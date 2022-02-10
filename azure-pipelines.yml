@@ -1,0 +1,57 @@
+#
+# Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH, Germany. All rights reserved.
+#
+
+name: $(Date:yyyy.MM.dd)$(Rev:.r)
+
+pool: LinuxAgents # LinuxAgents-Cloud => not yet for production use
+
+parameters:
+  - name: PROJECT_VERSION
+    displayName: Project version. Defaults to DEV-SNAPSHOT
+    type: string
+    default: DEV-SNAPSHOT
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+pr:
+  drafts: false
+  branches:
+    include:
+      - master
+
+variables:
+  - group: OSS Check Variables # import external vars from group
+  # - group: SonarQube # required by Maven plugin: sonar-quality-check
+  - group: RBS Variables
+
+  # Service Connections
+  - name: ARTIFACTORY_SERVICE_CONNECTION
+    value: Artifactory BoschDevCloud-Nx_Base
+  - name: FOSSID_SERVICE_CONNECTION
+    value: FossID-Nx_Base
+
+  # Maven common properties
+  - name: SOURCE_PATH
+    value: source
+  - name: DEPLOYMENT_SOURCE_PATH
+    value: deployment
+  - name: MAVEN_SETTINGS_PATH
+    value: $(Agent.TempDirectory)/settings.xml
+  - name: MAVEN_CACHE_FOLDER
+    value: $(Pipeline.Workspace)/.m2/repository
+  - name: MAVEN_CMD_OPTS
+    value: -Xmx2048m -Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)
+  - name: MAVEN_BUILD_OPTS
+    value: --batch-mode --errors --settings $(MAVEN_SETTINGS_PATH)
+
+resources:
+  repositories:
+    - repository: build
+      name: bci-oss/rbs-build
+      endpoint: bci-oss
+      type: github
+      ref: main
