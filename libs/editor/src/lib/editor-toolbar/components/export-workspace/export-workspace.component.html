@@ -58,24 +58,18 @@
     <div class="content-container">
       <div class="dialog-header">
         <h4>Export workspace</h4>
-        <p>
-          The package you have created can be exported with all of its Aspect Models. <br />
-          <ng-container *ngIf="validationHasErrors">
-            Please note that one or many of these Aspect Models are not valid. <br />
-            You can choose to cancel and correct them or continue to export.</ng-container
-          >
+        <p *ngIf="!validationHasErrors">The package you have created can be exported with all of its Aspect Models.</p>
+        <p *ngIf="validationHasErrors">
+          The package you have created can not be exported due to Aspect Model having errors. Please fix them and retry
         </p>
       </div>
     </div>
     <bci-workspace-summary [summary]="validationStatus"></bci-workspace-summary>
   </div>
   <div class="dialog-actions">
-    <button mat-button (click)="close()">Cancel</button>
-    <button *ngIf="!exported" (click)="export()" type="button" mat-raised-button data-cy="export-button">
+    <button mat-button (click)="close()">Close</button>
+    <button *ngIf="!validationHasErrors" (click)="export()" type="button" mat-raised-button data-cy="export-button">
       <span>Export</span>
-    </button>
-    <button *ngIf="exported" (click)="close()" type="button" mat-raised-button data-cy="finish-export-button">
-      <span>Finish</span>
     </button>
   </div>
 </ng-container>

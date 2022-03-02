@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {NotificationService} from '@bci-web-core/core';
+import {NotificationsService} from '@bame/shared';
 
 enum VisibleStep {
   selection = 'selection',
@@ -33,6 +33,7 @@ export class WorkspaceSummaryComponent {
   public filesToOverwrite = {};
   public hasFilesToOverwrite = false;
   public selectedFilesToReplace: string[] = [];
+  public filesForWorkspace: string[] = [];
 
   get namespaces() {
     if (!Object.keys(this.validations).length) {
@@ -52,13 +53,15 @@ export class WorkspaceSummaryComponent {
           } else {
             this.filesToOverwrite[namespace] = [file];
           }
+        } else {
+          this.filesForWorkspace.push(value.aspectModelFileName);
         }
 
         if (!this.validations[namespace]) {
           this.validations[namespace] = [];
         }
 
-        const errors = (value?.validationErrors || []).map(error => {
+        const errors = (value?.validationReport?.validationErrors || []).map(error => {
           error.focusNode = error.focusNode?.split('#')[1];
           error.resultSeverity = error.resultSeverity?.split('#')[1]?.toLowerCase();
           error.resultMessage = error.resultMessage?.replace(/ \(see focusNode\)/g, '');
@@ -67,12 +70,12 @@ export class WorkspaceSummaryComponent {
 
         this.validations[namespace].push({file, errors});
       });
-      this.filesToReplace.emit(this.selectedFilesToReplace);
+      this.filesToReplace.emit([...this.filesForWorkspace, ...this.selectedFilesToReplace]);
     }
     return this.validations;
   }
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationsService) {}
 
   replaceFile(namespace: string, file: string) {
     this.selectedFilesToReplace = [...this.selectedFilesToReplace, `${namespace}:${file}`];

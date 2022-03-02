@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {ModelApiService} from '@bame/api';
-import {NotificationService} from '@bci-web-core/core';
 import {BehaviorSubject, catchError, first, of, Subscription, tap} from 'rxjs';
 import {EditorService} from '../../../editor.service';
 
@@ -39,11 +38,7 @@ export class ZipUploaderService {
     return this._hasError$.asObservable();
   }
 
-  constructor(
-    private modelApiService: ModelApiService,
-    private notificationService: NotificationService,
-    private editorService: EditorService
-  ) {}
+  constructor(private modelApiService: ModelApiService, private editorService: EditorService) {}
 
   tryImportZip(path: string, name: string): State {
     const state: State = this.states.find(s => s.path === path);
@@ -72,13 +67,11 @@ export class ZipUploaderService {
           state.rawResponse = response;
           state.result = response.correctFiles;
           state.incorrectFiles = response.incorrectFiles;
-          this.notificationService.success(`${state.name} was successfully imported`);
           this._hasError$.next(false);
           this.states.push(state);
           this.editorService.refreshSidebarNamespaces();
         }),
         catchError(() => {
-          this.notificationService.error(`${state.name} was not imported`);
           this._hasError$.next(true);
           return of(null);
         })

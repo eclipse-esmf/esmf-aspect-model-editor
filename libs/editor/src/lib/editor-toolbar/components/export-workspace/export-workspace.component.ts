@@ -177,7 +177,7 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
   hasResponseErrors() {
     return (
       !!this.validationStatus?.missingFiles.length ||
-      Object.values<any>(this.validationStatus?.correctFiles).some(({validationErrors}) => !!validationErrors.length)
+      this.validationStatus?.correctFiles.some(({validationReport: {validationErrors}}) => !!validationErrors?.length)
     );
   }
 }

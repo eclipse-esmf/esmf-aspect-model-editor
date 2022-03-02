@@ -30,7 +30,5 @@
 <div class="dialog-actions">
   <button mat-button *ngIf="!state?.loading || state?.loaded" (click)="dismiss()">Dismiss</button>
   <button mat-button *ngIf="state?.loading || !state?.loaded" (click)="cancel()">Cancel</button>
-  <button mat-raised-button *ngIf="hasFilesToReplace" [disabled]="replacingFiles" (click)="replace()">
-    {{ filesToOverwrite.length ? 'Replace' : 'Continue' }}
-  </button>
+  <button mat-raised-button *ngIf="hasFilesToReplace" [disabled]="replacingFiles" (click)="replace()">Continue</button>
 </div>

@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {NotificationService} from '@bci-web-core/core';
-import {catchError, of} from 'rxjs';
+import {EditorService} from '@bame/editor';
+import {catchError, first, of} from 'rxjs';
 import {WorkspaceSummaryComponent} from '../workspace-summary/workspace-summary.component';
 import {State, ZipUploaderService} from './zip-uploader.service';
 
@@ -29,41 +29,6 @@ export class ZipUploaderComponent implements OnInit {
     return Array.isArray(this.filesToOverwrite);
   }
 
-  get namespaces() {
-    if (!Object.keys(this.validations).length) {
-      this.incorrectFiles = this.state?.incorrectFiles || [];
-
-      this.state?.result.forEach(value => {
-        const pieces = value.aspectModelFileName.split(':');
-        const file = pieces.pop();
-        const namespace = pieces.join(':');
-
-        if (value.fileAlreadyDefined) {
-          if (this.filesToOverwrite[namespace]) {
-            this.filesToOverwrite[namespace].push(file);
-          } else {
-            this.filesToOverwrite[namespace] = [file];
-          }
-        }
-
-        if (!this.validations[namespace]) {
-          this.validations[namespace] = [];
-        }
-
-        const errors = (value?.validationErrors || []).map(error => {
-          error.focusNode = error.focusNode?.split('#')[1];
-          error.resultSeverity = error.resultSeverity?.split('#')[1]?.toLowerCase();
-          error.resultMessage = error.resultMessage?.replace(/ \(see focusNode\)/g, '');
-          return error;
-        });
-
-        this.validations[namespace].push({file, errors});
-      });
-    }
-    console.log(this.validations, this.state);
-    return this.validations;
-  }
-
   get hasError$() {
     return this.zipImporterService.hasError$;
   }
@@ -71,7 +36,7 @@ export class ZipUploaderComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<ZipUploaderComponent>,
     private zipImporterService: ZipUploaderService,
-    private notificationService: NotificationService,
+    private editorService: EditorService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -87,13 +52,13 @@ export class ZipUploaderComponent implements OnInit {
 
   dismiss() {
     const index = this.zipImporterService.states.findIndex(state => state?.path === this.state?.path);
+    this.editorService.refreshSidebarNamespaces();
     if (index < 0) {
       this.dialogRef.close();
       return;
     }
 
     this.zipImporterService.states.splice(index, 1);
-    this.notificationService.information(`${this.state.name} was dismissed`);
     this.dialogRef.close();
   }
 
@@ -104,7 +69,6 @@ export class ZipUploaderComponent implements OnInit {
 
   minimize() {
     this.dialogRef.close();
-    this.notificationService.information(`${this.state.name} was minimized. You can find it in the left sidebar`);
   }
 
   replace() {
@@ -123,5 +87,12 @@ export class ZipUploaderComponent implements OnInit {
         this.replacingFiles = false;
         this.summaryComponent.hasFilesToOverwrite = false;
       });
+  }
+
+  pushFilesToWorkspace(files: string[]) {
+    if (!files.length) {
+      return;
+    }
+    this.zipImporterService.replaceFiles(files).pipe(first()).subscribe();
   }
 }
