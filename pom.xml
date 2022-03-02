@@ -38,8 +38,8 @@
       libs/**,
       environments/**,
       apps/bame/src/main.ts,
-      apps/bame/src/**/*.spec.ts
-      apps/bame/src/app/app.component.ts
+      apps/bame/src/**/*.spec.ts,
+      apps/bame/src/app/app.component.ts,
       apps/bame/src/app/components/editor-canvas/sidebar/sidebar.component.ts
     </sonar.coverage.exclusions>
     <sonar.exclusions>
