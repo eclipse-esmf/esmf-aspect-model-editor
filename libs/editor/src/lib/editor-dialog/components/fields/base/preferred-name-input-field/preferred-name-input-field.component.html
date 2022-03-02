@@ -1,0 +1,7 @@
+<ng-container>
+  <mat-form-field *ngFor="let locale of metaModelElement?.getAllLocalesPreferredNames()">
+    <mat-label for="preferredName">Preferred name({{ locale }})</mat-label>
+    <input matInput [formControl]="getControl('preferredName' + locale)" name="preferredName{{ locale }}" data-cy="preferredName" />
+    <mat-hint>bamm:preferredName</mat-hint>
+  </mat-form-field>
+</ng-container>

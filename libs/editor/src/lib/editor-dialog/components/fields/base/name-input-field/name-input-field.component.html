@@ -1,0 +1,17 @@
+<mat-form-field>
+  <mat-label for="name">Name<ng-container *ngIf="isAsteriskVisible('name')"> *</ng-container></mat-label>
+  <input [formControl]="getControl('name')" matInput name="name" data-cy="name" />
+  <mat-hint>bamm:name</mat-hint>
+  <mat-error *ngIf="getControl('name')?.errors?.required">Please define a name</mat-error>
+  <mat-error *ngIf="getControl('name')?.errors?.namingUpperCase">
+    Please start with an upper case character followed by letters/numerals.
+  </mat-error>
+  <mat-error *ngIf="getControl('name')?.errors?.namingLowerCase">
+    Please start with a lower case character followed by letters/numerals.
+  </mat-error>
+  <mat-error *ngIf="getControl('name')?.errors?.checkShapeName"> Please select a different name as this one is already in use </mat-error>
+  <mat-error *ngIf="getControl('name')?.errors?.checkShapeNameExtRef">
+    Please select a different name as this one is already in use in the same namespace
+  </mat-error>
+  <mat-error *ngIf="getControl('name')?.errors?.whitespace"> Name must not contain whitespaces</mat-error>
+</mat-form-field>

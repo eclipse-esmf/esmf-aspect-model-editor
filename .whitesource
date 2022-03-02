@@ -1,9 +1,8 @@
 {
   "scanSettings": {
     "configMode": "AUTO",
-    "configExternalURL": "",
-    "projectToken": "",
-    "baseBranches": []
+    "projectToken": "719a6511c6d54a4284b47b023a0249e5f4505a6bf0f14c8fbf58ab51fcb8d2ba",
+    "baseBranches": ["master"]
   },
   "checkRunSettings": {
     "vulnerableCheckRunConclusionLevel": "failure",

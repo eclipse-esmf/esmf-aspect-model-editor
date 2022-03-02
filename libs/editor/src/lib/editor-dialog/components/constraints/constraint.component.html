@@ -1,0 +1,48 @@
+<!--
+  ~  Copyright (c) 2020 Robert Bosch Manufacturing Solutions GmbH, Germany. All rights reserved.
+  -->
+<bci-constraint-name-dropdown-field
+  [parentForm]="parentForm"
+  [previousDataSnapshot]="previousData"
+  (selectedConstraint)="onClassChange($event)"
+  (previousData)="onPreviousDataChange($event)"
+></bci-constraint-name-dropdown-field>
+<bci-base-input [previousData]="previousData || {}" [parentForm]="parentForm"></bci-base-input>
+
+<ng-container *ngIf="selectedConstraint === 'EncodingConstraint'">
+  <bci-encoding-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-encoding-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'FixedPointConstraint'">
+  <bci-scale-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-scale-input-field>
+  <bci-integer-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-integer-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'LanguageConstraint'">
+  <bci-language-code-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-language-code-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'LengthConstraint'">
+  <bci-min-length-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-min-length-input-field>
+  <bci-max-length-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-max-length-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'LocaleConstraint'">
+  <bci-locale-code-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-locale-code-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'RangeConstraint'">
+  <div fxLayout="column">
+    <bci-min-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-min-value-input-field>
+    <bci-max-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-max-value-input-field>
+  </div>
+  <bci-upper-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-upper-bound-input-field>
+  <bci-lower-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-lower-bound-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'RegularExpressionConstraint'">
+  <bci-regular-expression-value-input-field
+    [previousData]="previousData || {}"
+    [parentForm]="parentForm"
+  ></bci-regular-expression-value-input-field>
+</ng-container>

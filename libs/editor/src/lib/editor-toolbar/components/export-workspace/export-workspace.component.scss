@@ -1,0 +1,55 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-height: 75vh;
+  min-height: 55vh;
+  min-width: 800px;
+  max-width: 70vw;
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+
+  &.loading-container {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+.namespaces {
+  margin-top: 20px;
+  max-height: 50vh;
+  min-height: 25vh;
+  overflow-y: auto;
+  flex-direction: row;
+}
+
+.namespace {
+  margin-top: 20px;
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+  }
+
+  &-structure {
+    width: 50%;
+  }
+}
+
+.file-list {
+  list-style: none;
+
+  li {
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+}
+
+.dialog-actions {
+  padding: 20px 0 !important;
+}

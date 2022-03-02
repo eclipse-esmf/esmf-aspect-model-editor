@@ -1,0 +1,42 @@
+@import '~@bci-web-core/common-styles/sass/bci/bci-variables';
+
+.top-toolbar-icon {
+  background-color: #ffffff;
+  width: 24px;
+  padding: 12px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #fbfbfb;
+  }
+}
+
+:host {
+  border-bottom: 1px solid #cfd0d1;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 28px;
+}
+
+.toggle-sidebar {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.toggle-sidebar-active {
+  color: #007bc7;
+}
+
+.editor-icon-active {
+  color: $boschLightBlue;
+}
+
+.changes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  height: 100%;
+  font-size: 11px;
+  text-align: right;
+}

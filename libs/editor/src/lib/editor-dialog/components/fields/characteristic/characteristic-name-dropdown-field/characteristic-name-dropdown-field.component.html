@@ -1,0 +1,20 @@
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+  <mat-form-field>
+    <mat-label for="characteristicName">Characteristic class</mat-label>
+    <mat-select
+      [disabled]="selectedMetaModelElement?.isExternalReference()"
+      #characteristicName
+      [ngModel]="metaModelClassName"
+      (ngModelChange)="onCharacteristicChange($event)"
+      name="characteristicName"
+      data-cy="characteristicName"
+      panelClass="characteristic-items-panel"
+    >
+      <mat-optgroup *ngFor="let group of listCharacteristicGroup | keyvalue" [label]="group.key" [disabled]="group['disabled']">
+        <mat-option *ngFor="let characteristicName of group.value" [value]="characteristicName" [attr.cy-value]="characteristicName">
+          {{ characteristicName }}
+        </mat-option>
+      </mat-optgroup>
+    </mat-select>
+  </mat-form-field>
+</div>

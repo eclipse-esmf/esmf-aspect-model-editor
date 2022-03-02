@@ -1,0 +1,7 @@
+<div fxLayout="column" *ngIf="metaModelElement?.symbol || !metaModelElement?.isPredefined()">
+  <mat-form-field>
+    <mat-label for="symbol">Symbol</mat-label>
+    <input [formControl]="getControl('symbol')" matInput name="symbol" />
+    <mat-hint>unit:symbol</mat-hint>
+  </mat-form-field>
+</div>

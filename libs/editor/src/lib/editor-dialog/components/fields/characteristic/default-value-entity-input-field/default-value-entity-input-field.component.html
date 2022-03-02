@@ -1,0 +1,10 @@
+<mat-form-field>
+  <mat-label for="dataType">Default value</mat-label>
+  <input matInput [formControl]="getControl('defaultValue')" data-cy="defaultValue" [matAutocomplete]="auto" />
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let entityValue of entityValues" [value]="entityValue.name">
+      {{ entityValue.name }}
+    </mat-option>
+  </mat-autocomplete>
+  <mat-hint>bamm:defaultValue</mat-hint>
+</mat-form-field>

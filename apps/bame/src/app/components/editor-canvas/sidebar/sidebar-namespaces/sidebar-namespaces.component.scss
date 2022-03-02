@@ -1,0 +1,80 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 0 20px;
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+  padding-right: 10px;
+  user-select: none;
+  height: 100%;
+  overflow-y: auto;
+
+  .namespaces {
+    padding-top: 5px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    .title {
+      font-size: 21px;
+      font-weight: 500;
+    }
+
+    .list {
+      margin-top: 20px;
+    }
+
+    .namespace {
+      padding-bottom: 20px;
+      display: block;
+      font-size: 16px;
+
+      .folder {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+
+    .file {
+      display: flex;
+      cursor: pointer;
+      margin-left: 20px;
+      padding-top: 10px;
+
+      &:hover {
+        .show-more {
+          display: block;
+        }
+      }
+
+      &-name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .show-more {
+        display: none;
+        margin-right: 0;
+        margin-left: auto;
+      }
+    }
+
+    .current-file {
+      opacity: 0.5;
+    }
+  }
+}
+
+.selected {
+  font-weight: bold;
+  .show-more {
+    display: block !important;
+  }
+}

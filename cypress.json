@@ -1,0 +1,26 @@
+{
+  "fileServerFolder": ".",
+  "fixturesFolder": "apps/bame-e2e/src/fixtures",
+  "integrationFolder": "apps/bame-e2e/src/integration",
+  "modifyObstructiveCode": false,
+  "viewportWidth": 1920,
+  "viewportHeight": 1080,
+  "baseUrl": "http://localhost:4200/",
+  "reporter": "node_modules/mochawesome/src/mochawesome.js",
+  "supportFile": "apps/bame-e2e/src/support/index.ts",
+  "pluginsFile": "apps/bame-e2e/src/plugins/index.js",
+  "video": false,
+  "videoUploadOnPasses": false,
+  "screenshotOnRunFailure": false,
+  "videosFolder": "apps/bame-e2e/cypress/videos",
+  "screenshotsFolder": "apps/bame-e2e/cypress/screenshots",
+  "chromeWebSecurity": false,
+  "reporterOptions": {
+    "reportDir": "apps/bame-e2e/cypress/reports",
+    "overwrite": false,
+    "html": true,
+    "saveHtml": true,
+    "reportPageTitle": "Aspect Model Editor Tests",
+    "reportTitle": "Aspect Model Editor Tests"
+  }
+}

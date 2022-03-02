@@ -1,0 +1,13 @@
+<div fxLayout="column">
+  <mat-form-field>
+    <mat-label for="maxValue">Max Value</mat-label>
+    <input
+      matInput
+      name="maxValue"
+      [formControl]="getControl('maxValue')"
+      [placeholder]="getPlaceholder(getValueWithoutUrnDefinition(rangeConstraintDataType?.getUrn()))"
+      data-cy="maxValue"
+    />
+    <mat-hint>bamm-c:maxValue</mat-hint>
+  </mat-form-field>
+</div>

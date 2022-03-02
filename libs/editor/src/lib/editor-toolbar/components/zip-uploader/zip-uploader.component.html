@@ -1,0 +1,36 @@
+<div class="content-container">
+  <div class="dialog-header" *ngIf="!hasFilesToReplace">
+    <h4 *ngIf="state?.loading" matDialogTitle class="properties-title">Importing {{ data.name }}</h4>
+    <h4 *ngIf="!state?.loading" matDialogTitle class="properties-title">Import result summary for {{ data.name }}</h4>
+    <p *ngIf="!state?.loading && (hasError$ | async) === false">
+      The Aspect Model Package {{ data.name }} has been imported as a namespace and is now included in your workspace.
+    </p>
+  </div>
+
+  <div class="dialog-header" *ngIf="hasFilesToReplace">
+    <h4 matDialogTitle class="properties-title">Files conflict</h4>
+    <p>The following files already exists. Please choose either to replace it to the newer file keep the old one</p>
+  </div>
+
+  <ng-container *ngIf="(hasError$ | async) === false && !state?.loading">
+    <bci-workspace-summary [summary]="state.rawResponse" (filesToReplace)="filesToOverwrite = $event"></bci-workspace-summary>
+  </ng-container>
+
+  <div class="dialog-content loading-container" *ngIf="(hasError$ | async) === false && state?.loading">
+    <bci-activity-indicator></bci-activity-indicator>
+    <p>Importing package {{ data.name }}</p>
+  </div>
+
+  <div class="dialog-content import-error" *ngIf="(hasError$ | async) === true">
+    <mat-icon fontIcon="bosch-ic-alert-error" class="violation"></mat-icon>
+    <p>An error has occurred while importing</p>
+  </div>
+</div>
+
+<div class="dialog-actions">
+  <button mat-button *ngIf="!state?.loading || state?.loaded" (click)="dismiss()">Dismiss</button>
+  <button mat-button *ngIf="state?.loading || !state?.loaded" (click)="cancel()">Cancel</button>
+  <button mat-raised-button *ngIf="hasFilesToReplace" [disabled]="replacingFiles" (click)="replace()">
+    {{ filesToOverwrite.length ? 'Replace' : 'Continue' }}
+  </button>
+</div>

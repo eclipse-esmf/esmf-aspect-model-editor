@@ -1,0 +1,27 @@
+.container {
+  .types {
+    display: flex;
+  }
+
+  .type {
+    width: 24px;
+    height: 24px;
+    margin: 10px;
+    margin-left: 0;
+    justify-content: center;
+    text-align: center;
+    line-height: 24px;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    border: solid 3px transparent;
+  }
+
+  .selected {
+    border-color: #8bbefb;
+  }
+}
+
+.trait {
+  border-radius: 50%;
+}

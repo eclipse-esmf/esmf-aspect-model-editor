@@ -1,0 +1,41 @@
+<div class="container">
+  <div *ngIf="namespaces?.length > 0" class="namespaces">
+    <div class="title">Workspace</div>
+    <p *ngIf="!hasCurrentFile" class="description">To see your current Aspect Model save to namespace</p>
+    <div class="list">
+      <div *ngFor="let namespace of namespaces" class="namespace">
+        <div class="folder" [ngClass]="{selected: isSelectedNamespace(namespace.name)}" [title]="namespace.name">
+          <mat-icon fontIcon="bosch-ic-folder"></mat-icon>
+          {{ namespace.name }}
+        </div>
+        <ng-container *ngFor="let file of namespace.files">
+          <div
+            [class]="!isCurrentFile(namespace.name, file) ? 'file' : 'file current-file'"
+            [ngClass]="{selected: isSelectedNamespaceFile(namespace.name, file)}"
+            [title]="!isCurrentFile(namespace.name, file) ? file : ''"
+            [matTooltip]="!isCurrentFile(namespace.name, file) ? null : 'Currently loaded file'"
+          >
+            <div class="file-name" (click)="onSelectNamespaceFile(namespace.name, file)">
+              <mat-icon fontIcon="bosch-ic-document"></mat-icon>
+              {{ file }}
+            </div>
+            <mat-icon class="show-more" fontIcon="Bosch-Ic-show-more-vertical" [matMenuTriggerFor]="menu"></mat-icon>
+            <mat-menu #menu="matMenu">
+              <button
+                [disabled]="isCurrentFile(namespace.name, file)"
+                (click)="onDeleteNamespace(namespace.name + ':' + file)"
+                mat-menu-item
+              >
+                Delete
+              </button>
+              <button [disabled]="isCurrentFile(namespace.name, file)" (click)="onLoadAspectModel(namespace, file)" mat-menu-item>
+                Load Aspect Model
+              </button>
+              <button mat-menu-item (click)="copyNamespace(namespace.name + ':' + file)">Copy to clipboard</button>
+            </mat-menu>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

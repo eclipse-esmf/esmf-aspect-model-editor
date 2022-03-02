@@ -1,0 +1,37 @@
+<!--
+  ~  Copyright (c) 2020 Robert Bosch Manufacturing Solutions GmbH, Germany. All rights reserved.
+  -->
+<div fxLayout="column" style="height: 99%">
+  <bci-editor-toolbar
+    [isSidebarOpened]="isSidebarOpened"
+    (toggleHideSidebar)="onToggleHideSidebar()"
+    (editSelectedCell)="onEditSelectedCell()"
+    (closeEditDialog)="onCloseEditDialog()"
+  ></bci-editor-toolbar>
+
+  <bci-master-detail-view #masterDetail [detailViewSize]="500" [detailViewMinSize]="500" [useDialog]="useDialogModeForEdit" [useResizeHandle]="true">
+    <bci-master-view class="master-view-container">
+      <mat-sidenav-container [hasBackdrop]="false" style="display: flex; width: 100%; height: 100%">
+        <mat-sidenav #sideBar [opened]="isSidebarOpened" mode="over">
+          <bci-editor-sidebar (closeSidebar)="onToggleHideSidebar()"></bci-editor-sidebar>
+        </mat-sidenav>
+
+        <mat-sidenav-content class="canvas">
+          <div id="graph"></div>
+          <bci-editor-canvas-menu></bci-editor-canvas-menu>
+        </mat-sidenav-content>
+      </mat-sidenav-container>
+    </bci-master-view>
+
+    <bci-detail-view [isPadded]="false" class="detail-view-container">
+      <bci-editor-dialog
+        [masterDetailViewComponent]="masterDetail"
+        [hidden]="!isDetailDialogOpen()"
+        (save)="onSave($event)"
+        (closeDetailView)="resetSelectedShapeForUpdate()"
+      >
+      </bci-editor-dialog>
+    </bci-detail-view>
+  </bci-master-detail-view>
+  <bci-footer class="footer"></bci-footer>
+</div>

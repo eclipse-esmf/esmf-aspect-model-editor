@@ -1,0 +1,86 @@
+import {Injectable} from '@angular/core';
+import {mxgraph} from 'mxgraph-factory';
+import {DataFactory, Store} from 'n3';
+import {BaseVisitor} from '../base-visitor';
+import {MxGraphHelper} from '@bame/mx-graph';
+import {RdfNodeService} from '../../rdf-node';
+import {DefaultUnit} from '@bame/meta-model';
+import {RdfService} from '@bame/rdf/services';
+import {Bammu} from '@bame/vocabulary';
+
+@Injectable()
+export class UnitVisitor extends BaseVisitor<DefaultUnit> {
+  private get store(): Store {
+    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.store;
+  }
+
+  private get bammu(): Bammu {
+    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.BAMMU();
+  }
+
+  constructor(private rdfNodeService: RdfNodeService, rdfService: RdfService) {
+    super(rdfService);
+  }
+
+  visit(cell: mxgraph.mxCell): DefaultUnit {
+    const unit: DefaultUnit = MxGraphHelper.getModelElement<DefaultUnit>(cell);
+    this.setPrefix(unit.aspectModelUrn);
+    const oldAspectModelUrn = unit.aspectModelUrn;
+    this.addProperties(unit);
+    if (oldAspectModelUrn !== unit.aspectModelUrn) {
+      this.removeOldQuads(oldAspectModelUrn);
+    }
+    return unit;
+  }
+
+  private addProperties(unit: DefaultUnit) {
+    if (unit.isPredefined()) {
+      return;
+    }
+
+    this.rdfNodeService.update(unit, {
+      name: unit.name,
+      preferredName: unit.getAllLocalesPreferredNames().map(language => ({
+        language,
+        value: unit.getPreferredName(language),
+      })),
+      symbol: unit.symbol,
+      commonCode: unit.code,
+      conversionFactor: unit.conversionFactor,
+      numericConversionFactor: unit.numericConversionFactor,
+    });
+
+    // update reference unit
+    if (unit.referenceUnit?.aspectModelUrn) {
+      this.store.addQuad(
+        DataFactory.namedNode(unit.aspectModelUrn),
+        this.bammu.ReferenceUnitProperty(),
+        DataFactory.namedNode(unit.referenceUnit.aspectModelUrn)
+      );
+      this.setPrefix(unit.referenceUnit.aspectModelUrn);
+    }
+
+    // update quantity kinds
+    this.store.removeQuads(this.store.getQuads(DataFactory.namedNode(unit.aspectModelUrn), this.bammu.QuantityKindProperty(), null, null));
+
+    for (const quantityKind of unit.quantityKinds || []) {
+      if (!quantityKind?.aspectModelUrn) {
+        continue;
+      }
+
+      this.store.addQuad(
+        DataFactory.triple(
+          DataFactory.namedNode(unit.aspectModelUrn),
+          this.bammu.QuantityKindProperty(),
+          DataFactory.namedNode(quantityKind.aspectModelUrn)
+        )
+      );
+
+      this.setPrefix(quantityKind.aspectModelUrn);
+    }
+  }
+
+  private removeOldQuads(oldAspectModelUrn: string) {
+    this.store.removeQuads(this.store.getQuads(DataFactory.namedNode(oldAspectModelUrn), null, null, null));
+  }
+}

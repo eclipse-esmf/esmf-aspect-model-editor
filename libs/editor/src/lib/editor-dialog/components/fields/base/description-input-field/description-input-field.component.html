@@ -1,0 +1,7 @@
+<ng-container>
+  <mat-form-field *ngFor="let locale of metaModelElement?.getAllLocalesDescriptions()">
+    <mat-label for="description">Description({{ locale }})</mat-label>
+    <textarea matInput [formControl]="getControl('description' + locale)" name="description{{ locale }}" data-cy="description"></textarea>
+    <mat-hint>bamm:description</mat-hint>
+  </mat-form-field>
+</ng-container>

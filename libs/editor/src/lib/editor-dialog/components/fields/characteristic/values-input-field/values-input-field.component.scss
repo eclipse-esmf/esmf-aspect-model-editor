@@ -1,0 +1,16 @@
+/*
+ *  Copyright (c) 2020 Robert Bosch Manufacturing Solutions GmbH, Germany. All rights reserved.
+ */
+@import 'node_modules/@bci-web-core/common-styles/sass/bci/bci-variables';
+
+mat-chip {
+  background-color: $boschLightGray !important;
+}
+
+.enumeration-value-input {
+  height: 40px;
+}
+
+.entity-values {
+  margin-bottom: 24px;
+}

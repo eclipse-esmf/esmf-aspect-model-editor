@@ -1,0 +1,24 @@
+/*
+ *  Copyright (C) 2018 Robert Bosch Manufacturing Solutions GmbH, Germany. All rights reserved.
+ */
+@import 'node_modules/@bci-web-core/common-styles/sass/bci/bci-variables';
+@import 'node_modules/@bci-web-core/common-styles/sass/bci/mixins/typography';
+
+.bci-app-footer {
+  height: 40px;
+  color: $boschDarkBlue;
+  border-top: 1px solid $boschLightGrayW25;
+  padding: $gridSize * 2;
+  background: $boschWhite;
+  font-size: $font-size-base;
+}
+
+.bci-portal-footer-copyright {
+  color: $boschBlack;
+  font-weight: $font-weight-medium;
+}
+
+.disclosure-document,
+a {
+  cursor: pointer;
+}

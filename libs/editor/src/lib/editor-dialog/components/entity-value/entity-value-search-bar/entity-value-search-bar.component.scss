@@ -1,0 +1,36 @@
+@import '~@bci-web-core/common-styles/sass/bci/bci-variables';
+@import '~@bci-web-core/common-styles/sass/bci/colors';
+
+.main-title {
+  height: 8 * $gridSize;
+  background-color: $boschLightGrayW75;
+  padding-left: $gridSize;
+  .search-bar {
+    background-color: $boschWhite;
+    padding: 0;
+
+    ::ng-deep .mat-form-field-wrapper .mat-form-field-flex {
+      padding: $gridSize 0 !important;
+    }
+
+    ::ng-deep .mat-form-field-suffix {
+      background-color: $boschWhite !important;
+    }
+
+    ::ng-deep .mat-form-field-wrapper .mat-form-field-infix {
+      padding: 0 !important;
+      input {
+        padding: 1.5 * $gridSize 2 * $gridSize !important;
+        background-color: $boschWhite !important;
+      }
+    }
+  }
+  .add-button {
+    height: 8 * $gridSize;
+    width: 8 * $gridSize;
+    min-width: auto;
+    mat-icon {
+      color: $boschWhite;
+    }
+  }
+}

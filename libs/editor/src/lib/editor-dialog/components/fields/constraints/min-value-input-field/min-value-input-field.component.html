@@ -1,0 +1,13 @@
+<div fxLayout="column">
+  <mat-form-field>
+    <mat-label for="minValue">Min Value</mat-label>
+    <input
+      matInput
+      name="minValue"
+      [formControl]="getControl('minValue')"
+      [placeholder]="getPlaceholder(getValueWithoutUrnDefinition(rangeConstraintDataType?.getUrn()))"
+      data-cy="minValue"
+    />
+    <mat-hint>bamm-c:minValue</mat-hint>
+  </mat-form-field>
+</div>

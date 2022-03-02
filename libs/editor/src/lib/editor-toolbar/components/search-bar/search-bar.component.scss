@@ -1,0 +1,56 @@
+.search-bar-container {
+  cursor: default;
+  position: relative;
+
+  &__input-field {
+    border: none;
+    width: 250px;
+    margin-top: 5px;
+    height: 38px;
+    padding-right: 35px;
+
+    &::placeholder{
+      line-height: 1 !important;
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    padding-top: 5px;
+    right: 5px;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+
+  &__option {
+    font-weight: 400;
+    padding: 0 6px;
+    width: 250px;
+
+    &__icon {
+      align-self: center;
+      text-transform: uppercase;
+      display: inline-block;
+      height: 25px;
+      width: 25px;
+      text-align: center;
+      color: #ffffff;
+      margin-right: 5px;
+    }
+  }
+}
+
+.result {
+  display: inline-flex;
+}
+
+.namespace-prefix {
+  display: block;
+  margin-bottom: 0;
+  margin-top: -5px;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 205px;
+}

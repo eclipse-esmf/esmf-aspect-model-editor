@@ -1,0 +1,39 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "sourceMap": false,
+    "outDir": "dist/out-tsc",
+    "allowJs": true,
+    "types": [
+      "cypress",
+      "node"
+    ],
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false,
+    "noStrictGenericChecks": true,
+    "strictNullChecks": false
+  },
+  "angularCompilerOptions": {
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "include": [
+    "apps/bame/src/**/*.ts",
+    "libs/api/src/**/*.ts",
+    "libs/aspect-exporter/src/**/*.ts",
+    "libs/cache/src/**/*.ts",
+    "libs/connection/src/**/*.ts",
+    "libs/editor/src/**/*.ts",
+    "libs/instantiator/src/**/*.ts",
+    "libs/meta-model/src/**/*.ts",
+    "libs/mx-graph/src/**/*.ts",
+    "libs/rdf/src/**/*.ts",
+    "libs/settings-dialog/src/**/*.ts",
+    "libs/shared/src/**/*.ts",
+    "libs/vocabulary/src/**/*.ts"
+  ]
+}

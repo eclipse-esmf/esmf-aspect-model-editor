@@ -1,0 +1,20 @@
+<div
+  *ngIf="element"
+  #container
+  [ngClass]="{'element-imported': elementImported()}"
+  [title]="elementImported() ? 'Element already imported' : ''"
+  class="container"
+  [attr.data-cy]="dataCy"
+>
+  <div class="icon" [ngClass]="getIconClass">
+    {{ element.type.charAt(0).toUpperCase() }}
+  </div>
+  <div *ngIf="!compactView" class="info">
+    <div class="name">
+      {{ element.name }}
+    </div>
+    <div class="description">
+      {{ element.description }}
+    </div>
+  </div>
+</div>

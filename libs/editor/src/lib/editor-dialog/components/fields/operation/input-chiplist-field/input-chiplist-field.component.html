@@ -1,0 +1,49 @@
+<!--
+  ~ Copyright (c) 2021 Robert Bosch Manufacturing Solutions GmbH. All rights reserved.
+  -->
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+  <mat-form-field>
+    <mat-label for="input">Input</mat-label>
+    <mat-chip-list #chipList [formControl]="getControl('inputChipList')">
+      <mat-chip *ngFor="let input of inputValues" [selectable]="selectable" [removable]="removable" (removed)="remove(input)">
+        {{ input['name'] }}
+        <mat-icon matChipRemove fontIcon="Bosch-Ic-abort" *ngIf="removable" data-cy="input"></mat-icon>
+      </mat-chip>
+      <input
+        matInput
+        #input
+        class="enumeration-value-input"
+        name="inputValues"
+        [formControl]="getControl('inputValues')"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        placeholder="add value, click on tooltip"
+        data-cy="inputValues"
+      />
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" class="characteristic-input-autocomplete">
+      <mat-optgroup *ngIf="filteredPropertyTypes$ | async as filteredPropertyTypes" label="Property">
+        <mat-option
+          *ngIf="!isAlreadyDefined(filteredPropertyTypes, getControl('inputValues').value)"
+          [disabled]="!isLowerCase(getControl('inputValues').value)"
+          [value]="!isLowerCase(getControl('inputValues').value) ? '' : getControl('inputValues').value"
+          (click)="createNewProperty(getControl('inputValues').value)"
+        >
+          <span *ngIf="isLowerCase(getControl('inputValues').value)">
+            + Create new property: <strong>{{ getControl('inputValues').value }}</strong>
+          </span>
+          <span *ngIf="!isLowerCase(getControl('inputValues').value)">Please provide the name for the new Property in lower case.</span>
+        </mat-option>
+        <mat-option
+          *ngFor="let input of filteredPropertyTypes"
+          [value]="input.name"
+          (onSelectionChange)="onSelectionChange('input', input)"
+        >
+          {{ input.name }}<br /><span class="option-description">{{ input.description }}</span>
+        </mat-option>
+      </mat-optgroup>
+    </mat-autocomplete>
+    <mat-hint>bamm:input</mat-hint>
+  </mat-form-field>
+</div>

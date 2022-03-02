@@ -1,0 +1,15 @@
+<div class="file-name">{{ fileName }}</div>
+<div class="search-bar">
+  <bci-namespace-filter [fileName]="fileName" [elements]="elements" (searchElements)="filterElements($event)"></bci-namespace-filter>
+</div>
+<div class="elements">
+  <ng-container *ngFor="let model of elementsTypes">
+    <bci-namespace-element-list
+      *ngIf="model.elements.length"
+      [title]="model.name"
+      [type]="model.type"
+      [elements]="model.elements"
+    ></bci-namespace-element-list>
+  </ng-container>
+  <div *ngIf="!filteredElements?.length">No elements found</div>
+</div>

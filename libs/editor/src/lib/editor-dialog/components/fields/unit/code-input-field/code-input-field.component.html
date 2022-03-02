@@ -1,0 +1,7 @@
+<div fxLayout="column" *ngIf="metaModelElement?.code || !metaModelElement?.isPredefined()">
+  <mat-form-field>
+    <mat-label for="code">Code</mat-label>
+    <input [formControl]="getControl('code')" matInput name="code" />
+    <mat-hint>unit:code</mat-hint>
+  </mat-form-field>
+</div>

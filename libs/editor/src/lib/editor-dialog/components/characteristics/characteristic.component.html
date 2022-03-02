@@ -1,0 +1,46 @@
+<!--
+  ~  Copyright (c) 2020 Robert Bosch Manufacturing Solutions GmbH, Germany. All rights reserved.
+  -->
+<ng-container *ngIf="property">
+  <bci-characteristic-name-dropdown-field
+    [parentForm]="parentForm"
+    [previousDataSnapshot]="previousData"
+    (selectedCharacteristic)="onClassChange($event)"
+    (previousData)="onPreviousDataChange($event)"
+  ></bci-characteristic-name-dropdown-field>
+
+  <bci-base-input [previousData]="previousData || {}" [parentForm]="parentForm"></bci-base-input>
+  <bci-data-type-input-field
+    [previousData]="previousData || {}"
+    [parentForm]="parentForm"
+    *ngIf="selectedCharacteristic !== 'Either'"
+  ></bci-data-type-input-field>
+
+  <ng-container *ngIf="['Collection', 'Set', 'SortedSet', 'List', 'TimeSeries'].includes(selectedCharacteristic)">
+    <bci-element-characteristic-input-field
+      [previousData]="previousData || {}"
+      [parentForm]="parentForm"
+    ></bci-element-characteristic-input-field>
+  </ng-container>
+
+  <ng-container *ngIf="selectedCharacteristic === 'Enumeration'">
+    <bci-values-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-values-input-field>
+  </ng-container>
+
+  <ng-container *ngIf="['Measurement', 'Quantifiable', 'Duration'].includes(selectedCharacteristic)">
+    <bci-unit-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-unit-input-field>
+  </ng-container>
+
+  <ng-container *ngIf="selectedCharacteristic === 'State'">
+    <bci-bame-state-characteristic [previousData]="previousData || {}" [parentForm]="parentForm"></bci-bame-state-characteristic>
+  </ng-container>
+
+  <ng-container *ngIf="selectedCharacteristic === 'StructuredValue'">
+    <bci-structured-value [parentForm]="parentForm"></bci-structured-value>
+  </ng-container>
+
+  <ng-container *ngIf="selectedCharacteristic === 'Either'">
+    <bci-left-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-left-input-field>
+    <bci-right-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-right-input-field>
+  </ng-container>
+</ng-container>

@@ -1,0 +1,40 @@
+<!--
+  ~  Copyright (c) 2020 Robert Bosch Manufacturing Solutions GmbH, Germany. All rights reserved.
+  -->
+<div>
+  <form [formGroup]="form">
+    <div formArrayName="languages" class="language-scroll">
+      <div class="row">
+        <div *ngFor="let languages of getLanguageFormGroup().controls; let i = index;">
+          <div fxLayout="row" fxLayoutGap="10px" fxFlex="100%" [formGroupName]="i">
+            <mat-form-field class="language-align">
+              <input matInput (ngModelChange)="doFilterLanguage($event)" [matAutocomplete]="auto"
+                formControlName="languageCode" data-cy="langCode" />
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayLanguageWithTag">
+                <mat-option *ngFor="let language of filteredLanguageList | async" [value]="language.tag">
+                  {{ language.name}} ({{ language.tag }})
+                </mat-option>
+              </mat-autocomplete>
+              <mat-hint>Select language</mat-hint>
+              <mat-error
+                *ngIf="getLanguagesFormGroup(i).controls['languageCode']?.touched && getLanguagesFormGroup(i).controls['languageCode'].hasError('required')">
+                'Start typing to select language or delete this row.' </mat-error>
+            </mat-form-field>
+            <mat-icon fontIcon="Bosch-Ic-delete" class="delete-icon" (click)="deleteLanguage(i)"></mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row" class="btn-container">
+      <span (click)="addLanguage()" data-cy="addLang">
+        <mat-icon fontIcon="bosch-ic-add"></mat-icon>
+        <span>Add Language</span>
+      </span>
+    </div>
+    <div class="dialog-actions">
+      <button mat-raised-button (click)="onSubmit()" [disabled]="!form.valid || !languageList.length"
+        data-cy="saveButton">Save</button>
+      <button mat-button type="button" (click)="onClose()">Cancel</button>
+    </div>
+  </form>
+</div>

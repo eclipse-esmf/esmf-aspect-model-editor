@@ -1,0 +1,43 @@
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+  <mat-form-field>
+    <mat-label for="left">Left<ng-container *ngIf="isAsteriskVisible('left')"> *</ng-container></mat-label>
+    <input #left [matAutocomplete]="auto" matInput name="left" [formControl]="getControl('left')" data-cy="left" />
+    <button
+      *ngIf="leftControl?.disabled && !metaModelElement?.isExternalReference()"
+      (click)="unlockLeft()"
+      class="close-button"
+      data-cy="clear-left-button"
+      matSuffix
+      mat-icon-button
+      tabindex="-1"
+    >
+      <em class="Bosch-Ic Bosch-Ic-abort"></em>
+    </button>
+
+    <mat-autocomplete #auto="matAutocomplete" class="left">
+      <ng-container *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes">
+        <mat-option
+          *ngIf="!isAlreadyDefined(filteredCharacteristicTypes, left.value)"
+          [disabled]="!isUpperCase(left.value)"
+          [value]="!isUpperCase(left.value) ? '' : left.value"
+          (click)="createNewCharacteristic(left.value)"
+        >
+          <span *ngIf="isUpperCase(left.value)">
+            + Create new characteristic: <strong>{{ left.value }}</strong>
+          </span>
+          <span *ngIf="!isUpperCase(left.value)">Characteristic should be upper case</span>
+        </mat-option>
+        <mat-option
+          *ngFor="let left of filteredCharacteristicTypes"
+          [value]="left.name"
+          (onSelectionChange)="onSelectionChange('left', left)"
+        >
+          {{ left.name }}<br /><span class="option-description">{{ left.description }}</span>
+        </mat-option>
+      </ng-container>
+    </mat-autocomplete>
+    <mat-hint>bamm-c:left</mat-hint>
+    <mat-error *ngIf="getControl('left')?.errors?.required">Please define a left characteristic</mat-error>
+    <mat-error *ngIf="getControl('left')?.errors?.disabled">No left characteristic defined</mat-error>
+  </mat-form-field>
+</div>

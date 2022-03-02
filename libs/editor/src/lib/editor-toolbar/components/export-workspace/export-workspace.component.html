@@ -1,0 +1,107 @@
+<!-- Validation step -->
+<ng-container *ngIf="!error && !validationStatus">
+  <div class="content-container">
+    <div class="dialog-header">
+      <h4>Export workspace</h4>
+      <p>Please select the namespace that you would like to export as an Aspect Model Package.</p>
+    </div>
+
+    <div *ngIf="!validating" class="dialog-content namespaces">
+      <mat-radio-group class="namespace-list" [(ngModel)]="selectedNamespace">
+        <p>Namespaces</p>
+        <mat-radio-button
+          *ngFor="let item of namespaces | keyvalue"
+          [value]="item.key"
+          (click)="showStructure(item.key)"
+          class="namespace"
+          >{{ item.key }}</mat-radio-button
+        >
+      </mat-radio-group>
+      <div class="namespace-structure" *ngIf="selectedNamespace">
+        <p>Namespace Structure</p>
+        <mat-tree [dataSource]="structure.dataSource" [treeControl]="treeControl">
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+            <mat-icon fontIcon="bosch-ic-document"></mat-icon>
+            {{ node.name }}
+          </mat-tree-node>
+
+          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+              <mat-icon
+                [fontIcon]="treeControl.isExpanded(node) ? 'bosch-ic-folder-open' : 'bosch-ic-folder'"
+                class="mat-icon-rtl-mirror"
+              ></mat-icon>
+              {{ node.name }}
+            </button>
+          </mat-tree-node>
+        </mat-tree>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="validating" class="dialog-content loading-container">
+    <bci-activity-indicator></bci-activity-indicator>
+    <p>Validating your namespace</p>
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-button (click)="close()">Cancel</button>
+    <button [disabled]="!selectedNamespace || validating" (click)="validate()" type="button" mat-raised-button data-cy="validate-button">
+      <span>Validate</span>
+    </button>
+  </div>
+</ng-container>
+
+<!-- Summary step -->
+<ng-container *ngIf="validationStatus">
+  <div class="content-container">
+    <div class="content-container">
+      <div class="dialog-header">
+        <h4>Export workspace</h4>
+        <p>
+          The package you have created can be exported with all of its Aspect Models. <br />
+          <ng-container *ngIf="validationHasErrors">
+            Please note that one or many of these Aspect Models are not valid. <br />
+            You can choose to cancel and correct them or continue to export.</ng-container
+          >
+        </p>
+      </div>
+    </div>
+    <bci-workspace-summary [summary]="validationStatus"></bci-workspace-summary>
+  </div>
+  <div class="dialog-actions">
+    <button mat-button (click)="close()">Cancel</button>
+    <button *ngIf="!exported" (click)="export()" type="button" mat-raised-button data-cy="export-button">
+      <span>Export</span>
+    </button>
+    <button *ngIf="exported" (click)="close()" type="button" mat-raised-button data-cy="finish-export-button">
+      <span>Finish</span>
+    </button>
+  </div>
+</ng-container>
+
+<!-- Error step -->
+<ng-container *ngIf="error">
+  <div class="content-container">
+    <div class="dialog-header">
+      <h4>Error on exporting workspace</h4>
+    </div>
+
+    <div *ngIf="error?.internalServerError" class="dialog-content error-container">
+      <p>
+        Please make sure you don't have opened core files of the Aspect Model Editor or make sure no program other than Aspect Model Editor
+        is using them
+      </p>
+    </div>
+
+    <div *ngIf="error?.unexpectedError" class="dialog-content error-container">
+      <p>An unexpected error occurred while exporting the namespace. Please try to export the namespace again</p>
+    </div>
+  </div>
+
+  <div class="dialog-actions">
+    <button (click)="close()" type="button" mat-button data-cy="dismiss-export-validate">
+      <span>Dismiss</span>
+    </button>
+  </div>
+</ng-container>

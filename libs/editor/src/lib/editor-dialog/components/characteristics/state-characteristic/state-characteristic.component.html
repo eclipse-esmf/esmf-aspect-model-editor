@@ -1,0 +1,16 @@
+<!--
+  ~ Copyright (c) 2020 Bosch Software Innovations GmbH. All rights reserved.
+  -->
+<bci-values-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></bci-values-input-field>
+<div fxLayout="column">
+  <bci-default-value-entity-input-field
+    [previousData]="previousData || {}"
+    *ngIf="hasEntityType"
+    [parentForm]="parentForm"
+  ></bci-default-value-entity-input-field>
+  <bci-default-value-input-field
+    [previousData]="previousData || {}"
+    *ngIf="!hasEntityType"
+    [parentForm]="parentForm"
+  ></bci-default-value-input-field>
+</div>

@@ -1,0 +1,79 @@
+.table-container {
+  margin-top: 30px;
+  height: 500px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column-date {
+  flex: none;
+  width: 100px;
+  vertical-align: top;
+}
+
+.mat-column-delete {
+  flex: none;
+  width: 30px;
+  vertical-align: top;
+}
+
+.mat-column-type {
+  flex: none;
+  width: 30px;
+  vertical-align: top;
+  em {
+    padding-top: 10px;
+    display: block;
+  }
+}
+
+.mat-column-goto {
+  flex: none;
+  width: 30px;
+  vertical-align: top;
+  em {
+    padding-top: 10px;
+    display: block;
+  }
+}
+
+.mat-column-expand {
+  flex: none;
+  width: 30px;
+  vertical-align: top;
+  padding-right: 0;
+  em {
+    padding-top: 5px;
+    display: block;
+  }
+}
+
+.mat-column-message {
+  vertical-align: top;
+}
+
+.Bosch-Ic-notification-error {
+  color: red;
+}
+
+.Bosch-Ic-notification-warning {
+  color: orange;
+}
+
+.message-title {
+  margin: 10px;
+  margin-left: 0;
+}
+
+.delete-btn, .delete-all-btn {
+  min-width: 0;
+  height: 35px;
+}
+
+.no-notif-msg {
+  text-align: center;
+}

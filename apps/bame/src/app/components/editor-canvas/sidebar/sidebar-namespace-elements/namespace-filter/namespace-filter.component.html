@@ -1,0 +1,10 @@
+<div class="container">
+  <mat-form-field>
+    <input matInput [placeholder]="'Search elements in ' + fileName" type="text" [(ngModel)]="searchedString" (keyup)="filterElements()" />
+  </mat-form-field>
+  <div class="types">
+    <div *ngFor="let type of types" class="type" [ngClass]="getClassesForType(type)" (click)="toggleSelect(type)">
+      {{ type.charAt(0).toUpperCase() }}
+    </div>
+  </div>
+</div>

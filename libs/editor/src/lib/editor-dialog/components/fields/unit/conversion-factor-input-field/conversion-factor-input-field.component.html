@@ -1,0 +1,7 @@
+<div fxLayout="column" *ngIf="metaModelElement?.conversionFactor || !metaModelElement?.isPredefined()">
+  <mat-form-field>
+    <mat-label for="conversionFactor">ConversionFactor</mat-label>
+    <input [formControl]="getControl('conversionFactor')" matInput name="conversionFactor" />
+    <mat-hint>unit:conversionFactor</mat-hint>
+  </mat-form-field>
+</div>

@@ -1,0 +1,21 @@
+.corporate-information {
+  margin-top: 32px;
+  .name-and-version {
+    margin-bottom: 32px;
+  }
+  table {
+    line-height: 21px;
+    font-size: 14px;
+    td:first-child {
+      font-weight: bold;
+      color: #525f6b;
+    }
+    td {
+      vertical-align: top;
+      padding-right: 32px;
+      padding-bottom: 32px;
+    }
+    border-spacing: 2px;
+    margin-bottom: 32px;
+  }
+}

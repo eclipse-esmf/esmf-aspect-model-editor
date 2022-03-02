@@ -1,0 +1,22 @@
+<div class="dialog-header">
+  <h3 matDialogTitle>New Aspect Namespace</h3>
+  <button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+    <em class="Bosch-Ic Bosch-Ic-abort"></em>
+  </button>
+</div>
+<div class="dialog-content">
+  Are you sure you want to change the current
+  <span *ngIf="newNamespace !== oldNamespace"
+    >namespace to <span class="bold-text">{{ newNamespace }}</span></span
+  >
+  <span *ngIf="newVersion !== oldVersion && newNamespace !== oldNamespace"> and </span>
+  <span *ngIf="newVersion !== oldVersion"
+    >version to
+    <span class="bold-text">{{ newVersion }}</span>
+  </span>
+  ?
+</div>
+<div class="dialog-actions">
+  <button mat-raised-button (click)="onSave()">Save</button>
+  <button mat-button type="button" (click)="onClose()">Cancel</button>
+</div>

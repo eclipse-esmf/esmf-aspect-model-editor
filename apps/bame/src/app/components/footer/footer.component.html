@@ -1,0 +1,12 @@
+<div class="bci-app-footer" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="20px">
+  <div class="bci-portal-footer-copyright">© Robert Bosch Manufacturing Solutions GmbH {{ config.copyrightYear }}, all rights reserved</div>
+  <div>
+    <a data-cy="corporate-info-link" (click)="onOpenCorporateInformationDialog()">Corporate information</a>
+  </div>
+  <div>
+    <a data-cy="legal-notice-link" (click)="onOpenLegalNoticeDialog()">Legal notice</a>
+  </div>
+  <div>
+    <a class="disclosure-document" routerLink="" (click)="openDisclosureDocument()">Third party licenses</a>
+  </div>
+</div>
