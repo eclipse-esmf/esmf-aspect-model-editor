@@ -350,18 +350,16 @@ stages:
           - template: templates/git-tag-release.yml@build
             parameters:
               PROJECT_VERSION: ${{ parameters.PROJECT_VERSION }}
-              SOURCE_PATH: ${{ variables.SOURCE_PATH }}
 
           - template: templates/install-gh-cli.yml@build
 
           - template: templates/gh-release-notes.yml@build
             parameters:
               PROJECT_VERSION: ${{ parameters.PROJECT_VERSION }}
-              SOURCE_PATH: ${{ variables.SOURCE_PATH }}
 
           - task: Maven@3
             displayName: Upload artifacts
-#            condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+            condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
             inputs:
               mavenPomFile: pom.xml
               mavenOptions: ${{ variables.MAVEN_CMD_OPTS }}
