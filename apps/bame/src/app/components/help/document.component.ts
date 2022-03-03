@@ -7,7 +7,7 @@ import {MatDialogRef} from '@angular/material/dialog';
   styleUrls: ['./document.component.scss'],
 })
 export class DocumentComponent {
-  BAMEDocumentationLink = 'http://docs.digital-twin.bosch-nexeed.com/bame-guide/2.9.2/introduction.html'; // NOSONAR
+  BAMEDocumentationLink = 'http://docs.digital-twin.bosch-nexeed.com/ame-guide/3.0.0/introduction.html'; // NOSONAR
   BAMMDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/index.html';
   supportMail = 'Nexeed.Helpdesk@de.bosch.com';
 
