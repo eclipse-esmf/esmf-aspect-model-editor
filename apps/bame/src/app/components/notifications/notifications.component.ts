@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { NotificationModel, NotificationsService } from '@bame/shared'
-import { NotificationType } from '../../../../../../libs/shared/src/lib/enums/notification-type.enum';
+import {Component, OnInit} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {Router} from '@angular/router';
+import {NotificationModel, NotificationsService, NotificationType} from '@bame/shared';
 
 @Component({
   selector: 'bci-notifications',
@@ -10,15 +9,16 @@ import { NotificationType } from '../../../../../../libs/shared/src/lib/enums/no
   styleUrls: ['./notifications.component.scss'],
 })
 export class NotificationsComponent implements OnInit {
-
   displayedColumns: string[] = ['expand', 'date', 'type', 'message', 'goto', 'delete'];
 
-  constructor(private dialogRef: MatDialogRef<NotificationsComponent>,
+  constructor(
+    private dialogRef: MatDialogRef<NotificationsComponent>,
     public notificationsService: NotificationsService,
-    public router: Router) { }
+    public router: Router
+  ) {}
 
   ngOnInit() {
-    this.notificationsService.getNotifications().forEach((notification) => {
+    this.notificationsService.getNotifications().forEach(notification => {
       notification.expanded = false;
     });
   }

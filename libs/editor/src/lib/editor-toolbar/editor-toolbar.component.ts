@@ -207,14 +207,14 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   uploadZip(event: any) {
-    const filePath = event?.target?.files[0]?.path;
+    const file = event?.target?.files[0];
     const fileName = event?.target?.files[0]?.name;
 
-    if (!filePath) {
+    if (!file) {
       return;
     }
 
-    this.modalWindowService.openDialogWithComponent(ZipUploaderComponent, {data: {path: filePath, name: fileName}, disableClose: true});
+    this.modalWindowService.openDialogWithComponent(ZipUploaderComponent, {data: {file, name: fileName}, disableClose: true});
     event.target.value = '';
   }
 

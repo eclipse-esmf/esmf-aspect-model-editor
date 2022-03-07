@@ -52,7 +52,11 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
 
   private filesToValidate: string[];
   private subscription = new Subscription();
+  private url: string;
 
+
+  public namespaceLoading = false;
+  public namespaceMessage = '';
   public namespaces: SelectableNamespaces;
   public validated = false;
   public validationStatus: any;
@@ -74,10 +78,20 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.namespaceLoading = true;
+    this.namespaceMessage = 'Loading namespaces...';
+
     this.modelApiService
       .getAllNamespaces()
-      .pipe(first())
+      .pipe(first(), catchError(() => of([])))
       .subscribe(namespaces => {
+        this.namespaceLoading = false;
+        if (!namespaces.length) {
+          this.namespaceMessage = 'There are no namespaces to display';
+          return;
+        }
+
+        this.namespaceMessage = '';
         this.namespaces = namespaces.reduce((acc: SelectableNamespaces, namespace: string) => {
           const parts = namespace.split(this.namespaceSplitter);
           const file = parts.pop();
@@ -154,11 +168,19 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
   }
 
   export() {
+    if (this.url) {
+      const a = document.createElement('a');
+      a.href = this.url;
+      a.download = 'package.zip';
+      a.click();
+      return;
+    }
+
     this.exported = false;
     const sub = this.modelApiService.getExportZipFile().subscribe(response => {
-      const url = URL.createObjectURL(response);
+      this.url = URL.createObjectURL(response);
       const a = document.createElement('a');
-      a.href = url;
+      a.href = this.url;
       a.download = 'package.zip';
       a.click();
       this.exported = true;

@@ -20,7 +20,7 @@ export class ZipUploaderComponent implements OnInit {
 
   public incorrectFiles: string[] = [];
   public showIncorrectFiles = false;
-  public state: State;
+  public state: State = {} as any;
   public validations = {};
   public errors: any[];
   public filesToOverwrite = null;
@@ -41,24 +41,20 @@ export class ZipUploaderComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.data.index || this.data.index === 0) {
-      this.state = this.zipImporterService.states[this.data.index];
-      return;
-    }
+    this.state.loading = true;
+    const subscription = this.zipImporterService.importZip(this.data.file).subscribe(result => {
+      this.state = {
+        ...this.state,
+        loading: false,
+        ...result,
+      } as any;
+    });
 
-    // importing zip
-    this.state = this.zipImporterService.tryImportZip(this.data.path, this.data.name);
+    this.state.subscription = subscription;
   }
 
   dismiss() {
-    const index = this.zipImporterService.states.findIndex(state => state?.path === this.state?.path);
     this.editorService.refreshSidebarNamespaces();
-    if (index < 0) {
-      this.dialogRef.close();
-      return;
-    }
-
-    this.zipImporterService.states.splice(index, 1);
     this.dialogRef.close();
   }
 

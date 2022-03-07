@@ -9,13 +9,17 @@
     <div *ngIf="!validating" class="dialog-content namespaces">
       <mat-radio-group class="namespace-list" [(ngModel)]="selectedNamespace">
         <p>Namespaces</p>
-        <mat-radio-button
-          *ngFor="let item of namespaces | keyvalue"
-          [value]="item.key"
-          (click)="showStructure(item.key)"
-          class="namespace"
-          >{{ item.key }}</mat-radio-button
-        >
+        <p *ngIf="namespaceMessage">{{ namespaceMessage }}</p>
+
+        <ng-container *ngIf="!namespaceMessage && !namespaceLoading">
+          <mat-radio-button
+            *ngFor="let item of namespaces | keyvalue"
+            [value]="item.key"
+            (click)="showStructure(item.key)"
+            class="namespace"
+            >{{ item.key }}</mat-radio-button
+          >
+        </ng-container>
       </mat-radio-group>
       <div class="namespace-structure" *ngIf="selectedNamespace">
         <p>Namespace Structure</p>
@@ -69,7 +73,7 @@
   <div class="dialog-actions">
     <button mat-button (click)="close()">Close</button>
     <button *ngIf="!validationHasErrors" (click)="export()" type="button" mat-raised-button data-cy="export-button">
-      <span>Export</span>
+      <span>Export {{ exported ? 'Again' : '' }}</span>
     </button>
   </div>
 </ng-container>

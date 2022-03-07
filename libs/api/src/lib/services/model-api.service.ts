@@ -69,8 +69,11 @@ export class ModelApiService {
     );
   }
 
-  uploadZip(zipPath: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/validate-import-zip?zipFilePath=${encodeURIComponent(zipPath)}`, null);
+  uploadZip(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('zipFile', file);
+
+    return this.http.post(`${this.baseUrl}/validate-import-zip`, formData);
   }
 
   replaceFiles(files: string[]): Observable<any> {
