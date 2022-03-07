@@ -1,12 +1,12 @@
 /*
- *  Copyright (C) 2018 Robert Bosch Manufacturing Solutions GmbH, Germany. All rights reserved.
+ *  Copyright (C) 2022 Robert Bosch Manufacturing Solutions GmbH, Germany. All rights reserved.
  */
-import { createWriteStream } from "fs";
+import {createWriteStream} from "fs";
 
 const targetPath = `./apps/bame/src/assets/imprint-details.json`;
 const template = ` {
   "name": "Aspect Model Editor",
-  "version": "${process.env.bameVersion} (based on BAMM 1.0.0)",
+  "version": "${process.env.ameVersion} (based on BAMM 1.0.0)",
   "contactAtBosch": "Nexeed Helpdesk",
   "contactMail": "Nexeed.Helpdesk@de.bosch.com",
   "address": {

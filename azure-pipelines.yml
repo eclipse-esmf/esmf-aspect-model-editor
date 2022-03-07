@@ -276,11 +276,9 @@ stages:
             displayName: Install all dependencies
             continueOnError: false
 
-          - script: npm version ${{ parameters.PROJECT_VERSION }}
-            displayName: Bump version
-            condition: eq(variables.IS_SNAPSHOT, 'false')
-
-          - script: npm run update-imprint
+          - script: |
+              npm run version:set
+              ameVersion=${{ parameters.PROJECT_VERSION }} npm run update-imprint
             displayName: Build project for production
             continueOnError: false
 
