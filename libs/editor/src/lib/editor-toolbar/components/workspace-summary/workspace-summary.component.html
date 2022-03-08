@@ -1,15 +1,10 @@
 <div class="dialog-content overwrite-namespace" *ngIf="hasFilesToOverwrite">
   <div *ngFor="let entry of filesToOverwrite | keyvalue" class="namespace">
     <span class="namespace-name">{{ entry.key }}</span>
-    <div class="file" *ngFor="let file of entry.value">
-      <span class="file-name">{{ file }}</span>
-      <div class="acceptance">
-        <mat-button-toggle-group value="replace">
-          <mat-button-toggle value="keep" (click)="keepFile(entry.key, file)">Keep old file</mat-button-toggle>
-          <mat-button-toggle value="replace" (click)="replaceFile(entry.key, file)">Replace</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-    </div>
+    <mat-button-toggle-group value="replace">
+      <mat-button-toggle value="keep" (click)="keepNamespace(entry.key)">Keep</mat-button-toggle>
+      <mat-button-toggle value="replace" (click)="replaceNamespace(entry.key)">Replace</mat-button-toggle>
+    </mat-button-toggle-group>
   </div>
 </div>
 

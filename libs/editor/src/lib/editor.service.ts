@@ -256,7 +256,7 @@ export class EditorService {
     );
   }
 
-  private loadExternalModels(rdfModel: RdfModel) {
+  public loadExternalModels(rdfModel: RdfModel) {
     this.rdfService.externalRdfModels = [];
     return this.modelApiService.getAllNamespacesFilesContent(rdfModel).pipe(
       mergeMap((fileContentModels: Array<FileContentModel>) => {
@@ -266,6 +266,21 @@ export class EditorService {
         return of([]);
       })
     );
+  }
+
+  public addAspectModelFileIntoStore(aspectModelFileName: string): Observable<string> {
+    return this.modelApiService
+      .getAspectMetaModel(aspectModelFileName)
+      .pipe(
+        tap(aspectModel => this.rdfService.loadExternalReferenceModelIntoStore(new FileContentModel(aspectModelFileName, aspectModel)))
+      );
+  }
+
+  public removeAspectModelFileFromStore(aspectModelFileName: string) {
+    const index = this.rdfService.externalRdfModels.findIndex(
+      extRdfModel => extRdfModel.getAbsoluteAspectModelFileName() === aspectModelFileName
+    );
+    this.rdfService.externalRdfModels.splice(index, 1);
   }
 
   private loadCurrentModel(rdfModel: RdfModel, rdfAspectModel: string, validationResOfLoadedRdfModel: any) {

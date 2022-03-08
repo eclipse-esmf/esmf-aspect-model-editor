@@ -16,7 +16,10 @@ enum VisibleStep {
 })
 export class WorkspaceSummaryComponent {
   @Input() summary;
-  @Output() filesToReplace = new EventEmitter<string[]>();
+  @Output() namespacesToImport = new EventEmitter<string[]>();
+  @Output() hasNamespacesToOverwrite = new EventEmitter<boolean>();
+  @Output() replace = new EventEmitter();
+  @Output() keep = new EventEmitter();
 
   public readonly icons = {
     violation: 'Bosch-Ic-notification-error',
@@ -38,6 +41,8 @@ export class WorkspaceSummaryComponent {
   get namespaces() {
     if (!Object.keys(this.validations).length) {
       this.incorrectFiles = this.summary?.incorrectFiles || [];
+      const replaceNamespacesSet = new Set<string>();
+      const keepNamespacesSet = new Set<string>();
 
       this.summary?.correctFiles.forEach(value => {
         const pieces = value.aspectModelFileName.split(':');
@@ -45,7 +50,7 @@ export class WorkspaceSummaryComponent {
         const namespace = pieces.join(':');
 
         if (value.fileAlreadyDefined) {
-          this.selectedFilesToReplace.push(value.aspectModelFileName);
+          replaceNamespacesSet.add(namespace);
           this.hasFilesToOverwrite ||= value.fileAlreadyDefined;
 
           if (this.filesToOverwrite[namespace]) {
@@ -54,7 +59,7 @@ export class WorkspaceSummaryComponent {
             this.filesToOverwrite[namespace] = [file];
           }
         } else {
-          this.filesForWorkspace.push(value.aspectModelFileName);
+          keepNamespacesSet.add(namespace);
         }
 
         if (!this.validations[namespace]) {
@@ -70,21 +75,24 @@ export class WorkspaceSummaryComponent {
 
         this.validations[namespace].push({file, errors});
       });
-      this.filesToReplace.emit([...this.filesForWorkspace, ...this.selectedFilesToReplace]);
+
+      this.selectedFilesToReplace = Array.from<string>(replaceNamespacesSet);
+      this.filesForWorkspace = Array.from(new Set([...this.selectedFilesToReplace, ...Array.from(keepNamespacesSet)]));
+
+      this.namespacesToImport.emit(this.filesForWorkspace);
+      this.hasNamespacesToOverwrite.emit(this.hasFilesToOverwrite);
     }
     return this.validations;
   }
 
   constructor(private notificationService: NotificationsService) {}
 
-  replaceFile(namespace: string, file: string) {
-    this.selectedFilesToReplace = [...this.selectedFilesToReplace, `${namespace}:${file}`];
-    this.filesToReplace.emit(this.selectedFilesToReplace);
+  replaceNamespace(namespace: string) {
+    this.replace.emit(namespace);
   }
 
-  keepFile(namespace: string, file: string) {
-    this.selectedFilesToReplace = this.selectedFilesToReplace.filter(entry => entry !== `${namespace}:${file}`);
-    this.filesToReplace.emit(this.selectedFilesToReplace);
+  keepNamespace(namespace: string) {
+    this.keep.emit(namespace);
   }
 
   async copySummaryToClipboard() {

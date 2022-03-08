@@ -1,19 +1,30 @@
 <div class="content-container">
-  <div class="dialog-header" *ngIf="!hasFilesToReplace">
-    <h4 *ngIf="state?.loading" matDialogTitle class="properties-title">Importing {{ data.name }}</h4>
-    <h4 *ngIf="!state?.loading" matDialogTitle class="properties-title">Import result summary for {{ data.name }}</h4>
+  <div class="dialog-header" *ngIf="!imported && !hasFilesToReplace">
+    <h4 *ngIf="state?.loading" matDialogTitle class="properties-title">Validating {{ data.name }}</h4>
+    <h4 *ngIf="!state?.loading" matDialogTitle class="properties-title">Validation result summary for {{ data.name }}</h4>
     <p *ngIf="!state?.loading && (hasError$ | async) === false">
-      The Aspect Model Package {{ data.name }} has been imported as a namespace and is now included in your workspace.
+      The Aspect Model Package {{ data.name }} has been validated and can be imported.
     </p>
   </div>
 
-  <div class="dialog-header" *ngIf="hasFilesToReplace">
-    <h4 matDialogTitle class="properties-title">Files conflict</h4>
-    <p>The following files already exists. Please choose either to replace it to the newer file keep the old one</p>
+  <div class="dialog-header" *ngIf="!imported && hasFilesToReplace">
+    <h4 matDialogTitle class="properties-title">Namespace conflict</h4>
+    <p>The following namespace already exists. Please choose either to replace it or keep the old one</p>
+  </div>
+
+  <div class="dialog-header" *ngIf="imported">
+    <h4 matDialogTitle class="properties-title">Import result summary for {{ data.name }}</h4>
+    <p>The Aspect Model Package {{ data.name }} has been imported as a namespace and is now included in your workspace.</p>
   </div>
 
   <ng-container *ngIf="(hasError$ | async) === false && !state?.loading">
-    <bci-workspace-summary [summary]="state.rawResponse" (filesToReplace)="filesToOverwrite = $event"></bci-workspace-summary>
+    <bci-workspace-summary
+      [summary]="state.rawResponse"
+      (replace)="replaceNamespace($event)"
+      (keep)="keepNamespace($event)"
+      (namespacesToImport)="namespacesToReplace = $event"
+      (hasNamespacesToOverwrite)="hasFilesToReplace = $event"
+    ></bci-workspace-summary>
   </ng-container>
 
   <div class="dialog-content loading-container" *ngIf="(hasError$ | async) === false && state?.loading">
@@ -28,7 +39,7 @@
 </div>
 
 <div class="dialog-actions">
-  <button mat-button *ngIf="!state?.loading || state?.loaded" (click)="dismiss()">Dismiss</button>
-  <button mat-button *ngIf="state?.loading || !state?.loaded" (click)="cancel()">Cancel</button>
-  <button mat-raised-button *ngIf="hasFilesToReplace" [disabled]="replacingFiles" (click)="replace()">Continue</button>
+  <button mat-button *ngIf="imported" (click)="dismiss()">Dismiss</button>
+  <button mat-button *ngIf="!imported" [disabled]="replacingFiles" (click)="cancel()">Cancel</button>
+  <button mat-raised-button *ngIf="namespacesToReplace?.length" [disabled]="replacingFiles" (click)="replace()">Import</button>
 </div>

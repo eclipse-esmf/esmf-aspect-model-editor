@@ -1,9 +1,11 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {EditorService} from '@bame/editor';
-import {catchError, first, of} from 'rxjs';
+import {catchError, of} from 'rxjs';
 import {WorkspaceSummaryComponent} from '../workspace-summary/workspace-summary.component';
 import {State, ZipUploaderService} from './zip-uploader.service';
+import {RdfService} from '@bame/rdf/services';
+import {NotificationsService} from '@bame/shared';
 
 @Component({
   selector: 'bci-zip-uploader',
@@ -23,11 +25,10 @@ export class ZipUploaderComponent implements OnInit {
   public state: State = {} as any;
   public validations = {};
   public errors: any[];
-  public filesToOverwrite = null;
+  public namespacesToReplace: string[] = null;
   public replacingFiles = false;
-  public get hasFilesToReplace() {
-    return Array.isArray(this.filesToOverwrite);
-  }
+  public hasFilesToReplace = false;
+  public imported = false;
 
   get hasError$() {
     return this.zipImporterService.hasError$;
@@ -37,6 +38,8 @@ export class ZipUploaderComponent implements OnInit {
     private dialogRef: MatDialogRef<ZipUploaderComponent>,
     private zipImporterService: ZipUploaderService,
     private editorService: EditorService,
+    private rdfService: RdfService,
+    private notificationsService: NotificationsService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -46,6 +49,7 @@ export class ZipUploaderComponent implements OnInit {
       this.state = {
         ...this.state,
         loading: false,
+        loaded: true,
         ...result,
       } as any;
     });
@@ -59,36 +63,44 @@ export class ZipUploaderComponent implements OnInit {
   }
 
   cancel() {
+    this.editorService.refreshSidebarNamespaces();
     this.state.subscription?.unsubscribe();
     this.dismiss();
   }
 
-  minimize() {
-    this.dialogRef.close();
+  replaceNamespace(namespace: string) {
+    this.namespacesToReplace?.push(namespace);
+  }
+
+  keepNamespace(namespace: string) {
+    this.namespacesToReplace = this.namespacesToReplace?.filter(n => namespace !== n);
   }
 
   replace() {
-    if (!this.filesToOverwrite?.length) {
+    if (!this.namespacesToReplace?.length) {
       this.summaryComponent.hasFilesToOverwrite = false;
-      this.filesToOverwrite = null;
+      this.namespacesToReplace = null;
       return;
     }
+
+    const files = this.state.rawResponse.correctFiles.map(file => file.aspectModelFileName);
+    const toOverwrite = this.namespacesToReplace.reduce((acc: string[], namespace: string) => {
+      return [...acc, ...files.filter((file: string) => file.startsWith(namespace))];
+    }, []);
 
     this.replacingFiles = true;
+    this.imported = false;
     this.zipImporterService
-      .replaceFiles(this.filesToOverwrite)
+      .replaceFiles(toOverwrite)
       .pipe(catchError(() => of()))
       .subscribe(() => {
-        this.filesToOverwrite = null;
+        this.imported = true;
+        this.hasFilesToReplace = false;
+        this.namespacesToReplace = null;
         this.replacingFiles = false;
+        this.notificationsService.success(`Package ${this.data.name} was imported`);
         this.summaryComponent.hasFilesToOverwrite = false;
+        toOverwrite.forEach(file => this.editorService.addAspectModelFileIntoStore(file).subscribe());
       });
-  }
-
-  pushFilesToWorkspace(files: string[]) {
-    if (!files.length) {
-      return;
-    }
-    this.zipImporterService.replaceFiles(files).pipe(first()).subscribe();
   }
 }

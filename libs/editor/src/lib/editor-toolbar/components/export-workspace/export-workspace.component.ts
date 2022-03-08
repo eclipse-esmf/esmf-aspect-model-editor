@@ -6,11 +6,7 @@ import {ModelApiService} from '@bame/api';
 import {catchError, first, of, Subscription} from 'rxjs';
 
 interface SelectableNamespaces {
-  [namespace: string]: SelectableNamespace;
-}
-
-interface SelectableNamespace {
-  [version: string]: string[];
+  [namespace: string]: string[];
 }
 
 interface FlatNode {
@@ -54,7 +50,6 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private url: string;
 
-
   public namespaceLoading = false;
   public namespaceMessage = '';
   public namespaces: SelectableNamespaces;
@@ -83,7 +78,10 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
 
     this.modelApiService
       .getAllNamespaces()
-      .pipe(first(), catchError(() => of([])))
+      .pipe(
+        first(),
+        catchError(() => of([]))
+      )
       .subscribe(namespaces => {
         this.namespaceLoading = false;
         if (!namespaces.length) {
@@ -95,20 +93,19 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
         this.namespaces = namespaces.reduce((acc: SelectableNamespaces, namespace: string) => {
           const parts = namespace.split(this.namespaceSplitter);
           const file = parts.pop();
-          const version = parts.pop();
           const namespaceName = parts.join(this.namespaceSplitter);
 
           if (!acc[namespaceName]) {
-            acc[namespaceName] = {[version]: [file]};
+            acc[namespaceName] = [file];
             return acc;
           }
 
-          if (!acc[namespaceName][version]) {
-            acc[namespaceName][version] = [file];
+          if (!acc[namespaceName]) {
+            acc[namespaceName] = [file];
             return acc;
           }
 
-          acc[namespaceName][version].push(file);
+          acc[namespaceName].push(file);
           return acc;
         }, {} as SelectableNamespaces);
       });
@@ -120,8 +117,8 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
 
   showStructure(namespace: string) {
     this.structure.namespace = namespace;
-    this.structure.dataSource.data = Object.entries(this.namespaces[namespace]).map(([version, files]) => {
-      return {name: version, children: files.map(file => ({name: file}))};
+    this.structure.dataSource.data = this.namespaces[namespace].map(file => {
+      return {name: file};
     });
     this.treeControl.expandAll();
   }
@@ -134,9 +131,7 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.filesToValidate = Object.entries(versions).reduce((acc, [version, files]) => {
-      return [...acc, ...files.map(file => `${this.selectedNamespace}:${version}:${file}`)];
-    }, []);
+    this.filesToValidate = versions.map(file => `${this.selectedNamespace}:${file}`);
 
     this.validating = true;
     this.error = null;

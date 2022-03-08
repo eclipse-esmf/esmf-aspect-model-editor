@@ -1,13 +1,21 @@
-import {Base, BaseMetaModelElement, DefaultEntityValue, DefaultEnumeration, EntityValueProperty} from '@bame/meta-model';
+import {Base, BaseMetaModelElement, DefaultAspect, DefaultEntityValue, DefaultEnumeration, EntityValueProperty} from '@bame/meta-model';
 import {mxgraph} from 'mxgraph-factory';
 import {NamespacesCacheService} from '@bame/cache';
 import {MxGraphHelper} from '@bame/mx-graph';
 import {ModelService} from '@bame/rdf/services';
+import {EditorService} from '@bame/editor';
+import {ModelApiService} from '@bame/api';
+import {map} from 'rxjs';
 
 export abstract class BaseModelService {
   abstract isApplicable(metaModelElement: BaseMetaModelElement): boolean;
 
-  constructor(protected namespacesCacheService: NamespacesCacheService, protected modelService: ModelService) {}
+  constructor(
+    protected namespacesCacheService: NamespacesCacheService,
+    protected modelService: ModelService,
+    protected editorService?: EditorService,
+    protected modelApiService?: ModelApiService
+  ) {}
 
   get currentCachedFile() {
     return this.namespacesCacheService.getCurrentCachedFile();
@@ -18,10 +26,26 @@ export abstract class BaseModelService {
     // Add common operations
 
     // update name
+    const aspect = Object.assign({}, this.modelService.getLoadedAspectModel().aspect);
     const aspectModelUrn = this.modelService.getLoadedAspectModel().rdfModel.getAspectModelUrn();
     this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${metaModelElement.name}`, `${aspectModelUrn}${form.name}`);
     metaModelElement.name = form.name;
     metaModelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
+
+    if (metaModelElement instanceof DefaultAspect && aspect.aspectModelUrn !== metaModelElement.aspectModelUrn) {
+      const aspectModelFileName = aspect.aspectModelUrn.replace('urn:bamm:', '').replace('#', ':') + '.ttl';
+
+      this.modelApiService
+        .getAllNamespaces()
+        .pipe(
+          map((fileNames: string[]) => {
+            if (fileNames.find(fileName => fileName === aspectModelFileName)) {
+              this.editorService.addAspectModelFileIntoStore(aspectModelFileName).subscribe();
+            }
+          })
+        )
+        .subscribe();
+    }
 
     // update descriptions (multiple locales)
     this.updateDescriptionWithLocales(metaModelElement, form);

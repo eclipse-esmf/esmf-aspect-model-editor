@@ -49,7 +49,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     private loadingScreenService: LoadingScreenService,
     private notificationsService: NotificationsService,
     private elementRef: ElementRef
-  ) { }
+  ) {}
 
   @HostListener('mouseenter')
   public hoverDefaultView() {
@@ -98,7 +98,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     this.refreshNamespacesSubscription = this.editorService.onRefreshNamespaces.subscribe(() => {
       this.namespaces = [];
       this.initNamespaces();
-    })
+    });
   }
 
   public ngOnDestroy() {
@@ -118,21 +118,26 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     }
   }
 
-  public deleteNamespace(namespace: string) {
+  public deleteNamespace(aspectModelFileName: string) {
+    const aspectModelName = aspectModelFileName.split(':')[2].replace('.ttl', '');
     this.confirmDialogService
       .open({
-        phrases: [`Are you sure you want to delete ${namespace}?`, 'Deleting the namespace cannot be undone.'],
-        title: 'Delete Namespace',
+        phrases: [
+          `Are you sure you want to delete the Aspect Model "${aspectModelName}" from its namespace?`,
+          'This action cannot be undone.',
+        ],
+        title: 'Delete Aspect Model',
       })
       .subscribe(confirmed => {
         if (confirmed) {
-          this.modelApiService.deleteNamespace(namespace).subscribe(() => {
+          this.modelApiService.deleteNamespace(aspectModelFileName).subscribe(() => {
             this.namespaces = [];
             this.initNamespaces();
           });
           this.selectedNamespace = null;
           this.selectedNamespaceElements = null;
           this.sidebarNamespaces?.clearSelections();
+          this.editorService.removeAspectModelFileFromStore(aspectModelFileName);
         }
       });
   }
@@ -153,24 +158,30 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
   }
 
   public loadNamespaceFile(namespaceFileName: string) {
-    this.modelApiService.loadAspectModelByUrn(namespaceFileName).pipe(first()).subscribe((aspectModel: string) => {
-      const loadingScreenOptions: LoadingScreenOptions = { title: "Loading Aspect Model", closeable: true };
-      this.loadingScreenService.show(loadingScreenOptions);
-      this.editorService.loadNewAspectModel(aspectModel).pipe(
-        first(),
-        catchError(error =>
-          of(
-            this.notificationsService.error(
-              'Error when loading Aspect Model. Reverting to previous Aspect Model',
-              `${error}`,
-              null,
-              5000
-            )
+    this.modelApiService
+      .loadAspectModelByUrn(namespaceFileName)
+      .pipe(first())
+      .subscribe((aspectModel: string) => {
+        const loadingScreenOptions: LoadingScreenOptions = {title: 'Loading Aspect Model', closeable: true};
+        this.loadingScreenService.show(loadingScreenOptions);
+        this.editorService
+          .loadNewAspectModel(aspectModel)
+          .pipe(
+            first(),
+            catchError(error =>
+              of(
+                this.notificationsService.error(
+                  'Error when loading Aspect Model. Reverting to previous Aspect Model',
+                  `${error}`,
+                  null,
+                  5000
+                )
+              )
+            ),
+            finalize(() => this.loadingScreenService.close())
           )
-        ),
-        finalize(() => this.loadingScreenService.close())
-      ).subscribe();
-    });
+          .subscribe();
+      });
   }
 
   public close() {

@@ -7,17 +7,21 @@ import {mxgraph} from 'mxgraph-factory';
 import {AspectRenderService, MxGraphHelper} from '@bame/mx-graph';
 import {Title} from '@angular/platform-browser';
 import {NotificationsService} from '@bame/shared';
+import {EditorService} from '@bame/editor';
+import {ModelApiService} from '@bame/api';
 
 @Injectable({providedIn: 'root'})
 export class AspectModelService extends BaseModelService {
   constructor(
     namespacesCacheService: NamespacesCacheService,
     modelService: ModelService,
+    editorService: EditorService,
+    modelApiService: ModelApiService,
     private notificationsService: NotificationsService,
     private aspectRenderer: AspectRenderService,
     private titleService: Title
   ) {
-    super(namespacesCacheService, modelService);
+    super(namespacesCacheService, modelService, editorService, modelApiService);
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {
