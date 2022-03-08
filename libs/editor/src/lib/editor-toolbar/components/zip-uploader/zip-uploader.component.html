@@ -9,12 +9,12 @@
 
   <div class="dialog-header" *ngIf="!imported && hasFilesToReplace">
     <h4 matDialogTitle class="properties-title">Namespace conflict</h4>
-    <p>The following namespace already exists. Please choose either to replace it or keep the old one</p>
+    <p>The following namespace(s) already exist. Please choose whether you want to keep the existing or replace.</p>
   </div>
 
   <div class="dialog-header" *ngIf="imported">
     <h4 matDialogTitle class="properties-title">Import result summary for {{ data.name }}</h4>
-    <p>The Aspect Model Package {{ data.name }} has been imported as a namespace and is now included in your workspace.</p>
+    <p>The Aspect Model Package {{ data.name }} has been imported. All contained namespaces are now included in your workspace.</p>
   </div>
 
   <ng-container *ngIf="(hasError$ | async) === false && !state?.loading">

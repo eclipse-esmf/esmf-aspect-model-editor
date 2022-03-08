@@ -61,7 +61,7 @@
   <div class="content-container">
     <div class="content-container">
       <div class="dialog-header">
-        <h4>Export workspace</h4>
+        <h4>Export namespace</h4>
         <p *ngIf="!validationHasErrors">The package you have created can be exported with all of its Aspect Models.</p>
         <p *ngIf="validationHasErrors">
           The package you have created can not be exported due to Aspect Model having errors. Please fix them and retry
@@ -73,7 +73,7 @@
   <div class="dialog-actions">
     <button mat-button (click)="close()">Close</button>
     <button *ngIf="!validationHasErrors" (click)="export()" type="button" mat-raised-button data-cy="export-button">
-      <span>Export {{ exported ? 'Again' : '' }}</span>
+      <span>Export</span>
     </button>
   </div>
 </ng-container>

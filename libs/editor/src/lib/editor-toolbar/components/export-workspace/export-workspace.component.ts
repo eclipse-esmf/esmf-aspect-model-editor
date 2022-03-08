@@ -1,6 +1,6 @@
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {ModelApiService} from '@bame/api';
 import {catchError, first, of, Subscription} from 'rxjs';
@@ -57,7 +57,6 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
   public validationStatus: any;
   public validating = false;
   public error: any = null;
-  public exported = false;
   public validationHasErrors = false;
 
   public selectedNamespace: string;
@@ -171,14 +170,13 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.exported = false;
     const sub = this.modelApiService.getExportZipFile().subscribe(response => {
       this.url = URL.createObjectURL(response);
       const a = document.createElement('a');
       a.href = this.url;
       a.download = 'package.zip';
       a.click();
-      this.exported = true;
+      this.dialogRef.close();
     });
 
     this.subscription.add(sub);
