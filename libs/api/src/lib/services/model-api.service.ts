@@ -6,16 +6,15 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, map, mergeMap, tap, timeout} from 'rxjs/operators';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {CORE_CONFIG} from '@bci-web-core/core';
-import {ElectronService} from 'ngx-electron';
 import {
-  LogService,
-  BrowserService,
   AppConfig,
-  HttpHeaderBuilder,
+  BrowserService,
   FileContentModel,
+  HttpHeaderBuilder,
+  LogService,
+  ProcessingError,
   SemanticError,
   SyntacticError,
-  ProcessingError,
 } from '@bame/shared';
 import {ModelValidatorService} from './model-validator.service';
 import {RdfModel} from '@bame/rdf/utils';
@@ -29,7 +28,6 @@ export class ModelApiService {
 
   constructor(
     private http: HttpClient,
-    private electronService: ElectronService,
     private loggerService: LogService,
     private browserService: BrowserService,
     private modelValidatorService: ModelValidatorService,
@@ -221,12 +219,12 @@ export class ModelApiService {
             return;
           }
 
-          const fs = this.electronService.remote.require('fs');
-          const os = this.electronService.remote.require('os');
-          const path = this.electronService.remote.require('path');
+          const fs = window.require('fs');
+          const os = window.require('os');
+          const path = window.require('path');
           const bameTmpDir = path.join(os.homedir(), '.bametmp');
           const printFilePath = path.normalize(path.join(bameTmpDir, 'print.html'));
-          const BrowserWindow = this.electronService.remote.BrowserWindow;
+          const BrowserWindow = window.require('@electron/remote').BrowserWindow;
           const electronBrowserWindow = new BrowserWindow({
             width: 1920,
             height: 1080,

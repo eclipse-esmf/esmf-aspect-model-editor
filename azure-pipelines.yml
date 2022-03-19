@@ -90,20 +90,21 @@ stages:
               echo "proxy=http://127.0.0.1:3128/" >> $(Build.SourcesDirectory)/.npmrc
               echo "https-proxy=http://127.0.0.1:3128/" >> $(Build.SourcesDirectory)/.npmrc
 
-              echo "ELECTRON_CUSTOM_DIR=v10.1.3" >> $(Build.SourcesDirectory)/.npmrc
+              echo "ELECTRON_CUSTOM_DIR=v15.4.0" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron/" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_BUILDER_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron-builder/" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_BUILDER_BINARIES_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron-builder-binaries/" >> $(Build.SourcesDirectory)/.npmrc
 
-              authInfo=$(curl -u $(ArtifactoryServerUser):$(ArtifactoryServerApiKey) https://rb-artifactory.bosch.com/artifactory/api/npm/auth)
+              authInfo=$(curl -u $(ArtifactoryServerUser):$(ArtifactoryServerApiKey) https://artifactory.boschdevcloud.com/artifactory/api/npm/auth)
 
-              echo "registry=https://rb-artifactory.bosch.com/artifactory/api/npm/bci-npm-virtual/" >> $(Build.SourcesDirectory)/.npmrc
+              echo "registry=https://artifactory.boschdevcloud.com/artifactory/api/npm/lab000003-bci-npm-virtual/" >> $(Build.SourcesDirectory)/.npmrc
               echo "${authInfo}" >> $(Build.SourcesDirectory)/.npmrc
             displayName: Set node environements
 
-          - script: npm install
-            displayName: Install all dependencies
-            continueOnError: false
+          - task: Npm@1
+            inputs:
+              command: 'install'
+              customEndpoint: 'Artifactory bci-npm-virtual DevCloud-Nx_Base'
 
           - script: npm run lint
             displayName: Run linting
@@ -164,20 +165,22 @@ stages:
               echo "proxy=http://127.0.0.1:3128/" >> $(Build.SourcesDirectory)/.npmrc
               echo "https-proxy=http://127.0.0.1:3128/" >> $(Build.SourcesDirectory)/.npmrc
 
-              echo "ELECTRON_CUSTOM_DIR=v10.1.3" >> $(Build.SourcesDirectory)/.npmrc
+              echo "ELECTRON_CUSTOM_DIR=v15.4.0" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron/" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_BUILDER_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron-builder/" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_BUILDER_BINARIES_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron-builder-binaries/" >> $(Build.SourcesDirectory)/.npmrc
 
-              authInfo=$(curl -u $(ArtifactoryServerUser):$(ArtifactoryServerApiKey) https://rb-artifactory.bosch.com/artifactory/api/npm/auth)
+              authInfo=$(curl -u $(ArtifactoryServerUser):$(ArtifactoryServerApiKey) https://artifactory.boschdevcloud.com/artifactory/api/npm/auth)
 
-              echo "registry=https://rb-artifactory.bosch.com/artifactory/api/npm/bci-npm-virtual/" >> $(Build.SourcesDirectory)/.npmrc
+              echo "registry=https://artifactory.boschdevcloud.com/artifactory/api/npm/lab000003-bci-npm-virtual/" >> $(Build.SourcesDirectory)/.npmrc
               echo "${authInfo}" >> $(Build.SourcesDirectory)/.npmrc
             displayName: Set node environements
 
-          - script: npm install --production --ignore-scripts
-            displayName: Install prod dependencies
-            continueOnError: false
+          - task: Npm@1
+            inputs:
+              command: 'install'
+              customEndpoint: 'Artifactory bci-npm-virtual DevCloud-Nx_Base'
+              arguments: '--production --ignore-scripts'
 
           - task: WhiteSourceTsTask@1
             displayName: Run Whitesource scan
@@ -261,14 +264,14 @@ stages:
               echo "proxy=http://127.0.0.1:3128/" >> $(Build.SourcesDirectory)/.npmrc
               echo "https-proxy=http://127.0.0.1:3128/" >> $(Build.SourcesDirectory)/.npmrc
 
-              echo "ELECTRON_CUSTOM_DIR=v10.1.3" >> $(Build.SourcesDirectory)/.npmrc
+              echo "ELECTRON_CUSTOM_DIR=v15.4.0" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron/" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_BUILDER_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron-builder/" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_BUILDER_BINARIES_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron-builder-binaries/" >> $(Build.SourcesDirectory)/.npmrc
 
-              authInfo=$(curl -u $(ArtifactoryServerUser):$(ArtifactoryServerApiKey) https://rb-artifactory.bosch.com/artifactory/api/npm/auth)
+              authInfo=$(curl -u $(ArtifactoryServerUser):$(ArtifactoryServerApiKey) https://artifactory.boschdevcloud.com/artifactory/api/npm/auth)
 
-              echo "registry=https://rb-artifactory.bosch.com/artifactory/api/npm/bci-npm-virtual/" >> $(Build.SourcesDirectory)/.npmrc
+              echo "registry=https://artifactory.boschdevcloud.com/artifactory/api/npm/lab000003-bci-npm-virtual/" >> $(Build.SourcesDirectory)/.npmrc
               echo "${authInfo}" >> $(Build.SourcesDirectory)/.npmrc
             displayName: Set node environements
 
@@ -302,14 +305,14 @@ stages:
               echo "proxy=http://127.0.0.1:3128/" >> $(Build.SourcesDirectory)/.npmrc
               echo "https-proxy=http://127.0.0.1:3128/" >> $(Build.SourcesDirectory)/.npmrc
 
-              echo "ELECTRON_CUSTOM_DIR=v10.1.3" >> $(Build.SourcesDirectory)/.npmrc
+              echo "ELECTRON_CUSTOM_DIR=v15.4.0" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron/v" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_BUILDER_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron-builder/" >> $(Build.SourcesDirectory)/.npmrc
               echo "ELECTRON_BUILDER_BINARIES_MIRROR=https://bci-dev.de.bosch.com/artifacts/sw/electron-builder-binaries/" >> $(Build.SourcesDirectory)/.npmrc
 
-              authInfo=$(curl -u $(ArtifactoryServerUser):$(ArtifactoryServerApiKey) https://rb-artifactory.bosch.com/artifactory/api/npm/auth)
+              authInfo=$(curl -u $(ArtifactoryServerUser):$(ArtifactoryServerApiKey) https://artifactory.boschdevcloud.com/artifactory/api/npm/auth)
 
-              echo "registry=https://rb-artifactory.bosch.com/artifactory/api/npm/bci-npm-virtual/" >> $(Build.SourcesDirectory)/.npmrc
+              echo "registry=https://artifactory.boschdevcloud.com/artifactory/api/npm/lab000003-bci-npm-virtual/" >> $(Build.SourcesDirectory)/.npmrc
               echo "${authInfo}" >> $(Build.SourcesDirectory)/.npmrc
             displayName: Set node environements
 

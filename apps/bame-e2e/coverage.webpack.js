@@ -6,7 +6,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|ts)$/,
-        loader: 'istanbul-instrumenter-loader',
+        loader: 'coverage-istanbul-loader',
         options: {esModules: true},
         enforce: 'post',
         include: [

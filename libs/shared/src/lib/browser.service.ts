@@ -3,14 +3,21 @@
  */
 
 import {Injectable} from '@angular/core';
-import isElectron from 'is-electron';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BrowserService {
   isStartedAsElectronApp() {
-    return isElectron();
+    if (typeof window !== 'undefined' && typeof window.process === 'object' && (<any>window.process).type === 'renderer') {
+      return true;
+    }
+
+    if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
+      return true;
+    }
+
+    return typeof navigator === 'object' && navigator.userAgent.indexOf('Electron') >= 0;
   }
 
   getAssetBasePath(): string {

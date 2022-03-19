@@ -55,7 +55,6 @@
           "builder": "@angular-devkit/build-angular:browser",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "showCircularDependencies": false,
             "outputPath": "dist/apps/bame",
             "index": "apps/bame/src/index.html",
             "main": "apps/bame/src/main.ts",
@@ -162,7 +161,7 @@
       "projectType": "application",
       "architect": {
         "e2e": {
-          "builder": "@briebug/cypress-schematic:cypress",
+          "builder": "@cypress/schematic:cypress",
           "options": {
             "devServerTarget": "bame:serve-coverage",
             "tsConfig": "apps/bame-e2e/tsconfig.json",
@@ -404,10 +403,6 @@
       }
     }
   },
-  "cli": {
-    "defaultCollection": "@nrwl/angular",
-    "packageManager": "npm"
-  },
   "schematics": {
     "@nrwl/angular": {
       "application": {
@@ -434,6 +429,5 @@
     "@nrwl/angular:component": {
       "style": "scss"
     }
-  },
-  "defaultProject": "bame"
+  }
 }

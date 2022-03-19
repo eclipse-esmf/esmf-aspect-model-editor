@@ -129,7 +129,7 @@ export class EditorDialogValidators {
     try {
       new RegExp(control.value);
       return null;
-    } catch (e) {
+    } catch (e: any) {
       const splitMessage = e?.message?.split(':');
       return {
         regexValidator: {

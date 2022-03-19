@@ -10,7 +10,6 @@ import {AppComponent} from './app.component';
 import {EditorCanvasModule} from './components/editor-canvas/editor-canvas.module';
 import {CommonModule} from '@angular/common';
 import {HelpModule} from './components/help/help.module';
-import {NgxElectronModule} from 'ngx-electron';
 import {MxGraphModule} from '@bame/mx-graph';
 import {DomainModelToRdfModule} from '@bame/aspect-exporter';
 import {SettingDialogModule} from '@bame/settings-dialog';
@@ -33,11 +32,10 @@ import {NotificationsModule} from './components/notifications/notifications.modu
     EditorCanvasModule,
     SettingDialogModule,
     HelpModule,
-    NgxElectronModule,
     DomainModelToRdfModule,
     MxGraphModule,
     NotificationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
   ],
   providers: [LogService],
   bootstrap: [AppComponent],

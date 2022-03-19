@@ -11,13 +11,21 @@ describe('Auto Validate', () => {
   });
 
   it('should set timer to 2 seconds', () => {
-    cy.get(SettingsDialogSelectors.autoValidateInput).clear().type('2').blur();
-    cy.wait(2000).then(() => cy.get(SNACK_BAR).should('exist'));
+    cy.get(SettingsDialogSelectors.autoValidateInput)
+      .clear()
+      .type('2')
+      .focused()
+      .blur()
+      .then(() => cy.get(SNACK_BAR).should('exist'));
   });
 
   it('should stop timer for validation', () => {
-    cy.get(SettingsDialogSelectors.autoValidateInput).clear().type('2').blur();
-    cy.get(SettingsDialogSelectors.autoValidateToggle).click();
-    cy.wait(2000).then(() => cy.get(SNACK_BAR).should('not.exist'));
+    cy.get(SettingsDialogSelectors.autoValidateInput)
+      .clear()
+      .type('2')
+      .focused()
+      .blur()
+      .then(() => cy.get(SettingsDialogSelectors.autoValidateToggle).click())
+      .then(() => cy.get(SNACK_BAR).should('not.exist'));
   });
 });

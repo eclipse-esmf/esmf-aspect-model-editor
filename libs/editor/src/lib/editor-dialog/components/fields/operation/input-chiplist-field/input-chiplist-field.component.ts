@@ -43,7 +43,11 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
   }
 
   setInputControl() {
-    this.inputValues.push(...this.metaModelElement?.input.map(value => value.property));
+    const inputValueList = this.metaModelElement?.input.map(value => value.property);
+
+    if (inputValueList) {
+      this.inputValues.push(...inputValueList);
+    }
 
     this.parentForm.setControl(
       'inputValues',
@@ -60,7 +64,6 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
       })
     );
 
-    // this.parentForm.setControl('newProperty', new FormControl({value: null, disabled: this.metaModelElement?.isExternalReference()}));
     this.inputControl = this.parentForm.get('inputValues') as FormControl;
 
     this.filteredPropertyTypes$ = this.initFilteredPropertyTypes(this.inputControl);

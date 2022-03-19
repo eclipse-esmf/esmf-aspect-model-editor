@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {DefaultDuration, DefaultUnit, Unit} from '@bame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
@@ -14,7 +14,7 @@ declare const bammuDefinition: any;
   selector: 'bci-reference-unit-input-field',
   templateUrl: './reference-unit-input-field.component.html',
 })
-export class ReferenceUnitInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
+export class ReferenceUnitInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit, OnDestroy {
   filteredPredefinedUnits$: Observable<Array<any>>;
   filteredUnits$: Observable<Array<DefaultUnit>>;
   units: Array<Unit> = [];

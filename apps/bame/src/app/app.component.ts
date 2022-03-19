@@ -22,11 +22,10 @@ import {first, switchMap} from 'rxjs/operators';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {DomainModelToRdfService} from '@bame/aspect-exporter';
 import {SettingDialogComponent} from '@bame/settings-dialog';
-import {LogService, NotificationsService} from '@bame/shared';
+import {BrowserService, LogService, NotificationsService} from '@bame/shared';
 import {EditorService} from '@bame/editor';
 import {ModelApiService} from '@bame/api';
 import {NotificationsComponent} from './components/notifications/notifications.component';
-import {ElectronService} from 'ngx-electron';
 
 @Component({
   selector: 'bci-root',
@@ -81,7 +80,7 @@ export class AppComponent implements OnInit {
     private matDialog: MatDialog,
     private notificationsService: NotificationsService,
     private domainModelToRdf: DomainModelToRdfService,
-    private electronService: ElectronService
+    private browserService: BrowserService
   ) {
     // Overwrite name of BciMessagesComponent
     this.bciMessagesIntl.title = 'Notifications';
@@ -134,12 +133,12 @@ export class AppComponent implements OnInit {
   }
 
   setContextMenu() {
-    if (!this.electronService.remote) {
+    if (!this.browserService.isStartedAsElectronApp() || !window.require) {
       return;
     }
 
-    const {Menu} = this.electronService.remote;
-    const shell = this.electronService.shell;
+    const {Menu} = window.require('@electron/remote');
+    const {shell} = window.require('electron');
 
     window.addEventListener('contextmenu', e => {
       e.preventDefault();

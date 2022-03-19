@@ -15,7 +15,7 @@ const routes: Routes = [
   },
   {
     path: 'help',
-    loadChildren: './components/help/help.module#HelpModule',
+    loadChildren: () => import(`./components/help/help.module`).then(module => module.HelpModule),
   },
   {
     path: '',

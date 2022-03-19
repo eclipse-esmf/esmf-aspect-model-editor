@@ -17,13 +17,17 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
+      contextIsolation: false,
     },
   });
 
+  require('@electron/remote/main').initialize();
+  require('@electron/remote/main').enable(win.webContents);
+
   if (process.argv.includes('--dev')) {
-    win.loadURL('http://localhost:4200/');
+    win.loadURL('http://localhost:4200/').then(() => console.log('Dev mode launched'));
   } else {
-    win.loadFile('./dist/apps/bame/index.html');
+    win.loadFile('./dist/apps/bame/index.html').then(() => console.log('Application successfully launched'));
   }
 
   win.maximize();
@@ -36,9 +40,8 @@ const createWindow = () => {
     win.webContents.openDevTools();
   });
 
-  win.webContents.on('new-window', (evt, url, frameName, disposition, options) => {
-    options.width = 1280;
-    options.height = 720;
+  win.webContents.setWindowOpenHandler(() => {
+    return {action: 'allow', overrideBrowserWindowOptions: {width: 1280, height: 720}};
   });
 };
 

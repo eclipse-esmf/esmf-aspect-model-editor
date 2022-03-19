@@ -11,8 +11,12 @@ describe('Auto Save', () => {
   });
 
   it('should set timer to 2 seconds', () => {
-    cy.get(SettingsDialogSelectors.autoSaveInput).clear({force: true}).type('2').blur();
-    cy.wait(2000).then(() => cy.get(SNACK_BAR).should('exist'));
+    cy.get(SettingsDialogSelectors.autoSaveInput)
+      .clear({force: true})
+      .type('2')
+      .focused()
+      .blur()
+      .then(() => cy.get(SNACK_BAR).should('exist'));
   });
 
   it('should stop timer for saving', () => {
