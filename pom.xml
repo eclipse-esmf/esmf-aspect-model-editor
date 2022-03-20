@@ -40,7 +40,11 @@
       apps/bame/src/main.ts,
       apps/bame/src/**/*.spec.ts,
       apps/bame/src/app/app.component.ts,
-      apps/bame/src/app/components/editor-canvas/sidebar/sidebar.component.ts
+      apps/bame/src/app/components/editor-canvas/sidebar/sidebar.component.ts,
+      apps/bame/src/app/components/footer/footer.component.ts,
+      apps/bame/src/app/components/footer/legal-notice-dialog/legal-notice-dialog.component.ts,
+      apps/bame/src/app/components/footer/corporate-information-dialog/corporate-information-dialog.component.ts,
+      apps/bame/src/app/components/help/document.component.ts
     </sonar.coverage.exclusions>
     <sonar.exclusions>
       apps/bame/src/assets/**,
