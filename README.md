@@ -20,15 +20,15 @@ This project includes the Aspect model editor and their documentation.
 
 Are you having trouble with Aspect Model Editor? We want to help!
 
-* Check the [developer documentation](https://openmanufacturingplatform.github.io)
-* Check the BAMM [specification](https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/v1.0.0/index.html)
-* Having issues with the Aspect Model Editor? Open a [GitHub issue](https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/issues).
+- Check the [developer documentation](https://openmanufacturingplatform.github.io)
+- Check the BAMM [specification](https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/v1.0.0/index.html)
+- Having issues with the Aspect Model Editor? Open a [GitHub issue](https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/issues).
 
 ### Getting started
 
 #### Setup
 
-* Download & Install [Node.js](https://nodejs.org/en/download/)
+- Download & Install [Node.js](https://nodejs.org/en/download/)
 
 #### Install & Run
 
@@ -39,19 +39,22 @@ npm run start
 
 #### Run As Electron
 
-Windows: 
+Windows:
+
 ```bash
 npm run electron-start-win-dev
 npm run electron-start-win-prod
 ```
 
 Mac:
+
 ```bash
 npm run electron-start-mac-dev
 npm run electron-start-mac-prod
 ```
 
 Unix:
+
 ```bash
 npm run electron-start-unix-dev
 npm run electron-start-unix-prod
