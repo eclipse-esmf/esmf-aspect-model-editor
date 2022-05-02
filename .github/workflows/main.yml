@@ -1,0 +1,24 @@
+name: CI
+
+on: [pull_request]
+
+jobs:
+  build:
+    name: Test Actions
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+      - run: npm install
+        working-directory: core
+      - run: npm run cypress:ci
+        working-directory: core

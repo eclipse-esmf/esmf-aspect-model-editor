@@ -21,8 +21,10 @@ import {
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
+  DefaultConstraint,
   DefaultEither,
   DefaultEntity,
+  DefaultEntityValue,
   DefaultEnumeration,
   DefaultOperation,
   DefaultProperty,
@@ -93,6 +95,10 @@ export class MxGraphShapeOverlayService {
       return;
     }
 
+    if (baseMetaModelElement instanceof DefaultEnumeration) {
+      return;
+    }
+
     if (baseMetaModelElement instanceof DefaultProperty) {
       this.removeOverlay(cell, MxGraphHelper.getNewShapeOverlayButton(cell));
     } else if (baseMetaModelElement instanceof DefaultCharacteristic && !(baseMetaModelElement instanceof DefaultEither)) {
@@ -155,6 +161,11 @@ export class MxGraphShapeOverlayService {
     }
   }
 
+  hasEntityValueDescendantsAsEntity(metaModel: DefaultEntityValue) {
+    const entityProperties = metaModel.entity?.properties || [];
+    return entityProperties.some(({property}) => property?.characteristic?.dataType instanceof DefaultEntity);
+  }
+
   /**
    * Adds the + connector on the bottom of a shape
    *
@@ -165,6 +176,14 @@ export class MxGraphShapeOverlayService {
       const modelElement: BaseMetaModelElement = MxGraphHelper.getModelElement(cell);
       let overlayTooltip = 'Add ';
       let modelInfo = ModelInfo.IS_CHARACTERISTIC;
+
+      if (modelElement instanceof DefaultConstraint) {
+        return;
+      }
+
+      if (modelElement instanceof DefaultEntityValue) {
+        return;
+      }
 
       if (modelElement instanceof DefaultEither) {
         this.createArrowIconShapeOverlay(
