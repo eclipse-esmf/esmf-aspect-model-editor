@@ -37,13 +37,13 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Set env for (Mac)
-          if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-latest'
         run: |
           echo "tag_version=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
           echo "tag_version_with_v=${GITHUB_REF/refs\/tags\/}" >> $GITHUB_ENV
 
       - name: Set env for (Windows)
-          if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-latest'
         run: |
           echo ("tag_version=" + $env:GITHUB_REF.replace('refs/tags/v','')) >> $env:GITHUB_ENV
           echo ("tag_version_with_v=" + $env:GITHUB_REF.replace('refs/tags/','')) >> $env:GITHUB_ENV
