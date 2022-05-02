@@ -40,22 +40,22 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           mkdir backend
-          echo "MAC_TAG_VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
-          echo "MAC_TAG_VERSION_WITH_V=${GITHUB_REF/refs\/tags\/}" >> $GITHUB_ENV
+          echo "TAG_VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+          echo "TAG_VERSION_WITH_V=${GITHUB_REF/refs\/tags\/}" >> $GITHUB_ENV
 
-          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ MAC_TAG_VERSION_WITH_V }} | jq '.assets[0].browser_download_url')
-          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ MAC_TAG_VERSION_WITH_V }} | jq '.assets[1].browser_download_url')
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ TAG_VERSION_WITH_V }} | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ TAG_VERSION_WITH_V }} | jq '.assets[1].browser_download_url')
 
           if [[ ${ASSET_ONE_URL} != *".exe"* ]];
             then
               echo $ASSET_ONE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ MAC_TAG_VERSION_WITH_V }} | jq -r '.assets[0].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ TAG_VERSION_WITH_V }} | jq -r '.assets[0].url')
           fi
 
           if [[ ${ASSET_TWO_URL} != *".exe"* ]];
             then
               echo $ASSET_TWO_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ MAC_TAG_VERSION_WITH_V }} | jq -r '.assets[1].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ TAG_VERSION_WITH_V }} | jq -r '.assets[1].url')
           fi
 
           curl -L -H "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend.sh
@@ -65,10 +65,10 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           mkdir backend
-          echo ("WIN_TAG_VERSION=" + $env:GITHUB_REF.replace('refs/tags/v','')) >> $env:GITHUB_ENV
-          echo ("WIN_TAG_VERSION_WITH_V=" + $env:GITHUB_REF.replace('refs/tags/','')) >> $env:GITHUB_ENV
+          echo ("TAG_VERSION=" + $env:GITHUB_REF.replace('refs/tags/v','')) >> $env:GITHUB_ENV
+          echo ("TAG_VERSION_WITH_V=" + $env:GITHUB_REF.replace('refs/tags/','')) >> $env:GITHUB_ENV
 
-          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/$env:WIN_TAG_VERSION_WITH_V)
+          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/$env:TAG_VERSION_WITH_V)
           $RESPONSE_JSON=($RESPONSE | ConvertFrom-Json)
 
           if ($RESPONSE_JSON.assets[0].browser_download_url -match ".exe") {
@@ -85,12 +85,12 @@ jobs:
 
       - name: Set app version (Mac)
         if: matrix.os == 'macos-latest'
-        run: npm version ${{ MAC_TAG_VERSION }}
+        run: npm version ${{ TAG_VERSION }}
         working-directory: core
 
       - name: Set app version (Windows)
         if: matrix.os == 'windows-latest'
-        run: npm version ${{ env:WIN_TAG_VERSION }}
+        run: npm version ${{ env:TAG_VERSION }}
         working-directory: core
 
       - name: Build electron app (Mac)
@@ -108,7 +108,7 @@ jobs:
         uses: joncloud/makensis-action@v3.6
         with:
           script-file: win-installer/installer.nsi
-          arguments: "-V3 -DVERSION=${{ env.WIN_TAG_VERSION }}"
+          arguments: "-V3 -DVERSION=${{ env.TAG_VERSION }}"
 
       - name: Create GitHub release (Mac)
         if: ${{ (matrix.os == 'macos-latest') &&  (!contains( github.ref, '-M' )) }}
@@ -117,7 +117,7 @@ jobs:
           overwrite: true
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-${{ MAC_TAG_VERSION }}-mac.dmg
+          file: core/electron/aspect-model-editor-${{ TAG_VERSION }}-mac.dmg
           tag: ${{ github.ref }}
 
       - name: Create GitHub pre-release (Mac)
@@ -127,7 +127,7 @@ jobs:
           overwrite: true
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-${{ MAC_TAG_VERSION }}.dmg
+          file: core/electron/aspect-model-editor-${{ TAG_VERSION }}.dmg
           tag: ${{ github.ref }}
 
       - name: Create GitHub release (Windows)
@@ -137,7 +137,7 @@ jobs:
           overwrite: true
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: win-installer/aspect-model-editor-${{ env.WIN_TAG_VERSION }}-win.exe
+          file: win-installer/aspect-model-editor-${{ env.TAG_VERSION }}-win.exe
           tag: ${{ github.ref }}
 
       - name: Create GitHub pre-release (Windows)
@@ -147,5 +147,5 @@ jobs:
           overwrite: true
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: win-installer/aspect-model-editor-${{ env.WIN_TAG_VERSION }}-win.exe
+          file: win-installer/aspect-model-editor-${{ env.TAG_VERSION }}-win.exe
           tag: ${{ github.ref }}
