@@ -19,7 +19,7 @@
 </div>
 <form (submit)="onSave()">
   <mat-form-field class="entity-form-field" appearance="fill">
-    <mat-label for="entityValueName">Name</mat-label>
+    <mat-label for="entityValueName">Name *</mat-label>
     <input
       [formControl]="entityValueName"
       [ngClass]="entityValueName.hasError('checkShapeName') || entityValueName.hasError('whitespace') ? 'ng-invalid-error' : ''"
