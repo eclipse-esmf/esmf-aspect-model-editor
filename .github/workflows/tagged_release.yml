@@ -44,8 +44,8 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           mkdir backend
-          echo "TAG_VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
-          echo "TAG_VERSION_WITH_V=${GITHUB_REF/refs\/tags\/}" >> $GITHUB_ENV
+          echo "::set-env name=TAG_VERSION::${GITHUB_REF/refs\/tags\/v/}"
+          echo "::set-env name=TAG_VERSION_WITH_V::${GITHUB_REF/refs\/tags\/}"
 
           ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ TAG_VERSION_WITH_V }} | jq '.assets[0].browser_download_url')
           ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ TAG_VERSION_WITH_V }} | jq '.assets[1].browser_download_url')
