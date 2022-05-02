@@ -5,7 +5,7 @@
   !include nsDialogs.nsh
   !include LogicLib.nsh
 
-  !define MUI_ICON "images\logo.ico"
+  !define MUI_ICON "..\core\apps\ame\src\assets\img\svg\icon.svg"
 ;--------------------------------
 ;General
 
@@ -72,8 +72,6 @@ Section "Install"
                    "Publisher" "open-manufacturing.org"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" \
                    "DisplayVersion" "${VERSION}"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" \
-                   "DisplayIcon" "$INSTDIR\images\logo.ico"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" \
                    "UninstallString" "$INSTDIR\uninstall.exe"
 
