@@ -5,6 +5,10 @@ on:
     tags:
       - "v*"
 
+env:
+  TAG_VERSION: 0.0.0
+  TAG_VERSION_WITH_V: 0.0.0
+
 jobs:
   gh_tagged_release:
     name: Create tagged release
