@@ -39,8 +39,9 @@ jobs:
       - name: Set env for (Mac)
         if: matrix.os == 'macos-latest'
         run: |
-          echo "tag_version=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
-          echo "tag_version_with_v=${GITHUB_REF/refs\/tags\/}" >> $GITHUB_ENV
+          tagVersion=${GITHUB_REF/refs\/tags\/v/}
+          echo tag_version=$tagVersion >> $GITHUB_ENV
+          echo tag_version_with_v=$tagVersion >> $GITHUB_ENV
 
       - name: Set env for (Windows)
         if: matrix.os == 'windows-latest'
