@@ -1,0 +1,41 @@
+/*!
+ * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+// graph element colors
+html {
+  --ame-aspect: #7589c8;
+  --ame-property: #c5c8d4;
+  --ame-operation: #d5bfda;
+  --ame-event: #b9d8fa;
+  --ame-characteristic: #d6e2a6;
+  --ame-entity: #aeade0;
+  --ame-constraint: #74aeaf;
+  --ame-trait: #74aeaf;
+  --ame-unit: #b9ab50;
+  --ame-entity-value: #aeade0;
+  --ame-font: #000000;
+  --ame-border: #000000;
+  --ame-primary: #8da5bf;
+  --ame-accent: #995fab;
+  --ame-error: #e83f22;
+}
+
+$characteristic-color: var(--ame-characteristic);
+$property-color: var(--ame-property);
+$entity-color: var(--ame-entity);
+$constraint-color: var(--ame-constraint);
+$trait-color: var(--ame-trait);
+$unit-color: var(--ame-unit);
+$aspect-color: var(--ame-aspect);
+$operation-color: var(--ame-operation);
+$event-color: var(--ame-event);

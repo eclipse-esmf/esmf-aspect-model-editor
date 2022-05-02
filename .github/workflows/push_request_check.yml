@@ -1,0 +1,72 @@
+name: Check New Pull Request
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ '**' ]
+
+# Tests are done in Ubuntu because Mac and Windows random failures, and it is not stable.
+jobs:
+  build:
+    name: Check if passes all requirements
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Setup NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: '17'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Download aspect model service into project (Mac)
+        if: matrix.os == 'macos-latest'
+        run: |
+          mkdir backend
+          URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/latest | grep -v ".exe" | grep browser_download_url | cut -d '"' -f 4)
+          curl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" $URL --output backend/ame-backend
+
+      - name: Download aspect model service into project (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          mkdir backend
+          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/latest)
+          $RESPONSE_JSON=($RESPONSE | ConvertFrom-Json)
+
+          if ($RESPONSE_JSON.assets.browser_download_url[0] -match ".exe") {
+            curl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" $RESPONSE_JSON.assets.browser_download_url[0] --output backend/ame-backend.exe
+          } elseif ($RESPONSE_JSON.assets.browser_download_url[1] -match ".exe") {
+            curl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" $RESPONSE_JSON.assets.browser_download_url[1] --output backend/ame-backend.exe
+          }
+
+      - name: Install node modules (Dev)
+        run: npm install
+        working-directory: core
+
+      - name: Identifying and reporting lint patterns
+        run: npm run lint
+        working-directory: core
+
+      - name: Performing cypress tests
+        run: npm run cypress:ci
+        working-directory: core
+
+      - name: Build dev package
+        run: npm run build
+        working-directory: core

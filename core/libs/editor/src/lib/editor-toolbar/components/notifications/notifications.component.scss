@@ -1,0 +1,135 @@
+/*!
+ * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+:host {
+  display: block;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+}
+
+.table-container {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  height: 500px;
+  max-width: 100%;
+}
+
+table {
+  width: 100%;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.mat-column-expand {
+  width: 35px;
+}
+
+.mat-column-date {
+  width: 200px;
+}
+
+.mat-column-type {
+  width: 100px;
+}
+
+.mat-column-options {
+  width: 30px;
+}
+
+:host::ng-deep {
+  .notifications-table {
+    mat-header-row {
+      position: fixed;
+    }
+
+    thead {
+      th {
+        border-top: 1px solid #ededed;
+      }
+    }
+
+    tbody {
+      .mat-column-date {
+        flex: none;
+        padding-top: 5px;
+        vertical-align: top;
+      }
+
+      .mat-column-type {
+        flex: none;
+        vertical-align: top;
+
+        mat-icon {
+          padding-top: 10px;
+          display: block;
+        }
+      }
+
+      .mat-column-options {
+        flex: none;
+        vertical-align: top;
+
+        button {
+          padding-top: 5px;
+          display: block;
+        }
+      }
+
+      .mat-column-expand {
+        flex: none;
+        vertical-align: top;
+        padding-right: 0;
+
+        mat-icon {
+          padding-top: 5px;
+          display: block;
+          cursor: pointer;
+        }
+      }
+
+      .mat-column-message {
+        vertical-align: top;
+      }
+    }
+  }
+}
+
+.error_outline {
+  color: red;
+}
+
+.warning_amber {
+  color: orange;
+}
+
+.message-title {
+  margin: 10px;
+  margin-left: 0;
+}
+
+.delete-btn,
+.delete-all-btn {
+  min-width: 0;
+  height: 35px;
+}
+
+.no-notif-msg {
+  text-align: center;
+}

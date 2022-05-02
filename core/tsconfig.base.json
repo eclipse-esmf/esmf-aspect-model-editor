@@ -1,0 +1,43 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false,
+    "noStrictGenericChecks": true,
+    "strictNullChecks": false,
+    "paths": {
+      "@ame/api": ["libs/api/src/index.ts"],
+      "@ame/app/*": ["apps/ame/src/app/*"],
+      "@ame/aspect-exporter": ["libs/aspect-exporter/src/index.ts"],
+      "@ame/cache": ["libs/cache/src/index.ts"],
+      "@ame/connection": ["libs/connection/src/index.ts"],
+      "@ame/editor": ["libs/editor/src/index.ts"],
+      "@ame/instantiator": ["libs/instantiator/src/index.ts"],
+      "@ame/meta-model": ["libs/meta-model/src/index.ts"],
+      "@ame/mx-graph": ["libs/mx-graph/src/index.ts"],
+      "@ame/rdf/*": ["libs/rdf/src/lib/*"],
+      "@ame/settings-dialog": ["libs/settings-dialog/src/index.ts"],
+      "@ame/shared": ["libs/shared/src/index.ts"],
+      "@ame/vocabulary": ["libs/vocabulary/src/index.ts"]
+    },
+    "typeRoots": ["node_modules/@types", "node_modules/@typed-mxgraph"],
+    "types": ["node", "jest"],
+    "lib": ["es2018", "dom"]
+  },
+  "exclude": ["node_modules", "tmp"]
+}

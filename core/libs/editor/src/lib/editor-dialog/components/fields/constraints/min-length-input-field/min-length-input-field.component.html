@@ -1,0 +1,21 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div fxLayout="column">
+  <mat-form-field [floatLabel]="getControl('minValue')?.disabled ? 'always' : 'auto'" appearance="fill">
+    <mat-label for="minValue">Min Value</mat-label>
+    <input matInput type="number" name="minValue" [formControl]="getControl('minValue')" data-cy="minValue" pattern="^[0-9]\d*$" />
+    <mat-hint>bamm-c:minValue</mat-hint>
+    <mat-error *ngIf="getControl('minValue').errors?.pattern">Please provide a non-negative integer.</mat-error>
+  </mat-form-field>
+</div>

@@ -1,0 +1,79 @@
+/*!
+ * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+:host {
+  width: 100%;
+  min-width: 100%;
+
+  .complex-value-items {
+    margin-top: 8px;
+  }
+
+  ::ng-deep .mat-expansion-panel-body {
+    padding: 0 !important;
+  }
+
+  .mat-expansion-panel .mat-expansion-panel-header.complex-value-header {
+    padding-left: 16px;
+
+    .complex-value-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      .value-name {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .complex-value-toolbox {
+        display: grid;
+        font-size: 32px;
+        width: 72px;
+        justify-content: right;
+      }
+    }
+  }
+
+  .complex-value-table {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+
+    .table-values {
+      width: 100%;
+    }
+
+    .complex-value-icon {
+      margin-top: 0;
+    }
+
+    .empty-state {
+      width: 100%;
+      min-height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .mat-header-row .mat-header-cell {
+      font-weight: normal;
+    }
+  }
+}
+
+.text--center {
+  text-align: center;
+}

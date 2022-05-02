@@ -1,0 +1,54 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div fxLayout="column" fxLayoutAlign="space-between center">
+  <mat-form-field *ngIf="!hasComplexValues" [floatLabel]="getControl('values')?.disabled ? 'always' : 'auto'" appearance="fill">
+    <mat-label for="values">Values</mat-label>
+    <mat-chip-list #chipList [formControl]="getControl('chipList')">
+      <mat-chip
+        *ngFor="let value of enumValues"
+        [selectable]="selectable"
+        [removable]="removable"
+        (removed)="remove(value); onEnumChange()"
+      >
+        {{ value['name'] }}
+        <mat-icon matChipRemove data-cy="chipIcon">close</mat-icon>
+      </mat-chip>
+      <input
+        matInput
+        class="enumeration-value-input"
+        name="values"
+        [formControl]="getControl('values')"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="addOnBlur"
+        (matChipInputTokenEnd)="add($event)"
+        (paste)="paste($event)"
+        (keyup)="onEnumChange()"
+        placeholder="add value, hit enter"
+        data-cy="values"
+      />
+    </mat-chip-list>
+    <mat-hint>bamm-c:values</mat-hint>
+    <mat-error *ngIf="getControl('values')?.errors?.required">This field is required</mat-error>
+  </mat-form-field>
+
+  <ame-entity-value-view
+    class="entity-values"
+    *ngIf="hasComplexValues"
+    [complexValues]="enumEntityValues"
+    [enumeration]="metaModelElement"
+    [parentForm]="parentForm"
+    (complexValueChange)="enumValueChange($event)"
+  ></ame-entity-value-view>
+</div>

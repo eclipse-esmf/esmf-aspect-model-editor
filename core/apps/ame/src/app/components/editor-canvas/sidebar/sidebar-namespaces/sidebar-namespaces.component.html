@@ -1,0 +1,56 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="container">
+  <div *ngIf="namespaces?.length > 0" class="namespaces">
+    <div class="title">Workspace</div>
+    <p *ngIf="!hasCurrentFile" class="description">To see your current Aspect Model save to namespace</p>
+    <div class="list">
+      <div *ngFor="let namespace of namespaces" class="namespace">
+        <div class="folder" [ngClass]="{selected: isSelectedNamespace(namespace.name)}" [title]="namespace.name">
+          <mat-icon>folder</mat-icon>
+          <span>{{ namespace.name }}</span>
+        </div>
+        <ng-container *ngFor="let file of namespace.files">
+          <div
+            [class]="!isCurrentFile(namespace.name, file) ? 'file' : 'file current-file'"
+            [ngClass]="{selected: isSelectedNamespaceFile(namespace.name, file)}"
+            [title]="!isCurrentFile(namespace.name, file) ? file : ''"
+            [matTooltip]="!isCurrentFile(namespace.name, file) ? null : 'Currently loaded file'"
+          >
+            <div class="file-name" (click)="onSelectNamespaceFile(namespace.name, file)">
+              <mat-icon>description</mat-icon>
+              <span>
+                {{ file }}
+              </span>
+            </div>
+            <mat-icon class="show-more material-icons" [matMenuTriggerFor]="menu">more_horiz</mat-icon>
+            <mat-menu #menu="matMenu">
+              <button
+                [disabled]="isCurrentFile(namespace.name, file)"
+                (click)="onDeleteNamespace(namespace.name + ':' + file)"
+                mat-menu-item
+              >
+                Delete
+              </button>
+              <button [disabled]="isCurrentFile(namespace.name, file)" (click)="onLoadAspectModel(namespace, file)" mat-menu-item>
+                Load Aspect Model
+              </button>
+              <button mat-menu-item (click)="copyNamespace(namespace.name + ':' + file)">Copy to clipboard</button>
+            </mat-menu>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

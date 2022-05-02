@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+  <mat-icon>close</mat-icon>
+</button>
+
+<h2 mat-dialog-title>Start modeling</h2>
+
+<mat-dialog-content>
+  <p>Aspect Model Editor is the visual editor for BAMM specific Aspect Models as part of the Nexeed Digital Twin System.</p>
+  <p>
+    Please refer to the
+    <a href="{{ AMEDocumentationLink }}" target="_blank" rel="noopener">Documentation</a>
+    for help regarding the usage of Aspect Model Editor.
+  </p>
+
+  <p>
+    Please refer to the
+    <a href="{{ BAMMDocumentationLink }}" target="_blank" rel="noopener">Specification</a>
+    for general help about the Digital Twin System and the Aspect Meta Model.
+  </p>
+
+  <p>
+    For support and feature requests or if you need a pdf version of the documentation please contact
+    <a href="mailto:{{ supportMail }}" target="_top">Nexeed Helpdesk</a> (Nexeed.Helpdesk@de.bosch.com).
+  </p>
+</mat-dialog-content>

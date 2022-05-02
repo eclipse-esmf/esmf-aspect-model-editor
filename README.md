@@ -1,11 +1,39 @@
-### Aspect Model Editor Frontend
+# Aspect Model Editor
 
-UI service for Aspect Model Editor, supports following operations :
+## Table of Contents
 
-* Enables user to create/update aspect models using graphical editor.
-* Enables user to Load/Save the Aspect TTL's
+- [Download & Installation](#download--installation)
+- [Documentation](#documentation)
+- [Getting help](#getting-help)
+- [Introduction](#)
+- [Getting started](#getting-started)
+  - [Setup](#setup)
+  - [Install & Run](#install--run)
+  - [Run As Electron](#run-as-electron)
+  - [Running E2E (Cypress) Test](#running-e2e-cypress-test)
+- [License](#license)
 
-### Getting Started
+## Download & Installation
+
+[//]: # (TODO Add something here)
+
+## Documentation
+
+[//]: # (TODO Add something here)
+
+## Getting help
+
+Are you having trouble with Aspect Model Editor? We want to help!
+
+* Check the [developer documentation](https://openmanufacturingplatform.github.io)
+* Check the BAMM [specification](https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/v1.0.0/index.html)
+* Having issues with the Aspect Model Editor? Open a [GitHub issue](https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/issues).
+
+## introduction
+
+[//]: # (TODO Add something here)
+
+### Getting started
 
 #### Setup
 
@@ -26,31 +54,37 @@ npm install
 npm run start
 ```
 
-#### Build & Package As Electron
+#### Run As Electron
 
+Windows: 
 ```bash
-npm run electron:ci
+npm run electron-start-win-dev
 npm run electron-start-win-prod
+```
+
+Mac:
+```bash
+npm run electron-start-mac-dev
+npm run electron-start-mac-prod
+```
+
+Unix:
+```bash
+npm run electron-start-unix-dev
+npm run electron-start-unix-prod
 ```
 
 #### Running E2E (Cypress) Test
 
 ```bash
 npm run cypress
-npm run cypress:ci
 ```
 
-### Reports
+## License
 
-* [SonarQube Report](https://bci-dev.de.bosch.com/sonar/dashboard?id=com.bosch.bci.bame:bame-ui)
-* [WhiteSource Report](https://app-eu.whitesourcesoftware.com/Wss)
-* [FossId Report](https://rb-fossid.de.bosch.com/)
+SPDX-License-Identifier: MPL-2.0
 
-### About
+This program and the accompanying materials are made available under the terms of the
+[Mozilla Public License, v. 2.0](LICENSE).
 
-Maintainers
-[Michele Santoro](michele.santoro@bosch.com)
-
-Contributors
-[Michele Santoro](michele.santoro@bosch.com)
-George Moscu Razvan Muresan
+The [Notice file](NOTICE.md) details contained third party materials.

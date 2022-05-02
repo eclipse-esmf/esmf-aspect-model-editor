@@ -1,0 +1,56 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div mat-dialog-title class="header">
+  <h2>Start modeling</h2>
+  <button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <div class="info">
+    <mat-icon>info</mat-icon>
+    <p>An existing Aspect Model will be replaced with the new one. Any unsaved changes will be lost.</p>
+  </div>
+  <p>To start modeling you have three options:</p>
+  <ul>
+    <li>start from a new model (see initial ttl code in the text area below)</li>
+    <li>copy paste ttl code of an existing model into the text area below</li>
+    <li>load ttl code from a file by choosing "Load from File" below.</li>
+  </ul>
+  <p>As an expert you may also modify the shown ttl code manually.</p>
+  <mat-form-field appearance="outline">
+    <textarea
+      [(ngModel)]="rdfAspectModel"
+      data-cy="dialogInputModel"
+      spellcheck="false"
+      matInput
+      placeholder="Paste your Aspect Model here or load it from file."
+    ></textarea>
+  </mat-form-field>
+  <input style="display: none" type="file" (change)="onLoadFromFile($event)" #fileInput />
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button [matMenuTriggerFor]="menu" mat-raised-button class="menu" data-cy="models-drop-down">
+    Models <mat-icon>keyboard_arrow_up</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="onLoadDefault()" data-cy="dialogDefaultAspectButton">Default Aspect Model</button>
+    <button mat-menu-item (click)="onLoadMovementExample()" data-cy="dialogMovementExampleAspectButton">Movement Example</button>
+  </mat-menu>
+  <button mat-raised-button (click)="fileInput.click()">Load from File</button>
+  <button mat-raised-button color="primary" (click)="onOk()" [disabled]="!rdfAspectModel" data-cy="dialogStartButton">
+    Start modeling
+  </button>
+</mat-dialog-actions>

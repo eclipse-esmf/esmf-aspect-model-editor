@@ -1,0 +1,50 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="search-bar-container">
+  <mat-form-field appearance="outline" class="toolbar-search">
+    <input
+      matInput
+      #searchInputField
+      [matAutocomplete]="auto"
+      (keyup)="searchForCellsAndInstances()"
+      type="search"
+      color="primary"
+      placeholder="Search element"
+      spellcheck="false"
+      data-cy="searchInputField"
+    />
+    <mat-icon class="search-bar-container__icon material-icons" (click)="focusOnSearchInputField()">search</mat-icon>
+  </mat-form-field>
+  <mat-autocomplete (optionSelected)="goToSearchResult($event)" [panelWidth]="500" [displayWith]="displayCellId" #auto="matAutocomplete">
+    <mat-option *ngFor="let searchResult of searchResults" [value]="searchResult" class="search-bar-container__option">
+      <ng-container *ngIf="searchResult.cell">
+        <div class="result">
+          <span ngClass="{{ getCellType(searchResult.cell) }} search-bar-container__option__icon">
+            {{ getFirstLetterOfType(searchResult.cell) }}
+          </span>
+          <div>
+            {{ searchResult.cell.id }}
+            <p *ngIf="searchResult.namespacePrefix" class="namespace-prefix" [title]="searchResult.namespacePrefix">
+              {{ searchResult.namespacePrefix }}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="searchResult.entityValue">
+        <span ngClass="entity-value search-bar-container__option__icon"> V </span>
+        {{ searchResult.entityValue.name }}
+      </ng-container>
+    </mat-option>
+  </mat-autocomplete>
+</div>

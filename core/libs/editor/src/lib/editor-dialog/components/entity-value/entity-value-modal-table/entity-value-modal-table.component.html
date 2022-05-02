@@ -1,0 +1,94 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<mat-table [dataSource]="dataSource" class="example-container" *ngIf="form">
+  <!-- Property Name Column -->
+  <ng-container matColumnDef="key">
+    <mat-header-cell *matHeaderCellDef>Property</mat-header-cell>
+    <mat-cell *matCellDef="let property">
+      <mat-icon *ngIf="isComplexProperty(property)" class="material-icons complex-property-icon">view_module</mat-icon>
+      {{ property.name }}
+      <span>{{ propertiesFormGroup.controls[property.name]?.validator ? ' *' : '' }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <!-- Value Column -->
+  <ng-container matColumnDef="value">
+    <mat-header-cell *matHeaderCellDef>Value</mat-header-cell>
+    <mat-cell *matCellDef="let property">
+      <mat-form-field *ngIf="!isComplexProperty(property)" class="small-input-field">
+        <input
+          [formControl]="getControl(property.name)"
+          type="text"
+          matInput
+          name="propertyValue-{{ property.name }}"
+          data-cy="propertyValueNotComplex"
+        />
+      </mat-form-field>
+
+      <mat-form-field *ngIf="isComplexProperty(property)">
+        <mat-label for="entityValue">Entity Value</mat-label>
+        <input
+          #entityValueInput
+          matInput
+          name="entityValue-{{ property.name }}"
+          [matAutocomplete]="auto"
+          [formControl]="getComplexDisplayControl(property.name)"
+          data-cy="propertyValueComplex"
+        />
+        <button
+          *ngIf="getComplexDisplayControl(property.name)?.disabled"
+          (click)="unlockEntityValue(property)"
+          class="close-button"
+          data-cy="clear-entityValue-button"
+          matSuffix
+          mat-icon-button
+          tabindex="-1"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <mat-autocomplete #auto="matAutocomplete" class="characteristic-entity-value-autocomplete">
+          <mat-optgroup *ngIf="filteredEntityValues$[property?.name] | async as filteredEntityValues" label="Entity Values">
+            <mat-option
+              *ngIf="showCreateNewEntityOption(entityValueInput.value, filteredEntityValues)"
+              [value]="entityValueInput.value"
+              (click)="createNewEntityValue(property, entityValueInput.value)"
+            >
+              <span>
+                + Create: <strong>{{ entityValueInput.value }}</strong>
+              </span>
+            </mat-option>
+            <mat-option
+              *ngFor="let entityValue of filteredEntityValues"
+              [value]="entityValue.name"
+              (onSelectionChange)="changeSelection(property, entityValue)"
+            >
+              {{ entityValue.name }}
+            </mat-option>
+          </mat-optgroup>
+        </mat-autocomplete>
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="noRecord">
+    <mat-footer-cell *matFooterCellDef>No properties defined for this entity value</mat-footer-cell>
+  </ng-container>
+
+  <ng-template [ngIf]="entity?.properties.length === 0">
+    <mat-footer-row *matFooterRowDef="['noRecord']"></mat-footer-row>
+  </ng-template>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>

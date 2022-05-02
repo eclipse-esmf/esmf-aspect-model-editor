@@ -1,0 +1,185 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<!-- Toolbar -->
+<div class="menu-items">
+  <div class="menu-items__group">
+    <button
+      mat-button
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      matTooltip="New/Load"
+      [matMenuTriggerFor]="loadMenu"
+      data-cy="tbLoadButton"
+    >
+      <mat-icon class="material-icons">add_box</mat-icon>
+    </button>
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Save" [matMenuTriggerFor]="saveMenu">
+      <mat-icon class="material-icons">save</mat-icon>
+    </button>
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Add file to namespace" (click)="fileInput.click()">
+      <mat-icon class="material-icons">snippet_folder</mat-icon>
+    </button>
+  </div>
+
+  <div class="menu-items__group">
+    <button
+      mat-button
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      matTooltip="Edit highlighted cell"
+      (click)="editSelectedCell.emit()"
+    >
+      <mat-icon class="material-icons">edit</mat-icon>
+    </button>
+    <button
+      mat-button
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      matTooltip="Delete"
+      data-cy="tbDeleteButton"
+      (click)="onDelete()"
+    >
+      <mat-icon class="material-icons">delete</mat-icon>
+    </button>
+    <button
+      mat-button
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      matTooltip="{{ getLabelExpandCollapse() }}"
+      (click)="onToggleExpand()"
+      data-cy="collapseExpandToggle"
+    >
+      <mat-icon [class.editor-icon-active]="!isAllShapesExpanded" class="material-icons rotate-45">{{
+        isAllShapesExpanded ? 'unfold_less' : 'unfold_more'
+      }}</mat-icon>
+    </button>
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Format" (click)="onFormat()">
+      <mat-icon class="material-icons rotate-90">schema</mat-icon>
+    </button>
+    <button
+      mat-button
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      matTooltip="Connect"
+      data-cy="tbConnectButton"
+      (click)="onConnect()"
+    >
+      <mat-icon class="material-icons">commit</mat-icon>
+    </button>
+    <button
+      mat-button
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      matTooltip="Validate"
+      data-cy="tbValidateButton"
+      (click)="onValidate()"
+    >
+      <mat-icon class="material-icons">task</mat-icon>
+    </button>
+  </div>
+
+  <div class="menu-items__group">
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Print" data-cy="tbPrintButton" (click)="onPrint()">
+      <mat-icon class="material-icons">print</mat-icon>
+    </button>
+  </div>
+
+  <div class="menu-items__group">
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" [matTooltip]="getTitleEditorMap()" (click)="onToggleEditorMap()">
+      <mat-icon [class.editor-icon-active]="settings.showEditorMap" class="material-icons">map</mat-icon>
+    </button>
+    <button
+      mat-button
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      [matTooltip]="getTitleEditorNavigation()"
+      (click)="onToggleEditorNavigation()"
+    >
+      <mat-icon [class.editor-icon-active]="settings.showEditorNav" class="material-icons">view_agenda</mat-icon>
+    </button>
+  </div>
+
+  <div class="menu-items-group search">
+    <ame-search-bar></ame-search-bar>
+  </div>
+</div>
+
+<!-- Actions -->
+<div class="actions">
+  <!--
+    Here was theme switcher.
+    Now is moved to settings until full scheme is implemented
+  -->
+
+  <button
+    [matTooltipShowDelay]="0"
+    [matTooltipHideDelay]="0"
+    (click)="onOpenSettings()"
+    matTooltip="Settings"
+    mat-button
+    data-cy="settings-button"
+  >
+    <mat-icon>settings</mat-icon>
+  </button>
+  <button
+    [matTooltipShowDelay]="0"
+    [matTooltipHideDelay]="0"
+    (click)="onLoadNotifications()"
+    matTooltip="Notifications"
+    mat-button
+    data-cy="notifications-button"
+  >
+    <mat-icon [matBadge]="notificationsService.badgeText | async" matBadgeColor="warn">notifications</mat-icon>
+  </button>
+  <button
+    [matTooltipShowDelay]="0"
+    [matTooltipHideDelay]="0"
+    (click)="onShowHelpDialog()"
+    matTooltip="Help"
+    mat-button
+    data-cy="help-button"
+  >
+    <mat-icon>help</mat-icon>
+  </button>
+</div>
+
+<!-- Menus -->
+<mat-menu #loadMenu="matMenu">
+  <button mat-menu-item (click)="onNew()" matTooltip="Create/Upload Aspect Model" data-cy="create-model">
+    <mat-icon class="material-icons">add_circle</mat-icon>
+    <span>Create/Upload Aspect Model</span>
+  </button>
+  <button mat-menu-item (click)="zipInput.click()" matTooltip="Import Package" data-cy="import-package">
+    <mat-icon class="material-icons">folder_zip</mat-icon>
+    <span>Import Package</span>
+  </button>
+</mat-menu>
+
+<mat-menu #saveMenu="matMenu">
+  <button mat-menu-item (click)="onDownload()">
+    <mat-icon class="material-icons">file_download</mat-icon>
+    <span>Export Aspect Model</span>
+  </button>
+  <button mat-menu-item (click)="openExportModal()">
+    <mat-icon class="material-icons">file_download</mat-icon>
+    <span>Export Namespace</span>
+  </button>
+  <button mat-menu-item (click)="onSave()">
+    <mat-icon class="material-icons">save</mat-icon>
+    <span>Save to Workspace</span>
+  </button>
+</mat-menu>
+
+<input style="display: none" type="file" (change)="onAddFileToNamespace($event)" #fileInput accept=".ttl" />
+<input style="display: none" type="file" (change)="uploadZip($event)" #zipInput accept=".zip" />

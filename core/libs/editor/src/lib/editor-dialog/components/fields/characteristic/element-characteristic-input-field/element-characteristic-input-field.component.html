@@ -1,0 +1,61 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+  <mat-form-field [floatLabel]="getControl('elementCharacteristic')?.disabled ? 'always' : 'auto'" appearance="fill">
+    <mat-label for="elementCharacteristic">Element Characteristic</mat-label>
+    <input
+      #elementCharacteristic
+      [matAutocomplete]="auto"
+      matInput
+      name="elementCharacteristic"
+      [formControl]="getControl('elementCharacteristicDisplay')"
+      data-cy="elementCharacteristic"
+    />
+    <button
+      *ngIf="elementCharacteristicDisplayControl?.disabled && !metaModelElement?.isExternalReference()"
+      (click)="unlockElementCharacteristic()"
+      class="close-button"
+      data-cy="clear-element-characteristic-button"
+      matSuffix
+      mat-icon-button
+      tabindex="-1"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <mat-autocomplete #auto="matAutocomplete" class="element-characteristic">
+      <ng-container *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes" label="Characteristic">
+        <mat-option
+          *ngIf="!isAlreadyDefined(filteredCharacteristicTypes, elementCharacteristic.value)"
+          [disabled]="!isUpperCase(elementCharacteristic.value)"
+          [value]="!isUpperCase(elementCharacteristic.value) ? '' : elementCharacteristic.value"
+          (click)="createNewCharacteristic(elementCharacteristic.value)"
+        >
+          <span *ngIf="isUpperCase(elementCharacteristic.value)">
+            + Create new characteristic: <strong>{{ elementCharacteristic.value }}</strong>
+          </span>
+          <span *ngIf="!isUpperCase(elementCharacteristic.value)">Please provide the name for the new Characteristic in upper case.</span>
+        </mat-option>
+        <mat-option
+          *ngFor="let elementCharacteristic of filteredCharacteristicTypes"
+          [value]="elementCharacteristic.name"
+          (onSelectionChange)="onSelectionChange('elementCharacteristicDisplay', elementCharacteristic)"
+        >
+          {{ elementCharacteristic.name }}<br /><span class="option-description">{{ elementCharacteristic.description }}</span>
+        </mat-option>
+      </ng-container>
+    </mat-autocomplete>
+    <mat-hint>bamm-c:elementCharacteristic</mat-hint>
+  </mat-form-field>
+</div>

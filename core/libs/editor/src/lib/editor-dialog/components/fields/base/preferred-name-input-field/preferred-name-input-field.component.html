@@ -1,0 +1,22 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<mat-form-field
+  *ngFor="let locale of metaModelElement?.getAllLocalesPreferredNames()"
+  [floatLabel]="getControl('preferredName' + locale)?.disabled ? 'always' : 'auto'"
+  appearance="fill"
+>
+  <mat-label for="preferredName">Preferred name({{ locale }})</mat-label>
+  <input matInput [formControl]="getControl('preferredName' + locale)" name="preferredName{{ locale }}" data-cy="preferredName" />
+  <mat-hint>bamm:preferredName</mat-hint>
+</mat-form-field>

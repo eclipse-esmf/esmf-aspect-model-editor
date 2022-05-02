@@ -1,20 +1,12 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
-# Web Core defaults
-/documentation
-/test-results
-/e2e/**/e2e-results*
-*.tgz# See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist
-/tmp
-/out-tsc
-/apps/bame-e2e/.nyc_output
-/apps/bame-e2e/coverage
-/apps/bame-e2e/cypress
+**/dist
+**/tmp
+**/out-tsc
 
 # dependencies
-/node_modules
+**/node_modules
 
 # profiling files
 chrome-profiler-events.json
@@ -39,13 +31,8 @@ speed-measure-plugin.json
 !.vscode/extensions.json
 
 # misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
+**/.sass-cache
+**/coverage
 /typings
 
 # System Files
@@ -54,25 +41,20 @@ Thumbs.db
 
 #maven
 /target
-/node
+**/node
 
 *.iml
 
 # electron
-/out
-/.cache
-/electron
-print.html
+**/out
+**/.cache
+**/electron
+**/.files
 lsp
 
 # cypress
-/.nyc_output
-/cypress/videos
-/cypress/screenshots
-/cypress/reports
-
-# disclosure document
-src/assets/footer-doc
+**/.nyc_output
+**/cypress
 
 #jest
 jest-coverage

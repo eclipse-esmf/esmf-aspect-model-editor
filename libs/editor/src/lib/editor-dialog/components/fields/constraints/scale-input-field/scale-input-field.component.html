@@ -1,9 +1,0 @@
-<div fxLayout="column">
-  <mat-form-field>
-    <mat-label for="scale">Scale<ng-container *ngIf="isAsteriskVisible('scale')"> *</ng-container></mat-label>
-    <input matInput name="scale" data-cy="scale" type="number" pattern="^[1-9]\d*$" [formControl]="getControl('scale')" />
-    <mat-hint>bamm-c:scale</mat-hint>
-    <mat-error *ngIf="getControl('scale').errors?.required">Scale is required</mat-error>
-    <mat-error *ngIf="getControl('scale').errors?.pattern">Please provide a positive number</mat-error>
-  </mat-form-field>
-</div>

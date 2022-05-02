@@ -1,0 +1,226 @@
+{
+  "name": "aspect-model-editor",
+  "author": "",
+  "description": "Used to design and edit BAMM specific aspect models.",
+  "productName": "Aspect-Model-Editor",
+  "version": "",
+  "main": "main.js",
+  "build": {
+    "appId": "io.openmanufacturing.ame",
+    "artifactName": "${name}-${version}-${os}.${ext}",
+    "win": {
+      "target": "zip",
+      "icon": "./apps/ame/src/assets/img/product_aspect_model_editor_general.ico",
+      "files": [
+        "main.js",
+        "dist",
+        "electron-libs"
+      ],
+      "extraFiles": [
+        {
+          "from": "../backend/",
+          "to": "backend/",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "./apps/bame/src/assets/img/product_aspect_model_editor_general.ico",
+      "files": [
+        "main.js",
+        "dist",
+        "electron-libs"
+      ],
+      "extraFiles": [
+        {
+          "from": "../backend/",
+          "to": "backend/",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
+    "directories": {
+      "output": "./electron"
+    }
+  },
+  "scripts": {
+    "ng": "nx",
+    "nx": "nx",
+    "lint": "nx run-many --all --target=lint --exclude=ame-e2e",
+    "start": "ng serve --configuration development",
+    "build": "ng build --configuration development",
+    "build:stats": "ng build --configuration production --stats-json",
+    "build:prod": "ng build --configuration production",
+    "format:check-apps": "prettier --config ./.prettierrc --list-different \"./apps/ame/src/{app,assets}/**/*{.ts,.js,.json,.html,.scss}\"",
+    "format:check-libs": "prettier --config ./.prettierrc --list-different \"./libs/**/*{.ts,.js,.json,.html,.scss}\"",
+    "prettier:apps": "prettier --config ./.prettierrc --write \"./apps/ame/src/{app,assets}/**/*{.ts,.js,.json,.html,.scss}\" \"./apps/ame-e2e/src/integration/**/*{.ts,.js,.json,.html,.scss}\"",
+    "prettier:libs": "prettier --config ./.prettierrc --write \"./libs/**/*{.ts,.js,.json,.html,.scss}\"",
+    "prettier:env": "prettier --config ./.prettierrc --write \"./environments/**/*{.ts,.js,.json,.html,.scss}\"",
+    "analyse": "webpack-bundle-analyzer dist/ame/stats.json",
+    "doc:app": "compodoc -p tsconfig.app.json -t --hideGenerator -d \\\"dist/docs/app\\\"",
+    "electron-start-mac-dev-mode": "electron . --dev",
+    "electron-start-unix-dev-mode": "electron . --dev",
+    "electron-start-win-dev-mode": ".\\node_modules\\electron\\dist\\electron.exe . --dev",
+    "electron-builder-win-prod": "ng build --configuration production && electron-builder build --win",
+    "electron-builder-mac-prod": "ng build --configuration production && electron-builder build --mac",
+    "electron-run-win": ".\\node_modules\\electron\\dist\\electron.exe .",
+    "electron-start-win-dev": "ng build --configuration development --base-href .\\ && npm run electron-run-win",
+    "electron-start-win-prod": "ng build --configuration production --base-href .\\ && npm run electron-run-win",
+    "electron-start-mac-dev": "ng build --configuration development --base-href ./ && ./node_modules/.bin/electron .",
+    "electron-start-mac-prod": "ng build --configuration production --base-href ./ && ./node_modules/.bin/electron .",
+    "electron-start-unix-dev": "ng build --configuration development --base-href ./ && ./node_modules/.bin/electron .",
+    "electron-start-unix-prod": "ng build --configuration production --base-href ./ && ./node_modules/.bin/electron .",
+    "help": "nx help",
+    "affected:apps": "nx affected:apps",
+    "affected:libs": "nx affected:libs",
+    "affected:build": "nx affected:build",
+    "affected:e2e": "nx affected:e2e",
+    "affected:test": "nx affected:test",
+    "affected:lint": "nx affected:lint",
+    "affected:dep-graph": "nx affected:dep-graph",
+    "affected": "nx affected",
+    "format": "nx format:write",
+    "format:write": "nx format:write",
+    "format:nx-check": "nx format:check",
+    "update": "nx migrate latest",
+    "workspace-generator": "nx workspace-generator",
+    "dep-graph": "nx dep-graph",
+    "postinstall": "node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
+    "test": "nx run-many --all --target=test",
+    "test:coverage": "nx run-many --all --target=test --coverage",
+    "test:headless": "npm run test:headless:app",
+    "cypress": "npm run cypress:clean && npm run cypress:ci",
+    "cypress:ci": "nx e2e ame-e2e",
+    "cypress:clean": "rimraf 'cypress/reports' && rimraf 'coverage' && rimraf '.nyc_output'",
+    "cypress:open": "npm run cypress:clean && npx cypress open"
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "apps/ame/**/*.ts",
+      "libs/**/*.ts"
+    ],
+    "exclude": [
+      "cypress/",
+      "apps/ame-e2e",
+      "apps/ame/**/*.spec.ts",
+      "libs/**/*.spec.ts"
+    ],
+    "all": true
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "13.3.3",
+    "@angular/cdk": "13.3.3",
+    "@angular/common": "13.3.3",
+    "@angular/compiler": "13.3.3",
+    "@angular/core": "13.3.3",
+    "@angular/flex-layout": "^13.0.0-beta.38",
+    "@angular/forms": "13.3.3",
+    "@angular/material": "13.3.3",
+    "@angular/platform-browser": "13.3.3",
+    "@angular/platform-browser-dynamic": "13.3.3",
+    "@angular/router": "13.3.3",
+    "@electron/remote": "^2.0.5",
+    "@juggle/resize-observer": "^3.3.1",
+    "angular-split": "^13.2.0",
+    "electron-localshortcut": "^3.2.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "file-saver": "^2.0.5",
+    "fuse.js": "^6.5.3",
+    "locale-codes": "^1.3.1",
+    "loglevel": "^1.7.1",
+    "mxgraph": "^4.2.2",
+    "mxgraph-factory": "^4.2.0",
+    "n3": "~1.6.4",
+    "ngx-toastr": "^14.2.1",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "rxjs": "~7.4.0",
+    "stream-browserify": "^3.0.0",
+    "tslib": "^2.0.0",
+    "urn-lib": "^2.0.0",
+    "zone.js": "0.11.5"
+  },
+  "devDependencies": {
+    "@angular-builders/jest": "^13.0.3",
+    "@angular-devkit/build-angular": "13.3.3",
+    "@angular-eslint/builder": "^13.1.0",
+    "@angular-eslint/eslint-plugin": "~13.1.0",
+    "@angular-eslint/eslint-plugin-template": "~13.1.0",
+    "@angular-eslint/schematics": "^13.1.0",
+    "@angular-eslint/template-parser": "~13.1.0",
+    "@angular/cli": "13.3.3",
+    "@angular/compiler-cli": "13.3.3",
+    "@angular/language-service": "13.3.3",
+    "@angularclass/hmr": "^3.0.0",
+    "@compodoc/compodoc": "^1.1.14",
+    "@cypress/code-coverage": "^3.9.12",
+    "@cypress/schematic": "^1.6.0",
+    "@cypress/webpack-preprocessor": "^5.9.1",
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@nrwl/angular": "13.10.0",
+    "@nrwl/cli": "13.10.0",
+    "@nrwl/cypress": "13.10.0",
+    "@nrwl/eslint-plugin-nx": "13.10.0",
+    "@nrwl/jest": "13.10.0",
+    "@nrwl/linter": "13.10.0",
+    "@nrwl/nx-cloud": "13.2.2",
+    "@nrwl/workspace": "13.10.0",
+    "@typed-mxgraph/typed-mxgraph": "^1.0.4",
+    "@types/jest": "^27.0.1",
+    "@types/n3": "^1.4.4",
+    "@types/node": "^16.7.13",
+    "@typescript-eslint/eslint-plugin": "5.18.0",
+    "@typescript-eslint/experimental-utils": "5.18.0",
+    "@typescript-eslint/parser": "5.18.0",
+    "coverage-istanbul-loader": "^3.0.5",
+    "cypress": "^6.9.1",
+    "electron": "15.4.0",
+    "electron-builder": "^22.11.7",
+    "eslint": "8.12.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "2.25.2",
+    "eslint-plugin-jsdoc": "^38.0.3",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "events": "^3.3.0",
+    "jest": "^27.2.0",
+    "jest-junit": "^13.0.0",
+    "jest-preset-angular": "11.1.1",
+    "mocha": "^9.1.4",
+    "mochawesome": "^7.0.0",
+    "ng-packagr": "13.3.1",
+    "ngx": "^2.4.0",
+    "ngx-build-plus": "^13.0.1",
+    "nx": "13.10.0",
+    "nyc": "^15.1.0",
+    "prettier": "2.5.1",
+    "replace-in-files-cli": "^2.0.0",
+    "rimraf": "^3.0.2",
+    "source-map-support": "^0.5.19",
+    "ts-jest": "27.0.5",
+    "ts-loader": "^9.2.5",
+    "ts-node": "^10.2.1",
+    "typescript": "4.6.3",
+    "webpack": "^5.52.0",
+    "webpack-bundle-analyzer": "^4.4.2",
+    "webpack-cli": "^4.8.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browser": {
+    "fs": true,
+    "os": true,
+    "path": true
+  }
+}

@@ -1,7 +1,0 @@
-<ng-container *ngIf="filteredElements?.length > 0">
-  <div class="title">{{ title }}</div>
-  <div class="list">
-    <bci-sidebar-element *ngFor="let element of filteredElements" [element]="element"></bci-sidebar-element>
-    <div *ngIf="!isExpanded" class="see-all" (click)="expandList()">See all elements</div>
-  </div>
-</ng-container>

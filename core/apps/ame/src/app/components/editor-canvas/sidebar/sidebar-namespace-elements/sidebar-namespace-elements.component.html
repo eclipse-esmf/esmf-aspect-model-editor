@@ -1,0 +1,28 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="file-name">{{ fileName }}</div>
+<div class="search-bar">
+  <ame-namespace-filter [fileName]="fileName" [elements]="elements" (searchElements)="filterElements($event)"></ame-namespace-filter>
+</div>
+<div class="elements">
+  <ng-container *ngFor="let model of elementsTypes">
+    <ame-namespace-element-list
+      *ngIf="model.elements.length"
+      [title]="model.name"
+      [type]="model.type"
+      [elements]="model.elements"
+    ></ame-namespace-element-list>
+  </ng-container>
+  <div *ngIf="!filteredElements?.length">No elements found</div>
+</div>

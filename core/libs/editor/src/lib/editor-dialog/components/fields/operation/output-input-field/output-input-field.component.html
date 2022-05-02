@@ -1,0 +1,45 @@
+<!--
+  ~ Copyright (c) 2021 Robert Bosch Manufacturing Solutions GmbH. All rights reserved.
+  -->
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+  <mat-form-field [floatLabel]="getControl('output')?.disabled ? 'always' : 'auto'" appearance="fill">
+    <mat-label for="output">Output</mat-label>
+    <input #output [matAutocomplete]="auto" matInput name="output" [formControl]="getControl('output')" data-cy="output" />
+    <button
+      *ngIf="outputControl?.disabled && !metaModelElement?.isExternalReference()"
+      (click)="unlockOutput()"
+      class="close-button"
+      data-cy="clear-output-button"
+      matSuffix
+      mat-icon-button
+      tabindex="-1"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+    <mat-autocomplete #auto="matAutocomplete" class="characteristic-output-autocomplete">
+      <mat-optgroup *ngIf="filteredPropertyTypes$ | async as filteredPropertyTypes" label="Property">
+        <mat-option
+          *ngIf="!isAlreadyDefined(filteredPropertyTypes, output.value)"
+          [disabled]="!isLowerCase(output.value)"
+          [value]="!isLowerCase(output.value) ? '' : output.value"
+          (click)="createNewProperty(output.value)"
+        >
+          <span *ngIf="isLowerCase(output.value)">
+            + Create new property: <strong>{{ output.value }}</strong>
+          </span>
+          <span *ngIf="!isLowerCase(output.value)">Please provide the name for the new Property in lower case.</span>
+        </mat-option>
+        <mat-option
+          *ngFor="let output of filteredPropertyTypes"
+          [value]="output.name"
+          (onSelectionChange)="onSelectionChange('output', output)"
+        >
+          {{ output.name }}<br /><span class="option-description">{{ output.description }}</span>
+        </mat-option>
+      </mat-optgroup>
+    </mat-autocomplete>
+    <mat-hint>bamm:output</mat-hint>
+    <mat-error *ngIf="getControl('output')?.errors?.required">Please define a output</mat-error>
+    <mat-error *ngIf="getControl('output')?.errors?.disabled">No output defined</mat-error>
+  </mat-form-field>
+</div>

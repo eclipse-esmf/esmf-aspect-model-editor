@@ -1,0 +1,108 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="item setting-item">
+  <mat-slide-toggle
+    [(ngModel)]="settings.autoSaveEnabled"
+    (change)="toggleSaveTimeout($event)"
+    class="setting-item__toggle"
+    data-cy="autoSaveToggle"
+  >
+    <span class="setting-item__toggle__content"> Auto-save </span>
+  </mat-slide-toggle>
+  <mat-form-field class="setting-item__value" appearance="fill">
+    <mat-label for="autosaveTime">Waiting period</mat-label>
+    <input
+      [disabled]="!settings.autoSaveEnabled"
+      [(ngModel)]="settings.saveTimerSeconds"
+      (blur)="changeSaveTimeout()"
+      matInput
+      type="number"
+      name="autosaveTime"
+    />
+    <mat-hint>Seconds</mat-hint>
+  </mat-form-field>
+</div>
+
+<div class="item setting-item">
+  <mat-slide-toggle
+    [(ngModel)]="settings.autoValidationEnabled"
+    (change)="toggleValidateTimeout($event)"
+    class="setting-item__toggle"
+    data-cy="autoValidateToggle"
+  >
+    <span class="setting-item__toggle__content">
+      Auto-validation
+      <mat-icon
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="100"
+        matTooltip="After completing a validation, after passing the waiting period the next auto-validation will be triggered."
+        >info</mat-icon
+      >
+    </span>
+  </mat-slide-toggle>
+  <mat-form-field class="setting-item__value" appearance="fill">
+    <mat-label for="autosaveTime">Waiting period</mat-label>
+    <input
+      [disabled]="!settings.autoValidationEnabled"
+      [(ngModel)]="settings.validationTimerSeconds"
+      (blur)="changeValidateTimeout()"
+      matInput
+      type="number"
+      name="autoValidateTime"
+    />
+    <mat-hint>Seconds</mat-hint>
+  </mat-form-field>
+</div>
+
+<div class="item">
+  <mat-slide-toggle [(ngModel)]="settings.showValidationPopupNotifications" (change)="onChange()">
+    Show additional popups for notifications
+  </mat-slide-toggle>
+</div>
+
+<div class="item">
+  <mat-slide-toggle
+    matTooltip="may be more suitable for some models, e.g. with recursion"
+    [(ngModel)]="settings.enableHierarchicalLayout"
+    (change)="onChange(); onLayoutChange()"
+  >
+    <span class="setting-item__toggle__content"> Use "hierarchical" layout </span>
+  </mat-slide-toggle>
+</div>
+
+<div class="item">
+  <mat-slide-toggle [(ngModel)]="settings.showEntityValueEntityEdge" (change)="onChange(); onLayoutChange()">
+    <span class="setting-item__toggle__content"> Display 'entity value - entity' relationship </span>
+  </mat-slide-toggle>
+</div>
+
+<div class="item">
+  <mat-slide-toggle [(ngModel)]="settings.showConnectionLabels" (change)="onChange(); onLayoutChange()">
+    <span class="setting-item__toggle__content">
+      Display disambiguation labels
+      <mat-icon
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="100"
+        matTooltip="Displays labels on relationships that require disambiguation, e.g. Operation input/output, Characteristic Either left/right and Properties with notInPayload set."
+        >info</mat-icon
+      >
+    </span>
+  </mat-slide-toggle>
+</div>
+
+<div class="item">
+  <mat-slide-toggle [(ngModel)]="settings.useSaturatedColors" (change)="onChange(); themeChange($event)">
+    <span class="setting-item__toggle__content"> Display highly saturated colors </span>
+  </mat-slide-toggle>
+</div>
