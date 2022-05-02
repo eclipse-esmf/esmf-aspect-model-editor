@@ -54,8 +54,9 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           mkdir backend
-          echo ${{ tag_version }}
-          echo ${{ tag_version_with_v }}
+          
+          echo $tag_version
+          echo $tag_version_with_v
 
           ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ tag_version_with_v }} | jq '.assets[0].browser_download_url')
           ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ tag_version_with_v }} | jq '.assets[1].browser_download_url')
