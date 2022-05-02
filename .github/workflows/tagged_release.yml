@@ -36,23 +36,26 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
-      - name: Set env for (Mac)
+      - name: Set env (MAC)
         if: matrix.os == 'macos-latest'
-        run: |
-          tagVersion=${GITHUB_REF/refs\/tags\/v/}
-          echo tag_version=$tagVersion >> $GITHUB_ENV
-          echo tag_version_with_v=$tagVersion >> $GITHUB_ENV
+        uses: lukka/set-shell-env@v1.1
+        with:
+          tag_version: ${GITHUB_REF/refs\/tags\/v/}
+          tag_version_with_v: ${GITHUB_REF/refs\/tags\/}
 
       - name: Set env for (Windows)
         if: matrix.os == 'windows-latest'
-        run: |
-          echo ("tag_version=" + $env:GITHUB_REF.replace('refs/tags/v','')) >> $env:GITHUB_ENV
-          echo ("tag_version_with_v=" + $env:GITHUB_REF.replace('refs/tags/','')) >> $env:GITHUB_ENV
+        uses: lukka/set-shell-env@v1.1
+        with:
+          tag_version: $env:GITHUB_REF.replace('refs/tags/v','')
+          tag_version_with_v: $env:GITHUB_REF.replace('refs/tags/','')
 
       - name: Download aspect model service into project (Mac)
         if: matrix.os == 'macos-latest'
         run: |
           mkdir backend
+          echo ${{ tag_version }}
+          echo ${{ tag_version_with_v }}
 
           ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ tag_version_with_v }} | jq '.assets[0].browser_download_url')
           ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ tag_version_with_v }} | jq '.assets[1].browser_download_url')
@@ -76,8 +79,10 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           mkdir backend
+          echo ${{ env:tag_version }}
+          echo $${{ env:tag_version_with_v }}
 
-          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/$env:tag_version_with_v)
+          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/${{ env:tag_version_with_v }}
           $RESPONSE_JSON=($RESPONSE | ConvertFrom-Json)
 
           if ($RESPONSE_JSON.assets[0].browser_download_url -match ".exe") {
