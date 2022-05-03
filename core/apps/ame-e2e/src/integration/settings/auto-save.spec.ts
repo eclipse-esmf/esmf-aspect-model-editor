@@ -33,7 +33,7 @@ describe('Auto Save', () => {
   });
 
   it('should stop timer for saving', () => {
-    cy.get(SettingsDialogSelectors.autoSaveInput).clear({force: true}).type('2').blur();
+    cy.get(SettingsDialogSelectors.autoSaveInput).clear({force: true}).type('2');
     cy.get(SettingsDialogSelectors.autoSaveToggle).click({force: true});
     cy.wait(2000).then(() => cy.get(SNACK_BAR).should('not.exist'));
   });

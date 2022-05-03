@@ -13,7 +13,15 @@
 
 /// <reference types="Cypress" />
 
-import {FIELD_name, FIELD_notInPayload, FIELD_optional, FIELD_payloadName, SELECTOR_editorSaveButton} from '../../support/constants';
+import {
+  FIELD_name,
+  FIELD_notInPayload,
+  FIELD_optional,
+  FIELD_payloadName,
+  SELECTOR_ecProperty,
+  SELECTOR_editorSaveButton,
+  SELECTOR_tbDeleteButton,
+} from '../../support/constants';
 
 // These tests are for the special case that the name of the shape is changed and the turtle file is generated correctly.
 describe('Test edit property', () => {
@@ -32,6 +40,47 @@ describe('Test edit property', () => {
         expect(rdf).to.contain('bamm:properties (:test :property1)');
         expect(rdf).to.contain(':test a bamm:Property;');
         expect(rdf).to.contain(':property1 a bamm:Property');
+      });
+  });
+
+  it('should remove "test" and add new named "test"', () => {
+    cy.clickShape('test')
+      .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
+      .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300).then(() => cy.shapeExists('property1')))
+      .then(() => cy.dbClickShape('property1'))
+      .then(() => {
+        cy.get(FIELD_name).clear({force: true}).type('test', {force: true});
+        return cy.get(SELECTOR_editorSaveButton).focus().click({force: true});
+      });
+  });
+
+  it('should get error on renaming first property same as property from same namespace', () => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+      'io.openmanufacturing.digitaltwin:1.0.0': ['external-property-reference-with-children.txt'],
+    });
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {'Ame-Model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-property-reference-with-children.txt'},
+      },
+      {
+        fixture: '/external-reference/same-namespace/with-childrens/external-property-reference.txt',
+      }
+    );
+
+    cy.visitDefault();
+    cy.startModelling()
+      .then(() => cy.shapeExists('property1'))
+      .then(() => cy.dbClickShape('property1'))
+      .then(() => {
+        cy.get(FIELD_name).clear({force: true}).type('externalPropertyWithChildren', {force: true});
+        cy.get('ame-name-input-field mat-error').should(
+          'contain',
+          'Please select a different name as this one is already in use in the same namespace'
+        );
       });
   });
 
@@ -116,6 +165,8 @@ describe('Test edit property', () => {
   });
 
   it('should not permit to put 2 properties with the same name', () => {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {});
+
     cy.visitDefault();
     cy.startModelling()
       // create a

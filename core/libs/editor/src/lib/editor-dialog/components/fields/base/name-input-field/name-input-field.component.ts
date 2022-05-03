@@ -64,6 +64,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
         }
       )
     );
+    this.parentForm.get('name').markAsTouched();
   }
 
   private getNameValidators(): any[] {

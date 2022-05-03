@@ -38,7 +38,7 @@ export class SearchService {
    * This method will instantiate Fuse for every search because
    *  the list of elements may change form one search to another.
    */
-  search<T>(value: string, list: T[], options: Fuse.IFuseOptions<T>) {
+  search<T>(value: string, list: T[], options: Fuse.IFuseOptions<any>) {
     return new Fuse(list, options).search(this.adaptForSpecialSearch(value)).map(entry => entry.item);
   }
 
