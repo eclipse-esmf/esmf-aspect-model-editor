@@ -5,7 +5,7 @@
   !include nsDialogs.nsh
   !include LogicLib.nsh
 
-  !define MUI_ICON "..\core\apps\ame\src\assets\img\png\aspect-model-editor-targetsize-256.png"
+  !define MUI_ICON "..\core\apps\ame\src\assets\img\ico\aspect-model-editor-targetsize-256.ico"
 ;--------------------------------
 ;General
 
