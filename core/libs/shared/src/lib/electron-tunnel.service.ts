@@ -9,6 +9,10 @@ export class ElectronTunnelService {
   constructor(private notificationsService: NotificationsService) {}
 
   public subscribeMessages() {
+    if (!this.ipcRenderer) {
+      return;
+    }
+
     this.onServiceNotStarted();
   }
 

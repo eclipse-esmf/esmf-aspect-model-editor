@@ -14,8 +14,15 @@
 import {InjectionToken} from '@angular/core';
 import {AppConfig} from '@ame/shared';
 
+const serviceUrl = 'http://localhost:9091';
+const api = {
+  models: `${serviceUrl}/ame/api/models`,
+  generate: `${serviceUrl}/ame/api/generate`,
+  package: `${serviceUrl}/ame/api/package`,
+};
+
 export const config = {
-  ameService: 'http://localhost:9091',
+  ameService: serviceUrl,
   editorConfiguration: 'assets/config/editor/config/editor.xml',
   assetLocation: 'assets',
   oldMaxBammVersion: '2.0.0',
@@ -23,6 +30,7 @@ export const config = {
   minBammVersion: '1.0.0',
   currentBammVersion: '1.0.0',
   copyrightYear: '2021',
+  api,
 };
 
 export const APP_CONFIG = new InjectionToken<AppConfig>('app.config');

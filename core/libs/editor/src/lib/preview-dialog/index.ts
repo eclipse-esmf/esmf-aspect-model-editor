@@ -11,19 +11,5 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export interface AppConfig {
-  environment: string;
-  ameService: string;
-  editorConfiguration: string;
-  assetLocation: string;
-  oldMinBammVersion: string;
-  oldMaxBammVersion: string;
-  minBammVersion: string;
-  currentBammVersion: string;
-  copyrightYear: string;
-  api: {
-    models: string;
-    generate: string;
-    package: string;
-  };
-}
+export * from './preview-dialog.component';
+export * from './preview-dialog.module';

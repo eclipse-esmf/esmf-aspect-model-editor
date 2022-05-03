@@ -34,6 +34,7 @@ import {ConfirmDialogService} from '../confirm-dialog/confirm-dialog.service';
 import {ModelApiService} from '@ame/api';
 import {DocumentComponent, ExportWorkspaceComponent, ZipUploaderComponent} from './components';
 import {NotificationsComponent} from './components/notifications/notifications.component';
+import {PreviewDialogComponent} from '../preview-dialog';
 
 @Component({
   selector: 'ame-editor-toolbar',
@@ -219,7 +220,6 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     const reader = new FileReader();
     reader.readAsText(event.target.files[0]);
     reader.onload = () => {
-      console.log(reader.result.toString());
       this.modelApiService
         .saveModel(reader.result.toString())
         .pipe(first())
@@ -261,6 +261,65 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
         finalize(() => this.loadingScreen$.unsubscribe())
       )
       .subscribe({next: () => this.loadingScreenService.close(), error: () => this.loadingScreenService.close()});
+  }
+
+  generateJsonSample() {
+    this.onValidate(this.onGenerateJsonSample.bind(this));
+  }
+
+  onGenerateJsonSample() {
+    if (!this.modelService.getLoadedAspectModel().rdfModel) {
+      return;
+    }
+    const subscription$ = this.modelService
+      .synchronizeModelToRdf()
+      .pipe(
+        switchMap(() => this.editorService.downloadJsonSample(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
+        finalize(() => subscription$.unsubscribe())
+      )
+      .subscribe({
+        next: data => {
+          this.openPreview(
+            'Sample JSON Payload preview',
+            JSON.stringify(data, null, 2),
+            `${this.modelService.getLoadedAspectModel().aspect.name}-sample.json`
+          );
+        },
+        error: () => {
+          this.notificationsService.error('Failed to generate JSON Sample', 'Invalid Aspect Model');
+          this.loadingScreenService.close();
+        },
+      });
+  }
+
+  generateJsonSchema() {
+    this.onValidate(this.onGenerateJsonSchema);
+  }
+
+  onGenerateJsonSchema() {
+    if (!this.modelService.getLoadedAspectModel().rdfModel) {
+      return;
+    }
+
+    const subscription$ = this.modelService
+      .synchronizeModelToRdf()
+      .pipe(
+        switchMap(() => this.editorService.downloadJsonSchema(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
+        finalize(() => subscription$.unsubscribe())
+      )
+      .subscribe({
+        next: data => {
+          this.openPreview(
+            'JSON Schema preview',
+            JSON.stringify(data, null, 2),
+            `${this.modelService.getLoadedAspectModel().aspect.name}-schema.json`
+          );
+        },
+        error: () => {
+          this.notificationsService.error('Failed to generate JSON Schema', 'Invalid Aspect Model');
+          this.loadingScreenService.close();
+        },
+      });
   }
 
   onDelete() {
@@ -311,7 +370,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  onValidate() {
+  onValidate(callback?: Function) {
     this.loadingScreenOptions.title = 'Validating';
     this.loadingScreenOptions.hasCloseButton = true;
 
@@ -324,15 +383,16 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
           localStorage.removeItem('validating');
         })
       )
-      .subscribe(
-        correctableErrors => {
+      .subscribe({
+        next: correctableErrors => {
           this.loadingScreenService.close();
           this.logService.logInfo('Validated successfully');
           if (correctableErrors?.length === 0) {
             this.notificationsService.info('Validation completed successfully', null, null, 5000);
+            callback?.call(this);
           }
         },
-        error => {
+        error: error => {
           this.loadingScreenService.close();
           if (error?.type === SaveValidateErrorsCodes.validationInProgress) {
             this.notificationsService.error('Validation in progress');
@@ -345,8 +405,8 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
             5000
           );
           this.logService.logError(`Error occurred while validating the current model (${error})`);
-        }
-      );
+        },
+      });
   }
 
   onToggleEditorNavigation() {
@@ -365,5 +425,16 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   getTitleEditorMap() {
     return this.settings.showEditorMap ? 'Hide map' : 'Show map';
+  }
+
+  private openPreview(title: string, content: string, fileName: string) {
+    const config = {
+      data: {
+        title: title,
+        content: content,
+        fileName: fileName,
+      },
+    };
+    this.matDialog.open(PreviewDialogComponent, config);
   }
 }

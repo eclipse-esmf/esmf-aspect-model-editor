@@ -11,7 +11,7 @@
   "pluginsFile": "apps/ame-e2e/src/plugins/index.js",
   "video": false,
   "videoUploadOnPasses": false,
-  "screenshotOnRunFailure": true,
+  "screenshotOnRunFailure": false,
   "videosFolder": "apps/ame-e2e/cypress/videos",
   "screenshotsFolder": "apps/ame-e2e/cypress/screenshots",
   "chromeWebSecurity": false,

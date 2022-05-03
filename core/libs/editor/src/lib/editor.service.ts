@@ -289,6 +289,16 @@ export class EditorService {
     this.rdfService.externalRdfModels.splice(index, 1);
   }
 
+  public downloadJsonSample(rdfModel: RdfModel) {
+    const serializedModel = this.rdfService.serializeModel(rdfModel);
+    return this.modelApiService.getJsonSample(serializedModel);
+  }
+
+  public downloadJsonSchema(rdfModel: RdfModel) {
+    const serializedModel = this.rdfService.serializeModel(rdfModel);
+    return this.modelApiService.getJsonSchema(serializedModel);
+  }
+
   private loadCurrentModel(rdfModel: RdfModel, rdfAspectModel: string, validationResOfLoadedRdfModel: any) {
     return this.modelService.loadRdfModel(rdfModel, rdfAspectModel, validationResOfLoadedRdfModel).pipe(
       first(),

@@ -90,8 +90,25 @@
   </div>
 
   <div class="menu-items__group">
-    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Print" data-cy="tbPrintButton" (click)="onPrint()">
-      <mat-icon class="material-icons">print</mat-icon>
+    <button
+      mat-button
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      matTooltip="Generate HTML documentation"
+      data-cy="tbPrintButton"
+      (click)="onPrint()"
+    >
+      <mat-icon class="material-icons">html</mat-icon>
+    </button>
+    <button
+      mat-button
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      matTooltip="Generate JSON/JSON Schema"
+      [matMenuTriggerFor]="downloadJson"
+      data-cy="tbDownloadJsonButton"
+    >
+      <mat-icon class="material-icons">data_object</mat-icon>
     </button>
   </div>
 
@@ -178,6 +195,17 @@
   <button mat-menu-item (click)="onSave()">
     <mat-icon class="material-icons">save</mat-icon>
     <span>Save to Workspace</span>
+  </button>
+</mat-menu>
+
+<mat-menu #downloadJson="matMenu">
+  <button mat-menu-item (click)="generateJsonSample()" matTooltip="Generate sample JSON payload" data-cy="download-json-sample">
+    <mat-icon class="material-icons">file_download</mat-icon>
+    <span>Generate sample JSON payload</span>
+  </button>
+  <button mat-menu-item (click)="generateJsonSchema()" matTooltip="Generate JSON schema" data-cy="download-json-schema">
+    <mat-icon class="material-icons">file_download</mat-icon>
+    <span>Generate JSON schema</span>
   </button>
 </mat-menu>
 

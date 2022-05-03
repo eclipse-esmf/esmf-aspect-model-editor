@@ -33,7 +33,7 @@ import {RdfModel} from '@ame/rdf/utils';
   providedIn: 'root',
 })
 export class ModelApiService {
-  private baseUrl = `${this.config.ameService}/ame/api/models`;
+  private urls = this.config.api;
   private requestTimeout = 60000;
 
   constructor(
@@ -56,7 +56,7 @@ export class ModelApiService {
 
   loadAspectModelByUrn(urn: string): Observable<string> {
     return this.http
-      .get<string>(`${this.baseUrl}`, {
+      .get<string>(`${this.urls.models}`, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withUrn(urn).build(),
         responseType: 'text' as 'json',
       })
@@ -71,7 +71,7 @@ export class ModelApiService {
   }
 
   saveModel(rdfContent: string): Observable<string> {
-    return this.http.post<string>(`${this.baseUrl}`, rdfContent).pipe(
+    return this.http.post<string>(`${this.urls.models}`, rdfContent).pipe(
       timeout(this.requestTimeout),
       catchError(res => throwError(() => res))
     );
@@ -81,16 +81,16 @@ export class ModelApiService {
     const formData = new FormData();
     formData.append('zipFile', file);
 
-    return this.http.post(`${this.baseUrl}/validate-import-zip`, formData);
+    return this.http.post(`${this.urls.package}/validate-import-zip`, formData);
   }
 
   replaceFiles(files: string[]): Observable<any> {
-    return this.http.post(`${this.baseUrl}/import`, files);
+    return this.http.post(`${this.urls.package}/import`, files);
   }
 
   saveLatest(rdfContent: string): Observable<string> {
     return this.http
-      .post<string>(`${this.baseUrl}`, rdfContent, {
+      .post<string>(`${this.urls.models}`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withUrn(':latest.ttl').build(),
       })
       .pipe(
@@ -101,7 +101,7 @@ export class ModelApiService {
 
   deleteNamespace(namespace: string): Observable<string> {
     return this.http
-      .delete<string>(`${this.baseUrl}`, {
+      .delete<string>(`${this.urls.models}`, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withUrn(namespace).build(),
       })
       .pipe(
@@ -113,7 +113,7 @@ export class ModelApiService {
   // TODO In the backend a defined object should be returned
   getAllNamespaces(): Observable<any> {
     return this.http
-      .get<Map<string, Array<string>>>(`${this.baseUrl}/namespaces`, {
+      .get<Map<string, Array<string>>>(`${this.urls.models}/namespaces`, {
         params: {
           shouldRefresh: true,
         },
@@ -152,20 +152,42 @@ export class ModelApiService {
   }
 
   validateFilesForExport(files: string[]): Observable<any> {
-    return this.http.post(`${this.baseUrl}/validate-models`, files);
+    return this.http.post(`${this.urls.package}/validate-models`, files);
   }
 
   getExportZipFile(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/export-zip/AME.zip`, {
+    return this.http.get(`${this.urls.package}/export-zip/AME.zip`, {
       responseType: 'blob' as 'json',
     });
   }
 
   getAspectMetaModel(aspectModelFileName: string): Observable<string> {
     return this.http
-      .get<string>(`${this.baseUrl}`, {
+      .get<string>(`${this.urls.models}`, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withUrn(aspectModelFileName).build(),
         responseType: 'text' as 'json',
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => throwError(() => res))
+      );
+  }
+
+  getJsonSample(rdfContent: string): Observable<string> {
+    return this.http
+      .post<string>(`${this.urls.generate}/json-sample`, rdfContent, {
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => throwError(() => res))
+      );
+  }
+
+  getJsonSchema(rdfContent: string): Observable<string> {
+    return this.http
+      .post<string>(`${this.urls.generate}/json-schema`, rdfContent, {
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
       })
       .pipe(
         timeout(this.requestTimeout),
@@ -176,7 +198,7 @@ export class ModelApiService {
   migrateAspectModel(rdfContent: string, errors: Array<SemanticError | SyntacticError | ProcessingError>): Observable<string> {
     this.modelValidatorService.notifyCorrectableErrors(errors);
     return this.http
-      .post(`${this.baseUrl}/migrate`, rdfContent, {
+      .post(`${this.urls.models}/migrate`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
         responseType: 'text',
       })
@@ -192,7 +214,7 @@ export class ModelApiService {
 
   getValidationErrors(rdfContent: string): Observable<Array<SemanticError | SyntacticError | ProcessingError>> {
     return this.http
-      .post<Array<SemanticError | SyntacticError | ProcessingError>>(`${this.baseUrl}/validate`, rdfContent, {
+      .post<Array<SemanticError | SyntacticError | ProcessingError>>(`${this.urls.models}/validate`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
       })
       .pipe(
@@ -204,7 +226,10 @@ export class ModelApiService {
 
   openDocumentation(rdfModel: RdfModel, rdfContent: string): Observable<void> {
     return this.http
-      .post(`${this.baseUrl}/docu`, rdfContent, {headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(), responseType: 'text'})
+      .post(`${this.urls.generate}/documentation`, rdfContent, {
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+        responseType: 'text',
+      })
       .pipe(
         timeout(this.requestTimeout),
         map((documentation: string) => {
