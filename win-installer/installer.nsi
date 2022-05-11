@@ -13,7 +13,7 @@
   Name "Aspect Model Editor"
   Unicode True
 
-  OutFile "aspect-model-editor-${VERSION}-win.exe"
+  OutFile "aspect-model-editor-v${VERSION}-win.exe"
 
   ;Default installation folder
   InstallDir "$LOCALAPPDATA\ASPECT-MODEL-EDITOR"
