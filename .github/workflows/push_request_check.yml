@@ -35,26 +35,6 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
-      - name: Download aspect model service into project (Mac)
-        if: matrix.os == 'macos-latest'
-        run: |
-          mkdir backend
-          URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/latest | grep -v ".exe" | grep browser_download_url | cut -d '"' -f 4)
-          curl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" $URL --output backend/ame-backend
-
-      - name: Download aspect model service into project (Windows)
-        if: matrix.os == 'windows-latest'
-        run: |
-          mkdir backend
-          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/latest)
-          $RESPONSE_JSON=($RESPONSE | ConvertFrom-Json)
-
-          if ($RESPONSE_JSON.assets.browser_download_url[0] -match ".exe") {
-            curl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" $RESPONSE_JSON.assets.browser_download_url[0] --output backend/ame-backend.exe
-          } elseif ($RESPONSE_JSON.assets.browser_download_url[1] -match ".exe") {
-            curl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" $RESPONSE_JSON.assets.browser_download_url[1] --output backend/ame-backend.exe
-          }
-
       - name: Install node modules (Dev)
         run: npm install
         working-directory: core

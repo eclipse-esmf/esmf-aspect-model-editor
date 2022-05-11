@@ -7,7 +7,7 @@
   "main": "main.js",
   "build": {
     "appId": "io.openmanufacturing.ame",
-    "artifactName": "${name}-${version}-${os}.${ext}",
+    "artifactName": "${name}-v${version}-${os}.${ext}",
     "win": {
       "target": "zip",
       "icon": "./apps/ame/src/assets/img/png/aspect-model-editor-targetsize-256.png",
@@ -44,6 +44,24 @@
         }
       ]
     },
+    "linux": {
+      "target": "tar.gz",
+      "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-256.icns",
+      "files": [
+        "main.js",
+        "dist",
+        "electron-libs"
+      ],
+      "extraFiles": [
+        {
+          "from": "../backend/",
+          "to": "backend/",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
     "directories": {
       "output": "./electron"
     }
@@ -64,17 +82,18 @@
     "analyse": "webpack-bundle-analyzer dist/ame/stats.json",
     "doc:app": "compodoc -p tsconfig.app.json -t --hideGenerator -d \\\"dist/docs/app\\\"",
     "electron-start-mac-dev-mode": "electron . --dev",
-    "electron-start-unix-dev-mode": "electron . --dev",
+    "electron-start-linux-dev-mode": "electron . --dev",
     "electron-start-win-dev-mode": ".\\node_modules\\electron\\dist\\electron.exe . --dev",
     "electron-builder-win-prod": "ng build --configuration production && electron-builder build --win",
     "electron-builder-mac-prod": "ng build --configuration production && electron-builder build --mac",
+    "electron-builder-linux-prod": "ng build --configuration production && electron-builder build --linux",
     "electron-run-win": ".\\node_modules\\electron\\dist\\electron.exe .",
     "electron-start-win-dev": "ng build --configuration development --base-href .\\ && npm run electron-run-win",
     "electron-start-win-prod": "ng build --configuration production --base-href .\\ && npm run electron-run-win",
     "electron-start-mac-dev": "ng build --configuration development --base-href ./ && ./node_modules/.bin/electron .",
     "electron-start-mac-prod": "ng build --configuration production --base-href ./ && ./node_modules/.bin/electron .",
-    "electron-start-unix-dev": "ng build --configuration development --base-href ./ && ./node_modules/.bin/electron .",
-    "electron-start-unix-prod": "ng build --configuration production --base-href ./ && ./node_modules/.bin/electron .",
+    "electron-start-linux-dev": "ng build --configuration development --base-href ./ && ./node_modules/.bin/electron .",
+    "electron-start-linux-prod": "ng build --configuration production --base-href ./ && ./node_modules/.bin/electron .",
     "help": "nx help",
     "affected:apps": "nx affected:apps",
     "affected:libs": "nx affected:libs",
