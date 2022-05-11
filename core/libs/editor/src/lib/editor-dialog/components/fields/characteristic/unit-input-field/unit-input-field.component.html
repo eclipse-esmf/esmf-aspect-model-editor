@@ -35,7 +35,8 @@
               + Create new Unit: <strong>{{ unit.value }}</strong>
             </span>
           </mat-option>
-          <mat-option *ngFor="let unit of filteredUnits" [value]="unit.name" (onSelectionChange)="onExistingUnitChange(unit)">
+          <mat-option *ngFor="let unit of filteredUnits" [value]="unit.name" [title]="unit.name"
+            (onSelectionChange)="onExistingUnitChange(unit)">
             {{ unit?.name }}
           </mat-option>
         </mat-optgroup>
@@ -43,8 +44,9 @@
       <ng-container #predefinedUnits *ngIf="filteredPredefinedUnits$ | async as filteredPredefinedUnits">
         <mat-optgroup label="Predefined Units" *ngIf="filteredPredefinedUnits?.length">
           <mat-option
-            *ngFor="let unit of filteredPredefinedUnits$ | async"
+            *ngFor="let unit of filteredPredefinedUnits"
             [value]="unit.name"
+            [title]="unit.name"
             [attr.data-unit-cy]="unit.name"
             (onSelectionChange)="onPredefinedUnitChange(unit)"
           >

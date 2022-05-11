@@ -20,6 +20,7 @@ import {BammUnitInstantiator, MetaModelElementInstantiator} from '@ame/instantia
 import {EditorModelService} from '../../../../editor-model.service';
 import {NamespacesCacheService} from '@ame/cache';
 import {ModelService} from '@ame/rdf/services';
+import {SearchService} from '@ame/shared';
 
 declare const bammuDefinition: any;
 
@@ -42,7 +43,8 @@ export class UnitInputFieldComponent
   constructor(
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
-    private modelService: ModelService
+    private modelService: ModelService,
+    private searchService: SearchService
   ) {
     super(metaModelDialogService, namespacesCacheService);
     this.bammUnitInstantiator = new BammUnitInstantiator(
@@ -94,8 +96,8 @@ export class UnitInputFieldComponent
     );
 
     this.parentForm.setControl('changedUnit', new FormControl(unitName ? this.bammUnitInstantiator.getUnit(unitName) : null));
-    this.filteredUnits$ = this.initFilteredUnits(this.unitDisplayControl);
-    this.filteredPredefinedUnits$ = this.initFilteredPredefinedUnits(this.unitDisplayControl, this.units);
+    this.filteredUnits$ = this.initFilteredUnits(this.unitDisplayControl, this.searchService);
+    this.filteredPredefinedUnits$ = this.initFilteredPredefinedUnits(this.unitDisplayControl, this.units, this.searchService);
   }
 
   createNewUnit(unitName: string) {

@@ -15,9 +15,10 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {EditorModelService} from '../../editor-model.service';
 import {Observable, startWith, Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {BaseMetaModelElement, DefaultCharacteristic, DefaultConstraint, Unit} from '@ame/meta-model';
+import {BaseMetaModelElement, DefaultCharacteristic, DefaultConstraint, DefaultUnit, Unit} from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
 import {PreviousFormDataSnapshot} from '../../interfaces';
+import {SearchService, unitSearchOption} from '@ame/shared';
 
 interface FilteredType {
   name: string;
@@ -149,20 +150,28 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
     );
   }
 
-  initFilteredUnits(control: FormControl) {
+  initFilteredUnits(control: FormControl, searchService: SearchService) {
+    const units = this.currentCachedFile.getCachedUnits();
     return control?.valueChanges.pipe(
       map((value: string) => {
-        const units = this.currentCachedFile.getCachedUnits();
-        return value ? units?.filter(type => this.inSearchList(type, value)) : units;
+        if (!value) {
+          return units;
+        }
+        return searchService
+          .search<DefaultUnit>(value, units, unitSearchOption);
       }),
-      startWith(this.currentCachedFile.getCachedUnits())
+      startWith(units)
     );
   }
 
-  initFilteredPredefinedUnits(control: FormControl, units: Array<Unit>) {
+  initFilteredPredefinedUnits(control: FormControl, units: Array<Unit>, searchService: SearchService) {
     return control?.valueChanges.pipe(
       map((value: string) => {
-        return value ? units?.filter(type => this.inSearchList(type, value)) : units;
+        if (!value) {
+          return units;
+        }
+        return searchService
+          .search<Unit>(value, units, unitSearchOption);
       }),
       startWith(units)
     );

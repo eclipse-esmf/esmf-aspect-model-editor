@@ -241,4 +241,21 @@ describe('Test editing Unit', () => {
         });
     });
   });
+
+  it('can filter predefined units', () => {
+    cy.visitDefault();
+    cy.startModelling()
+      .then(() => cy.dbClickShape('Characteristic1'))
+      .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Quantifiable').click({force: true}))
+      .then(() =>
+        cy
+          .get(FIELD_unit)
+          .clear({force: true})
+          .type('=metre', {force: true})
+          .get('mat-option')
+          .last()
+          .contains('metre')
+          .click({force: true})
+      )
+  });
 });

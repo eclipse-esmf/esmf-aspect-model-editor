@@ -20,6 +20,7 @@ import {Observable} from 'rxjs';
 import {BammUnitInstantiator, MetaModelElementInstantiator} from '@ame/instantiator';
 import {NamespacesCacheService} from '@ame/cache';
 import {ModelService} from '@ame/rdf/services';
+import {SearchService} from '@ame/shared';
 
 declare const bammuDefinition: any;
 
@@ -37,7 +38,8 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
   constructor(
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
-    private modelService: ModelService
+    private modelService: ModelService,
+    private searchService: SearchService
   ) {
     super(metaModelDialogService, namespacesCacheService);
     this.bammUnitInstantiator = new BammUnitInstantiator(
@@ -76,8 +78,8 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
       })
     );
 
-    this.filteredUnits$ = this.initFilteredUnits(this.unitDisplayControl);
-    this.filteredPredefinedUnits$ = this.initFilteredPredefinedUnits(this.unitDisplayControl, this.units);
+    this.filteredUnits$ = this.initFilteredUnits(this.unitDisplayControl, this.searchService);
+    this.filteredPredefinedUnits$ = this.initFilteredPredefinedUnits(this.unitDisplayControl, this.units, this.searchService);
   }
 
   unlockUnit() {

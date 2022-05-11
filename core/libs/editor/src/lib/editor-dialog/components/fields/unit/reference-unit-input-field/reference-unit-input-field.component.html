@@ -36,7 +36,8 @@
       <ng-container #predefinedUnits *ngIf="filteredPredefinedUnits$ | async as filteredPredefinedUnits">
         <mat-optgroup label="Predefined Units" *ngIf="filteredPredefinedUnits?.length">
           <mat-option
-            *ngFor="let unit of filteredPredefinedUnits$ | async"
+            *ngFor="let unit of filteredPredefinedUnits"
+            [title]="unit.name"
             [value]="unit.name"
             (onSelectionChange)="onPredefinedUnitChange(unit)"
           >
