@@ -55,19 +55,19 @@ jobs:
           ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
           ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
 
-          if [[ ${ASSET_ONE_URL} != *".exe"* && ${ASSET_ONE_URL} != *".tar.gz"* ]];
+          if [[ ${ASSET_ONE_URL} == *"-mac"* ]];
             then
               echo $ASSET_ONE_URL
               DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[0].url')
           fi
 
-          if [[ ${ASSET_TWO_URL} != *".exe"* && ${ASSET_TWO_URL} != *".tar.gz"* ]];
+          if [[ ${ASSET_TWO_URL} == *"-mac"* ]];
             then
               echo $ASSET_TWO_URL
               DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[1].url')
           fi
 
-          if [[ ${ASSET_THREE_URL} != *".exe"* && ${ASSET_THREE_URL} != *".tar.gz"* ]];
+          if [[ ${ASSET_THREE_URL} == *"-mac"* ]];
             then
               echo ASSET_THREE_URL
               DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[2].url')
@@ -85,19 +85,19 @@ jobs:
           ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
           ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
 
-          if [[ ${ASSET_ONE_URL} != *".exe"* && ${ASSET_ONE_URL} != *".dmg"* ]];
+          if [[ ${ASSET_ONE_URL} == *"-linux"* ]];
             then
               echo $ASSET_ONE_URL
               DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[0].url')
           fi
 
-          if [[ ${ASSET_TWO_URL} != *".exe"* && ${ASSET_TWO_URL} != *".dmg"* ]];
+          if [[ ${ASSET_TWO_URL} == *"-linux"* ]];
             then
               echo $ASSET_TWO_URL
               DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[1].url')
           fi
 
-          if [[ ${ASSET_THREE_URL} != *".exe"* && ${ASSET_THREE_URL} != *".dmg"* ]];
+          if [[ ${ASSET_THREE_URL} == *"-linux"* ]];
             then
               echo ASSET_THREE_URL
               DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[2].url')
