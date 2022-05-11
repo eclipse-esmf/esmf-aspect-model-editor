@@ -209,7 +209,7 @@ jobs:
           overwrite: true
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: win-installer/aspect-model-editor-v${{ env.tagVersion }}-win.exe
+          file: win-installer/aspect-model-editor-${{ env.tagVersion }}-win.exe
           tag: ${{ github.ref }}
 
       - name: Create GitHub pre-release (Windows)
@@ -219,6 +219,6 @@ jobs:
           overwrite: true
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: win-installer/aspect-model-editor-v${{ env.tagVersion }}-win.exe
+          file: win-installer/aspect-model-editor-${{ env.tagVersion }}-win.exe
           tag: ${{ github.ref }}
 
