@@ -36,6 +36,7 @@ import {
 import {EntityValueService} from '@ame/editor';
 import {DefaultStructuredValue} from '../aspect-meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
+import {ShapeConnectorService} from '@ame/connection';
 
 @Injectable({providedIn: 'root'})
 export class ElementModelService {
@@ -45,7 +46,8 @@ export class ElementModelService {
     private mxGraphService: MxGraphService,
     private namespacesCacheService: NamespacesCacheService,
     private entityValueService: EntityValueService,
-    private languageSettingsService: LanguageSettingsService
+    private languageSettingsService: LanguageSettingsService,
+    private shapeConnectorService: ShapeConnectorService
   ) {}
 
   get currentCachedFile() {

@@ -173,11 +173,11 @@
 
 <!-- Menus -->
 <mat-menu #loadMenu="matMenu">
-  <button mat-menu-item (click)="onNew()" matTooltip="Create/Upload Aspect Model" data-cy="create-model">
+  <button mat-menu-item (click)="onNew()" data-cy="create-model">
     <mat-icon class="material-icons">add_circle</mat-icon>
     <span>Create/Upload Aspect Model</span>
   </button>
-  <button mat-menu-item (click)="zipInput.click()" matTooltip="Import Package" data-cy="import-package">
+  <button mat-menu-item (click)="zipInput.click()" data-cy="import-package">
     <mat-icon class="material-icons">folder_zip</mat-icon>
     <span>Import Package</span>
   </button>

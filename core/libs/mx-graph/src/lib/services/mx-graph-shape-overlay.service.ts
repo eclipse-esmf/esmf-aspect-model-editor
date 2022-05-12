@@ -394,8 +394,9 @@ export class MxGraphShapeOverlayService {
       });
       return;
     }
+
     // This will add back the + overlay for characteristic if we remove the entity and for property if we remove the characteristic
-    if (modelElement instanceof DefaultProperty || MxGraphHelper.isCharacteristicWithoutDataType(incomingEdges[0].source)) {
+    if (modelElement instanceof DefaultProperty || incomingEdges.some(edge => MxGraphHelper.isCharacteristicWithoutDataType(edge.source))) {
       incomingEdges.forEach(edge => this.addBottomShapeOverlay(edge.source));
     }
   }

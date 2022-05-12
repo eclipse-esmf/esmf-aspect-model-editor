@@ -23,7 +23,7 @@ import {
 } from '@ame/mx-graph';
 import {mxgraph} from 'mxgraph-factory';
 import {ShapeConnectorService} from '@ame/connection';
-import {BaseMetaModelElement, DefaultCharacteristic, DefaultEither, DefaultTrait} from '@ame/meta-model';
+import {BaseMetaModelElement, DefaultCharacteristic, DefaultEither, DefaultEntity, DefaultProperty, DefaultTrait} from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
 import {BaseModelService} from './base-model-service';
 
@@ -60,7 +60,7 @@ export class TraitModelService extends BaseModelService {
     const sourceTargetPair = this.getSourceTargetPairForReconnect(cell);
 
     const informationOfEithers: Array<EitherInformation> = [];
-    sourceTargetPair.forEach((target, source) => {
+    Array.from(sourceTargetPair.keys()).forEach(source => {
       const sourceMetaModel = MxGraphHelper.getModelElement(source);
       if (sourceMetaModel instanceof DefaultEither) {
         informationOfEithers.push({
@@ -97,14 +97,9 @@ export class TraitModelService extends BaseModelService {
 
       // outgoingEdges[0].target can be characteristic or constraint.
       // In this case we need to make sure that we relink property only to characteristic
-      if (
-        incomingEdges.length &&
-        outgoingEdges.length &&
-        MxGraphHelper.getModelElement(outgoingEdges[0].target) instanceof DefaultCharacteristic
-      ) {
-        incomingEdges.forEach(incomingEdge => {
-          sourceTargetPair.set(incomingEdge.source, outgoingEdges[0].target);
-        });
+      const characteristicEdge = outgoingEdges.find(edge => MxGraphHelper.getModelElement(edge.target) instanceof DefaultCharacteristic);
+      if (incomingEdges.length && outgoingEdges.length && characteristicEdge) {
+        incomingEdges.forEach(incomingEdge => sourceTargetPair.set(incomingEdge.source, characteristicEdge.target));
       }
     }
     return sourceTargetPair;
@@ -133,6 +128,13 @@ export class TraitModelService extends BaseModelService {
         this.mxGraphShapeOverlayService.removeOverlay(target, MxGraphHelper.getTopOverlayButton(target));
         this.mxGraphShapeOverlayService.removeOverlaysByConnection(sourceModelElement, source);
         this.mxGraphShapeOverlayService.addTopShapeOverlay(target);
+        if (
+          targetModelElement instanceof DefaultCharacteristic &&
+          sourceModelElement instanceof DefaultProperty &&
+          !(targetModelElement.dataType instanceof DefaultEntity)
+        ) {
+          this.mxGraphShapeOverlayService.addBottomShapeOverlay(target);
+        }
         this.mxGraphService.formatShapes();
       }
     });

@@ -4,7 +4,15 @@
 <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
   <mat-form-field [floatLabel]="getControl('output')?.disabled ? 'always' : 'auto'" appearance="fill">
     <mat-label for="output">Output</mat-label>
-    <input #output [matAutocomplete]="auto" matInput name="output" [formControl]="getControl('output')" data-cy="output" />
+    <input
+      #output
+      [matAutocomplete]="auto"
+      spellcheck="false"
+      matInput
+      name="output"
+      [formControl]="getControl('output')"
+      data-cy="output"
+    />
     <button
       *ngIf="outputControl?.disabled && !metaModelElement?.isExternalReference()"
       (click)="unlockOutput()"
