@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -30,6 +30,7 @@ import {FormGroup} from '@angular/forms';
 })
 export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(ShapeSettingsComponent) shapeSettingsComponent: ShapeSettingsComponent;
+  @ViewChild('graph') graphElement: ElementRef<HTMLDivElement>;
 
   private unsubscribe: Subject<void> = new Subject();
   private selectedShapeForUpdate: mxgraph.mxCell | null;
@@ -70,6 +71,13 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
       'deleteElement',
       mxUtils.bind(this, () => this.editorService.deleteSelectedElements())
     );
+
+    this.graphElement.nativeElement.addEventListener('wheel', evt => {
+      if (evt.altKey) {
+        evt.preventDefault();
+      }
+    });
+
     window['ng-editor-service'] = this.editorService;
   }
 
