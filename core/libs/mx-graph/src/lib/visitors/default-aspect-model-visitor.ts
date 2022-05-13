@@ -69,8 +69,23 @@ import {
 import {AspectModelVisitor} from './aspect-model-visitor';
 
 export class DefaultAspectModelVisitor<T, U> implements AspectModelVisitor<T, U> {
+
+  visitedElements = []; // Keep track of already visited elements
+
   visit(element: BaseMetaModelElement, context: U): T {
+    let wasVisited = false;
+    if (this.visitedElements.includes(element)) {
+      wasVisited = true;
+    } else {
+      this.visitedElements.push(element);
+    }
     const item: U = element.accept(<any>this, context);
+    if (wasVisited) {
+      // In case the element was visited -> don't visit its lower attributes since they were already visited previously
+      // This avoids duplication of bamm-c elements
+      // TODO: Might need further investigation
+      return null;
+    }
 
     if (item) {
       // by heaving attribute 'parents' on entityValue we will call this recursively forever so we need to exclude it
