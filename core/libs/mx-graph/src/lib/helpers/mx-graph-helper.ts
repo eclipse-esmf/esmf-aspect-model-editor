@@ -308,8 +308,9 @@ export class MxGraphHelper {
   static createSpanElement(content: PropertyInformation) {
     const span = document.createElement('span');
     span.classList.add('element-info');
+    const sanitizedLabel = `${content.label}`.replace(/\n/g, ' ');
     span.title = content.label;
-    span.innerText = content.label;
+    span.innerText = sanitizedLabel;
     span.dataset.key = content.key;
     span.dataset.lang = content.lang || '';
     return span;
