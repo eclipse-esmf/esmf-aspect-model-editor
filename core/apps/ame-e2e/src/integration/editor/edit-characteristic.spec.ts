@@ -105,11 +105,7 @@ describe('Test editing Characteristic', () => {
           .should('eq', `${META_MODEL_see} = http://www.see1.de,http://www.see2.de,http://www.see3.de`)
       )
       .then(() =>
-        cy
-          .getUpdatedRDF()
-          .then(rdf =>
-            expect(rdf).to.contain('bamm:see <http%3A%2F%2Fwww.see1.de>, <http%3A%2F%2Fwww.see2.de>, <http%3A%2F%2Fwww.see3.de>')
-          )
+        cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>'))
       )
 
       .then(() =>
@@ -126,7 +122,7 @@ describe('Test editing Characteristic', () => {
         cy.getCellLabel('Characteristic1', META_MODEL_see).should('eq', `${META_MODEL_see} = http://www.see1.de,http://www.see3.de`)
       )
       .then(() => cy.getUpdatedRDF())
-      .then(rdf => expect(rdf).to.contain('bamm:see <http%3A%2F%2Fwww.see1.de>, <http%3A%2F%2Fwww.see3.de>'))
+      .then(rdf => expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see3.de>'))
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.characteristic.getSeeReferences()).to.have.length(2);
@@ -152,11 +148,7 @@ describe('Test editing Characteristic', () => {
           .should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001`)
       )
       .then(() => cy.getUpdatedRDF())
-      .then(rdf =>
-        expect(rdf).to.contain(
-          'bamm:see <urn%3Airdi%3Aeclass%3A0173-1%2302-AAO677>, <urn%3Airdi%3Aiec%3A0112%2F2%2F%2F%2F62683%23ACC011%23001>'
-        )
-      )
+      .then(rdf => expect(rdf).to.contain('bamm:see <urn:irdi:eclass:0173-1#02-AAO677>, <urn:irdi:iec:0112/2///62683#ACC011#001>'))
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.properties[0].property.characteristic.getSeeReferences()).to.have.length(2);
@@ -169,7 +161,7 @@ describe('Test editing Characteristic', () => {
 
       .then(() => cy.getCellLabel('Characteristic1', META_MODEL_see).should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677`))
       .then(() => cy.getUpdatedRDF())
-      .then(rdf => expect(rdf).to.contain('bamm:see <urn%3Airdi%3Aeclass%3A0173-1%2302-AAO677>'))
+      .then(rdf => expect(rdf).to.contain('bamm:see <urn:irdi:eclass:0173-1#02-AAO677>'))
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.properties[0].property.characteristic.getSeeReferences()).to.have.length(1);
@@ -241,7 +233,7 @@ describe('Test editing Characteristic', () => {
             '    bamm:name "NewCharacteristic";\n' +
             '    bamm:dataType xsd:integer;\n' +
             '    bamm:description "New description for the new created characteristic"@en;\n' +
-            '    bamm:see <urn%3Airdi%3Aeclass%3A0173-1%2302-AAO677>;\n' +
+            '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
             '    bamm:preferredName "new-preferredName"@en.'
         );
       })
@@ -263,7 +255,7 @@ describe('Test editing Characteristic', () => {
             '    bamm:name "NewCharacteristic";\n' +
             '    bamm:dataType xsd:integer;\n' +
             '    bamm:description "New description for the new created characteristic"@en;\n' +
-            '    bamm:see <urn%3Airdi%3Aeclass%3A0173-1%2302-AAO677>;\n' +
+            '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
             '    bamm:preferredName "new-preferredName"@en;\n' +
             '    bamm-c:values' +
             ' ("1"^^xsd:integer "2"^^xsd:integer "a"^^xsd:integer "b"^^xsd:integer "3"^^xsd:integer "4"^^xsd:integer).'
@@ -285,7 +277,7 @@ describe('Test editing Characteristic', () => {
             '    bamm:name "NewCharacteristic";\n' +
             '    bamm:dataType xsd:integer;\n' +
             '    bamm:description "New description for the new created characteristic"@en;\n' +
-            '    bamm:see <urn%3Airdi%3Aeclass%3A0173-1%2302-AAO677>;\n' +
+            '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
             '    bamm:preferredName "new-preferredName"@en;\n' +
             '    bamm-c:values ("2"^^xsd:integer "b"^^xsd:integer "3"^^xsd:integer).'
         )

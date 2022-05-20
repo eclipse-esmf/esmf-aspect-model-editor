@@ -2,6 +2,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",

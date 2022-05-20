@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component} from '@angular/core';
+import {APP_CONFIG, AppConfig} from '@ame/shared';
+import {Component, Inject} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 
 @Component({
@@ -24,7 +25,7 @@ export class DocumentComponent {
   BAMMDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/index.html';
   supportMail = 'Nexeed.Helpdesk@de.bosch.com';
 
-  constructor(private dialogRef: MatDialogRef<DocumentComponent>) {}
+  constructor(private dialogRef: MatDialogRef<DocumentComponent>, @Inject(APP_CONFIG) public config: AppConfig) {}
 
   onClose(): void {
     this.dialogRef.close();

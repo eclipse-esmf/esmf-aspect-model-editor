@@ -159,7 +159,7 @@ export class RdfNodeService {
   ) {
     const arrayProperty: string[] = properties[key];
     arrayProperty.forEach(property => {
-      this.addDatatype(metaModelElement, aspectModelUrn, property, true);
+      this.addDatatype(metaModelElement, aspectModelUrn, property, key !== 'see');
     });
   }
 

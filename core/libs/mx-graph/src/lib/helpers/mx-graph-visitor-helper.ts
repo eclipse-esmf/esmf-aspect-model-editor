@@ -136,7 +136,7 @@ export class MxGraphVisitorHelper {
 
   static addSee(metaModelElement: Base): PropertyInformation {
     if (metaModelElement.getSeeReferences() && metaModelElement.getSeeReferences().length > 0) {
-      return {label: `see = ${decodeURIComponent(metaModelElement.getSeeReferences().join(','))}`, key: 'see'};
+      return {label: `see = ${metaModelElement.getSeeReferences().join(',')}`, key: 'see'};
     }
     return null;
   }

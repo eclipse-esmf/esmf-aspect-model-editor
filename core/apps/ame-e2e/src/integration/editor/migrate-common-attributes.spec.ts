@@ -54,7 +54,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>.'
+            '    bamm:see <http://see.de>.'
         )
       );
   });
@@ -72,7 +72,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>.'
+            '    bamm:see <http://see.de>.'
         )
       );
   });
@@ -100,7 +100,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>;\n' +
+            '    bamm:see <http://see.de>;\n' +
             '    bamm-c:elementCharacteristic :Characteristic2.'
         );
       });
@@ -119,7 +119,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>;\n' +
+            '    bamm:see <http://see.de>;\n' +
             '    bamm-c:elementCharacteristic :Characteristic2.'
         )
       );
@@ -138,7 +138,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>;\n' +
+            '    bamm:see <http://see.de>;\n' +
             '    bamm-c:elementCharacteristic :Characteristic2.'
         )
       );
@@ -157,7 +157,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>;\n' +
+            '    bamm:see <http://see.de>;\n' +
             '    bamm-c:elementCharacteristic :Characteristic2.'
         )
       );
@@ -176,7 +176,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>;\n' +
+            '    bamm:see <http://see.de>;\n' +
             '    bamm-c:elementCharacteristic :Characteristic2.\n'
         )
       );
@@ -196,7 +196,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>;\n' +
+            '    bamm:see <http://see.de>;\n' +
             '    bamm-c:values ("1" "2" "a" "b" "3" "4").'
         );
       });
@@ -216,7 +216,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>;\n' +
+            '    bamm:see <http://see.de>;\n' +
             '    bamm-c:values ("1" "2" "a" "b" "3" "4");\n' +
             '    bamm-c:defaultValue "testState".'
         );
@@ -237,7 +237,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>;\n' +
+            '    bamm:see <http://see.de>;\n' +
             '    bamm-c:unit unit:commonYear.'
         )
       );
@@ -259,7 +259,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>;\n' +
+            '    bamm:see <http://see.de>;\n' +
             '    bamm-c:unit unit:ampere.'
         )
       );
@@ -278,7 +278,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>.'
+            '    bamm:see <http://see.de>.'
         )
       );
   });
@@ -298,7 +298,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>.'
+            '    bamm:see <http://see.de>.'
         )
       );
   });
@@ -320,7 +320,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType :Entity1;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>;\n' +
+            '    bamm:see <http://see.de>;\n' +
             '    bamm-c:unit unit:acre.'
         )
       )
@@ -340,7 +340,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    bamm:dataType :Entity1;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http%3A%2F%2Fsee.de>;\n' +
+            '    bamm:see <http://see.de>;\n' +
             '    bamm-c:unit unit:day.'
         )
       );

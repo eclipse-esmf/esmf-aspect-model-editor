@@ -13,6 +13,7 @@
 
 import {InjectionToken} from '@angular/core';
 import {AppConfig} from '@ame/shared';
+import packageJson from '../../../../package.json';
 
 const serviceUrl = 'http://localhost:9091';
 const api = {
@@ -23,10 +24,9 @@ const api = {
 
 export const config = {
   ameService: serviceUrl,
+  ameVersion: packageJson.version,
   editorConfiguration: 'assets/config/editor/config/editor.xml',
   assetLocation: 'assets',
-  oldMaxBammVersion: '2.0.0',
-  oldMinBammVersion: '1.2.1',
   minBammVersion: '1.0.0',
   currentBammVersion: '1.0.0',
   copyrightYear: '2021',

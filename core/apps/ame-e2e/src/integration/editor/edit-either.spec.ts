@@ -104,7 +104,7 @@ describe('Test editing Either', () => {
       .then(rdf => {
         expect(rdf).to.contain('bamm:preferredName "new-preferredName"@en');
         expect(rdf).to.contain('bamm:description "New description for the new created characteristic"@en');
-        expect(rdf).to.contain('bamm:see <http%3A%2F%2Fwww.see1.de>, <http%3A%2F%2Fwww.see2.de>, <http%3A%2F%2Fwww.see3.de>');
+        expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
       })
       .then(() => cy.getAspect())
       .then(aspect => {
@@ -158,7 +158,7 @@ describe('Test editing Either', () => {
         expect(rdf).to.contain('NewRightCharacteristic a bamm:Characteristic');
         expect(rdf).to.contain('bamm:preferredName "new-preferredName"@en');
         expect(rdf).to.contain('bamm:description "New description for the new created characteristic"@en');
-        expect(rdf).to.contain('bamm:see <http%3A%2F%2Fwww.see1.de>, <http%3A%2F%2Fwww.see2.de>, <http%3A%2F%2Fwww.see3.de>');
+        expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
         expect(rdf).to.contain('LeftCharacteristic a bamm:Characteristic');
         expect(rdf).to.contain('RightCharacteristic a bamm:Characteristic');
         expect(rdf).not.contain('bamm:dataType');
@@ -184,7 +184,7 @@ describe('Test editing Either', () => {
         expect(rdf).to.contain('Either1 a bamm-c:Either');
         expect(rdf).to.contain('bamm:preferredName "new-preferredName"@en');
         expect(rdf).to.contain('bamm:description "New description for the new created characteristic"@en');
-        expect(rdf).to.contain('bamm:see <http%3A%2F%2Fwww.see1.de>, <http%3A%2F%2Fwww.see2.de>, <http%3A%2F%2Fwww.see3.de>');
+        expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
 
         expect(rdf).to.contain('LeftCharacteristic a bamm:Characteristic');
         expect(rdf).to.contain('RightCharacteristic a bamm:Characteristic');
@@ -229,7 +229,7 @@ describe('Test editing Either', () => {
         expect(rdf).to.contain('Either1 a bamm:Characteristic');
         expect(rdf).to.contain('bamm:preferredName "new-preferredName"@en');
         expect(rdf).to.contain('bamm:description "New description for the new created characteristic"@en');
-        expect(rdf).to.contain('bamm:see <http%3A%2F%2Fwww.see1.de>, <http%3A%2F%2Fwww.see2.de>, <http%3A%2F%2Fwww.see3.de>');
+        expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
 
         expect(rdf).to.contain('LeftCharacteristic a bamm:Characteristic');
         expect(rdf).to.contain('RightCharacteristic a bamm:Characteristic');
@@ -279,7 +279,7 @@ describe('Test editing Either', () => {
           expect(rdf).not.contain('bamm-c:right :Characteristic2');
           expect(rdf).to.contain('bamm:preferredName "new-preferredName"@en');
           expect(rdf).to.contain('bamm:description "New description for the new created characteristic"@en');
-          expect(rdf).to.contain('bamm:see <http%3A%2F%2Fwww.see1.de>, <http%3A%2F%2Fwww.see2.de>, <http%3A%2F%2Fwww.see3.de>');
+          expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
 
           expect(rdf).not.contain('bamm:dataType');
           expect(rdf).not.contain('bamm-c:left :LeftCharacteristic');
