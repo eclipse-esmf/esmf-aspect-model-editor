@@ -16,12 +16,14 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-import {OverWrittenProperty} from '@ame/meta-model';
+import {BaseMetaModelElement, DefaultEntity, DefaultEntityValue, OverWrittenProperty} from '@ame/meta-model';
+import {NamespacesCacheService} from '@ame/cache';
 
 export interface PropertiesDialogData {
   name: string;
   properties: OverWrittenProperty[];
   isExternalRef: boolean;
+  metaModelElement?: BaseMetaModelElement;
 }
 
 @Component({
@@ -32,7 +34,9 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
   public form: FormGroup;
   public keys: string[] = [];
 
-  public headers = ['name', 'optional', 'notInPayload', 'payloadName'];
+  public headers = [];
+  public standardHeaders = ['name', 'optional', 'payloadName'];
+  public enumerationEntityHeaders = ['name', 'optional', 'notInPayload', 'payloadName'];
   public dataSource: MatTableDataSource<OverWrittenProperty>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -40,6 +44,7 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
   constructor(
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<PropertiesModalComponent>,
+    private cacheService: NamespacesCacheService,
     @Inject(MAT_DIALOG_DATA) public data: PropertiesDialogData
   ) {}
 
@@ -60,6 +65,17 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
     if (this.data.isExternalRef) {
       this.form.disable();
     }
+
+    this.headers = this.standardHeaders;
+    if (this.data.metaModelElement instanceof DefaultEntity) {
+      const entityValues = this.cacheService.getCurrentCachedFile().getCachedEntityValues();
+      entityValues.forEach((entityValue: DefaultEntityValue) => {
+        if (entityValue.entity.aspectModelUrn === this.data.metaModelElement.aspectModelUrn) {
+          this.headers = this.enumerationEntityHeaders;
+        }
+      });
+    }
+
   }
 
   ngAfterViewInit() {

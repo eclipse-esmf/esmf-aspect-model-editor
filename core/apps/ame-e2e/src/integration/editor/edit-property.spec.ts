@@ -14,12 +14,17 @@
 /// <reference types="Cypress" />
 
 import {
+  FIELD_characteristicName,
+  FIELD_entityValueName,
   FIELD_name,
   FIELD_notInPayload,
   FIELD_optional,
   FIELD_payloadName,
+  SELECTOR_addEntityValue,
   SELECTOR_ecProperty,
   SELECTOR_editorSaveButton,
+  SELECTOR_entitySaveButton,
+  SELECTOR_searchEntityValueInputField,
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
 
@@ -381,14 +386,14 @@ describe('Test edit property', () => {
   });
 
   describe('property optionality', () => {
-    it('should overwrite property with optional and notInPayload', () => {
+    it('should overwrite property with optional and notInPayload should not be present', () => {
       cy.visitDefault();
       cy.startModelling()
         .then(() => cy.dbClickShape('AspectDefault'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
         .then(() => {
+          cy.get(`input[type="checkbox"][name="property1_${FIELD_notInPayload}"]`).should('not.exist');
           cy.get(`input[type="checkbox"][name="property1_${FIELD_optional}"]`).click({force: true});
-          cy.get(`input[type="checkbox"][name="property1_${FIELD_notInPayload}"]`).click({force: true});
           return cy.wait(500);
         })
         .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}))
@@ -404,11 +409,45 @@ describe('Test edit property', () => {
               '    bamm:name "AspectDefault";\n' +
               '    bamm:properties ([\n' +
               '  bamm:property :property1;\n' +
-              '  bamm:optional "true"^^xsd:boolean;\n' +
-              '  bamm:notInPayload "true"^^xsd:boolean\n' +
+              '  bamm:optional "true"^^xsd:boolean\n' +
               ']);\n' +
               '    bamm:operations ();\n' +
               '    bamm:events ().\n'
+          );
+        });
+    });
+
+    it('should overwrite property of complex enumeration with notInPayload', () => {
+      cy.visitDefault();
+      cy.startModelling()
+        .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+        .then(() => cy.shapeExists('Entity1'))
+        .then(() => cy.dbClickShape('Characteristic1'))
+        .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
+        .then(() => cy.get(SELECTOR_searchEntityValueInputField).should('exist'))
+        .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}).wait(200))
+        .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityValue', {force: true}))
+        .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
+        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+        .then(() => cy.clickAddShapePlusIcon('Entity1'))
+        .then(() => cy.dbClickShape('Entity1'))
+        .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
+        .then(() => {
+          cy.get(`input[type="checkbox"][name="property2_${FIELD_notInPayload}"]`).click({force: true});
+          return cy.wait(500);
+        })
+        .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}).should('not.exist'))
+        .then(() => cy.wait(500))
+        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => {
+          expect(rdf).to.contain(
+            ':Entity1 a bamm:Entity;\n' +
+            '    bamm:name "Entity1";\n' +
+            '    bamm:properties ([\n' +
+            '  bamm:property :property2;\n' +
+            '  bamm:notInPayload "true"^^xsd:boolean\n' +
+            ']).'
           );
         });
     });

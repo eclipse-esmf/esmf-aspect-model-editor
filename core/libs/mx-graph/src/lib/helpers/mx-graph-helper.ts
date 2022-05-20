@@ -51,11 +51,7 @@ export class MxGraphHelper {
    * @param parent BaseMetaModelElement
    */
   static isOptionalProperty(child: DefaultProperty, parent: BaseMetaModelElement) {
-    if (!(parent instanceof DefaultAspect || parent instanceof DefaultEntity)) {
-      return false;
-    }
-
-    if (!(child instanceof DefaultProperty)) {
+    if (!(parent instanceof DefaultEntity) || !(child instanceof DefaultProperty)) {
       return false;
     }
 
@@ -183,7 +179,7 @@ export class MxGraphHelper {
     return div?.style.height.split('px')[0];
   }
 
-  static createEdgeLabel(cell: mxgraph.mxCell): HTMLElement {
+  static createEdgeLabel(cell: mxgraph.mxCell, graph: mxgraph.mxGraph): HTMLElement {
     const sourceElement: BaseMetaModelElement = MxGraphHelper.getModelElement(cell.source);
     const targetElement: BaseMetaModelElement = MxGraphHelper.getModelElement(cell.target);
 
@@ -214,7 +210,20 @@ export class MxGraphHelper {
       }
       return p;
     }
-    if (targetElement instanceof DefaultProperty && (sourceElement instanceof DefaultEntity || sourceElement instanceof DefaultAspect)) {
+    if (targetElement instanceof DefaultProperty && (sourceElement instanceof DefaultEntity)) {
+      const entityIncomingEdges = graph.getIncomingEdges(cell.source);
+      let hasEnumeration = false;
+      if (entityIncomingEdges) {
+        entityIncomingEdges.forEach((c: mxgraph.mxCell) => {
+          // first check if it has a parent Enumeration
+          if (this.getModelElement(c.source) instanceof DefaultEnumeration) {
+            hasEnumeration = true;
+          }
+        });
+      }
+      if (!hasEnumeration) {
+        return null;
+      }
       const overwrittenProp = sourceElement.properties.find(prop => prop.property === targetElement);
       if (overwrittenProp.keys.notInPayload) {
         const p = document.createElement('p');

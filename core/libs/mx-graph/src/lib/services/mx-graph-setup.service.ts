@@ -80,7 +80,7 @@ export class MxGraphSetupService {
     this.graph.getLabel = (cell): any => {
       if (!cell.value && this.configurationService.getSettings().showConnectionLabels) {
         // label for edges
-        return MxGraphHelper.createEdgeLabel(cell);
+        return MxGraphHelper.createEdgeLabel(cell, this.graph);
       }
 
       if (!cell.connectable) {

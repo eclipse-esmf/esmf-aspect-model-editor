@@ -75,6 +75,7 @@ export class PropertiesButtonComponent implements OnInit {
           name: this.metaModelElement.name,
           properties: this.propertiesClone || this.metaModelElement.properties,
           isExternalRef: this.metaModelElement.isExternalReference(),
+          metaModelElement: this.metaModelElement,
         },
         autoFocus: false,
       })
