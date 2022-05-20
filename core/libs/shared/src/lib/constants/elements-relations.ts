@@ -25,16 +25,14 @@ export enum Elements {
 }
 
 export const relations = {
-  [Elements.aspect]: [Elements.property],
-  [Elements.aspect]: [Elements.operation],
-  [Elements.aspect]: [Elements.event],
+  [Elements.aspect]: [Elements.property, Elements.operation, Elements.event],
   [Elements.property]: [Elements.characteristic, Elements.trait],
+  [Elements.characteristic]: [Elements.entity, Elements.entityValue, Elements.unit],
+  [Elements.entity]: [Elements.property],
+  [Elements.trait]: [Elements.constraint, Elements.characteristic],
+  [Elements.entityValue]: [Elements.entityValue],
+  [Elements.event]: [Elements.property],
   [Elements.operation]: [],
   [Elements.constraint]: [],
   [Elements.unit]: [],
-  [Elements.characteristic]: [Elements.entity, Elements.entityValue, Elements.unit],
-  [Elements.entity]: [Elements.property],
-  [Elements.trait]: [Elements.constraint],
-  [Elements.entityValue]: [],
-  [Elements.event]: [Elements.property],
 };

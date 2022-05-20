@@ -341,7 +341,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   onConnect() {
-    const selectedCells = Object.assign([], this.mxGraphAttributeService.graph.selectionModel.cells);
+    const selectedCells = [...this.mxGraphAttributeService.graph.selectionModel.cells];
 
     if (selectedCells.length !== 2) {
       this.notificationsService.error('Please select only two elements to connect them');
