@@ -15,7 +15,7 @@
   <ng-container *ngIf="view === 'namespaces'">
     <ame-sidebar-namespaces
       #sidebarNamespaces
-      [namespaces]="namespaces"
+      [namespaces]="sidebarService.namespaces"
       (selectNamespace)="onSelectNamespace($event)"
       (deleteNamespace)="deleteNamespace($event)"
       (loadNamespaceFile)="loadNamespaceFile($event)"

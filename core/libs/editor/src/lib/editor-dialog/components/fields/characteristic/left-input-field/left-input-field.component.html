@@ -30,7 +30,7 @@
     <mat-autocomplete #auto="matAutocomplete" class="left">
       <ng-container *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes">
         <mat-option
-          *ngIf="!isAlreadyDefined(filteredCharacteristicTypes, left.value)"
+          *ngIf="!isAlreadyDefined(filteredCharacteristicTypes, left.value) && !getControl('left')?.errors?.foundModel"
           [disabled]="!isUpperCase(left.value)"
           [value]="!isUpperCase(left.value) ? '' : left.value"
           (click)="createNewCharacteristic(left.value)"
@@ -50,6 +50,11 @@
       </ng-container>
     </mat-autocomplete>
     <mat-hint>bamm-c:left</mat-hint>
+
+    <mat-error *ngIf="getControl('left')?.errors?.checkShapeName"> Please select a different name as this one is of different type </mat-error>
+    <mat-error *ngIf="getControl('left')?.errors?.checkShapeNameExtRef">
+      Please select a different name as this one is of different type in the same namespace
+    </mat-error>
     <mat-error *ngIf="getControl('left')?.errors?.required">Please define a left characteristic</mat-error>
     <mat-error *ngIf="getControl('left')?.errors?.disabled">No left characteristic defined</mat-error>
   </mat-form-field>

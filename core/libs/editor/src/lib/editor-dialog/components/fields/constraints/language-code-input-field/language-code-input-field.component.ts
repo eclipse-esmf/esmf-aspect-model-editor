@@ -22,6 +22,15 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 @Component({
   selector: 'ame-language-code-input-field',
   templateUrl: './language-code-input-field.component.html',
+  styles: [
+    `
+      ::ng-deep {
+        .language-code .mat-option-text {
+          line-height: 1 !important;
+        }
+      }
+    `,
+  ],
 })
 export class LanguageCodeInputFieldComponent extends InputFieldComponent<DefaultLanguageConstraint> implements OnInit, OnDestroy {
   public filteredLanguages: Observable<Array<locale.ILocale>>;

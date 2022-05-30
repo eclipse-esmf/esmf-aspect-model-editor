@@ -157,8 +157,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
         if (!value) {
           return units;
         }
-        return searchService
-          .search<DefaultUnit>(value, units, unitSearchOption);
+        return searchService.search<DefaultUnit>(value, units, unitSearchOption);
       }),
       startWith(units)
     );
@@ -170,8 +169,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
         if (!value) {
           return units;
         }
-        return searchService
-          .search<Unit>(value, units, unitSearchOption);
+        return searchService.search<Unit>(value, units, unitSearchOption);
       }),
       startWith(units)
     );

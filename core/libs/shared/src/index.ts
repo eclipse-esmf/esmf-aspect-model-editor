@@ -29,3 +29,4 @@ export * from './lib/components/loading-screen/loading-screen.service';
 export * from './lib/alert.service';
 export * from './lib/config';
 export * from './lib/electron-tunnel.service';
+export * from './lib/sidebar.service';

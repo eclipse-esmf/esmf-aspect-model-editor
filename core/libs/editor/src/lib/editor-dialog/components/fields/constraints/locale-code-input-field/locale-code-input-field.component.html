@@ -16,7 +16,7 @@
     <mat-label for="localeCode">Locale Code</mat-label>
     <input matInput [formControl]="getControl('localeCode')" name="localeCode" [matAutocomplete]="auto" data-cy="localeCode" />
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let lang of filteredLanguages | async" [value]="lang.tag">
+      <mat-option *ngFor="let lang of filteredLanguages | async" [value]="lang.tag" class="language-code">
         {{ lang.tag }}<br /><span class="option-description">{{ lang.name }}</span>
       </mat-option>
     </mat-autocomplete>

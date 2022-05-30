@@ -19,6 +19,8 @@ import {DefaultCharacteristic, DefaultCollection} from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
 import {NamespacesCacheService} from '@ame/cache';
 import {NotificationsService} from '@ame/shared';
+import {EditorDialogValidators} from '../../../../validators';
+import {RdfService} from '@ame/rdf/services';
 
 @Component({
   selector: 'ame-element-characteristic-input-field',
@@ -33,7 +35,8 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
   constructor(
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private rdfService: RdfService
   ) {
     super(metaModelDialogService, namespacesCacheService);
     this.fieldName = 'elementCharacteristic';
@@ -59,11 +62,22 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
 
     this.parentForm.setControl(
       'elementCharacteristicDisplay',
-      new FormControl({
-        value,
-        disabled: !!value || this.metaModelElement.isExternalReference(),
-      })
+      new FormControl(
+        {
+          value,
+          disabled: !!value || this.metaModelElement.isExternalReference(),
+        },
+        [
+          EditorDialogValidators.duplicateNameWithDifferentType(
+            this.namespacesCacheService,
+            this.metaModelElement,
+            this.rdfService.externalRdfModels,
+            DefaultCharacteristic
+          ),
+        ]
+      )
     );
+    this.getControl('elementCharacteristicDisplay').markAsTouched();
     this.parentForm.setControl(
       'elementCharacteristic',
       new FormControl({

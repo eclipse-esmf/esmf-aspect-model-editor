@@ -19,8 +19,9 @@ import {DefaultDuration, DefaultMeasurement, DefaultQuantifiable, DefaultUnit, U
 import {BammUnitInstantiator, MetaModelElementInstantiator} from '@ame/instantiator';
 import {EditorModelService} from '../../../../editor-model.service';
 import {NamespacesCacheService} from '@ame/cache';
-import {ModelService} from '@ame/rdf/services';
+import {ModelService, RdfService} from '@ame/rdf/services';
 import {SearchService} from '@ame/shared';
+import {EditorDialogValidators} from '../../../../validators';
 
 declare const bammuDefinition: any;
 
@@ -44,7 +45,8 @@ export class UnitInputFieldComponent
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
     private modelService: ModelService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private rdfService: RdfService
   ) {
     super(metaModelDialogService, namespacesCacheService);
     this.bammUnitInstantiator = new BammUnitInstantiator(
@@ -88,7 +90,15 @@ export class UnitInputFieldComponent
   initUnitFormControl() {
     const unit = this.getCurrentValue(this.fieldName);
     const unitName = unit instanceof DefaultUnit ? unit.name : unit;
-    this.unitDisplayControl = new FormControl({value: unitName, disabled: !!unit}, this.unitRequired ? Validators.required : null);
+    this.unitDisplayControl = new FormControl({value: unitName, disabled: !!unit}, [
+      EditorDialogValidators.duplicateNameWithDifferentType(
+        this.namespacesCacheService,
+        this.metaModelElement,
+        this.rdfService.externalRdfModels,
+        DefaultUnit
+      ),
+      ...(this.unitRequired ? [Validators.required] : []),
+    ]);
 
     this.parentForm.setControl(
       this.fieldName,

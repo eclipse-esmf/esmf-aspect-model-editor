@@ -22,6 +22,8 @@ import {EditorModelService} from '../../../../editor-model.service';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {EditorDialogValidators} from '../../../../validators';
+import {RdfService} from '@ame/rdf/services';
 
 @Component({
   selector: 'ame-data-type-input-field',
@@ -39,9 +41,10 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
 
   constructor(
     public metaModelDialogService: EditorModelService,
+    private mxGraphService: MxGraphService,
+    private rdfService: RdfService,
     public namespacesCacheService: NamespacesCacheService,
-    public dataTypeService: DataTypeService,
-    private mxGraphService: MxGraphService
+    public dataTypeService: DataTypeService
   ) {
     super(metaModelDialogService, namespacesCacheService);
     this.fieldName = 'dataTypeEntity';
@@ -77,14 +80,28 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
 
     this.parentForm.setControl(
       'dataType',
-      new FormControl({
-        value,
-        disabled: !!value || this.metaModelElement?.isExternalReference(),
-      })
+      new FormControl(
+        {
+          value,
+          disabled: !!value || this.metaModelElement?.isExternalReference(),
+        },
+        [
+          EditorDialogValidators.duplicateNameWithDifferentType(
+            this.namespacesCacheService,
+            this.metaModelElement,
+            this.rdfService.externalRdfModels,
+            DefaultEntity
+          ),
+        ]
+      )
     );
+    this.getControl('dataType').markAsTouched();
     this.parentForm.setControl(
       'dataTypeEntity',
-      new FormControl({value: dataType, disabled: this.metaModelElement?.isExternalReference()})
+      new FormControl({
+        value: dataType,
+        disabled: this.metaModelElement?.isExternalReference(),
+      })
     );
     this.dataTypeControl = this.parentForm.get('dataType') as FormControl;
     this.dataTypeEntityControl = this.parentForm.get('dataTypeEntity') as FormControl;

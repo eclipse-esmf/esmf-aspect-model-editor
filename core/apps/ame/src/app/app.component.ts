@@ -143,7 +143,7 @@ export class AppComponent implements OnInit {
     this.dialogService.open(StartLoadModalComponent, {disableClose: true, data: {aspectModel}});
   }
 
-  private loadNewAspectModel(aspectModel: Observable<string>, callback, isDefault?: boolean) {
+  private loadNewAspectModel(aspectModel: Observable<string>, callback: () => any, isDefault?: boolean) {
     aspectModel
       .pipe(
         switchMap(model => this.editorService.loadNewAspectModel(model, isDefault)),

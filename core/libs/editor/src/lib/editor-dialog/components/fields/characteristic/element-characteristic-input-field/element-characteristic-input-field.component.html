@@ -34,10 +34,20 @@
       <mat-icon>close</mat-icon>
     </button>
 
+    <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeName">
+     Please select a different name as this one is of different type
+    </mat-error>
+    <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeNameExtRef">
+     Please select a different name as this one is of different type in the same namespace
+    </mat-error>
+
     <mat-autocomplete #auto="matAutocomplete" class="element-characteristic">
       <ng-container *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes" label="Characteristic">
         <mat-option
-          *ngIf="!isAlreadyDefined(filteredCharacteristicTypes, elementCharacteristic.value)"
+          *ngIf="
+            !isAlreadyDefined(filteredCharacteristicTypes, elementCharacteristic.value) &&
+            !getControl('elementCharacteristicDisplay')?.errors
+          "
           [disabled]="!isUpperCase(elementCharacteristic.value)"
           [value]="!isUpperCase(elementCharacteristic.value) ? '' : elementCharacteristic.value"
           (click)="createNewCharacteristic(elementCharacteristic.value)"

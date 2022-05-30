@@ -20,6 +20,7 @@ import {EditorModelService} from '../../../../editor-model.service';
 import {NamespacesCacheService} from '@ame/cache';
 import {EditorDialogValidators} from '../../../../validators';
 import {NotificationsService} from '@ame/shared';
+import {RdfService} from '@ame/rdf/services';
 
 @Component({
   selector: 'ame-left-input-field',
@@ -34,7 +35,8 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
   constructor(
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private rdfService: RdfService
   ) {
     super(metaModelDialogService, namespacesCacheService);
     this.fieldName = 'leftCharacteristic';
@@ -66,10 +68,20 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
           disabled: !!value || this.metaModelElement.isExternalReference(),
         },
         {
-          validators: [Validators.required, EditorDialogValidators.disabled],
+          validators: [
+            Validators.required,
+            EditorDialogValidators.disabled,
+            EditorDialogValidators.duplicateNameWithDifferentType(
+              this.namespacesCacheService,
+              this.metaModelElement,
+              this.rdfService.externalRdfModels,
+              DefaultCharacteristic
+            ),
+          ],
         }
       )
     );
+
     this.parentForm.setControl(
       'leftCharacteristic',
       new FormControl({

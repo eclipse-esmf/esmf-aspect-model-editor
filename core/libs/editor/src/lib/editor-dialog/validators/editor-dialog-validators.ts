@@ -43,7 +43,7 @@ export class EditorDialogValidators {
       return null;
     }
 
-    const uriRegEx = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/;
+    const uriRegEx = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/; //NOSONAR
 
     const invalidUris: string[] = [];
     let elementsCount = 0;
@@ -67,27 +67,42 @@ export class EditorDialogValidators {
   static duplicateName(
     namespaceCacheService: NamespacesCacheService,
     metaModelElement: BaseMetaModelElement,
-    extRdfModels: Array<RdfModel>
+    extRdfModels: Array<RdfModel>,
+    haveTheSameName = true
   ) {
-    return (control: FormControl) => {
+    return (control: AbstractControl) => {
       if (!control?.value) {
         return null;
       }
 
-      if (control.value === metaModelElement.name) {
+      if (control.value === metaModelElement.name && haveTheSameName) {
         return null;
       }
 
       const nameSpace = metaModelElement.aspectModelUrn?.split('#')[0] + '#';
       const aspectModelUrn = `${nameSpace}${control.value}`;
 
-      const modelElementDefinedInExtRefCachedFile = extRdfModels.find(rdfModel =>
-        rdfModel.store.getSubjects(null, DataFactory.literal(control.value), null).find(sub => sub.value === aspectModelUrn)
-      );
+      let foundExternalElement: BaseMetaModelElement;
+      for (const rdfModel of extRdfModels) {
+        const element = rdfModel.store
+          .getSubjects(null, DataFactory.literal(control.value), null)
+          .find(sub => sub.value === aspectModelUrn);
 
-      if (modelElementDefinedInExtRefCachedFile) {
+        if (element) {
+          const [namespace] = element.value.split('#');
+          namespaceCacheService.sidebarService.loadNamespaceFiles(namespace, namespaceCacheService.getCurrentCachedFile());
+          const files = namespaceCacheService.getFiles(namespace);
+          foundExternalElement = files.reduce<BaseMetaModelElement>((acc, file) => acc || file.getEitherElement(element.value), null);
+          if (foundExternalElement) {
+            break;
+          }
+        }
+      }
+
+      if (foundExternalElement) {
         return {
           checkShapeNameExtRef: true,
+          foundModel: foundExternalElement,
         };
       }
 
@@ -95,11 +110,39 @@ export class EditorDialogValidators {
         .getCurrentCachedFile()
         .getEitherElement<BaseMetaModelElement>(aspectModelUrn);
 
-      return modelElementDefinedInCurrentCachedFile && modelElementDefinedInCurrentCachedFile.name !== metaModelElement.name
+      return modelElementDefinedInCurrentCachedFile &&
+        (!haveTheSameName || modelElementDefinedInCurrentCachedFile.name !== metaModelElement.name)
         ? {
             checkShapeName: true,
+            foundModel: modelElementDefinedInCurrentCachedFile,
           }
         : null;
+    };
+  }
+
+  static duplicateNameWithDifferentType(
+    namespaceCacheService: NamespacesCacheService,
+    metaModelElement: BaseMetaModelElement,
+    extRdfModels: Array<RdfModel>,
+    modelType: Function
+  ) {
+    return (control: AbstractControl) => {
+      const duplicateNameValidation = EditorDialogValidators.duplicateName(
+        namespaceCacheService,
+        metaModelElement,
+        extRdfModels,
+        false
+      )(control);
+
+      if (
+        duplicateNameValidation &&
+        duplicateNameValidation.foundModel instanceof modelType &&
+        !duplicateNameValidation.checkShapeNameExtRef
+      ) {
+        return null;
+      }
+
+      return duplicateNameValidation;
     };
   }
 

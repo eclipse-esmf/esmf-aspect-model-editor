@@ -20,6 +20,7 @@ import {InputFieldComponent} from '../../input-field.component';
 import {EditorDialogValidators} from '../../../../validators';
 import {EditorModelService} from '../../../../editor-model.service';
 import {NotificationsService} from '@ame/shared';
+import {RdfService} from '@ame/rdf/services';
 
 @Component({
   selector: 'ame-right-input-field',
@@ -34,7 +35,8 @@ export class RightInputFieldComponent extends InputFieldComponent<DefaultEither>
   constructor(
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private rdfService: RdfService
   ) {
     super(metaModelDialogService, namespacesCacheService);
     this.fieldName = 'rightCharacteristic';
@@ -66,7 +68,16 @@ export class RightInputFieldComponent extends InputFieldComponent<DefaultEither>
           disabled: !!value || this.metaModelElement.isExternalReference(),
         },
         {
-          validators: [Validators.required, EditorDialogValidators.disabled],
+          validators: [
+            Validators.required,
+            EditorDialogValidators.disabled,
+            EditorDialogValidators.duplicateNameWithDifferentType(
+              this.namespacesCacheService,
+              this.metaModelElement,
+              this.rdfService.externalRdfModels,
+              DefaultCharacteristic
+            ),
+          ],
         }
       )
     );

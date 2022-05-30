@@ -20,18 +20,20 @@ import {Observable} from 'rxjs';
 import {NamespacesCacheService} from '@ame/cache';
 import {MatChipList} from '@angular/material/chips';
 import {ENTER} from '@angular/cdk/keycodes';
+import {EditorDialogValidators} from '../../../../validators';
+import {RdfService} from '@ame/rdf/services';
+import {ErrorStateMatcher} from '@angular/material/core';
 
 @Component({
   selector: 'ame-input-chiplist-field',
   templateUrl: './input-chiplist-field.component.html',
 })
 export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {
-  @ViewChild('inputChipList') inputChipList: MatChipList;
+  @ViewChild('chipList') inputChipList: MatChipList;
   @ViewChild('input') inputValue;
 
-  filteredPropertyTypes$: Observable<any[]>;
-
-  inputControl: FormControl;
+  public filteredPropertyTypes$: Observable<any[]>;
+  public inputControl: FormControl;
 
   readonly separatorKeysCodes: number[] = [ENTER];
 
@@ -39,7 +41,11 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
   public removable = true;
   public inputValues: Array<Property>;
 
-  constructor(public metaModelDialogService: EditorModelService, public namespacesCacheService: NamespacesCacheService) {
+  constructor(
+    public metaModelDialogService: EditorModelService,
+    public namespacesCacheService: NamespacesCacheService,
+    private rdfService: RdfService
+  ) {
     super(metaModelDialogService, namespacesCacheService);
   }
 
@@ -48,6 +54,12 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
       this.inputValues = [];
       this.setInputControl();
     });
+  }
+
+  hasErrors(): ErrorStateMatcher {
+    return {
+      isErrorState: () => !!this.getControl('inputValues')?.errors,
+    };
   }
 
   ngOnDestroy() {
@@ -64,11 +76,22 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
 
     this.parentForm.setControl(
       'inputValues',
-      new FormControl({
-        value: '',
-        disabled: this.metaModelElement.isExternalReference(),
-      })
+      new FormControl(
+        {
+          value: '',
+          disabled: this.metaModelElement.isExternalReference(),
+        },
+        [
+          EditorDialogValidators.duplicateNameWithDifferentType(
+            this.namespacesCacheService,
+            this.metaModelElement,
+            this.rdfService.externalRdfModels,
+            DefaultProperty
+          ),
+        ]
+      )
     );
+
     this.parentForm.setControl(
       'inputChipList',
       new FormControl({
@@ -78,7 +101,6 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
     );
 
     this.inputControl = this.parentForm.get('inputValues') as FormControl;
-
     this.filteredPropertyTypes$ = this.initFilteredPropertyTypes(this.inputControl);
   }
 
@@ -91,7 +113,7 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
       return; // happens on reset form
     }
 
-    const property = this.currentCachedFile.getCachedProperties().find(property => property.aspectModelUrn === newValue.urn);
+    const property = this.currentCachedFile.getCachedProperties().find(p => p.aspectModelUrn === newValue.urn);
     this.parentForm.setControl('input', new FormControl(property));
 
     this.inputValue.nativeElement.value = '';
@@ -109,7 +131,6 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
     const newProperty = new DefaultProperty(this.metaModelElement.metaModelVersion, urn, propertyName, null);
 
     this.parentForm.setControl('input', new FormControl(newProperty));
-
     this.inputValue.nativeElement.value = '';
 
     this.inputValues.push(newProperty);

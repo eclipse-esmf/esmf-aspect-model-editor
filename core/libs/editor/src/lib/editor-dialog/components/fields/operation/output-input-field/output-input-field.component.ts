@@ -18,6 +18,8 @@ import {DefaultOperation, DefaultProperty} from '@ame/meta-model';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {NamespacesCacheService} from '@ame/cache';
+import {EditorDialogValidators} from '../../../../validators';
+import {RdfService} from '@ame/rdf/services';
 
 @Component({
   selector: 'ame-output-input-field',
@@ -29,7 +31,11 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
   outputControl: FormControl;
   newPropertyControl: FormControl;
 
-  constructor(public metaModelDialogService: EditorModelService, public namespacesCacheService: NamespacesCacheService) {
+  constructor(
+    public metaModelDialogService: EditorModelService,
+    public namespacesCacheService: NamespacesCacheService,
+    private rdfService: RdfService
+  ) {
     super(metaModelDialogService, namespacesCacheService);
   }
 
@@ -48,11 +54,23 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
 
     this.parentForm.setControl(
       'output',
-      new FormControl({
-        value,
-        disabled: !!value || this.metaModelElement.isExternalReference(),
-      })
+      new FormControl(
+        {
+          value,
+          disabled: !!value || this.metaModelElement.isExternalReference(),
+        },
+        [
+          EditorDialogValidators.duplicateNameWithDifferentType(
+            this.namespacesCacheService,
+            this.metaModelElement,
+            this.rdfService.externalRdfModels,
+            DefaultProperty
+          ),
+        ]
+      )
     );
+    this.getControl('output').markAsTouched();
+
     this.parentForm.setControl(
       'outputValue',
       new FormControl({

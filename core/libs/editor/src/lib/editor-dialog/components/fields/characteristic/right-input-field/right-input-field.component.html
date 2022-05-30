@@ -30,7 +30,7 @@
     <mat-autocomplete #auto="matAutocomplete" class="right">
       <ng-container *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes">
         <mat-option
-          *ngIf="!isAlreadyDefined(filteredCharacteristicTypes, right.value)"
+          *ngIf="!isAlreadyDefined(filteredCharacteristicTypes, right.value) && !getControl('right')?.errors?.foundModel"
           [disabled]="!isUpperCase(right.value)"
           [value]="!isUpperCase(right.value) ? '' : right.value"
           (click)="createNewCharacteristic(right.value)"

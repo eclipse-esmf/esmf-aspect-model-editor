@@ -26,7 +26,7 @@ import {
   DefaultTrait,
   DefaultUnit,
 } from '@ame/meta-model';
-import {ElementModel, LoadingScreenOptions, LoadingScreenService, NamespaceModel, NotificationsService} from '@ame/shared';
+import {ElementModel, LoadingScreenOptions, LoadingScreenService, NamespaceModel, NotificationsService, SidebarService} from '@ame/shared';
 import {catchError, finalize, first, Subscription, throwError} from 'rxjs';
 
 @Component({
@@ -40,7 +40,6 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
 
   public selectedNamespace: string = null;
   public selectedNamespaceElements: ElementModel[];
-  public namespaces: NamespaceModel[] = [];
 
   public view = 'default';
   public isHoveredDefaultView = false;
@@ -55,7 +54,8 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     private modelApiService: ModelApiService,
     private loadingScreenService: LoadingScreenService,
     private notificationsService: NotificationsService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    public sidebarService: SidebarService
   ) {}
 
   @HostListener('mouseenter')
@@ -92,7 +92,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
   public ngOnInit() {
     this.initNamespaces();
     this.refreshNamespacesSubscription = this.editorService.onRefreshNamespaces.subscribe(() => {
-      this.namespaces = [];
+      this.sidebarService.resetNamespaces();
       this.initNamespaces();
     });
   }
@@ -126,7 +126,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
       .subscribe(confirmed => {
         if (confirmed) {
           this.modelApiService.deleteNamespace(aspectModelFileName).subscribe(() => {
-            this.namespaces = [];
+            this.sidebarService.resetNamespaces();
             this.initNamespaces();
           });
           this.selectedNamespace = null;
@@ -169,17 +169,15 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
           .loadNewAspectModel(aspectModel)
           .pipe(
             first(),
-            catchError(error =>
-              throwError(() => {
-                this.notificationsService.error(
-                  'Error when loading Aspect Model. Reverting to previous Aspect Model',
-                  `${error}`,
-                  null,
-                  5000
-                );
-                return error;
-              })
-            ),
+            catchError(error => {
+              this.notificationsService.error(
+                'Error when loading Aspect Model. Reverting to previous Aspect Model',
+                `${error}`,
+                null,
+                5000
+              );
+              return throwError(() => error);
+            }),
             finalize(() => this.loadingScreenService.close())
           )
           .subscribe();
@@ -221,9 +219,9 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
         const namespaceFolder = namespace.slice(0, namespace.lastIndexOf(':'));
         const namespaceFile = namespaceParts[namespaceParts.length - 1];
 
-        const parentNamespace = this.namespaces.find((ns: NamespaceModel) => ns.name === namespaceFolder);
+        const parentNamespace = this.sidebarService.namespaces.find((ns: NamespaceModel) => ns.name === namespaceFolder);
         if (!parentNamespace) {
-          this.namespaces.push(new NamespaceModel(namespaceFolder, [namespaceFile]));
+          this.sidebarService.namespaces.push(new NamespaceModel(namespaceFolder, [namespaceFile]));
         } else {
           parentNamespace.files.push(namespaceFile);
         }

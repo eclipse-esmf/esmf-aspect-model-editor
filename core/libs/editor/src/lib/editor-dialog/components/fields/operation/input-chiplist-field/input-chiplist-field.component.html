@@ -4,29 +4,30 @@
 <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
   <mat-form-field [floatLabel]="getControl('inputValues')?.disabled ? 'always' : 'auto'" appearance="fill">
     <mat-label for="input">Input</mat-label>
-    <mat-chip-list #chipList [formControl]="getControl('inputChipList')">
+    <mat-chip-list #chipList [errorStateMatcher]="hasErrors()" [formControl]="getControl('inputChipList')">
       <mat-chip *ngFor="let input of inputValues" [selectable]="selectable" [removable]="removable" (removed)="remove(input)">
         {{ input['name'] }}
         <mat-icon matChipRemove *ngIf="removable" data-cy="input">close</mat-icon>
       </mat-chip>
       <input
-        matInput
         #input
-        class="enumeration-value-input"
-        name="inputValues"
-        spellcheck="false"
         [formControl]="getControl('inputValues')"
         [matAutocomplete]="auto"
         [matChipInputFor]="chipList"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        placeholder="add value, click on tooltip"
+        matInput
+        class="enumeration-value-input"
+        name="inputValues"
+        spellcheck="false"
+        placeholder="Add value, click option"
         data-cy="inputValues"
       />
     </mat-chip-list>
+
     <mat-autocomplete #auto="matAutocomplete" class="characteristic-input-autocomplete">
       <mat-optgroup *ngIf="filteredPropertyTypes$ | async as filteredPropertyTypes" label="Property">
         <mat-option
-          *ngIf="!isAlreadyDefined(filteredPropertyTypes, getControl('inputValues').value)"
+          *ngIf="!isAlreadyDefined(filteredPropertyTypes, getControl('inputValues').value) && !getControl('inputValues').errors"
           [disabled]="!isLowerCase(getControl('inputValues').value)"
           [value]="!isLowerCase(getControl('inputValues').value) ? '' : getControl('inputValues').value"
           (click)="createNewProperty(getControl('inputValues').value)"
@@ -46,5 +47,12 @@
       </mat-optgroup>
     </mat-autocomplete>
     <mat-hint>bamm:input</mat-hint>
+
+    <mat-error *ngIf="getControl('inputValues')?.errors?.checkShapeName">
+      Please select a different name as this one is of different type
+    </mat-error>
+    <mat-error *ngIf="getControl('inputValues')?.errors?.checkShapeNameExtRef">
+      Please select a different name as this one is of different type in the same namespace
+    </mat-error>
   </mat-form-field>
 </div>

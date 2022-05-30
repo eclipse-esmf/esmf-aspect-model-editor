@@ -27,10 +27,17 @@
       <mat-icon>close</mat-icon>
     </button>
 
+    <mat-error *ngIf="getControl('dataType')?.errors?.checkShapeName">
+      Please select a different name as this one is of different type
+    </mat-error>
+    <mat-error *ngIf="getControl('dataType')?.errors?.checkShapeNameExtRef">
+      Please select a different name as this one is of different type in the same namespace
+    </mat-error>
+
     <mat-autocomplete #auto="matAutocomplete" class="characteristic-datatype-autocomplete">
       <mat-optgroup *ngIf="!entitiesDisabled && filteredEntityTypes$ | async as filteredEntityTypes" label="Entities">
         <mat-option
-          *ngIf="!isAlreadyDefined(filteredEntityTypes, dataType.value)"
+          *ngIf="!isAlreadyDefined(filteredEntityTypes, dataType.value) && !getControl('dataType')?.errors"
           [disabled]="!isUpperCase(dataType.value)"
           [value]="!isUpperCase(dataType.value) ? '' : dataType.value"
           (click)="createNewEntity(dataType.value)"

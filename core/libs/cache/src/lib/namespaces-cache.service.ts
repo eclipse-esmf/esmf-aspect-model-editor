@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SidebarService} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {CachedFile} from './cached-file';
 
@@ -20,6 +21,20 @@ import {CachedFile} from './cached-file';
 export class NamespacesCacheService {
   private namespaces = new Map<string, Map<string, CachedFile>>();
   private currentCachedFile: CachedFile;
+
+  constructor(public sidebarService: SidebarService) {}
+
+  /**
+   * Return an array with all file from all namespaces when `namespace` is not provided
+   * Else, the function return all files from the specified namespace
+   *
+   * @returns CachedFile[]
+   */
+  getFiles(namespace: string = ''): CachedFile[] {
+    return Array.from(this.namespaces.entries())
+      .filter(([existingNamespace]) => existingNamespace.includes(namespace || ''))
+      .reduce((acc, [, mapFile]) => [...acc, ...mapFile.values()], []);
+  }
 
   /**
    * Gets the map from this namespace

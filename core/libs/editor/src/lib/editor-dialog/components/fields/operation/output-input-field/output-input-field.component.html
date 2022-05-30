@@ -24,10 +24,18 @@
     >
       <mat-icon>close</mat-icon>
     </button>
+
+    <mat-error *ngIf="getControl('output')?.errors?.checkShapeName"
+      >Please select a different name as this one is of different type
+    </mat-error>
+    <mat-error *ngIf="getControl('output')?.errors?.checkShapeNameExtRef">
+      Please select a different name as this one is of different type in the same namespace
+    </mat-error>
+
     <mat-autocomplete #auto="matAutocomplete" class="characteristic-output-autocomplete">
       <mat-optgroup *ngIf="filteredPropertyTypes$ | async as filteredPropertyTypes" label="Property">
         <mat-option
-          *ngIf="!isAlreadyDefined(filteredPropertyTypes, output.value)"
+          *ngIf="!isAlreadyDefined(filteredPropertyTypes, output.value) && !getControl('output').errors"
           [disabled]="!isLowerCase(output.value)"
           [value]="!isLowerCase(output.value) ? '' : output.value"
           (click)="createNewProperty(output.value)"
