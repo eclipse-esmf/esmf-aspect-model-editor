@@ -37,53 +37,6 @@ import {RdfModel} from './rdf-model';
 import {Bamm, Bammc, Bamme, Bammu} from '@ame/vocabulary';
 
 export class RdfModelUtil {
-  static readonly defaultAspectModelAlias = '';
-
-  static resolveNamespaceAlias(namespace: string, metaModelVersion: string, metaModelIdentifier: string): string {
-    const bamm = new Bamm(metaModelVersion, metaModelIdentifier);
-    const bammc = new Bammc(bamm);
-    const bamme = new Bamme(bamm);
-    const bammu = new Bammu(bamm);
-
-    if (namespace.startsWith(bamm.getNamespace())) {
-      return bamm.getAlias();
-    }
-
-    if (namespace.startsWith(bammc.getNamespace())) {
-      return bammc.getAlias();
-    }
-
-    if (namespace.startsWith(bamme.getNamespace())) {
-      return bamme.getAlias();
-    }
-
-    if (namespace.startsWith(bammu.getNamespace())) {
-      return bammu.getAlias();
-    }
-
-    if (namespace.startsWith(Bamm.XSD_URI)) {
-      return 'xsd';
-    }
-
-    if (namespace.startsWith(Bamm.RDF_URI)) {
-      return 'rdf';
-    }
-
-    if (namespace.startsWith(Bamm.RDFS_URI)) {
-      return 'rdfs';
-    }
-
-    return this.defaultAspectModelAlias;
-  }
-
-  static isBammDefinition(urn: string, bamm: Bamm): boolean {
-    return urn && urn.includes(bamm.getNamespace());
-  }
-
-  static isBammcDefinition(urn: string, bammc: Bammc): boolean {
-    return urn && urn.includes(bammc.getNamespace());
-  }
-
   static isBammuDefinition(urn: string, bammu: Bammu): boolean {
     return urn && urn.includes(bammu.getNamespace());
   }
@@ -94,10 +47,6 @@ export class RdfModelUtil {
 
   static isUnitInstance(urn: string, bammu: Bammu): boolean {
     return urn && urn.includes(bammu.getNamespace());
-  }
-
-  static isAspectModelDefinition(urn: string, rdfModel: RdfModel) {
-    return urn && urn.includes(rdfModel.getAspectModelUrn());
   }
 
   static getValueWithoutUrnDefinition(value: any): string {
@@ -117,10 +66,6 @@ export class RdfModelUtil {
 
   static getValuesWithoutUrnDefinition(values: Array<DefaultEntityValue | string | number | boolean>): string {
     return values.map(value => this.getValueWithoutUrnDefinition(value)).join(', ');
-  }
-
-  static appendLocale(value: string, locale: string): string {
-    return `${value} ${locale ? `@${locale}` : ''}`; // NOSONAR
   }
 
   static resolveAccurateType(

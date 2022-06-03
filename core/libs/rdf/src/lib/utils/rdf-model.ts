@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+
 import {DataFactory, NamedNode, Prefixes, Quad, Quad_Object, Quad_Subject, Store, Util, Writer} from 'n3';
-import {RdfModelUtil} from './rdf-model-util';
 import * as locale from 'locale-codes';
 import {InstantiatorListElement} from './rdf-model.types';
 import {DataTypeService} from '@ame/shared';
@@ -28,6 +28,8 @@ export class RdfModel {
 
   private _isExternalRef = false;
   private _aspectModelFileName: string;
+
+  private defaultAspectModelAlias = '';
 
   get isExternalRef(): boolean {
     return this._isExternalRef;
@@ -51,6 +53,7 @@ export class RdfModel {
     this.bammc = new Bammc(this.bamm);
     this.bamme = new Bamme(this.bamm);
     this.bammu = new Bammu(this.bamm);
+    this.setDefaultAspectModelAlias();
   }
 
   getMetaModelVersion(): string {
@@ -70,7 +73,7 @@ export class RdfModel {
   }
 
   getAspectModelUrn(): string {
-    return this.getNamespaces()[RdfModelUtil.defaultAspectModelAlias];
+    return this.getNamespaces()[this.defaultAspectModelAlias];
   }
 
   addPrefix(alias: string, namespace: any): void {
@@ -210,16 +213,6 @@ export class RdfModel {
     return elements;
   }
 
-  public findBlankNodes(uri: string, resolvedNodes: Array<Quad> = []): Array<Quad> {
-    this.store.getQuads(DataFactory.blankNode(uri), null, null, null).forEach(value => {
-      if (Util.isBlankNode(value.object) || !value.object.value.startsWith(Bamm.RDF_URI)) {
-        resolvedNodes.push(DataFactory.quad(value.subject, value.predicate, value.object));
-      }
-    });
-
-    return resolvedNodes;
-  }
-
   public resolveParent(quad: Quad): Quad {
     let parentQuad = quad;
     if (Util.isBlankNode(quad.subject)) {
@@ -256,6 +249,11 @@ export class RdfModel {
 
     this.metaModelVersion = 'unknown';
     this.metaModelIdentifier = 'unknown';
+  }
+
+  private setDefaultAspectModelAlias() {
+    const subject = this.store.getSubjects(this.bamm.RdfType(), null, null);
+    this.defaultAspectModelAlias = this.getAliasByNamespace(`${subject[0].value.split('#')[0]}#`);
   }
 
   BAMM(): Bamm {
