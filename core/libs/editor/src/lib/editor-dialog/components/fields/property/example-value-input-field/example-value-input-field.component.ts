@@ -22,6 +22,9 @@ import {FormControl} from '@angular/forms';
   templateUrl: './example-value-input-field.component.html',
 })
 export class ExampleValueInputFieldComponent extends InputFieldComponent<DefaultProperty> implements OnInit {
+
+  isDisabled = false;
+
   constructor(public metaModelDialogService: EditorModelService) {
     super(metaModelDialogService);
   }
@@ -31,9 +34,13 @@ export class ExampleValueInputFieldComponent extends InputFieldComponent<Default
   }
 
   initForm() {
+    this.isDisabled = this.metaModelElement.characteristic?.dataType?.isComplex();
     this.parentForm.setControl(
       'exampleValue',
-      new FormControl({value: this.metaModelElement?.exampleValue || '', disabled: this.metaModelElement.isExternalReference()})
+      new FormControl({
+        value: this.metaModelElement?.exampleValue || '',
+        disabled: this.metaModelElement.isExternalReference() || this.isDisabled
+      })
     );
   }
 }

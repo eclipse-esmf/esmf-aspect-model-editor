@@ -11,7 +11,8 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="getControl('exampleValue')?.disabled ? 'always' : 'auto'" appearance="fill">
+<mat-form-field [floatLabel]="getControl('exampleValue')?.disabled ? 'always' : 'auto'" appearance="fill"
+  [matTooltip]="this.isDisabled ? 'exampleValue disabled for complex datatypes': ''">
   <mat-label for="exampleValue">Example value</mat-label>
   <input [formControl]="getControl('exampleValue')" matInput name="exampleValue" />
   <mat-hint>bamm:exampleValue</mat-hint>
