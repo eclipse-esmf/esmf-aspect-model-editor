@@ -21,7 +21,7 @@ import {environment} from 'environments/environment';
 import {MxGraphSetupService, MxGraphGeometryProviderService} from '.';
 import {MxGraphHelper, MxGraphCharacteristicHelper, PropertyInformation} from '../helpers';
 import {mxUtils, mxCell, mxConstants} from '../providers';
-import {BaseMetaModelElement, DefaultEntityValue} from '@ame/meta-model';
+import {Base, BaseMetaModelElement, DefaultEntityValue} from '@ame/meta-model';
 import {ModelStyleResolver, MxAttributeName} from '../models';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {CollapsedOverlay, ExpandedOverlay, NotificationsService} from '@ame/shared';
@@ -284,7 +284,7 @@ export class MxGraphService {
         });
         this.mxGraphShapeOverlayService.addOrRemoveExternalReferenceShapeOverlay(cell);
       });
-      this.formatShapes();
+      this.formatShapes(true);
     }).subscribe(() => {
       const selectedCell = this.mxGraphShapeSelectorService.getSelectedShape();
       if (selectedCell) {
@@ -292,7 +292,7 @@ export class MxGraphService {
       }
       if (this.firstTimeFold) {
         this.firstTimeFold = false;
-        this.formatShapes();
+        this.formatShapes(true);
         this.graph.refresh();
       }
     });
@@ -324,14 +324,14 @@ export class MxGraphService {
       });
 
       this.mxGraphAttributeService.inCollapsedMode = true;
-      this.formatShapes();
+      this.formatShapes(true);
     }).subscribe(() => {
       const selectedCell = this.mxGraphShapeSelectorService.getSelectedShape();
       if (selectedCell) {
         this.navigateToCell(selectedCell, true);
       }
       if (this.firstTimeFold) {
-        this.formatShapes();
+        this.formatShapes(true);
         this.firstTimeFold = false;
         this.graph.refresh();
       }
@@ -357,12 +357,38 @@ export class MxGraphService {
   }
 
   /** Re-formats entire schematic. */
-  formatShapes(): void {
+  formatShapes(force: boolean = false): void {
+    if (!this.configurationService.getSettings().autoFormatEnabled && !force) {
+      return;
+    }
     if (this.mxGraphAttributeService.graph.getDefaultParent().children !== undefined) {
       this.configurationService.getSettings().enableHierarchicalLayout
         ? MxGraphHelper.setHierarchicalLayout(this.mxGraphAttributeService.graph, this.mxGraphAttributeService.inCollapsedMode)
         : MxGraphHelper.setCompactTreeLayout(this.mxGraphAttributeService.graph, this.mxGraphAttributeService.inCollapsedMode);
     }
+  }
+
+
+  formatCell(cell: mxgraph.mxCell) {
+    if (this.configurationService.getSettings().autoFormatEnabled) {
+      // don't apply cell formatting in case auto format is enabled
+      return;
+    }
+    const initialX = cell.geometry.x;
+    const initialY = cell.geometry.y;
+    const formattedCells = [];
+    if (this.mxGraphAttributeService.graph.getDefaultParent().children !== undefined) {
+      this.configurationService.getSettings().enableHierarchicalLayout
+        ? MxGraphHelper.setHierarchicalLayout(this.mxGraphAttributeService.graph, this.mxGraphAttributeService.inCollapsedMode, cell)
+        : MxGraphHelper.setCompactTreeLayout(this.mxGraphAttributeService.graph, this.mxGraphAttributeService.inCollapsedMode, cell);
+    }
+    this.updateGraph(() => {
+      const deltaX = initialX - cell.geometry.x;
+      const deltaY = initialY - cell.geometry.y;
+      this.applyDelta(cell, deltaX, deltaY, formattedCells);
+    }).subscribe(() => {
+      this.graph.refresh();
+    });
   }
 
   /**
@@ -462,5 +488,48 @@ export class MxGraphService {
     deletedEntityValueCells
       .filter(entityValueCell => entityValueCell.isVertex())
       .forEach(entityValueCell => this.updateEntityValuesWithReference(MxGraphHelper.getModelElement(entityValueCell)));
+  }
+
+  private applyDelta(cell, deltaX, deltaY, formattedCells) {
+      if (!cell || formattedCells.includes(cell)) {
+        return;
+      }
+      formattedCells.push(cell);
+      cell.geometry.x += deltaX;
+      cell.geometry.y += deltaY;
+
+      const edgesToRedraw = this.graph.getOutgoingEdges(cell);
+      const modelElement = MxGraphHelper.getModelElement(cell);
+
+      Object.keys(modelElement)
+      .filter(attributeName => attributeName !== 'parents')
+      .forEach(attributeName => {
+        const attributeValue: any = modelElement[attributeName];
+        if (attributeValue instanceof Base) {
+          return this.applyDelta(this.resolveCellByModelElement(attributeValue), deltaX, deltaY, formattedCells);
+        }
+
+        if (attributeValue?.property && attributeValue?.keys) {
+          return this.applyDelta(this.resolveCellByModelElement(attributeValue.property), deltaX, deltaY, formattedCells);
+        }
+
+        if (Array.isArray(attributeValue)) {
+          return attributeValue.forEach(arrayElement => {
+            if (arrayElement instanceof Base) {
+              return this.applyDelta(this.resolveCellByModelElement(arrayElement), deltaX, deltaY, formattedCells);
+            }
+            if (arrayElement?.value instanceof DefaultEntityValue) {
+              this.applyDelta(this.resolveCellByModelElement(arrayElement.value), deltaX, deltaY, formattedCells);
+            }
+            if (arrayElement.property && arrayElement.keys) {
+              this.applyDelta(this.resolveCellByModelElement(arrayElement.property), deltaX, deltaY, formattedCells);
+            }
+            return null;
+          });
+        }
+      });
+      edgesToRedraw.forEach(edge => {
+        this.graph.resetEdge(edge);
+      });
   }
 }

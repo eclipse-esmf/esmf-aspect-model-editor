@@ -347,7 +347,7 @@ export class EditorService {
         })
         .pipe(
           tap(() => {
-            this.mxGraphService.formatShapes();
+            this.mxGraphService.formatShapes(true);
             this.mxGraphSetupService.centerGraph();
           }),
           switchMap(() => this.validate())
@@ -580,7 +580,7 @@ export class EditorService {
   }
 
   formatAspect() {
-    this.mxGraphService.formatShapes();
+    this.mxGraphService.formatShapes(true);
   }
 
   refreshValidateModel() {

@@ -38,7 +38,7 @@ export abstract class BaseRenderService {
     if (typeof callback === 'function') {
       callback();
     }
-
+    this.mxGraphService.formatCell(cell);
     this.mxGraphService.formatShapes();
   }
 

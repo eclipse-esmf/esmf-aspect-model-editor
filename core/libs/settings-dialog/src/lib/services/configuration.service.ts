@@ -19,6 +19,7 @@ const DEFAULT_SETTINGS: Settings = {
   showEditorMap: true,
   autoSaveEnabled: true,
   autoValidationEnabled: true,
+  autoFormatEnabled: true,
   showValidationPopupNotifications: false,
   enableHierarchicalLayout: true,
   validationTimerSeconds: 400,

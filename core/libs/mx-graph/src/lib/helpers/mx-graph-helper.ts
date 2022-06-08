@@ -150,18 +150,23 @@ export class MxGraphHelper {
     return cell?.overlays?.find(overlay => overlay.align === mxConstants.ALIGN_RIGHT);
   }
 
-  static setCompactTreeLayout(graph: mxgraph.mxGraph, inCollapsedMode: boolean): void {
+  static setCompactTreeLayout(graph: mxgraph.mxGraph, inCollapsedMode: boolean, cell?: mxgraph.mxCell): void {
     const graphLayout = new mxCompactTreeLayout(graph);
+    graphLayout.maintainParentLocation = true;
     graphLayout.horizontal = false;
     graphLayout.minEdgeJetty = ModelCompactTreeLayout.minEdgeJetty;
     graphLayout.levelDistance = inCollapsedMode
       ? ModelCompactTreeLayout.collapsedLevelDistance
       : ModelCompactTreeLayout.expandedLevelDistance;
     graphLayout.nodeDistance = inCollapsedMode ? ModelCompactTreeLayout.collapsedNodeDistance : ModelCompactTreeLayout.expandedNodeDistance;
-    graphLayout.execute(graph.getDefaultParent());
+    if (cell) {
+      graphLayout.execute(graph.getDefaultParent(), cell);
+    } else {
+      graphLayout.execute(graph.getDefaultParent());
+    }
   }
 
-  static setHierarchicalLayout(graph: mxgraph.mxGraph, inCollapsedMode: boolean): void {
+  static setHierarchicalLayout(graph: mxgraph.mxGraph, inCollapsedMode: boolean, cell?: mxgraph.mxCell): void {
     const graphLayout = new mxHierarchicalLayout(graph);
     graphLayout.maintainParentLocation = true;
     graphLayout.edgeStyle = ModelHierarchicalLayout.edgeStyle;
@@ -171,7 +176,11 @@ export class MxGraphHelper {
     graphLayout.interRankCellSpacing = inCollapsedMode
       ? ModelHierarchicalLayout.collapsedInterRankCellSpacing
       : ModelHierarchicalLayout.expandedInterRankCellSpacing;
-    graphLayout.execute(graph.getDefaultParent());
+    if (cell) {
+      graphLayout.execute(graph.getDefaultParent(), cell);
+    } else {
+      graphLayout.execute(graph.getDefaultParent());
+    }
   }
 
   static getCellHeight(cell: mxgraph.mxCell) {

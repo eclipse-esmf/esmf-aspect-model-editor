@@ -15,6 +15,7 @@ export interface Settings {
   showEditorNav: boolean;
   autoSaveEnabled: boolean;
   autoValidationEnabled: boolean;
+  autoFormatEnabled: boolean;
   showValidationPopupNotifications: boolean;
   enableHierarchicalLayout: boolean;
   validationTimerSeconds: number;

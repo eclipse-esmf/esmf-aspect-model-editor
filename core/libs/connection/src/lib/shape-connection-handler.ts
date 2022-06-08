@@ -75,6 +75,7 @@ export class AspectConnectionHandler implements ShapeSingleConnector<Aspect> {
     const child = this.mxGraphService.renderModelElement(metaModelElement);
     aspect.properties.push({property: defaultProperty, keys: {}});
     this.mxGraphService.assignToParent(child, source);
+    this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();
   }
 }
@@ -106,6 +107,7 @@ export class OperationConnectionHandler implements ShapeSingleConnector<Operatio
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultProperty);
     const child = this.mxGraphService.renderModelElement(metaModelElement);
     this.mxGraphService.assignToParent(child, source);
+    this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();
   }
 }
@@ -123,6 +125,7 @@ export class EventConnectionHandler implements ShapeSingleConnector<Event> {
     const overWrittenProperty = {property: defaultProperty, keys: {}};
     event.parameters.push(overWrittenProperty);
     this.mxGraphService.assignToParent(child, source);
+    this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();
   }
 }
@@ -149,6 +152,7 @@ export class PropertyConnectionHandler implements ShapeSingleConnector<Property>
         this.mxGraphShapeOverlayService.removeOverlay(child, MxGraphHelper.getNewShapeOverlayButton(child));
       }
 
+      this.mxGraphService.formatCell(source);
       this.mxGraphService.formatShapes();
     }
   }
@@ -184,6 +188,7 @@ export class EitherConnectionHandler implements ShapeSingleConnector<DefaultEith
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultCharacteristic);
     const child = this.mxGraphService.renderModelElement(metaModelElement);
     this.mxGraphService.assignToParent(child, source);
+    this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();
   }
 }
@@ -206,6 +211,7 @@ export class EntityConnectionHandler implements ShapeSingleConnector<Entity> {
     entity.properties.push(overWrittenProperty);
     this.entityValueService.onNewProperty(overWrittenProperty, entity as DefaultEntity);
     this.mxGraphService.assignToParent(child, source);
+    this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();
   }
 }
@@ -222,6 +228,7 @@ export class ConstraintConnectionHandler implements ShapeSingleConnector<Default
     const child = this.mxGraphService.renderModelElement(metaModelElement);
     constraint.update(defaultCharacteristic);
     this.mxGraphService.assignToParent(child, source);
+    this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();
   }
 }
@@ -239,6 +246,7 @@ export class TraitConnectionHandler implements ShapeSingleConnector<DefaultTrait
     const child = this.mxGraphService.renderModelElement(metaModelElement);
     trait.update(defaultElement);
     this.mxGraphService.assignToParent(child, source);
+    this.mxGraphService.formatCell(child);
     this.mxGraphService.formatShapes();
   }
 }
@@ -342,14 +350,17 @@ export class CharacteristicConnectionHandler implements ShapeSingleConnector<Cha
           this.mxGraphService.assignToParent(traitShape, edgeSource);
           (<DefaultTrait>defaultTrait).baseCharacteristic = selectedParentMetaModel;
           this.mxGraphService.assignToParent(selectedParent, traitShape);
+          this.mxGraphService.formatCell(edgeSource);
         });
       } else {
         (<DefaultTrait>defaultTrait).baseCharacteristic = selectedParentMetaModel;
         this.mxGraphService.assignToParent(source, traitShape);
       }
       this.addConstraint(defaultTrait, traitShape);
+      this.mxGraphService.formatCell(traitShape);
     }
 
+    this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();
   }
 
@@ -366,6 +377,7 @@ export class CharacteristicConnectionHandler implements ShapeSingleConnector<Cha
     (<DefaultTrait>defaultTrait).update(defaultConstraint);
 
     this.mxGraphService.assignToParent(constraintShape, traitShape);
+    this.mxGraphService.formatCell(traitShape);
   }
 }
 
@@ -391,6 +403,7 @@ export class StructuredValueConnectionHandler implements ShapeSingleConnector<St
     const propertyCell = this.mxGraphService.renderModelElement(metaModelElement);
     this.mxGraphService.assignToParent(propertyCell, source);
     this.mxGraphService.graph.labelChanged(source, MxGraphHelper.createPropertiesLabel(source));
+    this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();
     this.currentCachedFile.resolveCachedElement(property);
   }
@@ -411,6 +424,7 @@ export class EntityValueConnectionHandler implements ShapeSingleConnector<Defaul
     const entityCell = this.mxGraphService.resolveCellByModelElement(entityValue.entity);
     // connect: EntityValue - Entity
     this.mxGraphService.assignToParent(entityCell, child);
+    this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();
   }
 }

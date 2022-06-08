@@ -42,7 +42,7 @@ export class ConfigurationComponent implements OnInit {
   }
 
   onLayoutChange() {
-    this.mxGraphService.formatShapes();
+    this.mxGraphService.formatShapes(true);
   }
 
   changeSaveTimeout() {

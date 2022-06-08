@@ -333,7 +333,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
       this.mxGraphService.expandCells();
     }
     this.isAllShapesExpanded = !this.isAllShapesExpanded;
-    this.mxGraphService.formatShapes();
+    this.mxGraphService.formatShapes(true);
   }
 
   onFormat() {
