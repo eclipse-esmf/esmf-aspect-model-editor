@@ -163,6 +163,7 @@
     "ngx-toastr": "^14.2.1",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
+    "portfinder": "^1.0.28",
     "rxjs": "~7.4.0",
     "stream-browserify": "^3.0.0",
     "tslib": "^2.0.0",

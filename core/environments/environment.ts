@@ -12,6 +12,6 @@
  */
 
 export const environment = {
-  VERSION: require('../package.json').version,
+  version: require('../package.json').version,
   production: false,
 };

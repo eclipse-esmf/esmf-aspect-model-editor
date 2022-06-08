@@ -19,7 +19,8 @@ export interface AppConfig {
   assetLocation: string;
   minBammVersion: string;
   currentBammVersion: string;
-  copyrightYear: string;
+  serviceUrl: string;
+  defaultPort: string;
   api: {
     models: string;
     generate: string;

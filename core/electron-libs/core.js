@@ -17,6 +17,7 @@ const path = require('path');
 const electronLocalShortcut = require('electron-localshortcut');
 const electronRemote = require('@electron/remote/main');
 const promises = require('./promisify');
+const portfinder = require('portfinder');
 const platformData = require('./os-checker').default;
 
 /**
@@ -81,30 +82,42 @@ function createWindow() {
 }
 
 function startService() {
-  const rootPath = path.join(__dirname, '..', '..', '..', 'backend');
-  if (processesIDs.length === 0) {
-    const loader = spawn(path.join(rootPath, `ame-backend${platformData.extension}`));
+  portfinder
+    .getPortPromise({
+      port: 30000,
+      stopPort: 31000,
+    })
+    .then(port => {
+      const rootPath = path.join(__dirname, '..', '..', '..', 'backend');
+      if (processesIDs.length === 0) {
+        global.backendPort = port;
+        const loader = spawn(path.join(rootPath, `ame-backend${platformData.extension}`), [`-Dserver.port=${port}`]);
 
-    loader.stdout.on('data', data => {
-      if (data.includes('Tomcat started on port(s): 9091')) {
-        console.log('Tomcat is now started');
-        createWindow();
+        loader.stdout.on('data', data => {
+          if (data.includes(`Tomcat started on port(s): ${port}`)) {
+            console.log(`Tomcat is now started on port ${port}`);
+            createWindow();
+          }
+        });
+
+        loader.on('close', code => {
+          // notify frontend
+          console.log(`child process exited with code ${code}`);
+        });
+
+        loader.on('error', error => {
+          console.log('Error on opening Tomcat');
+          console.log(error);
+        });
+
+        processesIDs.push(loader.pid);
       }
-    });
-
-    loader.on('close', code => {
-      // notify frontend
-      console.log(`child process exited with code ${code}`);
-    });
-
-    loader.on('error', error => {
-      console.log('Error on opening Tomcat');
+    })
+    .catch(error => {
+      alert();
       console.log(error);
-      cleanUpProcesses();
+      alert('Port between 30000 and 31000 are already in use.');
     });
-
-    processesIDs.push(loader.pid);
-  }
 }
 
 exports.default = {

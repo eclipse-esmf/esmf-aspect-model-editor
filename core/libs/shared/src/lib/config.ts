@@ -15,22 +15,21 @@ import {InjectionToken} from '@angular/core';
 import {AppConfig} from '@ame/shared';
 import packageJson from '../../../../package.json';
 
-const serviceUrl = 'http://localhost:9091';
-const api = {
-  models: `${serviceUrl}/ame/api/models`,
-  generate: `${serviceUrl}/ame/api/generate`,
-  package: `${serviceUrl}/ame/api/package`,
-};
+const defaultPort = '9091';
 
 export const config = {
-  ameService: serviceUrl,
   ameVersion: packageJson.version,
   editorConfiguration: 'assets/config/editor/config/editor.xml',
   assetLocation: 'assets',
   minBammVersion: '1.0.0',
   currentBammVersion: '1.0.0',
-  copyrightYear: '2021',
-  api,
+  defaultPort: '9091',
+  serviceUrl: `http://localhost:${defaultPort}`,
+  api: {
+    models: '/ame/api/models',
+    generate: '/ame/api/generate',
+    package: '/ame/api/package',
+  },
 };
 
 export const APP_CONFIG = new InjectionToken<AppConfig>('app.config');
