@@ -14,13 +14,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {map, Observable} from 'rxjs';
-import {DefaultCharacteristic, DefaultEither} from '@ame/meta-model';
+import {Characteristic, DefaultCharacteristic, DefaultEither} from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
 import {InputFieldComponent} from '../../input-field.component';
 import {EditorDialogValidators} from '../../../../validators';
 import {EditorModelService} from '../../../../editor-model.service';
-import {NotificationsService} from '@ame/shared';
+import {NotificationsService, SearchService} from '@ame/shared';
 import {RdfService} from '@ame/rdf/services';
+import {MxGraphService} from '@ame/mx-graph';
 
 @Component({
   selector: 'ame-right-input-field',
@@ -36,9 +37,11 @@ export class RightInputFieldComponent extends InputFieldComponent<DefaultEither>
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
     private notificationsService: NotificationsService,
-    private rdfService: RdfService
+    public rdfService: RdfService,
+    public searchService?: SearchService,
+    public mxGraphService?: MxGraphService
   ) {
-    super(metaModelDialogService, namespacesCacheService);
+    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
     this.fieldName = 'rightCharacteristic';
   }
 
@@ -106,9 +109,14 @@ export class RightInputFieldComponent extends InputFieldComponent<DefaultEither>
       return; // happens on reset form
     }
 
-    const defaultCharacteristic = this.currentCachedFile
+    let defaultCharacteristic = this.currentCachedFile
       .getCachedCharacteristics()
       .find(characteristic => characteristic.aspectModelUrn === newValue.urn);
+
+    if (!defaultCharacteristic) {
+      defaultCharacteristic = this.namespacesCacheService.findElementOnExtReference<Characteristic>(newValue.urn);
+    }
+
     this.parentForm.setControl('rightCharacteristic', new FormControl(defaultCharacteristic));
 
     this.rightControl.patchValue(newValue.name);

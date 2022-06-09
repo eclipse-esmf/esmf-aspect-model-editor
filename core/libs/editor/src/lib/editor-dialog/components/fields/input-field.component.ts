@@ -10,20 +10,33 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+
 import {Directive, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {EditorModelService} from '../../editor-model.service';
 import {Observable, startWith, Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {BaseMetaModelElement, DefaultCharacteristic, DefaultConstraint, DefaultUnit, Unit} from '@ame/meta-model';
+import {
+  BaseMetaModelElement,
+  DefaultCharacteristic,
+  DefaultConstraint,
+  DefaultEntity,
+  DefaultProperty,
+  DefaultUnit,
+  Unit,
+} from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
 import {PreviousFormDataSnapshot} from '../../interfaces';
-import {SearchService, unitSearchOption} from '@ame/shared';
+import {mxCellSearchOption, SearchService, unitSearchOption} from '@ame/shared';
+import {mxgraph} from 'mxgraph-factory';
+import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 
 interface FilteredType {
   name: string;
   description: string;
   urn: string;
+  namespace?: string;
+  complex?: boolean;
 }
 
 @Directive()
@@ -41,7 +54,12 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
     return this.namespacesCacheService.getCurrentCachedFile();
   }
 
-  protected constructor(public metaModelDialogService: EditorModelService, public namespacesCacheService?: NamespacesCacheService) {}
+  protected constructor(
+    public metaModelDialogService: EditorModelService,
+    public namespacesCacheService?: NamespacesCacheService,
+    public searchService?: SearchService,
+    public mxGraphService?: MxGraphService
+  ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCurrentValue(key: string, _locale?: string) {
@@ -119,14 +137,14 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
 
   initFilteredPropertyTypes(control: FormControl): Observable<Array<FilteredType>> {
     return control?.valueChanges.pipe(
+      startWith(''),
       map((value: string) => {
         const properties: Array<FilteredType> = this.currentCachedFile.getCachedProperties()?.map(property => ({
           name: property.name,
           description: property.getDescription('en') || '',
           urn: property.aspectModelUrn,
         }));
-
-        return value ? properties?.filter(type => this.inSearchList(type, value)) : properties;
+        return [...properties, ...this.searchExtProperty(value)]?.filter(type => this.inSearchList(type, value));
       }),
       startWith([])
     );
@@ -134,6 +152,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
 
   initFilteredCharacteristicTypes(control: FormControl, elementAspectUrn: string): Observable<Array<FilteredType>> {
     return control?.valueChanges.pipe(
+      startWith(''),
       map((value: string) => {
         const characteristics: Array<FilteredType> = this.currentCachedFile
           .getCachedCharacteristics()
@@ -144,7 +163,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
           }))
           .filter(char => char.urn !== elementAspectUrn);
 
-        return value ? characteristics?.filter(type => this.inSearchList(type, value)) : characteristics;
+        return [...characteristics, ...this.searchExtCharacteristic(value)]?.filter(type => this.inSearchList(type, value));
       }),
       startWith([])
     );
@@ -153,6 +172,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
   initFilteredUnits(control: FormControl, searchService: SearchService) {
     const units = this.currentCachedFile.getCachedUnits();
     return control?.valueChanges.pipe(
+      startWith(''),
       map((value: string) => {
         if (!value) {
           return units;
@@ -193,5 +213,61 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
 
   isAlreadyDefined(filteredType: any, value: string) {
     return Object.values(filteredType).some((type: any) => type.name === value);
+  }
+
+  searchExtProperty(value: string): FilteredType[] {
+    return this.searchExtElement(value)
+      ?.map((cell: mxgraph.mxCell) => {
+        const modelElement = MxGraphHelper.getModelElement(cell);
+        if (modelElement.isExternalReference() && modelElement instanceof DefaultProperty) {
+          return {
+            name: modelElement.name,
+            description: modelElement.getDescription('en') || '',
+            urn: modelElement.aspectModelUrn,
+            namespace: modelElement.aspectModelUrn.split('#')[0],
+          };
+        }
+        return null;
+      })
+      .filter(cell => cell);
+  }
+
+  searchExtCharacteristic(value: string): FilteredType[] {
+    return this.searchExtElement(value)
+      ?.map((cell: mxgraph.mxCell) => {
+        const modelElement = MxGraphHelper.getModelElement(cell);
+        if (modelElement.isExternalReference() && modelElement instanceof DefaultCharacteristic) {
+          return {
+            name: modelElement.name,
+            description: modelElement.getDescription('en') || '',
+            urn: modelElement.aspectModelUrn,
+            namespace: modelElement.aspectModelUrn.split('#')[0],
+          };
+        }
+        return null;
+      })
+      .filter(cell => cell);
+  }
+
+  searchExtEntity(value: string): FilteredType[] {
+    return this.searchExtElement(value)
+      ?.map((cell: mxgraph.mxCell) => {
+        const modelElement = MxGraphHelper.getModelElement(cell);
+        if (modelElement.isExternalReference() && modelElement instanceof DefaultEntity) {
+          return {
+            name: modelElement.name,
+            description: modelElement.getDescription('en') || '',
+            urn: modelElement.aspectModelUrn,
+            namespace: modelElement.aspectModelUrn.split('#')[0],
+            complex: true,
+          };
+        }
+        return null;
+      })
+      .filter(cell => cell);
+  }
+
+  private searchExtElement(value: string): mxgraph.mxCell[] {
+    return this.searchService.search<mxgraph.mxCell>(value, this.mxGraphService.getAllCells(), mxCellSearchOption);
   }
 }

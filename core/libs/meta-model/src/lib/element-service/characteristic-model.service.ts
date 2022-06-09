@@ -28,15 +28,15 @@ import {mxgraph} from 'mxgraph-factory';
 import {
   Base,
   BaseMetaModelElement,
+  DefaultCollection,
   DefaultEntityValue,
   DefaultEnumeration,
+  DefaultProperty,
   DefaultQuantifiable,
   DefaultScalar,
   DefaultState,
-  DefaultUnit,
   DefaultStructuredValue,
-  DefaultProperty,
-  DefaultCollection,
+  DefaultUnit,
 } from '../aspect-meta-model';
 import {DefaultCharacteristic} from '../aspect-meta-model/default-characteristic';
 import {DefaultEntity} from '../aspect-meta-model/default-entity';
@@ -220,7 +220,7 @@ export class CharacteristicModelService extends BaseModelService {
     } else if (metaModelElement instanceof DefaultCollection) {
       metaModelElement.elementCharacteristic = form.elementCharacteristic;
       if (form.elementCharacteristic) {
-        this.currentCachedFile.resolveCachedElement(form.elementCharacteristic);
+        this.namespacesCacheService.resolveCachedElement(form.elementCharacteristic);
       }
     }
   }
@@ -229,7 +229,7 @@ export class CharacteristicModelService extends BaseModelService {
     if (form.newDataType) {
       metaModelElement.dataType = form.newDataType;
       metaModelElement.createdFromEditor = true;
-      this.currentCachedFile.resolveCachedElement(form.newDataType);
+      this.namespacesCacheService.resolveCachedElement(form.newDataType);
     }
 
     if (form.scalarDataType) {

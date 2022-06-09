@@ -35,14 +35,14 @@
     </button>
 
     <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeName">
-     Please select a different name as this one is of different type
+      Please select a different name as this one is of different type
     </mat-error>
     <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeNameExtRef">
-     Please select a different name as this one is of different type in the same namespace
+      Please select a different name as this one is of different type in the same namespace
     </mat-error>
 
     <mat-autocomplete #auto="matAutocomplete" class="element-characteristic">
-      <ng-container *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes" label="Characteristic">
+      <div *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes" label="Characteristic">
         <mat-option
           *ngIf="
             !isAlreadyDefined(filteredCharacteristicTypes, elementCharacteristic.value) &&
@@ -62,9 +62,19 @@
           [value]="elementCharacteristic.name"
           (onSelectionChange)="onSelectionChange('elementCharacteristicDisplay', elementCharacteristic)"
         >
-          {{ elementCharacteristic.name }}<br /><span class="option-description">{{ elementCharacteristic.description }}</span>
+          <div class="ellipsis">
+            <span>{{ elementCharacteristic.name }}</span>
+            <span *ngIf="elementCharacteristic.description" class="horizontal-separator"></span>
+            <span *ngIf="elementCharacteristic.description" class="option-description"
+                  [title]="elementCharacteristic.description">{{
+              elementCharacteristic.description
+              }}</span>
+          </div>
+          <p *ngIf="elementCharacteristic.namespace" class="namespace-prefix" [title]="elementCharacteristic.namespace">
+            {{ elementCharacteristic.namespace }}
+          </p>
         </mat-option>
-      </ng-container>
+      </div>
     </mat-autocomplete>
     <mat-hint>bamm-c:elementCharacteristic</mat-hint>
   </mat-form-field>

@@ -14,12 +14,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {InputFieldComponent} from '../../input-field.component';
 import {EditorModelService} from '../../../../editor-model.service';
-import {DefaultOperation, DefaultProperty} from '@ame/meta-model';
+import {DefaultOperation, DefaultProperty, Property} from '@ame/meta-model';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {NamespacesCacheService} from '@ame/cache';
 import {EditorDialogValidators} from '../../../../validators';
 import {RdfService} from '@ame/rdf/services';
+import {SearchService} from '@ame/shared';
+import {MxGraphService} from '@ame/mx-graph';
 
 @Component({
   selector: 'ame-output-input-field',
@@ -34,9 +36,11 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
   constructor(
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
-    private rdfService: RdfService
+    public rdfService: RdfService,
+    public searchService?: SearchService,
+    public mxGraphService?: MxGraphService
   ) {
-    super(metaModelDialogService, namespacesCacheService);
+    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
   }
 
   ngOnInit(): void {
@@ -94,11 +98,16 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
       return; // happens on reset form
     }
 
-    const defaultProperty = this.currentCachedFile.getCachedProperties().find(property => property.aspectModelUrn === newValue.urn);
-    this.parentForm.setControl('outputValue', new FormControl(defaultProperty));
+    let property = this.currentCachedFile.getCachedProperties().find(property => property.aspectModelUrn === newValue.urn);
+
+    if (!property) {
+      property = this.namespacesCacheService.findElementOnExtReference<Property>(newValue.urn);
+    }
+
+    this.parentForm.setControl('outputValue', new FormControl(property));
 
     this.outputControl.patchValue(newValue.name);
-    this.newPropertyControl.setValue(defaultProperty);
+    this.newPropertyControl.setValue(property);
     this.outputControl.disable();
   }
 

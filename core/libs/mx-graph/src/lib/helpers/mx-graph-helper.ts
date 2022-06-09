@@ -14,18 +14,18 @@
 import {
   BaseMetaModelElement,
   DefaultProperty,
-  DefaultEntity,
   DefaultCharacteristic,
-  DefaultEnumeration,
-  DefaultTrait,
-  DefaultEntityValue,
-  DefaultOperation,
   DefaultEither,
+  DefaultEntity,
+  DefaultEntityValue,
+  DefaultEnumeration,
+  DefaultOperation,
   DefaultStructuredValue,
+  DefaultTrait,
 } from '@ame/meta-model';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {LanguageSettingsService} from '@ame/settings-dialog';
-import {ModelCompactTreeLayout, ModelHierarchicalLayout, ExpandedModelShape} from '@ame/shared';
+import {ExpandedModelShape, ModelCompactTreeLayout, ModelHierarchicalLayout} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {ModelBaseProperties} from '../models';
 import {mxConstants, mxCompactTreeLayout, mxHierarchicalLayout} from '../providers';

@@ -39,20 +39,20 @@ export class SearchService {
    *  the list of elements may change form one search to another.
    */
   search<T>(value: string, list: T[], options: Fuse.IFuseOptions<any>) {
-    return new Fuse(list, options).search(this.adaptForSpecialSearch(value)).map(entry => entry.item);
+    return value ? new Fuse(list, options).search(this.adaptForSpecialSearch(value)).map(entry => entry.item) : list;
   }
 
   /**
    * Fuse.js uses ' to search for items that includes the value but we want to do this using *.
    */
   private adaptForSpecialSearch(value: string) {
-    const fuseInlineSearchToken = '\''; // prettier-ignore
+    const fuseInlineSearchToken = "'"; // prettier-ignore
 
-    if (value.startsWith(fuseInlineSearchToken)) {
+    if (value?.startsWith(fuseInlineSearchToken)) {
       return '';
     }
 
-    if (value.startsWith('*')) {
+    if (value?.startsWith('*')) {
       return value.replace('*', fuseInlineSearchToken);
     }
 

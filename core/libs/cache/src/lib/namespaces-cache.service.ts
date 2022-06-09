@@ -14,6 +14,7 @@
 import {SidebarService} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {CachedFile} from './cached-file';
+import {Base} from '@ame/meta-model';
 
 @Injectable({
   providedIn: 'root',
@@ -111,7 +112,9 @@ export class NamespacesCacheService {
   findElementOnExtReference<T>(aspectModelUrn: string): T {
     const [namespace] = aspectModelUrn.split('#');
     const cachedFiles = Array.from(this.namespaces.get(namespace + '#')?.values() || []);
-    return cachedFiles.find(cachedFile => !!cachedFile.getEitherElement(aspectModelUrn))?.getEitherElement(aspectModelUrn);
+    return cachedFiles
+      .find(cachedFile => this.currentCachedFile !== cachedFile && !!cachedFile.getEitherElement(aspectModelUrn))
+      ?.getEitherElement(aspectModelUrn);
   }
 
   /**
@@ -150,5 +153,18 @@ export class NamespacesCacheService {
 
     this.namespaces.delete(oldUrn);
     this.namespaces.set(newUrn, values);
+  }
+
+  /**
+   * This method will resolve the element when it´s not defined external.
+   *
+   * @param element - MetaModelElement to resolve
+   */
+  resolveCachedElement(element: Base) {
+    let cachedProperty = this.findElementOnExtReference<Base>(element.aspectModelUrn);
+    if (!cachedProperty) {
+      cachedProperty = this.currentCachedFile.resolveCachedElement(element);
+    }
+    return cachedProperty;
   }
 }

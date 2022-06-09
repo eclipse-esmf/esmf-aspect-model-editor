@@ -38,10 +38,10 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
   constructor(
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
-    private modelService: ModelService,
-    private searchService: SearchService
+    public searchService: SearchService,
+    private modelService: ModelService
   ) {
-    super(metaModelDialogService, namespacesCacheService);
+    super(metaModelDialogService, namespacesCacheService, searchService);
     this.bammUnitInstantiator = new BammUnitInstantiator(
       new MetaModelElementInstantiator(this.modelService.getLoadedAspectModel().rdfModel, this.currentCachedFile)
     );

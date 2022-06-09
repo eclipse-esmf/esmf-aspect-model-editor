@@ -18,9 +18,9 @@ import {MxGraphShapeOverlayService} from './mx-graph-shape-overlay.service';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
 import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
 import {environment} from 'environments/environment';
-import {MxGraphSetupService, MxGraphGeometryProviderService} from '.';
-import {MxGraphHelper, MxGraphCharacteristicHelper, PropertyInformation} from '../helpers';
-import {mxUtils, mxCell, mxConstants} from '../providers';
+import {MxGraphGeometryProviderService, MxGraphSetupService} from '.';
+import {MxGraphCharacteristicHelper, MxGraphHelper, PropertyInformation} from '../helpers';
+import {mxCell, mxConstants, mxUtils} from '../providers';
 import {Base, BaseMetaModelElement, DefaultEntityValue} from '@ame/meta-model';
 import {MxAttributeName} from '../models';
 import {ConfigurationService} from '@ame/settings-dialog';
@@ -390,7 +390,12 @@ export class MxGraphService {
         ? 'optionalPropertyEdge'
         : 'defaultEdge';
 
-    if (parent.edges && parent.edges.find(edge => edge.target.id === child.id)) {
+    if (
+      parent.edges &&
+      parent.edges.find(
+        edge => MxGraphHelper.getModelElement(edge.target).aspectModelUrn === MxGraphHelper.getModelElement(child).aspectModelUrn
+      )
+    ) {
       return;
     }
     this.mxGraphAttributeService.graph.insertEdge(

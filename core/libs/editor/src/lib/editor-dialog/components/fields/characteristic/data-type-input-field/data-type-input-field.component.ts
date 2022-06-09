@@ -16,8 +16,8 @@ import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
-import {DefaultCharacteristic, DefaultEither, DefaultEntity, DefaultScalar, DefaultStructuredValue} from '@ame/meta-model';
-import {DataTypeService} from '@ame/shared';
+import {DefaultCharacteristic, DefaultEither, DefaultEntity, DefaultScalar, DefaultStructuredValue, Entity} from '@ame/meta-model';
+import {DataTypeService, SearchService} from '@ame/shared';
 import {EditorModelService} from '../../../../editor-model.service';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
@@ -41,12 +41,13 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
 
   constructor(
     public metaModelDialogService: EditorModelService,
-    private mxGraphService: MxGraphService,
-    private rdfService: RdfService,
     public namespacesCacheService: NamespacesCacheService,
-    public dataTypeService: DataTypeService
+    public dataTypeService: DataTypeService,
+    public mxGraphService: MxGraphService,
+    public rdfService: RdfService,
+    public searchService?: SearchService
   ) {
-    super(metaModelDialogService, namespacesCacheService);
+    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
     this.fieldName = 'dataTypeEntity';
   }
 
@@ -120,7 +121,12 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     }
 
     if (newValue.complex) {
-      const entity = this.currentCachedFile.getCachedElement(newValue.urn);
+      let entity = this.currentCachedFile.getCachedElement(newValue.urn);
+
+      if (!entity) {
+        entity = this.namespacesCacheService.findElementOnExtReference<Entity>(newValue.urn);
+      }
+
       this.parentForm.setControl('dataTypeEntity', new FormControl(entity));
     } else {
       this.parentForm.setControl('dataTypeEntity', new FormControl(new DefaultScalar(newValue.urn)));
@@ -175,6 +181,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     this.filteredEntityTypes$ = this.entitiesDisabled
       ? of([])
       : this.dataTypeControl?.valueChanges.pipe(
+          startWith(''),
           map((value: string) => {
             const entities = this.currentCachedFile.getCachedEntities()?.map(entity => ({
               name: entity.name,
@@ -184,7 +191,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
               entity,
             }));
 
-            return value ? entities?.filter(type => this.inSearchList(type, value)) : entities;
+            return [...entities, ...this.searchExtEntity(value)]?.filter(type => this.inSearchList(type, value));
           }),
           startWith([])
         );

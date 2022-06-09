@@ -14,10 +14,13 @@
 ::ng-deep {
   .characteristic-datatype-autocomplete {
     .mat-option-text {
-      display: grid;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
 
       .option-title {
-        line-height: 25px;
+        line-height: 1;
+        margin-bottom: 5px;
       }
 
       .option-description {

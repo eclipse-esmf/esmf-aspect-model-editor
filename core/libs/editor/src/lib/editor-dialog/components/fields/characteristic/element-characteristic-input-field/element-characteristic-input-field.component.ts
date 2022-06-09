@@ -15,12 +15,13 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
-import {DefaultCharacteristic, DefaultCollection} from '@ame/meta-model';
+import {Characteristic, DefaultCharacteristic, DefaultCollection} from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
 import {NamespacesCacheService} from '@ame/cache';
-import {NotificationsService} from '@ame/shared';
+import {NotificationsService, SearchService} from '@ame/shared';
 import {EditorDialogValidators} from '../../../../validators';
 import {RdfService} from '@ame/rdf/services';
+import {MxGraphService} from '@ame/mx-graph';
 
 @Component({
   selector: 'ame-element-characteristic-input-field',
@@ -36,9 +37,11 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
     private notificationsService: NotificationsService,
-    private rdfService: RdfService
+    public rdfService: RdfService,
+    public searchService?: SearchService,
+    public mxGraphService?: MxGraphService
   ) {
-    super(metaModelDialogService, namespacesCacheService);
+    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
     this.fieldName = 'elementCharacteristic';
   }
 
@@ -104,9 +107,14 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
       return; // happens on reset form
     }
 
-    const defaultCharacteristic = this.currentCachedFile
+    let defaultCharacteristic = this.currentCachedFile
       .getCachedCharacteristics()
       .find(characteristic => characteristic.aspectModelUrn === newValue.urn);
+
+    if (!defaultCharacteristic) {
+      defaultCharacteristic = this.namespacesCacheService.findElementOnExtReference<Characteristic>(newValue.urn);
+    }
+
     this.parentForm.setControl('elementCharacteristic', new FormControl(defaultCharacteristic));
 
     this.elementCharacteristicDisplayControl.patchValue(newValue.name);

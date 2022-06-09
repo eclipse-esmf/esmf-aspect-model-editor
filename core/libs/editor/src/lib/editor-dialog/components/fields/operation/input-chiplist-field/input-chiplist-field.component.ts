@@ -23,6 +23,8 @@ import {ENTER} from '@angular/cdk/keycodes';
 import {EditorDialogValidators} from '../../../../validators';
 import {RdfService} from '@ame/rdf/services';
 import {ErrorStateMatcher} from '@angular/material/core';
+import {MxGraphService} from '@ame/mx-graph';
+import {SearchService} from '@ame/shared';
 
 @Component({
   selector: 'ame-input-chiplist-field',
@@ -44,9 +46,11 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
   constructor(
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
-    private rdfService: RdfService
+    public rdfService: RdfService,
+    public searchService?: SearchService,
+    public mxGraphService?: MxGraphService
   ) {
-    super(metaModelDialogService, namespacesCacheService);
+    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
   }
 
   ngOnInit(): void {
@@ -113,7 +117,12 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
       return; // happens on reset form
     }
 
-    const property = this.currentCachedFile.getCachedProperties().find(p => p.aspectModelUrn === newValue.urn);
+    let property = this.currentCachedFile.getCachedProperties().find(p => p.aspectModelUrn === newValue.urn);
+
+    if (!property) {
+      property = this.namespacesCacheService.findElementOnExtReference<Property>(newValue.urn);
+    }
+
     this.parentForm.setControl('input', new FormControl(property));
 
     this.inputValue.nativeElement.value = '';

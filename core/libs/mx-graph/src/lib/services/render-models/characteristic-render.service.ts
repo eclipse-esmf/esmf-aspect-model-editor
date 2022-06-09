@@ -157,7 +157,7 @@ export class CharacteristicRenderService extends BaseRenderService {
   }
 
   private handleEitherCharacteristic(cell: mxgraph.mxCell, characteristic: DefaultCharacteristic, modelInfo: ModelInfo) {
-    const cachedCharacteristic = this.namespacesCacheService.getCurrentCachedFile().resolveCachedElement(characteristic);
+    const cachedCharacteristic = this.namespacesCacheService.resolveCachedElement(characteristic);
     const childCell = this.mxGraphService.resolveCellByModelElement(cachedCharacteristic);
     this.unitRendererService.removeFrom(cell);
     this.shapeConnectorService.connectShapes(
@@ -208,6 +208,7 @@ export class CharacteristicRenderService extends BaseRenderService {
     }
 
     if (newDataType instanceof DefaultEntity) {
+      this.removeOutgoingComplexDataType(cell);
       this.handleComplexDataType(cell, newDataType);
     } else if (newDataType instanceof DefaultScalar) {
       this.removeOutgoingComplexDataType(cell);
@@ -222,7 +223,7 @@ export class CharacteristicRenderService extends BaseRenderService {
     if (this.metaModelElement instanceof DefaultStructuredValue) {
       return;
     }
-    const cachedEntity = this.namespacesCacheService.getCurrentCachedFile().resolveCachedElement(newDataType);
+    const cachedEntity = this.namespacesCacheService.resolveCachedElement(newDataType);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
     const entityCell = resolvedCell ? resolvedCell : this.mxGraphService.renderModelElement(newDataType);
     this.shapeConnectorService.connectShapes(this.metaModelElement, newDataType, cell, entityCell);
@@ -309,7 +310,7 @@ export class CharacteristicRenderService extends BaseRenderService {
             this.mxGraphService.graph.removeCells([edge], true);
           }
         });
-        const cachedCharacteristic = this.namespacesCacheService.getCurrentCachedFile().resolveCachedElement(elementCharacteristic);
+        const cachedCharacteristic = this.namespacesCacheService.resolveCachedElement(elementCharacteristic);
         const childCell = this.mxGraphService.resolveCellByModelElement(cachedCharacteristic);
         this.unitRendererService.removeFrom(cell);
         this.shapeConnectorService.connectShapes(

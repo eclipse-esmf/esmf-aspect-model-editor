@@ -45,15 +45,23 @@
           <span *ngIf="isUpperCase(dataType.value)">
             + Create new entity: <strong>{{ dataType.value }}</strong>
           </span>
-          <span *ngIf="!isUpperCase(dataType.value)">Please provide the name for the new Entity in upper case.</span>
+          <span class="ellipsis" *ngIf="!isUpperCase(dataType.value)">Please provide the name for the new Entity in upper case.</span>
         </mat-option>
         <mat-option
           *ngFor="let dataType of filteredEntityTypes"
           [value]="dataType.name"
           (onSelectionChange)="onSelectionChange('dataType', dataType)"
         >
-          <span class="option-title">{{ dataType.name }}</span
-          ><span class="option-description">{{ dataType.description }}</span>
+          <div class="ellipsis">
+            <span>{{ dataType.name }}</span>
+            <span *ngIf="dataType.description" class="horizontal-separator"></span>
+            <span *ngIf="dataType.description" class="option-description" [title]="dataType.description">
+              {{ dataType.description }}
+            </span>
+          </div>
+          <p *ngIf="dataType.namespace" class="namespace-prefix ellipsis" [title]="dataType.namespace">
+            {{ dataType.namespace }}
+          </p>
         </mat-option>
       </mat-optgroup>
 
