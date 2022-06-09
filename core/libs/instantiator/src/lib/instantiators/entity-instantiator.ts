@@ -41,6 +41,8 @@ export class EntityInstantiator {
     const defaultEntity = new DefaultEntity(null, null, null, new Array<OverWrittenProperty>());
     defaultEntity.setExternalReference(this.rdfModel.isExternalRef);
 
+    defaultEntity.fileName = this.metaModelElementInstantiator.fileName;
+
     this.metaModelElementInstantiator.initBaseProperties(quads, defaultEntity, this.metaModelElementInstantiator.rdfModel);
 
     quads.forEach(quad => {

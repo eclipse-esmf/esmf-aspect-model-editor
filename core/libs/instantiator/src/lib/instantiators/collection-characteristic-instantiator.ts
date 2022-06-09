@@ -51,6 +51,9 @@ export class CollectionCharacteristicInstantiator extends CharacteristicInstanti
         });
       }
     }
+
+    collectionCharacteristic.fileName = this.metaModelElementInstantiator.fileName;
+
     return collectionCharacteristic;
   }
 

@@ -127,18 +127,18 @@ export class DeleteLanguageInformationVisitor extends DefaultAspectModelVisitor<
 
       const cell = this.mxGraphService.resolveCellByModelElement(element);
 
-      if (!cell['configuration']) {
+      if (!cell['configuration']?.fields) {
         return;
       }
 
       const newCellConfig = [];
-      cell['configuration'].forEach(conf => {
+      cell['configuration'].fields.forEach(conf => {
         if (!((conf.key == 'description' || conf.key == 'preferredName') && conf.lang == locale)) {
           newCellConfig.push(conf);
         }
       });
 
-      cell['configuration'] = newCellConfig;
+      cell['configuration'].fields = newCellConfig;
       this.mxGraphAttributeService.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
     });
   }

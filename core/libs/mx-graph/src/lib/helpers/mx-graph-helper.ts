@@ -14,7 +14,6 @@
 import {
   BaseMetaModelElement,
   DefaultProperty,
-  DefaultAspect,
   DefaultEntity,
   DefaultCharacteristic,
   DefaultEnumeration,
@@ -28,6 +27,7 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {ModelCompactTreeLayout, ModelHierarchicalLayout, ExpandedModelShape} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
+import {ModelBaseProperties} from '../models';
 import {mxConstants, mxCompactTreeLayout, mxHierarchicalLayout} from '../providers';
 import {MxGraphVisitorHelper, PropertyInformation} from './mx-graph-visitor-helper';
 
@@ -219,7 +219,7 @@ export class MxGraphHelper {
       }
       return p;
     }
-    if (targetElement instanceof DefaultProperty && (sourceElement instanceof DefaultEntity)) {
+    if (targetElement instanceof DefaultProperty && sourceElement instanceof DefaultEntity) {
       const entityIncomingEdges = graph.getIncomingEdges(cell.source);
       let hasEnumeration = false;
       if (entityIncomingEdges) {
@@ -260,7 +260,8 @@ export class MxGraphHelper {
     if (!cell.collapsed) {
       title.style.width = cell.geometry.width + 'px';
     }
-    title.innerText = MxGraphHelper.getModelElement(cell).name;
+    title.title = modelElement.name;
+    title.innerText = modelElement.name.length > 24 ? modelElement.name.substring(0, 21) + '...' : modelElement.name;
     title.classList.add('element-name');
 
     div.appendChild(title);
@@ -278,16 +279,20 @@ export class MxGraphHelper {
       return div;
     }
 
+    const iconsBar = this.createShapeIconsBar(cell['configuration']?.baseProperties);
+
     // Generates an one line property to exactly calculate the height
     // After getting the height, this element is removed
     const heightGenerator = MxGraphHelper.createSpanElement({label: 'x', key: ''});
     div.appendChild(heightGenerator);
 
     if (!cell.collapsed) {
-      for (const conf of cell['configuration'] || []) {
-        div.appendChild(MxGraphHelper.createSpanElement(conf));
+      iconsBar && !(modelElement instanceof DefaultEntityValue) && div.appendChild(iconsBar);
+      for (const conf of cell['configuration']?.fields || []) {
+        div.appendChild(this.createSpanElement(conf));
       }
     } else {
+      title.title = '';
       title.classList.add('simple');
     }
 
@@ -303,6 +308,7 @@ export class MxGraphHelper {
     // getting the height then removing the heightGenerator
     const elementHeight = elementToRemove.clientHeight;
     div.removeChild(elementToRemove);
+    infoElements.push(iconsBar);
 
     // calculating the height for the cell for mxGraph relative with html height (41 - html, 35 - mxgraph, result: 41/35)
     const elementsSize = (elementHeight * infoElements.length + title.clientHeight) / (41 / 35) + (infoElements.length ? 30 : 0);
@@ -310,7 +316,7 @@ export class MxGraphHelper {
     if (cell.collapsed) {
       cell.geometry.width = Math.max(50, title.clientWidth + 10);
       cell.geometry.height = title.clientHeight + 15;
-    } else if (!(MxGraphHelper.getModelElement(cell) instanceof DefaultEntityValue)) {
+    } else if (!(modelElement instanceof DefaultEntityValue)) {
       cell.geometry.height =
         elementsSize < cell.geometry.height && elementsSize < ExpandedModelShape.expandedElementHeight
           ? ExpandedModelShape.expandedElementHeight
@@ -323,7 +329,32 @@ export class MxGraphHelper {
     return div;
   }
 
-  static createSpanElement(content: PropertyInformation) {
+  private static createShapeIconsBar(baseProperties: ModelBaseProperties) {
+    if (!baseProperties) {
+      return null;
+    }
+
+    const iconsBar = document.createElement('div');
+    iconsBar.classList.add('icons-bar');
+
+    if (baseProperties.external && !baseProperties.predefined) {
+      const infoLock = document.createElement('div');
+      infoLock.title = `Namespace: ${baseProperties.namespace} \nVersion: ${baseProperties.version} \nFile: ${baseProperties.fileName}`;
+      infoLock.classList.add('info-shape');
+      iconsBar.appendChild(infoLock);
+    }
+
+    if (baseProperties.predefined) {
+      const infoLock = document.createElement('div');
+      infoLock.title = `BAMM Element`;
+      infoLock.classList.add('info-shape');
+      iconsBar.appendChild(infoLock);
+    }
+
+    return iconsBar;
+  }
+
+  private static createSpanElement(content: PropertyInformation) {
     const span = document.createElement('span');
     span.classList.add('element-info');
     const sanitizedLabel = `${content.label}`.replace(/\n/g, ' ');
@@ -335,7 +366,13 @@ export class MxGraphHelper {
   }
 
   static updateLabel(cell: mxgraph.mxCell, graph: mxgraph.mxGraph, languageSettingsService: LanguageSettingsService) {
-    cell['configuration'] = MxGraphVisitorHelper.getElementProperties(MxGraphHelper.getModelElement(cell), languageSettingsService);
+    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(MxGraphHelper.getModelElement(cell), languageSettingsService);
     graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
+  }
+
+  static getNamespaceFromElement(element: BaseMetaModelElement) {
+    const [namespace] = element.aspectModelUrn.split('#');
+    const splitted = namespace.split(':');
+    return [splitted.pop(), splitted.pop()];
   }
 }

@@ -116,9 +116,17 @@ export class MxGraphSetupService {
     name.innerText = cell.id;
     div.appendChild(name);
 
-    if (cell['configuration']) {
+    const configuration = cell['configuration'];
+
+    if (configuration?.fields) {
       const table = document.createElement('table');
-      cell['configuration'].forEach((propLabel: PropertyInformation) => {
+      if (!configuration?.baseProperties.isPredefined) {
+        table.innerHTML += `<tr><td>Namespace</td><td>${configuration?.baseProperties.namespace}</td></tr>`;
+        table.innerHTML += `<tr><td>Version</td><td>${configuration?.baseProperties.version}</td></tr>`;
+        table.innerHTML += `<tr><td>File</td><td>${configuration?.baseProperties.fileName}</td></tr>`;
+      }
+
+      configuration.fields.forEach((propLabel: PropertyInformation) => {
         const [propName, ...propValue] = propLabel.label.split(' = ');
         table.innerHTML += `<tr><td>${propName}</td><td>${propValue.join(' = ')}</td></tr>`;
       });

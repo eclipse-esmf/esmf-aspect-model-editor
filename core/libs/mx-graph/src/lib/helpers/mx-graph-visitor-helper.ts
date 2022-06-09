@@ -44,6 +44,8 @@ import {
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import * as locale from 'locale-codes';
+import {ModelBaseProperties} from '../models';
+import {MxGraphHelper} from './mx-graph-helper';
 
 export interface PropertyInformation {
   label: string;
@@ -404,5 +406,27 @@ export class MxGraphVisitorHelper {
     }
 
     return null;
+  }
+
+  static getModelInfo(modelElement: BaseMetaModelElement, aspect: BaseMetaModelElement): ModelBaseProperties {
+    try {
+      const [, currentNamespace] = MxGraphHelper.getNamespaceFromElement(aspect);
+      const [elementVersion, elementNamespace] = MxGraphHelper.getNamespaceFromElement(modelElement);
+
+      const [aspectVersionedNamespace] = aspect.aspectModelUrn.split('#');
+      const [elementVersionedNamespace] = modelElement.aspectModelUrn.split('#');
+
+      return {
+        version: elementVersion,
+        namespace: elementNamespace,
+        external: modelElement.isExternalReference(),
+        predefined: !!(modelElement as DefaultCharacteristic)?.isPredefined && (modelElement as DefaultCharacteristic)?.isPredefined(),
+        sameNamespace: elementNamespace === currentNamespace,
+        sameVersionedNamespace: aspectVersionedNamespace === elementVersionedNamespace,
+        fileName: modelElement.fileName,
+      };
+    } catch (error) {
+      return null;
+    }
   }
 }

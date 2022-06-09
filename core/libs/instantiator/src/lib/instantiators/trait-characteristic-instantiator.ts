@@ -28,6 +28,7 @@ export class TraitCharacteristicInstantiator extends CharacteristicInstantiator 
 
     const bammc = this.metaModelElementInstantiator.bammc;
     defaultTrait = new DefaultTrait(null, null, null, null, new Array<Constraint>());
+    defaultTrait.fileName = this.metaModelElementInstantiator.fileName;
 
     quads.forEach(quad => {
       if (bammc.isBaseCharacteristicProperty(quad.predicate.value)) {

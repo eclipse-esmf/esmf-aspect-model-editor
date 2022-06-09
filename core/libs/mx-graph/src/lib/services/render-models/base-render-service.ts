@@ -32,7 +32,11 @@ export abstract class BaseRenderService {
     cell.setId(modelElement.name);
     cell.setAttribute('name', modelElement.name);
 
-    cell['configuration'] = MxGraphVisitorHelper.getElementProperties(modelElement, this.languageSettingsService);
+    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.languageSettingsService);
+    cell['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(
+      modelElement,
+      MxGraphHelper.getModelElement(this.mxGraphService.mxGraphShapeSelectorService.getAspectCell())
+    );
     this.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
 
     if (typeof callback === 'function') {

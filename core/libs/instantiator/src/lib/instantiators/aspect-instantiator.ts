@@ -44,6 +44,8 @@ export class AspectInstantiator {
     const events = this.metaModelElementInstantiator.getEvents(aspectNode, bamm.EventsProperty());
     const aspect = new DefaultAspect(null, null, null, properties, operations, events);
 
+    aspect.fileName = this.metaModelElementInstantiator.fileName;
+
     this.metaModelElementInstantiator.initBaseProperties(this.rdfModel.findAnyProperty(aspectNode), aspect, this.rdfModel);
 
     this.recursiveModelElements.forEach((recursiveProperties: BaseMetaModelElement[], key: string) => {

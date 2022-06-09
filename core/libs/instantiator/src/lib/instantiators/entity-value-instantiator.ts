@@ -56,6 +56,7 @@ export class EntityValueInstantiator {
     defaultEntityValue.name = subject.split('#')?.[1];
     defaultEntityValue.aspectModelUrn = subject;
     defaultEntityValue.entity = this.getEntity(quads);
+    defaultEntityValue.fileName = this.metaModelElementInstantiator.fileName;
     defaultEntityValue.setExternalReference(this.rdfModel.isExternalRef);
 
     // saving into cache earlier to prevent infinite loop

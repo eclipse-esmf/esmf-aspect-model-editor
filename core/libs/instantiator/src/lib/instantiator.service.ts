@@ -58,7 +58,7 @@ export class InstantiatorService {
 
     if (aspect) {
       const aspectInstantiator = new AspectInstantiator(metaModelElementInstantiator);
-      aspectInstantiator.createAspect(aspect);
+      aspectInstantiator.createAspect(aspect).fileName = fileName;
     }
 
     const uniqueSubjects = rdfModel.store

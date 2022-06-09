@@ -54,6 +54,7 @@ export class PropertyInstantiator {
     const property = new DefaultProperty(null, null, null, null);
     const quads = this.resolveQuads(listElement, this.rdfModel);
     property.setExternalReference(this.rdfModel.isExternalRef);
+    property.fileName = this.metaModelElementInstantiator.fileName;
 
     this.metaModelElementInstantiator.initBaseProperties(quads, property, this.rdfModel);
     // resolving element to not enter in infinite loop

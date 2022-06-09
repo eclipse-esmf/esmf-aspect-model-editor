@@ -28,6 +28,7 @@ export class StructuredValueCharacteristicInstantiator extends CharacteristicIns
 
     const bammc = this.metaModelElementInstantiator.bammc;
     structuredValueCharacteristic = new DefaultStructuredValue(null, null, null, null, null, null);
+    structuredValueCharacteristic.fileName = this.metaModelElementInstantiator.fileName;
     quads.forEach(quad => {
       if (bammc.isDeconstructionRuleProperty(quad.predicate.value)) {
         structuredValueCharacteristic.deconstructionRule = quad.object.value;

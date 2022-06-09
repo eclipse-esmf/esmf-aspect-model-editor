@@ -43,6 +43,7 @@ export class ConstraintInstantiator extends BaseConstraintCharacteristicInstanti
 
     const constraint = super.create(quad);
     constraint.setExternalReference(this.rdfModel.isExternalRef);
+    constraint.fileName = this.metaModelElementInstantiator.fileName;
 
     // Anonymous nodes are stored in the array for later processing of the name
     if ((constraint as DefaultConstraint).isAnonymousNode()) {

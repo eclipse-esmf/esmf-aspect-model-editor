@@ -22,7 +22,7 @@ import {MxGraphSetupService, MxGraphGeometryProviderService} from '.';
 import {MxGraphHelper, MxGraphCharacteristicHelper, PropertyInformation} from '../helpers';
 import {mxUtils, mxCell, mxConstants} from '../providers';
 import {Base, BaseMetaModelElement, DefaultEntityValue} from '@ame/meta-model';
-import {ModelStyleResolver, MxAttributeName} from '../models';
+import {MxAttributeName} from '../models';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {CollapsedOverlay, ExpandedOverlay, NotificationsService} from '@ame/shared';
 import {NamespacesCacheService} from '@ame/cache';
@@ -46,9 +46,9 @@ export class MxGraphService {
     private mxGraphGeometryProviderService: MxGraphGeometryProviderService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private notificationsService: NotificationsService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    public mxGraphShapeSelectorService: MxGraphShapeSelectorService
   ) {
     this.document = mxUtils.createXmlDocument();
     if (!environment.production) {
@@ -79,8 +79,10 @@ export class MxGraphService {
     try {
       updateFunction?.();
     } finally {
-      this.mxGraphAttributeService.graph.model.endUpdate();
-      requestAnimationFrame(() => subject.next(true));
+      requestAnimationFrame(() => {
+        this.mxGraphAttributeService.graph.model.endUpdate();
+        subject.next(true);
+      });
     }
 
     return subject.asObservable();
@@ -129,14 +131,7 @@ export class MxGraphService {
     let modelShape: mxgraph.mxCell;
     const geometry = this.mxGraphGeometryProviderService.createGeometry(metaModelElement, x, y);
     try {
-      modelShape = this.mxGraphShapeOverlayService.createShape(
-        metaModelElement.name,
-        ModelStyleResolver.resolve(metaModelElement),
-        metaModelElement.name,
-        this.document.createElement('model'),
-        geometry,
-        cellConfiguration
-      );
+      modelShape = this.mxGraphShapeOverlayService.createShape(metaModelElement, geometry, cellConfiguration);
       MxGraphHelper.setModelElement(modelShape, metaModelElement);
 
       this.themeService.applyShapeStyle(modelShape);
@@ -148,14 +143,6 @@ export class MxGraphService {
       }
 
       this.mxGraphShapeOverlayService.checkComplexEnumerationOverlays(metaModelElement, modelShape);
-
-      if (
-        metaModelElement.isExternalReference() &&
-        !(metaModelElement instanceof DefaultEntityValue) &&
-        !this.mxGraphAttributeService.inCollapsedMode
-      ) {
-        this.mxGraphShapeOverlayService.addExternalReferenceOverlay(modelShape);
-      }
 
       if (!metaModelElement.isExternalReference()) {
         this.mxGraphShapeOverlayService.addBottomShapeOverlay(modelShape);
@@ -282,7 +269,6 @@ export class MxGraphService {
 
           MxGraphHelper.setConstrainOverlayOffset(overlay, cell);
         });
-        this.mxGraphShapeOverlayService.addOrRemoveExternalReferenceShapeOverlay(cell);
       });
       this.formatShapes(true);
     }).subscribe(() => {
@@ -320,7 +306,6 @@ export class MxGraphService {
         const isVertex = this.mxGraphAttributeService.graph.model.isVertex(cell);
         this.mxGraphGeometryProviderService.upgradeTraitGeometry(cell, geometry, isVertex);
         this.mxGraphGeometryProviderService.upgradeEntityValueGeometry(cell, geometry, isVertex);
-        this.mxGraphShapeOverlayService.addOrRemoveExternalReferenceShapeOverlay(cell);
       });
 
       this.mxGraphAttributeService.inCollapsedMode = true;
@@ -367,7 +352,6 @@ export class MxGraphService {
         : MxGraphHelper.setCompactTreeLayout(this.mxGraphAttributeService.graph, this.mxGraphAttributeService.inCollapsedMode);
     }
   }
-
 
   formatCell(cell: mxgraph.mxCell) {
     if (this.configurationService.getSettings().autoFormatEnabled) {
@@ -491,17 +475,17 @@ export class MxGraphService {
   }
 
   private applyDelta(cell, deltaX, deltaY, formattedCells) {
-      if (!cell || formattedCells.includes(cell)) {
-        return;
-      }
-      formattedCells.push(cell);
-      cell.geometry.x += deltaX;
-      cell.geometry.y += deltaY;
+    if (!cell || formattedCells.includes(cell)) {
+      return;
+    }
+    formattedCells.push(cell);
+    cell.geometry.x += deltaX;
+    cell.geometry.y += deltaY;
 
-      const edgesToRedraw = this.graph.getOutgoingEdges(cell);
-      const modelElement = MxGraphHelper.getModelElement(cell);
+    const edgesToRedraw = this.graph.getOutgoingEdges(cell);
+    const modelElement = MxGraphHelper.getModelElement(cell);
 
-      Object.keys(modelElement)
+    Object.keys(modelElement)
       .filter(attributeName => attributeName !== 'parents')
       .forEach(attributeName => {
         const attributeValue: any = modelElement[attributeName];
@@ -528,8 +512,8 @@ export class MxGraphService {
           });
         }
       });
-      edgesToRedraw.forEach(edge => {
-        this.graph.resetEdge(edge);
-      });
+    edgesToRedraw.forEach(edge => {
+      this.graph.resetEdge(edge);
+    });
   }
 }

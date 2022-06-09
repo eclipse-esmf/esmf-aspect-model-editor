@@ -46,6 +46,8 @@ export class EitherCharacteristicInstantiator extends CharacteristicInstantiator
       }
     }
 
+    defaultEither.fileName = this.metaModelElementInstantiator.fileName;
+
     return defaultEither;
   }
 

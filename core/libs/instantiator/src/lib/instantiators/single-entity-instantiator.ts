@@ -28,6 +28,7 @@ export class SingleEntityInstantiator extends CharacteristicInstantiator {
 
     const bamm = this.metaModelElementInstantiator.bamm;
     defaultSingleEntity = new DefaultSingleEntity(null, null, null, null);
+    defaultSingleEntity.fileName = this.metaModelElementInstantiator.fileName;
 
     this.metaModelElementInstantiator.initBaseProperties(quads, defaultSingleEntity, this.metaModelElementInstantiator.rdfModel);
 

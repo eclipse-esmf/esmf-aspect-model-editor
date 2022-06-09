@@ -35,6 +35,8 @@ export class DurationCharacteristicInstantiator extends CharacteristicInstantiat
       }
     });
 
+    durationCharacteristic.fileName = this.metaModelElementInstantiator.fileName;
+
     return durationCharacteristic;
   }
 

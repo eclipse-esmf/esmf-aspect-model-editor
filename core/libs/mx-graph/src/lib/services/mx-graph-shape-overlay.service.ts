@@ -32,7 +32,7 @@ import {
 } from '@ame/meta-model';
 import {BrowserService} from '@ame/shared';
 import {ShapeConnectorService} from '@ame/connection';
-import {ModelInfo, ModelStyle} from '../models';
+import {ModelInfo, ModelStyleResolver} from '../models';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 
 @Injectable()
@@ -70,20 +70,6 @@ export class MxGraphShapeOverlayService {
     }
   }
 
-  public addExternalReferenceOverlay(cell: mxgraph.mxCell): void {
-    const overlay = this.createIconShapeOverlay('external-reference', 'Immutable', 18, 18);
-    overlay.verticalAlign = mxConstants.ALIGN_TOP;
-    if (MxGraphHelper.getModelElement(cell) instanceof DefaultTrait) {
-      overlay.offset.y += 15;
-      overlay.align = mxConstants.ALIGN_CENTER;
-    } else {
-      overlay.align = mxConstants.ALIGN_LEFT;
-      overlay.offset.x += 15;
-      overlay.offset.y += 15;
-    }
-    this.mxGraphAttributeService.graph.addCellOverlay(cell, overlay);
-  }
-
   /**
    * Removes the connection of the specified cell and changes the internal model to reflect the change
    *
@@ -119,7 +105,7 @@ export class MxGraphShapeOverlayService {
     const modelElement = MxGraphHelper.getModelElement(this.mxGraphShapeSelectorService.getSelectedShape());
     mxGraphConnectorService.createAndConnectShape(modelElement, cell, modelInfo);
 
-    cell['configuration'] = MxGraphVisitorHelper.getElementProperties(modelElement, this.injector.get(LanguageSettingsService));
+    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.injector.get(LanguageSettingsService));
     this.mxGraphAttributeService.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
 
     this.removeOverlaysByConnection(modelElement, cell);
@@ -402,43 +388,37 @@ export class MxGraphShapeOverlayService {
   }
 
   public createShape(
-    label: string,
-    style: ModelStyle,
-    name: string,
-    element: HTMLElement,
+    modelElement: BaseMetaModelElement,
     geometry?: mxgraph.mxGeometry,
     cellConfiguration?: PropertyInformation[]
   ): mxgraph.mxCell {
     const graph = this.mxGraphAttributeService.graph;
+    const element = document.createElement('model');
 
-    element.setAttribute('label', label);
+    element.setAttribute('label', modelElement.name);
     element.setAttribute('parent', 'yes');
-    element.setAttribute('name', name);
+    element.setAttribute('name', modelElement.name);
 
     const modelElementCell = graph.insertVertex(
       graph.getDefaultParent(),
-      name,
+      modelElement.name,
       element,
       geometry.x,
       geometry.y,
       geometry.width,
       geometry.height,
-      style
+      ModelStyleResolver.resolve(modelElement)
     );
 
-    modelElementCell.setId(name);
-    modelElementCell['configuration'] = cellConfiguration;
+    modelElementCell.setId(modelElement.name);
+    modelElementCell['configuration'] = {
+      baseProperties: MxGraphVisitorHelper.getModelInfo(
+        modelElement,
+        MxGraphHelper.getModelElement(this.mxGraphShapeSelectorService.getAspectCell())
+      ),
+      fields: cellConfiguration,
+    };
     graph.foldingEnabled = false;
     return modelElementCell;
-  }
-
-  public addOrRemoveExternalReferenceShapeOverlay(cell: mxgraph.mxCell) {
-    if (MxGraphHelper.getModelElement(cell)?.isExternalReference()) {
-      if (cell.isCollapsed()) {
-        cell.overlays = [];
-      } else {
-        this.addExternalReferenceOverlay(cell);
-      }
-    }
   }
 }

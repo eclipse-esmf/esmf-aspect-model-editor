@@ -37,6 +37,8 @@ export class CodeCharacteristicInstantiator extends CharacteristicInstantiator {
       }
     });
 
+    defaultCode.fileName = this.metaModelElementInstantiator.fileName;
+
     return defaultCode;
   }
 

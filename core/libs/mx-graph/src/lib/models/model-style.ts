@@ -67,3 +67,13 @@ export class ModelStyleResolver {
     return null;
   }
 }
+
+export interface ModelBaseProperties {
+  version: string;
+  namespace: string;
+  fileName: string;
+  external: boolean;
+  predefined: boolean;
+  sameNamespace: boolean;
+  sameVersionedNamespace: boolean;
+}

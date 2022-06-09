@@ -72,6 +72,7 @@ export class BammUnitInstantiator {
     }
 
     const defaultUnit = new DefaultUnit(this.bamm.version, null, null, null, null, null);
+    defaultUnit.fileName = this.metaModelElementInstantiator.fileName;
     const unitPropertyQuads = this.metaModelElementInstantiator.rdfModel.store.getQuads(DataFactory.namedNode(name), null, null, null);
     const alreadyDefinedUnit = this.cachedFile.getElement<Entity>(unitPropertyQuads[0]?.subject.value, this.isIsolated);
 

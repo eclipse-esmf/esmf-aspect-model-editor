@@ -42,6 +42,7 @@ export class EventInstantiator {
     const quads = this.resolveQuads(listElement, this.rdfModel);
 
     event.setExternalReference(this.rdfModel.isExternalRef);
+    event.fileName = this.metaModelElementInstantiator.fileName;
 
     this.metaModelElementInstantiator.initBaseProperties(quads, event, this.rdfModel);
     // resolving element to not enter in infinite loop

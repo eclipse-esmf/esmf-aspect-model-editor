@@ -142,12 +142,7 @@ export class cyHelp {
       }
     }
 
-    const regexName = name;
-
-    return cy
-      .contains(new RegExp('^' + regexName + '$', 'g'))
-      .first()
-      .click({force: true});
+    return cy.getHTMLCell(name).first().click({force: true});
   }
 
   static getShapeLabels(name: string) {
@@ -164,7 +159,7 @@ export class cyHelp {
       if (!foundShape) {
         throw new Error(`Shape ${name} not found`);
       }
-      return !!foundShape['configuration'].find(conf => conf.key === 'shapeIconType');
+      return !!foundShape['configuration']?.fields.find(conf => conf.key === 'shapeIconType');
     });
   }
 

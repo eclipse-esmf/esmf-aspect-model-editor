@@ -42,6 +42,7 @@ export class OperationInstantiator {
     const quads = this.resolveQuads(listElement, this.rdfModel);
 
     operation.setExternalReference(this.rdfModel.isExternalRef);
+    operation.fileName = this.metaModelElementInstantiator.fileName;
 
     this.metaModelElementInstantiator.initBaseProperties(quads, operation, this.rdfModel);
     // resolving element to not enter in infinite loop

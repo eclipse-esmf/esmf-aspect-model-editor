@@ -14,6 +14,7 @@
 @import '~ngx-toastr/toastr';
 @import './assets/styles/colors.scss';
 @import './assets/styles/theme.scss';
+@import './assets/styles/shape-label.scss';
 
 body,
 html {
@@ -223,55 +224,6 @@ mat-icon {
   td:nth-child(odd) {
     background: #f7f7f7;
   }
-}
-
-.cell-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-weight: 400;
-
-  .element-name {
-    align-self: center;
-    text-align: center;
-    text-overflow: ellipsis;
-    overflow-x: hidden;
-    font-size: 16px;
-    margin-top: -2px;
-    margin-bottom: 5px;
-    box-sizing: border-box;
-
-    &.simple {
-      margin: 0;
-      padding: 0 3px;
-    }
-
-    &:not(.simple) {
-      padding-bottom: 6px;
-      border-bottom: 2px solid var(--ame-font);
-    }
-  }
-
-  .element-info {
-    display: block;
-    align-self: flex-start;
-    width: 100%;
-    padding: 5px 10px;
-    text-align: left;
-    text-overflow: ellipsis;
-    overflow-x: hidden;
-    box-sizing: border-box;
-  }
-}
-
-.edge-label {
-  height: 15px;
-  border-radius: 3px;
-  padding: 2px;
-  padding-right: 4px;
-  padding-left: 4px;
-  color: black;
-  transform: translate(0, -4px);
 }
 
 .dialog-header {

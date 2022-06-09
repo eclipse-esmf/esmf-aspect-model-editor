@@ -170,13 +170,13 @@ export class EditorService {
     // enforce parent domain object will be updated if an cell e.g. unit will be deleted
     this.mxGraphAttributeService.graph.addListener(
       mxEvent.CELLS_REMOVED,
-      mxUtils.bind(this, (source: mxgraph.mxGraph, event: mxgraph.mxEventObject) => {
+      mxUtils.bind(this, (_source: mxgraph.mxGraph, event: mxgraph.mxEventObject) => {
         const changedCells: Array<mxgraph.mxCell> = event.getProperty('cells');
         changedCells.forEach(cell => {
           if (MxGraphHelper.getModelElement(cell)) {
             const edgeParent = changedCells.find(edge => edge.isEdge() && edge.target && edge.target.id === cell.id);
             if (edgeParent) {
-              const sourceElement = <Base>MxGraphHelper.getModelElement(edgeParent.source);
+              const sourceElement = MxGraphHelper.getModelElement(edgeParent.source) as Base;
               if (!sourceElement.isExternalReference()) {
                 sourceElement.delete(MxGraphHelper.getModelElement(cell));
               }
@@ -362,7 +362,7 @@ export class EditorService {
     const ds = mxUtils.makeDraggable(
       element,
       this.mxGraphAttributeService.graph,
-      (graph, evt, cell, x, y) => {
+      (_graph, _evt, _cell, x, y) => {
         const elementType: string = (<any>element).attributes['element-type'];
         const urn: string = (<any>element).attributes['urn'];
         this.createElement(x, y, elementType, urn);

@@ -30,6 +30,7 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
 
     const bammc = this.metaModelElementInstantiator.bammc;
     defaultState = <DefaultState>super.processElement(quads);
+    defaultState.fileName = this.metaModelElementInstantiator.fileName;
 
     quads.forEach(quad => {
       if (bammc.isDefaultValueProperty(quad.predicate.value)) {

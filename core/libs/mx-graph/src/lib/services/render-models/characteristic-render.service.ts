@@ -113,7 +113,7 @@ export class CharacteristicRenderService extends BaseRenderService {
       );
 
       propertyCell = this.mxGraphService.resolveCellByModelElement(element.property);
-      propertyCell['configuration'] = MxGraphVisitorHelper.getElementProperties(element.property, this.languageSettingsService);
+      propertyCell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(element.property, this.languageSettingsService);
       this.graph.labelChanged(propertyCell, MxGraphHelper.createPropertiesLabel(propertyCell));
 
       if (!element.property?.characteristic) {
@@ -129,7 +129,7 @@ export class CharacteristicRenderService extends BaseRenderService {
       );
 
       childCharacteristicCell = this.mxGraphService.resolveCellByModelElement(element.property.characteristic);
-      childCharacteristicCell['configuration'] = MxGraphVisitorHelper.getElementProperties(
+      childCharacteristicCell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
         element.property.characteristic,
         this.languageSettingsService
       );

@@ -54,6 +54,7 @@ export class BaseConstraintCharacteristicInstantiator {
 
     // post init all common properties of the meta model element
     const element = this.processElement(propertyQuads);
+    element.fileName = this.metaModelElementInstantiator.fileName;
 
     (<DefaultConstraint>element).setAnonymouseNode(Util.isBlankNode(quad.object));
     this.metaModelElementInstantiator.initBaseProperties(propertyQuads, element, this.metaModelElementInstantiator.rdfModel);

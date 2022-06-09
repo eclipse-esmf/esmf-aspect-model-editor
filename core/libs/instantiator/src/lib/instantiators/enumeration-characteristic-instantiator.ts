@@ -31,6 +31,7 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
     const bamm = this.metaModelElementInstantiator.bamm;
     const bammc = this.metaModelElementInstantiator.bammc;
     enumeration = DefaultEnumeration.createInstance();
+    enumeration.fileName = this.metaModelElementInstantiator.fileName;
 
     for (const quad of quads) {
       if ((bamm.isValueProperty(quad.predicate.value) || bammc.isValuesProperty(quad.predicate.value)) && Util.isBlankNode(quad.object)) {
