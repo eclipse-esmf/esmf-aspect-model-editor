@@ -74,6 +74,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     if (this.view !== 'default') {
       return;
     }
+
     this.isHoveredDefaultView = false;
     if (!this.isHoveredDefaultView) {
       this.collapse();
