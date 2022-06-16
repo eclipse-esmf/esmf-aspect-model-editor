@@ -416,6 +416,7 @@ export class EditorService {
           y
         );
         this.renderImportedChildElements(element);
+        this.mxGraphService.formatCell(this.mxGraphService.resolveCellByModelElement(element));
         this.mxGraphService.formatShapes();
       } else {
         this.notificationsService.warning('Element is already used', null, `editor/select/${aspectModelUrn}`, 2000);

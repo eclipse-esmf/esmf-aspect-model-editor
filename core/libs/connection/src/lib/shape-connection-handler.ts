@@ -13,7 +13,7 @@
 
 import {mxgraph} from 'mxgraph-factory';
 import {Injectable} from '@angular/core';
-import {ModelInfo, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {ModelInfo, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService, MxGraphVisitorHelper} from '@ame/mx-graph';
 import {
   Aspect,
   Base,
@@ -46,6 +46,7 @@ import {ExpandedModelShape, NotificationsService} from '@ame/shared';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import mxCell = mxgraph.mxCell;
+import {LanguageSettingsService} from '@ame/settings-dialog';
 
 export interface ShapeSingleConnector<T> {
   connect(metaModel: T, source: mxCell, modelInfo?: ModelInfo): void;
@@ -264,7 +265,8 @@ export class CharacteristicConnectionHandler implements ShapeSingleConnector<Cha
     private modelElementNamingService: ModelElementNamingService,
     private namespacesCacheService: NamespacesCacheService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService
+    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
+    private languageSettingsService: LanguageSettingsService
   ) {}
 
   public connect(characteristic: Characteristic, source: mxCell, modelInfo: ModelInfo) {
@@ -295,6 +297,18 @@ export class CharacteristicConnectionHandler implements ShapeSingleConnector<Cha
       characteristic.dataType = defaultEntity;
 
       const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultEntity);
+      const selectedParentIncomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(source);
+      selectedParentIncomingEdges.forEach(edge => {
+        const edgeSource = edge.source;
+        const edgeSourceMetaModelElement = MxGraphHelper.getModelElement(edgeSource);
+
+        if (edgeSourceMetaModelElement instanceof DefaultProperty) {
+          // remove example value for complex datatypes
+          edgeSourceMetaModelElement.exampleValue = null;
+          edgeSource['configuration'].fields = MxGraphVisitorHelper.getElementProperties(edgeSourceMetaModelElement, this.languageSettingsService);
+          this.mxGraphAttributeService.graph.labelChanged(edgeSource, MxGraphHelper.createPropertiesLabel(edgeSource));
+        }
+      });
       const child = this.mxGraphService.renderModelElement(metaModelElement);
       this.mxGraphService.assignToParent(child, source);
       // add icon if we click on + button of an enumeration
@@ -533,7 +547,8 @@ export class CharacteristicEntityConnectionHandler implements ShapeMultiConnecto
   constructor(
     private mxGraphService: MxGraphService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService
+    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
+    private languageSettingsService: LanguageSettingsService
   ) {}
 
   public connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultEntity, parent: mxCell, child: mxCell) {
@@ -569,6 +584,20 @@ export class CharacteristicEntityConnectionHandler implements ShapeMultiConnecto
     this.mxGraphService.formatShapes();
     if (parentMetaModel.dataType) {
       this.mxGraphService.graph.labelChanged(parent, MxGraphHelper.createPropertiesLabel(parent));
+    }
+    if (parentMetaModel.dataType?.isComplex()) {
+      const selectedParentIncomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(parent);
+      selectedParentIncomingEdges.forEach(edge => {
+        const edgeSource = edge.source;
+        const edgeSourceMetaModelElement = MxGraphHelper.getModelElement(edgeSource);
+
+        if (edgeSourceMetaModelElement instanceof DefaultProperty) {
+          // remove example value for complex datatypes
+          edgeSourceMetaModelElement.exampleValue = null;
+          edgeSource['configuration'].fields = MxGraphVisitorHelper.getElementProperties(edgeSourceMetaModelElement, this.languageSettingsService);
+          this.mxGraphAttributeService.graph.labelChanged(edgeSource, MxGraphHelper.createPropertiesLabel(edgeSource));
+        }
+      });
     }
   }
 }

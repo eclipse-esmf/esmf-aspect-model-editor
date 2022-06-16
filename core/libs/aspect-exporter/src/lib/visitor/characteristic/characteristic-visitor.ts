@@ -301,6 +301,12 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
         continue;
       }
 
+      if (characteristic.dataType?.isComplex() && parent instanceof DefaultProperty) {
+        // remove exampleValue for complex datatype
+        parent.exampleValue = null;
+        this.rdfNodeService.update(parent, {exampleValue: null});
+      }
+
       this.removeOldAndAddNewReference(
         DataFactory.namedNode(parent.aspectModelUrn),
         parent instanceof DefaultCollection ? this.bammc.ElementCharacteristicProperty() : this.bamm.CharacteristicProperty(),
