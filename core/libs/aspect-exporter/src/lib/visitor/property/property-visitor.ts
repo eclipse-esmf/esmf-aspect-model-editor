@@ -41,7 +41,6 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
   private addProperties(property: DefaultProperty) {
     this.rdfNodeService.update(property, {
       exampleValue: property.exampleValue,
-      refines: property.refines,
       preferredName: property.getAllLocalesPreferredNames().map(language => ({
         language,
         value: property.getPreferredName(language),

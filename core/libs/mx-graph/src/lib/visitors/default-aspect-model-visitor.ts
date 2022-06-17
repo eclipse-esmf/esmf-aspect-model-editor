@@ -55,6 +55,7 @@
 import {
   Base,
   BaseMetaModelElement,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -69,7 +70,6 @@ import {
 import {AspectModelVisitor} from './aspect-model-visitor';
 
 export class DefaultAspectModelVisitor<T, U> implements AspectModelVisitor<T, U> {
-
   visitedElements = []; // Keep track of already visited elements
 
   visit(element: BaseMetaModelElement, context: U): T {
@@ -123,43 +123,47 @@ export class DefaultAspectModelVisitor<T, U> implements AspectModelVisitor<T, U>
     return null;
   }
 
-  visitAspect(aspect: DefaultAspect, context: U): T {
+  visitAspect(_aspect: DefaultAspect, _context: U): T {
     return undefined;
   }
 
-  visitCharacteristic(characteristic: DefaultCharacteristic, context: U): T {
+  visitCharacteristic(_characteristic: DefaultCharacteristic, _context: U): T {
     return undefined;
   }
 
-  visitConstraint(constraint: DefaultConstraint, context: U): T {
+  visitConstraint(_constraint: DefaultConstraint, _context: U): T {
     return undefined;
   }
 
-  visitEntity(entity: DefaultEntity, context: U): T {
+  visitEntity(_entity: DefaultEntity, _context: U): T {
     return undefined;
   }
 
-  visitOperation(operation: DefaultOperation, context: U): T {
+  visitOperation(_operation: DefaultOperation, _context: U): T {
     return undefined;
   }
 
-  visitProperty(property: DefaultProperty, context: U): T {
+  visitProperty(_property: DefaultProperty, _context: U): T {
     return undefined;
   }
 
-  visitQuantityKind(quantityKind: DefaultQuantityKind, context: U): T {
+  visitQuantityKind(_quantityKind: DefaultQuantityKind, _context: U): T {
     return undefined;
   }
 
-  visitUnit(unit: DefaultUnit, context: U): T {
+  visitUnit(_unit: DefaultUnit, _context: U): T {
     return undefined;
   }
 
-  visitEntityValue(entityValue: DefaultEntityValue, context: U): T {
+  visitEntityValue(_entityValue: DefaultEntityValue, _context: U): T {
     return undefined;
   }
 
-  visitEvent(event: DefaultEvent, context: U): T {
+  visitEvent(_event: DefaultEvent, _context: U): T {
+    return undefined;
+  }
+
+  visitAbstractEntity(_abstractEntity: DefaultAbstractEntity, _context: U) {
     return undefined;
   }
 }
