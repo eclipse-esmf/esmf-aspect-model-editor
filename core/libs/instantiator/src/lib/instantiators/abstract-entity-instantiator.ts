@@ -12,11 +12,10 @@
  */
 
 import {DataFactory, Quad} from 'n3';
-import {DefaultEntity, Entity, OverWrittenProperty} from '@ame/meta-model';
+import {DefaultAbstractEntity} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {AbstractEntityInstantiator} from './abstract-entity-instantiator';
 
-export class EntityInstantiator {
+export class AbstractEntityInstantiator {
   private get cachedFile() {
     return this.metaModelElementInstantiator.cachedFile;
   }
@@ -31,37 +30,33 @@ export class EntityInstantiator {
 
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
-  createEntity(quads: Array<Quad>): Entity {
-    const entity = this.cachedFile.getElement<Entity>(quads[0]?.subject.value, this.isIsolated);
-
-    if (entity) {
-      return entity;
+  createAbstractEntity(quads: Quad[]): DefaultAbstractEntity {
+    const abstractEntity = this.cachedFile.getElement<DefaultAbstractEntity>(quads[0]?.subject.value, this.isIsolated);
+    if (abstractEntity) {
+      return abstractEntity;
     }
 
     const bamm = this.metaModelElementInstantiator.bamm;
-    const defaultEntity = new DefaultEntity(null, null, null, new Array<OverWrittenProperty>());
+    const defaultAbstractEntity = new DefaultAbstractEntity(null, null, null, []);
+    defaultAbstractEntity.setExternalReference(this.rdfModel.isExternalRef);
+    defaultAbstractEntity.fileName = this.metaModelElementInstantiator.fileName;
 
-    defaultEntity.setExternalReference(this.rdfModel.isExternalRef);
-    defaultEntity.fileName = this.metaModelElementInstantiator.fileName;
-
-    this.metaModelElementInstantiator.initBaseProperties(quads, defaultEntity, this.metaModelElementInstantiator.rdfModel);
+    this.metaModelElementInstantiator.initBaseProperties(quads, defaultAbstractEntity, this.metaModelElementInstantiator.rdfModel);
 
     quads.forEach(quad => {
       if (bamm.isExtendsProperty(quad.predicate.value)) {
-        defaultEntity.extendedElement = new AbstractEntityInstantiator(this.metaModelElementInstantiator).createAbstractEntity(
-          this.rdfModel.store.getQuads(quad.object, null, null, null)
-        );
+        defaultAbstractEntity.extendedElement = this.createAbstractEntity(this.rdfModel.store.getQuads(quad.object, null, null, null));
         return;
       }
 
       if (bamm.isPropertiesProperty(quad.predicate.value)) {
-        defaultEntity.properties = this.metaModelElementInstantiator.getProperties(
+        defaultAbstractEntity.properties = this.metaModelElementInstantiator.getProperties(
           DataFactory.namedNode(quad.subject.value),
           bamm.PropertiesProperty()
         );
       }
     });
 
-    return <Entity>this.cachedFile.resolveElement(defaultEntity, this.isIsolated);
+    return this.cachedFile.resolveElement<DefaultAbstractEntity>(defaultAbstractEntity, this.isIsolated);
   }
 }

@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {AspectModelVisitor} from '@ame/mx-graph';
+import {Base} from './base';
+import {Entity} from './default-entity';
+import {OverWrittenProperty} from './overwritten-property';
+
+export class DefaultAbstractEntity extends Base implements Entity {
+  public extendedElement: DefaultAbstractEntity;
+
+  public get className(): string {
+    return 'DefaultAbstractEntity';
+  }
+
+  public get ownProperties(): OverWrittenProperty[] {
+    return this._properties;
+  }
+
+  public get properties() {
+    if (this.extendedElement instanceof DefaultAbstractEntity) {
+      return [...this._properties, ...this.extendedElement.properties];
+    }
+    return this._properties;
+  }
+
+  public set properties(_properties: OverWrittenProperty[]) {
+    this._properties = _properties;
+  }
+
+  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _properties: Array<OverWrittenProperty> = []) {
+    super(metaModelVersion, aspectModelUrn, name);
+  }
+
+  static createInstance() {
+    return new DefaultAbstractEntity(null, null, 'AbstractEntity', []);
+  }
+
+  getUrn(): string {
+    return this.aspectModelUrn;
+  }
+
+  isScalar(): boolean {
+    return false;
+  }
+
+  isComplex(): boolean {
+    return false;
+  }
+
+  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
+    return visitor.visitAbstractEntity(this, context);
+  }
+}

@@ -156,6 +156,7 @@ export class InstantiatorService {
       }
       return;
     }
+
     if (bamm.isEntity(elementType)) {
       const entity = new EntityInstantiator(metaModelElementInstantiator).createEntity(rdfModel.store.getQuads(subject, null, null, null));
       if (entity) {
