@@ -16,7 +16,14 @@
     <input matInput [placeholder]="'Search elements in ' + fileName" type="text" [(ngModel)]="searchedString" (keyup)="filterElements()" />
   </mat-form-field>
   <div class="types">
-    <div *ngFor="let type of types" class="type" [ngClass]="getClassesForType(type)" (click)="toggleSelect(type)">
+    <div
+      *ngFor="let type of types"
+      class="type"
+      matTooltipPosition="above"
+      [matTooltip]="'Filter by ' + type.charAt(0).toUpperCase() + type.substring(1, type.length)"
+      [ngClass]="getClassesForType(type)"
+      (click)="toggleSelect(type)"
+    >
       {{ type.charAt(0).toUpperCase() }}
     </div>
   </div>

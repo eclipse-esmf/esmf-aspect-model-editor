@@ -23,6 +23,7 @@ import {
   DefaultUnit,
   DefaultEntityValue,
   DefaultEvent,
+  DefaultAbstractEntity,
 } from '@ame/meta-model';
 
 /**
@@ -38,6 +39,7 @@ export enum ModelStyle {
   UNIT = 'unit',
   TRAIT = 'trait',
   ENTITY_VALUE = 'entityValue',
+  ABSTRACT_ENTITY = 'abstractEntity',
   EVENT = 'event',
 }
 
@@ -55,6 +57,8 @@ export class ModelStyleResolver {
       return ModelStyle.TRAIT;
     } else if (metaModelElement instanceof DefaultCharacteristic) {
       return ModelStyle.CHARACTERISTIC;
+    } else if (metaModelElement instanceof DefaultAbstractEntity) {
+      return ModelStyle.ABSTRACT_ENTITY;
     } else if (metaModelElement instanceof DefaultEntity) {
       return ModelStyle.ENTITY;
     } else if (metaModelElement instanceof DefaultUnit) {

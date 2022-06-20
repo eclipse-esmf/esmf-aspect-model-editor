@@ -39,6 +39,7 @@ export class ThemeService {
       operation: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.operation},
       event: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.event},
       characteristic: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.characteristic},
+      abstractEntity: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.entityValue},
       entity: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.entity},
       constraint: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.constraint},
       trait: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.trait},

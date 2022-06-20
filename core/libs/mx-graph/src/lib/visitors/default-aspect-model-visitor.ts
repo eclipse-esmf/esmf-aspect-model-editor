@@ -87,38 +87,39 @@ export class DefaultAspectModelVisitor<T, U> implements AspectModelVisitor<T, U>
       return null;
     }
 
-    if (item) {
-      // by heaving attribute 'parents' on entityValue we will call this recursively forever so we need to exclude it
-      Object.keys(element)
-        .filter(attributeName => attributeName !== 'parents')
-        .forEach(attributeName => {
-          const attributeValue: any = element[attributeName];
-          if (attributeValue instanceof Base) {
-            return this.visit(attributeValue, item);
-          }
+    item &&
+      Object.keys(element).forEach(attributeName => {
+        if (attributeName === 'parents') {
+          return;
+        }
+        // by heaving attribute 'parents' on entityValue we will call this recursively forever so we need to exclude it
 
-          if (attributeValue?.property && attributeValue?.keys) {
-            return this.visit(attributeValue.property, item);
-          }
+        const attributeValue: any = element[attributeName];
+        if (attributeValue instanceof Base) {
+          return this.visit(attributeValue, item);
+        }
 
-          if (Array.isArray(attributeValue)) {
-            return attributeValue.forEach(arrayElement => {
-              if (arrayElement instanceof Base) {
-                return this.visit(arrayElement, item);
-              }
+        if (attributeValue?.property && attributeValue?.keys) {
+          return this.visit(attributeValue.property, item);
+        }
 
-              if (arrayElement?.value instanceof DefaultEntityValue) {
-                return this.visit(arrayElement.value, item);
-              }
+        if (Array.isArray(attributeValue)) {
+          return attributeValue.forEach(arrayElement => {
+            if (arrayElement instanceof Base) {
+              return this.visit(arrayElement, item);
+            }
 
-              if (arrayElement.property && arrayElement.keys) {
-                return this.visit(arrayElement.property, item);
-              }
-              return null;
-            });
-          }
-        });
-    }
+            if (arrayElement?.value instanceof DefaultEntityValue) {
+              return this.visit(arrayElement.value, item);
+            }
+
+            if (arrayElement.property && arrayElement.keys) {
+              return this.visit(arrayElement.property, item);
+            }
+            return null;
+          });
+        }
+      });
 
     return null;
   }
