@@ -19,6 +19,7 @@ export const lightColors: ThemeColors = {
   operation: '#D5BFDA',
   event: '#B9D8FA',
   characteristic: '#D6E2A6',
+  abstractEntity: '#AEADE0',
   entity: '#AEADE0',
   constraint: '#74AEAF',
   trait: '#74AEAF',

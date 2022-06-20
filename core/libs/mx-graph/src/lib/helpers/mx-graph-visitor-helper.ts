@@ -17,6 +17,7 @@ import {
   BaseMetaModelElement,
   Characteristic,
   Constraint,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -298,6 +299,14 @@ export class MxGraphVisitorHelper {
   }
 
   static getEntityProperties(entity: DefaultEntity, languageSettingsService: LanguageSettingsService) {
+    return [
+      ...MxGraphVisitorHelper.addLocalizedPreferredNames(entity, languageSettingsService),
+      ...MxGraphVisitorHelper.addLocalizedDescriptions(entity, languageSettingsService),
+      MxGraphVisitorHelper.addSee(entity),
+    ].filter(e => !!e);
+  }
+
+  static getAbstractEntityProperties(entity: DefaultAbstractEntity, languageSettingsService: LanguageSettingsService) {
     return [
       ...MxGraphVisitorHelper.addLocalizedPreferredNames(entity, languageSettingsService),
       ...MxGraphVisitorHelper.addLocalizedDescriptions(entity, languageSettingsService),

@@ -22,6 +22,7 @@ import {
   DefaultOperation,
   DefaultStructuredValue,
   DefaultTrait,
+  DefaultAbstractEntity,
 } from '@ame/meta-model';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {LanguageSettingsService} from '@ame/settings-dialog';
@@ -266,7 +267,7 @@ export class MxGraphHelper {
 
     div.appendChild(title);
 
-    if (modelElement instanceof DefaultEntityValue) {
+    if (modelElement instanceof DefaultEntityValue || modelElement instanceof DefaultAbstractEntity) {
       title.classList.add('simple');
     }
 
@@ -316,7 +317,7 @@ export class MxGraphHelper {
     if (cell.collapsed) {
       cell.geometry.width = Math.max(50, title.clientWidth + 10);
       cell.geometry.height = title.clientHeight + 15;
-    } else if (!(modelElement instanceof DefaultEntityValue)) {
+    } else if (!(modelElement instanceof DefaultEntityValue || modelElement instanceof DefaultAbstractEntity)) {
       cell.geometry.height =
         elementsSize < cell.geometry.height && elementsSize < ExpandedModelShape.expandedElementHeight
           ? ExpandedModelShape.expandedElementHeight

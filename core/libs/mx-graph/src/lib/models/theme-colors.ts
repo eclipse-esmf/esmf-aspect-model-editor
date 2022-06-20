@@ -17,6 +17,7 @@ export interface ThemeColors {
   operation: string;
   event: string;
   characteristic: string;
+  abstractEntity: string;
   entity: string;
   constraint: string;
   trait: string;

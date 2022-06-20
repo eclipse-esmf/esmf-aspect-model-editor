@@ -19,6 +19,7 @@ export const darkColors: ThemeColors = {
   operation: '#995FAB',
   event: '#8DA5BF',
   characteristic: '#99B719',
+  abstractEntity: '#55539F',
   entity: '#55539F',
   constraint: '#19787A',
   trait: '#19787A',

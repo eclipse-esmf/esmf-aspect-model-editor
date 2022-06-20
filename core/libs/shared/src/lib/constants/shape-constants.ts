@@ -58,3 +58,10 @@ export enum ExpandedRoundBorderShape {
   collapsedRoundBorderWidth = 30,
   collapsedRoundBorderHeight = 30,
 }
+
+export enum ExpandedMiniShape {
+  expandedRoundBorderWidth = 100,
+  expandedRoundBorderHeight = 40,
+  collapsedRoundBorderWidth = 30,
+  collapsedRoundBorderHeight = 30,
+}
