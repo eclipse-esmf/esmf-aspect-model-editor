@@ -11,17 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DefaultEntity, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
+import {ModelService, RdfService} from '@ame/rdf/services';
+import {RdfModel} from '@ame/rdf/utils';
 import {TestBed} from '@angular/core/testing';
 import {describe, expect, it} from '@jest/globals';
+import {provideMockObject} from 'jest-helpers';
 import {Store} from 'n3';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {EntityVisitor} from './entity-visitor';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {RdfModel} from '@ame/rdf/utils';
-import {DefaultEntity, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
-import {provideMockObject} from '../../../../../../jest-helpers';
 
 describe('Entity Visitor', () => {
   let service: EntityVisitor;

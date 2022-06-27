@@ -13,6 +13,7 @@
 
 import {
   BaseMetaModelElement,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -35,6 +36,22 @@ import {ModelInfo} from '@ame/mx-graph';
 export class ShapeConnectorUtil {
   static isEntityPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
     return parentModel instanceof DefaultEntity && childModel instanceof DefaultProperty;
+  }
+
+  static isEntityEntityConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return parentModel instanceof DefaultEntity && childModel instanceof DefaultEntity;
+  }
+
+  static isEntityAbstractEntityConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return parentModel instanceof DefaultEntity && childModel instanceof DefaultAbstractEntity;
+  }
+
+  static isAbstractEntityAbstractEntityConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return parentModel instanceof DefaultAbstractEntity && childModel instanceof DefaultAbstractEntity;
+  }
+
+  static isAbstractEntityPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return parentModel instanceof DefaultAbstractEntity && childModel instanceof DefaultProperty;
   }
 
   static isCharacteristicEntityConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {

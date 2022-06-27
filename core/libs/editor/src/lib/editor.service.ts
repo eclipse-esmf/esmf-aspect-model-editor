@@ -60,6 +60,7 @@ import {
   Aspect,
   Base,
   BaseMetaModelElement,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -374,6 +375,7 @@ export class EditorService {
 
   createElement(x: number, y: number, elementType: string, aspectModelUrn?: string) {
     // in case of new element (no urn passed)
+    console.log(x, y, elementType, aspectModelUrn);
     if (!aspectModelUrn) {
       let newInstance = null;
       switch (elementType) {
@@ -400,6 +402,9 @@ export class EditorService {
           break;
         case 'event':
           newInstance = DefaultEvent.createInstance();
+          break;
+        case 'abstractentity':
+          newInstance = DefaultAbstractEntity.createInstance();
           break;
         default:
           return;

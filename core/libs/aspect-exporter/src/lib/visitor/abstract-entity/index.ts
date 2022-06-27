@@ -11,16 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './model-element-editor-component';
-export * from './aspect';
-export * from './characteristics';
-export * from './constraints';
-export * from './shape-settings';
-export * from './entities';
-export * from './entity-value';
-export * from './fields';
-export * from './operations';
-export * from './properties';
-export * from './units';
-export * from './events';
-export * from './abstract-entities';
+export * from './abstract-entity';

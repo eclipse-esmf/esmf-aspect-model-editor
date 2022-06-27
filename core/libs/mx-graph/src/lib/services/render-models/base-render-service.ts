@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, DefaultAspect, DefaultEntity, OverWrittenPropertyKeys} from '@ame/meta-model';
+import {Base, DefaultAspect, DefaultEntity, DefaultProperty, OverWrittenPropertyKeys} from '@ame/meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper, MxGraphVisitorHelper} from '../../helpers';
@@ -50,6 +50,10 @@ export abstract class BaseRenderService {
     const modelElement = MxGraphHelper.getModelElement<DefaultAspect | DefaultEntity>(cell);
     this.graph.getOutgoingEdges(cell)?.forEach((e: mxgraph.mxCell) => {
       const property = MxGraphHelper.getModelElement(e.target);
+      if (!(property instanceof DefaultProperty)) {
+        return;
+      }
+
       const keys: OverWrittenPropertyKeys = modelElement.properties.find(
         ({property: prop}) => prop.aspectModelUrn === property.aspectModelUrn
       ).keys;

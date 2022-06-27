@@ -15,7 +15,7 @@ import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {BaseVisitor} from '../base-visitor';
-import {Characteristic, DefaultCharacteristic, DefaultEntity} from '@ame/meta-model';
+import {DefaultAbstractEntity} from '@ame/meta-model';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {RdfService} from '@ame/rdf/services';
@@ -23,7 +23,7 @@ import {DataFactory, Store} from 'n3';
 import {Bamm} from '@ame/vocabulary';
 
 @Injectable()
-export class EntityVisitor extends BaseVisitor<DefaultEntity> {
+export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
   private store: Store;
   private bamm: Bamm;
 
@@ -36,59 +36,44 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
     super(rdfService);
   }
 
-  visit(cell: mxgraph.mxCell): DefaultEntity {
+  visit(cell: mxgraph.mxCell): DefaultAbstractEntity {
     this.store = this.rdfService.currentRdfModel.store;
     this.bamm = this.rdfService.currentRdfModel.BAMM();
-    const entity: DefaultEntity = MxGraphHelper.getModelElement(cell);
-    this.setPrefix(entity.aspectModelUrn);
-    const newAspectModelUrn = `${entity.aspectModelUrn.split('#')[0]}#${entity.name}`;
-    this.updateParents(cell);
-    entity.aspectModelUrn = newAspectModelUrn;
-    this.updateProperties(entity);
-    this.updateExtends(entity);
-    return entity;
+    const abstractEntity: DefaultAbstractEntity = MxGraphHelper.getModelElement(cell);
+    this.setPrefix(abstractEntity.aspectModelUrn);
+    const newAspectModelUrn = `${abstractEntity.aspectModelUrn.split('#')[0]}#${abstractEntity.name}`;
+    abstractEntity.aspectModelUrn = newAspectModelUrn;
+    this.updateProperties(abstractEntity);
+    this.updateExtends(abstractEntity);
+    return abstractEntity;
   }
 
-  private updateProperties(entity: DefaultEntity) {
+  private updateProperties(abstractEntity: DefaultAbstractEntity) {
     this.rdfListService.setRdfModel(this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel);
-    this.rdfNodeService.update(entity, {
-      preferredName: entity.getAllLocalesPreferredNames()?.map(language => ({
+    this.rdfNodeService.update(abstractEntity, {
+      preferredName: abstractEntity.getAllLocalesPreferredNames()?.map(language => ({
         language,
-        value: entity.getPreferredName(language),
+        value: abstractEntity.getPreferredName(language),
       })),
-      description: entity.getAllLocalesDescriptions()?.map(language => ({
+      description: abstractEntity.getAllLocalesDescriptions()?.map(language => ({
         language,
-        value: entity.getDescription(language),
+        value: abstractEntity.getDescription(language),
       })),
-      see: entity.getSeeReferences() || [],
-      name: entity.name,
+      see: abstractEntity.getSeeReferences() || [],
+      name: abstractEntity.name,
     });
 
-    if (entity.properties?.length) {
-      this.rdfListService.push(entity, ...entity.properties);
-      for (const property of entity.properties) {
+    if (abstractEntity.properties?.length) {
+      this.rdfListService.push(abstractEntity, ...abstractEntity.properties);
+      for (const property of abstractEntity.properties) {
         this.setPrefix(property.property.aspectModelUrn);
       }
     } else {
-      this.rdfListService.createEmpty(entity, ListProperties.properties);
+      this.rdfListService.createEmpty(abstractEntity, ListProperties.properties);
     }
   }
 
-  private updateParents(cell: mxgraph.mxCell) {
-    const entity = MxGraphHelper.getModelElement<DefaultEntity>(cell);
-    const parents = this.graphService
-      .resolveParents(cell)
-      ?.map((parent: mxgraph.mxCell) => MxGraphHelper.getModelElement<Characteristic>(parent))
-      ?.filter(metaModelElement => metaModelElement instanceof DefaultCharacteristic);
-
-    if (parents) {
-      for (const parent of parents) {
-        this.rdfNodeService.update(parent, {dataType: entity.aspectModelUrn});
-      }
-    }
-  }
-
-  private updateExtends(entity: DefaultEntity) {
+  private updateExtends(entity: DefaultAbstractEntity) {
     if (entity.extendedElement?.aspectModelUrn) {
       this.store.addQuad(
         DataFactory.namedNode(entity.aspectModelUrn),

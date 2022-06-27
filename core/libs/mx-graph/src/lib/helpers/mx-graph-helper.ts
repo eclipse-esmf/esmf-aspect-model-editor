@@ -269,6 +269,7 @@ export class MxGraphHelper {
 
     if (modelElement instanceof DefaultEntityValue || modelElement instanceof DefaultAbstractEntity) {
       title.classList.add('simple');
+      return div;
     }
 
     if (modelElement instanceof DefaultTrait) {
