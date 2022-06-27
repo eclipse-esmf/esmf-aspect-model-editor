@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {DefaultEntity} from '@ame/meta-model';
+import {DefaultAbstractEntity} from '@ame/meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
@@ -24,7 +24,7 @@ import {ShapeConnectorService} from '@ame/connection';
 @Injectable({
   providedIn: 'root',
 })
-export class EntityRenderService extends BaseRenderService {
+export class AbstractEntityRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
@@ -46,16 +46,16 @@ export class EntityRenderService extends BaseRenderService {
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {
-    return MxGraphHelper.getModelElement(cell) instanceof DefaultEntity;
+    return MxGraphHelper.getModelElement(cell) instanceof DefaultAbstractEntity;
   }
 
   private handleExtendsElement(cell: mxgraph.mxCell) {
-    const metaModelElement = MxGraphHelper.getModelElement<DefaultEntity>(cell);
+    const metaModelElement = MxGraphHelper.getModelElement<DefaultAbstractEntity>(cell);
     if (!metaModelElement.extendedElement) {
       return;
     }
 
-    const extendsElement = metaModelElement.extendedElement as DefaultEntity;
+    const extendsElement = metaModelElement.extendedElement as DefaultAbstractEntity;
     const cachedEntity = this.namespacesCacheService.resolveCachedElement(extendsElement);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
     const entityCell = resolvedCell ? resolvedCell : this.mxGraphService.renderModelElement(extendsElement);

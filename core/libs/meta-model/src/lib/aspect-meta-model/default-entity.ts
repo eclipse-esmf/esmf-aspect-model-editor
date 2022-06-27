@@ -22,28 +22,21 @@ import {DefaultAbstractEntity} from './default-abstract-entity';
 export interface Entity extends BaseMetaModelElement, HasProperties, Type, CanExtend {}
 
 export class DefaultEntity extends Base implements Entity {
-  public extendedElement: Entity;
+  public extendedElement: DefaultAbstractEntity;
 
   public get className() {
     return 'DefaultEntity';
   }
 
-  public get ownProperties(): OverWrittenProperty[] {
-    return this._properties;
-  }
-
-  public get properties() {
+  public get extendedProperties(): OverWrittenProperty[] {
     if (this.extendedElement instanceof DefaultEntity || this.extendedElement instanceof DefaultAbstractEntity) {
-      return [...this._properties, ...this.extendedElement.properties];
+      return this.extendedElement.properties;
     }
-    return this._properties;
+
+    return [];
   }
 
-  public set properties(_properties: OverWrittenProperty[]) {
-    this._properties = _properties;
-  }
-
-  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _properties: Array<OverWrittenProperty> = []) {
+  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public properties: OverWrittenProperty[] = []) {
     super(metaModelVersion, aspectModelUrn, name);
   }
 

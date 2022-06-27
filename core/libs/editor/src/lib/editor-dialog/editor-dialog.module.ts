@@ -27,6 +27,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {EntityValuePipe} from './pipes';
 import {
+  AbstractEntityComponent,
   AspectComponent,
   BaseInputComponent,
   CharacteristicComponent,
@@ -50,6 +51,7 @@ import {
   EntityValueViewComponent,
   EventComponent,
   ExampleValueInputFieldComponent,
+  ExtendsFieldComponent,
   InputChiplistFieldComponent,
   IntegerInputFieldComponent,
   LanguageCodeInputFieldComponent,
@@ -116,6 +118,7 @@ import {FlexModule} from '@angular/flex-layout';
   ],
   declarations: [
     AspectComponent,
+    AbstractEntityComponent,
     CharacteristicComponent,
     ConfirmDialogComponent,
     ConstraintComponent,
@@ -175,6 +178,7 @@ import {FlexModule} from '@angular/flex-layout';
     StructuredValueComponent,
     StructuredValuePropertyFieldComponent,
     StructuredValuePropertiesComponent,
+    ExtendsFieldComponent,
   ],
   exports: [ShapeSettingsComponent],
 })

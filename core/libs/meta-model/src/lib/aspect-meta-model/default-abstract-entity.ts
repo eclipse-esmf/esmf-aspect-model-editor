@@ -12,7 +12,7 @@
  */
 
 import {AspectModelVisitor} from '@ame/mx-graph';
-import {Base} from './base';
+import {Base, BaseMetaModelElement} from './base';
 import {Entity} from './default-entity';
 import {OverWrittenProperty} from './overwritten-property';
 
@@ -24,21 +24,18 @@ export class DefaultAbstractEntity extends Base implements Entity {
   }
 
   public get ownProperties(): OverWrittenProperty[] {
-    return this._properties;
+    return this.properties;
   }
 
-  public get properties() {
+  public get extendedProperties(): OverWrittenProperty[] {
     if (this.extendedElement instanceof DefaultAbstractEntity) {
-      return [...this._properties, ...this.extendedElement.properties];
+      return this.extendedElement.properties;
     }
-    return this._properties;
+
+    return [];
   }
 
-  public set properties(_properties: OverWrittenProperty[]) {
-    this._properties = _properties;
-  }
-
-  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, private _properties: Array<OverWrittenProperty> = []) {
+  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public properties: OverWrittenProperty[] = []) {
     super(metaModelVersion, aspectModelUrn, name);
   }
 
@@ -60,5 +57,18 @@ export class DefaultAbstractEntity extends Base implements Entity {
 
   accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
     return visitor.visitAbstractEntity(this, context);
+  }
+
+  delete(baseMetalModelElement: BaseMetaModelElement) {
+    if (baseMetalModelElement.className === 'DefaultProperty' || baseMetalModelElement.className === 'DefaultAbstractProperty') {
+      const index = this.properties.findIndex(({property}) => property.aspectModelUrn === baseMetalModelElement.aspectModelUrn);
+      if (index >= 0) {
+        this.properties.splice(index, 1);
+      }
+    }
+
+    if ('DefaultAbstractEntity' === baseMetalModelElement.className) {
+      this.extendedElement = null;
+    }
   }
 }

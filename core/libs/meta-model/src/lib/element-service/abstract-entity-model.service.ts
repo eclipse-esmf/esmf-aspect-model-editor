@@ -16,7 +16,14 @@ import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 import {EntityValueService} from '@ame/editor';
-import {EntityRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {
+  AbstractEntityRenderService,
+  MxGraphAttributeService,
+  MxGraphHelper,
+  MxGraphService,
+  MxGraphShapeOverlayService,
+  MxGraphVisitorHelper,
+} from '@ame/mx-graph';
 import {
   Base,
   BaseMetaModelElement,
@@ -27,9 +34,10 @@ import {
   OverWrittenPropertyKeys,
 } from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
+import {LanguageSettingsService} from '@ame/settings-dialog';
 
 @Injectable({providedIn: 'root'})
-export class EntityModelService extends BaseModelService {
+export class AbstractEntityModelService extends BaseModelService {
   constructor(
     protected namespacesCacheService: NamespacesCacheService,
     protected modelService: ModelService,
@@ -37,20 +45,21 @@ export class EntityModelService extends BaseModelService {
     private entityValueService: EntityValueService,
     private mxGraphService: MxGraphService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private entityRenderer: EntityRenderService
+    private abstractEntityRenderer: AbstractEntityRenderService,
+    private languageService: LanguageSettingsService
   ) {
     super(namespacesCacheService, modelService);
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {
-    return metaModelElement instanceof DefaultEntity;
+    return metaModelElement instanceof DefaultAbstractEntity;
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement: DefaultEntity = MxGraphHelper.getModelElement(cell);
+    const metaModelElement: DefaultAbstractEntity = MxGraphHelper.getModelElement(cell);
     super.update(cell, form);
-
-    metaModelElement.extendedElement = [DefaultEntity, DefaultAbstractEntity].some(c => form?.extends instanceof c) ? form.extends : null;
+    console.log(form);
+    metaModelElement.extendedElement = form?.extends instanceof DefaultAbstractEntity ? form.extends : null;
 
     if (form.editedProperties) {
       for (const {property, keys} of metaModelElement.properties) {
@@ -74,17 +83,29 @@ export class EntityModelService extends BaseModelService {
         });
     }
 
-    this.entityRenderer.update({cell});
+    this.abstractEntityRenderer.update({cell});
   }
 
   delete(cell: mxgraph.mxCell) {
-    super.delete(cell);
-    const modelElement = MxGraphHelper.getModelElement(cell);
+    const modelElement = MxGraphHelper.getModelElement<DefaultAbstractEntity>(cell);
     const outgoingEdges = this.mxGraphAttributeService.graph.getOutgoingEdges(cell);
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
+
+    for (const edge of incomingEdges) {
+      const entity = MxGraphHelper.getModelElement<DefaultEntity>(edge.source);
+      entity.extendedElement = null;
+      edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
+        MxGraphHelper.getModelElement(edge.source),
+        this.languageService
+      );
+      this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));
+    }
+
+    super.delete(cell);
+
     this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
     this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, modelElement);
-    this.entityValueService.onEntityRemove(modelElement as DefaultEntity, () => {
+    this.entityValueService.onEntityRemove(modelElement, () => {
       if (!cell?.edges) {
         this.mxGraphService.removeCells([cell]);
         return;

@@ -26,25 +26,27 @@ import {
   OperationVisitor,
   PropertyVisitor,
   UnitVisitor,
+  AbstractEntityVisitor,
 } from './visitor';
 
 @NgModule({
   declarations: [],
   imports: [CommonModule],
   providers: [
+    AbstractEntityVisitor,
     AspectVisitor,
     CharacteristicVisitor,
-    ConstraintVisitor,
-    EntityVisitor,
-    PropertyVisitor,
-    OperationVisitor,
-    EntityVisitor,
-    RdfNodeService,
-    DomainModelToRdfService,
     CleanupVisitor,
+    ConstraintVisitor,
+    DomainModelToRdfService,
     EntityValueVisitor,
-    UnitVisitor,
+    EntityVisitor,
+    EntityVisitor,
     EventVisitor,
+    OperationVisitor,
+    PropertyVisitor,
+    RdfNodeService,
+    UnitVisitor,
   ],
 })
 export class DomainModelToRdfModule {}

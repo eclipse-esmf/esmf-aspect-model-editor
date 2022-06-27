@@ -20,7 +20,7 @@
   class="container"
 >
   <div class="icon" [ngClass]="getIconClass">
-    {{ element.type.charAt(0).toUpperCase() }}
+    {{ elementShortcut[element.type] }}
   </div>
   <div class="info" [matTooltip]="element.description" matTooltipPosition="right">
     <div class="name" [title]="element.name">

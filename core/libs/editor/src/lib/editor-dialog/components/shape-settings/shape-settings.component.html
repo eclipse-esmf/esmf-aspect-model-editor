@@ -32,6 +32,7 @@
     <ame-constraint *ngSwitchCase="isConstraint()" [parentForm]="formGroup"></ame-constraint>
     <ame-property *ngSwitchCase="isOfType(['DefaultProperty'])" [parentForm]="formGroup"></ame-property>
     <ame-operation *ngSwitchCase="isOfType(['DefaultOperation'])" [parentForm]="formGroup"></ame-operation>
+    <ame-abstract-entity *ngSwitchCase="isOfType(['DefaultAbstractEntity'])" [parentForm]="formGroup"></ame-abstract-entity>
     <ame-entity *ngSwitchCase="isOfType(['DefaultEntity'])" [parentForm]="formGroup"></ame-entity>
     <ame-unit *ngSwitchCase="isOfType(['DefaultUnit'])" [parentForm]="formGroup"></ame-unit>
     <ame-trait-characteristic *ngSwitchCase="isOfType(['DefaultTrait'])" [parentForm]="formGroup"></ame-trait-characteristic>

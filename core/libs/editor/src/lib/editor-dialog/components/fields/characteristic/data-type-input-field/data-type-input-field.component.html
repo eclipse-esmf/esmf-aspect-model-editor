@@ -68,7 +68,7 @@
       <ng-container *ngIf="filteredDataTypes$ | async as filteredDataTypes">
         <mat-optgroup label="Types" *ngIf="filteredDataTypes?.length">
           <mat-option
-            *ngFor="let dataType of filteredDataTypes$ | async"
+            *ngFor="let dataType of filteredDataTypes"
             [value]="dataType.name"
             (onSelectionChange)="onSelectionChange('dataType', dataType)"
             data-cy="dataTypeOption"

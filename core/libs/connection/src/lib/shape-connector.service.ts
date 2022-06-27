@@ -13,6 +13,9 @@
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {
+  AbstractEntityAbstractEntityConnectionHandler,
+  AbstractEntityConnectionHandler,
+  AbstractEntityPropertyConnectionHandler,
   AspectConnectionHandler,
   AspectEventConnectionHandler,
   AspectPropertyConnectionHandler,
@@ -23,7 +26,9 @@ import {
   EitherCharacteristicLeftConnectionHandler,
   EitherCharacteristicRightConnectionHandler,
   EitherConnectionHandler,
+  EntityAbstractEntityConnectionHandler,
   EntityConnectionHandler,
+  EntityEntityConnectionHandler,
   EntityPropertyConnectionHandler,
   EntityValueConnectionHandler,
   EnumerationEntityValueConnectionHandler,
@@ -44,6 +49,7 @@ import {
 import {ShapeConnectorUtil} from './shape-connector-util';
 import {
   BaseMetaModelElement,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultEither,
@@ -73,6 +79,7 @@ export class ShapeConnectorService {
     private eitherConnectionHandler: EitherConnectionHandler,
     private characteristicConnectionHandler: CharacteristicConnectionHandler,
     private entityConnectionHandler: EntityConnectionHandler,
+    private abstractEntityConnectionHandler: AbstractEntityConnectionHandler,
     private eventConnectionHandler: EventConnectionHandler,
     private aspectPropertyConnectionHandler: AspectPropertyConnectionHandler,
     private aspectEventConnectionHandler: AspectEventConnectionHandler,
@@ -86,6 +93,10 @@ export class ShapeConnectorService {
     private traitWithCharacteristicOrConstraintConnectionHandler: TraitWithCharacteristicOrConstraintConnectionHandler,
     private collectionCharacteristicConnectionHandler: CollectionCharacteristicConnectionHandler,
     private entityPropertyConnectionHandler: EntityPropertyConnectionHandler,
+    private entityEntityConnectionHandler: EntityEntityConnectionHandler,
+    private abstractEntityAbstractEntityConnectionHandler: AbstractEntityAbstractEntityConnectionHandler,
+    private entityAbstractEntityConnectionHandler: EntityAbstractEntityConnectionHandler,
+    private abstractEntityPropertyConnectionHandler: AbstractEntityPropertyConnectionHandler,
     private traitConnectionHandler: TraitConnectionHandler,
     private structuredValueConnectionHandler: StructuredValueConnectionHandler,
     private entityValueConnectionHandler: EntityValueConnectionHandler,
@@ -130,6 +141,9 @@ export class ShapeConnectorService {
         break;
       case metaModel instanceof DefaultEntity:
         connectionHandler = this.entityConnectionHandler;
+        break;
+      case metaModel instanceof DefaultAbstractEntity:
+        connectionHandler = this.abstractEntityConnectionHandler;
         break;
       case metaModel instanceof DefaultEntityValue:
         connectionHandler = this.entityValueConnectionHandler;
@@ -199,6 +213,18 @@ export class ShapeConnectorService {
         break;
       case ShapeConnectorUtil.isEntityPropertyConnection(parentModel, childModel):
         connectionHandler = this.entityPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isEntityEntityConnection(parentModel, childModel):
+        connectionHandler = this.entityEntityConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isAbstractEntityAbstractEntityConnection(parentModel, childModel):
+        connectionHandler = this.abstractEntityAbstractEntityConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isEntityAbstractEntityConnection(parentModel, childModel):
+        connectionHandler = this.entityAbstractEntityConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isAbstractEntityPropertyConnection(parentModel, childModel):
+        connectionHandler = this.abstractEntityPropertyConnectionHandler;
         break;
       case ShapeConnectorUtil.isCollectionCharacteristicConnection(parentModel, childModel):
         connectionHandler = this.collectionCharacteristicConnectionHandler;

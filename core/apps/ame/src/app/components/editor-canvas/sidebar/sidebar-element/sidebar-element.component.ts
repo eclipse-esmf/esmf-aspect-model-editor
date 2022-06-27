@@ -19,19 +19,29 @@ import {MxGraphService} from '@ame/mx-graph';
 import {ElementModel} from '@ame/shared';
 import {environment} from 'environments/environment';
 
+export const elementShortcuts = {
+  property: 'P',
+  operation: 'O',
+  characteristic: 'C',
+  entity: 'E',
+  constraint: 'C',
+  trait: 'T',
+  unit: 'U',
+  event: 'E',
+  abstractEntity: 'AE',
+};
+
 @Component({
   selector: 'ame-sidebar-element',
   templateUrl: './sidebar-element.component.html',
   styleUrls: ['./sidebar-element.component.scss'],
 })
 export class SidebarElementComponent implements AfterViewInit {
-  @Input()
-  public element: ElementModel;
-
-  @ViewChild('container')
-  public container: any;
+  @Input() public element: ElementModel;
+  @ViewChild('container') public container: any;
 
   public dataCy = '';
+  public elementShortcut = elementShortcuts;
 
   get getIconClass(): string {
     return this.element.type.toLowerCase();

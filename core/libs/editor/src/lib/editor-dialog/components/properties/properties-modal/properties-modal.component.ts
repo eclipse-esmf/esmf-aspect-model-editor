@@ -41,6 +41,10 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  public get extendedProperties(): OverWrittenProperty[] {
+    return (this.data.metaModelElement as DefaultEntity)?.extendedElement.extendedProperties || [];
+  }
+
   constructor(
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<PropertiesModalComponent>,
@@ -75,7 +79,6 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
         }
       });
     }
-
   }
 
   ngAfterViewInit() {
