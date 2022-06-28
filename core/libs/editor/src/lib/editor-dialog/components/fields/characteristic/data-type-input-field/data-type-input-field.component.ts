@@ -13,7 +13,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {map, startWith, tap} from 'rxjs/operators';
+import {map, startWith} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
 import {DefaultCharacteristic, DefaultEither, DefaultEntity, DefaultScalar, DefaultStructuredValue, Entity} from '@ame/meta-model';
@@ -172,7 +172,6 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     });
 
     this.filteredDataTypes$ = this.dataTypeControl?.valueChanges.pipe(
-      tap(searched => console.log(searched, types)),
       map((value: string) => (value ? types.filter(type => this.inSearchList(type, value)) : types)),
       startWith(types)
     );

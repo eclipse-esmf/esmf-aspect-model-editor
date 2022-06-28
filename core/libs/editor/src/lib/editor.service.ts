@@ -375,7 +375,6 @@ export class EditorService {
 
   createElement(x: number, y: number, elementType: string, aspectModelUrn?: string) {
     // in case of new element (no urn passed)
-    console.log(x, y, elementType, aspectModelUrn);
     if (!aspectModelUrn) {
       let newInstance = null;
       switch (elementType) {

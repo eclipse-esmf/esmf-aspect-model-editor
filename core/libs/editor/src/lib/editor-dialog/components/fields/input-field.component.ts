@@ -55,6 +55,10 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
     return this.namespacesCacheService.getCurrentCachedFile();
   }
 
+  get elementWithEntityType() {
+    return this.metaModelElement as any as DefaultEntity;
+  }
+
   protected constructor(
     public metaModelDialogService: EditorModelService,
     public namespacesCacheService?: NamespacesCacheService,

@@ -58,7 +58,6 @@ export class AbstractEntityModelService extends BaseModelService {
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement: DefaultAbstractEntity = MxGraphHelper.getModelElement(cell);
     super.update(cell, form);
-    console.log(form);
     metaModelElement.extendedElement = form?.extends instanceof DefaultAbstractEntity ? form.extends : null;
 
     if (form.editedProperties) {

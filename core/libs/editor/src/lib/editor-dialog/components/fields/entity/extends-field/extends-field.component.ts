@@ -111,8 +111,6 @@ export class ExtendsFieldComponent extends InputFieldComponent<DefaultEntity> im
       foundEntity = this.namespacesCacheService.findElementOnExtReference<DefaultEntity>(newValue.urn);
     }
 
-    console.log(foundEntity);
-
     this.parentForm.setControl('extends', new FormControl(foundEntity));
 
     this.extendsValueControl.patchValue(newValue.name);

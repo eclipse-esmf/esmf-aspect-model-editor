@@ -13,7 +13,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, DefaultCharacteristic} from '@ame/meta-model';
+import {BaseMetaModelElement, DefaultAbstractEntity, DefaultCharacteristic, DefaultEntity} from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -35,6 +35,16 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMe
     if (this.metaModelElement instanceof DefaultCharacteristic && this.metaModelElement.isPredefined()) {
       return this.metaModelElement?.[key] || '';
     }
+
+    if (this.metaModelElement instanceof DefaultEntity || this.metaModelElement instanceof DefaultAbstractEntity) {
+      return (
+        this.previousData?.[key] ||
+        this.metaModelElement.extendedPreferredName?.get(locale) ||
+        this.metaModelElement?.getPreferredName(locale) ||
+        ''
+      );
+    }
+
     return this.previousData?.[key] || this.metaModelElement?.getPreferredName(locale) || '';
   }
 
@@ -65,7 +75,10 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMe
         key,
         new FormControl({
           value: this.getCurrentValue(key, locale),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
+          disabled:
+            this.metaModelDialogService.isReadOnly() ||
+            (this.metaModelElement as DefaultEntity)?.extendedPreferredName?.get(locale) ||
+            this.metaModelElement?.isExternalReference(),
         })
       );
     });

@@ -308,7 +308,6 @@ describe('Test editing different Collections', () => {
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        console.log(rdf);
         expect(rdf).not.contain('NewCharacteristic');
       });
   };
