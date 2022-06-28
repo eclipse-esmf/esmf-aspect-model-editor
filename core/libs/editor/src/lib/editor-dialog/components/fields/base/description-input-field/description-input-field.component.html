@@ -15,6 +15,10 @@
   <mat-form-field
     *ngFor="let locale of metaModelElement?.getAllLocalesDescriptions()"
     [floatLabel]="getControl('description' + locale)?.disabled ? 'always' : 'auto'"
+    [matTooltip]="
+      elementWithEntityType?.extendedPreferredName?.get(locale) ? 'This was extended from another Abstract Entity or Entity' : ''
+    "
+    [matTooltipPosition]="'left'"
     appearance="fill"
   >
     <mat-label for="description">Description({{ locale }})</mat-label>

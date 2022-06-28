@@ -19,6 +19,7 @@ import {
   DefaultEntityValue,
   DefaultProperty,
   DefaultTrait,
+  EntityValueProperty,
   OverWrittenProperty,
   Property,
 } from '@ame/meta-model';
@@ -58,9 +59,9 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
         this.metaModelElement = metaModelElement as DefaultEntityValue;
         this.parentForm.setControl('entityValueProperties', this.propertiesFormGroup);
 
-        const {properties, entity} = this.metaModelElement;
-        if (!properties.length && entity.properties.length) {
-          for (const property of entity.properties) {
+        const {properties, entity}: {properties: EntityValueProperty[]; entity: DefaultEntity} = this.metaModelElement;
+        if (!properties.length && entity.allProperties.length) {
+          for (const property of entity.allProperties) {
             this.metaModelElement.addProperty(property);
           }
         }

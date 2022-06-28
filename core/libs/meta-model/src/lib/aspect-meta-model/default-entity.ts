@@ -36,6 +36,34 @@ export class DefaultEntity extends Base implements Entity {
     return [];
   }
 
+  public get extendedPreferredName() {
+    if (!this.extendedElement) {
+      return null;
+    }
+
+    return this.extendedElement.preferredNames.size ? this.extendedElement.preferredNames : this.extendedElement.extendedPreferredName;
+  }
+
+  public get extendedDescription() {
+    if (!this.extendedElement) {
+      return null;
+    }
+
+    return this.extendedElement.descriptions.size ? this.extendedElement.descriptions : this.extendedElement.extendedDescription;
+  }
+
+  public get extendedSee() {
+    if (!this.extendedElement) {
+      return null;
+    }
+
+    return this.extendedElement.see?.length ? this.extendedElement.see : this.extendedElement.extendedSee;
+  }
+
+  public get allProperties(): OverWrittenProperty[] {
+    return [...(this.extendedProperties || []), ...this.properties];
+  }
+
   constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public properties: OverWrittenProperty[] = []) {
     super(metaModelVersion, aspectModelUrn, name);
   }

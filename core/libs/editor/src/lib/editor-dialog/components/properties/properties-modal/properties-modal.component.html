@@ -21,7 +21,10 @@
   <mat-table *ngIf="form" [dataSource]="dataSource" [formGroup]="form">
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-      <mat-cell *matCellDef="let overwritten">{{ overwritten.property.name }}</mat-cell>
+      <mat-cell [class.inherited]="overwritten.inherited" *matCellDef="let overwritten">
+        <span>{{ overwritten.property.name }}</span>
+        <span *ngIf="overwritten.inherited">Inherited</span>
+      </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="payloadName">

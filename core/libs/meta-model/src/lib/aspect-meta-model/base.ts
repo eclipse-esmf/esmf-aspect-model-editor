@@ -25,11 +25,11 @@ export interface BaseMetaModelElement extends BaseElement, IsDescribed, External
 }
 
 export abstract class Base implements BaseMetaModelElement {
-  private preferredNames: Map<string, string>;
-  private descriptions: Map<string, string>;
-  private see?: Array<string> = [];
-  private anonymouseNode = false;
-  private externalReference = false;
+  public preferredNames: Map<string, string>;
+  public descriptions: Map<string, string>;
+  public see?: Array<string> = [];
+  public anonymouseNode = false;
+  public externalReference = false;
   public fileName: string;
 
   abstract get className();

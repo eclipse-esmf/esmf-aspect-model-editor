@@ -77,11 +77,11 @@ export class EntityValueViewComponent implements OnInit, OnDestroy {
     this.complexValues = [];
   }
 
-  trackProperty(index: number, item: EntityValueProperty): string {
+  trackProperty(_index: number, item: EntityValueProperty): string {
     return `${item?.key.property.name}`;
   }
 
-  trackValue(index: number, item: DefaultEntityValue): string {
+  trackValue(_index: number, item: DefaultEntityValue): string {
     return `${item?.name}`;
   }
 
