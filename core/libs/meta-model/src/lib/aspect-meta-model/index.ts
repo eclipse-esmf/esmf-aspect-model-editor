@@ -56,3 +56,4 @@ export * from './default-duration';
 export * from './default-event';
 export * from './overwritten-property';
 export * from './default-abstract-entity';
+export * from './default-abstract-property';
