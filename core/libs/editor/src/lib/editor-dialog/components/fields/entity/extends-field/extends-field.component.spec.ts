@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ExtendsFieldComponent } from './extends-field.component';
+import {ExtendsFieldComponent} from './extends-field.component';
 
 describe('ExtendsFieldComponent', () => {
   let component: ExtendsFieldComponent;
@@ -8,9 +8,8 @@ describe('ExtendsFieldComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ExtendsFieldComponent ]
-    })
-    .compileComponents();
+      declarations: [ExtendsFieldComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

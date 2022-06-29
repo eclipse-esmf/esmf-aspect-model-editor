@@ -19,7 +19,7 @@ export interface OverWrittenPropertyKeys {
   payloadName?: string;
 }
 
-export interface OverWrittenProperty {
-  property: DefaultProperty;
+export interface OverWrittenProperty<T = DefaultProperty> {
+  property: T;
   keys: OverWrittenPropertyKeys;
 }

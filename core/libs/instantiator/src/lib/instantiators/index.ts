@@ -44,3 +44,4 @@ export * from './structured-value-instantiator';
 export * from './timeseries-characteristic-instantiator';
 export * from './trait-characteristic-instantiator';
 export * from './event-instantiator';
+export * from './abstract-property-instantiator';

@@ -11,51 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
- *
- * See the AUTHORS file(s) distributed with this work for
- * additional information regarding authorship.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * SPDX-License-Identifier: MPL-2.0
- */
-
-/*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
- *
- * See the AUTHORS file(s) distributed with this work for
- * additional information regarding authorship.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * SPDX-License-Identifier: MPL-2.0
- */
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
- *
- * See the AUTHORS file(s) distributed with this work for
- * additional information regarding authorship.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * SPDX-License-Identifier: MPL-2.0
- */
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Base,
   BaseMetaModelElement,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -145,6 +106,10 @@ export class DefaultAspectModelVisitor<T, U> implements AspectModelVisitor<T, U>
   }
 
   visitProperty(_property: DefaultProperty, _context: U): T {
+    return undefined;
+  }
+
+  visitAbstractProperty(_abstractProperty: DefaultAbstractProperty, _context: U): T {
     return undefined;
   }
 
