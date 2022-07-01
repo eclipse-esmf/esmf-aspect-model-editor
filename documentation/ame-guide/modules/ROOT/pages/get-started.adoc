@@ -1,0 +1,17 @@
+:page-partial:
+
+[[get-started]]
+= Get started
+
+This section guides you through your first steps with the Aspect Model Editor for creating, editing, and saving an Aspect Model.
+
+For more information on the underlying specification, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/index.html[BAMM Aspect Meta Model version 1.0.0^, opts=nofollow].
+
+NOTE: The Aspect Model Editor does currently not support shortcuts for editing Aspect Models. Please use the icons and buttons as provided in the user interface (e.g., xref::ui-overview.adoc#toolbar[toolbar], xref::ui-overview.adoc#add-icon[Add icon] as well as right click for context menu). All elements of the user interface are described in the xref:ui-overview.adoc[UI Overview] section.
+
+++++
+<style>
+  img {border: 1px solid #cfd0d1;}
+  .imageblock {flex-direction: row !important;}
+</style>
+++++

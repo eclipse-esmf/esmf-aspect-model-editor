@@ -1,0 +1,62 @@
+:page-partial:
+
+[[settings]]
+= Settings
+
+To access the Settings dialog, click the Settings icon image:toolbar-icons/settings.png[Settings icon].
+
+[[configuration]]
+== General configuration
+
+In the Settings dialog, select the *Configuration* tab.
+
+image::settings-configuration.png[Configuration tab in Settings dialog, width=100%]
+
+* *Auto-save*: automatically saves the current model in a predefined period. The latest auto-saved version is restored after the restart of the application.
+
+* *Auto-validation*: automatically validates the current model in a predefined period. The validation information is displayed in the xref::validation-and-notifications.adoc[Notifications dialog].
+
+* *Show additional popups for notifications*: displays notifications in the top center of the user interface additionally to the notifications in the notifications overview.
+
+* *Use "hierarchical" layout*: aligns all elements below the root Aspect.
+
+* *Display 'entity value &ndash; entity' relationship*: displays all relationship connections from Entity instances to their related Entities.
+
+* *Display disambiguation labels*: displays labels on the relationship connections between the elements for easier identification of the relationship (e.g., for Operations: Properties are labeled with input or output).
+
+* *Display highly saturated colors*: changes the color scheme of the elements from light to full saturation.
++
+image::settings-saturated-colors.png[Lower versus full saturation,width=80%]
+
+
+[[language-settings]]
+== Language settings
+
+In the Settings dialog, select the *Languages* tab.
+
+image::settings-languages.png[Languages tab in Settings dialog,width=100%]
+
+Define for which languages the `description` and the `preferredName` attributes for elements should be displayed.
+
+Element attributes can only be added for the languages defined in your settings. 
+
+NOTE: Importing a model automatically imports all languages existing in the respective model but never deletes a language.
+
+WARNING: All attributes of each element in a specific language will be deleted without a way to restore them, when deleting this language from your settings. Make sure to save your model before deleting languages in your settings.
+
+
+[[namespace-settings]]
+== Namespace settings
+
+In the Settings dialog, select the *Namespaces* tab.
+
+image::settings-namespaces.png[Namespaces tab in Settings dialog,, width=100%]
+
+Edit the current namespace and check the supported version of the underlying BAMM Aspect Meta Model, the current Aspect's namespace as well as the predefined namespaces. For more information, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/namespaces.html[Namespaces (BAMM 1.0.0)^, opts=nofollow].
+
+++++
+<style>
+  img {border: 1px solid #cfd0d1;}
+  .imageblock {flex-direction: row !important;}
+</style>
+++++
