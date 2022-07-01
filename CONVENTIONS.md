@@ -11,13 +11,9 @@ See [CONTRIBUTING](CONTRIBUTING.md)
 
 ## Code Recommendations
 
-[//]: # (TODO Add something here)
+This project uses the library [Prettier](https://www.npmjs.com/package/prettier) and should also be created with it, so that a clear code can be created.
 
 ## Documentation
-
-### Source Code Documentation
-
-[//]: # (TODO Add something here)
 
 ### Developer Documentation
 Developer documentation is put into a README.md placed in the project root. This should contain documentation like:

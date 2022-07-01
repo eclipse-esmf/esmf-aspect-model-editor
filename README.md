@@ -2,24 +2,19 @@
 
 ## Table of Contents
 
-- [Download & Installation](#download--installation)
-- [Documentation](#documentation)
+- [Introduction](#introduction)
 - [Getting help](#getting-help)
-- [Introduction](#)
 - [Getting started](#getting-started)
   - [Setup](#setup)
   - [Install & Run](#install--run)
   - [Run As Electron](#run-as-electron)
   - [Running E2E (Cypress) Test](#running-e2e-cypress-test)
+- [Documentation](#documentation)
 - [License](#license)
 
-## Download & Installation
+## Introduction
 
-[//]: # (TODO Add something here)
-
-## Documentation
-
-[//]: # (TODO Add something here)
+This project includes the Aspect model editor in and their documentation.
 
 ## Getting help
 
@@ -28,10 +23,6 @@ Are you having trouble with Aspect Model Editor? We want to help!
 * Check the [developer documentation](https://openmanufacturingplatform.github.io)
 * Check the BAMM [specification](https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/v1.0.0/index.html)
 * Having issues with the Aspect Model Editor? Open a [GitHub issue](https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/issues).
-
-## introduction
-
-[//]: # (TODO Add something here)
 
 ### Getting started
 
@@ -80,6 +71,10 @@ npm run electron-start-unix-prod
 npm run cypress
 ```
 
+## Documentation
+
+The documentation can be found in the root directory under the path documentation.
+
 ## License
 
 SPDX-License-Identifier: MPL-2.0
@@ -88,3 +83,7 @@ This program and the accompanying materials are made available under the terms o
 [Mozilla Public License, v. 2.0](LICENSE).
 
 The [Notice file](NOTICE.md) details contained third party materials.
+
+## GraalVm native-image
+
+To build a native image we use GraalVm: [GraalVm](https://github.com/oracle/graal/tree/vm-ce-22.1.0)
