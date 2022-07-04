@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ModelApiService} from '@ame/api';
 import {NamespacesCacheService} from '@ame/cache';
 import {ConfirmDialogService, EditorService} from '@ame/editor';
@@ -42,7 +42,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
   public selectedNamespaceElements: ElementModel[];
 
   public view = 'default';
-  public isHoveredDefaultView = false;
+  public viewExpanded = false;
 
   private loadModelSubscription: Subscription;
   private refreshNamespacesSubscription: Subscription;
@@ -57,29 +57,6 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     private elementRef: ElementRef,
     public sidebarService: SidebarService
   ) {}
-
-  @HostListener('mouseenter')
-  public hoverDefaultView() {
-    if (this.view !== 'default') {
-      return;
-    }
-    this.isHoveredDefaultView = true;
-    if (this.isHoveredDefaultView) {
-      this.expand();
-    }
-  }
-
-  @HostListener('mouseleave')
-  public hoverOutDefaultView() {
-    if (this.view !== 'default') {
-      return;
-    }
-
-    this.isHoveredDefaultView = false;
-    if (!this.isHoveredDefaultView) {
-      this.collapse();
-    }
-  }
 
   public ngAfterViewInit(): void {
     this.editorService.initCanvas();
@@ -190,11 +167,12 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
   }
 
   public collapse() {
+    this.viewExpanded = false;
     this.elementRef.nativeElement.style.width = '95px';
-    this.elementRef.nativeElement.style.transition = '0.5s all 1.5s';
   }
 
   public expand(noDelay?: boolean) {
+    this.viewExpanded = true;
     this.elementRef.nativeElement.style.width = '400px';
     if (!noDelay) {
       this.elementRef.nativeElement.style.transition = '0.5s all 0.5s';
@@ -210,7 +188,6 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
 
   public goToDefault() {
     this.view = 'default';
-    this.collapse();
   }
 
   private initNamespaces() {

@@ -47,32 +47,44 @@
   justify-content: flex-end;
 }
 
-.info {
+.expand-btn {
   position: absolute;
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 40px;
   margin-top: -7px;
-  padding-left: 13px;
+  padding-left: 60px;
+  cursor: pointer;
+}
+
+.collapse-btn {
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  margin-top: -7px;
+  padding-left: 360px;
+  cursor: pointer;
 }
 
 .close-namespace {
   height: 30px;
   width: 30px;
   right: 20px;
-  top: -15px;
-  width: 50px;
+  top: -10px;
+  line-height: 30px;
 }
 
 .close-namespace-elements {
   width: 30px;
   height: 30px;
   right: 55px;
-  top: -15px;
+  top: -5px;
+  line-height: 30px;
 }
 
 .back-to-namespace {
   width: 30px;
   height: 30px;
   right: 75px;
-  top: -15px;
+  top: -5px;
+  line-height: 30px;
 }

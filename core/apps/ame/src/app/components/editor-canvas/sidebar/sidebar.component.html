@@ -44,12 +44,16 @@
 
   <ng-container *ngIf="view === 'default'">
     <mat-icon
-      class="info"
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="100"
-      matTooltip="To create a new element, drag one to the right in the graph area"
-      >info</mat-icon
+      *ngIf="!viewExpanded"
+      class="expand-btn"
+      (click)="expand(true)"
+      >navigate_next</mat-icon
     >
+    <mat-icon
+    *ngIf="viewExpanded"
+    class="collapse-btn"
+    (click)="collapse()"
+    >navigate_before</mat-icon>
     <ame-sidebar-new-element class="namespaces" (openWorkspaces)="goToNamespaces()"></ame-sidebar-new-element>
   </ng-container>
 </div>
