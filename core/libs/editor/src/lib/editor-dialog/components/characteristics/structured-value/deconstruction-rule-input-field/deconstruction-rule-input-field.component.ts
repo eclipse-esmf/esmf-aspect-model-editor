@@ -13,13 +13,10 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {DefaultStructuredValue, DefaultProperty} from '@ame/meta-model';
+import {DefaultProperty, DefaultStructuredValue} from '@ame/meta-model';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {combineLatest} from 'rxjs';
-import {EditorModelService} from '../../../../editor-model.service';
-import {EditorDialogValidators} from '../../../../validators';
-import {InputFieldComponent} from '../../../fields';
-import {PredefinedRulesService, predefinedRules} from './predefined-rules.service';
+import {EditorDialogValidators, EditorModelService, InputFieldComponent, predefinedRules, PredefinedRulesService} from '@ame/editor';
 
 @Component({
   selector: 'ame-deconstruction-rule-input-field',
@@ -61,6 +58,7 @@ export class DeconstructionRuleInputFieldComponent extends InputFieldComponent<D
           .map(element => (element instanceof DefaultProperty ? element.name : element))
           .join(' ');
       }
+
       this.initForm();
     });
   }

@@ -34,7 +34,7 @@ import {RdfModel} from '@ame/rdf/utils';
 })
 export class ModelApiService {
   private defaultPort = this.config.defaultPort;
-  private serviceUrl = this.config.serviceUrl;
+  private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
   private requestTimeout = 60000;
 

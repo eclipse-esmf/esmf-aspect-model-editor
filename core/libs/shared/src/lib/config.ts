@@ -18,7 +18,7 @@ import packageJson from '../../../../package.json';
 const defaultPort = '9091';
 
 export const config = {
-  ameVersion: packageJson.version,
+  ameVersion: packageJson?.version,
   editorConfiguration: 'assets/config/editor/config/editor.xml',
   assetLocation: 'assets',
   minBammVersion: '1.0.0',

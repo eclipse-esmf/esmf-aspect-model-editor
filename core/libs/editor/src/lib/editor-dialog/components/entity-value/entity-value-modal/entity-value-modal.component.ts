@@ -15,7 +15,7 @@ import {Component, Inject} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {EditorModelService} from '../../../editor-model.service';
-import {EditorDialogValidators} from '../../../validators/editor-dialog-validators';
+import {EditorDialogValidators} from '../../../validators';
 import {DefaultEntity, DefaultEntityValue, DefaultEnumeration, OverWrittenProperty} from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';

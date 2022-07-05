@@ -13,21 +13,16 @@
 
 import {Injectable} from '@angular/core';
 import {DefaultAspect} from '@ame/meta-model';
-import {MxGraphService, MxGraphHelper} from '@ame/mx-graph';
+import {MxGraphHelper} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {mxgraph} from 'mxgraph-factory';
-import {RdfListService, ListProperties} from '../../rdf-list';
-import {RdfNodeService} from '../../rdf-node/rdf-node.service';
+import {ListProperties, RdfListService} from '../../rdf-list';
+import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
 
 @Injectable()
 export class AspectVisitor extends BaseVisitor<DefaultAspect> {
-  constructor(
-    public rdfNodeService: RdfNodeService,
-    public graphService: MxGraphService,
-    public rdfListService: RdfListService,
-    rdfService: RdfService
-  ) {
+  constructor(public rdfNodeService: RdfNodeService, public rdfListService: RdfListService, rdfService: RdfService) {
     super(rdfService);
   }
 

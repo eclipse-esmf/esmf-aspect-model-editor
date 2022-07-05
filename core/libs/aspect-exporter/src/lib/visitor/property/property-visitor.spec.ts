@@ -14,22 +14,19 @@
 import {TestBed} from '@angular/core/testing';
 import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
-import {provideMockObject} from 'src/app/jest-helpers/utils';
-import {DefaultAspect} from 'src/app/shared/aspect-meta-model/default-aspect';
-import {DefaultEntity} from 'src/app/shared/aspect-meta-model/default-entity';
-import {DefaultProperty} from 'src/app/shared/aspect-meta-model/default-property';
-import {RdfModel} from 'src/app/shared/model';
-import {ModelService} from 'src/app/shared/model.service';
-import {MxGraphService} from 'src/app/shared/mx-graph/mx-graph.service';
+import {MxGraphService} from '@ame/mx-graph';
 import {RdfListService} from '../../rdf-list';
-import {RdfNodeService} from '../../rdf-node/rdf-node.service';
+import {RdfNodeService} from '@ame/aspect-exporter';
 import {PropertyVisitor} from './property-visitor';
+import {ModelService, RdfService} from '@ame/rdf/services';
+import {RdfModel} from '@ame/rdf/utils/rdf-model';
+import {DefaultProperty} from '@ame/meta-model';
+import {provideMockObject} from '../../../../../../jest-helpers';
 
 describe('Property Visitor', () => {
   let service: PropertyVisitor;
   let rdfNodeService: jest.Mocked<RdfNodeService>;
-  let rdfListService: jest.Mocked<RdfListService>;
-  let mxGraphService: jest.Mocked<MxGraphService>;
+  let rdfService: jest.Mocked<RdfService>;
 
   let modelService: jest.Mocked<ModelService>;
   let rdfModel: jest.Mocked<RdfModel>;
@@ -42,6 +39,10 @@ describe('Property Visitor', () => {
         {
           provide: RdfNodeService,
           useValue: provideMockObject(RdfNodeService),
+        },
+        {
+          provide: RdfService,
+          useValue: provideMockObject(RdfService),
         },
         {
           provide: RdfListService,
@@ -63,8 +64,10 @@ describe('Property Visitor', () => {
     rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
     rdfNodeService.modelService = modelService;
 
-    rdfListService = TestBed.inject(RdfListService) as jest.Mocked<RdfListService>;
-    mxGraphService = TestBed.inject(MxGraphService) as jest.Mocked<MxGraphService>;
+    rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
+    rdfService.currentRdfModel = rdfModel;
+    rdfService.externalRdfModels = [];
+
     service = TestBed.inject(PropertyVisitor);
   });
 
@@ -77,45 +80,12 @@ describe('Property Visitor', () => {
     service.visit(propertyCell as any);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(property, {
-      notInPayload: false,
-      payloadName: undefined,
       exampleValue: undefined,
-      optional: false,
       refines: undefined,
       preferredName: [],
       description: [],
       see: [],
       name: 'property1',
-    });
-  });
-
-  it('should update the parents parent with the new property reference', () => {
-    const propertyCell = getPropertyCell();
-    property.name = 'property2';
-
-    const parents = [new DefaultAspect('1', 'aspect', 'aspect', [property]), new DefaultEntity('1', 'entity', 'entity', [property])];
-    mxGraphService.resolveParents.mockImplementation(() => parents.map(parent => ({getMetaModelElement: () => parent} as any)));
-
-    expect(property.aspectModelUrn).toBe('bamm#property1');
-
-    service.visit(propertyCell as any);
-
-    expect(property.aspectModelUrn).toBe('bamm#property2');
-    expect(rdfListService.remove).toHaveBeenNthCalledWith(1, parents[0], property);
-    expect(rdfListService.remove).toHaveBeenNthCalledWith(2, parents[1], property);
-    expect(rdfListService.push).toHaveBeenNthCalledWith(1, parents[0], property);
-    expect(rdfListService.push).toHaveBeenNthCalledWith(2, parents[1], property);
-
-    expect(rdfNodeService.update).toHaveBeenCalledWith(property, {
-      notInPayload: false,
-      payloadName: undefined,
-      exampleValue: undefined,
-      optional: false,
-      refines: undefined,
-      preferredName: [],
-      description: [],
-      see: [],
-      name: 'property2',
     });
   });
 });

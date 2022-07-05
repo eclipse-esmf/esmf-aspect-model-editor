@@ -33,12 +33,8 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
   visit(cell: mxgraph.mxCell): DefaultProperty {
     const property: DefaultProperty = MxGraphHelper.getModelElement<DefaultProperty>(cell);
     this.setPrefix(property.aspectModelUrn);
-    const oldAspectModelUrn = property.aspectModelUrn;
     this.addProperties(property);
     this.addCharacteristic(property);
-    if (oldAspectModelUrn !== property.aspectModelUrn) {
-      this.removeOldQuads(oldAspectModelUrn);
-    }
     return property;
   }
 
@@ -70,9 +66,5 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
       this.rdfService.currentRdfModel.BAMM().CharacteristicProperty(),
       DataFactory.namedNode(property.characteristic.aspectModelUrn)
     );
-  }
-
-  private removeOldQuads(oldAspectModelUrn: string) {
-    this.store.removeQuads(this.store.getQuads(DataFactory.namedNode(oldAspectModelUrn), null, null, null));
   }
 }

@@ -13,24 +13,24 @@
 
 import {TestBed} from '@angular/core/testing';
 import {
-  DefaultConstraint,
-  DefaultRangeConstraint,
-  DefaultFixedPointConstraint,
-  DefaultLengthConstraint,
-  DefaultLanguageConstraint,
-  DefaultEncodingConstraint,
-  DefaultRegularExpressionConstraint,
-  DefaultLocaleConstraint,
   BoundDefinition,
+  DefaultConstraint,
+  DefaultEncodingConstraint,
+  DefaultFixedPointConstraint,
+  DefaultLanguageConstraint,
+  DefaultLengthConstraint,
+  DefaultLocaleConstraint,
+  DefaultRangeConstraint,
+  DefaultRegularExpressionConstraint,
 } from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
-import {ModelService} from '@ame/rdf/services';
+import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {describe, expect, it} from '@jest/globals';
 import {provideMockObject} from 'jest-helpers/utils';
 import {Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
-import {RdfNodeService} from '../../rdf-node/rdf-node.service';
+import {RdfNodeService} from '@ame/aspect-exporter';
 import {ConstraintVisitor} from './constraint-visitor';
 
 describe('Constraint Visitor', () => {
@@ -38,6 +38,7 @@ describe('Constraint Visitor', () => {
   let rdfNodeService: jest.Mocked<RdfNodeService>;
 
   let modelService: jest.Mocked<ModelService>;
+  let rdfService: jest.Mocked<RdfService>;
   let rdfModel: jest.Mocked<RdfModel>;
   let constraint: DefaultConstraint;
   let rangeConstraint: DefaultRangeConstraint;
@@ -57,6 +58,10 @@ describe('Constraint Visitor', () => {
           useValue: provideMockObject(RdfNodeService),
         },
         {
+          provide: RdfService,
+          useValue: provideMockObject(RdfService),
+        },
+        {
           provide: RdfListService,
           useValue: provideMockObject(RdfListService),
         },
@@ -72,6 +77,11 @@ describe('Constraint Visitor', () => {
     rdfModel.store = new Store();
     rdfModel.BAMMC.mockImplementation(() => ({ConstraintProperty: () => 'constraintProperty'} as any));
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
+
+    rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
+    rdfService.currentRdfModel = rdfModel;
+    rdfService.externalRdfModels = [];
+
     constraint = new DefaultConstraint('1', 'bamm#constraint1', 'constraint1');
     rangeConstraint = new DefaultRangeConstraint(
       '1',
@@ -224,19 +234,5 @@ describe('Constraint Visitor', () => {
     expect(rdfNodeService.update).toHaveBeenCalledWith(localeConstraint, {
       localeCode: 'en',
     });
-  });
-
-  it('should update constraint name', () => {
-    const constraintCell = getConstraintCell(constraint);
-    constraint.name = 'constraint2';
-    service.visit(constraintCell as any);
-    expect(rdfNodeService.remove).toHaveBeenCalled();
-    expect(rdfNodeService.update).toHaveBeenCalledWith(constraint, {
-      preferredName: [],
-      description: [],
-      see: [],
-      name: 'constraint2',
-    });
-    expect(constraint.aspectModelUrn).toBe('bamm#constraint2');
   });
 });

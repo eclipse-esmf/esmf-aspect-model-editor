@@ -39,7 +39,6 @@ import {
   DefaultValueEntityInputFieldComponent,
   DefaultValueInputFieldComponent,
   DescriptionInputFieldComponent,
-  ShapeSettingsComponent,
   ElementCharacteristicInputFieldComponent,
   EncodingInputFieldComponent,
   EntityComponent,
@@ -75,6 +74,7 @@ import {
   RightInputFieldComponent,
   ScaleInputFieldComponent,
   SeeInputFieldComponent,
+  ShapeSettingsComponent,
   StateCharacteristicComponent,
   StructuredValueComponent,
   StructuredValuePropertiesComponent,
@@ -90,6 +90,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
+import {FlexModule} from '@angular/flex-layout';
 
 @NgModule({
   providers: [EditorModelService],
@@ -111,6 +112,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatButtonModule,
     MatDialogModule,
     MatTableModule,
+    FlexModule,
   ],
   declarations: [
     AspectComponent,

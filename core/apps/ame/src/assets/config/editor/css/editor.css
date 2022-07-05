@@ -72,7 +72,7 @@ div.mxPopupMenu {
 
 table.mxPopupMenu {
   border-collapse: collapse;
-  margin: 0px;
+  margin: 0;
 }
 
 td.mxPopupMenuItem {
@@ -83,12 +83,11 @@ td.mxPopupMenuItem {
 
 td.mxPopupMenuIcon {
   background-color: white;
-  padding: 0px;
+  padding: 0;
 }
 
 td.mxPopupMenuIcon .geIcon {
-  padding: 2px;
-  padding-bottom: 4px;
+  padding: 2px 2px 4px;
   margin: 2px;
   border: 1px solid transparent;
   opacity: 0.5;

@@ -18,16 +18,15 @@ import {provideMockObject} from '../../../../../../jest-helpers';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {OperationVisitor} from './operation-visitor';
-import {DefaultAspect, DefaultOperation} from '@ame/meta-model';
+import {DefaultOperation} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfModel} from '@ame/rdf/utils';
-import {ModelService} from '@ame/rdf/services';
+import {ModelService, RdfService} from '@ame/rdf/services';
 
 describe('Operation Visitor', () => {
   let service: OperationVisitor;
   let rdfNodeService: jest.Mocked<RdfNodeService>;
-  let rdfListService: jest.Mocked<RdfListService>;
-  let mxGraphService: jest.Mocked<MxGraphService>;
+  let rdfService: jest.Mocked<RdfService>;
 
   let modelService: jest.Mocked<ModelService>;
   let rdfModel: jest.Mocked<RdfModel>;
@@ -40,6 +39,10 @@ describe('Operation Visitor', () => {
         {
           provide: RdfNodeService,
           useValue: provideMockObject(RdfNodeService),
+        },
+        {
+          provide: RdfService,
+          useValue: provideMockObject(RdfService),
         },
         {
           provide: RdfListService,
@@ -61,8 +64,10 @@ describe('Operation Visitor', () => {
     rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
     rdfNodeService.modelService = modelService;
 
-    rdfListService = TestBed.inject(RdfListService) as jest.Mocked<RdfListService>;
-    mxGraphService = TestBed.inject(MxGraphService) as jest.Mocked<MxGraphService>;
+    rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
+    rdfService.currentRdfModel = rdfModel;
+    rdfService.externalRdfModels = [];
+
     service = TestBed.inject(OperationVisitor);
   });
 
@@ -75,39 +80,10 @@ describe('Operation Visitor', () => {
     service.visit(propertyCell as any);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(operation, {
-      input: [],
-      output: null,
       preferredName: [],
       description: [],
       see: [],
       name: 'operation1',
-    });
-  });
-
-  it('should update the parents parent with the new operation reference', () => {
-    const operationCell = getOperationCell();
-    operation.name = 'operation2';
-
-    const parents = [new DefaultAspect('1', 'aspect', 'aspect', null, [operation])];
-    mxGraphService.resolveParents.mockImplementation(() => parents.map(parent => ({getMetaModelElement: () => parent} as any)));
-
-    expect(operation.aspectModelUrn).toBe('bamm#operation1');
-
-    service.visit(operationCell as any);
-
-    expect(operation.aspectModelUrn).toBe('bamm#operation2');
-    expect(rdfListService.remove).toHaveBeenNthCalledWith(1, parents[0], operation);
-    expect(rdfListService.remove).toHaveBeenNthCalledWith(2, parents[1], operation);
-    expect(rdfListService.push).toHaveBeenNthCalledWith(1, parents[0], operation);
-    expect(rdfListService.push).toHaveBeenNthCalledWith(2, parents[1], operation);
-
-    expect(rdfNodeService.update).toHaveBeenCalledWith(operation, {
-      input: [],
-      output: null,
-      preferredName: [],
-      description: [],
-      see: [],
-      name: 'operation2',
     });
   });
 });

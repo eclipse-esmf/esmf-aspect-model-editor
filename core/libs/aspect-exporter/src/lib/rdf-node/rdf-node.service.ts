@@ -18,8 +18,7 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 import {LogService} from '@ame/shared';
 import {DataFactory, Quad} from 'n3';
 import {PropertyEnum} from './enums/property.enum';
-import {BasePropertiesInterface} from './interfaces/base-properties.interface';
-import {LocaleInterface} from './interfaces/locale.interface';
+import {BasePropertiesInterface, LocaleInterface} from './interfaces';
 
 @Injectable({
   providedIn: 'root',

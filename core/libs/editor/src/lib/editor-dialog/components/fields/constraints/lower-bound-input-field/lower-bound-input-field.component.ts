@@ -53,11 +53,6 @@ export class LowerBoundInputFieldComponent extends InputFieldComponent<DefaultCo
     this.parentForm.removeControl(this.fieldName);
   }
 
-  getPlaceholder(rangeValueDataType: string): string {
-    const dataType = this.dataTypeService.getDataType(rangeValueDataType);
-    return dataType ? dataType.description : '';
-  }
-
   initForm() {
     this.parentForm.setControl(
       this.fieldName,

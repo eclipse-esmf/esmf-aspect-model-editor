@@ -60,10 +60,6 @@ export class RdfModel {
     return this.metaModelVersion;
   }
 
-  getMetaModelIdentifier(): string {
-    return this.metaModelIdentifier;
-  }
-
   getNamespaces(): Prefixes<any> {
     return this.prefixes;
   }

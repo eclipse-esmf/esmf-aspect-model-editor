@@ -12,7 +12,13 @@
  */
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {ThemeSwitcherComponent} from './theme-switcher.component';
+import {ThemeSwitcherComponent} from '@ame/editor';
+import {beforeEach, describe, expect, it} from '@jest/globals';
+import {CommonModule} from '@angular/common';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatButtonModule} from '@angular/material/button';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 
 describe('ThemeSwitcherComponent', () => {
   let component: ThemeSwitcherComponent;
@@ -21,6 +27,12 @@ describe('ThemeSwitcherComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ThemeSwitcherComponent],
+      imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        {provide: MAT_DIALOG_DATA, useValue: {}},
+        {provide: MatDialogRef, useValue: {}},
+      ],
     }).compileComponents();
   });
 

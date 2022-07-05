@@ -39,7 +39,7 @@ describe('Test editing Trait', () => {
           .focus()
           .click({force: true})
           .then(() => {
-            cy.getUpdatedRDF().then(rdf => {
+            cy.getUpdatedRDF().then(() => {
               // TODO: resolve after validator fix
               // expect(rdf).to.contain('bamm:description "New description for the new created trait"@en');
               cy.getAspect().then(aspect => {

@@ -14,9 +14,11 @@
 import {TestBed} from '@angular/core/testing';
 import {DataFactory, Quad, Store} from 'n3';
 import {describe, expect, it} from '@jest/globals';
-import {ModelService} from 'src/app/shared/model.service';
-import {Bamm} from 'src/app/shared/vocabulary';
-import {EntityValueVisitor} from './entity-value-visitor';
+import {EntityValueVisitor} from '@ame/aspect-exporter';
+import {Bamm} from '@ame/vocabulary';
+import {ModelService, RdfService} from '@ame/rdf/services';
+import {provideMockObject} from '../../../../../../jest-helpers';
+import {RdfModel} from '@ame/rdf/utils';
 
 class MockBamm {
   RdfType = jest.fn(() => DataFactory.namedNode('type'));
@@ -24,21 +26,29 @@ class MockBamm {
 }
 
 class MockRDFModel {
+  rdfModel = provideMockObject(RdfModel);
   store = new Store();
   BAMM = jest.fn((): Bamm => new MockBamm() as any as Bamm);
+  // BAMMC = jest.fn((): Bammc => new MockBamm() as any as Bammc);
+  // BAMMU = jest.fn((): Bammu => new MockBamm() as any as Bammu);
 }
 
 describe('Entity value visitor', () => {
-  let rdfModel: MockRDFModel;
+  let mockedRdfModel: MockRDFModel;
   let service: EntityValueVisitor;
+  let rdfService: jest.Mocked<RdfService>;
   const entity: any = {aspectModelUrn: 'entityUrn1'};
   const mockProperty1: any = {
-    aspectModelUrn: 'propertyUrn1',
-    getDeepLookUpDataType: jest.fn().mockReturnValue({getUrn: () => 'dataTypeUrn1'}),
+    property: {
+      aspectModelUrn: 'propertyUrn1',
+      getDeepLookUpDataType: jest.fn().mockReturnValue({getUrn: () => 'dataTypeUrn1'}),
+    },
   };
   const mockProperty2: any = {
-    aspectModelUrn: 'propertyUrn2',
-    getDeepLookUpDataType: jest.fn().mockReturnValue({getUrn: () => 'dataTypeUrn2'}),
+    property: {
+      aspectModelUrn: 'propertyUrn2',
+      getDeepLookUpDataType: jest.fn().mockReturnValue({getUrn: () => 'dataTypeUrn2'}),
+    },
   };
   const mockEntityValue1: any = {
     aspectModelUrn: 'entityValueUrn1',
@@ -51,19 +61,30 @@ describe('Entity value visitor', () => {
   };
 
   beforeEach(() => {
-    rdfModel = new MockRDFModel();
+    mockedRdfModel = new MockRDFModel();
     TestBed.configureTestingModule({
       providers: [
         EntityValueVisitor,
-        {provide: ModelService, useValue: {getLoadedAspectModel: jest.fn().mockReturnValue({rdfModel: rdfModel})}},
+        {
+          provide: ModelService,
+          useValue: {getLoadedAspectModel: jest.fn().mockReturnValue({rdfModel: mockedRdfModel})},
+        },
+        {
+          provide: RdfService,
+          useValue: provideMockObject(RdfService),
+        },
       ],
     });
     service = TestBed.inject(EntityValueVisitor);
+
+    rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
+    rdfService.currentRdfModel = mockedRdfModel.rdfModel;
+    rdfService.externalRdfModels = [];
   });
 
   it('should update store', () => {
     service.visitModel(mockEntityValue1);
-    const allQuads = rdfModel.store.getQuads(null, null, null, null);
+    const allQuads = mockedRdfModel.store.getQuads(null, null, null, null);
 
     expect(allQuads.length).toBe(3);
     checkQuad(allQuads[0], 'entityValueUrn1', 'propertyUrn1', '123');

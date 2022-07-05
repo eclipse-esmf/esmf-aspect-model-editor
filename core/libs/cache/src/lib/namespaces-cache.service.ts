@@ -47,16 +47,6 @@ export class NamespacesCacheService {
   }
 
   /**
-   * Adds a new namespace. Its value will be an empty map
-   *
-   * @param namespaceKey - namespace name
-   */
-  addNamespace(namespaceKey: string): Map<string, CachedFile> {
-    this.namespaces.set(namespaceKey, new Map());
-    return this.namespaces.get(namespaceKey);
-  }
-
-  /**
    * Adds an empty CachedFile to path Namespace -> File
    *
    * @param namespaceKey - namespace name

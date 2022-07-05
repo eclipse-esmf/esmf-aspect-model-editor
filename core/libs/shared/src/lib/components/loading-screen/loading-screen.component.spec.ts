@@ -14,6 +14,12 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {LoadingScreenComponent} from './loading-screen.component';
+import {expect, describe, it, beforeEach} from '@jest/globals';
+import {CommonModule} from '@angular/common';
+import {MatDialogModule, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatButtonModule} from '@angular/material/button';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 
 describe('LoadingScreenComponent', () => {
   let component: LoadingScreenComponent;
@@ -22,6 +28,10 @@ describe('LoadingScreenComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoadingScreenComponent],
+      imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers:  [{provide: MAT_DIALOG_DATA, useValue: {}},
+      {provide: MatDialogRef, useValue: {}}]
     }).compileComponents();
   });
 

@@ -36,15 +36,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 !important;
     color: white;
     font-size: 26px;
     height: 45px;
     width: 45px;
     text-align: center;
     vertical-align: middle;
-    margin-right: 5px;
-    margin-left: 5px;
+    margin: 0 !important;
 
     mat-icon {
       margin-top: 20px;
@@ -76,5 +74,5 @@
 .namespaces-button {
   transform: scale(2);
   padding-bottom: 35px;
-  height: 0px;
+  height: 0;
 }

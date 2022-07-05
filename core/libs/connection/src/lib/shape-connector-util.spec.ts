@@ -12,14 +12,8 @@
  */
 
 import {expect, describe} from '@jest/globals';
-import {DefaultEntity} from '../aspect-meta-model/default-entity';
-import {DefaultProperty} from '../aspect-meta-model/default-property';
+import {DefaultAspect, DefaultCharacteristic, DefaultCollection, DefaultConstraint, DefaultEntity, DefaultProperty, DefaultTrait} from '@ame/meta-model';
 import {ShapeConnectorUtil} from './shape-connector-util';
-import {DefaultCharacteristic} from '../aspect-meta-model/default-characteristic';
-import {DefaultTrait} from '../aspect-meta-model/default-trait';
-import {DefaultConstraint} from '../aspect-meta-model/default-constraint';
-import {DefaultAspect} from '../aspect-meta-model/default-aspect';
-import {DefaultCollection} from '../aspect-meta-model/default-collection';
 
 describe('Test Shape connector util', () => {
   test('should be parent: Entity child: Property', () => {

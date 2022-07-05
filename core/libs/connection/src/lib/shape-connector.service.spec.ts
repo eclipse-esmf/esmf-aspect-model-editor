@@ -14,21 +14,34 @@
 import {describe, expect} from '@jest/globals';
 import {
   AspectConnectionHandler,
+  AspectEventConnectionHandler,
   AspectPropertyConnectionHandler,
   CharacteristicConnectionHandler,
   CharacteristicEntityConnectionHandler,
+  CharacteristicUnitConnectionHandler,
   CollectionCharacteristicConnectionHandler,
   ConstraintConnectionHandler,
+  EitherCharacteristicLeftConnectionHandler,
+  EitherCharacteristicRightConnectionHandler,
+  EitherConnectionHandler,
   EntityConnectionHandler,
   EntityPropertyConnectionHandler,
+  EntityValueConnectionHandler,
+  EnumerationEntityValueConnectionHandler,
+  EventConnectionHandler,
+  EventPropertyConnectionHandler,
+  OperationConnectionHandler,
+  OperationPropertyInputConnectionHandler,
+  OperationPropertyOutputConnectionHandler,
   PropertyCharacteristicConnectionHandler,
   PropertyConnectionHandler,
   ShapeConnectorService,
+  StructuredValueCharacteristicPropertyConnectionHandler,
+  StructuredValueConnectionHandler,
   TraitConnectionHandler,
   TraitWithCharacteristicOrConstraintConnectionHandler,
 } from '@ame/connection';
 import {TestBed} from '@angular/core/testing';
-import {LogService} from '../log.service';
 import {
   DefaultAspect,
   DefaultCharacteristic,
@@ -39,7 +52,7 @@ import {
   DefaultTrait,
 } from '@ame/meta-model';
 import {provideMockObject} from 'jest-helpers/utils';
-import {NotificationsService} from '@ame/shared';
+import {LogService, NotificationsService} from '@ame/shared';
 
 describe('Test Shape connector service', () => {
   let service: ShapeConnectorService;
@@ -47,6 +60,8 @@ describe('Test Shape connector service', () => {
   let notificationsService: jest.Mocked<NotificationsService>;
   let aspectConnectionHandler: jest.Mocked<AspectConnectionHandler>;
   let propertyConnectionHandler: jest.Mocked<PropertyConnectionHandler>;
+  let operationConnectionHandler: jest.Mocked<OperationConnectionHandler>;
+  let eventConnectionHandler: jest.Mocked<EventConnectionHandler>;
   let characteristicConnectionHandler: jest.Mocked<CharacteristicConnectionHandler>;
   let entityConnectionHandler: jest.Mocked<EntityConnectionHandler>;
   let aspectPropertyConnectionHandler: jest.Mocked<AspectPropertyConnectionHandler>;
@@ -74,12 +89,56 @@ describe('Test Shape connector service', () => {
           useValue: provideMockObject(AspectConnectionHandler),
         },
         {
+          provide: AspectEventConnectionHandler,
+          useValue: provideMockObject(AspectEventConnectionHandler),
+        },
+        {
+          provide: OperationConnectionHandler,
+          useValue: provideMockObject(OperationConnectionHandler),
+        },
+        {
+          provide: OperationPropertyInputConnectionHandler,
+          useValue: provideMockObject(OperationPropertyInputConnectionHandler),
+        },
+        {
+          provide: OperationPropertyOutputConnectionHandler,
+          useValue: provideMockObject(OperationPropertyOutputConnectionHandler),
+        },
+        {
           provide: PropertyConnectionHandler,
           useValue: provideMockObject(PropertyConnectionHandler),
         },
         {
+          provide: EventConnectionHandler,
+          useValue: provideMockObject(EventConnectionHandler),
+        },
+        {
+          provide: EventPropertyConnectionHandler,
+          useValue: provideMockObject(EventPropertyConnectionHandler),
+        },
+        {
           provide: CharacteristicConnectionHandler,
           useValue: provideMockObject(CharacteristicConnectionHandler),
+        },
+        {
+          provide: EitherCharacteristicLeftConnectionHandler,
+          useValue: provideMockObject(EitherCharacteristicLeftConnectionHandler),
+        },
+        {
+          provide: EitherCharacteristicRightConnectionHandler,
+          useValue: provideMockObject(EitherCharacteristicRightConnectionHandler),
+        },
+        {
+          provide: EitherConnectionHandler,
+          useValue: provideMockObject(EitherConnectionHandler),
+        },
+        {
+          provide: StructuredValueConnectionHandler,
+          useValue: provideMockObject(StructuredValueConnectionHandler),
+        },
+        {
+          provide: StructuredValueCharacteristicPropertyConnectionHandler,
+          useValue: provideMockObject(StructuredValueCharacteristicPropertyConnectionHandler),
         },
         {
           provide: ConstraintConnectionHandler,
@@ -88,6 +147,14 @@ describe('Test Shape connector service', () => {
         {
           provide: EntityConnectionHandler,
           useValue: provideMockObject(EntityConnectionHandler),
+        },
+        {
+          provide: EntityValueConnectionHandler,
+          useValue: provideMockObject(EntityConnectionHandler),
+        },
+        {
+          provide: EnumerationEntityValueConnectionHandler,
+          useValue: provideMockObject(EnumerationEntityValueConnectionHandler),
         },
         {
           provide: AspectPropertyConnectionHandler,
@@ -100,6 +167,10 @@ describe('Test Shape connector service', () => {
         {
           provide: CharacteristicEntityConnectionHandler,
           useValue: provideMockObject(CharacteristicEntityConnectionHandler),
+        },
+        {
+          provide: CharacteristicUnitConnectionHandler,
+          useValue: provideMockObject(CharacteristicUnitConnectionHandler),
         },
         {
           provide: TraitWithCharacteristicOrConstraintConnectionHandler,
@@ -122,7 +193,9 @@ describe('Test Shape connector service', () => {
     logService = TestBed.inject(LogService) as jest.Mocked<LogService>;
     notificationsService = TestBed.inject(NotificationsService) as jest.Mocked<NotificationsService>;
     aspectConnectionHandler = TestBed.inject(AspectConnectionHandler) as jest.Mocked<AspectConnectionHandler>;
+    aspectPropertyConnectionHandler = TestBed.inject(AspectPropertyConnectionHandler) as jest.Mocked<AspectPropertyConnectionHandler>;
     propertyConnectionHandler = TestBed.inject(PropertyConnectionHandler) as jest.Mocked<PropertyConnectionHandler>;
+    characteristicConnectionHandler = TestBed.inject(CharacteristicConnectionHandler) as jest.Mocked<CharacteristicConnectionHandler>;
     entityConnectionHandler = TestBed.inject(EntityConnectionHandler) as jest.Mocked<EntityConnectionHandler>;
     propertyCharacteristicConnectionHandler = TestBed.inject(
       PropertyCharacteristicConnectionHandler

@@ -16,7 +16,7 @@ import {FormControl} from '@angular/forms';
 import {DefaultAspect} from '@ame/meta-model';
 import {ModelElementEditorComponent} from '..';
 import {EditorModelService} from '../../editor-model.service';
-import {UpdatedProperties} from '../properties/properties-button/properties-button.component';
+import {UpdatedProperties} from '../properties';
 
 @Component({
   selector: 'ame-aspect',

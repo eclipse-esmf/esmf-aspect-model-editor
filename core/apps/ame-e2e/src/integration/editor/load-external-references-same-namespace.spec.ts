@@ -14,7 +14,7 @@
 /// <reference types="Cypress" />
 
 import {Aspect, DefaultEntity, DefaultQuantifiable, Trait} from '@ame/meta-model';
-import {SELECTOR_dialogInputModel, SELECTOR_dialogStartButton, SELECTOR_tbLoadButton} from '../../support/constants';
+import {SELECTOR_dialogStartButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
 describe('Test load external reference with same namespace', () => {

@@ -20,7 +20,7 @@ import {DefaultEntityValue} from '@ame/meta-model';
 export class EntityValuePipe implements PipeTransform {
   transform(value: DefaultEntityValue[], search: string): DefaultEntityValue[] {
     if (!value || value.length === 0) {
-      return;
+      return null;
     }
     if (!search) {
       return value;

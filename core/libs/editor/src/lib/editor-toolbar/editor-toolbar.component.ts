@@ -134,16 +134,15 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
           this.closeEditDialog.emit();
           return this.editorService.loadNewAspectModel(rdfAspectModel).pipe(
             first(),
-            catchError(error =>
-              of(
-                this.notificationsService.error(
-                  'Error when loading Aspect Model. Reverting to previous Aspect Model',
-                  `${error}`,
-                  null,
-                  5000
-                )
-              )
-            ),
+            catchError(error => {
+              this.notificationsService.error(
+                'Error when loading Aspect Model. Reverting to previous Aspect Model',
+                `${error}`,
+                null,
+                5000
+              );
+              return of(null);
+            }),
             finalize(() => {
               this.loadingScreen$.unsubscribe();
               this.loadingScreenService.close();

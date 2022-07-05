@@ -17,17 +17,19 @@ export const provideMockObject = <T>(service: T) => {
   }
 
   const object: any = {};
-  for (const key in service.prototype) {
-    if (!service.prototype[key]) {
-      continue;
-    }
+  for (const key of Object.getOwnPropertyNames(service.prototype)) {
+    if (key !== 'currentCachedFile' && key !== 'visitorAnnouncer$' && key !== 'graph') {
+      if (!service.prototype[key]) {
+        continue;
+      }
 
-    if (typeof service.prototype[key] === 'function') {
-      object[key] = jest.fn();
-      continue;
-    }
+      if (typeof service.prototype[key] === 'function') {
+        object[key] = jest.fn();
+        continue;
+      }
 
-    object[key] = service.prototype[key];
+      object[key] = service.prototype[key];
+    }
   }
 
   return object;

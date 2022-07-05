@@ -14,7 +14,6 @@
 /// <reference types="Cypress" />
 import {cyHelp} from '../../support/helpers';
 import {FIELD_characteristicName, SELECTOR_editorSaveButton, SELECTOR_tbDeleteButton} from '../../support/constants';
-import {Aspect} from '@ame/meta-model';
 
 describe('Test create recursive element', () => {
   function checkIfAspectHasCharacteristic(aspect: any) {

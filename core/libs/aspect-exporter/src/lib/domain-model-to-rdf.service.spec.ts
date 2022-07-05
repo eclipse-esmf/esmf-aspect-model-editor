@@ -12,15 +12,23 @@
  */
 
 import {TestBed} from '@angular/core/testing';
-import {expect, describe, it} from '@jest/globals';
+import {describe, expect, it} from '@jest/globals';
 
-import {DomainModelToRdfService} from './domain-model-to-rdf.service';
+import {DomainModelToRdfService} from '@ame/aspect-exporter';
+import {provideMockObject} from '../../../../jest-helpers';
 
 describe('DomainModelToRdfService', () => {
   let service: DomainModelToRdfService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: DomainModelToRdfService,
+          useValue: provideMockObject(DomainModelToRdfService),
+        },
+      ],
+    });
     service = TestBed.inject(DomainModelToRdfService);
   });
 

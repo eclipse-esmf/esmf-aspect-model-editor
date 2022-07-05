@@ -16,8 +16,8 @@ import {RdfModel} from '@ame/rdf/utils';
 import {simpleDataTypes} from '@ame/shared';
 import {Bamm} from '@ame/vocabulary';
 import {BlankNode, DataFactory, NamedNode, Quad, Quad_Object, Store, Triple, Util} from 'n3';
-import {RdfListHelper} from './rd-list-helper';
-import {getPredicateByKey, getRelations} from './rdf-list.contants';
+import {RdfListHelper} from './rdf-list-helper';
+import {RdfListConstants} from './rdf-list.constants';
 import {
   CreateEmptyRdfList,
   EmptyRdfList,
@@ -100,11 +100,14 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
 
   createEmpty(source: SourceElementType, property: ListProperties) {
     this.emptyList(source, property);
-    this.createNewList(DataFactory.namedNode(source.aspectModelUrn), getPredicateByKey(property, this.bamm, this.rdfModel.BAMMC()));
+    this.createNewList(
+      DataFactory.namedNode(source.aspectModelUrn),
+      RdfListConstants.getPredicateByKey(property, this.bamm, this.rdfModel.BAMMC())
+    );
   }
 
   emptyList(source: SourceElementType, property: ListProperties) {
-    const predicate = getPredicateByKey(property, this.bamm, this.rdfModel.BAMMC());
+    const predicate = RdfListConstants.getPredicateByKey(property, this.bamm, this.rdfModel.BAMMC());
     const subject = DataFactory.namedNode(source.aspectModelUrn);
     const list = this.store.getQuads(subject, predicate, null, null)?.[0]?.object;
 
@@ -185,7 +188,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   }
 
   private getFilteredElements(source: SourceElementType, elements: ListElementType[]): StoreListReferences {
-    const relations = getRelations(this.bamm, this.rdfModel.BAMMC());
+    const relations = RdfListConstants.getRelations(this.bamm, this.rdfModel.BAMMC());
     const children = relations.find(({source: sourceType}) => source instanceof sourceType).children;
     const types = children.map(child => child.type).filter(type => type);
 
@@ -217,7 +220,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   }
 
   private resolvePredicate(source: SourceElementType, element: ListElementType) {
-    const relations = getRelations(this.bamm, this.rdfModel.BAMMC());
+    const relations = RdfListConstants.getRelations(this.bamm, this.rdfModel.BAMMC());
     for (const {source: sourceType, children} of relations) {
       if (!(source instanceof sourceType)) {
         continue;

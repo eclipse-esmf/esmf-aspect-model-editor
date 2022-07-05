@@ -43,6 +43,10 @@ jobs:
         run: npm run lint
         working-directory: core
 
+      - name: Performing jest tests
+        run: npm run test
+        working-directory: core
+
       - name: Performing cypress tests
         run: npm run cypress:ci
         working-directory: core

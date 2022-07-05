@@ -11,18 +11,28 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
+import {expect, describe, it, beforeEach} from '@jest/globals';
 import {AlertComponent} from './alert.component';
+import {CommonModule} from '@angular/common';
+import {MatDialogModule, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatButtonModule} from '@angular/material/button';
 
 describe('AlertComponent', () => {
   let component: AlertComponent;
   let fixture: ComponentFixture<AlertComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [AlertComponent],
-    }).compileComponents();
+    TestBed.configureTestingModule({
+      declarations: [ AlertComponent],
+      imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers:  [{provide: MAT_DIALOG_DATA, useValue: {}},
+      {provide: MatDialogRef, useValue: {}}]
+    })  
+    .compileComponents();
   });
 
   beforeEach(() => {

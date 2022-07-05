@@ -184,14 +184,6 @@ export class CachedFile {
     this.cachedElements = newCachedElements;
   }
 
-  updateIsolatedElementKey(oldKey: string, newKey: string) {
-    const resolvedEntry = this.isolatedElements.get(oldKey);
-    if (resolvedEntry) {
-      this.isolatedElements.delete(oldKey);
-      this.isolatedElements.set(newKey, resolvedEntry);
-    }
-  }
-
   addAnonymousElement(modelElement: BaseMetaModelElement, name?: string) {
     this.anonymousElements.push({element: modelElement, name: name});
   }

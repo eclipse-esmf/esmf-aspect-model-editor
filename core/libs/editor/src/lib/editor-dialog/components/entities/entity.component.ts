@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Component, Input} from '@angular/core';
-import {UpdatedProperties} from '../properties/properties-button/properties-button.component';
+import {UpdatedProperties} from '../properties';
 import {EditorModelService} from '../../editor-model.service';
 import {FormControl} from '@angular/forms';
 
