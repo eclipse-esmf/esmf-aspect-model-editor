@@ -16,6 +16,7 @@ import {
   BaseMetaModelElement,
   Characteristic,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultEntity,
@@ -120,6 +121,16 @@ export class CachedFile {
       }
     });
     return entities;
+  }
+
+  getCachedAbstractProperties(): Array<DefaultAbstractProperty> {
+    const abstractProperties: Array<DefaultAbstractProperty> = [];
+    this.cachedElements.forEach(modelElement => {
+      if (modelElement instanceof DefaultAbstractProperty) {
+        abstractProperties.push(modelElement);
+      }
+    });
+    return abstractProperties;
   }
 
   getCachedProperties(): Array<Property> {

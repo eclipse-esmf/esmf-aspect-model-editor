@@ -14,6 +14,7 @@
 export enum Elements {
   aspect = 'aspect',
   property = 'property',
+  abstractProperty = 'abstractProperty',
   operation = 'operation',
   constraint = 'constraint',
   characteristic = 'characteristic',
@@ -27,7 +28,8 @@ export enum Elements {
 
 export const relations = {
   [Elements.aspect]: [Elements.property, Elements.operation, Elements.event],
-  [Elements.property]: [Elements.characteristic, Elements.trait],
+  [Elements.property]: [Elements.characteristic, Elements.trait, Elements.abstractProperty, Elements.property],
+  [Elements.abstractProperty]: [Elements.abstractProperty],
   [Elements.characteristic]: [Elements.entity, Elements.entityValue, Elements.unit],
   [Elements.entity]: [Elements.property, Elements.entity, Elements.abstractEntity],
   [Elements.trait]: [Elements.constraint, Elements.characteristic],
@@ -36,5 +38,5 @@ export const relations = {
   [Elements.operation]: [],
   [Elements.constraint]: [],
   [Elements.unit]: [],
-  [Elements.abstractEntity]: [Elements.abstractEntity, Elements.property],
+  [Elements.abstractEntity]: [Elements.abstractEntity, Elements.property, Elements.abstractProperty],
 };

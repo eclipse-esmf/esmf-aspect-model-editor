@@ -18,14 +18,16 @@ import {Type} from './type';
 import {DefaultScalar} from './default-scalar';
 import {DefaultTrait} from './default-trait';
 import {AspectModelVisitor} from '@ame/mx-graph';
+import {DefaultAbstractProperty} from '.';
 
 export interface Property extends BaseMetaModelElement, LookUpDatatype {
   characteristic: Characteristic;
-  refines?: string;
   exampleValue?: any;
 }
 
 export class DefaultProperty extends Base implements Property {
+  public extendedElement: DefaultProperty | DefaultAbstractProperty;
+
   static createInstance() {
     return new DefaultProperty(null, null, 'property', null);
   }

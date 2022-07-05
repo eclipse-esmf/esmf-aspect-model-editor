@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DataFactory} from 'n3';
-import {InstantiatorListElement, RdfModel} from '@ame/rdf/utils';
+import {InstantiatorListElement} from '@ame/rdf/utils';
 import {DefaultAbstractProperty, OverWrittenProperty, OverWrittenPropertyKeys} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 
@@ -47,7 +46,7 @@ export class AbstractPropertyInstantiator {
   private constructAbstractProperty(listElement: InstantiatorListElement): OverWrittenProperty<DefaultAbstractProperty> {
     const bamm = this.metaModelElementInstantiator.bamm;
     const property = new DefaultAbstractProperty(null, null, null, null);
-    const quads = this.resolveQuads(listElement, this.rdfModel);
+    const quads = this.rdfModel.findAnyProperty(listElement.quad) || [];
     property.setExternalReference(this.rdfModel.isExternalRef);
     property.fileName = this.metaModelElementInstantiator.fileName;
 
@@ -61,7 +60,9 @@ export class AbstractPropertyInstantiator {
       }
 
       if (bamm.isExtendsProperty(quad.predicate.value)) {
-        property.extendedElement = this.createAbstractProperty({quad: quad.object});
+        this.metaModelElementInstantiator.getProperty({quad: quad.object}, extractedAbstractProperty => {
+          property.extendedElement = extractedAbstractProperty;
+        });
       }
     }
 
@@ -69,9 +70,5 @@ export class AbstractPropertyInstantiator {
       property,
       keys: this.resolveOverwrittenKeys(listElement),
     };
-  }
-
-  private resolveQuads(element: InstantiatorListElement, rdfModel: RdfModel) {
-    return element.quad ? rdfModel.findAnyProperty(DataFactory.namedNode(element.quad.value)) : [];
   }
 }

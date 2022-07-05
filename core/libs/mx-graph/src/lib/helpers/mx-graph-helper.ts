@@ -23,6 +23,7 @@ import {
   DefaultStructuredValue,
   DefaultTrait,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
 } from '@ame/meta-model';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {LanguageSettingsService} from '@ame/settings-dialog';
@@ -245,39 +246,47 @@ export class MxGraphHelper {
     return null;
   }
 
+  private static createLabelElement(cell: mxgraph.mxCell) {
+    const div = document.createElement('div');
+    div.dataset.cellId = cell.id;
+    div.dataset.collapsed = cell.collapsed ? 'yes' : 'no';
+    div.classList.add('cell-label');
+    div.style.width = cell.geometry.width + 'px';
+    return div;
+  }
+
+  private static createTitleLabelElement(cell) {
+    const modelElement = MxGraphHelper.getModelElement(cell);
+    const title = document.createElement('span');
+    if (!cell.collapsed) {
+      title.style.width = cell.geometry.width + 'px';
+    }
+    title.title = modelElement.name;
+    title.innerText = modelElement.name?.length > 24 ? modelElement.name?.substring(0, 21) + '...' : modelElement.name;
+    title.classList.add('element-name');
+    return title;
+  }
+
   static createPropertiesLabel(cell: mxgraph.mxCell) {
     const modelElement = MxGraphHelper.getModelElement(cell);
     if (!modelElement) {
       return null;
     }
 
-    const div = document.createElement('div');
-    div.dataset.cellId = cell.id;
-    div.dataset.collapsed = cell.collapsed ? 'yes' : 'no';
-    div.classList.add('cell-label');
-    div.style.width = cell.geometry.width + 'px';
-
-    const title = document.createElement('span');
-    if (!cell.collapsed) {
-      title.style.width = cell.geometry.width + 'px';
-    }
-    title.title = modelElement.name;
-    title.innerText = modelElement.name.length > 24 ? modelElement.name.substring(0, 21) + '...' : modelElement.name;
-    title.classList.add('element-name');
+    const isSmallShape = [DefaultEntityValue, DefaultAbstractEntity, DefaultAbstractProperty].some(c => modelElement instanceof c);
+    const div = this.createLabelElement(cell);
+    const title = this.createTitleLabelElement(cell);
 
     div.appendChild(title);
 
-    if (modelElement instanceof DefaultEntityValue || modelElement instanceof DefaultAbstractEntity) {
+    if (isSmallShape) {
       title.classList.add('simple');
       return div;
     }
 
     if (modelElement instanceof DefaultTrait) {
       title.classList.add('simple');
-
-      if (cell.collapsed) {
-        div.removeChild(title);
-      }
+      cell.collapsed && div.removeChild(title);
       return div;
     }
 
@@ -288,14 +297,14 @@ export class MxGraphHelper {
     const heightGenerator = MxGraphHelper.createSpanElement({label: 'x', key: ''});
     div.appendChild(heightGenerator);
 
-    if (!cell.collapsed) {
+    if (cell.collapsed) {
+      title.title = '';
+      title.classList.add('simple');
+    } else {
       iconsBar && !(modelElement instanceof DefaultEntityValue) && div.appendChild(iconsBar);
       for (const conf of cell['configuration']?.fields || []) {
         div.appendChild(this.createSpanElement(conf));
       }
-    } else {
-      title.title = '';
-      title.classList.add('simple');
     }
 
     // to get the calculated height, the div needs to be inserted in body
@@ -318,7 +327,7 @@ export class MxGraphHelper {
     if (cell.collapsed) {
       cell.geometry.width = Math.max(50, title.clientWidth + 10);
       cell.geometry.height = title.clientHeight + 15;
-    } else if (!(modelElement instanceof DefaultEntityValue || modelElement instanceof DefaultAbstractEntity)) {
+    } else if (!isSmallShape) {
       cell.geometry.height =
         elementsSize < cell.geometry.height && elementsSize < ExpandedModelShape.expandedElementHeight
           ? ExpandedModelShape.expandedElementHeight

@@ -36,6 +36,7 @@ export class ThemeService {
     return {
       aspect: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.aspect},
       property: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.property},
+      abstractProperty: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.abstractProperty},
       operation: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.operation},
       event: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.event},
       characteristic: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.characteristic},

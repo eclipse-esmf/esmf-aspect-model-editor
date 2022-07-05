@@ -191,7 +191,8 @@ export class RdfModel {
           optional: blankNodeElements.find(e => e.predicate.value === this.bamm.OptionalProperty().value)?.object,
           notInPayload: blankNodeElements.find(e => e.predicate.value === this.bamm.NotInPayloadProperty().value)?.object,
           payloadName: blankNodeElements.find(e => e.predicate.value === this.bamm.payloadNameProperty().value)?.object,
-          quad: blankNodeElements.find(e => e.predicate.value === this.bamm.PropertyProperty().value)?.object,
+          quad: blankNodeElements.find(e => e.predicate.value === this.bamm.PropertyProperty().value)?.object || quad.subject,
+          extends: blankNodeElements.find(e => e.predicate.value === this.bamm.ExtendsProperty().value)?.object,
         });
         continue;
       }
@@ -222,7 +223,7 @@ export class RdfModel {
     return parentQuad;
   }
 
-  findAnyProperty(quad: Quad_Subject | Quad | NamedNode): Array<Quad> {
+  findAnyProperty(quad: Quad_Subject | Quad_Object | Quad | NamedNode): Array<Quad> {
     if (quad instanceof Quad) {
       return this.store.getQuads(quad.object, null, null, null);
     } else {

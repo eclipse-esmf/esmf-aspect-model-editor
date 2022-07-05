@@ -16,7 +16,6 @@ import {AspectModelVisitor} from '@ame/mx-graph';
 import {OverWrittenProperty} from './overwritten-property';
 
 interface AbstractProperty extends BaseMetaModelElement {
-  refines?: string;
   exampleValue?: any;
 }
 
@@ -24,7 +23,7 @@ export class DefaultAbstractProperty extends Base implements AbstractProperty {
   public extendedElement: OverWrittenProperty<DefaultAbstractProperty>;
 
   static createInstance() {
-    return new DefaultAbstractProperty(null, null, 'property', null);
+    return new DefaultAbstractProperty(null, null, 'abstractProperty', null);
   }
 
   get className() {

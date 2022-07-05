@@ -28,6 +28,7 @@ import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component
 import {EntityValuePipe} from './pipes';
 import {
   AbstractEntityComponent,
+  AbstractPropertyComponent,
   AspectComponent,
   BaseInputComponent,
   CharacteristicComponent,
@@ -118,6 +119,7 @@ import {FlexModule} from '@angular/flex-layout';
   ],
   declarations: [
     AspectComponent,
+    AbstractPropertyComponent,
     AbstractEntityComponent,
     CharacteristicComponent,
     ConfirmDialogComponent,

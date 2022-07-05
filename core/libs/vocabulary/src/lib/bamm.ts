@@ -229,8 +229,16 @@ export class Bamm {
     return DataFactory.namedNode(`${this.getNamespace()}Property`);
   }
 
+  AbstractProperty(): NamedNode {
+    return DataFactory.namedNode(`${this.getNamespace()}AbstractProperty`);
+  }
+
   isPropertyElement(value: string): boolean {
     return value === this.Property().value;
+  }
+
+  isAbstractPropertyElement(value: string): boolean {
+    return value === this.AbstractProperty().value;
   }
 
   isOperationElement(value: string): boolean {

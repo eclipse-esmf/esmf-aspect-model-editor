@@ -385,15 +385,20 @@ export class MxGraphService {
     const parentModel = MxGraphHelper.getModelElement(parent);
     const childModel = MxGraphHelper.getModelElement(child);
 
+    const abstractRelations = {
+      DefaultAbstractEntity: ['DefaultAbstractEntity'],
+      DefaultEntity: ['DefaultAbstractEntity', 'DefaultEntity'],
+      DefaultProperty: ['DefaultAbstractProperty', 'DefaultProperty'],
+      DefaultAbstractProperty: ['DefaultAbstractProperty'],
+    };
+
     const cellStyle =
       parentModel instanceof DefaultEntityValue && !(MxGraphHelper.getModelElement(child) instanceof DefaultEntityValue)
         ? 'entityValueEntityEdge'
         : MxGraphHelper.isOptionalProperty(MxGraphHelper.getModelElement(child), parentModel)
         ? 'optionalPropertyEdge'
-        : (parentModel instanceof DefaultAbstractEntity && childModel instanceof DefaultAbstractEntity) ||
-          (parentModel instanceof DefaultEntity && childModel instanceof DefaultAbstractEntity) ||
-          (parentModel instanceof DefaultEntity && childModel instanceof DefaultEntity)
-        ? 'entityAbstractEntityEdge'
+        : abstractRelations[parentModel.className]?.includes(childModel.className)
+        ? 'abstractElementEdge'
         : 'defaultEdge';
 
     if (
