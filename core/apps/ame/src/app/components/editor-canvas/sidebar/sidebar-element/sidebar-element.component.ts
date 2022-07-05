@@ -29,6 +29,7 @@ export const elementShortcuts = {
   unit: 'U',
   event: 'E',
   abstractEntity: 'AE',
+  abstractProperty: 'AP',
 };
 
 @Component({

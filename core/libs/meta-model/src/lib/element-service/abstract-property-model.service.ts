@@ -17,13 +17,13 @@ import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 import {EntityValueService} from '@ame/editor';
 import {MxGraphHelper, MxGraphService, PropertyRenderService} from '@ame/mx-graph';
-import {BaseMetaModelElement, DefaultProperty} from '@ame/meta-model';
+import {BaseMetaModelElement} from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
-import {DefaultStructuredValue} from '../aspect-meta-model';
+import {DefaultAbstractProperty, DefaultProperty, DefaultStructuredValue} from '../aspect-meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 
 @Injectable({providedIn: 'root'})
-export class PropertyModelService extends BaseModelService {
+export class AbstractPropertyModelService extends BaseModelService {
   constructor(
     namespacesCacheService: NamespacesCacheService,
     modelService: ModelService,
@@ -36,21 +36,23 @@ export class PropertyModelService extends BaseModelService {
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {
-    return metaModelElement instanceof DefaultProperty;
+    return metaModelElement instanceof DefaultAbstractProperty;
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement: DefaultProperty = MxGraphHelper.getModelElement(cell);
+    const metaModelElement: DefaultAbstractProperty = MxGraphHelper.getModelElement(cell);
     super.update(cell, form);
 
-    metaModelElement.extendedElement = form?.extends instanceof DefaultProperty ? form.extends : null;
+    metaModelElement.extendedElement = [DefaultProperty, DefaultAbstractProperty].some(c => form?.extends instanceof c)
+      ? form.extends
+      : null;
     metaModelElement.exampleValue = form.exampleValue;
 
     this.propertyRenderer.update({cell});
   }
 
   delete(cell: mxgraph.mxCell) {
-    const modelElement: DefaultProperty = MxGraphHelper.getModelElement(cell);
+    const modelElement: DefaultAbstractProperty = MxGraphHelper.getModelElement(cell);
 
     const parents = this.mxGraphService.resolveParents(cell);
     for (const parent of parents) {
@@ -62,8 +64,8 @@ export class PropertyModelService extends BaseModelService {
     }
 
     super.delete(cell);
-    this.entityValueService.onPropertyRemove(modelElement, () => {
-      this.mxGraphService.removeCells([cell]);
-    });
+    // this.entityValueService.onPropertyRemove(modelElement, () => {
+    //   this.mxGraphService.removeCells([cell]);
+    // });
   }
 }

@@ -18,6 +18,7 @@ import {
   Characteristic,
   Constraint,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -128,9 +129,9 @@ export class MxGraphVisitorHelper {
       .filter(e => !!e);
   }
 
-  static addExtends(entity: DefaultEntity | DefaultAbstractEntity): PropertyInformation {
-    if (entity.extendedElement !== null && entity.extendedElement !== undefined) {
-      return {label: `extends = ${entity.extendedElement.name}`, key: 'extends'};
+  static addExtends(element: any): PropertyInformation {
+    if (element.extendedElement !== null && element.extendedElement !== undefined) {
+      return {label: `extends = ${element.extendedElement.name}`, key: 'extends'};
     }
     return null;
   }
@@ -332,11 +333,16 @@ export class MxGraphVisitorHelper {
 
   static getPropertyProperties(property: DefaultProperty, languageSettingsService: LanguageSettingsService) {
     return [
+      MxGraphVisitorHelper.addExtends(property),
       ...MxGraphVisitorHelper.addLocalizedPreferredNames(property, languageSettingsService),
       ...MxGraphVisitorHelper.addLocalizedDescriptions(property, languageSettingsService),
       MxGraphVisitorHelper.addSee(property),
       MxGraphVisitorHelper.addExampleValue(property),
     ].filter(e => !!e);
+  }
+
+  static getAbstractPropertyProperties(abstractProperty: any, languageSettingsService: LanguageSettingsService) {
+    return this.getPropertyProperties(abstractProperty, languageSettingsService);
   }
 
   static getCharacteristicProperties(characteristic: DefaultCharacteristic, languageSettingsService: LanguageSettingsService) {
@@ -420,6 +426,10 @@ export class MxGraphVisitorHelper {
 
     if (element instanceof DefaultAbstractEntity) {
       return this.getAbstractEntityProperties(element, languageSettingsService);
+    }
+
+    if (element instanceof DefaultAbstractProperty) {
+      return this.getAbstractPropertyProperties(element, languageSettingsService);
     }
 
     return null;

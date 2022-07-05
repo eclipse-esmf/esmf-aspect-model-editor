@@ -58,7 +58,7 @@ export class EntityValueService {
     });
   }
 
-  onNewProperty(property: OverWrittenProperty, entity: DefaultEntity) {
+  onNewProperty(property: OverWrittenProperty<DefaultProperty>, entity: DefaultEntity) {
     const entityValues = this.currentCachedFile.getCachedEntityValues().filter(entityValue => entityValue.entity.name === entity.name);
     if (!entityValues.length) {
       return;

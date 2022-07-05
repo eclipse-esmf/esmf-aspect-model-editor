@@ -10,14 +10,13 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {Component, Input} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 
-import {Quad_Object} from 'n3';
-
-export interface InstantiatorListElement {
-  blankNode?: boolean;
-  quad: Quad_Object;
-  optional?: Quad_Object;
-  notInPayload?: Quad_Object;
-  payloadName?: Quad_Object;
-  extends?: Quad_Object;
+@Component({
+  selector: 'ame-abstract-property',
+  templateUrl: './abstract-property.component.html',
+})
+export class AbstractPropertyComponent {
+  @Input() parentForm: FormGroup;
 }
