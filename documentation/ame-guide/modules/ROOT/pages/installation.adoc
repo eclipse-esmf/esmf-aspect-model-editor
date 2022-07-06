@@ -18,7 +18,7 @@ Before you install the latest version of the Aspect Model Editor, make sure you 
 
 To install the Aspect Model Editor, proceed as follows:
 
-. Download the executable installation file from the https://github.com/bci-oss/rbs-aspect-model-editor/releases[Aspect Model Editor^, opts=nofollow] releases.
+. Download the executable installation file from the https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/releases[Aspect Model Editor^, opts=nofollow] releases.
 . Double-click the `.exe` file to run the installer.
 . Click *Next* on the Welcome screen.
 +

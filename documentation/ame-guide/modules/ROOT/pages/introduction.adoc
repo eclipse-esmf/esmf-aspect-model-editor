@@ -6,7 +6,7 @@
 The Aspect Model Editor is a visual editor for Aspect Models, which automatically validates the models against the open-source
 https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/index.html[BAMM Aspect Meta Model version 1.0.0^, opts=nofollow]. All concepts, possibilities, and restrictions defined by the BAMM Aspect Meta Model are incorporated in the Aspect Model Editor in a convenient way with a smart user flow.
 
-Typically, Aspect Models are edited as code, that is, text-based. With the Aspect Model Editor, such code gets visualized so that relationships and dependencies within the model can be understood quickly and easily. 
+Typically, Aspect Models are edited as code, that is, text-based. With the Aspect Model Editor, such code gets visualized so that relationships and dependencies within the model can be understood quickly and easily.
 
 Aspect Models can be exported as TTL files and imported from TTL files at any moment during the work on the model. By that, the Aspect Model Editor caters to all working preferences.
 
@@ -14,10 +14,10 @@ image::code_vs_editor.png[Code versus editor, width=100%]
 _Two ways of creating Aspect Models: text-based and graphically &ndash; with the Aspect Model Editor_
 
 == Target audience for the Aspect Model Editor
-The Aspect Model Editor focuses on practitioners, such as domain experts or data experts, who intend to efficiently build reusable Aspect Models for the data and data sources of their domain. 
+The Aspect Model Editor focuses on practitioners, such as domain experts or data experts, who intend to efficiently build reusable Aspect Models for the data and data sources of their domain.
 
 == Benefits
-Especially for expert teams who model Aspects together, the visual representation of Aspect Models provides a low entry barrier and easy understanding, and facilitates collaboration. 
+Especially for expert teams who model Aspects together, the visual representation of Aspect Models provides a low entry barrier and easy understanding, and facilitates collaboration.
 
 In addition to that, constant background validation ensures that your Aspect Models correspond to the BAMM Aspect Meta Model, enabling reusablity of your Aspect Models and automation of the downstream process steps for your Aspect Models.
 
@@ -40,9 +40,9 @@ Each Aspect references a particular Aspect Model, which, in a machine-readable w
 == License
 SPDX-License-Identifier: MPL-2.0
 
-This program and the accompanying materials are made under the terms of https://github.com/bci-oss/rbs-aspect-model-editor/blob/master/LICENSE[Mozilla Public License, V. 2.0^, opts=nofollow].
+This program and the accompanying materials are made under the terms of https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/blob/main/LICENSE[Mozilla Public License, V. 2.0^, opts=nofollow].
 
-All contained third-party materials are listed in the https://github.com/bci-oss/rbs-aspect-model-editor/blob/master/NOTICE.md[NOTICE.md^, opts=nofollow] file.
+All contained third-party materials are listed in the https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/blob/main/NOTICE.md[NOTICE.md^, opts=nofollow] file.
 
 &nbsp;
 

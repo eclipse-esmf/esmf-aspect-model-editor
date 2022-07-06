@@ -10,7 +10,7 @@
     "artifactName": "${name}-v${version}-${os}.${ext}",
     "win": {
       "target": "zip",
-      "icon": "./apps/ame/src/assets/img/png/aspect-model-editor-targetsize-256.png",
+      "icon": "./apps/ame/src/assets/img/png/aspect-model-editor-targetsize-192.png",
       "files": [
         "main.js",
         "dist",
@@ -28,7 +28,7 @@
     },
     "mac": {
       "target": "dmg",
-      "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-256.icns",
+      "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
       "files": [
         "main.js",
         "dist",
@@ -46,7 +46,7 @@
     },
     "linux": {
       "target": "tar.gz",
-      "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-256.icns",
+      "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
       "files": [
         "main.js",
         "dist",

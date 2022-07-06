@@ -43,7 +43,7 @@ async function cleanUpProcesses() {
 }
 
 function createWindow() {
-  const iconPathArray = ['..', 'apps', 'ame', 'src', 'assets', 'img', 'png', 'aspect-model-editor-targetsize-256.png'];
+  const iconPathArray = ['..', 'apps', 'ame', 'src', 'assets', 'img', 'png', 'aspect-model-editor-targetsize-192.png'];
   const iconPath = path.join(__dirname, ...iconPathArray);
 
   mainWindow = new BrowserWindow({

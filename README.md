@@ -14,7 +14,7 @@
 
 ## Introduction
 
-This project includes the Aspect model editor in and their documentation.
+This project includes the Aspect model editor and their documentation.
 
 ## Getting help
 
@@ -29,14 +29,6 @@ Are you having trouble with Aspect Model Editor? We want to help!
 #### Setup
 
 * Download & Install [Node.js](https://nodejs.org/en/download/)
-* Configure NPM Proxy (Required for downloading Cypress)
-    ```bash
-    npm config set proxy http://{user}:{password}@{proxy_host}:{proxy_port}
-    npm config set https-proxy http://{user}:{password}@{proxy_host}:{proxy_port}
-    ```
-* Configure NPM Registry
-  * Visit [BCI NPM Registry](https://artifactory.boschdevcloud.com) click on "Set Me Up" and follow the specified
-    instructions.
 
 #### Install & Run
 
