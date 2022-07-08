@@ -16,6 +16,7 @@ import {NamespacesCacheService} from '@ame/cache';
 import {
   BaseMetaModelElement,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -41,8 +42,9 @@ import {
   OperationVisitor,
   PropertyVisitor,
   UnitVisitor,
+  AbstractEntityVisitor,
+  AbstractPropertyVisitor,
 } from './visitor';
-import { AbstractEntityVisitor } from './visitor/abstract-entity';
 
 @Injectable()
 export class DomainModelToRdfService {
@@ -64,6 +66,7 @@ export class DomainModelToRdfService {
     private constraintVisitorService: ConstraintVisitor,
     private entityVisitorService: EntityVisitor,
     private abstractEntityVisitorService: AbstractEntityVisitor,
+    private abstractPropertyVisitorService: AbstractPropertyVisitor,
     private entityValueVisitor: EntityValueVisitor,
     private eventVisitorService: EventVisitor,
     private unitVisitorService: UnitVisitor,
@@ -111,6 +114,8 @@ export class DomainModelToRdfService {
       return this.aspectVisitorService;
     } else if (metaModelElement instanceof DefaultProperty) {
       return this.propertyVisitorService;
+    } else if (metaModelElement instanceof DefaultAbstractProperty) {
+      return this.abstractPropertyVisitorService;
     } else if (metaModelElement instanceof DefaultOperation) {
       return this.operationVisitorService;
     } else if (metaModelElement instanceof DefaultConstraint) {

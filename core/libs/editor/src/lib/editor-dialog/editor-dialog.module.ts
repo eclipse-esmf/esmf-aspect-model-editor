@@ -52,7 +52,7 @@ import {
   EntityValueViewComponent,
   EventComponent,
   ExampleValueInputFieldComponent,
-  ExtendsFieldComponent,
+  EntityExtendsFieldComponent,
   InputChiplistFieldComponent,
   IntegerInputFieldComponent,
   LanguageCodeInputFieldComponent,
@@ -88,6 +88,7 @@ import {
   UnitInputFieldComponent,
   UpperBoundInputFieldComponent,
   ValuesInputFieldComponent,
+  PropertyExtendsFieldComponent,
 } from './components';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {CommonModule} from '@angular/common';
@@ -180,7 +181,8 @@ import {FlexModule} from '@angular/flex-layout';
     StructuredValueComponent,
     StructuredValuePropertyFieldComponent,
     StructuredValuePropertiesComponent,
-    ExtendsFieldComponent,
+    EntityExtendsFieldComponent,
+    PropertyExtendsFieldComponent,
   ],
   exports: [ShapeSettingsComponent],
 })

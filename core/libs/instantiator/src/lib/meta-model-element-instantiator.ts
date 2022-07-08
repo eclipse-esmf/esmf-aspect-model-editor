@@ -406,6 +406,10 @@ export class MetaModelElementInstantiator {
       }
     });
 
+    if (!metaModelElement.name) {
+      this.setUniqueElementName(metaModelElement);
+    }
+
     if (typeQuad && !Util.isBlankNode(typeQuad.subject)) {
       (<Base>metaModelElement).aspectModelUrn = `${typeQuad.subject.value}`;
     } else {
@@ -414,10 +418,6 @@ export class MetaModelElementInstantiator {
 
     if (!(<Base>metaModelElement).metaModelVersion) {
       (<Base>metaModelElement).metaModelVersion = rdfModel.BAMM().version;
-    }
-
-    if (!metaModelElement.name) {
-      this.setUniqueElementName(metaModelElement);
     }
   }
 

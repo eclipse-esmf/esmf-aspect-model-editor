@@ -17,6 +17,7 @@ import {
   AbstractEntityAbstractPropertyConnectionHandler,
   AbstractEntityConnectionHandler,
   AbstractEntityPropertyConnectionHandler,
+  AbstractPropertyAbstractPropertyConnectionHandler,
   AspectConnectionHandler,
   AspectEventConnectionHandler,
   AspectPropertyConnectionHandler,
@@ -103,6 +104,7 @@ export class ShapeConnectorService {
     private propertyPropertyConnectionHandler: PropertyPropertyConnectionHandler,
     private propertyAbstractPropertyConnectionHandler: PropertyAbstractPropertyConnectionHandler,
     private abstractEntityAbstractPropertyConnectionHandler: AbstractEntityAbstractPropertyConnectionHandler,
+    private abstractPropertyAbstractPropertyConnectionHandler: AbstractPropertyAbstractPropertyConnectionHandler,
     private traitConnectionHandler: TraitConnectionHandler,
     private structuredValueConnectionHandler: StructuredValueConnectionHandler,
     private entityValueConnectionHandler: EntityValueConnectionHandler,
@@ -240,6 +242,9 @@ export class ShapeConnectorService {
         break;
       case ShapeConnectorUtil.isAbstractEntityAbstractPropertyConnection(parentModel, childModel):
         connectionHandler = this.abstractEntityAbstractPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isAbstractPropertyAbstractPropertyConnection(parentModel, childModel):
+        connectionHandler = this.abstractPropertyAbstractPropertyConnectionHandler;
         break;
       case ShapeConnectorUtil.isCollectionCharacteristicConnection(parentModel, childModel):
         connectionHandler = this.collectionCharacteristicConnectionHandler;

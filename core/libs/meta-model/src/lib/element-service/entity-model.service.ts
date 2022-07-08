@@ -16,7 +16,14 @@ import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 import {EntityValueService} from '@ame/editor';
-import {EntityRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {
+  EntityRenderService,
+  MxGraphAttributeService,
+  MxGraphHelper,
+  MxGraphService,
+  MxGraphShapeOverlayService,
+  MxGraphVisitorHelper,
+} from '@ame/mx-graph';
 import {
   Base,
   BaseMetaModelElement,
@@ -27,6 +34,7 @@ import {
   OverWrittenPropertyKeys,
 } from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
+import {LanguageSettingsService} from '@ame/settings-dialog';
 
 @Injectable({providedIn: 'root'})
 export class EntityModelService extends BaseModelService {
@@ -37,7 +45,8 @@ export class EntityModelService extends BaseModelService {
     private entityValueService: EntityValueService,
     private mxGraphService: MxGraphService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private entityRenderer: EntityRenderService
+    private entityRenderer: EntityRenderService,
+    private languageService: LanguageSettingsService
   ) {
     super(namespacesCacheService, modelService);
   }
@@ -48,8 +57,6 @@ export class EntityModelService extends BaseModelService {
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement: DefaultEntity = MxGraphHelper.getModelElement(cell);
-    super.update(cell, form);
-
     metaModelElement.extendedElement = [DefaultEntity, DefaultAbstractEntity].some(c => form?.extends instanceof c) ? form.extends : null;
 
     if (form.editedProperties) {
@@ -74,10 +81,12 @@ export class EntityModelService extends BaseModelService {
         });
     }
 
+    super.update(cell, form);
     this.entityRenderer.update({cell});
   }
 
   delete(cell: mxgraph.mxCell) {
+    this.updateExtends(cell);
     super.delete(cell);
     const modelElement = MxGraphHelper.getModelElement(cell);
     const outgoingEdges = this.mxGraphAttributeService.graph.getOutgoingEdges(cell);
@@ -112,5 +121,22 @@ export class EntityModelService extends BaseModelService {
       this.mxGraphService.updateEntityValuesWithCellReference(entityValuesToDelete);
       this.mxGraphService.removeCells([cell, ...entityValuesToDelete]);
     });
+  }
+
+  private updateExtends(cell: mxgraph.mxCell) {
+    const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
+    for (const edge of incomingEdges) {
+      const entity = MxGraphHelper.getModelElement<DefaultEntity>(edge.source);
+      if (!(entity instanceof DefaultEntity)) {
+        continue;
+      }
+
+      entity.extendedElement = null;
+      edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
+        MxGraphHelper.getModelElement(edge.source),
+        this.languageService
+      );
+      this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));
+    }
   }
 }

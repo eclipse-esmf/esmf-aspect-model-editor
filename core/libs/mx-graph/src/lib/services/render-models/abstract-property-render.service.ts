@@ -12,10 +12,11 @@
  */
 
 import {Injectable} from '@angular/core';
-import {DefaultAbstractEntity} from '@ame/meta-model';
+import {DefaultAbstractProperty} from '@ame/meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
+import {RendererUpdatePayload} from '../../models';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 import {NamespacesCacheService} from '@ame/cache';
@@ -24,7 +25,7 @@ import {ShapeConnectorService} from '@ame/connection';
 @Injectable({
   providedIn: 'root',
 })
-export class AbstractEntityRenderService extends BaseRenderService {
+export class AbstractPropertyRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
@@ -34,28 +35,24 @@ export class AbstractEntityRenderService extends BaseRenderService {
     super(mxGraphService, languageSettingsService);
   }
 
-  update({cell}) {
+  update({cell, callback}: RendererUpdatePayload) {
     this.handleExtendsElement(cell);
     this.renderParents(cell);
-    super.update({
-      cell,
-      callback: () => {
-        this.renderOptionalProperties(cell);
-      },
-    });
+
+    super.update({cell, callback});
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {
-    return MxGraphHelper.getModelElement(cell) instanceof DefaultAbstractEntity;
+    return MxGraphHelper.getModelElement(cell) instanceof DefaultAbstractProperty;
   }
 
   private handleExtendsElement(cell: mxgraph.mxCell) {
-    const metaModelElement = MxGraphHelper.getModelElement<DefaultAbstractEntity>(cell);
+    const metaModelElement = MxGraphHelper.getModelElement<DefaultAbstractProperty>(cell);
     if (!metaModelElement.extendedElement) {
       return;
     }
 
-    const extendsElement = metaModelElement.extendedElement as DefaultAbstractEntity;
+    const extendsElement = metaModelElement.extendedElement as DefaultAbstractProperty;
     const cachedEntity = this.namespacesCacheService.resolveCachedElement(extendsElement);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
     const entityCell = resolvedCell ? resolvedCell : this.mxGraphService.renderModelElement(extendsElement);

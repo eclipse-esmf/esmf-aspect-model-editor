@@ -57,9 +57,8 @@ export class AbstractEntityModelService extends BaseModelService {
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement: DefaultAbstractEntity = MxGraphHelper.getModelElement(cell);
-    super.update(cell, form);
     metaModelElement.extendedElement = form?.extends instanceof DefaultAbstractEntity ? form.extends : null;
-
+    
     if (form.editedProperties) {
       for (const {property, keys} of metaModelElement.properties) {
         const newKeys: OverWrittenPropertyKeys = form.editedProperties[property.aspectModelUrn];
@@ -81,7 +80,8 @@ export class AbstractEntityModelService extends BaseModelService {
           }
         });
     }
-
+    
+    super.update(cell, form);
     this.abstractEntityRenderer.update({cell});
   }
 

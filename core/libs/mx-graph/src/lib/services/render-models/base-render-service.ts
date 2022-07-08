@@ -75,4 +75,18 @@ export abstract class BaseRenderService {
       ?.getAllCells()
       ?.find(cell => MxGraphHelper.getModelElement(cell)?.aspectModelUrn === modelElement?.aspectModelUrn);
   }
+
+  protected renderParents(cell: mxgraph.mxCell) {
+    const parents = this.mxGraphService.resolveParents(cell);
+
+    for (const parent of parents) {
+      const parentMetaModel = MxGraphHelper.getModelElement(parent);
+      parent['configuration'].fields = MxGraphVisitorHelper.getElementProperties(parentMetaModel, this.languageSettingsService);
+      parent['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(
+        parentMetaModel,
+        MxGraphHelper.getModelElement(this.mxGraphService.mxGraphShapeSelectorService.getAspectCell())
+      );
+      this.graph.labelChanged(parent, MxGraphHelper.createPropertiesLabel(parent));
+    }
+  }
 }
