@@ -99,7 +99,8 @@ export class ModelService {
           try {
             return this.instantiatorService.instantiateFile(checkedRdfModel, this.currentCachedFile, 'currentFileName').aspect;
           } catch (e) {
-            console.error(e);
+            console.groupCollapsed('model.service -> loadRDFmodel', e);
+            console.groupEnd();
             throw new Error('Instantiator cannot load model!');
           }
         }),
@@ -108,12 +109,17 @@ export class ModelService {
         catchError(err =>
           throwError(() => {
             // TODO add the real problem maybe ...
+             console.groupCollapsed('model.service -> loadRDFmodel', err);
+             console.groupEnd();
             this.logService.logError(`Error while loading the model. ${JSON.stringify(err.message)}.`);
             return err.message;
           })
         )
       );
     } catch (error: any) {
+      console.groupCollapsed('model.service -> loadRDFmodel', error);
+      console.groupEnd();
+
       return throwError(() => error.message);
     }
   }

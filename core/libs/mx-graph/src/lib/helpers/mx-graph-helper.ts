@@ -302,7 +302,10 @@ export class MxGraphHelper {
       title.classList.add('simple');
     } else {
       iconsBar && !(modelElement instanceof DefaultEntityValue) && div.appendChild(iconsBar);
-      for (const conf of cell['configuration']?.fields || []) {
+      const fields = cell['configuration']?.fields || [];
+      const extendedFields = fields.filter(({extended}) => extended);
+      const normalFields = fields.filter(({extended}) => !extended);
+      for (const conf of [...normalFields, ...extendedFields]) {
         div.appendChild(this.createSpanElement(conf));
       }
     }
@@ -367,9 +370,10 @@ export class MxGraphHelper {
 
   private static createSpanElement(content: PropertyInformation) {
     const span = document.createElement('span');
+    content.extended && (span.style.opacity = '0.75');
     span.classList.add('element-info');
     const sanitizedLabel = `${content.label}`.replace(/\n/g, ' ');
-    span.title = content.label;
+    span.title = (content.extended ? 'Inherited\n' : '') + content.label;
     span.innerText = sanitizedLabel;
     span.dataset.key = content.key;
     span.dataset.lang = content.lang || '';
@@ -382,7 +386,7 @@ export class MxGraphHelper {
   }
 
   static getNamespaceFromElement(element: BaseMetaModelElement) {
-    const [namespace] = element.aspectModelUrn.split('#');
+    const [namespace] = element?.aspectModelUrn.split('#') || ['', ''];
     const splitted = namespace.split(':');
     return [splitted.pop(), splitted.pop()];
   }

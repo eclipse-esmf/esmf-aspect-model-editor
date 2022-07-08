@@ -12,11 +12,12 @@
  */
 
 import {AspectModelVisitor} from '@ame/mx-graph';
-import {Base, BaseMetaModelElement} from './base';
+import {BaseMetaModelElement} from './base';
+import {CanExtendsWithProperties} from './can-extend';
 import {Entity} from './default-entity';
 import {OverWrittenProperty} from './overwritten-property';
 
-export class DefaultAbstractEntity extends Base implements Entity {
+export class DefaultAbstractEntity extends CanExtendsWithProperties implements Entity {
   public extendedElement: DefaultAbstractEntity;
 
   public get className(): string {
@@ -27,40 +28,8 @@ export class DefaultAbstractEntity extends Base implements Entity {
     return this.properties;
   }
 
-  public get extendedProperties(): OverWrittenProperty[] {
-    if (this.extendedElement instanceof DefaultAbstractEntity) {
-      return this.extendedElement.properties;
-    }
-
-    return [];
-  }
-
   public get allProperties(): OverWrittenProperty[] {
     return [...(this.extendedProperties || []), ...this.properties];
-  }
-
-  public get extendedPreferredName() {
-    if (!this.extendedElement) {
-      return null;
-    }
-
-    return this.extendedElement.preferredNames.size ? this.extendedElement.preferredNames : this.extendedElement.extendedPreferredName;
-  }
-
-  public get extendedDescription() {
-    if (!this.extendedElement) {
-      return null;
-    }
-
-    return this.extendedElement.descriptions.size ? this.extendedElement.descriptions : this.extendedElement.extendedDescription;
-  }
-
-  public get extendedSee() {
-    if (!this.extendedElement) {
-      return null;
-    }
-
-    return this.extendedElement.see?.length ? this.extendedElement.see : this.extendedElement.extendedSee;
   }
 
   constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public properties: OverWrittenProperty[] = []) {

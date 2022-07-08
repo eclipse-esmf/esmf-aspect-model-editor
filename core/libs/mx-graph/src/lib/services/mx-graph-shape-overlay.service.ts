@@ -18,6 +18,7 @@ import {MxGraphHelper, MxGraphVisitorHelper, PropertyInformation} from '../helpe
 import {mxCellOverlay, mxConstants, mxEvent, mxImage} from '../providers';
 import {
   BaseMetaModelElement,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -163,11 +164,7 @@ export class MxGraphShapeOverlayService {
       let overlayTooltip = 'Add ';
       let modelInfo = ModelInfo.IS_CHARACTERISTIC;
 
-      if (modelElement instanceof DefaultConstraint) {
-        return;
-      }
-
-      if (modelElement instanceof DefaultEntityValue) {
+      if ([DefaultConstraint, DefaultEntityValue, DefaultAbstractProperty].some(c => modelElement instanceof c)) {
         return;
       }
 

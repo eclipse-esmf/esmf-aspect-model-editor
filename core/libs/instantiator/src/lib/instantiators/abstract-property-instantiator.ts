@@ -61,7 +61,7 @@ export class AbstractPropertyInstantiator {
 
       if (bamm.isExtendsProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getProperty({quad: quad.object}, extractedAbstractProperty => {
-          property.extendedElement = extractedAbstractProperty;
+          property.extendedElement = extractedAbstractProperty?.property;
         });
       }
     }

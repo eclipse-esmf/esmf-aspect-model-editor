@@ -97,7 +97,9 @@ export class ElementModelService {
 
     if (
       (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultAbstractEntity) ||
-      (sourceModelElement instanceof DefaultProperty && targetModelElement instanceof DefaultAbstractProperty)
+      (sourceModelElement instanceof DefaultProperty && targetModelElement instanceof DefaultAbstractProperty) ||
+      (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultEntity) ||
+      (sourceModelElement instanceof DefaultProperty && targetModelElement instanceof DefaultProperty)
     ) {
       sourceModelElement.extendedElement = null;
       edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(

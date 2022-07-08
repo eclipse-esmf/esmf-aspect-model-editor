@@ -836,6 +836,26 @@ export class PropertyAbstractPropertyConnectionHandler
 @Injectable({
   providedIn: 'root',
 })
+export class AbstractPropertyAbstractPropertyConnectionHandler
+  extends PropertyInheritanceConnector
+  implements ShapeMultiConnector<DefaultAbstractProperty, DefaultAbstractProperty>
+{
+  constructor(
+    protected mxGraphService: MxGraphService,
+    protected mxGraphAttributeService: MxGraphAttributeService,
+    protected languageSettingsService: LanguageSettingsService
+  ) {
+    super(mxGraphService, mxGraphAttributeService, languageSettingsService);
+  }
+
+  public connect(parentMetaModel: DefaultAbstractProperty, childMetaModel: DefaultAbstractProperty, parentCell: mxCell, childCell: mxCell) {
+    super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class AbstractEntityAbstractPropertyConnectionHandler
   implements ShapeMultiConnector<DefaultAbstractEntity, DefaultAbstractProperty>
 {

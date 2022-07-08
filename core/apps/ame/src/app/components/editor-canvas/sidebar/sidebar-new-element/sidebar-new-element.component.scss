@@ -16,6 +16,13 @@
   flex-direction: column;
   box-sizing: border-box;
   padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
 
   > *:not(:last-child) {
     margin-bottom: 20px;

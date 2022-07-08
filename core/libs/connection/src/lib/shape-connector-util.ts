@@ -93,6 +93,10 @@ export class ShapeConnectorUtil {
     return parentModel instanceof DefaultAbstractEntity && childModel instanceof DefaultAbstractProperty;
   }
 
+  static isAbstractPropertyAbstractPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return parentModel instanceof DefaultAbstractProperty && childModel instanceof DefaultAbstractProperty;
+  }
+
   static isAspectEventConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
     return parentModel instanceof DefaultAspect && childModel instanceof DefaultEvent;
   }

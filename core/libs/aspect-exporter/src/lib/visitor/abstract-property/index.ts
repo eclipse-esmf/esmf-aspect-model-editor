@@ -11,5 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './example-value-input-field/example-value-input-field.component';
-export * from './extends-field/extends-field.component';
+export * from './abstract-property-visitor';

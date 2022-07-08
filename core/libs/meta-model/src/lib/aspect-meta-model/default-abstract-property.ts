@@ -11,16 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement} from './base';
+import {BaseMetaModelElement} from './base';
 import {AspectModelVisitor} from '@ame/mx-graph';
-import {OverWrittenProperty} from './overwritten-property';
+import {CanExtend} from './can-extend';
 
-interface AbstractProperty extends BaseMetaModelElement {
+interface AbstractProperty {
   exampleValue?: any;
 }
 
-export class DefaultAbstractProperty extends Base implements AbstractProperty {
-  public extendedElement: OverWrittenProperty<DefaultAbstractProperty>;
+export class DefaultAbstractProperty extends CanExtend implements AbstractProperty {
+  public extendedElement: DefaultAbstractProperty;
 
   static createInstance() {
     return new DefaultAbstractProperty(null, null, 'abstractProperty', null);

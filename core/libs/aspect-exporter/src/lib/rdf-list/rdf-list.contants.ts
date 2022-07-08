@@ -13,6 +13,7 @@
 
 import {
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultEntity,
   DefaultEnumeration,
@@ -40,11 +41,17 @@ export const getRelations = (bamm: Bamm, bammc: Bammc): Relations[] => [
   },
   {
     source: DefaultEntity,
-    children: [{type: DefaultProperty, predicate: bamm.PropertiesProperty()}],
+    children: [
+      {type: DefaultProperty, predicate: bamm.PropertiesProperty()},
+      {type: DefaultAbstractProperty, predicate: bamm.PropertiesProperty()},
+    ],
   },
   {
     source: DefaultAbstractEntity,
-    children: [{type: DefaultProperty, predicate: bamm.PropertiesProperty()}],
+    children: [
+      {type: DefaultProperty, predicate: bamm.PropertiesProperty()},
+      {type: DefaultAbstractProperty, predicate: bamm.PropertiesProperty()},
+    ],
   },
   {
     source: DefaultEnumeration,

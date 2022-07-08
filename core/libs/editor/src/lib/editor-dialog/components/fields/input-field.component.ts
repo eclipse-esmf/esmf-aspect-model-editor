@@ -18,6 +18,7 @@ import {Observable, of, startWith, Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {
   BaseMetaModelElement,
+  CanExtend,
   DefaultAbstractEntity,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -55,8 +56,8 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
     return this.namespacesCacheService.getCurrentCachedFile();
   }
 
-  get elementWithEntityType() {
-    return this.metaModelElement as any as DefaultEntity;
+  get elementExtends() {
+    return this.metaModelElement as  any as CanExtend;
   }
 
   protected constructor(
@@ -185,6 +186,21 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
       startWith(''),
       map((value: string) => {
         const properties: Array<FilteredType> = this.currentCachedFile.getCachedProperties()?.map(property => ({
+          name: property.name,
+          description: property.getDescription('en') || '',
+          urn: property.aspectModelUrn,
+        }));
+        return [...properties, ...this.searchExtProperty(value)]?.filter(type => this.inSearchList(type, value));
+      }),
+      startWith([])
+    );
+  }
+
+  initFilteredAbstractPropertyTypes(control: FormControl): Observable<Array<FilteredType>> {
+    return control?.valueChanges.pipe(
+      startWith(''),
+      map((value: string) => {
+        const properties: Array<FilteredType> = this.currentCachedFile.getCachedAbstractProperties()?.map(property => ({
           name: property.name,
           description: property.getDescription('en') || '',
           urn: property.aspectModelUrn,

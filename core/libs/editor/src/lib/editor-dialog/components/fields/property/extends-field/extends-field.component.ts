@@ -1,5 +1,5 @@
 import {NamespacesCacheService} from '@ame/cache';
-import {DefaultEntity, DefaultAbstractEntity} from '@ame/meta-model';
+import {DefaultProperty, DefaultAbstractProperty} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {NotificationsService, SearchService} from '@ame/shared';
@@ -11,12 +11,12 @@ import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
-  selector: 'ame-entity-extends-field',
+  selector: 'ame-property-extends-field',
   templateUrl: './extends-field.component.html',
   styleUrls: ['./extends-field.component.scss'],
 })
-export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEntity> implements OnInit, OnDestroy {
-  public filteredAbstractEntities$: Observable<any[]>;
+export class PropertyExtendsFieldComponent extends InputFieldComponent<DefaultProperty> implements OnInit, OnDestroy {
+  public filteredAbstractProperties$: Observable<any[]>;
 
   public extendsValueControl: FormControl;
   public extendsControl: FormControl;
@@ -64,13 +64,13 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
               this.namespacesCacheService,
               this.metaModelElement,
               this.rdfService.externalRdfModels,
-              DefaultAbstractEntity
+              DefaultAbstractProperty
             ),
             EditorDialogValidators.duplicateNameWithDifferentType(
               this.namespacesCacheService,
               this.metaModelElement,
               this.rdfService.externalRdfModels,
-              DefaultEntity
+              DefaultProperty
             ),
           ],
         }
@@ -88,9 +88,9 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
     this.extendsValueControl = this.parentForm.get('extendsValue') as FormControl;
     this.extendsControl = this.parentForm.get('extends') as FormControl;
 
-    this.filteredAbstractEntities$ = combineLatest([
-      this.metaModelElement instanceof DefaultEntity ? this.initFilteredEntities(this.extendsValueControl) : of([]),
-      this.initFilteredAbstractEntities(this.extendsValueControl),
+    this.filteredAbstractProperties$ = combineLatest([
+      this.metaModelElement instanceof DefaultProperty ? this.initFilteredPropertyTypes(this.extendsValueControl) : of([]),
+      this.initFilteredAbstractPropertyTypes(this.extendsValueControl),
     ]).pipe(map(([a, b]) => [...a, ...b].filter(e => e.name !== this.metaModelElement.name)));
   }
 
@@ -99,43 +99,43 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
       return; // happens on reset form
     }
 
-    let foundEntity: DefaultEntity | DefaultAbstractEntity = this.currentCachedFile
-      .getCachedAbstractEntities()
-      .find(entity => entity.aspectModelUrn === newValue.urn);
+    let foundProperty: any = this.currentCachedFile
+      .getCachedAbstractProperties()
+      .find(abstractProperty => abstractProperty.aspectModelUrn === newValue.urn);
 
-    if (!foundEntity) {
-      foundEntity = this.currentCachedFile.getCachedEntities().find(entity => entity.aspectModelUrn === newValue.urn) as DefaultEntity;
+    if (!foundProperty) {
+      foundProperty = this.currentCachedFile.getCachedProperties().find(property => property.aspectModelUrn === newValue.urn);
     }
 
-    if (!foundEntity) {
-      foundEntity = this.namespacesCacheService.findElementOnExtReference<DefaultEntity>(newValue.urn);
+    if (!foundProperty) {
+      foundProperty = this.namespacesCacheService.findElementOnExtReference<DefaultProperty>(newValue.urn);
     }
 
-    this.parentForm.setControl('extends', new FormControl(foundEntity));
+    this.parentForm.setControl('extends', new FormControl(foundProperty));
 
     this.extendsValueControl.patchValue(newValue.name);
-    this.extendsControl.setValue(foundEntity);
+    this.extendsControl.setValue(foundProperty);
     this.extendsValueControl.disable();
   }
 
-  createNewAbstractEntity(entityName: string) {
-    if (!this.isUpperCase(entityName)) {
+  createNewAbstractProperty(propertyName: string) {
+    if (!this.isLowerCase(propertyName)) {
       return;
     }
 
-    const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${entityName}`;
+    const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${propertyName}`;
 
-    if (this.metaModelElement.aspectModelUrn === urn || this.parentForm.get('name').value === entityName) {
+    if (this.metaModelElement.aspectModelUrn === urn || this.parentForm.get('name').value === propertyName) {
       this.notificationsService.error('Element left cannot link itself');
       this.extendsValueControl.setValue('');
       return;
     }
 
-    const newAbstractEntity = new DefaultAbstractEntity(this.metaModelElement.metaModelVersion, urn, entityName, []);
-    this.parentForm.setControl('extends', new FormControl(newAbstractEntity));
+    const newAbstractProperty = new DefaultAbstractProperty(this.metaModelElement.metaModelVersion, urn, propertyName, null);
+    this.parentForm.setControl('extends', new FormControl(newAbstractProperty));
 
-    this.extendsValueControl.patchValue(entityName);
-    this.extendsControl.setValue(newAbstractEntity);
+    this.extendsValueControl.patchValue(propertyName);
+    this.extendsControl.setValue(newAbstractProperty);
     this.extendsValueControl.disable();
   }
 

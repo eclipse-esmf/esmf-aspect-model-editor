@@ -13,7 +13,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, DefaultEntity} from '@ame/meta-model';
+import {BaseMetaModelElement, CanExtend} from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -35,8 +35,18 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
   getCurrentValue() {
     return (
       this.previousData?.[this.fieldName] ||
-      ((this.metaModelElement as DefaultEntity)?.extendedSee || this.metaModelElement?.getSeeReferences())?.join(',') ||
+      this.metaModelElement?.getSeeReferences()?.join(',') ||
+      (this.metaModelElement as CanExtend)?.extendedSee?.join(',') ||
       ''
+    );
+  }
+
+  get isInherited(): boolean {
+    const control = this.parentForm.get(this.fieldName);
+    return (
+      this.metaModelElement instanceof CanExtend &&
+      this.metaModelElement.extendedSee &&
+      control.value === this.metaModelElement.extendedSee?.join(',')
     );
   }
 
@@ -49,10 +59,7 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
       new FormControl(
         {
           value: this.decodeUriComponent(this.getCurrentValue()),
-          disabled:
-            this.metaModelDialogService.isReadOnly() ||
-            (this.metaModelElement as DefaultEntity).extendedSee ||
-            this.metaModelElement?.isExternalReference(),
+          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
         },
         {
           validators: [EditorDialogValidators.seeURI],

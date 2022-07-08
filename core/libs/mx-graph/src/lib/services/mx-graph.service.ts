@@ -21,7 +21,7 @@ import {environment} from 'environments/environment';
 import {MxGraphGeometryProviderService, MxGraphSetupService} from '.';
 import {MxGraphCharacteristicHelper, MxGraphHelper, PropertyInformation} from '../helpers';
 import {mxCell, mxConstants, mxUtils} from '../providers';
-import {Base, BaseMetaModelElement, DefaultAbstractEntity, DefaultEntity, DefaultEntityValue} from '@ame/meta-model';
+import {Base, BaseMetaModelElement, DefaultEntityValue} from '@ame/meta-model';
 import {MxAttributeName} from '../models';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {CollapsedOverlay, ExpandedOverlay, NotificationsService} from '@ame/shared';

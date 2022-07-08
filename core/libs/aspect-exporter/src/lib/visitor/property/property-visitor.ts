@@ -33,6 +33,7 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
   visit(cell: mxgraph.mxCell): DefaultProperty {
     const property: DefaultProperty = MxGraphHelper.getModelElement<DefaultProperty>(cell);
     this.setPrefix(property.aspectModelUrn);
+    this.addExtends(property);
     this.addProperties(property);
     this.addCharacteristic(property);
     return property;
@@ -64,6 +65,19 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
       DataFactory.namedNode(property.aspectModelUrn),
       this.rdfService.currentRdfModel.BAMM().CharacteristicProperty(),
       DataFactory.namedNode(property.characteristic.aspectModelUrn)
+    );
+  }
+
+  private addExtends(property: DefaultProperty) {
+    if (!property.extendedElement) {
+      return;
+    }
+
+    this.setPrefix(property.extendedElement.aspectModelUrn);
+    this.store.addQuad(
+      DataFactory.namedNode(property.aspectModelUrn),
+      this.rdfService.currentRdfModel.BAMM().ExtendsProperty(),
+      DataFactory.namedNode(property.extendedElement.aspectModelUrn)
     );
   }
 }

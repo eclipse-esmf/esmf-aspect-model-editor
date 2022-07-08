@@ -84,7 +84,7 @@ export class PropertyInstantiator {
 
       if (bamm.isExtendsProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getProperty({quad: quad.object}, extractedProperty => {
-          property.extendedElement = extractedProperty;
+          property.extendedElement = extractedProperty?.property;
         });
       }
     }

@@ -15,11 +15,10 @@ import {Injectable} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
-import {EntityValueService} from '@ame/editor';
-import {MxGraphHelper, MxGraphService, PropertyRenderService} from '@ame/mx-graph';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper, AbstractPropertyRenderService} from '@ame/mx-graph';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
-import {DefaultAbstractProperty, DefaultProperty, DefaultStructuredValue} from '../aspect-meta-model';
+import {DefaultAbstractProperty} from '../aspect-meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 
 @Injectable({providedIn: 'root'})
@@ -27,10 +26,10 @@ export class AbstractPropertyModelService extends BaseModelService {
   constructor(
     namespacesCacheService: NamespacesCacheService,
     modelService: ModelService,
-    private entityValueService: EntityValueService,
     private mxGraphService: MxGraphService,
-    private languageSettingsService: LanguageSettingsService,
-    private propertyRenderer: PropertyRenderService
+    private abstractPropertyRenderer: AbstractPropertyRenderService,
+    private mxGraphAttributeService: MxGraphAttributeService,
+    private languageService: LanguageSettingsService
   ) {
     super(namespacesCacheService, modelService);
   }
@@ -41,31 +40,29 @@ export class AbstractPropertyModelService extends BaseModelService {
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement: DefaultAbstractProperty = MxGraphHelper.getModelElement(cell);
-    super.update(cell, form);
-
-    metaModelElement.extendedElement = [DefaultProperty, DefaultAbstractProperty].some(c => form?.extends instanceof c)
-      ? form.extends
-      : null;
+    metaModelElement.extendedElement = form?.extends instanceof DefaultAbstractProperty ? form.extends : null;
     metaModelElement.exampleValue = form.exampleValue;
 
-    this.propertyRenderer.update({cell});
+    super.update(cell, form);
+    this.abstractPropertyRenderer.update({cell});
   }
 
   delete(cell: mxgraph.mxCell) {
-    const modelElement: DefaultAbstractProperty = MxGraphHelper.getModelElement(cell);
-
-    const parents = this.mxGraphService.resolveParents(cell);
-    for (const parent of parents) {
-      const parentModel = MxGraphHelper.getModelElement(parent);
-      if (parentModel instanceof DefaultStructuredValue) {
-        parentModel.delete(modelElement);
-        MxGraphHelper.updateLabel(parent, this.mxGraphService.graph, this.languageSettingsService);
-      }
-    }
-
+    this.updateExtends(cell);
     super.delete(cell);
-    // this.entityValueService.onPropertyRemove(modelElement, () => {
-    //   this.mxGraphService.removeCells([cell]);
-    // });
+    this.mxGraphService.graph.removeCells([cell]);
+  }
+
+  private updateExtends(cell: mxgraph.mxCell) {
+    const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
+    for (const edge of incomingEdges) {
+      const abstractProperty = MxGraphHelper.getModelElement<DefaultAbstractProperty>(edge.source);
+      abstractProperty.extendedElement = null;
+      edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
+        MxGraphHelper.getModelElement(edge.source),
+        this.languageService
+      );
+      this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));
+    }
   }
 }
