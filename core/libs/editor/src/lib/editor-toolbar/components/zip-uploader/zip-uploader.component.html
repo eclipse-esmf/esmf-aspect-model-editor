@@ -11,31 +11,40 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<ng-container *ngIf="!imported && !hasFilesToReplace">
+<ng-container *ngIf="readyToImport">
   <h2 mat-dialog-title *ngIf="state?.loading" class="properties-title">Validating {{ data.name }}</h2>
   <h2 *ngIf="!state?.loading" class="properties-title">Validation result summary for {{ data.name }}</h2>
-  <p *ngIf="!state?.loading && (hasError$ | async) === false">
-    The Aspect Model Package {{ data.name }} has been validated and can be imported.
+  <p *ngIf="!state?.loading && (hasError$ | async) === false && !hasMissingFiles && readyToImport">
+    The Aspect Model Package <b>{{ data.name }}</b> has been validated and <b>can be imported</b>.
+  </p>
+  <p *ngIf="!state?.loading && (hasError$ | async) === false && hasMissingFiles">
+    The Aspect Model Package <b>{{ data.name }}</b> can not be imported due to <b>missing files</b>.
   </p>
 </ng-container>
 
-<ng-container *ngIf="!imported && hasFilesToReplace">
+<ng-container *ngIf="!imported && hasFilesToReplace && !readyToImport">
   <h2 mat-dialog-title class="properties-title">Namespace conflict</h2>
   <p>The following namespace(s) already exist. Please choose whether you want to keep the existing or replace.</p>
 </ng-container>
 
 <ng-container *ngIf="imported">
-  <h2 mat-dialog-title class="properties-title">Import result summary for {{ data.name }}</h2>
-  <p>The Aspect Model Package {{ data.name }} has been imported. All contained namespaces are now included in your workspace.</p>
+  <h2 mat-dialog-title class="properties-title">
+    Import result summary for <b>{{ data.name }}</b>
+  </h2>
+  <p>
+    The Aspect Model Package <b>{{ data.name }}</b> has been imported. All contained namespaces are now included in your workspace.
+  </p>
 </ng-container>
 
 <mat-dialog-content *ngIf="(hasError$ | async) === false && !state?.loading">
   <ame-workspace-summary
     [summary]="state.rawResponse"
+    [readyToImport]="readyToImport"
     (replace)="replaceNamespace($event)"
     (keep)="keepNamespace($event)"
     (namespacesToImport)="namespacesToReplace = $event"
-    (hasNamespacesToOverwrite)="hasFilesToReplace = $event"
+    (hasNamespacesToOverwrite)="onHasFilesToReplace($event)"
+    (hasMissingFiles)="hasMissingFiles = $event"
   ></ame-workspace-summary>
 </mat-dialog-content>
 
@@ -54,7 +63,14 @@
 <mat-dialog-actions align="end">
   <button mat-flat-button *ngIf="imported" (click)="dismiss()">Dismiss</button>
   <button mat-flat-button *ngIf="!imported" [disabled]="replacingFiles" (click)="cancel()">Cancel</button>
-  <button mat-flat-button color="primary" *ngIf="namespacesToReplace?.length" [disabled]="replacingFiles" (click)="replace()">
+  <button mat-flat-button *ngIf="namespacesToReplace?.length && !readyToImport" (click)="readyToImport = true">Next</button>
+  <button
+    mat-flat-button
+    color="primary"
+    *ngIf="namespacesToReplace?.length && readyToImport && !hasMissingFiles"
+    [disabled]="replacingFiles"
+    (click)="replace()"
+  >
     Import
   </button>
 </mat-dialog-actions>

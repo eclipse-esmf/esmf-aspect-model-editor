@@ -421,6 +421,7 @@ export class MetaModelElementInstantiator {
         null,
         5000
       );
+      return {externalRdfModel: null, externalReference: null};
     }
 
     skipSetExternal || (externalReference as any).setExternalReference(true);

@@ -27,6 +27,8 @@ import {NotificationsService} from '@ame/shared';
 export class ZipUploaderComponent implements OnInit {
   @ViewChild(WorkspaceSummaryComponent) summaryComponent: WorkspaceSummaryComponent;
 
+  private _readyToImport = false;
+
   public readonly icons = {
     violation: 'error',
     success: 'done',
@@ -41,6 +43,15 @@ export class ZipUploaderComponent implements OnInit {
   public replacingFiles = false;
   public hasFilesToReplace = false;
   public imported = false;
+  public hasMissingFiles = false;
+
+  public set readyToImport(value: boolean) {
+    this._readyToImport = value;
+  }
+
+  public get readyToImport() {
+    return this._readyToImport;
+  }
 
   get hasError$() {
     return this.zipImporterService.hasError$;
@@ -66,6 +77,11 @@ export class ZipUploaderComponent implements OnInit {
     });
 
     this.state.subscription = subscription;
+  }
+
+  onHasFilesToReplace(hasFilesToReplace: boolean) {
+    this.hasFilesToReplace = hasFilesToReplace;
+    this.readyToImport = !hasFilesToReplace;
   }
 
   dismiss() {

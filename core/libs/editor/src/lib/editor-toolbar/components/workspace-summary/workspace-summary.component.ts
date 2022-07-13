@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core';
 import {NotificationsService} from '@ame/shared';
 
 enum VisibleStep {
@@ -27,8 +27,10 @@ enum VisibleStep {
   templateUrl: './workspace-summary.component.html',
   styleUrls: ['./workspace-summary.component.scss'],
 })
-export class WorkspaceSummaryComponent {
+export class WorkspaceSummaryComponent implements AfterViewInit {
   @Input() summary;
+  @Input() readyToImport: boolean;
+  @Output() hasMissingFiles = new EventEmitter<boolean>();
   @Output() namespacesToImport = new EventEmitter<string[]>();
   @Output() hasNamespacesToOverwrite = new EventEmitter<boolean>();
   @Output() replace = new EventEmitter();
@@ -51,7 +53,11 @@ export class WorkspaceSummaryComponent {
   public selectedFilesToReplace: string[] = [];
   public filesForWorkspace: string[] = [];
 
-  get namespaces() {
+  public namespaces: {[key: string]: any};
+
+  constructor(private notificationService: NotificationsService) {}
+
+  ngAfterViewInit(): void {
     if (!Object.keys(this.validations).length) {
       this.incorrectFiles = this.summary?.incorrectFiles || [];
       const replaceNamespacesSet = new Set<string>();
@@ -82,7 +88,7 @@ export class WorkspaceSummaryComponent {
         const errors = (value?.validationReport?.validationErrors || []).map(error => {
           error.focusNode = error.focusNode?.split('#')[1];
           error.resultSeverity = error.resultSeverity?.split('#')[1]?.toLowerCase();
-          error.resultMessage = error.resultMessage?.replace(/ \(see focusNode\)/g, '');
+          error.resultMessage = error.resultMessage?.replace(/ \(see focusNode\)/g, '').split('\n');
           return error;
         });
 
@@ -94,11 +100,25 @@ export class WorkspaceSummaryComponent {
 
       this.namespacesToImport.emit(this.filesForWorkspace);
       this.hasNamespacesToOverwrite.emit(this.hasFilesToOverwrite);
-    }
-    return this.validations;
-  }
 
-  constructor(private notificationService: NotificationsService) {}
+      if (this.summary?.missingFiles) {
+        this.missingFiles = this.summary.missingFiles?.map(data => {
+          const [analysedFile] = (data.analysedFile || '').split('/').reverse();
+          const errorMessage = data.errorMessage.split('\n');
+
+          return {
+            analysedFile,
+            errorMessage,
+            missingFile: data.missingFile,
+          };
+        });
+      }
+
+      this.hasMissingFiles.emit(this.missingFiles?.length > 0);
+    }
+
+    this.namespaces = this.validations;
+  }
 
   replaceNamespace(namespace: string) {
     this.replace.emit(namespace);

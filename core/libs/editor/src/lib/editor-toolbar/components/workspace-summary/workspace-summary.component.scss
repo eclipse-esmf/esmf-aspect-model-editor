@@ -27,6 +27,16 @@
   }
 }
 
+mat-selection-list {
+  & > *:not(:first-child) {
+    margin-top: 10px;
+  }
+
+  & > :last-child {
+    margin-bottom: 10px;
+  }
+}
+
 .dialog-content {
   display: flex;
   width: 100%;
@@ -52,7 +62,8 @@
   }
 
   .errors-column {
-    width: 600px;
+    min-width: 600px;
+    max-width: 840px;
     padding-top: 15px;
   }
 

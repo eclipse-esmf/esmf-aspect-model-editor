@@ -192,6 +192,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
 
   private initNamespaces() {
     this.modelApiService.getAllNamespaces().subscribe((data: string[]) => {
+      this.sidebarService.resetNamespaces();
       data.forEach((namespace: string) => {
         const namespaceParts = namespace.split(':');
         const namespaceFolder = namespace.slice(0, namespace.lastIndexOf(':'));

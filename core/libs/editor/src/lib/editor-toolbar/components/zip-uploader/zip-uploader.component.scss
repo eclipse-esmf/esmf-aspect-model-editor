@@ -16,8 +16,8 @@
   flex-direction: column;
   justify-content: space-between;
   max-height: 75vh;
-  min-width: 45vw;
-  max-width: 70vw;
+  min-width: 75vw;
+  max-width: 75vw;
 }
 
 h2[mat-dialog-title] {
@@ -31,7 +31,7 @@ h2[mat-dialog-title] {
 }
 
 .dialog-header {
-  margin-top: 20px !important;
+  margin-top: 10px !important;
   margin-bottom: 40px !important;
 
   .header-description {

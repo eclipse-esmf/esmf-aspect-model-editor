@@ -17,7 +17,7 @@
   <p>You can either continue with the auto-saved model or dismiss it to start with the default Aspect Model.</p>
 </mat-dialog-content>
 
-<mat-dialog-actions>
+<mat-dialog-actions align="end">
   <button mat-button [disabled]="!!loadingButton" (click)="loadAutoSavedModel()">
     <span *ngIf="loadingButton !== 'autoSaved'">Load auto-saved model</span>
     <mat-spinner diameter="20" *ngIf="loadingButton === 'autoSaved'" class="spinner"></mat-spinner>
