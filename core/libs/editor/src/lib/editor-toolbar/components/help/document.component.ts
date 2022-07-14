@@ -21,8 +21,8 @@ import {MatDialogRef} from '@angular/material/dialog';
   styleUrls: ['./document.component.scss'],
 })
 export class DocumentComponent {
-  AMEDocumentationLink = 'http://docs.digital-twin.bosch-nexeed.com/ame-guide/3.0.0/introduction.html'; // NOSONAR
-  BAMMDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/index.html';
+  AMEDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-documentation/ame-guide/4.0.0/introduction.html';
+  BAMMDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/v1.0.0/index.html';
 
   constructor(private dialogRef: MatDialogRef<DocumentComponent>, @Inject(APP_CONFIG) public config: AppConfig) {}
 
