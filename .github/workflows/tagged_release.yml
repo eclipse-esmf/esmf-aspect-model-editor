@@ -51,29 +51,29 @@ jobs:
         run: |
           mkdir backend
 
-          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq '.assets[0].browser_download_url')
-          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
-          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
+          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
 
           if [[ ${ASSET_ONE_URL} == *"-mac"* ]];
             then
               echo $ASSET_ONE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[0].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[0].url')
           fi
 
           if [[ ${ASSET_TWO_URL} == *"-mac"* ]];
             then
               echo $ASSET_TWO_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[1].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[1].url')
           fi
 
           if [[ ${ASSET_THREE_URL} == *"-mac"* ]];
             then
               echo ASSET_THREE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[2].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[2].url')
           fi
 
-          curl -L -H "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend.sh
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend.sh
           chmod 755 backend/ame-backend.sh
 
       - name: Download aspect model service into project (Linux)
@@ -81,29 +81,29 @@ jobs:
         run: |
           mkdir backend
 
-          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq '.assets[0].browser_download_url')
-          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
-          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
+          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
 
           if [[ ${ASSET_ONE_URL} == *"-linux"* ]];
             then
               echo $ASSET_ONE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[0].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[0].url')
           fi
 
           if [[ ${ASSET_TWO_URL} == *"-linux"* ]];
             then
               echo $ASSET_TWO_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[1].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[1].url')
           fi
 
           if [[ ${ASSET_THREE_URL} == *"-linux"* ]];
             then
               echo ASSET_THREE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$tagVersion | jq -r '.assets[2].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[2].url')
           fi
 
-          curl -L -H "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend.sh
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend.sh
           chmod 755 backend/ame-backend.sh
 
       - name: Download aspect model service into project (Windows)
@@ -111,18 +111,18 @@ jobs:
         run: |
           mkdir backend
 
-          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" https://api.github.com/repos/bci-oss/rbs-aspect-model-service/releases/tags/v$env:tagVersion)
+          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$env:tagVersion)
           $RESPONSE_JSON=($RESPONSE | ConvertFrom-Json)
 
           if ($RESPONSE_JSON.assets[0].browser_download_url -match ".exe") {
             echo $RESPONSE_JSON.assets[0].browser_download_url
-            curl.exe -sL -H "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" -H "Accept: application/octet-stream" $RESPONSE_JSON.assets[0].url -o backend/ame-backend.exe
+            curl.exe -sL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $RESPONSE_JSON.assets[0].url -o backend/ame-backend.exe
           } elseif ($RESPONSE_JSON.assets[1].browser_download_url -match ".exe") {
             echo $RESPONSE_JSON.assets[1].browser_download_url
-            curl.exe -sL -H "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" -H "Accept: application/octet-stream" $RESPONSE_JSON.assets[1].url -o backend/ame-backend.exe
+            curl.exe -sL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $RESPONSE_JSON.assets[1].url -o backend/ame-backend.exe
           } elseif ($RESPONSE_JSON.assets[2].browser_download_url -match ".exe") {
             echo $RESPONSE_JSON.assets[2].browser_download_url
-            curl.exe -sL -H "Authorization: token ${{ secrets.RBS_BOT_TOKEN }}" -H "Accept: application/octet-stream" $RESPONSE_JSON.assets[2].url -o backend/ame-backend.exe
+            curl.exe -sL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $RESPONSE_JSON.assets[2].url -o backend/ame-backend.exe
           }
 
 
