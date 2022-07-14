@@ -1,0 +1,224 @@
+name: "Create Tagged Release"
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  gh_tagged_release:
+    name: Create tagged release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Setup NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: '17'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Set tag version (Unix)
+        if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
+        run: echo "tagVersion=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+
+      - name: Set tag version (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          $version = $env:GITHUB_REF.replace('refs/tags/v','')
+          echo "tagVersion=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+
+      - name: Download aspect model service into project (Mac)
+        if: matrix.os == 'macos-latest'
+        run: |
+          mkdir backend
+
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
+          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
+
+          if [[ ${ASSET_ONE_URL} == *"-mac"* ]];
+            then
+              echo $ASSET_ONE_URL
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[0].url')
+          fi
+
+          if [[ ${ASSET_TWO_URL} == *"-mac"* ]];
+            then
+              echo $ASSET_TWO_URL
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[1].url')
+          fi
+
+          if [[ ${ASSET_THREE_URL} == *"-mac"* ]];
+            then
+              echo ASSET_THREE_URL
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[2].url')
+          fi
+
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend.sh
+          chmod 755 backend/ame-backend.sh
+
+      - name: Download aspect model service into project (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          mkdir backend
+
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
+          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
+
+          if [[ ${ASSET_ONE_URL} == *"-linux"* ]];
+            then
+              echo $ASSET_ONE_URL
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[0].url')
+          fi
+
+          if [[ ${ASSET_TWO_URL} == *"-linux"* ]];
+            then
+              echo $ASSET_TWO_URL
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[1].url')
+          fi
+
+          if [[ ${ASSET_THREE_URL} == *"-linux"* ]];
+            then
+              echo ASSET_THREE_URL
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[2].url')
+          fi
+
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend.sh
+          chmod 755 backend/ame-backend.sh
+
+      - name: Download aspect model service into project (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          mkdir backend
+
+          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$env:tagVersion)
+          $RESPONSE_JSON=($RESPONSE | ConvertFrom-Json)
+
+          if ($RESPONSE_JSON.assets[0].browser_download_url -match ".exe") {
+            echo $RESPONSE_JSON.assets[0].browser_download_url
+            curl.exe -sL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $RESPONSE_JSON.assets[0].url -o backend/ame-backend.exe
+          } elseif ($RESPONSE_JSON.assets[1].browser_download_url -match ".exe") {
+            echo $RESPONSE_JSON.assets[1].browser_download_url
+            curl.exe -sL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $RESPONSE_JSON.assets[1].url -o backend/ame-backend.exe
+          } elseif ($RESPONSE_JSON.assets[2].browser_download_url -match ".exe") {
+            echo $RESPONSE_JSON.assets[2].browser_download_url
+            curl.exe -sL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $RESPONSE_JSON.assets[2].url -o backend/ame-backend.exe
+          }
+
+
+      - name: Install node modules
+        run: npm install
+        working-directory: core
+
+      - name: Set app version (Unix)
+        if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
+        run: npm version $tagVersion
+        working-directory: core
+
+      - name: Set app version (Windows)
+        if: matrix.os == 'windows-latest'
+        run: npm version $env:tagVersion
+        working-directory: core
+
+      - name: Build electron app (Mac)
+        if: matrix.os == 'macos-latest'
+        run: npm run electron-builder-mac-prod
+        working-directory: core
+
+      - name: Build electron app (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: npm run electron-builder-linux-prod
+        working-directory: core
+
+      - name: Build electron app (Windows)
+        if: matrix.os == 'windows-latest'
+        run: npm run electron-builder-win-prod
+        working-directory: core
+
+      - name: Create Windows installer
+        if: matrix.os == 'windows-latest'
+        uses: joncloud/makensis-action@v3.6
+        with:
+          script-file: win-installer/installer.nsi
+          arguments: "-V3 -DVERSION=${{ env.tagVersion }}"
+
+      - name: Create GitHub release (Mac)
+        if: ${{ (matrix.os == 'macos-latest') &&  (!contains( github.ref, '-M' )) }}
+        uses: svenstaro/upload-release-action@latest
+        with:
+          overwrite: true
+          prerelease: false
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: core/electron/aspect-model-editor-v${{ env.tagVersion }}-mac.dmg
+          tag: ${{ github.ref }}
+
+      - name: Create GitHub pre-release (Mac)
+        if: ${{ (matrix.os == 'macos-latest') &&  (contains( github.ref, '-M' )) }}
+        uses: svenstaro/upload-release-action@latest
+        with:
+          overwrite: true
+          prerelease: true
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: core/electron/aspect-model-editor-v${{ env.tagVersion }}-mac.dmg
+          tag: ${{ github.ref }}
+
+      - name: Create GitHub release (Linux)
+        if: ${{ (matrix.os == 'ubuntu-latest') &&  (!contains( github.ref, '-M' )) }}
+        uses: svenstaro/upload-release-action@latest
+        with:
+          overwrite: true
+          prerelease: false
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: core/electron/aspect-model-editor-v${{ env.tagVersion }}-linux.tar.gz
+          tag: ${{ github.ref }}
+
+      - name: Create GitHub pre-release (Linux)
+        if: ${{ (matrix.os == 'ubuntu-latest') &&  (contains( github.ref, '-M' )) }}
+        uses: svenstaro/upload-release-action@latest
+        with:
+          overwrite: true
+          prerelease: true
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: core/electron/aspect-model-editor-v${{ env.tagVersion }}-linux.tar.gz
+          tag: ${{ github.ref }}
+
+      - name: Create GitHub release (Windows)
+        if: ${{ (matrix.os == 'windows-latest') && (!contains( github.ref, '-M' )) }}
+        uses: svenstaro/upload-release-action@latest
+        with:
+          overwrite: true
+          prerelease: false
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: win-installer/aspect-model-editor-v${{ env.tagVersion }}-win.exe
+          tag: ${{ github.ref }}
+
+      - name: Create GitHub pre-release (Windows)
+        if: ${{ (matrix.os == 'windows-latest') && (contains( github.ref, '-M' )) }}
+        uses: svenstaro/upload-release-action@latest
+        with:
+          overwrite: true
+          prerelease: true
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: win-installer/aspect-model-editor-v${{ env.tagVersion }}-win.exe
+          tag: ${{ github.ref }}
+

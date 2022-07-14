@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div fxLayout="column">
+  <mat-form-field [floatLabel]="getControl('languageCode')?.disabled ? 'always' : 'auto'" appearance="fill">
+    <mat-label for="languageCode">Language Code</mat-label>
+    <input matInput [formControl]="getControl('languageCode')" [matAutocomplete]="auto" name="languageCode" data-cy="languageCode" />
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let lang of filteredLanguages | async" [value]="lang.tag" class="language-code">
+        {{ lang.tag }}<br /><span class="option-description">{{ lang.name }}</span>
+      </mat-option>
+    </mat-autocomplete>
+    <mat-hint>bamm:languageCode</mat-hint>
+    <mat-error *ngIf="getControl('languageCode').errors?.required">Language Code is required</mat-error>
+  </mat-form-field>
+</div>

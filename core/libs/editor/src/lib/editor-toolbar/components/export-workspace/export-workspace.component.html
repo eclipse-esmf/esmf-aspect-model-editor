@@ -1,0 +1,113 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<!-- Validation step -->
+<ng-container *ngIf="!error && !validationStatus">
+  <h2 mat-dialog-title>Export workspace</h2>
+  <p>Please select the namespace that you would like to export as an Aspect Model Package.</p>
+
+  <mat-dialog-content *ngIf="!validating" class="namespaces">
+    <mat-radio-group class="namespace-list" [(ngModel)]="selectedNamespace">
+      <h4 class="column-title">Namespaces</h4>
+      <p *ngIf="namespaceMessage">{{ namespaceMessage }}</p>
+
+      <ng-container *ngIf="!namespaceMessage && !namespaceLoading">
+        <mat-radio-button
+          *ngFor="let item of namespaces | keyvalue"
+          [value]="item.key"
+          (click)="showStructure(item.key)"
+          class="namespace"
+          >{{ item.key }}</mat-radio-button
+        >
+      </ng-container>
+    </mat-radio-group>
+
+    <div class="namespace-structure" *ngIf="selectedNamespace">
+      <h4 class="column-title">Namespace Structure</h4>
+      <mat-tree [dataSource]="structure.dataSource" [treeControl]="treeControl">
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+          <mat-icon class="file-icon">description</mat-icon>
+          {{ node.name }}
+        </mat-tree-node>
+
+        <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+          <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+            <mat-icon class="file-icon">{{ treeControl.isExpanded(node) ? 'folder_copy' : 'folder' }}</mat-icon>
+            {{ node.name }}
+          </button>
+        </mat-tree-node>
+      </mat-tree>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-content *ngIf="validating" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p class="loading-message">Validating your namespace</p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-flat-button (click)="close()">Cancel</button>
+    <button
+      [disabled]="!selectedNamespace || validating"
+      (click)="validate()"
+      type="button"
+      mat-flat-button
+      color="primary"
+      data-cy="validate-button"
+    >
+      <span>Validate</span>
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+
+<!-- Summary step -->
+<ng-container *ngIf="validationStatus">
+  <h2 mat-dialog-title>Export workspace</h2>
+  <p *ngIf="!validationHasErrors">The package you have created can be exported with all of its Aspect Models.</p>
+  <p *ngIf="validationHasErrors">
+    The package you have created can not be exported due to Aspect Model having errors. Please fix them and retry
+  </p>
+
+  <mat-dialog-content>
+    <ame-workspace-summary [readyToImport]="true" [summary]="validationStatus"></ame-workspace-summary>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-flat-button [color]="validationHasErrors && 'primary'" (click)="close()">Close</button>
+    <button color="primary" *ngIf="!validationHasErrors" (click)="export()" type="button" mat-flat-button data-cy="export-button">
+      <span>Export</span>
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+
+<!-- Error step -->
+<ng-container *ngIf="error">
+  <h2 mat-dialog-title>Error on exporting workspace</h2>
+
+  <mat-dialog-content *ngIf="error?.internalServerError" class="error-container">
+    <p>
+      Please make sure you don't have opened core files of the Aspect Model Editor or make sure no program other than Aspect Model Editor is
+      using them
+    </p>
+  </mat-dialog-content>
+
+  <mat-dialog-content *ngIf="error?.unexpectedError" class="error-container">
+    <p>An unexpected error occurred while exporting the namespace. Please try to export the namespace again</p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button (click)="close()" color="primary" type="button" mat-raised-button data-cy="dismiss-export-validate">
+      <span>Dismiss</span>
+    </button>
+  </mat-dialog-actions>
+</ng-container>

@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<mat-form-field appearance="fill" [floatLabel]="getControl('see')?.disabled ? 'always' : 'auto'">
+  <mat-label for="see">See</mat-label>
+  <input matInput [formControl]="getControl('see')" name="see" data-cy="see" />
+  <mat-hint>bamm:see</mat-hint>
+  <mat-error *ngIf="getControl('see')?.errors?.uri">
+    Invalid URI{{ getControl('see')?.errors.uri.invalidUris.length > 1 ? 's' : '' }} '{{ getControl('see')?.errors.uri.invalidUris[0] }}'{{
+      getControl('see')?.errors.uri.invalidUris.length > 1 ? ', ...' : ''
+    }}
+  </mat-error>
+</mat-form-field>

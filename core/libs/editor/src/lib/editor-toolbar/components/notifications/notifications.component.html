@@ -1,0 +1,85 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<h2 mat-dialog-header>Notifications</h2>
+<button class="close-button" data-cy="close-notifications" mat-icon-button tabindex="-1" (click)="onClose()">
+  <mat-icon>close</mat-icon>
+</button>
+
+<mat-dialog-content class="table-container">
+  <button (click)="clearAllNotifications()" mat-button color="primary" data-cy="clear-notifications">
+    <span>Clear table</span>
+  </button>
+
+  <caption></caption>
+  <table [dataSource]="notificationsService.getNotifications()" mat-table class="mat-elevation-z2 notifications-table">
+    <ng-container matColumnDef="expand">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon *ngIf="!element.expanded && element.description" (click)="element.expanded = !element.expanded">expand_more</mat-icon>
+        <mat-icon *ngIf="element.expanded && element.description" (click)="element.expanded = !element.expanded">expand_less</mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="date-time">
+          <div>{{ element.formattedDate }} {{ element.formattedTime }}</div>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon [ngClass]="[getTypeIcon(element.type)]">{{ getTypeIcon(element.type) }}</mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="message">
+      <th mat-header-cell *matHeaderCellDef>Message</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="message-title">
+          {{ element.title }}
+        </div>
+        <div *ngIf="element.expanded">
+          {{ element.description }}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="options">
+      <th mat-header-cell *matHeaderCellDef>Options</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button (click)="currentItem = element" [matMenuTriggerFor]="menu">
+          <mat-icon>more_vertical</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell no-notif-msg" colspan="9999">No notifications available.</td>
+    </tr>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</mat-dialog-content>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="goTo(currentItem?.link)" [disabled]="!currentItem?.link">
+    <mat-icon>arrow_circle_right</mat-icon>Go to
+  </button>
+  <button mat-menu-item (click)="clearNotification(currentItem)"><mat-icon>delete</mat-icon>Clear</button>
+</mat-menu>

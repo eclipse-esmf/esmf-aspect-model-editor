@@ -1,0 +1,110 @@
+:page-partial:
+
+[[installing-running-the-aspect-model-editor]]
+= Install the Aspect Model Editor
+
+
+[[preparation]]
+== Preparation
+
+Before you install the latest version of the Aspect Model Editor, make sure you have covered the following:
+
+* Login with administrator permissions to install or uninstall the Aspect Model Editor.
+* If you have previously installed the Aspect Model Editor, see xref:installation.adoc#upgrade[Upgrade].
+
+
+[[installation]]
+== Install the Aspect Model Editor
+
+To install the Aspect Model Editor, proceed as follows:
+
+. Download the executable installation file from the https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/releases[Aspect Model Editor^, opts=nofollow] releases.
+. Double-click the `.exe` file to run the installer.
+. Click *Next* on the Welcome screen.
++
+image::installation-01.png[width=100% !important]
+. Select the preferred installation location.
++
+. Click *Install*.
++
+NOTE: Long paths and paths containing whitespaces may lead to incorrect installation or incorrect behavior of the application. Choose a short destination path without whitespaces &ndash; preferably those suggested by the installer by default. For further information see xref::known-issues.adoc#aspect-model-editor-service-down[Known Issues].
++
+image::installation-02.png[width=100% !important]
++
+→ The installation is executed. The progress bar indicates the status of the process.
++
+image::installation-03.png[width=100% !important]
+. Click *Finish* to close Setup.
++
+image::installation-04.png[width=100% !important]
+
+→ After the installation you will find the Aspect Model Editor in the folder you chose previously. In addition to that, you will find a link on your desktop.
+
+
+[[startup]]
+== Start the Aspect Model Editor
+
+To run the Aspect Model Editor, no administration permissions are required.
+
+Use one of the following alternatives:
+
+* Navigate to the previously chosen installation location of the Aspect Model Editor and double-click the `Aspect-Model-Editor.exe` file.
+
+* On Windows, press the *Windows key*, type `Aspect` to filter for the Aspect Model Editor, and click *Open*.
++
+image::search-app.png[width=50% !important]
+
+
+[[check-installation]]
+== Verify the installation
+
+To verify that your installation was executed successfully, proceed as follows:
+
+. Open the Aspect Model Editor.
+. Open the _Movement_ example that came with the editor (see xref::load-and-save-models.adoc#load-start-new-models[Load or start a new model]).
+. Click *Validate* in the xref:ui-overview.adoc#toolbar[toolbar].
+
+→ If the validation of the built-in example is executed, your installation was successful. In that case, the background validation service is working properly and you can start working with the Aspect Model Editor.
+
+For more information on validation, see xref:validation-and-notifications.adoc#notifications[Validation and notifications].
+
+[[uninstaller]]
+== Uninstall the Aspect Model Editor
+
+To uninstall the Aspect Model Editor, proceed as follows:
+
+. Close any running instance of the Aspect Model Editor.
+. Navigate to the installation folder of the Aspect Model Editor.
+. Double-click the `Uninstall.exe` executable.
+. In the Uninstaller dialog, click *Next* to continue.
++
+image::uninstall-01.png[width=50% !important]
+. Click *Uninstall* to start the process.
++
+image::uninstall-02.png[width=50% !important]
+. Click *Finish* to close the Uninstaller.
++
+image::uninstall-03.png[width=50% !important]
+
+→ The Aspect Model Editor with all dependencies was deleted from your system.
+
+TIP: Alternatively, on Windows, you can also uninstall as follows: Open Windows menu → type Aspect Model Editor → click *Uninstall* → right-click on the Aspect Model Editor → click *Uninstall*.
+
+
+[[upgrade]]
+== Upgrade the Aspect Model Editor
+
+To upgrade the Aspect Model Editor to the latest version, proceed as follows:
+
+. First uninstall the existing installation. See xref::installation.adoc#uninstaller[Uninstall the Aspect Model Editor].
+
+. Run a new installation with your required version of the Aspect Model Editor. See xref::installation.adoc#installation[Install the Aspect Model Editor].
+
+NOTE: You can have only one installation of the Aspect Model Editor on your local machine. In case you have already an older version, uninstall it first and then install the new version.
+
+++++
+<style>
+  img {border: 1px solid #cfd0d1;}
+  .imageblock {flex-direction: row !important;}
+</style>
+++++

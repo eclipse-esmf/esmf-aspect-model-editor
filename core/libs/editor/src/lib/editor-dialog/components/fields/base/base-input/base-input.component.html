@@ -1,0 +1,17 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<ame-name-input-field [previousData]="previousData" [parentForm]="parentForm"></ame-name-input-field>
+<ame-preferred-name-input-field [previousData]="previousData" [parentForm]="parentForm"></ame-preferred-name-input-field>
+<ame-description-input-field [previousData]="previousData" [parentForm]="parentForm"></ame-description-input-field>
+<ame-see-input-field *ngIf="!hideSee" [previousData]="previousData" [parentForm]="parentForm"></ame-see-input-field>

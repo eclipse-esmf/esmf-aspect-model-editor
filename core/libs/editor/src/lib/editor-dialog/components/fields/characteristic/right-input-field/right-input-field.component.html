@@ -1,0 +1,61 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+  <mat-form-field [floatLabel]="getControl('right')?.disabled ? 'always' : 'auto'" appearance="fill">
+    <mat-label for="right">Right</mat-label>
+    <input #right [matAutocomplete]="auto" matInput name="right" [formControl]="getControl('right')" data-cy="right" />
+    <button
+      *ngIf="rightControl?.disabled && !metaModelElement?.isExternalReference()"
+      (click)="unlockRight()"
+      class="close-button"
+      data-cy="clear-right-button"
+      matSuffix
+      mat-icon-button
+      tabindex="-1"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <mat-autocomplete #auto="matAutocomplete" class="right">
+      <div *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes">
+        <mat-option
+          *ngIf="!isAlreadyDefined(filteredCharacteristicTypes, right.value) && !getControl('right')?.errors?.foundModel"
+          [disabled]="!isUpperCase(right.value)"
+          [value]="!isUpperCase(right.value) ? '' : right.value"
+          (click)="createNewCharacteristic(right.value)">
+          <span *ngIf="isUpperCase(right.value)">
+            + Create new characteristic: <strong>{{ right.value }}</strong>
+          </span>
+          <span *ngIf="!isUpperCase(right.value)">Characteristic should be upper case</span>
+        </mat-option>
+        <mat-option
+          *ngFor="let right of filteredCharacteristicTypes"
+          [value]="right.name"
+          (onSelectionChange)="onSelectionChange('right', right)">
+          <div class="result">
+            <div class="ellipsis">
+              {{ right.name }} <span *ngIf="right.description" class="option-description"
+                                     [title]="right.description">- {{ right.description }}</span>
+              <p *ngIf="right.namespace" class="namespace-prefix" [title]="right.namespace">
+                {{ right.namespace }}
+              </p>
+            </div>
+          </div>
+        </mat-option>
+      </div>
+    </mat-autocomplete>
+    <mat-hint>bamm-c:right</mat-hint>
+    <mat-error *ngIf="getControl('right')?.errors?.required">Please define a right characteristic</mat-error>
+  </mat-form-field>
+</div>

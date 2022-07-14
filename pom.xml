@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.openmanufacturing</groupId>
+  <artifactId>sds-aspect-model-editor</artifactId>
+  <name>SDS Aspect Model Editor</name>
+  <version>DEV-SNAPSHOT</version>
+
+  <description>OMP SDS Aspect Model Editor</description>
+  <licenses>
+    <license>
+      <name>MPL-2.0</name>
+      <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Semantic Data Structuring Working Group</name>
+      <email>artifacts@open-manufacturing.org</email>
+      <organization>Open Manufacturing Platform</organization>
+      <organizationUrl>https://open-manufacturing.org</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <url>https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor</url>
+  </scm>
+
+  <properties>
+    <!-- Versions of plugins -->
+    <npm-version>8.5.0</npm-version>
+    <newman-version>5.2.0</newman-version>
+    <node-version>16.14.2</node-version>
+    <frontend-maven-plugin-version>1.12.1</frontend-maven-plugin-version>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>${frontend-maven-plugin-version}</version>
+        <executions>
+          <execution>
+            <id>Install node and npm</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${project.basedir}/core</workingDirectory>
+              <nodeVersion>v${node-version}</nodeVersion>
+              <npmVersion>${npm-version}</npmVersion>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Install production dependencies</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${project.basedir}/core</workingDirectory>
+              <arguments>install --production --ignore-scripts</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Build Aspect Model Editor production</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${project.basedir}/core</workingDirectory>
+              <arguments>run build:prod</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

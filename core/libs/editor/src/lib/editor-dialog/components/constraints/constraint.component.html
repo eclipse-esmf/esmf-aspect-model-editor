@@ -1,0 +1,58 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<ame-constraint-name-dropdown-field
+  [parentForm]="parentForm"
+  [previousDataSnapshot]="previousData"
+  (selectedConstraint)="onClassChange($event)"
+  (previousData)="onPreviousDataChange($event)"
+></ame-constraint-name-dropdown-field>
+<ame-base-input [previousData]="previousData || {}" [parentForm]="parentForm"></ame-base-input>
+
+<ng-container *ngIf="selectedConstraint === 'EncodingConstraint'">
+  <ame-encoding-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-encoding-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'FixedPointConstraint'">
+  <ame-scale-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-scale-input-field>
+  <ame-integer-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-integer-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'LanguageConstraint'">
+  <ame-language-code-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-language-code-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'LengthConstraint'">
+  <ame-min-length-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-min-length-input-field>
+  <ame-max-length-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-max-length-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'LocaleConstraint'">
+  <ame-locale-code-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-locale-code-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'RangeConstraint'">
+  <div fxLayout="column">
+    <ame-min-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-min-value-input-field>
+    <ame-max-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-max-value-input-field>
+  </div>
+  <ame-upper-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-upper-bound-input-field>
+  <ame-lower-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-lower-bound-input-field>
+</ng-container>
+
+<ng-container *ngIf="selectedConstraint === 'RegularExpressionConstraint'">
+  <ame-regular-expression-value-input-field
+    [previousData]="previousData || {}"
+    [parentForm]="parentForm"
+  ></ame-regular-expression-value-input-field>
+</ng-container>

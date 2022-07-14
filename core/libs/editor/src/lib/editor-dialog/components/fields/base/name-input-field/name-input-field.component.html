@@ -1,0 +1,30 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<mat-form-field [floatLabel]="getControl('name')?.disabled ? 'always' : 'auto'" appearance="fill">
+  <mat-label for="name">Name</mat-label>
+  <input [formControl]="getControl('name')" matInput name="name" data-cy="name" />
+  <mat-hint>bamm:name</mat-hint>
+  <mat-error *ngIf="getControl('name')?.errors?.required">Please define a name</mat-error>
+  <mat-error *ngIf="getControl('name')?.errors?.namingUpperCase">
+    Please start with an upper case character followed by letters/numerals.
+  </mat-error>
+  <mat-error *ngIf="getControl('name')?.errors?.namingLowerCase">
+    Please start with a lower case character followed by letters/numerals.
+  </mat-error>
+  <mat-error *ngIf="getControl('name')?.errors?.checkShapeName"> Please select a different name as this one is already in use </mat-error>
+  <mat-error *ngIf="getControl('name')?.errors?.checkShapeNameExtRef">
+    Please select a different name as this one is already in use in the same namespace
+  </mat-error>
+  <mat-error *ngIf="getControl('name')?.errors?.whitespace"> Name must not contain whitespaces</mat-error>
+</mat-form-field>

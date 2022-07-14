@@ -1,0 +1,51 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div
+  *ngIf="metaModelElement?.referenceUnit || !metaModelElement.isPredefined()"
+  fxLayout="row"
+  fxLayoutGap="15px"
+  fxLayoutAlign="space-between center"
+>
+  <mat-form-field [floatLabel]="unitDisplayControl?.disabled ? 'always' : 'auto'" appearance="fill">
+    <mat-label for="referenceUnit">ReferenceUnit</mat-label>
+    <input #unit [matAutocomplete]="auto" matInput name="referenceUnit" [formControl]="unitDisplayControl" data-cy="referenceUnit" />
+    <button
+      *ngIf="unitDisplayControl?.disabled && !metaModelElement?.isExternalReference() && !metaModelElement.isPredefined()"
+      (click)="unlockUnit()"
+      class="close-button"
+      data-cy="clear-unit-button"
+      matSuffix
+      mat-icon-button
+      tabindex="-1"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <mat-autocomplete #auto="matAutocomplete">
+      <ng-container #predefinedUnits *ngIf="filteredPredefinedUnits$ | async as filteredPredefinedUnits">
+        <mat-optgroup label="Predefined Units" *ngIf="filteredPredefinedUnits?.length">
+          <mat-option
+            *ngFor="let unit of filteredPredefinedUnits"
+            [title]="unit.name"
+            [value]="unit.name"
+            (onSelectionChange)="onPredefinedUnitChange(unit)"
+          >
+            {{ unit.name }}
+          </mat-option>
+        </mat-optgroup>
+      </ng-container>
+    </mat-autocomplete>
+    <mat-hint>unit:referenceUnit</mat-hint>
+  </mat-form-field>
+</div>

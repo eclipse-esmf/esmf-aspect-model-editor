@@ -1,0 +1,55 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="field" fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+  <mat-form-field>
+    <mat-label for="left">Property</mat-label>
+    <input #property [matAutocomplete]="auto" [formControl]="control" matInput name="property-element" data-cy="property-element" />
+    <button
+      *ngIf="control?.disabled && !overwrittenProperty?.property?.isExternalReference()"
+      (click)="unlock()"
+      class="close-button"
+      data-cy="clear-property-button"
+      matSuffix
+      mat-icon-button
+      tabindex="-1"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <mat-autocomplete #auto="matAutocomplete" class="property-element">
+      <mat-optgroup *ngIf="filteredProperties$ | async as filteredProperties" label="Property">
+        <mat-option
+          *ngIf="!filteredProperties.length"
+          [disabled]="!isLowerCase(property.value)"
+          [value]="!isLowerCase(property.value) ? '' : property.value"
+          (click)="createNewProperty(property.value)"
+        >
+          <span *ngIf="isLowerCase(property.value)" data-cy="new-property">
+            + Create new property: <strong>{{ property.value }}</strong>
+          </span>
+          <span *ngIf="!isLowerCase(property.value)">Please provide the name for the new Property in lower case.</span>
+        </mat-option>
+        <mat-option
+          *ngFor="let filteredProperty of filteredProperties"
+          [value]="filteredProperty.name"
+          (onSelectionChange)="onSelectionChange(filteredProperty)"
+        >
+          {{ filteredProperty.name }}<br /><span class="option-description">{{ filteredProperty.description }}</span>
+        </mat-option>
+      </mat-optgroup>
+    </mat-autocomplete>
+    <mat-error *ngIf="control?.errors?.required">Please choose or create a Property</mat-error>
+    <mat-error *ngIf="control?.errors?.disabled">No property defined</mat-error>
+  </mat-form-field>
+</div>

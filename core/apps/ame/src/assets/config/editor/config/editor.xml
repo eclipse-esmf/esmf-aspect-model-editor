@@ -1,0 +1,31 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<mxEditor>
+    <ui>
+        <!--TODO update if necessary-->
+        <!--<resource basename="assets/config/editor/resources/app"/>-->
+        <stylesheet name="assets/config/editor/css/editor.css"/>
+        <add as="graph" element="graph"/>
+    </ui>
+
+    <mxDefaultKeyHandler as="keyHandler">
+        <include name="assets/config/editor/config/key-handler.xml"/>
+    </mxDefaultKeyHandler>
+
+    <mxGraph as="graph" dropEnabled="0">
+        <mxStylesheet as="stylesheet">
+            <include name="assets/config/editor/config/stylesheet.xml"/>
+        </mxStylesheet>
+    </mxGraph>
+</mxEditor>

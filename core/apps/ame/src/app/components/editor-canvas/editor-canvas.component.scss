@@ -1,0 +1,101 @@
+/*!
+ * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+:host {
+  overflow: hidden;
+
+  ::ng-deep {
+    .as-split-area {
+      overflow-y: hidden !important;
+    }
+
+    .as-split-gutter {
+      flex-basis: 8px !important;
+      background-color: #efeff0;
+      border-left: 2px solid #efeff0 !important;
+      transition: 150ms;
+
+      &:hover {
+        border-left-color: #007bc7 !important;
+      }
+    }
+
+    .as-split-gutter-icon {
+      background-image: url('../../../assets/config/editor/img/drag.svg') !important;
+      background-size: 20px;
+    }
+  }
+}
+
+::ng-deep {
+  div.mxPopupMenu {
+    position: fixed !important;
+    .mxPopupMenuItem {
+      padding-left: 15px;
+    }
+    .mxPopupMenuIcon {
+      padding-top: 7px;
+      padding-left: 10px;
+    }
+  }
+
+  div.mxTooltip {
+    position: fixed !important;
+  }
+}
+
+.editor-canvas-layout {
+  height: 100vh;
+}
+
+#graph {
+  margin-top: 5px;
+  background: #efeff0;
+  overflow: auto;
+  transition: 0.5s;
+  position: relative;
+  width: 100%;
+}
+
+.detail-view-container {
+  padding: 0 25px 0 25px;
+  overflow-y: auto;
+  border-top: 1px solid #efeff0;
+}
+
+.content {
+  height: calc(100% - 90px);
+  overflow: hidden;
+  margin: 0;
+  display: flex;
+  box-sizing: border-box;
+}
+
+.canvas {
+  background: #efeff0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: inline-flex;
+  position: relative;
+}
+
+.footer {
+  z-index: 2;
+  height: 40px;
+}
+
+ame-editor-sidebar {
+  box-shadow: 10px 0 5px -2px #888;
+  border-right: 1px solid #cfd0d1;
+}

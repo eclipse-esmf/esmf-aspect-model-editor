@@ -1,0 +1,13 @@
+:page-partial:
+
+[[release-notes]]
+= Release notes
+
+Find the release notes for the Aspect Model Editor at the https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/releases[GitHub releases overview^, opts=nofollow].
+
+++++
+<style>
+  img {border: 1px solid #cfd0d1;}
+  .imageblock {flex-direction: row !important;}
+</style>
+++++
