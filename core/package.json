@@ -3,7 +3,7 @@
   "author": "",
   "description": "Used to design and edit BAMM specific aspect models.",
   "productName": "Aspect-Model-Editor",
-  "version": "4.0.0",
+  "version": "",
   "main": "main.js",
   "build": {
     "appId": "io.openmanufacturing.ame",
