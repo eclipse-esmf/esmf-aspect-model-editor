@@ -1,0 +1,35 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="dialog-header">
+  <h3 matDialogTitle>New Aspect Namespace</h3>
+  <button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div class="dialog-content">
+  Are you sure you want to change the current
+  <span *ngIf="newNamespace !== oldNamespace"
+    >namespace to <span class="bold-text">{{ newNamespace }}</span></span
+  >
+  <span *ngIf="newVersion !== oldVersion && newNamespace !== oldNamespace"> and </span>
+  <span *ngIf="newVersion !== oldVersion"
+    >version to
+    <span class="bold-text">{{ newVersion }}</span>
+  </span>
+  ?
+</div>
+<div class="dialog-actions">
+  <button mat-raised-button (click)="onSave()">Save</button>
+  <button mat-button type="button" (click)="onClose()">Cancel</button>
+</div>

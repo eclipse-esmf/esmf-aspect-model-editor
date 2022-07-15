@@ -1,0 +1,151 @@
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:bamm:io.openmanufacturing:1.0.0#> .
+
+:AspectWithAllCharacteristic a bamm:Aspect ;
+   bamm:name "AspectWithAllCharacteristic" ;
+   bamm:properties (
+      :testCodeProperty
+      :testCollectiontProperty
+      :testDurationProperty
+      :testEnumerationProperty
+      :testListProperty
+      :testMeasurementProperty
+      :testQuantifiableProperty
+      :testSetProperty
+      :testSortedSetProperty
+   ) ;
+   bamm:operations ( ) .
+
+:testCodeProperty a bamm:Property ;
+   bamm:name "testCodeProperty" ;
+   bamm:characteristic :TestCode .
+
+:TestCode a bamm-c:Code ;
+   bamm:name "TestCode" ;
+   bamm:preferredName "Test Code"@en ;
+   bamm:description "This is a test code."@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:dataType xsd:int .
+
+:testCollectiontProperty a bamm:Property ;
+   bamm:name "testCollectiontProperty" ;
+   bamm:preferredName "Test Property"@en ;
+   bamm:description "This is a test property."@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:see <http://bosch.com/me> ;
+   bamm:exampleValue "Example Value" ;
+   bamm:characteristic :TestCollection .
+
+:TestCollection a bamm-c:Collection ;
+   bamm:name "TestCollection" ;
+   bamm:preferredName "Test Collection"@en ;
+   bamm:description "This is a test collection."@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:dataType xsd:string .
+
+:testDurationProperty a bamm:Property ;
+   bamm:name "testDurationProperty" ;
+   bamm:characteristic :TestDuration .
+
+:TestDuration a bamm-c:Duration ;
+   bamm:name "TestDuration" ;
+   bamm:preferredName "Test Duration"@en ;
+   bamm:description "This is a test Duration"@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:dataType xsd:int ;
+   bamm-c:unit unit:kilosecond .
+
+:testEnumerationProperty a bamm:Property ;
+   bamm:name "testEnumerationProperty" ;
+   bamm:preferredName "Test Property"@en ;
+   bamm:description "This is a test property."@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:see <http://bosch.com/me> ;
+   bamm:exampleValue "Example Value" ;
+   bamm:characteristic :TestEnumeration .
+
+:TestEnumeration a bamm-c:Enumeration ;
+   bamm:name "TestEnumeration" ;
+   bamm:preferredName "Test Enumeration"@en ;
+   bamm:description "This is a test for enumeration."@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:dataType xsd:int ;
+   bamm-c:values ( 1 2 3 ) .
+
+:testListProperty a bamm:Property ;
+   bamm:name "testListProperty" ;
+   bamm:preferredName "Test Property"@en ;
+   bamm:description "This is a test property."@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:see <http://bosch.com/me> ;
+   bamm:exampleValue "Example Value" ;
+   bamm:characteristic :TestList .
+
+:TestList a bamm-c:List ;
+   bamm:name "TestList" ;
+   bamm:preferredName "Test List"@en ;
+   bamm:description "This is a test list."@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:dataType xsd:string .
+
+:testMeasurementProperty a bamm:Property ;
+   bamm:name "testMeasurementProperty" ;
+   bamm:characteristic :TestMeasurement .
+
+:TestMeasurement a bamm-c:Measurement ;
+   bamm:name "TestMeasurement" ;
+   bamm:preferredName "Test Measurement"@en ;
+   bamm:description "This is a test Measurement"@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:dataType xsd:float ;
+   bamm-c:unit unit:kelvin .
+
+:testQuantifiableProperty a bamm:Property ;
+   bamm:name "testQuantifiableProperty" ;
+   bamm:characteristic :TestQuantifiable .
+
+:TestQuantifiable a bamm-c:Quantifiable ;
+   bamm:name "TestQuantifiable" ;
+   bamm:preferredName "Test Quantifiable"@en ;
+   bamm:description "This is a test Quantifiable"@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:dataType xsd:float ;
+   bamm-c:unit unit:hertz .
+
+:testSetProperty a bamm:Property ;
+   bamm:name "testSetProperty" ;
+   bamm:preferredName "Test Property"@en ;
+   bamm:description "This is a test property."@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:see <http://bosch.com/me> ;
+   bamm:exampleValue "Example Value" ;
+   bamm:characteristic :TestSet .
+
+:TestSet a bamm-c:Set ;
+   bamm:name "TestSet" ;
+   bamm:preferredName "Test Set"@en ;
+   bamm:description "This is a test set."@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:dataType xsd:string .
+
+:testSortedSetProperty a bamm:Property ;
+   bamm:name "testSortedSetProperty" ;
+   bamm:preferredName "Test Property"@en ;
+   bamm:description "This is a test property."@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:see <http://bosch.com/me> ;
+   bamm:exampleValue "Example Value" ;
+   bamm:characteristic :TestSortedSet .
+
+:TestSortedSet a bamm-c:SortedSet ;
+   bamm:name "TestSortedSet" ;
+   bamm:preferredName "Test Sorted Set"@en ;
+   bamm:description "This is a test sorted set."@en ;
+   bamm:see <http://bosch.com/opcon> ;
+   bamm:dataType xsd:string .

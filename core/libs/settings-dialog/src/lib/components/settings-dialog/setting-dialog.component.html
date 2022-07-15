@@ -1,0 +1,36 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<h2 mat-dialog-title>Settings</h2>
+<button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+  <mat-icon>close</mat-icon>
+</button>
+
+<mat-dialog-content>
+  <mat-tab-group>
+    <mat-tab *ngFor="let tab of tabs">
+      <ng-template mat-tab-label>{{ tab.label }}</ng-template>
+      <div class="tab-content">
+        <div *ngIf="tab.configuration">
+          <ame-configuration></ame-configuration>
+        </div>
+        <div *ngIf="tab.languages" class="settings-scroll">
+          <ame-language-settings></ame-language-settings>
+        </div>
+        <div *ngIf="tab.namespaces">
+          <ame-namespace></ame-namespace>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</mat-dialog-content>

@@ -1,0 +1,136 @@
+:page-partial:
+
+[[editing-model]]
+= Edit models
+
+An Aspect Model consists of different BAMM elements: one Aspect and several Properties, Operations, Characteristics, Constraints, Entities, or Events.
+
+An Aspect is created by default when starting an Aspect Model. All other elements can then be added. Every element created in the editor can be altered. 
+
+NOTE: Elements that belong to other namespaces/files cannot be edited.
+
+The naming conventions for Aspect Model elements are defined in the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/modeling-guidelines.html#naming-rules[Naming Rules (BAMM 1.0.0)^, opts=nofollow]. The Aspect Model Editor guides you to follow all those BAMM naming conventions for your Aspect Models.
+
+[[work-with-workspace-sidebar]]
+== Work with the Workspace sidebar
+
+image::ame-ui-overview-workspace-numbers.png[width=100%]
+
+1. To open a list of all the namespaces and files that are currently available, click the Workspace icon image:elements/workspace.png[Workspace icon].
++
+For more information, see xref::namespaces-references.adoc#namespaces-external-references[Namespaces and external references].
+
+2. The Workspace sidebar also offers all available default elements for your Aspect Models. From here you can add new Properties, Characteristics, Entities, Constraints, Operations, Events, and Traits by dragging an element from the sidebar to the graph area canvas.
+
+[[adding-elements]]
+== Add elements
+
+There are two different ways to add an element:
+* Use the Add icon
+* Use drag-and-drop from the Workspace sidebar
+
+
+[[adding-simple-way]]
+=== Use the Add icon
+
+To add and connect the next logical element, click the Add icon at the bottom edge of any existing element. 
+
+* After an Aspect a default Property will be added.
+* After a Property a default Characteristic will be added.
+* After a Characteristic a default Entity will be added.
+* After an Entity a default Property will be added.
++
+image::adding-elements-all.png[width=80%]
+
+NOTE: For Characteristics, you will also find an Add icon on the top to insert a Constraint between the Property and the Characteristic.
+
+image::adding-elements.png[width=100%]
+
+[[adding-dedicated-way]]
+=== Use drag-and-drop from the Workspace sidebar
+
+Drag and drop one of the available elements from the xref:ui-overview.adoc#workspace-sidebar[Workspace sidebar].
+You have the option to create new elements or to use already xref::use-external-references.adoc#add-external-references[existing elements] from other namespaces.
+
+NOTE: In order to prevent formatting issues, connect a new element right after you added it. See also xref:known-issues.adoc[known issues].
+
+
+[[searching-elements]]
+== Find elements
+
+Use the search bar in the xref::ui-overview.adoc#toolbar[toolbar] to find elements already connected in the Aspect Model. By selecting an element, it will be highlighted and centered on the graph area canvas.
+
+image::element-search.png[width=100%]
+
+Use the following advanced search possibilities for more specific search results:
+[cols="30%,70%"]
+|===
+|=position
+|BAMM elements that are named "position"
+|*position
+|BAMM elements that contain "position" in their name
+|position$
+|BAMM elements where the name ends with "position"
+|===
+
+
+[[connecting-elements]]
+== Connect elements
+
+In some situations you might want to connect elements manually, e.g., when you want to reuse a Characteristic and connect a second Property to it.
+
+To connect two elements manually, proceed as follows:
+
+. Click both elements while holding the CTRL key on your keyboard.
+. Click the *Connect* icon in the xref::ui-overview.adoc#toolbar[toolbar].
++
+image::connecting-elements.png[width=100%]
+
+→ Both elements are now connected.
+
+
+[[trait-case]]
+=== Use Traits
+
+There are two ways of adding a Trait:
+
+* Drag and drop one from the Workspace sidebar
+* Click the top Add icon at a Characteristic
+
+Clicking the top Add icon image:add.png[Add icon] of a Characteristic will add a new Trait, taking the Characteristic's position and connecting the Trait to the initial Characteristic as well as a newly created Constraint. In this scenario, the newly created Trait takes the name of the parent attribute as a prefix to its own name.
+
+A Trait has an Add icon image:add.png[Add icon] on the bottom of the element, which is always visible:
+
+* When clicking the Add icon image:add.png[Add icon], a Characteristic is created and connected to the Trait. 
+
+* If there is already a Characteristic connected to the Trait, each Trait Add icon image:add.png[Add icon] click will create a new Constraint and connect it to the Trait.
++
+image::trait.png[width=80%]
+
+[[trait-example]]
+=== Trait Example
+
+Try out the following example to learn how to connect two Properties to the same Characteristic with each Property having different Constraints.
+
+For a new model that only has an Aspect so far:
+
+. Create two Properties by clicking twice on the Aspect's Add icon image:add.png[Add icon].
+. For each Property create a Characteristic by clicking the Add icon image:add.png[Add icon] of each Property.
+. Click the top Add icon image:add.png[Add icon] of each Characteristic to create a Trait and a Constraint for each Property.
+. Remove the second Characteristic.
+. Connect the second Trait with the first Characteristic: 
+.. Click the Trait, 
+.. Then CTRL+click the Characteristic,
+.. Then click the Connect icon image:toolbar-icons/connect.png[Connect icon] on the xref:ui-overview.adoc#toolbar[toolbar].
+. Click the Format icon image:toolbar-icons/format.png[Format icon].
+
+→ As a result you have connected two Properties to the same Characteristic with each Property having different Constraints.
+
+image::different-constraints.png[Different Constraints]
+
+++++
+<style>
+  img {border: 1px solid #cfd0d1;}
+  .imageblock {flex-direction: row !important;}
+</style>
+++++

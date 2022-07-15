@@ -1,0 +1,39 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div fxLayout="column" class="editor-canvas-layout">
+  <ame-editor-toolbar (editSelectedCell)="onEditSelectedCell()" (closeEditDialog)="closeShapeSettings()"></ame-editor-toolbar>
+
+  <div class="content">
+    <ame-editor-sidebar></ame-editor-sidebar>
+    <as-split direction="horizontal">
+      <as-split-area [size]="70">
+        <div class="canvas">
+          <div #graph id="graph"></div>
+          <ame-editor-canvas-menu></ame-editor-canvas-menu>
+        </div>
+      </as-split-area>
+      <as-split-area [size]="30" [visible]="isShapeSettingOpened" [maxSize]="80" [minSize]="30">
+        <ame-shape-settings
+          *ngIf="isShapeSettingOpened"
+          [modelElement]="modelElement"
+          [isOpened]="isShapeSettingOpened"
+          (save)="onSave($event)"
+          (afterClose)="resetSelectedShapeForUpdate()"
+        >
+        </ame-shape-settings>
+      </as-split-area>
+    </as-split>
+  </div>
+  <ame-footer class="footer"></ame-footer>
+</div>

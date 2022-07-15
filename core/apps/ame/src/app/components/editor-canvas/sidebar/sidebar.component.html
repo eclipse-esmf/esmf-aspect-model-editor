@@ -1,0 +1,59 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="sidebar-content">
+  <ng-container *ngIf="view === 'namespaces'">
+    <ame-sidebar-namespaces
+      #sidebarNamespaces
+      [namespaces]="sidebarService.namespaces"
+      (selectNamespace)="onSelectNamespace($event)"
+      (deleteNamespace)="deleteNamespace($event)"
+      (loadNamespaceFile)="loadNamespaceFile($event)"
+      class="namespaces"
+    ></ame-sidebar-namespaces>
+    <button class="close-namespace" data-cy="sidebar-close" mat-icon-button tabindex="-1" (click)="goToDefault()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="view === 'namespace-elements'">
+    <ame-sidebar-namespace-elements
+      *ngIf="selectedNamespace"
+      [elements]="selectedNamespaceElements || []"
+      [namespace]="selectedNamespace"
+      class="elements"
+    >
+    </ame-sidebar-namespace-elements>
+    <button class="back-to-namespace" data-cy="sidebar-back" mat-icon-button tabindex="-1" (click)="goToNamespaces()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button class="close-namespace-elements" data-cy="sidebar-close" mat-icon-button tabindex="-1" (click)="goToDefault()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="view === 'default'">
+    <mat-icon
+      *ngIf="!viewExpanded"
+      class="expand-btn"
+      (click)="expand(true)"
+      >navigate_next</mat-icon
+    >
+    <mat-icon
+    *ngIf="viewExpanded"
+    class="collapse-btn"
+    (click)="collapse()"
+    >navigate_before</mat-icon>
+    <ame-sidebar-new-element class="namespaces" (openWorkspaces)="goToNamespaces()"></ame-sidebar-new-element>
+  </ng-container>
+</div>

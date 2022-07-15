@@ -1,0 +1,48 @@
+{
+  "root": true,
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nrwl/nx"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "@nrwl/nx/enforce-module-boundaries": [
+          "off",
+          {
+            "enforceBuildableLibDependency": true,
+            "allow": [],
+            "depConstraints": [
+              {
+                "sourceTag": "*",
+                "onlyDependOnLibsWithTags": ["*"]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nrwl/nx/typescript"],
+      "rules": {
+        "no-prototype-builtins": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "no-extra-boolean-cast": "off",
+        "@typescript-eslint/ban-types": [
+          "error",
+          {
+            "types": {
+              "Function": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nrwl/nx/javascript"],
+      "rules": {}
+    }
+  ]
+}

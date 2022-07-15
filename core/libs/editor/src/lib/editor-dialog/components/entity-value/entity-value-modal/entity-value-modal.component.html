@@ -1,0 +1,44 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="dialog-header">
+  <h3 matDialogTitle>{{ title }}</h3>
+  <button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<form (submit)="onSave()">
+  <mat-form-field class="entity-form-field" appearance="fill">
+    <mat-label for="entityValueName">Name</mat-label>
+    <input
+      [formControl]="entityValueName"
+      [ngClass]="entityValueName.hasError('checkShapeName') || entityValueName.hasError('whitespace') ? 'ng-invalid-error' : ''"
+      matInput
+      type="text"
+      name="entityValueName"
+      data-cy="entityValueName"
+    />
+    <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('checkShapeName')">
+      Name already exists, please choose another one
+    </mat-error>
+    <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('whitespace')">
+      Name must not contain whitespaces
+    </mat-error>
+  </mat-form-field>
+  <ame-entity-value-modal-table [form]="form" [entity]="entity" [entityValue]="entityValue" [enumeration]="enumeration">
+  </ame-entity-value-modal-table>
+  <div class="dialog-actions">
+    <button type="button" mat-raised-button (click)="onClose()" data-cy="entityCancelButton">Cancel</button>
+    <button [disabled]="form.invalid" mat-raised-button color="primary" type="submit" data-cy="entitySaveButton">Save</button>
+  </div>
+</form>

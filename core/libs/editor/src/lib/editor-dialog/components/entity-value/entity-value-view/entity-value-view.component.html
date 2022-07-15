@@ -1,0 +1,78 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<ame-entity-value-search-bar
+  [count]="(complexValues | entityValue: searchFilter)?.length"
+  [disableAddNewEntityValue]="enumeration?.isExternalReference()"
+  (add)="onNew()"
+  (newSearch)="searchFilter = $event"
+></ame-entity-value-search-bar>
+
+<mat-expansion-panel
+  class="complex-value-items"
+  expanded="true"
+  *ngFor="let complexValue of complexValues | entityValue: searchFilter; trackBy: trackValue"
+>
+  <mat-expansion-panel-header class="complex-value-header">
+    <mat-panel-title class="complex-value-bar">
+      <span class="value-name">{{ complexValue.name }}</span>
+      <div class="complex-value-toolbox">
+        <mat-icon
+          *ngIf="!enumeration?.isExternalReference()"
+          (click)="onDelete(complexValue, $event)"
+          matTooltip="Delete complex value {{ complexValue.name }}"
+          data-cy="remove-entity-value"
+          >delete</mat-icon
+        >
+      </div>
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <mat-action-row class="complex-value-table">
+    <mat-table
+      *ngIf="complexValue.properties?.length"
+      [dataSource]="complexValue.properties"
+      [trackBy]="trackProperty"
+      class="table-values"
+    >
+      <!-- Property Name Column -->
+      <ng-container matColumnDef="key">
+        <mat-header-cell *matHeaderCellDef>Property</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.key.property.name }}
+        </mat-cell>
+      </ng-container>
+      <!-- Value Column -->
+      <ng-container matColumnDef="value">
+        <mat-header-cell *matHeaderCellDef>Value</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <mat-icon class="material-icons complex-value-icon" *ngIf="element?.isComplex" matTooltip="Complex Data type"
+            >view_module</mat-icon
+          >
+          {{ element.isComplex ? element.value.name : element.value }}
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [class.selected]="selection.isSelected(row)"
+        (click)="selection.toggle(row)"
+      ></mat-row>
+    </mat-table>
+    <div class="empty-state" *ngIf="!complexValue.properties?.length">
+      <p>No data</p>
+    </div>
+  </mat-action-row>
+</mat-expansion-panel>
+
+<div class="text--center" *ngIf="complexValues?.length === 0">No entity values</div>
+<div class="text--center" *ngIf="(complexValues | entityValue: searchFilter)?.length === 0">Entity values are filtered out.</div>

@@ -1,0 +1,75 @@
+%shape-icon {
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  height: 20px;
+  width: 20px;
+  cursor: default;
+}
+
+.icons-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 7px;
+  box-sizing: border-box;
+  position: absolute;
+  left: 3px;
+  top: -2px;
+
+  & > *:not(:last-child) {
+    margin-right: 5px;
+  }
+}
+
+.info-shape {
+  @extend %shape-icon;
+  background-image: url('../config/editor/img/read_more.svg');
+}
+
+.cell-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 400;
+  position: relative;
+
+  .element-name {
+    align-self: center;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    font-size: 16px;
+    margin-top: -2px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+
+    &.simple {
+      margin: 0;
+      padding: 0 3px;
+    }
+
+    &:not(.simple) {
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--ame-font);
+    }
+  }
+
+  .element-info {
+    display: block;
+    align-self: flex-start;
+    width: 100%;
+    padding: 5px 10px;
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+}
+
+.edge-label {
+  height: 15px;
+  border-radius: 3px;
+  padding: 2px 4px;
+  color: black;
+  transform: translate(0, -4px);
+}

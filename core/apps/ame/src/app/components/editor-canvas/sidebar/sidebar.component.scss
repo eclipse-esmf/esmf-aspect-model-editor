@@ -1,0 +1,89 @@
+/*!
+ * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 95px;
+  height: 100%;
+  box-sizing: border-box;
+  border-right: 1px solid #cfd0d1;
+}
+
+.sidebar-content {
+  display: flex;
+  padding-top: 20px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.namespaces,
+.elements {
+  width: 100%;
+  height: 100%;
+}
+
+.close-area {
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+}
+
+.collapse {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.expand-btn {
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  margin-top: -7px;
+  padding-left: 60px;
+  cursor: pointer;
+}
+
+.collapse-btn {
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  margin-top: -7px;
+  padding-left: 360px;
+  cursor: pointer;
+}
+
+.close-namespace {
+  height: 30px;
+  right: 20px;
+  top: -10px;
+  line-height: 30px;
+}
+
+.close-namespace-elements {
+  width: 30px;
+  height: 30px;
+  right: 55px;
+  top: -5px;
+  line-height: 30px;
+}
+
+.back-to-namespace {
+  width: 30px;
+  height: 30px;
+  right: 75px;
+  top: -5px;
+  line-height: 30px;
+}

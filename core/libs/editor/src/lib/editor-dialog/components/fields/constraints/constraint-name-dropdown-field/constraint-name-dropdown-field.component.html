@@ -1,0 +1,31 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+  <mat-form-field [floatLabel]="selectedMetaModelElement?.isExternalReference() ? 'always' : 'auto'" appearance="fill">
+    <mat-label for="constraintName">Constraint class</mat-label>
+    <mat-select
+      #constraintName
+      [disabled]="selectedMetaModelElement?.isExternalReference()"
+      [ngModel]="metaModelClassName"
+      (ngModelChange)="onConstraintChange($event)"
+      name="constraintName"
+      data-cy="constraintName"
+      panelClass="constraint-items-panel"
+    >
+      <mat-option *ngFor="let constraintName of listConstraintNames" [value]="constraintName" [attr.cy-value]="constraintName">
+        {{ constraintName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

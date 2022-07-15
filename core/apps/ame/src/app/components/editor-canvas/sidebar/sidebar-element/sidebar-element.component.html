@@ -1,0 +1,33 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div
+  *ngIf="element"
+  #container
+  [ngClass]="{'element-imported': elementImported()}"
+  [attr.data-cy]="dataCy"
+  [title]="elementImported() ? 'Element already imported' : 'Drag to the right to create this element'"
+  class="container"
+>
+  <div class="icon" [ngClass]="getIconClass">
+    {{ element.type.charAt(0).toUpperCase() }}
+  </div>
+  <div class="info" [matTooltip]="element.description" matTooltipPosition="right">
+    <div class="name" [title]="element.name">
+      {{ element.name }}
+    </div>
+    <div class="description">
+      {{ element.description }}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="shape-settings__header">
+  <div class="column-container">
+    <h3 class="shape-settings__header__title">{{ getTitle() }}</h3>
+    <p class="shape-settings__header__description" *ngIf="metaModelElement?.isExternalReference()">
+      {{ metaModelElement?.aspectModelUrn?.split('#')[0] }}
+    </p>
+  </div>
+  <div class="splitter"></div>
+  <button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div class="shape-settings__content">
+  <form *ngIf="metaModelElement" [formGroup]="formGroup" [ngSwitch]="true" novalidate>
+    <!-- the same view can be shown in more than one case -->
+    <ame-aspect *ngSwitchCase="isOfType(['DefaultAspect'])" [parentForm]="formGroup"></ame-aspect>
+    <ame-characteristic *ngSwitchCase="isCharacteristic() && !isOfType(['DefaultTrait'])" [parentForm]="formGroup"></ame-characteristic>
+    <ame-constraint *ngSwitchCase="isConstraint()" [parentForm]="formGroup"></ame-constraint>
+    <ame-property *ngSwitchCase="isOfType(['DefaultProperty'])" [parentForm]="formGroup"></ame-property>
+    <ame-operation *ngSwitchCase="isOfType(['DefaultOperation'])" [parentForm]="formGroup"></ame-operation>
+    <ame-entity *ngSwitchCase="isOfType(['DefaultEntity'])" [parentForm]="formGroup"></ame-entity>
+    <ame-unit *ngSwitchCase="isOfType(['DefaultUnit'])" [parentForm]="formGroup"></ame-unit>
+    <ame-trait-characteristic *ngSwitchCase="isOfType(['DefaultTrait'])" [parentForm]="formGroup"></ame-trait-characteristic>
+    <ame-entity-value *ngSwitchCase="isOfType(['DefaultEntityValue'])" [parentForm]="formGroup"></ame-entity-value>
+    <ame-event *ngSwitchCase="isOfType(['DefaultEvent'])" [parentForm]="formGroup"></ame-event>
+  </form>
+</div>
+
+<div class="shape-settings__actions">
+  <button
+    *ngIf="metaModelDialogService.isSaveButtonEnabled()"
+    type="button"
+    mat-flat-button
+    (click)="onClose()"
+    data-cy="editorCancelButton"
+  >
+    Cancel
+  </button>
+  <button
+    *ngIf="metaModelDialogService.isSaveButtonEnabled()"
+    mat-flat-button
+    color="primary"
+    type="button"
+    [disabled]="!formGroup.valid"
+    (click)="onSave()"
+    data-cy="editorSaveButton"
+  >
+    Save
+  </button>
+</div>

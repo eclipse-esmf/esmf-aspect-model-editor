@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "sourceMap": false,
+    "outDir": "dist/out-tsc",
+    "allowJs": true,
+    "types": ["cypress", "node"],
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false,
+    "noStrictGenericChecks": true,
+    "strictNullChecks": false
+  },
+  "angularCompilerOptions": {
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "include": ["apps/ame-e2e/src/**/*.ts", "apps/ame-e2e/src/**/*.js"]
+}

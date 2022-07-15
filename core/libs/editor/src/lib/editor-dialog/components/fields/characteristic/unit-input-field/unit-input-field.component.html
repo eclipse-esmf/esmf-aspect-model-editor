@@ -1,0 +1,70 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+  <mat-form-field [floatLabel]="getControl('unit')?.disabled ? 'always' : 'auto'" appearance="fill">
+    <mat-label for="unit">Unit</mat-label>
+    <input #unit [matAutocomplete]="auto" matInput name="unit" [formControl]="unitDisplayControl" data-cy="unit" />
+    <button
+      *ngIf="unitDisplayControl?.disabled && !metaModelElement?.isExternalReference()"
+      (click)="unlockUnit()"
+      class="close-button"
+      data-cy="clear-unit-button"
+      matSuffix
+      mat-icon-button
+      tabindex="-1"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <mat-error *ngIf="unitDisplayControl?.errors?.checkShapeName"> Please select a different name as this one is of different type </mat-error>
+    <mat-error *ngIf="unitDisplayControl?.errors?.checkShapeNameExtRef">
+      Please select a different name as this one is of different type in the same namespace
+    </mat-error>
+    <mat-error *ngIf="getControl('unit')?.errors?.required">This field is required</mat-error>
+
+    <mat-autocomplete #auto="matAutocomplete">
+      <ng-container *ngIf="filteredUnits$ | async as filteredUnits">
+        <mat-optgroup *ngIf="(unit.value || filteredUnits.length) && !unitDisplayControl.errors" label="Units">
+          <mat-option *ngIf="filteredUnits.length <= 0 && unit.value" [value]="unit.value" (click)="createNewUnit(unit.value)">
+            <span>
+              + Create new Unit: <strong>{{ unit.value }}</strong>
+            </span>
+          </mat-option>
+          <mat-option
+            *ngFor="let unit of filteredUnits"
+            [value]="unit.name"
+            [title]="unit.name"
+            (onSelectionChange)="onExistingUnitChange(unit)"
+          >
+            {{ unit?.name }}
+          </mat-option>
+        </mat-optgroup>
+      </ng-container>
+      <ng-container #predefinedUnits *ngIf="filteredPredefinedUnits$ | async as filteredPredefinedUnits">
+        <mat-optgroup label="Predefined Units" *ngIf="filteredPredefinedUnits?.length">
+          <mat-option
+            *ngFor="let unit of filteredPredefinedUnits"
+            [value]="unit.name"
+            [title]="unit.name"
+            [attr.data-unit-cy]="unit.name"
+            (onSelectionChange)="onPredefinedUnitChange(unit)"
+          >
+            {{ unit.name }}
+          </mat-option>
+        </mat-optgroup>
+      </ng-container>
+    </mat-autocomplete>
+    <mat-hint>bamm:unit</mat-hint>
+  </mat-form-field>
+</div>

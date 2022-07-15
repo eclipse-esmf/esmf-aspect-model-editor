@@ -1,0 +1,10 @@
+name: ame-guide
+title: Aspect Model Editor
+version: "4.0.0"
+start_page: ROOT:introduction.adoc
+nav:
+  - modules/ROOT/nav.adoc
+asciidoc:
+  attributes:
+    currently-supported-bamm: 1.0.0
+    bamm-link: https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/v1.0.0/index.html[1.0.0]
