@@ -67,6 +67,6 @@
     </mat-autocomplete>
     <mat-hint>bamm:extends</mat-hint>
 
-    <mat-error *ngIf="getControl('extendsValue')?.errors?.required">Please define an Abstract Property</mat-error>
+    <mat-error *ngIf="getControl('extendsValue')?.errors?.recursive">This element can not be chose due to recursive connections</mat-error>
   </mat-form-field>
 </div>

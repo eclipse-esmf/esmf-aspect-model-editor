@@ -24,6 +24,7 @@ import {
   DefaultTrait,
   DefaultAbstractEntity,
   DefaultAbstractProperty,
+  CanExtend,
 } from '@ame/meta-model';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {LanguageSettingsService} from '@ame/settings-dialog';
@@ -281,6 +282,9 @@ export class MxGraphHelper {
 
     if (isSmallShape) {
       title.classList.add('simple');
+      if (modelElement instanceof CanExtend && cell.collapsed) {
+        div.removeChild(title);
+      }
       return div;
     }
 

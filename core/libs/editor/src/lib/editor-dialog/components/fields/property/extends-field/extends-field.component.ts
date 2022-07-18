@@ -1,5 +1,5 @@
 import {NamespacesCacheService} from '@ame/cache';
-import {DefaultProperty, DefaultAbstractProperty} from '@ame/meta-model';
+import {DefaultProperty, DefaultAbstractProperty, CanExtend} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {NotificationsService, SearchService} from '@ame/shared';
@@ -91,7 +91,9 @@ export class PropertyExtendsFieldComponent extends InputFieldComponent<DefaultPr
     this.filteredAbstractProperties$ = combineLatest([
       this.metaModelElement instanceof DefaultProperty ? this.initFilteredPropertyTypes(this.extendsValueControl) : of([]),
       this.initFilteredAbstractPropertyTypes(this.extendsValueControl),
-    ]).pipe(map(([a, b]) => [...a, ...b].filter(e => e.name !== this.metaModelElement.name)));
+    ]).pipe(
+      map(([a, b]) => [...a, ...b].filter(e => e.name !== this.metaModelElement.name && !this.isRecursive(this.getElementFromCache(e))))
+    );
   }
 
   onSelectionChange(newValue: any) {
@@ -99,18 +101,7 @@ export class PropertyExtendsFieldComponent extends InputFieldComponent<DefaultPr
       return; // happens on reset form
     }
 
-    let foundProperty: any = this.currentCachedFile
-      .getCachedAbstractProperties()
-      .find(abstractProperty => abstractProperty.aspectModelUrn === newValue.urn);
-
-    if (!foundProperty) {
-      foundProperty = this.currentCachedFile.getCachedProperties().find(property => property.aspectModelUrn === newValue.urn);
-    }
-
-    if (!foundProperty) {
-      foundProperty = this.namespacesCacheService.findElementOnExtReference<DefaultProperty>(newValue.urn);
-    }
-
+    const foundProperty: any = this.getElementFromCache(newValue);
     this.parentForm.setControl('extends', new FormControl(foundProperty));
 
     this.extendsValueControl.patchValue(newValue.name);
@@ -144,5 +135,29 @@ export class PropertyExtendsFieldComponent extends InputFieldComponent<DefaultPr
     this.extendsValueControl.patchValue('');
     this.extendsControl.patchValue(null);
     this.extendsControl.markAllAsTouched();
+  }
+
+  private isRecursive(foundProperty: CanExtend) {
+    if (!foundProperty) {
+      return false;
+    }
+
+    return this.metaModelElement.aspectModelUrn === foundProperty.aspectModelUrn || this.isRecursive(foundProperty.extendedElement);
+  }
+
+  private getElementFromCache(newValue: any) {
+    let foundProperty: any = this.currentCachedFile
+      .getCachedAbstractProperties()
+      .find(abstractProperty => abstractProperty.aspectModelUrn === newValue.urn);
+
+    if (!foundProperty) {
+      foundProperty = this.currentCachedFile.getCachedProperties().find(property => property.aspectModelUrn === newValue.urn);
+    }
+
+    if (!foundProperty) {
+      foundProperty = this.namespacesCacheService.findElementOnExtReference<DefaultProperty>(newValue.urn);
+    }
+
+    return foundProperty;
   }
 }
