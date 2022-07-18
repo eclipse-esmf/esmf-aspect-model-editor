@@ -12,6 +12,8 @@
  */
 
 import {
+  DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultEntity,
   DefaultEnumeration,
@@ -42,7 +44,14 @@ export class RdfListConstants {
       },
       {
         source: DefaultEntity,
-        children: [{type: DefaultProperty, predicate: bamm.PropertiesProperty()}],
+        children: [
+          {type: DefaultProperty, predicate: bamm.PropertiesProperty()},
+          {type: DefaultAbstractProperty, predicate: bamm.PropertiesProperty()},
+        ],
+      },
+      {
+        source: DefaultAbstractEntity,
+        children: [{type: DefaultAbstractProperty, predicate: bamm.PropertiesProperty()}],
       },
       {
         source: DefaultEnumeration,
@@ -69,6 +78,7 @@ export class RdfListConstants {
       [ListProperties.values]: bammc.ValuesProperty(),
       [ListProperties.operations]: bamm.OperationsProperty(),
       [ListProperties.properties]: bamm.PropertiesProperty(),
+      [ListProperties.abstractProperties]: bamm.PropertiesProperty(),
       [ListProperties.input]: bamm.InputProperty(),
       [ListProperties.quantityKinds]: bamm.QuantityKindsProperty(),
       [ListProperties.events]: bamm.EventsProperty(),

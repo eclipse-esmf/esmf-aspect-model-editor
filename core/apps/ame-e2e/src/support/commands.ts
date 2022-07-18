@@ -202,9 +202,10 @@ Cypress.Commands.add('getHTMLCell', (name: string) =>
 );
 
 Cypress.Commands.add('dbClickShape', (name: string) => {
-  cy.getHTMLCell(name);
-  cy.getHTMLCell(name).dblclick({force: true});
-  cy.getHTMLCell(name).trigger('mousemove', {force: true});
+  cy.clickShape(name).then(() => {
+    cy.getHTMLCell(name).dblclick({force: true});
+    cy.getHTMLCell(name).trigger('mousemove', {force: true});
+  });
 
   return cy
     .get(SELECTOR_editorSaveButton)
@@ -213,7 +214,7 @@ Cypress.Commands.add('dbClickShape', (name: string) => {
 });
 
 Cypress.Commands.add('getCellLabel', (shape: string, keyName: string) => {
-  return cy.getHTMLCell(shape).get(`.element-info[data-key="${keyName}"]`).invoke('attr', 'title');
+  return cy.getHTMLCell(shape).find(`.element-info[data-key="${keyName}"]`).invoke('attr', 'title');
 });
 
 Cypress.Commands.add('clickShape', cyHelp.clickShape);
@@ -330,11 +331,7 @@ Cypress.Commands.add('clickConnectShapes', (nameSource, nameTarget) =>
   cy
     .then(() => cyHelp.clickShape(nameSource))
     .then(() => cyHelp.clickShape(nameTarget, true))
-    .then(() => {
-      debugger;
-      cy.get(SELECTOR_tbConnectButton).click({force: true});
-      debugger;
-    })
+    .then(() => cy.get(SELECTOR_tbConnectButton).click({force: true}))
 );
 
 Cypress.Commands.add('getFormField', (name: string) => cy.get(`[ng-reflect-model="${name}"]`));
@@ -350,14 +347,14 @@ Cypress.Commands.add('dragElement', (selector: string, x: number, y: number) =>
     if (Cypress.platform === 'darwin') {
       return cy
         .get(selector)
-        .trigger('mousedown', 'left' ,{which: 1, force: true})
+        .trigger('mousedown', 'left', {which: 1, force: true})
         .trigger('mousemove', {clientX: graphX, clientY: graphY, force: true, waitForAnimations: true})
         .then(() => cy.get('#graph > svg').click(graphX, graphY, {force: true}).trigger('mouseup', {force: true}));
     }
 
     return cy
       .get(selector)
-      .trigger('pointerdown' ,{which: 1, force: true})
+      .trigger('pointerdown', {which: 1, force: true})
       .trigger('pointermove', {clientX: graphX, clientY: graphY, force: true, waitForAnimations: true})
       .then(() => cy.get('#graph > svg').click(graphX, graphY, {force: true}).trigger('pointerup', {force: true}));
   })

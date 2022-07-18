@@ -19,6 +19,7 @@ export type ListElementType = any;
 export type SourceElementType = Aspect | Operation | Enumeration | StructuredValue | Entity | Unit | Event;
 export enum ListProperties {
   properties = 'properties',
+  abstractProperties = 'abstractProperties',
   operations = 'operations',
   input = 'input',
   values = 'values',
@@ -54,7 +55,7 @@ export interface StoreListReferences {
 
 export interface CreateEmptyRdfList {
   createEmpty(source: Aspect, property: ListProperties.properties | ListProperties.operations | ListProperties.events): void;
-  createEmpty(source: Entity, property: ListProperties.properties): void;
+  createEmpty(source: Entity, property: ListProperties.properties | ListProperties.abstractProperties): void;
   createEmpty(source: Event, property: ListProperties.parameters): void;
   createEmpty(source: Enumeration, property: ListProperties.values): void;
   createEmpty(source: StructuredValue, property: ListProperties.elements): void;
@@ -63,7 +64,7 @@ export interface CreateEmptyRdfList {
 
 export interface EmptyRdfList {
   emptyList(source: Aspect, property: ListProperties.properties | ListProperties.operations | ListProperties.events): void;
-  emptyList(source: Entity, property: ListProperties.properties): void;
+  emptyList(source: Entity, property: ListProperties.properties | ListProperties.abstractProperties): void;
   emptyList(source: Event, property: ListProperties.parameters): void;
   emptyList(source: Enumeration, property: ListProperties.values): void;
   emptyList(source: StructuredValue, property: ListProperties.elements): void;

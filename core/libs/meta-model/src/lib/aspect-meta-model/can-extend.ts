@@ -15,7 +15,7 @@ import {AspectModelVisitor} from '@ame/mx-graph';
 import {Base} from './base';
 import {OverWrittenProperty} from './overwritten-property';
 
-export class CanExtend extends Base {
+export abstract class CanExtend extends Base {
   public extendedElement: CanExtend;
 
   public get className(): any {
@@ -46,6 +46,7 @@ export class CanExtend extends Base {
     return this.extendedElement.see?.length ? this.extendedElement.see : this.extendedElement.extendedSee;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   accept<T, U>(_visitor: AspectModelVisitor<T, U>, _context: U): T {
     throw new Error('Method not implemented.');
   }

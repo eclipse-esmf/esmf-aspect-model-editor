@@ -100,10 +100,14 @@ export abstract class BaseModelService {
 
   protected updateSee(modelElement: BaseMetaModelElement, form: {[key: string]: any}) {
     const newSeeValue = form.see instanceof Array ? form.see : form.see?.split(',');
-    if (modelElement instanceof CanExtend && newSeeValue?.join(',') !== modelElement.extendedSee?.join(',')) {
-      modelElement.setSeeReferences(form.see ? newSeeValue : null);
+    if (modelElement instanceof CanExtend) {
+      if (newSeeValue?.join(',') !== modelElement.extendedSee?.join(',')) {
+        modelElement.setSeeReferences(form.see ? newSeeValue : null);
+      } else {
+        modelElement.setSeeReferences([]);
+      }
     } else {
-      modelElement.setSeeReferences([]);
+      modelElement.setSeeReferences(form.see ? newSeeValue : null);
     }
   }
 
@@ -113,10 +117,14 @@ export abstract class BaseModelService {
         return;
       }
       const locale = key.replace('description', '');
-      if (modelElement instanceof CanExtend && form[key] !== modelElement.extendedDescription?.get(locale)) {
-        modelElement.addDescription(locale, form[key]);
+      if (modelElement instanceof CanExtend) {
+        if (form[key] !== modelElement.extendedDescription?.get(locale)) {
+          modelElement.addDescription(locale, form[key]);
+        } else {
+          modelElement.addDescription(locale, '');
+        }
       } else {
-        modelElement.addDescription(locale, '');
+        modelElement.addDescription(locale, form[key]);
       }
     });
   }
@@ -127,10 +135,14 @@ export abstract class BaseModelService {
         return;
       }
       const locale = key.replace('preferredName', '');
-      if (modelElement instanceof CanExtend && form[key] !== modelElement.extendedPreferredName?.get(locale)) {
-        modelElement.addPreferredName(locale, form[key]);
+      if (modelElement instanceof CanExtend) {
+        if (form[key] !== modelElement.extendedPreferredName?.get(locale)) {
+          modelElement.addPreferredName(locale, form[key]);
+        } else {
+          modelElement.addPreferredName(locale, '');
+        }
       } else {
-        modelElement.addPreferredName(locale, '');
+        modelElement.addPreferredName(locale, form[key]);
       }
     });
   }

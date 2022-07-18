@@ -190,6 +190,7 @@ export class ElementModelService {
       AbstractEntityModelService,
       AbstractPropertyModelService,
       AspectModelService,
+      TraitModelService,
       CharacteristicModelService,
       ConstraintModelService,
       EntityModelService,
@@ -197,7 +198,6 @@ export class ElementModelService {
       EventModelService,
       OperationModelService,
       PropertyModelService,
-      TraitModelService,
       UnitModelService,
     ];
 

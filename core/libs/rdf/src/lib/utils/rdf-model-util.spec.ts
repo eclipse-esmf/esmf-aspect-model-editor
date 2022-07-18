@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /*
  * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -83,8 +84,8 @@ describe('Test RDF Model Util', () => {
       const metaModelElement = DefaultFixedPointConstraint.createInstance();
       const bamm = {} as Bamm;
       const bammc = {
-        isScaleValueProperty: (value): boolean => true,
-        isIntegerValueProperty: (value): boolean => true,
+        isScaleValueProperty: (_value): boolean => true,
+        isIntegerValueProperty: (_value): boolean => true,
       } as Bammc;
 
       rdfModel.BAMM = () => bamm;
@@ -99,7 +100,7 @@ describe('Test RDF Model Util', () => {
     test('should return DefaultProperty urn', () => {
       const metaModelElement = DefaultProperty.createInstance();
       const bamm = {
-        isExampleValueProperty: (value): boolean => true,
+        isExampleValueProperty: (_value): boolean => true,
       } as Bamm;
       const bammc = {} as Bammc;
       rdfModel.BAMM = () => bamm;
@@ -131,7 +132,7 @@ describe('Test RDF Model Util', () => {
       const metaModelElement = DefaultEnumeration.createInstance();
       const bamm = {} as Bamm;
       const bammc = {
-        isValuesProperty: (value): boolean => true,
+        isValuesProperty: (_value): boolean => true,
       } as Bammc;
       rdfModel.BAMMC = () => bammc;
       rdfModel.BAMM = () => bamm;
@@ -146,8 +147,8 @@ describe('Test RDF Model Util', () => {
       const metaModelElement = DefaultState.createInstance();
       const bamm = {} as Bamm;
       const bammc = {
-        isValuesProperty: (value): boolean => false,
-        isDefaultValueProperty: (value): boolean => true,
+        isValuesProperty: (_value): boolean => false,
+        isDefaultValueProperty: (_value): boolean => true,
       } as Bammc;
       rdfModel.BAMMC = () => bammc;
       rdfModel.BAMM = () => bamm;
@@ -162,8 +163,8 @@ describe('Test RDF Model Util', () => {
       const metaModelElement = DefaultState.createInstance();
       const bamm = {} as Bamm;
       const bammc = {
-        isValuesProperty: (value): boolean => false,
-        isDefaultValueProperty: (value): boolean => false,
+        isValuesProperty: (_value): boolean => false,
+        isDefaultValueProperty: (_value): boolean => false,
       } as Bammc;
       rdfModel.BAMM = () => bamm;
       rdfModel.BAMMC = () => bammc;
