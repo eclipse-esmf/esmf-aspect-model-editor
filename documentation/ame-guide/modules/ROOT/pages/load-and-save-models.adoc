@@ -57,7 +57,6 @@ image::autosaving.png[width=100%]
 
 ++++
 <style>
-  img {border: 1px solid #cfd0d1;}
   .imageblock {flex-direction: row !important;}
 </style>
 ++++

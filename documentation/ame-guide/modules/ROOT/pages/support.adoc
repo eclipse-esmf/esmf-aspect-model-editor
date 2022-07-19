@@ -19,7 +19,6 @@ For general questions on semantic data structuring and the role of the Aspect Mo
 
 ++++
 <style>
-  img {border: 1px solid #cfd0d1;}
   .imageblock {flex-direction: row !important;}
 </style>
 ++++

@@ -204,7 +204,6 @@ For more information, see xref:navigate-models.adoc[Navigate models].
 
 ++++
 <style>
-  img {border: 1px solid #cfd0d1;}
   .imageblock {flex-direction: row !important;}
 </style>
 ++++
