@@ -44,10 +44,6 @@ This program and the accompanying materials are made under the terms of https://
 
 All contained third-party materials are listed in the https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/blob/main/NOTICE.md[NOTICE.md^, opts=nofollow] file.
 
-&nbsp;
-
-include::support.adoc[]
-
 ++++
 <style>
   img {border: 1px solid #cfd0d1;}
