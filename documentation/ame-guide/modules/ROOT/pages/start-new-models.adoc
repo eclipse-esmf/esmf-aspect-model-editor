@@ -19,7 +19,6 @@ image::start-modeling-edit-ui.png[width=80%]
 
 ++++
 <style>
-  img {border: 1px solid #cfd0d1;}
   .imageblock {flex-direction: row !important;}
 </style>
 ++++
