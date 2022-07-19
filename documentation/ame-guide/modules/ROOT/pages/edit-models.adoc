@@ -130,7 +130,6 @@ image::different-constraints.png[Different Constraints]
 
 ++++
 <style>
-  img {border: 1px solid #cfd0d1;}
   .imageblock {flex-direction: row !important;}
 </style>
 ++++

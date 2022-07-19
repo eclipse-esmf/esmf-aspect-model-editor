@@ -46,7 +46,6 @@ This sections lists features that can be achieved within the Aspect Model Editor
 
 ++++
 <style>
-  img {border: 1px solid #cfd0d1;}
   .imageblock {flex-direction: row !important;}
 </style>
 ++++

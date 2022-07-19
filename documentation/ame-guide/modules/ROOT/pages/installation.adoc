@@ -104,7 +104,6 @@ NOTE: You can have only one installation of the Aspect Model Editor on your loca
 
 ++++
 <style>
-  img {border: 1px solid #cfd0d1;}
   .imageblock {flex-direction: row !important;}
 </style>
 ++++

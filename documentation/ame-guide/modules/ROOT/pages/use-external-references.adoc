@@ -53,7 +53,6 @@ To refer from one element to another one, proceed as follows:
 
 ++++
 <style>
-  img {border: 1px solid #cfd0d1;}
   .imageblock {flex-direction: row !important;}
 </style>
 ++++
