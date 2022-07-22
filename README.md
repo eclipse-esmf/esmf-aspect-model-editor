@@ -21,14 +21,17 @@ This project includes the Aspect model editor and their documentation.
 Are you having trouble with Aspect Model Editor? We want to help!
 
 - Check the [developer documentation](https://openmanufacturingplatform.github.io)
-- Check the BAMM [specification](https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/v1.0.0/index.html)
-- Having issues with the Aspect Model Editor? Open a [GitHub issue](https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/issues).
+- Check the
+  BAMM [specification](https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/v1.0.0/index.html)
+- Having issues with the Aspect Model Editor? Open
+  a [GitHub issue](https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/issues).
 
 ### Getting started
 
 #### Setup
 
 - Download & Install [Node.js](https://nodejs.org/en/download/)
+- To generate Aspect Model documentation, the installation [GraphViz](https://graphviz.org/download) is required.
 
 #### Install & Run
 

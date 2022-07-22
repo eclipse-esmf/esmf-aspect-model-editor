@@ -7,4 +7,4 @@ nav:
 asciidoc:
   attributes:
     currently-supported-bamm: 1.0.0
-    bamm-link: https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/index.html[1.0.0]
+    bamm-link: https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/v1.0.0/index.html[1.0.0]
