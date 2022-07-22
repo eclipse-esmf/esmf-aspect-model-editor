@@ -15,9 +15,11 @@ import {
   Aspect,
   Base,
   BaseMetaModelElement,
+  CanExtend,
   Characteristic,
   Constraint,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -52,6 +54,7 @@ export interface PropertyInformation {
   label: string;
   key: string;
   lang?: string;
+  extended?: boolean;
 }
 
 export class MxGraphVisitorHelper {
@@ -96,18 +99,28 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addLocalizedDescriptions(metaModelElement: Base, languageSettingsService: LanguageSettingsService): PropertyInformation[] {
-    return metaModelElement
-      .getAllLocalesDescriptions()
+  static addLocalizedDescriptions(
+    metaModelElement: CanExtend | Base,
+    languageSettingsService: LanguageSettingsService
+  ): PropertyInformation[] {
+    const languages: string[] =
+      metaModelElement.getAllLocalesDescriptions().length >= ((metaModelElement as CanExtend)?.extendedDescription?.size || 0)
+        ? metaModelElement.getAllLocalesDescriptions()
+        : Array.from((metaModelElement as CanExtend)?.extendedDescription?.keys());
+
+    return languages
       .map(languageCode => {
         const langTag = locale.getByTag(languageCode).tag;
         languageSettingsService.addLanguageCode(langTag);
         const description = metaModelElement.getDescription(langTag);
-        if (description) {
+        const extendedDescription = (metaModelElement as CanExtend)?.extendedDescription?.get(langTag);
+
+        if (description || extendedDescription) {
           return {
-            label: `description = ${description} @${langTag}`,
+            label: `description = ${description || extendedDescription} @${langTag}`,
             key: 'description',
             lang: langTag,
+            extended: !!extendedDescription && !description,
           };
         }
         return null;
@@ -115,24 +128,37 @@ export class MxGraphVisitorHelper {
       .filter(e => !!e);
   }
 
-  static addLocalizedPreferredNames(metaModelElement: Base, languageSettingsService: LanguageSettingsService): PropertyInformation[] {
-    return metaModelElement
-      .getAllLocalesPreferredNames()
+  static addLocalizedPreferredNames(
+    metaModelElement: CanExtend | Base,
+    languageSettingsService: LanguageSettingsService
+  ): PropertyInformation[] {
+    const languages: string[] =
+      metaModelElement.getAllLocalesPreferredNames().length >= ((metaModelElement as CanExtend)?.extendedPreferredName?.size || 0)
+        ? metaModelElement.getAllLocalesPreferredNames()
+        : Array.from((metaModelElement as CanExtend)?.extendedPreferredName?.keys());
+
+    return languages
       .map(languageCode => {
         const langTag = locale.getByTag(languageCode).tag;
         languageSettingsService.addLanguageCode(langTag);
         const preferredName = metaModelElement.getPreferredName(langTag);
-        if (preferredName) {
-          return {label: `preferredName = ${preferredName} @${langTag}`, key: 'preferredName', lang: langTag};
+        const extendedPreferredName = (metaModelElement as CanExtend)?.extendedPreferredName?.get(langTag);
+        if (preferredName || extendedPreferredName) {
+          return {
+            label: `preferredName = ${preferredName || extendedPreferredName} @${langTag}`,
+            key: 'preferredName',
+            lang: langTag,
+            extended: !!extendedPreferredName && !preferredName,
+          };
         }
         return null;
       })
       .filter(e => !!e);
   }
 
-  static addExtends(entity: DefaultEntity | DefaultAbstractEntity): PropertyInformation {
-    if (entity.extendedElement !== null && entity.extendedElement !== undefined) {
-      return {label: `extends = ${entity.extendedElement.name}`, key: 'extends'};
+  static addExtends(element: any): PropertyInformation {
+    if (element.extendedElement !== null && element.extendedElement !== undefined) {
+      return {label: `extends = ${element.extendedElement.name}`, key: 'extends'};
     }
     return null;
   }
@@ -147,8 +173,14 @@ export class MxGraphVisitorHelper {
   }
 
   static addSee(metaModelElement: Base): PropertyInformation {
-    if (metaModelElement.getSeeReferences() && metaModelElement.getSeeReferences().length > 0) {
-      return {label: `see = ${metaModelElement.getSeeReferences().join(',')}`, key: 'see'};
+    if (metaModelElement.getSeeReferences()?.length > 0 || (metaModelElement as CanExtend)?.extendedSee?.length) {
+      const stringSee = metaModelElement.getSeeReferences().join(',');
+      const stringExtendedSee = (metaModelElement as CanExtend)?.extendedSee?.join(',');
+      return {
+        label: `see = ${stringSee || stringExtendedSee}`,
+        key: 'see',
+        extended: !!stringExtendedSee && !stringSee,
+      };
     }
     return null;
   }
@@ -301,18 +333,18 @@ export class MxGraphVisitorHelper {
 
   static getOperationProperties(operation: DefaultOperation, languageSettingsService: LanguageSettingsService) {
     return [
-      ...MxGraphVisitorHelper.addLocalizedPreferredNames(operation, languageSettingsService),
-      ...MxGraphVisitorHelper.addLocalizedDescriptions(operation, languageSettingsService),
-      MxGraphVisitorHelper.addSee(operation),
+      ...this.addLocalizedPreferredNames(operation, languageSettingsService),
+      ...this.addLocalizedDescriptions(operation, languageSettingsService),
+      this.addSee(operation),
     ].filter(e => !!e);
   }
 
   static getEntityProperties(entity: DefaultEntity, languageSettingsService: LanguageSettingsService) {
     return [
-      MxGraphVisitorHelper.addExtends(entity),
-      ...MxGraphVisitorHelper.addLocalizedPreferredNames(entity, languageSettingsService),
-      ...MxGraphVisitorHelper.addLocalizedDescriptions(entity, languageSettingsService),
-      MxGraphVisitorHelper.addSee(entity),
+      this.addExtends(entity),
+      ...this.addLocalizedPreferredNames(entity, languageSettingsService),
+      ...this.addLocalizedDescriptions(entity, languageSettingsService),
+      this.addSee(entity),
     ].filter(e => !!e);
   }
 
@@ -322,68 +354,73 @@ export class MxGraphVisitorHelper {
 
   static getUnitProperties(unit: DefaultUnit, languageSettingsService: LanguageSettingsService) {
     return [
-      ...MxGraphVisitorHelper.addLocalizedPreferredNames(unit, languageSettingsService),
-      MxGraphVisitorHelper.addCode(unit),
-      MxGraphVisitorHelper.addSymbol(unit),
-      MxGraphVisitorHelper.addConversionFactor(unit),
-      MxGraphVisitorHelper.addNumericConversionFactor(unit),
-      MxGraphVisitorHelper.addQuantityKinds(unit.quantityKinds),
-      MxGraphVisitorHelper.addReferenceUnit(unit),
+      ...this.addLocalizedPreferredNames(unit, languageSettingsService),
+      this.addCode(unit),
+      this.addSymbol(unit),
+      this.addConversionFactor(unit),
+      this.addNumericConversionFactor(unit),
+      this.addQuantityKinds(unit.quantityKinds),
+      this.addReferenceUnit(unit),
     ].filter(e => !!e);
   }
 
   static getPropertyProperties(property: DefaultProperty, languageSettingsService: LanguageSettingsService) {
     return [
-      ...MxGraphVisitorHelper.addLocalizedPreferredNames(property, languageSettingsService),
-      ...MxGraphVisitorHelper.addLocalizedDescriptions(property, languageSettingsService),
-      MxGraphVisitorHelper.addSee(property),
-      MxGraphVisitorHelper.addExampleValue(property),
+      this.addExtends(property),
+      ...this.addLocalizedPreferredNames(property, languageSettingsService),
+      ...this.addLocalizedDescriptions(property, languageSettingsService),
+      this.addSee(property),
+      this.addExampleValue(property),
     ].filter(e => !!e);
+  }
+
+  static getAbstractPropertyProperties(abstractProperty: any, languageSettingsService: LanguageSettingsService) {
+    return this.getPropertyProperties(abstractProperty, languageSettingsService);
   }
 
   static getCharacteristicProperties(characteristic: DefaultCharacteristic, languageSettingsService: LanguageSettingsService) {
     return [
-      ...MxGraphVisitorHelper.addLocalizedPreferredNames(characteristic, languageSettingsService),
-      ...MxGraphVisitorHelper.addLocalizedDescriptions(characteristic, languageSettingsService),
-      MxGraphVisitorHelper.addSee(characteristic),
-      MxGraphVisitorHelper.addDataType(characteristic),
-      MxGraphVisitorHelper.addValues(characteristic),
-      MxGraphVisitorHelper.addDefaultValue(characteristic),
-      MxGraphVisitorHelper.addDeconstructionRule(characteristic),
-      MxGraphVisitorHelper.addElements(characteristic),
+      ...this.addLocalizedPreferredNames(characteristic, languageSettingsService),
+      ...this.addLocalizedDescriptions(characteristic, languageSettingsService),
+      this.addSee(characteristic),
+      this.addDataType(characteristic),
+      this.addValues(characteristic),
+      this.addDefaultValue(characteristic),
+      this.addDeconstructionRule(characteristic),
+      this.addElements(characteristic),
     ].filter(e => !!e);
   }
 
   static getAspectProperties(aspect: DefaultAspect, languageSettingsService: LanguageSettingsService) {
     return [
-      ...MxGraphVisitorHelper.addLocalizedPreferredNames(aspect, languageSettingsService),
-      ...MxGraphVisitorHelper.addLocalizedDescriptions(aspect, languageSettingsService),
-      MxGraphVisitorHelper.addSee(aspect),
-      MxGraphVisitorHelper.addIsCollectionAspect(aspect),
+      ...this.addLocalizedPreferredNames(aspect, languageSettingsService),
+      ...this.addLocalizedDescriptions(aspect, languageSettingsService),
+      this.addSee(aspect),
+      this.addIsCollectionAspect(aspect),
     ].filter(e => !!e);
   }
 
   static getConstraintProperties(constraint: DefaultConstraint, languageSettingsService: LanguageSettingsService) {
     return [
-      ...MxGraphVisitorHelper.addLocalizedPreferredNames(constraint, languageSettingsService),
-      ...MxGraphVisitorHelper.addLocalizedDescriptions(constraint, languageSettingsService),
-      MxGraphVisitorHelper.addSee(constraint),
-      MxGraphVisitorHelper.addValue(constraint),
-      MxGraphVisitorHelper.addMinValue(constraint),
-      MxGraphVisitorHelper.addMaxValue(constraint),
-      ...MxGraphVisitorHelper.addBoundDefinition(constraint),
-      MxGraphVisitorHelper.addLanguageCode(constraint),
-      MxGraphVisitorHelper.addScale(constraint),
-      MxGraphVisitorHelper.addInteger(constraint),
-      MxGraphVisitorHelper.addLocaleCode(constraint),
+      ...this.addLocalizedPreferredNames(constraint, languageSettingsService),
+      ...this.addLocalizedDescriptions(constraint, languageSettingsService),
+      this.addSee(constraint),
+      this.addValue(constraint),
+      this.addMinValue(constraint),
+      this.addMaxValue(constraint),
+      ...this.addBoundDefinition(constraint),
+      this.addLanguageCode(constraint),
+      this.addScale(constraint),
+      this.addInteger(constraint),
+      this.addLocaleCode(constraint),
     ].filter(e => !!e);
   }
 
   static getEventProperties(event: DefaultEvent, languageSettingsService: LanguageSettingsService) {
     return [
-      ...MxGraphVisitorHelper.addLocalizedPreferredNames(event, languageSettingsService),
-      ...MxGraphVisitorHelper.addLocalizedDescriptions(event, languageSettingsService),
-      MxGraphVisitorHelper.addSee(event),
+      ...this.addLocalizedPreferredNames(event, languageSettingsService),
+      ...this.addLocalizedDescriptions(event, languageSettingsService),
+      this.addSee(event),
     ].filter(e => !!e);
   }
 
@@ -422,6 +459,10 @@ export class MxGraphVisitorHelper {
 
     if (element instanceof DefaultAbstractEntity) {
       return this.getAbstractEntityProperties(element, languageSettingsService);
+    }
+
+    if (element instanceof DefaultAbstractProperty) {
+      return this.getAbstractPropertyProperties(element, languageSettingsService);
     }
 
     return null;

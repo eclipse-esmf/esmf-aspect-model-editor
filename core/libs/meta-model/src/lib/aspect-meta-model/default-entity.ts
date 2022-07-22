@@ -10,54 +10,21 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-
-import {Base, BaseMetaModelElement} from './base';
+import {BaseMetaModelElement} from './base';
 import {HasProperties} from './has-properties';
 import {Type} from './type';
 import {OverWrittenProperty} from './overwritten-property';
 import {AspectModelVisitor} from '@ame/mx-graph';
-import {CanExtend} from './can-extend';
+import {CanExtendsWithProperties} from './can-extend';
 import {DefaultAbstractEntity} from './default-abstract-entity';
 
-export interface Entity extends BaseMetaModelElement, HasProperties, Type, CanExtend {}
+export interface Entity extends BaseMetaModelElement, HasProperties, Type {}
 
-export class DefaultEntity extends Base implements Entity {
-  public extendedElement: DefaultAbstractEntity;
+export class DefaultEntity extends CanExtendsWithProperties implements Entity {
+  public extendedElement: DefaultAbstractEntity | DefaultEntity;
 
   public get className() {
     return 'DefaultEntity';
-  }
-
-  public get extendedProperties(): OverWrittenProperty[] {
-    if (this.extendedElement instanceof DefaultEntity || this.extendedElement instanceof DefaultAbstractEntity) {
-      return this.extendedElement.properties;
-    }
-
-    return [];
-  }
-
-  public get extendedPreferredName() {
-    if (!this.extendedElement) {
-      return null;
-    }
-
-    return this.extendedElement.preferredNames.size ? this.extendedElement.preferredNames : this.extendedElement.extendedPreferredName;
-  }
-
-  public get extendedDescription() {
-    if (!this.extendedElement) {
-      return null;
-    }
-
-    return this.extendedElement.descriptions.size ? this.extendedElement.descriptions : this.extendedElement.extendedDescription;
-  }
-
-  public get extendedSee() {
-    if (!this.extendedElement) {
-      return null;
-    }
-
-    return this.extendedElement.see?.length ? this.extendedElement.see : this.extendedElement.extendedSee;
   }
 
   public get allProperties(): OverWrittenProperty[] {
@@ -95,7 +62,6 @@ export class DefaultEntity extends Base implements Entity {
         this.properties.splice(index, 1);
       }
     }
-
     if (['DefaultAbstractEntity', 'DefaultEntity'].includes(baseMetalModelElement.className)) {
       this.extendedElement = null;
     }

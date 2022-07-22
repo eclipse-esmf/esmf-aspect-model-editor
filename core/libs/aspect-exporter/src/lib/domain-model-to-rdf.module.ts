@@ -27,6 +27,7 @@ import {
   PropertyVisitor,
   UnitVisitor,
   AbstractEntityVisitor,
+  AbstractPropertyVisitor,
 } from './visitor';
 
 @NgModule({
@@ -34,6 +35,7 @@ import {
   imports: [CommonModule],
   providers: [
     AbstractEntityVisitor,
+    AbstractPropertyVisitor,
     AspectVisitor,
     CharacteristicVisitor,
     CleanupVisitor,

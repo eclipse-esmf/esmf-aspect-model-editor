@@ -69,7 +69,7 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
         this.setPrefix(property.property.aspectModelUrn);
       }
     } else {
-      this.rdfListService.createEmpty(abstractEntity, ListProperties.properties);
+      this.rdfListService.createEmpty(abstractEntity, ListProperties.abstractProperties);
     }
   }
 

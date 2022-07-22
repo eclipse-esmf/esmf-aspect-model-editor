@@ -36,7 +36,7 @@ export class AbstractEntityRenderService extends BaseRenderService {
 
   update({cell}) {
     this.handleExtendsElement(cell);
-
+    this.renderParents(cell);
     super.update({
       cell,
       callback: () => {

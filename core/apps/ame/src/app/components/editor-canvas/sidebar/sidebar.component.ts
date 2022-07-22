@@ -176,6 +176,9 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
           .pipe(
             first(),
             catchError(error => {
+              console.groupCollapsed('sidebar.component -> loadNamespaceFile', error);
+              console.groupEnd();
+
               this.notificationsService.error(
                 'Error when loading Aspect Model. Reverting to previous Aspect Model',
                 `${error}`,

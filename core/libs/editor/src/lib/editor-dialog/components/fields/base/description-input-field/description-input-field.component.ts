@@ -13,7 +13,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, DefaultAbstractEntity, DefaultCharacteristic, DefaultEntity} from '@ame/meta-model';
+import {BaseMetaModelElement, CanExtend, DefaultCharacteristic} from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -36,16 +36,25 @@ export class DescriptionInputFieldComponent extends InputFieldComponent<BaseMeta
       return this.metaModelElement?.[key] || '';
     }
 
-    if (this.metaModelElement instanceof DefaultEntity || this.metaModelElement instanceof DefaultAbstractEntity) {
+    if (this.metaModelElement instanceof CanExtend) {
       return (
         this.previousData?.[key] ||
+        this.metaModelElement?.getDescription(locale) ||
         this.metaModelElement.extendedDescription?.get(locale) ||
-        this.metaModelElement?.getPreferredName(locale) ||
         ''
       );
     }
 
     return this.previousData?.[key] || this.metaModelElement?.getDescription(locale) || '';
+  }
+
+  isInherited(locale: string): boolean {
+    const control = this.parentForm.get('description' + locale);
+    return (
+      this.metaModelElement instanceof CanExtend &&
+      this.metaModelElement.extendedDescription?.get(locale) &&
+      control.value === this.metaModelElement.extendedDescription?.get(locale)
+    );
   }
 
   private setDescriptionControls() {
@@ -71,10 +80,7 @@ export class DescriptionInputFieldComponent extends InputFieldComponent<BaseMeta
         key,
         new FormControl({
           value: this.getCurrentValue(key, locale) || this.metaModelElement?.getDescription(locale),
-          disabled:
-            this.metaModelDialogService.isReadOnly() ||
-            (this.metaModelElement as DefaultEntity)?.extendedDescription?.get(locale) ||
-            this.metaModelElement?.isExternalReference(),
+          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
         })
       );
     });

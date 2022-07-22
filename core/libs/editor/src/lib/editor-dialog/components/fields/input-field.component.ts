@@ -18,6 +18,7 @@ import {Observable, of, startWith, Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {
   BaseMetaModelElement,
+  CanExtend,
   DefaultAbstractEntity,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -55,8 +56,8 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
     return this.namespacesCacheService.getCurrentCachedFile();
   }
 
-  get elementWithEntityType() {
-    return this.metaModelElement as any as DefaultEntity;
+  get elementExtends() {
+    return this.metaModelElement as  any as CanExtend;
   }
 
   protected constructor(
@@ -64,8 +65,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
     public namespacesCacheService?: NamespacesCacheService,
     public searchService?: SearchService,
     public mxGraphService?: MxGraphService
-  ) {
-  }
+  ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCurrentValue(key: string, _locale?: string) {
@@ -141,49 +141,44 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
     this.parentForm.setControl('changedMetaModel', new FormControl());
   }
 
-  initFilteredEntities(control: FormControl, disabled, metamodel?: BaseMetaModelElement) {
+  initFilteredEntities(control: FormControl, disabled = false) {
     return disabled
       ? of([])
       : control?.valueChanges.pipe(
-        startWith(''),
-        map((value: string) => {
-          const entities = []
-          this.currentCachedFile.getCachedEntities()?.forEach(entity => {
-            if (metamodel && (metamodel as any) === entity.extendedElement) {
-              return;
-            }
-            entities.push({
+          startWith(''),
+          map((value: string) => {
+            const entities = this.currentCachedFile.getCachedEntities()?.map(entity => ({
               name: entity.name,
               description: entity.getDescription('en') || '',
               urn: entity.getUrn(),
               complex: true,
               entity,
-            });
-          });
-          return [...entities, ...this.searchExtEntity(value)]?.filter(type => this.inSearchList(type, value));
-        }),
-        startWith([])
-      );
+            }));
+
+            return [...entities, ...this.searchExtEntity(value)]?.filter(type => this.inSearchList(type, value));
+          }),
+          startWith([])
+        );
   }
 
   initFilteredAbstractEntities(control: FormControl, disabled = false) {
     return disabled
       ? of([])
       : control?.valueChanges.pipe(
-        startWith(''),
-        map((value: string) => {
-          const entities = this.currentCachedFile.getCachedAbstractEntities()?.map(abstractEntity => ({
-            name: abstractEntity.name,
-            description: abstractEntity.getDescription('en') || '',
-            urn: abstractEntity.getUrn(),
-            complex: true,
-            entity: abstractEntity,
-          }));
+          startWith(''),
+          map((value: string) => {
+            const entities = this.currentCachedFile.getCachedAbstractEntities()?.map(abstractEntity => ({
+              name: abstractEntity.name,
+              description: abstractEntity.getDescription('en') || '',
+              urn: abstractEntity.getUrn(),
+              complex: true,
+              entity: abstractEntity,
+            }));
 
-          return [...entities, ...this.searchExtAbstractEntity(value)]?.filter(type => this.inSearchList(type, value));
-        }),
-        startWith([])
-      );
+            return [...entities, ...this.searchExtAbstractEntity(value)]?.filter(type => this.inSearchList(type, value));
+          }),
+          startWith([])
+        );
   }
 
   initFilteredPropertyTypes(control: FormControl): Observable<Array<FilteredType>> {
@@ -191,6 +186,21 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
       startWith(''),
       map((value: string) => {
         const properties: Array<FilteredType> = this.currentCachedFile.getCachedProperties()?.map(property => ({
+          name: property.name,
+          description: property.getDescription('en') || '',
+          urn: property.aspectModelUrn,
+        }));
+        return [...properties, ...this.searchExtProperty(value)]?.filter(type => this.inSearchList(type, value));
+      }),
+      startWith([])
+    );
+  }
+
+  initFilteredAbstractPropertyTypes(control: FormControl): Observable<Array<FilteredType>> {
+    return control?.valueChanges.pipe(
+      startWith(''),
+      map((value: string) => {
+        const properties: Array<FilteredType> = this.currentCachedFile.getCachedAbstractProperties()?.map(property => ({
           name: property.name,
           description: property.getDescription('en') || '',
           urn: property.aspectModelUrn,

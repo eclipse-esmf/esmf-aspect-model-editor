@@ -22,3 +22,4 @@ export * from './entity-value';
 export * from './unit';
 export * from './event';
 export * from './abstract-entity';
+export * from './abstract-property';

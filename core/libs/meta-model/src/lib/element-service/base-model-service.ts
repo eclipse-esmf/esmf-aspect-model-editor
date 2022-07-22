@@ -11,7 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, BaseMetaModelElement, DefaultAspect, DefaultEntityValue, DefaultEnumeration, EntityValueProperty} from '@ame/meta-model';
+import {
+  Base,
+  BaseMetaModelElement,
+  CanExtend,
+  DefaultAspect,
+  DefaultEntityValue,
+  DefaultEnumeration,
+  EntityValueProperty,
+} from '@ame/meta-model';
 import {mxgraph} from 'mxgraph-factory';
 import {NamespacesCacheService} from '@ame/cache';
 import {MxGraphHelper} from '@ame/mx-graph';
@@ -67,8 +75,7 @@ export abstract class BaseModelService {
     this.updatePreferredWithLocales(metaModelElement, form);
 
     // update see
-    const newSeeValue = form.see instanceof Array ? form.see : form.see?.split(',');
-    metaModelElement.setSeeReferences(form.see ? newSeeValue : null);
+    this.updateSee(metaModelElement, form);
   }
 
   delete(cell: mxgraph.mxCell) {
@@ -91,10 +98,32 @@ export abstract class BaseModelService {
     }
   }
 
+  protected updateSee(modelElement: BaseMetaModelElement, form: {[key: string]: any}) {
+    const newSeeValue = form.see instanceof Array ? form.see : form.see?.split(',');
+    if (modelElement instanceof CanExtend) {
+      if (newSeeValue?.join(',') !== modelElement.extendedSee?.join(',')) {
+        modelElement.setSeeReferences(form.see ? newSeeValue : null);
+      } else {
+        modelElement.setSeeReferences([]);
+      }
+    } else {
+      modelElement.setSeeReferences(form.see ? newSeeValue : null);
+    }
+  }
+
   protected updateDescriptionWithLocales(modelElement: BaseMetaModelElement, form: {[key: string]: any}) {
     Object.keys(form).forEach(key => {
-      if (key.startsWith('description')) {
-        const locale = key.replace('description', '');
+      if (!key.startsWith('description')) {
+        return;
+      }
+      const locale = key.replace('description', '');
+      if (modelElement instanceof CanExtend) {
+        if (form[key] !== modelElement.extendedDescription?.get(locale)) {
+          modelElement.addDescription(locale, form[key]);
+        } else {
+          modelElement.addDescription(locale, '');
+        }
+      } else {
         modelElement.addDescription(locale, form[key]);
       }
     });
@@ -102,8 +131,17 @@ export abstract class BaseModelService {
 
   protected updatePreferredWithLocales(modelElement: BaseMetaModelElement, form: {[key: string]: any}) {
     Object.keys(form).forEach(key => {
-      if (key.startsWith('preferredName')) {
-        const locale = key.replace('preferredName', '');
+      if (!key.startsWith('preferredName')) {
+        return;
+      }
+      const locale = key.replace('preferredName', '');
+      if (modelElement instanceof CanExtend) {
+        if (form[key] !== modelElement.extendedPreferredName?.get(locale)) {
+          modelElement.addPreferredName(locale, form[key]);
+        } else {
+          modelElement.addPreferredName(locale, '');
+        }
+      } else {
         modelElement.addPreferredName(locale, form[key]);
       }
     });

@@ -21,7 +21,7 @@ import {environment} from 'environments/environment';
 import {MxGraphGeometryProviderService, MxGraphSetupService} from '.';
 import {MxGraphCharacteristicHelper, MxGraphHelper, PropertyInformation} from '../helpers';
 import {mxCell, mxConstants, mxUtils} from '../providers';
-import {Base, BaseMetaModelElement, DefaultAbstractEntity, DefaultEntity, DefaultEntityValue} from '@ame/meta-model';
+import {Base, BaseMetaModelElement, DefaultEntityValue} from '@ame/meta-model';
 import {MxAttributeName} from '../models';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {CollapsedOverlay, ExpandedOverlay, NotificationsService} from '@ame/shared';
@@ -385,15 +385,20 @@ export class MxGraphService {
     const parentModel = MxGraphHelper.getModelElement(parent);
     const childModel = MxGraphHelper.getModelElement(child);
 
+    const abstractRelations = {
+      DefaultAbstractEntity: ['DefaultAbstractEntity'],
+      DefaultEntity: ['DefaultAbstractEntity', 'DefaultEntity'],
+      DefaultProperty: ['DefaultAbstractProperty', 'DefaultProperty'],
+      DefaultAbstractProperty: ['DefaultAbstractProperty'],
+    };
+
     const cellStyle =
       parentModel instanceof DefaultEntityValue && !(MxGraphHelper.getModelElement(child) instanceof DefaultEntityValue)
         ? 'entityValueEntityEdge'
         : MxGraphHelper.isOptionalProperty(MxGraphHelper.getModelElement(child), parentModel)
         ? 'optionalPropertyEdge'
-        : (parentModel instanceof DefaultAbstractEntity && childModel instanceof DefaultAbstractEntity) ||
-          (parentModel instanceof DefaultEntity && childModel instanceof DefaultAbstractEntity) ||
-          (parentModel instanceof DefaultEntity && childModel instanceof DefaultEntity)
-        ? 'entityAbstractEntityEdge'
+        : abstractRelations[parentModel.className]?.includes(childModel.className)
+        ? 'abstractElementEdge'
         : 'defaultEdge';
 
     if (

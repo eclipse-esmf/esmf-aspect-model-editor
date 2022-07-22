@@ -202,9 +202,10 @@ Cypress.Commands.add('getHTMLCell', (name: string) =>
 );
 
 Cypress.Commands.add('dbClickShape', (name: string) => {
-  cy.getHTMLCell(name);
-  cy.getHTMLCell(name).dblclick({force: true});
-  cy.getHTMLCell(name).trigger('mousemove', {force: true});
+  cy.clickShape(name).then(() => {
+    cy.getHTMLCell(name).dblclick({force: true});
+    cy.getHTMLCell(name).trigger('mousemove', {force: true});
+  });
 
   return cy
     .get(SELECTOR_editorSaveButton)
@@ -213,7 +214,7 @@ Cypress.Commands.add('dbClickShape', (name: string) => {
 });
 
 Cypress.Commands.add('getCellLabel', (shape: string, keyName: string) => {
-  return cy.getHTMLCell(shape).get(`.element-info[data-key="${keyName}"]`).invoke('attr', 'title');
+  return cy.getHTMLCell(shape).find(`.element-info[data-key="${keyName}"]`).invoke('attr', 'title');
 });
 
 Cypress.Commands.add('clickShape', cyHelp.clickShape);
@@ -330,9 +331,7 @@ Cypress.Commands.add('clickConnectShapes', (nameSource, nameTarget) =>
   cy
     .then(() => cyHelp.clickShape(nameSource))
     .then(() => cyHelp.clickShape(nameTarget, true))
-    .then(() => {
-      cy.get(SELECTOR_tbConnectButton).click({force: true});
-    })
+    .then(() => cy.get(SELECTOR_tbConnectButton).click({force: true}))
 );
 
 Cypress.Commands.add('getFormField', (name: string) => cy.get(`[ng-reflect-model="${name}"]`));

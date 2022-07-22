@@ -14,8 +14,10 @@ import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {
   AbstractEntityAbstractEntityConnectionHandler,
+  AbstractEntityAbstractPropertyConnectionHandler,
   AbstractEntityConnectionHandler,
   AbstractEntityPropertyConnectionHandler,
+  AbstractPropertyAbstractPropertyConnectionHandler,
   AspectConnectionHandler,
   AspectEventConnectionHandler,
   AspectPropertyConnectionHandler,
@@ -37,8 +39,10 @@ import {
   OperationConnectionHandler,
   OperationPropertyInputConnectionHandler,
   OperationPropertyOutputConnectionHandler,
+  PropertyAbstractPropertyConnectionHandler,
   PropertyCharacteristicConnectionHandler,
   PropertyConnectionHandler,
+  PropertyPropertyConnectionHandler,
   ShapeMultiConnector,
   ShapeSingleConnector,
   StructuredValueCharacteristicPropertyConnectionHandler,
@@ -97,6 +101,10 @@ export class ShapeConnectorService {
     private abstractEntityAbstractEntityConnectionHandler: AbstractEntityAbstractEntityConnectionHandler,
     private entityAbstractEntityConnectionHandler: EntityAbstractEntityConnectionHandler,
     private abstractEntityPropertyConnectionHandler: AbstractEntityPropertyConnectionHandler,
+    private propertyPropertyConnectionHandler: PropertyPropertyConnectionHandler,
+    private propertyAbstractPropertyConnectionHandler: PropertyAbstractPropertyConnectionHandler,
+    private abstractEntityAbstractPropertyConnectionHandler: AbstractEntityAbstractPropertyConnectionHandler,
+    private abstractPropertyAbstractPropertyConnectionHandler: AbstractPropertyAbstractPropertyConnectionHandler,
     private traitConnectionHandler: TraitConnectionHandler,
     private structuredValueConnectionHandler: StructuredValueConnectionHandler,
     private entityValueConnectionHandler: EntityValueConnectionHandler,
@@ -226,6 +234,18 @@ export class ShapeConnectorService {
         break;
       case ShapeConnectorUtil.isAbstractEntityPropertyConnection(parentModel, childModel):
         connectionHandler = this.abstractEntityPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isPropertyPropertyConnection(parentModel, childModel):
+        connectionHandler = this.propertyPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isPropertyAbstractPropertyConnection(parentModel, childModel):
+        connectionHandler = this.propertyAbstractPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isAbstractEntityAbstractPropertyConnection(parentModel, childModel):
+        connectionHandler = this.abstractEntityAbstractPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isAbstractPropertyAbstractPropertyConnection(parentModel, childModel):
+        connectionHandler = this.abstractPropertyAbstractPropertyConnectionHandler;
         break;
       case ShapeConnectorUtil.isCollectionCharacteristicConnection(parentModel, childModel):
         connectionHandler = this.collectionCharacteristicConnectionHandler;

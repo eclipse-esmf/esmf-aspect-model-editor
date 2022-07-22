@@ -24,6 +24,7 @@ import {
   DefaultEntityValue,
   DefaultEvent,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
 } from '@ame/meta-model';
 
 /**
@@ -32,6 +33,7 @@ import {
 export enum ModelStyle {
   ASPECT = 'aspect',
   PROPERTY = 'property',
+  ABSTRACT_PROPERTY = 'abstractProperty',
   OPERATION = 'operation',
   CHARACTERISTIC = 'characteristic',
   CONSTRAINT = 'constraint',
@@ -49,6 +51,8 @@ export class ModelStyleResolver {
       return ModelStyle.ASPECT;
     } else if (metaModelElement instanceof DefaultProperty) {
       return ModelStyle.PROPERTY;
+    } else if (metaModelElement instanceof DefaultAbstractProperty) {
+      return ModelStyle.ABSTRACT_PROPERTY;
     } else if (metaModelElement instanceof DefaultOperation) {
       return ModelStyle.OPERATION;
     } else if (metaModelElement instanceof DefaultConstraint) {

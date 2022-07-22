@@ -28,6 +28,7 @@ import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component
 import {EntityValuePipe} from './pipes';
 import {
   AbstractEntityComponent,
+  AbstractPropertyComponent,
   AspectComponent,
   BaseInputComponent,
   CharacteristicComponent,
@@ -43,6 +44,7 @@ import {
   ElementCharacteristicInputFieldComponent,
   EncodingInputFieldComponent,
   EntityComponent,
+  EntityExtendsFieldComponent,
   EntityValueComponent,
   EntityValueModalComponent,
   EntityValueModalTableComponent,
@@ -51,7 +53,6 @@ import {
   EntityValueViewComponent,
   EventComponent,
   ExampleValueInputFieldComponent,
-  ExtendsFieldComponent,
   InputChiplistFieldComponent,
   IntegerInputFieldComponent,
   LanguageCodeInputFieldComponent,
@@ -118,6 +119,7 @@ import {FlexModule} from '@angular/flex-layout';
   ],
   declarations: [
     AspectComponent,
+    AbstractPropertyComponent,
     AbstractEntityComponent,
     CharacteristicComponent,
     ConfirmDialogComponent,
@@ -178,7 +180,7 @@ import {FlexModule} from '@angular/flex-layout';
     StructuredValueComponent,
     StructuredValuePropertyFieldComponent,
     StructuredValuePropertiesComponent,
-    ExtendsFieldComponent,
+    EntityExtendsFieldComponent,
   ],
   exports: [ShapeSettingsComponent],
 })

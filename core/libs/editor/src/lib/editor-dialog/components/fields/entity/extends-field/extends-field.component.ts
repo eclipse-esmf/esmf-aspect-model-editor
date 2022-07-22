@@ -1,5 +1,5 @@
 import {NamespacesCacheService} from '@ame/cache';
-import {DefaultAbstractEntity, DefaultEntity} from '@ame/meta-model';
+import {DefaultEntity, DefaultAbstractEntity} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {NotificationsService, SearchService} from '@ame/shared';
@@ -11,11 +11,11 @@ import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
-  selector: 'ame-extends-field',
+  selector: 'ame-entity-extends-field',
   templateUrl: './extends-field.component.html',
   styleUrls: ['./extends-field.component.scss'],
 })
-export class ExtendsFieldComponent extends InputFieldComponent<DefaultEntity> implements OnInit, OnDestroy {
+export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEntity> implements OnInit, OnDestroy {
   public filteredAbstractEntities$: Observable<any[]>;
 
   public extendsValueControl: FormControl;
@@ -89,7 +89,7 @@ export class ExtendsFieldComponent extends InputFieldComponent<DefaultEntity> im
     this.extendsControl = this.parentForm.get('extends') as FormControl;
 
     this.filteredAbstractEntities$ = combineLatest([
-      this.metaModelElement instanceof DefaultEntity ? this.initFilteredEntities(this.extendsValueControl, false, this.metaModelElement) : of([]),
+      this.metaModelElement instanceof DefaultEntity ? this.initFilteredEntities(this.extendsValueControl) : of([]),
       this.initFilteredAbstractEntities(this.extendsValueControl),
     ]).pipe(map(([a, b]) => [...a, ...b].filter(e => e.name !== this.metaModelElement.name)));
   }
@@ -131,7 +131,7 @@ export class ExtendsFieldComponent extends InputFieldComponent<DefaultEntity> im
       return;
     }
 
-    const newAbstractEntity = new DefaultAbstractEntity(this.metaModelElement.metaModelVersion, urn, entityName, null);
+    const newAbstractEntity = new DefaultAbstractEntity(this.metaModelElement.metaModelVersion, urn, entityName, []);
     this.parentForm.setControl('extends', new FormControl(newAbstractEntity));
 
     this.extendsValueControl.patchValue(entityName);

@@ -39,9 +39,10 @@ import {
   PropertyModelService,
   TraitModelService,
   UnitModelService,
+  AbstractPropertyModelService,
 } from '@ame/meta-model';
 import {EntityValueService} from '@ame/editor';
-import {DefaultAbstractEntity, DefaultStructuredValue} from '../aspect-meta-model';
+import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultStructuredValue} from '../aspect-meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {ShapeConnectorService} from '@ame/connection';
 import {AbstractEntityModelService} from './abstract-entity-model.service';
@@ -94,7 +95,12 @@ export class ElementModelService {
       return;
     }
 
-    if (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultAbstractEntity) {
+    if (
+      (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultAbstractEntity) ||
+      (sourceModelElement instanceof DefaultProperty && targetModelElement instanceof DefaultAbstractProperty) ||
+      (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultEntity) ||
+      (sourceModelElement instanceof DefaultProperty && targetModelElement instanceof DefaultProperty)
+    ) {
       sourceModelElement.extendedElement = null;
       edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
         MxGraphHelper.getModelElement(edge.source),
@@ -182,7 +188,9 @@ export class ElementModelService {
     // Order is important
     const elementServices: any[] = [
       AbstractEntityModelService,
+      AbstractPropertyModelService,
       AspectModelService,
+      TraitModelService,
       CharacteristicModelService,
       ConstraintModelService,
       EntityModelService,
@@ -190,7 +198,6 @@ export class ElementModelService {
       EventModelService,
       OperationModelService,
       PropertyModelService,
-      TraitModelService,
       UnitModelService,
     ];
 

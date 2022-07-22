@@ -17,7 +17,9 @@ import {
   BaseMetaModelElement,
   Characteristic,
   Constraint,
+  DefaultAbstractProperty,
   DefaultEntityValue,
+  DefaultProperty,
   DefaultScalar,
   Entity,
   Event,
@@ -29,6 +31,7 @@ import {
 } from '@ame/meta-model';
 import {InstantiatorService} from './instantiator.service';
 import {
+  AbstractPropertyInstantiator,
   BammUnitInstantiator,
   CharacteristicInstantiator,
   CodeCharacteristicInstantiator,
@@ -118,9 +121,23 @@ export class MetaModelElementInstantiator {
 
   getProperty(element: InstantiatorListElement, callback: Function) {
     const propertyInstantiator = new PropertyInstantiator(this);
+    const abstractPropertyInstantiator = new AbstractPropertyInstantiator(this);
+    let quads: Quad[];
 
-    if (this.rdfModel.store.getQuads(element.quad, null, null, null).length) {
-      return callback(propertyInstantiator.createProperty(element));
+    if (Util.isBlankNode(element.quad)) {
+      const firstQuad = this.rdfModel.store.getQuads(element.quad, null, null, null).find(e => this.bamm.isRdfFirst(e.predicate.value));
+      quads = firstQuad ? this.rdfModel.store.getQuads(firstQuad.object, null, null, null) : [];
+      element.quad = firstQuad.object;
+    } else {
+      quads = this.rdfModel.store.getQuads(element.quad, null, null, null);
+    }
+
+    const hasAbstractProperties = quads.some(quad => this.bamm.isAbstractPropertyElement(quad.object.value));
+
+    if (quads.length) {
+      return hasAbstractProperties
+        ? callback(abstractPropertyInstantiator.createAbstractProperty(element))
+        : callback(propertyInstantiator.createProperty(element));
     }
 
     const extReference = this.namespaceCacheService.findElementOnExtReference<Property>(element.quad.value);
@@ -203,7 +220,7 @@ export class MetaModelElementInstantiator {
     });
   }
 
-  loadOutputProperty(quad: Quad, isPropertyExtRef: boolean, callback: Function): void {
+  loadOutputProperty(quad: Quad, _isPropertyExtRef: boolean, callback: Function): void {
     if (this.rdfModel.store.getQuads(quad.object, null, null, null).length) {
       const property = new PropertyInstantiator(this).createProperty({quad: quad.object, blankNode: false}).property;
       return callback(property);
@@ -354,6 +371,24 @@ export class MetaModelElementInstantiator {
     return this.constraintInstantiator.create(quad);
   }
 
+  public setUniqueElementName(modelElement: BaseMetaModelElement, name?: string) {
+    name = name || `${modelElement.className}`.replace('Default', '');
+
+    if (modelElement instanceof DefaultProperty || modelElement instanceof DefaultAbstractProperty) {
+      name = name[0].toLowerCase() + name.substring(1);
+    }
+
+    let counter = 1;
+    let tmpAspectModelUrn: string = null;
+    let tmpName: string = null;
+    do {
+      tmpName = `${name}${counter++}`;
+      tmpAspectModelUrn = `${this.rdfModel.getAspectModelUrn()}${tmpName}`;
+    } while (this.cachedFile.getCachedElement<BaseMetaModelElement>(tmpAspectModelUrn));
+    modelElement.aspectModelUrn = tmpAspectModelUrn;
+    modelElement.name = tmpName;
+  }
+
   initBaseProperties(quads: Array<Quad>, metaModelElement: BaseMetaModelElement, rdfModel: RdfModel) {
     let typeQuad: Quad;
 
@@ -370,6 +405,10 @@ export class MetaModelElementInstantiator {
         typeQuad = quad;
       }
     });
+
+    if (!metaModelElement.name) {
+      this.setUniqueElementName(metaModelElement);
+    }
 
     if (typeQuad && !Util.isBlankNode(typeQuad.subject)) {
       (<Base>metaModelElement).aspectModelUrn = `${typeQuad.subject.value}`;

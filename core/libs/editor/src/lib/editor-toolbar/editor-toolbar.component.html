@@ -64,7 +64,7 @@
         isAllShapesExpanded ? 'unfold_less' : 'unfold_more'
       }}</mat-icon>
     </button>
-    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Format" (click)="onFormat()">
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Format" (click)="onFormat()" data-cy="formatButton">
       <mat-icon class="material-icons rotate-90">schema</mat-icon>
     </button>
     <button

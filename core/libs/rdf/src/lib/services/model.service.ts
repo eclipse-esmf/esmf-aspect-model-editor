@@ -14,7 +14,7 @@
 import {Inject, Injectable} from '@angular/core';
 import {Observable, Observer, of, Subject, throwError} from 'rxjs';
 import {catchError, first, map, switchMap, tap} from 'rxjs/operators';
-import {Aspect, BaseMetaModelElement, DefaultConstraint, LoadedAspectModel} from '@ame/meta-model';
+import {Aspect, BaseMetaModelElement, DefaultAbstractProperty, DefaultProperty, LoadedAspectModel} from '@ame/meta-model';
 import {InstantiatorService} from '@ame/instantiator';
 import {environment} from 'environments/environment';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
@@ -99,7 +99,8 @@ export class ModelService {
           try {
             return this.instantiatorService.instantiateFile(checkedRdfModel, this.currentCachedFile, 'currentFileName').aspect;
           } catch (e) {
-            console.error(e);
+            console.groupCollapsed('model.service -> loadRDFmodel', e);
+            console.groupEnd();
             throw new Error('Instantiator cannot load model!');
           }
         }),
@@ -108,12 +109,17 @@ export class ModelService {
         catchError(err =>
           throwError(() => {
             // TODO add the real problem maybe ...
+             console.groupCollapsed('model.service -> loadRDFmodel', err);
+             console.groupEnd();
             this.logService.logError(`Error while loading the model. ${JSON.stringify(err.message)}.`);
             return err.message;
           })
         )
       );
     } catch (error: any) {
+      console.groupCollapsed('model.service -> loadRDFmodel', error);
+      console.groupEnd();
+
       return throwError(() => error.message);
     }
   }
@@ -207,9 +213,13 @@ export class ModelService {
     return !this.currentCachedFile.getCachedElement<BaseMetaModelElement>(`${this.rdfModel.getAspectModelUrn()}${modelElement.name}`);
   }
 
-  private setUniqueElementName(modelElement: BaseMetaModelElement, name?: string) {
-    // only anonymous characteristics and constraints are allowed
-    name = name || (modelElement instanceof DefaultConstraint ? 'Constraint' : 'Characteristic');
+  public setUniqueElementName(modelElement: BaseMetaModelElement, name?: string) {
+    name = name || `${modelElement.className}`.replace('Default', '');
+
+    if (modelElement instanceof DefaultProperty || modelElement instanceof DefaultAbstractProperty) {
+      name = name[0].toLowerCase() + name.substring(1);
+    }
+
     let counter = 1;
     let tmpAspectModelUrn: string = null;
     let tmpName: string = null;
