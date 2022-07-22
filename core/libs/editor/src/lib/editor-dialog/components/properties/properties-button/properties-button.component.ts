@@ -32,38 +32,17 @@ export interface UpdatedProperties {
 @Component({
   selector: 'ame-properties-button',
   templateUrl: './properties-button.component.html',
-  styles: [
-    `
-      :host {
-        margin-top: 25px;
-        display: block;
-      }
-
-      .properties-button {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: rgba(0, 0, 0, 0.04);
-        padding: 10px 15px;
-      }
-
-      p {
-        display: flex;
-        align-items: center;
-        margin: 0;
-
-        mat-icon {
-          margin-right: 10px;
-        }
-      }
-    `,
-  ],
+  styleUrls: ['./properties-button.component.scss'],
 })
 export class PropertiesButtonComponent implements OnInit {
   @Output() overwrite = new EventEmitter();
-  metaModelElement: DefaultEntity | DefaultAspect | DefaultAbstractEntity;
 
   private propertiesClone: OverWrittenProperty[];
+
+  public metaModelElement: DefaultEntity | DefaultAspect | DefaultAbstractEntity;
+  public get isPredefined(): boolean {
+    return typeof this.metaModelElement?.['isPredefined'] === 'function' && this.metaModelElement?.['isPredefined']();
+  }
 
   constructor(private matDialog: MatDialog, private metaModelDialogService: EditorModelService) {}
 
@@ -87,6 +66,7 @@ export class PropertiesButtonComponent implements OnInit {
           properties: this.propertiesClone || this.metaModelElement.properties,
           isExternalRef: this.metaModelElement.isExternalReference(),
           metaModelElement: this.metaModelElement,
+          isPredefined: this.isPredefined,
         },
         autoFocus: false,
       })

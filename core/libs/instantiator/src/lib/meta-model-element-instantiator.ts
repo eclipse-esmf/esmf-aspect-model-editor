@@ -66,6 +66,7 @@ import {
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {InstantiatorListElement, RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {NotificationsService} from '@ame/shared';
+import {PredefinedEntityInstantiator} from './instantiators/bamme-predefined-entity-instantiator';
 
 export class MetaModelElementInstantiator {
   private characteristicInstantiator: CharacteristicInstantiator;
@@ -307,6 +308,11 @@ export class MetaModelElementInstantiator {
 
     if (Util.isBlankNode(quad.object)) {
       quad = this.rdfModel.resolveBlankNodes(quad.object.value).shift();
+    }
+
+    if (quad.object.value === this.bamme.TimeSeriesEntity) {
+      const predefinedEntityInstantiator = new PredefinedEntityInstantiator(this);
+      return callback(predefinedEntityInstantiator.entityInstances[this.bamme.TimeSeriesEntity]());
     }
 
     const typeQuad = quad ? RdfModelUtil.getEffectiveType(quad, this.rdfModel) : null;

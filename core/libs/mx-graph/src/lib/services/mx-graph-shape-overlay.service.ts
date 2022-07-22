@@ -30,6 +30,7 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultTrait,
+  OverWrittenProperty,
 } from '@ame/meta-model';
 import {BrowserService} from '@ame/shared';
 import {ShapeConnectorService} from '@ame/connection';
@@ -86,7 +87,7 @@ export class MxGraphShapeOverlayService {
       return;
     }
 
-    if (baseMetaModelElement instanceof DefaultProperty) {
+    if (baseMetaModelElement instanceof DefaultProperty && baseMetaModelElement.characteristic) {
       this.removeOverlay(cell, MxGraphHelper.getNewShapeOverlayButton(cell));
     } else if (baseMetaModelElement instanceof DefaultCharacteristic && !(baseMetaModelElement instanceof DefaultEither)) {
       this.removeCharacteristicOverlays(cell);
@@ -150,7 +151,7 @@ export class MxGraphShapeOverlayService {
 
   hasEntityValueDescendantsAsEntity(metaModel: DefaultEntityValue) {
     const entityProperties = metaModel.entity?.properties || [];
-    return entityProperties.some(({property}) => property?.characteristic?.dataType instanceof DefaultEntity);
+    return entityProperties.some(({property}: OverWrittenProperty<any>) => property?.characteristic?.dataType instanceof DefaultEntity);
   }
 
   /**

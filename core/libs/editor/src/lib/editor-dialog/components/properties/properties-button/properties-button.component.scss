@@ -1,0 +1,26 @@
+:host {
+  margin-top: 25px;
+  display: block;
+}
+
+.properties-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.04);
+  padding: 10px 15px;
+
+  .predefined {
+    opacity: 0.75;
+  }
+}
+
+p {
+  display: flex;
+  align-items: center;
+  margin: 0;
+
+  mat-icon {
+    margin-right: 10px;
+  }
+}

@@ -28,6 +28,7 @@ export interface Property extends BaseMetaModelElement, LookUpDatatype {
 
 export class DefaultProperty extends CanExtend implements Property {
   public extendedElement: DefaultProperty | DefaultAbstractProperty;
+  public readonly predefined: boolean;
 
   static createInstance() {
     return new DefaultProperty(null, null, 'property', null);
@@ -42,9 +43,11 @@ export class DefaultProperty extends CanExtend implements Property {
     aspectModelUrn: string,
     name: string,
     public characteristic: Characteristic,
+    predefined: boolean = false,
     public exampleValue?: any
   ) {
     super(metaModelVersion, aspectModelUrn, name);
+    this.predefined = predefined;
   }
 
   getDeepLookUpDataType(): Type {
@@ -70,5 +73,9 @@ export class DefaultProperty extends CanExtend implements Property {
     } else if (baseMetalModelElement instanceof DefaultScalar) {
       this.characteristic.dataType = baseMetalModelElement;
     }
+  }
+
+  isPredefined() {
+    return this.predefined;
   }
 }

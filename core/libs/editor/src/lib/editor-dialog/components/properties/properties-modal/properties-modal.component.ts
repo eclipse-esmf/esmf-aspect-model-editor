@@ -21,9 +21,10 @@ import {NamespacesCacheService} from '@ame/cache';
 
 export interface PropertiesDialogData {
   name: string;
+  metaModelElement?: BaseMetaModelElement;
   properties: OverWrittenProperty[];
   isExternalRef: boolean;
-  metaModelElement?: BaseMetaModelElement;
+  isPredefined?: boolean;
 }
 
 @Component({
@@ -72,7 +73,7 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
     }, {});
 
     this.form = this.formBuilder.group(group);
-    if (this.data.isExternalRef) {
+    if (this.data.isExternalRef || this.data.isPredefined) {
       this.form.disable();
     }
 

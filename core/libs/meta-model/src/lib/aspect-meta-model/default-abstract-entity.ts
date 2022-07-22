@@ -12,6 +12,8 @@
  */
 
 import {AspectModelVisitor} from '@ame/mx-graph';
+import {DefaultProperty} from './default-property';
+import {DefaultAbstractProperty} from './default-abstract-property';
 import {BaseMetaModelElement} from './base';
 import {CanExtendsWithProperties} from './can-extend';
 import {Entity} from './default-entity';
@@ -19,21 +21,29 @@ import {OverWrittenProperty} from './overwritten-property';
 
 export class DefaultAbstractEntity extends CanExtendsWithProperties implements Entity {
   public extendedElement: DefaultAbstractEntity;
+  public readonly predefined: boolean;
 
   public get className(): string {
     return 'DefaultAbstractEntity';
   }
 
-  public get ownProperties(): OverWrittenProperty[] {
+  public get ownProperties(): OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>[] {
     return this.properties;
   }
 
-  public get allProperties(): OverWrittenProperty[] {
+  public get allProperties(): OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>[] {
     return [...(this.extendedProperties || []), ...this.properties];
   }
 
-  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public properties: OverWrittenProperty[] = []) {
+  constructor(
+    metaModelVersion: string,
+    aspectModelUrn: string,
+    name: string,
+    public properties: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>[] = [],
+    predefined: boolean = false
+  ) {
     super(metaModelVersion, aspectModelUrn, name);
+    this.predefined = predefined;
   }
 
   static createInstance() {
@@ -50,6 +60,10 @@ export class DefaultAbstractEntity extends CanExtendsWithProperties implements E
 
   isComplex(): boolean {
     return false;
+  }
+
+  isPredefined() {
+    return this.predefined;
   }
 
   accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {

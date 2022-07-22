@@ -66,7 +66,7 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
   createNewProperty(name: string) {
     const namespace = this.rdfService.currentRdfModel.getAspectModelUrn();
     const version = this.rdfService.currentRdfModel.getMetaModelVersion();
-    const newProperty = new DefaultProperty(version, namespace + name, name, null);
+    const newProperty = new DefaultProperty(version, namespace + name, name, null, false);
     this.fieldControl.setValue(newProperty);
     this.control.disable();
   }

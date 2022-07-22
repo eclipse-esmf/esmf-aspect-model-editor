@@ -32,6 +32,10 @@ export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty
 
   visit(cell: mxgraph.mxCell): DefaultAbstractProperty {
     const abstractProperty: DefaultAbstractProperty = MxGraphHelper.getModelElement<DefaultAbstractProperty>(cell);
+    if (abstractProperty.isPredefined()) {
+      return null;
+    }
+
     this.setPrefix(abstractProperty.aspectModelUrn);
     const oldAspectModelUrn = abstractProperty.aspectModelUrn;
     this.addExtends(abstractProperty);

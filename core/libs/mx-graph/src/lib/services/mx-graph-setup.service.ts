@@ -22,7 +22,7 @@ import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
 import {MxGraphHelper, PropertyInformation} from '../helpers';
 import {mxConstants, mxEditor, mxLayoutManager, mxOutline, mxPoint, mxRectangle, mxStackLayout, mxUtils} from '../providers';
-import {DefaultEntity, DefaultEntityValue, DefaultTrait} from '@ame/meta-model';
+import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultEntity, DefaultEntityValue, DefaultTrait} from '@ame/meta-model';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {AppConfig, APP_CONFIG, AssetsPath, BindingsService, BrowserService} from '@ame/shared';
 
@@ -98,7 +98,8 @@ export class MxGraphSetupService {
   }
 
   private getTooltipForCell(cell: mxgraph.mxCell) {
-    if (MxGraphHelper.getModelElement(cell) instanceof DefaultTrait) {
+    const metaModelElement = MxGraphHelper.getModelElement(cell);
+    if ([DefaultEntityValue, DefaultTrait, DefaultAbstractEntity, DefaultAbstractProperty].some(e => metaModelElement instanceof e)) {
       return this.getToolTipContent(cell);
     }
 
@@ -123,7 +124,10 @@ export class MxGraphSetupService {
       if (!configuration?.baseProperties.isPredefined) {
         table.innerHTML += `<tr><td>Namespace</td><td>${configuration?.baseProperties.namespace}</td></tr>`;
         table.innerHTML += `<tr><td>Version</td><td>${configuration?.baseProperties.version}</td></tr>`;
-        table.innerHTML += `<tr><td>File</td><td>${configuration?.baseProperties.fileName}</td></tr>`;
+
+        if (configuration?.baseProperties.fileName) {
+          table.innerHTML += `<tr><td>File</td><td>${configuration?.baseProperties.fileName}</td></tr>`;
+        }
       }
 
       configuration.fields.forEach((propLabel: PropertyInformation) => {

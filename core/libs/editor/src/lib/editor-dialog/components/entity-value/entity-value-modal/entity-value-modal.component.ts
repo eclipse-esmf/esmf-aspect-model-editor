@@ -86,7 +86,7 @@ export class EntityValueModalComponent {
       newEntityValues: new FormControl([]),
     });
 
-    this.entity.allProperties.forEach((property: OverWrittenProperty) => {
+    this.entity.allProperties.forEach((property: OverWrittenProperty<any>) => {
       const validators = [];
       if (!property.keys.optional) {
         validators.push(EditorDialogValidators.requiredObject);

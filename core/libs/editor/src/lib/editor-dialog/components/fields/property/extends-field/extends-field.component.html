@@ -22,7 +22,7 @@
       data-cy="extendsValue"
     />
     <button
-      *ngIf="extendsValueControl?.disabled && !metaModelElement?.isExternalReference()"
+      *ngIf="extendsValueControl?.disabled && !metaModelElement?.isExternalReference() && !metaModelElement.isPredefined()"
       (click)="unlockExtends()"
       class="close-button"
       data-cy="clear-extends-button"

@@ -409,6 +409,7 @@ export class MxGraphService {
     ) {
       return;
     }
+
     this.mxGraphAttributeService.graph.insertEdge(
       this.mxGraphAttributeService.graph.getDefaultParent(),
       null,

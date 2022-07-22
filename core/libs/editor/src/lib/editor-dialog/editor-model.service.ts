@@ -12,7 +12,7 @@
  */
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {BaseMetaModelElement, DefaultUnit} from '@ame/meta-model';
+import {BaseMetaModelElement} from '@ame/meta-model';
 import {BammCharacteristicInstantiator, MetaModelElementInstantiator} from '@ame/instantiator';
 import {ModelService} from '@ame/rdf/services';
 
@@ -61,11 +61,7 @@ export class EditorModelService {
     }
 
     this.dataChangedEventQueue = [];
-    this.readOnly =
-      metaModelElement && this.bammCharacteristicInstantiator.getSupportedCharacteristicNames().includes(metaModelElement.aspectModelUrn);
-    if (!this.readOnly && metaModelElement instanceof DefaultUnit) {
-      this.readOnly = metaModelElement.isPredefined();
-    }
+    this.readOnly = typeof metaModelElement?.['isPredefined'] === 'function' && metaModelElement?.['isPredefined']();
     this.saveButtonEnabled = true;
     this.metaModelElementSubject.next(metaModelElement);
   }

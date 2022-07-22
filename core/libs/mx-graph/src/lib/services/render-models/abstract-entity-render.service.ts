@@ -20,6 +20,9 @@ import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 import {NamespacesCacheService} from '@ame/cache';
 import {ShapeConnectorService} from '@ame/connection';
+import {MxGraphSetupVisitor} from '../../visitors/mx-graph-setup-visitor';
+import {RdfService} from '@ame/rdf/services';
+import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +32,9 @@ export class AbstractEntityRenderService extends BaseRenderService {
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
     private namespacesCacheService: NamespacesCacheService,
-    private shapeConnectorService: ShapeConnectorService
+    private shapeConnectorService: ShapeConnectorService,
+    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
+    private rdfService: RdfService
   ) {
     super(mxGraphService, languageSettingsService);
   }
@@ -55,7 +60,20 @@ export class AbstractEntityRenderService extends BaseRenderService {
       return;
     }
 
+    const mxGraphSetupVisitor = new MxGraphSetupVisitor(
+      this.mxGraphService,
+      this.mxGraphShapeOverlayService,
+      this.namespacesCacheService,
+      this.languageSettingsService,
+      this.rdfService.currentRdfModel
+    );
+
     const extendsElement = metaModelElement.extendedElement as DefaultAbstractEntity;
+    if (extendsElement.isPredefined()) {
+      mxGraphSetupVisitor.visit(extendsElement, cell);
+      return;
+    }
+
     const cachedEntity = this.namespacesCacheService.resolveCachedElement(extendsElement);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
     const entityCell = resolvedCell ? resolvedCell : this.mxGraphService.renderModelElement(extendsElement);

@@ -57,7 +57,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
   }
 
   get elementExtends() {
-    return this.metaModelElement as  any as CanExtend;
+    return this.metaModelElement as any as CanExtend;
   }
 
   protected constructor(
@@ -69,7 +69,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCurrentValue(key: string, _locale?: string) {
-    if (this.metaModelElement instanceof DefaultCharacteristic && this.metaModelElement?.isPredefined()) {
+    if (typeof this.metaModelElement?.['isPredefined'] === 'function' && this.metaModelElement?.['isPredefined']()) {
       return this.metaModelElement?.[key] || '';
     }
 

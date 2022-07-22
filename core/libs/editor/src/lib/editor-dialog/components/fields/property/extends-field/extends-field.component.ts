@@ -56,7 +56,7 @@ export class PropertyExtendsFieldComponent extends InputFieldComponent<DefaultPr
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement.isExternalReference(),
+          disabled: !!value || this.metaModelElement.isExternalReference() || this.metaModelElement.isPredefined(),
         },
         {
           validators: [
