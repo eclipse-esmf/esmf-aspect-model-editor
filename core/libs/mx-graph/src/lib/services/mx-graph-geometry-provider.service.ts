@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {BaseMetaModelElement, DefaultTrait, DefaultEntityValue, DefaultAbstractEntity} from '@ame/meta-model';
+import {BaseMetaModelElement, DefaultTrait, DefaultEntityValue, DefaultAbstractEntity, DefaultAbstractProperty} from '@ame/meta-model';
 import {ExpandedEllipseShape, ExpandedRoundBorderShape, ExpandedModelShape, ExpandedMiniShape} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {mxGeometry} from '../providers';
@@ -102,6 +102,6 @@ export class MxGraphGeometryProviderService {
   }
 
   private isMiniShape(metaModelElement: BaseMetaModelElement): boolean {
-    return metaModelElement instanceof DefaultAbstractEntity;
+    return metaModelElement instanceof DefaultAbstractEntity || metaModelElement instanceof DefaultAbstractProperty;
   }
 }
