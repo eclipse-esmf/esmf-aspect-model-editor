@@ -19,9 +19,14 @@ import {Characteristic, DefaultCharacteristic, DefaultEntity} from '@ame/meta-mo
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {RdfService} from '@ame/rdf/services';
+import {DataFactory, Store} from 'n3';
+import {Bamm} from '@ame/vocabulary';
 
 @Injectable()
 export class EntityVisitor extends BaseVisitor<DefaultEntity> {
+  private store: Store;
+  private bamm: Bamm;
+
   constructor(
     public rdfNodeService: RdfNodeService,
     public graphService: MxGraphService,
@@ -32,12 +37,15 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
   }
 
   visit(cell: mxgraph.mxCell): DefaultEntity {
+    this.store = this.rdfService.currentRdfModel.store;
+    this.bamm = this.rdfService.currentRdfModel.BAMM();
     const entity: DefaultEntity = MxGraphHelper.getModelElement(cell);
     this.setPrefix(entity.aspectModelUrn);
     const newAspectModelUrn = `${entity.aspectModelUrn.split('#')[0]}#${entity.name}`;
     this.updateParents(cell);
     entity.aspectModelUrn = newAspectModelUrn;
     this.updateProperties(entity);
+    this.updateExtends(entity);
     return entity;
   }
 
@@ -77,6 +85,17 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
       for (const parent of parents) {
         this.rdfNodeService.update(parent, {dataType: entity.aspectModelUrn});
       }
+    }
+  }
+
+  private updateExtends(entity: DefaultEntity) {
+    if (entity.extendedElement?.aspectModelUrn) {
+      this.store.addQuad(
+        DataFactory.namedNode(entity.aspectModelUrn),
+        this.bamm.ExtendsProperty(),
+        DataFactory.namedNode(entity.extendedElement.aspectModelUrn)
+      );
+      this.setPrefix(entity.extendedElement.aspectModelUrn);
     }
   }
 }

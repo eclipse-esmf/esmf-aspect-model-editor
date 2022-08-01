@@ -62,6 +62,7 @@ import {
   DefaultUnit,
   DefaultQuantityKind,
   DefaultEvent,
+  DefaultAbstractEntity,
 } from '@ame/meta-model';
 import {LogService} from '@ame/shared';
 import {MxGraphHelper} from '../helpers';
@@ -97,6 +98,8 @@ export class DeleteLanguageInformationVisitor extends DefaultAspectModelVisitor<
         this.visitConstraint(modelElement, parents);
       } else if (modelElement instanceof DefaultCharacteristic) {
         this.visitCharacteristic(modelElement, parents);
+      } else if (modelElement instanceof DefaultAbstractEntity) {
+        this.visitAbstractEntity(modelElement, parents);
       } else if (modelElement instanceof DefaultEntity) {
         this.visitEntity(modelElement, parents);
       } else if (modelElement instanceof DefaultOperation) {
@@ -108,7 +111,6 @@ export class DeleteLanguageInformationVisitor extends DefaultAspectModelVisitor<
       } else if (modelElement instanceof DefaultEvent) {
         this.visitEvent(modelElement, parents);
       }
-      return;
     });
 
     return MxGraphHelper.getModelElement(this.mxGraphShapeSelectorService.getAspectCell());
@@ -143,48 +145,53 @@ export class DeleteLanguageInformationVisitor extends DefaultAspectModelVisitor<
     });
   }
 
-  visitAspect(aspect: DefaultAspect, context: Array<BaseMetaModelElement>): BaseMetaModelElement {
+  visitAspect(aspect: DefaultAspect, _context: Array<BaseMetaModelElement>): BaseMetaModelElement {
     this.removeLanguageInformation(aspect);
     return aspect;
   }
 
-  visitCharacteristic(characteristic: DefaultCharacteristic, context: Array<BaseMetaModelElement>): BaseMetaModelElement {
+  visitCharacteristic(characteristic: DefaultCharacteristic, _context: Array<BaseMetaModelElement>): BaseMetaModelElement {
     this.removeLanguageInformation(characteristic);
     return characteristic;
   }
 
-  visitConstraint(constraint: DefaultConstraint, context: Array<BaseMetaModelElement>): BaseMetaModelElement {
+  visitConstraint(constraint: DefaultConstraint, _context: Array<BaseMetaModelElement>): BaseMetaModelElement {
     this.removeLanguageInformation(constraint);
     return constraint;
   }
 
-  visitEntity(entity: DefaultEntity, context: Array<BaseMetaModelElement>): BaseMetaModelElement {
+  visitEntity(entity: DefaultEntity, _context: Array<BaseMetaModelElement>): BaseMetaModelElement {
     this.removeLanguageInformation(entity);
     return entity;
   }
 
-  visitOperation(operation: DefaultOperation, context: Array<BaseMetaModelElement>): BaseMetaModelElement {
+  visitOperation(operation: DefaultOperation, _context: Array<BaseMetaModelElement>): BaseMetaModelElement {
     this.removeLanguageInformation(operation);
     return operation;
   }
 
-  visitProperty(property: DefaultProperty, context: Array<BaseMetaModelElement>): BaseMetaModelElement {
+  visitProperty(property: DefaultProperty, _context: Array<BaseMetaModelElement>): BaseMetaModelElement {
     this.removeLanguageInformation(property);
     return property;
   }
 
-  visitQuantityKind(quantityKind: DefaultQuantityKind, context: Array<BaseMetaModelElement>): BaseMetaModelElement {
+  visitQuantityKind(quantityKind: DefaultQuantityKind, _context: Array<BaseMetaModelElement>): BaseMetaModelElement {
     this.removeLanguageInformation(quantityKind);
     return quantityKind;
   }
 
-  visitUnit(unit: DefaultUnit, context: Array<BaseMetaModelElement>): BaseMetaModelElement {
+  visitUnit(unit: DefaultUnit, _context: Array<BaseMetaModelElement>): BaseMetaModelElement {
     this.removeLanguageInformation(unit);
     return unit;
   }
 
-  visitEvent(event: DefaultEvent, context: Array<BaseMetaModelElement>): BaseMetaModelElement {
+  visitEvent(event: DefaultEvent, _context: Array<BaseMetaModelElement>): BaseMetaModelElement {
     this.removeLanguageInformation(event);
     return event;
+  }
+
+  visitAbstractEntity(abstractEntity: DefaultAbstractEntity, _context: BaseMetaModelElement[]) {
+    this.removeLanguageInformation(abstractEntity);
+    return abstractEntity;
   }
 }

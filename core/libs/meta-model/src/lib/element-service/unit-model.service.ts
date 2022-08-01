@@ -60,6 +60,7 @@ export class UnitModelService extends BaseModelService {
       const quantityKind = bammuDefinition.quantityKinds[qk];
       return new DefaultQuantityKind(metaModelElement.metaModelVersion, urn, qk, quantityKind.label);
     });
+
     this.unitRenderer.update({cell, form});
   }
 

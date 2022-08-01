@@ -15,6 +15,7 @@ import {Injectable} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {
   BaseMetaModelElement,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -41,6 +42,7 @@ import {
   PropertyVisitor,
   UnitVisitor,
 } from './visitor';
+import { AbstractEntityVisitor } from './visitor/abstract-entity';
 
 @Injectable()
 export class DomainModelToRdfService {
@@ -61,6 +63,7 @@ export class DomainModelToRdfService {
     private characteristicVisitorService: CharacteristicVisitor,
     private constraintVisitorService: ConstraintVisitor,
     private entityVisitorService: EntityVisitor,
+    private abstractEntityVisitorService: AbstractEntityVisitor,
     private entityValueVisitor: EntityValueVisitor,
     private eventVisitorService: EventVisitor,
     private unitVisitorService: UnitVisitor,
@@ -116,6 +119,8 @@ export class DomainModelToRdfService {
       return this.characteristicVisitorService;
     } else if (metaModelElement instanceof DefaultEntity) {
       return this.entityVisitorService;
+    } else if (metaModelElement instanceof DefaultAbstractEntity) {
+      return this.abstractEntityVisitorService;
     } else if (metaModelElement instanceof DefaultEntityValue) {
       return this.entityValueVisitor;
     } else if (metaModelElement instanceof DefaultEvent) {

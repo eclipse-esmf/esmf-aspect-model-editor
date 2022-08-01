@@ -62,8 +62,8 @@ export class EntityValueModalTableComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty('entity') && this.entity) {
-      this.dataSource = new MatTableDataSource(this.entity.properties.map(property => property.property));
-      this.entity.properties.forEach((property: OverWrittenProperty) => {
+      this.dataSource = new MatTableDataSource(this.entity.allProperties.map(property => property.property));
+      this.entity.allProperties.forEach((property: OverWrittenProperty) => {
         this.initFilteredEntityValues(property.property);
       });
     }

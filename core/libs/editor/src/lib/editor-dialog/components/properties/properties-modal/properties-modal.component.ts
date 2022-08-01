@@ -41,6 +41,10 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  public get extendedProperties(): OverWrittenProperty[] {
+    return (this.data.metaModelElement as DefaultEntity)?.extendedElement.extendedProperties || [];
+  }
+
   constructor(
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<PropertiesModalComponent>,
@@ -49,14 +53,20 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.data.properties);
-    const group = this.data.properties.reduce((acc, curr) => {
+    const allProperties: (OverWrittenProperty & {inherited?: boolean})[] = [
+      ...((this.data.metaModelElement as DefaultEntity)?.extendedProperties || []).map(e => ({...e, inherited: true})),
+      ...this.data.properties,
+    ];
+
+    this.dataSource = new MatTableDataSource(allProperties);
+
+    const group = allProperties.reduce((acc, curr) => {
       this.keys.push(curr.property.aspectModelUrn);
       acc[curr.property.aspectModelUrn] = this.formBuilder.group({
-        name: [curr.property.name],
-        optional: [curr.keys.optional || false],
-        notInPayload: [curr.keys.notInPayload || false],
-        payloadName: [curr.keys.payloadName || ''],
+        name: this.formBuilder.control({value: curr.property.name, disabled: curr.inherited}),
+        optional: this.formBuilder.control({value: curr.keys.optional || false, disabled: curr.inherited}),
+        notInPayload: this.formBuilder.control({value: curr.keys.notInPayload || false, disabled: curr.inherited}),
+        payloadName: this.formBuilder.control({value: curr.keys.payloadName || '', disabled: curr.inherited}),
       });
       return acc;
     }, {});
@@ -75,7 +85,6 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
         }
       });
     }
-
   }
 
   ngAfterViewInit() {

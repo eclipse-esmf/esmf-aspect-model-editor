@@ -13,7 +13,7 @@
 
 <mxStylesheet>
   <add as="defaultEdge">
-    <add as="endArrow" value="classic" />
+    <add as="endArrow" value="open" />
     <add as="edge" value="entityRelationEdgeStyle" />
     <add as="curved" value="1" />
     <add as="strokeColor" value="#000000" />
@@ -21,6 +21,9 @@
   </add>
 	<add as="entityValueEntityEdge" extend="defaultEdge">
 		<add as="dashed" value="1" />
+	</add>
+	<add as="entityAbstractEntityEdge" extend="defaultEdge">
+		<add as="endArrow" value="block" />
 	</add>
 	<add as="optionalPropertyEdge" extend="defaultEdge">
 		<add as="dashed" value="1" />
@@ -89,6 +92,12 @@
 		<add as="connectable" value="1" />
 	</add>
 	<add as="entity_property" extend="model_property">
+		<add as="connectable" value="1" />
+	</add>
+	<add as="abstractEntity" extend="model">
+		<add as="connectable" value="1" />
+	</add>
+	<add as="abstractEntity_property" extend="model_property">
 		<add as="connectable" value="1" />
 	</add>
   <add as="unit" extend="model">

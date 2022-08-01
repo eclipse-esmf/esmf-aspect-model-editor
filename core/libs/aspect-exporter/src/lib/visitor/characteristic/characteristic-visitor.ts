@@ -186,7 +186,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private updateCode(characteristic: DefaultCode) {
+  private updateCode(_characteristic: DefaultCode) {
     // To be discussed
   }
 
@@ -213,7 +213,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private updateSingleEntity(characteristic: DefaultSingleEntity) {
+  private updateSingleEntity(_characteristic: DefaultSingleEntity) {
     // nothing to add
   }
 

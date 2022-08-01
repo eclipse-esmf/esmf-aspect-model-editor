@@ -28,6 +28,18 @@
   margin-top: 30px;
 }
 
+.inherited {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.38);
+
+  span:nth-child(2) {
+    font-size: 12px;
+  }
+}
+
 mat-form-field {
   margin-top: 0 !important;
   margin-right: 20px;

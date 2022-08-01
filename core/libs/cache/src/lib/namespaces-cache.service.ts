@@ -23,7 +23,9 @@ export class NamespacesCacheService {
   private namespaces = new Map<string, Map<string, CachedFile>>();
   private currentCachedFile: CachedFile;
 
-  constructor(public sidebarService: SidebarService) {}
+  constructor(public sidebarService: SidebarService) {
+    window['cache'] = this;
+  }
 
   /**
    * Return an array with all file from all namespaces when `namespace` is not provided

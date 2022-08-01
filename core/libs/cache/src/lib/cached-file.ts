@@ -15,6 +15,7 @@ import {
   Aspect,
   BaseMetaModelElement,
   Characteristic,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultEntity,
@@ -105,6 +106,16 @@ export class CachedFile {
     const entities: Array<Entity> = [];
     this.cachedElements.forEach(modelElement => {
       if (modelElement instanceof DefaultEntity) {
+        entities.push(modelElement);
+      }
+    });
+    return entities;
+  }
+
+  getCachedAbstractEntities(): Array<DefaultAbstractEntity> {
+    const entities: Array<DefaultAbstractEntity> = [];
+    this.cachedElements.forEach(modelElement => {
+      if (modelElement instanceof DefaultAbstractEntity) {
         entities.push(modelElement);
       }
     });

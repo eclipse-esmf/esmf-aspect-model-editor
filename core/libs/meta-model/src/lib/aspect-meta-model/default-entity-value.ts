@@ -13,7 +13,7 @@
 
 import {AspectModelVisitor} from '@ame/mx-graph';
 import {Base, BaseMetaModelElement} from './base';
-import {Entity} from './default-entity';
+import {DefaultEntity} from './default-entity';
 import {DefaultEnumeration} from './default-enumeration';
 import {DefaultProperty} from './default-property';
 import {OverWrittenProperty} from './overwritten-property';
@@ -48,7 +48,7 @@ export class DefaultEntityValue extends Base implements EntityValue {
     public metaModelVersion: string,
     public name: string,
     public aspectModelUrn: string,
-    public entity: Entity,
+    public entity: DefaultEntity,
     properties?: OverWrittenProperty[]
   ) {
     super(metaModelVersion, aspectModelUrn, name);

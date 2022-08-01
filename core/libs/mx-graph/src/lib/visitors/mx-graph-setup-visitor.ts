@@ -19,6 +19,7 @@ import {MxGraphService, MxGraphShapeOverlayService} from '../services';
 import {
   Base,
   BaseMetaModelElement,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -109,7 +110,7 @@ export class MxGraphSetupVisitor extends DefaultAspectModelVisitor<mxCell, mxCel
     return cell;
   }
 
-  visitQuantityKind(quantityKind: DefaultQuantityKind, context: mxCell): mxCell {
+  visitQuantityKind(_quantityKind: DefaultQuantityKind, _context: mxCell): mxCell {
     // The information is directly shown on the unit, mainly to reduce the amount of shapes
   }
 
@@ -136,7 +137,30 @@ export class MxGraphSetupVisitor extends DefaultAspectModelVisitor<mxCell, mxCel
     return cell;
   }
 
-  visitAspect(aspect: DefaultAspect, context: mxCell): mxCell {
+  visitAbstractEntity(_abstractEntity: DefaultAbstractEntity, context: mxCell) {
+    if (this.shapes.get(_abstractEntity.name)) {
+      const cellTmp = this.shapes.get(_abstractEntity.name);
+      // Todo It may be that characteristics are not connected.
+      if (!this.currentCachedFile.getIsolatedElement(_abstractEntity.aspectModelUrn)) {
+        this.mxGraphService.assignToParent(cellTmp, context);
+      }
+      return;
+    }
+
+    const cell = this.getOrCreateMxCell(
+      _abstractEntity,
+      MxGraphVisitorHelper.getAbstractEntityProperties(_abstractEntity, this.languageSettingsService)
+    );
+
+    this.connectIsolatedElement(context, cell);
+
+    if (!this.currentCachedFile.getIsolatedElement(_abstractEntity.aspectModelUrn)) {
+      this.assignToParent(cell, context, _abstractEntity);
+    }
+    return cell;
+  }
+
+  visitAspect(aspect: DefaultAspect, _context: mxCell): mxCell {
     // English is our default at the moment.
     this.languageSettingsService.setLanguageCodes(['en']);
     return this.createMxCell(aspect, MxGraphVisitorHelper.getAspectProperties(aspect, this.languageSettingsService));

@@ -16,6 +16,7 @@ import {FormControl, Validators} from '@angular/forms';
 import {NamespacesCacheService} from '@ame/cache';
 import {
   BaseMetaModelElement,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -72,9 +73,11 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
       Validators.required,
       EditorDialogValidators.duplicateName(this.namespacesCacheService, this.metaModelElement, this.rdfService.externalRdfModels),
     ];
+
     if (this.metaModelElement instanceof DefaultUnit) {
       return nameValidators;
     }
+
     if (!(this.metaModelElement instanceof DefaultEntityValue)) {
       nameValidators.push(this.isUpperCaseName() ? EditorDialogValidators.namingUpperCase : EditorDialogValidators.namingLowerCase);
     } else {
@@ -88,6 +91,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
     return (
       this.metaModelElement instanceof DefaultAspect ||
       this.metaModelElement instanceof DefaultEntity ||
+      this.metaModelElement instanceof DefaultAbstractEntity ||
       this.metaModelElement instanceof DefaultConstraint ||
       this.metaModelElement instanceof DefaultCharacteristic
     );

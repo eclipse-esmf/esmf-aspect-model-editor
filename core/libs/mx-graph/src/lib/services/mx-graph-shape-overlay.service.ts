@@ -18,6 +18,7 @@ import {MxGraphHelper, MxGraphVisitorHelper, PropertyInformation} from '../helpe
 import {mxCellOverlay, mxConstants, mxEvent, mxImage} from '../providers';
 import {
   BaseMetaModelElement,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -42,7 +43,8 @@ export class MxGraphShapeOverlayService {
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private injector: Injector
-  ) {}
+  ) {
+  }
 
   public removeOverlay(cell: mxgraph.mxCell, overlay: mxgraph.mxCellOverlay): void {
     this.mxGraphAttributeService.graph.removeCellOverlay(cell, overlay);
@@ -215,7 +217,7 @@ export class MxGraphShapeOverlayService {
         return;
       }
 
-      if (modelElement instanceof DefaultAspect || modelElement instanceof DefaultEntity) {
+      if (modelElement instanceof DefaultAspect || modelElement instanceof DefaultEntity || modelElement instanceof DefaultAbstractEntity) {
         overlayTooltip += 'Property';
       } else if (modelElement instanceof DefaultProperty) {
         overlayTooltip += 'Characteristic';

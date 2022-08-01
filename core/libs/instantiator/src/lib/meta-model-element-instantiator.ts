@@ -320,7 +320,7 @@ export class MetaModelElementInstantiator {
       });
     }
 
-    const quadPropertyRefined = this.rdfModel.store.getQuads(quad.subject, this.bamm.RefinesProperty(), null, null);
+    const quadPropertyRefined = this.rdfModel.store.getQuads(quad.subject, this.bamm.ExtendsProperty(), null, null);
     if (quadPropertyRefined && quadPropertyRefined.length > 0) {
       const entity = new EntityInstantiator(this).createEntity(quadPropertyRefined);
       return callback(this.cachedFile.resolveElement(entity, this.isIsolated));

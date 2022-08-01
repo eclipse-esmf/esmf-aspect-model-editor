@@ -22,17 +22,19 @@ export enum Elements {
   unit = 'unit',
   event = 'event',
   entityValue = 'entityValue',
+  abstractEntity = 'abstractEntity',
 }
 
 export const relations = {
   [Elements.aspect]: [Elements.property, Elements.operation, Elements.event],
   [Elements.property]: [Elements.characteristic, Elements.trait],
   [Elements.characteristic]: [Elements.entity, Elements.entityValue, Elements.unit],
-  [Elements.entity]: [Elements.property],
+  [Elements.entity]: [Elements.property, Elements.entity, Elements.abstractEntity],
   [Elements.trait]: [Elements.constraint, Elements.characteristic],
   [Elements.entityValue]: [Elements.entityValue],
   [Elements.event]: [Elements.property],
   [Elements.operation]: [],
   [Elements.constraint]: [],
   [Elements.unit]: [],
+  [Elements.abstractEntity]: [Elements.abstractEntity, Elements.property],
 };

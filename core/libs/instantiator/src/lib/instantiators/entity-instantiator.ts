@@ -14,6 +14,7 @@
 import {DataFactory, Quad} from 'n3';
 import {DefaultEntity, Entity, OverWrittenProperty} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
+import {AbstractEntityInstantiator} from './abstract-entity-instantiator';
 
 export class EntityInstantiator {
   private get cachedFile() {
@@ -39,13 +40,20 @@ export class EntityInstantiator {
 
     const bamm = this.metaModelElementInstantiator.bamm;
     const defaultEntity = new DefaultEntity(null, null, null, new Array<OverWrittenProperty>());
-    defaultEntity.setExternalReference(this.rdfModel.isExternalRef);
 
+    defaultEntity.setExternalReference(this.rdfModel.isExternalRef);
     defaultEntity.fileName = this.metaModelElementInstantiator.fileName;
 
     this.metaModelElementInstantiator.initBaseProperties(quads, defaultEntity, this.metaModelElementInstantiator.rdfModel);
 
     quads.forEach(quad => {
+      if (bamm.isExtendsProperty(quad.predicate.value)) {
+        defaultEntity.extendedElement = new AbstractEntityInstantiator(this.metaModelElementInstantiator).createAbstractEntity(
+          this.rdfModel.store.getQuads(quad.object, null, null, null)
+        );
+        return;
+      }
+
       if (bamm.isPropertiesProperty(quad.predicate.value)) {
         defaultEntity.properties = this.metaModelElementInstantiator.getProperties(
           DataFactory.namedNode(quad.subject.value),

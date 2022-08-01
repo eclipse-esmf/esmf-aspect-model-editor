@@ -14,6 +14,8 @@
 <mat-form-field
   *ngFor="let locale of metaModelElement?.getAllLocalesPreferredNames()"
   [floatLabel]="getControl('preferredName' + locale)?.disabled ? 'always' : 'auto'"
+  [matTooltip]="elementWithEntityType?.extendedPreferredName?.get(locale) ? 'This was extended from another Abstract Entity or Entity' : ''"
+  [matTooltipPosition]="'left'"
   appearance="fill"
 >
   <mat-label for="preferredName">Preferred name({{ locale }})</mat-label>

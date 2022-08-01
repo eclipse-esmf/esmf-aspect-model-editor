@@ -55,6 +55,7 @@
 import {
   Base,
   BaseMetaModelElement,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -69,7 +70,6 @@ import {
 import {AspectModelVisitor} from './aspect-model-visitor';
 
 export class DefaultAspectModelVisitor<T, U> implements AspectModelVisitor<T, U> {
-
   visitedElements = []; // Keep track of already visited elements
 
   visit(element: BaseMetaModelElement, context: U): T {
@@ -87,79 +87,84 @@ export class DefaultAspectModelVisitor<T, U> implements AspectModelVisitor<T, U>
       return null;
     }
 
-    if (item) {
-      // by heaving attribute 'parents' on entityValue we will call this recursively forever so we need to exclude it
-      Object.keys(element)
-        .filter(attributeName => attributeName !== 'parents')
-        .forEach(attributeName => {
-          const attributeValue: any = element[attributeName];
-          if (attributeValue instanceof Base) {
-            return this.visit(attributeValue, item);
-          }
+    item &&
+      Object.keys(element).forEach(attributeName => {
+        if (attributeName === 'parents') {
+          return;
+        }
+        // by heaving attribute 'parents' on entityValue we will call this recursively forever so we need to exclude it
 
-          if (attributeValue?.property && attributeValue?.keys) {
-            return this.visit(attributeValue.property, item);
-          }
+        const attributeValue: any = element[attributeName];
+        if (attributeValue instanceof Base) {
+          return this.visit(attributeValue, item);
+        }
 
-          if (Array.isArray(attributeValue)) {
-            return attributeValue.forEach(arrayElement => {
-              if (arrayElement instanceof Base) {
-                return this.visit(arrayElement, item);
-              }
+        if (attributeValue?.property && attributeValue?.keys) {
+          return this.visit(attributeValue.property, item);
+        }
 
-              if (arrayElement?.value instanceof DefaultEntityValue) {
-                return this.visit(arrayElement.value, item);
-              }
+        if (Array.isArray(attributeValue)) {
+          return attributeValue.forEach(arrayElement => {
+            if (arrayElement instanceof Base) {
+              return this.visit(arrayElement, item);
+            }
 
-              if (arrayElement.property && arrayElement.keys) {
-                return this.visit(arrayElement.property, item);
-              }
-              return null;
-            });
-          }
-        });
-    }
+            if (arrayElement?.value instanceof DefaultEntityValue) {
+              return this.visit(arrayElement.value, item);
+            }
+
+            if (arrayElement.property && arrayElement.keys) {
+              return this.visit(arrayElement.property, item);
+            }
+            return null;
+          });
+        }
+      });
 
     return null;
   }
 
-  visitAspect(aspect: DefaultAspect, context: U): T {
+  visitAspect(_aspect: DefaultAspect, _context: U): T {
     return undefined;
   }
 
-  visitCharacteristic(characteristic: DefaultCharacteristic, context: U): T {
+  visitCharacteristic(_characteristic: DefaultCharacteristic, _context: U): T {
     return undefined;
   }
 
-  visitConstraint(constraint: DefaultConstraint, context: U): T {
+  visitConstraint(_constraint: DefaultConstraint, _context: U): T {
     return undefined;
   }
 
-  visitEntity(entity: DefaultEntity, context: U): T {
+  visitEntity(_entity: DefaultEntity, _context: U): T {
     return undefined;
   }
 
-  visitOperation(operation: DefaultOperation, context: U): T {
+  visitOperation(_operation: DefaultOperation, _context: U): T {
     return undefined;
   }
 
-  visitProperty(property: DefaultProperty, context: U): T {
+  visitProperty(_property: DefaultProperty, _context: U): T {
     return undefined;
   }
 
-  visitQuantityKind(quantityKind: DefaultQuantityKind, context: U): T {
+  visitQuantityKind(_quantityKind: DefaultQuantityKind, _context: U): T {
     return undefined;
   }
 
-  visitUnit(unit: DefaultUnit, context: U): T {
+  visitUnit(_unit: DefaultUnit, _context: U): T {
     return undefined;
   }
 
-  visitEntityValue(entityValue: DefaultEntityValue, context: U): T {
+  visitEntityValue(_entityValue: DefaultEntityValue, _context: U): T {
     return undefined;
   }
 
-  visitEvent(event: DefaultEvent, context: U): T {
+  visitEvent(_event: DefaultEvent, _context: U): T {
+    return undefined;
+  }
+
+  visitAbstractEntity(_abstractEntity: DefaultAbstractEntity, _context: U) {
     return undefined;
   }
 }

@@ -17,6 +17,7 @@ import {
   BaseMetaModelElement,
   Characteristic,
   Constraint,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -125,6 +126,13 @@ export class MxGraphVisitorHelper {
         return null;
       })
       .filter(e => !!e);
+  }
+
+  static addExtends(entity: DefaultEntity | DefaultAbstractEntity): PropertyInformation {
+    if (entity.extendedElement !== null && entity.extendedElement !== undefined) {
+      return {label: `extends = ${entity.extendedElement.name}`, key: 'extends'};
+    }
+    return null;
   }
 
   static addValue(constraint: Constraint): PropertyInformation {
@@ -299,10 +307,15 @@ export class MxGraphVisitorHelper {
 
   static getEntityProperties(entity: DefaultEntity, languageSettingsService: LanguageSettingsService) {
     return [
+      MxGraphVisitorHelper.addExtends(entity),
       ...MxGraphVisitorHelper.addLocalizedPreferredNames(entity, languageSettingsService),
       ...MxGraphVisitorHelper.addLocalizedDescriptions(entity, languageSettingsService),
       MxGraphVisitorHelper.addSee(entity),
     ].filter(e => !!e);
+  }
+
+  static getAbstractEntityProperties(entity: any, languageSettingsService: LanguageSettingsService) {
+    return this.getEntityProperties(entity, languageSettingsService);
   }
 
   static getUnitProperties(unit: DefaultUnit, languageSettingsService: LanguageSettingsService) {
@@ -405,19 +418,23 @@ export class MxGraphVisitorHelper {
       return this.getEventProperties(element, languageSettingsService);
     }
 
+    if (element instanceof DefaultAbstractEntity) {
+      return this.getAbstractEntityProperties(element, languageSettingsService);
+    }
+
     return null;
   }
 
   static getModelInfo(modelElement: BaseMetaModelElement, aspect: BaseMetaModelElement): ModelBaseProperties {
     try {
       const [, currentNamespace] = MxGraphHelper.getNamespaceFromElement(aspect);
-      const [elementVersion, elementNamespace] = MxGraphHelper.getNamespaceFromElement(modelElement);
+      const [, elementNamespace] = MxGraphHelper.getNamespaceFromElement(modelElement);
 
       const [aspectVersionedNamespace] = aspect.aspectModelUrn.split('#');
       const [elementVersionedNamespace] = modelElement.aspectModelUrn.split('#');
 
       return {
-        version: elementVersion,
+        version: modelElement.metaModelVersion,
         namespace: elementNamespace,
         external: modelElement.isExternalReference(),
         predefined: !!(modelElement as DefaultCharacteristic)?.isPredefined && (modelElement as DefaultCharacteristic)?.isPredefined(),

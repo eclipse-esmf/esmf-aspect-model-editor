@@ -245,8 +245,8 @@ export class RdfModelUtil {
     }
 
     const externalRdfModel = metaModelElementInstantiator.getRdfModelByElement(DataFactory.namedNode(elementType));
-    quads = externalRdfModel.store.getQuads(DataFactory.namedNode(elementType), null, metaModelElementInstantiator.bamm.Entity(), null);
+    quads = externalRdfModel?.store.getQuads(DataFactory.namedNode(elementType), null, metaModelElementInstantiator.bamm.Entity(), null);
 
-    return !!quads.length;
+    return !!quads?.length;
   }
 }

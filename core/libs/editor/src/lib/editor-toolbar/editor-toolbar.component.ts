@@ -351,7 +351,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     const secondElement = selectedCells[1].style.split(';')[0];
     const modelElements = selectedCells.map(e => MxGraphHelper.getModelElement(e));
 
-    if (relations[secondElement].includes(firstElement)) {
+    if (secondElement !== firstElement && relations[secondElement].includes(firstElement)) {
       modelElements.reverse();
       selectedCells.reverse();
     }

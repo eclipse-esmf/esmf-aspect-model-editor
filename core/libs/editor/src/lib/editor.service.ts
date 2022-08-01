@@ -60,6 +60,7 @@ import {
   Aspect,
   Base,
   BaseMetaModelElement,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -400,6 +401,9 @@ export class EditorService {
           break;
         case 'event':
           newInstance = DefaultEvent.createInstance();
+          break;
+        case 'abstractentity':
+          newInstance = DefaultAbstractEntity.createInstance();
           break;
         default:
           return;

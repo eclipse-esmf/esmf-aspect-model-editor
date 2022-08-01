@@ -12,7 +12,7 @@
  */
 
 import {DataFactory, NamedNode, Quad, Quad_Object, Util} from 'n3';
-import {DefaultEntityValue, OverWrittenProperty, Entity} from '@ame/meta-model';
+import {DefaultEntityValue, OverWrittenProperty, Entity, DefaultEntity} from '@ame/meta-model';
 import {EntityInstantiator} from './entity-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {Bamm} from '@ame/vocabulary';
@@ -55,7 +55,7 @@ export class EntityValueInstantiator {
     const defaultEntityValue = new DefaultEntityValue(null, null, null, null, []);
     defaultEntityValue.name = subject.split('#')?.[1];
     defaultEntityValue.aspectModelUrn = subject;
-    defaultEntityValue.entity = this.getEntity(quads);
+    defaultEntityValue.entity = this.getEntity(quads) as DefaultEntity;
     defaultEntityValue.fileName = this.metaModelElementInstantiator.fileName;
     defaultEntityValue.setExternalReference(this.rdfModel.isExternalRef);
 
