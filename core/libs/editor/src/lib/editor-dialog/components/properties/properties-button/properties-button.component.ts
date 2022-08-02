@@ -32,32 +32,7 @@ export interface UpdatedProperties {
 @Component({
   selector: 'ame-properties-button',
   templateUrl: './properties-button.component.html',
-  styles: [
-    `
-      :host {
-        margin-top: 25px;
-        display: block;
-      }
-
-      .properties-button {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: rgba(0, 0, 0, 0.04);
-        padding: 10px 15px;
-      }
-
-      p {
-        display: flex;
-        align-items: center;
-        margin: 0;
-
-        mat-icon {
-          margin-right: 10px;
-        }
-      }
-    `,
-  ],
+  styleUrls: ['./properties-button.component.scss'],
 })
 export class PropertiesButtonComponent implements OnInit {
   @Output() overwrite = new EventEmitter();
