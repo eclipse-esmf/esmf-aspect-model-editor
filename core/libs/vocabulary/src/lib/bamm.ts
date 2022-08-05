@@ -313,12 +313,12 @@ export class Bamm {
     return this.QuantityKindsProperty().value === value;
   }
 
-  isRefinesProperty(value: string): boolean {
-    return this.RefinesProperty().value === value;
+  isExtendsProperty(value: string): boolean {
+    return this.ExtendsProperty().value === value;
   }
 
-  RefinesProperty(): NamedNode {
-    return DataFactory.namedNode(`${this.getNamespace()}refines`);
+  ExtendsProperty(): NamedNode {
+    return DataFactory.namedNode(`${this.getNamespace()}extends`);
   }
 
   ValueProperty(): NamedNode {
@@ -352,7 +352,15 @@ export class Bamm {
     return DataFactory.namedNode(`${this.getNamespace()}Entity`);
   }
 
+  AbstractEntity(): NamedNode {
+    return DataFactory.namedNode(`${this.getNamespace()}AbstractEntity`);
+  }
+
   isEntity(value: string): boolean {
+    return this.Entity().value === value;
+  }
+
+  isAbstractEntity(value: string): boolean {
     return this.Entity().value === value;
   }
 }

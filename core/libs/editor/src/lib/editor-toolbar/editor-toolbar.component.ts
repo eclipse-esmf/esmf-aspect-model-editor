@@ -89,7 +89,11 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   onOpenSettings() {
-    this.matDialog.open(SettingDialogComponent).afterClosed();
+    this.matDialog
+      .open(SettingDialogComponent, {
+        panelClass: 'settings-dialog-container',
+      })
+      .afterClosed();
   }
 
   onShowHelpDialog() {
@@ -130,7 +134,10 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
           if (!rdfAspectModel) {
             return of(null);
           }
-          this.loadingScreenService.open({...this.loadingScreenOptions, closeButtonAction: () => this.loadingScreen$.unsubscribe()});
+          this.loadingScreenService.open({
+            ...this.loadingScreenOptions,
+            closeButtonAction: () => this.loadingScreen$.unsubscribe(),
+          });
           this.closeEditDialog.emit();
           return this.editorService.loadNewAspectModel(rdfAspectModel).pipe(
             first(),
@@ -187,6 +194,8 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
             first(),
             map((namespaces: string[]) => {
               const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
+              const serializeModel = this.rdfService.serializeModel(rdfModel);
+
               if (namespaces.some(namespace => namespace === rdfModel.getAbsoluteAspectModelFileName())) {
                 this.confirmDialogService
                   .open({
@@ -195,13 +204,16 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
                       'Are you sure you want to overwrite it?',
                     ],
                     title: 'Update Aspect model',
+                    okButtonText: 'Overwrite',
                   })
                   .subscribe(confirmed => {
                     if (confirmed) {
+                      this.editorService.updateLastSavedRdf(false, serializeModel, new Date());
                       this.editorService.saveModel().subscribe();
                     }
                   });
               } else {
+                this.editorService.updateLastSavedRdf(false, serializeModel, new Date());
                 this.editorService.saveModel().subscribe();
               }
             })
@@ -351,7 +363,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     const secondElement = selectedCells[1].style.split(';')[0];
     const modelElements = selectedCells.map(e => MxGraphHelper.getModelElement(e));
 
-    if (relations[secondElement].includes(firstElement)) {
+    if (secondElement !== firstElement && relations[secondElement].includes(firstElement)) {
       modelElements.reverse();
       selectedCells.reverse();
     }

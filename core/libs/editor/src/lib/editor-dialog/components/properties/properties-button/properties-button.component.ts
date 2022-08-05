@@ -13,7 +13,14 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {BaseMetaModelElement, DefaultAspect, DefaultEntity, OverWrittenProperty, OverWrittenPropertyKeys} from '@ame/meta-model';
+import {
+  BaseMetaModelElement,
+  DefaultAbstractEntity,
+  DefaultAspect,
+  DefaultEntity,
+  OverWrittenProperty,
+  OverWrittenPropertyKeys,
+} from '@ame/meta-model';
 import {first} from 'rxjs/operators';
 import {PropertiesModalComponent} from '..';
 import {EditorModelService} from '../../../editor-model.service';
@@ -54,7 +61,7 @@ export interface UpdatedProperties {
 })
 export class PropertiesButtonComponent implements OnInit {
   @Output() overwrite = new EventEmitter();
-  metaModelElement: DefaultEntity | DefaultAspect;
+  metaModelElement: DefaultEntity | DefaultAspect | DefaultAbstractEntity;
 
   private propertiesClone: OverWrittenProperty[];
 
@@ -62,7 +69,11 @@ export class PropertiesButtonComponent implements OnInit {
 
   ngOnInit(): void {
     this.metaModelDialogService.getMetaModelElement().subscribe((metaModelElement: BaseMetaModelElement) => {
-      if (metaModelElement instanceof DefaultEntity || metaModelElement instanceof DefaultAspect) {
+      if (
+        metaModelElement instanceof DefaultEntity ||
+        metaModelElement instanceof DefaultAbstractEntity ||
+        metaModelElement instanceof DefaultAspect
+      ) {
         this.metaModelElement = metaModelElement;
       }
     });

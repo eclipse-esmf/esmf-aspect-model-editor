@@ -11,7 +11,12 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field appearance="fill" [floatLabel]="getControl('see')?.disabled ? 'always' : 'auto'">
+<mat-form-field
+  appearance="fill"
+  [floatLabel]="getControl('see')?.disabled ? 'always' : 'auto'"
+  [matTooltip]="elementWithEntityType?.extendedSee ? 'This was extended from another Abstract Entity or Entity' : ''"
+  [matTooltipPosition]="'left'"
+>
   <mat-label for="see">See</mat-label>
   <input matInput [formControl]="getControl('see')" name="see" data-cy="see" />
   <mat-hint>bamm:see</mat-hint>

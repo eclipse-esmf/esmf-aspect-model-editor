@@ -31,14 +31,13 @@
             {{ language.name }} ({{ language.tag }})
           </mat-option>
         </mat-autocomplete>
-        <mat-hint>Select language</mat-hint>
+        <mat-hint *ngIf="!getLanguagesFormGroup(i).controls['languageCode'].value">Select language</mat-hint>
         <mat-error
           *ngIf="
             getLanguagesFormGroup(i).controls['languageCode']?.touched &&
             getLanguagesFormGroup(i).controls['languageCode'].hasError('required')
           "
-        >
-          'Start typing to select language or delete this row.'
+        > Start typing to select language or delete this row.
         </mat-error>
       </mat-form-field>
     </div>
@@ -51,7 +50,8 @@
 
   <div class="dialog-actions">
     <button mat-flat-button (click)="onClose()">Cancel</button>
-    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!form.valid || !languageList.length" data-cy="saveButton">
+    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!form.valid || !languageList.length"
+            data-cy="saveButton">
       Save
     </button>
   </div>

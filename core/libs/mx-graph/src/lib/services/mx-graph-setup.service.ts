@@ -24,7 +24,7 @@ import {MxGraphHelper, PropertyInformation} from '../helpers';
 import {mxConstants, mxEditor, mxLayoutManager, mxOutline, mxPoint, mxRectangle, mxStackLayout, mxUtils} from '../providers';
 import {DefaultEntity, DefaultEntityValue, DefaultTrait} from '@ame/meta-model';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {AppConfig, APP_CONFIG, AssetsPath, BindingsService, BrowserService} from '@ame/shared';
+import {APP_CONFIG, AppConfig, AssetsPath, BindingsService, BrowserService} from '@ame/shared';
 
 @Injectable()
 export class MxGraphSetupService {
@@ -184,6 +184,7 @@ export class MxGraphSetupService {
 
     return cell.value;
   }
+
   /**
    * Returns the padding for pages in page view with scrollbars.
    * We have 400px width for namespace sidebar.
@@ -231,6 +232,7 @@ export class MxGraphSetupService {
       return new mxRectangle(x0, y0, w0, h0);
     }
   }
+
   /**
    * Fits the number of background pages to the graph
    */

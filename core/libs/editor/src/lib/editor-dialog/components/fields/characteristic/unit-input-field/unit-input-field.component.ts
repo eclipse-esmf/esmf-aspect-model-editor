@@ -22,6 +22,7 @@ import {NamespacesCacheService} from '@ame/cache';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {SearchService} from '@ame/shared';
 import {EditorDialogValidators} from '../../../../validators';
+import {MatOptionSelectionChange} from '@angular/material/core';
 
 declare const bammuDefinition: any;
 
@@ -72,8 +73,8 @@ export class UnitInputFieldComponent
     this.parentForm.removeControl('changedUnit');
   }
 
-  onPredefinedUnitChange(predefinedUnit: Unit) {
-    if (predefinedUnit) {
+  onPredefinedUnitChange(predefinedUnit: Unit, event: MatOptionSelectionChange) {
+    if (predefinedUnit && event.isUserInput) {
       const newPredefinedUnit = this.bammUnitInstantiator.getUnit(predefinedUnit?.name);
       this.parentForm.get('unit').setValue(newPredefinedUnit);
       this.unitDisplayControl.patchValue(newPredefinedUnit.name);
@@ -102,7 +103,13 @@ export class UnitInputFieldComponent
 
     this.parentForm.setControl(
       this.fieldName,
-      new FormControl({value: unit, disabled: this.metaModelElement?.isExternalReference()}, this.unitRequired ? Validators.required : null)
+      new FormControl(
+        {
+          value: unit,
+          disabled: this.metaModelElement?.isExternalReference(),
+        },
+        this.unitRequired ? Validators.required : null
+      )
     );
 
     this.parentForm.setControl('changedUnit', new FormControl(unitName ? this.bammUnitInstantiator.getUnit(unitName) : null));

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AbstractControl, FormControl} from '@angular/forms';
+import {AbstractControl, ValidatorFn} from '@angular/forms';
 import {NamespacesCacheService} from '@ame/cache';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {RFC2141} from 'urn-lib';
@@ -26,7 +26,7 @@ export class EditorDialogValidators {
     return /^(\b[a-z]+[a-zA-Z0-9]*)$/.test(control?.value) ? null : {namingLowerCase: true}; //NOSONAR
   }
 
-  static namingUpperCase(control: FormControl) {
+  static namingUpperCase(control: AbstractControl) {
     if (!control?.value) {
       return null;
     }
@@ -34,7 +34,7 @@ export class EditorDialogValidators {
     return /^(\b[A-Z]+[a-zA-Z0-9]*)$/.test(control?.value) ? null : {namingUpperCase: true}; //NOSONAR
   }
 
-  static disabled(control: FormControl) {
+  static disabled(control: AbstractControl) {
     return control?.disabled ? null : {disabled: true};
   }
 
@@ -69,7 +69,7 @@ export class EditorDialogValidators {
     metaModelElement: BaseMetaModelElement,
     extRdfModels: Array<RdfModel>,
     haveTheSameName = true
-  ) {
+  ): ValidatorFn {
     return (control: AbstractControl) => {
       if (!control?.value) {
         return null;
@@ -125,7 +125,7 @@ export class EditorDialogValidators {
     metaModelElement: BaseMetaModelElement,
     extRdfModels: Array<RdfModel>,
     modelType: Function
-  ) {
+  ): ValidatorFn {
     return (control: AbstractControl) => {
       const duplicateNameValidation = EditorDialogValidators.duplicateName(
         namespaceCacheService,
@@ -146,7 +146,7 @@ export class EditorDialogValidators {
     };
   }
 
-  static noWhiteSpace(control: FormControl) {
+  static noWhiteSpace(control: AbstractControl) {
     if (!control?.value) {
       return null;
     }
@@ -155,7 +155,7 @@ export class EditorDialogValidators {
   }
 
   static duplicateNameString(namespacesCacheService: NamespacesCacheService, namespace: string) {
-    return (control: FormControl) => {
+    return (control: AbstractControl) => {
       if (!control?.value) {
         return null;
       }

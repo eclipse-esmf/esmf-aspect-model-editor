@@ -15,16 +15,16 @@
   <div id="outline" class="map-graph"></div>
 </div>
 <div class="menu-container" *ngIf="settings.showEditorNav">
-  <button mat-button (click)="fit()">
+  <button mat-button (click)="fit()" title="Fit the complete model on the current view">
     <mat-icon>fit_screen</mat-icon>
   </button>
-  <button mat-button (click)="actualSize()">
+  <button mat-button (click)="actualSize()" title="Reset zoom level to 100%">
     <mat-icon>close_fullscreen</mat-icon>
   </button>
-  <button mat-button (click)="zoomIn()">
+  <button mat-button (click)="zoomIn()" title="Zoom in">
     <mat-icon>add</mat-icon>
   </button>
-  <button mat-button (click)="zoomOut()">
+  <button mat-button (click)="zoomOut()" title="Zoom out">
     <mat-icon>remove</mat-icon>
   </button>
 </div>

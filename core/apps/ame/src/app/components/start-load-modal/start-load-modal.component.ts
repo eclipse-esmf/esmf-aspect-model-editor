@@ -12,7 +12,7 @@
  */
 
 import {Component, Inject} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ModelApiService} from '@ame/api';
 import {EditorService} from '@ame/editor';
 import {NotificationsService} from '@ame/shared';
@@ -39,7 +39,7 @@ export class StartLoadModalComponent {
     this.loadNewAspectModel(of(this.data.aspectModel), () => {
       this.notificationsService.info('Auto saved model was loaded');
     });
-    this.editorService.updateLastSavedRdf({rdf: this.data.aspectModel});
+    this.editorService.showLastSavedRdf({rdf: this.data.aspectModel});
   }
 
   loadDefault() {

@@ -13,6 +13,9 @@
 
 import {describe, expect} from '@jest/globals';
 import {
+  AbstractEntityAbstractEntityConnectionHandler,
+  AbstractEntityConnectionHandler,
+  AbstractEntityPropertyConnectionHandler,
   AspectConnectionHandler,
   AspectEventConnectionHandler,
   AspectPropertyConnectionHandler,
@@ -24,7 +27,9 @@ import {
   EitherCharacteristicLeftConnectionHandler,
   EitherCharacteristicRightConnectionHandler,
   EitherConnectionHandler,
+  EntityAbstractEntityConnectionHandler,
   EntityConnectionHandler,
+  EntityEntityConnectionHandler,
   EntityPropertyConnectionHandler,
   EntityValueConnectionHandler,
   EnumerationEntityValueConnectionHandler,
@@ -71,6 +76,11 @@ describe('Test Shape connector service', () => {
   let collectionCharacteristicConnectionHandler: jest.Mocked<CollectionCharacteristicConnectionHandler>;
   let entityPropertyConnectionHandler: jest.Mocked<EntityPropertyConnectionHandler>;
   let traitConnectionHandler: jest.Mocked<TraitConnectionHandler>;
+  let abstractEntityConnectionHandler: jest.Mocked<AbstractEntityConnectionHandler>;
+  let abstractEntityAbstractEntityConnectionHandler: jest.Mocked<AbstractEntityAbstractEntityConnectionHandler>;
+  let abstractEntityPropertyConnectionHandler: jest.Mocked<AbstractEntityPropertyConnectionHandler>;
+  let entityAbstractEntityConnectionHandler: jest.Mocked<EntityAbstractEntityConnectionHandler>;
+  let entityEntityConnectionHandler: jest.Mocked<EntityEntityConnectionHandler>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -187,6 +197,26 @@ describe('Test Shape connector service', () => {
         {
           provide: TraitConnectionHandler,
           useValue: provideMockObject(TraitConnectionHandler),
+        },
+        {
+          provide: AbstractEntityConnectionHandler,
+          useValue: provideMockObject(AbstractEntityConnectionHandler),
+        },
+        {
+          provide: EntityEntityConnectionHandler,
+          useValue: provideMockObject(EntityEntityConnectionHandler),
+        },
+        {
+          provide: AbstractEntityAbstractEntityConnectionHandler,
+          useValue: provideMockObject(AbstractEntityAbstractEntityConnectionHandler),
+        },
+        {
+          provide: EntityAbstractEntityConnectionHandler,
+          useValue: provideMockObject(EntityAbstractEntityConnectionHandler),
+        },
+        {
+          provide: AbstractEntityPropertyConnectionHandler,
+          useValue: provideMockObject(AbstractEntityPropertyConnectionHandler),
         },
       ],
     });

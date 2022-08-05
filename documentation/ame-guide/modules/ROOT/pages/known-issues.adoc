@@ -13,7 +13,7 @@ See also xref:known-limitations.adoc#known-limitations[known limitations].
 [[aspect-model-editor-freezes-loading-model]]
 === Aspect Model Editor freezes when loading model
 
-[%noheader, cols="15%,85%"]
+[%noheader,cols="15%,85%"]
 |===
 h| Error
 a| When loading an Aspect Model, the Aspect Model Editor freezes in a blurry mode.
@@ -25,7 +25,7 @@ a| This can be caused by previously generated TTL with certain syntax errors. Th
 [[error-when-loading-rdf]]
 === Error when loading RDF
 
-[%noheader, cols="15%,85%"]
+[%noheader,cols="15%,85%"]
 |===
 h| Error
 a| When loading a TTL file to edit an Aspect Model, an `Error when loading RDF` is shown.
@@ -36,13 +36,13 @@ version is not supported by this version of the Aspect Model Editor.
 
 h| Workaround
 a|
-Check that you have not missed parts of the TTL file. Also check against syntax errors consulting https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/namespaces.html[Namespaces and versions (BAMM 1.0.0)^, opts=nofollow].
+Check that you have not missed parts of the TTL file. Also check against syntax errors consulting https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/namespaces.html[Namespaces and versions (BAMM 1.0.0)^,opts=nofollow].
 |===
 
 [[datatype-characteristic]]
 === The dataType (see value) that is used as dataType on the Characteristic (see focusNode) is neither an allowed XSD or RDF type, nor a type that is defined as rdfs:Class.
 
-[%noheader, cols="15%,85%"]
+[%noheader,cols="15%,85%"]
 |===
 h| Error
 a|
@@ -62,7 +62,7 @@ a|
 _Wrong data type_
 
 Check that the data types you are using are correct, see
-https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/datatypes.html[Datatypes (BAMM 1.0.0)^, opts=nofollow]
+https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/datatypes.html[Datatypes (BAMM 1.0.0)^,opts=nofollow]
 
 _Unsupported Namespaces_
 
@@ -74,7 +74,7 @@ Hint: You can check the current default namespaces via looking at the Movement E
 [[validation-does-not-stop]]
 === Validation does not stop
 
-[%noheader, cols="15%,85%"]
+[%noheader,cols="15%,85%"]
 |===
 h| Error
 a| When loading a TTL file, units are not loaded correctly. After triggering a validation, this validation does not stop and the user cannot continue to edit the Aspect Model.
@@ -90,11 +90,10 @@ Restart the Aspect Model Editor.
 Fixed for Aspect Model Editor 2.1.0 and higher: If the backend is not available, a message is shown to the user.
 |===
 
-
 [[validation-timeout]]
 === Validation timeout
 
-[%noheader, cols="15%,85%"]
+[%noheader,cols="15%,85%"]
 |===
 h| Error
 a| After triggering a validation, the validation runs into a timeout.
@@ -106,14 +105,52 @@ h| Workaround
 a| Restart the Aspect Model Editor.
 |===
 
+[[editing-element]]
+=== Editing elements
+
+[%noheader,cols="15%,85%"]
+|===
+h| Error
+a| While the element edit view is displayed and you adjust something in the editor, the edit view is not updated.
+
+h| Workaround
+a| Close the edit elements view and reopen it.
+|===
+
+[[overlapping-elements]]
+=== Overlapping elements
+
+[%noheader,cols="15%,85%"]
+|===
+h| Error
+a| As soon as elements overlap, the last created one is displayed above all others.
+
+h| Workaround
+a| Move all elements to a free space so that you can see them again.
+|===
 
 [[other-known-issues]]
 == Other known issues
 
+[[launch-windows-application-twice]]
+=== Launch Windows application twice
+
+[%noheader,cols="15%,85%"]
+|===
+h| Error
+a| If the application is started twice, there may be problems with some Aspect Models already displayed in the other application.
+
+h| Explanation
+a| Electron/Windows locks these files and recognizes that they are already used by another tool.
+
+h| Workaround
+a| Launch only one instance of the Aspect Model Editor.
+|===
+
 [[aspect-model-editor-installation-cannot-write-all-files]]
 === Aspect Model Editor installation cannot write all files
 
-[%noheader, cols="15%,85%"]
+[%noheader,cols="15%,85%"]
 |===
 h| Error
 a| During installation, some files cannot be written. Popup allows retry or abort.
@@ -122,13 +159,13 @@ h| Explanation
 a| File path restriction does not allow writing a file.
 
 h| Workaround
-a| Install on C:\AME or similar without going deeper in hierarchy
+a| Install on C:\AME or similar without going deeper in hierarchy.
 |===
 
 [[cannot-add-entity-relate-entity-with-characteristic]]
 === Cannot add Entity or relate Entity with Characteristic
 
-[%noheader, cols="15%,85%"]
+[%noheader,cols="15%,85%"]
 |===
 h| Error
 a| Trying to add entity / relate entity with Characteristic does not work.
@@ -143,7 +180,7 @@ a| Should you need to relate this Characteristic with an Entity, change your Cha
 [[key-press-not-recognized]]
 === Key press not recognized
 
-[%noheader, cols="15%,85%"]
+[%noheader,cols="15%,85%"]
 |===
 h| Error
 a| During usage, a key press (e.g. delete to delete an element) is not recognized. Instead, no action happens.
@@ -158,7 +195,7 @@ a| Use mouse actions instead, e.g. the toolbar on the top with the Delete icon. 
 [[elements-missing-auto-format]]
 === Some elements seem missing when loading or auto-formatting
 
-[%noheader, cols="15%,85%"]
+[%noheader,cols="15%,85%"]
 |===
 h| Error
 a| After loading an Aspect Model or after auto-format, some elements seem to be missing
@@ -179,7 +216,7 @@ a|
 [[uninstaller-not-available]]
 === Uninstaller not available
 
-[%noheader, cols="15%,85%"]
+[%noheader,cols="15%,85%"]
 |===
 h| Error
 a|
@@ -200,11 +237,10 @@ image::uninstall-04.png[width=50%]
 image::uninstall-05.png[width=100%]
 |===
 
-
 [[javascript-mac-ame3.0.0]]
 === MacOS: JavaScript error occurred in the main process
 
-[%noheader, cols="15%,85%"]
+[%noheader,cols="15%,85%"]
 |===
 h| Error
 a|

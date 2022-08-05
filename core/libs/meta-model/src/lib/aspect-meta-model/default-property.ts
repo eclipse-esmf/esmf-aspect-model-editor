@@ -13,14 +13,13 @@
 
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 import {Base, BaseMetaModelElement} from './base';
-import {CanRefine} from './can-refine';
 import {LookUpDatatype} from './look-up-datatype';
 import {Type} from './type';
 import {DefaultScalar} from './default-scalar';
 import {DefaultTrait} from './default-trait';
 import {AspectModelVisitor} from '@ame/mx-graph';
 
-export interface Property extends BaseMetaModelElement, CanRefine, LookUpDatatype {
+export interface Property extends BaseMetaModelElement, LookUpDatatype {
   characteristic: Characteristic;
   refines?: string;
   exampleValue?: any;
@@ -40,14 +39,9 @@ export class DefaultProperty extends Base implements Property {
     aspectModelUrn: string,
     name: string,
     public characteristic: Characteristic,
-    public refines?: string,
     public exampleValue?: any
   ) {
     super(metaModelVersion, aspectModelUrn, name);
-  }
-
-  getRefines(): string {
-    return this.refines;
   }
 
   getDeepLookUpDataType(): Type {

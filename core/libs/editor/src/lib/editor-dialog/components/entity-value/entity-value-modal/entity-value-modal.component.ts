@@ -86,7 +86,7 @@ export class EntityValueModalComponent {
       newEntityValues: new FormControl([]),
     });
 
-    this.entity.properties.forEach((property: OverWrittenProperty) => {
+    this.entity.allProperties.forEach((property: OverWrittenProperty) => {
       const validators = [];
       if (!property.keys.optional) {
         validators.push(EditorDialogValidators.requiredObject);
@@ -135,7 +135,7 @@ export class EntityValueModalComponent {
     entityValue.aspectModelUrn = this.getAspectModelUrnFromName(this.entityValueName.value);
     entityValue.entity = this.entity;
 
-    this.entity.properties.forEach(data => {
+    this.entity.allProperties.forEach(data => {
       const value = this.form.get('properties').get(data.property.name).value;
       entityValue.addProperty(data, value);
     });

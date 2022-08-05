@@ -331,9 +331,7 @@ Cypress.Commands.add('clickConnectShapes', (nameSource, nameTarget) =>
     .then(() => cyHelp.clickShape(nameSource))
     .then(() => cyHelp.clickShape(nameTarget, true))
     .then(() => {
-      debugger;
       cy.get(SELECTOR_tbConnectButton).click({force: true});
-      debugger;
     })
 );
 
@@ -350,14 +348,14 @@ Cypress.Commands.add('dragElement', (selector: string, x: number, y: number) =>
     if (Cypress.platform === 'darwin') {
       return cy
         .get(selector)
-        .trigger('mousedown', 'left' ,{which: 1, force: true})
+        .trigger('mousedown', 'left', {which: 1, force: true})
         .trigger('mousemove', {clientX: graphX, clientY: graphY, force: true, waitForAnimations: true})
         .then(() => cy.get('#graph > svg').click(graphX, graphY, {force: true}).trigger('mouseup', {force: true}));
     }
 
     return cy
       .get(selector)
-      .trigger('pointerdown' ,{which: 1, force: true})
+      .trigger('pointerdown', {which: 1, force: true})
       .trigger('pointermove', {clientX: graphX, clientY: graphY, force: true, waitForAnimations: true})
       .then(() => cy.get('#graph > svg').click(graphX, graphY, {force: true}).trigger('pointerup', {force: true}));
   })

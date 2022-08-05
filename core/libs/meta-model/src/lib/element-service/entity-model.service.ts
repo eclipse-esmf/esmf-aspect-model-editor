@@ -17,7 +17,15 @@ import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 import {EntityValueService} from '@ame/editor';
 import {EntityRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {Base, BaseMetaModelElement, DefaultEntity, DefaultEntityValue, DefaultEnumeration, OverWrittenPropertyKeys} from '@ame/meta-model';
+import {
+  Base,
+  BaseMetaModelElement,
+  DefaultAbstractEntity,
+  DefaultEntity,
+  DefaultEntityValue,
+  DefaultEnumeration,
+  OverWrittenPropertyKeys,
+} from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
 
 @Injectable({providedIn: 'root'})
@@ -42,6 +50,8 @@ export class EntityModelService extends BaseModelService {
     const metaModelElement: DefaultEntity = MxGraphHelper.getModelElement(cell);
     super.update(cell, form);
 
+    metaModelElement.extendedElement = [DefaultEntity, DefaultAbstractEntity].some(c => form?.extends instanceof c) ? form.extends : null;
+
     if (form.editedProperties) {
       for (const {property, keys} of metaModelElement.properties) {
         const newKeys: OverWrittenPropertyKeys = form.editedProperties[property.aspectModelUrn];
@@ -49,6 +59,7 @@ export class EntityModelService extends BaseModelService {
         keys.optional = newKeys.optional;
         keys.payloadName = newKeys.payloadName;
       }
+
       this.namespacesCacheService
         .getCurrentCachedFile()
         .getCachedEntityValues()

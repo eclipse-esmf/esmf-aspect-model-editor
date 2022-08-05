@@ -13,12 +13,20 @@
 
 import {mxgraph} from 'mxgraph-factory';
 import {Injectable} from '@angular/core';
-import {ModelInfo, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService, MxGraphVisitorHelper} from '@ame/mx-graph';
+import {
+  ModelInfo,
+  MxGraphAttributeService,
+  MxGraphHelper,
+  MxGraphService,
+  MxGraphShapeOverlayService,
+  MxGraphVisitorHelper,
+} from '@ame/mx-graph';
 import {
   Aspect,
   Base,
   BaseMetaModelElement,
   Characteristic,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -35,18 +43,18 @@ import {
   DefaultTrait,
   DefaultUnit,
   Entity,
+  Event,
   ModelElementNamingService,
   Operation,
   Property,
   StructuredValue,
-  Event,
 } from '@ame/meta-model';
 import {EntityValueService} from '@ame/editor';
 import {ExpandedModelShape, NotificationsService} from '@ame/shared';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import mxCell = mxgraph.mxCell;
 import {LanguageSettingsService} from '@ame/settings-dialog';
+import mxCell = mxgraph.mxCell;
 
 export interface ShapeSingleConnector<T> {
   connect(metaModel: T, source: mxCell, modelInfo?: ModelInfo): void;
@@ -58,6 +66,41 @@ export interface ShapeMultiConnector<T, R> {
 
 export interface ShapeMultiConnectorWithProperty<T, R> {
   connect(parentMetaModel: T, childMetaModel: R, parent: mxCell, child: mxCell, property: string): void;
+}
+
+class ExtendElementChecker {
+  constructor(
+    protected mxGraphService: MxGraphService,
+    protected mxGraphAttributeService: MxGraphAttributeService,
+    protected languageSettingsService: LanguageSettingsService,
+    protected notificationsService: NotificationsService
+  ) {}
+
+  public connect(parentMetaModel: BaseMetaModelElement, childMetaModel: BaseMetaModelElement, parentCell: mxCell, childCell: mxCell) {
+    if ((childMetaModel as any).extendedElement === parentMetaModel) {
+      this.notificationsService.info(
+        `${childMetaModel.name} already extends ${parentMetaModel.name}. Please remove the connection to create a new one.`,
+        null,
+        null,
+        5000
+      );
+      return;
+    }
+    (parentMetaModel as any).extendedElement = childMetaModel;
+    this.checkAndRemoveExtendElement(parentCell);
+    this.mxGraphService.assignToParent(childCell, parentCell);
+    parentCell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(parentMetaModel, this.languageSettingsService);
+    this.mxGraphAttributeService.graph.labelChanged(parentCell, MxGraphHelper.createPropertiesLabel(parentCell));
+  }
+
+  checkAndRemoveExtendElement(parentCell: mxCell) {
+    this.mxGraphAttributeService.graph.getOutgoingEdges(parentCell).forEach((outEdge: mxCell) => {
+      const targetElement = MxGraphHelper.getModelElement(outEdge.target);
+      if (targetElement instanceof DefaultEntity || targetElement instanceof DefaultAbstractEntity) {
+        this.mxGraphService.removeCells([parentCell.removeEdge(outEdge, true)]);
+      }
+    });
+  }
 }
 
 // ==========================================================================================
@@ -220,6 +263,30 @@ export class EntityConnectionHandler implements ShapeSingleConnector<Entity> {
 @Injectable({
   providedIn: 'root',
 })
+export class AbstractEntityConnectionHandler implements ShapeSingleConnector<Entity> {
+  constructor(
+    private mxGraphService: MxGraphService,
+    private modelElementNamingService: ModelElementNamingService,
+    private entityValueService: EntityValueService
+  ) {}
+
+  public connect(abstractEntity: DefaultAbstractEntity, source: mxCell) {
+    console.log('Change this to abstract properties');
+    const defaultProperty = DefaultProperty.createInstance();
+    const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultProperty);
+    const child = this.mxGraphService.renderModelElement(metaModelElement);
+    const overWrittenProperty = {property: defaultProperty, keys: {}};
+    abstractEntity.properties.push(overWrittenProperty);
+    this.entityValueService.onNewProperty(overWrittenProperty, abstractEntity);
+    this.mxGraphService.assignToParent(child, source);
+    this.mxGraphService.formatCell(source);
+    this.mxGraphService.formatShapes();
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class ConstraintConnectionHandler implements ShapeSingleConnector<DefaultConstraint> {
   constructor(private mxGraphService: MxGraphService, private modelElementNamingService: ModelElementNamingService) {}
 
@@ -247,6 +314,7 @@ export class TraitConnectionHandler implements ShapeSingleConnector<DefaultTrait
     const child = this.mxGraphService.renderModelElement(metaModelElement);
     trait.update(defaultElement);
     this.mxGraphService.assignToParent(child, source);
+    this.mxGraphService.moveCells([child], source.getGeometry().x + 30, source.getGeometry().y + 60);
     this.mxGraphService.formatCell(child);
     this.mxGraphService.formatShapes();
   }
@@ -305,7 +373,10 @@ export class CharacteristicConnectionHandler implements ShapeSingleConnector<Cha
         if (edgeSourceMetaModelElement instanceof DefaultProperty) {
           // remove example value for complex datatypes
           edgeSourceMetaModelElement.exampleValue = null;
-          edgeSource['configuration'].fields = MxGraphVisitorHelper.getElementProperties(edgeSourceMetaModelElement, this.languageSettingsService);
+          edgeSource['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
+            edgeSourceMetaModelElement,
+            this.languageSettingsService
+          );
           this.mxGraphAttributeService.graph.labelChanged(edgeSource, MxGraphHelper.createPropertiesLabel(edgeSource));
         }
       });
@@ -371,6 +442,12 @@ export class CharacteristicConnectionHandler implements ShapeSingleConnector<Cha
         this.mxGraphService.assignToParent(source, traitShape);
       }
       this.addConstraint(defaultTrait, traitShape);
+
+      const traitWithProperty = traitShape.edges?.some(edge => MxGraphHelper.getModelElement(edge.source) instanceof DefaultProperty);
+
+      if (!traitWithProperty) {
+        this.mxGraphService.moveCells([traitShape], source.getGeometry().x, source.getGeometry().y);
+      }
       this.mxGraphService.formatCell(traitShape);
     }
 
@@ -391,7 +468,6 @@ export class CharacteristicConnectionHandler implements ShapeSingleConnector<Cha
     (<DefaultTrait>defaultTrait).update(defaultConstraint);
 
     this.mxGraphService.assignToParent(constraintShape, traitShape);
-    this.mxGraphService.formatCell(traitShape);
   }
 }
 
@@ -594,7 +670,10 @@ export class CharacteristicEntityConnectionHandler implements ShapeMultiConnecto
         if (edgeSourceMetaModelElement instanceof DefaultProperty) {
           // remove example value for complex datatypes
           edgeSourceMetaModelElement.exampleValue = null;
-          edgeSource['configuration'].fields = MxGraphVisitorHelper.getElementProperties(edgeSourceMetaModelElement, this.languageSettingsService);
+          edgeSource['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
+            edgeSourceMetaModelElement,
+            this.languageSettingsService
+          );
           this.mxGraphAttributeService.graph.labelChanged(edgeSource, MxGraphHelper.createPropertiesLabel(edgeSource));
         }
       });
@@ -642,11 +721,7 @@ export class CollectionCharacteristicConnectionHandler implements ShapeMultiConn
   providedIn: 'root',
 })
 export class EitherCharacteristicLeftConnectionHandler implements ShapeMultiConnector<DefaultEither, DefaultCharacteristic> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private modelElementNamingService: ModelElementNamingService,
-    private mxGraphAttributeService: MxGraphAttributeService
-  ) {}
+  constructor(private mxGraphService: MxGraphService, private mxGraphAttributeService: MxGraphAttributeService) {}
 
   public connect(parentMetaModel: DefaultEither, childMetaModel: DefaultCharacteristic, parent: mxCell, child: mxCell) {
     this.mxGraphAttributeService.graph.getOutgoingEdges(parent).forEach(outEdge => {
@@ -665,11 +740,7 @@ export class EitherCharacteristicLeftConnectionHandler implements ShapeMultiConn
   providedIn: 'root',
 })
 export class EitherCharacteristicRightConnectionHandler implements ShapeMultiConnector<DefaultEither, DefaultCharacteristic> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private modelElementNamingService: ModelElementNamingService,
-    private mxGraphAttributeService: MxGraphAttributeService
-  ) {}
+  constructor(private mxGraphService: MxGraphService, private mxGraphAttributeService: MxGraphAttributeService) {}
 
   public connect(parentMetaModel: DefaultEither, childMetaModel: DefaultCharacteristic, parent: mxCell, child: mxCell) {
     this.mxGraphAttributeService.graph.getOutgoingEdges(parent).forEach(outEdge => {
@@ -692,7 +763,7 @@ export class StructuredValueCharacteristicPropertyConnectionHandler
 {
   constructor(private mxGraphService: MxGraphService, private mxGraphAttributeService: MxGraphAttributeService) {}
 
-  public connect(parentMetaModel: DefaultStructuredValue, childMetaModel: DefaultProperty, first: mxCell, second: mxCell) {
+  public connect(_parentMetaModel: DefaultStructuredValue, _childMetaModel: DefaultProperty, first: mxCell, second: mxCell) {
     const hasPropertyParent = this.mxGraphAttributeService.graph
       .getIncomingEdges(first)
       .some(edge => MxGraphHelper.getModelElement(edge.source) instanceof DefaultProperty);
@@ -713,13 +784,89 @@ export class StructuredValueCharacteristicPropertyConnectionHandler
 export class EntityPropertyConnectionHandler implements ShapeMultiConnector<DefaultEntity, DefaultProperty> {
   constructor(private mxGraphService: MxGraphService, private entityValueService: EntityValueService) {}
 
-  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, childCell: mxCell, parentCell: mxCell) {
+  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: mxCell, childCell: mxCell) {
     if (!parentMetaModel.properties.find(({property}) => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
       const overWrittenProperty = {property: childMetaModel, keys: {}};
       parentMetaModel.properties.push(overWrittenProperty);
       this.entityValueService.onNewProperty(overWrittenProperty, parentMetaModel);
     }
     this.mxGraphService.assignToParent(parentCell, childCell);
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class EntityEntityConnectionHandler extends ExtendElementChecker implements ShapeMultiConnector<DefaultEntity, DefaultEntity> {
+  constructor(
+    protected mxGraphService: MxGraphService,
+    protected mxGraphAttributeService: MxGraphAttributeService,
+    protected languageSettingsService: LanguageSettingsService,
+    protected notificationsService: NotificationsService
+  ) {
+    super(mxGraphService, mxGraphAttributeService, languageSettingsService, notificationsService);
+  }
+
+  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultEntity, parentCell: mxCell, childCell: mxCell) {
+    super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AbstractEntityAbstractEntityConnectionHandler
+  extends ExtendElementChecker
+  implements ShapeMultiConnector<DefaultAbstractEntity, DefaultAbstractEntity>
+{
+  constructor(
+    protected mxGraphService: MxGraphService,
+    protected mxGraphAttributeService: MxGraphAttributeService,
+    protected languageSettingsService: LanguageSettingsService,
+    protected notificationsService: NotificationsService
+  ) {
+    super(mxGraphService, mxGraphAttributeService, languageSettingsService, notificationsService);
+  }
+
+  public connect(parentMetaModel: DefaultAbstractEntity, childMetaModel: DefaultAbstractEntity, parentCell: mxCell, childCell: mxCell) {
+    super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class EntityAbstractEntityConnectionHandler
+  extends ExtendElementChecker
+  implements ShapeMultiConnector<DefaultAbstractEntity, DefaultEntity>
+{
+  constructor(
+    protected mxGraphService: MxGraphService,
+    protected mxGraphAttributeService: MxGraphAttributeService,
+    protected languageSettingsService: LanguageSettingsService,
+    protected notificationsService: NotificationsService
+  ) {
+    super(mxGraphService, mxGraphAttributeService, languageSettingsService, notificationsService);
+  }
+
+  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultAbstractEntity, child: mxCell, parent: mxCell) {
+    super.connect(parentMetaModel, childMetaModel, child, parent);
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AbstractEntityPropertyConnectionHandler implements ShapeMultiConnector<DefaultAbstractEntity, DefaultProperty> {
+  constructor(private mxGraphService: MxGraphService, private entityValueService: EntityValueService) {}
+
+  public connect(parentMetaModel: DefaultAbstractEntity, childMetaModel: DefaultProperty, parentCell: mxCell, childCell: mxCell) {
+    if (!parentMetaModel.properties.find(({property}) => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
+      const overWrittenProperty = {property: childMetaModel, keys: {}};
+      parentMetaModel.properties.push(overWrittenProperty);
+      this.entityValueService.onNewProperty(overWrittenProperty, parentMetaModel);
+    }
+    this.mxGraphService.assignToParent(childCell, parentCell);
   }
 }
 

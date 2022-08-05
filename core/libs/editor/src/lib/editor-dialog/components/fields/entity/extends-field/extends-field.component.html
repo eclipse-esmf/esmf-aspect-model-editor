@@ -1,0 +1,72 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+  <mat-form-field [floatLabel]="getControl('extendsValue')?.disabled ? 'always' : 'auto'" appearance="fill">
+    <mat-label for="extendsValue">Extends</mat-label>
+    <input
+      #extends
+      [matAutocomplete]="auto"
+      [formControl]="getControl('extendsValue')"
+      matInput
+      name="extendsValue"
+      data-cy="extendsValue"
+    />
+    <button
+      *ngIf="extendsValueControl?.disabled && !metaModelElement?.isExternalReference()"
+      (click)="unlockExtends()"
+      class="close-button"
+      data-cy="clear-extends-button"
+      matSuffix
+      mat-icon-button
+      tabindex="-1"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <mat-autocomplete #auto="matAutocomplete" class="extendsValue">
+      <div *ngIf="filteredAbstractEntities$ | async as filteredAbstractEntities">
+        <mat-option
+          *ngIf="!isAlreadyDefined(filteredAbstractEntities, extends.value) && !getControl('extendsValue')?.errors?.foundModel"
+          [disabled]="!isUpperCase(extends.value)"
+          [value]="!isUpperCase(extends.value) ? '' : extends.value"
+          (click)="createNewAbstractEntity(extends.value)"
+        >
+          <span *ngIf="isUpperCase(extends.value)">
+            + Create new Abstract Entity: <strong>{{ extends.value }}</strong>
+          </span>
+          <span *ngIf="!isUpperCase(extends.value)">Abstract Entity should be upper case</span>
+        </mat-option>
+        <mat-option
+          *ngFor="let abstractEntity of filteredAbstractEntities"
+          [value]="abstractEntity.name"
+          (onSelectionChange)="onSelectionChange(abstractEntity)"
+        >
+          <div class="result">
+            <div class="ellipsis">
+              {{ abstractEntity.name }}
+              <span *ngIf="abstractEntity.description" class="option-description" [title]="abstractEntity.description"
+                >- {{ abstractEntity.description }}</span
+              >
+              <p *ngIf="abstractEntity.namespace" class="namespace-prefix" [title]="abstractEntity.namespace">
+                {{ abstractEntity.namespace }}
+              </p>
+            </div>
+          </div>
+        </mat-option>
+      </div>
+    </mat-autocomplete>
+    <mat-hint>bamm:extends</mat-hint>
+
+    <mat-error *ngIf="getControl('extendsValue')?.errors?.required">Please define an Abstract Entity</mat-error>
+  </mat-form-field>
+</div>

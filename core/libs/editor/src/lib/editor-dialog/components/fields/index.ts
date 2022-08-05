@@ -19,3 +19,4 @@ export * from './property';
 export * from './unit';
 export * from './dropdown-field.component';
 export * from './input-field.component';
+export * from './entity';

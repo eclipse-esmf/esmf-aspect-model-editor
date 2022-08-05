@@ -14,7 +14,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
 import {DefaultCharacteristic, DefaultEither, DefaultEntity, DefaultScalar, DefaultStructuredValue, Entity} from '@ame/meta-model';
 import {DataTypeService, SearchService} from '@ame/shared';
@@ -24,6 +24,7 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {EditorDialogValidators} from '../../../../validators';
 import {RdfService} from '@ame/rdf/services';
+import {MatOptionSelectionChange} from '@angular/material/core';
 
 @Component({
   selector: 'ame-data-type-input-field',
@@ -31,13 +32,13 @@ import {RdfService} from '@ame/rdf/services';
   styleUrls: ['./data-type-input-field.component.scss'],
 })
 export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultCharacteristic> implements OnInit, OnDestroy {
-  filteredDataTypes$: Observable<any[]>;
-  filteredEntityTypes$: Observable<any[]>;
+  public filteredDataTypes$: Observable<any[]>;
+  public filteredEntityTypes$: Observable<any[]>;
 
-  dataTypeControl: FormControl;
-  dataTypeEntityControl: FormControl;
+  public dataTypeControl: FormControl;
+  public dataTypeEntityControl: FormControl;
 
-  entitiesDisabled = false;
+  public entitiesDisabled = false;
 
   constructor(
     public metaModelDialogService: EditorModelService,
@@ -108,11 +109,11 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     this.dataTypeEntityControl = this.parentForm.get('dataTypeEntity') as FormControl;
 
     this.initFilteredDataTypes();
-    this.initFilteredEntityTypes();
+    this.filteredEntityTypes$ = this.initFilteredEntities(this.dataTypeControl, this.entitiesDisabled);
   }
 
-  onSelectionChange(fieldPath: string, newValue: any) {
-    if (fieldPath !== 'dataType') {
+  onSelectionChange(fieldPath: string, newValue: any, event: MatOptionSelectionChange) {
+    if (fieldPath !== 'dataType' || !event.isUserInput) {
       return;
     }
 
@@ -175,26 +176,6 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
       map((value: string) => (value ? types.filter(type => this.inSearchList(type, value)) : types)),
       startWith(types)
     );
-  }
-
-  private initFilteredEntityTypes() {
-    this.filteredEntityTypes$ = this.entitiesDisabled
-      ? of([])
-      : this.dataTypeControl?.valueChanges.pipe(
-          startWith(''),
-          map((value: string) => {
-            const entities = this.currentCachedFile.getCachedEntities()?.map(entity => ({
-              name: entity.name,
-              description: entity.getDescription('en') || '',
-              urn: entity.getUrn(),
-              complex: true,
-              entity,
-            }));
-
-            return [...entities, ...this.searchExtEntity(value)]?.filter(type => this.inSearchList(type, value));
-          }),
-          startWith([])
-        );
   }
 
   private hasStructuredValueAsGrandParent() {

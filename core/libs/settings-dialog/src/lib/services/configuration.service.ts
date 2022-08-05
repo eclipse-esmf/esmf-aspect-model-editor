@@ -20,7 +20,6 @@ const DEFAULT_SETTINGS: Settings = {
   autoSaveEnabled: true,
   autoValidationEnabled: true,
   autoFormatEnabled: true,
-  showValidationPopupNotifications: false,
   enableHierarchicalLayout: true,
   validationTimerSeconds: 400,
   saveTimerSeconds: 60,

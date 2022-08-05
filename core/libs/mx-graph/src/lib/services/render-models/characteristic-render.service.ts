@@ -187,7 +187,7 @@ export class CharacteristicRenderService extends BaseRenderService {
       return;
     }
 
-    const edgesToRemove = cell.edges.filter(
+    const edgesToRemove = cell.edges?.filter(
       edge => MxGraphHelper.getModelElement(edge.target).aspectModelUrn !== modelElement.aspectModelUrn
     );
     this.mxGraphService.removeCells(edgesToRemove || []);
@@ -327,7 +327,7 @@ export class CharacteristicRenderService extends BaseRenderService {
   }
 
   private removeCharacteristic(cell: mxgraph.mxCell, modelElement: DefaultCharacteristic) {
-    const edgesToRemove = cell.edges.filter(edge => {
+    const edgesToRemove = cell.edges?.filter(edge => {
       const sourceModel = MxGraphHelper.getModelElement(edge.source);
       if (modelElement.aspectModelUrn !== sourceModel.aspectModelUrn) {
         return false;

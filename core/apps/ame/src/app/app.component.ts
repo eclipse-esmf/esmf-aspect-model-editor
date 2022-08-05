@@ -119,8 +119,6 @@ export class AppComponent implements OnInit {
               },
             ]
           : []),
-        {role: 'cut', label: 'Cut selected text'},
-        {role: 'copy', label: 'Copy selected text'},
         ...(target.tagName.toLowerCase() === 'a'
           ? [
               {
@@ -131,7 +129,6 @@ export class AppComponent implements OnInit {
               },
             ]
           : []),
-        {role: 'paste', label: 'Paste'},
       ];
 
       const menu = Menu.buildFromTemplate(template);

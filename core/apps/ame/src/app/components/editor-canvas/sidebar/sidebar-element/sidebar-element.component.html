@@ -16,11 +16,11 @@
   #container
   [ngClass]="{'element-imported': elementImported()}"
   [attr.data-cy]="dataCy"
-  [title]="elementImported() ? 'Element already imported' : 'Drag to the right to create this element'"
+  [title]="elementImported() ? 'Element already imported' : element.name + ' - Drag to the right to add'"
   class="container"
 >
   <div class="icon" [ngClass]="getIconClass">
-    {{ element.type.charAt(0).toUpperCase() }}
+    {{ elementShortcut[element.type] }}
   </div>
   <div class="info" [matTooltip]="element.description" matTooltipPosition="right">
     <div class="name" [title]="element.name">

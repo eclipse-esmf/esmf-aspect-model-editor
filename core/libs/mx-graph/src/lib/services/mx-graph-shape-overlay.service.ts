@@ -18,6 +18,7 @@ import {MxGraphHelper, MxGraphVisitorHelper, PropertyInformation} from '../helpe
 import {mxCellOverlay, mxConstants, mxEvent, mxImage} from '../providers';
 import {
   BaseMetaModelElement,
+  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -29,6 +30,7 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultTrait,
+  DefaultUnit,
 } from '@ame/meta-model';
 import {BrowserService} from '@ame/shared';
 import {ShapeConnectorService} from '@ame/connection';
@@ -55,18 +57,12 @@ export class MxGraphShapeOverlayService {
    */
   public addTopShapeOverlay(cell: mxgraph.mxCell): void {
     if (cell.style?.includes('characteristic') && !(MxGraphHelper.getModelElement(cell) instanceof DefaultEither)) {
-      const haveParentTrait = this.mxGraphAttributeService.graph
-        .getIncomingEdges(cell)
-        .some(edge => MxGraphHelper.getModelElement(edge.source) instanceof DefaultTrait);
-
-      if (!haveParentTrait) {
-        const overlay = this.createIconShapeOverlay('add-outline-frame', 'Add Trait');
-        overlay.align = mxConstants.ALIGN_CENTER;
-        overlay.verticalAlign = mxConstants.ALIGN_TOP;
-        overlay.offset.x += cell.geometry.width / 8;
-        overlay.addListener(mxEvent.CLICK, () => this.addShapeAction(cell, ModelInfo.IS_CHARACTERISTIC));
-        this.mxGraphAttributeService.graph.addCellOverlay(cell, overlay);
-      }
+      const overlay = this.createIconShapeOverlay('add-outline-frame', 'Add Trait');
+      overlay.align = mxConstants.ALIGN_CENTER;
+      overlay.verticalAlign = mxConstants.ALIGN_TOP;
+      overlay.offset.x += cell.geometry.width / 8;
+      overlay.addListener(mxEvent.CLICK, () => this.addShapeAction(cell, ModelInfo.IS_CHARACTERISTIC));
+      this.mxGraphAttributeService.graph.addCellOverlay(cell, overlay);
     }
   }
 
@@ -163,11 +159,7 @@ export class MxGraphShapeOverlayService {
       let overlayTooltip = 'Add ';
       let modelInfo = ModelInfo.IS_CHARACTERISTIC;
 
-      if (modelElement instanceof DefaultConstraint) {
-        return;
-      }
-
-      if (modelElement instanceof DefaultEntityValue) {
+      if (modelElement instanceof DefaultConstraint || modelElement instanceof DefaultEntityValue || modelElement instanceof DefaultUnit) {
         return;
       }
 
@@ -215,7 +207,7 @@ export class MxGraphShapeOverlayService {
         return;
       }
 
-      if (modelElement instanceof DefaultAspect || modelElement instanceof DefaultEntity) {
+      if (modelElement instanceof DefaultAspect || modelElement instanceof DefaultEntity || modelElement instanceof DefaultAbstractEntity) {
         overlayTooltip += 'Property';
       } else if (modelElement instanceof DefaultProperty) {
         overlayTooltip += 'Characteristic';

@@ -10,6 +10,5 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-export interface CanRefine {
-  getRefines(): string;
-}
+
+export * from './abstract-entity';

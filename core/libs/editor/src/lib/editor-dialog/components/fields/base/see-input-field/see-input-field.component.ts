@@ -13,7 +13,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement} from '@ame/meta-model';
+import {BaseMetaModelElement, DefaultEntity} from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -33,19 +33,23 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
   }
 
   getCurrentValue() {
-    return this.previousData?.[this.fieldName] || this.metaModelElement?.getSeeReferences()?.join(',') || '';
+    return (
+      this.previousData?.[this.fieldName] ||
+      ((this.metaModelElement as DefaultEntity)?.extendedSee || this.metaModelElement?.getSeeReferences())?.join(',') ||
+      ''
+    );
   }
 
   private setSeeControl() {
-    if (this.parentForm.get(this.fieldName)?.value) {
-      return;
-    }
     this.parentForm.setControl(
       this.fieldName,
       new FormControl(
         {
           value: this.decodeUriComponent(this.getCurrentValue()),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
+          disabled:
+            this.metaModelDialogService.isReadOnly() ||
+            (this.metaModelElement as DefaultEntity).extendedSee ||
+            this.metaModelElement?.isExternalReference(),
         },
         {
           validators: [EditorDialogValidators.seeURI],

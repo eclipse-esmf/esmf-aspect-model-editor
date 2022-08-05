@@ -14,7 +14,7 @@
 <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
   <mat-form-field [floatLabel]="getControl('unit')?.disabled ? 'always' : 'auto'" appearance="fill">
     <mat-label for="unit">Unit</mat-label>
-    <input #unit [matAutocomplete]="auto" matInput name="unit" [formControl]="unitDisplayControl" data-cy="unit" />
+    <input #unit [matAutocomplete]="auto" matInput name="unit" [formControl]="unitDisplayControl" data-cy="unit"/>
     <button
       *ngIf="unitDisplayControl?.disabled && !metaModelElement?.isExternalReference()"
       (click)="unlockUnit()"
@@ -27,7 +27,9 @@
       <mat-icon>close</mat-icon>
     </button>
 
-    <mat-error *ngIf="unitDisplayControl?.errors?.checkShapeName"> Please select a different name as this one is of different type </mat-error>
+    <mat-error *ngIf="unitDisplayControl?.errors?.checkShapeName"> Please select a different name as this one is of
+      different type
+    </mat-error>
     <mat-error *ngIf="unitDisplayControl?.errors?.checkShapeNameExtRef">
       Please select a different name as this one is of different type in the same namespace
     </mat-error>
@@ -36,7 +38,8 @@
     <mat-autocomplete #auto="matAutocomplete">
       <ng-container *ngIf="filteredUnits$ | async as filteredUnits">
         <mat-optgroup *ngIf="(unit.value || filteredUnits.length) && !unitDisplayControl.errors" label="Units">
-          <mat-option *ngIf="filteredUnits.length <= 0 && unit.value" [value]="unit.value" (click)="createNewUnit(unit.value)">
+          <mat-option *ngIf="filteredUnits.length <= 0 && unit.value" [value]="unit.value"
+                      (click)="createNewUnit(unit.value)">
             <span>
               + Create new Unit: <strong>{{ unit.value }}</strong>
             </span>
@@ -58,7 +61,7 @@
             [value]="unit.name"
             [title]="unit.name"
             [attr.data-unit-cy]="unit.name"
-            (onSelectionChange)="onPredefinedUnitChange(unit)"
+            (onSelectionChange)="onPredefinedUnitChange(unit, $event)"
           >
             {{ unit.name }}
           </mat-option>

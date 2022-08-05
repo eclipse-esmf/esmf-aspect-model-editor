@@ -47,7 +47,7 @@
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="100"
         matTooltip="After completing a validation, after passing the waiting period the next auto-validation will be triggered."
-        >info</mat-icon
+      >info</mat-icon
       >
     </span>
   </mat-slide-toggle>
@@ -76,12 +76,6 @@
 </div>
 
 <div class="item">
-  <mat-slide-toggle [(ngModel)]="settings.showValidationPopupNotifications" (change)="onChange()">
-    Show additional popups for notifications
-  </mat-slide-toggle>
-</div>
-
-<div class="item">
   <mat-slide-toggle
     matTooltip="may be more suitable for some models, e.g. with recursion"
     [(ngModel)]="settings.enableHierarchicalLayout"
@@ -105,14 +99,14 @@
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="100"
         matTooltip="Displays labels on relationships that require disambiguation, e.g. Operation input/output, Characteristic Either left/right and Properties with notInPayload set."
-        >info</mat-icon
+      >info</mat-icon
       >
     </span>
   </mat-slide-toggle>
 </div>
 
-<div class="item">
-  <mat-slide-toggle [(ngModel)]="settings.useSaturatedColors" (change)="onChange(); themeChange($event)">
-    <span class="setting-item__toggle__content"> Display highly saturated colors </span>
-  </mat-slide-toggle>
-</div>
+<!--<div class="item">-->
+<!--  <mat-slide-toggle [(ngModel)]="settings.useSaturatedColors" (change)="onChange(); themeChange($event)">-->
+<!--    <span class="setting-item__toggle__content"> Display highly saturated colors </span>-->
+<!--  </mat-slide-toggle>-->
+<!--</div>-->
