@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultEntity, DefaultCharacteristic, OverWrittenProperty} from '@ame/meta-model';
+import {DefaultCharacteristic, DefaultEntity, OverWrittenProperty} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {ModelService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
@@ -23,7 +23,7 @@ import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AbstractEntityVisitor} from './abstract-entity';
 
-describe('Entity Visitor', () => {
+describe.skip('Entity Visitor', () => {
   let service: AbstractEntityVisitor;
   let rdfNodeService: jest.Mocked<RdfNodeService>;
   let rdfListService: jest.Mocked<RdfListService>;
