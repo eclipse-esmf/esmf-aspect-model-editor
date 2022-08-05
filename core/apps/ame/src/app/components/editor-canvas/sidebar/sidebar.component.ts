@@ -145,7 +145,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
       .open({
         phrases: [`You are about to load ${namespaceFileName}.`, 'Do you want to save the current Aspect Model in the workspace first?'],
         title: 'Save current Aspect Model',
-        closeButtonText: 'Don´t save',
+        closeButtonText: "Don't save",
         okButtonText: 'Save',
       })
       .subscribe(confirmed => {

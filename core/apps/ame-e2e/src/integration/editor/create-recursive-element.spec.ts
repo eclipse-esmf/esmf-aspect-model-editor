@@ -166,18 +166,11 @@ describe('Test create recursive element', () => {
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain(
-          ':property1 a bamm:Property;\n' + '    bamm:name "property1";\n' + '    bamm:characteristic :Characteristic1.'
-        );
-        expect(rdf).to.contain(
-          ':newProperty2 a bamm:Property;\n' + '    bamm:name "newProperty2";\n' + '    bamm:characteristic :Characteristic1.'
-        );
-        expect(rdf).to.contain(
-          ':newProperty3 a bamm:Property;\n' + '    bamm:name "newProperty3";\n' + '    bamm:characteristic :Characteristic1.'
-        );
-        cy.getAspect().then(checkIfAspectHasCharacteristic);
-        cyHelp.hasAddShapeOverlay('newProperty2').then(addShapeIcon => expect(addShapeIcon).to.be.false);
-        cyHelp.hasAddShapeOverlay('newProperty3').then(addShapeIcon => expect(addShapeIcon).to.be.false);
+        expect(rdf).to.contain(':property1 a bamm:Property;\n' + '    bamm:name "property1".');
+        expect(rdf).to.contain(':newProperty2 a bamm:Property;\n' + '    bamm:name "newProperty2".');
+        expect(rdf).to.contain(':newProperty3 a bamm:Property;\n' + '    bamm:name "newProperty3".');
+        cyHelp.hasAddShapeOverlay('newProperty2').then(addShapeIcon => expect(addShapeIcon).to.be.true);
+        cyHelp.hasAddShapeOverlay('newProperty3').then(addShapeIcon => expect(addShapeIcon).to.be.true);
       });
   });
 });
