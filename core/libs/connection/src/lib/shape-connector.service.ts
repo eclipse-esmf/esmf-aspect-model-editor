@@ -177,7 +177,8 @@ export class ShapeConnectorService {
       case ShapeConnectorUtil.isOperationPropertyOutputConnection(parentModel, childModel, modelInfo):
         connectionHandler = this.operationPropertyOutputConnectionHandler;
         break;
-      case ShapeConnectorUtil.isOperationPropertyConnection(parentModel, childModel):
+      case ShapeConnectorUtil.isOperationPropertyConnection(parentModel, childModel) ||
+        ShapeConnectorUtil.isPropertyOperationConnection(parentModel, childModel):
         this.notificationsService.warning(
           'For connecting input/output Properties use the icons below the Aspect or the edit the Operation properties via edit area'
         );

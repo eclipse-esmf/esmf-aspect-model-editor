@@ -154,6 +154,11 @@ mat-icon {
   }
 }
 
+.settings-dialog-container .mat-dialog-container {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -223,15 +228,18 @@ mat-icon {
 .cell-tooltip {
   font-size: 13px;
   max-width: 300px;
+
   table,
   td,
   th {
     border: solid 2px #ccc;
   }
+
   table {
     border-collapse: collapse;
     width: 100%;
   }
+
   td {
     margin: 0 auto;
     overflow-wrap: break-word;
@@ -242,6 +250,7 @@ mat-icon {
     text-align: left;
     max-width: 140px;
   }
+
   td:nth-child(odd) {
     background: #f7f7f7;
   }
@@ -251,6 +260,7 @@ mat-icon {
   display: inline-flex;
   position: relative;
   width: 100%;
+
   .close-button {
     position: absolute;
     top: 0;

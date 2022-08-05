@@ -445,6 +445,10 @@ export class MxGraphService {
     this.mxGraphAttributeService.graph.removeCells(cells);
   }
 
+  moveCells(cells: Array<mxgraph.mxCell>, dx: number, dy: number): void {
+    this.mxGraphAttributeService.graph.moveCells(cells, dx, dy);
+  }
+
   /**
    *
    * @returns array with all available cells(mx elements)

@@ -21,6 +21,7 @@ import {BammUnitInstantiator, MetaModelElementInstantiator} from '@ame/instantia
 import {NamespacesCacheService} from '@ame/cache';
 import {ModelService} from '@ame/rdf/services';
 import {SearchService} from '@ame/shared';
+import {MatOptionSelectionChange} from '@angular/material/core';
 
 declare const bammuDefinition: any;
 
@@ -29,11 +30,13 @@ declare const bammuDefinition: any;
   templateUrl: './reference-unit-input-field.component.html',
 })
 export class ReferenceUnitInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit, OnDestroy {
-  filteredPredefinedUnits$: Observable<Array<any>>;
-  filteredUnits$: Observable<Array<DefaultUnit>>;
-  units: Array<Unit> = [];
-  unitDisplayControl: FormControl;
   private bammUnitInstantiator: BammUnitInstantiator;
+
+  public filteredPredefinedUnits$: Observable<Array<any>>;
+  public filteredUnits$: Observable<Array<DefaultUnit>>;
+  public units: Array<Unit> = [];
+  public unitDisplayControl: FormControl;
+  public referenceUnitControl: FormControl;
 
   constructor(
     public metaModelDialogService: EditorModelService,
@@ -78,6 +81,8 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
       })
     );
 
+    this.referenceUnitControl = this.parentForm.get('referenceUnit') as FormControl;
+
     this.filteredUnits$ = this.initFilteredUnits(this.unitDisplayControl, this.searchService);
     this.filteredPredefinedUnits$ = this.initFilteredPredefinedUnits(this.unitDisplayControl, this.units, this.searchService);
   }
@@ -85,14 +90,14 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
   unlockUnit() {
     this.unitDisplayControl.enable();
     this.unitDisplayControl.patchValue('');
-    this.parentForm.get('referenceUnit').setValue(null);
-    this.parentForm.get('referenceUnit').markAllAsTouched();
+    this.parentForm.setControl('referenceUnit', new FormControl(null));
+    this.referenceUnitControl.markAllAsTouched();
   }
 
-  onPredefinedUnitChange(predefinedUnit: Unit) {
-    if (predefinedUnit) {
+  onPredefinedUnitChange(predefinedUnit: Unit, event: MatOptionSelectionChange) {
+    if (predefinedUnit && event.isUserInput) {
       const newPredefinedUnit = this.bammUnitInstantiator.getUnit(predefinedUnit?.name);
-      this.parentForm.get('referenceUnit').setValue(newPredefinedUnit);
+      this.referenceUnitControl.setValue(newPredefinedUnit);
       this.unitDisplayControl.patchValue(newPredefinedUnit.name);
       this.unitDisplayControl.disable();
     }

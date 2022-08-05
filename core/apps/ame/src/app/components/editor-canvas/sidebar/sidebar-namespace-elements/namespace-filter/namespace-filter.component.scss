@@ -26,10 +26,14 @@
     color: var(--ame-font);
     cursor: pointer;
     user-select: none;
+    opacity: 60%;
     border: solid 1px transparent;
+    box-sizing: border-box;
   }
 
   .selected {
+    opacity: 100%;
+    border-width: 2px;
     border-color: var(--ame-font);
   }
 }

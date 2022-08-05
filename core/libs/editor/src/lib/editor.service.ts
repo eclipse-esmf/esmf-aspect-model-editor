@@ -20,6 +20,7 @@ import {
   ProcessingError,
   SaveValidateErrorsCodes,
   SemanticError,
+  SidebarService,
   SyntacticError,
   ValidateStatus,
 } from '@ame/shared';
@@ -97,11 +98,11 @@ export class EditorService {
   private saveModel$ = new BehaviorSubject(this.settings.autoSaveEnabled);
   private saveLatestModelSubscription$: Subscription;
   private lastSavedRDF$ = new BehaviorSubject<Partial<ILastSavedModel>>({});
-
   public loadModel$ = new BehaviorSubject(null);
   public delayedBindings: Array<any> = [];
 
   public onRefreshNamespaces: Subject<void> = new Subject();
+  public onRefreshSideBar$: Subject<void> = new Subject();
 
   public get savedRdf$() {
     return this.lastSavedRDF$.asObservable();
@@ -131,19 +132,32 @@ export class EditorService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private confirmDialogService: ConfirmDialogService,
     private elementModelService: ElementModelService,
-    private titleService: Title
+    private titleService: Title,
+    private sidebarService: SidebarService
   ) {
     if (!environment.production) {
       window['angular.editorService'] = this;
     }
   }
 
-  updateLastSavedRdf(lastSavedModel: Partial<ILastSavedModel>) {
+  removeLastSavedRdf() {
+    this.lastSavedRDF$.next({rdf: null, changed: true, date: null});
+  }
+
+  showLastSavedRdf(lastSavedModel: Partial<ILastSavedModel>) {
     const lastSavedDate: string = localStorage.getItem('lastSavedDate');
     this.lastSavedRDF$.next({
       ...this.lastSavedRDF$.value,
       ...lastSavedModel,
       date: lastSavedDate ? new Date(+lastSavedDate) : null,
+    });
+  }
+
+  updateLastSavedRdf(changed: boolean, model: string, saveDate: Date) {
+    this.lastSavedRDF$.next({
+      changed: changed,
+      rdf: model,
+      date: saveDate,
     });
   }
 
@@ -212,6 +226,8 @@ export class EditorService {
   }
 
   loadNewAspectModel(rdfAspectModel: string, isDefault?: boolean) {
+    this.refreshSidebar();
+    this.removeLastSavedRdf();
     this.notificationsService.info('Loading model', null, null, 5000);
     return this.rdfService.loadModel(rdfAspectModel).pipe(
       switchMap(rdfModel =>
@@ -612,8 +628,6 @@ export class EditorService {
       delayWhen(() => timer(this.settings.validationTimerSeconds * 1000)),
       switchMap(() => this.validate().pipe(first())),
       tap(() => {
-        this.notificationsService.info('Validation completed successfully', 'The model is valid');
-        this.logService.logInfo('Validated successfully');
         localStorage.removeItem(ValidateStatus.validating);
         this.refreshValidateModel();
       }),
@@ -678,14 +692,27 @@ export class EditorService {
       delayWhen(() => timer(this.settings.saveTimerSeconds * 1000)),
       switchMap(() => this.modelService.saveLatestModel()),
       tap(model => {
-        this.lastSavedRDF$.next({
-          changed: false,
-          rdf: model.serializedModel,
-          date: model.savedDate,
-        });
+        this.updateLastSavedRdf(false, model.serializedModel, model.savedDate);
+
+        const namespaces = this.sidebarService.namespaces;
+        const aspectModelFileName = this.rdfService.currentRdfModel.getAbsoluteAspectModelFileName().split(':')[2];
+        const aspectModelNamespace = this.rdfService.currentRdfModel.getAspectModelUrn().replace('urn:bamm:', '').replace('#', '');
+
+        const isNamespaceInWorkspace = namespaces.find(
+          namespace => namespace.name === aspectModelNamespace && namespace.files.includes(aspectModelFileName)
+        );
+
         localStorage.setItem('lastSavedDate', model.savedDate.getTime().toString());
-        this.notificationsService.info('Aspect model was saved');
-        this.logService.logInfo('Aspect model was saved');
+
+        if (isNamespaceInWorkspace) {
+          this.saveModel().subscribe();
+          this.notificationsService.info('Aspect model was saved in workspace');
+          this.logService.logInfo('Aspect model was saved in workspace');
+        } else {
+          this.notificationsService.info('Aspect model was saved in localStorage');
+          this.logService.logInfo('Aspect model was saved in localStorage');
+        }
+
         this.refreshSaveModel();
       }),
       retryWhen(errors =>
@@ -749,6 +776,10 @@ export class EditorService {
 
   refreshSidebarNamespaces() {
     this.onRefreshNamespaces.next();
+  }
+
+  refreshSidebar() {
+    this.onRefreshSideBar$.next();
   }
 
   private saveCompleteError(error) {

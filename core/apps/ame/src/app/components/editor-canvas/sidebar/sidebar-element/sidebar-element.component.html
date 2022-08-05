@@ -16,7 +16,7 @@
   #container
   [ngClass]="{'element-imported': elementImported()}"
   [attr.data-cy]="dataCy"
-  [title]="elementImported() ? 'Element already imported' : 'Drag to the right to create this element'"
+  [title]="elementImported() ? 'Element already imported' : element.name + ' - Drag to the right to add'"
   class="container"
 >
   <div class="icon" [ngClass]="getIconClass">

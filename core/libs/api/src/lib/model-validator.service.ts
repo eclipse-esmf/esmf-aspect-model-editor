@@ -15,7 +15,7 @@ import {Injectable} from '@angular/core';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfModel} from '@ame/rdf/utils';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
-import {SemanticError, SyntacticError, ProcessingError, NotificationsService} from '@ame/shared';
+import {LogService, NotificationsService, ProcessingError, SemanticError, SyntacticError} from '@ame/shared';
 
 @Injectable({
   providedIn: 'root',
@@ -26,11 +26,13 @@ export class ModelValidatorService {
   constructor(
     private mxGraphService: MxGraphService,
     private configurationService: ConfigurationService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private logService: LogService
   ) {
     this.settings = this.configurationService.getSettings();
     this.notificationsService.clearNotifications();
   }
+
   /*
    * This method will return true if at least one error is critical, otherwise false.
    * In this category are included structural errors.
@@ -47,6 +49,15 @@ export class ModelValidatorService {
    * In this category are included syntactic,processing and semantic errors.
    */
   notifyCorrectableErrors(validationErrors: Array<SemanticError | SyntacticError | ProcessingError>): void {
+    if (!validationErrors.length) {
+      this.notificationsService.info('Validation completed successfully', 'The model is valid');
+      this.logService.logInfo('Validated completed successfully');
+      return;
+    }
+
+    this.notificationsService.warning('Validation completed with errors', 'The model is not valid');
+    this.logService.logWarn('Validated completed with errors');
+
     validationErrors.forEach((error: any) => {
       if (error.originalExceptionMessage) {
         this.notifySyntacticError(error);
@@ -71,8 +82,7 @@ export class ModelValidatorService {
       `Error on element ${error.focusNode ? error.focusNode.split('#')[1] + ': ' + error.resultMessage : error.resultMessage}`,
       null,
       error.focusNode,
-      5000,
-      !this.settings.showValidationPopupNotifications
+      5000
     );
     this.mxGraphService.showValidationErrorOnShape(error.focusNode);
   }

@@ -120,7 +120,10 @@ export class CharacteristicModelService extends BaseModelService {
     if (form.changedMetaModel) {
       this.changeMetaModel(metaModelElement, form, cell);
       metaModelElement = form.changedMetaModel;
-      cell = this.mxGraphService.resolveCellByModelElement(metaModelElement);
+
+      if (!metaModelElement.isPredefined()) {
+        cell = this.mxGraphService.resolveCellByModelElement(metaModelElement);
+      }
 
       if (!(metaModelElement instanceof DefaultEnumeration)) {
         this.removeUnusedEntityValues(metaModelElement);

@@ -15,11 +15,11 @@
   *ngIf="metaModelElement?.referenceUnit || !metaModelElement.isPredefined()"
   fxLayout="row"
   fxLayoutGap="15px"
-  fxLayoutAlign="space-between center"
->
+  fxLayoutAlign="space-between center">
   <mat-form-field [floatLabel]="unitDisplayControl?.disabled ? 'always' : 'auto'" appearance="fill">
     <mat-label for="referenceUnit">ReferenceUnit</mat-label>
-    <input #unit [matAutocomplete]="auto" matInput name="referenceUnit" [formControl]="unitDisplayControl" data-cy="referenceUnit" />
+    <input #unit [matAutocomplete]="auto" matInput name="referenceUnit" [formControl]="unitDisplayControl"
+           data-cy="referenceUnit"/>
     <button
       *ngIf="unitDisplayControl?.disabled && !metaModelElement?.isExternalReference() && !metaModelElement.isPredefined()"
       (click)="unlockUnit()"
@@ -27,8 +27,7 @@
       data-cy="clear-unit-button"
       matSuffix
       mat-icon-button
-      tabindex="-1"
-    >
+      tabindex="-1">
       <mat-icon>close</mat-icon>
     </button>
 
@@ -39,8 +38,7 @@
             *ngFor="let unit of filteredPredefinedUnits"
             [title]="unit.name"
             [value]="unit.name"
-            (onSelectionChange)="onPredefinedUnitChange(unit)"
-          >
+            (onSelectionChange)="onPredefinedUnitChange(unit, $event)">
             {{ unit.name }}
           </mat-option>
         </mat-optgroup>

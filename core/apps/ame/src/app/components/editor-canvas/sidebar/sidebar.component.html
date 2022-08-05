@@ -18,7 +18,7 @@
       [namespaces]="sidebarService.namespaces"
       (selectNamespace)="onSelectNamespace($event)"
       (deleteNamespace)="deleteNamespace($event)"
-      (loadNamespaceFile)="loadNamespaceFile($event)"
+      (loadNamespaceFile)="confirmLoadingFile($event)"
       class="namespaces"
     ></ame-sidebar-namespaces>
     <button class="close-namespace" data-cy="sidebar-close" mat-icon-button tabindex="-1" (click)="goToDefault()">
@@ -37,7 +37,8 @@
     <button class="back-to-namespace" data-cy="sidebar-back" mat-icon-button tabindex="-1" (click)="goToNamespaces()">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <button class="close-namespace-elements" data-cy="sidebar-close" mat-icon-button tabindex="-1" (click)="goToDefault()">
+    <button class="close-namespace-elements" data-cy="sidebar-close" mat-icon-button tabindex="-1"
+            (click)="goToDefault()">
       <mat-icon>close</mat-icon>
     </button>
   </ng-container>
@@ -47,13 +48,15 @@
       *ngIf="!viewExpanded"
       class="expand-btn"
       (click)="expand(true)"
-      >navigate_next</mat-icon
+    >navigate_next
+    </mat-icon
     >
     <mat-icon
-    *ngIf="viewExpanded"
-    class="collapse-btn"
-    (click)="collapse()"
-    >navigate_before</mat-icon>
+      *ngIf="viewExpanded"
+      class="collapse-btn"
+      (click)="collapse()"
+    >navigate_before
+    </mat-icon>
     <ame-sidebar-new-element class="namespaces" (openWorkspaces)="goToNamespaces()"></ame-sidebar-new-element>
   </ng-container>
 </div>

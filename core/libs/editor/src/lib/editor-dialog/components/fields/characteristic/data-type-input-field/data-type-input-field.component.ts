@@ -24,6 +24,7 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {EditorDialogValidators} from '../../../../validators';
 import {RdfService} from '@ame/rdf/services';
+import {MatOptionSelectionChange} from '@angular/material/core';
 
 @Component({
   selector: 'ame-data-type-input-field',
@@ -111,8 +112,8 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     this.filteredEntityTypes$ = this.initFilteredEntities(this.dataTypeControl, this.entitiesDisabled);
   }
 
-  onSelectionChange(fieldPath: string, newValue: any) {
-    if (fieldPath !== 'dataType') {
+  onSelectionChange(fieldPath: string, newValue: any, event: MatOptionSelectionChange) {
+    if (fieldPath !== 'dataType' || !event.isUserInput) {
       return;
     }
 

@@ -29,7 +29,7 @@ export class NamespaceFilterComponent implements OnChanges {
   @Output()
   public searchElements = new EventEmitter<ElementModel[]>();
 
-  public types = ['property', 'operation', 'characteristic', 'entity', 'constraint', 'trait', 'unit', 'event'];
+  public types = ['property', 'operation', 'characteristic', 'entity', 'constraint', 'trait', 'event'];
   public selectedTypes = [];
   public searchedString: string = null;
   public filteredElements: ElementModel[];

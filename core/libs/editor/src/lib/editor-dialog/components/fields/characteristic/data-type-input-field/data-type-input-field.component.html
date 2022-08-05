@@ -14,7 +14,8 @@
 <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
   <mat-form-field [floatLabel]="getControl('dataType')?.disabled ? 'always' : 'auto'" appearance="fill">
     <mat-label for="dataType">Data type</mat-label>
-    <input #dataType [matAutocomplete]="auto" matInput name="dataType" [formControl]="getControl('dataType')" data-cy="dataType" />
+    <input #dataType [matAutocomplete]="auto" matInput name="dataType" [formControl]="getControl('dataType')"
+           data-cy="dataType"/>
     <button
       *ngIf="dataTypeControl?.disabled && !metaModelElement?.isExternalReference()"
       (click)="unlockDataType()"
@@ -50,7 +51,7 @@
         <mat-option
           *ngFor="let dataType of filteredEntityTypes"
           [value]="dataType.name"
-          (onSelectionChange)="onSelectionChange('dataType', dataType)"
+          (onSelectionChange)="onSelectionChange('dataType', dataType, $event)"
         >
           <div class="ellipsis">
             <span>{{ dataType.name }}</span>
@@ -70,7 +71,7 @@
           <mat-option
             *ngFor="let dataType of filteredDataTypes"
             [value]="dataType.name"
-            (onSelectionChange)="onSelectionChange('dataType', dataType)"
+            (onSelectionChange)="onSelectionChange('dataType', dataType, $event)"
             data-cy="dataTypeOption"
           >
             <span class="option-title">{{ dataType.name }}</span

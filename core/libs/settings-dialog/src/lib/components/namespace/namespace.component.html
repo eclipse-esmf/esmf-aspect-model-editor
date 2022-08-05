@@ -18,34 +18,35 @@
       [matTooltipShowDelay]="0"
       [matTooltipHideDelay]="100"
       matTooltip="Please note that only the current Aspect Model in its current version will be moved to another namespace. References to other Aspect Models and/or versions will keep the original namespace."
-      >info</mat-icon
+    >info
+    </mat-icon
     >
   </h3>
 
   <div class="namespace-fields">
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">Value</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="aspectUri" />
+      <input matInput spellcheck="false" class="form-control" formControlName="aspectUri"/>
     </mat-form-field>
 
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">Version</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="aspectVersion" />
+      <input matInput spellcheck="false" class="form-control" formControlName="aspectVersion"/>
     </mat-form-field>
 
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">Name</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="aspectName" />
+      <input matInput spellcheck="false" class="form-control" formControlName="aspectName"/>
     </mat-form-field>
 
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">BAMM Version</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="bammVersion" />
+      <input matInput spellcheck="false" class="form-control" formControlName="bammVersion"/>
     </mat-form-field>
   </div>
 
   <div class="dialog-actions">
-    <button *ngIf="!areSameAspectValues()" mat-flat-button type="button" (click)="onClose()">Cancel</button>
+    <button *ngIf="!areSameAspectValues()" mat-flat-button type="button" (click)="onClose()">Discard changes</button>
     <button
       [disabled]="areSameAspectValues() || namespaceForm.invalid"
       (click)="onSubmit()"
@@ -53,7 +54,7 @@
       color="primary"
       data-cy="saveButton"
     >
-      Save
+      Apply
     </button>
   </div>
 </form>

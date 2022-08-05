@@ -21,7 +21,7 @@ import {MatDialogRef} from '@angular/material/dialog';
   styleUrls: ['./document.component.scss'],
 })
 export class DocumentComponent {
-  AMEDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-documentation/ame-guide/4.0.0/introduction.html';
+  AMEDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-documentation/ame-guide/4.0.1/introduction.html';
   BAMMDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/v1.0.0/index.html';
 
   constructor(private dialogRef: MatDialogRef<DocumentComponent>, @Inject(APP_CONFIG) public config: AppConfig) {}

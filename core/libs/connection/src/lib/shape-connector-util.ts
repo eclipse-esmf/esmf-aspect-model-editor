@@ -124,6 +124,10 @@ export class ShapeConnectorUtil {
     return parentModel instanceof DefaultOperation && childModel instanceof DefaultProperty;
   }
 
+  static isPropertyOperationConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return parentModel instanceof DefaultProperty && childModel instanceof DefaultOperation;
+  }
+
   static isCharacteristicCollectionConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
     return parentModel instanceof DefaultCharacteristic && childModel instanceof DefaultCollection;
   }

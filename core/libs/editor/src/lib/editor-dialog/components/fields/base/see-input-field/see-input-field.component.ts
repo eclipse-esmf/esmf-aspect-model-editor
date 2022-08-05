@@ -41,9 +41,6 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
   }
 
   private setSeeControl() {
-    if (this.parentForm.get(this.fieldName)?.value) {
-      return;
-    }
     this.parentForm.setControl(
       this.fieldName,
       new FormControl(

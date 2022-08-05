@@ -34,6 +34,7 @@ import {UnitRenderService} from './unit-render.service';
 interface EnumerationForm {
   chipList: DefaultEntityValue[];
   deletedEntityValues: DefaultEntityValue[];
+
   [key: string]: any;
 }
 
@@ -157,7 +158,7 @@ export class EnumerationRenderService extends BaseRenderService {
 
   private removeElementCharacteristic(cell: mxgraph.mxCell) {
     const modelElement = MxGraphHelper.getModelElement(cell);
-    const edgesToRemove = cell.edges.filter(edge => {
+    const edgesToRemove = cell.edges?.filter(edge => {
       const sourceModel = MxGraphHelper.getModelElement(edge.source);
       if (modelElement.aspectModelUrn !== sourceModel.aspectModelUrn) {
         return false;

@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M14,9v2h-3V9H8.5V7H11V1H4v6h2.5v2H4v6h2.5v2H4v6h7v-6H8.5v-2H11v-2h3v2h7V9H14z"/></svg>
+<svg width="23.999999999999996" height="23.999999999999996" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+
+  <g>
+    <title>Layer 1</title>
+    <rect id="svg_1" width="24" height="24" fill="none"/>
+    <path transform="rotate(-90 12.5 12.146)" id="svg_2"
+          d="m14,9.14599l0,2l-3,0l0,-2l-2.5,0l0,-2l2.5,0l0,-6l-7,0l0,6l2.5,0l0,2l-2.5,0l0,6l2.5,0l0,2l-2.5,0l0,6l7,0l0,-6l-2.5,0l0,-2l2.5,0l0,-2l3,0l0,2l7,0l0,-6l-7,0z"/>
+  </g>
+</svg>

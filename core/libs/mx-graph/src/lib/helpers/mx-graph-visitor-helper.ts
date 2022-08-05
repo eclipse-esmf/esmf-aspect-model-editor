@@ -58,15 +58,17 @@ export class MxGraphVisitorHelper {
   static addDataType(metaModelElement: Characteristic): PropertyInformation {
     if (
       metaModelElement.dataType &&
-      metaModelElement.dataType.getUrn() &&
-      !metaModelElement.dataType.getUrn().startsWith('urn') &&
-      !(metaModelElement instanceof DefaultEither)
+      ((metaModelElement.dataType.getUrn() &&
+        !metaModelElement.dataType.getUrn().startsWith('urn') &&
+        !(metaModelElement instanceof DefaultEither)) ||
+        (metaModelElement.dataType.getUrn().includes('meta-model') && metaModelElement.dataType.getUrn().includes('#curie')))
     ) {
       return {
         label: `dataType = ${RdfModelUtil.getValueWithoutUrnDefinition(metaModelElement.dataType.getUrn())}`,
         key: 'dataType',
       };
     }
+
     return null;
   }
 

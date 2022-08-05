@@ -45,8 +45,11 @@ export class ConstraintModelService extends BaseModelService {
     let metaModelElement: DefaultConstraint = MxGraphHelper.getModelElement(cell);
     if (form.changedMetaModel) {
       cell = this.mxGraphService.resolveCellByModelElement(metaModelElement);
-      const trait: DefaultTrait = MxGraphHelper.getModelElement(cell.edges[0].source);
-      trait.constraints = trait.constraints.filter(constraint => constraint.aspectModelUrn !== metaModelElement.aspectModelUrn);
+
+      if (cell.edges) {
+        const trait: DefaultTrait = MxGraphHelper.getModelElement(cell.edges[0].source);
+        trait.constraints = trait.constraints.filter(constraint => constraint.aspectModelUrn !== metaModelElement.aspectModelUrn);
+      }
 
       this.updateModelOfParent(cell, form.changedMetaModel);
       MxGraphHelper.setModelElement(cell, form.changedMetaModel);

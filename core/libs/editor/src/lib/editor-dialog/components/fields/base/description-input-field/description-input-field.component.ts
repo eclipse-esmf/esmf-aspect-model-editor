@@ -64,10 +64,6 @@ export class DescriptionInputFieldComponent extends InputFieldComponent<BaseMeta
 
       if (previousDisabled && !isNowPredefined) {
         control?.patchValue(this.getCurrentValue(key, locale));
-      } else if (!previousDisabled && !isNowPredefined) {
-        if (this.parentForm.get(key)?.value) {
-          return;
-        }
       }
 
       this.removeDescriptionControl(locale);

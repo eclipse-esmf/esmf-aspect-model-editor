@@ -28,6 +28,7 @@ import {
 } from '@ame/meta-model';
 import {ElementModel, LoadingScreenOptions, LoadingScreenService, NamespaceModel, NotificationsService, SidebarService} from '@ame/shared';
 import {catchError, finalize, first, Subscription, throwError} from 'rxjs';
+import {RdfService} from '@ame/rdf/services';
 
 @Component({
   selector: 'ame-editor-sidebar',
@@ -46,6 +47,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
 
   private loadModelSubscription: Subscription;
   private refreshNamespacesSubscription: Subscription;
+  private refreshSideBarSubscription: Subscription;
 
   constructor(
     private editorService: EditorService,
@@ -55,6 +57,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     private loadingScreenService: LoadingScreenService,
     private notificationsService: NotificationsService,
     private elementRef: ElementRef,
+    private rdfService: RdfService,
     public sidebarService: SidebarService
   ) {}
 
@@ -73,11 +76,16 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
       this.sidebarService.resetNamespaces();
       this.initNamespaces();
     });
+
+    this.refreshSideBarSubscription = this.editorService.onRefreshSideBar$.subscribe(() => {
+      this.view = 'default';
+    });
   }
 
   public ngOnDestroy() {
     this.loadModelSubscription.unsubscribe();
     this.refreshNamespacesSubscription.unsubscribe();
+    this.refreshSideBarSubscription.unsubscribe();
   }
 
   public onSelectNamespace(namespace: string) {
@@ -130,7 +138,27 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     }
   }
 
-  public loadNamespaceFile(namespaceFileName: string) {
+  public confirmLoadingFile(namespaceFileName: string) {
+    const serializeModel = this.rdfService.serializeModel(this.rdfService.currentRdfModel);
+
+    this.confirmDialogService
+      .open({
+        phrases: [`You are about to load ${namespaceFileName}.`, 'Do you want to save the current Aspect Model in the workspace first?'],
+        title: 'Save current Aspect Model',
+        closeButtonText: 'Don´t save',
+        okButtonText: 'Save',
+      })
+      .subscribe(confirmed => {
+        if (confirmed) {
+          this.editorService.updateLastSavedRdf(false, serializeModel, new Date());
+          this.editorService.saveModel().subscribe();
+        }
+        // TODO improve this functionality
+        this.loadNamespaceFile(namespaceFileName);
+      });
+  }
+
+  private loadNamespaceFile(namespaceFileName: string) {
     const subscription = this.modelApiService
       .loadAspectModelByUrn(namespaceFileName)
       .pipe(first())
@@ -232,6 +260,28 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
 
   private loadNamespace(namespaceFolder: string, namespaceFile: string) {
     const cachedFile = this.editorService.loadExternalAspectModel(`${namespaceFolder}:${namespaceFile}`);
+
+    const duplicateElements = [];
+
+    this.namespaceCacheService
+      .getCurrentCachedFile()
+      .getAllElements<BaseMetaModelElement>()
+      .forEach(currentFileElement =>
+        cachedFile.getAllElements<BaseMetaModelElement>().forEach(cachedFileElement => {
+          if (currentFileElement.aspectModelUrn === cachedFileElement.aspectModelUrn) {
+            duplicateElements.push(currentFileElement.aspectModelUrn);
+          }
+        })
+      );
+
+    if (duplicateElements.length) {
+      this.notificationsService.warning(
+        'Duplicate elements in Aspect Model',
+        `No identical elements are allowed to exist in a namespace and it can lead to problem when referencing. The following elements have been identified as duplicate: ${duplicateElements.join(
+          ', '
+        )}`
+      );
+    }
     this.selectedNamespaceElements = cachedFile
       ?.getAllElements<BaseMetaModelElement>()
       .filter(elem => this.getType(elem))
