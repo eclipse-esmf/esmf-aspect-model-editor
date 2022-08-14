@@ -28,6 +28,7 @@ import {
   SourceElementType,
   StoreListReferences,
 } from './rdf-list.types';
+import {RdfNodeService} from '../rdf-node';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,8 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   private store: Store;
   private bamm: Bamm;
   private rdfModel: RdfModel;
+
+  constructor(private nodeService: RdfNodeService) {}
 
   setRdfModel(rdfModel: RdfModel) {
     this.rdfModel = rdfModel;
@@ -131,11 +134,21 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
 
   private createOverWrittenElements(elements: OverWrittenListElement[]) {
     for (const element of elements) {
+      const model = element.metaModelElement?.property;
+      if (model?.extendedElement) {
+        this.nodeService.updateBlankNode(element.blankNode, model, {
+          extends: model?.extendedElement?.aspectModelUrn,
+          characteristic: model.characteristic?.aspectModelUrn,
+        });
+        continue;
+      }
+
       this.store.addQuad(
         element.blankNode,
         this.bamm.PropertyProperty(),
         DataFactory.namedNode(element.metaModelElement.property.aspectModelUrn)
       );
+
       if (element.metaModelElement.keys.optional) {
         this.store.addQuad(
           element.blankNode,
@@ -143,6 +156,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
           DataFactory.literal(`${element.metaModelElement.keys.optional}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy))
         );
       }
+
       if (element.metaModelElement.keys.notInPayload) {
         this.store.addQuad(
           element.blankNode,
@@ -150,6 +164,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
           DataFactory.literal(`${element.metaModelElement.keys.notInPayload}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy))
         );
       }
+
       if (element.metaModelElement.keys.payloadName) {
         this.store.addQuad(
           element.blankNode,

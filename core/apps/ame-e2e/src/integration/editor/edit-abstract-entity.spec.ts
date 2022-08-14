@@ -23,7 +23,6 @@ import {
   SELECTOR_ecAbstractEntity,
   SELECTOR_ecAbstractProperty,
   SELECTOR_ecEntity,
-  SELECTOR_ecProperty,
   SELECTOR_editorCancelButton,
   SELECTOR_editorSaveButton,
   SELECTOR_notificationsButton,
@@ -217,14 +216,10 @@ describe('Create and Edit Abstract Entity', () => {
       cy.visitDefault();
       cy.startModelling();
       cy.clickAddShapePlusIcon('Characteristic1')
-        .then(() => cy.clickAddShapePlusIcon('Entity1'))
-        .then(() => cy.clickAddShapePlusIcon('Entity1'))
         .then(() => cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300).then(() => cy.clickShape('AbstractEntity1')))
         .then(() => cy.clickAddShapePlusIcon('AbstractEntity1'))
         .then(() => cy.clickAddShapePlusIcon('AbstractEntity1'))
         .then(() => cy.clickConnectShapes('AbstractEntity1', 'Entity1'))
-        .then(() => cy.clickConnectShapes('property2', 'abstractProperty1'))
-        .then(() => cy.clickConnectShapes('property3', 'abstractProperty2'))
 
         .then(() => cy.dbClickShape('AbstractEntity1'))
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 1', {force: true}))
@@ -242,7 +237,7 @@ describe('Create and Edit Abstract Entity', () => {
       cy.then(() => cy.getUpdatedRDF()).then(rdf => {
         console.log(rdf);
         expect(rdf).to.contain(
-          `:Entity1 a bamm:Entity;\n    bamm:name "Entity1";\n    bamm:properties (:property2 :property3);\n    bamm:extends :AbstractEntity1.`
+          `:Entity1 a bamm:Entity;\n    bamm:name "Entity1";\n    bamm:properties ([ bamm:extends :abstractProperty1 ] [ bamm:extends :abstractProperty2 ]);\n    bamm:extends :AbstractEntity1.`
         );
         expect(rdf).to.contain(
           `:AbstractEntity1 a bamm:AbstractEntity;\n    bamm:name "AbstractEntity1";\n` +

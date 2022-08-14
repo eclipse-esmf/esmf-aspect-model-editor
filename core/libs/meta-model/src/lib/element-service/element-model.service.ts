@@ -78,10 +78,12 @@ export class ElementModelService {
     if (!cell) {
       return;
     }
+
     if (cell?.isEdge()) {
       this.decoupleElements(cell);
       return;
     }
+
     const modelElement = MxGraphHelper.getModelElement(cell);
     const elementModelService = this.getElementModelService(modelElement);
     elementModelService?.delete(cell);
@@ -96,10 +98,18 @@ export class ElementModelService {
     }
 
     if (
-      (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultAbstractEntity) ||
       (sourceModelElement instanceof DefaultProperty && targetModelElement instanceof DefaultAbstractProperty) ||
-      (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultEntity) ||
       (sourceModelElement instanceof DefaultProperty && targetModelElement instanceof DefaultProperty)
+    ) {
+      this.currentCachedFile.removeCachedElement(MxGraphHelper.getModelElement(edge.source).aspectModelUrn);
+      this.mxGraphService.removeCells([edge, edge.source]);
+      return;
+    }
+
+    if (
+      (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultAbstractEntity) ||
+      (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultEntity) ||
+      (sourceModelElement instanceof DefaultAbstractProperty && targetModelElement instanceof DefaultAbstractProperty)
     ) {
       sourceModelElement.extendedElement = null;
       edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(

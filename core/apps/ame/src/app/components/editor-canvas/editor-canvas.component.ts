@@ -77,8 +77,6 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
         evt.preventDefault();
       }
     });
-
-    window['ng-editor-service'] = this.editorService;
   }
 
   ngOnInit() {

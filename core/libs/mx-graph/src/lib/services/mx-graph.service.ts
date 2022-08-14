@@ -21,7 +21,7 @@ import {environment} from 'environments/environment';
 import {MxGraphGeometryProviderService, MxGraphSetupService} from '.';
 import {MxGraphCharacteristicHelper, MxGraphHelper, PropertyInformation} from '../helpers';
 import {mxCell, mxConstants, mxUtils} from '../providers';
-import {Base, BaseMetaModelElement, DefaultEntityValue} from '@ame/meta-model';
+import {Base, BaseMetaModelElement, DefaultAbstractProperty, DefaultEntityValue, DefaultProperty} from '@ame/meta-model';
 import {MxAttributeName} from '../models';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {CollapsedOverlay, ExpandedOverlay, NotificationsService} from '@ame/shared';
@@ -397,6 +397,8 @@ export class MxGraphService {
         ? 'entityValueEntityEdge'
         : MxGraphHelper.isOptionalProperty(MxGraphHelper.getModelElement(child), parentModel)
         ? 'optionalPropertyEdge'
+        : childModel instanceof DefaultAbstractProperty && parentModel instanceof DefaultProperty
+        ? 'abstractPropertyEdge'
         : abstractRelations[parentModel.className]?.includes(childModel.className)
         ? 'abstractElementEdge'
         : 'defaultEdge';

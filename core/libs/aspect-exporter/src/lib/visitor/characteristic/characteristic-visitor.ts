@@ -14,6 +14,7 @@
 import {Injectable} from '@angular/core';
 import {
   BaseMetaModelElement,
+  CanExtend,
   DefaultCharacteristic,
   DefaultCode,
   DefaultCollection,
@@ -301,8 +302,13 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
         continue;
       }
 
+      if (parent instanceof CanExtend && parent.extendedElement) {
+        continue;
+      }
+
       if (characteristic.dataType?.isComplex() && parent instanceof DefaultProperty) {
         // remove exampleValue for complex datatype
+
         parent.exampleValue = null;
         this.rdfNodeService.update(parent, {exampleValue: null});
       }

@@ -12,8 +12,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {BaseMetaModelElement, DefaultTrait, DefaultEntityValue, DefaultAbstractEntity, DefaultAbstractProperty} from '@ame/meta-model';
-import {ExpandedEllipseShape, ExpandedRoundBorderShape, ExpandedModelShape, ExpandedMiniShape} from '@ame/shared';
+import {BaseMetaModelElement, DefaultTrait, DefaultEntityValue} from '@ame/meta-model';
+import {ExpandedEllipseShape, ExpandedRoundBorderShape, ExpandedModelShape} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {mxGeometry} from '../providers';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
@@ -62,8 +62,6 @@ export class MxGraphGeometryProviderService {
         return new mxGeometry(x, y, ExpandedEllipseShape.expandedEllipseElementWidth, ExpandedEllipseShape.expandedEllipseElementHeight);
       case this.isRoundedBorderShape(metaModelElement):
         return new mxGeometry(x, y, ExpandedRoundBorderShape.expandedRoundBorderWidth, ExpandedRoundBorderShape.expandedRoundBorderHeight);
-      case this.isMiniShape(metaModelElement):
-        return new mxGeometry(x, y, ExpandedMiniShape.expandedRoundBorderWidth, ExpandedMiniShape.expandedRoundBorderHeight);
       default:
         return new mxGeometry(x, y, ExpandedModelShape.expandedElementWidth, ExpandedModelShape.expandedElementHeight);
     }
@@ -86,8 +84,6 @@ export class MxGraphGeometryProviderService {
           ExpandedRoundBorderShape.collapsedRoundBorderWidth,
           ExpandedRoundBorderShape.collapsedRoundBorderHeight
         );
-      case this.isMiniShape(metaModelElement):
-        return new mxGeometry(x, y, ExpandedMiniShape.collapsedRoundBorderWidth, ExpandedMiniShape.collapsedRoundBorderHeight);
       default:
         return new mxGeometry(x, y, w ? w : ExpandedModelShape.collapsedElementWidth, h ? h : ExpandedModelShape.collapsedElementHeight);
     }
@@ -99,9 +95,5 @@ export class MxGraphGeometryProviderService {
 
   private isRoundedBorderShape(metaModelElement: BaseMetaModelElement): boolean {
     return metaModelElement instanceof DefaultEntityValue;
-  }
-
-  private isMiniShape(metaModelElement: BaseMetaModelElement): boolean {
-    return metaModelElement instanceof DefaultAbstractEntity || metaModelElement instanceof DefaultAbstractProperty;
   }
 }

@@ -20,6 +20,8 @@ export interface BasePropertiesInterface {
   description?: LocaleInterface[];
   see?: string[];
   refines?: string;
+  extends?: string;
+  characteristic?: string;
 
   // characteristic
   dataType?: string;

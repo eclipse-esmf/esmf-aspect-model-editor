@@ -9,24 +9,14 @@
 
 :AspectWithAbstractProperties a bamm:Aspect ;
   bamm:name "AspectWithAbstractProperties" ;
-  bamm:properties ( :propertyWithAbstractProperty1 :propertyWithAbstractProperty2 ) ;
+  bamm:properties ( [ bamm:extends :abstractProperty1; bamm:characteristic :Characteristic] [bamm:extends :abstractProperty2; bamm:characteristic :Characteristic]) ;
   bamm:operations ( ) .
-
-:propertyWithAbstractProperty1 a bamm:Property;
-  bamm:name "propertyWithAbstractProperty1";
-  bamm:extends :abstractProperty1;
-  bamm:characteristic :Characteristic.
 
 :abstractProperty1 a bamm:AbstractProperty;
   bamm:name "abstractProperty1";
   bamm:description "Description"@en;
   bamm:preferredName "Preferred Name"@ro;
   bamm:see <http://test.com>.
-
-:propertyWithAbstractProperty2 a bamm:Property;
-  bamm:name "propertyWithAbstractProperty2";
-  bamm:extends :abstractProperty2;
-  bamm:characteristic :Characteristic.
 
 :abstractProperty2 a bamm:AbstractProperty;
   bamm:name "abstractProperty2";

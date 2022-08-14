@@ -28,15 +28,15 @@ export class SidebarNewElementComponent implements OnInit {
   public ngOnInit() {
     this.elements = [
       new ElementModel(null, 'Property', 'property', 'Named Value'),
-      new ElementModel(null, 'Operation', 'operation', 'Represents triggerable actions'),
-      new ElementModel(null, 'Characteristic', 'characteristic', 'Characterizes a Property'),
-      // TODO reactivate for feature usage
-      // new ElementModel(null, 'AbstractEntity', 'abstractEntity', 'The abstraction of a logical encapsulation'),
+      new ElementModel(null, 'Characteristic', 'characteristic', 'The meaning of a Property in the context of the Aspect'),
       new ElementModel(null, 'Entity', 'entity', 'The logical encapsulation of multiple values'),
-      new ElementModel(null, 'Constraint', 'constraint', 'A limitation applied to a Characteristic'),
-      new ElementModel(null, 'Trait', 'trait', 'Bundles Constraints'),
       new ElementModel(null, 'Unit', 'unit', 'A definition of a physical unit'),
-      new ElementModel(null, 'Event', 'event', 'Supported events of the Aspect'),
+      new ElementModel(null, 'Constraint', 'constraint', 'A limitation applied to a Characteristic'),
+      new ElementModel(null, 'Trait', 'trait', 'Encapsulates multiple limitations to Characteristics'),
+      new ElementModel(null, 'Operation', 'operation', 'An Operation represents an action that can be triggered on the Aspect'),
+      new ElementModel(null, 'Event', 'event', 'A definition of an Event supported by the Aspect'),
+      new ElementModel(null, 'AbstractProperty', 'abstractProperty', 'Abstract named value'),
+      new ElementModel(null, 'AbstractEntity', 'abstractEntity', 'The abstraction of a logical encapsulation of multiple values'),
     ];
   }
 }

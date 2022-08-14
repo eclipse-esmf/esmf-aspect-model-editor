@@ -13,7 +13,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, CanExtend, DefaultCharacteristic} from '@ame/meta-model';
+import {BaseMetaModelElement, CanExtend, DefaultCharacteristic, DefaultProperty} from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -57,6 +57,10 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMe
     );
   }
 
+  private isDisabled() {
+    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extendedElement;
+  }
+
   private setPreferredNameNameControls() {
     const allLocalesPreferredNames = this.metaModelElement?.getAllLocalesPreferredNames();
 
@@ -80,7 +84,7 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMe
         key,
         new FormControl({
           value: this.getCurrentValue(key, locale),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
+          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
         })
       );
     });

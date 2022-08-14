@@ -116,6 +116,7 @@ export abstract class BaseModelService {
       if (!key.startsWith('description')) {
         return;
       }
+
       const locale = key.replace('description', '');
       if (modelElement instanceof CanExtend) {
         if (form[key] !== modelElement.extendedDescription?.get(locale)) {

@@ -18,7 +18,7 @@ import {BaseModelService} from './base-model-service';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper, AbstractPropertyRenderService} from '@ame/mx-graph';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
-import {DefaultAbstractProperty} from '../aspect-meta-model';
+import {CanExtend, DefaultAbstractProperty, DefaultProperty} from '../aspect-meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 
 @Injectable({providedIn: 'root'})
@@ -53,11 +53,16 @@ export class AbstractPropertyModelService extends BaseModelService {
     this.mxGraphService.graph.removeCells([cell]);
   }
 
-  private updateExtends(cell: mxgraph.mxCell) {
+  private updateExtends(cell: mxgraph.mxCell, isDeleting = true) {
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
     for (const edge of incomingEdges) {
-      const abstractProperty = MxGraphHelper.getModelElement<DefaultAbstractProperty>(edge.source);
-      abstractProperty.extendedElement = null;
+      const element = MxGraphHelper.getModelElement<CanExtend>(edge.source);
+      if (element instanceof DefaultProperty && isDeleting) {
+        this.mxGraphService.graph.removeCells([edge.source]);
+        continue;
+      }
+
+      element.extendedElement = null;
       edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
         MxGraphHelper.getModelElement(edge.source),
         this.languageService

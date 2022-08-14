@@ -32,6 +32,10 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
 
   visit(cell: mxgraph.mxCell): DefaultProperty {
     const property: DefaultProperty = MxGraphHelper.getModelElement<DefaultProperty>(cell);
+    if (property.extendedElement) {
+      return null;
+    }
+
     this.setPrefix(property.aspectModelUrn);
     this.addExtends(property);
     this.addProperties(property);

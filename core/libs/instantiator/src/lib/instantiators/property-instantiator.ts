@@ -56,6 +56,9 @@ export class PropertyInstantiator {
     property.fileName = this.metaModelElementInstantiator.fileName;
 
     this.metaModelElementInstantiator.initBaseProperties(quads, property, this.rdfModel);
+    if (listElement.blankNode) {
+      property.aspectModelUrn = listElement.quad.value;
+    }
     // resolving element to not enter in infinite loop
     this.currentCachedFile.resolveElement(property, this.isIsolated);
 
@@ -85,6 +88,9 @@ export class PropertyInstantiator {
       if (bamm.isExtendsProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getProperty({quad: quad.object}, extractedProperty => {
           property.extendedElement = extractedProperty?.property;
+          if (property.extendedElement) {
+            property.name = `[${property.extendedElement.name}]`;
+          }
         });
       }
     }

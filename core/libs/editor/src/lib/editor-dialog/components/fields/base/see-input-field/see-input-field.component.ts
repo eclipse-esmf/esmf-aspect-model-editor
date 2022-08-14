@@ -13,7 +13,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, CanExtend} from '@ame/meta-model';
+import {BaseMetaModelElement, CanExtend, DefaultProperty} from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -50,13 +50,17 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
     );
   }
 
+  private isDisabled() {
+    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extendedElement;
+  }
+
   private setSeeControl() {
     this.parentForm.setControl(
       this.fieldName,
       new FormControl(
         {
           value: this.decodeUriComponent(this.getCurrentValue()),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
+          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
         },
         {
           validators: [EditorDialogValidators.seeURI],

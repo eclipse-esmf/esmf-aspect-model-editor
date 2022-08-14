@@ -28,6 +28,9 @@
 	<add as="optionalPropertyEdge" extend="defaultEdge">
 		<add as="dashed" value="1" />
 	</add>
+	<add as="abstractPropertyEdge" extend="abstractElementEdge">
+		<add as="dashed" value="1" />
+	</add>
   <add as="common">
 		<add as="fontSize" value="12" />
 	</add>
