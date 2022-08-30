@@ -163,7 +163,7 @@ export class ModelApiService {
   }
 
   getExportZipFile(): Observable<any> {
-    return this.http.get(`${this.serviceUrl}${this.api.package}/export-zip/AME.zip`, {
+    return this.http.get(`${this.serviceUrl}${this.api.package}/export-zip`, {
       responseType: 'blob' as 'json',
     });
   }
