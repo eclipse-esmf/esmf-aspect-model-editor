@@ -37,9 +37,13 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
   }
 
   visit(cell: mxgraph.mxCell): DefaultAbstractEntity {
+    const abstractEntity: DefaultAbstractEntity = MxGraphHelper.getModelElement(cell);
+    if (abstractEntity.isPredefined()) {
+      return null;
+    }
+
     this.store = this.rdfService.currentRdfModel.store;
     this.bamm = this.rdfService.currentRdfModel.BAMM();
-    const abstractEntity: DefaultAbstractEntity = MxGraphHelper.getModelElement(cell);
     this.setPrefix(abstractEntity.aspectModelUrn);
     const newAspectModelUrn = `${abstractEntity.aspectModelUrn.split('#')[0]}#${abstractEntity.name}`;
     abstractEntity.aspectModelUrn = newAspectModelUrn;

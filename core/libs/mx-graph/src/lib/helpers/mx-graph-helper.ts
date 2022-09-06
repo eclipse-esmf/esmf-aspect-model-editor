@@ -253,13 +253,13 @@ export class MxGraphHelper {
     return div;
   }
 
-  private static createTitleLabelElement(cell) {
+  private static createTitleLabelElement(cell: mxgraph.mxCell, isSmallShape: boolean) {
     const modelElement = MxGraphHelper.getModelElement(cell);
     const title = document.createElement('span');
     if (!cell.collapsed) {
       title.style.width = cell.geometry.width + 'px';
     }
-    title.title = modelElement.name;
+    title.title = isSmallShape ? '' : modelElement.name;
     title.innerText = modelElement.name?.length > 24 ? modelElement.name?.substring(0, 21) + '...' : modelElement.name;
     title.classList.add('element-name');
     return title;
@@ -273,7 +273,7 @@ export class MxGraphHelper {
 
     const isSmallShape = [DefaultEntityValue].some(c => modelElement instanceof c);
     const div = this.createLabelElement(cell);
-    const title = this.createTitleLabelElement(cell);
+    const title = this.createTitleLabelElement(cell, isSmallShape);
 
     div.appendChild(title);
 

@@ -25,9 +25,9 @@ describe('Test editing Entity', () => {
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cy.shapeExists('Entity1'))
       .then(() => {
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           assert.isNotNull(aspect.properties[0].property.characteristic.dataType);
-          expect((<DefaultEntity>aspect.properties[0].property.characteristic.dataType).name).to.be.equal('Entity1');
+          expect(aspect.properties[0].property.characteristic.dataType.name).to.be.equal('Entity1');
         });
       });
   });
@@ -37,8 +37,8 @@ describe('Test editing Entity', () => {
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
       .then(() => cy.shapeExists('property2'))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
-        const entity = <DefaultEntity>aspect.properties[0].property.characteristic.dataType;
+      .then(aspect => {
+        const entity = aspect.properties[0].property.characteristic.dataType;
         expect(entity.properties).to.have.length(1);
         expect(entity.properties[0].property.name).to.be.equal('property2');
       });
@@ -48,8 +48,8 @@ describe('Test editing Entity', () => {
     });
     cy.clickAddShapePlusIcon('Entity1').then(() => {
       cy.shapeExists('property3').then(() => {
-        cy.getAspect().then((aspect: Aspect) => {
-          const entity = <DefaultEntity>aspect.properties[0].property.characteristic.dataType;
+        cy.getAspect().then(aspect => {
+          const entity = aspect.properties[0].property.characteristic.dataType;
           expect(entity.properties).to.have.length(2);
           expect(entity.properties[1].property.name).to.be.equal('property3');
         });

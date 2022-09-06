@@ -36,9 +36,13 @@ export interface UpdatedProperties {
 })
 export class PropertiesButtonComponent implements OnInit {
   @Output() overwrite = new EventEmitter();
-  metaModelElement: DefaultEntity | DefaultAspect | DefaultAbstractEntity;
 
   private propertiesClone: OverWrittenProperty[];
+
+  public metaModelElement: DefaultEntity | DefaultAspect | DefaultAbstractEntity;
+  public get isPredefined(): boolean {
+    return typeof this.metaModelElement?.['isPredefined'] === 'function' && this.metaModelElement?.['isPredefined']();
+  }
 
   constructor(private matDialog: MatDialog, private metaModelDialogService: EditorModelService) {}
 
@@ -62,6 +66,7 @@ export class PropertiesButtonComponent implements OnInit {
           properties: this.propertiesClone || this.metaModelElement.properties,
           isExternalRef: this.metaModelElement.isExternalReference(),
           metaModelElement: this.metaModelElement,
+          isPredefined: this.isPredefined,
         },
         autoFocus: false,
       })

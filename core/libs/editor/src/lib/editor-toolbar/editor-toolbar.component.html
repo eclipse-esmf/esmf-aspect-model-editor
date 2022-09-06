@@ -12,7 +12,7 @@
   -->
 
 <!-- Toolbar -->
-<div class="menu-items">
+<div class="menu-items" (click)="blurActiveButton()">
   <div class="menu-items__group">
     <button
       mat-button
@@ -133,7 +133,7 @@
 </div>
 
 <!-- Actions -->
-<div class="actions">
+<div class="actions" (click)="blurActiveButton()">
   <!--
     Here was theme switcher.
     Now is moved to settings until full scheme is implemented
@@ -172,7 +172,7 @@
 </div>
 
 <!-- Menus -->
-<mat-menu #loadMenu="matMenu">
+<mat-menu #loadMenu="matMenu" (click)="blurActiveButton()">
   <button mat-menu-item (click)="onNew()" data-cy="create-model">
     <mat-icon class="material-icons">add_circle</mat-icon>
     <span>Create/Upload Aspect Model</span>

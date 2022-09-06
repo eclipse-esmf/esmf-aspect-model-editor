@@ -16,6 +16,18 @@ import {Bamm} from './bamm';
 export class Bamme {
   private alias = 'bamm-e';
 
+  get TimeSeriesEntity() {
+    return this.getNamespace() + 'TimeSeriesEntity';
+  }
+
+  get timestampProperty() {
+    return this.getNamespace() + 'timestamp';
+  }
+
+  get valueProperty() {
+    return this.getNamespace() + 'value';
+  }
+
   constructor(private bamm: Bamm) {}
 
   getAlias(): string {
@@ -36,5 +48,17 @@ export class Bamme {
 
   getAspectModelUrn(elementName: string): string {
     return `${this.getNamespace()}${elementName}`;
+  }
+
+  isTimeSeriesEntity(urn: string) {
+    return this.TimeSeriesEntity === urn;
+  }
+
+  isTimestampProperty(urn: string) {
+    return this.timestampProperty === urn;
+  }
+
+  isValueProperty(urn: string) {
+    return this.valueProperty === urn;
   }
 }

@@ -21,7 +21,7 @@
   <mat-table *ngIf="form" [dataSource]="dataSource" [formGroup]="form">
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-      <mat-cell [class.inherited]="overwritten.inherited" *matCellDef="let overwritten">
+      <mat-cell [ngClass]="{inherited: overwritten.inherited, disabled: overwritten.disabled}" *matCellDef="let overwritten">
         <span>{{ overwritten.property.name }}</span>
         <span *ngIf="overwritten.inherited">Inherited</span>
       </mat-cell>
@@ -30,7 +30,7 @@
     <ng-container matColumnDef="payloadName">
       <mat-header-cell *matHeaderCellDef>Payload Name</mat-header-cell>
       <mat-cell *matCellDef="let overwritten">
-        <mat-form-field>
+        <mat-form-field *ngIf="!(overwritten.disabled || overwritten.inherited)">
           <mat-label for="refines">Payload Name</mat-label>
           <input
             [formControl]="getControl([overwritten.property.aspectModelUrn, 'payloadName'])"

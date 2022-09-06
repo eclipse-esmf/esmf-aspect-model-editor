@@ -45,3 +45,5 @@ export * from './timeseries-characteristic-instantiator';
 export * from './trait-characteristic-instantiator';
 export * from './event-instantiator';
 export * from './abstract-property-instantiator';
+export * from './bamme-predefined-entity-instantiator';
+export * from './bamme-predefined-property-instantiator';

@@ -31,6 +31,7 @@ import {
   META_MODEL_preferredName,
   META_MODEL_see,
   META_MODEL_values,
+  SELECTOR_editorCancelButton,
   SELECTOR_editorSaveButton,
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
@@ -43,7 +44,7 @@ describe('Test editing Characteristic', () => {
     cy.startModelling()
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.properties).to.have.length(1);
         expect(aspect.properties[0].property.characteristic.name).to.equal('Characteristic1');
       });
@@ -205,7 +206,7 @@ describe('Test editing Characteristic', () => {
         expect(rdf).to.contain('NewCharacteristic a bamm:Characteristic');
       })
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => expect(aspect.properties[0].property.characteristic.name).to.equal('NewCharacteristic'));
+      .then(aspect => expect(aspect.properties[0].property.characteristic.name).to.equal('NewCharacteristic'));
   });
 
   it('can edit unit', () => {
@@ -238,7 +239,7 @@ describe('Test editing Characteristic', () => {
         );
       })
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => expect(aspect.properties[0].property.characteristic.name).to.be.equal('NewCharacteristic'));
+      .then(aspect => expect(aspect.properties[0].property.characteristic.name).to.be.equal('NewCharacteristic'));
   });
 
   it('can change to class Enumeration', () => {
@@ -305,7 +306,8 @@ describe('Test editing Characteristic', () => {
   it('add new default characteristic rename it and add new default characteristic', () => {
     cy.clickAddShapePlusIcon('property1')
       .then(() => cy.shapeExists('Characteristic1'))
-      .then(() => cy.dbClickShape('Characteristic1'))
+      .then(() => cy.dbClickShape('Characteristic1').wait(200))
+      .then(() => cy.get(SELECTOR_editorCancelButton).focus()) // reactivate change detection
       .then(() => cy.get(FIELD_name).clear({force: true}).type('NewCharacteristic', {force: true}))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))

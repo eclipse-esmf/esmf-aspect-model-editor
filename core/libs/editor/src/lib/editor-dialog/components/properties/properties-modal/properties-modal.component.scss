@@ -28,7 +28,8 @@
   margin-top: 30px;
 }
 
-.inherited {
+.inherited,
+.disabled {
   display: flex;
   flex-direction: column;
   align-items: flex-start;

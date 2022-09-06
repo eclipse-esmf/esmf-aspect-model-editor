@@ -14,14 +14,7 @@
 import {Injectable, Injector} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
-import {
-  MxAttributeName,
-  MxGraphCharacteristicHelper,
-  MxGraphHelper,
-  MxGraphService,
-  MxGraphShapeOverlayService,
-  MxGraphVisitorHelper,
-} from '@ame/mx-graph';
+import {MxGraphCharacteristicHelper, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService, MxGraphVisitorHelper} from '@ame/mx-graph';
 import {
   AspectModelService,
   BaseMetaModelElement,
@@ -44,7 +37,6 @@ import {
 import {EntityValueService} from '@ame/editor';
 import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultStructuredValue} from '../aspect-meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
-import {ShapeConnectorService} from '@ame/connection';
 import {AbstractEntityModelService} from './abstract-entity-model.service';
 
 @Injectable({providedIn: 'root'})
@@ -55,8 +47,7 @@ export class ElementModelService {
     private mxGraphService: MxGraphService,
     private namespacesCacheService: NamespacesCacheService,
     private entityValueService: EntityValueService,
-    private languageSettingsService: LanguageSettingsService,
-    private shapeConnectorService: ShapeConnectorService
+    private languageSettingsService: LanguageSettingsService
   ) {}
 
   get currentCachedFile() {
@@ -84,6 +75,10 @@ export class ElementModelService {
       return;
     }
 
+    if (this.handleTimeSeriesEntityCellRemoval(cell)) {
+      return;
+    }
+
     const modelElement = MxGraphHelper.getModelElement(cell);
     const elementModelService = this.getElementModelService(modelElement);
     elementModelService?.delete(cell);
@@ -106,47 +101,31 @@ export class ElementModelService {
       return;
     }
 
-    if (
-      (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultAbstractEntity) ||
-      (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultEntity) ||
-      (sourceModelElement instanceof DefaultAbstractProperty && targetModelElement instanceof DefaultAbstractProperty)
-    ) {
-      sourceModelElement.extendedElement = null;
-      edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
-        MxGraphHelper.getModelElement(edge.source),
-        this.languageSettingsService
-      );
-      this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));
-      this.removeConnectionBetweenElements(edge, sourceModelElement, targetModelElement);
-      this.mxGraphService.removeCells([edge]);
+    if (this.handleTimeSeriesEntityDecoupling(edge, sourceModelElement)) {
       return;
     }
 
-    if (sourceModelElement instanceof DefaultEntity && targetModelElement instanceof DefaultProperty) {
-      return this.entityValueService.onPropertyRemove(targetModelElement, () => {
-        this.removeConnectionBetweenElements(edge, sourceModelElement, targetModelElement);
-        this.mxGraphService.removeCells([edge]);
-      });
+    if (this.handleAbstractElementsDecoupling(edge, sourceModelElement, targetModelElement)) {
+      return;
     }
+
+    if (this.handleEntityPropertyDecoupling(edge, sourceModelElement, targetModelElement)) {
+      return;
+    }
+
     this.decoupleEnumerationFromEntityValue(sourceModelElement, targetModelElement, edge);
 
-    if (sourceModelElement instanceof DefaultEnumeration && targetModelElement instanceof DefaultEntity) {
-      return this.entityValueService.onEntityDisconnect(sourceModelElement, targetModelElement, () => {
-        const valuesCell = edge.source.children?.find(
-          childCell => childCell.getAttribute(MxAttributeName.META_MODEL_PROPERTY) === 'values'
-        );
-        const obsoleteEntityValues = MxGraphCharacteristicHelper.findObsoleteEntityValues(edge);
-        this.removeConnectionBetweenElements(edge, sourceModelElement, targetModelElement);
-        this.mxGraphService.updateEntityValuesWithCellReference(obsoleteEntityValues);
-        this.mxGraphService.removeCells([edge, valuesCell, ...obsoleteEntityValues]);
-      });
+    if (this.handleEnumerationEntityDecoupling(edge, sourceModelElement, targetModelElement)) {
+      return;
     }
 
     if (sourceModelElement instanceof DefaultEntityValue && targetModelElement instanceof DefaultEntity) {
       this.mxGraphService.updateEnumerationsWithEntityValue(sourceModelElement);
       this.mxGraphService.updateEntityValuesWithCellReference([edge.source]);
       this.mxGraphService.removeCells([edge.source]);
-    } else if (targetModelElement instanceof DefaultEntityValue) {
+    }
+
+    if (targetModelElement instanceof DefaultEntityValue) {
       this.mxGraphService.updateEnumerationsWithEntityValue(targetModelElement);
       this.mxGraphService.removeCells([edge.target]);
     }
@@ -158,6 +137,159 @@ export class ElementModelService {
 
     this.removeConnectionBetweenElements(edge, sourceModelElement, targetModelElement);
     this.mxGraphService.removeCells([edge]);
+  }
+
+  private handleTimeSeriesEntityCellRemoval(cell: mxgraph.mxCell) {
+    const modelElement = MxGraphHelper.getModelElement(cell);
+
+    if (modelElement instanceof DefaultAbstractEntity && modelElement.name === 'TimeSeriesEntity') {
+      this.handleTimeSeriesEntityTreeRemoval(cell);
+      return true;
+    }
+
+    if (
+      (modelElement instanceof DefaultProperty && modelElement.name === 'timestamp') ||
+      (modelElement instanceof DefaultAbstractProperty && modelElement.name === 'value')
+    ) {
+      this.handleTimeSeriesEntityPropertiesRemoval(cell);
+      return true;
+    }
+
+    const foundCell = this.mxGraphService.graph.getIncomingEdges(cell).find(e => {
+      const model = MxGraphHelper.getModelElement(e.source);
+      return model instanceof DefaultProperty && model.name === 'timestamp' && model.isPredefined();
+    })?.source;
+
+    if (foundCell) {
+      this.handleTimeSeriesEntityPropertiesRemoval(foundCell);
+      return true;
+    }
+
+    return false;
+  }
+
+  private handleTimeSeriesEntityDecoupling(edge: mxgraph.mxCell, source: BaseMetaModelElement) {
+    const isSourcePredefined = typeof source['isPredefined'] === 'function' && source['isPredefined']();
+
+    if (!isSourcePredefined) {
+      return false;
+    }
+
+    if (source instanceof DefaultAbstractEntity && source.name === 'TimeSeriesEntity') {
+      this.handleTimeSeriesEntityTreeRemoval(edge.source);
+      return true;
+    }
+
+    if (source instanceof DefaultProperty && source.name === 'timestamp') {
+      this.handleTimeSeriesEntityPropertiesRemoval(edge.source);
+      return true;
+    }
+
+    return false;
+  }
+
+  private handleTimeSeriesEntityPropertiesRemoval(cell: mxgraph.mxCell) {
+    const incomingEdges = this.mxGraphService.graph.getIncomingEdges(cell);
+    const timeSeriesCell = incomingEdges.find(edge => {
+      const modelElement = MxGraphHelper.getModelElement(edge.source);
+      return modelElement instanceof DefaultAbstractEntity && modelElement.name === 'TimeSeriesEntity';
+    })?.source;
+
+    if (timeSeriesCell) {
+      this.handleTimeSeriesEntityTreeRemoval(timeSeriesCell);
+    } else {
+      this.handleTimeSeriesEntityTreeRemoval(cell);
+    }
+  }
+
+  private handleTimeSeriesEntityTreeRemoval(cell: mxgraph.mxCell) {
+    const cellStack = this.mxGraphService.graph.getOutgoingEdges(cell).map(edge => edge.target);
+    const cellsToBeRemoved = [];
+
+    while (cellStack.length) {
+      const lastCell = cellStack.pop();
+      const modelElement = MxGraphHelper.getModelElement(lastCell);
+      const parentsEdges = this.mxGraphService.graph.getIncomingEdges(lastCell);
+
+      const dependentProperties = parentsEdges.filter(e => {
+        const parentElement = MxGraphHelper.getModelElement(e.source);
+        return parentElement instanceof DefaultAbstractProperty || parentElement instanceof DefaultProperty;
+      });
+
+      const hasAbstractEntityAsParent = parentsEdges.length - dependentProperties.length === 1;
+      if (
+        modelElement instanceof DefaultAbstractProperty &&
+        modelElement.name === 'value' &&
+        hasAbstractEntityAsParent &&
+        dependentProperties.length > 1
+      ) {
+        continue;
+      }
+
+      if (
+        modelElement instanceof DefaultProperty &&
+        modelElement.name === 'timestamp' &&
+        hasAbstractEntityAsParent &&
+        dependentProperties?.length > 0
+      ) {
+        continue;
+      }
+
+      cellStack.push(...this.mxGraphService.graph.getOutgoingEdges(lastCell).map(edge => edge.target));
+      cellsToBeRemoved.push(lastCell);
+    }
+
+    [cell, ...cellsToBeRemoved].forEach(c => {
+      const modelElement = MxGraphHelper.getModelElement(c);
+      const elementModelService = this.getElementModelService(modelElement);
+      elementModelService?.delete(c);
+    });
+  }
+
+  private handleAbstractElementsDecoupling(edge: mxgraph.mxCell, source: BaseMetaModelElement, target: BaseMetaModelElement) {
+    if (
+      (source instanceof DefaultEntity && target instanceof DefaultAbstractEntity) ||
+      (source instanceof DefaultEntity && target instanceof DefaultEntity) ||
+      (source instanceof DefaultAbstractProperty && target instanceof DefaultAbstractProperty)
+    ) {
+      source.extendedElement = null;
+      edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
+        MxGraphHelper.getModelElement(edge.source),
+        this.languageSettingsService
+      );
+      this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));
+      this.removeConnectionBetweenElements(edge, source, target);
+      this.mxGraphService.removeCells([edge]);
+      return true;
+    }
+
+    return false;
+  }
+
+  private handleEntityPropertyDecoupling(edge: mxgraph.mxCell, source: BaseMetaModelElement, target: BaseMetaModelElement) {
+    if (source instanceof DefaultEntity && target instanceof DefaultProperty) {
+      this.entityValueService.onPropertyRemove(target, () => {
+        this.removeConnectionBetweenElements(edge, source, target);
+        this.mxGraphService.removeCells([edge]);
+      });
+
+      return true;
+    }
+
+    return false;
+  }
+
+  private handleEnumerationEntityDecoupling(edge: mxgraph.mxCell, source: BaseMetaModelElement, target: BaseMetaModelElement) {
+    if (source instanceof DefaultEnumeration && target instanceof DefaultEntity) {
+      return this.entityValueService.onEntityDisconnect(source, target, () => {
+        const obsoleteEntityValues = MxGraphCharacteristicHelper.findObsoleteEntityValues(edge);
+        this.removeConnectionBetweenElements(edge, source, target);
+        this.mxGraphService.updateEntityValuesWithCellReference(obsoleteEntityValues);
+        this.mxGraphService.removeCells([edge, ...obsoleteEntityValues]);
+      });
+    }
+
+    return false;
   }
 
   private removeConnectionBetweenElements(edge: mxgraph.mxCell, source: BaseMetaModelElement, target: BaseMetaModelElement) {

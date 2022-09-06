@@ -1,4 +1,5 @@
 import {NamespacesCacheService} from '@ame/cache';
+import {MetaModelElementInstantiator, PredefinedEntityInstantiator} from '@ame/instantiator';
 import {DefaultEntity, DefaultAbstractEntity} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
@@ -17,9 +18,16 @@ import {InputFieldComponent} from '../../input-field.component';
 })
 export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEntity> implements OnInit, OnDestroy {
   public filteredAbstractEntities$: Observable<any[]>;
-
   public extendsValueControl: FormControl;
   public extendsControl: FormControl;
+  public predefinedEntities: {
+    name: string;
+    entity: DefaultAbstractEntity;
+    urn: string;
+    description: string;
+    complex: boolean;
+    namespace?: string;
+  }[];
 
   constructor(
     private notificationsService: NotificationsService,
@@ -35,6 +43,19 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
 
   ngOnInit(): void {
     this.subscription = this.getMetaModelData().subscribe(() => this.setExtendsControl());
+    const predefinedEntities = new PredefinedEntityInstantiator(new MetaModelElementInstantiator(this.rdfService.currentRdfModel, null))
+      .entityInstances;
+    this.predefinedEntities = Object.values(predefinedEntities).map(value => {
+      const entity = value();
+
+      return {
+        name: entity.name,
+        description: entity.getDescription('en') || '',
+        urn: entity.getUrn(),
+        complex: false,
+        entity,
+      };
+    });
   }
 
   ngOnDestroy() {
@@ -56,7 +77,7 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement.isExternalReference(),
+          disabled: !!value || this.metaModelElement.isExternalReference() || this.metaModelElement.isPredefined(),
         },
         {
           validators: [
@@ -109,6 +130,10 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
 
     if (!foundEntity) {
       foundEntity = this.namespacesCacheService.findElementOnExtReference<DefaultEntity>(newValue.urn);
+    }
+
+    if (!foundEntity) {
+      foundEntity = newValue.entity;
     }
 
     this.parentForm.setControl('extends', new FormControl(foundEntity));

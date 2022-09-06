@@ -82,7 +82,6 @@ export const FIELD_propertyValueComplex = '[data-cy="propertyValueComplex"]';
 export const FIELD_deconstructionRuleInput = '[data-cy="deconstruction-rule-input"]';
 export const FIELD_deconstructionRuleSelect = '[data-cy="deconstruction-rule-select"]';
 export const FIELD_elementsModalButton = '[data-cy="elements-modal-button"]';
-
 export const SELECTOR_removeEntityValue = '[data-cy="remove-entity-value"]';
 
 // Search model

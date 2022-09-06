@@ -43,7 +43,7 @@ describe('Test editing Unit', () => {
       .then(() => cyHelp.hasAddShapeOverlay('Quantifiable1'))
       .then(hasAddOverlay => expect(hasAddOverlay).equal(true))
       .then(() => {
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then((aspect) => {
           expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
           expect((<DefaultQuantifiable>aspect.properties[0].property.characteristic).unit.name).to.equal('CustomUnit1');
         });
@@ -72,7 +72,7 @@ describe('Test editing Unit', () => {
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => {
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then((aspect) => {
           expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
           expect((<DefaultQuantifiable>aspect.properties[0].property.characteristic).unit.name).to.equal('CustomUnit2');
         });
@@ -95,7 +95,7 @@ describe('Test editing Unit', () => {
       .then(() => cy.get('[data-cy=clear-unit-button]').click({force: true}))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => {
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then((aspect) => {
           expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
           expect((<DefaultQuantifiable>aspect.properties[0].property.characteristic).unit).to.be.null;
         });
@@ -128,7 +128,7 @@ describe('Test editing Unit', () => {
       .then(() => cy.clickShape('CustomUnit2'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then((aspect) => {
           expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
           expect((<DefaultQuantifiable>aspect.properties[0].property.characteristic).unit).to.be.null;
         })
@@ -228,7 +228,7 @@ describe('Test editing Unit', () => {
       cy.get(SELECTOR_tbDeleteButton)
         .click({force: true})
         .then(() => {
-          cy.getAspect().then((aspect: Aspect) => {
+          cy.getAspect().then((aspect) => {
             assert.isNull(aspect.properties[0].property.characteristic);
           });
           cy.getUpdatedRDF().then(rdf => {

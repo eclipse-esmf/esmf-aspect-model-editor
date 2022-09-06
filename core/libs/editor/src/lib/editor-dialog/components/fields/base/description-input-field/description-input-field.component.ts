@@ -20,6 +20,13 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-description-input-field',
   templateUrl: './description-input-field.component.html',
+  styles: [
+    `
+      textarea {
+        line-height: 1.35;
+      }
+    `,
+  ],
 })
 export class DescriptionInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
   constructor(public metaModelDialogService: EditorModelService) {

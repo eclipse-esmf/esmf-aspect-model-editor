@@ -98,7 +98,8 @@ export class MxGraphSetupService {
   }
 
   private getTooltipForCell(cell: mxgraph.mxCell) {
-    if (MxGraphHelper.getModelElement(cell) instanceof DefaultTrait) {
+    const metaModelElement = MxGraphHelper.getModelElement(cell);
+    if ([DefaultEntityValue, DefaultTrait].some(e => metaModelElement instanceof e)) {
       return this.getToolTipContent(cell);
     }
 
@@ -123,7 +124,10 @@ export class MxGraphSetupService {
       if (!configuration?.baseProperties.isPredefined) {
         table.innerHTML += `<tr><td>Namespace</td><td>${configuration?.baseProperties.namespace}</td></tr>`;
         table.innerHTML += `<tr><td>Version</td><td>${configuration?.baseProperties.version}</td></tr>`;
-        table.innerHTML += `<tr><td>File</td><td>${configuration?.baseProperties.fileName}</td></tr>`;
+
+        if (configuration?.baseProperties.fileName) {
+          table.innerHTML += `<tr><td>File</td><td>${configuration?.baseProperties.fileName}</td></tr>`;
+        }
       }
 
       configuration.fields.forEach((propLabel: PropertyInformation) => {

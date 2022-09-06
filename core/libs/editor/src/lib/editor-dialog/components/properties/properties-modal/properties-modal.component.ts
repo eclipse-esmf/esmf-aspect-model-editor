@@ -16,14 +16,27 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-import {BaseMetaModelElement, DefaultEntity, DefaultEntityValue, OverWrittenProperty} from '@ame/meta-model';
+import {
+  BaseMetaModelElement,
+  DefaultAbstractProperty,
+  DefaultEntity,
+  DefaultEntityValue,
+  DefaultProperty,
+  OverWrittenProperty,
+} from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
 
 export interface PropertiesDialogData {
   name: string;
+  metaModelElement?: BaseMetaModelElement;
   properties: OverWrittenProperty[];
   isExternalRef: boolean;
-  metaModelElement?: BaseMetaModelElement;
+  isPredefined?: boolean;
+}
+
+export interface PropertyStatus {
+  inherited?: boolean;
+  disabled?: boolean;
 }
 
 @Component({
@@ -53,9 +66,19 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    const allProperties: (OverWrittenProperty & {inherited?: boolean})[] = [
-      ...((this.data.metaModelElement as DefaultEntity)?.extendedProperties || []).map(e => ({...e, inherited: true})),
-      ...this.data.properties,
+    const extendedProperties = ((this.data.metaModelElement as DefaultEntity)?.extendedProperties || [])
+      .filter(({property}) => !(property instanceof DefaultAbstractProperty && this.data.metaModelElement instanceof DefaultEntity))
+      .map(e => ({
+        ...e,
+        inherited: true,
+      }));
+
+    const allProperties: (OverWrittenProperty & PropertyStatus)[] = [
+      ...extendedProperties,
+      ...this.data.properties.map(e => ({
+        ...e,
+        disabled: !!(e.property instanceof DefaultProperty && e.property.extendedElement),
+      })),
     ];
 
     this.dataSource = new MatTableDataSource(allProperties);
@@ -63,16 +86,28 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
     const group = allProperties.reduce((acc, curr) => {
       this.keys.push(curr.property.aspectModelUrn);
       acc[curr.property.aspectModelUrn] = this.formBuilder.group({
-        name: this.formBuilder.control({value: curr.property.name, disabled: curr.inherited}),
-        optional: this.formBuilder.control({value: curr.keys.optional || false, disabled: curr.inherited}),
-        notInPayload: this.formBuilder.control({value: curr.keys.notInPayload || false, disabled: curr.inherited}),
-        payloadName: this.formBuilder.control({value: curr.keys.payloadName || '', disabled: curr.inherited}),
+        name: this.formBuilder.control({
+          value: curr.property.name,
+          disabled: curr.inherited || curr.disabled,
+        }),
+        optional: this.formBuilder.control({
+          value: curr.keys.optional || false,
+          disabled: curr.inherited || curr.disabled,
+        }),
+        notInPayload: this.formBuilder.control({
+          value: curr.keys.notInPayload || false,
+          disabled: curr.inherited || curr.disabled,
+        }),
+        payloadName: this.formBuilder.control({
+          value: curr.keys.payloadName || '',
+          disabled: curr.inherited || curr.disabled,
+        }),
       });
       return acc;
     }, {});
 
     this.form = this.formBuilder.group(group);
-    if (this.data.isExternalRef) {
+    if (this.data.isExternalRef || this.data.isPredefined) {
       this.form.disable();
     }
 

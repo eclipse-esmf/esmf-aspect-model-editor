@@ -14,6 +14,7 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {
+  DefaultAbstractProperty,
   DefaultEntity,
   DefaultEntityValue,
   DefaultEnumeration,
@@ -45,7 +46,7 @@ export class EntityValueModalTableComponent implements OnChanges {
   @Input()
   public entity: DefaultEntity;
 
-  public dataSource: MatTableDataSource<DefaultProperty>;
+  public dataSource: MatTableDataSource<DefaultProperty | DefaultAbstractProperty>;
 
   public filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
 
@@ -63,7 +64,7 @@ export class EntityValueModalTableComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty('entity') && this.entity) {
       this.dataSource = new MatTableDataSource(this.entity.allProperties.map(property => property.property));
-      this.entity.allProperties.forEach((property: OverWrittenProperty) => {
+      this.entity.allProperties.forEach((property: OverWrittenProperty<any>) => {
         this.initFilteredEntityValues(property.property);
       });
     }

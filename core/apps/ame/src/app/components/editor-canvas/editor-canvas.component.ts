@@ -66,6 +66,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
     // actions for context menu
     this.bindingsService.registerAction('editElement', () => this.onEditSelectedCell());
     this.bindingsService.registerAction('deleteElement', () => this.editorService.deleteSelectedElements());
+
     // actions for hotkeys
     this.editorService.bindAction(
       'deleteElement',

@@ -88,6 +88,15 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     clearInterval(this.checkChangesInterval);
   }
 
+  // Deactivates the bug where the shape can not be removed
+  blurActiveButton() {
+    requestAnimationFrame(() => {
+      if (document.activeElement.tagName.toLowerCase() === 'button') {
+        (document.activeElement as HTMLButtonElement).blur();
+      }
+    });
+  }
+
   onOpenSettings() {
     this.matDialog
       .open(SettingDialogComponent, {

@@ -33,20 +33,20 @@ describe('Test drag and drop', () => {
       .then(() => cyHelp.hasAddShapeOverlay(parent).then(hasAddOverlay => expect(hasAddOverlay).equal(expected)));
   }
 
-  function checkRelationParentChild(parentModel: Aspect, parent: string, child: string) {
+  function checkRelationParentChild(parentModel, parent: string, child: string) {
     expect(parentModel.name).to.equal(parent);
     expect(parentModel.properties).to.be.length(2);
     expect(parentModel.properties[1].property.name).to.equal(child);
   }
 
-  function checkAspect(aspect: Aspect) {
+  function checkAspect(aspect) {
     expect(aspect.name).to.equal('AspectDefault');
     expect(aspect.properties).to.be.length(1);
     expect(aspect.properties[0].property.name).to.equal('property1');
     expect(aspect.properties[0].property.characteristic.name).to.equal('ExternalCharacteristic');
   }
 
-  function checkASpectAndChildrenConstraint(aspect: Aspect) {
+  function checkASpectAndChildrenConstraint(aspect) {
     expect(aspect.name).to.equal('AspectDefault');
     expect(aspect.properties).to.be.length(1);
     expect(aspect.properties[0].property.name).to.equal('property1');
@@ -55,15 +55,15 @@ describe('Test drag and drop', () => {
     expect((<Trait>aspect.properties[0].property.characteristic).constraints[0].name).to.equal('ExternalConstraint');
   }
 
-  function checkAspectAndChildrenEntity(aspect: Aspect) {
+  function checkAspectAndChildrenEntity(aspect) {
     expect(aspect.name).to.equal('AspectDefault');
     expect(aspect.properties).to.be.length(1);
     expect(aspect.properties[0].property.name).to.equal('property1');
     expect(aspect.properties[0].property.characteristic.name).to.equal('Characteristic1');
-    expect((<Entity>aspect.properties[0].property.characteristic.dataType).name).to.equal('ExternalEntity');
+    expect(aspect.properties[0].property.characteristic.dataType.name).to.equal('ExternalEntity');
   }
 
-  function checkAspectTree(aspect: Aspect) {
+  function checkAspectTree(aspect) {
     expect(aspect.name).to.equal('AspectDefault');
     expect(aspect.properties).to.be.length(2);
     expect(aspect.properties[0].property.name).to.equal('property1');
@@ -71,13 +71,13 @@ describe('Test drag and drop', () => {
     expect(aspect.properties[1].property.name).to.equal('externalPropertyWithChildren');
     expect(aspect.properties[1].property.characteristic.name).to.equal('ChildrenCharacteristic1');
 
-    const entity = <Entity>aspect.properties[1].property.characteristic.dataType;
+    const entity = aspect.properties[1].property.characteristic.dataType;
     expect(entity.name).to.equal('ChildrenEntity1');
     expect(entity.properties).to.be.length(2);
     expect(entity.properties[0].property.name).to.equal('childrenProperty1');
     expect(entity.properties[1].property.name).to.equal('childrenProperty2');
     expect(entity.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic2');
-    expect((<Entity>entity.properties[0].property.characteristic.dataType).name).to.equal('ChildrenEntity2');
+    expect(entity.properties[0].property.characteristic.dataType.name).to.equal('ChildrenEntity2');
     expect(entity.properties[1].property.characteristic.name).to.equal('Boolean');
   }
 
@@ -106,7 +106,7 @@ describe('Test drag and drop', () => {
       .then(() => cy.clickShape('externalProperty'))
       .then(() => connectElements('AspectDefault', 'externalProperty', true))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
+      .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain('bamm:properties (:property1 :externalProperty)');
@@ -259,7 +259,7 @@ describe('Test drag and drop', () => {
       .then(() => cy.clickShape('externalProperty'))
       .then(() => connectElements('AspectDefault', 'externalProperty', true))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
+      .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain('@prefix : <urn:bamm:io.openmanufacturing.digitaltwin:1.0.0#>.');
