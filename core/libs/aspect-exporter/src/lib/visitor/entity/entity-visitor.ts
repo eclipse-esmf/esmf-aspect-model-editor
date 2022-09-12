@@ -61,7 +61,6 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
         value: entity.getDescription(language),
       })),
       see: entity.getSeeReferences() || [],
-      name: entity.name,
     });
 
     if (entity.properties?.length) {

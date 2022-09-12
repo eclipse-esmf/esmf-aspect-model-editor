@@ -79,14 +79,12 @@ export class EditorDialogValidators {
         return null;
       }
 
-      const nameSpace = metaModelElement.aspectModelUrn?.split('#')[0] + '#';
-      const aspectModelUrn = `${nameSpace}${control.value}`;
+      const [primaryNamespace] = metaModelElement.aspectModelUrn.split('#');
+      const aspectModelUrn = `${primaryNamespace}#${control.value}`;
 
       let foundExternalElement: BaseMetaModelElement;
       for (const rdfModel of extRdfModels) {
-        const element = rdfModel.store
-          .getSubjects(null, DataFactory.literal(control.value), null)
-          .find(sub => sub.value === aspectModelUrn);
+        const element = rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null)?.[0]?.subject;
 
         if (element) {
           const [namespace] = element.value.split('#');

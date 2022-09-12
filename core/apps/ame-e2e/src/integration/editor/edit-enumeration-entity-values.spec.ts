@@ -492,19 +492,15 @@ describe('Test enumeration entity value', () => {
       .then(rdf =>
         expect(rdf).to.contain(
           ':AspectDefault a bamm:Aspect;\n' +
-            '    bamm:name "AspectDefault";\n' +
             '    bamm:properties (:property1);\n' +
             '    bamm:operations ();\n' +
             '    bamm:events ().\n' +
             ':property1 a bamm:Property;\n' +
-            '    bamm:name "property1";\n' +
             '    bamm:characteristic :Characteristic1.\n' +
             ':Characteristic1 a bamm-c:Enumeration;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType :Entity1;\n' +
             '    bamm-c:values (:FillGapEntityValue :EntityValue1).\n' +
             ':Entity1 a bamm:Entity;\n' +
-            '    bamm:name "Entity1";\n' +
             '    bamm:properties ().\n' +
             ':FillGapEntityValue a :Entity1.\n' +
             ':EntityValue1 a :Entity1.'
@@ -524,19 +520,15 @@ describe('Test enumeration entity value', () => {
       .then(rdf => {
         expect(rdf).to.contain(
           ':AspectDefault a bamm:Aspect;\n' +
-            '    bamm:name "AspectDefault";\n' +
             '    bamm:properties (:property1);\n' +
             '    bamm:operations ();\n' +
             '    bamm:events ().\n' +
             ':property1 a bamm:Property;\n' +
-            '    bamm:name "property1";\n' +
             '    bamm:characteristic :Characteristic1.\n' +
             ':Characteristic1 a bamm-c:Enumeration;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType :Entity1;\n' +
             '    bamm-c:values (:FillGapEntityValue).\n' +
             ':Entity1 a bamm:Entity;\n' +
-            '    bamm:name "Entity1";\n' +
             '    bamm:properties ().\n' +
             ':FillGapEntityValue a :Entity1.'
         );

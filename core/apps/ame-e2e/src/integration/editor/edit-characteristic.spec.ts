@@ -231,7 +231,6 @@ describe('Test editing Characteristic', () => {
       .then(rdf => {
         expect(rdf).to.contain(
           ':NewCharacteristic a bamm-c:Code;\n' +
-            '    bamm:name "NewCharacteristic";\n' +
             '    bamm:dataType xsd:integer;\n' +
             '    bamm:description "New description for the new created characteristic"@en;\n' +
             '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
@@ -253,7 +252,6 @@ describe('Test editing Characteristic', () => {
       .then(rdf =>
         expect(rdf).to.contain(
           ':NewCharacteristic a bamm-c:Enumeration;\n' +
-            '    bamm:name "NewCharacteristic";\n' +
             '    bamm:dataType xsd:integer;\n' +
             '    bamm:description "New description for the new created characteristic"@en;\n' +
             '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
@@ -275,7 +273,6 @@ describe('Test editing Characteristic', () => {
       .then(rdf =>
         expect(rdf).to.contain(
           ':NewCharacteristic a bamm-c:Enumeration;\n' +
-            '    bamm:name "NewCharacteristic";\n' +
             '    bamm:dataType xsd:integer;\n' +
             '    bamm:description "New description for the new created characteristic"@en;\n' +
             '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
@@ -316,8 +313,8 @@ describe('Test editing Characteristic', () => {
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic;\n' + '    bamm:name "Characteristic1".');
-        expect(rdf).to.contain(':NewCharacteristic a bamm:Characteristic;\n' + '    bamm:name "NewCharacteristic".');
+        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic.\n');
+        expect(rdf).to.contain(':NewCharacteristic a bamm:Characteristic.\n');
       });
   });
 
@@ -330,17 +327,12 @@ describe('Test editing Characteristic', () => {
       .then(rdf =>
         expect(rdf).to.contain(
           ':property1 a bamm:Property;\n' +
-            '    bamm:name "property1";\n' +
             '    bamm:characteristic :NewCharacteristic.\n' +
-            ':Characteristic1 a bamm:Characteristic;\n' +
-            '    bamm:name "Characteristic1".\n' +
-            ':NewCharacteristic a bamm:Characteristic;\n' +
-            '    bamm:name "NewCharacteristic".\n' +
+            ':Characteristic1 a bamm:Characteristic.\n' +
+            ':NewCharacteristic a bamm:Characteristic.\n' +
             ':property2 a bamm:Property;\n' +
-            '    bamm:name "property2";\n' +
             '    bamm:characteristic :Characteristic1.\n' +
             ':NewAspect a bamm:Aspect;\n' +
-            '    bamm:name "NewAspect";\n' +
             '    bamm:properties (:property1 :property2);\n' +
             '    bamm:operations ();\n' +
             '    bamm:events ().'
@@ -476,7 +468,6 @@ describe('Structured Value Characteristic', () => {
       cy.getUpdatedRDF().then(rdf => {
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:StructuredValue;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm-c:deconstructionRule "example-(group1)-splitter-(group2)-(group3)";\n' +
             '    bamm-c:elements ("example-" :group1Property "-splitter-" :group2Property "-" :group3Property).'
@@ -517,7 +508,6 @@ describe('Structured Value Characteristic', () => {
         .then(rdf => {
           expect(rdf).to.contain(
             ':Characteristic1 a bamm-c:StructuredValue;\n' +
-              '    bamm:name "Characteristic1";\n' +
               '    bamm:dataType xsd:string;\n' +
               '    bamm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})";\n' +
               '    bamm-c:elements (:username "@" :host).'
@@ -562,7 +552,6 @@ describe('Structured Value Characteristic', () => {
         .then(rdf => {
           expect(rdf).to.contain(
             ':Characteristic1 a bamm-c:StructuredValue;\n' +
-              '    bamm:name "Characteristic1";\n' +
               '    bamm:dataType xsd:string;\n' +
               '    bamm-c:deconstructionRule "(\\\\d{4})-(\\\\d{2})-(\\\\d{2})";\n' +
               '    bamm-c:elements (:year "-" :month "-" :day).'
@@ -607,7 +596,6 @@ describe('Structured Value Characteristic', () => {
         .then(rdf => {
           expect(rdf).to.contain(
             ':Characteristic1 a bamm-c:StructuredValue;\n' +
-              '    bamm:name "Characteristic1";\n' +
               '    bamm:dataType xsd:string;\n' +
               '    bamm-c:deconstructionRule "0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})";\n' +
               '    bamm-c:elements ("0x" :red :green :blue).'

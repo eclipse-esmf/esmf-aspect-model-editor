@@ -64,7 +64,6 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
         value: abstractEntity.getDescription(language),
       })),
       see: abstractEntity.getSeeReferences() || [],
-      name: abstractEntity.name,
     });
 
     if (abstractEntity.properties?.length) {

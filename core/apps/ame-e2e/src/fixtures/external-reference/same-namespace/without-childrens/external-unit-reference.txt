@@ -1,18 +1,17 @@
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#> .
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#> .
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#> .
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix : <urn:bamm:io.openmanufacturing:1.0.0#> .
 
-:ExternalUnit a unit:Unit;
-     bamm:name "ExternalUnit";
+:ExternalUnit a bamm:Unit;
      bamm:preferredName "TestUnit"@en;
-     unit:symbol "TestSymbol";
-     unit:commonCode "TestCode";
-     unit:conversionFactor "TestConversionFactor";
-     unit:numericConversionFactor "TestNumericConversionFactor";
-     unit:referenceUnit unit:day;
-     unit:quantityKind unit:absoluteActivity, unit:fahrenheitTemperature.
+     bamm:symbol "TestSymbol";
+     bamm:commonCode "TestCode";
+     bamm:conversionFactor "TestConversionFactor";
+     bamm:numericConversionFactor "TestNumericConversionFactor";
+     bamm:referenceUnit unit:day;
+     bamm:quantityKind unit:absoluteActivity, unit:fahrenheitTemperature.

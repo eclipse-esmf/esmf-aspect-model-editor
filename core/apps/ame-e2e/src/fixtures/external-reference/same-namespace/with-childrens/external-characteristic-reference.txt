@@ -1,32 +1,26 @@
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#> .
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#> .
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#> .
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix : <urn:bamm:io.openmanufacturing.digitaltwin:1.0.0#> .
 
 :ExternalCharacteristicWithChildren a bamm:Characteristic;
-    bamm:name "ExternalCharacteristicWithChildren";
     bamm:dataType :ChildrenEntity1.
 
 :ChildrenEntity1 a bamm:Entity;
-    bamm:name "ChildrenEntity1";
     bamm:properties (:childrenProperty1 :childrenProperty2).
 
 :childrenProperty1 a bamm:Property;
-    bamm:name "childrenProperty1";
     bamm:characteristic :ChildrenCharacteristic2.
 
 :childrenProperty2 a bamm:Property;
-    bamm:name "childrenProperty2";
     bamm:characteristic bamm-c:Boolean.
 
 :ChildrenCharacteristic2 a bamm:Characteristic;
-    bamm:name "ChildrenCharacteristic2";
     bamm:dataType :ChildrenEntity2.
 
 :ChildrenEntity2 a bamm:Entity;
-    bamm:name "ChildrenEntity2";
     bamm:properties ().

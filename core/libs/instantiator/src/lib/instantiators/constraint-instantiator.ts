@@ -47,11 +47,7 @@ export class ConstraintInstantiator extends BaseConstraintCharacteristicInstanti
 
     // Anonymous nodes are stored in the array for later processing of the name
     if ((constraint as DefaultConstraint).isAnonymousNode()) {
-      const parentNameQuad = this.rdfModel.store
-        .getQuads(quad.subject, null, null, null)
-        .find(({predicate}) => predicate.equals(this.rdfModel.BAMM().NameProperty()));
-
-      constraint.name = constraint.name || `Constraint${parentNameQuad?.object?.value}`;
+      constraint.name = constraint.name || `Constraint${quad.subject.value.split('#')[1]}`;
       constraint.aspectModelUrn = `${this.metaModelElementInstantiator.rdfModel.getAspectModelUrn()}${constraint.name}`;
       this.cachedFile.addAnonymousElement(constraint, constraint.name);
     }

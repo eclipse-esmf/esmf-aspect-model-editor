@@ -174,10 +174,10 @@ describe('Create and Edit Abstract Property', () => {
         expect(rdf).to.contain(`[ bamm:extends :abstractProperty1 ]`);
         expect(rdf).to.contain(`[ bamm:extends :abstractProperty2 ]`);
         expect(rdf).to.contain(
-          `:abstractProperty1 a bamm:AbstractProperty;\n    bamm:name "abstractProperty1";\n    bamm:preferredName "Preferred Name 1"@en;\n    bamm:description "Description 1"@en;\n    bamm:see <http://test1.com>.`
+          `:abstractProperty1 a bamm:AbstractProperty;\n    bamm:preferredName "Preferred Name 1"@en;\n    bamm:description "Description 1"@en;\n    bamm:see <http://test1.com>.`
         );
         expect(rdf).to.contain(
-          `:abstractProperty2 a bamm:AbstractProperty;\n    bamm:name "abstractProperty2";\n    bamm:preferredName "Preferred Name 2"@en;\n    bamm:description "Description 2"@en;\n    bamm:see <http://test2.com>.`
+          `:abstractProperty2 a bamm:AbstractProperty;\n    bamm:preferredName "Preferred Name 2"@en;\n    bamm:description "Description 2"@en;\n    bamm:see <http://test2.com>.`
         );
       });
     });

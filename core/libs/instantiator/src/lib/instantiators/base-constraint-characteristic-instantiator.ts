@@ -43,10 +43,9 @@ export class BaseConstraintCharacteristicInstantiator {
     }
 
     const propertyQuads: Array<Quad> = this.metaModelElementInstantiator.rdfModel.findAnyProperty(quad);
-
-    const elementQuad = Util.isBlankNode(quad.object)
-      ? this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value).shift()
-      : propertyQuads.shift();
+    const elementQuad = (
+      Util.isBlankNode(quad.object) ? this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value) : propertyQuads
+    ).find(q => q.predicate.equals(this.bamm.RdfType()));
 
     if (!this.shouldProcess(<NamedNode>elementQuad.object)) {
       return this.nextProcessor !== null ? this.nextProcessor.create(quad) : null;

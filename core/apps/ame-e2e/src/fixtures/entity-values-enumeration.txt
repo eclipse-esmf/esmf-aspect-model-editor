@@ -1,25 +1,21 @@
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#> .
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#> .
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#> .
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix : <urn:bamm:io.openmanufacturing:1.0.0#> .
 
 :AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
     bamm:properties (:property1);
     bamm:operations ().
 :property1 a bamm:Property;
-    bamm:name "property1";
     bamm:characteristic :Characteristic1.
 :Characteristic1 a bamm-c:Enumeration;
-    bamm:name "Characteristic1";
     bamm:dataType :Entity1;
     bamm-c:values (:test1 :test2 :test3).
 :Entity1 a bamm:Entity;
-    bamm:name "Entity1";
     bamm:properties (:property2 :property3).
 :test1 a :Entity1;
     :property2 "test1p2";
@@ -31,14 +27,10 @@
     :property2 "test3p2";
     :property3 "test3p3".
 :property2 a bamm:Property;
-    bamm:name "property2";
     bamm:characteristic :Characteristic2.
 :property3 a bamm:Property;
-    bamm:name "property3";
     bamm:characteristic :Characteristic3.
 :Characteristic2 a bamm:Characteristic;
-    bamm:name "Characteristic2";
     bamm:dataType xsd:string.
 :Characteristic3 a bamm:Characteristic;
-    bamm:name "Characteristic3";
     bamm:dataType xsd:string.

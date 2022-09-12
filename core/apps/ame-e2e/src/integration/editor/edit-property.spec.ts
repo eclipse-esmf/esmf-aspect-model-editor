@@ -169,7 +169,7 @@ describe('Test edit property', () => {
       });
   });
 
-  it('should not permit to put 2 properties with the same name', () => {
+  it('should not allow to put 2 properties with the same name', () => {
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {});
 
     cy.visitDefault();
@@ -215,7 +215,7 @@ describe('Test edit property', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain('bamm:properties (:b :a)');
-        expect(rdf).to.contain(':a a bamm:Property;');
+        expect(rdf).to.contain(':a a bamm:Property.');
         expect(rdf).to.contain(':b a bamm:Property');
       });
   });
@@ -237,18 +237,14 @@ describe('Test edit property', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
-          ':property1 a bamm:Property;\n' +
-            '    bamm:name "property1".\n' +
+          ':property1 a bamm:Property.\n' +
             ':Characteristic1 a bamm:Characteristic;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string.\n' +
             ':NewAspect a bamm:Aspect;\n' +
-            '    bamm:name "NewAspect";\n' +
             '    bamm:properties (:newProperty :property1);\n' +
             '    bamm:operations ();\n' +
             '    bamm:events ().\n' +
             ':newProperty a bamm:Property;\n' +
-            '    bamm:name "newProperty";\n' +
             '    bamm:characteristic :Characteristic1.'
         );
       });
@@ -271,23 +267,13 @@ describe('Test edit property', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
-          ':AspectDefault a bamm:Aspect;\n' +
-            '    bamm:name "AspectDefault";\n' +
-            '    bamm:properties (:property1);\n' +
-            '    bamm:operations ();\n' +
-            '    bamm:events ().\n'
+          ':AspectDefault a bamm:Aspect;\n' + '    bamm:properties (:property1);\n' + '    bamm:operations ();\n' + '    bamm:events ().\n'
         );
-        expect(rdf).to.contain(
-          ':property1 a bamm:Property;\n' + '    bamm:name "property1";\n' + '    bamm:characteristic :Characteristic1.'
-        );
-        expect(rdf).to.contain(
-          ':Characteristic1 a bamm:Characteristic;\n' + '    bamm:name "Characteristic1";\n' + '    bamm:dataType :Entity1.'
-        );
-        expect(rdf).to.contain(
-          ':Entity1 a bamm:Entity;\n' + '    bamm:name "Entity1";\n' + '    bamm:properties (:newProperty :property2).'
-        );
-        expect(rdf).to.contain(':property2 a bamm:Property;\n' + '    bamm:name "property2".');
-        expect(rdf).to.contain(':newProperty a bamm:Property;\n' + '    bamm:name "newProperty".');
+        expect(rdf).to.contain(':property1 a bamm:Property;\n' + '    bamm:characteristic :Characteristic1.');
+        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic;\n' + '    bamm:dataType :Entity1.');
+        expect(rdf).to.contain(':Entity1 a bamm:Entity;\n' + '    bamm:properties (:newProperty :property2).');
+        expect(rdf).to.contain(':property2 a bamm:Property.\n');
+        expect(rdf).to.contain(':newProperty a bamm:Property.\n');
       });
   });
 
@@ -314,23 +300,13 @@ describe('Test edit property', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
-          ':AspectDefault a bamm:Aspect;\n' +
-            '    bamm:name "AspectDefault";\n' +
-            '    bamm:properties (:property1);\n' +
-            '    bamm:operations ();\n' +
-            '    bamm:events ().\n'
+          ':AspectDefault a bamm:Aspect;\n' + '    bamm:properties (:property1);\n' + '    bamm:operations ();\n' + '    bamm:events ().\n'
         );
-        expect(rdf).to.contain(
-          ':property1 a bamm:Property;\n' + '    bamm:name "property1";\n' + '    bamm:characteristic :Characteristic1.'
-        );
-        expect(rdf).to.contain(
-          ':Characteristic1 a bamm:Characteristic;\n' + '    bamm:name "Characteristic1";\n' + '    bamm:dataType :NewEntity.'
-        );
-        expect(rdf).to.contain(
-          ':NewEntity a bamm:Entity;\n' + '    bamm:name "NewEntity";\n' + '    bamm:properties (:newProperty :property2).'
-        );
-        expect(rdf).to.contain(':property2 a bamm:Property;\n' + '    bamm:name "property2".');
-        expect(rdf).to.contain(':newProperty a bamm:Property;\n' + '    bamm:name "newProperty".');
+        expect(rdf).to.contain(':property1 a bamm:Property;\n' + '    bamm:characteristic :Characteristic1.');
+        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic;\n' + '    bamm:dataType :NewEntity.');
+        expect(rdf).to.contain(':NewEntity a bamm:Entity;\n' + '    bamm:properties (:newProperty :property2).');
+        expect(rdf).to.contain(':property2 a bamm:Property.\n');
+        expect(rdf).to.contain(':newProperty a bamm:Property.\n');
       });
   });
 
@@ -363,25 +339,18 @@ describe('Test edit property', () => {
       .then(() => cy.shapeExists('NewAspect'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain(
-          ':property1 a bamm:Property;\n' + '    bamm:name "property1";\n' + '    bamm:characteristic :Characteristic1.'
-        );
-        expect(rdf).to.contain(
-          ':Characteristic1 a bamm:Characteristic;\n' + '    bamm:name "Characteristic1";\n' + '    bamm:dataType :NewEntity.'
-        );
+        expect(rdf).to.contain(':property1 a bamm:Property;\n' + '    bamm:characteristic :Characteristic1.');
+        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic;\n' + '    bamm:dataType :NewEntity.');
         expect(rdf).to.contain(
           ':NewAspect a bamm:Aspect;\n' +
-            '    bamm:name "NewAspect";\n' +
             '    bamm:properties (:property1 :property3);\n' +
             '    bamm:operations ();\n' +
             '    bamm:events ().\n'
         );
-        expect(rdf).to.contain(':property3 a bamm:Property;\n' + '    bamm:name "property3".');
-        expect(rdf).to.contain(
-          ':NewEntity a bamm:Entity;\n' + '    bamm:name "NewEntity";\n' + '    bamm:properties (:newProperty :property2).'
-        );
-        expect(rdf).to.contain(':property2 a bamm:Property;\n' + '    bamm:name "property2".');
-        expect(rdf).to.contain(':newProperty a bamm:Property;\n' + '    bamm:name "newProperty".');
+        expect(rdf).to.contain(':property3 a bamm:Property.\n');
+        expect(rdf).to.contain(':NewEntity a bamm:Entity;\n' + '    bamm:properties (:newProperty :property2).');
+        expect(rdf).to.contain(':property2 a bamm:Property.\n');
+        expect(rdf).to.contain(':newProperty a bamm:Property.\n');
       });
   });
 
@@ -401,12 +370,9 @@ describe('Test edit property', () => {
         .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain(
-            ':property1 a bamm:Property;\n' + '    bamm:name "property1";\n' + '    bamm:characteristic :Characteristic1.'
-          );
+          expect(rdf).to.contain(':property1 a bamm:Property;\n' + '    bamm:characteristic :Characteristic1.');
           expect(rdf).to.contain(
             ':AspectDefault a bamm:Aspect;\n' +
-              '    bamm:name "AspectDefault";\n' +
               '    bamm:properties ([\n' +
               '  bamm:property :property1;\n' +
               '  bamm:optional "true"^^xsd:boolean\n' +
@@ -443,11 +409,10 @@ describe('Test edit property', () => {
         .then(rdf => {
           expect(rdf).to.contain(
             ':Entity1 a bamm:Entity;\n' +
-            '    bamm:name "Entity1";\n' +
-            '    bamm:properties ([\n' +
-            '  bamm:property :property2;\n' +
-            '  bamm:notInPayload "true"^^xsd:boolean\n' +
-            ']).'
+              '    bamm:properties ([\n' +
+              '  bamm:property :property2;\n' +
+              '  bamm:notInPayload "true"^^xsd:boolean\n' +
+              ']).'
           );
         });
     });
@@ -464,12 +429,9 @@ describe('Test edit property', () => {
         .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain(
-            ':property1 a bamm:Property;\n' + '    bamm:name "property1";\n' + '    bamm:characteristic :Characteristic1.'
-          );
+          expect(rdf).to.contain(':property1 a bamm:Property;\n' + '    bamm:characteristic :Characteristic1.');
           expect(rdf).to.contain(
             ':AspectDefault a bamm:Aspect;\n' +
-              '    bamm:name "AspectDefault";\n' +
               '    bamm:properties ([\n' +
               '  bamm:property :property1;\n' +
               '  bamm:payloadName "payloadName"\n' +

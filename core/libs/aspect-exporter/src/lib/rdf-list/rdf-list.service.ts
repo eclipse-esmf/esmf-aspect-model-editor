@@ -186,11 +186,11 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
           continue;
         }
 
-        const name = this.store.getQuads(quad.object, this.bamm.NameProperty(), null, null)?.[0]?.object;
+        const [, name] = quad.object.value.split('#');
         listElement.push({
           node: quad.object,
           // trim the double quotes (")
-          name: name?.value.replace(/^"(.+(?="$))"$/, '$1'),
+          name: name?.replace(/^"(.+(?="$))"$/, '$1'),
         });
       }
 

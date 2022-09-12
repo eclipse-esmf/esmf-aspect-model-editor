@@ -58,7 +58,6 @@ export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty
         value: abstractProperty.getDescription(language),
       })),
       see: abstractProperty.getSeeReferences() || [],
-      name: abstractProperty.name,
     });
   }
 

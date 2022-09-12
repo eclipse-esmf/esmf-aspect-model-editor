@@ -55,7 +55,6 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
         value: property.getDescription(language),
       })),
       see: property.getSeeReferences() || [],
-      name: property.name,
     });
   }
 

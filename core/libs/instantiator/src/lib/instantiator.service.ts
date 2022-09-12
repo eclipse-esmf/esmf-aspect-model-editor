@@ -91,7 +91,6 @@ export class InstantiatorService {
   ) {
     const bamm = rdfModel.BAMM();
     const bammc = rdfModel.BAMMC();
-    const bammu = rdfModel.BAMMU();
     const elementType = rdfModel.store.getObjects(subject, rdfModel.BAMM().RdfType(), null)?.[0]?.value;
 
     if (bamm.isPropertyElement(elementType)) {
@@ -148,7 +147,7 @@ export class InstantiatorService {
       return;
     }
 
-    if (bammu.isUnitElement(elementType)) {
+    if (bamm.isUnitElement(elementType)) {
       const unit = new BammUnitInstantiator(metaModelElementInstantiator).createUnit(subject.value);
       if (unit) {
         cachedFile.resolveIsolatedElement(unit);

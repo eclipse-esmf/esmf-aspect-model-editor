@@ -19,7 +19,7 @@ import {MxGraphHelper} from '@ame/mx-graph';
 import {RdfNodeService} from '../../rdf-node';
 import {DefaultUnit} from '@ame/meta-model';
 import {RdfService} from '@ame/rdf/services';
-import {Bammu} from '@ame/vocabulary';
+import {Bamm, Bammu} from '@ame/vocabulary';
 
 @Injectable()
 export class UnitVisitor extends BaseVisitor<DefaultUnit> {
@@ -29,6 +29,10 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
 
   private get bammu(): Bammu {
     return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.BAMMU();
+  }
+
+  private get bamm(): Bamm {
+    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.BAMM();
   }
 
   constructor(private rdfNodeService: RdfNodeService, rdfService: RdfService) {
@@ -52,7 +56,6 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
     }
 
     this.rdfNodeService.update(unit, {
-      name: unit.name,
       preferredName: unit.getAllLocalesPreferredNames().map(language => ({
         language,
         value: unit.getPreferredName(language),
@@ -67,14 +70,14 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
     if (unit.referenceUnit?.aspectModelUrn) {
       this.store.addQuad(
         DataFactory.namedNode(unit.aspectModelUrn),
-        this.bammu.ReferenceUnitProperty(),
+        this.bamm.ReferenceUnitProperty(),
         DataFactory.namedNode(unit.referenceUnit.aspectModelUrn)
       );
       this.setPrefix(unit.referenceUnit.aspectModelUrn);
     }
 
     // update quantity kinds
-    this.store.removeQuads(this.store.getQuads(DataFactory.namedNode(unit.aspectModelUrn), this.bammu.QuantityKindProperty(), null, null));
+    this.store.removeQuads(this.store.getQuads(DataFactory.namedNode(unit.aspectModelUrn), this.bamm.QuantityKindProperty(), null, null));
 
     for (const quantityKind of unit.quantityKinds || []) {
       if (!quantityKind?.aspectModelUrn) {
@@ -84,7 +87,7 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
       this.store.addQuad(
         DataFactory.triple(
           DataFactory.namedNode(unit.aspectModelUrn),
-          this.bammu.QuantityKindProperty(),
+          this.bamm.QuantityKindProperty(),
           DataFactory.namedNode(quantityKind.aspectModelUrn)
         )
       );

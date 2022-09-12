@@ -13,7 +13,6 @@
 
 import {NamedNode, Quad, Quad_Object, Quad_Subject, Util} from 'n3';
 import {
-  Base,
   BaseMetaModelElement,
   Characteristic,
   Constraint,
@@ -406,9 +405,7 @@ export class MetaModelElementInstantiator {
     let typeQuad: Quad;
 
     quads.forEach(quad => {
-      if (this.bamm.isNameProperty(quad.predicate.value)) {
-        metaModelElement.name = quad.object.value;
-      } else if (this.bamm.isDescriptionProperty(quad.predicate.value)) {
+      if (this.bamm.isDescriptionProperty(quad.predicate.value)) {
         this.addDescription(quad, metaModelElement);
       } else if (this.bamm.isPreferredNameProperty(quad.predicate.value)) {
         this.addPreferredName(quad, metaModelElement);
@@ -419,18 +416,16 @@ export class MetaModelElementInstantiator {
       }
     });
 
-    if (!metaModelElement.name) {
-      this.setUniqueElementName(metaModelElement);
-    }
-
     if (typeQuad && !Util.isBlankNode(typeQuad.subject)) {
-      (<Base>metaModelElement).aspectModelUrn = `${typeQuad.subject.value}`;
+      [, metaModelElement.name] = typeQuad.subject.value.split('#');
+      metaModelElement.aspectModelUrn = typeQuad.subject.value;
     } else {
-      (<Base>metaModelElement).aspectModelUrn = `${this.rdfModel.getAspectModelUrn()}${metaModelElement.name}`;
+      this.setUniqueElementName(metaModelElement);
+      metaModelElement.aspectModelUrn = `${this.rdfModel.getAspectModelUrn()}${metaModelElement.name}`;
     }
 
-    if (!(<Base>metaModelElement).metaModelVersion) {
-      (<Base>metaModelElement).metaModelVersion = rdfModel.BAMM().version;
+    if (!metaModelElement.metaModelVersion) {
+      metaModelElement.metaModelVersion = rdfModel.BAMM().version;
     }
   }
 

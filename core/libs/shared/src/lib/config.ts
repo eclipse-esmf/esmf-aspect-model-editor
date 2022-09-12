@@ -22,7 +22,7 @@ export const config = {
   editorConfiguration: 'assets/config/editor/config/editor.xml',
   assetLocation: 'assets',
   minBammVersion: '1.0.0',
-  currentBammVersion: '1.0.0',
+  currentBammVersion: '2.0.0',
   defaultPort: '9091',
   serviceUrl: `http://localhost:${defaultPort}`,
   api: {

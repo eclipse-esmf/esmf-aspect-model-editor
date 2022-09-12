@@ -239,7 +239,6 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
   // base functions
   private updateProperties(characteristic: DefaultCharacteristic) {
     this.rdfNodeService.update(characteristic, {
-      name: characteristic.name,
       preferredName: characteristic.getAllLocalesPreferredNames()?.map(language => ({
         language,
         value: characteristic.getPreferredName(language),

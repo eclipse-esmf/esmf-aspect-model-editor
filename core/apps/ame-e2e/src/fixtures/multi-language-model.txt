@@ -1,68 +1,55 @@
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#> .
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#> .
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#> .
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix : <urn:bamm:io.openmanufacturing:1.0.0#> .
 
 :AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
     bamm:properties (:property1 :property2 :property3);
     bamm:operations ();
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
     bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
 :property1 a bamm:Property;
-    bamm:name "property1";
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
     bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
     bamm:characteristic :Characteristic1.
 :property2 a bamm:Property;
-    bamm:name "property2";
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
     bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
     bamm:characteristic :Property1Trait.
 :property3 a bamm:Property;
-    bamm:name "property3";
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
     bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
     bamm:characteristic :Characteristic3.
 :Characteristic1 a bamm:Characteristic;
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
-    bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
-    bamm:name "Characteristic1".
+    bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
 :Property1Trait a bamm-c:Trait;
-    bamm:name "Property1Trait";
     bamm-c:baseCharacteristic :Characteristic2;
     bamm-c:constraint :Constraint1.
 :Characteristic2 a bamm:Characteristic;
-    bamm:name "Characteristic2";
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
     bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
     bamm:dataType :Entity1.
 :Characteristic3 a bamm:Characteristic;
-    bamm:name "Characteristic3";
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
     bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
 :Constraint1 a bamm:Constraint;
-    bamm:name "Constraint1";
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
     bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
 :Entity1 a bamm:Entity;
-    bamm:name "Entity1";
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
     bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
     bamm:properties (:property4 :property5 :property6).
 :property4 a bamm:Property;
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
-    bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
-    bamm:name "property4".
+    bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
 :property5 a bamm:Property;
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
-    bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
-    bamm:name "property5".
+    bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
 :property6 a bamm:Property;
     bamm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
-    bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
-    bamm:name "property6".
+    bamm:description "description en"@en, "description de"@de-DE, "description us"@en-US.

@@ -52,7 +52,6 @@ export class EventVisitor extends BaseVisitor<DefaultEvent> {
         value: event.getDescription(language),
       })),
       see: event.getSeeReferences() || [],
-      name: event.name,
     });
 
     if (event.parameters?.length) {

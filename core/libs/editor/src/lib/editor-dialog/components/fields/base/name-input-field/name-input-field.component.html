@@ -14,7 +14,6 @@
 <mat-form-field [floatLabel]="getControl('name')?.disabled ? 'always' : 'auto'" appearance="fill">
   <mat-label for="name">Name</mat-label>
   <input [formControl]="getControl('name')" matInput name="name" data-cy="name" />
-  <mat-hint>bamm:name</mat-hint>
   <mat-error *ngIf="getControl('name')?.errors?.required">Please define a name</mat-error>
   <mat-error *ngIf="getControl('name')?.errors?.namingUpperCase">
     Please start with an upper case character followed by letters/numerals.

@@ -371,4 +371,28 @@ export class Bamm {
   isAbstractEntity(value: string): boolean {
     return this.Entity().value === value;
   }
+
+  Unit(): NamedNode {
+    return DataFactory.namedNode(`${this.getNamespace()}Unit`);
+  }
+
+  isUnitElement(value: string): boolean {
+    return value === this.Unit().value;
+  }
+
+  QuantityKindProperty(): NamedNode {
+    return DataFactory.namedNode(`${this.getNamespace()}quantityKind`);
+  }
+
+  isQuantityKindProperty(value: string): boolean {
+    return this.QuantityKindProperty().value === value;
+  }
+
+  isNumericConversionFactorProperty(value: string): boolean {
+    return `${this.getNamespace()}numericConversionFactor` === value;
+  }
+
+  isCommonCodeProperty(value: string): boolean {
+    return `${this.getNamespace()}commonCode` === value;
+  }
 }

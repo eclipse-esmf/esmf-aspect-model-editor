@@ -95,7 +95,7 @@ describe('Test drag and drop', () => {
     cy.fixture('/external-reference/different-namespace/model-with-external-operation-reference-with-children')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -170,7 +170,7 @@ describe('Test drag and drop', () => {
     cy.fixture('/external-reference/different-namespace/model-with-external-characteristic-reference-with-childrens')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -227,9 +227,11 @@ describe('Test drag and drop', () => {
     cy.fixture('/external-reference/different-namespace/model-with-external-entity-reference-with-childrens')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
       .then(aspect => {
+        console.log(aspect);
+
         expect(aspect.name).to.equal('AspectDefault');
         expect(aspect.properties).to.be.length(1);
         expect(aspect.properties[0].property.name).to.equal('property1');
@@ -283,7 +285,7 @@ describe('Test drag and drop', () => {
     cy.fixture('/external-reference/different-namespace/model-with-external-unit-reference')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -391,7 +393,7 @@ describe('Test drag and drop', () => {
     cy.fixture('/external-reference/different-namespace/model-with-several-external-reference')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');

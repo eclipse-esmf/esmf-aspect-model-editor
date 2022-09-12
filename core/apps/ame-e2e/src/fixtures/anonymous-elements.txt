@@ -1,45 +1,29 @@
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#> .
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#> .
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#> .
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix : <urn:bamm:io.openmanufacturing:1.0.0#> .
 
 :AspectDefault a bamm:Aspect ;
-    bamm:name "AspectDefault" ;
     bamm:properties (:property1 :property2 :property3) ;
     bamm:operations () .
 
 :property1 a bamm:Property ;
-    bamm:name "property1" ;
     bamm:characteristic :Characteristic1 .
 
 :property2 a bamm:Property ;
-    bamm:name "property2" ;
-    bamm:characteristic [ a bamm:Characteristic ;
-                          bamm:name "Characteristic2" ;
-                          bamm:dataType xsd:string ] .
+    bamm:characteristic [ a bamm:Characteristic; bamm:dataType xsd:string ] .
 
 :property3 a bamm:Property ;
-    bamm:name "property3" ;
     bamm:characteristic [
         a bamm-c:Trait ;
-        bamm:name "Trait1" ;
-        bamm-c:baseCharacteristic [
-            a bamm:Characteristic ;
-            bamm:name "Characteristic3"
-        ] ;
-        bamm-c:constraint [
-            a bamm:Constraint ;
-            bamm:name "Constraint1" ] ;
-            bamm-c:constraint [
-                a bamm:Constraint ;
-                bamm:name "Constraint2"
-            ]
-        ] .
+        bamm-c:baseCharacteristic [ a bamm:Characteristic ] ;
+        bamm-c:constraint [ a bamm:Constraint ] ;
+        bamm-c:constraint [ a bamm:Constraint ]
+    ] .
 
 :Characteristic1 a bamm:Characteristic ;
-    bamm:name "Characteristic1" ;
     bamm:dataType xsd:string .

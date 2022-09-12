@@ -1,22 +1,19 @@
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#> .
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#> .
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#> .
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix : <urn:bamm:io.openmanufacturing.digitaltwin:1.0.0#> .
 
 :AspectDefault a bamm:Aspect ;
-    bamm:name "AspectDefault" ;
     bamm:properties (:property1) ;
     bamm:operations ();
     bamm:events () .
 
 :property1 a bamm:Property;
-    bamm:name "property1";
     bamm:characteristic :Characteristic1 .
 
 :Characteristic1 a bamm:Characteristic ;
-    bamm:name "Characteristic1" ;
     bamm:dataType xsd:string .

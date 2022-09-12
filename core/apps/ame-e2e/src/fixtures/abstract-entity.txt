@@ -1,40 +1,31 @@
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#>.
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#>.
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#>.
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix : <urn:bamm:io.openmanufacturing.digitaltwin:1.0.0#>.
 
 :AspectDefault a bamm:Aspect;
-    bamm:name "AspectDefault";
     bamm:properties (:property1);
     bamm:operations ();
     bamm:events ().
 :property1 a bamm:Property;
-    bamm:name "property1";
     bamm:characteristic :Characteristic1.
 :Characteristic1 a bamm:Characteristic;
-    bamm:name "Characteristic1";
     bamm:dataType :Entity1.
 :Entity1 a bamm:Entity;
-    bamm:name "Entity1";
     bamm:properties (:property2 :property3);
     bamm:extends :AbstractEntity1.
 :property2 a bamm:Property;
-    bamm:name "property2";
     bamm:extends :abstractProperty2.
 :property3 a bamm:Property;
-    bamm:name "property3";
     bamm:extends :abstractProperty1.
 :AbstractEntity1 a bamm:AbstractEntity;
-    bamm:name "AbstractEntity1";
     bamm:preferredName "Preferred Name 1"@en;
     bamm:description "Description 1"@en;
     bamm:see <http://test1.com>;
     bamm:properties (:abstractProperty1 :abstractProperty2).
-:abstractProperty2 a bamm:AbstractProperty;
-    bamm:name "abstractProperty2".
-:abstractProperty1 a bamm:AbstractProperty;
-    bamm:name "abstractProperty1".
+:abstractProperty2 a bamm:AbstractProperty.
+:abstractProperty1 a bamm:AbstractProperty.
