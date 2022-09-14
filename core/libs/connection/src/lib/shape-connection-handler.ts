@@ -620,34 +620,27 @@ export class PropertyCharacteristicConnectionHandler implements ShapeMultiConnec
   providedIn: 'root',
 })
 export class CharacteristicEntityConnectionHandler implements ShapeMultiConnector<DefaultCharacteristic, DefaultEntity> {
+  get currentCachedFile() {
+    return this.namespacesCacheService.getCurrentCachedFile();
+  }
+
   constructor(
     private mxGraphService: MxGraphService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private languageSettingsService: LanguageSettingsService
+    private languageSettingsService: LanguageSettingsService,
+    private namespacesCacheService: NamespacesCacheService
   ) {}
 
   public connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultEntity, parent: mxCell, child: mxCell) {
-    this.mxGraphAttributeService.graph.getOutgoingEdges(parent).forEach(outEdge => {
-      const childTargetMetaModel = MxGraphHelper.getModelElement(child.target);
-      const outEdgeTargetMetaModel = MxGraphHelper.getModelElement(outEdge.target);
-      if (
-        outEdge !== child &&
-        !(childTargetMetaModel instanceof DefaultCharacteristic) &&
-        !(outEdgeTargetMetaModel instanceof DefaultCharacteristic) &&
-        !(outEdgeTargetMetaModel instanceof DefaultUnit)
-      ) {
-        // remove icon if we delete the edge between enumeration and entity.
-        if (parentMetaModel instanceof DefaultEnumeration) {
-          this.mxGraphShapeOverlayService.removeComplexTypeShapeOverlays(parent);
-        }
-      }
-    });
+    this.mxGraphAttributeService.graph.getOutgoingEdges(parent).forEach(outEdge => this.removeCells(outEdge, null));
+
     parentMetaModel.dataType = childMetaModel;
     this.mxGraphShapeOverlayService.removeOverlay(parent, MxGraphHelper.getNewShapeOverlayButton(parent));
     // add icon when you simply connect an enumeration with an entity.
     if (parentMetaModel instanceof DefaultEnumeration) {
-      if (!parentMetaModel.createdFromEditor && !(parentMetaModel.dataType instanceof DefaultEntity)) {
+      //TODO User should be informed if he wants to change the entity. Otherwise he deletes all values.
+      if (!parentMetaModel.createdFromEditor) {
         parentMetaModel.values = [];
       }
       this.mxGraphShapeOverlayService.removeOverlay(parent, MxGraphHelper.getRightOverlayButton(parent));
@@ -678,6 +671,28 @@ export class CharacteristicEntityConnectionHandler implements ShapeMultiConnecto
         }
       });
     }
+  }
+
+  private removeCells(edge: mxCell, parent: mxCell) {
+    const metaModel = MxGraphHelper.getModelElement(edge.target);
+
+    if (metaModel instanceof DefaultUnit) {
+      return;
+    }
+
+    // remove icon if we delete the edge between enumeration and entity.
+    if (metaModel instanceof DefaultEnumeration) {
+      this.mxGraphShapeOverlayService.removeComplexTypeShapeOverlays(parent);
+    }
+
+    //TODO should be defined in more detail
+    if (metaModel instanceof DefaultEntityValue) {
+      this.mxGraphAttributeService.graph.getOutgoingEdges(edge.target).forEach(outEdge => this.removeCells(outEdge, null));
+      this.mxGraphService.removeCells([edge.target]);
+      this.currentCachedFile.removeCachedElement(metaModel.aspectModelUrn);
+    }
+
+    this.mxGraphService.removeCells([edge]);
   }
 }
 
