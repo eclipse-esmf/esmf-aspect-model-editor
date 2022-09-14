@@ -29,7 +29,17 @@ export class NamespaceFilterComponent implements OnChanges {
   @Output()
   public searchElements = new EventEmitter<ElementModel[]>();
 
-  public types = ['property', 'operation', 'characteristic', 'entity', 'constraint', 'trait', 'event'];
+  public types = [
+    'property',
+    'abstract-property',
+    'operation',
+    'characteristic',
+    'entity',
+    'abstract-entity',
+    'constraint',
+    'trait',
+    'event',
+  ];
   public selectedTypes = [];
   public searchedString: string = null;
   public filteredElements: ElementModel[];
@@ -44,6 +54,21 @@ export class NamespaceFilterComponent implements OnChanges {
 
   public getClassesForType(type: string): string[] {
     return this.selectedTypes.includes(type) ? [type, 'selected'] : [type];
+  }
+
+  public getName(type: string) {
+    return type
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.substring(1, word.length))
+      .join(' ');
+  }
+
+  public getInitials(type: string) {
+    const words = type.split('-');
+    return words
+      .map(word => word.charAt(0).toUpperCase())
+      .join('')
+      .substring(0, 2);
   }
 
   public toggleSelect(type: string) {

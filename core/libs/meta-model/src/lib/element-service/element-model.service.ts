@@ -92,12 +92,11 @@ export class ElementModelService {
       return;
     }
 
-    if (
-      (sourceModelElement instanceof DefaultProperty && targetModelElement instanceof DefaultAbstractProperty) ||
-      (sourceModelElement instanceof DefaultProperty && targetModelElement instanceof DefaultProperty)
-    ) {
-      this.currentCachedFile.removeCachedElement(MxGraphHelper.getModelElement(edge.source).aspectModelUrn);
-      this.mxGraphService.removeCells([edge, edge.source]);
+    if (this.handleAbstractEntityRemoval(edge)) {
+      return;
+    }
+
+    if (this.handleAbstractPropertyRemoval(edge, sourceModelElement, targetModelElement)) {
       return;
     }
 
@@ -137,6 +136,39 @@ export class ElementModelService {
 
     this.removeConnectionBetweenElements(edge, sourceModelElement, targetModelElement);
     this.mxGraphService.removeCells([edge]);
+  }
+
+  private handleAbstractEntityRemoval(edge: mxgraph.mxCell) {
+    if (!(MxGraphHelper.getModelElement(edge.target) instanceof DefaultAbstractEntity)) {
+      return false;
+    }
+
+    const parents = this.mxGraphService.resolveParents(edge.target)?.filter(c => MxGraphHelper.getModelElement(c) instanceof DefaultEntity);
+    const toRemove = [edge];
+
+    for (const parent of parents) {
+      const properties = this.mxGraphService.graph
+        .getOutgoingEdges(parent)
+        .map(e => e.target)
+        .filter(c => !!MxGraphHelper.getModelElement<DefaultProperty>(c)?.extendedElement);
+      toRemove.push(...properties);
+    }
+
+    this.mxGraphService.removeCells(toRemove);
+    return true;
+  }
+
+  private handleAbstractPropertyRemoval(edge: mxgraph.mxCell, source: BaseMetaModelElement, target: BaseMetaModelElement) {
+    if (
+      (source instanceof DefaultProperty && target instanceof DefaultAbstractProperty) ||
+      (source instanceof DefaultProperty && target instanceof DefaultProperty)
+    ) {
+      this.currentCachedFile.removeCachedElement(MxGraphHelper.getModelElement(edge.source).aspectModelUrn);
+      this.mxGraphService.removeCells([edge, edge.source]);
+      return true;
+    }
+
+    return false;
   }
 
   private handleTimeSeriesEntityCellRemoval(cell: mxgraph.mxCell) {
@@ -249,6 +281,7 @@ export class ElementModelService {
   private handleAbstractElementsDecoupling(edge: mxgraph.mxCell, source: BaseMetaModelElement, target: BaseMetaModelElement) {
     if (
       (source instanceof DefaultEntity && target instanceof DefaultAbstractEntity) ||
+      (source instanceof DefaultAbstractEntity && target instanceof DefaultAbstractEntity) ||
       (source instanceof DefaultEntity && target instanceof DefaultEntity) ||
       (source instanceof DefaultAbstractProperty && target instanceof DefaultAbstractProperty)
     ) {

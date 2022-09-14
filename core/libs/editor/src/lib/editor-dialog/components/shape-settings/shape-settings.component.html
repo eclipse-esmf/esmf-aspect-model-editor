@@ -45,20 +45,20 @@
 <div class="shape-settings__actions">
   <button
     *ngIf="metaModelDialogService.isSaveButtonEnabled()"
+    (click)="onClose()"
     type="button"
     mat-flat-button
-    (click)="onClose()"
     data-cy="editorCancelButton"
   >
     Cancel
   </button>
   <button
     *ngIf="metaModelDialogService.isSaveButtonEnabled()"
+    [disabled]="!formGroup.valid"
+    (click)="onSave()"
     mat-flat-button
     color="primary"
     type="button"
-    [disabled]="!formGroup.valid"
-    (click)="onSave()"
     data-cy="editorSaveButton"
   >
     Save

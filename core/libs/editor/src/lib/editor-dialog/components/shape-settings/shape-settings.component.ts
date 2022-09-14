@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {
   BaseMetaModelElement,
@@ -32,13 +32,14 @@ import {LanguageSettingsService} from '@ame/settings-dialog';
 import {LogService} from '@ame/shared';
 import {ModelService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'ame-shape-settings',
   templateUrl: './shape-settings.component.html',
   styleUrls: ['./shape-settings.component.scss'],
 })
-export class ShapeSettingsComponent implements OnInit, OnChanges {
+export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   public metaModelClassName: string;
   public metaModelElement: BaseMetaModelElement;
   public selectedMetaModelElement: BaseMetaModelElement;
@@ -47,6 +48,8 @@ export class ShapeSettingsComponent implements OnInit, OnChanges {
   public tmpCharacteristic: Characteristic;
   public units: Unit[] = [];
   public formGroup: FormGroup = new FormGroup({});
+
+  private subscription = new Subscription();
 
   @Input() isOpened = false;
   @Input() modelElement: BaseMetaModelElement = null;
@@ -82,6 +85,10 @@ export class ShapeSettingsComponent implements OnInit, OnChanges {
       this.metaModelElement = metaModelElement;
       this.changeDetector.detectChanges();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onSave(): void {
@@ -130,8 +137,8 @@ export class ShapeSettingsComponent implements OnInit, OnChanges {
       return 'Edit';
     }
     let name = `${this.metaModelElement.getPreferredName('en') || this.metaModelElement.name}`;
-    name = name.length > 150 ? `${name.substr(0, 100)}...` : name;
-    return this.metaModelElement.isExternalReference() ? name : `Edit ${this.getMetaModelElementType()} ${name}`;
+    name = name.length > 150 ? `${name.substring(0, 100)}...` : name;
+    return this.metaModelElement.isExternalReference() ? name : `Edit ${this.metaModelClassName} ${name}`;
   }
 
   addLanguageSettings(metaModelElement: BaseMetaModelElement) {
@@ -143,34 +150,6 @@ export class ShapeSettingsComponent implements OnInit, OnChanges {
         }
       });
     }
-  }
-
-  getMetaModelElementType(): string {
-    if (this.isAspect()) {
-      return 'Aspect';
-    }
-    if (this.isProperty()) {
-      return 'Property';
-    }
-    if (this.isOperation()) {
-      return 'Operation';
-    }
-    if (this.isCharacteristic()) {
-      return 'Characteristic';
-    }
-    if (this.isConstraint()) {
-      return 'Constraint';
-    }
-    if (this.isEntity()) {
-      return 'Entity';
-    }
-    if (this.isUnit()) {
-      return 'Unit';
-    }
-    if (this.isEvent()) {
-      return 'Event';
-    }
-    return '';
   }
 
   isAspect(): boolean {

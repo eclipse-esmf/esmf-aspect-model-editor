@@ -68,6 +68,14 @@ export class SidebarElementComponent implements AfterViewInit {
     });
   }
 
+  public getInitials(type: string) {
+    const words = type.split('-');
+    return words
+      .map(word => word.charAt(0).toUpperCase())
+      .join('')
+      .substring(0, 2);
+  }
+
   public elementImported(): boolean {
     if (this.element?.aspectModelUrn) {
       const modelElement: BaseMetaModelElement = this.cacheService.findElementOnExtReference(this.element.aspectModelUrn);

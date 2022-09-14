@@ -20,7 +20,7 @@ export interface BaseElement extends IsNamed, IsVersioned {}
 
 export interface BaseMetaModelElement extends BaseElement, IsDescribed, ExternalReference {
   fileName: string;
-  get className();
+  get className(): string;
   accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T;
 }
 

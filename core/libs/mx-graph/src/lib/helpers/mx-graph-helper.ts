@@ -22,6 +22,7 @@ import {
   DefaultOperation,
   DefaultStructuredValue,
   DefaultTrait,
+  CanExtend,
 } from '@ame/meta-model';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {LanguageSettingsService} from '@ame/settings-dialog';
@@ -136,6 +137,17 @@ export class MxGraphHelper {
           .getIncomingEdges(firstEdge.source)
           .some(secondEdge => MxGraphHelper.getModelElement(secondEdge.source) instanceof DefaultStructuredValue)
       );
+  }
+
+  static isEntityCycleInheritance(child: mxgraph.mxCell, parent: BaseMetaModelElement, graph: mxgraph.mxGraph): boolean {
+    const nextGeneration = graph.getOutgoingEdges(child)?.map(edge => edge.target) || [];
+
+    for (const cell of nextGeneration) {
+      const model = MxGraphHelper.getModelElement(cell);
+      return model.aspectModelUrn === parent.aspectModelUrn || this.isEntityCycleInheritance(cell, parent, graph);
+    }
+
+    return false;
   }
 
   static getNewShapeOverlayButton(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
@@ -279,6 +291,9 @@ export class MxGraphHelper {
 
     if (isSmallShape) {
       title.classList.add('simple');
+      if (modelElement instanceof CanExtend && cell.collapsed) {
+        div.removeChild(title);
+      }
       return div;
     }
 
@@ -348,17 +363,23 @@ export class MxGraphHelper {
 
     const iconsBar = document.createElement('div');
     iconsBar.classList.add('icons-bar');
+    const infoLock = document.createElement('div');
+    infoLock.title = '';
 
     if (baseProperties.external && !baseProperties.predefined) {
-      const infoLock = document.createElement('div');
-      infoLock.title = `Namespace: ${baseProperties.namespace} \nVersion: ${baseProperties.version} \nFile: ${baseProperties.fileName}`;
+      infoLock.title += `Namespace: ${baseProperties.namespace} \nVersion: ${baseProperties.version} \nFile: ${baseProperties.fileName}\n`;
       infoLock.classList.add('info-shape');
       iconsBar.appendChild(infoLock);
     }
 
     if (baseProperties.predefined) {
-      const infoLock = document.createElement('div');
-      infoLock.title = `BAMM Element`;
+      infoLock.title += `BAMM Element\n`;
+      infoLock.classList.add('info-shape');
+      iconsBar.appendChild(infoLock);
+    }
+
+    if (baseProperties.isAbstract) {
+      infoLock.title += `Abstract Element\n`;
       infoLock.classList.add('info-shape');
       iconsBar.appendChild(infoLock);
     }

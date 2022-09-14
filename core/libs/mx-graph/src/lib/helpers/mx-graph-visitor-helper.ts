@@ -480,10 +480,11 @@ export class MxGraphVisitorHelper {
         version: modelElement.metaModelVersion,
         namespace: elementNamespace,
         external: modelElement.isExternalReference(),
-        predefined: !!(modelElement as DefaultCharacteristic)?.isPredefined && (modelElement as DefaultCharacteristic)?.isPredefined(),
+        predefined: !!(modelElement as DefaultCharacteristic)?.isPredefined?.(),
         sameNamespace: elementNamespace === currentNamespace,
         sameVersionedNamespace: aspectVersionedNamespace === elementVersionedNamespace,
         fileName: modelElement.fileName,
+        isAbstract: modelElement.className.toLowerCase().includes('abstract'),
       };
     } catch (error) {
       return null;

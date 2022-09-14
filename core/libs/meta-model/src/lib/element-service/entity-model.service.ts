@@ -24,17 +24,10 @@ import {
   MxGraphShapeOverlayService,
   MxGraphVisitorHelper,
 } from '@ame/mx-graph';
-import {
-  Base,
-  BaseMetaModelElement,
-  DefaultAbstractEntity,
-  DefaultEntity,
-  DefaultEntityValue,
-  DefaultEnumeration,
-  OverWrittenPropertyKeys,
-} from '@ame/meta-model';
+import {Base, BaseMetaModelElement, DefaultEntity, DefaultEntityValue, DefaultEnumeration, OverWrittenPropertyKeys} from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
 import {LanguageSettingsService} from '@ame/settings-dialog';
+import {BaseEntityModelService} from './base-entity-model.service';
 
 @Injectable({providedIn: 'root'})
 export class EntityModelService extends BaseModelService {
@@ -46,7 +39,8 @@ export class EntityModelService extends BaseModelService {
     private mxGraphService: MxGraphService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private entityRenderer: EntityRenderService,
-    private languageService: LanguageSettingsService
+    private languageService: LanguageSettingsService,
+    private baseEntityModel: BaseEntityModelService
   ) {
     super(namespacesCacheService, modelService);
   }
@@ -57,7 +51,7 @@ export class EntityModelService extends BaseModelService {
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement: DefaultEntity = MxGraphHelper.getModelElement(cell);
-    metaModelElement.extendedElement = [DefaultEntity, DefaultAbstractEntity].some(c => form?.extends instanceof c) ? form.extends : null;
+    this.baseEntityModel.checkExtendedElement(metaModelElement, form?.extends);
 
     if (form.editedProperties) {
       for (const {property, keys} of metaModelElement.properties) {

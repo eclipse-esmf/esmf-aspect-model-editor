@@ -22,6 +22,7 @@ import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
 import {MxGraphService} from '../mx-graph.service';
 import {MxGraphHelper, MxGraphVisitorHelper} from '../../helpers';
 import {MxGraphSetupVisitor} from '../../visitors';
+import {NotificationsService} from '@ame/shared';
 
 @Injectable({
   providedIn: 'root',
@@ -33,12 +34,18 @@ export class BaseEntityRendererService {
     private namespacesCacheService: NamespacesCacheService,
     private shapeConnectorService: ShapeConnectorService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
+    private notificationService: NotificationsService,
     private rdfService: RdfService
   ) {}
 
   public handleExtendsElement(cell: mxgraph.mxCell) {
     const metaModelElement = MxGraphHelper.getModelElement<DefaultEntity>(cell);
-    if (!metaModelElement.extendedElement || this.hasTimeSeries(cell)) {
+    if (this.hasTimeSeries(cell)) {
+      return;
+    }
+
+    if (!metaModelElement.extendedElement) {
+      this.cleanUpAbstractConnections(cell);
       return;
     }
 
@@ -101,6 +108,14 @@ export class BaseEntityRendererService {
         modelElement.name === 'TimeSeriesEntity'
       );
     });
+  }
+
+  private cleanUpAbstractConnections(cell: mxgraph.mxCell) {
+    const childrenEdges = this.mxGraphService.graph
+      .getOutgoingEdges(cell)
+      .filter(edge => [DefaultEntity, DefaultAbstractEntity].some(c => MxGraphHelper.getModelElement(edge.target) instanceof c));
+
+    this.mxGraphService.graph.removeCells(childrenEdges);
   }
 
   private updateCell(cell: mxgraph.mxCell) {

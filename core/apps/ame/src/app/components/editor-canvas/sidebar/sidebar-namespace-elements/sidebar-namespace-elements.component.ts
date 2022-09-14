@@ -26,9 +26,11 @@ export class SidebarNamespaceElementsComponent implements OnChanges {
   public filteredElements: ElementModel[];
   public elementsTypes = [
     {name: 'Properties', type: 'property', elements: []},
+    {name: 'Abstract Properties', type: 'abstract-property', elements: []},
     {name: 'Operations', type: 'operation', elements: []},
     {name: 'Characteristics', type: 'characteristic', elements: []},
     {name: 'Entities', type: 'entity', elements: []},
+    {name: 'Abstract Entities', type: 'abstract-entity', elements: []},
     {name: 'Traits', type: 'trait', elements: []},
     {name: 'Constraints', type: 'constraint', elements: []},
     {name: 'Unit', type: 'unit', elements: []},

@@ -54,6 +54,6 @@ export abstract class CanExtend extends Base {
 
 export class CanExtendsWithProperties extends CanExtend {
   public get extendedProperties(): OverWrittenProperty[] {
-    return (this.extendedElement as any)?.properties || [];
+    return (this.extendedElement as any)?.allProperties || [];
   }
 }

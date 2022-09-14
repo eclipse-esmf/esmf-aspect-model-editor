@@ -22,4 +22,5 @@ export interface Settings {
   showEntityValueEntityEdge: boolean;
   showConnectionLabels: boolean;
   useSaturatedColors: boolean;
+  showAbstractPropertyConnection: boolean;
 }

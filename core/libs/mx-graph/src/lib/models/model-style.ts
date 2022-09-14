@@ -84,4 +84,5 @@ export interface ModelBaseProperties {
   predefined: boolean;
   sameNamespace: boolean;
   sameVersionedNamespace: boolean;
+  isAbstract: boolean;
 }

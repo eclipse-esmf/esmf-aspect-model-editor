@@ -17,6 +17,8 @@ import {NamespacesCacheService} from '@ame/cache';
 import {ConfirmDialogService, EditorService} from '@ame/editor';
 import {
   BaseMetaModelElement,
+  DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
@@ -256,6 +258,10 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
       return 'unit';
     } else if (modelElement instanceof DefaultEvent) {
       return 'event';
+    } else if (modelElement instanceof DefaultAbstractEntity) {
+      return 'abstract-entity';
+    } else if (modelElement instanceof DefaultAbstractProperty) {
+      return 'abstract-property';
     } else {
       return null;
     }
