@@ -58,7 +58,7 @@ export class ModelApiService {
   }
 
   getMovementAspectModel(): Observable<string> {
-    return this.http.get('assets/aspect-models/movement.ttl', {responseType: 'text'});
+    return this.http.get('assets/aspect-models/io.openmanufacturing.examples.movement/1.0.0/Movement.ttl', {responseType: 'text'});
   }
 
   loadAspectModelByUrn(urn: string): Observable<string> {
