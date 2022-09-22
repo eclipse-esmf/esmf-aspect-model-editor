@@ -20,6 +20,8 @@ export class PredefinedEntityInstantiator {
 
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
     this.entityInstances[this.metaModelElementInstantiator.bamme.TimeSeriesEntity] = this.createTimeSeriesEntity.bind(this);
+    this.entityInstances[this.metaModelElementInstantiator.bamme.Point3d] = this.createPoint3D.bind(this);
+    this.entityInstances[this.metaModelElementInstantiator.bamme.FileResource] = this.createFileResource.bind(this);
   }
 
   private createTimeSeriesEntity() {
@@ -47,5 +49,46 @@ export class PredefinedEntityInstantiator {
     );
 
     return timeSeriesEntity;
+  }
+
+  private createPoint3D() {
+    const {propertyInstances} = new PredefinedPropertyInstantiator(this.metaModelElementInstantiator);
+    const {bamm, bamme} = this.metaModelElementInstantiator;
+    const point3dEntity = new DefaultAbstractEntity(
+      bamm.version,
+      bamme.Point3d,
+      'Point3d',
+      [
+        {property: propertyInstances[bamme.xProperty](), keys: {}},
+        {property: propertyInstances[bamme.yProperty](), keys: {}},
+        {property: propertyInstances[bamme.zProperty](), keys: {}},
+      ],
+      true
+    );
+
+    point3dEntity.addPreferredName('en', 'Point 3D');
+    point3dEntity.addDescription('en', 'Describes a point in ℝ³.');
+
+    return point3dEntity;
+  }
+
+  private createFileResource() {
+    const {propertyInstances} = new PredefinedPropertyInstantiator(this.metaModelElementInstantiator);
+    const {bamm, bamme} = this.metaModelElementInstantiator;
+    const fileResourceEntity = new DefaultAbstractEntity(
+      bamm.version,
+      bamme.FileResource,
+      'FileResource',
+      [
+        {property: propertyInstances[bamme.resourceProperty](), keys: {}},
+        {property: propertyInstances[bamme.mimeTypeProperty](), keys: {}},
+      ],
+      true
+    );
+
+    fileResourceEntity.addPreferredName('en', 'File Resource');
+    fileResourceEntity.addDescription('en', 'Describes a resource with a relative or absolute location and a MIME type.');
+
+    return fileResourceEntity;
   }
 }

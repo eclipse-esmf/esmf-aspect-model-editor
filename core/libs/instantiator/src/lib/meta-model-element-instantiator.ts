@@ -316,9 +316,9 @@ export class MetaModelElementInstantiator {
       quad = this.rdfModel.resolveBlankNodes(quad.object.value).shift();
     }
 
-    if (quad.object.value === this.bamme.TimeSeriesEntity) {
-      const predefinedEntityInstantiator = new PredefinedEntityInstantiator(this);
-      return callback(predefinedEntityInstantiator.entityInstances[this.bamme.TimeSeriesEntity]());
+    const predefinedEntityInstantiator = new PredefinedEntityInstantiator(this);
+    if (predefinedEntityInstantiator.entityInstances[quad.object.value]) {
+      return callback(predefinedEntityInstantiator.entityInstances[quad.object.value]());
     }
 
     const typeQuad = quad ? RdfModelUtil.getEffectiveType(quad, this.rdfModel) : null;

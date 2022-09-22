@@ -51,14 +51,16 @@ export class EntityInstantiator {
 
     this.metaModelElementInstantiator.initBaseProperties(quads, defaultEntity, this.metaModelElementInstantiator.rdfModel);
 
+    const predefinedEntityInstantiator = new PredefinedEntityInstantiator(this.metaModelElementInstantiator);
+
     quads.forEach(quad => {
       if (bamm.isExtendsProperty(quad.predicate.value)) {
         const quads = this.rdfModel.store.getQuads(quad.object, null, null, null);
         const isEntity = quads.some(quad => bamm.isEntity(quad.object.value));
         defaultEntity.extendedElement = isEntity
           ? (this.createEntity(quads) as DefaultEntity)
-          : this.bamme.isTimeSeriesEntity(quad.object.value)
-          ? new PredefinedEntityInstantiator(this.metaModelElementInstantiator).entityInstances[this.bamme.TimeSeriesEntity]()
+          : predefinedEntityInstantiator.entityInstances[quad.object.value]
+          ? predefinedEntityInstantiator.entityInstances[quad.object.value]()
           : new AbstractEntityInstantiator(this.metaModelElementInstantiator).createAbstractEntity(quads);
         return;
       }

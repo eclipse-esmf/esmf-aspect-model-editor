@@ -16,28 +16,17 @@ import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphCharacteristicHelper, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService, MxGraphVisitorHelper} from '@ame/mx-graph';
 import {
-  AspectModelService,
   BaseMetaModelElement,
-  BaseModelService,
   CharacteristicModelService,
-  ConstraintModelService,
   DefaultEntity,
   DefaultEntityValue,
   DefaultEnumeration,
   DefaultProperty,
-  EntityModelService,
-  EntityValueModelService,
-  EventModelService,
-  OperationModelService,
-  PropertyModelService,
-  TraitModelService,
-  UnitModelService,
-  AbstractPropertyModelService,
 } from '@ame/meta-model';
 import {EntityValueService} from '@ame/editor';
 import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultStructuredValue} from '../aspect-meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
-import {AbstractEntityModelService} from './abstract-entity-model.service';
+import {ModelRootService} from './model-root.service';
 
 @Injectable({providedIn: 'root'})
 export class ElementModelService {
@@ -47,7 +36,8 @@ export class ElementModelService {
     private mxGraphService: MxGraphService,
     private namespacesCacheService: NamespacesCacheService,
     private entityValueService: EntityValueService,
-    private languageSettingsService: LanguageSettingsService
+    private languageSettingsService: LanguageSettingsService,
+    private modelRootService: ModelRootService
   ) {}
 
   get currentCachedFile() {
@@ -61,7 +51,7 @@ export class ElementModelService {
     const characteristicModelService = this.injector.get(CharacteristicModelService);
     const modelElement = MxGraphHelper.getModelElement(cell);
     const modelService =
-      modelElement instanceof DefaultEnumeration ? characteristicModelService : this.getElementModelService(modelElement);
+      modelElement instanceof DefaultEnumeration ? characteristicModelService : this.modelRootService.getElementModelService(modelElement);
     modelService.update(cell, form);
   }
 
@@ -75,12 +65,15 @@ export class ElementModelService {
       return;
     }
 
-    if (this.handleTimeSeriesEntityCellRemoval(cell)) {
-      return;
+    const modelElement = MxGraphHelper.getModelElement(cell);
+    if (this.modelRootService.isPredefined(modelElement)) {
+      const service = this.modelRootService.getPredefinedService(modelElement);
+      if (service?.delete && service?.delete?.(cell)) {
+        return;
+      }
     }
 
-    const modelElement = MxGraphHelper.getModelElement(cell);
-    const elementModelService = this.getElementModelService(modelElement);
+    const elementModelService = this.modelRootService.getElementModelService(modelElement);
     elementModelService?.delete(cell);
   }
 
@@ -100,8 +93,11 @@ export class ElementModelService {
       return;
     }
 
-    if (this.handleTimeSeriesEntityDecoupling(edge, sourceModelElement)) {
-      return;
+    if (this.modelRootService.isPredefined(sourceModelElement)) {
+      const service = this.modelRootService.getPredefinedService(sourceModelElement);
+      if (service?.decouple && service?.decouple?.(edge, sourceModelElement)) {
+        return;
+      }
     }
 
     if (this.handleAbstractElementsDecoupling(edge, sourceModelElement, targetModelElement)) {
@@ -169,113 +165,6 @@ export class ElementModelService {
     }
 
     return false;
-  }
-
-  private handleTimeSeriesEntityCellRemoval(cell: mxgraph.mxCell) {
-    const modelElement = MxGraphHelper.getModelElement(cell);
-
-    if (modelElement instanceof DefaultAbstractEntity && modelElement.name === 'TimeSeriesEntity') {
-      this.handleTimeSeriesEntityTreeRemoval(cell);
-      return true;
-    }
-
-    if (
-      (modelElement instanceof DefaultProperty && modelElement.name === 'timestamp') ||
-      (modelElement instanceof DefaultAbstractProperty && modelElement.name === 'value')
-    ) {
-      this.handleTimeSeriesEntityPropertiesRemoval(cell);
-      return true;
-    }
-
-    const foundCell = this.mxGraphService.graph.getIncomingEdges(cell).find(e => {
-      const model = MxGraphHelper.getModelElement(e.source);
-      return model instanceof DefaultProperty && model.name === 'timestamp' && model.isPredefined();
-    })?.source;
-
-    if (foundCell) {
-      this.handleTimeSeriesEntityPropertiesRemoval(foundCell);
-      return true;
-    }
-
-    return false;
-  }
-
-  private handleTimeSeriesEntityDecoupling(edge: mxgraph.mxCell, source: BaseMetaModelElement) {
-    const isSourcePredefined = typeof source['isPredefined'] === 'function' && source['isPredefined']();
-
-    if (!isSourcePredefined) {
-      return false;
-    }
-
-    if (source instanceof DefaultAbstractEntity && source.name === 'TimeSeriesEntity') {
-      this.handleTimeSeriesEntityTreeRemoval(edge.source);
-      return true;
-    }
-
-    if (source instanceof DefaultProperty && source.name === 'timestamp') {
-      this.handleTimeSeriesEntityPropertiesRemoval(edge.source);
-      return true;
-    }
-
-    return false;
-  }
-
-  private handleTimeSeriesEntityPropertiesRemoval(cell: mxgraph.mxCell) {
-    const incomingEdges = this.mxGraphService.graph.getIncomingEdges(cell);
-    const timeSeriesCell = incomingEdges.find(edge => {
-      const modelElement = MxGraphHelper.getModelElement(edge.source);
-      return modelElement instanceof DefaultAbstractEntity && modelElement.name === 'TimeSeriesEntity';
-    })?.source;
-
-    if (timeSeriesCell) {
-      this.handleTimeSeriesEntityTreeRemoval(timeSeriesCell);
-    } else {
-      this.handleTimeSeriesEntityTreeRemoval(cell);
-    }
-  }
-
-  private handleTimeSeriesEntityTreeRemoval(cell: mxgraph.mxCell) {
-    const cellStack = this.mxGraphService.graph.getOutgoingEdges(cell).map(edge => edge.target);
-    const cellsToBeRemoved = [];
-
-    while (cellStack.length) {
-      const lastCell = cellStack.pop();
-      const modelElement = MxGraphHelper.getModelElement(lastCell);
-      const parentsEdges = this.mxGraphService.graph.getIncomingEdges(lastCell);
-
-      const dependentProperties = parentsEdges.filter(e => {
-        const parentElement = MxGraphHelper.getModelElement(e.source);
-        return parentElement instanceof DefaultAbstractProperty || parentElement instanceof DefaultProperty;
-      });
-
-      const hasAbstractEntityAsParent = parentsEdges.length - dependentProperties.length === 1;
-      if (
-        modelElement instanceof DefaultAbstractProperty &&
-        modelElement.name === 'value' &&
-        hasAbstractEntityAsParent &&
-        dependentProperties.length > 1
-      ) {
-        continue;
-      }
-
-      if (
-        modelElement instanceof DefaultProperty &&
-        modelElement.name === 'timestamp' &&
-        hasAbstractEntityAsParent &&
-        dependentProperties?.length > 0
-      ) {
-        continue;
-      }
-
-      cellStack.push(...this.mxGraphService.graph.getOutgoingEdges(lastCell).map(edge => edge.target));
-      cellsToBeRemoved.push(lastCell);
-    }
-
-    [cell, ...cellsToBeRemoved].forEach(c => {
-      const modelElement = MxGraphHelper.getModelElement(c);
-      const elementModelService = this.getElementModelService(modelElement);
-      elementModelService?.delete(c);
-    });
   }
 
   private handleAbstractElementsDecoupling(edge: mxgraph.mxCell, source: BaseMetaModelElement, target: BaseMetaModelElement) {
@@ -357,32 +246,5 @@ export class ElementModelService {
       this.currentCachedFile.removeCachedElement(targetModelElement.aspectModelUrn);
       this.mxGraphService.removeCells([edge.target]);
     }
-  }
-
-  private getElementModelService(modelElement: BaseMetaModelElement): BaseModelService {
-    // Order is important
-    const elementServices: any[] = [
-      AbstractEntityModelService,
-      AbstractPropertyModelService,
-      AspectModelService,
-      TraitModelService,
-      CharacteristicModelService,
-      ConstraintModelService,
-      EntityModelService,
-      EntityValueModelService,
-      EventModelService,
-      OperationModelService,
-      PropertyModelService,
-      UnitModelService,
-    ];
-
-    // choose the applicable model service
-    for (const serviceClass of elementServices) {
-      const elementModelService = this.injector.get(serviceClass);
-      if (elementModelService.isApplicable(modelElement)) {
-        return elementModelService;
-      }
-    }
-    return null;
   }
 }

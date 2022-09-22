@@ -59,7 +59,6 @@ export class AbstractEntityModelService extends BaseModelService {
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement: DefaultAbstractEntity = MxGraphHelper.getModelElement(cell);
-    this.baseEntityModel.checkExtendedElement(metaModelElement, form?.extends);
 
     if (form.editedProperties) {
       for (const {property, keys} of metaModelElement.properties) {
@@ -84,6 +83,7 @@ export class AbstractEntityModelService extends BaseModelService {
     }
 
     super.update(cell, form);
+    this.baseEntityModel.checkExtendedElement(metaModelElement, form?.extends);
     this.abstractEntityRenderer.update({cell});
   }
 

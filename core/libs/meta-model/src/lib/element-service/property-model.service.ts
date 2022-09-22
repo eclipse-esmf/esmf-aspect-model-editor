@@ -46,12 +46,12 @@ export class PropertyModelService extends BaseModelService {
       return;
     }
 
+    metaModelElement.exampleValue = form.exampleValue;
+    super.update(cell, form);
+
     metaModelElement.extendedElement = [DefaultProperty, DefaultAbstractProperty].some(c => form?.extends instanceof c)
       ? form.extends
       : null;
-    metaModelElement.exampleValue = form.exampleValue;
-
-    super.update(cell, form);
     this.updatePropertiesNames(cell);
     this.propertyRenderer.update({cell});
   }

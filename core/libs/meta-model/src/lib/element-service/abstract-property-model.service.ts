@@ -40,10 +40,10 @@ export class AbstractPropertyModelService extends BaseModelService {
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement: DefaultAbstractProperty = MxGraphHelper.getModelElement(cell);
-    metaModelElement.extendedElement = form?.extends instanceof DefaultAbstractProperty ? form.extends : null;
     metaModelElement.exampleValue = form.exampleValue;
 
     super.update(cell, form);
+    metaModelElement.extendedElement = form?.extends instanceof DefaultAbstractProperty ? form.extends : null;
     this.updatePropertiesNames(cell);
     this.abstractPropertyRenderer.update({cell});
   }
