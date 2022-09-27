@@ -12,7 +12,7 @@
  */
 
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {EditorService} from '@ame/editor';
 import {catchError, of} from 'rxjs';
 import {WorkspaceSummaryComponent} from '../workspace-summary/workspace-summary.component';
@@ -34,8 +34,7 @@ export class ZipUploaderComponent implements OnInit {
     success: 'done',
   };
 
-  public incorrectFiles: string[] = [];
-  public showIncorrectFiles = false;
+  public invalidFiles: string[] = [];
   public state: State = {} as any;
   public validations = {};
   public errors: any[];
@@ -110,7 +109,7 @@ export class ZipUploaderComponent implements OnInit {
       return;
     }
 
-    const files = this.state.rawResponse.correctFiles.map(file => file.aspectModelFileName);
+    const files = this.state.rawResponse.validFiles.map(file => file.aspectModelFileName);
     const toOverwrite = this.namespacesToReplace.reduce((acc: string[], namespace: string) => {
       return [...acc, ...files.filter((file: string) => file.startsWith(namespace))];
     }, []);

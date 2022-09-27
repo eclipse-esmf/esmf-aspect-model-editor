@@ -54,11 +54,11 @@ export class ModelApiService {
   private readonly LATEST_FILENAME = ':latest.ttl';
 
   getDefaultAspectModel(): Observable<string> {
-    return this.http.get('assets/aspect-models/default.ttl', {responseType: 'text'});
+    return this.http.get('assets/aspect-models/io.openmanufacturing.examples.movement/1.0.0/Default.ttl', {responseType: 'text'});
   }
 
   getMovementAspectModel(): Observable<string> {
-    return this.http.get('assets/aspect-models/movement.ttl', {responseType: 'text'});
+    return this.http.get('assets/aspect-models/io.openmanufacturing.examples.movement/1.0.0/Movement.ttl', {responseType: 'text'});
   }
 
   loadAspectModelByUrn(urn: string): Observable<string> {
