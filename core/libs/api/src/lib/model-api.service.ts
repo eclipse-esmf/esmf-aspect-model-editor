@@ -77,11 +77,13 @@ export class ModelApiService {
     return this.loadAspectModelByUrn(this.LATEST_FILENAME);
   }
 
-  saveModel(rdfContent: string): Observable<string> {
-    return this.http.post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent).pipe(
-      timeout(this.requestTimeout),
-      catchError(res => throwError(() => res))
-    );
+  saveModel(rdfContent: string, aspectUrn?: string): Observable<string> {
+    return this.http
+      .post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent, {headers: new HttpHeaderBuilder().withUrn(aspectUrn).build()})
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => throwError(() => res))
+      );
   }
 
   uploadZip(file: File): Observable<any> {
@@ -117,32 +119,34 @@ export class ModelApiService {
       );
   }
 
-  // TODO In the backend a defined object should be returned
-  getAllNamespaces(): Observable<any> {
-    return this.http
-      .get<Map<string, Array<string>>>(`${this.serviceUrl}${this.api.models}/namespaces`, {
-        params: {
-          shouldRefresh: true,
-        },
-      })
-      .pipe(
-        timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
-        map(data =>
-          Object.keys(data).reduce(
-            (fileNames, namespace) => [...fileNames, ...data[namespace].map((fileName: string) => `${namespace}:${fileName}`)],
-            []
-          )
-        )
-      );
+  getNamespacesStructure(): Observable<any> {
+    return this.http.get<Map<string, Array<string>>>(`${this.serviceUrl}${this.api.models}/namespaces`, {
+      params: {
+        shouldRefresh: true,
+      },
+    });
   }
 
-  getAllNamespacesFilesContent(rdfModel: RdfModel): Observable<FileContentModel[]> {
-    return this.getAllNamespaces().pipe(
+  // TODO In the backend a defined object should be returned
+  getNamespacesAppendWithFiles(): Observable<any> {
+    return this.getNamespacesStructure().pipe(
+      timeout(this.requestTimeout),
+      catchError(res => throwError(() => res)),
+      map(data =>
+        Object.keys(data).reduce(
+          (fileNames, namespace) => [...fileNames, ...data[namespace].map((fileName: string) => `${namespace}:${fileName}`)],
+          []
+        )
+      )
+    );
+  }
+
+  getAllNamespacesFilesContent(rdfModel?: RdfModel): Observable<FileContentModel[]> {
+    return this.getNamespacesAppendWithFiles().pipe(
       map(aspectModelFileNames =>
         aspectModelFileNames.reduce(
           (files, fileName) =>
-            fileName !== rdfModel.getAbsoluteAspectModelFileName()
+            fileName !== rdfModel?.getAbsoluteAspectModelFileName()
               ? [...files, this.getAspectMetaModel(fileName).pipe(map(aspectMetaModel => new FileContentModel(fileName, aspectMetaModel)))]
               : files,
           []

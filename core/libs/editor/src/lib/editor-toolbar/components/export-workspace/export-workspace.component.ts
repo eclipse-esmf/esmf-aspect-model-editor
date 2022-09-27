@@ -89,7 +89,7 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
     this.namespaceMessage = 'Loading namespaces...';
 
     this.modelApiService
-      .getAllNamespaces()
+      .getNamespacesAppendWithFiles()
       .pipe(
         first(),
         catchError(() => of([]))

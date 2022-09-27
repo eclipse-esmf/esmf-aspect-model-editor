@@ -199,7 +199,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
       .synchronizeModelToRdf()
       .pipe(
         switchMap(() =>
-          this.modelApiService.getAllNamespaces().pipe(
+          this.modelApiService.getNamespacesAppendWithFiles().pipe(
             first(),
             map((namespaces: string[]) => {
               const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;

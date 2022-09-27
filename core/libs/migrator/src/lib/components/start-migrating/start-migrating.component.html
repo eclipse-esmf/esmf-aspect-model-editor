@@ -1,0 +1,35 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<h2 mat-dialog-title>Migrate Workspace to BAMM {{ config.currentBammVersion }}</h2>
+
+<mat-dialog-content>
+  <p>
+    Your workspace has at least one file under BAMM version <strong>{{ config.currentBammVersion }}</strong> and needs to be migrated.
+    <br />
+    Click the Migrate button to proceed with the migration.
+  </p>
+  <mat-checkbox [checked]="increaseVersion" (change)="changeVersionCheck($event)"> Auto-increase namespace versions. </mat-checkbox>
+  <p class="version-description">
+    If selected, a new major version of all migrated namespaces will be created to indicate the BAMM version upgrade. Otherwise the existing
+    namespaces will be overwritten (previous content will remain in a backup).
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button *ngIf="!migrateLoading" (click)="closeDialog()" mat-flat-button>Cancel</button>
+  <button [disabled]="migrateLoading" (click)="migrate()" mat-flat-button color="primary">
+    <span *ngIf="!migrateLoading">Migrate</span>
+    <mat-spinner *ngIf="migrateLoading" diameter="20" class="spinner"></mat-spinner>
+  </button>
+</mat-dialog-actions>

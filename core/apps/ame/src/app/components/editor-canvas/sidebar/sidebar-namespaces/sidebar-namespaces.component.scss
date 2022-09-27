@@ -18,6 +18,11 @@
   box-sizing: border-box;
 }
 
+.outdated {
+  opacity: 0.65;
+  cursor: default !important;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -26,6 +31,10 @@
   user-select: none;
   height: 100%;
   overflow-y: auto;
+
+  .migrate-button {
+    align-self: flex-start;
+  }
 
   .namespaces {
     width: 310px;
@@ -36,6 +45,7 @@
 
     .title {
       font-size: 21px;
+      margin-bottom: 10px;
       font-weight: 500;
     }
 
@@ -101,6 +111,7 @@
 
 .selected {
   font-weight: bold;
+
   .show-more {
     display: block !important;
   }

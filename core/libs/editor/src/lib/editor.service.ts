@@ -280,7 +280,7 @@ export class EditorService {
     );
   }
 
-  public loadExternalModels(rdfModel: RdfModel) {
+  public loadExternalModels(rdfModel?: RdfModel) {
     this.rdfService.externalRdfModels = [];
     return this.modelApiService.getAllNamespacesFilesContent(rdfModel).pipe(
       mergeMap((fileContentModels: Array<FileContentModel>) => {

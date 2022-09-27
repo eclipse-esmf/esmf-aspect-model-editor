@@ -15,20 +15,42 @@
   <div *ngIf="namespaces?.length > 0" class="namespaces">
     <div class="title">Workspace</div>
     <p *ngIf="!hasCurrentFile" class="description">To see your current Aspect Model save to namespace</p>
+    <button
+      *ngIf="isWorkspaceOutdated"
+      (click)="migrateWorkspace()"
+      class="migrate-button"
+      color="primary"
+      mat-raised-button
+      matTooltip="The workspace has at least one outdated file"
+      matTooltipPosition="right"
+    >
+      <span>Migrate All</span>
+    </button>
+
     <div class="list">
       <div *ngFor="let namespace of namespaces" class="namespace">
-        <div class="folder" [ngClass]="{selected: isSelectedNamespace(namespace.name)}" [title]="namespace.name">
+        <div
+          class="folder"
+          [ngClass]="{selected: isSelectedNamespace(namespace.name), outdated: namespace.outdated}"
+          [title]="namespace.name"
+        >
           <mat-icon>folder</mat-icon>
           <span>{{ namespace.name }}</span>
         </div>
         <ng-container *ngFor="let file of namespace.files">
           <div
-            [class]="!isCurrentFile(namespace.name, file) ? 'file' : 'file current-file'"
-            [ngClass]="{selected: isSelectedNamespaceFile(namespace.name, file)}"
-            [title]="!isCurrentFile(namespace.name, file) ? file : ''"
-            [matTooltip]="!isCurrentFile(namespace.name, file) ? null : 'Currently loaded file'"
+            class="file"
+            [ngClass]="{
+              selected: isSelectedNamespaceFile(namespace.name, file),
+              'current-file': isCurrentFile(namespace.name, file)
+            }"
           >
-            <div class="file-name" (click)="onSelectNamespaceFile(namespace.name, file)">
+            <div
+              [class.outdated]="namespace.getFileStatus(file).outdated"
+              [matTooltip]="getTooltip(namespace, file)"
+              (click)="onSelectNamespaceFile(namespace.name, file)"
+              class="file-name"
+            >
               <mat-icon>description</mat-icon>
               <span>
                 {{ file }}
@@ -43,7 +65,11 @@
               >
                 Delete
               </button>
-              <button [disabled]="isCurrentFile(namespace.name, file)" (click)="onLoadAspectModel(namespace, file)" mat-menu-item>
+              <button
+                [disabled]="isCurrentFile(namespace.name, file) || namespace.getFileStatus(file).outdated"
+                (click)="onLoadAspectModel(namespace, file)"
+                mat-menu-item
+              >
                 Load Aspect Model
               </button>
               <button mat-menu-item (click)="copyNamespace(namespace.name + ':' + file)">Copy to clipboard</button>

@@ -13,3 +13,4 @@
 
 export * from './lib/model-validator.service';
 export * from './lib/model-api.service';
+export * from './lib/migrator-api.service';

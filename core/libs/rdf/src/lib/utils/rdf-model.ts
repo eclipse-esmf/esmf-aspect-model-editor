@@ -47,6 +47,10 @@ export class RdfModel {
     this._aspectModelFileName = value.split(':')[2];
   }
 
+  get aspectUrn(): string {
+    return this.store.getSubjects(this.bamm.RdfType(), this.bamm.Aspect(), null)[0]?.value;
+  }
+
   constructor(public store: Store, public dataTypeService: DataTypeService, private prefixes: Prefixes) {
     this.resolveMetaModelVersion();
     this.bamm = new Bamm(this.metaModelVersion, this.metaModelIdentifier);

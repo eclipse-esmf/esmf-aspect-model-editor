@@ -57,7 +57,7 @@ export abstract class BaseModelService {
       const aspectModelFileName = aspect.aspectModelUrn.replace('urn:bamm:', '').replace('#', ':') + '.ttl';
 
       this.modelApiService
-        .getAllNamespaces()
+        .getNamespacesAppendWithFiles()
         .pipe(
           map((fileNames: string[]) => {
             if (fileNames.find(fileName => fileName === aspectModelFileName)) {

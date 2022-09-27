@@ -151,6 +151,9 @@ export class ElementModelService {
     }
 
     this.mxGraphService.removeCells(toRemove);
+    const source = MxGraphHelper.getModelElement<DefaultEntity>(edge.source);
+    source.extendedElement = null;
+    MxGraphHelper.updateLabel(edge.source, this.mxGraphService.graph, this.languageSettingsService);
     return true;
   }
 
@@ -190,6 +193,10 @@ export class ElementModelService {
 
   private handleEntityPropertyDecoupling(edge: mxgraph.mxCell, source: BaseMetaModelElement, target: BaseMetaModelElement) {
     if (source instanceof DefaultEntity && target instanceof DefaultProperty) {
+      if (target.extendedElement) {
+        this.mxGraphService.removeCells([edge.target]);
+      }
+
       this.entityValueService.onPropertyRemove(target, () => {
         this.removeConnectionBetweenElements(edge, source, target);
         this.mxGraphService.removeCells([edge]);

@@ -121,6 +121,10 @@ class EntityInheritanceConnector extends InheritanceConnector {
     parent: mxgraph.mxCell,
     child: mxgraph.mxCell
   ) {
+    if (parentMetaModel.extendedElement?.aspectModelUrn === childMetaModel.aspectModelUrn) {
+      return;
+    }
+
     const abstractProperties = childMetaModel.allProperties
       .map(({property}) => property)
       .filter(

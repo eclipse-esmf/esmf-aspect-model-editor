@@ -19,6 +19,7 @@
       (selectNamespace)="onSelectNamespace($event)"
       (deleteNamespace)="deleteNamespace($event)"
       (loadNamespaceFile)="confirmLoadingFile($event)"
+      (refresh)="initNamespaces()"
       class="namespaces"
     ></ame-sidebar-namespaces>
     <button class="close-namespace" data-cy="sidebar-close" mat-icon-button tabindex="-1" (click)="goToDefault()">

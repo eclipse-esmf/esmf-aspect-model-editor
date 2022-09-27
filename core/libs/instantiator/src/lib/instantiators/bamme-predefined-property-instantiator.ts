@@ -17,9 +17,9 @@ import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {BammCharacteristicInstantiator} from './bamm-characteristic-instantiator';
 
 const coordinates = {
-  x: {preferredName: 'X axis', description: 'The position along the X axis'},
-  y: {preferredName: 'Y axis', description: 'The position along the Y axis'},
-  z: {preferredName: 'Z axis', description: 'The position along the Z axis'},
+  x: {preferredName: 'X', description: 'The position along the X axis'},
+  y: {preferredName: 'Y', description: 'The position along the Y axis'},
+  z: {preferredName: 'Z', description: 'The position along the Z axis'},
 };
 
 export class PredefinedPropertyInstantiator {
@@ -50,7 +50,7 @@ export class PredefinedPropertyInstantiator {
     );
 
     timestampProperty.addPreferredName('en', 'Timestamp');
-    timestampProperty.addDescription('en', 'The point in time');
+    timestampProperty.addDescription('en', 'The specific point in time when the corresponding value was recorded.');
 
     return timestampProperty;
   }
@@ -65,7 +65,7 @@ export class PredefinedPropertyInstantiator {
     );
 
     valueProperty.addPreferredName('en', 'Value');
-    valueProperty.addDescription('en', 'Any value');
+    valueProperty.addDescription('en', 'The value that was recorded and is part of a time series.');
 
     return valueProperty;
   }
@@ -100,7 +100,7 @@ export class PredefinedPropertyInstantiator {
     );
 
     resourceProperty.addPreferredName('en', 'Resource');
-    resourceProperty.addDescription('en', 'The location of the resource');
+    resourceProperty.addDescription('en', 'Location of a resource');
 
     return resourceProperty;
   }
@@ -116,11 +116,12 @@ export class PredefinedPropertyInstantiator {
         this.metaModelElementInstantiator,
         this.metaModelElementInstantiator.rdfModel.dataTypeService
       ),
-      true
+      true,
+      'application/json'
     );
 
     mimeTypeProperty.addPreferredName('en', 'MIME Type');
-    mimeTypeProperty.addDescription('en', 'The MIME type of the resource');
+    mimeTypeProperty.addDescription('en', 'A MIME type as defined in RFC 2046');
 
     return mimeTypeProperty;
   }

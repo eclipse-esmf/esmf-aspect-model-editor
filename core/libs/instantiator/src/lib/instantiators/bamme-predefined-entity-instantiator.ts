@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultAbstractEntity} from '@ame/meta-model';
+import {DefaultAbstractEntity, DefaultEntity} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {PredefinedPropertyInstantiator} from './bamme-predefined-property-instantiator';
 
@@ -45,7 +45,7 @@ export class PredefinedEntityInstantiator {
     timeSeriesEntity.addPreferredName('en', 'Time Series Entity');
     timeSeriesEntity.addDescription(
       'en',
-      'The Time Series Entity is used with the Time Series Characteristic. It wraps the two Properties timestamp and value to represent a value at a point in time.'
+      'An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded.'
     );
 
     return timeSeriesEntity;
@@ -67,7 +67,7 @@ export class PredefinedEntityInstantiator {
     );
 
     point3dEntity.addPreferredName('en', 'Point 3D');
-    point3dEntity.addDescription('en', 'Describes a point in ℝ³.');
+    point3dEntity.addDescription('en', 'Defines a position in a three dimensional space.');
 
     return point3dEntity;
   }
@@ -75,7 +75,7 @@ export class PredefinedEntityInstantiator {
   private createFileResource() {
     const {propertyInstances} = new PredefinedPropertyInstantiator(this.metaModelElementInstantiator);
     const {bamm, bamme} = this.metaModelElementInstantiator;
-    const fileResourceEntity = new DefaultAbstractEntity(
+    const fileResourceEntity = new DefaultEntity(
       bamm.version,
       bamme.FileResource,
       'FileResource',
@@ -87,7 +87,7 @@ export class PredefinedEntityInstantiator {
     );
 
     fileResourceEntity.addPreferredName('en', 'File Resource');
-    fileResourceEntity.addDescription('en', 'Describes a resource with a relative or absolute location and a MIME type.');
+    fileResourceEntity.addDescription('en', 'A file in a specific format');
 
     return fileResourceEntity;
   }

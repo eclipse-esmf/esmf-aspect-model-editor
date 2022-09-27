@@ -13,8 +13,8 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {Observable} from 'rxjs';
-import {first, switchMap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {catchError, first, switchMap, tap} from 'rxjs/operators';
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
 import {BrowserService, ElectronTunnelService, LogService, NotificationsService} from '@ame/shared';
 import {EditorService} from '@ame/editor';
@@ -23,6 +23,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {StartLoadModalComponent} from './components/start-load-modal/start-load-modal.component';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {ThemeService} from '@ame/mx-graph';
+import {MigratorService} from '@ame/migrator';
 
 @Component({
   selector: 'ame-root',
@@ -43,7 +44,8 @@ export class AppComponent implements OnInit {
     private browserService: BrowserService,
     private electronTunnelService: ElectronTunnelService,
     private configurationService: ConfigurationService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private migratorService: MigratorService
   ) {
     this.domainModelToRdf.listenForStoreUpdates();
   }
@@ -54,32 +56,43 @@ export class AppComponent implements OnInit {
     this.setContextMenu();
     this.themeService.setCssVars(this.configurationService.getSettings()?.useSaturatedColors ? 'dark' : 'light');
 
-    if (!window.location.search.includes('e2e=true')) {
-      this.modelApiService
-        .loadLatest()
-        .pipe(first())
-        .subscribe({
-          next: aspectModel => {
-            if (aspectModel.length > 0) {
-              this.onLoadAutoSavedModel(aspectModel);
-            }
-          },
-          error: error => {
-            if (error.status === 400) {
-              this.loggerService.logError(`Error during load auto saved model (${JSON.stringify(error)})`);
-            } else if (error.status === 404) {
-              this.loggerService.logInfo('Default aspect was loaded');
-              this.loadNewAspectModel(
-                this.modelApiService.getDefaultAspectModel(),
-                () => {
-                  this.notificationsService.info('Default model was loaded', null, null, 5000);
-                },
-                true
-              );
-            }
-          },
-        });
+    if (window.location.search.includes('e2e=true')) {
+      return;
     }
+
+    this.migratorService
+      .startMigrating()
+      .pipe(tap(() => this.startApplication()))
+      .subscribe(() => this.editorService.refreshSidebarNamespaces());
+  }
+
+  private startApplication() {
+    return this.modelApiService
+      .loadLatest()
+      .pipe(
+        first(),
+        tap(aspectModel => {
+          if (aspectModel.length > 0) {
+            this.onLoadAutoSavedModel(aspectModel);
+          }
+        }),
+        catchError(error => {
+          if (error.status === 400) {
+            this.loggerService.logError(`Error during load auto saved model (${JSON.stringify(error)})`);
+          } else if (error.status === 404) {
+            this.loggerService.logInfo('Default aspect was loaded');
+            this.loadNewAspectModel(
+              this.modelApiService.getDefaultAspectModel(),
+              () => {
+                this.notificationsService.info('Default model was loaded', null, null, 5000);
+              },
+              true
+            );
+          }
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   private isGraphElement(target: HTMLElement) {

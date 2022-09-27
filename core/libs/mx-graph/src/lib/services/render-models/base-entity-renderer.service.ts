@@ -45,6 +45,10 @@ export class BaseEntityRendererService {
       return;
     }
 
+    if (this.isAlreadyConnected(cell)) {
+      return;
+    }
+
     if (!metaModelElement.extendedElement) {
       this.cleanUpAbstractConnections(cell);
       return;
@@ -72,6 +76,9 @@ export class BaseEntityRendererService {
 
       mxGraphSetupVisitor.visit(extendsElement, cell);
       predefinedCell = this.mxGraphService.resolveCellByModelElement(extendsElement);
+
+      // setting to null to create the properties after abstract properties
+      metaModelElement.extendedElement = null;
       this.shapeConnectorService.connectShapes(metaModelElement, extendsElement, cell, predefinedCell);
       return;
     }
@@ -103,7 +110,20 @@ export class BaseEntityRendererService {
   private isSameExtendedElement(cell: mxgraph.mxCell, child: mxgraph.mxCell) {
     const modelElement = MxGraphHelper.getModelElement<DefaultEntity>(cell);
     const childModel = MxGraphHelper.getModelElement<DefaultAbstractEntity>(child);
-    return modelElement.extendedElement?.aspectModelUrn === childModel.aspectModelUrn;
+    return childModel && modelElement.extendedElement && modelElement.extendedElement?.aspectModelUrn === childModel?.aspectModelUrn;
+  }
+
+  private isAlreadyConnected(cell: mxgraph.mxCell) {
+    const modelElement = MxGraphHelper.getModelElement<DefaultEntity>(cell);
+    const extendedElement = modelElement.extendedElement;
+
+    if (!extendedElement) {
+      return false;
+    }
+
+    return this.mxGraphService.graph
+      .getOutgoingEdges(cell)
+      .some(({target}) => MxGraphHelper.getModelElement(target).aspectModelUrn === extendedElement.aspectModelUrn);
   }
 
   private cleanUpAbstractConnections(cell: mxgraph.mxCell) {
