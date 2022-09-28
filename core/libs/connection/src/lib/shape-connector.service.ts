@@ -187,9 +187,9 @@ export class ShapeConnectorService {
         break;
       case ShapeConnectorUtil.isOperationPropertyConnection(parentModel, childModel) ||
         ShapeConnectorUtil.isPropertyOperationConnection(parentModel, childModel):
-        this.notificationsService.warning(
-          'For connecting input/output Properties use the icons below the Aspect or the edit the Operation properties via edit area'
-        );
+        this.notificationsService.warning({
+          title: 'For connecting input/output Properties use the icons below the Aspect or the edit the Operation properties via edit area',
+        });
         break;
       case ShapeConnectorUtil.isEitherCharacteristicLeftConnection(parentModel, childModel, modelInfo):
         connectionHandler = this.eitherCharacteristicLeftConnectionHandler;
@@ -211,11 +211,11 @@ export class ShapeConnectorService {
         break;
       case ShapeConnectorUtil.isCharacteristicEntityConnection(parentModel, childModel):
         if ((<DefaultCharacteristic>parentModel).isPredefined()) {
-          this.notificationsService.warning('The element can only be connected if the characteristic contains a class');
+          this.notificationsService.warning({title: 'The element can only be connected if the characteristic contains a class'});
           break;
         }
         if (parentModel instanceof DefaultTrait || parentModel instanceof DefaultEither) {
-          this.notificationsService.warning('The elements cannot be connected');
+          this.notificationsService.warning({title: 'The elements cannot be connected'});
           break;
         }
         connectionHandler = this.characteristicEntityConnectionHandler;
@@ -254,7 +254,7 @@ export class ShapeConnectorService {
         connectionHandler = this.enumerationEntityValueConnectionHandler;
         break;
       case ShapeConnectorUtil.isCharacteristicCollectionConnection(parentModel, childModel):
-        this.notificationsService.warning('Characteristics cannot be connected with collection');
+        this.notificationsService.warning({title: 'Characteristics cannot be connected with collection'});
         break;
       case ShapeConnectorUtil.isCharacteristicUnitConnection(parentModel, childModel):
         connectionHandler = this.characteristicUnitConnectionHandler;
@@ -266,7 +266,7 @@ export class ShapeConnectorService {
         connectionHandler = this.eventPropertyConnectionHandler;
         break;
       default:
-        this.notificationsService.warning('The elements cannot be connected');
+        this.notificationsService.warning({title: 'The elements cannot be connected'});
     }
 
     connectionHandler?.connect(parentModel, childModel, parentSource, childSource);

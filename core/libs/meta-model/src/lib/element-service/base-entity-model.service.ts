@@ -30,7 +30,11 @@ export class BaseEntityModelService {
     const resolvedCell = extendedElement && this.mxGraphService.resolveCellByModelElement(extendedElement);
 
     if (resolvedCell && MxGraphHelper.isEntityCycleInheritance(resolvedCell, metaModelElement, this.mxGraphService.graph)) {
-      this.notificationService.warning('Recursive elements', 'Can not connect elements due to circular connection', null, 5000);
+      this.notificationService.warning({
+        title: 'Recursive elements',
+        message: 'Can not connect elements due to circular connection',
+        timeout: 5000,
+      });
       return;
     }
 

@@ -46,7 +46,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         // Skip handling of 400 which must be done in the related component
         if (!this.isError400(error) && !this.isError422(error)) {
           const messageDetail = 'Please try again later. In case if it happens again, please contact us';
-          this.notificationsService.error(error.statusText, messageDetail);
+          this.notificationsService.error({title: error.statusText, message: messageDetail});
           this.loggerService.logError(
             `Oops! We're sorry! An error (${error.status} ${error.statusText}) happened we could not handle.  ${messageDetail}`
           );

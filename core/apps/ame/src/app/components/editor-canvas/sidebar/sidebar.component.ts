@@ -181,12 +181,11 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
               console.groupCollapsed('sidebar.component -> loadNamespaceFile', error);
               console.groupEnd();
 
-              this.notificationsService.error(
-                'Error when loading Aspect Model. Reverting to previous Aspect Model',
-                `${error}`,
-                null,
-                5000
-              );
+              this.notificationsService.error({
+                title: 'Error when loading Aspect Model. Reverting to previous Aspect Model',
+                message: `${error}`,
+                timeout: 5000,
+              });
               return throwError(() => error);
             }),
             finalize(() => this.loadingScreenService.close())
@@ -284,12 +283,12 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
       );
 
     if (duplicateElements.length) {
-      this.notificationsService.warning(
-        'Duplicate elements in Aspect Model',
-        `No identical elements are allowed to exist in a namespace and it can lead to problem when referencing. The following elements have been identified as duplicate: ${duplicateElements.join(
+      this.notificationsService.warning({
+        title: 'Duplicate elements in Aspect Model',
+        message: `No identical elements are allowed to exist in a namespace and it can lead to problem when referencing. The following elements have been identified as duplicate: ${duplicateElements.join(
           ', '
-        )}`
-      );
+        )}`,
+      });
     }
     this.selectedNamespaceElements = cachedFile
       ?.getAllElements<BaseMetaModelElement>()

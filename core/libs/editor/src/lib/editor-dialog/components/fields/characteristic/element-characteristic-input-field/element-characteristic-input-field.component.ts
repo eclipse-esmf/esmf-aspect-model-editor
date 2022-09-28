@@ -130,7 +130,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
     const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${characteristicName}`;
 
     if (this.metaModelElement.aspectModelUrn === urn || this.parentForm.get('name').value === characteristicName) {
-      this.notificationsService.error('Element characteristic cannot link itself.');
+      this.notificationsService.error({title: 'Element characteristic cannot link itself.'});
       this.elementCharacteristicDisplayControl.setValue('');
       return;
     }

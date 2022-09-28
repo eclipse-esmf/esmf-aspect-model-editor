@@ -84,7 +84,7 @@ export class AppComponent implements OnInit {
             this.loadNewAspectModel(
               this.modelApiService.getDefaultAspectModel(),
               () => {
-                this.notificationsService.info('Default model was loaded', null, null, 5000);
+                this.notificationsService.info({title: 'Default model was loaded', timeout: 5000});
               },
               true
             );

@@ -32,7 +32,6 @@ import {
   delayWhen,
   first,
   forkJoin,
-  map,
   mergeMap,
   Observable,
   of,
@@ -229,21 +228,17 @@ export class EditorService {
   loadNewAspectModel(rdfAspectModel: string, isDefault?: boolean) {
     this.refreshSidebar();
     this.removeLastSavedRdf();
-    this.notificationsService.info('Loading model', null, null, 5000);
+    this.notificationsService.info({title: 'Loading model', timeout: 2000});
+
     return this.rdfService.loadModel(rdfAspectModel).pipe(
-      switchMap(rdfModel =>
-        this.validateCurrentModel(rdfModel).pipe(
-          tap(() => {
-            this.loadModel$.next(null);
-            localStorage.removeItem(ValidateStatus.validating);
-            if (!isDefault) {
-              this.notificationsService.info('Aspect Model loaded', null, null, 5000);
-            }
-          }),
-          switchMap(validationResOfLoadedRdfModel => this.loadExternalModels(rdfModel).pipe(map(() => validationResOfLoadedRdfModel))),
-          switchMap(validationResOfLoadedRdfModel => this.loadCurrentModel(rdfModel, rdfAspectModel, validationResOfLoadedRdfModel))
-        )
-      )
+      switchMap(loadedRdfModel =>
+        this.loadExternalModels(loadedRdfModel).pipe(switchMap(() => this.loadCurrentModel(loadedRdfModel, rdfAspectModel)))
+      ),
+      tap(() => {
+        if (!isDefault) {
+          this.notificationsService.info({title: 'Aspect Model loaded', timeout: 3000});
+        }
+      })
     );
   }
 
@@ -259,30 +254,9 @@ export class EditorService {
     return this.instantiatorService.instantiateFile(extRdfModel, findCacheFile, fileName);
   }
 
-  private validateCurrentModel(rdfModel: RdfModel) {
-    return this.getIdentifiedModelValidator(rdfModel).pipe(
-      tap((validationResults: Array<any>) => {
-        if (this.modelValidatorService.checkForCriticalErrors(validationResults, rdfModel)) {
-          throwError(() => null);
-        }
-      }),
-      catchError(error => {
-        if (error.status === 0) {
-          return of(this.notificationsService.error('Aspect Model Editor Service is Down', null, null, 10000));
-        }
-        return of(
-          this.notificationsService.error(
-            'The model is invalid. Reverting to previous Aspect Model',
-            'The introduced BAMM model is invalid'
-          )
-        );
-      })
-    );
-  }
-
-  public loadExternalModels(rdfModel?: RdfModel) {
+  public loadExternalModels(loadedRdfModel?: RdfModel) {
     this.rdfService.externalRdfModels = [];
-    return this.modelApiService.getAllNamespacesFilesContent(rdfModel).pipe(
+    return this.modelApiService.getAllNamespacesFilesContent(loadedRdfModel).pipe(
       mergeMap((fileContentModels: Array<FileContentModel>) => {
         if (fileContentModels.length) {
           return forkJoin(fileContentModels.map(fileContent => this.rdfService.loadExternalReferenceModelIntoStore(fileContent)));
@@ -317,8 +291,8 @@ export class EditorService {
     return this.modelApiService.getJsonSchema(serializedModel);
   }
 
-  private loadCurrentModel(rdfModel: RdfModel, rdfAspectModel: string, validationResOfLoadedRdfModel: any) {
-    return this.modelService.loadRdfModel(rdfModel, rdfAspectModel, validationResOfLoadedRdfModel).pipe(
+  private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string) {
+    return this.modelService.loadRdfModel(loadedRdfModel, rdfAspectModel).pipe(
       first(),
       tap((aspect: Aspect) => {
         this.removeOldGraph();
@@ -327,15 +301,10 @@ export class EditorService {
       }),
       catchError(error => {
         this.logService.logError('Error on loading aspect model', error);
-        return of(this.notificationsService.error('Error on loading the aspect model', error));
+        this.notificationsService.error({title: 'Error on loading the aspect model', message: error});
+        return of({});
       })
     );
-  }
-
-  // This validation is needed so that old models can be migrated to the new OMP format.
-  private getIdentifiedModelValidator(rdfModel: RdfModel) {
-    const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.getValidationErrors(serializedModel);
   }
 
   private removeOldGraph() {
@@ -446,7 +415,11 @@ export class EditorService {
         this.mxGraphService.formatCell(this.mxGraphService.resolveCellByModelElement(element));
         this.mxGraphService.formatShapes();
       } else {
-        this.notificationsService.warning('Element is already used', null, `editor/select/${aspectModelUrn}`, 2000);
+        this.notificationsService.warning({
+          title: 'Element is already used',
+          link: `editor/select/${aspectModelUrn}`,
+          timeout: 2000,
+        });
       }
     }
   }
@@ -515,7 +488,7 @@ export class EditorService {
     return selectedElements.filter(cell => {
       if (cell.style === 'aspect') {
         // Prevent deleting the 'Aspect' element and throw warning message
-        this.notificationsService.warning('Cannot delete Aspect');
+        this.notificationsService.warning({title: 'Cannot delete Aspect'});
       }
 
       return (
@@ -643,12 +616,11 @@ export class EditorService {
           tap(error => {
             if (!Object.values(SaveValidateErrorsCodes).includes(error?.type)) {
               this.logService.logError(`Error occurred while validating the current model (${error})`);
-              this.notificationsService.error(
-                'Validation completed with errors',
-                'Unfortunately the validation could not be completed. Please retry or contact support',
-                null,
-                5000
-              );
+              this.notificationsService.error({
+                title: 'Validation completed with errors',
+                message: 'Unfortunately the validation could not be completed. Please retry or contact support',
+                timeout: 5000,
+              });
             }
             localStorage.removeItem(ValidateStatus.validating);
           }),
@@ -713,10 +685,10 @@ export class EditorService {
 
         if (isNamespaceInWorkspace) {
           this.saveModel().subscribe();
-          this.notificationsService.info('Aspect model was saved in workspace');
+          this.notificationsService.info({title: 'Aspect model was saved in workspace'});
           this.logService.logInfo('Aspect model was saved in workspace');
         } else {
-          this.notificationsService.info('Aspect model was saved in localStorage');
+          this.notificationsService.info({title: 'Aspect model was saved in localStorage'});
           this.logService.logInfo('Aspect model was saved in localStorage');
         }
 
@@ -738,7 +710,7 @@ export class EditorService {
   saveModel() {
     return this.modelService.saveModel().pipe(
       tap(() => {
-        this.notificationsService.info('Aspect model was saved to the local folder');
+        this.notificationsService.info({title: 'Aspect model was saved to the local folder'});
         this.logService.logInfo('Aspect model was saved to the local folder');
         this.refreshSaveModel();
         this.refreshSidebarNamespaces();
@@ -749,7 +721,8 @@ export class EditorService {
         console.groupEnd();
 
         this.logService.logError('Error on saving aspect model', error);
-        return of(this.notificationsService.error('Error on saving the aspect model'));
+        this.notificationsService.error({title: 'Error on saving the aspect model'});
+        return of({});
       })
     );
   }
@@ -760,7 +733,7 @@ export class EditorService {
 
   openDocumentation(rdfModel: RdfModel) {
     if (!rdfModel) {
-      this.notificationsService.error('Aspect model could not be found');
+      this.notificationsService.error({title: 'Aspect model could not be found'});
       return null;
     }
     const rdfAspectModel = this.rdfService.serializeModel(rdfModel);
@@ -769,7 +742,7 @@ export class EditorService {
       .pipe(
         switchMap(errors =>
           errors.length > 0
-            ? of(this.notificationsService.error('Could not load Aspect model, please make sure the model is valid'))
+            ? of(this.notificationsService.error({title: 'Could not load Aspect model, please make sure the model is valid'}))
             : this.modelApiService.openDocumentation(rdfModel, rdfAspectModel)
         )
       );
@@ -794,6 +767,6 @@ export class EditorService {
 
   private saveCompleteError(error) {
     this.logService.logError(`Error occurred while saving the current model (${error})`);
-    this.notificationsService.error('Saving completed with errors');
+    this.notificationsService.error({title: 'Saving completed with errors'});
   }
 }

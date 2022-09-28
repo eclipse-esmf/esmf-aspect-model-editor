@@ -60,17 +60,14 @@ export class ModelService {
     };
   }
 
-  loadRdfModel(rdfModel: RdfModel, rdfAspectModel: string, errors: Array<any>): Observable<Aspect> {
+  loadRdfModel(loadedRdfModel: RdfModel, rdfAspectModel: string): Observable<Aspect> {
     if (this.currentCachedFile) {
       this.currentCachedFile.reset();
     }
-    const bammVersion: string = rdfModel.BAMM().version;
+
+    const bammVersion: string = loadedRdfModel.BAMM().version;
 
     try {
-      if (bammVersion < this.config.minBammVersion) {
-        return throwError(() => `BAMM version ${bammVersion} is too small to migrate.`);
-      }
-
       if (bammVersion > this.config.currentBammVersion) {
         return throwError(
           () => `The provided Aspect Model is using BAMM version ${bammVersion} which is too high.
@@ -78,41 +75,22 @@ export class ModelService {
         );
       }
 
-      let rdfModelObservable = of(rdfModel);
-      if (bammVersion < this.config.currentBammVersion && bammVersion >= this.config.minBammVersion) {
-        rdfModelObservable = this.migrateAspectModel(bammVersion, rdfAspectModel, errors);
-      }
+      const rdfModel$ =
+        bammVersion < this.config.currentBammVersion ? this.migrateAspectModel(bammVersion, rdfAspectModel) : of(loadedRdfModel);
 
-      return rdfModelObservable.pipe(
-        tap(checkedRdfModel => {
-          this.rdfModel = checkedRdfModel;
-
-          const currentNamespace = this.rdfModel.getAspectModelUrn();
-          const currentFileName = 'currentFileName';
-
-          this.namespaceCacheService.removeAll();
-
-          const currentCachedFile = this.namespaceCacheService.addFile(currentNamespace, currentFileName);
-          this.namespaceCacheService.setCurrentCachedFile(currentCachedFile);
-        }),
-        map(checkedRdfModel => {
-          try {
-            return this.instantiatorService.instantiateFile(checkedRdfModel, this.currentCachedFile, 'currentFileName').aspect;
-          } catch (e) {
-            console.groupCollapsed('model.service -> loadRDFmodel', e);
-            console.groupEnd();
-            throw new Error('Instantiator cannot load model!');
-          }
-        }),
+      return rdfModel$.pipe(
+        tap(rdfModel => (this.rdfModel = rdfModel)),
+        tap(() => this.setCurrentCacheFile()),
+        map(() => this.instantiateFile()),
         tap(() => this.processAnonymousElements()),
         map(aspect => (this.aspect = aspect)),
-        catchError(err =>
+        catchError(error =>
           throwError(() => {
             // TODO add the real problem maybe ...
-             console.groupCollapsed('model.service -> loadRDFmodel', err);
-             console.groupEnd();
-            this.logService.logError(`Error while loading the model. ${JSON.stringify(err.message)}.`);
-            return err.message;
+            console.groupCollapsed('model.service -> loadRDFmodel', error);
+            console.groupEnd();
+            this.logService.logError(`Error while loading the model. ${JSON.stringify(error.message)}.`);
+            return error.message;
           })
         )
       );
@@ -124,26 +102,39 @@ export class ModelService {
     }
   }
 
-  private migrateAspectModel(bammVersion: string, rdfAspectModel: string, errors: Array<any>): Observable<RdfModel> {
-    this.notificationsService.info(
-      `Migrating from BAMM version ${bammVersion} to BAMM version ${this.config.currentBammVersion}`,
-      null,
-      null,
-      5000
-    );
+  private migrateAspectModel(bammVersion: string, rdfAspectModel: string): Observable<RdfModel> {
+    this.notificationsService.info({
+      title: `Migrating from BAMM version ${bammVersion} to BAMM version ${this.config.currentBammVersion}`,
+      timeout: 5000,
+    });
 
-    return this.modelApiService.migrateAspectModel(rdfAspectModel, errors).pipe(
+    return this.modelApiService.migrateAspectModel(rdfAspectModel).pipe(
       first(),
       tap(() =>
-        this.notificationsService.info(
-          `Successfully migrated from BAMM Version ${bammVersion} to BAMM version ${this.config.currentBammVersion} BAMM version`,
-          null,
-          null,
-          5000
-        )
+        this.notificationsService.info({
+          title: `Successfully migrated from BAMM Version ${bammVersion} to BAMM version ${this.config.currentBammVersion} BAMM version`,
+          timeout: 5000,
+        })
       ),
       switchMap(migratedAspectModel => this.rdfService.loadModel(migratedAspectModel).pipe(first()))
     );
+  }
+
+  private setCurrentCacheFile() {
+    this.namespaceCacheService.removeAll();
+
+    const currentCachedFile = this.namespaceCacheService.addFile(this.rdfModel.getAspectModelUrn(), 'currentFileName');
+    this.namespaceCacheService.setCurrentCachedFile(currentCachedFile);
+  }
+
+  private instantiateFile() {
+    try {
+      return this.instantiatorService.instantiateFile(this.rdfModel, this.currentCachedFile, 'currentFileName').aspect;
+    } catch (error) {
+      console.groupCollapsed('model.service -> loadRDFmodel', error);
+      console.groupEnd();
+      throw new Error('Instantiator cannot load model!');
+    }
   }
 
   saveLatestModel() {
@@ -187,22 +178,22 @@ export class ModelService {
           // else resolve the naming
           this.setUniqueElementName(modelElementNamePair.element, modelElementNamePair.name);
           this.currentCachedFile.resolveCachedElement(modelElementNamePair.element);
-          this.notificationsService.info(
-            'Renamed anonymous element',
-            `The anonymous element ${modelElementNamePair.name} was renamed to ${modelElementNamePair.element.name}`,
-            `editor/select/${modelElementNamePair.element.aspectModelUrn}`,
-            2000
-          );
+          this.notificationsService.info({
+            title: 'Renamed anonymous element',
+            message: `The anonymous element ${modelElementNamePair.name} was renamed to ${modelElementNamePair.element.name}`,
+            link: `editor/select/${modelElementNamePair.element.aspectModelUrn}`,
+            timeout: 2000,
+          });
         }
       } else {
         this.setUniqueElementName(modelElementNamePair.element);
         this.currentCachedFile.resolveCachedElement(modelElementNamePair.element);
-        this.notificationsService.info(
-          'Renamed anonymous element',
-          `The anonymous element was named to ${modelElementNamePair.element.name}`,
-          `editor/select/${modelElementNamePair.element.aspectModelUrn}`,
-          2000
-        );
+        this.notificationsService.info({
+          title: 'Renamed anonymous element',
+          message: `The anonymous element was named to ${modelElementNamePair.element.name}`,
+          link: `editor/select/${modelElementNamePair.element.aspectModelUrn}`,
+          timeout: 2000,
+        });
       }
     });
     this.currentCachedFile.clearAnonymousElements();

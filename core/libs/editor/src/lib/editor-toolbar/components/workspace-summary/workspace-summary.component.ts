@@ -141,9 +141,9 @@ export class WorkspaceSummaryComponent implements AfterViewInit {
 
     try {
       await navigator.clipboard.writeText(textToClipboard);
-      this.notificationService.success('Summary copied to clipboard');
+      this.notificationService.success({title: 'Summary copied to clipboard'});
     } catch {
-      this.notificationService.success('Error on copying summary to clipboard');
+      this.notificationService.success({title: 'Error on copying summary to clipboard'});
     }
   }
 }

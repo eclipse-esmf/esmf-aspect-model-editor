@@ -50,12 +50,12 @@ export class ModelValidatorService {
    */
   notifyCorrectableErrors(validationErrors: Array<SemanticError | SyntacticError | ProcessingError>): void {
     if (!validationErrors.length) {
-      this.notificationsService.info('Validation completed successfully', 'The model is valid');
+      this.notificationsService.info({title: 'Validation completed successfully', message: 'The model is valid'});
       this.logService.logInfo('Validated completed successfully');
       return;
     }
 
-    this.notificationsService.warning('Validation completed with errors', 'The model is not valid');
+    this.notificationsService.warning({title: 'Validation completed with errors', message: 'The model is not valid'});
     this.logService.logWarn('Validated completed with errors');
 
     validationErrors.forEach((error: any) => {
@@ -70,20 +70,19 @@ export class ModelValidatorService {
   }
 
   private notifySyntacticError(error: SyntacticError) {
-    this.notificationsService.validationError(error.originalExceptionMessage, null, null, 5000);
+    this.notificationsService.validationError({title: error.originalExceptionMessage, timeout: 5000});
   }
 
   private notifyProcessingError(error: ProcessingError) {
-    this.notificationsService.validationError(error.message, null, null, 5000);
+    this.notificationsService.validationError({title: error.message, timeout: 5000});
   }
 
   private notifySemanticError(error: SemanticError) {
-    this.notificationsService.validationError(
-      `Error on element ${error.focusNode ? error.focusNode.split('#')[1] + ': ' + error.resultMessage : error.resultMessage}`,
-      null,
-      error.focusNode,
-      5000
-    );
+    this.notificationsService.validationError({
+      title: `Error on element ${error.focusNode ? error.focusNode.split('#')[1] + ': ' + error.resultMessage : error.resultMessage}`,
+      link: error.focusNode,
+      timeout: 5000,
+    });
     this.mxGraphService.showValidationErrorOnShape(error.focusNode);
   }
 }

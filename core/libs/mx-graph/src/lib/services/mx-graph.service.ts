@@ -228,7 +228,7 @@ export class MxGraphService {
    */
   navigateToCell(cell: mxgraph.mxCell, center: boolean): mxgraph.mxCell {
     if (!cell) {
-      this.notificationsService.error('The shape you are looking for was not found');
+      this.notificationsService.error({title: 'The shape you are looking for was not found'});
       return null;
     }
 

@@ -60,6 +60,6 @@ export class AspectModelService extends BaseModelService {
 
   delete() {
     // Aspect model cannot be deleted
-    this.notificationsService.info('The Aspect can`t be deleted');
+    this.notificationsService.info({title: 'The Aspect can`t be deleted'});
   }
 }

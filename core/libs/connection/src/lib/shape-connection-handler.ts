@@ -26,6 +26,8 @@ import {
   Base,
   BaseMetaModelElement,
   Characteristic,
+  DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -42,21 +44,19 @@ import {
   DefaultTrait,
   DefaultUnit,
   Entity,
+  Event,
   ModelElementNamingService,
   Operation,
+  OverWrittenProperty,
   Property,
   StructuredValue,
-  Event,
-  DefaultAbstractEntity,
-  DefaultAbstractProperty,
-  OverWrittenProperty,
 } from '@ame/meta-model';
 import {EntityValueService} from '@ame/editor';
 import {ExpandedModelShape, NotificationsService} from '@ame/shared';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import mxCell = mxgraph.mxCell;
 import {LanguageSettingsService} from '@ame/settings-dialog';
+import mxCell = mxgraph.mxCell;
 
 export interface ShapeSingleConnector<T> {
   connect(metaModel: T, source: mxCell, modelInfo?: ModelInfo): void;
@@ -80,7 +80,7 @@ abstract class InheritanceConnector {
 
   public connect(parentMetaModel: BaseMetaModelElement, childMetaModel: BaseMetaModelElement, parentCell: mxCell, childCell: mxCell) {
     if (typeof parentMetaModel['isPredefined'] === 'function' && parentMetaModel['isPredefined']()) {
-      this.notificationsService.warning("A predefined element can't have a child");
+      this.notificationsService.warning({title: "A predefined element can't have a child"});
       return;
     }
 
@@ -142,7 +142,13 @@ class EntityInheritanceConnector extends InheritanceConnector {
       return property;
     });
 
-    parentMetaModel.properties = [...parentMetaModel.properties, ...newProperties.map(property => ({property, keys: {}}))];
+    parentMetaModel.properties = [
+      ...parentMetaModel.properties,
+      ...newProperties.map(property => ({
+        property,
+        keys: {},
+      })),
+    ];
 
     for (let i = 0; i < newProperties.length; i++) {
       const propertyCell = this.mxGraphService.renderModelElement(newProperties[i]);
@@ -233,7 +239,7 @@ export class OperationConnectionHandler implements ShapeSingleConnector<Operatio
     const overWrittenProperty = {property: defaultProperty, keys: {}};
     if (ModelInfo.IS_OPERATION_OUTPUT === modelInfo) {
       if (operation.output) {
-        this.notificationsService.warning('Operation output is already defined');
+        this.notificationsService.warning({title: 'Operation output is already defined'});
         return;
       }
       operation.output = overWrittenProperty;
@@ -310,13 +316,13 @@ export class EitherConnectionHandler implements ShapeSingleConnector<DefaultEith
 
     if (ModelInfo.IS_EITHER_LEFT === modelInfo) {
       if (either.left) {
-        this.notificationsService.warning('Either left is already defined');
+        this.notificationsService.warning({title: 'Either left is already defined'});
         return;
       }
       either.left = defaultCharacteristic;
     } else if (ModelInfo.IS_EITHER_RIGHT === modelInfo) {
       if (either.right) {
-        this.notificationsService.warning('Either right is already defined');
+        this.notificationsService.warning({title: 'Either right is already defined'});
         return;
       }
       either.right = defaultCharacteristic;
@@ -932,20 +938,22 @@ export class PropertyPropertyConnectionHandler
 
   public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultProperty, parentCell: mxCell, childCell: mxCell) {
     if (parentMetaModel.isPredefined()) {
-      this.notificationsService.warning("A predefined element can't have a child");
+      this.notificationsService.warning({title: "A predefined element can't have a child"});
       return;
     }
 
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
-      this.notificationService.warning('Recursive elements', 'Can not connect elements due to circular connection', null, 5000);
-    } else {
+      this.notificationService.warning({
+        title: 'Recursive elements',
+        message: 'Can not connect elements due to circular connection',
+        timeout: 5000,
+      });    } else {
       if (childMetaModel.extendedElement) {
-        this.notificationService.warning(
-          'Illegal operation',
-          'Can not extend a Property which already extends another element',
-          null,
-          5000
-        );
+        this.notificationService.warning({
+          title: 'Illegal operation',
+          message: 'Can not extend a Property which already extends another element',
+          timeout: 5000,
+        });
         return;
       }
       super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
@@ -971,8 +979,11 @@ export class PropertyAbstractPropertyConnectionHandler
 
   public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultAbstractProperty, parentCell: mxCell, childCell: mxCell) {
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
-      this.notificationService.warning('Recursive elements', 'Can not connect elements due to circular connection', null, 5000);
-    } else {
+      this.notificationService.warning({
+        title: 'Recursive elements',
+        message: 'Can not connect elements due to circular connection',
+        timeout: 5000,
+      });    } else {
       super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
     }
   }
@@ -996,8 +1007,11 @@ export class AbstractPropertyAbstractPropertyConnectionHandler
 
   public connect(parentMetaModel: DefaultAbstractProperty, childMetaModel: DefaultAbstractProperty, parentCell: mxCell, childCell: mxCell) {
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
-      this.notificationService.warning('Recursive elements', 'Can not connect elements due to circular connection', null, 5000);
-    } else {
+      this.notificationService.warning({
+        title: 'Recursive elements',
+        message: 'Can not connect elements due to circular connection',
+        timeout: 5000,
+      });    } else {
       super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
     }
   }
@@ -1099,8 +1113,11 @@ export class EntityEntityConnectionHandler extends EntityInheritanceConnector im
 
   public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultEntity, parentCell: mxCell, childCell: mxCell) {
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
-      this.notificationService.warning('Recursive elements', 'Can not connect elements due to circular connection', null, 5000);
-      return;
+      this.notificationService.warning({
+        title: 'Recursive elements',
+        message: 'Can not connect elements due to circular connection',
+        timeout: 5000,
+      });      return;
     }
 
     super.connectWithAbstract(parentMetaModel, childMetaModel, parentCell, childCell);
@@ -1126,8 +1143,11 @@ export class AbstractEntityAbstractEntityConnectionHandler
 
   public connect(parentMetaModel: DefaultAbstractEntity, childMetaModel: DefaultAbstractEntity, parentCell: mxCell, childCell: mxCell) {
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
-      this.notificationService.warning('Recursive elements', 'Can not connect elements due to circular connection', null, 5000);
-    } else {
+      this.notificationService.warning({
+        title: 'Recursive elements',
+        message: 'Can not connect elements due to circular connection',
+        timeout: 5000,
+      });    } else {
       super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
     }
   }
@@ -1160,8 +1180,11 @@ export class EntityAbstractEntityConnectionHandler
 
   public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultAbstractEntity, parent: mxCell, child: mxCell) {
     if (MxGraphHelper.isEntityCycleInheritance(child, parentMetaModel, this.mxGraphService.graph)) {
-      this.notificationService.warning('Recursive elements', 'Can not connect elements due to circular connection', null, 5000);
-      return;
+      this.notificationService.warning({
+        title: 'Recursive elements',
+        message: 'Can not connect elements due to circular connection',
+        timeout: 5000,
+      });      return;
     }
 
     super.connectWithAbstract(parentMetaModel, childMetaModel, parent, child);

@@ -124,7 +124,7 @@ export class ZipUploaderComponent implements OnInit {
         this.hasFilesToReplace = false;
         this.namespacesToReplace = null;
         this.replacingFiles = false;
-        this.notificationsService.success(`Package ${this.data.name} was imported`);
+        this.notificationsService.success({title: `Package ${this.data.name} was imported`});
         this.summaryComponent.hasFilesToOverwrite = false;
         toOverwrite.forEach(file => this.editorService.addAspectModelFileIntoStore(file).subscribe());
       });

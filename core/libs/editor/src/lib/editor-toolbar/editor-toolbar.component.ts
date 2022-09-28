@@ -151,12 +151,11 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
           return this.editorService.loadNewAspectModel(rdfAspectModel).pipe(
             first(),
             catchError(error => {
-              this.notificationsService.error(
-                'Error when loading Aspect Model. Reverting to previous Aspect Model',
-                `${error}`,
-                null,
-                5000
-              );
+              this.notificationsService.error({
+                title: 'Error when loading Aspect Model. Reverting to previous Aspect Model',
+                message: `${error}`,
+                timeout: 5000,
+              });
               return of(null);
             }),
             finalize(() => {
@@ -244,9 +243,9 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
         .saveModel(reader.result.toString())
         .pipe(first())
         .subscribe({
-          error: () => this.notificationsService.error('Error adding file to namespaces'),
+          error: () => this.notificationsService.error({title: 'Error adding file to namespaces'}),
           complete: () => {
-            this.notificationsService.success('Successfully added file to namespaces');
+            this.notificationsService.success({title: 'Successfully added file to namespaces'});
             this.editorService.refreshSidebarNamespaces();
           },
         });
@@ -306,7 +305,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
           );
         },
         error: () => {
-          this.notificationsService.error('Failed to generate JSON Sample', 'Invalid Aspect Model');
+          this.notificationsService.error({title: 'Failed to generate JSON Sample', message: 'Invalid Aspect Model'});
           this.loadingScreenService.close();
         },
       });
@@ -336,7 +335,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
           );
         },
         error: () => {
-          this.notificationsService.error('Failed to generate JSON Schema', 'Invalid Aspect Model');
+          this.notificationsService.error({title: 'Failed to generate JSON Schema', message: 'Invalid Aspect Model'});
           this.loadingScreenService.close();
         },
       });
@@ -364,7 +363,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     const selectedCells = [...this.mxGraphAttributeService.graph.selectionModel.cells];
 
     if (selectedCells.length !== 2) {
-      this.notificationsService.error('Please select only two elements to connect them');
+      this.notificationsService.error({title: 'Please select only two elements to connect them'});
       return;
     }
 
@@ -378,7 +377,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
 
     if (modelElements[0]?.isExternalReference()) {
-      this.notificationsService.error('Cannot connect external reference');
+      this.notificationsService.error({title: 'Cannot connect external reference'});
       return;
     }
 
@@ -408,22 +407,21 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
           this.loadingScreenService.close();
           this.logService.logInfo('Validated successfully');
           if (correctableErrors?.length === 0) {
-            this.notificationsService.info('Validation completed successfully', null, null, 5000);
+            this.notificationsService.info({title: 'Validation completed successfully', timeout: 5000});
             callback?.call(this);
           }
         },
         error: error => {
           this.loadingScreenService.close();
           if (error?.type === SaveValidateErrorsCodes.validationInProgress) {
-            this.notificationsService.error('Validation in progress');
+            this.notificationsService.error({title: 'Validation in progress'});
             return;
           }
-          this.notificationsService.error(
-            'Validation completed with errors',
-            'Unfortunately the validation could not be completed. Please retry or contact support',
-            null,
-            5000
-          );
+          this.notificationsService.error({
+            title: 'Validation completed with errors',
+            message: 'Unfortunately the validation could not be completed. Please retry or contact support',
+            timeout: 5000,
+          });
           this.logService.logError(`Error occurred while validating the current model (${error})`);
         },
       });

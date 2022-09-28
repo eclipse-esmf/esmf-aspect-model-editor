@@ -29,6 +29,8 @@ import {
 import {ModelValidatorService} from './model-validator.service';
 import {RdfModel} from '@ame/rdf/utils';
 
+type ValidationError = SemanticError | SyntacticError | ProcessingError;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -206,8 +208,7 @@ export class ModelApiService {
       );
   }
 
-  migrateAspectModel(rdfContent: string, errors: Array<SemanticError | SyntacticError | ProcessingError>): Observable<string> {
-    this.modelValidatorService.notifyCorrectableErrors(errors);
+  migrateAspectModel(rdfContent: string): Observable<string> {
     return this.http
       .post(`${this.serviceUrl}${this.api.models}/migrate`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
@@ -219,13 +220,13 @@ export class ModelApiService {
   /*
    *This method will get all the errors and notify the user for those which are correctable.
    */
-  validate(rdfContent: string): Observable<Array<SemanticError | SyntacticError | ProcessingError>> {
+  validate(rdfContent: string): Observable<Array<ValidationError>> {
     return this.getValidationErrors(rdfContent).pipe(tap(errors => this.modelValidatorService.notifyCorrectableErrors(errors)));
   }
 
-  getValidationErrors(rdfContent: string): Observable<Array<SemanticError | SyntacticError | ProcessingError>> {
+  getValidationErrors(rdfContent: string): Observable<Array<ValidationError>> {
     return this.http
-      .post<Array<SemanticError | SyntacticError | ProcessingError>>(`${this.serviceUrl}${this.api.models}/validate`, rdfContent, {
+      .post<Array<ValidationError>>(`${this.serviceUrl}${this.api.models}/validate`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
       })
       .pipe(

@@ -1,6 +1,6 @@
 import {NamespacesCacheService} from '@ame/cache';
 import {MetaModelElementInstantiator, PredefinedEntityInstantiator} from '@ame/instantiator';
-import {DefaultEntity, DefaultAbstractEntity} from '@ame/meta-model';
+import {DefaultAbstractEntity, DefaultEntity} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {NotificationsService, SearchService} from '@ame/shared';
@@ -151,7 +151,7 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
     const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${entityName}`;
 
     if (this.metaModelElement.aspectModelUrn === urn || this.parentForm.get('name').value === entityName) {
-      this.notificationsService.error('Element left cannot link itself');
+      this.notificationsService.error({title: 'Element left cannot link itself'});
       this.extendsValueControl.setValue('');
       return;
     }
