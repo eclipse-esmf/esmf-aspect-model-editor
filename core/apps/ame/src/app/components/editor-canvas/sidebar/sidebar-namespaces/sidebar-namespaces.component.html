@@ -46,7 +46,7 @@
             }"
           >
             <div
-              [class.outdated]="namespace.getFileStatus(file).outdated"
+              [class.outdated]="namespace.getFileStatus(file)?.outdated"
               [matTooltip]="getTooltip(namespace, file)"
               (click)="onSelectNamespaceFile(namespace.name, file)"
               class="file-name"

@@ -200,6 +200,12 @@ class PropertyInheritanceConnector extends InheritanceConnector {
   isInheritedElement(element: BaseMetaModelElement): boolean {
     return element instanceof DefaultProperty || element instanceof DefaultAbstractProperty;
   }
+
+  protected hasEntityParent(cell: mxgraph.mxCell) {
+    return !this.mxGraphService
+      .resolveParents(cell)
+      .some(cell => [DefaultAbstractEntity, DefaultEntity].some(c => MxGraphHelper.getModelElement(cell) instanceof c));
+  }
 }
 
 // ==========================================================================================
@@ -393,13 +399,14 @@ export class AbstractEntityConnectionHandler implements ShapeSingleConnector<Ent
       newProperty.aspectModelUrn = `${namespace}#[${name}]`;
       newProperty.metaModelVersion = abstractProperty.metaModelVersion;
       const newPropertyCell = this.mxGraphService.renderModelElement(newProperty);
-      this.propertyAbstractPropertyConnector.connect(newProperty, abstractProperty, newPropertyCell, abstractPropertyCell);
 
       for (const entity of entities) {
         const entityModel: DefaultEntity = MxGraphHelper.getModelElement(entity);
         entityModel.properties.push({property: newProperty, keys: {}});
         this.entityPropertyConnector.connect(entityModel, newProperty, entity, newPropertyCell);
       }
+
+      this.propertyAbstractPropertyConnector.connect(newProperty, abstractProperty, newPropertyCell, abstractPropertyCell);
     }
 
     this.mxGraphService.formatShapes();
@@ -942,22 +949,33 @@ export class PropertyPropertyConnectionHandler
       return;
     }
 
+    if (this.hasEntityParent(parentCell)) {
+      this.notificationsService.warning({
+        title: 'No entity as parent present',
+        message: 'One of the Properties/Abstract Properties need to have as parent an Entity/Abstract Entity',
+      });
+      return;
+    }
+
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({
         title: 'Recursive elements',
         message: 'Can not connect elements due to circular connection',
         timeout: 5000,
-      });    } else {
-      if (childMetaModel.extendedElement) {
-        this.notificationService.warning({
-          title: 'Illegal operation',
-          message: 'Can not extend a Property which already extends another element',
-          timeout: 5000,
-        });
-        return;
-      }
-      super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
+      });
+      return;
     }
+
+    if (childMetaModel.extendedElement) {
+      this.notificationService.warning({
+        title: 'Illegal operation',
+        message: 'Can not extend a Property which already extends another element',
+        timeout: 5000,
+      });
+      return;
+    }
+
+    super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
   }
 }
 
@@ -978,12 +996,21 @@ export class PropertyAbstractPropertyConnectionHandler
   }
 
   public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultAbstractProperty, parentCell: mxCell, childCell: mxCell) {
+    if (this.hasEntityParent(parentCell)) {
+      this.notificationsService.warning({
+        title: 'No entity as parent present',
+        message: 'The Property need to have as parent an Entity/Abstract Entity',
+      });
+      return;
+    }
+
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({
         title: 'Recursive elements',
         message: 'Can not connect elements due to circular connection',
         timeout: 5000,
-      });    } else {
+      });
+    } else {
       super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
     }
   }
@@ -1006,12 +1033,21 @@ export class AbstractPropertyAbstractPropertyConnectionHandler
   }
 
   public connect(parentMetaModel: DefaultAbstractProperty, childMetaModel: DefaultAbstractProperty, parentCell: mxCell, childCell: mxCell) {
+    if (this.hasEntityParent(parentCell)) {
+      this.notificationsService.warning({
+        title: 'No entity as parent present',
+        message: 'One of the Abstract Properties need to have as parent an Entity/Abstract Entity',
+      });
+      return;
+    }
+
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({
         title: 'Recursive elements',
         message: 'Can not connect elements due to circular connection',
         timeout: 5000,
-      });    } else {
+      });
+    } else {
       super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
     }
   }
@@ -1117,7 +1153,8 @@ export class EntityEntityConnectionHandler extends EntityInheritanceConnector im
         title: 'Recursive elements',
         message: 'Can not connect elements due to circular connection',
         timeout: 5000,
-      });      return;
+      });
+      return;
     }
 
     super.connectWithAbstract(parentMetaModel, childMetaModel, parentCell, childCell);
@@ -1147,7 +1184,8 @@ export class AbstractEntityAbstractEntityConnectionHandler
         title: 'Recursive elements',
         message: 'Can not connect elements due to circular connection',
         timeout: 5000,
-      });    } else {
+      });
+    } else {
       super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
     }
   }
@@ -1184,7 +1222,8 @@ export class EntityAbstractEntityConnectionHandler
         title: 'Recursive elements',
         message: 'Can not connect elements due to circular connection',
         timeout: 5000,
-      });      return;
+      });
+      return;
     }
 
     super.connectWithAbstract(parentMetaModel, childMetaModel, parent, child);

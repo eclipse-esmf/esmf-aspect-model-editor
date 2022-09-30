@@ -22,7 +22,7 @@ export class NamespaceModel {
   private fileStatus: FileStatus = {};
 
   public get outdated(): boolean {
-    return Object.values(this.fileStatus).reduce((acc: boolean, {outdated}) => acc && outdated, true);
+    return Object.values(this.fileStatus).reduce((acc: boolean, {outdated}) => acc || outdated, false);
   }
 
   constructor(public name: string, public files: string[]) {}

@@ -44,7 +44,7 @@
 
     <ng-container matColumnDef="optional">
       <mat-header-cell *matHeaderCellDef>Optional</mat-header-cell>
-      <mat-cell *matCellDef="let overwritten">
+      <mat-cell [class.hidden]="overwritten.abstract" *matCellDef="let overwritten">
         <mat-checkbox
           [formControl]="getControl([overwritten.property.aspectModelUrn, 'optional'])"
           name="{{ overwritten.property.name }}_optional"

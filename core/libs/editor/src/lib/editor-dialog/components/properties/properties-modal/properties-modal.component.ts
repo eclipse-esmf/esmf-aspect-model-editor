@@ -78,6 +78,7 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
       ...this.data.properties.map(e => ({
         ...e,
         disabled: !!(e.property instanceof DefaultProperty && e.property.extendedElement),
+        abstract: e.property instanceof DefaultAbstractProperty,
       })),
     ];
 

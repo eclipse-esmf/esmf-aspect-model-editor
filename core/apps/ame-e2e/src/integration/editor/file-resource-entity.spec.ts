@@ -32,27 +32,19 @@ describe('Time Series Entity', () => {
 
       .then(() => cy.clickShape('Entity1'))
       .then(() => cy.getCellLabel('Entity1', 'preferredName').should('eq', 'Inherited\npreferredName = File Resource @en'))
-      .then(() =>
-        cy
-          .getCellLabel('Entity1', 'description')
-          .should('eq', 'Inherited\ndescription = Describes a resource with a relative or absolute location and a MIME type. @en')
-      )
+      .then(() => cy.getCellLabel('Entity1', 'description').should('eq', 'Inherited\ndescription = A file in a specific format @en'))
 
       .then(() => cy.clickShape('FileResource'))
       .then(() => cy.getCellLabel('FileResource', 'preferredName').should('eq', 'preferredName = File Resource @en'))
-      .then(() =>
-        cy
-          .getCellLabel('FileResource', 'description')
-          .should('eq', 'description = Describes a resource with a relative or absolute location and a MIME type. @en')
-      )
+      .then(() => cy.getCellLabel('FileResource', 'description').should('eq', 'description = A file in a specific format @en'))
 
       .then(() => cy.clickShape('resource'))
       .then(() => cy.getCellLabel('resource', 'preferredName').should('eq', 'preferredName = Resource @en'))
-      .then(() => cy.getCellLabel('resource', 'description').should('eq', 'description = The location of the resource @en'))
+      .then(() => cy.getCellLabel('resource', 'description').should('eq', 'description = Location of a resource @en'))
 
       .then(() => cy.clickShape('mimeType'))
       .then(() => cy.getCellLabel('mimeType', 'preferredName').should('eq', 'preferredName = MIME Type @en'))
-      .then(() => cy.getCellLabel('mimeType', 'description').should('eq', 'description = The MIME type of the resource @en'))
+      .then(() => cy.getCellLabel('mimeType', 'description').should('eq', 'description = A MIME type as defined in RFC 2046 @en'))
 
       .then(() => cy.clickShape('ResourcePath'))
       .then(() => cy.getCellLabel('ResourcePath', 'preferredName').should('eq', 'preferredName = Resource Path @en'))

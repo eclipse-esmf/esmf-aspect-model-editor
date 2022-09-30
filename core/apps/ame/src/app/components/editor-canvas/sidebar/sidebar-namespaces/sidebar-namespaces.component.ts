@@ -11,10 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {APP_CONFIG, AppConfig} from '@ame/shared';
+import {APP_CONFIG, AppConfig, NamespaceModel} from '@ame/shared';
 import {Component, Inject, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
-import {NamespaceModel} from '@ame/shared';
 import {RdfService} from '@ame/rdf/services';
 import {ExporterHelper, MigratorService} from '@ame/migrator';
 

@@ -69,6 +69,17 @@
           </span>
           <span *ngIf="!isUpperCase(extends.value)">Abstract Entity should be upper case</span>
         </mat-option>
+        <mat-option
+          *ngIf="!isAlreadyDefined(filteredEntities$ | async, extends.value) && !getControl('extendsValue')?.errors?.foundModel"
+          [disabled]="!isUpperCase(extends.value)"
+          [value]="!isUpperCase(extends.value) ? '' : extends.value"
+          (click)="createEntity(extends.value)"
+        >
+          <span *ngIf="isUpperCase(extends.value)">
+            + Create new Entity: <strong>{{ extends.value }}</strong>
+          </span>
+          <span *ngIf="!isUpperCase(extends.value)">Entity should be upper case</span>
+        </mat-option>
 
         <mat-option
           *ngFor="let abstractEntity of filteredAbstractEntities"

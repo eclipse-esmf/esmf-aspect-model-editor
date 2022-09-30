@@ -80,12 +80,11 @@ export class ModelApiService {
   }
 
   saveModel(rdfContent: string, aspectUrn?: string): Observable<string> {
-    return this.http
-      .post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent, {headers: new HttpHeaderBuilder().withUrn(aspectUrn).build()})
-      .pipe(
-        timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
-      );
+    const headers = aspectUrn ? new HttpHeaderBuilder().withUrn(aspectUrn).build() : undefined;
+    return this.http.post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent, {headers}).pipe(
+      timeout(this.requestTimeout),
+      catchError(res => throwError(() => res))
+    );
   }
 
   uploadZip(file: File): Observable<any> {

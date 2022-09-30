@@ -31,6 +31,7 @@ import {
   DefaultEntity,
   DefaultEntityValue,
   DefaultEnumeration,
+  DefaultProperty,
   OverWrittenPropertyKeys,
 } from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
@@ -92,7 +93,14 @@ export class AbstractEntityModelService extends BaseModelService {
     const outgoingEdges = this.mxGraphAttributeService.graph.getOutgoingEdges(cell);
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
 
+    const extendingProperties = [];
     for (const edge of incomingEdges) {
+      const properties = this.mxGraphService.graph.getOutgoingEdges(edge.source).filter(e => {
+        const property = MxGraphHelper.getModelElement<DefaultProperty>(e.target);
+        return property instanceof DefaultProperty && !!property.extendedElement;
+      });
+      extendingProperties.push(...properties.map(e => e.target));
+
       const entity = MxGraphHelper.getModelElement<DefaultEntity>(edge.source);
       entity.extendedElement = null;
       edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
@@ -102,6 +110,7 @@ export class AbstractEntityModelService extends BaseModelService {
       this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));
     }
 
+    this.mxGraphService.graph.removeCells(extendingProperties);
     super.delete(cell);
 
     this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);

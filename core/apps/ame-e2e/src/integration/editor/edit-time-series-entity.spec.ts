@@ -45,7 +45,7 @@ describe('Time Series Entity', () => {
           .getCellLabel('Entity1', 'description')
           .should(
             'eq',
-            'Inherited\ndescription = The Time Series Entity is used with the Time Series Characteristic. It wraps the two Properties timestamp and value to represent a value at a point in time. @en'
+            'Inherited\ndescription = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en'
           )
       )
 
@@ -56,22 +56,32 @@ describe('Time Series Entity', () => {
           .getCellLabel('TimeSeriesEntity', 'description')
           .should(
             'eq',
-            'description = The Time Series Entity is used with the Time Series Characteristic. It wraps the two Properties timestamp and value to represent a value at a point in time. @en'
+            'description = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en'
           )
       )
 
       .then(() => cy.clickShape('[value]'))
       .then(() => cy.getCellLabel('[value]', 'extends').should('eq', 'extends = value'))
       .then(() => cy.getCellLabel('[value]', 'preferredName').should('eq', 'Inherited\npreferredName = Value @en'))
-      .then(() => cy.getCellLabel('[value]', 'description').should('eq', 'Inherited\ndescription = Any value @en'))
+      .then(() =>
+        cy
+          .getCellLabel('[value]', 'description')
+          .should('eq', 'Inherited\ndescription = The value that was recorded and is part of a time series. @en')
+      )
 
       .then(() => cy.clickShape('value'))
       .then(() => cy.getCellLabel('value', 'preferredName').should('eq', 'preferredName = Value @en'))
-      .then(() => cy.getCellLabel('value', 'description').should('eq', 'description = Any value @en'))
+      .then(() =>
+        cy.getCellLabel('value', 'description').should('eq', 'description = The value that was recorded and is part of a time series. @en')
+      )
 
       .then(() => cy.clickShape('timestamp'))
       .then(() => cy.getCellLabel('timestamp', 'preferredName').should('eq', 'preferredName = Timestamp @en'))
-      .then(() => cy.getCellLabel('timestamp', 'description').should('eq', 'description = The point in time @en'))
+      .then(() =>
+        cy
+          .getCellLabel('timestamp', 'description')
+          .should('eq', 'description = The specific point in time when the corresponding value was recorded. @en')
+      )
 
       .then(() => cy.clickShape('Timestamp'))
       .then(() => cy.getCellLabel('Timestamp', 'preferredName').should('eq', 'preferredName = Timestamp @en'))
@@ -129,46 +139,6 @@ describe('Time Series Entity', () => {
       .then(() => cy.get('[data-cell-id="Timestamp"]').should('not.exist'));
   });
 
-  it('should not remove value', () => {
-    cy.dragElement(SELECTOR_ecProperty, 350, 300).then(() => cy.clickShape('property2'));
-    createTimeSeriesEntity();
-
-    cy.clickConnectShapes('property2', 'value');
-    cy.clickShape('TimeSeriesEntity')
-      .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
-      .then(() => cy.get('[data-cell-id="TimeSeriesEntity"]').should('not.exist'))
-      .then(() => cy.get('[data-cell-id="value"]').should('exist'))
-      .then(() => cy.get('[data-cell-id="[value]"]').first().should('exist'))
-      .then(() => cy.get('[data-cell-id="timestamp"]').should('not.exist'))
-      .then(() => cy.get('[data-cell-id="Timestamp"]').should('not.exist'))
-
-      .then(() => cy.clickShape('value'))
-      .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
-      .then(() => cy.get('[data-cell-id="value"]').should('not.exist'))
-      .then(() => cy.get('[data-cell-id="[value]"]').should('not.exist'));
-  });
-
-  it('should not remove timestamp', () => {
-    cy.dragElement(SELECTOR_ecProperty, 350, 300).then(() => cy.clickShape('property3'));
-    createTimeSeriesEntity();
-
-    cy.clickConnectShapes('property3', 'timestamp');
-    cy.clickShape('TimeSeriesEntity')
-      .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
-      .then(() => cy.get('[data-cell-id="TimeSeriesEntity"]').should('not.exist'))
-      .then(() => cy.get('[data-cell-id="value"]').should('not.exist'))
-      .then(() => cy.get('[data-cell-id="[value]"]').should('not.exist'))
-      .then(() => cy.get('[data-cell-id="timestamp"]').should('exist'))
-      .then(() => cy.get('[data-cell-id="[timestamp]"]').should('exist'))
-      .then(() => cy.get('[data-cell-id="Timestamp"]').should('exist'))
-
-      .then(() => cy.clickShape('timestamp'))
-      .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
-      .then(() => cy.get('[data-cell-id="timestamp"]').should('not.exist'))
-      .then(() => cy.get('[data-cell-id="[timestamp]"]').should('not.exist'))
-      .then(() => cy.get('[data-cell-id="Timestamp"]').should('not.exist'));
-  });
-
   it('should export', () => {
     createTimeSeriesEntity();
     cy.then(() => cy.getUpdatedRDF()).then(rdf => {
@@ -196,7 +166,7 @@ describe('Time Series Entity', () => {
           .getCellLabel('Entity1', 'description')
           .should(
             'eq',
-            'Inherited\ndescription = The Time Series Entity is used with the Time Series Characteristic. It wraps the two Properties timestamp and value to represent a value at a point in time. @en'
+            'Inherited\ndescription = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en'
           )
       )
 
@@ -207,22 +177,32 @@ describe('Time Series Entity', () => {
           .getCellLabel('TimeSeriesEntity', 'description')
           .should(
             'eq',
-            'description = The Time Series Entity is used with the Time Series Characteristic. It wraps the two Properties timestamp and value to represent a value at a point in time. @en'
+            'description = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en'
           )
       )
 
       .then(() => cy.clickShape('[value]'))
       .then(() => cy.getCellLabel('[value]', 'extends').should('eq', 'extends = value'))
       .then(() => cy.getCellLabel('[value]', 'preferredName').should('eq', 'Inherited\npreferredName = Value @en'))
-      .then(() => cy.getCellLabel('[value]', 'description').should('eq', 'Inherited\ndescription = Any value @en'))
+      .then(() =>
+        cy
+          .getCellLabel('[value]', 'description')
+          .should('eq', 'Inherited\ndescription = The value that was recorded and is part of a time series. @en')
+      )
 
       .then(() => cy.clickShape('value'))
       .then(() => cy.getCellLabel('value', 'preferredName').should('eq', 'preferredName = Value @en'))
-      .then(() => cy.getCellLabel('value', 'description').should('eq', 'description = Any value @en'))
+      .then(() =>
+        cy.getCellLabel('value', 'description').should('eq', 'description = The value that was recorded and is part of a time series. @en')
+      )
 
       .then(() => cy.clickShape('timestamp'))
       .then(() => cy.getCellLabel('timestamp', 'preferredName').should('eq', 'preferredName = Timestamp @en'))
-      .then(() => cy.getCellLabel('timestamp', 'description').should('eq', 'description = The point in time @en'))
+      .then(() =>
+        cy
+          .getCellLabel('timestamp', 'description')
+          .should('eq', 'description = The specific point in time when the corresponding value was recorded. @en')
+      )
 
       .then(() => cy.clickShape('Timestamp'))
       .then(() => cy.getCellLabel('Timestamp', 'preferredName').should('eq', 'preferredName = Timestamp @en'))
