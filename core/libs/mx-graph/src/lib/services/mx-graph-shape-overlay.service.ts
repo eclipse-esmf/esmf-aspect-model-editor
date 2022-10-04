@@ -31,7 +31,6 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultTrait,
-  OverWrittenProperty,
   DefaultUnit,
   OverWrittenProperty,
 } from '@ame/meta-model';
