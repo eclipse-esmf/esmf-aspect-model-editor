@@ -10,13 +10,13 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+
 import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {saveAs} from 'file-saver';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {catchError, finalize, first, map, switchMap} from 'rxjs/operators';
-import {of, Subscription} from 'rxjs';
+import {MatDialog} from '@angular/material/dialog';
+import {finalize, first, switchMap} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {ConfigurationService, SettingDialogComponent, Settings} from '@ame/settings-dialog';
+import {ConfigurationService, Settings} from '@ame/settings-dialog';
 import {
   BindingsService,
   LoadingScreenOptions,
@@ -27,14 +27,12 @@ import {
   SaveValidateErrorsCodes,
 } from '@ame/shared';
 import {EditorService} from '../editor.service';
-import {LoadModelDialogComponent} from '../load-model-dialog';
 import {ShapeConnectorService} from '@ame/connection';
 import {ModelService, RdfService} from '@ame/rdf/services';
-import {ConfirmDialogService} from '../confirm-dialog/confirm-dialog.service';
 import {ModelApiService} from '@ame/api';
-import {DocumentComponent, ExportWorkspaceComponent, ZipUploaderComponent} from './components';
-import {NotificationsComponent} from './components/notifications/notifications.component';
 import {PreviewDialogComponent} from '../preview-dialog';
+import {InformationService} from './services/information.service';
+import {FileHandlingService} from './services/file-handling.service';
 
 @Component({
   selector: 'ame-editor-toolbar',
@@ -54,7 +52,13 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   private loadingScreen$: Subscription;
   private loadingScreenOptions: LoadingScreenOptions;
 
+  get labelExpandCollapse() {
+    return this.isAllShapesExpanded ? 'Collapse all' : 'Expand all';
+  }
+
   constructor(
+    private informationService: InformationService,
+    private fileHandlingService: FileHandlingService,
     public notificationsService: NotificationsService,
     private editorService: EditorService,
     private mxGraphService: MxGraphService,
@@ -68,8 +72,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     private configurationService: ConfigurationService,
     private bindingsService: BindingsService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private confirmDialogService: ConfirmDialogService
+    private mxGraphShapeOverlayService: MxGraphShapeOverlayService
   ) {}
 
   ngOnInit(): void {
@@ -97,174 +100,73 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     });
   }
 
-  onOpenSettings() {
-    this.matDialog
-      .open(SettingDialogComponent, {
-        panelClass: 'settings-dialog-container',
-      })
-      .afterClosed();
+  openSettingsDialog() {
+    this.informationService.openSettingsDialog();
   }
 
-  onShowHelpDialog() {
-    this.matDialog.open(DocumentComponent);
+  openHelpDialog() {
+    this.informationService.openHelpDialog();
   }
 
-  onLoadNotifications() {
-    const notificationModal = this.matDialog.open(NotificationsComponent, {
-      width: '60%',
-      autoFocus: false,
-    });
-    this.keyDownEvents(notificationModal);
+  openNotificationDialog() {
+    this.informationService.openNotificationDialog();
   }
 
-  private keyDownEvents(matDialogRef: MatDialogRef<any>) {
-    matDialogRef.keydownEvents().subscribe(keyBoardEvent => {
-      // KeyCode might not be supported by electron.
-      if (keyBoardEvent.code === 'Escape') {
-        matDialogRef.close();
-      }
-    });
-  }
-
-  getLabelExpandCollapse() {
-    return this.isAllShapesExpanded ? 'Collapse all' : 'Expand all';
-  }
-
-  onNew() {
+  openLoadNewAspectModelDialog() {
     this.loadingScreenOptions.title = 'Loading Aspect Model';
     this.loadingScreenOptions.hasCloseButton = true;
 
-    this.loadingScreen$ = this.matDialog
-      .open(LoadModelDialogComponent)
-      .afterClosed()
+    this.loadingScreen$ = this.fileHandlingService
+      .openLoadNewAspectModelDialog(this.loadingScreenOptions)
       .pipe(
-        first(),
-        switchMap(rdfAspectModel => {
-          if (!rdfAspectModel) {
-            return of(null);
-          }
-          this.loadingScreenService.open({
-            ...this.loadingScreenOptions,
-            closeButtonAction: () => this.loadingScreen$.unsubscribe(),
-          });
+        finalize(() => {
           this.closeEditDialog.emit();
-          return this.editorService.loadNewAspectModel(rdfAspectModel).pipe(
-            first(),
-            catchError(error => {
-              this.notificationsService.error({
-                title: 'Error when loading Aspect Model. Reverting to previous Aspect Model',
-                message: `${error}`,
-                timeout: 5000,
-              });
-              return of(null);
-            }),
-            finalize(() => {
-              this.loadingScreen$.unsubscribe();
-              this.loadingScreenService.close();
-            })
-          );
+          this.loadingScreen$.unsubscribe();
         })
       )
       .subscribe();
   }
 
-  onDownload() {
+  exportAsAspectModelFile() {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
       return;
     }
-
     this.loadingScreenOptions.title = 'Saving Aspect Model';
     this.loadingScreenOptions.hasCloseButton = false;
 
-    this.loadingScreenService.open(this.loadingScreenOptions);
-    try {
-      this.modelService.synchronizeModelToRdf().subscribe(() => {
-        saveAs(
-          new Blob([this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel)], {
-            type: 'text/turtle;charset=utf-8',
-          }),
-          `${this.modelService.getLoadedAspectModel().aspect.name}.ttl`
-        );
-      });
-    } catch (error) {
-      this.logService.logError(`Error while saving the model. ${JSON.stringify(error)}.`);
-    } finally {
-      this.loadingScreenService.close();
-    }
+    this.fileHandlingService.exportAsAspectModelFile(this.loadingScreenOptions).subscribe();
   }
 
-  onSave() {
-    this.modelService
-      .synchronizeModelToRdf()
-      .pipe(
-        switchMap(() =>
-          this.modelApiService.getNamespacesAppendWithFiles().pipe(
-            first(),
-            map((namespaces: string[]) => {
-              const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
-              const serializeModel = this.rdfService.serializeModel(rdfModel);
-
-              if (namespaces.some(namespace => namespace === rdfModel.getAbsoluteAspectModelFileName())) {
-                this.confirmDialogService
-                  .open({
-                    phrases: [
-                      `The Aspect model "${rdfModel.getAbsoluteAspectModelFileName()}" is already defined in your file structure.`,
-                      'Are you sure you want to overwrite it?',
-                    ],
-                    title: 'Update Aspect model',
-                    okButtonText: 'Overwrite',
-                  })
-                  .subscribe(confirmed => {
-                    if (confirmed) {
-                      this.editorService.updateLastSavedRdf(false, serializeModel, new Date());
-                      this.editorService.saveModel().subscribe();
-                    }
-                  });
-              } else {
-                this.editorService.updateLastSavedRdf(false, serializeModel, new Date());
-                this.editorService.saveModel().subscribe();
-              }
-            })
-          )
-        )
-      )
-      .subscribe();
+  saveAspectModelToWorkspace() {
+    this.fileHandlingService.saveAspectModelToWorkspace().subscribe();
   }
 
-  openExportModal() {
-    this.matDialog.open(ExportWorkspaceComponent, {disableClose: true}).afterClosed().pipe(first()).subscribe();
+  openExportDialog() {
+    this.fileHandlingService.openExportDialog().subscribe();
   }
 
-  onAddFileToNamespace(event: any) {
-    const reader = new FileReader();
-    reader.readAsText(event.target.files[0]);
-    reader.onload = () => {
-      this.modelApiService
-        .saveModel(reader.result.toString())
-        .pipe(first())
-        .subscribe({
-          error: () => this.notificationsService.error({title: 'Error adding file to namespaces'}),
-          complete: () => {
-            this.notificationsService.success({title: 'Successfully added file to namespaces'});
-            this.editorService.refreshSidebarNamespaces();
-          },
-        });
-    };
+  addFileToNamespace(event: any) {
+    this.fileHandlingService.addFileToNamespace(event.target.files[0]);
   }
 
   uploadZip(event: any) {
     const file = event?.target?.files[0];
-    const fileName = event?.target?.files[0]?.name;
 
     if (!file) {
       return;
     }
 
-    this.matDialog.open(ZipUploaderComponent, {data: {file, name: fileName}, disableClose: true});
+    this.fileHandlingService.uploadZip(file);
     event.target.value = '';
   }
 
-  onPrint() {
+  generateOpenApiSpec() {
+    if (!this.modelService.getLoadedAspectModel().rdfModel) {
+      return;
+    }
+  }
+
+  generateDocumentation() {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
       return;
     }

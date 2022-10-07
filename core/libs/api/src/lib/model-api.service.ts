@@ -235,7 +235,24 @@ export class ModelApiService {
       );
   }
 
-  openDocumentation(rdfModel: RdfModel, rdfContent: string): Observable<void> {
+  generateOpenApiSpec(rdfContent: string): Observable<string> {
+    return this.http
+      .post<string>(`${this.serviceUrl}${this.api.models}/validate`, rdfContent, {
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+        params: {
+          output: 'id1234',
+          baseUrl: '5',
+          includeQueryApi: '5',
+          pagingOption: '5',
+        },
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => throwError(() => res))
+      );
+  }
+
+  openDocumentation(rdfContent: string): Observable<void> {
     return this.http
       .post(`${this.serviceUrl}${this.api.generate}/documentation`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),

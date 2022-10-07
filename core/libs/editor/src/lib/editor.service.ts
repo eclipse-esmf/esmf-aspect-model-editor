@@ -743,7 +743,7 @@ export class EditorService {
         switchMap(errors =>
           errors.length > 0
             ? of(this.notificationsService.error({title: 'Could not load Aspect model, please make sure the model is valid'}))
-            : this.modelApiService.openDocumentation(rdfModel, rdfAspectModel)
+            : this.modelApiService.openDocumentation(rdfAspectModel)
         )
       );
   }

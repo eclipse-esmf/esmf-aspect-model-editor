@@ -19,12 +19,13 @@ import {MatMenuModule} from '@angular/material/menu';
 import {LoadModelDialogModule} from '../load-model-dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
-  WorkspaceSummaryComponent,
-  ExportWorkspaceComponent,
-  SearchBarComponent,
-  ZipUploaderComponent,
   DocumentComponent,
+  ExportWorkspaceComponent,
+  GenerateOpenApiComponent,
+  SearchBarComponent,
   ThemeSwitcherComponent,
+  WorkspaceSummaryComponent,
+  ZipUploaderComponent,
 } from './components';
 import {FormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -77,6 +78,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     DocumentComponent,
     NotificationsComponent,
     ThemeSwitcherComponent,
+    GenerateOpenApiComponent,
   ],
   exports: [EditorToolbarComponent, ThemeSwitcherComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

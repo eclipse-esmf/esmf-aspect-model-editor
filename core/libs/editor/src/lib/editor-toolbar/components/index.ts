@@ -12,6 +12,7 @@
  */
 
 export * from './export-workspace/export-workspace.component';
+export * from './generate-open-api/generate-open-api.component';
 export * from './search-bar/search-bar.component';
 export * from './zip-uploader/zip-uploader.component';
 export * from './zip-uploader/zip-uploader.service';

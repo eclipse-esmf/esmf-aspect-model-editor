@@ -14,115 +14,67 @@
 <!-- Toolbar -->
 <div class="menu-items" (click)="blurActiveButton()">
   <div class="menu-items__group">
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      matTooltip="New/Load"
-      [matMenuTriggerFor]="loadMenu"
-      data-cy="tbLoadButton"
-    >
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="New/Load"
+            [matMenuTriggerFor]="loadMenu" data-cy="tbLoadButton">
       <mat-icon class="material-icons">add_box</mat-icon>
     </button>
-    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Save" [matMenuTriggerFor]="saveMenu">
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Save"
+            [matMenuTriggerFor]="saveMenu">
       <mat-icon class="material-icons">save</mat-icon>
     </button>
-    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Add file to namespace" (click)="fileInput.click()">
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Add file to namespace"
+            (click)="fileInput.click()">
       <mat-icon class="material-icons">snippet_folder</mat-icon>
     </button>
   </div>
 
   <div class="menu-items__group">
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      matTooltip="Edit highlighted cell"
-      (click)="editSelectedCell.emit()"
-    >
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Edit highlighted cell"
+            (click)="editSelectedCell.emit()">
       <mat-icon class="material-icons">edit</mat-icon>
     </button>
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      matTooltip="Delete"
-      data-cy="tbDeleteButton"
-      (click)="onDelete()"
-    >
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Delete"
+            data-cy="tbDeleteButton" (click)="onDelete()">
       <mat-icon class="material-icons">delete</mat-icon>
     </button>
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      matTooltip="{{ getLabelExpandCollapse() }}"
-      (click)="onToggleExpand()"
-      data-cy="collapseExpandToggle"
-    >
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="{{ labelExpandCollapse }}"
+            (click)="onToggleExpand()" data-cy="collapseExpandToggle">
       <mat-icon [class.editor-icon-active]="!isAllShapesExpanded" class="material-icons rotate-45">{{
         isAllShapesExpanded ? 'unfold_less' : 'unfold_more'
-      }}</mat-icon>
+        }}</mat-icon>
     </button>
-    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Format" (click)="onFormat()" data-cy="formatButton">
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Format" (click)="onFormat()"
+            data-cy="formatButton">
       <mat-icon class="material-icons rotate-90">schema</mat-icon>
     </button>
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      matTooltip="Connect"
-      data-cy="tbConnectButton"
-      (click)="onConnect()"
-    >
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Connect"
+            data-cy="tbConnectButton" (click)="onConnect()">
       <mat-icon class="material-icons">commit</mat-icon>
     </button>
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      matTooltip="Validate"
-      data-cy="tbValidateButton"
-      (click)="onValidate()"
-    >
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Validate"
+            data-cy="tbValidateButton" (click)="onValidate()">
       <mat-icon class="material-icons">task</mat-icon>
     </button>
   </div>
 
   <div class="menu-items__group">
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      matTooltip="Generate HTML documentation"
-      data-cy="tbPrintButton"
-      (click)="onPrint()"
-    >
-      <mat-icon class="material-icons">html</mat-icon>
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Generate Document"
+            [matMenuTriggerFor]="generateDocument" data-cy="tbGenerateDocumentButton">
+      <mat-icon class="material-icons">build</mat-icon>
     </button>
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      matTooltip="Generate JSON/JSON Schema"
-      [matMenuTriggerFor]="downloadJson"
-      data-cy="tbDownloadJsonButton"
-    >
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Generate JSON/JSON Schema"
+            [matMenuTriggerFor]="downloadJson" data-cy="tbDownloadJsonButton">
       <mat-icon class="material-icons">data_object</mat-icon>
     </button>
   </div>
 
   <div class="menu-items__group">
-    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" [matTooltip]="getTitleEditorMap()" (click)="onToggleEditorMap()">
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" [matTooltip]="getTitleEditorMap()"
+            (click)="onToggleEditorMap()">
       <mat-icon [class.editor-icon-active]="settings.showEditorMap" class="material-icons">map</mat-icon>
     </button>
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [matTooltip]="getTitleEditorNavigation()"
-      (click)="onToggleEditorNavigation()"
-    >
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" [matTooltip]="getTitleEditorNavigation()"
+            (click)="onToggleEditorNavigation()">
       <mat-icon [class.editor-icon-active]="settings.showEditorNav" class="material-icons">view_agenda</mat-icon>
     </button>
   </div>
@@ -139,41 +91,24 @@
     Now is moved to settings until full scheme is implemented
   -->
 
-  <button
-    [matTooltipShowDelay]="0"
-    [matTooltipHideDelay]="0"
-    (click)="onOpenSettings()"
-    matTooltip="Settings"
-    mat-button
-    data-cy="settings-button"
-  >
+  <button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" (click)="openSettingsDialog()" matTooltip="Settings"
+          mat-button data-cy="settings-button">
     <mat-icon>settings</mat-icon>
   </button>
-  <button
-    [matTooltipShowDelay]="0"
-    [matTooltipHideDelay]="0"
-    (click)="onLoadNotifications()"
-    matTooltip="Notifications"
-    mat-button
-    data-cy="notifications-button"
-  >
+  <button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" (click)="openNotificationDialog()"
+          matTooltip="Notifications"
+          mat-button data-cy="notifications-button">
     <mat-icon [matBadge]="notificationsService.badgeText | async" matBadgeColor="warn">notifications</mat-icon>
   </button>
-  <button
-    [matTooltipShowDelay]="0"
-    [matTooltipHideDelay]="0"
-    (click)="onShowHelpDialog()"
-    matTooltip="Help"
-    mat-button
-    data-cy="help-button"
-  >
+  <button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" (click)="openHelpDialog()" matTooltip="Help"
+          mat-button data-cy="help-button">
     <mat-icon>help</mat-icon>
   </button>
 </div>
 
 <!-- Menus -->
 <mat-menu #loadMenu="matMenu" (click)="blurActiveButton()">
-  <button mat-menu-item (click)="onNew()" data-cy="create-model">
+  <button mat-menu-item (click)="openLoadNewAspectModelDialog()" data-cy="create-model">
     <mat-icon class="material-icons">add_circle</mat-icon>
     <span>Create/Upload Aspect Model</span>
   </button>
@@ -184,22 +119,34 @@
 </mat-menu>
 
 <mat-menu #saveMenu="matMenu">
-  <button mat-menu-item (click)="onDownload()">
+  <button mat-menu-item (click)="exportAsAspectModelFile()">
     <mat-icon class="material-icons">file_download</mat-icon>
     <span>Export Aspect Model</span>
   </button>
-  <button mat-menu-item (click)="openExportModal()">
+  <button mat-menu-item (click)="openExportDialog()">
     <mat-icon class="material-icons">file_download</mat-icon>
     <span>Export Namespace</span>
   </button>
-  <button mat-menu-item (click)="onSave()">
+  <button mat-menu-item (click)="saveAspectModelToWorkspace()">
     <mat-icon class="material-icons">save</mat-icon>
     <span>Save to Workspace</span>
   </button>
 </mat-menu>
 
+<mat-menu #generateDocument="matMenu">
+  <button mat-menu-item data-cy="tbPrintButton" (click)="generateDocumentation()">
+    <mat-icon class="material-icons">html</mat-icon>
+    <span>Generate HTML documentation</span>
+  </button>
+  <button mat-menu-item data-cy="tbOpenApiButton" (click)="generateOpenApiSpec()">
+    <mat-icon class="material-icons">api</mat-icon>
+    <span>Generate Open Api specification</span>
+  </button>
+</mat-menu>
+
 <mat-menu #downloadJson="matMenu">
-  <button mat-menu-item (click)="generateJsonSample()" matTooltip="Generate sample JSON payload" data-cy="download-json-sample">
+  <button mat-menu-item (click)="generateJsonSample()" matTooltip="Generate sample JSON payload"
+          data-cy="download-json-sample">
     <mat-icon class="material-icons">file_download</mat-icon>
     <span>Generate sample JSON payload</span>
   </button>
@@ -209,5 +156,5 @@
   </button>
 </mat-menu>
 
-<input style="display: none" type="file" (change)="onAddFileToNamespace($event)" #fileInput accept=".ttl" />
-<input style="display: none" type="file" (change)="uploadZip($event)" #zipInput accept=".zip" />
+<input style="display: none" type="file" (change)="addFileToNamespace($event)" #fileInput accept=".ttl"/>
+<input style="display: none" type="file" (change)="uploadZip($event)" #zipInput accept=".zip"/>
