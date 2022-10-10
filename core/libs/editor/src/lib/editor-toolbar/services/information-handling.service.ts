@@ -20,7 +20,7 @@ import {NotificationsComponent} from '../components/notifications/notifications.
 @Injectable({
   providedIn: 'root',
 })
-export class InformationService {
+export class InformationHandlingService {
   constructor(private matDialog: MatDialog) {}
 
   openSettingsDialog() {

@@ -17,7 +17,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {LoadModelDialogComponent} from '../../load-model-dialog';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
 import {Observable, of, throwError} from 'rxjs';
-import {LoadingScreenOptions, LoadingScreenService, LogService, NotificationsService} from '@ame/shared';
+import {LoadingScreenOptions, LoadingScreenService, LogService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
 import {saveAs} from 'file-saver';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {ModelApiService} from '@ame/api';
@@ -68,6 +68,13 @@ export class FileHandlingService {
   }
 
   exportAsAspectModelFile(loadingScreenOptions): Observable<any> {
+    if (!this.modelService.getLoadedAspectModel().rdfModel) {
+      return throwError(() => {
+        this.logService.logError('No Rdf model available. ');
+        return 'No Rdf model available. ';
+      });
+    }
+
     this.loadingScreenService.open(loadingScreenOptions);
     return this.modelService.synchronizeModelToRdf().pipe(
       tap(() =>
@@ -131,7 +138,6 @@ export class FileHandlingService {
   }
 
   addFileToNamespace(file: File) {
-    // TODO validation should be triggered before
     const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = () => {
@@ -156,5 +162,35 @@ export class FileHandlingService {
 
   uploadZip(file: File) {
     this.matDialog.open(ZipUploaderComponent, {data: {file, name: file.name}, disableClose: true});
+  }
+
+  validateFile(loadingScreenOptions: LoadingScreenOptions, callback?: Function) {
+    this.loadingScreenService.open(loadingScreenOptions);
+    return this.editorService.validate().pipe(
+      map(correctableErrors => {
+        this.logService.logInfo('Validated successfully');
+        if (correctableErrors?.length === 0) {
+          this.notificationsService.info({title: 'Validation completed successfully', timeout: 5000});
+          callback?.call(this);
+        }
+      }),
+      catchError(error => {
+        if (error?.type === SaveValidateErrorsCodes.validationInProgress) {
+          this.notificationsService.error({title: 'Validation in progress'});
+          return of(() => 'Validation in progress');
+        }
+        this.notificationsService.error({
+          title: 'Validation completed with errors',
+          message: 'Unfortunately the validation could not be completed. Please retry or contact support',
+          timeout: 5000,
+        });
+        this.logService.logError(`Error occurred while validating the current model (${error})`);
+        return throwError(() => 'Validation completed with errors');
+      }),
+      finalize(() => {
+        localStorage.removeItem('validating');
+        this.loadingScreenService.close();
+      })
+    );
   }
 }

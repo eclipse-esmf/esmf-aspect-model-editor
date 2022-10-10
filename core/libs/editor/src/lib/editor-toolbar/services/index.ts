@@ -11,6 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './editor-toolbar.component';
-export * from './components';
-export * from './editor-toolbar.module';
+export * from './information-handling.service';
+export * from './file-handling.service';
+export * from './generate-handling.service';
