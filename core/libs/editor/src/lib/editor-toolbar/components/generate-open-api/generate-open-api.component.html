@@ -18,7 +18,7 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Output File format</mat-label>
-    <select matNativeControl [formControl]="getControl('output')">
+    <select matNativeControl [formControl]="getControl('output')" data-cy="tbOutputButton">
       <option value="json">Json</option>
       <option value="yaml">Yaml</option>
     </select>
@@ -60,7 +60,7 @@
     <button mat-flat-button (click)="close()">Cancel</button>
     <button
       (click)="generateOpenApiSpec()" type="button" mat-flat-button color="primary"
-      data-cy="generate-open-api-button">
+      data-cy="tbGenerateOpenApiButton">
       <span>Generate</span>
     </button>
   </mat-dialog-actions>

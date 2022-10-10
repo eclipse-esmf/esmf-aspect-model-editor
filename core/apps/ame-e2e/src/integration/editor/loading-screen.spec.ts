@@ -18,6 +18,7 @@ import {
   SELECTOR_dialogStartButton,
   SELECTOR_loadingCloseButton,
   SELECTOR_modalsDropdown,
+  SELECTOR_tbGenerateDocumentButton,
   SELECTOR_tbLoadButton,
   SELECTOR_tbPrintButton,
   SELECTOR_tbValidateButton,
@@ -25,7 +26,10 @@ import {
 
 describe('Test loading screen', () => {
   it('can cancel loading model', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json', delay: 5000});
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {
+      fixture: 'model-validation-response.json',
+      delay: 5000,
+    });
     cy.visitDefault();
     cy.get(SELECTOR_tbLoadButton)
       .click({force: true})
@@ -46,8 +50,9 @@ describe('Test loading screen', () => {
   });
 
   it('can cancel generate html documentation', () => {
-    cy.get(SELECTOR_tbPrintButton)
+    cy.get(SELECTOR_tbGenerateDocumentButton)
       .click({force: true})
+      .then(() => cy.get(SELECTOR_tbPrintButton).click({force: true}))
       .then(() => cy.get(SELECTOR_loadingCloseButton).click({force: true}))
       .then(() => cy.get('.cdk-overlay-container').should('not.be.visible', 8000));
   });

@@ -17,7 +17,9 @@ export const SELECTOR_tbConnectButton = '[data-cy="tbConnectButton"]';
 export const SELECTOR_modalsDropdown = '[data-cy="models-drop-down"]';
 export const SELECTOR_tbLoadButton = '[data-cy="tbLoadButton"]';
 export const SELECTOR_tbValidateButton = '[data-cy="tbValidateButton"]';
+export const SELECTOR_tbGenerateDocumentButton = '[data-cy="tbGenerateDocumentButton"]';
 export const SELECTOR_tbPrintButton = '[data-cy="tbPrintButton"]';
+export const SELECTOR_tbOpenApiButton = '[data-cy="tbOpenApiButton"]';
 export const SELECTOR_tbCollapseToggle = '[data-cy="collapseExpandToggle"]';
 
 export const SELECTOR_addEntityValue = '[data-cy="addNewEntityValueButton"]';
@@ -125,3 +127,7 @@ export const SNACK_BAR = '.ngx-toastr';
 
 // Sidebar
 export const SIDEBAR_CLOSE_BUTTON = '[data-cy="sidebar-close"]';
+
+// Generation
+export const GENERATION_tbGenerateOpenApiButton = '[data-cy="tbGenerateOpenApiButton"]';
+export const GENERATION_tbOutputButton = '[data-cy="tbOutputButton"]';

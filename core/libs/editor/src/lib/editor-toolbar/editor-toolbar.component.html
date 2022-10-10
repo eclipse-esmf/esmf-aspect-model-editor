@@ -146,11 +146,12 @@
 
 <mat-menu #downloadJson="matMenu">
   <button mat-menu-item (click)="generateJsonSample()" matTooltip="Generate sample JSON payload"
-          data-cy="download-json-sample">
+          data-cy="tbOpenJsonPayloadButton">
     <mat-icon class="material-icons">file_download</mat-icon>
     <span>Generate sample JSON payload</span>
   </button>
-  <button mat-menu-item (click)="generateJsonSchema()" matTooltip="Generate JSON schema" data-cy="download-json-schema">
+  <button mat-menu-item (click)="generateJsonSchema()" matTooltip="Generate JSON schema"
+          data-cy="tbOpenJsonSchemaButton">
     <mat-icon class="material-icons">file_download</mat-icon>
     <span>Generate JSON schema</span>
   </button>
