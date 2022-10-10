@@ -12,13 +12,14 @@
  */
 
 import {Injectable} from '@angular/core';
-import {EditorService} from '@ame/editor';
+import {EditorService, GenerateOpenApiComponent, OpenApi} from '@ame/editor';
 import {MatDialog} from '@angular/material/dialog';
 import {finalize, first, switchMap} from 'rxjs/operators';
 import {LoadingScreenOptions, LoadingScreenService, LogService, NotificationsService} from '@ame/shared';
-import {ModelService} from '@ame/rdf/services';
-import {catchError, map, Observable, of, throwError} from 'rxjs';
+import {ModelService, RdfService} from '@ame/rdf/services';
+import {catchError, map, Observable, throwError} from 'rxjs';
 import {PreviewDialogComponent} from '../../preview-dialog';
+import {saveAs} from 'file-saver';
 
 @Injectable({
   providedIn: 'root',
@@ -31,11 +32,12 @@ export class GenerateHandlingService {
     private matDialog: MatDialog,
     private editorService: EditorService,
     private modelService: ModelService,
+    private rdfService: RdfService,
     private notificationsService: NotificationsService,
     private loadingScreenService: LoadingScreenService
   ) {}
 
-  generateOpenApiSpec(): Observable<any> {
+  openGenerationOpenApiSpec(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
       return throwError(() => {
         this.logService.logError(this.noRdfModelAvailable);
@@ -43,7 +45,47 @@ export class GenerateHandlingService {
       });
     }
 
-    return of();
+    return this.matDialog
+      .open(GenerateOpenApiComponent, {disableClose: true})
+      .afterClosed()
+      .pipe(
+        first(),
+        map(openApi => this.generateOpenApiSpec(loadingScreenOptions, openApi).subscribe())
+      );
+  }
+
+  generateOpenApiSpec(loadingScreenOptions: LoadingScreenOptions, openApi: OpenApi): Observable<any> {
+    this.loadingScreenService.open(loadingScreenOptions);
+
+    return this.modelService.synchronizeModelToRdf().pipe(
+      switchMap(() => this.editorService.generateOpenApiSpec(this.modelService.getLoadedAspectModel().rdfModel, openApi).pipe(first())),
+      catchError(() => {
+        this.notificationsService.error({
+          title: 'Failed to generate Open Api specification',
+          message: 'Invalid Aspect Model',
+          timeout: 5000,
+        });
+        return throwError(() => 'Failed to generate Open Api specification');
+      }),
+      map(data => {
+        if (openApi.output === 'yaml') {
+          saveAs(
+            new Blob([data], {
+              type: 'text/yaml',
+            }),
+            `${this.modelService.getLoadedAspectModel().aspect.name}-open-api.yaml`
+          );
+        } else {
+          saveAs(
+            new Blob([this.formatStringToJson(data)], {
+              type: 'application/json;charset=utf-8',
+            }),
+            `${this.modelService.getLoadedAspectModel().aspect.name}-open-api.json`
+          );
+        }
+      }),
+      finalize(() => this.loadingScreenService.close())
+    );
   }
 
   generateDocumentation(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
@@ -71,7 +113,7 @@ export class GenerateHandlingService {
 
     this.loadingScreenService.open(loadingScreenOptions);
     return this.modelService.synchronizeModelToRdf().pipe(
-      switchMap(() => this.editorService.downloadJsonSample(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
+      switchMap(() => this.editorService.generateJsonSample(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
       catchError(() => {
         this.notificationsService.error({
           title: 'Failed to generate JSON Sample',
@@ -83,7 +125,7 @@ export class GenerateHandlingService {
       map(data => {
         this.openPreview(
           'Sample JSON Payload preview',
-          JSON.stringify(data, null, 2),
+          this.formatStringToJson(data),
           `${this.modelService.getLoadedAspectModel().aspect.name}-sample.json`
         );
       }),
@@ -101,7 +143,7 @@ export class GenerateHandlingService {
 
     this.loadingScreenService.open(loadingScreenOptions);
     return this.modelService.synchronizeModelToRdf().pipe(
-      switchMap(() => this.editorService.downloadJsonSchema(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
+      switchMap(() => this.editorService.generateJsonSchema(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
       catchError(() => {
         this.notificationsService.error({
           title: 'Failed to generate JSON Schema',
@@ -113,12 +155,16 @@ export class GenerateHandlingService {
       map(data => {
         this.openPreview(
           'JSON Schema preview',
-          JSON.stringify(data, null, 2),
+          this.formatStringToJson(data),
           `${this.modelService.getLoadedAspectModel().aspect.name}-schema.json`
         );
       }),
       finalize(() => this.loadingScreenService.close())
     );
+  }
+
+  private formatStringToJson(data: string): string {
+    return JSON.stringify(data, null, 2);
   }
 
   private openPreview(title: string, content: string, fileName: string) {

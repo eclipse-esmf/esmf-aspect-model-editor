@@ -28,6 +28,7 @@ import {
 } from '@ame/shared';
 import {ModelValidatorService} from './model-validator.service';
 import {RdfModel} from '@ame/rdf/utils';
+import {OpenApi} from '@ame/editor';
 
 type ValidationError = SemanticError | SyntacticError | ProcessingError;
 
@@ -185,7 +186,7 @@ export class ModelApiService {
       );
   }
 
-  getJsonSample(rdfContent: string): Observable<string> {
+  generateJsonSample(rdfContent: string): Observable<string> {
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.generate}/json-sample`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
@@ -196,7 +197,7 @@ export class ModelApiService {
       );
   }
 
-  getJsonSchema(rdfContent: string): Observable<string> {
+  generateJsonSchema(rdfContent: string): Observable<string> {
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.generate}/json-schema`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
@@ -235,16 +236,17 @@ export class ModelApiService {
       );
   }
 
-  generateOpenApiSpec(rdfContent: string): Observable<string> {
+  generateOpenApiSpec(rdfContent: string, openApi: OpenApi): Observable<string> {
     return this.http
-      .post<string>(`${this.serviceUrl}${this.api.models}/validate`, rdfContent, {
+      .post<string>(`${this.serviceUrl}${this.api.generate}/open-api-spec`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
         params: {
-          output: 'id1234',
-          baseUrl: '5',
-          includeQueryApi: '5',
-          pagingOption: '5',
+          output: openApi.output,
+          baseUrl: openApi.baseUrl,
+          includeQueryApi: openApi.includeQueryApi,
+          pagingOption: openApi.paging,
         },
+        responseType: openApi.output === 'yaml' ? ('text' as 'json') : 'json',
       })
       .pipe(
         timeout(this.requestTimeout),

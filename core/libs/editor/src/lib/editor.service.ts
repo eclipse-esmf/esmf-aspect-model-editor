@@ -83,6 +83,7 @@ import {ModelApiService, ModelValidatorService} from '@ame/api';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {Title} from '@angular/platform-browser';
+import {OpenApi} from './editor-toolbar';
 import mxCell = mxgraph.mxCell;
 
 @Injectable({
@@ -281,14 +282,19 @@ export class EditorService {
     this.rdfService.externalRdfModels.splice(index, 1);
   }
 
-  public downloadJsonSample(rdfModel: RdfModel) {
+  public generateJsonSample(rdfModel: RdfModel) {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.getJsonSample(serializedModel);
+    return this.modelApiService.generateJsonSample(serializedModel);
   }
 
-  public downloadJsonSchema(rdfModel: RdfModel) {
+  public generateJsonSchema(rdfModel: RdfModel) {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.getJsonSchema(serializedModel);
+    return this.modelApiService.generateJsonSchema(serializedModel);
+  }
+
+  public generateOpenApiSpec(rdfModel: RdfModel, openApi: OpenApi) {
+    const serializedModel = this.rdfService.serializeModel(rdfModel);
+    return this.modelApiService.generateOpenApiSpec(serializedModel, openApi);
   }
 
   private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string) {

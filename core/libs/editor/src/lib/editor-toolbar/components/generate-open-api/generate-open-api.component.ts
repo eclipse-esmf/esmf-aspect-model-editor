@@ -11,9 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ModelApiService} from '@ame/api';
+import {Component, OnInit} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {FormControl, FormGroup} from '@angular/forms';
+
+export interface OpenApi {
+  output: string;
+  baseUrl: string;
+  includeQueryApi: boolean;
+  useSemanticVersion: boolean;
+  paging: string;
+}
 
 @Component({
   selector: 'ame-generate-open-api',
@@ -21,11 +29,39 @@ import {ModelApiService} from '@ame/api';
   styleUrls: ['./generate-open-api.component.scss'],
 })
 export class GenerateOpenApiComponent implements OnInit {
-  constructor(
-    private dialogRef: MatDialogRef<GenerateOpenApiComponent>,
-    private modelApiService: ModelApiService,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  form: FormGroup;
 
-  ngOnInit(): void {}
+  constructor(private dialogRef: MatDialogRef<GenerateOpenApiComponent>) {}
+
+  ngOnInit() {
+    this.form = new FormGroup({
+      baseUrl: new FormControl('https://example.com'),
+      includeQueryApi: new FormControl(false),
+      useSemanticVersion: new FormControl(false),
+      output: new FormControl('json'),
+      paging: new FormControl('NO_PAGING'),
+    });
+  }
+
+  generateOpenApiSpec() {
+    this.dialogRef.close({
+      output: this.getControlValue('output') as string,
+      baseUrl: this.getControlValue('baseUrl') as string,
+      includeQueryApi: this.getControlValue('includeQueryApi') as boolean,
+      useSemanticVersion: this.getControlValue('useSemanticVersion') as boolean,
+      paging: this.getControlValue('paging') as string,
+    });
+  }
+
+  close() {
+    this.dialogRef.close();
+  }
+
+  getControl(path: string): FormControl {
+    return this.form.get(path) as FormControl;
+  }
+
+  getControlValue(path: string): string | boolean {
+    return this.getControl(path).value;
+  }
 }

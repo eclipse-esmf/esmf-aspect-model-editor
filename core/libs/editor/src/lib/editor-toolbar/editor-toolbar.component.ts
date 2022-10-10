@@ -198,7 +198,19 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
       .subscribe();
   }
 
-  generateOpenApiSpec() {}
+  openGenerationOpenApiSpec() {
+    this.validateFile(this.onGenerateOpenApiSpec.bind(this));
+  }
+
+  onGenerateOpenApiSpec() {
+    this.loadingScreenOptions.title = 'Generate Open API specification';
+    this.loadingScreenOptions.hasCloseButton = true;
+
+    const subscription$ = this.generateHandlingService
+      .openGenerationOpenApiSpec(this.loadingScreenOptions)
+      .pipe(finalize(() => subscription$.unsubscribe()))
+      .subscribe();
+  }
 
   onDelete() {
     this.editorService.deleteSelectedElements();

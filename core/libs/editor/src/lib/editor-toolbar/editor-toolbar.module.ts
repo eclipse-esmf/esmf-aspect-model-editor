@@ -27,7 +27,7 @@ import {
   WorkspaceSummaryComponent,
   ZipUploaderComponent,
 } from './components';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatListModule} from '@angular/material/list';
@@ -68,6 +68,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatBadgeModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     EditorToolbarComponent,
