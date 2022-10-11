@@ -168,9 +168,9 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.loadingScreenOptions.title = 'Generate HTML Documentation';
     this.loadingScreenOptions.hasCloseButton = true;
 
-    this.loadingScreen$ = this.generateHandlingService
+    const subscription$ = this.generateHandlingService
       .openGenerationDocumentation(this.loadingScreenOptions)
-      .pipe(finalize(() => this.loadingScreen$.unsubscribe()))
+      .pipe(finalize(() => subscription$.unsubscribe()))
       .subscribe();
   }
 

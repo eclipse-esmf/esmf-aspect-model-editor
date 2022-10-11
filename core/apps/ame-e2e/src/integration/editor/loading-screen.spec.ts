@@ -14,6 +14,7 @@
 /// <reference types="Cypress" />
 
 import {
+  GENERATION_tbOpenDoc,
   SELECTOR_dialogDefaultAspectButton,
   SELECTOR_dialogStartButton,
   SELECTOR_loadingCloseButton,
@@ -53,6 +54,7 @@ describe('Test loading screen', () => {
     cy.get(SELECTOR_tbGenerateDocumentButton)
       .click({force: true})
       .then(() => cy.get(SELECTOR_tbPrintButton).click({force: true}))
+      .then(() => cy.get(GENERATION_tbOpenDoc).click({force: true}))
       .then(() => cy.get(SELECTOR_loadingCloseButton).click({force: true}))
       .then(() => cy.get('.cdk-overlay-container').should('not.be.visible', 8000));
   });

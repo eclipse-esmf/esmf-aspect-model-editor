@@ -131,3 +131,5 @@ export const SIDEBAR_CLOSE_BUTTON = '[data-cy="sidebar-close"]';
 // Generation
 export const GENERATION_tbGenerateOpenApiButton = '[data-cy="tbGenerateOpenApiButton"]';
 export const GENERATION_tbOutputButton = '[data-cy="tbOutputButton"]';
+export const GENERATION_tbOpenDoc = '[data-cy="tbOpenDoc"]';
+export const GENERATION_tbDownloadDoc = '[data-cy="tbDownloadDoc"]';

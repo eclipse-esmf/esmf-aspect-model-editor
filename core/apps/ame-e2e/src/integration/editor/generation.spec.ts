@@ -14,13 +14,15 @@
 /// <reference types="Cypress" />
 
 import {
+  GENERATION_tbDownloadDoc,
   GENERATION_tbGenerateOpenApiButton,
   GENERATION_tbOutputButton,
   SELECTOR_tbGenerateDocumentButton,
   SELECTOR_tbOpenApiButton,
+  SELECTOR_tbPrintButton,
 } from '../../support/constants';
 
-describe('Test generation from valid Aspect Model', () => {
+describe('Test generation and download from valid Aspect Model', () => {
   it('Can generate valid JSON Open Api Specification', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept(
@@ -36,7 +38,7 @@ describe('Test generation from valid Aspect Model', () => {
       .then(() => cy.readFile('cypress/downloads/AspectDefault-open-api.json').should('exist'));
   });
 
-  it('Can generate valid YAML Open Api Specification', () => {
+  it('Can generate and download valid YAML Open Api Specification', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept(
       'POST',
@@ -51,5 +53,16 @@ describe('Test generation from valid Aspect Model', () => {
       .then(() => cy.get(GENERATION_tbOutputButton).select('Yaml'))
       .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force: true}))
       .then(() => cy.readFile('cypress/downloads/AspectDefault-open-api.yaml').should('exist'));
+  });
+
+  it('Can generate and download valid Aspect Model documentation', () => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('POST', 'http://localhost:9091/ame/api/generate/documentation', {fixture: 'valid-documentation.html'});
+    cy.visitDefault();
+    cy.startModelling()
+      .then(() => cy.get(SELECTOR_tbGenerateDocumentButton).click({force: true}))
+      .then(() => cy.get(SELECTOR_tbPrintButton).click({force: true}))
+      .then(() => cy.get(GENERATION_tbDownloadDoc).click({force: true}))
+      .then(() => cy.readFile('cypress/downloads/AspectDefault-documentation.html').should('exist'));
   });
 });
