@@ -192,4 +192,16 @@ export class EditorDialogValidators {
       };
     }
   }
+
+  static baseUrl(control: AbstractControl) {
+    let validUrl;
+
+    try {
+      validUrl = new URL(control.value) && control.value.includes('.');
+    } catch {
+      validUrl = false;
+    }
+
+    return validUrl ? null : {invalidUrl: true};
+  }
 }

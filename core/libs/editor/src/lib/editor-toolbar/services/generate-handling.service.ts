@@ -17,7 +17,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {finalize, first, switchMap} from 'rxjs/operators';
 import {LoadingScreenOptions, LoadingScreenService, LogService, NotificationsService} from '@ame/shared';
 import {ModelService, RdfService} from '@ame/rdf/services';
-import {catchError, map, Observable, throwError} from 'rxjs';
+import {catchError, map, Observable, of, throwError} from 'rxjs';
 import {PreviewDialogComponent} from '../../preview-dialog';
 import {saveAs} from 'file-saver';
 
@@ -50,7 +50,7 @@ export class GenerateHandlingService {
       .afterClosed()
       .pipe(
         first(),
-        map(openApi => this.generateOpenApiSpec(loadingScreenOptions, openApi).subscribe())
+        map(openApi => (openApi ? this.generateOpenApiSpec(loadingScreenOptions, openApi).subscribe() : of({})))
       );
   }
 

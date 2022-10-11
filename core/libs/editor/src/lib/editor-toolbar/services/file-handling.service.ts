@@ -168,6 +168,7 @@ export class FileHandlingService {
     this.loadingScreenService.open(loadingScreenOptions);
     return this.editorService.validate().pipe(
       map(correctableErrors => {
+        this.loadingScreenService.close();
         this.logService.logInfo('Validated successfully');
         if (correctableErrors?.length === 0) {
           this.notificationsService.info({title: 'Validation completed successfully', timeout: 5000});
@@ -175,6 +176,7 @@ export class FileHandlingService {
         }
       }),
       catchError(error => {
+        this.loadingScreenService.close();
         if (error?.type === SaveValidateErrorsCodes.validationInProgress) {
           this.notificationsService.error({title: 'Validation in progress'});
           return of(() => 'Validation in progress');
@@ -187,10 +189,7 @@ export class FileHandlingService {
         this.logService.logError(`Error occurred while validating the current model (${error})`);
         return throwError(() => 'Validation completed with errors');
       }),
-      finalize(() => {
-        localStorage.removeItem('validating');
-        this.loadingScreenService.close();
-      })
+      finalize(() => localStorage.removeItem('validating'))
     );
   }
 }

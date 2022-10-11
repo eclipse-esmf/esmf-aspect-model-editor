@@ -27,6 +27,7 @@
   <mat-form-field appearance="fill">
     <mat-label>BaseUrl - the base URL for the Aspect API</mat-label>
     <input matInput [formControl]="getControl('baseUrl')" placeholder="https://example.com">
+    <mat-error *ngIf="getControl('baseUrl')?.errors?.invalidUrl">Please add a valid url</mat-error>
   </mat-form-field>
 
   <section>
@@ -59,7 +60,7 @@
   <mat-dialog-actions align="end">
     <button mat-flat-button (click)="close()">Cancel</button>
     <button
-      (click)="generateOpenApiSpec()" type="button" mat-flat-button color="primary"
+      (click)="generateOpenApiSpec()" type="button" mat-flat-button color="primary" [disabled]="!form.valid"
       data-cy="tbGenerateOpenApiButton">
       <span>Generate</span>
     </button>

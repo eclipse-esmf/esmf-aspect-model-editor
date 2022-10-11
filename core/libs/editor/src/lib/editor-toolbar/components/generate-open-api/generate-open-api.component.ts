@@ -14,6 +14,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormControl, FormGroup} from '@angular/forms';
+import {EditorDialogValidators} from '../../../editor-dialog';
 
 export interface OpenApi {
   output: string;
@@ -35,7 +36,10 @@ export class GenerateOpenApiComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-      baseUrl: new FormControl('https://example.com'),
+      baseUrl: new FormControl('https://example.com', {
+        validators: [EditorDialogValidators.baseUrl],
+        updateOn: 'blur',
+      }),
       includeQueryApi: new FormControl(false),
       useSemanticVersion: new FormControl(false),
       output: new FormControl('json'),
