@@ -737,23 +737,6 @@ export class EditorService {
     return this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel);
   }
 
-  openDocumentation(rdfModel: RdfModel) {
-    if (!rdfModel) {
-      this.notificationsService.error({title: 'Aspect model could not be found'});
-      return null;
-    }
-    const rdfAspectModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService
-      .validate(rdfAspectModel)
-      .pipe(
-        switchMap(errors =>
-          errors.length > 0
-            ? of(this.notificationsService.error({title: 'Could not load Aspect model, please make sure the model is valid'}))
-            : this.modelApiService.openDocumentation(rdfAspectModel)
-        )
-      );
-  }
-
   openAlertBox() {
     this.alertService.open({
       data: {

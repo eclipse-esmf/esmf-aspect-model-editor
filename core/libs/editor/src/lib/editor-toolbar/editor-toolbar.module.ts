@@ -43,6 +43,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {GenerateDocumentationComponent} from './components/generate-documentation/generate-documentation.component';
 
 @NgModule({
   imports: [
@@ -80,6 +81,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     NotificationsComponent,
     ThemeSwitcherComponent,
     GenerateOpenApiComponent,
+    GenerateDocumentationComponent,
   ],
   exports: [EditorToolbarComponent, ThemeSwitcherComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {EditorService, GenerateOpenApiComponent, OpenApi} from '@ame/editor';
+import {ConfirmDialogService, EditorService, GenerateDocumentationComponent, GenerateOpenApiComponent, OpenApi} from '@ame/editor';
 import {MatDialog} from '@angular/material/dialog';
 import {finalize, first, switchMap} from 'rxjs/operators';
 import {LoadingScreenOptions, LoadingScreenService, LogService, NotificationsService} from '@ame/shared';
@@ -20,6 +20,7 @@ import {ModelService, RdfService} from '@ame/rdf/services';
 import {catchError, map, Observable, of, throwError} from 'rxjs';
 import {PreviewDialogComponent} from '../../preview-dialog';
 import {saveAs} from 'file-saver';
+import {ModelApiService} from '@ame/api';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,9 @@ export class GenerateHandlingService {
     private matDialog: MatDialog,
     private editorService: EditorService,
     private modelService: ModelService,
+    private modelApiService: ModelApiService,
     private rdfService: RdfService,
+    private confirmDialogService: ConfirmDialogService,
     private notificationsService: NotificationsService,
     private loadingScreenService: LoadingScreenService
   ) {}
@@ -88,7 +91,7 @@ export class GenerateHandlingService {
     );
   }
 
-  generateDocumentation(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
+  openGenerationDocumentation(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
       return throwError(() => {
         this.logService.logError(this.noRdfModelAvailable);
@@ -96,9 +99,51 @@ export class GenerateHandlingService {
       });
     }
 
+    return this.matDialog
+      .open(GenerateDocumentationComponent, {disableClose: true})
+      .afterClosed()
+      .pipe(
+        first(),
+        map(result => {
+          if (result === 'download') {
+            return this.downloadDocumentation(loadingScreenOptions).subscribe();
+          }
+
+          if (result === 'open') {
+            return this.generateDocumentation(loadingScreenOptions).subscribe();
+          }
+
+          return of({});
+        })
+      );
+  }
+
+  downloadDocumentation(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
     this.loadingScreenService.open(loadingScreenOptions);
     return this.modelService.synchronizeModelToRdf().pipe(
-      switchMap(() => this.editorService.openDocumentation(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
+      first(),
+      switchMap(() =>
+        this.modelApiService.downloadDocumentation(this.editorService.getSerializedModel()).pipe(
+          first(),
+          map(data =>
+            saveAs(
+              new Blob([data], {
+                type: 'text/html',
+              }),
+              `${this.modelService.getLoadedAspectModel().aspect.name}-documentation.html`
+            )
+          )
+        )
+      ),
+      finalize(() => this.loadingScreenService.close())
+    );
+  }
+
+  generateDocumentation(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
+    this.loadingScreenService.open(loadingScreenOptions);
+    return this.modelService.synchronizeModelToRdf().pipe(
+      first(),
+      switchMap(() => this.modelApiService.openDocumentation(this.editorService.getSerializedModel()).pipe(first())),
       finalize(() => this.loadingScreenService.close())
     );
   }

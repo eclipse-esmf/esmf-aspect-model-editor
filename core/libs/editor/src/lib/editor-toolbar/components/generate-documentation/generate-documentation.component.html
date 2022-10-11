@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<h2 mat-dialog-title>Generate Documentation</h2>
+<p>Choose desired option</p>
+<mat-dialog-actions align="end">
+  <button mat-flat-button (click)="close()">Cancel</button>
+  <button (click)="openDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbOpenDoc">Open
+    Documentation
+  </button>
+  <button (click)="downloadDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbDownloadDoc">
+    Download Documentation
+  </button>
+</mat-dialog-actions>

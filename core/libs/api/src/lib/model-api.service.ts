@@ -254,59 +254,62 @@ export class ModelApiService {
       );
   }
 
-  openDocumentation(rdfContent: string): Observable<void> {
+  downloadDocumentation(rdfContent: string): Observable<string> {
     return this.http
       .post(`${this.serviceUrl}${this.api.generate}/documentation`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
         responseType: 'text',
       })
-      .pipe(
-        timeout(this.requestTimeout),
-        map((documentation: string) => {
-          if (!this.browserService.isStartedAsElectronApp()) {
-            const tabRef = window.open('about:blank', '_blank');
-            tabRef.document.write(documentation);
-            tabRef.focus();
-            tabRef.document.close();
-            return;
-          }
+      .pipe(timeout(this.requestTimeout));
+  }
 
-          const fs = window.require('fs');
-          const os = window.require('os');
-          const path = window.require('path');
-          const ameTmpDir = path.join(os.homedir(), '.ametmp');
-          const printFilePath = path.normalize(path.join(ameTmpDir, 'print.html'));
-          const BrowserWindow = window.require('@electron/remote').BrowserWindow;
-          const electronBrowserWindow = new BrowserWindow({
-            width: 1920,
-            height: 1080,
-          });
+  openDocumentation(rdfContent: string): Observable<void> {
+    return this.downloadDocumentation(rdfContent).pipe(
+      map((documentation: string) => {
+        if (!this.browserService.isStartedAsElectronApp()) {
+          const tabRef = window.open('about:blank', '_blank');
+          tabRef.document.write(documentation);
+          tabRef.focus();
+          tabRef.document.close();
+          return;
+        }
 
-          if (!fs.existsSync(ameTmpDir)) {
-            fs.mkdirSync(ameTmpDir);
-          }
+        const fs = window.require('fs');
+        const os = window.require('os');
+        const path = window.require('path');
+        const ameTmpDir = path.join(os.homedir(), '.ametmp');
+        const printFilePath = path.normalize(path.join(ameTmpDir, 'print.html'));
+        const BrowserWindow = window.require('@electron/remote').BrowserWindow;
+        const electronBrowserWindow = new BrowserWindow({
+          width: 1920,
+          height: 1080,
+        });
 
-          fs.writeFile(printFilePath, documentation, err => {
-            if (err) {
-              this.loggerService.logError('Write error:  ' + err.message);
-            } else {
-              electronBrowserWindow.loadFile(printFilePath);
-              electronBrowserWindow.reload();
-              electronBrowserWindow.focus();
-            }
-          });
-        }),
-        catchError(response => {
-          if (response instanceof HttpErrorResponse) {
-            if (response.status === 422) {
-              return throwError(() => JSON.parse(response.error).error.message.split(': ')[1]);
-            } else if (response.status === 400) {
-              // TODO This should be removed as soon as the SDK has fixed the graphviz error.
-              return throwError(() => JSON.parse(response.error).error.message);
-            }
+        if (!fs.existsSync(ameTmpDir)) {
+          fs.mkdirSync(ameTmpDir);
+        }
+
+        fs.writeFile(printFilePath, documentation, err => {
+          if (err) {
+            this.loggerService.logError('Write error:  ' + err.message);
+          } else {
+            electronBrowserWindow.loadFile(printFilePath);
+            electronBrowserWindow.reload();
+            electronBrowserWindow.focus();
           }
-          return throwError(() => 'Server error');
-        })
-      );
+        });
+      }),
+      catchError(response => {
+        if (response instanceof HttpErrorResponse) {
+          if (response.status === 422) {
+            return throwError(() => JSON.parse(response.error).error.message.split(': ')[1]);
+          } else if (response.status === 400) {
+            // TODO This should be removed as soon as the SDK has fixed the graphviz error.
+            return throwError(() => JSON.parse(response.error).error.message);
+          }
+        }
+        return throwError(() => 'Server error');
+      })
+    );
   }
 }
