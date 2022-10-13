@@ -43,7 +43,9 @@ describe('Create and Edit Abstract Property', () => {
         .then(() => cy.get(FIELD_descriptionen).focus().type('Description'))
         .then(() => cy.get(FIELD_see).focus().type('http://test.com'))
         .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
-        .then(() => cy.clickConnectShapes('abstractProperty1', 'property1'))
+        .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+        .then(() => cy.clickAddShapePlusIcon('Entity1'))
+        .then(() => cy.clickConnectShapes('abstractProperty1', 'property2'))
         .then(() => cy.getCellLabel('[abstractProperty1]', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name @en'))
         .then(() => cy.getCellLabel('[abstractProperty1]', 'description').should('eq', 'Inherited\ndescription = Description @en'))
         .then(() => cy.getCellLabel('[abstractProperty1]', 'see').should('eq', 'Inherited\nsee = http://test.com'));
@@ -55,50 +57,6 @@ describe('Create and Edit Abstract Property', () => {
         .then(() => cy.get(FIELD_descriptionen).should('be.disabled'))
         .then(() => cy.get(FIELD_preferredNameen).should('be.disabled'))
         .then(() => cy.get(FIELD_see).should('be.disabled'));
-    });
-  });
-
-  describe('Abstract Property -> Abstract Property', () => {
-    it('should connect abstractProperty1 to abstractProperty2', () => {
-      cy.visitDefault();
-      cy.startModelling()
-        .then(() => cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300).then(() => cy.clickShape('abstractProperty1')))
-        .then(() => cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300).then(() => cy.clickShape('abstractProperty2')))
-        .then(() => cy.clickConnectShapes('abstractProperty1', 'abstractProperty2'))
-        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200));
-
-      cy.getCellLabel('abstractProperty1', 'extends').should('eq', 'extends = abstractProperty2');
-    });
-
-    it('abstractProperty1 should have abstractProperty2 values', () => {
-      cy.clickShape('abstractProperty2')
-        .dbClickShape('abstractProperty2')
-        .then(() => cy.get(FIELD_preferredNameen).focus().type('Preferred Name'))
-        .then(() => cy.get(FIELD_descriptionen).focus().type('Description'))
-        .then(() => cy.get(FIELD_see).focus().type('http://test.com'))
-        .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
-        .then(() => cy.dbClickShape('abstractProperty1'))
-        .then(() => cy.get(FIELD_preferredNameen).should('have.value', 'Preferred Name'))
-        .then(() => cy.get(FIELD_descriptionen).should('have.value', 'Description'))
-        .then(() => cy.get(FIELD_see).should('have.value', 'http://test.com'))
-        .then(() => cy.get(SELECTOR_editorCancelButton).click({force: true}));
-    });
-
-    it('should not connect recursively', () => {
-      cy.clickConnectShapes('abstractProperty2', 'abstractProperty1')
-        .then(() => cy.get(SELECTOR_notificationsButton).click({force: true}))
-        .then(() => cy.wait(500).get('.mat-cell').contains('Recursive elements').should('exist'))
-        .then(() => cy.wait(500).get('[data-cy="close-notifications"]').click({force: true}));
-    });
-
-    it('abstractProperty1 should not have abstractProperty2 values anymore', () => {
-      cy.clickShape('abstractProperty2')
-        .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
-        .then(() => cy.dbClickShape('abstractProperty1').wait(500))
-        .then(() => cy.get(FIELD_preferredNameen).should('have.value', ''))
-        .then(() => cy.get(FIELD_descriptionen).should('have.value', ''))
-        .then(() => cy.get(FIELD_see).should('have.value', ''))
-        .then(() => cy.get(SELECTOR_editorCancelButton).click({force: true}));
     });
   });
 

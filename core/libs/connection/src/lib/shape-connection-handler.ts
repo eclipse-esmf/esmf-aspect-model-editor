@@ -535,7 +535,9 @@ export class CharacteristicConnectionHandler implements ShapeSingleConnector<Cha
       // add trait
       const defaultTrait = this.modelElementNamingService.resolveElementNaming(
         DefaultTrait.createInstance(),
-        RdfModelUtil.capitalizeFirstLetter(selectedParentIncomingEdges.length ? selectedParentIncomingEdges[0].source.id : source.id)
+        RdfModelUtil.capitalizeFirstLetter(
+          (selectedParentIncomingEdges.length ? selectedParentIncomingEdges[0].source.id : source.id)?.replace(/[[\]]/g, '')
+        )
       );
       const traitShape = this.mxGraphService.renderModelElement(this.currentCachedFile.resolveCachedElement(defaultTrait));
 
@@ -785,9 +787,11 @@ export class CharacteristicEntityConnectionHandler implements ShapeMultiConnecto
 
     this.mxGraphService.assignToParent(child, parent);
     this.mxGraphService.formatShapes();
+
     if (parentMetaModel.dataType) {
-      this.mxGraphService.graph.labelChanged(parent, MxGraphHelper.createPropertiesLabel(parent));
+      MxGraphHelper.updateLabel(parent, this.mxGraphAttributeService.graph, this.languageSettingsService);
     }
+
     if (parentMetaModel.dataType?.isComplex()) {
       const selectedParentIncomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(parent);
       selectedParentIncomingEdges.forEach(edge => {
@@ -801,7 +805,7 @@ export class CharacteristicEntityConnectionHandler implements ShapeMultiConnecto
             edgeSourceMetaModelElement,
             this.languageSettingsService
           );
-          this.mxGraphAttributeService.graph.labelChanged(edgeSource, MxGraphHelper.createPropertiesLabel(edgeSource));
+          MxGraphHelper.updateLabel(edgeSource, this.mxGraphAttributeService.graph, this.languageSettingsService);
         }
       });
     }

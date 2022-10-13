@@ -69,6 +69,7 @@
           </span>
           <span *ngIf="!isUpperCase(extends.value)">Abstract Entity should be upper case</span>
         </mat-option>
+
         <mat-option
           *ngIf="!isAlreadyDefined(filteredEntities$ | async, extends.value) && !getControl('extendsValue')?.errors?.foundModel"
           [disabled]="!isUpperCase(extends.value)"
