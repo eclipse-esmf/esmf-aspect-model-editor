@@ -15,6 +15,7 @@ export interface FileStatus {
   [file: string]: {
     outdated: boolean;
     version: string;
+    hasErrors?: boolean;
   };
 }
 
@@ -29,6 +30,14 @@ export class NamespaceModel {
 
   setFileStatus(file: string, version: string, outdated: boolean) {
     this.fileStatus[file] = {version, outdated};
+  }
+
+  setFileHasErrors(file: string, hasErrors: boolean) {
+    if (this.fileStatus[file]) {
+      this.fileStatus[file].hasErrors = hasErrors;
+    } else {
+      this.fileStatus[file] = {version: null, outdated: false, hasErrors};
+    }
   }
 
   getFileStatus(file: string) {

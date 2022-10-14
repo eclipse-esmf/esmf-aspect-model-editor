@@ -47,11 +47,13 @@
           >
             <div
               [class.outdated]="namespace.getFileStatus(file)?.outdated"
+              [class.hasErrors]="namespace.getFileStatus(file)?.hasErrors"
               [matTooltip]="getTooltip(namespace, file)"
-              (click)="onSelectNamespaceFile(namespace.name, file)"
+              (click)="onSelectNamespaceFile(namespace, file)"
               class="file-name"
             >
-              <mat-icon>description</mat-icon>
+              <mat-icon *ngIf="!namespace.getFileStatus(file)?.hasErrors">description</mat-icon>
+              <mat-icon *ngIf="namespace.getFileStatus(file)?.hasErrors">error_outline</mat-icon>
               <span>
                 {{ file }}
               </span>
@@ -66,7 +68,9 @@
                 Delete
               </button>
               <button
-                [disabled]="isCurrentFile(namespace.name, file) || namespace.getFileStatus(file).outdated"
+                [disabled]="
+                  isCurrentFile(namespace.name, file) || namespace.getFileStatus(file)?.outdated || namespace.getFileStatus(file)?.hasErrors
+                "
                 (click)="onLoadAspectModel(namespace, file)"
                 mat-menu-item
               >

@@ -192,7 +192,12 @@ export class RdfService {
 
       if (error) {
         this.logService.logInfo(`Error when parsing RDF ${error}`);
-        subject.error(error);
+        const rdfModel = new RdfModel(store, this.dataTypeService, {});
+        rdfModel.isExternalRef = true;
+        rdfModel.aspectModelFileName = fileContent.fileName;
+        rdfModel.hasErrors = true;
+        this.externalRdfModels.push(rdfModel);
+        subject.next(rdfModel);
         subject.complete();
       }
     });

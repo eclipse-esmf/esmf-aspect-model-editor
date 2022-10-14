@@ -273,7 +273,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
 
     this.namespaceCacheService
       .getCurrentCachedFile()
-      .getAllElements<BaseMetaModelElement>()
+      ?.getAllElements<BaseMetaModelElement>()
       .forEach(currentFileElement =>
         cachedFile.getAllElements<BaseMetaModelElement>().forEach(cachedFileElement => {
           if (currentFileElement.aspectModelUrn === cachedFileElement.aspectModelUrn) {

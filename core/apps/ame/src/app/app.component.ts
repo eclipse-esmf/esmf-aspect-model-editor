@@ -60,10 +60,10 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    this.migratorService
-      .startMigrating()
-      .pipe(tap(() => this.startApplication()))
-      .subscribe(() => this.editorService.refreshSidebarNamespaces());
+    this.migratorService.startMigrating().subscribe(() => {
+      this.startApplication();
+      this.editorService.refreshSidebarNamespaces();
+    });
   }
 
   private startApplication() {

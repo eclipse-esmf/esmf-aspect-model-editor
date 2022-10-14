@@ -18,7 +18,8 @@
   box-sizing: border-box;
 }
 
-.outdated {
+.outdated,
+.hasErrors {
   opacity: 0.65;
   cursor: default !important;
 }

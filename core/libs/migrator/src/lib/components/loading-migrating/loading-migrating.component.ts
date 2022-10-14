@@ -15,7 +15,7 @@ import {MigratorApiService} from '@ame/api';
 import {EditorService} from '@ame/editor';
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {catchError, map, of, switchMap} from 'rxjs';
+import {catchError, of} from 'rxjs';
 
 @Component({
   selector: 'ame-loading-migrating',
@@ -28,10 +28,7 @@ export class LoadingMigratingComponent implements OnInit {
   ngOnInit(): void {
     this.migratorApiService
       .migrateWorkspace()
-      .pipe(
-        switchMap(data => this.editorService.loadExternalModels().pipe(map(() => data))),
-        catchError(() => of(null))
-      )
+      .pipe(catchError(() => of(null)))
       .subscribe(data => {
         this.router.navigate([{outlets: {migrator: 'status'}}], {state: {data}});
       });

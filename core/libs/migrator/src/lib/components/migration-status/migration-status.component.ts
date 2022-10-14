@@ -15,6 +15,8 @@ import {Component, OnInit} from '@angular/core';
 import {NamespaceStatus} from '@ame/api';
 import {MigratorService} from '../../migrator.service';
 import {Router} from '@angular/router';
+import {EditorService} from '@ame/editor';
+import {RdfModel} from '@ame/rdf/utils';
 
 @Component({
   selector: 'ame-migration-status',
@@ -26,25 +28,18 @@ export class MigrationStatusComponent implements OnInit {
   public filteredErrorFiles = {};
   public hasErrors = false;
 
-  constructor(public migratorService: MigratorService, private router: Router) {}
+  constructor(public migratorService: MigratorService, private editorService: EditorService, private router: Router) {}
 
   ngOnInit(): void {
     this.migrationStatus = history.state.data?.namespaces || [];
     this.hasErrors = this.migrationStatus.length <= 0;
 
-    for (const status of this.migrationStatus) {
-      for (const fileStatus of status.files) {
-        if (!fileStatus.success) {
-          this.hasErrors = true;
-
-          if (!this.filteredErrorFiles[status.namespace]) {
-            this.filteredErrorFiles[status.namespace] = [fileStatus.name];
-          } else {
-            this.filteredErrorFiles[status.namespace].push(fileStatus.name);
-          }
-        }
-      }
-    }
+    this.editorService.loadExternalModels().subscribe(rdfModels => {
+      const erroredModels = rdfModels.filter(rdfModel => rdfModel?.hasErrors);
+      this.hasErrors ||= erroredModels.length > 0;
+      this.setFilesWithError(erroredModels);
+      console.log(erroredModels, this.migrationStatus);
+    });
   }
 
   increaseVersion() {
@@ -55,5 +50,40 @@ export class MigrationStatusComponent implements OnInit {
 
   closeDialog() {
     this.migratorService.dialogRef.close();
+  }
+
+  private setFilesWithError(rdfModels: RdfModel[]) {
+    for (const status of this.migrationStatus) {
+      for (const fileStatus of status.files) {
+        if (!fileStatus.success) {
+          this.hasErrors = true;
+
+          if (!this.filteredErrorFiles[status.namespace]) {
+            this.filteredErrorFiles[status.namespace] = [fileStatus.name];
+          } else {
+            this.filteredErrorFiles[status.namespace].push(fileStatus.name);
+          }
+          continue;
+        }
+
+        const hasErroredRdfModel = rdfModels.some(rdfModel => {
+          if (rdfModel.aspectModelFileName !== fileStatus.name) {
+            return false;
+          }
+
+          const [namespace] = rdfModel.aspectUrn.split('#');
+          return namespace.endsWith(status.namespace);
+        });
+
+        if (hasErroredRdfModel) {
+          if (!this.filteredErrorFiles[status.namespace]) {
+            this.filteredErrorFiles[status.namespace] = [fileStatus.name];
+          } else {
+            this.filteredErrorFiles[status.namespace].push(fileStatus.name);
+          }
+          this.hasErrors = true;
+        }
+      }
+    }
   }
 }

@@ -28,6 +28,7 @@ export class RdfModel {
 
   private _isExternalRef = false;
   private _aspectModelFileName: string;
+  private _hasErrors = false;
 
   private defaultAspectModelAlias = '';
 
@@ -49,6 +50,14 @@ export class RdfModel {
 
   get aspectUrn(): string {
     return this.store.getSubjects(this.bamm.RdfType(), this.bamm.Aspect(), null)[0]?.value;
+  }
+
+  set hasErrors(hasErrors: boolean) {
+    this._hasErrors = hasErrors;
+  }
+
+  get hasErrors(): boolean {
+    return this._hasErrors;
   }
 
   constructor(public store: Store, public dataTypeService: DataTypeService, private prefixes: Prefixes) {

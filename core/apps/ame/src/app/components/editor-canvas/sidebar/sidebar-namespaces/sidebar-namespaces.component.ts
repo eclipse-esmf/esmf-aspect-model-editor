@@ -75,6 +75,10 @@ export class SidebarNamespacesComponent implements OnChanges {
       return `Outdated file. Migrate to BAMM ${this.config.currentBammVersion}`;
     }
 
+    if (namespace.getFileStatus(file)?.hasErrors) {
+      return `This file loaded with errors`;
+    }
+
     return null;
   }
 
@@ -86,13 +90,13 @@ export class SidebarNamespacesComponent implements OnChanges {
     return this.selectedNamespace === namespaceName && this.selectedNamespaceFile === file;
   }
 
-  public onSelectNamespaceFile(namespace: string, namespaceFile: string) {
-    if (this.isCurrentFile(namespace, namespaceFile)) {
+  public onSelectNamespaceFile(namespace: NamespaceModel, namespaceFile: string) {
+    if (this.isCurrentFile(namespace.name, namespaceFile) || namespace.getFileStatus(namespaceFile)?.hasErrors) {
       return;
     }
-    this.selectedNamespace = namespace;
+    this.selectedNamespace = namespace.name;
     this.selectedNamespaceFile = namespaceFile;
-    this.selectNamespace.emit(this.selectedNamespaceFile ? `${namespace}:${namespaceFile}` : null);
+    this.selectNamespace.emit(this.selectedNamespaceFile ? `${namespace.name}:${namespaceFile}` : null);
   }
 
   public onDeleteNamespace(namespace: string) {
@@ -120,9 +124,16 @@ export class SidebarNamespacesComponent implements OnChanges {
     for (const namespace of this.namespaces) {
       for (const file of namespace.files) {
         const [namespaceValue] = namespace.name.split(':');
-        const bamm = this.rdfService.externalRdfModels
-          .find(rdf => rdf.aspectModelFileName === file && rdf.getPrefixes()['']?.split(':')?.[2]?.endsWith(namespaceValue))
-          ?.BAMM();
+        const rdfModel = this.rdfService.externalRdfModels.find(
+          rdf => rdf.aspectModelFileName === file && rdf.getPrefixes()['']?.split(':')?.[2]?.endsWith(namespaceValue)
+        );
+
+        if (!rdfModel && !this.isCurrentFile(namespace.name, file)) {
+          namespace.setFileHasErrors(file, true);
+          continue;
+        }
+
+        const bamm = rdfModel?.BAMM();
         if (bamm) {
           namespace.setFileStatus(file, bamm.version, ExporterHelper.isVersionOutdated(bamm.version, this.config.currentBammVersion));
         }
