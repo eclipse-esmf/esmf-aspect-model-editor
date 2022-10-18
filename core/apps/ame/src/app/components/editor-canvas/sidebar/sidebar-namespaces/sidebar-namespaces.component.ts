@@ -91,7 +91,9 @@ export class SidebarNamespacesComponent implements OnChanges {
   }
 
   public onSelectNamespaceFile(namespace: NamespaceModel, namespaceFile: string) {
-    if (this.isCurrentFile(namespace.name, namespaceFile) || namespace.getFileStatus(namespaceFile)?.hasErrors) {
+    const fileStatus = namespace.getFileStatus(namespaceFile);
+
+    if (this.isCurrentFile(namespace.name, namespaceFile) || fileStatus?.hasErrors || fileStatus?.outdated) {
       return;
     }
     this.selectedNamespace = namespace.name;
