@@ -71,7 +71,11 @@
         </mat-option>
 
         <mat-option
-          *ngIf="!isAlreadyDefined(filteredEntities$ | async, extends.value) && !getControl('extendsValue')?.errors?.foundModel"
+          *ngIf="
+            !isAbstractEntity &&
+            !isAlreadyDefined(filteredEntities$ | async, extends.value) &&
+            !getControl('extendsValue')?.errors?.foundModel
+          "
           [disabled]="!isUpperCase(extends.value)"
           [value]="!isUpperCase(extends.value) ? '' : extends.value"
           (click)="createEntity(extends.value)"

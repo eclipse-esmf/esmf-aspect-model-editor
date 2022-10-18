@@ -31,6 +31,10 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
     namespace?: string;
   }[];
 
+  public get isAbstractEntity() {
+    return this.metaModelElement instanceof DefaultAbstractEntity;
+  }
+
   constructor(
     private notificationsService: NotificationsService,
     public metaModelDialogService: EditorModelService,
