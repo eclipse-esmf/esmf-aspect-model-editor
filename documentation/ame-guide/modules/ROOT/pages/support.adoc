@@ -5,9 +5,10 @@
 
 For troubleshooting, have a look at the xref:known-issues.adoc#known-issues[known issues] and the xref:known-limitations.adoc#known-limitations[known limitations] of the Aspect Model Editor.
 
-As the Aspect Model Editor relies on the BAMM specification, also check out the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/index.html[BAMM Aspect Meta Model version 1.0.0^, opts=nofollow].
+As the Aspect Model Editor relies on the BAMM specification, also check out the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/index.html[BAMM Aspect Meta Model version 2.0.0^,opts=nofollow].
 
-For further support, open an https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/issues[issue in GitHub^, opts=nofollow]. To enable the community to give you the best possible advice, please include the following to your issue:
+For further support, open an https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/issues[issue in GitHub^,opts=nofollow].
+To enable the community to give you the best possible advice, please include the following to your issue:
 
 * Procedure you worked on when you experienced the unexpected behavior.
 * Expected behavior.
@@ -15,7 +16,7 @@ For further support, open an https://github.com/OpenManufacturingPlatform/sds-as
 * Version of the Aspect Model Editor you use.
 * Additional helpful resources (screenshots, TTL files, etc.).
 
-For general questions on semantic data structuring and the role of the Aspect Model Editor, discuss within the working groups of the https://community.open-manufacturing.org/forums/forum/omp-working-group/forum-five/[Open Manufacturing Platform community^, opts=nofollow].
+For general questions on semantic data structuring and the role of the Aspect Model Editor, discuss within the working groups of the https://community.open-manufacturing.org/forums/forum/omp-working-group/forum-five/[Open Manufacturing Platform community^,opts=nofollow].
 
 ++++
 <style>

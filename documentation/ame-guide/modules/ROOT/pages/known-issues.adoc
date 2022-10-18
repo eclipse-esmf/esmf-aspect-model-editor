@@ -36,7 +36,7 @@ version is not supported by this version of the Aspect Model Editor.
 
 h| Workaround
 a|
-Check that you have not missed parts of the TTL file. Also check against syntax errors consulting https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/namespaces.html[Namespaces and versions (BAMM 1.0.0)^,opts=nofollow].
+Check that you have not missed parts of the TTL file. Also check against syntax errors consulting https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/namespaces.html[Namespaces and versions (BAMM 2.0.0)^,opts=nofollow].
 |===
 
 [[datatype-characteristic]]
@@ -62,7 +62,7 @@ a|
 _Wrong data type_
 
 Check that the data types you are using are correct, see
-https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/datatypes.html[Datatypes (BAMM 1.0.0)^,opts=nofollow]
+https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/datatypes.html[Datatypes (BAMM 2.0.0)^,opts=nofollow]
 
 _Unsupported Namespaces_
 

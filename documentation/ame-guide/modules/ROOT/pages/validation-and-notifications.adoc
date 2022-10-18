@@ -3,23 +3,24 @@
 [[notifications]]
 = Validation and notifications
 
-The Aspect Model Editor periodically validates your current Aspect Model against the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/index.html[BAMM Aspect Meta Model version 1.0.0^, opts=nofollow].
+The Aspect Model Editor periodically validates your current Aspect Model against the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/index.html[BAMM Aspect Meta Model version 2.0.0^,opts=nofollow].
 
 To view the validation results in the Notifications dialog, click the Notifications icon image:toolbar-icons/notifications.png[Notifications icon].
 
-image::notification_screenshot.png[Notification, width=100%]
+image::notification_screenshot.png[Notification,width=100%]
 
-→ In the Notifications dialog, all the validation results for your Aspect Model are listed. 
+→ In the Notifications dialog, all the validation results for your Aspect Model are listed.
 
-To see more details for a notification, expand it by clicking the Expand arrow icon image:expand.png[Expand icon]. 
+To see more details for a notification, expand it by clicking the Expand arrow icon image:expand.png[Expand icon].
 
 == Locate validation errors in your Aspect Model
 
-To locate a validation error in your model, click the Options icon image:options.png[Options icon] for a particular validation error and select *Go to*. 
+To locate a validation error in your model, click the Options icon image:options.png[Options icon] for a particular validation error and select *Go to*.
 
-image:notification-02.png[Go to, width=100%]
+image:notification-02.png[Go to,width=100%]
 
-Resolve the issue within your model. For more information on valid Aspect Models, refer to the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/modeling-guidelines.html[BAMM Aspect Meta Model version 1.0.0 > Aspects^, opts=nofollow].
+Resolve the issue within your model.
+For more information on valid Aspect Models, refer to the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/modeling-guidelines.html[BAMM Aspect Meta Model version 1.0.0 > Aspects^,opts=nofollow].
 
 See also xref:known-issues.adoc#issues-with-validation-loading-ttl-files[Known issues: issues with validation and
 loading TTL files].
