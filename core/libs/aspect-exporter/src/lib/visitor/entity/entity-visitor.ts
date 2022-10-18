@@ -66,7 +66,7 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
     if (entity.properties?.length) {
       this.rdfListService.push(entity, ...entity.properties);
       for (const property of entity.properties) {
-        this.setPrefix(property.property.aspectModelUrn);
+        !property.property?.extendedElement && this.setPrefix(property.property.aspectModelUrn);
       }
     } else {
       this.rdfListService.createEmpty(entity, ListProperties.properties);
