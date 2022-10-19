@@ -18,8 +18,8 @@ import {MxGraphHelper, MxGraphVisitorHelper, PropertyInformation} from '../helpe
 import {mxCellOverlay, mxConstants, mxEvent, mxImage} from '../providers';
 import {
   BaseMetaModelElement,
-  DefaultAbstractProperty,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -31,8 +31,8 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultTrait,
-  OverWrittenProperty,
   DefaultUnit,
+  OverWrittenProperty,
 } from '@ame/meta-model';
 import {BrowserService} from '@ame/shared';
 import {ShapeConnectorService} from '@ame/connection';
@@ -49,7 +49,9 @@ export class MxGraphShapeOverlayService {
   ) {}
 
   public removeOverlay(cell: mxgraph.mxCell, overlay: mxgraph.mxCellOverlay): void {
-    this.mxGraphAttributeService.graph.removeCellOverlay(cell, overlay);
+    if (overlay) {
+      this.mxGraphAttributeService.graph.removeCellOverlay(cell, overlay);
+    }
   }
 
   /**
