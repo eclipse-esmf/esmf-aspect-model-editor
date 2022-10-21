@@ -125,10 +125,10 @@ export class SidebarNamespacesComponent implements OnChanges {
   private mergeRdfWithNamespaces() {
     for (const namespace of this.namespaces) {
       for (const file of namespace.files) {
-        const [namespaceValue] = namespace.name.split(':');
-        const rdfModel = this.rdfService.externalRdfModels.find(
-          rdf => rdf.aspectModelFileName === file && rdf.getPrefixes()['']?.split(':')?.[2]?.endsWith(namespaceValue)
-        );
+        const rdfModel = this.rdfService.externalRdfModels.find(rdf => {
+          const mainPrefix = rdf.getPrefixes()[''];
+          return rdf.aspectModelFileName === file && mainPrefix?.substring(0, mainPrefix.length - 1)?.endsWith(namespace.name);
+        });
 
         if (!rdfModel && !this.isCurrentFile(namespace.name, file)) {
           namespace.setFileHasErrors(file, true);

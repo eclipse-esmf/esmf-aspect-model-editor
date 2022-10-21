@@ -84,12 +84,13 @@ export class ZipUploaderComponent implements OnInit {
   }
 
   dismiss() {
-    this.editorService.refreshSidebarNamespaces();
+    this.editorService.loadExternalModels().subscribe(() => {
+      this.editorService.refreshSidebarNamespaces();
+    });
     this.dialogRef.close();
   }
 
   cancel() {
-    this.editorService.refreshSidebarNamespaces();
     this.state.subscription?.unsubscribe();
     this.dismiss();
   }
