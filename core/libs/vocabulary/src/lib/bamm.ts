@@ -369,7 +369,7 @@ export class Bamm {
   }
 
   isAbstractEntity(value: string): boolean {
-    return this.Entity().value === value;
+    return this.AbstractEntity().value === value;
   }
 
   Unit(): NamedNode {

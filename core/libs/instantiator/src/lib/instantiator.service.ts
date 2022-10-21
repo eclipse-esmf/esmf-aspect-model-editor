@@ -22,12 +22,14 @@ import {
   EventInstantiator,
   OperationInstantiator,
   PropertyInstantiator,
+  AbstractPropertyInstantiator,
 } from './instantiators';
 import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {NotificationsService} from '@ame/shared';
+import {AbstractEntityInstantiator} from './instantiators/abstract-entity-instantiator';
 
 @Injectable({
   providedIn: 'root',
@@ -105,6 +107,19 @@ export class InstantiatorService {
       return;
     }
 
+    if (bamm.isAbstractPropertyElement(elementType)) {
+      const overwrittenProperty = new AbstractPropertyInstantiator(metaModelElementInstantiator).createAbstractProperty({
+        blankNode: false,
+        quad: subject,
+      });
+
+      if (overwrittenProperty?.property) {
+        cachedFile.resolveIsolatedElement(overwrittenProperty.property);
+        cachedFile.removeCachedElement(overwrittenProperty.property.aspectModelUrn);
+      }
+      return;
+    }
+
     if (elementType.endsWith('Constraint')) {
       const constraint = metaModelElementInstantiator.getConstraint(DataFactory.quad(null, null, subject));
       if (constraint) {
@@ -158,6 +173,17 @@ export class InstantiatorService {
 
     if (bamm.isEntity(elementType)) {
       const entity = new EntityInstantiator(metaModelElementInstantiator).createEntity(rdfModel.store.getQuads(subject, null, null, null));
+      if (entity) {
+        cachedFile.resolveIsolatedElement(entity);
+        cachedFile.removeCachedElement(entity.aspectModelUrn);
+      }
+      return;
+    }
+
+    if (bamm.isAbstractEntity(elementType)) {
+      const entity = new AbstractEntityInstantiator(metaModelElementInstantiator).createAbstractEntity(
+        rdfModel.store.getQuads(subject, null, null, null)
+      );
       if (entity) {
         cachedFile.resolveIsolatedElement(entity);
         cachedFile.removeCachedElement(entity.aspectModelUrn);

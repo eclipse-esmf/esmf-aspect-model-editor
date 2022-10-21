@@ -62,11 +62,12 @@
       .folder {
         display: flex;
         align-items: center;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+
         span {
           margin-left: 5px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
         }
       }
     }
@@ -76,18 +77,25 @@
       cursor: pointer;
       margin-left: 20px;
       padding-top: 10px;
+      align-items: center;
+      justify-content: space-between;
 
-      .file-name {
+      &-name {
         display: flex;
         align-items: center;
+
         span {
           margin-left: 5px;
+        }
+
+        .error-icon {
+          color: var(--ame-error);
         }
       }
 
       &:hover {
         .show-more {
-          display: block;
+          visibility: visible;
         }
       }
 
@@ -98,14 +106,22 @@
       }
 
       .show-more {
-        display: none;
+        visibility: hidden;
         margin-right: 0;
-        margin-left: auto;
+        margin-left: 10px;
       }
     }
 
-    .current-file {
-      opacity: 0.5;
+    .current-file .file-name {
+      width: 100%;
+      background-color: #787878;
+      color: white;
+      padding: 5px 20px;
+      margin-left: -20px;
+
+      mat-icon {
+        color: white;
+      }
     }
   }
 }
@@ -114,6 +130,6 @@
   font-weight: bold;
 
   .show-more {
-    display: block !important;
+    visibility: visible !important;
   }
 }

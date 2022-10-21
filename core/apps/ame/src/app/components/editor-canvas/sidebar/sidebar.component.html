@@ -13,6 +13,10 @@
 
 <div class="sidebar-content">
   <ng-container *ngIf="view === 'namespaces'">
+    <button class="close-namespace" data-cy="sidebar-close" mat-icon-button tabindex="-1" (click)="goToDefault()">
+      <mat-icon>close</mat-icon>
+    </button>
+
     <ame-sidebar-namespaces
       #sidebarNamespaces
       [namespaces]="sidebarService.namespaces"
@@ -22,12 +26,16 @@
       (refresh)="initNamespaces()"
       class="namespaces"
     ></ame-sidebar-namespaces>
-    <button class="close-namespace" data-cy="sidebar-close" mat-icon-button tabindex="-1" (click)="goToDefault()">
-      <mat-icon>close</mat-icon>
-    </button>
   </ng-container>
 
   <ng-container *ngIf="view === 'namespace-elements'">
+    <button class="back-to-namespace" data-cy="sidebar-back" mat-icon-button tabindex="-1" (click)="goToNamespaces()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button class="close-namespace-elements" data-cy="sidebar-close" mat-icon-button tabindex="-1" (click)="goToDefault()">
+      <mat-icon>close</mat-icon>
+    </button>
+
     <ame-sidebar-namespace-elements
       *ngIf="selectedNamespace"
       [elements]="selectedNamespaceElements || []"
@@ -35,12 +43,6 @@
       class="elements"
     >
     </ame-sidebar-namespace-elements>
-    <button class="back-to-namespace" data-cy="sidebar-back" mat-icon-button tabindex="-1" (click)="goToNamespaces()">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <button class="close-namespace-elements" data-cy="sidebar-close" mat-icon-button tabindex="-1" (click)="goToDefault()">
-      <mat-icon>close</mat-icon>
-    </button>
   </ng-container>
 
   <ng-container *ngIf="view === 'default'">

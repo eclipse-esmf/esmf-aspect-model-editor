@@ -53,7 +53,7 @@
               class="file-name"
             >
               <mat-icon *ngIf="!namespace.getFileStatus(file)?.hasErrors">description</mat-icon>
-              <mat-icon *ngIf="namespace.getFileStatus(file)?.hasErrors">error_outline</mat-icon>
+              <mat-icon class="error-icon" *ngIf="namespace.getFileStatus(file)?.hasErrors">error_outline</mat-icon>
               <span>
                 {{ file }}
               </span>

@@ -68,22 +68,26 @@
 .close-namespace {
   height: 30px;
   right: 20px;
-  top: -10px;
+  top: 10px;
   line-height: 30px;
+  width: 30px;
+  position: absolute;
 }
 
 .close-namespace-elements {
   width: 30px;
   height: 30px;
-  right: 55px;
-  top: -5px;
+  right: 15px;
+  top: 10px;
   line-height: 30px;
+  position: absolute;
 }
 
 .back-to-namespace {
   width: 30px;
   height: 30px;
-  right: 75px;
-  top: -5px;
+  right: 50px;
+  top: 10px;
   line-height: 30px;
+  position: absolute;
 }
