@@ -216,6 +216,7 @@ export class CharacteristicModelService extends BaseModelService {
       }
     } else if (metaModelElement instanceof DefaultEnumeration && metaModelElement.dataType instanceof DefaultEntity) {
       // complex enumeration
+      metaModelElement.createdFromEditor = true;
       this.updateComplexEnumeration(metaModelElement, form);
     } else if (metaModelElement instanceof DefaultEnumeration) {
       // simple enumeration

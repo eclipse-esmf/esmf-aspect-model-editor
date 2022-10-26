@@ -43,7 +43,7 @@ export class WorkspaceSummaryComponent implements AfterViewInit {
   public readonly step = VisibleStep;
 
   public visibleStep: VisibleStep = VisibleStep.selection;
-  public incorrectFiles: string[] = [];
+  public invalidFiles: string[] = [];
   public missingFiles: any;
 
   public validations = {};
@@ -59,11 +59,11 @@ export class WorkspaceSummaryComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     if (!Object.keys(this.validations).length) {
-      this.incorrectFiles = this.summary?.incorrectFiles || [];
+      this.invalidFiles = this.summary?.invalidFiles || [];
       const replaceNamespacesSet = new Set<string>();
       const keepNamespacesSet = new Set<string>();
 
-      this.summary?.correctFiles.forEach(value => {
+      this.summary?.validFiles.forEach(value => {
         const pieces = value.aspectModelFileName.split(':');
         const file = pieces.pop();
         const namespace = pieces.join(':');
@@ -132,7 +132,7 @@ export class WorkspaceSummaryComponent implements AfterViewInit {
     const textToClipboard = JSON.stringify(
       {
         namespaces: this.namespaces,
-        incorrectFiles: this.incorrectFiles,
+        invalidFiles: this.invalidFiles,
         missingFiles: this.missingFiles,
       },
       null,
@@ -141,9 +141,9 @@ export class WorkspaceSummaryComponent implements AfterViewInit {
 
     try {
       await navigator.clipboard.writeText(textToClipboard);
-      this.notificationService.success('Summary copied to clipboard');
+      this.notificationService.success({title: 'Summary copied to clipboard'});
     } catch {
-      this.notificationService.success('Error on copying summary to clipboard');
+      this.notificationService.success({title: 'Error on copying summary to clipboard'});
     }
   }
 }

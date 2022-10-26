@@ -229,8 +229,16 @@ export class Bamm {
     return DataFactory.namedNode(`${this.getNamespace()}Property`);
   }
 
+  AbstractProperty(): NamedNode {
+    return DataFactory.namedNode(`${this.getNamespace()}AbstractProperty`);
+  }
+
   isPropertyElement(value: string): boolean {
     return value === this.Property().value;
+  }
+
+  isAbstractPropertyElement(value: string): boolean {
+    return value === this.AbstractProperty().value;
   }
 
   isOperationElement(value: string): boolean {
@@ -361,6 +369,30 @@ export class Bamm {
   }
 
   isAbstractEntity(value: string): boolean {
-    return this.Entity().value === value;
+    return this.AbstractEntity().value === value;
+  }
+
+  Unit(): NamedNode {
+    return DataFactory.namedNode(`${this.getNamespace()}Unit`);
+  }
+
+  isUnitElement(value: string): boolean {
+    return value === this.Unit().value;
+  }
+
+  QuantityKindProperty(): NamedNode {
+    return DataFactory.namedNode(`${this.getNamespace()}quantityKind`);
+  }
+
+  isQuantityKindProperty(value: string): boolean {
+    return this.QuantityKindProperty().value === value;
+  }
+
+  isNumericConversionFactorProperty(value: string): boolean {
+    return `${this.getNamespace()}numericConversionFactor` === value;
+  }
+
+  isCommonCodeProperty(value: string): boolean {
+    return `${this.getNamespace()}commonCode` === value;
   }
 }

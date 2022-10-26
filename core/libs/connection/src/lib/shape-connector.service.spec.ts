@@ -16,6 +16,8 @@ import {
   AbstractEntityAbstractEntityConnectionHandler,
   AbstractEntityConnectionHandler,
   AbstractEntityPropertyConnectionHandler,
+  AbstractEntityAbstractPropertyConnectionHandler,
+  AbstractPropertyAbstractPropertyConnectionHandler,
   AspectConnectionHandler,
   AspectEventConnectionHandler,
   AspectPropertyConnectionHandler,
@@ -38,8 +40,10 @@ import {
   OperationConnectionHandler,
   OperationPropertyInputConnectionHandler,
   OperationPropertyOutputConnectionHandler,
+  PropertyAbstractPropertyConnectionHandler,
   PropertyCharacteristicConnectionHandler,
   PropertyConnectionHandler,
+  PropertyPropertyConnectionHandler,
   ShapeConnectorService,
   StructuredValueCharacteristicPropertyConnectionHandler,
   StructuredValueConnectionHandler,
@@ -48,6 +52,8 @@ import {
 } from '@ame/connection';
 import {TestBed} from '@angular/core/testing';
 import {
+  DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -58,6 +64,8 @@ import {
 } from '@ame/meta-model';
 import {provideMockObject} from 'jest-helpers/utils';
 import {LogService, NotificationsService} from '@ame/shared';
+import {MxGraphAttributeService, MxGraphService} from '@ame/mx-graph';
+import {EntityValueService} from '@ame/editor';
 
 describe('Test Shape connector service', () => {
   let service: ShapeConnectorService;
@@ -65,8 +73,6 @@ describe('Test Shape connector service', () => {
   let notificationsService: jest.Mocked<NotificationsService>;
   let aspectConnectionHandler: jest.Mocked<AspectConnectionHandler>;
   let propertyConnectionHandler: jest.Mocked<PropertyConnectionHandler>;
-  let operationConnectionHandler: jest.Mocked<OperationConnectionHandler>;
-  let eventConnectionHandler: jest.Mocked<EventConnectionHandler>;
   let characteristicConnectionHandler: jest.Mocked<CharacteristicConnectionHandler>;
   let entityConnectionHandler: jest.Mocked<EntityConnectionHandler>;
   let aspectPropertyConnectionHandler: jest.Mocked<AspectPropertyConnectionHandler>;
@@ -77,10 +83,6 @@ describe('Test Shape connector service', () => {
   let entityPropertyConnectionHandler: jest.Mocked<EntityPropertyConnectionHandler>;
   let traitConnectionHandler: jest.Mocked<TraitConnectionHandler>;
   let abstractEntityConnectionHandler: jest.Mocked<AbstractEntityConnectionHandler>;
-  let abstractEntityAbstractEntityConnectionHandler: jest.Mocked<AbstractEntityAbstractEntityConnectionHandler>;
-  let abstractEntityPropertyConnectionHandler: jest.Mocked<AbstractEntityPropertyConnectionHandler>;
-  let entityAbstractEntityConnectionHandler: jest.Mocked<EntityAbstractEntityConnectionHandler>;
-  let entityEntityConnectionHandler: jest.Mocked<EntityEntityConnectionHandler>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -93,6 +95,18 @@ describe('Test Shape connector service', () => {
         {
           provide: NotificationsService,
           useValue: provideMockObject(NotificationsService),
+        },
+        {
+          provide: MxGraphService,
+          useValue: provideMockObject(MxGraphService),
+        },
+        {
+          provide: MxGraphAttributeService,
+          useValue: provideMockObject(MxGraphAttributeService),
+        },
+        {
+          provide: EntityValueService,
+          useValue: provideMockObject(EntityValueService),
         },
         {
           provide: AspectConnectionHandler,
@@ -203,10 +217,6 @@ describe('Test Shape connector service', () => {
           useValue: provideMockObject(AbstractEntityConnectionHandler),
         },
         {
-          provide: EntityEntityConnectionHandler,
-          useValue: provideMockObject(EntityEntityConnectionHandler),
-        },
-        {
           provide: AbstractEntityAbstractEntityConnectionHandler,
           useValue: provideMockObject(AbstractEntityAbstractEntityConnectionHandler),
         },
@@ -215,11 +225,32 @@ describe('Test Shape connector service', () => {
           useValue: provideMockObject(EntityAbstractEntityConnectionHandler),
         },
         {
+          provide: EntityEntityConnectionHandler,
+          useValue: provideMockObject(EntityEntityConnectionHandler),
+        },
+        {
           provide: AbstractEntityPropertyConnectionHandler,
           useValue: provideMockObject(AbstractEntityPropertyConnectionHandler),
         },
+        {
+          provide: PropertyPropertyConnectionHandler,
+          useValue: provideMockObject(PropertyPropertyConnectionHandler),
+        },
+        {
+          provide: PropertyAbstractPropertyConnectionHandler,
+          useValue: provideMockObject(PropertyAbstractPropertyConnectionHandler),
+        },
+        {
+          provide: AbstractEntityAbstractPropertyConnectionHandler,
+          useValue: provideMockObject(AbstractEntityAbstractPropertyConnectionHandler),
+        },
+        {
+          provide: AbstractPropertyAbstractPropertyConnectionHandler,
+          useValue: provideMockObject(AbstractPropertyAbstractPropertyConnectionHandler),
+        },
       ],
     });
+
     logService = TestBed.inject(LogService) as jest.Mocked<LogService>;
     notificationsService = TestBed.inject(NotificationsService) as jest.Mocked<NotificationsService>;
     aspectConnectionHandler = TestBed.inject(AspectConnectionHandler) as jest.Mocked<AspectConnectionHandler>;
@@ -227,6 +258,7 @@ describe('Test Shape connector service', () => {
     propertyConnectionHandler = TestBed.inject(PropertyConnectionHandler) as jest.Mocked<PropertyConnectionHandler>;
     characteristicConnectionHandler = TestBed.inject(CharacteristicConnectionHandler) as jest.Mocked<CharacteristicConnectionHandler>;
     entityConnectionHandler = TestBed.inject(EntityConnectionHandler) as jest.Mocked<EntityConnectionHandler>;
+    abstractEntityConnectionHandler = TestBed.inject(AbstractEntityConnectionHandler) as jest.Mocked<AbstractEntityConnectionHandler>;
     propertyCharacteristicConnectionHandler = TestBed.inject(
       PropertyCharacteristicConnectionHandler
     ) as jest.Mocked<PropertyCharacteristicConnectionHandler>;
@@ -244,6 +276,7 @@ describe('Test Shape connector service', () => {
 
     service = TestBed.inject(ShapeConnectorService);
   });
+
   describe('createAndConnectShape', () => {
     test('should connect DefaultAspect', () => {
       const element = new DefaultAspect(null, null, null);
@@ -283,6 +316,14 @@ describe('Test Shape connector service', () => {
       service.createAndConnectShape(element, null);
 
       expect(entityConnectionHandler.connect).toHaveBeenCalled();
+    });
+
+    test('should connect DefaultAbstractEntity', () => {
+      const element = new DefaultAbstractEntity(null, null, null);
+
+      service.createAndConnectShape(element, null);
+
+      expect(abstractEntityConnectionHandler.connect).toHaveBeenCalled();
     });
 
     test('should only log in case of no metaModel', () => {
@@ -361,6 +402,7 @@ describe('Test Shape connector service', () => {
 
       expect(entityPropertyConnectionHandler.connect).toHaveBeenCalled();
     });
+
     test('should connect collection with characteristic', () => {
       const parentModel = DefaultCollection.createInstance();
       const childModel = DefaultCharacteristic.createInstance();
@@ -368,6 +410,76 @@ describe('Test Shape connector service', () => {
       service.connectShapes(parentModel, childModel, null, null);
 
       expect(collectionCharacteristicConnectionHandler.connect).toHaveBeenCalled();
+    });
+
+    test('should connect Property with Property', () => {
+      const parentModel = DefaultProperty.createInstance();
+      const childModel = DefaultProperty.createInstance();
+      const propertyPropertyConnectionHandler = TestBed.inject(PropertyPropertyConnectionHandler);
+
+      service.connectShapes(parentModel, childModel, null, null);
+
+      expect(propertyPropertyConnectionHandler.connect).toHaveBeenCalled();
+    });
+
+    test('should connect Property with AbstractProperty', () => {
+      const parentModel = DefaultProperty.createInstance();
+      const childModel = DefaultAbstractProperty.createInstance();
+      const propertyAbstractPropertyConnectionHandler = TestBed.inject(PropertyAbstractPropertyConnectionHandler);
+
+      service.connectShapes(parentModel, childModel, null, null);
+
+      expect(propertyAbstractPropertyConnectionHandler.connect).toHaveBeenCalled();
+    });
+
+    test('should connect Property with AbstractEntity', () => {
+      const parentModel = DefaultAbstractEntity.createInstance();
+      const childModel = DefaultProperty.createInstance();
+      const connector = TestBed.inject(AbstractEntityPropertyConnectionHandler);
+
+      service.connectShapes(parentModel, childModel, null, null);
+
+      expect(connector.connect).toHaveBeenCalled();
+    });
+
+    test('should connect AbstractProperty with AbstractEntity', () => {
+      const parentModel = DefaultAbstractEntity.createInstance();
+      const childModel = DefaultAbstractProperty.createInstance();
+      const connector = TestBed.inject(AbstractEntityAbstractPropertyConnectionHandler);
+
+      service.connectShapes(parentModel, childModel, null, null);
+
+      expect(connector.connect).toHaveBeenCalled();
+    });
+
+    test('should connect AbstractProperty with AbstractEntity', () => {
+      const parentModel = DefaultAbstractProperty.createInstance();
+      const childModel = DefaultAbstractProperty.createInstance();
+      const connector = TestBed.inject(AbstractPropertyAbstractPropertyConnectionHandler);
+
+      service.connectShapes(parentModel, childModel, null, null);
+
+      expect(connector.connect).toHaveBeenCalled();
+    });
+
+    test('should connect AbstractEntity with AbstractEntity', () => {
+      const parentModel = DefaultAbstractEntity.createInstance();
+      const childModel = DefaultAbstractEntity.createInstance();
+      const connector = TestBed.inject(AbstractEntityAbstractEntityConnectionHandler);
+
+      service.connectShapes(parentModel, childModel, null, null);
+
+      expect(connector.connect).toHaveBeenCalled();
+    });
+
+    test('should connect Entity with AbstractEntity', () => {
+      const parentModel = DefaultEntity.createInstance();
+      const childModel = DefaultAbstractEntity.createInstance();
+      const connector = TestBed.inject(EntityAbstractEntityConnectionHandler);
+
+      service.connectShapes(parentModel, childModel, null, null);
+
+      expect(connector.connect).toHaveBeenCalled();
     });
 
     test('should not connect characteristic with collection', () => {

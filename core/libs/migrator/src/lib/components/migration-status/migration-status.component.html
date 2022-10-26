@@ -1,0 +1,41 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<h2 mat-dialog-title>Migration Status</h2>
+
+<mat-dialog-content *ngIf="hasErrors">
+  <p>
+    Migration finished with errors. Bellow you can see the files with errors. Please open them in a previous version of AME editor and fix
+    the errors
+  </p>
+  <div class="status" *ngFor="let namespace of filteredErrorFiles | keyvalue">
+    <span class="namespace">{{ namespace.key }}</span>
+    <p class="file" *ngFor="let file of namespace.value">
+      <mat-icon>error_outline</mat-icon>
+      {{ file }}
+    </p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-content class="migration-success" *ngIf="!hasErrors">
+  <mat-icon class="migration-success-icon">done</mat-icon>
+  <p>Migration finished with success</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button *ngIf="!migratorService.increaseNamespaceVersion || hasErrors" (click)="closeDialog()" mat-flat-button>Close</button>
+  <button *ngIf="!hasErrors && migratorService.increaseNamespaceVersion" (click)="increaseVersion()" mat-flat-button color="primary">
+    <span>Migrate Version</span>
+    <!-- <mat-spinner diameter="20" class="spinner"></mat-spinner> -->
+  </button>
+</mat-dialog-actions>

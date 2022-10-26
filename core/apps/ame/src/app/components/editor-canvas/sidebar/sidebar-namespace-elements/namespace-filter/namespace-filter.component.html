@@ -20,11 +20,11 @@
       *ngFor="let type of types"
       class="type"
       matTooltipPosition="above"
-      [matTooltip]="'Filter by ' + type.charAt(0).toUpperCase() + type.substring(1, type.length)"
+      [matTooltip]="'Filter by ' + getName(type)"
       [ngClass]="getClassesForType(type)"
       (click)="toggleSelect(type)"
     >
-      {{ type.charAt(0).toUpperCase() }}
+      {{ getInitials(type) }}
     </div>
   </div>
 </div>

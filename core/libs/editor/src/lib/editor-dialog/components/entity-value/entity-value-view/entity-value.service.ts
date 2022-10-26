@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {DefaultProperty, OverWrittenProperty, DefaultEntity, DefaultEnumeration, DefaultEntityValue} from '@ame/meta-model';
+import {DefaultEntity, DefaultEntityValue, DefaultEnumeration, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
 import {ConfirmDialogService} from '@ame/editor';
 import {NamespacesCacheService} from '@ame/cache';
 import {NotificationsService} from '@ame/shared';
@@ -58,7 +58,7 @@ export class EntityValueService {
     });
   }
 
-  onNewProperty(property: OverWrittenProperty, entity: DefaultEntity) {
+  onNewProperty(property: OverWrittenProperty<DefaultProperty>, entity: DefaultEntity) {
     const entityValues = this.currentCachedFile.getCachedEntityValues().filter(entityValue => entityValue.entity.name === entity.name);
     if (!entityValues.length) {
       return;
@@ -68,12 +68,10 @@ export class EntityValueService {
       entityValue.addProperty(property);
     }
 
-    this.notifications.warning(
-      `Property ${property.property.name} was added to ${entity.name} instances. Make sure to add a value to them!`,
-      null,
-      null,
-      5000
-    );
+    this.notifications.warning({
+      title: `Property ${property.property.name} was added to ${entity.name} instances. Make sure to add a value to them!`,
+      timeout: 5000,
+    });
   }
 
   onEntityRemove(entity: DefaultEntity, acceptCallback: Function) {

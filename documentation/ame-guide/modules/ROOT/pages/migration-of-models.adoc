@@ -1,0 +1,54 @@
+:page-partial:
+
+[[migration-of-models]]
+= Migration of models
+
+There are three different ways to migrate an Aspect Model:
+
+* Automatic migration when starting the application.
+* Initiate migration from the sidebar.
+* Loading a (syntactically valid) Aspect Model based on an older BAMM version
+
+[[automatic-migration]]
+== Automatic migration when starting the application
+
+As soon as the application is started and an Aspect Model with an older version is found in the workspace.
+A dialog appears with the information whether the Aspect Models should be migrated.
+
+image::automatic-migration.png[width=100%]
+
+* If the checkbox Auto-increase namespace versions is activated, the Aspect Models are updated to the next higher version and the old Aspect Models are no longer displayed in the workspace.
+
+* If the checkbox Auto-increase namespace versions is not activated, the Aspect Models will be overwritten without the version of the Aspect Models increasing.
+
+NOTE: A backup of the old Aspect Models will be created in the workspace as a zip package.
+
+image::migration-status.png[width=100%]
+
+image::version-increased.png[width=100%]
+
+After the migration has been completed, the Aspect models can be modelled as usually.
+
+[[initiate-migration-from-the-sidebar]]
+== Initiate migration from the sidebar
+
+If the migration of the Aspect Models in the workspace is to be carried out later, this can be cancelled for the first time.
+A migration button is provided in the sidebar below ((/within?)) the workspace to start a pending migration.
+
+image::migration-status.png[width=100%]
+
+[[loading-old-model]]
+== Loading a (syntactically valid) Aspect Model based on an olders BAMM version
+
+A migration of an Aspect Model in an old version can also be loaded as usual.
+The tool automatically recognises the older version and migrates it to the latest BAMM version.
+
+image::load-old-model.png[width=100%]
+
+image::migrate-notification.png[width=100%]
+
+++++
+<style>
+  .imageblock {flex-direction: row !important;}
+</style>
+++++

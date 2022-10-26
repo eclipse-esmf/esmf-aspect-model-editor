@@ -14,6 +14,7 @@
 import {
   BaseMetaModelElement,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -30,6 +31,8 @@ export interface AspectModelVisitor<T, U> {
   visit(metalModelElement: BaseMetaModelElement, context: U): T;
 
   visitProperty(property: DefaultProperty, context: U): T;
+
+  visitAbstractProperty(property: DefaultAbstractProperty, context: U): T;
 
   visitAspect(aspect: DefaultAspect, context: U): T;
 

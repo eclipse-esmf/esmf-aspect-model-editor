@@ -5,16 +5,17 @@
 
 The Aspect Model Editor supports loading and saving Aspect Models in the official RDF/Turtle format (TTL).
 
-NOTE: In case the loaded Aspect Model has a lower BAMM version than the one that the Aspect Model Editor is currently based on, migration will start automatically. 
+NOTE: In case the loaded Aspect Model has a lower BAMM version than the one that the Aspect Model Editor is currently based on, migration will start automatically.
 
-Currently, the Aspect Model Editor is based on https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0[BAMM Aspect Meta Model 1.0.0^, opts=nofollow].
+Currently, the Aspect Model Editor is based on https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0[BAMM Aspect Meta Model 2.0.0^,opts=nofollow].
 
 [[load-start-new-models]]
 == Load or start a new model
 
 To start modeling, proceed as follows:
 
-WARNING: Already opened Aspect Models will be lost when loading a new one. Always make sure to save the previous Aspect Model first.
+WARNING: Already opened Aspect Models will be lost when loading a new one.
+Always make sure to save the previous Aspect Model first.
 
 . Click the *New/Load* icon in the xref:ui-overview.adoc#toolbar[toolbar].
 . Click *Create/Upload Aspect Model*.
@@ -30,7 +31,6 @@ image::start-modeling-ui.png[width=80%]
 +
 image::start-modeling-edit-ui.png[width=80%]
 . Click *Start modeling*.
-
 
 [[save-models]]
 == Save models
@@ -49,9 +49,8 @@ TIP: For saving a new version of a model without overriding the existing one, se
 [[auto-save]]
 == Auto-save
 
-The Aspect Model Editor will auto-save your model in the background every 5 minutes, please confirm. After restarting
-The Aspect Model Editor you will be asked whether you want to load the auto-saved model or dismiss it and start from
-scratch.
+The Aspect Model Editor will auto-save your model in the background every 5 minutes, please confirm.
+After restarting The Aspect Model Editor you will be asked whether you want to load the auto-saved model or dismiss it and start from scratch.
 
 image::autosaving.png[width=100%]
 

@@ -12,20 +12,24 @@
  */
 
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
-import {Base, BaseMetaModelElement} from './base';
+import {BaseMetaModelElement} from './base';
 import {LookUpDatatype} from './look-up-datatype';
 import {Type} from './type';
 import {DefaultScalar} from './default-scalar';
 import {DefaultTrait} from './default-trait';
 import {AspectModelVisitor} from '@ame/mx-graph';
+import {DefaultAbstractProperty} from './default-abstract-property';
+import {CanExtend} from './can-extend';
 
 export interface Property extends BaseMetaModelElement, LookUpDatatype {
   characteristic: Characteristic;
-  refines?: string;
   exampleValue?: any;
 }
 
-export class DefaultProperty extends Base implements Property {
+export class DefaultProperty extends CanExtend implements Property {
+  public extendedElement: DefaultProperty | DefaultAbstractProperty;
+  public readonly predefined: boolean;
+
   static createInstance() {
     return new DefaultProperty(null, null, 'property', null);
   }
@@ -39,9 +43,11 @@ export class DefaultProperty extends Base implements Property {
     aspectModelUrn: string,
     name: string,
     public characteristic: Characteristic,
+    predefined: boolean = false,
     public exampleValue?: any
   ) {
     super(metaModelVersion, aspectModelUrn, name);
+    this.predefined = predefined;
   }
 
   getDeepLookUpDataType(): Type {
@@ -67,5 +73,9 @@ export class DefaultProperty extends Base implements Property {
     } else if (baseMetalModelElement instanceof DefaultScalar) {
       this.characteristic.dataType = baseMetalModelElement;
     }
+  }
+
+  isPredefined() {
+    return this.predefined;
   }
 }

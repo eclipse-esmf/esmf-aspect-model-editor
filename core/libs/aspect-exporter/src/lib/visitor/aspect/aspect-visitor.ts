@@ -46,7 +46,6 @@ export class AspectVisitor extends BaseVisitor<DefaultAspect> {
         value: aspect.getDescription(language),
       })),
       see: aspect.getSeeReferences() || [],
-      name: aspect.name,
     });
 
     if (aspect.properties?.length) {

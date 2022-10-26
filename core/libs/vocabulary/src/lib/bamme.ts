@@ -13,8 +13,64 @@
 
 import {Bamm} from './bamm';
 
+export enum PredefinedProperties {
+  timestamp = 'timestamp',
+  value = 'value',
+  resource = 'resource',
+  mimeType = 'mimeType',
+  x = 'x',
+  y = 'y',
+  z = 'z',
+}
+
+export enum PredefinedEntities {
+  TimeSeriesEntity = 'TimeSeriesEntity',
+  Point3d = 'Point3d',
+  FileResource = 'FileResource',
+}
+
 export class Bamme {
   private alias = 'bamm-e';
+
+  get TimeSeriesEntity() {
+    return this.getNamespace() + PredefinedEntities.TimeSeriesEntity;
+  }
+
+  get timestampProperty() {
+    return this.getNamespace() + PredefinedProperties.timestamp;
+  }
+
+  get valueProperty() {
+    return this.getNamespace() + PredefinedProperties.value;
+  }
+
+  get Point3d() {
+    return this.getNamespace() + PredefinedEntities.Point3d;
+  }
+
+  get xProperty() {
+    return this.getNamespace() + PredefinedProperties.x;
+  }
+
+  get yProperty() {
+    return this.getNamespace() + PredefinedProperties.y;
+  }
+
+  get zProperty() {
+    return this.getNamespace() + PredefinedProperties.z;
+  }
+
+  get FileResource() {
+    return this.getNamespace() + PredefinedEntities.FileResource;
+  }
+
+  get resourceProperty() {
+    return this.getNamespace() + PredefinedProperties.resource;
+  }
+
+  get mimeTypeProperty() {
+    return this.getNamespace() + PredefinedProperties.mimeType;
+  }
 
   constructor(private bamm: Bamm) {}
 
@@ -36,5 +92,17 @@ export class Bamme {
 
   getAspectModelUrn(elementName: string): string {
     return `${this.getNamespace()}${elementName}`;
+  }
+
+  isTimeSeriesEntity(urn: string) {
+    return this.TimeSeriesEntity === urn;
+  }
+
+  isTimestampProperty(urn: string) {
+    return this.timestampProperty === urn;
+  }
+
+  isValueProperty(urn: string) {
+    return this.valueProperty === urn;
   }
 }

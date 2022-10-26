@@ -22,13 +22,11 @@ The validation information is displayed in the xref::validation-and-notification
 
 * *Use "hierarchical" layout*: aligns all elements below the root Aspect.
 
-* *Display 'entity value &ndash; entity' relationship*: displays all relationship connections from Entity instances to their related Entities.
+* *Display 'Entity value &ndash; entity' relationship*: displays all relationship connections from Entity instances to their related Entities.
+
+* *Display 'Property - Abstract Property' relationship*: displays all relationship connections from Property instances to their related Abstract Properties.
 
 * *Display disambiguation labels*: displays labels on the relationship connections between the elements for easier identification of the relationship (e.g., for Operations: Properties are labeled with input or output).
-
-//* *Display highly saturated colors*: changes the color scheme of the elements from light to full saturation.
-//+
-//image::settings-saturated-colors.png[Lower versus full saturation,width=80%]
 
 [[language-settings]]
 == Language settings
@@ -54,7 +52,7 @@ In the Settings dialog, select the *Namespaces* tab.
 image::settings-namespaces.png[Namespaces tab in Settings dialog,,width=100%]
 
 Edit the current namespace and check the supported version of the underlying BAMM Aspect Meta Model, the current Aspect's namespace as well as the predefined namespaces.
-For more information, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/namespaces.html[Namespaces (BAMM 1.0.0)^,opts=nofollow].
+For more information, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/namespaces.html[Namespaces (BAMM 2.0.0)^,opts=nofollow].
 
 ++++
 <style>

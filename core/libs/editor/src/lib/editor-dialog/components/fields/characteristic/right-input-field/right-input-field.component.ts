@@ -132,13 +132,13 @@ export class RightInputFieldComponent extends InputFieldComponent<DefaultEither>
     const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${characteristicName}`;
 
     if (this.metaModelElement.aspectModelUrn === urn || this.parentForm.get('name').value === characteristicName) {
-      this.notificationsService.error('Element right cannot link itself');
+      this.notificationsService.error({title: 'Element right cannot link itself'});
       this.rightControl.setValue('');
       return;
     }
 
     if (characteristicName === this.parentForm.get('leftCharacteristic')?.value?.name) {
-      this.notificationsService.error('Element right cannot point to the same characteristic as the left element.');
+      this.notificationsService.error({title: 'Element right cannot point to the same characteristic as the left element.'});
       this.rightControl.setValue('');
       return;
     }

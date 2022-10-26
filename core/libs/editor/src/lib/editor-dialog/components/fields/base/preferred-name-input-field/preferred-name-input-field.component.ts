@@ -13,7 +13,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, DefaultAbstractEntity, DefaultCharacteristic, DefaultEntity} from '@ame/meta-model';
+import {BaseMetaModelElement, CanExtend, DefaultCharacteristic, DefaultProperty} from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -36,16 +36,29 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMe
       return this.metaModelElement?.getPreferredName(locale) || '';
     }
 
-    if (this.metaModelElement instanceof DefaultEntity || this.metaModelElement instanceof DefaultAbstractEntity) {
+    if (this.metaModelElement instanceof CanExtend) {
       return (
         this.previousData?.[key] ||
-        this.metaModelElement.extendedPreferredName?.get(locale) ||
         this.metaModelElement?.getPreferredName(locale) ||
+        this.metaModelElement.extendedPreferredName?.get(locale) ||
         ''
       );
     }
 
     return this.previousData?.[key] || this.metaModelElement?.getPreferredName(locale) || '';
+  }
+
+  isInherited(locale: string): boolean {
+    const control = this.parentForm.get(this.fieldName + locale);
+    return (
+      this.metaModelElement instanceof CanExtend &&
+      this.metaModelElement.extendedPreferredName?.get(locale) &&
+      control.value === this.metaModelElement.extendedPreferredName?.get(locale)
+    );
+  }
+
+  private isDisabled() {
+    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extendedElement;
   }
 
   private setPreferredNameNameControls() {
@@ -71,10 +84,7 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMe
         key,
         new FormControl({
           value: this.getCurrentValue(key, locale),
-          disabled:
-            this.metaModelDialogService.isReadOnly() ||
-            (this.metaModelElement as DefaultEntity)?.extendedPreferredName?.get(locale) ||
-            this.metaModelElement?.isExternalReference(),
+          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
         })
       );
     });

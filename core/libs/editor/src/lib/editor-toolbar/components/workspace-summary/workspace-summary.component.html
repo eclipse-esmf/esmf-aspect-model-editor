@@ -57,7 +57,7 @@
           </div>
         </mat-list-option>
 
-        <mat-list-option *ngIf="incorrectFiles?.length" class="incorrect-files" (click)="visibleStep = step.incorrectFile">
+        <mat-list-option *ngIf="invalidFiles?.length" class="incorrect-files" (click)="visibleStep = step.incorrectFile">
           <div class="content">
             <mat-icon>error</mat-icon>
             <span>Incorrect files</span>
@@ -99,7 +99,7 @@
 
       <div *ngIf="visibleStep === step.incorrectFile" class="incorrect-files">
         <p class="error-notifier">These files were not imported:</p>
-        <div class="incorrect-file" *ngFor="let file of incorrectFiles">
+        <div class="incorrect-file" *ngFor="let file of invalidFiles">
           <p class="file-name">{{ file }}</p>
         </div>
       </div>

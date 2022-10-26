@@ -20,7 +20,7 @@ export class RdfListHelper {
     const overWrittenListElements: OverWrittenListElement[] = [];
     const listElements = elements.map(metaModelElement => {
       const {keys, property} = metaModelElement || {};
-      if (property instanceof DefaultProperty && (keys?.optional || keys?.notInPayload || keys?.payloadName)) {
+      if (property instanceof DefaultProperty && (keys?.optional || keys?.notInPayload || keys?.payloadName || property.extendedElement)) {
         const blankNode = DataFactory.blankNode();
         overWrittenListElements.push({
           metaModelElement,

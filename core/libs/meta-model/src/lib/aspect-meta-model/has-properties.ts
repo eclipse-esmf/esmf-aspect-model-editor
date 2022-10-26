@@ -11,8 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DefaultAbstractProperty} from './default-abstract-property';
+import {DefaultProperty} from './default-property';
 import {OverWrittenProperty} from './overwritten-property';
 
 export interface HasProperties {
-  properties: Array<OverWrittenProperty>;
+  properties: Array<OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>>;
 }

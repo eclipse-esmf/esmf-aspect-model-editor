@@ -21,7 +21,6 @@ import {
   SELECTOR_settingsButton,
   SELECTOR_tbLoadButton,
 } from '../../support/constants';
-import {Aspect} from '@ame/meta-model';
 
 describe('Test language settings', () => {
   it('can open settings dialog', () => {
@@ -92,7 +91,7 @@ describe('Test language settings', () => {
                   expect(rdf).not.contain('@en-us');
                   expect(rdf).not.contain('@de-de');
                   expect(rdf).to.contain('@en');
-                  cy.getAspect().then((aspect: Aspect) => {
+                  cy.getAspect().then(aspect => {
                     cyHelp.assertNotNullMultiLanguageValues(aspect, 'en');
                     cyHelp.assertNullMultiLanguageValues(aspect, 'en-US');
                     cyHelp.assertNullMultiLanguageValues(aspect, 'de-DE');

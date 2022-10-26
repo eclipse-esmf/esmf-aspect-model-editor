@@ -11,6 +11,36 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+export interface FileStatus {
+  [file: string]: {
+    outdated: boolean;
+    version: string;
+    hasErrors?: boolean;
+  };
+}
+
 export class NamespaceModel {
+  private fileStatus: FileStatus = {};
+
+  public get outdated(): boolean {
+    return Object.values(this.fileStatus).reduce((acc: boolean, {outdated}) => acc || outdated, false);
+  }
+
   constructor(public name: string, public files: string[]) {}
+
+  setFileStatus(file: string, version: string, outdated: boolean) {
+    this.fileStatus[file] = {version, outdated};
+  }
+
+  setFileHasErrors(file: string, hasErrors: boolean) {
+    if (this.fileStatus[file]) {
+      this.fileStatus[file].hasErrors = hasErrors;
+    } else {
+      this.fileStatus[file] = {version: null, outdated: false, hasErrors};
+    }
+  }
+
+  getFileStatus(file: string) {
+    return this.fileStatus[file];
+  }
 }

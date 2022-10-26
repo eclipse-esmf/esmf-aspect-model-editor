@@ -14,6 +14,7 @@
 import {
   BaseMetaModelElement,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -78,6 +79,22 @@ export class ShapeConnectorUtil {
 
   static isAspectPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
     return parentModel instanceof DefaultAspect && (childModel instanceof DefaultProperty || childModel instanceof DefaultOperation);
+  }
+
+  static isPropertyPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return parentModel instanceof DefaultProperty && childModel instanceof DefaultProperty;
+  }
+
+  static isPropertyAbstractPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return parentModel instanceof DefaultProperty && childModel instanceof DefaultAbstractProperty;
+  }
+
+  static isAbstractEntityAbstractPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return parentModel instanceof DefaultAbstractEntity && childModel instanceof DefaultAbstractProperty;
+  }
+
+  static isAbstractPropertyAbstractPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return parentModel instanceof DefaultAbstractProperty && childModel instanceof DefaultAbstractProperty;
   }
 
   static isAspectEventConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {

@@ -10,62 +10,39 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-
-import {Base, BaseMetaModelElement} from './base';
+import {BaseMetaModelElement} from './base';
 import {HasProperties} from './has-properties';
 import {Type} from './type';
 import {OverWrittenProperty} from './overwritten-property';
 import {AspectModelVisitor} from '@ame/mx-graph';
-import {CanExtend} from './can-extend';
+import {CanExtendsWithProperties} from './can-extend';
 import {DefaultAbstractEntity} from './default-abstract-entity';
+import {DefaultProperty} from './default-property';
+import {DefaultAbstractProperty} from './default-abstract-property';
 
-export interface Entity extends BaseMetaModelElement, HasProperties, Type, CanExtend {}
+export interface Entity extends BaseMetaModelElement, HasProperties, Type {}
 
-export class DefaultEntity extends Base implements Entity {
-  public extendedElement: DefaultAbstractEntity;
+export class DefaultEntity extends CanExtendsWithProperties implements Entity {
+  public extendedElement: DefaultAbstractEntity | DefaultEntity;
+  public readonly predefined: boolean;
 
   public get className() {
     return 'DefaultEntity';
   }
 
-  public get extendedProperties(): OverWrittenProperty[] {
-    if (this.extendedElement instanceof DefaultEntity || this.extendedElement instanceof DefaultAbstractEntity) {
-      return this.extendedElement.properties;
-    }
-
-    return [];
-  }
-
-  public get extendedPreferredName() {
-    if (!this.extendedElement) {
-      return null;
-    }
-
-    return this.extendedElement.preferredNames.size ? this.extendedElement.preferredNames : this.extendedElement.extendedPreferredName;
-  }
-
-  public get extendedDescription() {
-    if (!this.extendedElement) {
-      return null;
-    }
-
-    return this.extendedElement.descriptions.size ? this.extendedElement.descriptions : this.extendedElement.extendedDescription;
-  }
-
-  public get extendedSee() {
-    if (!this.extendedElement) {
-      return null;
-    }
-
-    return this.extendedElement.see?.length ? this.extendedElement.see : this.extendedElement.extendedSee;
-  }
-
-  public get allProperties(): OverWrittenProperty[] {
+  public get allProperties(): OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>[] {
     return [...(this.extendedProperties || []), ...this.properties];
   }
 
-  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public properties: OverWrittenProperty[] = []) {
+  constructor(
+    metaModelVersion: string,
+    aspectModelUrn: string,
+    name: string,
+    public properties: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>[] = [],
+    predefined = false
+  ) {
     super(metaModelVersion, aspectModelUrn, name);
+    this.predefined = predefined;
   }
 
   public static createInstance(): DefaultEntity {
@@ -88,6 +65,10 @@ export class DefaultEntity extends Base implements Entity {
     return visitor.visitEntity(this, context);
   }
 
+  isPredefined() {
+    return this.predefined;
+  }
+
   delete(baseMetalModelElement: BaseMetaModelElement) {
     if (baseMetalModelElement.className === 'DefaultProperty') {
       const index = this.properties.findIndex(({property}) => property.aspectModelUrn === baseMetalModelElement.aspectModelUrn);
@@ -95,7 +76,6 @@ export class DefaultEntity extends Base implements Entity {
         this.properties.splice(index, 1);
       }
     }
-
     if (['DefaultAbstractEntity', 'DefaultEntity'].includes(baseMetalModelElement.className)) {
       this.extendedElement = null;
     }

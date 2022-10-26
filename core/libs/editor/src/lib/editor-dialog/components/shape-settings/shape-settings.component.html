@@ -31,6 +31,7 @@
     <ame-characteristic *ngSwitchCase="isCharacteristic() && !isOfType(['DefaultTrait'])" [parentForm]="formGroup"></ame-characteristic>
     <ame-constraint *ngSwitchCase="isConstraint()" [parentForm]="formGroup"></ame-constraint>
     <ame-property *ngSwitchCase="isOfType(['DefaultProperty'])" [parentForm]="formGroup"></ame-property>
+    <ame-abstract-property *ngSwitchCase="isOfType(['DefaultAbstractProperty'])" [parentForm]="formGroup"></ame-abstract-property>
     <ame-operation *ngSwitchCase="isOfType(['DefaultOperation'])" [parentForm]="formGroup"></ame-operation>
     <ame-abstract-entity *ngSwitchCase="isOfType(['DefaultAbstractEntity'])" [parentForm]="formGroup"></ame-abstract-entity>
     <ame-entity *ngSwitchCase="isOfType(['DefaultEntity'])" [parentForm]="formGroup"></ame-entity>
@@ -44,20 +45,20 @@
 <div class="shape-settings__actions">
   <button
     *ngIf="metaModelDialogService.isSaveButtonEnabled()"
+    (click)="onClose()"
     type="button"
     mat-flat-button
-    (click)="onClose()"
     data-cy="editorCancelButton"
   >
     Cancel
   </button>
   <button
     *ngIf="metaModelDialogService.isSaveButtonEnabled()"
+    [disabled]="!formGroup.valid"
+    (click)="onSave()"
     mat-flat-button
     color="primary"
     type="button"
-    [disabled]="!formGroup.valid"
-    (click)="onSave()"
     data-cy="editorSaveButton"
   >
     Save

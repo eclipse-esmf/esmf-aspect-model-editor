@@ -16,6 +16,7 @@ import {ThemeColors} from '../models';
 export const lightColors: ThemeColors = {
   aspect: '#8298E0',
   property: '#C5C8D4',
+  abstractProperty: '#C5C8D4',
   operation: '#D5BFDA',
   event: '#B9D8FA',
   characteristic: '#D6E2A6',

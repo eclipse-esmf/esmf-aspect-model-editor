@@ -59,13 +59,13 @@ export class BammUnitInstantiator {
       : null;
   }
 
-  createUnit(name: string): Unit {
-    if (!name) {
+  createUnit(urn: string): Unit {
+    if (!urn) {
       return null;
     }
 
     const quantityKindNames = new Array<string>();
-    const predefinedUnit = this.createPredefinedUnit(name);
+    const predefinedUnit = this.createPredefinedUnit(urn);
 
     if (predefinedUnit) {
       return predefinedUnit;
@@ -73,7 +73,8 @@ export class BammUnitInstantiator {
 
     const defaultUnit = new DefaultUnit(this.bamm.version, null, null, null, null, null);
     defaultUnit.fileName = this.metaModelElementInstantiator.fileName;
-    const unitPropertyQuads = this.metaModelElementInstantiator.rdfModel.store.getQuads(DataFactory.namedNode(name), null, null, null);
+    const unitPropertyQuads = this.metaModelElementInstantiator.rdfModel.store.getQuads(DataFactory.namedNode(urn), null, null, null);
+    [, defaultUnit.name] = urn.split('#');
     const alreadyDefinedUnit = this.cachedFile.getElement<Entity>(unitPropertyQuads[0]?.subject.value, this.isIsolated);
 
     if (alreadyDefinedUnit) {
@@ -83,19 +84,17 @@ export class BammUnitInstantiator {
     defaultUnit.setExternalReference(this.rdfModel.isExternalRef);
 
     unitPropertyQuads.forEach(quad => {
-      if (this.bamm.isNameProperty(quad.predicate.value)) {
-        defaultUnit.name = quad.object.value;
-      } else if (this.bammu.isSymbolProperty(quad.predicate.value)) {
+      if (this.bamm.isSymbolProperty(quad.predicate.value)) {
         defaultUnit.symbol = quad.object.value;
-      } else if (this.bammu.isReferenceUnitProperty(quad.predicate.value)) {
+      } else if (this.bamm.isReferenceUnitProperty(quad.predicate.value)) {
         defaultUnit.referenceUnit = this.createUnit(quad.object.value);
-      } else if (this.bammu.isConversionFactorProperty(quad.predicate.value)) {
+      } else if (this.bamm.isConversionFactorProperty(quad.predicate.value)) {
         defaultUnit.conversionFactor = quad.object.value;
-      } else if (this.bammu.isNumericConversionFactorProperty(quad.predicate.value)) {
+      } else if (this.bamm.isNumericConversionFactorProperty(quad.predicate.value)) {
         defaultUnit.numericConversionFactor = quad.object.value;
-      } else if (this.bammu.isCommonCodeProperty(quad.predicate.value)) {
+      } else if (this.bamm.isCommonCodeProperty(quad.predicate.value)) {
         defaultUnit.code = quad.object.value;
-      } else if (this.bammu.isQuantityKindProperty(quad.predicate.value)) {
+      } else if (this.bamm.isQuantityKindProperty(quad.predicate.value)) {
         quantityKindNames.push(quad.object.value);
       }
     });

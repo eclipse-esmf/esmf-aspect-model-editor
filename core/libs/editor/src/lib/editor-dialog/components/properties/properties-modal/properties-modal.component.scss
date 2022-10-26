@@ -18,6 +18,10 @@
   min-width: 1080px;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .close-button {
   position: absolute;
   top: -10px;
@@ -28,7 +32,8 @@
   margin-top: 30px;
 }
 
-.inherited {
+.inherited,
+.disabled {
   display: flex;
   flex-direction: column;
   align-items: flex-start;

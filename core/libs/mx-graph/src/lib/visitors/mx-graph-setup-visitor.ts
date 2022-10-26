@@ -20,6 +20,7 @@ import {
   Base,
   BaseMetaModelElement,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -124,12 +125,30 @@ export class MxGraphSetupVisitor extends DefaultAspectModelVisitor<mxCell, mxCel
     return cell;
   }
 
+  visitAbstractProperty(property: DefaultAbstractProperty, context: mxgraph.mxCell): mxgraph.mxCell {
+    const cell = this.getOrCreateMxCell(
+      property,
+      MxGraphVisitorHelper.getAbstractPropertyProperties(property, this.languageSettingsService)
+    );
+    this.connectIsolatedElement(context, cell);
+
+    if (!this.currentCachedFile.getIsolatedElement(property.aspectModelUrn)) {
+      this.assignToParent(cell, context, property);
+    }
+    return cell;
+  }
+
   visitCharacteristic(characteristic: DefaultCharacteristic, context: mxCell): mxCell {
     const cell = this.getOrCreateMxCell(
       characteristic,
       MxGraphVisitorHelper.getCharacteristicProperties(characteristic, this.languageSettingsService)
     );
     this.connectIsolatedElement(context, cell);
+
+    const parentCell = MxGraphHelper.getModelElement(context);
+    if (parentCell instanceof DefaultAbstractProperty) {
+      return cell;
+    }
 
     if (!this.currentCachedFile.getIsolatedElement(characteristic.aspectModelUrn)) {
       this.assignToParent(cell, context, characteristic);

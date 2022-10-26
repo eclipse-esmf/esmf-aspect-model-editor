@@ -63,6 +63,7 @@ import {
   DefaultQuantityKind,
   DefaultEvent,
   DefaultAbstractEntity,
+  DefaultAbstractProperty,
 } from '@ame/meta-model';
 import {LogService} from '@ame/shared';
 import {MxGraphHelper} from '../helpers';
@@ -94,6 +95,8 @@ export class DeleteLanguageInformationVisitor extends DefaultAspectModelVisitor<
         this.visitAspect(modelElement, parents);
       } else if (modelElement instanceof DefaultProperty) {
         this.visitProperty(modelElement, parents);
+      } else if (modelElement instanceof DefaultAbstractProperty) {
+        this.visitAbstractProperty(modelElement, parents);
       } else if (modelElement instanceof DefaultConstraint) {
         this.visitConstraint(modelElement, parents);
       } else if (modelElement instanceof DefaultCharacteristic) {
@@ -171,6 +174,11 @@ export class DeleteLanguageInformationVisitor extends DefaultAspectModelVisitor<
   }
 
   visitProperty(property: DefaultProperty, _context: Array<BaseMetaModelElement>): BaseMetaModelElement {
+    this.removeLanguageInformation(property);
+    return property;
+  }
+
+  visitAbstractProperty(property: DefaultAbstractProperty, _context: Array<BaseMetaModelElement>): BaseMetaModelElement {
     this.removeLanguageInformation(property);
     return property;
   }

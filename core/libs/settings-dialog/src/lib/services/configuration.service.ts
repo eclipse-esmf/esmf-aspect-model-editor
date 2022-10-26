@@ -26,6 +26,7 @@ const DEFAULT_SETTINGS: Settings = {
   showEntityValueEntityEdge: false,
   showConnectionLabels: true,
   useSaturatedColors: false,
+  showAbstractPropertyConnection: true,
 };
 
 @Injectable({

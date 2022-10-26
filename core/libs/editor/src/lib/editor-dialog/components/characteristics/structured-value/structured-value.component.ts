@@ -76,6 +76,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
 
   ngOnDestroy() {
     super.ngOnDestroy();
+    this.subscription$?.unsubscribe();
     this.parentForm.removeControl('deconstructionRule');
     this.parentForm.removeControl('elements');
   }

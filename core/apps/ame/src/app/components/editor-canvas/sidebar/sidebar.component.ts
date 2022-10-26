@@ -17,6 +17,8 @@ import {NamespacesCacheService} from '@ame/cache';
 import {ConfirmDialogService, EditorService} from '@ame/editor';
 import {
   BaseMetaModelElement,
+  DefaultAbstractEntity,
+  DefaultAbstractProperty,
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
@@ -176,12 +178,14 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
           .pipe(
             first(),
             catchError(error => {
-              this.notificationsService.error(
-                'Error when loading Aspect Model. Reverting to previous Aspect Model',
-                `${error}`,
-                null,
-                5000
-              );
+              console.groupCollapsed('sidebar.component -> loadNamespaceFile', error);
+              console.groupEnd();
+
+              this.notificationsService.error({
+                title: 'Error when loading Aspect Model. Reverting to previous Aspect Model',
+                message: `${error}`,
+                timeout: 5000,
+              });
               return throwError(() => error);
             }),
             finalize(() => this.loadingScreenService.close())
@@ -218,8 +222,8 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     this.view = 'default';
   }
 
-  private initNamespaces() {
-    this.modelApiService.getAllNamespaces().subscribe((data: string[]) => {
+  public initNamespaces() {
+    this.modelApiService.getNamespacesAppendWithFiles().subscribe((data: string[]) => {
       this.sidebarService.resetNamespaces();
       data.forEach((namespace: string) => {
         const namespaceParts = namespace.split(':');
@@ -253,6 +257,10 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
       return 'unit';
     } else if (modelElement instanceof DefaultEvent) {
       return 'event';
+    } else if (modelElement instanceof DefaultAbstractEntity) {
+      return 'abstract-entity';
+    } else if (modelElement instanceof DefaultAbstractProperty) {
+      return 'abstract-property';
     } else {
       return null;
     }
@@ -265,7 +273,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
 
     this.namespaceCacheService
       .getCurrentCachedFile()
-      .getAllElements<BaseMetaModelElement>()
+      ?.getAllElements<BaseMetaModelElement>()
       .forEach(currentFileElement =>
         cachedFile.getAllElements<BaseMetaModelElement>().forEach(cachedFileElement => {
           if (currentFileElement.aspectModelUrn === cachedFileElement.aspectModelUrn) {
@@ -275,12 +283,12 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
       );
 
     if (duplicateElements.length) {
-      this.notificationsService.warning(
-        'Duplicate elements in Aspect Model',
-        `No identical elements are allowed to exist in a namespace and it can lead to problem when referencing. The following elements have been identified as duplicate: ${duplicateElements.join(
+      this.notificationsService.warning({
+        title: 'Duplicate elements in Aspect Model',
+        message: `No identical elements are allowed to exist in a namespace and it can lead to problem when referencing. The following elements have been identified as duplicate: ${duplicateElements.join(
           ', '
-        )}`
-      );
+        )}`,
+      });
     }
     this.selectedNamespaceElements = cachedFile
       ?.getAllElements<BaseMetaModelElement>()

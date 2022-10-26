@@ -37,7 +37,7 @@ export class StartLoadModalComponent {
   loadAutoSavedModel() {
     this.loadingButton = 'autoSaved';
     this.loadNewAspectModel(of(this.data.aspectModel), () => {
-      this.notificationsService.info('Auto saved model was loaded');
+      this.notificationsService.info({title: 'Auto saved model was loaded'});
     });
     this.editorService.showLastSavedRdf({rdf: this.data.aspectModel});
   }
@@ -47,7 +47,7 @@ export class StartLoadModalComponent {
     this.loadNewAspectModel(
       this.modelApiService.getDefaultAspectModel(),
       () => {
-        this.notificationsService.info('Default model was loaded', null, null);
+        this.notificationsService.info({title: 'Default model was loaded'});
       },
       true
     );

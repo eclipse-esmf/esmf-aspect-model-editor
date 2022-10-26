@@ -18,7 +18,6 @@ import {EntityValueVisitor} from '@ame/aspect-exporter';
 import {Bamm} from '@ame/vocabulary';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {provideMockObject} from '../../../../../../jest-helpers';
-import {RdfModel} from '@ame/rdf/utils';
 
 class MockBamm {
   RdfType = jest.fn(() => DataFactory.namedNode('type'));
@@ -26,7 +25,13 @@ class MockBamm {
 }
 
 class MockRDFModel {
-  rdfModel = provideMockObject(RdfModel);
+  rdfModel = {
+    store: new Store(),
+    BAMM: jest.fn(() => new Bamm('')),
+    BAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+    hasNamespace: jest.fn(() => false),
+    addPrefix: jest.fn(() => {}),
+  } as any;
   store = new Store();
   BAMM = jest.fn((): Bamm => new MockBamm() as any as Bamm);
   // BAMMC = jest.fn((): Bammc => new MockBamm() as any as Bammc);

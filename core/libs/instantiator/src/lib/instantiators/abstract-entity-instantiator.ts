@@ -14,6 +14,7 @@
 import {DataFactory, Quad} from 'n3';
 import {DefaultAbstractEntity} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
+import {PredefinedEntityInstantiator} from './bamme-predefined-entity-instantiator';
 
 export class AbstractEntityInstantiator {
   private get cachedFile() {
@@ -26,6 +27,10 @@ export class AbstractEntityInstantiator {
 
   private get isIsolated() {
     return this.metaModelElementInstantiator.isIsolated;
+  }
+
+  private get bamme() {
+    return this.metaModelElementInstantiator.bamme;
   }
 
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
@@ -45,7 +50,9 @@ export class AbstractEntityInstantiator {
 
     quads.forEach(quad => {
       if (bamm.isExtendsProperty(quad.predicate.value)) {
-        defaultAbstractEntity.extendedElement = this.createAbstractEntity(this.rdfModel.store.getQuads(quad.object, null, null, null));
+        defaultAbstractEntity.extendedElement = this.bamme.isTimeSeriesEntity(quad.object.value)
+          ? new PredefinedEntityInstantiator(this.metaModelElementInstantiator).entityInstances[this.bamme.TimeSeriesEntity]()
+          : this.createAbstractEntity(this.rdfModel.store.getQuads(quad.object, null, null, null));
         return;
       }
 

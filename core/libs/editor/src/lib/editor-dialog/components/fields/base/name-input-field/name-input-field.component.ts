@@ -22,6 +22,7 @@ import {
   DefaultConstraint,
   DefaultEntity,
   DefaultEntityValue,
+  DefaultProperty,
   DefaultUnit,
 } from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
@@ -47,6 +48,10 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
     this.subscription = this.getMetaModelData().subscribe(() => this.setNameControl());
   }
 
+  private isDisabled() {
+    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extendedElement;
+  }
+
   private setNameControl() {
     const nameControl = this.parentForm.get('name');
     if (nameControl?.value) {
@@ -58,7 +63,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
       new FormControl(
         {
           value: this.getCurrentValue('name'),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
+          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
         },
         {
           validators: this.getNameValidators(),
@@ -69,6 +74,10 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
   }
 
   private getNameValidators(): any[] {
+    if (this.isDisabled()) {
+      return [];
+    }
+
     const nameValidators = [
       Validators.required,
       EditorDialogValidators.duplicateName(this.namespacesCacheService, this.metaModelElement, this.rdfService.externalRdfModels),

@@ -34,7 +34,7 @@ export interface State {
   path: string;
   name: string;
   result: ValidationResult[];
-  incorrectFiles: string[];
+  invalidFiles: string[];
   loaded?: boolean;
   subscription?: Subscription;
   error?: string;
@@ -59,8 +59,8 @@ export class ZipUploaderService {
         this.editorService.refreshSidebarNamespaces();
         return {
           rawResponse: response,
-          result: response.correctFiles,
-          incorrectFiles: response.incorrectFiles,
+          result: response.validFiles,
+          invalidFiles: response.invalidFiles,
         };
       }),
       catchError(() => {

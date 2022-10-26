@@ -69,8 +69,7 @@
   <mat-slide-toggle [(ngModel)]="settings.autoFormatEnabled" class="setting-item__toggle" data-cy="autoFormatToggle">
     <span class="setting-item__toggle__content">
       Auto-Formatting
-      <mat-icon [matTooltipShowDelay]="0" [matTooltipHideDelay]="100" matTooltip="Auto format elements on the graph.">info
-      </mat-icon>
+      <mat-icon [matTooltipShowDelay]="0" [matTooltipHideDelay]="100" matTooltip="Auto format elements on the graph.">info </mat-icon>
     </span>
   </mat-slide-toggle>
 </div>
@@ -87,7 +86,13 @@
 
 <div class="item">
   <mat-slide-toggle [(ngModel)]="settings.showEntityValueEntityEdge" (change)="onChange(); onLayoutChange()">
-    <span class="setting-item__toggle__content"> Display 'entity value - entity' relationship </span>
+    <span class="setting-item__toggle__content"> Display 'Entity Value - Entity' relationship </span>
+  </mat-slide-toggle>
+</div>
+
+<div class="item">
+  <mat-slide-toggle [(ngModel)]="settings.showAbstractPropertyConnection" (change)="onChange(); onLayoutChange()">
+    <span class="setting-item__toggle__content"> Display 'Property - Abstract Property' relationship </span>
   </mat-slide-toggle>
 </div>
 

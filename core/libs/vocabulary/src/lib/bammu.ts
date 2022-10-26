@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Bamm} from './bamm';
-import {DataFactory, NamedNode} from 'n3';
 
 export class Bammu {
   private alias = 'unit';
@@ -48,45 +47,5 @@ export class Bammu {
 
   getNamespace(): string {
     return `${this.getUri()}#`;
-  }
-
-  QuantityKindProperty(): NamedNode {
-    return DataFactory.namedNode(`${this.getNamespace()}quantityKind`);
-  }
-
-  ReferenceUnitProperty(): NamedNode {
-    return DataFactory.namedNode(`${this.getNamespace()}referenceUnit`);
-  }
-
-  Unit(): NamedNode {
-    return DataFactory.namedNode(`${this.getNamespace()}Unit`);
-  }
-
-  isUnitElement(value: string): boolean {
-    return value === this.Unit().value;
-  }
-
-  isQuantityKindProperty(value: string): boolean {
-    return `${this.getNamespace()}quantityKind` === value;
-  }
-
-  isReferenceUnitProperty(value: string): boolean {
-    return `${this.getNamespace()}referenceUnit` === value;
-  }
-
-  isCommonCodeProperty(value: string): boolean {
-    return `${this.getNamespace()}commonCode` === value;
-  }
-
-  isConversionFactorProperty(value: string): boolean {
-    return `${this.getNamespace()}conversionFactor` === value;
-  }
-
-  isNumericConversionFactorProperty(value: string): boolean {
-    return `${this.getNamespace()}numericConversionFactor` === value;
-  }
-
-  isSymbolProperty(value: string): boolean {
-    return `${this.getNamespace()}symbol` === value;
   }
 }

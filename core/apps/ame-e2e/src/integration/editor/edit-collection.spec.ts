@@ -211,7 +211,7 @@ describe('Test editing different Collections', () => {
       })
       .then(() => cy.clickShape(characteristic))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.properties[0].property.characteristic.name).to.be.equal(characteristic);
       });
   };
@@ -232,8 +232,8 @@ describe('Test editing different Collections', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('bamm-c:elementCharacteristic :Characteristic2'))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
-        expect((<DefaultCollection>aspect.properties[0].property.characteristic).elementCharacteristic.name).to.equal('Characteristic2');
+      .then(aspect => {
+        expect(aspect.properties[0].property.characteristic.elementCharacteristic.name).to.equal('Characteristic2');
       });
   };
 
@@ -268,10 +268,10 @@ describe('Test editing different Collections', () => {
       })
       .then(() => cy.clickShape('Constraint1'))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.properties[0].property.characteristic.name).to.equal('Property1Trait');
-        expect((<DefaultTrait>aspect.properties[0].property.characteristic).baseCharacteristic.name).to.equal(characteristic);
-        expect((<DefaultTrait>aspect.properties[0].property.characteristic).constraints[0].name).to.equal('Constraint1');
+        expect(aspect.properties[0].property.characteristic.baseCharacteristic.name).to.equal(characteristic);
+        expect(aspect.properties[0].property.characteristic.constraints[0].name).to.equal('Constraint1');
       });
   };
 
@@ -286,9 +286,9 @@ describe('Test editing different Collections', () => {
         expect(rdf).to.contain('NewCharacteristic a bamm:Characteristic');
       })
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
-        const trait = <DefaultTrait>aspect.properties[0].property.characteristic;
-        const collection = <DefaultCollection>trait.baseCharacteristic;
+      .then(aspect => {
+        const trait = aspect.properties[0].property.characteristic;
+        const collection = trait.baseCharacteristic;
         expect(collection.elementCharacteristic.name).to.equal('NewCharacteristic');
       });
   };

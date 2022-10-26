@@ -1,4 +1,5 @@
 import {NamespacesCacheService} from '@ame/cache';
+import {MetaModelElementInstantiator, PredefinedEntityInstantiator} from '@ame/instantiator';
 import {DefaultAbstractEntity, DefaultEntity} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
@@ -11,15 +12,28 @@ import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
-  selector: 'ame-extends-field',
+  selector: 'ame-entity-extends-field',
   templateUrl: './extends-field.component.html',
   styleUrls: ['./extends-field.component.scss'],
 })
-export class ExtendsFieldComponent extends InputFieldComponent<DefaultEntity> implements OnInit, OnDestroy {
+export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEntity> implements OnInit, OnDestroy {
   public filteredAbstractEntities$: Observable<any[]>;
+  public filteredEntities$: Observable<any[]>;
 
   public extendsValueControl: FormControl;
   public extendsControl: FormControl;
+  public predefinedEntities: {
+    name: string;
+    entity: DefaultAbstractEntity;
+    urn: string;
+    description: string;
+    complex: boolean;
+    namespace?: string;
+  }[];
+
+  public get isAbstractEntity() {
+    return this.metaModelElement instanceof DefaultAbstractEntity;
+  }
 
   constructor(
     private notificationsService: NotificationsService,
@@ -35,6 +49,22 @@ export class ExtendsFieldComponent extends InputFieldComponent<DefaultEntity> im
 
   ngOnInit(): void {
     this.subscription = this.getMetaModelData().subscribe(() => this.setExtendsControl());
+    const predefinedEntities = new PredefinedEntityInstantiator(new MetaModelElementInstantiator(this.rdfService.currentRdfModel, null))
+      .entityInstances;
+    this.predefinedEntities = Object.values(predefinedEntities)
+      .map(value => {
+        const entity = value();
+
+        return {
+          name: entity.name,
+          description: entity.getDescription('en') || '',
+          urn: entity.getUrn(),
+          complex: false,
+          entity,
+        };
+      })
+      .filter(({entity}) => (this.metaModelElement instanceof DefaultAbstractEntity ? entity instanceof DefaultAbstractEntity : true))
+      .sort(({name: a}, {name: b}) => (a > b ? 1 : -1));
   }
 
   ngOnDestroy() {
@@ -56,7 +86,7 @@ export class ExtendsFieldComponent extends InputFieldComponent<DefaultEntity> im
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement.isExternalReference(),
+          disabled: !!value || this.metaModelElement.isExternalReference() || this.metaModelElement.isPredefined(),
         },
         {
           validators: [
@@ -89,9 +119,11 @@ export class ExtendsFieldComponent extends InputFieldComponent<DefaultEntity> im
     this.extendsControl = this.parentForm.get('extends') as FormControl;
 
     this.filteredAbstractEntities$ = combineLatest([
-      this.metaModelElement instanceof DefaultEntity ? this.initFilteredEntities(this.extendsValueControl, false, this.metaModelElement) : of([]),
+      this.metaModelElement instanceof DefaultEntity ? this.initFilteredEntities(this.extendsValueControl) : of([]),
       this.initFilteredAbstractEntities(this.extendsValueControl),
     ]).pipe(map(([a, b]) => [...a, ...b].filter(e => e.name !== this.metaModelElement.name)));
+
+    this.filteredEntities$ = this.initFilteredEntities(this.extendsValueControl);
   }
 
   onSelectionChange(newValue: any) {
@@ -111,6 +143,10 @@ export class ExtendsFieldComponent extends InputFieldComponent<DefaultEntity> im
       foundEntity = this.namespacesCacheService.findElementOnExtReference<DefaultEntity>(newValue.urn);
     }
 
+    if (!foundEntity) {
+      foundEntity = newValue.entity;
+    }
+
     this.parentForm.setControl('extends', new FormControl(foundEntity));
 
     this.extendsValueControl.patchValue(newValue.name);
@@ -126,12 +162,33 @@ export class ExtendsFieldComponent extends InputFieldComponent<DefaultEntity> im
     const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${entityName}`;
 
     if (this.metaModelElement.aspectModelUrn === urn || this.parentForm.get('name').value === entityName) {
-      this.notificationsService.error('Element left cannot link itself');
+      this.notificationsService.error({title: 'Element left cannot link itself'});
       this.extendsValueControl.setValue('');
       return;
     }
 
-    const newAbstractEntity = new DefaultAbstractEntity(this.metaModelElement.metaModelVersion, urn, entityName, null);
+    const newAbstractEntity = new DefaultAbstractEntity(this.metaModelElement.metaModelVersion, urn, entityName, []);
+    this.parentForm.setControl('extends', new FormControl(newAbstractEntity));
+
+    this.extendsValueControl.patchValue(entityName);
+    this.extendsControl.setValue(newAbstractEntity);
+    this.extendsValueControl.disable();
+  }
+
+  createEntity(entityName: string) {
+    if (!this.isUpperCase(entityName)) {
+      return;
+    }
+
+    const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${entityName}`;
+
+    if (this.metaModelElement.aspectModelUrn === urn || this.parentForm.get('name').value === entityName) {
+      this.notificationsService.error({title: 'Element left cannot link itself'});
+      this.extendsValueControl.setValue('');
+      return;
+    }
+
+    const newAbstractEntity = new DefaultEntity(this.metaModelElement.metaModelVersion, urn, entityName, []);
     this.parentForm.setControl('extends', new FormControl(newAbstractEntity));
 
     this.extendsValueControl.patchValue(entityName);

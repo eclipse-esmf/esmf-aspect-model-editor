@@ -1,0 +1,33 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<h2 mat-dialog-title>Increasing Namespaces Versions</h2>
+
+<mat-dialog-content *ngIf="namespaces">
+  <div *ngFor="let namespace of namespaces | keyvalue" class="namespace">
+    <p class="namespace__name">
+      <mat-spinner *ngIf="!isNamespaceMigrated(namespace.value)" class="namespace__name__icon" diameter="21"></mat-spinner>
+      <mat-icon *ngIf="isNamespaceMigrated(namespace.value)" class="namespace__name__icon">check</mat-icon>
+      <span>{{ getNamespaceExplicitVersioning(namespace.key) }}</span>
+    </p>
+    <p *ngFor="let file of namespace.value" class="namespace__file">
+      <mat-icon [hidden]="!file.migrated" class="namespace__file__icon">check</mat-icon>
+      <span>{{ file.name }}</span>
+    </p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-content class="loading-namespaces" *ngIf="!namespaces">
+  <mat-spinner diameter="100"></mat-spinner>
+  <p>Loading Namespaces</p>
+</mat-dialog-content>

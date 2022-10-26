@@ -41,14 +41,14 @@ describe('Test load external reference with same namespace', () => {
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
         expect(aspect.properties).to.be.length(1);
         expect(aspect.properties[0].property.name).to.equal('externalPropertyWithChildren');
 
         expect(aspect.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic1');
 
-        const entity = <DefaultEntity>aspect.properties[0].property.characteristic.dataType;
+        const entity = aspect.properties[0].property.characteristic.dataType;
         expect(entity.name).to.equal('ChildrenEntity1');
 
         expect(entity.properties[0].property.name).to.equal('childrenProperty1');
@@ -57,7 +57,7 @@ describe('Test load external reference with same namespace', () => {
         expect(entity.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic2');
         expect(entity.properties[1].property.characteristic.name).to.equal('Boolean');
 
-        expect((<DefaultEntity>entity.properties[0].property.characteristic.dataType).name).to.equal('ChildrenEntity2');
+        expect(entity.properties[0].property.characteristic.dataType.name).to.equal('ChildrenEntity2');
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
@@ -95,9 +95,9 @@ describe('Test load external reference with same namespace', () => {
     cy.fixture('/external-reference/same-namespace/model-with-external-operation-reference-with-children')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
         expect(aspect.operations).to.be.length(1);
         expect(aspect.operations[0].name).to.equal('externalOperationWithChildren');
@@ -106,7 +106,7 @@ describe('Test load external reference with same namespace', () => {
         expect(aspect.operations[0].input[0].property.name).to.equal('childProperty1');
         expect(aspect.operations[0].input[0].property.characteristic.name).to.equal('ChildrenCharacteristic1');
 
-        const entity1 = <DefaultEntity>aspect.operations[0].input[0].property.characteristic.dataType;
+        const entity1 = aspect.operations[0].input[0].property.characteristic.dataType;
         expect(entity1.name).to.equal('ChildrenEntity1');
         expect(entity1.properties[0].property.name).to.equal('childrenProperty1');
         expect(entity1.properties[1].property.name).to.equal('childrenProperty2');
@@ -115,7 +115,7 @@ describe('Test load external reference with same namespace', () => {
 
         expect(aspect.operations[0].input[1].property.name).to.equal('childProperty2');
         expect(aspect.operations[0].input[1].property.characteristic.name).to.equal('ChildrenCharacteristic1');
-        const entity2 = <DefaultEntity>aspect.operations[0].input[1].property.characteristic.dataType;
+        const entity2 = aspect.operations[0].input[1].property.characteristic.dataType;
         expect(entity2.name).to.equal('ChildrenEntity1');
         expect(entity2.properties[0].property.name).to.equal('childrenProperty1');
         expect(entity2.properties[1].property.name).to.equal('childrenProperty2');
@@ -124,7 +124,7 @@ describe('Test load external reference with same namespace', () => {
 
         expect(aspect.operations[0].output.property.name).to.equal('childProperty3');
         expect(aspect.operations[0].output.property.characteristic.name).to.equal('ChildrenCharacteristic1');
-        const entity3 = <DefaultEntity>aspect.operations[0].output.property.characteristic.dataType;
+        const entity3 = aspect.operations[0].output.property.characteristic.dataType;
         expect(entity3.name).to.equal('ChildrenEntity1');
         expect(entity3.properties[0].property.name).to.equal('childrenProperty1');
         expect(entity3.properties[1].property.name).to.equal('childrenProperty2');
@@ -170,16 +170,16 @@ describe('Test load external reference with same namespace', () => {
     cy.fixture('/external-reference/same-namespace/model-with-external-characteristic-reference-with-children')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
         expect(aspect.properties).to.be.length(1);
         expect(aspect.properties[0].property.name).to.equal('property1');
 
         expect(aspect.properties[0].property.characteristic.name).to.equal('ExternalCharacteristicWithChildren');
 
-        const entity = <DefaultEntity>aspect.properties[0].property.characteristic.dataType;
+        const entity = aspect.properties[0].property.characteristic.dataType;
         expect(entity.name).to.equal('ChildrenEntity1');
 
         expect(entity.properties[0].property.name).to.equal('childrenProperty1');
@@ -188,7 +188,7 @@ describe('Test load external reference with same namespace', () => {
         expect(entity.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic2');
         expect(entity.properties[1].property.characteristic.name).to.equal('Boolean');
 
-        expect((<DefaultEntity>entity.properties[0].property.characteristic.dataType).name).to.equal('ChildrenEntity2');
+        expect(entity.properties[0].property.characteristic.dataType.name).to.equal('ChildrenEntity2');
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
@@ -227,9 +227,9 @@ describe('Test load external reference with same namespace', () => {
     cy.fixture('/external-reference/same-namespace/model-with-external-unit-reference')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
         expect(aspect.properties).to.be.length(1);
         expect(aspect.properties[0].property.name).to.equal('property1');
@@ -273,16 +273,16 @@ describe('Test load external reference with same namespace', () => {
     cy.fixture('/external-reference/same-namespace/model-with-external-entity-reference-with-children')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
         expect(aspect.properties).to.be.length(1);
         expect(aspect.properties[0].property.name).to.equal('property1');
 
         expect(aspect.properties[0].property.characteristic.name).to.equal('Characteristic1');
 
-        const entity = <DefaultEntity>aspect.properties[0].property.characteristic.dataType;
+        const entity = aspect.properties[0].property.characteristic.dataType;
         expect(entity.name).to.equal('ExternalEntityWithChildren');
 
         expect(entity.properties[0].property.name).to.equal('childrenProperty1');
@@ -291,7 +291,7 @@ describe('Test load external reference with same namespace', () => {
         expect(entity.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic2');
         expect(entity.properties[1].property.characteristic.name).to.equal('Boolean');
 
-        expect((<DefaultEntity>entity.properties[0].property.characteristic.dataType).name).to.equal('ChildrenEntity2');
+        expect(entity.properties[0].property.characteristic.dataType.name).to.equal('ChildrenEntity2');
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
@@ -391,9 +391,9 @@ describe('Test load external reference with same namespace', () => {
     cy.fixture('/external-reference/same-namespace/model-with-several-external-reference')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
         expect(aspect.operations).to.be.length(2);
         expect(aspect.operations[0].name).to.equal('operation1');
@@ -416,7 +416,7 @@ describe('Test load external reference with same namespace', () => {
         expect((<Trait>aspect.properties[3].property.characteristic).constraints[0].name).to.equal('Constraint1');
         expect((<Trait>aspect.properties[3].property.characteristic).baseCharacteristic.name).to.equal('Characteristic1');
 
-        expect((<DefaultEntity>aspect.properties[0].property.characteristic.dataType).name).to.equal('ExternalEntity');
+        expect(aspect.properties[0].property.characteristic.dataType.name).to.equal('ExternalEntity');
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {

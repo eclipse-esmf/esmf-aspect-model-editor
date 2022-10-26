@@ -31,6 +31,7 @@
       "@ame/editor": ["libs/editor/src/index.ts"],
       "@ame/instantiator": ["libs/instantiator/src/index.ts"],
       "@ame/meta-model": ["libs/meta-model/src/index.ts"],
+      "@ame/migrator": ["libs/migrator/src/index.ts"],
       "@ame/mx-graph": ["libs/mx-graph/src/index.ts"],
       "@ame/rdf/*": ["libs/rdf/src/lib/*"],
       "@ame/settings-dialog": ["libs/settings-dialog/src/index.ts"],

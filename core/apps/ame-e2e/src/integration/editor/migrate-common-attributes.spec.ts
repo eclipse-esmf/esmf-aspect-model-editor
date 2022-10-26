@@ -50,7 +50,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm:Characteristic;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -68,7 +67,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:Code;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -96,7 +94,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf => {
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:Collection;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -115,7 +112,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:List;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -134,7 +130,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:Set;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -153,7 +148,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:SortedSet;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -172,7 +166,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:TimeSeries;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -192,7 +185,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf => {
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:Enumeration;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -212,7 +204,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf => {
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:State;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -233,7 +224,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:Duration;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -255,7 +245,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:Measurement;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -274,7 +263,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:SingleEntity;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -294,7 +282,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:SingleEntity;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType xsd:string;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -316,7 +303,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:Measurement;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType :Entity1;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +
@@ -336,7 +322,6 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:Duration;\n' +
-            '    bamm:name "Characteristic1";\n' +
             '    bamm:dataType :Entity1;\n' +
             '    bamm:preferredName "testPreferredName"@en;\n' +
             '    bamm:description "testDescription"@en;\n' +

@@ -25,9 +25,24 @@ import {RdfModel} from '../utils';
 export class RdfService {
   private namedNode = DataFactory.namedNode;
   private _latestSavedRDF: string;
+  private _externalRdfModels: Array<RdfModel> = [];
+  private _currentRdfModel: RdfModel;
 
-  public externalRdfModels: Array<RdfModel> = [];
-  public currentRdfModel: RdfModel;
+  public get externalRdfModels(): Array<RdfModel> {
+    return this._externalRdfModels;
+  }
+
+  public set externalRdfModels(rdfModelsR: Array<RdfModel>) {
+    this._externalRdfModels = rdfModelsR;
+  }
+
+  public get currentRdfModel(): RdfModel {
+    return this._currentRdfModel;
+  }
+
+  public set currentRdfModel(rdfModel: RdfModel) {
+    this._currentRdfModel = rdfModel;
+  }
 
   constructor(private modelApiService: ModelApiService, private dataTypeService: DataTypeService, private logService: LogService) {
     if (!environment.production) {
@@ -177,7 +192,12 @@ export class RdfService {
 
       if (error) {
         this.logService.logInfo(`Error when parsing RDF ${error}`);
-        subject.error(error);
+        const rdfModel = new RdfModel(store, this.dataTypeService, {});
+        rdfModel.isExternalRef = true;
+        rdfModel.aspectModelFileName = fileContent.fileName;
+        rdfModel.hasErrors = true;
+        this.externalRdfModels.push(rdfModel);
+        subject.next(rdfModel);
         subject.complete();
       }
     });

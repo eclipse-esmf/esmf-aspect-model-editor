@@ -14,6 +14,7 @@
 export interface ThemeColors {
   aspect: string;
   property: string;
+  abstractProperty: string;
   operation: string;
   event: string;
   characteristic: string;

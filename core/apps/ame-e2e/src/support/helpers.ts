@@ -66,7 +66,10 @@ export class cyHelp {
       if (!foundShape) {
         throw new Error(`Shape ${cellName} not found`);
       }
-      return foundShape?.overlays.every(({tooltip}) => tooltip === 'Add Left Characteristic' || tooltip === 'Add Right Characteristic');
+      return (
+        foundShape?.overlays.filter(({tooltip}) => tooltip === 'Add Left Characteristic' || tooltip === 'Add Right Characteristic')
+          .length === 2
+      );
     });
   }
 

@@ -11,17 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DefaultEntity, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
+import {ModelService, RdfService} from '@ame/rdf/services';
+import {RdfModel} from '@ame/rdf/utils';
 import {TestBed} from '@angular/core/testing';
 import {describe, expect, it} from '@jest/globals';
+import {provideMockObject} from 'jest-helpers';
 import {Store} from 'n3';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {EntityVisitor} from './entity-visitor';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {RdfModel} from '@ame/rdf/utils';
-import {DefaultEntity, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
-import {provideMockObject} from '../../../../../../jest-helpers';
+import {Bamm} from '@ame/vocabulary';
 
 describe('Entity Visitor', () => {
   let service: EntityVisitor;
@@ -59,8 +60,13 @@ describe('Entity Visitor', () => {
     });
 
     modelService = provideMockObject(ModelService);
-    rdfModel = provideMockObject(RdfModel);
-    rdfModel.store = new Store();
+    rdfModel = {
+      store: new Store(),
+      BAMM: jest.fn(() => new Bamm('')),
+      BAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+      hasNamespace: jest.fn(() => false),
+      addPrefix: jest.fn(() => {}),
+    } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
     entity = new DefaultEntity('1', 'bamm#entity1', 'entity1', null);
     property = new DefaultProperty('1', 'bamm#property1', 'property1', null);
@@ -90,7 +96,6 @@ describe('Entity Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'entity1',
     });
     expect(rdfListService.push).toHaveBeenCalledWith(entity, {property: property, keys: {}});
   });

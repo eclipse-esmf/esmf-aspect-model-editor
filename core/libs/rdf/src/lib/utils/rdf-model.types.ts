@@ -19,4 +19,5 @@ export interface InstantiatorListElement {
   optional?: Quad_Object;
   notInPayload?: Quad_Object;
   payloadName?: Quad_Object;
+  extends?: Quad_Object;
 }

@@ -16,6 +16,8 @@ export enum PropertyEnum {
   See = 'see',
   PreferredName = 'preferredName',
   Description = 'description',
+  Extends = 'extends',
+  Characteristic = 'characteristic',
   DataType = 'dataType',
   Optional = 'optional',
   MinValue = 'minValue',

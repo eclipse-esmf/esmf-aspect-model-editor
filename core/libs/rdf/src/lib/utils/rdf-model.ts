@@ -28,6 +28,7 @@ export class RdfModel {
 
   private _isExternalRef = false;
   private _aspectModelFileName: string;
+  private _hasErrors = false;
 
   private defaultAspectModelAlias = '';
 
@@ -45,6 +46,18 @@ export class RdfModel {
 
   set aspectModelFileName(value: string) {
     this._aspectModelFileName = value.split(':')[2];
+  }
+
+  get aspectUrn(): string {
+    return this.store.getSubjects(this.bamm.RdfType(), this.bamm.Aspect(), null)[0]?.value;
+  }
+
+  set hasErrors(hasErrors: boolean) {
+    this._hasErrors = hasErrors;
+  }
+
+  get hasErrors(): boolean {
+    return this._hasErrors;
   }
 
   constructor(public store: Store, public dataTypeService: DataTypeService, private prefixes: Prefixes) {
@@ -191,7 +204,8 @@ export class RdfModel {
           optional: blankNodeElements.find(e => e.predicate.value === this.bamm.OptionalProperty().value)?.object,
           notInPayload: blankNodeElements.find(e => e.predicate.value === this.bamm.NotInPayloadProperty().value)?.object,
           payloadName: blankNodeElements.find(e => e.predicate.value === this.bamm.payloadNameProperty().value)?.object,
-          quad: blankNodeElements.find(e => e.predicate.value === this.bamm.PropertyProperty().value)?.object,
+          quad: blankNodeElements.find(e => e.predicate.value === this.bamm.PropertyProperty().value)?.object || quad.subject,
+          extends: blankNodeElements.find(e => e.predicate.value === this.bamm.ExtendsProperty().value)?.object,
         });
         continue;
       }
@@ -222,7 +236,7 @@ export class RdfModel {
     return parentQuad;
   }
 
-  findAnyProperty(quad: Quad_Subject | Quad | NamedNode): Array<Quad> {
+  findAnyProperty(quad: Quad_Subject | Quad_Object | Quad | NamedNode): Array<Quad> {
     if (quad instanceof Quad) {
       return this.store.getQuads(quad.object, null, null, null);
     } else {

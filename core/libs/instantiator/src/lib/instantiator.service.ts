@@ -22,12 +22,14 @@ import {
   EventInstantiator,
   OperationInstantiator,
   PropertyInstantiator,
+  AbstractPropertyInstantiator,
 } from './instantiators';
 import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {NotificationsService} from '@ame/shared';
+import {AbstractEntityInstantiator} from './instantiators/abstract-entity-instantiator';
 
 @Injectable({
   providedIn: 'root',
@@ -91,7 +93,6 @@ export class InstantiatorService {
   ) {
     const bamm = rdfModel.BAMM();
     const bammc = rdfModel.BAMMC();
-    const bammu = rdfModel.BAMMU();
     const elementType = rdfModel.store.getObjects(subject, rdfModel.BAMM().RdfType(), null)?.[0]?.value;
 
     if (bamm.isPropertyElement(elementType)) {
@@ -99,6 +100,19 @@ export class InstantiatorService {
         blankNode: false,
         quad: subject,
       });
+      if (overwrittenProperty?.property) {
+        cachedFile.resolveIsolatedElement(overwrittenProperty.property);
+        cachedFile.removeCachedElement(overwrittenProperty.property.aspectModelUrn);
+      }
+      return;
+    }
+
+    if (bamm.isAbstractPropertyElement(elementType)) {
+      const overwrittenProperty = new AbstractPropertyInstantiator(metaModelElementInstantiator).createAbstractProperty({
+        blankNode: false,
+        quad: subject,
+      });
+
       if (overwrittenProperty?.property) {
         cachedFile.resolveIsolatedElement(overwrittenProperty.property);
         cachedFile.removeCachedElement(overwrittenProperty.property.aspectModelUrn);
@@ -148,7 +162,7 @@ export class InstantiatorService {
       return;
     }
 
-    if (bammu.isUnitElement(elementType)) {
+    if (bamm.isUnitElement(elementType)) {
       const unit = new BammUnitInstantiator(metaModelElementInstantiator).createUnit(subject.value);
       if (unit) {
         cachedFile.resolveIsolatedElement(unit);
@@ -159,6 +173,17 @@ export class InstantiatorService {
 
     if (bamm.isEntity(elementType)) {
       const entity = new EntityInstantiator(metaModelElementInstantiator).createEntity(rdfModel.store.getQuads(subject, null, null, null));
+      if (entity) {
+        cachedFile.resolveIsolatedElement(entity);
+        cachedFile.removeCachedElement(entity.aspectModelUrn);
+      }
+      return;
+    }
+
+    if (bamm.isAbstractEntity(elementType)) {
+      const entity = new AbstractEntityInstantiator(metaModelElementInstantiator).createAbstractEntity(
+        rdfModel.store.getQuads(subject, null, null, null)
+      );
       if (entity) {
         cachedFile.resolveIsolatedElement(entity);
         cachedFile.removeCachedElement(entity.aspectModelUrn);

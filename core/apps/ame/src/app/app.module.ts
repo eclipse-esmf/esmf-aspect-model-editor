@@ -30,6 +30,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
 import {FormsModule} from '@angular/forms';
+import {MigratorModule} from '@ame/migrator';
 
 @NgModule({
   declarations: [AppComponent, StartLoadModalComponent],
@@ -49,6 +50,7 @@ import {FormsModule} from '@angular/forms';
     ToastrModule.forRoot(),
     MatButtonModule,
     FormsModule,
+    MigratorModule,
   ],
   providers: [LogService, {provide: APP_CONFIG, useValue: config}],
   bootstrap: [AppComponent],

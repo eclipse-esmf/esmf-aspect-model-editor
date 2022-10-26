@@ -3,11 +3,11 @@
 [[edit-elements]]
 = Edit elements
 
-The elements of an Aspect Model &ndash; such as Properties, Operations, Characteristics, Constraints, Entities, or Events &ndash; have attributes, which can be edited in the xref:ui-overview.adoc#edit-dialog[Edit dialog]. 
+The elements of an Aspect Model &ndash; such as Properties, Operations, Characteristics, Constraints, Entities, or Events &ndash; have attributes, which can be edited in the xref:ui-overview.adoc#edit-dialog[Edit dialog].
 
 Elements that belong to other namespaces/files cannot be edited.
 
-For an overview of Aspect Model elements, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/meta-model-elements.html[Meta Model Elements (BAMM 1.0.0)^, opts=nofollow].
+For an overview of Aspect Model elements, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/meta-model-elements.html[Meta Model Elements (BAMM 2.0.0)^,opts=nofollow].
 
 [[edit-elements-general]]
 == Edit elements with the Edit dialog
@@ -18,17 +18,17 @@ To edit the attributes for an element, proceed as follows:
 +
 Alternatively, select the element and click the Edit icon image:toolbar-icons/edit.png[Edit icon] in the xref:ui-overview.adoc#toolbar[toolbar].
 
-. In the Edit dialog, change the attributes of the element. 
+. In the Edit dialog, change the attributes of the element.
 +
 Mandatory attribute fields are marked with an asterisk (*).
 +
-TIP: Jump from one attribute field to the next by pressing the *Tab* key on your keyboard. 
+TIP: Jump from one attribute field to the next by pressing the *Tab* key on your keyboard.
 
 . Click the *Save* button.
 +
 TIP: Save and close the Edit dialog by pressing *Control + Enter* on your keyboard.
 +
-image::edit-elements-02.png[Save changes in Edit dialog, width=70%]
+image::edit-elements-02.png[Save changes in Edit dialog,width=70%]
 
 → As a result, the attributes for the element of your Aspect Model have been changed and saved.
 
@@ -40,27 +40,31 @@ Element names can be changed but should be unique throughout the Aspect Model.
 
 The name of the Aspect also serves as the name of the Aspect Model.
 
-NOTE: The attributes `preferredName` and `description` are non-unique to allow for supporting multiple languages. That means, these attributes can be defined multiple times for different languages but only once for a specific language. For adding or removing languages, see xref::settings.adoc#language-settings[language settings].
+NOTE: The attributes `preferredName` and `description` are non-unique to allow for supporting multiple languages.
+That means, these attributes can be defined multiple times for different languages but only once for a specific language.
+For adding or removing languages, see xref::settings.adoc#language-settings[language settings].
 
-The Aspect Model Editor takes care of valid names. For more information, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/modeling-guidelines.html#naming-rules[Naming rules (BAMM 1.0.0)^, opts=nofollow].
+The Aspect Model Editor takes care of valid names.
+For more information, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/modeling-guidelines.html#naming-rules[Naming rules (BAMM 2.0.0)^,opts=nofollow].
 
 [[bamm-see-attribute]]
 == The `bamm:see` attribute
 
-Use the `bamm:see` attribute to add references to related elements in an external taxonomy, ontology, or standards document to Aspect Models. 
+Use the `bamm:see` attribute to add references to related elements in an external taxonomy, ontology, or standards document to Aspect Models.
 
-* The value of the `bamm:see` attribute must be a URI. 
+* The value of the `bamm:see` attribute must be a URI.
 * To set multiple values for the `bamm:see` attribute, separate them by commas.
 
 The meaning of the reference is informative only and implies no semantics such as equality or subsumption in either direction.
-For more information, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/modeling-guidelines.html#adding-external-references[Adding external references (BAMM 1.0.0)^, opts=nofollow].
+For more information, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/modeling-guidelines.html#adding-external-references[Adding external references (BAMM 2.0.0)^,opts=nofollow].
 
 [[properties-configuration]]
 == Properties Configuration for Aspects and Events
 
-The Aspect as well as Entity elements can contain additional Properties. Entities are wrappers for encapsulating multiple Properties, so apart from its standard attributes the most important thing is to add the relevant Properties.
+The Aspect as well as Entity elements can contain additional Properties.
+Entities are wrappers for encapsulating multiple Properties, so apart from its standard attributes the most important thing is to add the relevant Properties.
 
-To add and configure Properties, open the *Properties Configuration* by clicking the *Configure* button. 
+To add and configure Properties, open the *Properties Configuration* by clicking the *Configure* button.
 
 [cols="30%,70%"]
 |===
@@ -84,7 +88,7 @@ Properties can contain an example value:
 [cols="30%,70%"]
 |===
 |_Example value_
-|This provides an example value for the Property, which requires that the entered data type has been defined in a corresponding Characteristic. It is important to ensure that the data type has the correct format. Find the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/datatypes.html[Data Types (BAMM 1.0.0)^, opts=nofollow] with an example value.
+|This provides an example value for the Property, which requires that the entered data type has been defined in a corresponding Characteristic. It is important to ensure that the data type has the correct format. Find the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/datatypes.html[Data Types (BAMM 2.0.0)^,opts=nofollow] with an example value.
 |===
 
 [[edit-operations]]
@@ -100,39 +104,42 @@ Operations can have multiple inputs and one output:
 |A single reference to a Property that describes the output of the Operation.
 |===
 
-Multiple Properties can be entered for the Input attribute. 
+Multiple Properties can be entered for the Input attribute.
 
 To add Properties to the Input or Output attribute, proceed as follows:
 
-. In the xref:edit-elements.adoc#edit-elements-general[Edit dialog], select the Input or Output attribute field. 
-. Start typing a new or existing Property name. 
+. In the xref:edit-elements.adoc#edit-elements-general[Edit dialog], select the Input or Output attribute field.
+. Start typing a new or existing Property name.
 . In the displayed drop-down menu, click the new or existing Property name to add it as a value for the Input/Output attribute.
 
-→ Now a Property has been added to the Input/Output attribute of the Operation. 
+→ Now a Property has been added to the Input/Output attribute of the Operation.
 
 [cols="1,1"]
 |===
-|image:operation-input.png[Operation input attribute drop-down menu, width=90%]
-|image:operation-output.png[Operation output attribute drop-down menu, width=90%]
-|image:operation-input-chiplist.png[Operation input attribute result, width=90%]
-|image:operation-output-result.png[Operation output attribute result, width=90%]
+|image:operation-input.png[Operation input attribute drop-down menu,width=90%]
+|image:operation-output.png[Operation output attribute drop-down menu,width=90%]
+|image:operation-input-chiplist.png[Operation input attribute result,width=90%]
+|image:operation-output-result.png[Operation output attribute result,width=90%]
 |===
 
-NOTE: Currently, no Properties can be optionally set in Operations. See https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/modeling-guidelines.html#optional-properties[Optional Properties (BAMM 1.0.0)^, opts=nofollow].
+NOTE: Currently, no Properties can be optionally set in Operations.
+See https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/modeling-guidelines.html#optional-properties[Optional Properties (BAMM 2.0.0)^,opts=nofollow].
 
 [[edit-characteristics]]
 == Characteristic attributes
 
-Depending on the *Characteristic class* (i.e., Characteristics' classes and instances), different attributes are available. For the correct understanding of Characteristics, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/characteristics.html[Characteristics and Constraints (BAMM 1.0.0)^, opts=nofollow]. In the following, handling Characteristics with the Aspect Model Editor will be explained.
+Depending on the *Characteristic class* (i.e., Characteristics' classes and instances), different attributes are available.
+For the correct understanding of Characteristics, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/characteristics.html[Characteristics and Constraints (BAMM 2.0.0)^,opts=nofollow].
+In the following, handling Characteristics with the Aspect Model Editor will be explained.
 
 &nbsp;
 
 [[choosing-characteristic-subclass]]
 === Choose a Characteristic class
 
-For a new Characteristic, first choose a *Characteristic class* value from the drop-down menu of the Characteristic class attribute in the Edit dialog. 
+For a new Characteristic, first choose a *Characteristic class* value from the drop-down menu of the Characteristic class attribute in the Edit dialog.
 
-→ This will auto-populate the Edit dialog with the corresponding attribute fields. 
+→ This will auto-populate the Edit dialog with the corresponding attribute fields.
 
 &nbsp;
 
@@ -142,7 +149,7 @@ For a new Characteristic, first choose a *Characteristic class* value from the d
 BAMM allows two kinds of data types: simple types (scalars) and complex types (Entities).
 
 * For using a *simple data type*, populate the data type field with a value like `xsd:float`,
-`xsd:integer` or `xsd:string` (no quotation marks, no spaces), see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/datatypes.html[Data Types (BAMM 1.0.0)^, opts=nofollow].
+`xsd:integer` or `xsd:string` (no quotation marks, no spaces), see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/datatypes.html[Data Types (BAMM 2.0.0)^,opts=nofollow].
 +
 NOTE: Make sure that you do not include a space character as they are not accepted.
 
@@ -158,7 +165,8 @@ An Enumeration Characteristic can have simple data types or complex data types.
 [[characteristic-enumeration]]
 ==== Simple data types for Enumeration Characteristics
 
-If your Characteristic is an Enumeration, provide the possible values as a space-separated list of strings, e.g., `red yellow green`. See also https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/modeling-guidelines.html#declaring-enumerations[Declaring Enumerations(BAMM 1.0.0)^, opts=nofollow].
+If your Characteristic is an Enumeration, provide the possible values as a space-separated list of strings, e.g., `red yellow green`.
+See also https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/modeling-guidelines.html#declaring-enumerations[Declaring Enumerations(BAMM 2.0.0)^,opts=nofollow].
 
 If no data type is selected, `string` is selected as default for the values.
 
@@ -184,21 +192,25 @@ image::entity-instance-add-icon.png[width=80%]
 +
 image::entity-instance-add-dialog.png[width=80%]
 
-. Click *Save*. 
+. Click *Save*.
 
 → Now the Enumeration Characteristics Edit dialog displays a table with the information you just entered.
 
 image::entity-instance-new-value.png[width=100%]
 
-Now you can also create Entity instances using the Add icon image:add.png[Add icon] at the Enumeration Characteristic element in the Aspect Model. Note that first an Entity had to be created before an instance can be added.
+Now you can also create Entity instances using the Add icon image:add.png[Add icon] at the Enumeration Characteristic element in the Aspect Model.
+Note that first an Entity had to be created before an instance can be added.
 
 image::adding-entity-value-instance-plus-icon.png[width=100%]
 
 ==== Add nested Entity instances
 
-The properties of the Entity instance described above had simple values. However, they can also have complex values. To achieve that, use nested Entity instances.
+The properties of the Entity instance described above had simple values.
+However, they can also have complex values.
+To achieve that, use nested Entity instances.
 
-NOTE: Nested instances can only be created once the model allows it. It is important to construct your model first and then create the instances.
+NOTE: Nested instances can only be created once the model allows it.
+It is important to construct your model first and then create the instances.
 
 To create a nested Entity instance, proceed as follows:
 
@@ -206,9 +218,10 @@ To create a nested Entity instance, proceed as follows:
 +
 image::entity-instance-single-complex-values.png[width=80%]
 
-. Start typing a new Entity instance name and then select it from the drop-down menu. 
+. Start typing a new Entity instance name and then select it from the drop-down menu.
 +
-Note that complex values have an icon that identifies them, i.e., a new Entity instance should be created here. Once created, the attribute field is read-only and you can only remove a nested Entity instance with the Delete icon if another Entity instance is to be created or used for it.
+Note that complex values have an icon that identifies them, i.e., a new Entity instance should be created here.
+Once created, the attribute field is read-only and you can only remove a nested Entity instance with the Delete icon if another Entity instance is to be created or used for it.
 +
 image::create-new-nested-entity-instance.png[width=80%]
 
@@ -225,7 +238,9 @@ image::new-created-nested-entity-instance.png[width=100%]
 [[characteristic-structure-value]]
 === Structured Value Characteristics
 
-Structured Value Characteristics allow to semantically describe formatted string-like values like a date, email, or product's type part number. For example, for such type part numbers, the parts should be semantically described separately and the composition of those into one string should be described via a regular expression. For more background on Structured Values, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/characteristics.html#structured-value-characteristic[Structured Value(BAMM 1.0.0)^, opts=nofollow]
+Structured Value Characteristics allow to semantically describe formatted string-like values like a date, email, or product's type part number.
+For example, for such type part numbers, the parts should be semantically described separately and the composition of those into one string should be described via a regular expression.
+For more background on Structured Values, see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/characteristics.html#structured-value-characteristic[Structured Value(BAMM 2.0.0)^,opts=nofollow]
 
 For Structured Value Characteristics, the following attributes have to be defined:
 
@@ -234,7 +249,7 @@ For Structured Value Characteristics, the following attributes have to be define
 |_Deconstruction rule name_
 |A single choice for choosing a predefined rule or defining a custom rule. image:structured-value-deconstruction-rule-name.png[Structured Value deconstruction rule name]
 |_Deconstruction rule_
-| 
+|
 
 * If the `Custom Rule` is selected for the `Deconstruction rule name` attribute, this input option will be enabled and you can write your own rule.
 
@@ -255,7 +270,7 @@ To edit a new Structured Value Characteristic, proceed as follows:
 
 . Enter values for the attributes _Deconstruction rule name_, _Deconstruction rule_, and _Elements_.
 
-. Click *Save*. 
+. Click *Save*.
 
 → Now you can see the changes in editor.
 
@@ -263,45 +278,46 @@ image::structured-value-model.png[width=100%]
 
 To create a new element from such a Structured Value Characteristic, proceed as follows:
 
-* Click the Add icon image:add.png[Add icon] on the Structured Value Characteristic shape. 
+* Click the Add icon image:add.png[Add icon] on the Structured Value Characteristic shape.
 
-→ As a result, a new Property is created. 
+→ As a result, a new Property is created.
 
 NOTE: A new Property created from a Structured Value Characteristic, is automatically inserted as an attribute in the Structured Value Characteristic and the `(regex)` capture group is automatically appended to `deconstructionRule`.
 
-image::structured-value-add-icon.png[New Property from Structured Value, width=100%]
+image::structured-value-add-icon.png[New Property from Structured Value,width=100%]
 
-&nbsp; 
+&nbsp;
 
 [[choose-correct-unit]]
 === Unit as an attribute for Characteristics
 
 As an attribute for Characteristics, a Unit can be optional or mandatory.
 
-If your Characteristic is a *Quantifiable* (see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/characteristics.html[Characteristics (BAMM 1.0.0)^, opts=nofollow]), Unit is an optional attribute (only exception for not having a Unit: unit-less countable Quantifiable). 
+If your Characteristic is a *Quantifiable* (see https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/characteristics.html[Characteristics (BAMM 2.0.0)^,opts=nofollow]), Unit is an optional attribute (only exception for not having a Unit: unit-less countable Quantifiable).
 
 For the Characteristic classes *Duration* and *Measurement* the Unit attribute is mandatory.
 
 Entering a value to the Unit attribute field is done through a search:
 
-* Start typing the Unit you are searching for. 
-* You may also use advanced search syntax (=metre, *metre, perSecond$) as explained in xref:edit-models.adoc#searching-elements[Search Elements]. 
+* Start typing the Unit you are searching for.
+* You may also use advanced search syntax (=metre, *metre, perSecond$) as explained in xref:edit-models.adoc#searching-elements[Search Elements].
 * Select your Unit from the drop-down menu of the Unit attribute.
 +
 image::unit.png[width=100%]
 
-For a complete list of supported Units refer to the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/appendix/unitcatalog.html[Unit Catalog (BAMM 1.0.0)^, opts=nofollow].
+For a complete list of supported Units refer to the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/appendix/unitcatalog.html[Unit Catalog (BAMM 2.0.0)^,opts=nofollow].
 
-Further explanations about using Units can be found in https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/characteristics.html[Characteristics (BAMM 1.0.0)^, opts=nofollow].
+Further explanations about using Units can be found in https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/characteristics.html[Characteristics (BAMM 2.0.0)^,opts=nofollow].
 
 NOTE: Do not include space characters as they are not accepted.
 
 [[edit-constraint]]
 == Constraint attributes
 
-Constraints are special Characteristics that can restrict some features of the Characteristics. A list of the available Constraints can be found in the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/characteristics.html[BAMM Aspect Meta Model version 1.0.0.^, opts=nofollow].
+Constraints are special Characteristics that can restrict some features of the Characteristics.
+A list of the available Constraints can be found in the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/characteristics.html[BAMM Aspect Meta Model version 1.0.0.^,opts=nofollow].
 
-Except for Length Constraint, Range Constraint, and Fixed Point Constraint, all other Constraint types use `string` as a defined Constraint value. 
+Except for Length Constraint, Range Constraint, and Fixed Point Constraint, all other Constraint types use `string` as a defined Constraint value.
 
 For example, the Range Constraint uses minimum and maximum value.
 

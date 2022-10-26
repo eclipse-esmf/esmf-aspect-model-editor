@@ -21,7 +21,7 @@ import {environment} from 'environments/environment';
 import {MxGraphGeometryProviderService, MxGraphSetupService} from '.';
 import {MxGraphCharacteristicHelper, MxGraphHelper, PropertyInformation} from '../helpers';
 import {mxCell, mxConstants, mxUtils} from '../providers';
-import {Base, BaseMetaModelElement, DefaultAbstractEntity, DefaultEntity, DefaultEntityValue} from '@ame/meta-model';
+import {Base, BaseMetaModelElement, DefaultAbstractProperty, DefaultEntityValue, DefaultProperty} from '@ame/meta-model';
 import {MxAttributeName} from '../models';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {CollapsedOverlay, ExpandedOverlay, NotificationsService} from '@ame/shared';
@@ -228,7 +228,7 @@ export class MxGraphService {
    */
   navigateToCell(cell: mxgraph.mxCell, center: boolean): mxgraph.mxCell {
     if (!cell) {
-      this.notificationsService.error('The shape you are looking for was not found');
+      this.notificationsService.error({title: 'The shape you are looking for was not found'});
       return null;
     }
 
@@ -385,15 +385,22 @@ export class MxGraphService {
     const parentModel = MxGraphHelper.getModelElement(parent);
     const childModel = MxGraphHelper.getModelElement(child);
 
+    const abstractRelations = {
+      DefaultAbstractEntity: ['DefaultAbstractEntity'],
+      DefaultEntity: ['DefaultAbstractEntity', 'DefaultEntity'],
+      DefaultProperty: ['DefaultAbstractProperty', 'DefaultProperty'],
+      DefaultAbstractProperty: ['DefaultAbstractProperty'],
+    };
+
     const cellStyle =
       parentModel instanceof DefaultEntityValue && !(MxGraphHelper.getModelElement(child) instanceof DefaultEntityValue)
         ? 'entityValueEntityEdge'
         : MxGraphHelper.isOptionalProperty(MxGraphHelper.getModelElement(child), parentModel)
         ? 'optionalPropertyEdge'
-        : (parentModel instanceof DefaultAbstractEntity && childModel instanceof DefaultAbstractEntity) ||
-          (parentModel instanceof DefaultEntity && childModel instanceof DefaultAbstractEntity) ||
-          (parentModel instanceof DefaultEntity && childModel instanceof DefaultEntity)
-        ? 'entityAbstractEntityEdge'
+        : childModel instanceof DefaultAbstractProperty && parentModel instanceof DefaultProperty
+        ? 'abstractPropertyEdge'
+        : abstractRelations[parentModel.className]?.includes(childModel.className)
+        ? 'abstractElementEdge'
         : 'defaultEdge';
 
     if (
@@ -404,6 +411,7 @@ export class MxGraphService {
     ) {
       return;
     }
+
     this.mxGraphAttributeService.graph.insertEdge(
       this.mxGraphAttributeService.graph.getDefaultParent(),
       null,

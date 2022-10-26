@@ -18,6 +18,12 @@
   box-sizing: border-box;
 }
 
+.outdated,
+.hasErrors {
+  opacity: 0.65;
+  cursor: default !important;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -26,6 +32,10 @@
   user-select: none;
   height: 100%;
   overflow-y: auto;
+
+  .migrate-button {
+    align-self: flex-start;
+  }
 
   .namespaces {
     width: 310px;
@@ -36,6 +46,7 @@
 
     .title {
       font-size: 21px;
+      margin-bottom: 10px;
       font-weight: 500;
     }
 
@@ -51,11 +62,12 @@
       .folder {
         display: flex;
         align-items: center;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+
         span {
           margin-left: 5px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
         }
       }
     }
@@ -65,18 +77,25 @@
       cursor: pointer;
       margin-left: 20px;
       padding-top: 10px;
+      align-items: center;
+      justify-content: space-between;
 
-      .file-name {
+      &-name {
         display: flex;
         align-items: center;
+
         span {
           margin-left: 5px;
+        }
+
+        .error-icon {
+          color: var(--ame-error);
         }
       }
 
       &:hover {
         .show-more {
-          display: block;
+          visibility: visible;
         }
       }
 
@@ -87,21 +106,30 @@
       }
 
       .show-more {
-        display: none;
+        visibility: hidden;
         margin-right: 0;
-        margin-left: auto;
+        margin-left: 10px;
       }
     }
 
-    .current-file {
-      opacity: 0.5;
+    .current-file .file-name {
+      width: 100%;
+      background-color: #787878;
+      color: white;
+      padding: 5px 20px;
+      margin-left: -20px;
+
+      mat-icon {
+        color: white;
+      }
     }
   }
 }
 
 .selected {
   font-weight: bold;
+
   .show-more {
-    display: block !important;
+    visibility: visible !important;
   }
 }

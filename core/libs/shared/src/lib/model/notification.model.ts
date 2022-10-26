@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NotificationType} from '../enums/notification-type.enum';
+import {NotificationType} from '../enums';
 
 export class NotificationModel {
   public expanded = false;

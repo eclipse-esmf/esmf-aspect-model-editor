@@ -52,7 +52,6 @@ export class OperationVisitor extends BaseVisitor<DefaultOperation> {
         value: operation.getDescription(language),
       })),
       see: operation.getSeeReferences() || [],
-      name: operation.name,
     });
 
     if (operation.input?.length) {

@@ -18,6 +18,8 @@ import {RdfListService} from './rdf-list.service';
 import {ListProperties} from './rdf-list.types';
 import {Bamm} from '@ame/vocabulary';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
+import {provideMockObject} from 'jest-helpers';
+import {RdfNodeService} from '../rdf-node';
 
 class MockBamm {
   isRdfNill = jest.fn((namedNode: string) => namedNode === 'nill');
@@ -58,9 +60,16 @@ describe('RDF Helper', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [],
-      providers: [RdfListService],
+      providers: [
+        RdfListService,
+        {
+          provide: RdfNodeService,
+          useValue: provideMockObject(RdfNodeService),
+        },
+      ],
       imports: [],
-    }).compileComponents();
+    });
+
     rdfModel = new MockRDFModel() as any;
     service = TestBed.inject(RdfListService);
     service.setRdfModel(rdfModel);

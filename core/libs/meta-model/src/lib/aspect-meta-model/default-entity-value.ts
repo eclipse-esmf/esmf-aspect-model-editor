@@ -59,7 +59,7 @@ export class DefaultEntityValue extends Base implements EntityValue {
     return visitor.visitEntityValue(this, context);
   }
 
-  public addProperty(overWrittenProperty: OverWrittenProperty, value: string | DefaultEntityValue = '') {
+  public addProperty(overWrittenProperty: OverWrittenProperty<any>, value: string | DefaultEntityValue = '') {
     this.properties.push({key: overWrittenProperty, value});
   }
 

@@ -25,6 +25,7 @@ import {
   META_MODEL_preferredName,
   META_MODEL_see,
   SELECTOR_clearLeftCharacteristicButton,
+  SELECTOR_editorCancelButton,
   SELECTOR_editorSaveButton,
   SELECTOR_notificationsButton,
   SELECTOR_notificationsClearButton,
@@ -63,9 +64,9 @@ describe('Test editing Either', () => {
       .then(() => cyHelp.hasAddLeftAndRightShapeOverlay('Either1'))
       .then(hasAddLeftAndRightShapeOverlay => expect(hasAddLeftAndRightShapeOverlay).equal(true))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.properties[0].property.characteristic.name).to.equal('Either1');
-        const either = <DefaultEither>aspect.properties[0].property.characteristic;
+        const either = aspect.properties[0].property.characteristic;
         expect(either.left.name).to.equal('LeftCharacteristic');
         expect(either.right.name).to.equal('RightCharacteristic');
       })
@@ -143,9 +144,9 @@ describe('Test editing Either', () => {
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.properties[0].property.characteristic.name).to.equal('Either1');
-        const either = <DefaultEither>aspect.properties[0].property.characteristic;
+        const either = aspect.properties[0].property.characteristic;
         expect(either.left.name).to.equal('NewLeftCharacteristic');
         expect(either.right.name).to.equal('NewRightCharacteristic');
       })
@@ -173,9 +174,9 @@ describe('Test editing Either', () => {
       .then(() => cy.clickShape('NewRightCharacteristic'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
+      .then(aspect => {
         expect(aspect.properties[0].property.characteristic.name).to.equal('Either1');
-        const either = <DefaultEither>aspect.properties[0].property.characteristic;
+        const either = aspect.properties[0].property.characteristic;
         expect(either.left).to.be.null;
         expect(either.right).to.be.null;
       })
@@ -293,7 +294,7 @@ describe('Test editing Either', () => {
       .then(() => cy.clickShape('Either1'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => assert.isNull(aspect.properties[0].property.characteristic))
+      .then(aspect => assert.isNull(aspect.properties[0].property.characteristic))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain('Characteristic1 a bamm:Characteristic');
@@ -306,6 +307,7 @@ describe('Test editing Either', () => {
     cy.shapeExists('property1')
       .then(() => cy.clickAddShapePlusIcon('property1'))
       .then(() => cy.dbClickShape('Characteristic3'))
+      .then(() => cy.get(SELECTOR_editorCancelButton).focus()) // reactivate change detection
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Either').click({force: true}))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('Either1', {force: true}))
       .then(() =>

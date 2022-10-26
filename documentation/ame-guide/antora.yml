@@ -6,5 +6,5 @@ nav:
   - modules/ROOT/nav.adoc
 asciidoc:
   attributes:
-    currently-supported-bamm: 1.0.0
-    bamm-link: https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/v1.0.0/index.html[1.0.0]
+    currently-supported-bamm: 2.0.0
+    bamm-link: https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/2.0.0/index.html[2.0.0]

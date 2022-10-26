@@ -88,7 +88,6 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
         value: constraint.getDescription(language),
       })),
       see: constraint.getSeeReferences() || [],
-      name: constraint.name,
     });
   }
 

@@ -294,6 +294,29 @@
         }
       }
     },
+    "migrator": {
+      "projectType": "library",
+      "root": "libs/migrator",
+      "sourceRoot": "libs/migrator/src",
+      "prefix": "ame",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/migrator"],
+          "options": {
+            "jestConfig": "libs/migrator/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/migrator/src/**/*.ts", "libs/migrator/src/**/*.html"]
+          }
+        }
+      },
+      "tags": []
+    },
     "mx-graph": {
       "projectType": "library",
       "root": "libs/mx-graph",

@@ -15,6 +15,7 @@ import {DataFactory, Quad} from 'n3';
 import {DefaultEntity, Entity, OverWrittenProperty} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {AbstractEntityInstantiator} from './abstract-entity-instantiator';
+import {PredefinedEntityInstantiator} from './bamme-predefined-entity-instantiator';
 
 export class EntityInstantiator {
   private get cachedFile() {
@@ -27,6 +28,10 @@ export class EntityInstantiator {
 
   private get isIsolated() {
     return this.metaModelElementInstantiator.isIsolated;
+  }
+
+  private get bamme() {
+    return this.metaModelElementInstantiator.bamme;
   }
 
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
@@ -46,11 +51,17 @@ export class EntityInstantiator {
 
     this.metaModelElementInstantiator.initBaseProperties(quads, defaultEntity, this.metaModelElementInstantiator.rdfModel);
 
+    const predefinedEntityInstantiator = new PredefinedEntityInstantiator(this.metaModelElementInstantiator);
+
     quads.forEach(quad => {
       if (bamm.isExtendsProperty(quad.predicate.value)) {
-        defaultEntity.extendedElement = new AbstractEntityInstantiator(this.metaModelElementInstantiator).createAbstractEntity(
-          this.rdfModel.store.getQuads(quad.object, null, null, null)
-        );
+        const quads = this.rdfModel.store.getQuads(quad.object, null, null, null);
+        const isEntity = quads.some(quad => bamm.isEntity(quad.object.value));
+        defaultEntity.extendedElement = isEntity
+          ? (this.createEntity(quads) as DefaultEntity)
+          : predefinedEntityInstantiator.entityInstances[quad.object.value]
+          ? predefinedEntityInstantiator.entityInstances[quad.object.value]()
+          : new AbstractEntityInstantiator(this.metaModelElementInstantiator).createAbstractEntity(quads);
         return;
       }
 

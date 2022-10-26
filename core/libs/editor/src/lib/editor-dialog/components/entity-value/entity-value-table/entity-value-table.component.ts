@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectorRef, Component, OnChanges, OnInit, OnDestroy, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {
   BaseMetaModelElement,
@@ -34,7 +34,7 @@ import {map, Observable, startWith} from 'rxjs';
   templateUrl: './entity-value-table.component.html',
   styleUrls: ['./entity-value-table.component.scss'],
 })
-export class EntityValueTableComponent extends InputFieldComponent<DefaultEntityValue> implements OnInit, OnChanges {
+export class EntityValueTableComponent extends InputFieldComponent<DefaultEntityValue> implements OnInit, OnChanges, OnDestroy {
   public propertiesFormGroup: FormGroup = new FormGroup({});
   public dataSource: MatTableDataSource<DefaultProperty>;
 
@@ -88,6 +88,10 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
         this.dataSource = new MatTableDataSource(this.metaModelElement.properties.map(({key}) => key.property));
       })
     );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

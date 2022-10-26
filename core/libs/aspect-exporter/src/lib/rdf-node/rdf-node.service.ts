@@ -16,7 +16,7 @@ import {BaseMetaModelElement, DefaultEncodingConstraint, Type} from '@ame/meta-m
 import {ModelService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {LogService} from '@ame/shared';
-import {DataFactory, Quad} from 'n3';
+import {BlankNode, DataFactory, Quad} from 'n3';
 import {PropertyEnum} from './enums/property.enum';
 import {BasePropertiesInterface, LocaleInterface} from './interfaces';
 
@@ -131,6 +131,51 @@ export class RdfNodeService {
           break;
       }
     });
+  }
+
+  public updateBlankNode(element: BlankNode, metaModelElement: BaseMetaModelElement, properties: BasePropertiesInterface) {
+    for (const key in properties) {
+      const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
+
+      if (!properties[key] && properties[key] !== 0) {
+        // in case of null, undefined or false, don't add the quads
+        continue;
+      }
+
+      const bamm = rdfModel.BAMM();
+      switch (key) {
+        case PropertyEnum.Description:
+        case PropertyEnum.PreferredName:
+          properties[key].forEach((localeValue: LocaleInterface) => {
+            if (!localeValue.value && Number(localeValue.value) !== 0) {
+              return;
+            }
+
+            rdfModel.store.addQuad(
+              DataFactory.triple(
+                DataFactory.namedNode(metaModelElement.aspectModelUrn),
+                DataFactory.namedNode(rdfModel.BAMM().getAspectModelUrn(key)),
+                DataFactory.literal(localeValue.value, localeValue.language)
+              )
+            );
+          });
+          break;
+        case PropertyEnum.See:
+          properties[key]?.forEach(value => {
+            rdfModel.store.addQuad(DataFactory.triple(element, bamm.SeeProperty(), DataFactory.namedNode(`${value}`)));
+          });
+          break;
+        case PropertyEnum.Extends:
+          rdfModel.store.addQuad(DataFactory.triple(element, bamm.ExtendsProperty(), DataFactory.namedNode(properties[key])));
+          break;
+        case PropertyEnum.Characteristic:
+          rdfModel.store.addQuad(DataFactory.triple(element, bamm.CharacteristicProperty(), DataFactory.namedNode(properties[key])));
+          break;
+        default:
+          this.addQuad(metaModelElement, properties[key], bamm.getAspectModelUrn(key));
+          break;
+      }
+    }
   }
 
   private updateLocalizedValue(metaModelElement: BaseMetaModelElement, properties: BasePropertiesInterface, key: string) {

@@ -89,7 +89,7 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
     this.namespaceMessage = 'Loading namespaces...';
 
     this.modelApiService
-      .getAllNamespaces()
+      .getNamespacesAppendWithFiles()
       .pipe(
         first(),
         catchError(() => of([]))
@@ -205,7 +205,7 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
   hasResponseErrors() {
     return (
       !!this.validationStatus?.missingFiles.length ||
-      this.validationStatus?.correctFiles.some(({validationReport: {validationErrors}}) => !!validationErrors?.length)
+      this.validationStatus?.validFiles.some(({validationReport: {validationErrors}}) => !!validationErrors?.length)
     );
   }
 }

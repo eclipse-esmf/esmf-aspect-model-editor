@@ -69,14 +69,12 @@ describe('Test drag and drop', () => {
       .then(() => cyHelp.hasAddShapeOverlay('Entity1').then(hasAddOverlay => expect(hasAddOverlay).to.equal(true)))
 
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.operations[0].name).to.equals('operation1');
           expect(aspect.properties[1].property.name).to.equals('property2');
           expect(aspect.properties[1].property.characteristic.name).to.equals('Trait1');
-          expect((<DefaultTrait>aspect.properties[1].property.characteristic).baseCharacteristic.name).to.equals('Characteristic1');
-          expect((<DefaultEntity>(<DefaultTrait>aspect.properties[1].property.characteristic).baseCharacteristic.dataType).name).to.equals(
-            'Entity1'
-          );
+          expect(aspect.properties[1].property.characteristic.baseCharacteristic.name).to.equals('Characteristic1');
+          expect(aspect.properties[1].property.characteristic.baseCharacteristic.dataType.name).to.equals('Entity1');
         })
       );
   });

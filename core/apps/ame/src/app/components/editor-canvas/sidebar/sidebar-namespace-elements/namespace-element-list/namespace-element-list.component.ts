@@ -38,17 +38,21 @@ export class NamespaceElementListComponent implements OnChanges {
   }
 
   public expandList() {
-    this.filteredElements = [...(this.elements || [])];
+    this.filteredElements = this.filterElements();
     this.isExpanded = true;
   }
 
   private initList() {
-    this.filteredElements = [...(this.elements || [])];
+    this.filteredElements = this.filterElements();
     this.isExpanded = true;
 
     if (this.filteredElements.length > 3) {
       this.isExpanded = false;
       this.filteredElements.splice(3, this.filteredElements.length - 3);
     }
+  }
+
+  private filterElements(): ElementModel[] {
+    return [...(this.elements || [])].filter(element => !element.aspectModelUrn.startsWith('n3-') || !element.name.startsWith('['));
   }
 }

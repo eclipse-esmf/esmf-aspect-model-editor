@@ -16,7 +16,7 @@ import {Characteristic, DefaultCharacteristic, DefaultScalar} from '@ame/meta-mo
 import {DataTypeService} from '@ame/shared';
 
 export class BammCharacteristicInstantiator {
-  private characteristicInstanceList = [];
+  private characteristicInstanceList: {[key: string]: Function} = {};
 
   private readonly dataTypeService: DataTypeService;
 
@@ -27,15 +27,15 @@ export class BammCharacteristicInstantiator {
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
     this.dataTypeService = metaModelElementInstantiator.rdfModel.dataTypeService;
     const bammc = metaModelElementInstantiator.bammc;
-    this.characteristicInstanceList[`${bammc.getNamespace()}Timestamp`] = this.createTimestampCharacteristic; // NOSONAR
-    this.characteristicInstanceList[`${bammc.getNamespace()}Text`] = this.createTextCharacteristic; // NOSONAR
-    this.characteristicInstanceList[`${bammc.getNamespace()}MultiLanguageText`] = this.createMultiLanguageTextCharacteristic; // NOSONAR
-    this.characteristicInstanceList[`${bammc.getNamespace()}Boolean`] = this.createBooleanCharacteristic; // NOSONAR
-    this.characteristicInstanceList[`${bammc.getNamespace()}Locale`] = this.createLocaleCharacteristic; // NOSONAR
-    this.characteristicInstanceList[`${bammc.getNamespace()}Language`] = this.createLanguageCharacteristic; // NOSONAR
-    this.characteristicInstanceList[`${bammc.getNamespace()}UnitReference`] = this.createUnitReferenceCharacteristic; // NOSONAR
-    this.characteristicInstanceList[`${bammc.getNamespace()}ResourcePath`] = this.createResourcePathCharacteristic; // NOSONAR
-    this.characteristicInstanceList[`${bammc.getNamespace()}MimeType`] = this.createMimeTypeCharacteristic; // NOSONAR
+    this.characteristicInstanceList[`${bammc.getNamespace()}Timestamp`] = this.createTimestampCharacteristic;
+    this.characteristicInstanceList[`${bammc.getNamespace()}Text`] = this.createTextCharacteristic;
+    this.characteristicInstanceList[`${bammc.getNamespace()}MultiLanguageText`] = this.createMultiLanguageTextCharacteristic;
+    this.characteristicInstanceList[`${bammc.getNamespace()}Boolean`] = this.createBooleanCharacteristic;
+    this.characteristicInstanceList[`${bammc.getNamespace()}Locale`] = this.createLocaleCharacteristic;
+    this.characteristicInstanceList[`${bammc.getNamespace()}Language`] = this.createLanguageCharacteristic;
+    this.characteristicInstanceList[`${bammc.getNamespace()}UnitReference`] = this.createUnitReferenceCharacteristic;
+    this.characteristicInstanceList[`${bammc.getNamespace()}ResourcePath`] = this.createResourcePathCharacteristic;
+    this.characteristicInstanceList[`${bammc.getNamespace()}MimeType`] = this.createMimeTypeCharacteristic;
   }
 
   createTextCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator, dataTypeService: DataTypeService): Characteristic {

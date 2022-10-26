@@ -18,8 +18,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
-import {NamespacesCacheService} from '@ame/cache';
-import {ShapeConnectorService} from '@ame/connection';
+import {BaseEntityRendererService} from './base-entity-renderer.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,15 +27,14 @@ export class EntityRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
-    private namespacesCacheService: NamespacesCacheService,
-    private shapeConnectorService: ShapeConnectorService
+    private baseEntityRenderer: BaseEntityRendererService
   ) {
     super(mxGraphService, languageSettingsService);
   }
 
   update({cell}) {
-    this.handleExtendsElement(cell);
-
+    this.baseEntityRenderer.handleExtendsElement(cell);
+    this.renderParents(cell);
     super.update({
       cell,
       callback: () => {
@@ -47,18 +45,5 @@ export class EntityRenderService extends BaseRenderService {
 
   isApplicable(cell: mxgraph.mxCell): boolean {
     return MxGraphHelper.getModelElement(cell) instanceof DefaultEntity;
-  }
-
-  private handleExtendsElement(cell: mxgraph.mxCell) {
-    const metaModelElement = MxGraphHelper.getModelElement<DefaultEntity>(cell);
-    if (!metaModelElement.extendedElement) {
-      return;
-    }
-
-    const extendsElement = metaModelElement.extendedElement as DefaultEntity;
-    const cachedEntity = this.namespacesCacheService.resolveCachedElement(extendsElement);
-    const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
-    const entityCell = resolvedCell ? resolvedCell : this.mxGraphService.renderModelElement(extendsElement);
-    this.shapeConnectorService.connectShapes(metaModelElement, extendsElement, cell, entityCell);
   }
 }

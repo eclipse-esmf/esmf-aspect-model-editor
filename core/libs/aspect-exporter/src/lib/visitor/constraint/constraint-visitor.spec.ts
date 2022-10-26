@@ -32,6 +32,7 @@ import {Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {ConstraintVisitor} from './constraint-visitor';
+import {Bamm} from '@ame/vocabulary';
 
 describe('Constraint Visitor', () => {
   let service: ConstraintVisitor;
@@ -73,9 +74,14 @@ describe('Constraint Visitor', () => {
     });
 
     modelService = provideMockObject(ModelService);
-    rdfModel = provideMockObject(RdfModel);
-    rdfModel.store = new Store();
-    rdfModel.BAMMC.mockImplementation(() => ({ConstraintProperty: () => 'constraintProperty'} as any));
+
+    rdfModel = {
+      store: new Store(),
+      BAMM: jest.fn(() => new Bamm('')),
+      BAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+      hasNamespace: jest.fn(() => false),
+      addPrefix: jest.fn(() => {}),
+    } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
 
     rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
@@ -122,7 +128,6 @@ describe('Constraint Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'constraint1',
     });
   });
 
@@ -134,7 +139,6 @@ describe('Constraint Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'rangeConstraint',
     });
     expect(rdfNodeService.update).toHaveBeenCalledWith(rangeConstraint, {
       upperBoundDefinition: BoundDefinition.AT_MOST,
@@ -152,7 +156,6 @@ describe('Constraint Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'fixedPointConstraint',
     });
     expect(rdfNodeService.update).toHaveBeenCalledWith(fixedPointConstraint, {
       scale: 1,
@@ -168,7 +171,6 @@ describe('Constraint Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'lengthConstraint',
     });
     expect(rdfNodeService.update).toHaveBeenCalledWith(lengthConstraint, {
       minValue: 100,
@@ -184,7 +186,6 @@ describe('Constraint Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'languageConstraint',
     });
     expect(rdfNodeService.update).toHaveBeenCalledWith(languageConstraint, {
       languageCode: 'en',
@@ -199,7 +200,6 @@ describe('Constraint Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'encodingConstraint',
     });
     expect(rdfNodeService.update).toHaveBeenCalledWith(encodingConstraint, {
       value: 'encodingValue',
@@ -214,7 +214,6 @@ describe('Constraint Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'regularExpressionConstraint',
     });
     expect(rdfNodeService.update).toHaveBeenCalledWith(regularExpressionConstraint, {
       value: 'regularExpressionValue',
@@ -229,7 +228,6 @@ describe('Constraint Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'localeConstraint',
     });
     expect(rdfNodeService.update).toHaveBeenCalledWith(localeConstraint, {
       localeCode: 'en',

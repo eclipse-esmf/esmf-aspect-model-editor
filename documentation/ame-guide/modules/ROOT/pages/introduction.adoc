@@ -4,24 +4,31 @@
 = Introduction
 
 The Aspect Model Editor is a visual editor for Aspect Models, which automatically validates the models against the open-source
-https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/index.html[BAMM Aspect Meta Model version 1.0.0^, opts=nofollow]. All concepts, possibilities, and restrictions defined by the BAMM Aspect Meta Model are incorporated in the Aspect Model Editor in a convenient way with a smart user flow.
+https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/index.html[BAMM Aspect Meta Model version 2.0.0^,opts=nofollow].
+All concepts, possibilities, and restrictions defined by the BAMM Aspect Meta Model are incorporated in the Aspect Model Editor in a convenient way with a smart user flow.
 
-Typically, Aspect Models are edited as code, that is, text-based. With the Aspect Model Editor, such code gets visualized so that relationships and dependencies within the model can be understood quickly and easily.
+Typically, Aspect Models are edited as code, that is, text-based.
+With the Aspect Model Editor, such code gets visualized so that relationships and dependencies within the model can be understood quickly and easily.
 
-Aspect Models can be exported as TTL files and imported from TTL files at any moment during the work on the model. By that, the Aspect Model Editor caters to all working preferences.
+Aspect Models can be exported as TTL files and imported from TTL files at any moment during the work on the model.
+By that, the Aspect Model Editor caters to all working preferences.
 
-image::code_vs_editor.png[Code versus editor, width=100%]
+image::code_vs_editor.png[Code versus editor,width=100%]
+
 _Two ways of creating Aspect Models: text-based and graphically &ndash; with the Aspect Model Editor_
 
 == Target audience for the Aspect Model Editor
+
 The Aspect Model Editor focuses on practitioners, such as domain experts or data experts, who intend to efficiently build reusable Aspect Models for the data and data sources of their domain.
 
 == Benefits
+
 Especially for expert teams who model Aspects together, the visual representation of Aspect Models provides a low entry barrier and easy understanding, and facilitates collaboration.
 
 In addition to that, constant background validation ensures that your Aspect Models correspond to the BAMM Aspect Meta Model, enabling reusablity of your Aspect Models and automation of the downstream process steps for your Aspect Models.
 
 == Capabilities
+
 - Create Aspect Models from scratch or import TTL files to start or continue modeling in the Aspect Model Editor.
 - Navigate and edit your Aspect Models conveniently with a collapsed/extended view for your model details, auto-formatting, auto-saving, drag-and-drop of model elements, and many more.
 - Manage namespaces for your Aspect Models.
@@ -31,18 +38,24 @@ In addition to that, constant background validation ensures that your Aspect Mod
 - Validate your Aspect Models continuously in the background and directly go from the validation results list to those locations in your Aspect Model where validation was not completed successfully.
 
 == About Aspects and Aspect Models
-Each _Aspect_ represents a small, encapsulated piece of information about, for example, a product, product component, or any other asset. Aspects enable reusable integration of data sources and offer semantically enriched data, that is, information. With APIs implemented for each Aspect, Aspects offer their information to software solutions, which consume the Aspects' meaningful data for operational or analytical purposes.
 
-To do so, _Aspect Models_ make sure that Aspect APIs do not just provide the raw, proprietary data from the underlying data sources but semantically enriched data &ndash; data that is meaningful for a domain expert. An Aspect Model describes, for example, the physical unit or the possible value range of a temperature sensor and indicates what a particular temperature at that sensor _means_ with regard to the context of that sensor.
+Each _Aspect_ represents a small, encapsulated piece of information about, for example, a product, product component, or any other asset.
+Aspects enable reusable integration of data sources and offer semantically enriched data, that is, information.
+With APIs implemented for each Aspect, Aspects offer their information to software solutions, which consume the Aspects' meaningful data for operational or analytical purposes.
 
-Each Aspect references a particular Aspect Model, which, in a machine-readable way, describes how that Aspect is structured &ndash; based on the BAMM Aspect Meta Model specification. For more information on Aspects and Aspect Models, refer to https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/v1.0.0/index.html[BAMM Aspect Meta Model version 1.0.0^, opts=nofollow].
+To do so, _Aspect Models_ make sure that Aspect APIs do not just provide the raw, proprietary data from the underlying data sources but semantically enriched data &ndash; data that is meaningful for a domain expert.
+An Aspect Model describes, for example, the physical unit or the possible value range of a temperature sensor and indicates what a particular temperature at that sensor _means_ with regard to the context of that sensor.
+
+Each Aspect references a particular Aspect Model, which, in a machine-readable way, describes how that Aspect is structured &ndash; based on the BAMM Aspect Meta Model specification.
+For more information on Aspects and Aspect Models, refer to https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/index.html[BAMM Aspect Meta Model version 2.0.0^,opts=nofollow].
 
 == License
+
 SPDX-License-Identifier: MPL-2.0
 
-This program and the accompanying materials are made under the terms of https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/blob/main/LICENSE[Mozilla Public License, V. 2.0^, opts=nofollow].
+This program and the accompanying materials are made under the terms of https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/blob/main/LICENSE[Mozilla Public License,V. 2.0^,opts=nofollow].
 
-All contained third-party materials are listed in the https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/blob/main/NOTICE.md[NOTICE.md^, opts=nofollow] file.
+All contained third-party materials are listed in the https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/blob/main/NOTICE.md[NOTICE.md^,opts=nofollow] file.
 
 ++++
 <style>

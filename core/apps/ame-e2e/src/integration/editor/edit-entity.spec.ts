@@ -25,9 +25,9 @@ describe('Test editing Entity', () => {
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cy.shapeExists('Entity1'))
       .then(() => {
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           assert.isNotNull(aspect.properties[0].property.characteristic.dataType);
-          expect((<DefaultEntity>aspect.properties[0].property.characteristic.dataType).name).to.be.equal('Entity1');
+          expect(aspect.properties[0].property.characteristic.dataType.name).to.be.equal('Entity1');
         });
       });
   });
@@ -37,8 +37,8 @@ describe('Test editing Entity', () => {
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
       .then(() => cy.shapeExists('property2'))
       .then(() => cy.getAspect())
-      .then((aspect: Aspect) => {
-        const entity = <DefaultEntity>aspect.properties[0].property.characteristic.dataType;
+      .then(aspect => {
+        const entity = aspect.properties[0].property.characteristic.dataType;
         expect(entity.properties).to.have.length(1);
         expect(entity.properties[0].property.name).to.be.equal('property2');
       });
@@ -48,8 +48,8 @@ describe('Test editing Entity', () => {
     });
     cy.clickAddShapePlusIcon('Entity1').then(() => {
       cy.shapeExists('property3').then(() => {
-        cy.getAspect().then((aspect: Aspect) => {
-          const entity = <DefaultEntity>aspect.properties[0].property.characteristic.dataType;
+        cy.getAspect().then(aspect => {
+          const entity = aspect.properties[0].property.characteristic.dataType;
           expect(entity.properties).to.have.length(2);
           expect(entity.properties[1].property.name).to.be.equal('property3');
         });
@@ -194,12 +194,8 @@ describe('Test editing Entity', () => {
       .then(() => cy.shapeExists('property6'))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(
-            ':Entity1 a bamm:Entity;\n' + '    bamm:name "Entity1";\n' + '    bamm:properties (:property5 :property6).'
-          );
-          expect(rdf).to.contain(
-            ':NewEntity a bamm:Entity;\n' + '    bamm:name "NewEntity";\n' + '    bamm:properties (:property2 :property3).'
-          );
+          expect(rdf).to.contain(':Entity1 a bamm:Entity;\n' + '    bamm:properties (:property5 :property6).');
+          expect(rdf).to.contain(':NewEntity a bamm:Entity;\n' + '    bamm:properties (:property2 :property3).');
         });
       });
   });
@@ -211,37 +207,24 @@ describe('Test editing Entity', () => {
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain(
             ':property1 a bamm:Property;\n' +
-              '    bamm:name "property1";\n' +
               '    bamm:characteristic :Characteristic1.\n' +
               ':Characteristic1 a bamm:Characteristic;\n' +
-              '    bamm:name "Characteristic1";\n' +
               '    bamm:dataType :NewEntity.\n' +
               ':Entity1 a bamm:Entity;\n' +
-              '    bamm:name "Entity1";\n' +
               '    bamm:properties (:property5 :property6).\n' +
-              ':property2 a bamm:Property;\n' +
-              '    bamm:name "property2".\n' +
-              ':property3 a bamm:Property;\n' +
-              '    bamm:name "property3".\n' +
+              ':property2 a bamm:Property.\n' +
+              ':property3 a bamm:Property.\n' +
               ':NewEntity a bamm:Entity;\n' +
-              '    bamm:name "NewEntity";\n' +
               '    bamm:properties (:property2 :property3).\n' +
-              ':newProperty2 a bamm:Property;\n' +
-              '    bamm:name "newProperty2".\n' +
-              ':newProperty3 a bamm:Property;\n' +
-              '    bamm:name "newProperty3".\n' +
+              ':newProperty2 a bamm:Property.\n' +
+              ':newProperty3 a bamm:Property.\n' +
               ':property4 a bamm:Property;\n' +
-              '    bamm:name "property4";\n' +
               '    bamm:characteristic :Characteristic2.\n' +
               ':Characteristic2 a bamm:Characteristic;\n' +
-              '    bamm:name "Characteristic2";\n' +
               '    bamm:dataType :Entity1.\n' +
-              ':property5 a bamm:Property;\n' +
-              '    bamm:name "property5".\n' +
-              ':property6 a bamm:Property;\n' +
-              '    bamm:name "property6".\n' +
+              ':property5 a bamm:Property.\n' +
+              ':property6 a bamm:Property.\n' +
               ':NewAspect a bamm:Aspect;\n' +
-              '    bamm:name "NewAspect";\n' +
               '    bamm:properties (:property1 :property4);\n' +
               '    bamm:operations ();\n' +
               '    bamm:events ().'
@@ -271,29 +254,20 @@ describe('Test editing Entity', () => {
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain(
             ':property1 a bamm:Property;\n' +
-              '    bamm:name "property1";\n' +
               '    bamm:characteristic :Characteristic1.\n' +
               ':Characteristic1 a bamm:Characteristic;\n' +
-              '    bamm:name "Characteristic1";\n' +
               '    bamm:dataType :NewEntity.\n' +
               ':Entity1 a bamm:Entity;\n' +
-              '    bamm:name "Entity1";\n' +
               '    bamm:properties ().\n' +
               ':NewEntity a bamm:Entity;\n' +
-              '    bamm:name "NewEntity";\n' +
               '    bamm:properties ().\n' +
-              ':newProperty2 a bamm:Property;\n' +
-              '    bamm:name "newProperty2".\n' +
-              ':newProperty3 a bamm:Property;\n' +
-              '    bamm:name "newProperty3".\n' +
+              ':newProperty2 a bamm:Property.\n' +
+              ':newProperty3 a bamm:Property.\n' +
               ':property4 a bamm:Property;\n' +
-              '    bamm:name "property4";\n' +
               '    bamm:characteristic :Characteristic2.\n' +
               ':Characteristic2 a bamm:Characteristic;\n' +
-              '    bamm:name "Characteristic2";\n' +
               '    bamm:dataType :Entity1.\n' +
               ':NewAspect a bamm:Aspect;\n' +
-              '    bamm:name "NewAspect";\n' +
               '    bamm:properties (:property1 :property4);\n' +
               '    bamm:operations ();\n' +
               '    bamm:events ().'

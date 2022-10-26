@@ -23,7 +23,7 @@ describe('Test editing Trait', () => {
       cy.shapeExists('Characteristic1')
         .then(() => cy.clickAddTraitPlusIcon('Characteristic1'))
         .then(() => {
-          cy.getAspect().then((aspect: Aspect) => {
+          cy.getAspect().then((aspect) => {
             expect(aspect.properties).to.have.length(1);
             expect(aspect.properties[0].property.characteristic.name).to.equal('Property1Trait');
           });

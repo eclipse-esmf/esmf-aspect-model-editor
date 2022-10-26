@@ -29,6 +29,7 @@ export const elementShortcuts = {
   unit: 'U',
   event: 'E',
   abstractEntity: 'AE',
+  abstractProperty: 'AP',
 };
 
 @Component({
@@ -65,6 +66,14 @@ export class SidebarElementComponent implements AfterViewInit {
       }
       this.editorService.makeDraggable(this.container.nativeElement, this.createDraggableShadowElement('shadowElementRectangle'));
     });
+  }
+
+  public getInitials(type: string) {
+    const words = type.split('-');
+    return words
+      .map(word => word.charAt(0).toUpperCase())
+      .join('')
+      .substring(0, 2);
   }
 
   public elementImported(): boolean {

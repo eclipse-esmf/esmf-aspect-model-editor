@@ -56,6 +56,7 @@ export const SELECTOR_editorCancelButton = '[data-cy="editorCancelButton"]';
 export const FIELD_name = '[data-cy="name"]';
 export const FIELD_entityValueName = '[data-cy="entityValueName"]';
 export const FIELD_dataType = '[data-cy="dataType"]';
+export const FIELD_extends = '[data-cy="extendsValue"]';
 export const FIELD_dataTypeOption = '[data-cy="dataTypeOption"]';
 export const FIELD_chipIcon = '[data-cy=chipIcon]';
 export const FIELD_elementCharacteristic = '[data-cy="elementCharacteristic"]';
@@ -81,7 +82,6 @@ export const FIELD_propertyValueComplex = '[data-cy="propertyValueComplex"]';
 export const FIELD_deconstructionRuleInput = '[data-cy="deconstruction-rule-input"]';
 export const FIELD_deconstructionRuleSelect = '[data-cy="deconstruction-rule-select"]';
 export const FIELD_elementsModalButton = '[data-cy="elements-modal-button"]';
-
 export const SELECTOR_removeEntityValue = '[data-cy="remove-entity-value"]';
 
 // Search model
@@ -89,10 +89,12 @@ export const SELECTOR_searchInputField = '[data-cy="searchInputField"]';
 export const SELECTOR_searchEntityValueInputField = '[data-cy="searchEntityValueInputField"]';
 // Editor canvas
 export const SELECTOR_ecProperty = '[data-cy="dragDropProperty"]';
+export const SELECTOR_ecAbstractProperty = '[data-cy="dragDropAbstractProperty"]';
 export const SELECTOR_ecOperation = '[data-cy="dragDropOperation"]';
 export const SELECTOR_ecCharacteristic = '[data-cy="dragDropCharacteristic"]';
 export const SELECTOR_ecConstraint = '[data-cy="dragDropConstraint"]';
 export const SELECTOR_ecEntity = '[data-cy="dragDropEntity"]';
+export const SELECTOR_ecAbstractEntity = '[data-cy="dragDropAbstractEntity"]';
 export const SELECTOR_ecTrait = '[data-cy="dragDropTrait"]';
 export const SELECTOR_ecEvent = '[data-cy="dragDropEvent"]';
 

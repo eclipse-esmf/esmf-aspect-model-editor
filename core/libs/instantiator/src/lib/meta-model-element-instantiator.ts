@@ -13,11 +13,12 @@
 
 import {NamedNode, Quad, Quad_Object, Quad_Subject, Util} from 'n3';
 import {
-  Base,
   BaseMetaModelElement,
   Characteristic,
   Constraint,
+  DefaultAbstractProperty,
   DefaultEntityValue,
+  DefaultProperty,
   DefaultScalar,
   Entity,
   Event,
@@ -29,6 +30,7 @@ import {
 } from '@ame/meta-model';
 import {InstantiatorService} from './instantiator.service';
 import {
+  AbstractPropertyInstantiator,
   BammUnitInstantiator,
   CharacteristicInstantiator,
   CodeCharacteristicInstantiator,
@@ -48,6 +50,7 @@ import {
   LocaleConstraintInstantiator,
   MeasurementCharacteristicInstantiator,
   OperationInstantiator,
+  PredefinedPropertyInstantiator,
   PropertyInstantiator,
   QuantifiableCharacteristicInstantiator,
   RangeConstraintInstantiator,
@@ -63,6 +66,7 @@ import {
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {InstantiatorListElement, RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {NotificationsService} from '@ame/shared';
+import {PredefinedEntityInstantiator} from './instantiators/bamme-predefined-entity-instantiator';
 
 export class MetaModelElementInstantiator {
   private characteristicInstantiator: CharacteristicInstantiator;
@@ -118,9 +122,29 @@ export class MetaModelElementInstantiator {
 
   getProperty(element: InstantiatorListElement, callback: Function) {
     const propertyInstantiator = new PropertyInstantiator(this);
+    const abstractPropertyInstantiator = new AbstractPropertyInstantiator(this);
+    const predefinedPropertyInstantiator = new PredefinedPropertyInstantiator(this);
+    const isPredefined = !!predefinedPropertyInstantiator.propertyInstances[element.quad.value];
+    let quads: Quad[];
 
-    if (this.rdfModel.store.getQuads(element.quad, null, null, null).length) {
-      return callback(propertyInstantiator.createProperty(element));
+    if (isPredefined) {
+      return callback({property: predefinedPropertyInstantiator.propertyInstances[element.quad.value](), keys: {}});
+    }
+
+    if (Util.isBlankNode(element.quad)) {
+      const firstQuad = this.rdfModel.store.getQuads(element.quad, null, null, null).find(e => this.bamm.isRdfFirst(e.predicate.value));
+      quads = firstQuad ? this.rdfModel.store.getQuads(firstQuad.object, null, null, null) : [];
+      element.quad = firstQuad.object;
+    } else {
+      quads = this.rdfModel.store.getQuads(element.quad, null, null, null);
+    }
+
+    const hasAbstractProperties = quads.some(quad => this.bamm.isAbstractPropertyElement(quad.object.value));
+
+    if (quads.length) {
+      return hasAbstractProperties
+        ? callback(abstractPropertyInstantiator.createAbstractProperty(element))
+        : callback(propertyInstantiator.createProperty(element));
     }
 
     const extReference = this.namespaceCacheService.findElementOnExtReference<Property>(element.quad.value);
@@ -203,7 +227,7 @@ export class MetaModelElementInstantiator {
     });
   }
 
-  loadOutputProperty(quad: Quad, isPropertyExtRef: boolean, callback: Function): void {
+  loadOutputProperty(quad: Quad, _isPropertyExtRef: boolean, callback: Function): void {
     if (this.rdfModel.store.getQuads(quad.object, null, null, null).length) {
       const property = new PropertyInstantiator(this).createProperty({quad: quad.object, blankNode: false}).property;
       return callback(property);
@@ -292,6 +316,11 @@ export class MetaModelElementInstantiator {
       quad = this.rdfModel.resolveBlankNodes(quad.object.value).shift();
     }
 
+    const predefinedEntityInstantiator = new PredefinedEntityInstantiator(this);
+    if (predefinedEntityInstantiator.entityInstances[quad.object.value]) {
+      return callback(predefinedEntityInstantiator.entityInstances[quad.object.value]());
+    }
+
     const typeQuad = quad ? RdfModelUtil.getEffectiveType(quad, this.rdfModel) : null;
     if (!typeQuad) {
       return callback(null);
@@ -354,13 +383,29 @@ export class MetaModelElementInstantiator {
     return this.constraintInstantiator.create(quad);
   }
 
+  public setUniqueElementName(modelElement: BaseMetaModelElement, name?: string) {
+    name = name || `${modelElement.className}`.replace('Default', '');
+
+    if (modelElement instanceof DefaultProperty || modelElement instanceof DefaultAbstractProperty) {
+      name = name[0].toLowerCase() + name.substring(1);
+    }
+
+    let counter = 1;
+    let tmpAspectModelUrn: string = null;
+    let tmpName: string = null;
+    do {
+      tmpName = `${name}${counter++}`;
+      tmpAspectModelUrn = `${this.rdfModel.getAspectModelUrn()}${tmpName}`;
+    } while (this.cachedFile.getCachedElement<BaseMetaModelElement>(tmpAspectModelUrn));
+    modelElement.aspectModelUrn = tmpAspectModelUrn;
+    modelElement.name = tmpName;
+  }
+
   initBaseProperties(quads: Array<Quad>, metaModelElement: BaseMetaModelElement, rdfModel: RdfModel) {
     let typeQuad: Quad;
 
     quads.forEach(quad => {
-      if (this.bamm.isNameProperty(quad.predicate.value)) {
-        metaModelElement.name = quad.object.value;
-      } else if (this.bamm.isDescriptionProperty(quad.predicate.value)) {
+      if (this.bamm.isDescriptionProperty(quad.predicate.value)) {
         this.addDescription(quad, metaModelElement);
       } else if (this.bamm.isPreferredNameProperty(quad.predicate.value)) {
         this.addPreferredName(quad, metaModelElement);
@@ -372,13 +417,15 @@ export class MetaModelElementInstantiator {
     });
 
     if (typeQuad && !Util.isBlankNode(typeQuad.subject)) {
-      (<Base>metaModelElement).aspectModelUrn = `${typeQuad.subject.value}`;
+      [, metaModelElement.name] = typeQuad.subject.value.split('#');
+      metaModelElement.aspectModelUrn = typeQuad.subject.value;
     } else {
-      (<Base>metaModelElement).aspectModelUrn = `${this.rdfModel.getAspectModelUrn()}${metaModelElement.name}`;
+      this.setUniqueElementName(metaModelElement);
+      metaModelElement.aspectModelUrn = `${this.rdfModel.getAspectModelUrn()}${metaModelElement.name}`;
     }
 
-    if (!(<Base>metaModelElement).metaModelVersion) {
-      (<Base>metaModelElement).metaModelVersion = rdfModel.BAMM().version;
+    if (!metaModelElement.metaModelVersion) {
+      metaModelElement.metaModelVersion = rdfModel.BAMM().version;
     }
   }
 
@@ -413,14 +460,15 @@ export class MetaModelElementInstantiator {
     }
 
     if (!skipSetExternal && !externalReference) {
-      this.notificationsService.error(
-        'Error when loading the Aspect model. The Aspect model contains an external reference that is not included in the' +
+      const message = `The following URN cannot be loaded: ${quad.value}`;
+      this.notificationsService.error({
+        title:
+          'Error when loading the Aspect model. The Aspect model contains an external reference that is not included in the' +
           ' namespace file structure or is invalid. Please also check the file structure of your local model folder with ' +
           'the defined standard in the documentation',
-        `The following URN cannot be loaded: ${quad.value}`,
-        null,
-        5000
-      );
+        message: message,
+        timeout: 5000,
+      });
       return {externalRdfModel: null, externalReference: null};
     }
 

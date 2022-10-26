@@ -12,6 +12,7 @@
  */
 import {
   BaseMetaModelElement,
+  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -116,7 +117,9 @@ export class RdfModelUtil {
       modelElement.className === 'DefaultCharacteristic' ||
       modelElement.className === 'DefaultConstraint' ||
       modelElement.className === 'DefaultEntity' ||
+      modelElement.className === 'DefaultAbstractEntity' ||
       modelElement.className === 'DefaultEvent' ||
+      modelElement instanceof DefaultAbstractProperty ||
       modelElement instanceof DefaultProperty ||
       modelElement instanceof DefaultOperation ||
       modelElement instanceof DefaultEvent ||

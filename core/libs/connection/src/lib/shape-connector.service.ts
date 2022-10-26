@@ -14,8 +14,10 @@ import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {
   AbstractEntityAbstractEntityConnectionHandler,
+  AbstractEntityAbstractPropertyConnectionHandler,
   AbstractEntityConnectionHandler,
   AbstractEntityPropertyConnectionHandler,
+  AbstractPropertyAbstractPropertyConnectionHandler,
   AspectConnectionHandler,
   AspectEventConnectionHandler,
   AspectPropertyConnectionHandler,
@@ -37,8 +39,10 @@ import {
   OperationConnectionHandler,
   OperationPropertyInputConnectionHandler,
   OperationPropertyOutputConnectionHandler,
+  PropertyAbstractPropertyConnectionHandler,
   PropertyCharacteristicConnectionHandler,
   PropertyConnectionHandler,
+  PropertyPropertyConnectionHandler,
   ShapeMultiConnector,
   ShapeSingleConnector,
   StructuredValueCharacteristicPropertyConnectionHandler,
@@ -97,6 +101,10 @@ export class ShapeConnectorService {
     private abstractEntityAbstractEntityConnectionHandler: AbstractEntityAbstractEntityConnectionHandler,
     private entityAbstractEntityConnectionHandler: EntityAbstractEntityConnectionHandler,
     private abstractEntityPropertyConnectionHandler: AbstractEntityPropertyConnectionHandler,
+    private propertyPropertyConnectionHandler: PropertyPropertyConnectionHandler,
+    private propertyAbstractPropertyConnectionHandler: PropertyAbstractPropertyConnectionHandler,
+    private abstractEntityAbstractPropertyConnectionHandler: AbstractEntityAbstractPropertyConnectionHandler,
+    private abstractPropertyAbstractPropertyConnectionHandler: AbstractPropertyAbstractPropertyConnectionHandler,
     private traitConnectionHandler: TraitConnectionHandler,
     private structuredValueConnectionHandler: StructuredValueConnectionHandler,
     private entityValueConnectionHandler: EntityValueConnectionHandler,
@@ -179,9 +187,9 @@ export class ShapeConnectorService {
         break;
       case ShapeConnectorUtil.isOperationPropertyConnection(parentModel, childModel) ||
         ShapeConnectorUtil.isPropertyOperationConnection(parentModel, childModel):
-        this.notificationsService.warning(
-          'For connecting input/output Properties use the icons below the Aspect or the edit the Operation properties via edit area'
-        );
+        this.notificationsService.warning({
+          title: 'For connecting input/output Properties use the icons below the Aspect or the edit the Operation properties via edit area',
+        });
         break;
       case ShapeConnectorUtil.isEitherCharacteristicLeftConnection(parentModel, childModel, modelInfo):
         connectionHandler = this.eitherCharacteristicLeftConnectionHandler;
@@ -203,11 +211,11 @@ export class ShapeConnectorService {
         break;
       case ShapeConnectorUtil.isCharacteristicEntityConnection(parentModel, childModel):
         if ((<DefaultCharacteristic>parentModel).isPredefined()) {
-          this.notificationsService.warning('The element can only be connected if the characteristic contains a class');
+          this.notificationsService.warning({title: 'The element can only be connected if the characteristic contains a class'});
           break;
         }
         if (parentModel instanceof DefaultTrait || parentModel instanceof DefaultEither) {
-          this.notificationsService.warning('The elements cannot be connected');
+          this.notificationsService.warning({title: 'The elements cannot be connected'});
           break;
         }
         connectionHandler = this.characteristicEntityConnectionHandler;
@@ -227,6 +235,18 @@ export class ShapeConnectorService {
       case ShapeConnectorUtil.isAbstractEntityPropertyConnection(parentModel, childModel):
         connectionHandler = this.abstractEntityPropertyConnectionHandler;
         break;
+      case ShapeConnectorUtil.isPropertyPropertyConnection(parentModel, childModel):
+        connectionHandler = this.propertyPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isPropertyAbstractPropertyConnection(parentModel, childModel):
+        connectionHandler = this.propertyAbstractPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isAbstractEntityAbstractPropertyConnection(parentModel, childModel):
+        connectionHandler = this.abstractEntityAbstractPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isAbstractPropertyAbstractPropertyConnection(parentModel, childModel):
+        connectionHandler = this.abstractPropertyAbstractPropertyConnectionHandler;
+        break;
       case ShapeConnectorUtil.isCollectionCharacteristicConnection(parentModel, childModel):
         connectionHandler = this.collectionCharacteristicConnectionHandler;
         break;
@@ -234,7 +254,7 @@ export class ShapeConnectorService {
         connectionHandler = this.enumerationEntityValueConnectionHandler;
         break;
       case ShapeConnectorUtil.isCharacteristicCollectionConnection(parentModel, childModel):
-        this.notificationsService.warning('Characteristics cannot be connected with collection');
+        this.notificationsService.warning({title: 'Characteristics cannot be connected with collection'});
         break;
       case ShapeConnectorUtil.isCharacteristicUnitConnection(parentModel, childModel):
         connectionHandler = this.characteristicUnitConnectionHandler;
@@ -246,7 +266,7 @@ export class ShapeConnectorService {
         connectionHandler = this.eventPropertyConnectionHandler;
         break;
       default:
-        this.notificationsService.warning('The elements cannot be connected');
+        this.notificationsService.warning({title: 'The elements cannot be connected'});
     }
 
     connectionHandler?.connect(parentModel, childModel, parentSource, childSource);

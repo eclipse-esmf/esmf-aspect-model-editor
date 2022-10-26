@@ -47,35 +47,25 @@ describe('Test load aspect model with anonymous elements', () => {
             cy.getUpdatedRDF().then(rdf => {
               expect(rdf).to.contain(
                 ':AspectDefault a bamm:Aspect;\n' +
-                  '    bamm:name "AspectDefault";\n' +
                   '    bamm:properties (:property1 :property2 :property3);\n' +
                   '    bamm:operations ();\n' +
                   '    bamm:events ().\n' +
                   ':property1 a bamm:Property;\n' +
-                  '    bamm:name "property1";\n' +
                   '    bamm:characteristic :Characteristic1.\n' +
                   ':property2 a bamm:Property;\n' +
-                  '    bamm:name "property2";\n' +
                   '    bamm:characteristic :Characteristic2.\n' +
                   ':property3 a bamm:Property;\n' +
-                  '    bamm:name "property3";\n' +
                   '    bamm:characteristic :Trait1.\n' +
                   ':Characteristic1 a bamm:Characteristic;\n' +
-                  '    bamm:name "Characteristic1";\n' +
                   '    bamm:dataType xsd:string.\n' +
                   ':Characteristic2 a bamm:Characteristic;\n' +
-                  '    bamm:name "Characteristic2";\n' +
                   '    bamm:dataType xsd:string.\n' +
                   ':Trait1 a bamm-c:Trait;\n' +
-                  '    bamm:name "Trait1";\n' +
                   '    bamm-c:baseCharacteristic :Characteristic3;\n' +
                   '    bamm-c:constraint :Constraint1, :Constraint2.\n' +
-                  ':Characteristic3 a bamm:Characteristic;\n' +
-                  '    bamm:name "Characteristic3".\n' +
-                  ':Constraint1 a bamm:Constraint;\n' +
-                  '    bamm:name "Constraint1".\n' +
-                  ':Constraint2 a bamm:Constraint;\n' +
-                  '    bamm:name "Constraint2".'
+                  ':Characteristic3 a bamm:Characteristic.\n' +
+                  ':Constraint1 a bamm:Constraint.\n' +
+                  ':Constraint2 a bamm:Constraint.\n'
               );
             });
           });

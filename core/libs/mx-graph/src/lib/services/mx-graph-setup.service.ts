@@ -22,7 +22,7 @@ import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
 import {MxGraphHelper, PropertyInformation} from '../helpers';
 import {mxConstants, mxEditor, mxLayoutManager, mxOutline, mxPoint, mxRectangle, mxStackLayout, mxUtils} from '../providers';
-import {DefaultEntity, DefaultEntityValue, DefaultTrait} from '@ame/meta-model';
+import {DefaultAbstractProperty, DefaultEntity, DefaultEntityValue, DefaultProperty, DefaultTrait} from '@ame/meta-model';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {APP_CONFIG, AppConfig, AssetsPath, BindingsService, BrowserService} from '@ame/shared';
 
@@ -98,7 +98,8 @@ export class MxGraphSetupService {
   }
 
   private getTooltipForCell(cell: mxgraph.mxCell) {
-    if (MxGraphHelper.getModelElement(cell) instanceof DefaultTrait) {
+    const metaModelElement = MxGraphHelper.getModelElement(cell);
+    if ([DefaultEntityValue, DefaultTrait].some(e => metaModelElement instanceof e)) {
       return this.getToolTipContent(cell);
     }
 
@@ -123,7 +124,10 @@ export class MxGraphSetupService {
       if (!configuration?.baseProperties.isPredefined) {
         table.innerHTML += `<tr><td>Namespace</td><td>${configuration?.baseProperties.namespace}</td></tr>`;
         table.innerHTML += `<tr><td>Version</td><td>${configuration?.baseProperties.version}</td></tr>`;
-        table.innerHTML += `<tr><td>File</td><td>${configuration?.baseProperties.fileName}</td></tr>`;
+
+        if (configuration?.baseProperties.fileName) {
+          table.innerHTML += `<tr><td>File</td><td>${configuration?.baseProperties.fileName}</td></tr>`;
+        }
       }
 
       configuration.fields.forEach((propLabel: PropertyInformation) => {
@@ -297,12 +301,27 @@ export class MxGraphSetupService {
   }
 
   private isCellVisible(cell: mxgraph.mxCell): boolean {
-    return !(
-      cell.isEdge() &&
+    if (!cell.isEdge()) {
+      return true;
+    }
+
+    if (
       !this.configurationService.getSettings().showEntityValueEntityEdge &&
       MxGraphHelper.getModelElement(cell.source) instanceof DefaultEntityValue &&
       MxGraphHelper.getModelElement(cell.target) instanceof DefaultEntity
-    );
+    ) {
+      return false;
+    }
+
+    if (
+      !this.configurationService.getSettings().showAbstractPropertyConnection &&
+      MxGraphHelper.getModelElement(cell.source) instanceof DefaultProperty &&
+      MxGraphHelper.getModelElement(cell.target) instanceof DefaultAbstractProperty
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   private redraw(state: mxgraph.mxCellState, force: boolean, rendering: boolean): boolean {

@@ -13,8 +13,8 @@
 
 import {EventEmitter, Injectable} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
-import {NotificationType} from './enums/notification-type.enum';
-import {NotificationModel} from './model/notification.model';
+import {NotificationType} from './enums';
+import {NotificationModel} from './model';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +42,7 @@ export class NotificationsService {
     return this.notifications;
   }
 
-  warning(title: string, message?: string, link?: string, timeout?: number, hidePopup?: boolean) {
+  warning({title = '', message = '', link = '', timeout = 2000, hidePopup = false}) {
     timeout = timeout !== null && timeout !== undefined ? timeout : 2000;
     const notification = new NotificationModel(title, message, link, NotificationType.Warning);
     this.notifications.unshift(notification);
@@ -52,7 +52,7 @@ export class NotificationsService {
     }
   }
 
-  error(title: string, message?: string, link?: string, timeout?: number, hidePopup?: boolean) {
+  error({title = '', message = '', link = '', timeout = 2000, hidePopup = false}) {
     timeout = timeout !== null && timeout !== undefined ? timeout : 2000;
     const notification = new NotificationModel(title, message, link, NotificationType.Error);
     this.notifications.unshift(notification);
@@ -62,7 +62,7 @@ export class NotificationsService {
     }
   }
 
-  validationError(title: string, message?: string, link?: string, timeout?: number, hidePopup?: boolean) {
+  validationError({title = '', message = '', link = '', timeout = 2000, hidePopup = false}) {
     timeout = timeout !== null && timeout !== undefined ? timeout : 2000;
     const notification = new NotificationModel(title, message, link, NotificationType.Error);
     this.notifications.unshift(notification);
@@ -91,7 +91,7 @@ export class NotificationsService {
     }
   }
 
-  info(title: string, message?: string, link?: string, timeout?: number, hidePopup?: boolean) {
+  info({title = '', message = '', link = '', timeout = 2000, hidePopup = false}) {
     timeout = timeout !== null && timeout !== undefined ? timeout : 2000;
     const notification = new NotificationModel(title, message, link, NotificationType.Info);
     this.notifications.unshift(notification);
@@ -101,7 +101,7 @@ export class NotificationsService {
     }
   }
 
-  success(title: string, message?: string, link?: string, timeout?: number, hidePopup?: boolean) {
+  success({title = '', message = '', link = '', timeout = 2000, hidePopup = false}) {
     timeout = timeout !== null && timeout !== undefined ? timeout : 2000;
     const notification = new NotificationModel(title, message, link, NotificationType.Success);
     this.notifications.unshift(notification);
