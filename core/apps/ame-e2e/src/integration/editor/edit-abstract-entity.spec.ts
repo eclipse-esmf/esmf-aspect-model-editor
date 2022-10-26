@@ -29,6 +29,7 @@ import {
   SELECTOR_tbDeleteButton,
   SELECTOR_tbLoadButton,
 } from '../../support/constants';
+import {cyHelp} from '../../support/helpers';
 
 describe('Create and Edit Abstract Entity', () => {
   describe('Entity -> Abstract Entity', () => {
@@ -72,7 +73,7 @@ describe('Create and Edit Abstract Entity', () => {
     });
 
     it('should reconnect to AbstractEntity1', () => {
-      cy.then(() => cy.clickConnectShapes('AbstractEntity1', 'Entity1')).then(() =>
+      cy.then(() => cy.clickConnectShapes('Entity1', 'AbstractEntity1')).then(() =>
         cy.getCellLabel('Entity1', 'extends').should('eq', 'extends = AbstractEntity1')
       );
     });
@@ -106,7 +107,9 @@ describe('Create and Edit Abstract Entity', () => {
     });
 
     it('should not connect recursively', () => {
-      cy.clickConnectShapes('AbstractEntity2', 'AbstractEntity1')
+      cyHelp
+        .clickShape('Characteristic1') // To lost focus on AbstractEntity2
+        .then(() => cy.clickConnectShapes('AbstractEntity2', 'AbstractEntity1'))
         .then(() => cy.get(SELECTOR_notificationsButton).click({force: true}))
         .then(() => cy.wait(500).get('.mat-cell').contains('Recursive elements').should('exist'))
         .then(() => cy.wait(500).get('[data-cy="close-notifications"]').click({force: true}));
