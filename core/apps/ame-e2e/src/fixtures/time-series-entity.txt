@@ -11,10 +11,13 @@
     bamm:properties (:property1);
     bamm:operations ();
     bamm:events ().
+
 :property1 a bamm:Property;
     bamm:characteristic :Characteristic1.
+
 :Characteristic1 a bamm:Characteristic;
     bamm:dataType :Entity1.
+
 :Entity1 a bamm:Entity;
     bamm:properties ([bamm:extends bamm-e:value]);
     bamm:extends bamm-e:TimeSeriesEntity.

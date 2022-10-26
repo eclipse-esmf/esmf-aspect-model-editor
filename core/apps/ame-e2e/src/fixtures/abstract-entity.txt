@@ -11,21 +11,29 @@
     bamm:properties (:property1);
     bamm:operations ();
     bamm:events ().
+
 :property1 a bamm:Property;
     bamm:characteristic :Characteristic1.
+
 :Characteristic1 a bamm:Characteristic;
     bamm:dataType :Entity1.
+
 :Entity1 a bamm:Entity;
     bamm:properties (:property2 :property3);
     bamm:extends :AbstractEntity1.
+
 :property2 a bamm:Property;
     bamm:extends :abstractProperty2.
+
 :property3 a bamm:Property;
     bamm:extends :abstractProperty1.
+
 :AbstractEntity1 a bamm:AbstractEntity;
     bamm:preferredName "Preferred Name 1"@en;
     bamm:description "Description 1"@en;
     bamm:see <http://test1.com>;
     bamm:properties (:abstractProperty1 :abstractProperty2).
+
 :abstractProperty2 a bamm:AbstractProperty.
+
 :abstractProperty1 a bamm:AbstractProperty.
