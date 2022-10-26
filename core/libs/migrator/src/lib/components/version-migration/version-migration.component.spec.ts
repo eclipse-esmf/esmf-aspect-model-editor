@@ -10,21 +10,61 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {MigratorApiService, ModelApiService} from '@ame/api';
+import {EditorService} from '@ame/editor';
+import {RdfService} from '@ame/rdf/services';
+import {APP_CONFIG} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {RouterTestingModule} from '@angular/router/testing';
+import {provideMockObject} from 'jest-helpers';
+import {of} from 'rxjs';
 
 import {VersionMigrationComponent} from './version-migration.component';
 
 describe('VersionMigrationComponent', () => {
   let component: VersionMigrationComponent;
   let fixture: ComponentFixture<VersionMigrationComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [VersionMigrationComponent],
-    }).compileComponents();
-  });
+  let modelApiService: ModelApiService;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule, MatDialogModule, MatProgressSpinnerModule, MatIconModule],
+      declarations: [VersionMigrationComponent],
+      providers: [
+        {
+          provide: APP_CONFIG,
+          useValue: {
+            currentBammVersion: '2.0.0',
+          },
+        },
+        {
+          provide: MigratorApiService,
+          useValue: provideMockObject(MigratorApiService),
+        },
+        {
+          provide: RdfService,
+          useValue: provideMockObject(RdfService),
+        },
+        {
+          provide: ModelApiService,
+          useValue: provideMockObject(ModelApiService),
+        },
+        {
+          provide: EditorService,
+          useValue: {
+            settings: {},
+            loadExternalModels: jest.fn(() => of()),
+          },
+        },
+      ],
+    });
+
+    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService.getNamespacesStructure = jest.fn(() => of([]));
+
     fixture = TestBed.createComponent(VersionMigrationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

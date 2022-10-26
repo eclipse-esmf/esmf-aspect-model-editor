@@ -14,7 +14,6 @@
 import {describe, expect} from '@jest/globals';
 import {
   AbstractEntityAbstractEntityConnectionHandler,
-  AbstractEntityAbstractPropertyConnectionHandler,
   AbstractEntityConnectionHandler,
   AbstractEntityPropertyConnectionHandler,
   AbstractEntityAbstractPropertyConnectionHandler,
@@ -65,6 +64,8 @@ import {
 } from '@ame/meta-model';
 import {provideMockObject} from 'jest-helpers/utils';
 import {LogService, NotificationsService} from '@ame/shared';
+import {MxGraphAttributeService, MxGraphService} from '@ame/mx-graph';
+import {EntityValueService} from '@ame/editor';
 
 describe('Test Shape connector service', () => {
   let service: ShapeConnectorService;
@@ -74,7 +75,6 @@ describe('Test Shape connector service', () => {
   let propertyConnectionHandler: jest.Mocked<PropertyConnectionHandler>;
   let characteristicConnectionHandler: jest.Mocked<CharacteristicConnectionHandler>;
   let entityConnectionHandler: jest.Mocked<EntityConnectionHandler>;
-  let abstractEntityConnectionHandler: jest.Mocked<AbstractEntityConnectionHandler>;
   let aspectPropertyConnectionHandler: jest.Mocked<AspectPropertyConnectionHandler>;
   let propertyCharacteristicConnectionHandler: jest.Mocked<PropertyCharacteristicConnectionHandler>;
   let characteristicEntityConnectionHandler: jest.Mocked<CharacteristicEntityConnectionHandler>;
@@ -95,6 +95,18 @@ describe('Test Shape connector service', () => {
         {
           provide: NotificationsService,
           useValue: provideMockObject(NotificationsService),
+        },
+        {
+          provide: MxGraphService,
+          useValue: provideMockObject(MxGraphService),
+        },
+        {
+          provide: MxGraphAttributeService,
+          useValue: provideMockObject(MxGraphAttributeService),
+        },
+        {
+          provide: EntityValueService,
+          useValue: provideMockObject(EntityValueService),
         },
         {
           provide: AspectConnectionHandler,
@@ -238,6 +250,7 @@ describe('Test Shape connector service', () => {
         },
       ],
     });
+
     logService = TestBed.inject(LogService) as jest.Mocked<LogService>;
     notificationsService = TestBed.inject(NotificationsService) as jest.Mocked<NotificationsService>;
     aspectConnectionHandler = TestBed.inject(AspectConnectionHandler) as jest.Mocked<AspectConnectionHandler>;

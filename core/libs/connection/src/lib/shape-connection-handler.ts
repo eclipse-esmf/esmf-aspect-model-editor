@@ -130,7 +130,7 @@ class EntityInheritanceConnector extends InheritanceConnector {
       .filter(
         abstractProperty =>
           abstractProperty instanceof DefaultAbstractProperty &&
-          !childMetaModel.allProperties.some(({property: p}) => p.extendedElement?.aspectModelUrn === abstractProperty.aspectModelUrn)
+          !childMetaModel.allProperties?.some(({property: p}) => p.extendedElement?.aspectModelUrn === abstractProperty.aspectModelUrn)
       );
 
     const newProperties = abstractProperties.map(abstractProperty => {
@@ -204,7 +204,7 @@ class PropertyInheritanceConnector extends InheritanceConnector {
   protected hasEntityParent(cell: mxgraph.mxCell) {
     return !this.mxGraphService
       .resolveParents(cell)
-      .some(cell => [DefaultAbstractEntity, DefaultEntity].some(c => MxGraphHelper.getModelElement(cell) instanceof c));
+      ?.some(cell => [DefaultAbstractEntity, DefaultEntity].some(c => MxGraphHelper.getModelElement(cell) instanceof c));
   }
 }
 
@@ -362,6 +362,59 @@ export class EntityConnectionHandler implements ShapeSingleConnector<Entity> {
     this.mxGraphService.assignToParent(child, source);
     this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PropertyAbstractPropertyConnectionHandler
+  extends PropertyInheritanceConnector
+  implements ShapeMultiConnector<DefaultProperty, DefaultAbstractProperty>
+{
+  constructor(
+    protected mxGraphService: MxGraphService,
+    protected mxGraphAttributeService: MxGraphAttributeService,
+    protected languageSettingsService: LanguageSettingsService,
+    private notificationService: NotificationsService
+  ) {
+    super(mxGraphService, mxGraphAttributeService, languageSettingsService, notificationService);
+  }
+
+  public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultAbstractProperty, parentCell: mxCell, childCell: mxCell) {
+    if (this.hasEntityParent(parentCell)) {
+      this.notificationsService.warning({
+        title: 'No entity as parent present',
+        message: 'The Property need to have as parent an Entity/Abstract Entity',
+      });
+      return;
+    }
+
+    if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
+      this.notificationService.warning({
+        title: 'Recursive elements',
+        message: 'Can not connect elements due to circular connection',
+        timeout: 5000,
+      });
+    } else {
+      super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
+    }
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class EntityPropertyConnectionHandler implements ShapeMultiConnector<DefaultEntity, DefaultProperty> {
+  constructor(private mxGraphService: MxGraphService, private entityValueService: EntityValueService) {}
+
+  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: mxCell, childCell: mxCell) {
+    if (!parentMetaModel.properties.find(({property}) => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
+      const overWrittenProperty = {property: childMetaModel, keys: {}};
+      parentMetaModel.properties.push(overWrittenProperty);
+      this.entityValueService.onNewProperty(overWrittenProperty, parentMetaModel);
+    }
+    this.mxGraphService.assignToParent(childCell, parentCell);
   }
 }
 
@@ -986,43 +1039,6 @@ export class PropertyPropertyConnectionHandler
 @Injectable({
   providedIn: 'root',
 })
-export class PropertyAbstractPropertyConnectionHandler
-  extends PropertyInheritanceConnector
-  implements ShapeMultiConnector<DefaultProperty, DefaultAbstractProperty>
-{
-  constructor(
-    protected mxGraphService: MxGraphService,
-    protected mxGraphAttributeService: MxGraphAttributeService,
-    protected languageSettingsService: LanguageSettingsService,
-    private notificationService: NotificationsService
-  ) {
-    super(mxGraphService, mxGraphAttributeService, languageSettingsService, notificationService);
-  }
-
-  public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultAbstractProperty, parentCell: mxCell, childCell: mxCell) {
-    if (this.hasEntityParent(parentCell)) {
-      this.notificationsService.warning({
-        title: 'No entity as parent present',
-        message: 'The Property need to have as parent an Entity/Abstract Entity',
-      });
-      return;
-    }
-
-    if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
-      this.notificationService.warning({
-        title: 'Recursive elements',
-        message: 'Can not connect elements due to circular connection',
-        timeout: 5000,
-      });
-    } else {
-      super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
-    }
-  }
-}
-
-@Injectable({
-  providedIn: 'root',
-})
 export class AbstractPropertyAbstractPropertyConnectionHandler
   extends PropertyInheritanceConnector
   implements ShapeMultiConnector<DefaultAbstractProperty, DefaultAbstractProperty>
@@ -1110,22 +1126,6 @@ export class AbstractEntityAbstractPropertyConnectionHandler
 
     this.mxGraphService.assignToParent(childCell, parentCell);
     this.mxGraphService.formatShapes();
-  }
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class EntityPropertyConnectionHandler implements ShapeMultiConnector<DefaultEntity, DefaultProperty> {
-  constructor(private mxGraphService: MxGraphService, private entityValueService: EntityValueService) {}
-
-  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: mxCell, childCell: mxCell) {
-    if (!parentMetaModel.properties.find(({property}) => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
-      const overWrittenProperty = {property: childMetaModel, keys: {}};
-      parentMetaModel.properties.push(overWrittenProperty);
-      this.entityValueService.onNewProperty(overWrittenProperty, parentMetaModel);
-    }
-    this.mxGraphService.assignToParent(childCell, parentCell);
   }
 }
 

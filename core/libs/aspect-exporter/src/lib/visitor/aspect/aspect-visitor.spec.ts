@@ -22,6 +22,7 @@ import {AspectVisitor} from './aspect-visitor';
 import {provideMockObject} from 'jest-helpers/utils';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
+import {Bamm} from '@ame/vocabulary';
 
 describe('Aspect Visitor', () => {
   let service: AspectVisitor;
@@ -57,8 +58,12 @@ describe('Aspect Visitor', () => {
     });
 
     modelService = provideMockObject(ModelService);
-    rdfModel = provideMockObject(RdfModel);
-    rdfModel.store = new Store();
+    rdfModel = {
+      store: new Store(),
+      BAMM: jest.fn(() => new Bamm('')),
+      hasNamespace: jest.fn(() => false),
+      addPrefix: jest.fn(() => {}),
+    } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
     aspect = new DefaultAspect('1', 'bamm#aspect', 'aspect1', null);
 
@@ -85,7 +90,6 @@ describe('Aspect Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'aspect1',
     });
 
     expect(rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.properties);
@@ -109,7 +113,6 @@ describe('Aspect Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'aspect2',
     });
     expect(aspect.aspectModelUrn).toBe('bamm#aspect2');
   });

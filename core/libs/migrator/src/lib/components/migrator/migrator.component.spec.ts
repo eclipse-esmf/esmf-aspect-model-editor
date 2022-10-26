@@ -12,6 +12,7 @@
  */
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 
 import {MigratorComponent} from './migrator.component';
 
@@ -20,9 +21,10 @@ describe('MigratorComponent', () => {
   let fixture: ComponentFixture<MigratorComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [MigratorComponent],
-    }).compileComponents();
+      imports: [RouterTestingModule],
+    });
   });
 
   beforeEach(() => {

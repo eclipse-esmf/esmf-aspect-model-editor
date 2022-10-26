@@ -38,7 +38,6 @@ export class MigrationStatusComponent implements OnInit {
       const erroredModels = rdfModels.filter(rdfModel => rdfModel?.hasErrors);
       this.hasErrors ||= erroredModels.length > 0;
       this.setFilesWithError(erroredModels);
-      console.log(erroredModels, this.migrationStatus);
     });
   }
 

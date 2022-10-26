@@ -12,6 +12,10 @@
  */
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MigratorService} from '../../migrator.service';
 
 import {MigrationSuccessComponent} from './migration-success.component';
 
@@ -19,13 +23,20 @@ describe('MigrationSuccessComponent', () => {
   let component: MigrationSuccessComponent;
   let fixture: ComponentFixture<MigrationSuccessComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [MigrationSuccessComponent],
-    }).compileComponents();
-  });
-
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MatDialogModule, MatButtonModule, MatIconModule],
+      declarations: [MigrationSuccessComponent],
+      providers: [
+        {
+          provide: MigratorService,
+          useValue: {
+            dialogRef: {},
+          },
+        },
+      ],
+    });
+
     fixture = TestBed.createComponent(MigrationSuccessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

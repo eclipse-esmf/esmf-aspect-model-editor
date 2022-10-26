@@ -10,21 +10,50 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {MigratorApiService} from '@ame/api';
+import {APP_CONFIG} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {RouterTestingModule} from '@angular/router/testing';
+import {provideMockObject} from 'jest-helpers';
+import {of} from 'rxjs';
+import {MigratorService} from '../../migrator.service';
 
 import {StartMigratingComponent} from './start-migrating.component';
 
 describe('StartMigratingComponent', () => {
   let component: StartMigratingComponent;
   let fixture: ComponentFixture<StartMigratingComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [StartMigratingComponent],
-    }).compileComponents();
-  });
+  let migratorApiService: MigratorApiService;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule, MatDialogModule, MatCheckboxModule, MatButtonModule, MatProgressSpinnerModule],
+      declarations: [StartMigratingComponent],
+      providers: [
+        {
+          provide: APP_CONFIG,
+          useValue: {
+            currentBammVersion: '2.0.0',
+          },
+        },
+        {
+          provide: MigratorApiService,
+          useValue: provideMockObject(MigratorApiService),
+        },
+        {
+          provide: MigratorService,
+          useValue: provideMockObject(MigratorService),
+        },
+      ],
+    });
+
+    migratorApiService = TestBed.inject(MigratorApiService);
+    migratorApiService.createBackup = jest.fn(() => of());
+
     fixture = TestBed.createComponent(StartMigratingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

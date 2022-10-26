@@ -15,6 +15,7 @@ import {DefaultAbstractEntity, DefaultProperty, OverWrittenProperty} from '@ame/
 import {MxGraphService} from '@ame/mx-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
+import {Bamm} from '@ame/vocabulary';
 import {TestBed} from '@angular/core/testing';
 import {describe, expect, it} from '@jest/globals';
 import {provideMockObject} from 'jest-helpers';
@@ -32,7 +33,7 @@ describe('Abstract Entity Visitor', () => {
   let rdfModel: jest.Mocked<RdfModel>;
   let rdfService: jest.Mocked<RdfService>;
   let entity: DefaultAbstractEntity;
-  const property: OverWrittenProperty = {property: new DefaultProperty('', '', '', null, ''), keys: {}};
+  const property: OverWrittenProperty = {property: new DefaultProperty('', '', '', null), keys: {}};
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -58,8 +59,12 @@ describe('Abstract Entity Visitor', () => {
     });
 
     modelService = provideMockObject(ModelService);
-    rdfModel = provideMockObject(RdfModel);
-    rdfModel.store = new Store();
+    rdfModel = {
+      store: new Store(),
+      BAMM: jest.fn(() => new Bamm('')),
+      hasNamespace: jest.fn(() => false),
+      addPrefix: jest.fn(() => {}),
+    } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
     entity = new DefaultAbstractEntity('1', 'bamm#abstractEntity1', 'abstractEntity1', null);
     entity.properties = [property];
@@ -87,7 +92,6 @@ describe('Abstract Entity Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'abstractEntity1',
     });
     expect(rdfListService.push).toHaveBeenCalledWith(entity, property);
   });
@@ -100,7 +104,6 @@ describe('Abstract Entity Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'entity2',
     });
     expect(entity.aspectModelUrn).toBe('bamm#entity2');
   });

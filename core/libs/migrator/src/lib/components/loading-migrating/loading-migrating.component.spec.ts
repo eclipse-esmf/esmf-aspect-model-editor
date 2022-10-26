@@ -11,27 +11,41 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {MatDialogModule} from '@angular/material/dialog';
+import {RouterTestingModule} from '@angular/router/testing';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MigratorApiService} from '@ame/api';
 import {LoadingMigratingComponent} from './loading-migrating.component';
+import {provideMockObject} from '../../../../../../jest-helpers';
+import {of} from 'rxjs';
+import {Router} from '@angular/router';
 
 describe('LoadingMigratingComponent', () => {
-  let component: LoadingMigratingComponent;
   let fixture: ComponentFixture<LoadingMigratingComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [LoadingMigratingComponent],
-    }).compileComponents();
-  });
+  let migratorApiService: MigratorApiService;
+  let router: Router;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [LoadingMigratingComponent],
+      imports: [MatDialogModule, RouterTestingModule, MatProgressSpinnerModule],
+      providers: [{provide: MigratorApiService, useValue: provideMockObject(MigratorApiService)}],
+    });
+
+    migratorApiService = TestBed.inject(MigratorApiService);
+    migratorApiService.migrateWorkspace = jest.fn(() => of(null));
+
+    router = TestBed.inject(Router);
+    router.navigate = jest.fn();
+
     fixture = TestBed.createComponent(LoadingMigratingComponent);
-    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  it('navigated to next step', fakeAsync(() => {
+    tick();
+    expect(router.navigate).toHaveBeenCalledWith([{outlets: {migrator: 'status'}}], {state: {data: null}});
+    flush();
+  }));
 });

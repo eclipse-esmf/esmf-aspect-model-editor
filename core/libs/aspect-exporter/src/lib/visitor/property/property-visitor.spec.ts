@@ -22,6 +22,7 @@ import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils/rdf-model';
 import {DefaultProperty} from '@ame/meta-model';
 import {provideMockObject} from '../../../../../../jest-helpers';
+import {Bamm} from '@ame/vocabulary';
 
 describe('Property Visitor', () => {
   let service: PropertyVisitor;
@@ -56,8 +57,13 @@ describe('Property Visitor', () => {
     });
 
     modelService = provideMockObject(ModelService);
-    rdfModel = provideMockObject(RdfModel);
-    rdfModel.store = new Store();
+    rdfModel = {
+      store: new Store(),
+      BAMM: jest.fn(() => new Bamm('')),
+      BAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+      hasNamespace: jest.fn(() => false),
+      addPrefix: jest.fn(() => {}),
+    } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
     property = new DefaultProperty('1', 'bamm#property1', 'property1', null);
 
@@ -81,11 +87,9 @@ describe('Property Visitor', () => {
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(property, {
       exampleValue: undefined,
-      refines: undefined,
       preferredName: [],
       description: [],
       see: [],
-      name: 'property1',
     });
   });
 });

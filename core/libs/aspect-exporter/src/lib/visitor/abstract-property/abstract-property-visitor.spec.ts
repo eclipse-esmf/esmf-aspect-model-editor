@@ -14,6 +14,7 @@
 import {DefaultAbstractProperty} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
+import {Bamm} from '@ame/vocabulary';
 import {TestBed} from '@angular/core/testing';
 import {describe, expect, it} from '@jest/globals';
 import {provideMockObject} from 'jest-helpers';
@@ -46,8 +47,12 @@ describe('Property Visitor', () => {
     });
 
     modelService = provideMockObject(ModelService);
-    rdfModel = provideMockObject(RdfModel);
-    rdfModel.store = new Store();
+    rdfModel = {
+      store: new Store(),
+      BAMM: jest.fn(() => new Bamm('')),
+      hasNamespace: jest.fn(() => false),
+      addPrefix: jest.fn(() => {}),
+    } as any;
 
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
     abstractProperty = new DefaultAbstractProperty('1', 'bamm#abstractProperty1', 'abstractProperty1', null);
@@ -73,7 +78,6 @@ describe('Property Visitor', () => {
     expect(rdfNodeService.update).toHaveBeenCalledWith(abstractProperty, {
       description: [],
       exampleValue: null,
-      name: 'abstractProperty1',
       preferredName: [],
       see: [],
     });

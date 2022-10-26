@@ -22,6 +22,7 @@ import {DefaultOperation} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfModel} from '@ame/rdf/utils';
 import {ModelService, RdfService} from '@ame/rdf/services';
+import {Bamm} from '@ame/vocabulary';
 
 describe('Operation Visitor', () => {
   let service: OperationVisitor;
@@ -56,8 +57,13 @@ describe('Operation Visitor', () => {
     });
 
     modelService = provideMockObject(ModelService);
-    rdfModel = provideMockObject(RdfModel);
-    rdfModel.store = new Store();
+    rdfModel = {
+      store: new Store(),
+      BAMM: jest.fn(() => new Bamm('')),
+      BAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+      hasNamespace: jest.fn(() => false),
+      addPrefix: jest.fn(() => {}),
+    } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
     operation = new DefaultOperation('1', 'bamm#operation1', 'operation1', [], null);
 
@@ -83,7 +89,6 @@ describe('Operation Visitor', () => {
       preferredName: [],
       description: [],
       see: [],
-      name: 'operation1',
     });
   });
 });

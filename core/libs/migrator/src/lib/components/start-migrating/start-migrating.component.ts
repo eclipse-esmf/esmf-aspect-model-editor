@@ -18,7 +18,7 @@ import {Router} from '@angular/router';
 import {MigratorService} from '../../migrator.service';
 
 @Component({
-  selector: 'start-migrating',
+  selector: 'ame-start-migrating',
   templateUrl: './start-migrating.component.html',
   styleUrls: ['./start-migrating.component.scss'],
 })
