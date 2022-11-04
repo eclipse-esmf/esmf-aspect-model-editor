@@ -17,7 +17,6 @@ import {
   AbstractEntityAbstractPropertyConnectionHandler,
   AbstractEntityConnectionHandler,
   AbstractEntityPropertyConnectionHandler,
-  AbstractEntityAbstractPropertyConnectionHandler,
   AbstractPropertyAbstractPropertyConnectionHandler,
   AspectConnectionHandler,
   AspectEventConnectionHandler,
@@ -76,7 +75,6 @@ describe('Test Shape connector service', () => {
   let propertyConnectionHandler: jest.Mocked<PropertyConnectionHandler>;
   let characteristicConnectionHandler: jest.Mocked<CharacteristicConnectionHandler>;
   let entityConnectionHandler: jest.Mocked<EntityConnectionHandler>;
-  let abstractEntityConnectionHandler: jest.Mocked<AbstractEntityConnectionHandler>;
   let aspectPropertyConnectionHandler: jest.Mocked<AspectPropertyConnectionHandler>;
   let propertyCharacteristicConnectionHandler: jest.Mocked<PropertyCharacteristicConnectionHandler>;
   let characteristicEntityConnectionHandler: jest.Mocked<CharacteristicEntityConnectionHandler>;
