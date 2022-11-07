@@ -51,6 +51,7 @@ describe('Test loading screen', () => {
   });
 
   it('can cancel generate html documentation', () => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.get(SELECTOR_tbGenerateDocumentButton)
       .click({force: true})
       .then(() => cy.get(SELECTOR_tbPrintButton).click({force: true}))
