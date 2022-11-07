@@ -50,7 +50,7 @@ describe('Test generation and download from valid Aspect Model', () => {
     cy.startModelling()
       .then(() => cy.get(SELECTOR_tbGenerateDocumentButton).click({force: true}))
       .then(() => cy.get(SELECTOR_tbOpenApiButton).click({force: true}))
-      .then(() => cy.get(GENERATION_tbOutputButton).select('Yaml'))
+      .then(() => cy.get(GENERATION_tbOutputButton).select('YAML'))
       .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force: true}))
       .then(() => cy.readFile('cypress/downloads/AspectDefault-open-api.yaml').should('exist'));
   });
