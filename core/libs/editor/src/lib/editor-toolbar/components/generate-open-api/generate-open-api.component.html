@@ -13,14 +13,14 @@
 
 <form [formGroup]="form">
 
-  <h2 mat-dialog-title>Generate Open Api specification</h2>
+  <h2 mat-dialog-title>Generate OpenAPI specification</h2>
   <p>Configuration</p>
 
   <mat-form-field appearance="fill">
     <mat-label>Output File format</mat-label>
     <select matNativeControl [formControl]="getControl('output')" data-cy="tbOutputButton">
-      <option value="json">Json</option>
-      <option value="yaml">Yaml</option>
+      <option value="json">JSON</option>
+      <option value="yaml">YAML</option>
     </select>
   </mat-form-field>
 
