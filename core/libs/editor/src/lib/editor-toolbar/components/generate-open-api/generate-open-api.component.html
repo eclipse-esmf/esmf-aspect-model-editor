@@ -1,0 +1,68 @@
+<!--
+  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<form [formGroup]="form">
+
+  <h2 mat-dialog-title>Generate OpenAPI specification</h2>
+  <p>Configuration</p>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Output File format</mat-label>
+    <select matNativeControl [formControl]="getControl('output')" data-cy="tbOutputButton">
+      <option value="json">JSON</option>
+      <option value="yaml">YAML</option>
+    </select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>BaseUrl - the base URL for the Aspect API</mat-label>
+    <input matInput [formControl]="getControl('baseUrl')" placeholder="https://example.com">
+    <mat-error *ngIf="getControl('baseUrl')?.errors?.invalidUrl">Please add a valid url</mat-error>
+  </mat-form-field>
+
+  <section>
+    <mat-checkbox
+      [formControl]="getControl('includeQueryApi')"
+      class="checkbox-margin"
+      matTooltip="if set to true, a path section for the Query API Endpoint of the Aspect API will be included in the specification.">
+      IncludeQueryApi
+    </mat-checkbox>
+
+    <mat-checkbox
+      [formControl]="getControl('useSemanticVersion')"
+      class="checkbox-margin"
+      matTooltip=" if set to true, the complete semantic version of the Aspect Model will be used as
+      the version of the API. Otherwise only the major part of the Aspect Version is used as the version of the API.">
+      UseSemanticVersion
+    </mat-checkbox>
+  </section>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Paging type/option</mat-label>
+    <select matNativeControl [formControl]="getControl('paging')">
+      <option value="NO_PAGING">No paging</option>
+      <option value="CURSOR_BASED_PAGING">Cursor based paging</option>
+      <option value="OFFSET_BASED_PAGING">Offset based paging</option>
+      <option value="TIME_BASED_PAGING">Time based paging</option>
+    </select>
+  </mat-form-field>
+
+  <mat-dialog-actions align="end">
+    <button mat-flat-button (click)="close()">Cancel</button>
+    <button
+      (click)="generateOpenApiSpec()" type="button" mat-flat-button color="primary" [disabled]="!form.valid"
+      data-cy="tbGenerateOpenApiButton">
+      <span>Generate</span>
+    </button>
+  </mat-dialog-actions>
+</form>

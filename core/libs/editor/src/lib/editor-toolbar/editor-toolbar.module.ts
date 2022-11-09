@@ -19,14 +19,15 @@ import {MatMenuModule} from '@angular/material/menu';
 import {LoadModelDialogModule} from '../load-model-dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
-  WorkspaceSummaryComponent,
-  ExportWorkspaceComponent,
-  SearchBarComponent,
-  ZipUploaderComponent,
   DocumentComponent,
+  ExportWorkspaceComponent,
+  GenerateOpenApiComponent,
+  SearchBarComponent,
   ThemeSwitcherComponent,
+  WorkspaceSummaryComponent,
+  ZipUploaderComponent,
 } from './components';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatListModule} from '@angular/material/list';
@@ -42,6 +43,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {GenerateDocumentationComponent} from './components/generate-documentation/generate-documentation.component';
 
 @NgModule({
   imports: [
@@ -67,6 +69,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatBadgeModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     EditorToolbarComponent,
@@ -77,6 +80,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     DocumentComponent,
     NotificationsComponent,
     ThemeSwitcherComponent,
+    GenerateOpenApiComponent,
+    GenerateDocumentationComponent,
   ],
   exports: [EditorToolbarComponent, ThemeSwitcherComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

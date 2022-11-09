@@ -83,6 +83,7 @@ import {ModelApiService, ModelValidatorService} from '@ame/api';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {Title} from '@angular/platform-browser';
+import {OpenApi} from './editor-toolbar';
 import mxCell = mxgraph.mxCell;
 
 @Injectable({
@@ -281,14 +282,19 @@ export class EditorService {
     this.rdfService.externalRdfModels.splice(index, 1);
   }
 
-  public downloadJsonSample(rdfModel: RdfModel) {
+  public generateJsonSample(rdfModel: RdfModel) {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.getJsonSample(serializedModel);
+    return this.modelApiService.generateJsonSample(serializedModel);
   }
 
-  public downloadJsonSchema(rdfModel: RdfModel) {
+  public generateJsonSchema(rdfModel: RdfModel) {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.getJsonSchema(serializedModel);
+    return this.modelApiService.generateJsonSchema(serializedModel);
+  }
+
+  public generateOpenApiSpec(rdfModel: RdfModel, openApi: OpenApi) {
+    const serializedModel = this.rdfService.serializeModel(rdfModel);
+    return this.modelApiService.generateOpenApiSpec(serializedModel, openApi);
   }
 
   private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string) {
@@ -729,23 +735,6 @@ export class EditorService {
 
   getSerializedModel() {
     return this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel);
-  }
-
-  openDocumentation(rdfModel: RdfModel) {
-    if (!rdfModel) {
-      this.notificationsService.error({title: 'Aspect model could not be found'});
-      return null;
-    }
-    const rdfAspectModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService
-      .validate(rdfAspectModel)
-      .pipe(
-        switchMap(errors =>
-          errors.length > 0
-            ? of(this.notificationsService.error({title: 'Could not load Aspect model, please make sure the model is valid'}))
-            : this.modelApiService.openDocumentation(rdfModel, rdfAspectModel)
-        )
-      );
   }
 
   openAlertBox() {

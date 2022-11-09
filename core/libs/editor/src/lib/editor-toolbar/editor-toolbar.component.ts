@@ -10,31 +10,16 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+
 import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {saveAs} from 'file-saver';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {catchError, finalize, first, map, switchMap} from 'rxjs/operators';
-import {of, Subscription} from 'rxjs';
+import {finalize} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {ConfigurationService, SettingDialogComponent, Settings} from '@ame/settings-dialog';
-import {
-  BindingsService,
-  LoadingScreenOptions,
-  LoadingScreenService,
-  LogService,
-  NotificationsService,
-  relations,
-  SaveValidateErrorsCodes,
-} from '@ame/shared';
+import {ConfigurationService, Settings} from '@ame/settings-dialog';
+import {BindingsService, LoadingScreenOptions, NotificationsService, relations} from '@ame/shared';
 import {EditorService} from '../editor.service';
-import {LoadModelDialogComponent} from '../load-model-dialog';
 import {ShapeConnectorService} from '@ame/connection';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {ConfirmDialogService} from '../confirm-dialog/confirm-dialog.service';
-import {ModelApiService} from '@ame/api';
-import {DocumentComponent, ExportWorkspaceComponent, ZipUploaderComponent} from './components';
-import {NotificationsComponent} from './components/notifications/notifications.component';
-import {PreviewDialogComponent} from '../preview-dialog';
+import {FileHandlingService, GenerateHandlingService, InformationHandlingService} from './services';
 
 @Component({
   selector: 'ame-editor-toolbar',
@@ -54,22 +39,22 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   private loadingScreen$: Subscription;
   private loadingScreenOptions: LoadingScreenOptions;
 
+  get labelExpandCollapse() {
+    return this.isAllShapesExpanded ? 'Collapse all' : 'Expand all';
+  }
+
   constructor(
+    private informationService: InformationHandlingService,
+    private fileHandlingService: FileHandlingService,
+    private generateHandlingService: GenerateHandlingService,
     public notificationsService: NotificationsService,
     private editorService: EditorService,
     private mxGraphService: MxGraphService,
-    private matDialog: MatDialog,
-    private rdfService: RdfService,
-    private modelService: ModelService,
-    private modelApiService: ModelApiService,
-    private loadingScreenService: LoadingScreenService,
-    private logService: LogService,
     private shapeConnectorService: ShapeConnectorService,
     private configurationService: ConfigurationService,
     private bindingsService: BindingsService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private confirmDialogService: ConfirmDialogService
+    private mxGraphShapeOverlayService: MxGraphShapeOverlayService
   ) {}
 
   ngOnInit(): void {
@@ -97,248 +82,138 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     });
   }
 
-  onOpenSettings() {
-    this.matDialog
-      .open(SettingDialogComponent, {
-        panelClass: 'settings-dialog-container',
-      })
-      .afterClosed();
+  openSettingsDialog() {
+    this.informationService.openSettingsDialog();
   }
 
-  onShowHelpDialog() {
-    this.matDialog.open(DocumentComponent);
+  openHelpDialog() {
+    this.informationService.openHelpDialog();
   }
 
-  onLoadNotifications() {
-    const notificationModal = this.matDialog.open(NotificationsComponent, {
-      width: '60%',
-      autoFocus: false,
-    });
-    this.keyDownEvents(notificationModal);
+  openNotificationDialog() {
+    this.informationService.openNotificationDialog();
   }
 
-  private keyDownEvents(matDialogRef: MatDialogRef<any>) {
-    matDialogRef.keydownEvents().subscribe(keyBoardEvent => {
-      // KeyCode might not be supported by electron.
-      if (keyBoardEvent.code === 'Escape') {
-        matDialogRef.close();
-      }
-    });
-  }
-
-  getLabelExpandCollapse() {
-    return this.isAllShapesExpanded ? 'Collapse all' : 'Expand all';
-  }
-
-  onNew() {
+  openLoadNewAspectModelDialog() {
     this.loadingScreenOptions.title = 'Loading Aspect Model';
     this.loadingScreenOptions.hasCloseButton = true;
 
-    this.loadingScreen$ = this.matDialog
-      .open(LoadModelDialogComponent)
-      .afterClosed()
+    this.loadingScreen$ = this.fileHandlingService
+      .openLoadNewAspectModelDialog(this.loadingScreenOptions)
       .pipe(
-        first(),
-        switchMap(rdfAspectModel => {
-          if (!rdfAspectModel) {
-            return of(null);
-          }
-          this.loadingScreenService.open({
-            ...this.loadingScreenOptions,
-            closeButtonAction: () => this.loadingScreen$.unsubscribe(),
-          });
+        finalize(() => {
           this.closeEditDialog.emit();
-          return this.editorService.loadNewAspectModel(rdfAspectModel).pipe(
-            first(),
-            catchError(error => {
-              this.notificationsService.error({
-                title: 'Error when loading Aspect Model. Reverting to previous Aspect Model',
-                message: `${error}`,
-                timeout: 5000,
-              });
-              return of(null);
-            }),
-            finalize(() => {
-              this.loadingScreen$.unsubscribe();
-              this.loadingScreenService.close();
-            })
-          );
+          this.loadingScreen$.unsubscribe();
         })
       )
       .subscribe();
   }
 
-  onDownload() {
-    if (!this.modelService.getLoadedAspectModel().rdfModel) {
-      return;
-    }
-
+  exportAsAspectModelFile() {
     this.loadingScreenOptions.title = 'Saving Aspect Model';
     this.loadingScreenOptions.hasCloseButton = false;
 
-    this.loadingScreenService.open(this.loadingScreenOptions);
-    try {
-      this.modelService.synchronizeModelToRdf().subscribe(() => {
-        saveAs(
-          new Blob([this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel)], {
-            type: 'text/turtle;charset=utf-8',
-          }),
-          `${this.modelService.getLoadedAspectModel().aspect.name}.ttl`
-        );
-      });
-    } catch (error) {
-      this.logService.logError(`Error while saving the model. ${JSON.stringify(error)}.`);
-    } finally {
-      this.loadingScreenService.close();
-    }
+    this.fileHandlingService.exportAsAspectModelFile(this.loadingScreenOptions).subscribe();
   }
 
-  onSave() {
-    this.modelService
-      .synchronizeModelToRdf()
-      .pipe(
-        switchMap(() =>
-          this.modelApiService.getNamespacesAppendWithFiles().pipe(
-            first(),
-            map((namespaces: string[]) => {
-              const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
-              const serializeModel = this.rdfService.serializeModel(rdfModel);
-
-              if (namespaces.some(namespace => namespace === rdfModel.getAbsoluteAspectModelFileName())) {
-                this.confirmDialogService
-                  .open({
-                    phrases: [
-                      `The Aspect model "${rdfModel.getAbsoluteAspectModelFileName()}" is already defined in your file structure.`,
-                      'Are you sure you want to overwrite it?',
-                    ],
-                    title: 'Update Aspect model',
-                    okButtonText: 'Overwrite',
-                  })
-                  .subscribe(confirmed => {
-                    if (confirmed) {
-                      this.editorService.updateLastSavedRdf(false, serializeModel, new Date());
-                      this.editorService.saveModel().subscribe();
-                    }
-                  });
-              } else {
-                this.editorService.updateLastSavedRdf(false, serializeModel, new Date());
-                this.editorService.saveModel().subscribe();
-              }
-            })
-          )
-        )
-      )
-      .subscribe();
+  saveAspectModelToWorkspace() {
+    this.fileHandlingService.saveAspectModelToWorkspace().subscribe();
   }
 
-  openExportModal() {
-    this.matDialog.open(ExportWorkspaceComponent, {disableClose: true}).afterClosed().pipe(first()).subscribe();
+  openExportDialog() {
+    this.fileHandlingService.openExportDialog().subscribe();
   }
 
-  onAddFileToNamespace(event: any) {
-    const reader = new FileReader();
-    reader.readAsText(event.target.files[0]);
-    reader.onload = () => {
-      this.modelApiService
-        .saveModel(reader.result.toString())
-        .pipe(first())
-        .subscribe({
-          error: () => this.notificationsService.error({title: 'Error adding file to namespaces'}),
-          complete: () => {
-            this.notificationsService.success({title: 'Successfully added file to namespaces'});
-            this.editorService.refreshSidebarNamespaces();
-          },
-        });
-    };
+  addFileToNamespace(event: any) {
+    this.validateFile(this.onAddFileToNamespace.bind(this, event.target.files[0]));
+  }
+
+  onAddFileToNamespace(file: File) {
+    this.loadingScreenOptions.title = 'Add file to workspace';
+    this.loadingScreenOptions.hasCloseButton = true;
+
+    this.fileHandlingService.addFileToNamespace(file);
   }
 
   uploadZip(event: any) {
     const file = event?.target?.files[0];
-    const fileName = event?.target?.files[0]?.name;
 
     if (!file) {
       return;
     }
 
-    this.matDialog.open(ZipUploaderComponent, {data: {file, name: fileName}, disableClose: true});
+    this.fileHandlingService.uploadZip(file);
     event.target.value = '';
   }
 
-  onPrint() {
-    if (!this.modelService.getLoadedAspectModel().rdfModel) {
-      return;
-    }
+  validateFile(callback?: Function) {
+    this.loadingScreenOptions.title = 'Validating';
+    this.loadingScreenOptions.hasCloseButton = true;
 
+    this.loadingScreen$ = this.fileHandlingService
+      .validateFile(this.loadingScreenOptions, callback)
+      .pipe(
+        finalize(() => {
+          this.loadingScreen$.unsubscribe();
+        })
+      )
+      .subscribe();
+  }
+
+  generateDocumentation() {
+    this.validateFile(this.onGenerateDocumentation.bind(this));
+  }
+
+  onGenerateDocumentation() {
     this.loadingScreenOptions.title = 'Generate HTML Documentation';
     this.loadingScreenOptions.hasCloseButton = true;
 
-    this.loadingScreenService.open(this.loadingScreenOptions);
-    this.loadingScreen$ = this.modelService
-      .synchronizeModelToRdf()
-      .pipe(
-        switchMap(() => this.editorService.openDocumentation(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
-        finalize(() => this.loadingScreen$.unsubscribe())
-      )
-      .subscribe({next: () => this.loadingScreenService.close(), error: () => this.loadingScreenService.close()});
+    const subscription$ = this.generateHandlingService
+      .openGenerationDocumentation(this.loadingScreenOptions)
+      .pipe(finalize(() => subscription$.unsubscribe()))
+      .subscribe();
   }
 
   generateJsonSample() {
-    this.onValidate(this.onGenerateJsonSample.bind(this));
+    this.validateFile(this.onGenerateJsonSample.bind(this));
   }
 
   onGenerateJsonSample() {
-    if (!this.modelService.getLoadedAspectModel().rdfModel) {
-      return;
-    }
-    const subscription$ = this.modelService
-      .synchronizeModelToRdf()
-      .pipe(
-        switchMap(() => this.editorService.downloadJsonSample(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
-        finalize(() => subscription$.unsubscribe())
-      )
-      .subscribe({
-        next: data => {
-          this.openPreview(
-            'Sample JSON Payload preview',
-            JSON.stringify(data, null, 2),
-            `${this.modelService.getLoadedAspectModel().aspect.name}-sample.json`
-          );
-        },
-        error: () => {
-          this.notificationsService.error({title: 'Failed to generate JSON Sample', message: 'Invalid Aspect Model'});
-          this.loadingScreenService.close();
-        },
-      });
+    this.loadingScreenOptions.title = 'Generate JSON payload';
+    this.loadingScreenOptions.hasCloseButton = true;
+
+    const subscription$ = this.generateHandlingService
+      .generateJsonSample(this.loadingScreenOptions)
+      .pipe(finalize(() => subscription$.unsubscribe()))
+      .subscribe();
   }
 
   generateJsonSchema() {
-    this.onValidate(this.onGenerateJsonSchema);
+    this.validateFile(this.onGenerateJsonSchema.bind(this));
   }
 
   onGenerateJsonSchema() {
-    if (!this.modelService.getLoadedAspectModel().rdfModel) {
-      return;
-    }
+    this.loadingScreenOptions.title = 'Generate JSON Schema';
+    this.loadingScreenOptions.hasCloseButton = true;
 
-    const subscription$ = this.modelService
-      .synchronizeModelToRdf()
-      .pipe(
-        switchMap(() => this.editorService.downloadJsonSchema(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
-        finalize(() => subscription$.unsubscribe())
-      )
-      .subscribe({
-        next: data => {
-          this.openPreview(
-            'JSON Schema preview',
-            JSON.stringify(data, null, 2),
-            `${this.modelService.getLoadedAspectModel().aspect.name}-schema.json`
-          );
-        },
-        error: () => {
-          this.notificationsService.error({title: 'Failed to generate JSON Schema', message: 'Invalid Aspect Model'});
-          this.loadingScreenService.close();
-        },
-      });
+    const subscription$ = this.generateHandlingService
+      .generateJsonSchema(this.loadingScreenOptions)
+      .pipe(finalize(() => subscription$.unsubscribe()))
+      .subscribe();
+  }
+
+  openGenerationOpenApiSpec() {
+    this.validateFile(this.onGenerateOpenApiSpec.bind(this));
+  }
+
+  onGenerateOpenApiSpec() {
+    this.loadingScreenOptions.title = 'Generate Open API specification';
+    this.loadingScreenOptions.hasCloseButton = true;
+
+    const subscription$ = this.generateHandlingService
+      .openGenerationOpenApiSpec(this.loadingScreenOptions)
+      .pipe(finalize(() => subscription$.unsubscribe()))
+      .subscribe();
   }
 
   onDelete() {
@@ -389,44 +264,6 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     }
   }
 
-  onValidate(callback?: Function) {
-    this.loadingScreenOptions.title = 'Validating';
-    this.loadingScreenOptions.hasCloseButton = true;
-
-    this.loadingScreenService.open(this.loadingScreenOptions);
-    this.loadingScreen$ = this.editorService
-      .validate()
-      .pipe(
-        finalize(() => {
-          this.loadingScreen$.unsubscribe();
-          localStorage.removeItem('validating');
-        })
-      )
-      .subscribe({
-        next: correctableErrors => {
-          this.loadingScreenService.close();
-          this.logService.logInfo('Validated successfully');
-          if (correctableErrors?.length === 0) {
-            this.notificationsService.info({title: 'Validation completed successfully', timeout: 5000});
-            callback?.call(this);
-          }
-        },
-        error: error => {
-          this.loadingScreenService.close();
-          if (error?.type === SaveValidateErrorsCodes.validationInProgress) {
-            this.notificationsService.error({title: 'Validation in progress'});
-            return;
-          }
-          this.notificationsService.error({
-            title: 'Validation completed with errors',
-            message: 'Unfortunately the validation could not be completed. Please retry or contact support',
-            timeout: 5000,
-          });
-          this.logService.logError(`Error occurred while validating the current model (${error})`);
-        },
-      });
-  }
-
   onToggleEditorNavigation() {
     this.settings.showEditorNav = !this.settings.showEditorNav;
     this.configurationService.setSettings(this.settings);
@@ -443,16 +280,5 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   getTitleEditorMap() {
     return this.settings.showEditorMap ? 'Hide map' : 'Show map';
-  }
-
-  private openPreview(title: string, content: string, fileName: string) {
-    const config = {
-      data: {
-        title: title,
-        content: content,
-        fileName: fileName,
-      },
-    };
-    this.matDialog.open(PreviewDialogComponent, config);
   }
 }
