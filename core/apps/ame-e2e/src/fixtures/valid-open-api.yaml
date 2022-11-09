@@ -1,27 +1,39 @@
+#
+# Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+#
+# See the AUTHORS file(s) distributed with this work for
+# additional information regarding authorship.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+
 ---
 openapi: 3.0.3
 info:
   title: AspectDefault
   version: v1
 servers:
-- url: https://example.com/api/v1
-  variables:
-    api-version:
-      default: v1
+  - url: https://example.com/api/v1
+    variables:
+      api-version:
+        default: v1
 paths:
   /{tenant-id}/aspect-default:
     get:
       tags:
-      - AspectDefault
+        - AspectDefault
       operationId: getAspectDefault
       parameters:
-      - name: tenant-id
-        in: path
-        description: The ID of the tenant owning the requested Twin.
-        required: true
-        schema:
-          type: string
-          format: uuid
+        - name: tenant-id
+          in: path
+          description: The ID of the tenant owning the requested Twin.
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         "200":
           $ref: '#/components/responses/AspectDefault'
@@ -38,14 +50,14 @@ components:
     ErrorResponse:
       type: object
       required:
-      - error
+        - error
       properties:
         error:
           $ref: '#/components/schemas/Error'
     Error:
       type: object
       required:
-      - details
+        - details
       properties:
         message:
           type: string
@@ -69,7 +81,7 @@ components:
         property1:
           $ref: '#/components/schemas/urn_bamm_io.openmanufacturing.digitaltwin_1.0.0_Characteristic1'
       required:
-      - property1
+        - property1
   responses:
     Unauthorized:
       description: The requesting user or client is not authenticated.
