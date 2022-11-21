@@ -208,7 +208,7 @@
     "@typescript-eslint/experimental-utils": "5.18.0",
     "@typescript-eslint/parser": "5.18.0",
     "coverage-istanbul-loader": "^3.0.5",
-    "cypress": "^6.9.1",
+    "cypress": "10.11.0",
     "electron": "19.0.6",
     "electron-builder": "^23.2.0",
     "eslint": "8.12.0",
