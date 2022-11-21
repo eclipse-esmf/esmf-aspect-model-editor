@@ -36,7 +36,7 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Install node modules (Dev)
-        run: npm install
+        run: npm install --legacy-peer-deps
         working-directory: core
 
       - name: Identifying and reporting lint patterns
