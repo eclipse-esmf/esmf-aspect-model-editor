@@ -142,7 +142,7 @@ export class RdfService {
 
   saveModel(rdfModel: RdfModel): Observable<any> {
     const rdfContent = this.serializeModel(rdfModel);
-    return this.modelApiService.saveModel(rdfContent);
+    return this.modelApiService.saveModel(rdfContent, rdfModel.getAbsoluteAspectModelFileName());
   }
 
   loadModelLatest(): Observable<RdfModel> {
