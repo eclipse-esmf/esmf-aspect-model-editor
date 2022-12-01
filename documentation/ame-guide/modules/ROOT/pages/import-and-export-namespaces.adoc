@@ -1,7 +1,7 @@
 :page-partial:
 
 [[import-export-namespace]]
-= Import and export namespace
+= Import and export a namespace
 
 For general information on external references, see xref:namespaces-references.adoc#namespaces-external-references[Namespaces and external references].
 

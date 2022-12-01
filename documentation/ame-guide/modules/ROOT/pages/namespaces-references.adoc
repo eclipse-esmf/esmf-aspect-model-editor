@@ -12,7 +12,8 @@ The namespaces from which the external elements can be referenced are defined by
 By default, the Aspect Model Editor file directory is located at:
 
 * `+C:\Users\<YOUR-USER-NAME>\aspect-model-editor+` (on Windows)
-* `+/Users/<YOUR-USER-NAME>/aspect-model-editor+` (on Mac or Linux)
+* `+/Users/<YOUR-USER-NAME>/aspect-model-editor+` (on Mac)
+* `/home/<YOUR-USER-NAME>/aspect-model-editor+` (on Linux)
 
 Here you can add the folder structure for your external references which will then show up in the xref:ui-overview.adoc#workspace-sidebar[Workspace sidebar].
 
@@ -33,7 +34,7 @@ image::file-elements.png[width=100%]
 
 For more information, see also:
 
-* xref:import-and-export-namespaces.adoc[Import and export namespace]
+* xref:import-and-export-namespaces.adoc[Import and export a namespace]
 * xref:use-external-references.adoc[Use external references]
 
 ++++
