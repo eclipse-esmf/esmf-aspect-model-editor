@@ -10,7 +10,7 @@ For general information on external references, see xref:namespaces-references.a
 
 To add external references, proceed as follows:
 
-1. xref::import-and-export-namespaces.adoc#import-namespaces[Import the namespace] you want to use.
+1. xref::import-and-export-namespaces.adoc#import-namespace[Import the namespace] you want to use.
 2. Open the Workspace sidebar.
 3. Double-click the TTL file from which you want to use elements from.
 4. Drag the specific element and drop it to the graph area canvas.
@@ -19,19 +19,22 @@ image::external-reference-drag-and-drop.png[width=100%]
 +
 [NOTE]
 ====
-External references can only be dragged once into the current Aspect Model. These elements are marked with a lock sign signifying that they cannot be edited. You can only edit an external reference by editing the file it is defined in.
+External references can only be dragged once into the current Aspect Model.
+These elements are marked with a lock sign signifying that they cannot be edited.
+You can only edit an external reference by editing the file it is defined in.
 
 image::external-reference.png[width=100%]
 ====
 +
 [NOTE]
 ====
-When you drag and drop an external reference, it will also include all the lower connections (dependencies) of the element. Same goes for deleting the element &ndash; all dependencies will be deleted as well.
+When you drag and drop an external reference, it will also include all the lower connections (dependencies) of the element.
+Same goes for deleting the element &ndash; all dependencies will be deleted as well.
 
 image::external-reference-delete.png[width=100%]
 ====
-→ An external reference has now been added to your model.
 
+→ An external reference has now been added to your model.
 
 [[refer-to-another-element]]
 == Refer from one element to another one
@@ -43,9 +46,9 @@ To refer from one element to another one, proceed as follows:
 . Click *Save*.
 . Click *Save to namespace*.
 +
-→  Now the reference can be found in the xref:ui-overview.adoc#workspace-sidebar[Workspace sidebar].
+→ Now the reference can be found in the xref:ui-overview.adoc#workspace-sidebar[Workspace sidebar].
 . xref::load-and-save-models.adoc#load-start-new-models[Load or start] a new model.
-. xref::import-and-export-namespaces.adoc#import-export-namespaces[Open] the Workspace sidebar.
+. xref::import-and-export-namespaces.adoc#import-export-namespace[Open] the Workspace sidebar.
 . Double-click the TTL file of which you want to use elements from.
 . Drag the specific element and drop it on the graph area canvas.
 

@@ -1,14 +1,14 @@
 :page-partial:
 
-[[import-export-namespaces]]
-= Import and export namespaces
+[[import-export-namespace]]
+= Import and export namespace
 
 For general information on external references, see xref:namespaces-references.adoc#namespaces-external-references[Namespaces and external references].
 
-[[import-namespaces]]
-== Import namespaces
+[[import-namespace]]
+== Import namespace
 
-To import a package with namespaces, proceed as follows:
+To import a package with one single namespace, proceed as follows:
 
 . Click *New/Load* in the xref:ui-overview.adoc#toolbar[toolbar].
 . Click *Import Package*.
@@ -34,9 +34,8 @@ image::replace-import.png[width=80%]
 
 → Now your namespaces are added to the recent model.
 
-
 [[export-namespace]]
-== Export namespaces
+== Export namespace
 
 To export a namespace, proceed as follows:
 
@@ -49,7 +48,8 @@ To export a namespace, proceed as follows:
 image::select-namespace-export.png[width=100%]
 . Click *Validate*.
 +
-→ After validation is done, a summary dialog similar to the one for xref:import-and-export-namespaces.adoc#import-namespaces[namespace import] will be displayed. If the validation has files with errors, the namespace cannot be exported.
+→ After validation is done, a summary dialog similar to the one for xref:import-and-export-namespaces.adoc#import-namespace[namespace import] will be displayed.
+If the validation has files with errors, the namespace cannot be exported.
 +
 image::export-window.png[width=100%]
 . Click *Export*.

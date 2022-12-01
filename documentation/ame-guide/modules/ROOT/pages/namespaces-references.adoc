@@ -3,17 +3,18 @@
 [[namespaces-external-references]]
 = Namespaces and external references
 
-The Aspect Model Editor supports external references and custom namespaces. The namespaces from which the external elements can be referenced are defined by the folder structure of the Aspect Model Editor file directory.
+The Aspect Model Editor supports external references and custom namespaces.
+The namespaces from which the external elements can be referenced are defined by the folder structure of the Aspect Model Editor file directory.
 
 [[file-directory-folder-structure]]
 == File directory and folder structure on your local machine
 
-By default, the Aspect Model Editor file directory is located at: 
+By default, the Aspect Model Editor file directory is located at:
 
 * `+C:\Users\<YOUR-USER-NAME>\aspect-model-editor+` (on Windows)
 * `+/Users/<YOUR-USER-NAME>/aspect-model-editor+` (on Mac or Linux)
 
-Here you can add the folder structure for your external references which will then show up in the xref:ui-overview.adoc#workspace-sidebar[Workspace sidebar]. 
+Here you can add the folder structure for your external references which will then show up in the xref:ui-overview.adoc#workspace-sidebar[Workspace sidebar].
 
 image::namespace-file-structure.png[width=100%]
 
@@ -32,7 +33,7 @@ image::file-elements.png[width=100%]
 
 For more information, see also:
 
-* xref:import-and-export-namespaces.adoc[Import and export namespaces]
+* xref:import-and-export-namespaces.adoc[Import and export namespace]
 * xref:use-external-references.adoc[Use external references]
 
 ++++
