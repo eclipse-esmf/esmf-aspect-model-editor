@@ -13,30 +13,30 @@
 
 /// <reference types="Cypress" />
 
-import {Aspect, DefaultEntity, DefaultQuantifiable, Trait} from '@ame/meta-model';
+import {DefaultQuantifiable, Trait} from '@ame/meta-model';
 import {SELECTOR_dialogStartButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
-describe('Test load external reference with same namespace', () => {
-  it('Loading property element with there children from external file with same namespace', () => {
+describe('Test drag and drop', () => {
+  it('Loading property element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
-      'io.openmanufacturing.digitaltwin:1.0.0': ['external-property-reference-with-children.txt'],
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'io.openmanufacturing.different:1.0.0': ['external-property-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-property-reference-with-children.txt'},
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-property-reference.txt'},
       },
       {
-        fixture: '/external-reference/same-namespace/with-childrens/external-property-reference.txt',
+        fixture: '/external-reference/different-namespace/with-childrens/external-property-reference.txt',
       }
     );
 
     cy.visitDefault();
-    cy.fixture('/external-reference/same-namespace/model-with-external-property-reference-with-children')
+    cy.fixture('/external-reference/different-namespace/model-with-external-property-reference-with-childrens')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
@@ -61,7 +61,7 @@ describe('Test load external reference with same namespace', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:externalPropertyWithChildren)');
+        expect(rdf).to.contain('bamm:properties (different:externalPropertyWithChildren)');
 
         expect(rdf).not.contain(':externalPropertyWithChildren a bamm:Property');
         expect(rdf).not.contain(':ChildrenCharacteristic1 a bamm:Characteristic');
@@ -74,25 +74,25 @@ describe('Test load external reference with same namespace', () => {
       });
   });
 
-  it('Loading operation element with there children from external file with same namespace', () => {
+  it('Loading operation element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
-      'io.openmanufacturing.digitaltwin:1.0.0': ['external-operation-reference-with-children.txt'],
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'io.openmanufacturing.different:1.0.0': ['external-operation-reference-with-children.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-operation-reference-with-children.txt'},
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-operation-reference-with-children.txt'},
       },
       {
-        fixture: '/external-reference/same-namespace/with-childrens/external-operation-reference.txt',
+        fixture: '/external-reference/different-namespace/with-childrens/external-operation-reference.txt',
       }
     );
 
     cy.visitDefault();
-    cy.fixture('/external-reference/same-namespace/model-with-external-operation-reference-with-children')
+    cy.fixture('/external-reference/different-namespace/model-with-external-operation-reference-with-children')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
@@ -133,7 +133,7 @@ describe('Test load external reference with same namespace', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:operations (:externalOperationWithChildren)');
+        expect(rdf).to.contain('bamm:operations (different:externalOperationWithChildren)');
 
         expect(rdf).not.contain(':externalOperationWithChildren a bamm:Operation');
         expect(rdf).not.contain(':childrenProperty1 a bamm:Property');
@@ -149,25 +149,25 @@ describe('Test load external reference with same namespace', () => {
       });
   });
 
-  it('Loading characteristic element with there children from external file with same namespace', () => {
+  it('Loading characteristic element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
-      'io.openmanufacturing.digitaltwin:1.0.0': ['external-characteristic-reference-with-children.txt'],
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'io.openmanufacturing.different:1.0.0': ['external-characteristic-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-characteristic-reference-with-children.txt'},
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-characteristic-reference.txt'},
       },
       {
-        fixture: '/external-reference/same-namespace/with-childrens/external-characteristic-reference.txt',
+        fixture: '/external-reference/different-namespace/with-childrens/external-characteristic-reference.txt',
       }
     );
 
     cy.visitDefault();
-    cy.fixture('/external-reference/same-namespace/model-with-external-characteristic-reference-with-children')
+    cy.fixture('/external-reference/different-namespace/model-with-external-characteristic-reference-with-childrens')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
@@ -194,7 +194,7 @@ describe('Test load external reference with same namespace', () => {
       .then(rdf => {
         expect(rdf).to.contain('bamm:properties (:property1)');
         expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :ExternalCharacteristicWithChildren');
+        expect(rdf).to.contain('bamm:characteristic different:ExternalCharacteristicWithChildren');
 
         expect(rdf).not.contain(':ExternalCharacteristicWithChildren a bamm:Characteristic');
         expect(rdf).not.contain(':ChildrenEntity1 a bamm:Entity');
@@ -206,76 +206,32 @@ describe('Test load external reference with same namespace', () => {
       });
   });
 
-  it('Loading custom unit element from external file with same namespace', () => {
+  it('Loading entity element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
-      'io.openmanufacturing:1.0.0': ['external-unit-reference.txt'],
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'io.openmanufacturing.different:1.0.0': ['external-entity-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing:1.0.0:external-unit-reference.txt'},
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-entity-reference.txt'},
       },
       {
-        fixture: '/external-reference/same-namespace/without-childrens/external-unit-reference.txt',
+        fixture: '/external-reference/different-namespace/with-childrens/external-entity-reference.txt',
       }
     );
 
     cy.visitDefault();
-    cy.fixture('/external-reference/same-namespace/model-with-external-unit-reference')
+    cy.fixture('/external-reference/different-namespace/model-with-external-entity-reference-with-childrens')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.name).to.equal('AspectDefault');
-        expect(aspect.properties).to.be.length(1);
-        expect(aspect.properties[0].property.name).to.equal('property1');
+        console.log(aspect);
 
-        expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
-
-        const unit = (<DefaultQuantifiable>aspect.properties[0].property.characteristic).unit;
-        expect(unit.name).to.equal('ExternalUnit');
-      })
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:dataType xsd:string');
-        expect(rdf).to.contain('bamm:characteristic :Quantifiable1');
-        expect(rdf).to.contain(':Quantifiable1 a bamm-c:Quantifiable');
-        expect(rdf).to.contain('bamm-c:unit :ExternalUnit');
-
-        expect(rdf).not.contain(':ExternalUnit a unit:Unit');
-      });
-  });
-
-  it('Loading entity element with there children from external file with same namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
-      'io.openmanufacturing.digitaltwin:1.0.0': ['external-entity-reference-with-children.txt'],
-    });
-
-    cy.intercept(
-      {
-        method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-entity-reference-with-children.txt'},
-      },
-      {
-        fixture: '/external-reference/same-namespace/with-childrens/external-entity-reference.txt',
-      }
-    );
-
-    cy.visitDefault();
-    cy.fixture('/external-reference/same-namespace/model-with-external-entity-reference-with-children')
-      .as('rdfString')
-      .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
-      .then(() => cy.getAspect())
-      .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
         expect(aspect.properties).to.be.length(1);
         expect(aspect.properties[0].property.name).to.equal('property1');
@@ -297,7 +253,7 @@ describe('Test load external reference with same namespace', () => {
       .then(rdf => {
         expect(rdf).to.contain('bamm:characteristic :Characteristic1');
         expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
-        expect(rdf).to.contain('bamm:dataType :ExternalEntityWithChildren');
+        expect(rdf).to.contain('bamm:dataType different:ExternalEntityWithChildren');
 
         expect(rdf).not.contain(':ExternalEntityWithChildren a bamm:Entity');
         expect(rdf).not.contain(':childrenProperty1 a bamm:Property');
@@ -308,10 +264,56 @@ describe('Test load external reference with same namespace', () => {
       });
   });
 
-  it('Loading different elements from several external files with same namespace', () => {
+  it('Loading unit element from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
-      'io.openmanufacturing.digitaltwin:1.0.0': [
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'io.openmanufacturing.different:1.0.0': ['external-unit-reference.txt'],
+    });
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-unit-reference.txt'},
+      },
+      {
+        fixture: '/external-reference/different-namespace/without-childrens/external-unit-reference.txt',
+      }
+    );
+
+    cy.visitDefault();
+    cy.fixture('/external-reference/different-namespace/model-with-external-unit-reference')
+      .as('rdfString')
+      .then(rdfString => cyHelp.loadCustomModel(rdfString))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
+      .then(() => cy.getAspect())
+      .then(aspect => {
+        expect(aspect.name).to.equal('AspectDefault');
+        expect(aspect.properties).to.be.length(1);
+        expect(aspect.properties[0].property.name).to.equal('property1');
+
+        expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
+
+        const unit = (<DefaultQuantifiable>aspect.properties[0].property.characteristic).unit;
+        expect(unit.name).to.equal('ExternalUnit');
+      })
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => {
+        expect(rdf).to.contain('bamm:properties (:property1)');
+        expect(rdf).to.contain(':property1 a bamm:Property');
+        expect(rdf).to.contain('bamm:dataType xsd:string');
+        expect(rdf).to.contain('bamm:characteristic :Quantifiable1');
+        expect(rdf).to.contain(':Quantifiable1 a bamm-c:Quantifiable');
+        expect(rdf).to.contain('bamm-c:unit different:ExternalUnit');
+
+        expect(rdf).not.contain(':ExternalUnit a unit:Unit');
+      });
+  });
+
+  it('Loading different elements from several external files with different namespace', () => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'io.openmanufacturing.different:1.0.0': [
         'external-entity-reference.txt',
         'external-characteristic-reference.txt',
         'external-property-reference.txt',
@@ -325,10 +327,10 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-entity-reference.txt'},
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-entity-reference.txt'},
       },
       {
-        fixture: '/external-reference/same-namespace/without-childrens/external-entity-reference.txt',
+        fixture: '/external-reference/different-namespace/without-childrens/external-entity-reference.txt',
       }
     );
 
@@ -336,10 +338,10 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-characteristic-reference.txt'},
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-characteristic-reference.txt'},
       },
       {
-        fixture: '/external-reference/same-namespace/without-childrens/external-characteristic-reference.txt',
+        fixture: '/external-reference/different-namespace/without-childrens/external-characteristic-reference.txt',
       }
     );
 
@@ -347,10 +349,10 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-property-reference.txt'},
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-property-reference.txt'},
       },
       {
-        fixture: '/external-reference/same-namespace/without-childrens/external-property-reference.txt',
+        fixture: '/external-reference/different-namespace/without-childrens/external-property-reference.txt',
       }
     );
 
@@ -358,10 +360,10 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-operation-reference.txt'},
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-operation-reference.txt'},
       },
       {
-        fixture: '/external-reference/same-namespace/without-childrens/external-operation-reference.txt',
+        fixture: '/external-reference/different-namespace/without-childrens/external-operation-reference.txt',
       }
     );
 
@@ -369,10 +371,10 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-trait-reference.txt'},
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-trait-reference.txt'},
       },
       {
-        fixture: '/external-reference/same-namespace/with-childrens/external-trait-reference.txt',
+        fixture: '/external-reference/different-namespace/with-childrens/external-trait-reference.txt',
       }
     );
 
@@ -380,15 +382,15 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-constraint-reference.txt'},
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-constraint-reference.txt'},
       },
       {
-        fixture: '/external-reference/same-namespace/without-childrens/external-constraint-reference.txt',
+        fixture: '/external-reference/different-namespace/without-childrens/external-constraint-reference.txt',
       }
     );
 
     cy.visitDefault();
-    cy.fixture('/external-reference/same-namespace/model-with-several-external-reference')
+    cy.fixture('/external-reference/different-namespace/model-with-several-external-reference')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
@@ -420,20 +422,17 @@ describe('Test load external reference with same namespace', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:operations (:operation1 :externalOperation)');
-        expect(rdf).to.contain('bamm:input (:property1)');
-        expect(rdf).to.contain('bamm:output :property2');
-        expect(rdf).not.contain('bamm:input ()');
-
-        expect(rdf).to.contain('bamm:properties (:property1 :property2 :property3 :property4 :externalProperty)');
+        expect(rdf).to.contain('@prefix : <urn:bamm:io.openmanufacturing.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix different: <urn:bamm:io.openmanufacturing.different:1.0.0#>.');
+        expect(rdf).to.contain('bamm:properties (:property1 :property2 :property3 :property4 different:externalProperty)');
         expect(rdf).to.contain(':property1 a bamm:Property');
         expect(rdf).to.contain('bamm:characteristic :Characteristic1');
         expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
-        expect(rdf).to.contain('bamm:dataType :ExternalEntity');
+        expect(rdf).to.contain('bamm:dataType different:ExternalEntity');
         expect(rdf).to.contain(':property2 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :ExternalCharacteristic');
+        expect(rdf).to.contain('bamm:characteristic different:ExternalCharacteristic');
         expect(rdf).to.contain(':property3 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :ExternalTrait');
+        expect(rdf).to.contain('bamm:characteristic different:ExternalTrait');
         expect(rdf).to.contain(':property4 a bamm:Property');
         expect(rdf).to.contain('bamm:characteristic :Property4Trait');
         expect(rdf).to.contain(':Property4Trait a bamm-c:Trait');

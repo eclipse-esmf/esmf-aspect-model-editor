@@ -17,9 +17,9 @@ import {SELECTOR_notificationsButton, SELECTOR_notificationsDialogCloseButton, S
 
 describe('Test validate Aspect', () => {
   it('can validate default model', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'response-default-model-validation'});
     cy.visitDefault();
     cy.startModelling()
+      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'response-default-model-validation'}))
       .then(() => cy.get(SELECTOR_tbValidateButton).click({force: true}))
       .then(() => cy.get('.cdk-overlay-container').should('not.be.visible', 8000))
       .then(() => cy.get(SELECTOR_notificationsButton).click({force: true}))

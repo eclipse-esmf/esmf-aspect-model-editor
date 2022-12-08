@@ -13,14 +13,14 @@
 
 /// <reference types="Cypress" />
 
-import {Aspect, DefaultEntity} from '@ame/meta-model';
+import {DefaultEntity} from '@ame/meta-model';
 import {SELECTOR_dialogStartButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
 describe('Test load external reference with cross references', () => {
   it('Loading different elements from cross referenced file one way', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.digitaltwin:1.0.0': [
         'external-entity-reference.txt',
         'external-characteristic-reference.txt',
@@ -183,7 +183,7 @@ describe('Test load external reference with cross references', () => {
 
   it('Loading different elements from cross referenced file mixing', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.digitaltwin:1.0.0': [
         'external-entity-reference.txt',
         'external-property-reference.txt',

@@ -61,7 +61,7 @@ describe('Test edit property', () => {
 
   it('should get error on renaming first property same as property from same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.digitaltwin:1.0.0': ['external-property-reference-with-children.txt'],
     });
 
@@ -170,7 +170,7 @@ describe('Test edit property', () => {
   });
 
   it('should not allow to put 2 properties with the same name', () => {
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {});
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {});
 
     cy.visitDefault();
     cy.startModelling()
@@ -398,13 +398,10 @@ describe('Test edit property', () => {
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
         .then(() => cy.dbClickShape('Entity1'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
-        .then(() => {
-          cy.get(`input[type="checkbox"][name="property2_${FIELD_notInPayload}"]`).click({force: true});
-          return cy.wait(500);
-        })
-        .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}).should('not.exist'))
-        .then(() => cy.wait(500))
-        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+        .then(() => cy.get(`input[type="checkbox"][name="property2_${FIELD_notInPayload}"]`).click({force: true}).wait(500))
+        .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}).wait(2000))
+        .then(() => cy.get('[data-cy="propertiesSaveButton"]').should('not.exist'))
+        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}).wait(2000))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain(

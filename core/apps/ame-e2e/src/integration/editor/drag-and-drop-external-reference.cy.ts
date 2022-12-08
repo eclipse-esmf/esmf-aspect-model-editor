@@ -24,7 +24,7 @@ import {
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 import {MxGraphAttributeService} from '@ame/mx-graph';
-import {Aspect, Entity, Trait} from '@ame/meta-model';
+import {Trait} from '@ame/meta-model';
 
 describe('Test drag and drop', () => {
   function connectElements(parent: string, child: string, expected: boolean) {
@@ -82,24 +82,26 @@ describe('Test drag and drop', () => {
   }
 
   it('can add Property from external reference with same namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
-      'io.openmanufacturing.digitaltwin:1.0.0': ['external-property-reference.txt'],
-    });
-
-    cy.intercept(
-      {
-        method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-property-reference.txt'},
-      },
-      {
-        fixture: '/external-reference/same-namespace/without-childrens/external-property-reference.txt',
-      }
-    );
-
-    cy.visitDefault();
-    cy.startModelling()
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'})
+      .then(() =>
+        cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+          'io.openmanufacturing.digitaltwin:1.0.0': ['external-property-reference.txt'],
+        })
+      )
+      .then(() =>
+        cy.intercept(
+          {
+            method: 'GET',
+            url: 'http://localhost:9091/ame/api/models',
+            headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-property-reference.txt'},
+          },
+          {
+            fixture: '/external-reference/same-namespace/without-childrens/external-property-reference.txt',
+          }
+        )
+      )
+      .then(() => cy.visitDefault())
+      .then(() => cy.startModelling())
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
       .then(() => cy.get('.file-name').click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300))
@@ -119,7 +121,7 @@ describe('Test drag and drop', () => {
 
   it('can add Characteristic from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.digitaltwin:1.0.0': ['external-characteristic-reference.txt'],
     });
 
@@ -154,7 +156,7 @@ describe('Test drag and drop', () => {
 
   it('can add Constraint from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.digitaltwin:1.0.0': ['external-constraint-reference.txt'],
     });
 
@@ -198,7 +200,7 @@ describe('Test drag and drop', () => {
 
   it('can add Entity from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.digitaltwin:1.0.0': ['external-entity-reference.txt'],
     });
 
@@ -236,7 +238,7 @@ describe('Test drag and drop', () => {
 
   it('can add Property from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.different:1.0.0': ['external-property-reference.txt'],
     });
 
@@ -275,7 +277,7 @@ describe('Test drag and drop', () => {
 
   it('can add Characteristic from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.different:1.0.0': ['external-characteristic-reference.txt'],
     });
 
@@ -313,7 +315,7 @@ describe('Test drag and drop', () => {
 
   it('can add Constraint from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.different:1.0.0': ['external-constraint-reference.txt'],
     });
 
@@ -359,7 +361,7 @@ describe('Test drag and drop', () => {
 
   it('can add Entity from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.different:1.0.0': ['external-entity-reference.txt'],
     });
 
@@ -399,7 +401,7 @@ describe('Test drag and drop', () => {
 
   it("can add Property with children's from external reference same namespace", () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.digitaltwin:1.0.0': ['external-property-reference.txt'],
     });
 
@@ -443,7 +445,7 @@ describe('Test drag and drop', () => {
 
   it("can add Property with children's from external reference different namespace", () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces', {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'io.openmanufacturing.different:1.0.0': ['external-property-reference.txt'],
     });
 
