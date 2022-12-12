@@ -513,10 +513,6 @@ export class EditorService {
     const result = [];
     const selectedCells = this.mxGraphShapeSelectorService.getSelectedCells();
 
-    selectedCells.forEach(cell => {
-      result.push(...this.getObsoleteCells(cell));
-    });
-
     result.push(...selectedCells);
 
     // if the target is an ext. references it will show a display a confirmation dialog
@@ -534,26 +530,6 @@ export class EditorService {
     } else {
       this.deleteElements(result);
     }
-  }
-
-  // If last constraint of a trait is removed, trait has to be removed also
-  private getObsoleteCells(cell: mxgraph.mxCell): mxgraph.mxCell[] {
-    if (MxGraphHelper.getModelElement(cell) instanceof DefaultConstraint) {
-      const traits = this.getAllSourceTraits(cell);
-      // we only need to remove trait if the last trait.constraint is deleted.
-      return traits.filter(trait => this.getNumberOfTargetConstraints(trait) === 1);
-    }
-
-    return [];
-  }
-
-  private getAllSourceTraits(cell: mxgraph.mxCell): mxgraph.mxCell[] {
-    return cell.edges?.filter(edge => MxGraphHelper.getModelElement(edge.source) instanceof DefaultTrait).map(edge => edge.source) || [];
-  }
-
-  private getNumberOfTargetConstraints(cell: mxgraph.mxCell): number {
-    return cell.edges.map(edge => edge.target).filter(targetCell => MxGraphHelper.getModelElement(targetCell) instanceof DefaultConstraint)
-      .length;
   }
 
   private deleteElements(cells: mxgraph.mxCell[]): void {
