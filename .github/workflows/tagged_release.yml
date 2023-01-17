@@ -51,26 +51,26 @@ jobs:
         run: |
           mkdir backend
 
-          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[0].browser_download_url')
-          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
-          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
+          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
 
           if [[ ${ASSET_ONE_URL} == *"-mac"* ]];
             then
               echo $ASSET_ONE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[0].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[0].url')
           fi
 
           if [[ ${ASSET_TWO_URL} == *"-mac"* ]];
             then
               echo $ASSET_TWO_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[1].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[1].url')
           fi
 
           if [[ ${ASSET_THREE_URL} == *"-mac"* ]];
             then
               echo ASSET_THREE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[2].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[2].url')
           fi
 
           curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend.sh
@@ -81,26 +81,26 @@ jobs:
         run: |
           mkdir backend
 
-          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[0].browser_download_url')
-          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
-          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[1].browser_download_url')
+          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq '.assets[2].browser_download_url')
 
           if [[ ${ASSET_ONE_URL} == *"-linux"* ]];
             then
               echo $ASSET_ONE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[0].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[0].url')
           fi
 
           if [[ ${ASSET_TWO_URL} == *"-linux"* ]];
             then
               echo $ASSET_TWO_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[1].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[1].url')
           fi
 
           if [[ ${ASSET_THREE_URL} == *"-linux"* ]];
             then
               echo ASSET_THREE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[2].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$tagVersion | jq -r '.assets[2].url')
           fi
 
           curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend.sh
@@ -111,7 +111,7 @@ jobs:
         run: |
           mkdir backend
 
-          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/OpenManufacturingPlatform/sds-aspect-model-editor-backend/releases/tags/v$env:tagVersion)
+          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v$env:tagVersion)
           $RESPONSE_JSON=($RESPONSE | ConvertFrom-Json)
 
           if ($RESPONSE_JSON.assets[0].browser_download_url -match ".exe") {
@@ -163,7 +163,7 @@ jobs:
           arguments: "-V3 -DVERSION=${{ env.tagVersion }}"
 
       - name: Create GitHub release (Mac)
-        if: ${{ (matrix.os == 'macos-latest') &&  (!contains( github.ref, '-M' )) }}
+        if: ${{ (matrix.os == 'macos-latest') &&  (!contains( github.ref, '-rc' )) }}
         uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
@@ -173,7 +173,7 @@ jobs:
           tag: ${{ github.ref }}
 
       - name: Create GitHub pre-release (Mac)
-        if: ${{ (matrix.os == 'macos-latest') &&  (contains( github.ref, '-M' )) }}
+        if: ${{ (matrix.os == 'macos-latest') &&  (contains( github.ref, '-rc' )) }}
         uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
@@ -183,7 +183,7 @@ jobs:
           tag: ${{ github.ref }}
 
       - name: Create GitHub release (Linux)
-        if: ${{ (matrix.os == 'ubuntu-latest') &&  (!contains( github.ref, '-M' )) }}
+        if: ${{ (matrix.os == 'ubuntu-latest') &&  (!contains( github.ref, '-rc' )) }}
         uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
@@ -193,7 +193,7 @@ jobs:
           tag: ${{ github.ref }}
 
       - name: Create GitHub pre-release (Linux)
-        if: ${{ (matrix.os == 'ubuntu-latest') &&  (contains( github.ref, '-M' )) }}
+        if: ${{ (matrix.os == 'ubuntu-latest') &&  (contains( github.ref, '-rc' )) }}
         uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
@@ -203,7 +203,7 @@ jobs:
           tag: ${{ github.ref }}
 
       - name: Create GitHub release (Windows)
-        if: ${{ (matrix.os == 'windows-latest') && (!contains( github.ref, '-M' )) }}
+        if: ${{ (matrix.os == 'windows-latest') && (!contains( github.ref, '-rc' )) }}
         uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
@@ -213,7 +213,7 @@ jobs:
           tag: ${{ github.ref }}
 
       - name: Create GitHub pre-release (Windows)
-        if: ${{ (matrix.os == 'windows-latest') && (contains( github.ref, '-M' )) }}
+        if: ${{ (matrix.os == 'windows-latest') && (contains( github.ref, '-rc' )) }}
         uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
