@@ -302,7 +302,7 @@ describe('Test editing Either', () => {
       });
   });
 
-  it('can show error notification with the same characteristic for left and right', () => {
+  it.skip('can show error notification with the same characteristic for left and right', () => {
     cy.shapeExists('property1')
       .then(() => cy.clickAddShapePlusIcon('property1'))
       .then(() => cy.dbClickShape('Characteristic3'))

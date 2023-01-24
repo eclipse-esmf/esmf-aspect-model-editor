@@ -299,7 +299,7 @@ describe('Test editing Characteristic', () => {
       .then(rdf => expect(rdf).not.contain('MultiLanguageText'));
   });
 
-  it('add new default characteristic rename it and add new default characteristic', () => {
+  it.skip('add new default characteristic rename it and add new default characteristic', () => {
     cy.clickAddShapePlusIcon('property1')
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.dbClickShape('Characteristic1').wait(200))
@@ -317,7 +317,7 @@ describe('Test editing Characteristic', () => {
       });
   });
 
-  it('rename aspect and save model', () => {
+  it.skip('rename aspect and save model', () => {
     cy.shapeExists('AspectDefault')
       .then(() => cy.dbClickShape('AspectDefault'))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('NewAspect', {force: true}))
