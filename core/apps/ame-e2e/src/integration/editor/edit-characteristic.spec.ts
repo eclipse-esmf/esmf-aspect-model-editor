@@ -33,10 +33,9 @@ import {
   META_MODEL_values,
   SELECTOR_editorCancelButton,
   SELECTOR_editorSaveButton,
-  SELECTOR_tbDeleteButton,
-} from '../../support/constants';
-import {cyHelp} from '../../support/helpers';
-import {Aspect} from '@ame/meta-model';
+  SELECTOR_tbDeleteButton
+} from "../../support/constants";
+import {cyHelp} from "../../support/helpers";
 
 describe('Test editing Characteristic', () => {
   it('can add new', () => {
@@ -231,10 +230,10 @@ describe('Test editing Characteristic', () => {
       .then(rdf => {
         expect(rdf).to.contain(
           ':NewCharacteristic a bamm-c:Code;\n' +
-            '    bamm:dataType xsd:integer;\n' +
-            '    bamm:description "New description for the new created characteristic"@en;\n' +
-            '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
-            '    bamm:preferredName "new-preferredName"@en.'
+          '    bamm:dataType xsd:integer;\n' +
+          '    bamm:description "New description for the new created characteristic"@en;\n' +
+          '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
+          '    bamm:preferredName "new-preferredName"@en.'
         );
       })
       .then(() => cy.getAspect())
@@ -252,12 +251,12 @@ describe('Test editing Characteristic', () => {
       .then(rdf =>
         expect(rdf).to.contain(
           ':NewCharacteristic a bamm-c:Enumeration;\n' +
-            '    bamm:dataType xsd:integer;\n' +
-            '    bamm:description "New description for the new created characteristic"@en;\n' +
-            '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
-            '    bamm:preferredName "new-preferredName"@en;\n' +
-            '    bamm-c:values' +
-            ' ("1"^^xsd:integer "2"^^xsd:integer "a"^^xsd:integer "b"^^xsd:integer "3"^^xsd:integer "4"^^xsd:integer).'
+          '    bamm:dataType xsd:integer;\n' +
+          '    bamm:description "New description for the new created characteristic"@en;\n' +
+          '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
+          '    bamm:preferredName "new-preferredName"@en;\n' +
+          '    bamm-c:values' +
+          ' ("1"^^xsd:integer "2"^^xsd:integer "a"^^xsd:integer "b"^^xsd:integer "3"^^xsd:integer "4"^^xsd:integer).'
         )
       )
       .then(() => cy.getAspect())
@@ -273,11 +272,11 @@ describe('Test editing Characteristic', () => {
       .then(rdf =>
         expect(rdf).to.contain(
           ':NewCharacteristic a bamm-c:Enumeration;\n' +
-            '    bamm:dataType xsd:integer;\n' +
-            '    bamm:description "New description for the new created characteristic"@en;\n' +
-            '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
-            '    bamm:preferredName "new-preferredName"@en;\n' +
-            '    bamm-c:values ("2"^^xsd:integer "b"^^xsd:integer "3"^^xsd:integer).'
+          '    bamm:dataType xsd:integer;\n' +
+          '    bamm:description "New description for the new created characteristic"@en;\n' +
+          '    bamm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
+          '    bamm:preferredName "new-preferredName"@en;\n' +
+          '    bamm-c:values ("2"^^xsd:integer "b"^^xsd:integer "3"^^xsd:integer).'
         )
       );
   });
@@ -327,15 +326,15 @@ describe('Test editing Characteristic', () => {
       .then(rdf =>
         expect(rdf).to.contain(
           ':property1 a bamm:Property;\n' +
-            '    bamm:characteristic :NewCharacteristic.\n' +
-            ':Characteristic1 a bamm:Characteristic.\n' +
-            ':NewCharacteristic a bamm:Characteristic.\n' +
-            ':property2 a bamm:Property;\n' +
-            '    bamm:characteristic :Characteristic1.\n' +
-            ':NewAspect a bamm:Aspect;\n' +
-            '    bamm:properties (:property1 :property2);\n' +
-            '    bamm:operations ();\n' +
-            '    bamm:events ().'
+          '    bamm:characteristic :NewCharacteristic.\n' +
+          ':Characteristic1 a bamm:Characteristic.\n' +
+          ':NewCharacteristic a bamm:Characteristic.\n' +
+          ':property2 a bamm:Property;\n' +
+          '    bamm:characteristic :Characteristic1.\n' +
+          ':NewAspect a bamm:Aspect;\n' +
+          '    bamm:properties (:property1 :property2);\n' +
+          '    bamm:operations ();\n' +
+          '    bamm:events ().'
         )
       );
   });
@@ -468,9 +467,9 @@ describe('Structured Value Characteristic', () => {
       cy.getUpdatedRDF().then(rdf => {
         expect(rdf).to.contain(
           ':Characteristic1 a bamm-c:StructuredValue;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm-c:deconstructionRule "example-(group1)-splitter-(group2)-(group3)";\n' +
-            '    bamm-c:elements ("example-" :group1Property "-splitter-" :group2Property "-" :group3Property).'
+          '    bamm:dataType xsd:string;\n' +
+          '    bamm-c:deconstructionRule "example-(group1)-splitter-(group2)-(group3)";\n' +
+          '    bamm-c:elements ("example-" :group1Property "-splitter-" :group2Property "-" :group3Property).'
         );
       });
     });
@@ -508,9 +507,9 @@ describe('Structured Value Characteristic', () => {
         .then(rdf => {
           expect(rdf).to.contain(
             ':Characteristic1 a bamm-c:StructuredValue;\n' +
-              '    bamm:dataType xsd:string;\n' +
-              '    bamm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})";\n' +
-              '    bamm-c:elements (:username "@" :host).'
+            '    bamm:dataType xsd:string;\n' +
+            '    bamm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})";\n' +
+            '    bamm-c:elements (:username "@" :host).'
           );
         });
     });
@@ -552,9 +551,9 @@ describe('Structured Value Characteristic', () => {
         .then(rdf => {
           expect(rdf).to.contain(
             ':Characteristic1 a bamm-c:StructuredValue;\n' +
-              '    bamm:dataType xsd:string;\n' +
-              '    bamm-c:deconstructionRule "(\\\\d{4})-(\\\\d{2})-(\\\\d{2})";\n' +
-              '    bamm-c:elements (:year "-" :month "-" :day).'
+            '    bamm:dataType xsd:string;\n' +
+            '    bamm-c:deconstructionRule "(\\\\d{4})-(\\\\d{2})-(\\\\d{2})";\n' +
+            '    bamm-c:elements (:year "-" :month "-" :day).'
           );
         });
     });
@@ -596,9 +595,9 @@ describe('Structured Value Characteristic', () => {
         .then(rdf => {
           expect(rdf).to.contain(
             ':Characteristic1 a bamm-c:StructuredValue;\n' +
-              '    bamm:dataType xsd:string;\n' +
-              '    bamm-c:deconstructionRule "0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})";\n' +
-              '    bamm-c:elements ("0x" :red :green :blue).'
+            '    bamm:dataType xsd:string;\n' +
+            '    bamm-c:deconstructionRule "0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})";\n' +
+            '    bamm-c:elements ("0x" :red :green :blue).'
           );
         });
     });

@@ -70,7 +70,7 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
 
     this.unitDisplayControl = new FormControl({
       value: referenceUnit?.name,
-      disabled: referenceUnit || this.metaModelElement.isExternalReference(),
+      disabled: !!referenceUnit || this.metaModelElement.isExternalReference(),
     });
 
     this.parentForm.setControl(

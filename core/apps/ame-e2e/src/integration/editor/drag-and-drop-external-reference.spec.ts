@@ -24,7 +24,7 @@ import {
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 import {MxGraphAttributeService} from '@ame/mx-graph';
-import {Trait} from '@ame/meta-model';
+import {Aspect, Entity, Trait} from '@ame/meta-model';
 
 describe('Test drag and drop', () => {
   function connectElements(parent: string, child: string, expected: boolean) {
@@ -82,26 +82,24 @@ describe('Test drag and drop', () => {
   }
 
   it('can add Property from external reference with same namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'})
-      .then(() =>
-        cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-          'io.openmanufacturing.digitaltwin:1.0.0': ['external-property-reference.txt'],
-        })
-      )
-      .then(() =>
-        cy.intercept(
-          {
-            method: 'GET',
-            url: 'http://localhost:9091/ame/api/models',
-            headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-property-reference.txt'},
-          },
-          {
-            fixture: '/external-reference/same-namespace/without-childrens/external-property-reference.txt',
-          }
-        )
-      )
-      .then(() => cy.visitDefault())
-      .then(() => cy.startModelling())
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'io.openmanufacturing.digitaltwin:1.0.0': ['external-property-reference.txt'],
+    });
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-property-reference.txt'},
+      },
+      {
+        fixture: '/external-reference/same-namespace/without-childrens/external-property-reference.txt',
+      }
+    );
+
+    cy.visitDefault();
+    cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
       .then(() => cy.get('.file-name').click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300))

@@ -67,6 +67,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   ngAfterViewInit(): void {
     this.bindingsService.registerAction('connectElements', () => this.onConnect());
     this.bindingsService.registerAction('format', () => this.onFormat());
+    this.bindingsService.registerAction('copy-to-clipboard', () => this.fileHandlingService.copyToClipboard());
   }
 
   ngOnDestroy() {
@@ -118,6 +119,10 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   saveAspectModelToWorkspace() {
     this.fileHandlingService.saveAspectModelToWorkspace().subscribe();
+  }
+
+  copyToClipboard() {
+    this.fileHandlingService.copyToClipboard();
   }
 
   openExportDialog() {

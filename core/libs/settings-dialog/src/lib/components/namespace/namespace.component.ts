@@ -30,7 +30,12 @@ export class NamespaceComponent implements OnInit {
   columns: string[] = ['name', 'value', 'version'];
   predefinedNamespaces: Array<{name?: string; value?: string; version?: string}> = [];
 
-  namespaceForm = new FormGroup({});
+  namespaceForm = new FormGroup({
+    aspectUri: new FormControl('', Validators.required),
+    aspectName: new FormControl({value: '', disabled: true}),
+    aspectVersion: new FormControl(''),
+    bammVersion: new FormControl({value: GeneralConfig.bammVersion, disabled: true}),
+  });
   aspectUri: FormControl;
   aspectUriInitialValue: string;
   aspectVersionInitialValue: string;

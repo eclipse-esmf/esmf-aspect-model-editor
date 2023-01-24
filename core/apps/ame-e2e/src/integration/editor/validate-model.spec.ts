@@ -13,7 +13,11 @@
 
 /// <reference types="Cypress" />
 
-import {SELECTOR_notificationsButton, SELECTOR_notificationsDialogCloseButton, SELECTOR_tbValidateButton} from '../../support/constants';
+import {
+  SELECTOR_notificationsButton,
+  SELECTOR_notificationsDialogCloseButton,
+  SELECTOR_tbValidateButton
+} from "../../support/constants";
 
 describe('Test validate Aspect', () => {
   it('can validate default model', () => {

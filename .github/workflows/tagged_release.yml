@@ -127,7 +127,7 @@ jobs:
 
 
       - name: Install node modules
-        run: npm install --legacy-peer-deps
+        run: npm install
         working-directory: core
 
       - name: Set app version (Unix)

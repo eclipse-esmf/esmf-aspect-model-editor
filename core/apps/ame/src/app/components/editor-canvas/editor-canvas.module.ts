@@ -32,7 +32,6 @@ import {EditorDialogModule, EditorToolbarModule} from '@ame/editor';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {AngularSplitModule} from 'angular-split';
 import {FormsModule} from '@angular/forms';
-import {FlexLayoutModule} from '@angular/flex-layout';
 
 @NgModule({
   imports: [
@@ -48,7 +47,6 @@ import {FlexLayoutModule} from '@angular/flex-layout';
     MatTooltipModule,
     AngularSplitModule,
     FormsModule,
-    FlexLayoutModule,
   ],
   declarations: [
     EditorCanvasComponent,

@@ -93,7 +93,6 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
-import {FlexModule} from '@angular/flex-layout';
 
 @NgModule({
   providers: [EditorModelService],
@@ -115,7 +114,6 @@ import {FlexModule} from '@angular/flex-layout';
     MatButtonModule,
     MatDialogModule,
     MatTableModule,
-    FlexModule,
   ],
   declarations: [
     AspectComponent,

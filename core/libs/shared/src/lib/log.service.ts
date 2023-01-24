@@ -11,42 +11,31 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import * as log from 'loglevel';
-import {LogLevelNumbers} from 'loglevel';
+import { Injectable } from "@angular/core";
 
 @Injectable({
   providedIn: 'root',
 })
 export class LogService {
   private readonly prefix = '[AME]';
-  private logInstance = log;
-
-  constructor() {
-    this.logInstance.setDefaultLevel('info');
-  }
 
   logInfo(...msg: any[]) {
-    this.logInstance.info(`${this.prefix}`, ...msg);
+    // eslint-disable-next-line no-restricted-syntax
+    console.info(`${this.prefix}`, ...msg);
   }
 
   logDebug(...msg: any[]) {
-    this.logInstance.debug(`${this.prefix}`, ...msg);
+    // eslint-disable-next-line no-restricted-syntax
+    console.debug(`${this.prefix}`, ...msg);
   }
 
   logWarn(...msg: any[]) {
-    this.logInstance.warn(`${this.prefix}`, ...msg);
+    // eslint-disable-next-line no-restricted-syntax
+    console.warn(`${this.prefix}`, ...msg);
   }
 
   logError(...msg: any[]) {
-    this.logInstance.error(`${this.prefix}`, ...msg);
-  }
-
-  getLogLevel(): number {
-    return this.logInstance.getLevel();
-  }
-
-  setDefaultLevel(logLevel: LogLevelNumbers) {
-    this.logInstance.setDefaultLevel(logLevel);
+    // eslint-disable-next-line no-restricted-syntax
+    console.error(`${this.prefix}`, ...msg);
   }
 }

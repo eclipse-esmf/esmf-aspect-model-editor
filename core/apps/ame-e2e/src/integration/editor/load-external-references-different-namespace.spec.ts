@@ -13,7 +13,7 @@
 
 /// <reference types="Cypress" />
 
-import {DefaultQuantifiable, Trait} from '@ame/meta-model';
+import {Aspect, DefaultEntity, DefaultQuantifiable, Trait} from '@ame/meta-model';
 import {SELECTOR_dialogStartButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 

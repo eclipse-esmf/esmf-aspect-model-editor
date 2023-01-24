@@ -30,10 +30,9 @@ import {
   SELECTOR_notificationsButton,
   SELECTOR_notificationsClearButton,
   SELECTOR_notificationsDialogCloseButton,
-  SELECTOR_tbDeleteButton,
-} from '../../support/constants';
-import {Aspect, DefaultEither} from '@ame/meta-model';
-import {cyHelp} from '../../support/helpers';
+  SELECTOR_tbDeleteButton
+} from "../../support/constants";
+import {cyHelp} from "../../support/helpers";
 
 describe('Test editing Either', () => {
   it('can change to class Either', () => {
