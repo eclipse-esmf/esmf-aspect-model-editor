@@ -34,9 +34,6 @@ import './commands';
 
 import './helpers';
 
-// Import cypress code-coverage collector plugin
-import '@cypress/code-coverage/support';
-
 before(function before() {
   // Do not truncate assertion outputs of arrays and objects
   (<any>window).chai.config.truncateThreshold = 0;

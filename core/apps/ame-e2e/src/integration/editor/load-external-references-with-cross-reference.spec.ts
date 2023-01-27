@@ -13,7 +13,7 @@
 
 /// <reference types="Cypress" />
 
-import {DefaultEntity} from '@ame/meta-model';
+import {Aspect, DefaultEntity} from '@ame/meta-model';
 import {SELECTOR_dialogStartButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
@@ -131,7 +131,7 @@ describe('Test load external reference with cross references', () => {
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
-      .then((aspect) => {
+      .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
         expect(aspect.operations).to.be.length(2);
         expect(aspect.operations[0].name).to.equal('externalOperationWithCrossRef1');
@@ -244,7 +244,7 @@ describe('Test load external reference with cross references', () => {
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
       .then(() => cy.getAspect())
-      .then((aspect) => {
+      .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
         expect(aspect.operations).to.be.length(1);
         expect(aspect.operations[0].name).to.equal('externalOperationWithCrossRef');

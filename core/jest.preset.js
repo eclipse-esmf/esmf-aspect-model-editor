@@ -11,6 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const nxPreset = require('@nrwl/jest/preset');
+const nxPreset = require('@nrwl/jest/preset').default;
 
 module.exports = { ...nxPreset };

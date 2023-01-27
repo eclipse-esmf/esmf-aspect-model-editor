@@ -32,7 +32,7 @@ jobs:
       - name: Setup NodeJs
         uses: actions/setup-node@v3
         with:
-          node-version: '17'
+          node-version: '18'
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
@@ -127,7 +127,7 @@ jobs:
 
 
       - name: Install node modules
-        run: npm install --legacy-peer-deps
+        run: npm install
         working-directory: core
 
       - name: Set app version (Unix)

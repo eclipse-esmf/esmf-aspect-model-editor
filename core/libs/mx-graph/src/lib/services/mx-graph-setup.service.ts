@@ -347,6 +347,9 @@ export class MxGraphSetupService {
     menu.addItem('Format', this.resolveAssetsIcon(AssetsPath.FormatIcon), () => {
       this.bindingsService.fireAction('format');
     });
+    menu.addItem('Copy to Clipboard', this.resolveAssetsIcon(AssetsPath.Copy), () => {
+      this.bindingsService.fireAction('copy-to-clipboard');
+    });
     if (cell) {
       menu.addSeparator();
       menu.addItem('Delete', this.resolveAssetsIcon(AssetsPath.DeleteIcon), () => {

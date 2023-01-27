@@ -119,11 +119,11 @@
       "projectType": "application",
       "architect": {
         "e2e": {
-          "builder": "@cypress/schematic:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
-            "devServerTarget": "ame:serve-coverage",
-            "tsConfig": "apps/ame-e2e/tsconfig.json",
-            "headless": true
+            "cypressConfig": "cypress.config.js",
+            "devServerTarget": "ame:serve:development",
+            "tsConfig": "apps/ame-e2e/tsconfig.cypress.json"
           },
           "configurations": {
             "production": {
@@ -314,8 +314,7 @@
             "lintFilePatterns": ["libs/migrator/src/**/*.ts", "libs/migrator/src/**/*.html"]
           }
         }
-      },
-      "tags": []
+      }
     },
     "mx-graph": {
       "projectType": "library",

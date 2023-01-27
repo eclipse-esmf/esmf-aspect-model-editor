@@ -398,10 +398,13 @@ describe('Test edit property', () => {
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
         .then(() => cy.dbClickShape('Entity1'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
-        .then(() => cy.get(`input[type="checkbox"][name="property2_${FIELD_notInPayload}"]`).click({force: true}).wait(500))
-        .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}).wait(2000))
-        .then(() => cy.get('[data-cy="propertiesSaveButton"]').should('not.exist'))
-        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}).wait(2000))
+        .then(() => {
+          cy.get(`input[type="checkbox"][name="property2_${FIELD_notInPayload}"]`).click({force: true});
+          return cy.wait(500);
+        })
+        .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}).should('not.exist'))
+        .then(() => cy.wait(500))
+        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain(

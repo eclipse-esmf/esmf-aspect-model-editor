@@ -67,6 +67,25 @@ export class FileHandlingService {
       );
   }
 
+  copyToClipboard() {
+    if (!this.modelService.getLoadedAspectModel().rdfModel) {
+      this.notificationsService.error({
+        title: 'No RDF Model',
+        message: 'No Rdf model available.',
+        timeout: 5000,
+      });
+      return;
+    }
+
+    navigator.clipboard.writeText(this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel)).then(() => {
+      this.notificationsService.success({
+        title: 'Copied to Clipboard',
+        message: 'The Aspect Model has been copied to clipboard (as ttl code)',
+        timeout: 5000,
+      });
+    });
+  }
+
   exportAsAspectModelFile(loadingScreenOptions): Observable<any> {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
       return throwError(() => {

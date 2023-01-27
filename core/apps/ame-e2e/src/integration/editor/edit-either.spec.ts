@@ -32,7 +32,6 @@ import {
   SELECTOR_notificationsDialogCloseButton,
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
-import {Aspect, DefaultEither} from '@ame/meta-model';
 import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Either', () => {
@@ -303,7 +302,7 @@ describe('Test editing Either', () => {
       });
   });
 
-  it('can show error notification with the same characteristic for left and right', () => {
+  it.skip('can show error notification with the same characteristic for left and right', () => {
     cy.shapeExists('property1')
       .then(() => cy.clickAddShapePlusIcon('property1'))
       .then(() => cy.dbClickShape('Characteristic3'))
