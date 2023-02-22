@@ -44,7 +44,7 @@ import {
   QuantityKind,
   Unit,
 } from '@ame/meta-model';
-import {RdfModelUtil} from '@ame/rdf/utils';
+import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import * as locale from 'locale-codes';
 import {ModelBaseProperties} from '../models';
@@ -174,12 +174,22 @@ export class MxGraphVisitorHelper {
 
   static addSee(metaModelElement: Base): PropertyInformation {
     if (metaModelElement.getSeeReferences()?.length > 0 || (metaModelElement as CanExtend)?.extendedSee?.length) {
-      const stringSee = metaModelElement.getSeeReferences().join(',');
-      const stringExtendedSee = (metaModelElement as CanExtend)?.extendedSee?.join(',');
+      let extended = false;
+      let elements = (metaModelElement.getSeeReferences() || []).map(e =>
+        e.startsWith('urn:bamm') && e.includes('#') ? e.split('#')[1] : e
+      );
+
+      if (!elements.length) {
+        elements = (metaModelElement as CanExtend)?.extendedSee.map(e =>
+          e.startsWith('urn:bamm') && e.includes('#') ? e.split('#')[1] : e
+        );
+        extended = true;
+      }
+
       return {
-        label: `see = ${stringSee || stringExtendedSee}`,
+        label: `see = ${elements.join(',')}`,
         key: 'see',
-        extended: !!stringExtendedSee && !stringSee,
+        extended,
       };
     }
     return null;
@@ -468,12 +478,12 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static getModelInfo(modelElement: BaseMetaModelElement, aspect: BaseMetaModelElement): ModelBaseProperties {
+  static getModelInfo(modelElement: BaseMetaModelElement, rdfModel: RdfModel): ModelBaseProperties {
     try {
-      const [, currentNamespace] = MxGraphHelper.getNamespaceFromElement(aspect);
+      const [currentNamespace] = rdfModel.getAspectModelUrn().replace('urn:bamm:', '').split(':');
       const [, elementNamespace] = MxGraphHelper.getNamespaceFromElement(modelElement);
 
-      const [aspectVersionedNamespace] = aspect.aspectModelUrn.split('#');
+      const aspectVersionedNamespace = rdfModel.getAspectModelUrn().replace('#', '');
       const [elementVersionedNamespace] = modelElement.aspectModelUrn.split('#');
 
       return {

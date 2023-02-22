@@ -156,7 +156,7 @@ export class AppComponent implements OnInit {
   private loadNewAspectModel(aspectModel: Observable<string>, callback: () => any, isDefault?: boolean) {
     aspectModel
       .pipe(
-        switchMap(model => this.editorService.loadNewAspectModel(model, isDefault)),
+        switchMap(model => this.editorService.loadNewAspectModel(model, '', isDefault)),
         first()
       )
       .subscribe(callback);

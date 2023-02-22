@@ -13,9 +13,9 @@
 
 import {Injectable} from '@angular/core';
 import {MxGraphService} from '@ame/mx-graph';
-import {RdfModel} from '@ame/rdf/utils';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
-import {LogService, NotificationsService, ProcessingError, SemanticError, SyntacticError} from '@ame/shared';
+import {LogService, NotificationsService} from '@ame/shared';
+import {ViolationError} from '@ame/editor';
 
 @Injectable({
   providedIn: 'root',
@@ -34,22 +34,11 @@ export class ModelValidatorService {
   }
 
   /*
-   * This method will return true if at least one error is critical, otherwise false.
-   * In this category are included structural errors.
-   */
-  checkForCriticalErrors(validationErrors: Array<SemanticError | SyntacticError | ProcessingError>, rdfModel: RdfModel): boolean {
-    const metaModelNames = rdfModel.BAMMC().getMetaModelNames();
-    const criticalErrors = validationErrors.filter((error: any) => error?.resultMessage && metaModelNames.includes(error.resultPath));
-
-    return criticalErrors.length !== 0;
-  }
-
-  /*
    * Informs user about the errors that are correctable.
    * In this category are included syntactic,processing and semantic errors.
    */
-  notifyCorrectableErrors(validationErrors: Array<SemanticError | SyntacticError | ProcessingError>): void {
-    if (!validationErrors.length) {
+  notifyCorrectableErrors(violationErrors: Array<ViolationError>) {
+    if (!violationErrors.length) {
       this.notificationsService.info({title: 'Validation completed successfully', message: 'The model is valid'});
       this.logService.logInfo('Validated completed successfully');
       return;
@@ -58,31 +47,13 @@ export class ModelValidatorService {
     this.notificationsService.warning({title: 'Validation completed with errors', message: 'The model is not valid'});
     this.logService.logWarn('Validated completed with errors');
 
-    validationErrors.forEach((error: any) => {
-      if (error.originalExceptionMessage) {
-        this.notifySyntacticError(error);
-      } else if (error.message) {
-        this.notifyProcessingError(error);
-      } else {
-        this.notifySemanticError(error);
-      }
+    violationErrors.forEach((error: ViolationError) => {
+      this.notificationsService.validationError({
+        title: error.message,
+        link: error.focusNode,
+        timeout: 5000,
+      });
+      this.mxGraphService.showValidationErrorOnShape(error.focusNode);
     });
-  }
-
-  private notifySyntacticError(error: SyntacticError) {
-    this.notificationsService.validationError({title: error.originalExceptionMessage, timeout: 5000});
-  }
-
-  private notifyProcessingError(error: ProcessingError) {
-    this.notificationsService.validationError({title: error.message, timeout: 5000});
-  }
-
-  private notifySemanticError(error: SemanticError) {
-    this.notificationsService.validationError({
-      title: `Error on element ${error.focusNode ? error.focusNode.split('#')[1] + ': ' + error.resultMessage : error.resultMessage}`,
-      link: error.focusNode,
-      timeout: 5000,
-    });
-    this.mxGraphService.showValidationErrorOnShape(error.focusNode);
   }
 }

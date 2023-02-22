@@ -11,7 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-exports.default = {
-  os: process.platform,
-  extension: process.platform === 'win32' ? '.exe' : '.sh',
-};
+import {ViolationError} from './violation-error';
+
+export interface DetailViolationInfo {
+  file: string;
+  violationError: ViolationError[];
+}

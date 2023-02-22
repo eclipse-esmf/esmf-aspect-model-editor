@@ -20,6 +20,7 @@ import {ElementModel} from '@ame/shared';
 import {environment} from 'environments/environment';
 
 export const elementShortcuts = {
+  aspect: 'A',
   property: 'P',
   operation: 'O',
   characteristic: 'C',

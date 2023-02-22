@@ -38,6 +38,7 @@ import {BrowserService} from '@ame/shared';
 import {ShapeConnectorService} from '@ame/connection';
 import {ModelInfo, ModelStyleResolver} from '../models';
 import {LanguageSettingsService} from '@ame/settings-dialog';
+import {RdfService} from '@ame/rdf/services';
 
 @Injectable()
 export class MxGraphShapeOverlayService {
@@ -412,12 +413,11 @@ export class MxGraphShapeOverlayService {
       ModelStyleResolver.resolve(modelElement)
     );
 
+    const rdfService = this.injector.get(RdfService);
+
     modelElementCell.setId(modelElement.name);
     modelElementCell['configuration'] = {
-      baseProperties: MxGraphVisitorHelper.getModelInfo(
-        modelElement,
-        MxGraphHelper.getModelElement(this.mxGraphShapeSelectorService.getAspectCell())
-      ),
+      baseProperties: MxGraphVisitorHelper.getModelInfo(modelElement, rdfService.currentRdfModel),
       fields: cellConfiguration,
     };
     graph.foldingEnabled = false;

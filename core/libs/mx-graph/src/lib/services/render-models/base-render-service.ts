@@ -17,13 +17,18 @@ import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper, MxGraphVisitorHelper} from '../../helpers';
 import {MxGraphService} from '../mx-graph.service';
 import {RendererUpdatePayload} from '../../models';
+import {RdfService} from '@ame/rdf/services';
 
 export abstract class BaseRenderService {
   get graph(): mxgraph.mxGraph {
     return this.mxGraphService.graph;
   }
 
-  constructor(protected mxGraphService: MxGraphService, protected languageSettingsService: LanguageSettingsService) {}
+  constructor(
+    protected mxGraphService: MxGraphService,
+    protected languageSettingsService: LanguageSettingsService,
+    protected rdfService: RdfService
+  ) {}
   public abstract isApplicable(cell: mxgraph.mxCell): boolean;
 
   public update({cell, callback}: RendererUpdatePayload) {
@@ -33,10 +38,7 @@ export abstract class BaseRenderService {
     cell.setAttribute('name', modelElement.name);
 
     cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.languageSettingsService);
-    cell['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(
-      modelElement,
-      MxGraphHelper.getModelElement(this.mxGraphService.mxGraphShapeSelectorService.getAspectCell())
-    );
+    cell['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(modelElement, this.rdfService.currentRdfModel);
     this.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
 
     if (typeof callback === 'function') {
@@ -82,10 +84,7 @@ export abstract class BaseRenderService {
     for (const parent of parents) {
       const parentMetaModel = MxGraphHelper.getModelElement(parent);
       parent['configuration'].fields = MxGraphVisitorHelper.getElementProperties(parentMetaModel, this.languageSettingsService);
-      parent['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(
-        parentMetaModel,
-        MxGraphHelper.getModelElement(this.mxGraphService.mxGraphShapeSelectorService.getAspectCell())
-      );
+      parent['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(parentMetaModel, this.rdfService.currentRdfModel);
       this.graph.labelChanged(parent, MxGraphHelper.createPropertiesLabel(parent));
     }
   }

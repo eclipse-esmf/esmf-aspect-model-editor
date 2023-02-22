@@ -25,32 +25,32 @@
   <div class="dialog-content">
     <div class="namespace-column">
       <mat-selection-list [multiple]="false">
-        <mat-expansion-panel *ngFor="let namespace of namespaces | keyvalue" [expanded]="true">
+        <mat-expansion-panel *ngFor="let violation of violations" [expanded]="true">
           <mat-expansion-panel-header>
-            <mat-panel-title matTooltip="Package for namespace {{ namespace.key }}">
+            <mat-panel-title matTooltip="Package for namespace {{ violation.key }}">
               <mat-icon>folder</mat-icon>
-              <span>{{ namespace.key }}</span>
+              <span>{{ violation.key }}</span>
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <mat-panel-row>
-            <mat-list-option
-              *ngFor="let file of namespace.value"
-              (click)="errors = file.errors; visibleStep = errors?.length ? step.hasErrors : step.noError"
-            >
-              <div class="content">
-                <mat-icon>description</mat-icon>
-                <span>{{ file.file }}</span>
-              </div>
-              <div class="status">
-                <mat-icon *ngIf="file.errors?.length" matTooltip="This file has errors" class="violation">error </mat-icon>
-                <mat-icon *ngIf="!file.errors?.length" matTooltip="This file was validated with success" class="success">done </mat-icon>
-              </div>
-            </mat-list-option>
-          </mat-panel-row>
+          <mat-list-option
+            *ngFor="let value of violation.value"
+            (click)="errors = value.violationError; visibleStep = errors?.length ? step.hasErrors : step.noError"
+          >
+            <div class="content">
+              <mat-icon>description</mat-icon>
+              <span>{{ value.file }}</span>
+            </div>
+            <div class="status">
+              <mat-icon *ngIf="value.violationError?.length" matTooltip="This file has errors" class="violation">error </mat-icon>
+              <mat-icon *ngIf="!value.violationError?.length" matTooltip="This file was validated with success" class="success"
+                >done
+              </mat-icon>
+            </div>
+          </mat-list-option>
         </mat-expansion-panel>
 
-        <mat-list-option *ngIf="missingFiles?.length" class="missing-files" (click)="visibleStep = step.missingFile">
+        <mat-list-option *ngIf="missingElements?.length" class="missing-elements" (click)="visibleStep = step.missingElement">
           <div class="content">
             <mat-icon>sim_card_alert</mat-icon>
             <span>Missing files</span>
@@ -70,21 +70,23 @@
       <ng-container *ngIf="visibleStep === step.hasErrors">
         <p class="error-notifier" *ngIf="errors?.length">This model has the following errors:</p>
         <div class="notification" *ngFor="let error of errors">
-          <mat-icon class="notification-icon {{ error.resultSeverity }}">{{ icons[error.resultSeverity] }}</mat-icon>
           <div class="notification-content">
-            <p class="notification-name">{{ error.focusNode }}</p>
-            <p class="notification-description" *ngFor="let e of error.resultMessage">{{ e }}</p>
+            <p *ngIf="error.focusNode" class="notification-name">{{ error.focusNode }}</p>
+            <p class="notification-description">{{ error.message }}</p>
           </div>
         </div>
       </ng-container>
 
-      <ng-container *ngIf="visibleStep === step.missingFile">
-        <p class="error-notifier" *ngIf="missingFiles?.length">These files are required in the selected namespace:</p>
-        <div class="notification" *ngFor="let missingFile of missingFiles">
+      <ng-container *ngIf="visibleStep === step.missingElement">
+        <p class="error-notifier" *ngIf="missingElements?.length">These files are required in the selected namespace:</p>
+        <div class="notification" *ngFor="let missingElement of missingElements">
           <mat-icon class="notification-icon violation">{{ icons.violation }}</mat-icon>
           <div class="notification-content">
-            <p class="notification-name">{{ missingFile.analysedFile }}</p>
-            <p class="notification-description" *ngFor="let e of missingFile.errorMessage">{{ e }}</p>
+            <p class="notification-name">{{ missingElement.analysedFileName }}</p>
+            <p class="notification-description">{{ missingElement?.errorMessage }}</p>
+            <p class="notification-missing-file" *ngIf="missingElement?.missingFileName as missingFile">
+              Missing file: '{{ missingFile }}'
+            </p>
           </div>
         </div>
       </ng-container>

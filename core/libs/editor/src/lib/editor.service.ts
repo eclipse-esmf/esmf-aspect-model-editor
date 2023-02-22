@@ -17,11 +17,8 @@ import {
   FileContentModel,
   LogService,
   NotificationsService,
-  ProcessingError,
   SaveValidateErrorsCodes,
-  SemanticError,
   SidebarService,
-  SyntacticError,
   ValidateStatus,
 } from '@ame/shared';
 import {environment} from 'environments/environment';
@@ -45,6 +42,7 @@ import {
 } from 'rxjs';
 import {ILastSavedModel} from './editor.types';
 import {
+  mxConstants,
   mxEvent,
   MxGraphAttributeService,
   MxGraphHelper,
@@ -79,11 +77,11 @@ import {InstantiatorService} from '@ame/instantiator';
 import {ConfigurationService, LanguageSettingsService} from '@ame/settings-dialog';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
-import {ModelApiService, ModelValidatorService} from '@ame/api';
+import {ModelApiService} from '@ame/api';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {Title} from '@angular/platform-browser';
-import {OpenApi} from './editor-toolbar';
+import {OpenApi, ViolationError} from './editor-toolbar';
 import mxCell = mxgraph.mxCell;
 
 @Injectable({
@@ -127,7 +125,6 @@ export class EditorService {
     private configurationService: ConfigurationService,
     private languageSettingsService: LanguageSettingsService,
     private modelElementNamingService: ModelElementNamingService,
-    private modelValidatorService: ModelValidatorService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private mxGraphAttributeService: MxGraphAttributeService,
@@ -189,14 +186,18 @@ export class EditorService {
       mxUtils.bind(this, (_source: mxgraph.mxGraph, event: mxgraph.mxEventObject) => {
         const changedCells: Array<mxgraph.mxCell> = event.getProperty('cells');
         changedCells.forEach(cell => {
-          if (MxGraphHelper.getModelElement(cell)) {
-            const edgeParent = changedCells.find(edge => edge.isEdge() && edge.target && edge.target.id === cell.id);
-            if (edgeParent) {
-              const sourceElement = MxGraphHelper.getModelElement(edgeParent.source) as Base;
-              if (!sourceElement.isExternalReference()) {
-                sourceElement.delete(MxGraphHelper.getModelElement(cell));
-              }
-            }
+          if (!MxGraphHelper.getModelElement(cell)) {
+            return;
+          }
+
+          const edgeParent = changedCells.find(edge => edge.isEdge() && edge.target && edge.target.id === cell.id);
+          if (!edgeParent) {
+            return;
+          }
+
+          const sourceElement = MxGraphHelper.getModelElement(edgeParent.source) as Base;
+          if (!sourceElement.isExternalReference()) {
+            sourceElement.delete(MxGraphHelper.getModelElement(cell));
           }
         });
       })
@@ -226,14 +227,18 @@ export class EditorService {
     this.mxGraphService.removeCells([edgeToRemove]);
   }
 
-  loadNewAspectModel(rdfAspectModel: string, isDefault?: boolean) {
+  loadNewAspectModel(rdfAspectModel: string, namespaceFileName?: string, isDefault?: boolean) {
     this.refreshSidebar();
     this.removeLastSavedRdf();
     this.notificationsService.info({title: 'Loading model', timeout: 2000});
 
-    return this.rdfService.loadModel(rdfAspectModel).pipe(
+    return this.rdfService.loadModel(rdfAspectModel, namespaceFileName).pipe(
       switchMap(loadedRdfModel =>
-        this.loadExternalModels(loadedRdfModel).pipe(switchMap(() => this.loadCurrentModel(loadedRdfModel, rdfAspectModel)))
+        this.loadExternalModels(loadedRdfModel).pipe(
+          switchMap(() =>
+            this.loadCurrentModel(loadedRdfModel, rdfAspectModel, namespaceFileName || loadedRdfModel.absoluteAspectModelFileName)
+          )
+        )
       ),
       tap(() => {
         if (!isDefault) {
@@ -245,7 +250,7 @@ export class EditorService {
 
   loadExternalAspectModel(extRefAbsoluteAspectModelFileName: string): CachedFile {
     const extRdfModel = this.rdfService.externalRdfModels.find(
-      extRef => extRef.getAbsoluteAspectModelFileName() === extRefAbsoluteAspectModelFileName
+      extRef => extRef.absoluteAspectModelFileName === extRefAbsoluteAspectModelFileName
     );
     const fileName = extRdfModel.aspectModelFileName;
     let findCacheFile = this.namespaceCacheService.getFile([extRdfModel.getAspectModelUrn(), extRdfModel.aspectModelFileName]);
@@ -277,7 +282,7 @@ export class EditorService {
 
   public removeAspectModelFileFromStore(aspectModelFileName: string) {
     const index = this.rdfService.externalRdfModels.findIndex(
-      extRdfModel => extRdfModel.getAbsoluteAspectModelFileName() === aspectModelFileName
+      extRdfModel => extRdfModel.absoluteAspectModelFileName === aspectModelFileName
     );
     this.rdfService.externalRdfModels.splice(index, 1);
   }
@@ -287,9 +292,9 @@ export class EditorService {
     return this.modelApiService.generateJsonSample(serializedModel);
   }
 
-  public generateJsonSchema(rdfModel: RdfModel) {
+  public generateJsonSchema(rdfModel: RdfModel, language: string) {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.generateJsonSchema(serializedModel);
+    return this.modelApiService.generateJsonSchema(serializedModel, language);
   }
 
   public generateOpenApiSpec(rdfModel: RdfModel, openApi: OpenApi) {
@@ -297,13 +302,13 @@ export class EditorService {
     return this.modelApiService.generateOpenApiSpec(serializedModel, openApi);
   }
 
-  private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string) {
-    return this.modelService.loadRdfModel(loadedRdfModel, rdfAspectModel).pipe(
+  private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string, namespaceFileName: string) {
+    return this.modelService.loadRdfModel(loadedRdfModel, rdfAspectModel, namespaceFileName).pipe(
       first(),
       tap((aspect: Aspect) => {
         this.removeOldGraph();
         this.initializeNewGraph(aspect);
-        this.titleService.setTitle(`${aspect?.aspectModelUrn}.ttl - Aspect Model Editor`);
+        this.titleService.setTitle(`${namespaceFileName || aspect?.aspectModelUrn}.ttl - Aspect Model Editor`);
       }),
       catchError(error => {
         this.logService.logError('Error on loading aspect model', error);
@@ -331,7 +336,9 @@ export class EditorService {
       this.mxGraphService
         .updateGraph(() => {
           this.mxGraphService.firstTimeFold = true;
-          mxGraphSetupVisitor.visit(<DefaultAspect>aspect, null);
+          if (aspect) {
+            mxGraphSetupVisitor.visit(<DefaultAspect>aspect, null);
+          }
 
           const isolatedElements = this.namespaceCacheService.getCurrentCachedFile().getIsolatedElements();
           if (isolatedElements.size) {
@@ -373,6 +380,14 @@ export class EditorService {
     if (!aspectModelUrn) {
       let newInstance = null;
       switch (elementType) {
+        case 'aspect':
+          if (this.modelService.getLoadedAspectModel().aspect) {
+            this.notificationsService.warning({title: 'An AspectModel can contain only one Aspect element.'});
+            return;
+          }
+          newInstance = DefaultAspect.createInstance();
+          this.modelService.addAspect(newInstance);
+          break;
         case 'property':
           newInstance = DefaultProperty.createInstance();
           break;
@@ -490,25 +505,6 @@ export class EditorService {
     this.mxGraphService.assignToParent(childCell, context);
   }
 
-  filterSelectedElements(selectedElements) {
-    return selectedElements.filter(cell => {
-      if (cell.style === 'aspect') {
-        // Prevent deleting the 'Aspect' element and throw warning message
-        this.notificationsService.warning({title: 'Cannot delete Aspect'});
-      }
-
-      return (
-        typeof cell.style !== 'number' &&
-        cell.style !== 'aspect' &&
-        !(cell.style && typeof cell.style === 'string' && cell.style.includes('_property'))
-      );
-    });
-  }
-
-  deleteAll() {
-    this.mxGraphService.deleteAllShapes();
-  }
-
   deleteSelectedElements() {
     const result = [];
     const selectedCells = this.mxGraphShapeSelectorService.getSelectedCells();
@@ -534,6 +530,11 @@ export class EditorService {
 
   private deleteElements(cells: mxgraph.mxCell[]): void {
     cells.forEach((cell: mxgraph.mxCell) => {
+      this.mxGraphAttributeService.graph.setCellStyles(
+        mxConstants.STYLE_STROKECOLOR,
+        'black',
+        this.mxGraphService.graph.getOutgoingEdges(cell).map(edge => edge.target)
+      );
       this.elementModelService.deleteElement(cell);
     });
   }
@@ -612,7 +613,7 @@ export class EditorService {
     );
   }
 
-  validate(): Observable<Array<SemanticError | SyntacticError | ProcessingError>> {
+  validate(): Observable<Array<ViolationError>> {
     this.mxGraphService.resetValidationErrorOnAllShapes();
 
     return this.modelService.synchronizeModelToRdf().pipe(
@@ -656,7 +657,7 @@ export class EditorService {
         this.updateLastSavedRdf(false, model.serializedModel, model.savedDate);
 
         const namespaces = this.sidebarService.namespaces;
-        const aspectModelFileName = this.rdfService.currentRdfModel.getAbsoluteAspectModelFileName().split(':')[2];
+        const aspectModelFileName = this.rdfService.currentRdfModel.absoluteAspectModelFileName.split(':')[2];
         const aspectModelNamespace = this.rdfService.currentRdfModel.getAspectModelUrn().replace('urn:bamm:', '').replace('#', '');
 
         const isNamespaceInWorkspace = namespaces.find(

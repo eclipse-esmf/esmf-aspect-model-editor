@@ -19,13 +19,15 @@ import {mxgraph} from 'mxgraph-factory';
 import {RendererUpdatePayload} from '../../models';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
+import {RdfService} from '@ame/rdf/services';
+import {NamedNode} from 'n3';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AspectRenderService extends BaseRenderService {
-  constructor(mxGraphService: MxGraphService, languageSettingsService: LanguageSettingsService) {
-    super(mxGraphService, languageSettingsService);
+  constructor(mxGraphService: MxGraphService, languageSettingsService: LanguageSettingsService, rdfService: RdfService) {
+    super(mxGraphService, languageSettingsService, rdfService);
   }
 
   update({cell}: RendererUpdatePayload) {
@@ -35,6 +37,16 @@ export class AspectRenderService extends BaseRenderService {
         this.renderOptionalProperties(cell);
       },
     });
+  }
+
+  delete(cell: mxgraph.mxCell) {
+    const aspectModelElement = MxGraphHelper.getModelElement(cell);
+    const store = this.rdfService.currentRdfModel.store;
+
+    const aspectQuads = store.getQuads(new NamedNode(aspectModelElement.aspectModelUrn), null, null, null);
+    store.removeQuads(aspectQuads);
+
+    this.mxGraphService.removeCells([cell]);
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {

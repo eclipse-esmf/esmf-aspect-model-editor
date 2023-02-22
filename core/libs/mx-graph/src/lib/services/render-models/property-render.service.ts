@@ -21,6 +21,7 @@ import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 import {NamespacesCacheService} from '@ame/cache';
 import {ShapeConnectorService} from '@ame/connection';
+import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
   providedIn: 'root',
@@ -29,10 +30,11 @@ export class PropertyRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
+    rdfService: RdfService,
     private namespacesCacheService: NamespacesCacheService,
     private shapeConnectorService: ShapeConnectorService
   ) {
-    super(mxGraphService, languageSettingsService);
+    super(mxGraphService, languageSettingsService, rdfService);
   }
 
   update({cell, callback}: RendererUpdatePayload) {

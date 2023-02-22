@@ -24,9 +24,10 @@ import {
   DefaultProperty,
 } from '@ame/meta-model';
 import {EntityValueService} from '@ame/editor';
-import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultStructuredValue} from '../aspect-meta-model';
+import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultAspect, DefaultStructuredValue} from '../aspect-meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {ModelRootService} from './model-root.service';
+import {ModelService, RdfService} from '@ame/rdf/services';
 
 @Injectable({providedIn: 'root'})
 export class ElementModelService {
@@ -37,7 +38,9 @@ export class ElementModelService {
     private namespacesCacheService: NamespacesCacheService,
     private entityValueService: EntityValueService,
     private languageSettingsService: LanguageSettingsService,
-    private modelRootService: ModelRootService
+    private modelRootService: ModelRootService,
+    private modelService: ModelService,
+    private rdfService: RdfService
   ) {}
 
   get currentCachedFile() {
@@ -75,6 +78,12 @@ export class ElementModelService {
 
     const elementModelService = this.modelRootService.getElementModelService(modelElement);
     elementModelService?.delete(cell);
+    if (modelElement instanceof DefaultAspect) {
+      this.modelService.removeAspect();
+      this.rdfService.currentRdfModel.aspectModelFileName = '';
+      this.rdfService.currentRdfModel.absoluteAspectModelFileName = '';
+      this.currentCachedFile.fileName = '';
+    }
   }
 
   decoupleElements(edge: mxgraph.mxCell) {

@@ -34,6 +34,7 @@ export class CachedFile {
   private cachedElements: Map<string, any> = new Map<string, BaseMetaModelElement>();
   private isolatedElements: Map<string, any> = new Map<string, BaseMetaModelElement>();
   private _aspect: Aspect;
+  private _fileName: string;
 
   get aspect(): Aspect {
     return this._aspect;
@@ -44,6 +45,8 @@ export class CachedFile {
       this._aspect = value;
     }
   }
+
+  constructor(public fileName: string, public namespace: string) {}
 
   resolveElement<T>(element: T & IsNamed, isolated = false): T {
     return isolated ? this.resolveIsolatedElement(element) : this.resolveCachedElement(element);

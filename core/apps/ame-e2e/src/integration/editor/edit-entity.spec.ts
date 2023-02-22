@@ -13,7 +13,6 @@
 
 /// <reference types="Cypress" />
 
-import {Aspect, DefaultEntity} from '@ame/meta-model';
 import {SELECTOR_tbDeleteButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 

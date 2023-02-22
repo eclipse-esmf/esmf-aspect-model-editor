@@ -24,7 +24,7 @@ export interface Validation {
 }
 
 export interface ValidationResult {
-  validationErrors: Validation[];
+  violationErrors: Validation[];
   aspectModelFileName: string;
   fileAlreadyDefined: boolean;
 }

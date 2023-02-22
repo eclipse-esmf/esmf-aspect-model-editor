@@ -11,15 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const {exec} = require('child_process');
-
-exports.exec = cmd =>
-  new Promise((resolve, reject) => {
-    exec(cmd, (error, stdout, stderr) => {
-      if (error) {
-        return reject(error);
-      }
-
-      resolve(stdout ? stdout : stderr);
-    });
-  });
+export interface ViolationError {
+  message: string;
+  focusNode: string;
+  fix: string[];
+}

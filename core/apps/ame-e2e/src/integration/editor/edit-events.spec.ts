@@ -13,7 +13,6 @@
 
 /// <reference types="Cypress" />
 
-import {Aspect} from '@ame/meta-model';
 import {
   FIELD_name,
   SELECTOR_dialogInputModel,
@@ -68,7 +67,7 @@ describe('Test edit Events', () => {
       .then(() => cy.shapesConnected('event1', 'property2'))
       .then(() => cy.shapesConnected('event1', 'property3'))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.events[0].name).to.equal('event1');
           expect(aspect.events[0].parameters[0].property.name).to.equal('property2');
@@ -93,7 +92,7 @@ describe('Test edit Events', () => {
       .then(() => cy.get(FIELD_name).clear({force: true}).type('newEvent', {force: true}))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.events[0].name).to.equal('newEvent');
           expect(aspect.events[0].parameters).to.have.length(2);
@@ -118,7 +117,7 @@ describe('Test edit Events', () => {
       .then(() => cy.clickShape('property2'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.events[0].name).to.equal('newEvent');
           expect(aspect.events[0].parameters).to.have.length(1);

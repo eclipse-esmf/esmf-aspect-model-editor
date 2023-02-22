@@ -53,6 +53,14 @@ export class ModelService {
     }
   }
 
+  removeAspect() {
+    this.aspect = null;
+  }
+
+  addAspect(aspect: Aspect) {
+    this.aspect = aspect;
+  }
+
   getLoadedAspectModel(): LoadedAspectModel {
     return {
       rdfModel: this.rdfModel,
@@ -60,7 +68,7 @@ export class ModelService {
     };
   }
 
-  loadRdfModel(loadedRdfModel: RdfModel, rdfAspectModel: string): Observable<Aspect> {
+  loadRdfModel(loadedRdfModel: RdfModel, rdfAspectModel: string, namespaceFileName: string): Observable<Aspect> {
     if (this.currentCachedFile) {
       this.currentCachedFile.reset();
     }
@@ -80,8 +88,8 @@ export class ModelService {
 
       return rdfModel$.pipe(
         tap(rdfModel => (this.rdfModel = rdfModel)),
-        tap(() => this.setCurrentCacheFile()),
-        map(() => this.instantiateFile()),
+        tap(() => this.setCurrentCacheFile(namespaceFileName)),
+        map(() => this.instantiateFile(namespaceFileName)),
         tap(() => this.processAnonymousElements()),
         map(aspect => (this.aspect = aspect)),
         catchError(error =>
@@ -120,16 +128,22 @@ export class ModelService {
     );
   }
 
-  private setCurrentCacheFile() {
+  private setCurrentCacheFile(namespaceFileName: string) {
     this.namespaceCacheService.removeAll();
 
-    const currentCachedFile = this.namespaceCacheService.addFile(this.rdfModel.getAspectModelUrn(), 'currentFileName');
+    let fileName: string;
+    if (namespaceFileName) {
+      [, , fileName] = namespaceFileName.split(':');
+    }
+
+    const currentCachedFile = this.namespaceCacheService.addFile(this.rdfModel.getAspectModelUrn(), fileName);
     this.namespaceCacheService.setCurrentCachedFile(currentCachedFile);
   }
 
-  private instantiateFile() {
+  private instantiateFile(namespaceFileName: string) {
+    const [, , fileName] = namespaceFileName.split(':');
     try {
-      return this.instantiatorService.instantiateFile(this.rdfModel, this.currentCachedFile, 'currentFileName').aspect;
+      return this.instantiatorService.instantiateFile(this.rdfModel, this.currentCachedFile, fileName).aspect;
     } catch (error) {
       console.groupCollapsed('model.service -> loadRDFmodel', error);
       console.groupEnd();

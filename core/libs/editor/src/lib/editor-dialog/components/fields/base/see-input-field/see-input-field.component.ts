@@ -11,25 +11,63 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, Injector, OnInit, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {BaseMetaModelElement, CanExtend, DefaultProperty} from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
+import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {map, Observable} from 'rxjs';
+import {MatChipList} from '@angular/material/chips';
+
+interface SeeElement {
+  name?: string;
+  urn: string;
+}
 
 @Component({
   selector: 'ame-see-input-field',
   templateUrl: './see-input-field.component.html',
+  styleUrls: ['./see-input-field.component.scss'],
 })
 export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
-  constructor(public metaModelDialogService: EditorModelService) {
+  @ViewChild('see', {static: true}) seeInput;
+  @ViewChild('chipList', {static: true, read: MatChipList}) chipList: MatChipList;
+
+  public shapes$: Observable<BaseMetaModelElement[]>;
+  public searchControl = new FormControl('', {
+    validators: [EditorDialogValidators.seeURI],
+    updateOn: 'change',
+  });
+  public elements: SeeElement[] = [];
+
+  get isInherited(): boolean {
+    const control = this.parentForm.get(this.fieldName);
+    return (
+      this.metaModelElement instanceof CanExtend &&
+      this.metaModelElement.extendedSee &&
+      control.value === this.metaModelElement.extendedSee?.join(',')
+    );
+  }
+
+  get modelElements() {
+    return this.mxGraphService.getAllCells().map(cell => MxGraphHelper.getModelElement(cell));
+  }
+
+  constructor(public metaModelDialogService: EditorModelService, private injector: Injector) {
     super(metaModelDialogService);
     this.fieldName = 'see';
+    this.mxGraphService = this.injector.get(MxGraphService);
   }
 
   ngOnInit(): void {
     this.subscription = this.getMetaModelData().subscribe(() => this.setSeeControl());
+    this.subscription.add(
+      this.searchControl.statusChanges.subscribe(status => {
+        this.chipList.errorState = status === 'INVALID';
+      })
+    );
   }
 
   getCurrentValue() {
@@ -41,13 +79,23 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
     );
   }
 
-  get isInherited(): boolean {
-    const control = this.parentForm.get(this.fieldName);
-    return (
-      this.metaModelElement instanceof CanExtend &&
-      this.metaModelElement.extendedSee &&
-      control.value === this.metaModelElement.extendedSee?.join(',')
-    );
+  removeElement(element: SeeElement) {
+    this.elements = this.elements.filter(e => e !== element);
+    this.parentForm.get(this.fieldName).setValue(this.elements.map(({urn}) => urn).join(','));
+  }
+
+  addElementToList(elementName?: string) {
+    if (this.searchControl.valid) {
+      this.elements.push({urn: this.searchControl.value, name: elementName || ''});
+      this.seeInput.nativeElement.value = '';
+      this.searchControl.setValue('');
+
+      this.parentForm.get(this.fieldName).setValue(this.elements.map(({urn}) => urn).join(','));
+      this.chipList.errorState = false;
+    } else {
+      this.chipList.errorState = true;
+      this.seeInput.nativeElement.blur();
+    }
   }
 
   private isDisabled() {
@@ -65,6 +113,25 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
         {
           validators: [EditorDialogValidators.seeURI],
         }
+      )
+    );
+
+    if (this.parentForm.get(this.fieldName).disabled) {
+      this.searchControl.disable();
+    }
+    this.elements = [...(this.decodeUriComponent(this.getCurrentValue())?.split(',') || [])].map(urn => ({
+      name: urn.includes('#') && urn.startsWith('urn:bamm') ? urn.split('#')[1] : '',
+      urn,
+    }));
+
+    this.shapes$ = this.searchControl.valueChanges.pipe(
+      map((fieldValue: string) =>
+        !fieldValue
+          ? []
+          : this.modelElements.filter(
+              ({name, aspectModelUrn}) =>
+                name?.toLowerCase().includes(fieldValue?.toLowerCase()) && !this.elements.find(el => el.urn === aspectModelUrn)
+            )
       )
     );
   }

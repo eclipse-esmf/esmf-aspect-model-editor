@@ -25,6 +25,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {RenameModelComponent} from '../rename-model/rename-model.component';
 import {EntityValuePipe} from './pipes';
 import {
   AbstractEntityComponent,
@@ -121,6 +122,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     AbstractEntityComponent,
     CharacteristicComponent,
     ConfirmDialogComponent,
+    RenameModelComponent,
     ConstraintComponent,
     ShapeSettingsComponent,
     EntityComponent,

@@ -30,6 +30,7 @@ import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 import {EntityValueRenderService} from './entity-value-render.service';
 import {UnitRenderService} from './unit-render.service';
+import {RdfService} from '@ame/rdf/services';
 
 interface EnumerationForm {
   chipList: DefaultEntityValue[];
@@ -45,13 +46,14 @@ export class EnumerationRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
+    rdfService: RdfService,
     private shapeConnectorService: ShapeConnectorService,
     private entityValueRenderer: EntityValueRenderService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private unitRendererService: UnitRenderService,
     private namespaceCacheService: NamespacesCacheService
   ) {
-    super(mxGraphService, languageSettingsService);
+    super(mxGraphService, languageSettingsService, rdfService);
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {

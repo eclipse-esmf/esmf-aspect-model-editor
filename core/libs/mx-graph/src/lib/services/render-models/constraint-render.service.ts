@@ -18,13 +18,14 @@ import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
+import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConstraintRenderService extends BaseRenderService {
-  constructor(mxGraphService: MxGraphService, languageSettingsService: LanguageSettingsService) {
-    super(mxGraphService, languageSettingsService);
+  constructor(mxGraphService: MxGraphService, languageSettingsService: LanguageSettingsService, rdfService: RdfService) {
+    super(mxGraphService, languageSettingsService, rdfService);
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {

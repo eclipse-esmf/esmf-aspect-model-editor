@@ -17,6 +17,8 @@ import {
   GENERATION_tbDownloadDoc,
   GENERATION_tbGenerateOpenApiButton,
   GENERATION_tbOutputButton,
+  GENERATION_tbOutputButton_YAML,
+  SELECTOR_tbDeleteButton,
   SELECTOR_tbGenerateDocumentButton,
   SELECTOR_tbOpenApiButton,
   SELECTOR_tbPrintButton,
@@ -27,7 +29,7 @@ describe('Test generation and download from valid Aspect Model', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept(
       'POST',
-      'http://localhost:9091/ame/api/generate/open-api-spec?output=json&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING',
+      'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING',
       {fixture: 'valid-open-api.json'}
     );
     cy.visitDefault();
@@ -42,7 +44,7 @@ describe('Test generation and download from valid Aspect Model', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept(
       'POST',
-      'http://localhost:9091/ame/api/generate/open-api-spec?output=yaml&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING',
+      'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING',
       {fixture: 'valid-open-api.yaml'}
     );
 
@@ -50,19 +52,29 @@ describe('Test generation and download from valid Aspect Model', () => {
     cy.startModelling()
       .then(() => cy.get(SELECTOR_tbGenerateDocumentButton).click({force: true}))
       .then(() => cy.get(SELECTOR_tbOpenApiButton).click({force: true}))
-      .then(() => cy.get(GENERATION_tbOutputButton).select('YAML'))
+      .then(() => cy.get(GENERATION_tbOutputButton).click())
+      .then(() => cy.get(GENERATION_tbOutputButton_YAML).click())
       .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force: true}))
       .then(() => cy.readFile('cypress/downloads/AspectDefault-open-api.yaml').should('exist'));
   });
 
   it('Can generate and download valid Aspect Model documentation', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('POST', 'http://localhost:9091/ame/api/generate/documentation', {fixture: 'valid-documentation.html'});
+    cy.intercept('POST', 'http://localhost:9091/ame/api/generate/documentation?language=en', {fixture: 'valid-documentation.html'});
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_tbGenerateDocumentButton).click({force: true}))
       .then(() => cy.get(SELECTOR_tbPrintButton).click({force: true}))
       .then(() => cy.get(GENERATION_tbDownloadDoc).click({force: true}))
       .then(() => cy.readFile('cypress/downloads/AspectDefault-documentation.html').should('exist'));
+  });
+
+  it('Cannot generate valid shared Aspect Model', () => {
+    cy.visitDefault();
+    cy.startModelling()
+      .then(() => cy.getHTMLCell('AspectDefault').click({force: true}))
+      .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
+      .then(() => cy.get(SELECTOR_tbGenerateDocumentButton).should('be.disabled'))
+      .then(() => cy.get(SELECTOR_tbGenerateDocumentButton).should('be.disabled'));
   });
 });

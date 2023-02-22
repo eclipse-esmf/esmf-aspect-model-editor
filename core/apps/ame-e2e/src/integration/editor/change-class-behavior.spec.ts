@@ -55,7 +55,7 @@ const fields = [
   {selector: FIELD_name, name: 'Name', value: 'ChangedName'},
   {selector: FIELD_descriptionen, name: 'Description', value: 'Changed Description'},
   {selector: FIELD_preferredNameen, name: 'Preferred Name', value: 'Changed Preferred Name'},
-  {selector: FIELD_see, name: 'Preferred Name', value: 'http://example.com'},
+  {selector: FIELD_see, name: 'See', value: 'http://example.com'},
 ];
 
 describe('Constraint', () => {
@@ -93,7 +93,12 @@ describe('Characteristic', () => {
           .then(() => cy.shapeExists('AspectDefault'))
           .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 350, 300))
           .then(() => cy.dbClickShape('Characteristic1'))
-          .then(() => cy.get(field.selector).clear({force: true}).type(field.value, {force: true}));
+          .then(() => {
+            cy.get(field.selector).clear({force: true}).type(field.value, {force: true});
+            if (field.selector === FIELD_see) {
+              cy.get(`[data-cy="option__${field.value}"]`).click({force: true});
+            }
+          });
       });
 
       for (const classType of characteristicClassTypes) {
@@ -102,7 +107,13 @@ describe('Characteristic', () => {
             .click({force: true})
             .get(`mat-option[cy-value="${classType}"]`)
             .click({force: true})
-            .then(() => cy.get(field.selector).should('have.value', field.value));
+            .then(() => {
+              if (field.selector === FIELD_see) {
+                cy.get(`[data-cy="chip__${field.value}"] .chip-content`).should('contain.text', field.value);
+              } else {
+                cy.get(field.selector).should('have.value', field.value);
+              }
+            });
         });
       }
     });

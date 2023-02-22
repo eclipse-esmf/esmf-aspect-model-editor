@@ -107,7 +107,7 @@ export class VersionMigrationComponent implements OnInit {
     }
 
     const returnObject = {
-      oldNamespaceFile: rdfModel.getAbsoluteAspectModelFileName(),
+      oldNamespaceFile: rdfModel.absoluteAspectModelFileName,
       serializedUpdatedModel: '',
       file,
     };

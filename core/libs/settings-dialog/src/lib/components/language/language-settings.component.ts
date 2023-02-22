@@ -46,8 +46,8 @@ export class LanguageSettingsComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
-    this.form = this.fb.group({
-      languages: this.fb.array([]),
+    this.form = new FormGroup({
+      languages: new FormArray([]),
     });
     this.languageList = this.form.get('languages') as FormArray;
     this.languageSettingsService.getLanguageCodes().forEach(languageCode => {
@@ -78,7 +78,7 @@ export class LanguageSettingsComponent implements OnInit, AfterViewInit {
     this.languageList.push(this.createLanguage());
   }
 
-  deleteLanguage(index) {
+  deleteLanguage(index: number) {
     if (this.languageList.controls[index].value.languageCode) {
       this.deletedLanguages.push(this.languageList.controls[index].value);
     }
@@ -98,7 +98,7 @@ export class LanguageSettingsComponent implements OnInit, AfterViewInit {
     return '';
   }
 
-  getLanguagesFormGroup(index): FormGroup {
+  getLanguagesFormGroup(index: number): FormGroup {
     return this.languageList.controls[index] as FormGroup;
   }
 

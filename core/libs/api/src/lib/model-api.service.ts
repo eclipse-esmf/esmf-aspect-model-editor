@@ -15,22 +15,10 @@ import {Inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, map, mergeMap, tap, timeout} from 'rxjs/operators';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
-import {
-  APP_CONFIG,
-  AppConfig,
-  BrowserService,
-  FileContentModel,
-  HttpHeaderBuilder,
-  LogService,
-  ProcessingError,
-  SemanticError,
-  SyntacticError,
-} from '@ame/shared';
+import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, LogService} from '@ame/shared';
 import {ModelValidatorService} from './model-validator.service';
 import {RdfModel} from '@ame/rdf/utils';
-import {OpenApi} from '@ame/editor';
-
-type ValidationError = SemanticError | SyntacticError | ProcessingError;
+import {OpenApi, ViolationError} from '@ame/editor';
 
 @Injectable({
   providedIn: 'root',
@@ -148,24 +136,19 @@ export class ModelApiService {
       map(aspectModelFileNames =>
         aspectModelFileNames.reduce(
           (files, fileName) =>
-            fileName !== rdfModel?.getAbsoluteAspectModelFileName()
+            fileName !== rdfModel?.absoluteAspectModelFileName
               ? [...files, this.getAspectMetaModel(fileName).pipe(map(aspectMetaModel => new FileContentModel(fileName, aspectMetaModel)))]
               : files,
           []
         )
       ),
-      mergeMap((files$: Observable<string>[]) => {
-        if (files$.length) {
-          return forkJoin(files$);
-        }
-        return of([]);
-      }),
+      mergeMap((files$: Observable<string>[]) => (files$.length ? forkJoin(files$) : of([]))),
       catchError(() => of([]))
     );
   }
 
   validateFilesForExport(files: string[]): Observable<any> {
-    return this.http.post(`${this.serviceUrl}${this.api.package}/validate-models`, files);
+    return this.http.post(`${this.serviceUrl}${this.api.package}/validate-models-for-export`, files);
   }
 
   getExportZipFile(): Observable<any> {
@@ -197,10 +180,11 @@ export class ModelApiService {
       );
   }
 
-  generateJsonSchema(rdfContent: string): Observable<string> {
+  generateJsonSchema(rdfContent: string, language: string): Observable<string> {
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.generate}/json-schema`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+        params: {language},
       })
       .pipe(
         timeout(this.requestTimeout),
@@ -220,18 +204,18 @@ export class ModelApiService {
   /*
    *This method will get all the errors and notify the user for those which are correctable.
    */
-  validate(rdfContent: string): Observable<Array<ValidationError>> {
-    return this.getValidationErrors(rdfContent).pipe(tap(errors => this.modelValidatorService.notifyCorrectableErrors(errors)));
+  validate(rdfContent: string): Observable<Array<ViolationError>> {
+    return this.getViolationError(rdfContent).pipe(tap(errors => this.modelValidatorService.notifyCorrectableErrors(errors)));
   }
 
-  getValidationErrors(rdfContent: string): Observable<Array<ValidationError>> {
+  getViolationError(rdfContent: string): Observable<Array<ViolationError>> {
     return this.http
-      .post<Array<ValidationError>>(`${this.serviceUrl}${this.api.models}/validate`, rdfContent, {
+      .post<Array<ViolationError>>(`${this.serviceUrl}${this.api.models}/validate`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
       })
       .pipe(
         timeout(this.requestTimeout),
-        map((data: any) => data.validationErrors),
+        map((data: any) => data.violationErrors),
         catchError(res => throwError(() => res))
       );
   }
@@ -241,6 +225,7 @@ export class ModelApiService {
       .post<string>(`${this.serviceUrl}${this.api.generate}/open-api-spec`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
         params: {
+          language: openApi.language,
           output: openApi.output,
           baseUrl: openApi.baseUrl,
           includeQueryApi: openApi.includeQueryApi,
@@ -254,17 +239,20 @@ export class ModelApiService {
       );
   }
 
-  downloadDocumentation(rdfContent: string): Observable<string> {
+  downloadDocumentation(rdfContent: string, language: string): Observable<string> {
     return this.http
       .post(`${this.serviceUrl}${this.api.generate}/documentation`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+        params: {
+          language: language,
+        },
         responseType: 'text',
       })
       .pipe(timeout(this.requestTimeout));
   }
 
-  openDocumentation(rdfContent: string): Observable<void> {
-    return this.downloadDocumentation(rdfContent).pipe(
+  openDocumentation(rdfContent: string, language: string): Observable<void> {
+    return this.downloadDocumentation(rdfContent, language).pipe(
       map((documentation: string) => {
         if (!this.browserService.isStartedAsElectronApp()) {
           const tabRef = window.open('about:blank', '_blank');

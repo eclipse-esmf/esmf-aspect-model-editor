@@ -20,7 +20,6 @@ import {
   SELECTOR_editorSaveButton,
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
-import {Aspect, DefaultQuantifiable} from '@ame/meta-model';
 import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Unit', () => {
@@ -45,7 +44,7 @@ describe('Test editing Unit', () => {
       .then(() => {
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
-          expect((<DefaultQuantifiable>aspect.properties[0].property.characteristic).unit.name).to.equal('CustomUnit1');
+          expect(aspect.properties[0].property.characteristic.unit.name).to.equal('CustomUnit1');
         });
       })
       .then(() => {
@@ -74,7 +73,7 @@ describe('Test editing Unit', () => {
       .then(() => {
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
-          expect((<DefaultQuantifiable>aspect.properties[0].property.characteristic).unit.name).to.equal('CustomUnit2');
+          expect(aspect.properties[0].property.characteristic.unit.name).to.equal('CustomUnit2');
         });
       })
       .then(() => {
@@ -97,7 +96,7 @@ describe('Test editing Unit', () => {
       .then(() => {
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
-          expect((<DefaultQuantifiable>aspect.properties[0].property.characteristic).unit).to.be.null;
+          expect(aspect.properties[0].property.characteristic.unit).to.be.null;
         });
       })
       .then(() => {
@@ -130,7 +129,7 @@ describe('Test editing Unit', () => {
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
-          expect((<DefaultQuantifiable>aspect.properties[0].property.characteristic).unit).to.be.null;
+          expect(aspect.properties[0].property.characteristic.unit).to.be.null;
         })
       )
       .then(() =>

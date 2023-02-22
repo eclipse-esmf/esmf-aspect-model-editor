@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ConfirmDialogService, EditorService, ExportWorkspaceComponent, ZipUploaderComponent} from '@ame/editor';
+import {ConfirmDialogService, EditorService, ExportWorkspaceComponent, RenameModelDialogService, ZipUploaderComponent} from '@ame/editor';
 import {MatDialog} from '@angular/material/dialog';
 import {LoadModelDialogComponent} from '../../load-model-dialog';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
@@ -21,6 +21,12 @@ import {LoadingScreenOptions, LoadingScreenService, LogService, NotificationsSer
 import {saveAs} from 'file-saver';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {ModelApiService} from '@ame/api';
+import {NamespacesCacheService} from '@ame/cache';
+import {RdfModel} from '@ame/rdf/utils';
+
+enum InternalErrors {
+  RENAME_ABORT = 'RENAME_ABORT',
+}
 
 @Injectable({
   providedIn: 'root',
@@ -34,8 +40,10 @@ export class FileHandlingService {
     private rdfService: RdfService,
     private modelApiService: ModelApiService,
     private confirmDialogService: ConfirmDialogService,
+    private renameDialogService: RenameModelDialogService,
     private notificationsService: NotificationsService,
-    private loadingScreenService: LoadingScreenService
+    private loadingScreenService: LoadingScreenService,
+    private namespaceCacheService: NamespacesCacheService
   ) {}
 
   openLoadNewAspectModelDialog(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
@@ -49,7 +57,7 @@ export class FileHandlingService {
             return of(null);
           }
           this.loadingScreenService.open({...loadingScreenOptions});
-          return this.editorService.loadNewAspectModel(rdfAspectModel).pipe(
+          return this.editorService.loadNewAspectModel(rdfAspectModel, '').pipe(
             first(),
             catchError(error => {
               this.notificationsService.error({
@@ -96,14 +104,27 @@ export class FileHandlingService {
 
     this.loadingScreenService.open(loadingScreenOptions);
     return this.modelService.synchronizeModelToRdf().pipe(
-      tap(() =>
-        saveAs(
+      switchMap(() => {
+        const fileName = this.modelService.getLoadedAspectModel().aspect
+          ? `${this.modelService.getLoadedAspectModel().aspect?.name}.ttl`
+          : this.rdfService.currentRdfModel.aspectModelFileName || 'undefined.ttl';
+
+        if (fileName !== 'undefined.ttl') {
+          return of(fileName);
+        }
+
+        return this.modelApiService
+          .getNamespacesAppendWithFiles()
+          .pipe(switchMap(namespaces => this.openRenameModal(namespaces).pipe(map(result => result?.name || fileName))));
+      }),
+      tap(fileName => {
+        return saveAs(
           new Blob([this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel)], {
             type: 'text/turtle;charset=utf-8',
           }),
-          `${this.modelService.getLoadedAspectModel().aspect.name}.ttl`
-        )
-      ),
+          fileName
+        );
+      }),
       catchError(error => {
         this.logService.logError(`Error while exporting the Aspect Model. ${JSON.stringify(error)}.`);
         this.notificationsService.error({
@@ -119,36 +140,69 @@ export class FileHandlingService {
 
   saveAspectModelToWorkspace(): Observable<any> {
     return this.modelService.synchronizeModelToRdf().pipe(
-      switchMap(() =>
-        this.modelApiService.getNamespacesAppendWithFiles().pipe(
-          first(),
-          map((namespaces: string[]) => {
-            const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
-            const serializeModel = this.rdfService.serializeModel(rdfModel);
-
-            if (namespaces.some(namespace => namespace === rdfModel.getAbsoluteAspectModelFileName())) {
-              this.confirmDialogService
-                .open({
-                  phrases: [
-                    `The Aspect model "${rdfModel.getAbsoluteAspectModelFileName()}" is already defined in your file structure.`,
-                    'Are you sure you want to overwrite it?',
-                  ],
-                  title: 'Update Aspect model',
-                  okButtonText: 'Overwrite',
-                })
-                .subscribe(confirmed => {
-                  if (confirmed) {
-                    this.editorService.updateLastSavedRdf(false, serializeModel, new Date());
-                    this.editorService.saveModel().subscribe();
-                  }
-                });
-            } else {
-              this.editorService.updateLastSavedRdf(false, serializeModel, new Date());
-              this.editorService.saveModel().subscribe();
-            }
-          })
+      switchMap(() => this.modelApiService.getNamespacesAppendWithFiles()),
+      switchMap((namespaces: string[]) =>
+        this.openRenameModal(namespaces).pipe(
+          switchMap(result => (result ? of(result) : throwError(() => ({type: InternalErrors.RENAME_ABORT}))))
         )
-      )
+      ),
+      switchMap((result: {name: string; namespaces: string[]}) => this.openConfirmDialog(result.namespaces)),
+      switchMap(() => {
+        this.editorService.updateLastSavedRdf(
+          false,
+          this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel),
+          new Date()
+        );
+        return this.editorService.saveModel();
+      }),
+      tap(rdfModel => {
+        if (rdfModel instanceof RdfModel) {
+          this.namespaceCacheService.getCurrentCachedFile().fileName = rdfModel.aspectModelFileName;
+        }
+      }),
+      catchError(error => {
+        if (error?.type === InternalErrors.RENAME_ABORT) {
+          this.logService.logInfo('Aspect-less file: Rename abort');
+        }
+        return of(null);
+      })
+    );
+  }
+
+  private openConfirmDialog(namespaces: string[]) {
+    const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
+
+    if (namespaces.some(namespace => namespace === rdfModel.absoluteAspectModelFileName)) {
+      return this.confirmDialogService.open({
+        phrases: [
+          `The Aspect model "${rdfModel.absoluteAspectModelFileName}" is already defined in your file structure.`,
+          'Are you sure you want to overwrite it?',
+        ],
+        title: 'Update Aspect model',
+        okButtonText: 'Overwrite',
+      });
+    }
+
+    return of(null);
+  }
+
+  private openRenameModal(namespaces: string[]) {
+    const currentRdfModel = this.rdfService.currentRdfModel;
+    if (currentRdfModel.hasAspect || currentRdfModel.aspectModelFileName) {
+      return of({namespaces});
+    }
+
+    return this.renameDialogService.open(namespaces, currentRdfModel).pipe(
+      map(result => {
+        if (!result) {
+          return null;
+        }
+
+        currentRdfModel.aspectModelFileName = result.name;
+        // Resetting absolute file name to be reconstructed on save
+        currentRdfModel.absoluteAspectModelFileName = '';
+        return {namespaces, ...(result || {})};
+      })
     );
   }
 
@@ -188,9 +242,7 @@ export class FileHandlingService {
     return this.editorService.validate().pipe(
       map(correctableErrors => {
         this.loadingScreenService.close();
-        this.logService.logInfo('Validated successfully');
         if (correctableErrors?.length === 0) {
-          this.notificationsService.info({title: 'Validation completed successfully', timeout: 5000});
           callback?.call(this);
         }
       }),

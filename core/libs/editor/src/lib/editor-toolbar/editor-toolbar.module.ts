@@ -22,6 +22,7 @@ import {
   DocumentComponent,
   ExportWorkspaceComponent,
   GenerateOpenApiComponent,
+  LanguageSelectorModalComponent,
   SearchBarComponent,
   ThemeSwitcherComponent,
   WorkspaceSummaryComponent,
@@ -44,6 +45,8 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {GenerateDocumentationComponent} from './components/generate-documentation/generate-documentation.component';
+import {ConnectWithDialogModule} from '../connect-with-dialog/connect-with-dialog.module';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   imports: [
@@ -52,6 +55,7 @@ import {GenerateDocumentationComponent} from './components/generate-documentatio
     MatAutocompleteModule,
     MatIconModule,
     LoadModelDialogModule,
+    ConnectWithDialogModule,
     MatMenuModule,
     MatCheckboxModule,
     MatRadioModule,
@@ -70,6 +74,7 @@ import {GenerateDocumentationComponent} from './components/generate-documentatio
     MatButtonModule,
     MatProgressSpinnerModule,
     ReactiveFormsModule,
+    MatSelectModule,
   ],
   declarations: [
     EditorToolbarComponent,
@@ -82,6 +87,7 @@ import {GenerateDocumentationComponent} from './components/generate-documentatio
     ThemeSwitcherComponent,
     GenerateOpenApiComponent,
     GenerateDocumentationComponent,
+    LanguageSelectorModalComponent,
   ],
   exports: [EditorToolbarComponent, ThemeSwitcherComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

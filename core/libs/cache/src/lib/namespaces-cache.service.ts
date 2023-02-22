@@ -54,16 +54,17 @@ export class NamespacesCacheService {
    */
   addFile(namespaceKey: string, fileKey: string): CachedFile {
     let namespace = this.namespaces.get(namespaceKey);
+
     if (!namespace) {
       namespace = new Map<string, CachedFile>();
-      namespace.set(fileKey, new CachedFile());
+      namespace.set(fileKey, new CachedFile(fileKey, namespaceKey));
       this.namespaces.set(namespaceKey, namespace);
       return namespace.get(fileKey);
     }
 
     const cachedFile = namespace.get(fileKey);
     if (!cachedFile) {
-      namespace.set(fileKey, new CachedFile());
+      namespace.set(fileKey, new CachedFile(fileKey, namespaceKey));
       return namespace.get(fileKey);
     }
 

@@ -13,7 +13,6 @@
 
 /// <reference types="Cypress" />
 
-import {Aspect, DefaultEntity, DefaultQuantifiable, Trait} from '@ame/meta-model';
 import {SELECTOR_dialogStartButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
@@ -294,7 +293,7 @@ describe('Test drag and drop', () => {
 
         expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
 
-        const unit = (<DefaultQuantifiable>aspect.properties[0].property.characteristic).unit;
+        const unit = aspect.properties[0].property.characteristic.unit;
         expect(unit.name).to.equal('ExternalUnit');
       })
       .then(() => cy.getUpdatedRDF())
@@ -413,10 +412,10 @@ describe('Test drag and drop', () => {
         expect(aspect.properties[2].property.characteristic.name).to.equal('ExternalTrait');
         expect(aspect.properties[3].property.characteristic.name).to.equal('Property4Trait');
 
-        expect((<Trait>aspect.properties[2].property.characteristic).constraints[0].name).to.equal('ConstraintInTrait');
-        expect((<Trait>aspect.properties[2].property.characteristic).baseCharacteristic.name).to.equal('CharacteristicInTrait');
-        expect((<Trait>aspect.properties[3].property.characteristic).constraints[0].name).to.equal('Constraint1');
-        expect((<Trait>aspect.properties[3].property.characteristic).baseCharacteristic.name).to.equal('Characteristic1');
+        expect(aspect.properties[2].property.characteristic.constraints[0].name).to.equal('ConstraintInTrait');
+        expect(aspect.properties[2].property.characteristic.baseCharacteristic.name).to.equal('CharacteristicInTrait');
+        expect(aspect.properties[3].property.characteristic.constraints[0].name).to.equal('Constraint1');
+        expect(aspect.properties[3].property.characteristic.baseCharacteristic.name).to.equal('Characteristic1');
 
         expect(aspect.properties[0].property.characteristic.dataType.name).to.equal('ExternalEntity');
       })

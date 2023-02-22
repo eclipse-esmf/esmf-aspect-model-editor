@@ -13,7 +13,6 @@
 
 /// <reference types="Cypress" />
 
-import {Aspect} from '@ame/meta-model';
 import {FIELD_descriptionen, FIELD_preferredNameen, SELECTOR_editorSaveButton} from '../../support/constants';
 
 describe('Test editing Trait', () => {

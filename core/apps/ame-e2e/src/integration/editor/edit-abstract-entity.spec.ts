@@ -44,7 +44,7 @@ describe('Create and Edit Abstract Entity', () => {
       cy.dbClickShape('AbstractEntity1')
         .then(() => cy.get(FIELD_preferredNameen).focus().type('Preferred Name'))
         .then(() => cy.get(FIELD_descriptionen).focus().type('Description'))
-        .then(() => cy.get(FIELD_see).focus().type('http://test.com'))
+        .then(() => cy.addSeeElements('http://test.com'))
         .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
         .then(() => cy.clickConnectShapes('AbstractEntity1', 'Entity1'))
         .then(() => cy.getCellLabel('Entity1', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name @en'))
@@ -97,12 +97,12 @@ describe('Create and Edit Abstract Entity', () => {
         .dbClickShape('AbstractEntity2')
         .then(() => cy.get(FIELD_preferredNameen).focus().type('Preferred Name'))
         .then(() => cy.get(FIELD_descriptionen).focus().type('Description'))
-        .then(() => cy.get(FIELD_see).focus().type('http://test.com'))
+        .then(() => cy.addSeeElements('http://test.com'))
         .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
         .then(() => cy.dbClickShape('AbstractEntity1'))
         .then(() => cy.get(FIELD_preferredNameen).should('have.value', 'Preferred Name'))
         .then(() => cy.get(FIELD_descriptionen).should('have.value', 'Description'))
-        .then(() => cy.get(FIELD_see).should('have.value', 'http://test.com'))
+        .then(() => cy.get(`[data-cy="chip__http://test.com"] .chip-content`).should('contain.text', 'http://test.com'))
         .then(() => cy.get(SELECTOR_editorCancelButton).click({force: true}));
     });
 
@@ -227,7 +227,7 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.dbClickShape('AbstractEntity1'))
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 1', {force: true}))
         .then(() => cy.get(FIELD_descriptionen).type('Description 1', {force: true}))
-        .then(() => cy.get(FIELD_see).type('http://test1.com', {force: true}))
+        .then(() => cy.addSeeElements('http://test1.com'))
         .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}).wait(500));
 
       cy.getCellLabel('Entity1', 'extends').should('eq', 'extends = AbstractEntity1');

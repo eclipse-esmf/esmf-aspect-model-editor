@@ -90,6 +90,8 @@ export const SELECTOR_removeEntityValue = '[data-cy="remove-entity-value"]';
 export const SELECTOR_searchInputField = '[data-cy="searchInputField"]';
 export const SELECTOR_searchEntityValueInputField = '[data-cy="searchEntityValueInputField"]';
 // Editor canvas
+export const SELECTOR_ecAspect = '[data-cy="dragDropAspect"]';
+
 export const SELECTOR_ecProperty = '[data-cy="dragDropProperty"]';
 export const SELECTOR_ecAbstractProperty = '[data-cy="dragDropAbstractProperty"]';
 export const SELECTOR_ecOperation = '[data-cy="dragDropOperation"]';
@@ -131,5 +133,7 @@ export const SIDEBAR_CLOSE_BUTTON = '[data-cy="sidebar-close"]';
 // Generation
 export const GENERATION_tbGenerateOpenApiButton = '[data-cy="tbGenerateOpenApiButton"]';
 export const GENERATION_tbOutputButton = '[data-cy="tbOutputButton"]';
+export const GENERATION_tbOutputButton_JSON = '[data-cy="tbOutputButton-json"]';
+export const GENERATION_tbOutputButton_YAML = '[data-cy="tbOutputButton-yaml"]';
 export const GENERATION_tbOpenDoc = '[data-cy="tbOpenDoc"]';
 export const GENERATION_tbDownloadDoc = '[data-cy="tbDownloadDoc"]';

@@ -65,24 +65,23 @@ div.mxPopupMenu {
   background: white;
   border-radius: 4px;
   border: none;
-  padding: 3px;
-  width: 170px;
-  position: relative;
+  width: 220px;
+  overflow: hidden;
 }
 
 table.mxPopupMenu {
+  width: 100%;
   border-collapse: collapse;
   margin: 0;
 }
 
 td.mxPopupMenuItem {
-  padding: 7px 30px 7px 30px;
+  padding: 5px;
   font-size: 10pt;
   cursor: pointer;
 }
 
 td.mxPopupMenuIcon {
-  background-color: white;
   padding: 0;
 }
 
@@ -93,12 +92,6 @@ td.mxPopupMenuIcon .geIcon {
   opacity: 0.5;
   _width: 26px;
   _height: 26px;
-}
-
-td.mxPopupMenuIcon .geIcon:hover {
-  border: 1px solid gray;
-  border-radius: 2px;
-  opacity: 1;
 }
 
 tr.mxPopupMenuItemHover {

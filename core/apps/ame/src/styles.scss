@@ -321,4 +321,8 @@ mat-icon {
 
 .mat-tooltip {
   font-size: 12px;
+
+  &--long {
+    max-width: 400px !important;
+  }
 }

@@ -115,7 +115,8 @@ export class SidebarNamespacesComponent implements OnChanges {
   }
 
   public isCurrentFile(namespace: string, namespaceFile: string): boolean {
-    return `${this.namespaceService.getCurrentCachedFile()?.aspect?.aspectModelUrn}.ttl` === `urn:bamm:${namespace}#${namespaceFile}`;
+    const cachedFile = this.namespaceService.getCurrentCachedFile();
+    return `${cachedFile?.namespace}${cachedFile?.fileName}` === `urn:bamm:${namespace}#${namespaceFile}`;
   }
 
   public onLoadAspectModel(namespace: NamespaceModel, namespaceFile: string) {

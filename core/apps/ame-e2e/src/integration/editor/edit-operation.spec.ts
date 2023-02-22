@@ -22,7 +22,6 @@ import {
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
-import {Aspect} from '@ame/meta-model';
 
 describe('Test edit operation', () => {
   it('can add input and output properties', () => {
@@ -37,7 +36,7 @@ describe('Test edit operation', () => {
       .then(() => cy.clickAddInputShapeIcon('operation1'))
       .then(() => cy.clickAddOutputShapeIcon('operation1'))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('operation1');
           expect(aspect.operations[0].input).to.have.length(3);
@@ -68,7 +67,7 @@ describe('Test edit operation', () => {
       .then(() => cy.get(FIELD_name).clear({force: true}).type('newOperation', {force: true}))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(3);
@@ -100,7 +99,7 @@ describe('Test edit operation', () => {
       .then(() => cy.clickShape('property4'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(1);
@@ -128,7 +127,7 @@ describe('Test edit operation', () => {
       .then(() => cy.clickShape('property5'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(1);
@@ -181,7 +180,7 @@ describe('Test edit operation', () => {
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(3);
@@ -213,7 +212,7 @@ describe('Test edit operation', () => {
       .then(() => cy.get('[data-cy=input]').eq(1).click({force: true}))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(1);
@@ -251,7 +250,7 @@ describe('Test edit operation', () => {
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(1);
@@ -299,7 +298,7 @@ describe('Test edit operation', () => {
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(2);
@@ -337,7 +336,7 @@ describe('Test edit operation', () => {
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(1);
@@ -376,7 +375,7 @@ describe('Test edit operation', () => {
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(2);
@@ -412,7 +411,7 @@ describe('Test edit operation', () => {
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(2);
@@ -444,7 +443,7 @@ describe('Test edit operation', () => {
       .then(() => cy.get('[data-cy=input]').eq(0).click({force: true}))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
-        cy.getAspect().then((aspect: Aspect) => {
+        cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(0);

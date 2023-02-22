@@ -19,6 +19,7 @@ import {
   BaseMetaModelElement,
   DefaultAbstractEntity,
   DefaultAbstractProperty,
+  DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
@@ -29,7 +30,7 @@ import {
   DefaultUnit,
 } from '@ame/meta-model';
 import {ElementModel, LoadingScreenOptions, LoadingScreenService, NamespaceModel, NotificationsService, SidebarService} from '@ame/shared';
-import {catchError, finalize, first, Subscription, throwError} from 'rxjs';
+import {catchError, finalize, first, Subscription, switchMap, tap, throwError} from 'rxjs';
 import {RdfService} from '@ame/rdf/services';
 
 @Component({
@@ -163,19 +164,20 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
   private loadNamespaceFile(namespaceFileName: string) {
     const subscription = this.modelApiService
       .loadAspectModelByUrn(namespaceFileName)
-      .pipe(first())
-      .subscribe((aspectModel: string) => {
-        const loadingScreenOptions: LoadingScreenOptions = {
-          title: 'Loading Aspect Model',
-          hasCloseButton: true,
-          closeButtonAction: () => {
-            subscription.unsubscribe();
-          },
-        };
-        this.loadingScreenService.open(loadingScreenOptions);
-        this.editorService
-          .loadNewAspectModel(aspectModel)
-          .pipe(
+      .pipe(
+        first(),
+        tap(() => {
+          const loadingScreenOptions: LoadingScreenOptions = {
+            title: 'Loading Aspect Model',
+            hasCloseButton: true,
+            closeButtonAction: () => {
+              subscription.unsubscribe();
+            },
+          };
+          this.loadingScreenService.open(loadingScreenOptions);
+        }),
+        switchMap(aspectModel =>
+          this.editorService.loadNewAspectModel(aspectModel, namespaceFileName).pipe(
             first(),
             catchError(error => {
               console.groupCollapsed('sidebar.component -> loadNamespaceFile', error);
@@ -190,8 +192,9 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
             }),
             finalize(() => this.loadingScreenService.close())
           )
-          .subscribe();
-      });
+        )
+      )
+      .subscribe();
   }
 
   public close() {
@@ -241,7 +244,9 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
   }
 
   private getType(modelElement: BaseMetaModelElement) {
-    if (modelElement instanceof DefaultProperty) {
+    if (modelElement instanceof DefaultAspect) {
+      return 'aspect';
+    } else if (modelElement instanceof DefaultProperty) {
       return 'property';
     } else if (modelElement instanceof DefaultOperation) {
       return 'operation';
