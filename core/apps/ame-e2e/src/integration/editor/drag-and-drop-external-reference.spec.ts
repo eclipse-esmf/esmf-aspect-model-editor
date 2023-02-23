@@ -24,7 +24,6 @@ import {
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 import {MxGraphAttributeService} from '@ame/mx-graph';
-import {Aspect, Entity, Trait} from '@ame/meta-model';
 
 describe('Test drag and drop', () => {
   function connectElements(parent: string, child: string, expected: boolean) {
@@ -51,8 +50,8 @@ describe('Test drag and drop', () => {
     expect(aspect.properties).to.be.length(1);
     expect(aspect.properties[0].property.name).to.equal('property1');
     expect(aspect.properties[0].property.characteristic.name).to.equal('Trait1');
-    expect((<Trait>aspect.properties[0].property.characteristic).baseCharacteristic.name).to.equal('Characteristic1');
-    expect((<Trait>aspect.properties[0].property.characteristic).constraints[0].name).to.equal('ExternalConstraint');
+    expect(aspect.properties[0].property.characteristic.baseCharacteristic.name).to.equal('Characteristic1');
+    expect(aspect.properties[0].property.characteristic.constraints[0].name).to.equal('ExternalConstraint');
   }
 
   function checkAspectAndChildrenEntity(aspect) {

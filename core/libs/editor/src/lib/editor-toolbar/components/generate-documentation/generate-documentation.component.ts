@@ -11,8 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LanguageSettingsService} from '@ame/settings-dialog';
 import {Component} from '@angular/core';
+import {FormControl} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
+import * as locale from 'locale-codes';
 
 @Component({
   selector: 'ame-generate-documentation',
@@ -20,14 +23,20 @@ import {MatDialogRef} from '@angular/material/dialog';
   styleUrls: ['./generate-documentation.component.scss'],
 })
 export class GenerateDocumentationComponent {
-  constructor(private dialogRef: MatDialogRef<GenerateDocumentationComponent>) {}
+  public languages: locale.ILocale[] = [];
+  public languageControl: FormControl;
+
+  constructor(private dialogRef: MatDialogRef<GenerateDocumentationComponent>, private languageService: LanguageSettingsService) {
+    this.languages = this.languageService.getLanguageCodes().map(tag => locale.getByTag(tag));
+    this.languageControl = new FormControl(this.languages[0].tag);
+  }
 
   openDocumentation() {
-    this.dialogRef.close('open');
+    this.dialogRef.close({language: this.languageControl.value, action: 'open'});
   }
 
   downloadDocumentation() {
-    this.dialogRef.close('download');
+    this.dialogRef.close({language: this.languageControl.value, action: 'download'});
   }
 
   close() {

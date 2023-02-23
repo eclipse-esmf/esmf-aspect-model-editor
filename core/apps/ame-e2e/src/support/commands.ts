@@ -17,6 +17,7 @@ import {MxGraphAttributeService} from '@ame/mx-graph';
 import {ModelService} from '@ame/rdf/services';
 import {mxgraphFactory} from 'mxgraph-factory';
 import {
+  FIELD_see,
   SELECTOR_dialogDefaultAspectButton,
   SELECTOR_dialogStartButton,
   SELECTOR_editorSaveButton,
@@ -178,6 +179,16 @@ declare global {
        * Open AME
        */
       visitDefault(): Chainable;
+
+      /**
+       * Adds new elements to see field
+       */
+      addSeeElements(...element: string[]): Chainable;
+
+      /**
+       * Removes elements from see field. If none passed, will remove all elements
+       */
+      removeSeeElements(...elements: string[]): Chainable;
     }
   }
 }
@@ -403,4 +414,21 @@ Cypress.Commands.add('startModelling', () => {
     .then(() => cy.get(SELECTOR_dialogDefaultAspectButton).click({force: true}).wait(200))
     .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(200))
     .then(() => cy.get('ame-loading-screen', {timeout: 15000}).should('not.exist'));
+});
+
+Cypress.Commands.add('addSeeElements', (...elements: string[]) => {
+  for (const element of elements) {
+    cy.get(FIELD_see).clear({force: true}).type(element, {force: true}).get(`[data-cy="option__${element}"]`).click({force: true});
+  }
+});
+
+Cypress.Commands.add('removeSeeElements', (...elements: string[]) => {
+  if (elements.length === 0) {
+    cy.get('[data-cy="see-remove-chip"]').click({force: true, multiple: true});
+    return;
+  }
+
+  for (const element of elements) {
+    cy.get(FIELD_see).clear({force: true}).get(`[data-cy="chip__${element}"] [data-cy="see-remove-chip"]`).click({force: true});
+  }
 });

@@ -13,16 +13,57 @@
 
 <mat-form-field
   appearance="fill"
-  [floatLabel]="getControl('see')?.disabled ? 'always' : 'auto'"
+  [floatLabel]="searchControl?.disabled ? 'always' : 'auto'"
   [matTooltip]="isInherited ? 'This was extended from ' + elementExtends.extendedElement.name : ''"
   [matTooltipPosition]="'left'"
 >
   <mat-label for="see">See</mat-label>
-  <input matInput [formControl]="getControl('see')" name="see" data-cy="see" />
+  <mat-chip-list #chipList>
+    <mat-chip
+      *ngFor="let element of elements"
+      [matTooltip]="element.urn"
+      [attr.data-cy]="'chip__' + (element.name || element.urn)"
+      (removed)="removeElement(element)"
+      matTooltipClass="mat-tooltip--long"
+    >
+      <span class="chip-content">{{ element.name || element.urn }}</span>
+      <button data-cy="see-remove-chip" matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+  </mat-chip-list>
+
+  <input
+    [formControl]="searchControl"
+    [matAutocomplete]="auto"
+    [matChipInputFor]="chipList"
+    #see
+    matInput
+    placeholder="Type to search or write an URN or URL"
+    name="see"
+    data-cy="see"
+  />
   <mat-hint>bamm:see</mat-hint>
-  <mat-error *ngIf="getControl('see')?.errors?.uri">
-    Invalid URI{{ getControl('see')?.errors.uri.invalidUris.length > 1 ? 's' : '' }} '{{ getControl('see')?.errors.uri.invalidUris[0] }}'{{
-      getControl('see')?.errors.uri.invalidUris.length > 1 ? ', ...' : ''
-    }}
-  </mat-error>
+
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option
+      *ngIf="!(shapes$ | async)?.length && see.value"
+      [value]="see.value"
+      [attr.data-cy]="'option__' + see.value"
+      (click)="addElementToList()"
+    >
+      <span>{{ see.value }}</span>
+    </mat-option>
+    <mat-option
+      *ngFor="let shape of shapes$ | async"
+      [value]="shape.aspectModelUrn"
+      [attr.data-cy]="'option__' + shape.name"
+      (click)="addElementToList(shape.name)"
+    >
+      <span class="shape-name">{{ shape.name }}</span>
+      <span class="shape-urn">{{ shape.aspectModelUrn }}</span>
+    </mat-option>
+  </mat-autocomplete>
+
+  <mat-error *ngIf="searchControl.hasError('uri')"> Invalid URI '{{ searchControl?.errors.uri.invalidUris[0] }}' </mat-error>
 </mat-form-field>

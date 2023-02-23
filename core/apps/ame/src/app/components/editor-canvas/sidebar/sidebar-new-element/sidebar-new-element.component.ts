@@ -27,6 +27,7 @@ export class SidebarNewElementComponent implements OnInit {
 
   public ngOnInit() {
     this.elements = [
+      new ElementModel(null, 'Aspect', 'aspect', 'The root element of each Aspect Model'),
       new ElementModel(null, 'AbstractProperty', 'abstractProperty', 'Abstract named value'),
       new ElementModel(null, 'Property', 'property', 'Named Value'),
       new ElementModel(null, 'Characteristic', 'characteristic', 'The meaning of a Property in the context of the Aspect'),

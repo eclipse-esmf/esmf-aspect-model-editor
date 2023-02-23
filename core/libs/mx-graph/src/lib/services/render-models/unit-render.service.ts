@@ -21,6 +21,7 @@ import {MxGraphSetupVisitor} from '../../visitors';
 import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
+import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
   providedIn: 'root',
@@ -29,10 +30,11 @@ export class UnitRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
+    rdfService: RdfService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private namespacesCacheService: NamespacesCacheService
   ) {
-    super(mxGraphService, languageSettingsService);
+    super(mxGraphService, languageSettingsService, rdfService);
   }
 
   create(parentCell: mxgraph.mxCell, unit: DefaultUnit) {

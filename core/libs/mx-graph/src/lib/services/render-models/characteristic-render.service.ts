@@ -36,6 +36,7 @@ import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 import {UnitRenderService} from './unit-render.service';
 import {NamespacesCacheService} from '@ame/cache';
+import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
   providedIn: 'root',
@@ -46,12 +47,13 @@ export class CharacteristicRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
+    rdfService: RdfService,
     private shapeConnectorService: ShapeConnectorService,
     private unitRendererService: UnitRenderService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private namespacesCacheService: NamespacesCacheService
   ) {
-    super(mxGraphService, languageSettingsService);
+    super(mxGraphService, languageSettingsService, rdfService);
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {

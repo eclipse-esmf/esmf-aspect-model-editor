@@ -19,6 +19,7 @@ import {MxGraphHelper} from '../../helpers';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 import {BaseEntityRendererService} from './base-entity-renderer.service';
+import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
   providedIn: 'root',
@@ -27,9 +28,10 @@ export class AbstractEntityRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
+    rdfService: RdfService,
     private baseEntityRenderer: BaseEntityRendererService
   ) {
-    super(mxGraphService, languageSettingsService);
+    super(mxGraphService, languageSettingsService, rdfService);
   }
 
   update({cell}) {

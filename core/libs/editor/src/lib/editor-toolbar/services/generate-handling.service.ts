@@ -12,21 +12,32 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ConfirmDialogService, EditorService, GenerateDocumentationComponent, GenerateOpenApiComponent, OpenApi} from '@ame/editor';
+import {
+  EditorService,
+  GenerateDocumentationComponent,
+  GenerateOpenApiComponent,
+  LanguageSelectorModalComponent,
+  OpenApi,
+} from '@ame/editor';
 import {MatDialog} from '@angular/material/dialog';
 import {finalize, first, switchMap} from 'rxjs/operators';
 import {LoadingScreenOptions, LoadingScreenService, LogService, NotificationsService} from '@ame/shared';
-import {ModelService, RdfService} from '@ame/rdf/services';
+import {ModelService} from '@ame/rdf/services';
 import {catchError, map, Observable, of, throwError} from 'rxjs';
 import {PreviewDialogComponent} from '../../preview-dialog';
 import {saveAs} from 'file-saver';
 import {ModelApiService} from '@ame/api';
+import {NamespacesCacheService} from '@ame/cache';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GenerateHandlingService {
   private readonly noRdfModelAvailable = 'No Rdf model available.';
+  private get currentCachedFile() {
+    return this.namespaceCacheService.getCurrentCachedFile();
+  }
 
   constructor(
     private logService: LogService,
@@ -34,10 +45,9 @@ export class GenerateHandlingService {
     private editorService: EditorService,
     private modelService: ModelService,
     private modelApiService: ModelApiService,
-    private rdfService: RdfService,
-    private confirmDialogService: ConfirmDialogService,
     private notificationsService: NotificationsService,
-    private loadingScreenService: LoadingScreenService
+    private loadingScreenService: LoadingScreenService,
+    private namespaceCacheService: NamespacesCacheService
   ) {}
 
   openGenerationOpenApiSpec(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
@@ -83,7 +93,9 @@ export class GenerateHandlingService {
             new Blob([this.formatStringToJson(data)], {
               type: 'application/json;charset=utf-8',
             }),
-            `${this.modelService.getLoadedAspectModel().aspect.name}-open-api.json`
+            !this.modelService.getLoadedAspectModel().aspect
+              ? this.currentCachedFile.fileName
+              : `${this.modelService.getLoadedAspectModel().aspect.name}-open-api.json`
           );
         }
       }),
@@ -104,13 +116,17 @@ export class GenerateHandlingService {
       .afterClosed()
       .pipe(
         first(),
-        map(result => {
-          if (result === 'download') {
-            return this.downloadDocumentation(loadingScreenOptions).subscribe();
+        map((result: {language: string; action: string}) => {
+          if (result.action === 'download') {
+            return this.downloadDocumentation(result.language, loadingScreenOptions).subscribe({
+              error: error => this.notificationsService.error({title: error}),
+            });
           }
 
-          if (result === 'open') {
-            return this.generateDocumentation(loadingScreenOptions).subscribe();
+          if (result.action === 'open') {
+            return this.generateDocumentation(result.language, loadingScreenOptions).subscribe({
+              error: error => this.notificationsService.error({title: error}),
+            });
           }
 
           return of({});
@@ -118,32 +134,45 @@ export class GenerateHandlingService {
       );
   }
 
-  downloadDocumentation(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
+  downloadDocumentation(language: string, loadingScreenOptions: LoadingScreenOptions): Observable<any> {
     this.loadingScreenService.open(loadingScreenOptions);
     return this.modelService.synchronizeModelToRdf().pipe(
       first(),
       switchMap(() =>
-        this.modelApiService.downloadDocumentation(this.editorService.getSerializedModel()).pipe(
+        this.modelApiService.downloadDocumentation(this.editorService.getSerializedModel(), language).pipe(
           first(),
           map(data =>
             saveAs(
               new Blob([data], {
                 type: 'text/html',
               }),
-              `${this.modelService.getLoadedAspectModel().aspect.name}-documentation.html`
+              !this.modelService.getLoadedAspectModel().aspect
+                ? this.currentCachedFile.fileName
+                : `${this.modelService.getLoadedAspectModel().aspect.name}-documentation.html`
             )
-          )
+          ),
+          catchError(response => {
+            if (response instanceof HttpErrorResponse) {
+              if (response.status === 422) {
+                return throwError(() => JSON.parse(response.error).error.message.split(': ')[1]);
+              } else if (response.status === 400) {
+                // TODO This should be removed as soon as the SDK has fixed the graphviz error.
+                return throwError(() => JSON.parse(response.error).error.message);
+              }
+            }
+            return throwError(() => 'Server error');
+          })
         )
       ),
       finalize(() => this.loadingScreenService.close())
     );
   }
 
-  generateDocumentation(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
+  generateDocumentation(language: string, loadingScreenOptions: LoadingScreenOptions): Observable<any> {
     this.loadingScreenService.open(loadingScreenOptions);
     return this.modelService.synchronizeModelToRdf().pipe(
       first(),
-      switchMap(() => this.modelApiService.openDocumentation(this.editorService.getSerializedModel()).pipe(first())),
+      switchMap(() => this.modelApiService.openDocumentation(this.editorService.getSerializedModel(), language).pipe(first())),
       finalize(() => this.loadingScreenService.close())
     );
   }
@@ -171,7 +200,9 @@ export class GenerateHandlingService {
         this.openPreview(
           'Sample JSON Payload preview',
           this.formatStringToJson(data),
-          `${this.modelService.getLoadedAspectModel().aspect.name}-sample.json`
+          !this.modelService.getLoadedAspectModel().aspect
+            ? this.currentCachedFile.fileName
+            : `${this.modelService.getLoadedAspectModel().aspect.name}-sample.json`
         );
       }),
       finalize(() => this.loadingScreenService.close())
@@ -186,9 +217,12 @@ export class GenerateHandlingService {
       });
     }
 
-    this.loadingScreenService.open(loadingScreenOptions);
     return this.modelService.synchronizeModelToRdf().pipe(
-      switchMap(() => this.editorService.generateJsonSchema(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
+      switchMap(() => this.openLanguageSelector()),
+      switchMap((language: string) => {
+        this.loadingScreenService.open(loadingScreenOptions);
+        return this.editorService.generateJsonSchema(this.modelService.getLoadedAspectModel().rdfModel, language).pipe(first());
+      }),
       catchError(() => {
         this.notificationsService.error({
           title: 'Failed to generate JSON Schema',
@@ -198,13 +232,15 @@ export class GenerateHandlingService {
         return throwError(() => 'Failed to generate JSON Schema');
       }),
       map(data => {
+        this.loadingScreenService.close();
         this.openPreview(
           'JSON Schema preview',
           this.formatStringToJson(data),
-          `${this.modelService.getLoadedAspectModel().aspect.name}-schema.json`
+          !this.modelService.getLoadedAspectModel().aspect
+            ? this.currentCachedFile.fileName
+            : `${this.modelService.getLoadedAspectModel().aspect.name}-schema.json`
         );
-      }),
-      finalize(() => this.loadingScreenService.close())
+      })
     );
   }
 
@@ -220,6 +256,10 @@ export class GenerateHandlingService {
         fileName: fileName,
       },
     };
-    this.matDialog.open(PreviewDialogComponent, config);
+    return this.matDialog.open(PreviewDialogComponent, config).afterClosed();
+  }
+
+  private openLanguageSelector() {
+    return this.matDialog.open(LanguageSelectorModalComponent).afterClosed();
   }
 }

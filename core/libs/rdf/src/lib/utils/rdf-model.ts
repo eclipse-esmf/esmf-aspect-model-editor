@@ -29,6 +29,7 @@ export class RdfModel {
   private _isExternalRef = false;
   private _aspectModelFileName: string;
   private _hasErrors = false;
+  private _absoluteAspectModelFileName: string = null;
 
   private defaultAspectModelAlias = '';
 
@@ -45,11 +46,15 @@ export class RdfModel {
   }
 
   set aspectModelFileName(value: string) {
-    this._aspectModelFileName = value.split(':')[2];
+    this._aspectModelFileName = value.split(':')[2] || value;
+  }
+
+  get hasAspect(): boolean {
+    return this.store.getSubjects(this.bamm.RdfType(), this.bamm.Aspect(), null).length > 0;
   }
 
   get aspectUrn(): string {
-    return this.store.getSubjects(this.bamm.RdfType(), this.bamm.Aspect(), null)[0]?.value;
+    return this.store.getSubjects(this.bamm.RdfType(), this.bamm.Aspect(), null)[0]?.value || this.getAspectModelUrn();
   }
 
   set hasErrors(hasErrors: boolean) {
@@ -58,6 +63,27 @@ export class RdfModel {
 
   get hasErrors(): boolean {
     return this._hasErrors;
+  }
+
+  set absoluteAspectModelFileName(absoluteFileName: string) {
+    this._absoluteAspectModelFileName = absoluteFileName.replace('urn:bamm:', '');
+  }
+
+  get absoluteAspectModelFileName(): string {
+    if (this._absoluteAspectModelFileName) {
+      return this._absoluteAspectModelFileName;
+    }
+
+    const aspect = this.store.getSubjects(null, this.BAMM().Aspect(), null)?.[0];
+    if (aspect) {
+      return aspect.value.replace('urn:bamm:', '').replace('#', ':') + '.ttl';
+    }
+
+    if (this.aspectModelFileName) {
+      return `${this.getAspectModelUrn().replace('urn:bamm:', '').replace('#', ':')}${this.aspectModelFileName}`;
+    }
+
+    return null;
   }
 
   constructor(public store: Store, public dataTypeService: DataTypeService, private prefixes: Prefixes) {
@@ -135,16 +161,6 @@ export class RdfModel {
 
   getLocale(quad: Quad) {
     return quad ? locale.getByTag(quad.object['language']).tag : null;
-  }
-
-  getAbsoluteAspectModelFileName() {
-    const aspect = this.store.getSubjects(null, this.BAMM().Aspect(), null)?.[0];
-
-    if (aspect) {
-      return aspect.value.replace('urn:bamm:', '').replace('#', ':') + '.ttl';
-    }
-
-    return `${this.getAspectModelUrn().replace('urn:bamm:', '').replace('#', ':')}${this.aspectModelFileName}`;
   }
 
   public resolveRecursiveBlankNodes(uri: string, writer: Writer): Quad[] {

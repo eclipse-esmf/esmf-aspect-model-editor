@@ -112,11 +112,6 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
             return acc;
           }
 
-          if (!acc[namespaceName]) {
-            acc[namespaceName] = [file];
-            return acc;
-          }
-
           acc[namespaceName].push(file);
           return acc;
         }, {} as SelectableNamespaces);
@@ -161,7 +156,7 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
           }
 
           this.validating = false;
-          return of();
+          return of({});
         })
       )
       .subscribe(response => {
@@ -204,8 +199,8 @@ export class ExportWorkspaceComponent implements OnInit, OnDestroy {
 
   hasResponseErrors() {
     return (
-      !!this.validationStatus?.missingFiles.length ||
-      this.validationStatus?.validFiles.some(({validationReport: {validationErrors}}) => !!validationErrors?.length)
+      !!this.validationStatus?.missingElements.length ||
+      this.validationStatus?.validFiles.some(({validationReport: {violationErrors}}) => !!violationErrors?.length)
     );
   }
 }

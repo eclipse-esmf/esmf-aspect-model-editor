@@ -19,7 +19,6 @@ import {ModelService} from '@ame/rdf/services';
 import {mxgraph} from 'mxgraph-factory';
 import {AspectRenderService, MxGraphHelper} from '@ame/mx-graph';
 import {Title} from '@angular/platform-browser';
-import {NotificationsService} from '@ame/shared';
 import {EditorService} from '@ame/editor';
 import {ModelApiService} from '@ame/api';
 
@@ -30,7 +29,6 @@ export class AspectModelService extends BaseModelService {
     modelService: ModelService,
     editorService: EditorService,
     modelApiService: ModelApiService,
-    private notificationsService: NotificationsService,
     private aspectRenderer: AspectRenderService,
     private titleService: Title
   ) {
@@ -58,8 +56,8 @@ export class AspectModelService extends BaseModelService {
     this.titleService.setTitle(`${metaModelElement?.aspectModelUrn}.ttl - Aspect Model Editor`);
   }
 
-  delete() {
-    // Aspect model cannot be deleted
-    this.notificationsService.info({title: 'The Aspect can`t be deleted'});
+  delete(cell: mxgraph.mxCell) {
+    super.delete(cell);
+    this.aspectRenderer.delete(cell);
   }
 }

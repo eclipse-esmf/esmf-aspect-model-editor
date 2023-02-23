@@ -13,13 +13,7 @@
 
 /// <reference types="Cypress" />
 
-import {
-  FIELD_name,
-  SELECTOR_editorSaveButton,
-  SELECTOR_notificationsButton,
-  SELECTOR_notificationsDialogCloseButton,
-  SELECTOR_tbDeleteButton,
-} from '../../support/constants';
+import {FIELD_name, SELECTOR_editorSaveButton, SELECTOR_tbDeleteButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 import {Aspect} from '@ame/meta-model';
 
@@ -53,19 +47,6 @@ describe('Test editing Aspect', () => {
       );
   });
 
-  it('can not delete existing', () => {
-    cy.shapeExists('NewAspect')
-      .then(() => cy.clickShape('NewAspect'))
-      .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
-      .then(() => cy.getAspect().then((aspect: Aspect) => assert.isNotNull(aspect)))
-      .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('NewAspect')))
-      .then(() => cy.get(SELECTOR_notificationsButton).click({force: true}))
-      .then(() => {
-        assert(cy.contains('.message-title', 'The Aspect can`t be deleted'));
-        cy.get(SELECTOR_notificationsDialogCloseButton).click({force: true});
-      });
-  });
-
   it('can delete property1 and property3', () => {
     cy.shapeExists('NewAspect')
       .then(() => cy.clickShape('property1'))
@@ -76,5 +57,13 @@ describe('Test editing Aspect', () => {
         cy.getAspect().then((aspect: Aspect) => expect(aspect.properties).to.have.length(2));
         cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('bamm:properties (:property2 :property4)'));
       });
+  });
+
+  it('can delete existing aspect', () => {
+    cy.shapeExists('NewAspect')
+      .then(() => cy.clickShape('NewAspect'))
+      .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
+      .then(() => cy.getAspect().then((aspect: Aspect) => assert.isNull(aspect)))
+      .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).not.to.contain('NewAspect')));
   });
 });

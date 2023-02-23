@@ -15,19 +15,12 @@
 
 import {
   FIELD_descriptionen,
-  FIELD_extends,
-  FIELD_name,
   FIELD_preferredNameen,
-  FIELD_see,
   SELECTOR_dialogInputModel,
   SELECTOR_dialogStartButton,
   SELECTOR_ecAbstractProperty,
-  SELECTOR_editorCancelButton,
   SELECTOR_editorSaveButton,
-  SELECTOR_notificationsButton,
-  SELECTOR_tbDeleteButton,
   SELECTOR_tbLoadButton,
-  SNACK_BAR,
 } from '../../support/constants';
 
 describe('Create and Edit Abstract Property', () => {
@@ -41,7 +34,7 @@ describe('Create and Edit Abstract Property', () => {
       cy.dbClickShape('abstractProperty1')
         .then(() => cy.get(FIELD_preferredNameen).focus().type('Preferred Name'))
         .then(() => cy.get(FIELD_descriptionen).focus().type('Description'))
-        .then(() => cy.get(FIELD_see).focus().type('http://test.com'))
+        .then(() => cy.addSeeElements('http://test.com'))
         .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
         .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
@@ -49,14 +42,6 @@ describe('Create and Edit Abstract Property', () => {
         .then(() => cy.getCellLabel('[abstractProperty1]', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name @en'))
         .then(() => cy.getCellLabel('[abstractProperty1]', 'description').should('eq', 'Inherited\ndescription = Description @en'))
         .then(() => cy.getCellLabel('[abstractProperty1]', 'see').should('eq', 'Inherited\nsee = http://test.com'));
-    });
-
-    it('should edit property1', () => {
-      cy.dbClickShape('[abstractProperty1]')
-        .then(() => cy.get(FIELD_name).should('be.disabled'))
-        .then(() => cy.get(FIELD_descriptionen).should('be.disabled'))
-        .then(() => cy.get(FIELD_preferredNameen).should('be.disabled'))
-        .then(() => cy.get(FIELD_see).should('be.disabled'));
     });
   });
 
@@ -107,13 +92,13 @@ describe('Create and Edit Abstract Property', () => {
         .then(() => cy.dbClickShape('abstractProperty1'))
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 1', {force: true}))
         .then(() => cy.get(FIELD_descriptionen).type('Description 1', {force: true}))
-        .then(() => cy.get(FIELD_see).type('http://test1.com', {force: true}))
+        .then(() => cy.addSeeElements('http://test1.com'))
         .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}).wait(500))
 
         .then(() => cy.dbClickShape('abstractProperty2'))
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 2', {force: true}))
         .then(() => cy.get(FIELD_descriptionen).type('Description 2', {force: true}))
-        .then(() => cy.get(FIELD_see).type('http://test2.com', {force: true}))
+        .then(() => cy.addSeeElements('http://test2.com'))
         .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}).wait(500));
 
       cy.getCellLabel('[abstractProperty1]', 'extends').should('eq', 'extends = abstractProperty1');

@@ -22,6 +22,7 @@ import {MxGraphAttributeService} from '../mx-graph-attribute.service';
 import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
+import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
   providedIn: 'root',
@@ -30,11 +31,12 @@ export class EntityValueRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
+    rdfService: RdfService,
     private mxGraphShapeOverlay: MxGraphShapeOverlayService,
     private shapeConnectorService: ShapeConnectorService,
     private mxGraphAttributeService: MxGraphAttributeService
   ) {
-    super(mxGraphService, languageSettingsService);
+    super(mxGraphService, languageSettingsService, rdfService);
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {

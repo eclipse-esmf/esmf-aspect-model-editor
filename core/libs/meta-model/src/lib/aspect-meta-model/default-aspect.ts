@@ -31,6 +31,10 @@ export class DefaultAspect extends Base implements Aspect {
     return 'DefaultAspect';
   }
 
+  static createInstance() {
+    return new DefaultAspect(null, null, 'aspect');
+  }
+
   constructor(
     metaModelVersion: string,
     aspectModelUrn: string,

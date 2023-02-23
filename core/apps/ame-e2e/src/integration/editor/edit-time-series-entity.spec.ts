@@ -17,7 +17,6 @@ import {
   FIELD_extends,
   SELECTOR_dialogInputModel,
   SELECTOR_dialogStartButton,
-  SELECTOR_ecProperty,
   SELECTOR_editorSaveButton,
   SELECTOR_tbDeleteButton,
   SELECTOR_tbLoadButton,

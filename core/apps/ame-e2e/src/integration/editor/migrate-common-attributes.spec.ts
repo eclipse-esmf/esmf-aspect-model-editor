@@ -22,7 +22,6 @@ import {
   FIELD_elementCharacteristic,
   FIELD_name,
   FIELD_preferredNameen,
-  FIELD_see,
   FIELD_unit,
   FIELD_values,
   SELECTOR_ecCharacteristic,
@@ -40,7 +39,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_preferredNameen).clear({force: true}).type('testPreferredName', {force: true}))
       .then(() => cy.get(FIELD_descriptionen).clear({force: true}).type('testDescription', {force: true}))
-      .then(() => cy.get(FIELD_see).clear({force: true}).type('http://see.de', {force: true}))
+      .then(() => cy.addSeeElements('http://see.de'))
       .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
       .then(() =>
         cy.get(FIELD_dataType).clear({force: true}).type('string', {force: true}).get(FIELD_dataTypeOption).eq(1).click({force: true})

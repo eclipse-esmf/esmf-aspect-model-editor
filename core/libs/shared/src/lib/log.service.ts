@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import { Injectable } from "@angular/core";
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root',

@@ -11,5 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-module.exports = () => {
-};
+module.exports = () => {};

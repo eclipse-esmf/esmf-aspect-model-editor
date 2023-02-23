@@ -48,6 +48,8 @@ export class RdfService {
     if (!environment.production) {
       window['angular.rdfService'] = this;
     }
+
+    window['_rdfService'] = this;
   }
 
   serializeModel(rdfModel: RdfModel): string {
@@ -140,16 +142,18 @@ export class RdfService {
     );
   }
 
-  saveModel(rdfModel: RdfModel): Observable<any> {
+  saveModel(rdfModel: RdfModel): Observable<RdfModel> {
     const rdfContent = this.serializeModel(rdfModel);
-    return this.modelApiService.saveModel(rdfContent, rdfModel.getAbsoluteAspectModelFileName());
+    return this.modelApiService
+      .saveModel(rdfContent, rdfModel.absoluteAspectModelFileName)
+      .pipe(switchMap(() => this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.aspectModelFileName, rdfContent))));
   }
 
   loadModelLatest(): Observable<RdfModel> {
     return this.modelApiService.loadLatest().pipe(switchMap(rdf => this.loadModel(rdf)));
   }
 
-  loadModel(rdf: string): Observable<RdfModel> {
+  loadModel(rdf: string, namespaceFileName?: string): Observable<RdfModel> {
     const subject = new Subject<RdfModel>();
     const store: Store = new Store();
 
@@ -159,6 +163,12 @@ export class RdfService {
         store.addQuad(quad);
       } else if (prefixes) {
         this.currentRdfModel = new RdfModel(store, this.dataTypeService, prefixes);
+        this.currentRdfModel.absoluteAspectModelFileName =
+          this.currentRdfModel.absoluteAspectModelFileName ||
+          namespaceFileName ||
+          `${this.currentRdfModel.getAspectModelUrn().replace('#', ':')}NewModel.ttl`;
+
+        this.currentRdfModel.aspectModelFileName = this.currentRdfModel.absoluteAspectModelFileName;
         subject.next(this.currentRdfModel);
         subject.complete();
       }

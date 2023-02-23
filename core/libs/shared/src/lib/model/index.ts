@@ -11,12 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './app-config';
+export * from './app-config.interface';
 export * from './element.model';
 export * from './known-version';
 export * from './namespace.model';
 export * from './search-config';
 export * from './settings';
-export * from './validation-error';
 export * from './file-content.model';
 export * from './notification.model';

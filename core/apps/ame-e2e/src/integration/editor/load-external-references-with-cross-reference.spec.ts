@@ -13,7 +13,6 @@
 
 /// <reference types="Cypress" />
 
-import {Aspect, DefaultEntity} from '@ame/meta-model';
 import {SELECTOR_dialogStartButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
@@ -153,8 +152,8 @@ describe('Test load external reference with cross references', () => {
         expect(aspect.properties[0].property.characteristic.name).to.equal('ExternalCharacteristicWithCrossRef1');
         expect(aspect.properties[1].property.characteristic.name).to.equal('ExternalCharacteristicWithCrossRef2');
 
-        const entity1 = <DefaultEntity>aspect.properties[0].property.characteristic.dataType;
-        const entity2 = <DefaultEntity>aspect.properties[1].property.characteristic.dataType;
+        const entity1 = aspect.properties[0].property.characteristic.dataType;
+        const entity2 = aspect.properties[1].property.characteristic.dataType;
         expect(entity1.name).to.equal('ExternalEntityWithCrossRef1');
         expect(entity2.name).to.equal('ExternalEntityWithCrossRef2');
 
@@ -258,7 +257,7 @@ describe('Test load external reference with cross references', () => {
         expect(aspect.properties[0].property.name).to.equal('externalPropertyWithCrossRef');
         expect(aspect.properties[0].property.characteristic.name).to.equal('ExternalCharacteristicWithCrossRef');
 
-        const entity = <DefaultEntity>aspect.properties[0].property.characteristic.dataType;
+        const entity = aspect.properties[0].property.characteristic.dataType;
         expect(entity.name).to.equal('ExternalEntityWithCrossRef');
         expect(entity.properties).to.be.length(2);
       })

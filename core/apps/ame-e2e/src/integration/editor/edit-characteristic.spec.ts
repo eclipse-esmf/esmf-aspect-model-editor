@@ -23,7 +23,6 @@ import {
   FIELD_elementsModalButton,
   FIELD_name,
   FIELD_preferredNameen,
-  FIELD_see,
   FIELD_unit,
   FIELD_values,
   META_MODEL_dataType,
@@ -97,8 +96,8 @@ describe('Test editing Characteristic', () => {
   it('can edit see', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
-      .then(() => cy.get(FIELD_see).clear({force: true}).type('http://www.see1.de,http://www.see2.de,http://www.see3.de', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cy.addSeeElements('http://www.see1.de', 'http://www.see2.de', 'http://www.see3.de'))
+      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}).wait(250))
       .then(() =>
         cy
           .getCellLabel('Characteristic1', META_MODEL_see)
@@ -116,7 +115,7 @@ describe('Test editing Characteristic', () => {
       );
 
     cy.dbClickShape('Characteristic1')
-      .then(() => cy.get(FIELD_see).clear({force: true}).type('http://www.see1.de,http://www.see3.de', {force: true}))
+      .then(() => cy.removeSeeElements('http://www.see2.de'))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
         cy.getCellLabel('Characteristic1', META_MODEL_see).should('eq', `${META_MODEL_see} = http://www.see1.de,http://www.see3.de`)
@@ -134,12 +133,7 @@ describe('Test editing Characteristic', () => {
   it('can edit see http attributes to urns', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
-      .then(() =>
-        cy
-          .get(FIELD_see)
-          .clear({force: true})
-          .type('urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001', {force: true})
-      )
+      .then(() => cy.removeSeeElements().addSeeElements('urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001'))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
 
       .then(() =>
@@ -156,7 +150,7 @@ describe('Test editing Characteristic', () => {
       });
 
     cy.dbClickShape('Characteristic1')
-      .then(() => cy.get(FIELD_see).clear({force: true}).type('urn:irdi:eclass:0173-1#02-AAO677', {force: true}))
+      .then(() => cy.removeSeeElements().addSeeElements('urn:irdi:eclass:0173-1#02-AAO677'))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
 
       .then(() => cy.getCellLabel('Characteristic1', META_MODEL_see).should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677`))

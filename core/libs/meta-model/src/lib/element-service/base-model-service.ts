@@ -47,13 +47,13 @@ export abstract class BaseModelService {
     // Add common operations
 
     // update name
-    const aspect = Object.assign({}, this.modelService.getLoadedAspectModel().aspect);
+    const aspect = Object.assign({}, this.modelService.getLoadedAspectModel()?.aspect);
     const aspectModelUrn = this.modelService.getLoadedAspectModel().rdfModel.getAspectModelUrn();
     this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${metaModelElement.name}`, `${aspectModelUrn}${form.name}`);
     metaModelElement.name = form.name;
     metaModelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 
-    if (metaModelElement instanceof DefaultAspect && aspect.aspectModelUrn !== metaModelElement.aspectModelUrn) {
+    if (aspect && metaModelElement instanceof DefaultAspect && aspect.aspectModelUrn !== metaModelElement.aspectModelUrn) {
       const aspectModelFileName = aspect.aspectModelUrn.replace('urn:bamm:', '').replace('#', ':') + '.ttl';
 
       this.modelApiService

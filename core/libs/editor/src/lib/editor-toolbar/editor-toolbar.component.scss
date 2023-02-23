@@ -61,6 +61,10 @@ button:not([mat-menu-item]) {
     &:not(:last-child) {
       border-right: 1px solid #cfd0d1;
     }
+
+    &:not(:has(button:not(:disabled))) {
+      background-color: lightgrey;
+    }
   }
 }
 

@@ -338,22 +338,30 @@ export class MxGraphSetupService {
       menu.addItem('Edit', this.resolveAssetsIcon(AssetsPath.EditIcon), () => {
         this.bindingsService.fireAction('editElement');
       });
+
       if (selectedCells.length === 2) {
         menu.addItem('Connect', this.resolveAssetsIcon(AssetsPath.ConnectionOnIcon), () => {
           this.bindingsService.fireAction('connectElements');
         });
+      } else if (selectedCells.length === 1) {
+        menu.addItem('Connect with...', this.resolveAssetsIcon(AssetsPath.ConnectionOnIcon), () => {
+          this.bindingsService.fireAction('connect-with');
+        });
       }
     }
+
     menu.addItem('Format', this.resolveAssetsIcon(AssetsPath.FormatIcon), () => {
       this.bindingsService.fireAction('format');
     });
-    menu.addItem('Copy to Clipboard', this.resolveAssetsIcon(AssetsPath.Copy), () => {
-      this.bindingsService.fireAction('copy-to-clipboard');
-    });
+
     if (cell) {
       menu.addSeparator();
       menu.addItem('Delete', this.resolveAssetsIcon(AssetsPath.DeleteIcon), () => {
         this.bindingsService.fireAction('deleteElement');
+      });
+    } else {
+      menu.addItem('Copy to Clipboard', this.resolveAssetsIcon(AssetsPath.Copy), () => {
+        this.bindingsService.fireAction('copy-to-clipboard');
       });
     }
   }

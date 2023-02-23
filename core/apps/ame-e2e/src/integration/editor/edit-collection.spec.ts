@@ -24,7 +24,6 @@ import {
   SELECTOR_tbDeleteButton,
   SELECTOR_clearElementCharacteristicButton,
 } from '../../support/constants';
-import {Aspect, DefaultCollection, DefaultTrait} from '@ame/meta-model';
 
 describe('Test editing different Collections', () => {
   context('Type Collection', () => {

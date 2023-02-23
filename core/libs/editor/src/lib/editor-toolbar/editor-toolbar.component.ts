@@ -12,14 +12,24 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {finalize} from 'rxjs/operators';
+import {finalize, first} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {
+  MxGraphAttributeService,
+  MxGraphHelper,
+  MxGraphService,
+  MxGraphShapeOverlayService,
+  MxGraphShapeSelectorService,
+} from '@ame/mx-graph';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
 import {BindingsService, LoadingScreenOptions, NotificationsService, relations} from '@ame/shared';
 import {EditorService} from '../editor.service';
 import {ShapeConnectorService} from '@ame/connection';
 import {FileHandlingService, GenerateHandlingService, InformationHandlingService} from './services';
+import {MatDialog} from '@angular/material/dialog';
+import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
+import {mxgraph} from 'mxgraph-factory';
+import {ModelService} from '@ame/rdf/services';
 
 @Component({
   selector: 'ame-editor-toolbar',
@@ -44,17 +54,20 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   constructor(
+    public notificationsService: NotificationsService,
     private informationService: InformationHandlingService,
     private fileHandlingService: FileHandlingService,
     private generateHandlingService: GenerateHandlingService,
-    public notificationsService: NotificationsService,
     private editorService: EditorService,
     private mxGraphService: MxGraphService,
+    private modelService: ModelService,
     private shapeConnectorService: ShapeConnectorService,
     private configurationService: ConfigurationService,
     private bindingsService: BindingsService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService
+    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
+    private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
+    private matDialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +81,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.bindingsService.registerAction('connectElements', () => this.onConnect());
     this.bindingsService.registerAction('format', () => this.onFormat());
     this.bindingsService.registerAction('copy-to-clipboard', () => this.fileHandlingService.copyToClipboard());
+    this.bindingsService.registerAction('connect-with', () => this.openConnectWithDialog());
   }
 
   ngOnDestroy() {
@@ -157,11 +171,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
 
     this.loadingScreen$ = this.fileHandlingService
       .validateFile(this.loadingScreenOptions, callback)
-      .pipe(
-        finalize(() => {
-          this.loadingScreen$.unsubscribe();
-        })
-      )
+      .pipe(finalize(() => this.loadingScreen$.unsubscribe()))
       .subscribe();
   }
 
@@ -235,6 +245,26 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.mxGraphService.formatShapes(true);
   }
 
+  openConnectWithDialog() {
+    const [selectedCell] = this.mxGraphShapeSelectorService.getSelectedCells();
+    if (!selectedCell) {
+      this.notificationsService.error({
+        title: 'No element selected',
+        message: 'An element needs to be selected to be connected',
+      });
+    }
+
+    this.matDialog
+      .open(ConnectWithDialogComponent, {data: selectedCell})
+      .afterClosed()
+      .pipe(first())
+      .subscribe(result => {
+        if (result) {
+          this.connectElements([selectedCell, result.cell]);
+        }
+      });
+  }
+
   onFormat() {
     this.editorService.formatAspect();
   }
@@ -247,6 +277,10 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
       return;
     }
 
+    this.connectElements(selectedCells);
+  }
+
+  connectElements(selectedCells: mxgraph.mxCell[]) {
     const firstElement = selectedCells[0].style.split(';')[0];
     const secondElement = selectedCells[1].style.split(';')[0];
     const modelElements = selectedCells.map(e => MxGraphHelper.getModelElement(e));
@@ -285,5 +319,9 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   getTitleEditorMap() {
     return this.settings.showEditorMap ? 'Hide map' : 'Show map';
+  }
+
+  hasAspectElement(): boolean {
+    return !!this.modelService.getLoadedAspectModel().aspect;
   }
 }

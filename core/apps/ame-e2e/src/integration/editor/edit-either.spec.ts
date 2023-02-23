@@ -20,7 +20,6 @@ import {
   FIELD_name,
   FIELD_preferredNameen,
   FIELD_right,
-  FIELD_see,
   META_MODEL_description,
   META_MODEL_preferredName,
   META_MODEL_see,
@@ -86,7 +85,7 @@ describe('Test editing Either', () => {
       .then(() => {
         cy.get(FIELD_preferredNameen).clear({force: true}).type('new-preferredName', {force: true});
         cy.get(FIELD_descriptionen).clear({force: true}).type('New description for the new created characteristic', {force: true});
-        cy.get(FIELD_see).clear({force: true}).type('http://www.see1.de,http://www.see2.de,http://www.see3.de', {force: true});
+        cy.addSeeElements('http://www.see1.de', 'http://www.see2.de', 'http://www.see3.de');
       })
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => {

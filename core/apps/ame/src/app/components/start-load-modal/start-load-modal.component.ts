@@ -56,7 +56,7 @@ export class StartLoadModalComponent {
   private loadNewAspectModel(aspectModel: Observable<string>, callback: Function, isDefault?: boolean) {
     aspectModel
       .pipe(
-        switchMap(model => this.editorService.loadNewAspectModel(model, isDefault)),
+        switchMap(model => this.editorService.loadNewAspectModel(model, '', isDefault)),
         first()
       )
       .subscribe(() => {

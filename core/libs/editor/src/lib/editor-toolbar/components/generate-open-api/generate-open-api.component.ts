@@ -14,9 +14,12 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormControl, FormGroup} from '@angular/forms';
+import * as locale from 'locale-codes';
+import {LanguageSettingsService} from '@ame/settings-dialog';
 import {EditorDialogValidators} from '../../../editor-dialog';
 
 export interface OpenApi {
+  language: string;
   output: string;
   baseUrl: string;
   includeQueryApi: boolean;
@@ -30,16 +33,19 @@ export interface OpenApi {
   styleUrls: ['./generate-open-api.component.scss'],
 })
 export class GenerateOpenApiComponent implements OnInit {
-  form: FormGroup;
+  public form: FormGroup;
+  public languages: locale.ILocale[];
 
-  constructor(private dialogRef: MatDialogRef<GenerateOpenApiComponent>) {}
+  constructor(private dialogRef: MatDialogRef<GenerateOpenApiComponent>, private languageService: LanguageSettingsService) {}
 
   ngOnInit() {
+    this.languages = this.languageService.getLanguageCodes().map(tag => locale.getByTag(tag));
     this.form = new FormGroup({
       baseUrl: new FormControl('https://example.com', {
         validators: [EditorDialogValidators.baseUrl],
         updateOn: 'blur',
       }),
+      language: new FormControl(this.languages[0].tag),
       includeQueryApi: new FormControl(false),
       useSemanticVersion: new FormControl(false),
       output: new FormControl('json'),
@@ -49,11 +55,12 @@ export class GenerateOpenApiComponent implements OnInit {
 
   generateOpenApiSpec() {
     this.dialogRef.close({
-      output: this.getControlValue('output') as string,
+      output: this.getControlValue('output'),
       baseUrl: this.getControlValue('baseUrl') as string,
       includeQueryApi: this.getControlValue('includeQueryApi') as boolean,
       useSemanticVersion: this.getControlValue('useSemanticVersion') as boolean,
       paging: this.getControlValue('paging') as string,
+      language: this.getControlValue('language') as string,
     });
   }
 

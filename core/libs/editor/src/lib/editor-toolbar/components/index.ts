@@ -20,3 +20,4 @@ export * from './zip-uploader/zip-uploader.service';
 export * from './workspace-summary/workspace-summary.component';
 export * from './help/document.component';
 export * from './theme-switcher/theme-switcher.component';
+export * from './language-sector-modal/language-selector-modal.component';
