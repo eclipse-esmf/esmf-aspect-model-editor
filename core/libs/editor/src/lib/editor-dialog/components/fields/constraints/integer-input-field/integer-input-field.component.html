@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -13,9 +13,8 @@
 
 <div fxLayout="column">
   <mat-form-field [floatLabel]="getControl('integer')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label>Integer</mat-label>
+    <mat-label>integer</mat-label>
     <input matInput name="integer" [formControl]="getControl('integer')" data-cy="integer" type="number" pattern="^[1-9]\d*$" />
-    <mat-hint>bamm-c:integer</mat-hint>
     <mat-error *ngIf="getControl('integer').errors?.required">Integer is required</mat-error>
     <mat-error *ngIf="getControl('integer').errors?.pattern">Please provide a positive integer</mat-error>
   </mat-form-field>

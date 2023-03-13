@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -44,7 +44,7 @@ export class AbstractPropertyInstantiator {
   }
 
   private constructAbstractProperty(listElement: InstantiatorListElement): OverWrittenProperty<DefaultAbstractProperty> {
-    const bamm = this.metaModelElementInstantiator.bamm;
+    const samm = this.metaModelElementInstantiator.samm;
     const property = new DefaultAbstractProperty(null, null, null, null);
     const quads = this.rdfModel.findAnyProperty(listElement.quad) || [];
     property.setExternalReference(this.rdfModel.isExternalRef);
@@ -55,11 +55,11 @@ export class AbstractPropertyInstantiator {
     this.currentCachedFile.resolveElement(property, this.isIsolated);
 
     for (const quad of quads) {
-      if (bamm.isExampleValueProperty(quad.predicate.value)) {
+      if (samm.isExampleValueProperty(quad.predicate.value)) {
         property.exampleValue = quad.object.value;
       }
 
-      if (bamm.isExtendsProperty(quad.predicate.value)) {
+      if (samm.isExtendsProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getProperty({quad: quad.object}, extractedAbstractProperty => {
           property.extendedElement = extractedAbstractProperty?.property;
         });

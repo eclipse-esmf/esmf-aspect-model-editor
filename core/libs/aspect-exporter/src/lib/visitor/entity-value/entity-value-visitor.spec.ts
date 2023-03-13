@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,11 +15,11 @@ import {TestBed} from '@angular/core/testing';
 import {DataFactory, Quad, Store} from 'n3';
 import {describe, expect, it} from '@jest/globals';
 import {EntityValueVisitor} from '@ame/aspect-exporter';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {provideMockObject} from '../../../../../../jest-helpers';
 
-class MockBamm {
+class MockSamm {
   RdfType = jest.fn(() => DataFactory.namedNode('type'));
   getAspectModelUrn = jest.fn(key => key);
 }
@@ -27,15 +27,13 @@ class MockBamm {
 class MockRDFModel {
   rdfModel = {
     store: new Store(),
-    BAMM: jest.fn(() => new Bamm('')),
-    BAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+    SAMM: jest.fn(() => new Samm('')),
+    SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
     hasNamespace: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
   } as any;
   store = new Store();
-  BAMM = jest.fn((): Bamm => new MockBamm() as any as Bamm);
-  // BAMMC = jest.fn((): Bammc => new MockBamm() as any as Bammc);
-  // BAMMU = jest.fn((): Bammu => new MockBamm() as any as Bammu);
+  SAMM = jest.fn((): Samm => new MockSamm() as any as Samm);
 }
 
 describe('Entity value visitor', () => {

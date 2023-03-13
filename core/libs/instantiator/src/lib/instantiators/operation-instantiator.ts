@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -37,7 +37,7 @@ export class OperationInstantiator {
   }
 
   constructOperation(listElement: InstantiatorListElement): Operation {
-    const bamm = this.metaModelElementInstantiator.bamm;
+    const samm = this.metaModelElementInstantiator.samm;
     const operation = new DefaultOperation(null, null, null, new Array<OverWrittenProperty>(), null);
     const quads = this.resolveQuads(listElement, this.rdfModel);
 
@@ -49,9 +49,9 @@ export class OperationInstantiator {
     this.currentCachedFile.resolveElement(operation, this.isIsolated);
 
     quads.forEach(quad => {
-      if (bamm.isInputProperty(quad.predicate.value)) {
-        operation.input = this.metaModelElementInstantiator.getProperties(DataFactory.namedNode(quad.subject.value), bamm.InputProperty());
-      } else if (bamm.isOutputProperty(quad.predicate.value)) {
+      if (samm.isInputProperty(quad.predicate.value)) {
+        operation.input = this.metaModelElementInstantiator.getProperties(DataFactory.namedNode(quad.subject.value), samm.InputProperty());
+      } else if (samm.isOutputProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.loadOutputProperty(quad, false, (property: DefaultProperty) => {
           operation.output = {keys: {}, property: property};
         });

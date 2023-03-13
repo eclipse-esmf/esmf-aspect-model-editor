@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -12,7 +12,6 @@
   -->
 
 <mat-form-field [floatLabel]="getControl('defaultValue')?.disabled ? 'always' : 'auto'" appearance="fill">
-  <mat-label for="defaultValue">Default value</mat-label>
+  <mat-label for="defaultValue">defaultValue</mat-label>
   <input matInput name="defaultValue" [formControl]="getControl('defaultValue')" data-cy="defaultValue" />
-  <mat-hint>bamm-c:defaultValue</mat-hint>
 </mat-form-field>

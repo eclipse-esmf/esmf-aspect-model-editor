@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -16,7 +16,7 @@ import {Injectable} from '@angular/core';
 import {environment} from 'environments/environment';
 import {ModelApiService} from '@ame/api';
 import {DataTypeService, FileContentModel, LogService, SaveValidateErrorsCodes} from '@ame/shared';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 import {RdfModel} from '../utils';
 
 @Injectable({
@@ -56,7 +56,7 @@ export class RdfService {
     let rdfContent = '';
     let writer: Writer;
     const processedQuads = [];
-    const metaModelNames = rdfModel.BAMMC().getMetaModelNames(false);
+    const metaModelNames = rdfModel.SAMMC().getMetaModelNames(false);
 
     try {
       writer = new Writer({
@@ -86,24 +86,24 @@ export class RdfService {
               };
             })
           );
-        } else if (quad.object.value.startsWith(Bamm.XSD_URI)) {
+        } else if (quad.object.value.startsWith(Samm.XSD_URI)) {
           writer.addQuad(
-            DataFactory.quad(quad.subject, quad.predicate, DataFactory.namedNode(quad.object.value.replace(`${Bamm.XSD_URI}#`, 'xsd:')))
+            DataFactory.quad(quad.subject, quad.predicate, DataFactory.namedNode(quad.object.value.replace(`${Samm.XSD_URI}#`, 'xsd:')))
           );
-        } else if (quad.object.value === `${Bamm.RDF_URI}#langString`) {
+        } else if (quad.object.value === `${Samm.RDF_URI}#langString`) {
           // TODO: Need to change in the future
           writer.addQuad(
-            DataFactory.quad(quad.subject, quad.predicate, DataFactory.namedNode(quad.object.value.replace(`${Bamm.RDF_URI}#`, 'rdf:')))
+            DataFactory.quad(quad.subject, quad.predicate, DataFactory.namedNode(quad.object.value.replace(`${Samm.RDF_URI}#`, 'rdf:')))
           );
-        } else if (quad.object.value.startsWith(rdfModel.BAMM().getNamespace())) {
+        } else if (quad.object.value.startsWith(rdfModel.SAMM().getNamespace())) {
           writer.addQuad(
             DataFactory.quad(
               quad.subject,
               quad.predicate,
-              DataFactory.namedNode(quad.object.value.replace(`${rdfModel.BAMM().getNamespace()}`, `${rdfModel.BAMM().getAlias()}:`))
+              DataFactory.namedNode(quad.object.value.replace(`${rdfModel.SAMM().getNamespace()}`, `${rdfModel.SAMM().getAlias()}:`))
             )
           );
-        } else if (quad.object.value === rdfModel.BAMM().RdfNil().value) {
+        } else if (quad.object.value === rdfModel.SAMM().RdfNil().value) {
           writer.addQuad(this.namedNode(quad.subject.value), this.namedNode(quad.predicate.value), writer.list([]));
         } else {
           writer.addQuad(quad);

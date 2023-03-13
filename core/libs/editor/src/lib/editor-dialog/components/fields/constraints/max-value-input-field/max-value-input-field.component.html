@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -13,7 +13,7 @@
 
 <div fxLayout="column">
   <mat-form-field [floatLabel]="getControl('maxValue')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="maxValue">Max Value</mat-label>
+    <mat-label for="maxValue">maxValue</mat-label>
     <input
       matInput
       name="maxValue"
@@ -21,6 +21,5 @@
       [placeholder]="getPlaceholder(getValueWithoutUrnDefinition(rangeConstraintDataType?.getUrn()))"
       data-cy="maxValue"
     />
-    <mat-hint>bamm-c:maxValue</mat-hint>
   </mat-form-field>
 </div>

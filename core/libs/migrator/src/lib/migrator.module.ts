@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -19,12 +19,12 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {RouterModule, Routes} from '@angular/router';
 import {
-  StartMigratingComponent,
-  MigratorComponent,
   LoadingMigratingComponent,
-  VersionMigrationComponent,
-  MigrationSuccessComponent,
   MigrationStatusComponent,
+  MigrationSuccessComponent,
+  MigratorComponent,
+  StartMigratingComponent,
+  VersionMigrationComponent,
 } from './components';
 
 const routes: Routes = [

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -27,11 +27,11 @@ export class LanguageConstraintInstantiator extends ConstraintInstantiator {
       return defaultLanguageConstraint;
     }
 
-    const bammc = this.metaModelElementInstantiator.bammc;
+    const sammC = this.metaModelElementInstantiator.sammC;
     defaultLanguageConstraint = new DefaultLanguageConstraint(null, null, null, null);
 
     quads.forEach(quad => {
-      if (bammc.isLanguageCodeProperty(quad.predicate.value)) {
+      if (sammC.isLanguageCodeProperty(quad.predicate.value)) {
         defaultLanguageConstraint.languageCode = quad.object.value;
       }
     });
@@ -40,6 +40,6 @@ export class LanguageConstraintInstantiator extends ConstraintInstantiator {
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.LanguageConstraint().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.LanguageConstraint().equals(nameNode);
   }
 }

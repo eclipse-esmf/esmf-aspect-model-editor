@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Bamm} from './bamm';
+import {Samm} from './samm';
 
 export enum PredefinedProperties {
   timestamp = 'timestamp',
@@ -29,7 +29,7 @@ export enum PredefinedEntities {
   FileResource = 'FileResource',
 }
 
-export class Bamme {
+export class SammE {
   private alias = 'bamm-e';
 
   get TimeSeriesEntity() {
@@ -72,7 +72,7 @@ export class Bamme {
     return this.getNamespace() + PredefinedProperties.mimeType;
   }
 
-  constructor(private bamm: Bamm) {}
+  constructor(private samm: Samm) {}
 
   getAlias(): string {
     return this.alias;
@@ -83,7 +83,7 @@ export class Bamme {
   }
 
   getUri(): string {
-    return `${this.bamm.getBaseUri()}entity:${this.bamm.version}`;
+    return `${this.samm.getBaseUri()}entity:${this.samm.version}`;
   }
 
   getNamespace(): string {

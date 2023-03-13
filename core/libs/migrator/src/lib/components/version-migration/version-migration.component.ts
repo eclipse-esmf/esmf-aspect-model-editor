@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -20,11 +20,11 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {APP_CONFIG, AppConfig} from '@ame/shared';
 import {Router} from '@angular/router';
 
-export const defaultNamespaces = (bammVersion: string) => [
-  `urn:bamm:io.openmanufacturing:meta-model:${bammVersion}#`,
-  `urn:bamm:io.openmanufacturing:characteristic:${bammVersion}#`,
-  `urn:bamm:io.openmanufacturing:entity:${bammVersion}#`,
-  `urn:bamm:io.openmanufacturing:unit:${bammVersion}#`,
+export const defaultNamespaces = (sammVersion: string) => [
+  `urn:bamm:io.openmanufacturing:meta-model:${sammVersion}#`,
+  `urn:bamm:io.openmanufacturing:characteristic:${sammVersion}#`,
+  `urn:bamm:io.openmanufacturing:entity:${sammVersion}#`,
+  `urn:bamm:io.openmanufacturing:unit:${sammVersion}#`,
 
   `http://www.w3.org/1999/02/22-rdf-syntax-ns#`,
   `http://www.w3.org/2000/01/rdf-schema#`,
@@ -38,7 +38,7 @@ export const defaultNamespaces = (bammVersion: string) => [
 })
 export class VersionMigrationComponent implements OnInit {
   public namespaces: {[namespace: string]: {name: string; migrated: boolean}[]};
-  private defaultNamespaces = defaultNamespaces(this.config.currentBammVersion);
+  private defaultNamespaces = defaultNamespaces(this.config.currentSammVersion);
 
   constructor(
     private rdfService: RdfService,

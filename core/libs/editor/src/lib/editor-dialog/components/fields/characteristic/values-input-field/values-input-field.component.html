@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -13,7 +13,7 @@
 
 <div fxLayout="column" fxLayoutAlign="space-between center">
   <mat-form-field *ngIf="!hasComplexValues" [floatLabel]="getControl('values')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="values">Values</mat-label>
+    <mat-label for="values">values</mat-label>
     <mat-chip-list #chipList [formControl]="getControl('chipList')">
       <mat-chip
         *ngFor="let value of enumValues"
@@ -39,7 +39,6 @@
         data-cy="values"
       />
     </mat-chip-list>
-    <mat-hint>bamm-c:values</mat-hint>
     <mat-error *ngIf="getControl('values')?.errors?.required">This field is required</mat-error>
   </mat-form-field>
 

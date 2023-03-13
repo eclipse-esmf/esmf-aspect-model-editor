@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -21,11 +21,10 @@ import {MatDialogRef} from '@angular/material/dialog';
   styleUrls: ['./document.component.scss'],
 })
 export class DocumentComponent {
-  AMEDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-documentation/ame-guide/4.2.0/introduction.html';
-  BAMMDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/2.0.0/index.html';
+  AMEDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-documentation/ame-guide/4.2.1/introduction.html';
+  SAMMDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/2.0.0/index.html';
 
-  constructor(private dialogRef: MatDialogRef<DocumentComponent>, @Inject(APP_CONFIG) public config: AppConfig) {
-  }
+  constructor(private dialogRef: MatDialogRef<DocumentComponent>, @Inject(APP_CONFIG) public config: AppConfig) {}
 
   onClose(): void {
     this.dialogRef.close();

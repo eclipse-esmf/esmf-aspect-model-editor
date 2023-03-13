@@ -7,7 +7,7 @@ There are three different ways to migrate an Aspect Model:
 
 * Automatic migration when starting the application.
 * Initiate migration from the sidebar.
-* Loading a (syntactically valid) Aspect Model based on an older BAMM version
+* Loading a (syntactically valid) Aspect Model based on an older SAMM version
 
 [[automatic-migration]]
 == Automatic migration when starting the application
@@ -38,10 +38,10 @@ A migration button is provided in the sidebar below ((/within?)) the workspace t
 image::migration-status.png[width=100%]
 
 [[loading-old-model]]
-== Loading a (syntactically valid) Aspect Model based on an olders BAMM version
+== Loading a (syntactically valid) Aspect Model based on an older SAMM version
 
 A migration of an Aspect Model in an old version can also be loaded as usual.
-The tool automatically recognises the older version and migrates it to the latest BAMM version.
+The tool automatically recognises the older version and migrates it to the latest SAMM version.
 
 image::load-old-model.png[width=100%]
 

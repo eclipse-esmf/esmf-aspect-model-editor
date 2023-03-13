@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,7 +14,7 @@
 import {DefaultAbstractProperty, DefaultProperty} from '@ame/meta-model';
 import {PredefinedProperties} from '@ame/vocabulary';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {BammCharacteristicInstantiator} from './bamm-characteristic-instantiator';
+import {PredefinedCharacteristicInstantiator} from './predefined-characteristic-instantiator';
 
 const coordinates = {
   x: {preferredName: 'X', description: 'The position along the X axis'},
@@ -26,23 +26,23 @@ export class PredefinedPropertyInstantiator {
   public propertyInstances: {[key: string]: Function} = {};
 
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
-    this.propertyInstances[this.metaModelElementInstantiator.bamme.timestampProperty] = this.createTimestampProperty.bind(this);
-    this.propertyInstances[this.metaModelElementInstantiator.bamme.valueProperty] = this.createValueProperty.bind(this);
-    this.propertyInstances[this.metaModelElementInstantiator.bamme.resourceProperty] = this.createResourceProperty.bind(this);
-    this.propertyInstances[this.metaModelElementInstantiator.bamme.mimeTypeProperty] = this.createMimeTypeProperty.bind(this);
-    this.propertyInstances[this.metaModelElementInstantiator.bamme.xProperty] = this.createCoordinateProperty.bind(this, 'x');
-    this.propertyInstances[this.metaModelElementInstantiator.bamme.yProperty] = this.createCoordinateProperty.bind(this, 'y');
-    this.propertyInstances[this.metaModelElementInstantiator.bamme.zProperty] = this.createCoordinateProperty.bind(this, 'z');
+    this.propertyInstances[this.metaModelElementInstantiator.sammE.timestampProperty] = this.createTimestampProperty.bind(this);
+    this.propertyInstances[this.metaModelElementInstantiator.sammE.valueProperty] = this.createValueProperty.bind(this);
+    this.propertyInstances[this.metaModelElementInstantiator.sammE.resourceProperty] = this.createResourceProperty.bind(this);
+    this.propertyInstances[this.metaModelElementInstantiator.sammE.mimeTypeProperty] = this.createMimeTypeProperty.bind(this);
+    this.propertyInstances[this.metaModelElementInstantiator.sammE.xProperty] = this.createCoordinateProperty.bind(this, 'x');
+    this.propertyInstances[this.metaModelElementInstantiator.sammE.yProperty] = this.createCoordinateProperty.bind(this, 'y');
+    this.propertyInstances[this.metaModelElementInstantiator.sammE.zProperty] = this.createCoordinateProperty.bind(this, 'z');
   }
 
   private createTimestampProperty() {
-    const bammCharacteristicInstantiator = new BammCharacteristicInstantiator(this.metaModelElementInstantiator);
+    const defaultCharacteristicInstantiator = new PredefinedCharacteristicInstantiator(this.metaModelElementInstantiator);
 
     const timestampProperty = new DefaultProperty(
-      this.metaModelElementInstantiator.bamm.version,
-      this.metaModelElementInstantiator.bamme.getNamespace() + PredefinedProperties.timestamp,
+      this.metaModelElementInstantiator.samm.version,
+      this.metaModelElementInstantiator.sammE.getNamespace() + PredefinedProperties.timestamp,
       PredefinedProperties.timestamp,
-      bammCharacteristicInstantiator.createTimestampCharacteristic(
+      defaultCharacteristicInstantiator.createTimestampCharacteristic(
         this.metaModelElementInstantiator,
         this.metaModelElementInstantiator.rdfModel.dataTypeService
       ),
@@ -57,8 +57,8 @@ export class PredefinedPropertyInstantiator {
 
   private createValueProperty() {
     const valueProperty = new DefaultAbstractProperty(
-      this.metaModelElementInstantiator.bamm.version,
-      this.metaModelElementInstantiator.bamme.getNamespace() + PredefinedProperties.value,
+      this.metaModelElementInstantiator.samm.version,
+      this.metaModelElementInstantiator.sammE.getNamespace() + PredefinedProperties.value,
       PredefinedProperties.value,
       '',
       true
@@ -72,8 +72,8 @@ export class PredefinedPropertyInstantiator {
 
   private createCoordinateProperty(coordinate: 'x' | 'y' | 'z') {
     const valueProperty = new DefaultAbstractProperty(
-      this.metaModelElementInstantiator.bamm.version,
-      this.metaModelElementInstantiator.bamme.getNamespace() + coordinate,
+      this.metaModelElementInstantiator.samm.version,
+      this.metaModelElementInstantiator.sammE.getNamespace() + coordinate,
       coordinate,
       '',
       true
@@ -86,13 +86,13 @@ export class PredefinedPropertyInstantiator {
   }
 
   private createResourceProperty() {
-    const bammCharacteristicInstantiator = new BammCharacteristicInstantiator(this.metaModelElementInstantiator);
+    const defaultCharacteristicInstantiator = new PredefinedCharacteristicInstantiator(this.metaModelElementInstantiator);
 
     const resourceProperty = new DefaultProperty(
-      this.metaModelElementInstantiator.bamm.version,
-      this.metaModelElementInstantiator.bamme.getNamespace() + PredefinedProperties.resource,
+      this.metaModelElementInstantiator.samm.version,
+      this.metaModelElementInstantiator.sammE.getNamespace() + PredefinedProperties.resource,
       PredefinedProperties.resource,
-      bammCharacteristicInstantiator.createResourcePathCharacteristic(
+      defaultCharacteristicInstantiator.createResourcePathCharacteristic(
         this.metaModelElementInstantiator,
         this.metaModelElementInstantiator.rdfModel.dataTypeService
       ),
@@ -106,13 +106,13 @@ export class PredefinedPropertyInstantiator {
   }
 
   private createMimeTypeProperty() {
-    const bammCharacteristicInstantiator = new BammCharacteristicInstantiator(this.metaModelElementInstantiator);
+    const defaultCharacteristicInstantiator = new PredefinedCharacteristicInstantiator(this.metaModelElementInstantiator);
 
     const mimeTypeProperty = new DefaultProperty(
-      this.metaModelElementInstantiator.bamm.version,
-      this.metaModelElementInstantiator.bamme.getNamespace() + PredefinedProperties.mimeType,
+      this.metaModelElementInstantiator.samm.version,
+      this.metaModelElementInstantiator.sammE.getNamespace() + PredefinedProperties.mimeType,
       PredefinedProperties.mimeType,
-      bammCharacteristicInstantiator.createMimeTypeCharacteristic(
+      defaultCharacteristicInstantiator.createMimeTypeCharacteristic(
         this.metaModelElementInstantiator,
         this.metaModelElementInstantiator.rdfModel.dataTypeService
       ),

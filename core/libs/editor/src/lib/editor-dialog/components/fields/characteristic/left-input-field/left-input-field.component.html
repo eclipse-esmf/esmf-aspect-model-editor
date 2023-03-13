@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -11,9 +11,9 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+<div fxLayout="row" fxlayoutgap="5px" fxLayoutAlign="space-between center">
   <mat-form-field [floatLabel]="getControl('left')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="left">Left</mat-label>
+    <mat-label for="left">left</mat-label>
     <input #left [matAutocomplete]="auto" matInput name="left" [formControl]="getControl('left')" data-cy="left" />
     <button
       *ngIf="leftControl?.disabled && !metaModelElement?.isExternalReference()"
@@ -22,7 +22,8 @@
       data-cy="clear-left-button"
       matSuffix
       mat-icon-button
-      tabindex="-1">
+      tabindex="-1"
+    >
       <mat-icon>close</mat-icon>
     </button>
 
@@ -42,11 +43,12 @@
         <mat-option
           *ngFor="let left of filteredCharacteristicTypes"
           [value]="left.name"
-          (onSelectionChange)="onSelectionChange('left', left)">
+          (onSelectionChange)="onSelectionChange('left', left)"
+        >
           <div class="result">
             <div class="ellipsis">
-              {{ left.name }} <span *ngIf="left.description" class="option-description"
-                                    [title]="left.description">- {{ left.description }}</span>
+              {{ left.name }}
+              <span *ngIf="left.description" class="option-description" [title]="left.description">- {{ left.description }}</span>
               <p *ngIf="left.namespace" class="namespace-prefix" [title]="left.namespace">
                 {{ left.namespace }}
               </p>
@@ -55,8 +57,6 @@
         </mat-option>
       </div>
     </mat-autocomplete>
-    <mat-hint>bamm-c:left</mat-hint>
-
     <mat-error *ngIf="getControl('left')?.errors?.required">Please define a left characteristic</mat-error>
   </mat-form-field>
 </div>

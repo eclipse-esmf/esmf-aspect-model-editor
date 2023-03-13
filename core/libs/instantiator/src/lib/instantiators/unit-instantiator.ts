@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,13 +13,13 @@
 import {DataFactory} from 'n3';
 import {DefaultQuantityKind, DefaultUnit, Entity, QuantityKind, Unit} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {Bamm, Bammu} from '@ame/vocabulary';
+import {Samm, SammU} from '@ame/vocabulary';
 
-declare const bammuDefinition: any;
+declare const sammUDefinition: any;
 
-export class BammUnitInstantiator {
-  private readonly bammu: Bammu;
-  private readonly bamm: Bamm;
+export class UnitInstantiator {
+  private readonly sammU: SammU;
+  private readonly samm: Samm;
 
   private get cachedFile() {
     return this.metaModelElementInstantiator.cachedFile;
@@ -34,8 +34,8 @@ export class BammUnitInstantiator {
   }
 
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
-    this.bammu = this.metaModelElementInstantiator.bammu;
-    this.bamm = this.metaModelElementInstantiator.bamm;
+    this.sammU = this.metaModelElementInstantiator.sammU;
+    this.samm = this.metaModelElementInstantiator.samm;
   }
 
   getUnit(name: string): Unit {
@@ -48,11 +48,11 @@ export class BammUnitInstantiator {
       return null;
     }
 
-    const quantityKind = bammuDefinition.quantityKinds[name.replace(this.bammu.getNamespace(), '')];
+    const quantityKind = sammUDefinition.quantityKinds[name.replace(this.sammU.getNamespace(), '')];
     return quantityKind
       ? new DefaultQuantityKind(
-          this.bamm.version,
-          `${this.metaModelElementInstantiator.bammu.getDefaultQuantityKindsUri()}#${quantityKind.name}`,
+          this.samm.version,
+          `${this.metaModelElementInstantiator.sammU.getDefaultQuantityKindsUri()}#${quantityKind.name}`,
           quantityKind.name,
           quantityKind.label
         )
@@ -71,7 +71,7 @@ export class BammUnitInstantiator {
       return predefinedUnit;
     }
 
-    const defaultUnit = new DefaultUnit(this.bamm.version, null, null, null, null, null);
+    const defaultUnit = new DefaultUnit(this.samm.version, null, null, null, null, null);
     defaultUnit.fileName = this.metaModelElementInstantiator.fileName;
     const unitPropertyQuads = this.metaModelElementInstantiator.rdfModel.store.getQuads(DataFactory.namedNode(urn), null, null, null);
     [, defaultUnit.name] = urn.split('#');
@@ -84,17 +84,17 @@ export class BammUnitInstantiator {
     defaultUnit.setExternalReference(this.rdfModel.isExternalRef);
 
     unitPropertyQuads.forEach(quad => {
-      if (this.bamm.isSymbolProperty(quad.predicate.value)) {
+      if (this.samm.isSymbolProperty(quad.predicate.value)) {
         defaultUnit.symbol = quad.object.value;
-      } else if (this.bamm.isReferenceUnitProperty(quad.predicate.value)) {
+      } else if (this.samm.isReferenceUnitProperty(quad.predicate.value)) {
         defaultUnit.referenceUnit = this.createUnit(quad.object.value);
-      } else if (this.bamm.isConversionFactorProperty(quad.predicate.value)) {
+      } else if (this.samm.isConversionFactorProperty(quad.predicate.value)) {
         defaultUnit.conversionFactor = quad.object.value;
-      } else if (this.bamm.isNumericConversionFactorProperty(quad.predicate.value)) {
+      } else if (this.samm.isNumericConversionFactorProperty(quad.predicate.value)) {
         defaultUnit.numericConversionFactor = quad.object.value;
-      } else if (this.bamm.isCommonCodeProperty(quad.predicate.value)) {
+      } else if (this.samm.isCommonCodeProperty(quad.predicate.value)) {
         defaultUnit.code = quad.object.value;
-      } else if (this.bamm.isQuantityKindProperty(quad.predicate.value)) {
+      } else if (this.samm.isQuantityKindProperty(quad.predicate.value)) {
         quantityKindNames.push(quad.object.value);
       }
     });
@@ -112,13 +112,13 @@ export class BammUnitInstantiator {
   }
 
   createPredefinedUnit(name: string) {
-    const defaultUnit = new DefaultUnit(this.bamm.version, null, null, null, null, null);
-    const unit = bammuDefinition.units[name.replace(this.bammu.getNamespace(), '')];
+    const defaultUnit = new DefaultUnit(this.samm.version, null, null, null, null, null);
+    const unit = sammUDefinition.units[name.replace(this.sammU.getNamespace(), '')];
 
     if (unit) {
       defaultUnit.name = unit.name;
       defaultUnit.addPreferredName('en', unit.label);
-      defaultUnit.aspectModelUrn = `${this.metaModelElementInstantiator.bammu.getDefaultUnitUri()}#${defaultUnit.name}`;
+      defaultUnit.aspectModelUrn = `${this.metaModelElementInstantiator.sammU.getDefaultUnitUri()}#${defaultUnit.name}`;
       defaultUnit.symbol = unit.symbol;
       defaultUnit.code = unit.code;
       defaultUnit.referenceUnit = unit.referenceUnit ? this.createUnit(unit.referenceUnit().name) : null;

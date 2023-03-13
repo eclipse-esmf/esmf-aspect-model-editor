@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -69,7 +69,7 @@ export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty
     this.setPrefix(abstractProperty.extendedElement.aspectModelUrn);
     this.store.addQuad(
       DataFactory.namedNode(abstractProperty.aspectModelUrn),
-      this.rdfService.currentRdfModel.BAMM().ExtendsProperty(),
+      this.rdfService.currentRdfModel.samm.ExtendsProperty(),
       DataFactory.namedNode(abstractProperty.extendedElement.aspectModelUrn)
     );
   }

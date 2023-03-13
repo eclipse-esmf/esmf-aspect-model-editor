@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -36,12 +36,12 @@ export class AspectInstantiator {
   }
 
   createAspect(aspectSubject: Quad_Subject = null): Aspect {
-    const bamm = this.metaModelElementInstantiator.bamm;
-    const aspectNode = this.rdfModel.store.getQuads(aspectSubject, this.rdfModel.BAMM().RdfType(), this.rdfModel.BAMM().Aspect(), null)[0]
+    const samm = this.metaModelElementInstantiator.samm;
+    const aspectNode = this.rdfModel.store.getQuads(aspectSubject, this.rdfModel.SAMM().RdfType(), this.rdfModel.SAMM().Aspect(), null)[0]
       .subject;
-    const properties = this.metaModelElementInstantiator.getProperties(aspectNode, bamm.PropertiesProperty());
-    const operations = this.metaModelElementInstantiator.getOperations(aspectNode, bamm.OperationsProperty());
-    const events = this.metaModelElementInstantiator.getEvents(aspectNode, bamm.EventsProperty());
+    const properties = this.metaModelElementInstantiator.getProperties(aspectNode, samm.PropertiesProperty());
+    const operations = this.metaModelElementInstantiator.getOperations(aspectNode, samm.OperationsProperty());
+    const events = this.metaModelElementInstantiator.getEvents(aspectNode, samm.EventsProperty());
     const aspect = new DefaultAspect(null, null, null, properties, operations, events);
 
     aspect.fileName = this.metaModelElementInstantiator.fileName;

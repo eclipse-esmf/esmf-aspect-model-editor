@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -19,14 +19,14 @@ import {NamespacesCacheService} from '@ame/cache';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService, UnitRenderService} from '@ame/mx-graph';
 import {BaseMetaModelElement, DefaultQuantityKind, DefaultUnit} from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
-import {Bammu} from '@ame/vocabulary';
+import {SammU} from '@ame/vocabulary';
 
-declare const bammuDefinition: any;
+declare const sammUDefinition: any;
 
 @Injectable({providedIn: 'root'})
 export class UnitModelService extends BaseModelService {
-  private get bammu(): Bammu {
-    return this.modelService.getLoadedAspectModel().rdfModel.BAMMU();
+  private get sammU(): SammU {
+    return this.modelService.getLoadedAspectModel().rdfModel.SAMMU();
   }
 
   constructor(
@@ -56,8 +56,8 @@ export class UnitModelService extends BaseModelService {
 
     // update quantity kind
     metaModelElement.quantityKinds = form.quantityKindsChipList.map(qk => {
-      const urn = `${this.bammu.getNamespace()}${qk}`;
-      const quantityKind = bammuDefinition.quantityKinds[qk];
+      const urn = `${this.sammU.getNamespace()}${qk}`;
+      const quantityKind = sammUDefinition.quantityKinds[qk];
       return new DefaultQuantityKind(metaModelElement.metaModelVersion, urn, qk, quantityKind.label);
     });
 

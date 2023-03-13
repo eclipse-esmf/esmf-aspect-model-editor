@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -26,18 +26,18 @@ export class TraitCharacteristicInstantiator extends CharacteristicInstantiator 
       return defaultTrait;
     }
 
-    const bammc = this.metaModelElementInstantiator.bammc;
+    const sammC = this.metaModelElementInstantiator.sammC;
     defaultTrait = new DefaultTrait(null, null, null, null, new Array<Constraint>());
     defaultTrait.fileName = this.metaModelElementInstantiator.fileName;
 
     quads.forEach(quad => {
-      if (bammc.isBaseCharacteristicProperty(quad.predicate.value)) {
+      if (sammC.isBaseCharacteristicProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.loadCharacteristic(
           quad,
           false,
           (extReference: Characteristic) => (defaultTrait.baseCharacteristic = extReference)
         );
-      } else if (bammc.isConstraintProperty(quad.predicate.value)) {
+      } else if (sammC.isConstraintProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.loadConstraint(quad, (constraint: Constraint) => {
           defaultTrait.constraints.push(constraint);
         });
@@ -48,6 +48,6 @@ export class TraitCharacteristicInstantiator extends CharacteristicInstantiator 
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.TraitCharacteristic().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.TraitCharacteristic().equals(nameNode);
   }
 }

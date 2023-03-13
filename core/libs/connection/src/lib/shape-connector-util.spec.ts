@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,8 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {expect, describe} from '@jest/globals';
-import {DefaultAspect, DefaultCharacteristic, DefaultCollection, DefaultConstraint, DefaultEntity, DefaultProperty, DefaultTrait} from '@ame/meta-model';
+import {describe, expect} from '@jest/globals';
+import {
+  DefaultAspect,
+  DefaultCharacteristic,
+  DefaultCollection,
+  DefaultConstraint,
+  DefaultEntity,
+  DefaultProperty,
+  DefaultTrait,
+} from '@ame/meta-model';
 import {ShapeConnectorUtil} from './shape-connector-util';
 
 describe('Test Shape connector util', () => {

@@ -4,8 +4,8 @@
 = Introduction
 
 The Aspect Model Editor is a visual editor for Aspect Models, which automatically validates the models against the open-source
-https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/index.html[BAMM Aspect Meta Model version 2.0.0^,opts=nofollow].
-All concepts, possibilities, and restrictions defined by the BAMM Aspect Meta Model are incorporated in the Aspect Model Editor in a convenient way with a smart user flow.
+https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/index.html[SAMM Aspect Meta Model version 2.0.0^,opts=nofollow].
+All concepts, possibilities, and restrictions defined by the SAMM Aspect Meta Model are incorporated in the Aspect Model Editor in a convenient way with a smart user flow.
 
 Typically, Aspect Models are edited as code, that is, text-based.
 With the Aspect Model Editor, such code gets visualized so that relationships and dependencies within the model can be understood quickly and easily.
@@ -25,7 +25,7 @@ The Aspect Model Editor focuses on practitioners, such as domain experts or data
 
 Especially for expert teams who model Aspects together, the visual representation of Aspect Models provides a low entry barrier and easy understanding, and facilitates collaboration.
 
-In addition to that, constant background validation ensures that your Aspect Models correspond to the BAMM Aspect Meta Model, enabling reusablity of your Aspect Models and automation of the downstream process steps for your Aspect Models.
+In addition to that, constant background validation ensures that your Aspect Models correspond to the SAMM Aspect Meta Model, enabling reusablity of your Aspect Models and automation of the downstream process steps for your Aspect Models.
 
 == Capabilities
 
@@ -46,16 +46,16 @@ With APIs implemented for each Aspect, Aspects offer their information to softwa
 To do so, _Aspect Models_ make sure that Aspect APIs do not just provide the raw, proprietary data from the underlying data sources but semantically enriched data &ndash; data that is meaningful for a domain expert.
 An Aspect Model describes, for example, the physical unit or the possible value range of a temperature sensor and indicates what a particular temperature at that sensor _means_ with regard to the context of that sensor.
 
-Each Aspect references a particular Aspect Model, which, in a machine-readable way, describes how that Aspect is structured &ndash; based on the BAMM Aspect Meta Model specification.
-For more information on Aspects and Aspect Models, refer to https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/index.html[BAMM Aspect Meta Model version 2.0.0^,opts=nofollow].
+Each Aspect references a particular Aspect Model, which, in a machine-readable way, describes how that Aspect is structured &ndash; based on the SAMM Aspect Meta Model specification.
+For more information on Aspects and Aspect Models, refer to https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/index.html[SAMM Aspect Meta Model version 2.0.0^,opts=nofollow].
 
 == License
 
 SPDX-License-Identifier: MPL-2.0
 
-This program and the accompanying materials are made under the terms of https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/blob/main/LICENSE[Mozilla Public License,V. 2.0^,opts=nofollow].
+This program and the accompanying materials are made under the terms of https://github.com/eclipse-esmf/esmf-aspect-model-editor/blob/main/LICENSE[Mozilla Public License,V. 2.0^,opts=nofollow].
 
-All contained third-party materials are listed in the https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/blob/main/NOTICE.md[NOTICE.md^,opts=nofollow] file.
+All contained third-party materials are listed in the https://github.com/eclipse-esmf/esmf-aspect-model-editor/blob/main/NOTICE.md[NOTICE.md^,opts=nofollow] file.
 
 ++++
 <style>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,7 +15,7 @@ import {FormControl, Validators} from '@angular/forms';
 import {BaseMetaModelElement, DefaultEncodingConstraint} from '@ame/meta-model';
 import {InputFieldComponent} from '../../input-field.component';
 import {EditorModelService} from '../../../../editor-model.service';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 import {RdfModelUtil} from '@ame/rdf/utils';
 
 @Component({
@@ -37,7 +37,7 @@ export class EncodingInputFieldComponent extends InputFieldComponent<DefaultEnco
 
   ngOnInit() {
     this.subscription = this.getMetaModelData().subscribe((modelElement: BaseMetaModelElement) => {
-      this.encodingList = modelElement ? new Bamm(modelElement.metaModelVersion).getEncodingList() : null;
+      this.encodingList = modelElement ? new Samm(modelElement.metaModelVersion).getEncodingList() : null;
       if (modelElement instanceof DefaultEncodingConstraint) {
         this.metaModelElement = modelElement;
       }

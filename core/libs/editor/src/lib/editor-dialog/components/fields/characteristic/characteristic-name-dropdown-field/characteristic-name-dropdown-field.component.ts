@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,7 +13,7 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
-import {BammCharacteristicInstantiator, BammUnitInstantiator, MetaModelElementInstantiator} from '@ame/instantiator';
+import {MetaModelElementInstantiator, PredefinedCharacteristicInstantiator, UnitInstantiator} from '@ame/instantiator';
 import {
   BaseMetaModelElement,
   Characteristic,
@@ -48,8 +48,8 @@ import {DropdownFieldComponent} from '../../dropdown-field.component';
 export class CharacteristicNameDropdownFieldComponent extends DropdownFieldComponent<DefaultCharacteristic> implements OnInit {
   public listCharacteristics: Map<string, Function> = new Map();
   public listCharacteristicGroup: Map<string, Array<string>> = new Map();
-  public bammCharacteristicInstantiator: BammCharacteristicInstantiator;
-  public bammUnitInstantiator: BammUnitInstantiator;
+  public defaultCharacteristicInstantiator: PredefinedCharacteristicInstantiator;
+  public unitInstantiator: UnitInstantiator;
   public units: Array<Unit> = [];
 
   @Output() selectedCharacteristic = new EventEmitter<string>();
@@ -83,8 +83,8 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
 
     const oldMetaModelElement = this.metaModelElement;
     this.metaModelElement = newCharacteristicType;
-    if (!this.bammUnitInstantiator) {
-      this.bammUnitInstantiator = new BammUnitInstantiator(
+    if (!this.unitInstantiator) {
+      this.unitInstantiator = new UnitInstantiator(
         new MetaModelElementInstantiator(
           this.modelService.getLoadedAspectModel().rdfModel,
           this.namespacesCacheService.getCurrentCachedFile()
@@ -143,29 +143,31 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
 
   private createCharacteristicInstancesList() {
     const instanceList = [...this.listCharacteristics.keys()];
-    this.listCharacteristics.set('Boolean', () => this.createDefaultBammCharacteristic('Boolean'));
-    this.listCharacteristics.set('Language', () => this.createDefaultBammCharacteristic('Language'));
-    this.listCharacteristics.set('Locale', () => this.createDefaultBammCharacteristic('Locale'));
-    this.listCharacteristics.set('MultiLanguageText', () => this.createDefaultBammCharacteristic('MultiLanguageText'));
-    this.listCharacteristics.set('MimeType', () => this.createDefaultBammCharacteristic('MimeType'));
-    this.listCharacteristics.set('ResourcePath', () => this.createDefaultBammCharacteristic('ResourcePath'));
-    this.listCharacteristics.set('Text', () => this.createDefaultBammCharacteristic('Text'));
-    this.listCharacteristics.set('Timestamp', () => this.createDefaultBammCharacteristic('Timestamp'));
-    this.listCharacteristics.set('UnitReference', () => this.createDefaultBammCharacteristic('UnitReference'));
+    this.listCharacteristics.set('Boolean', () => this.createDefaultCharacteristic('Boolean'));
+    this.listCharacteristics.set('Language', () => this.createDefaultCharacteristic('Language'));
+    this.listCharacteristics.set('Locale', () => this.createDefaultCharacteristic('Locale'));
+    this.listCharacteristics.set('MultiLanguageText', () => this.createDefaultCharacteristic('MultiLanguageText'));
+    this.listCharacteristics.set('MimeType', () => this.createDefaultCharacteristic('MimeType'));
+    this.listCharacteristics.set('ResourcePath', () => this.createDefaultCharacteristic('ResourcePath'));
+    this.listCharacteristics.set('Text', () => this.createDefaultCharacteristic('Text'));
+    this.listCharacteristics.set('Timestamp', () => this.createDefaultCharacteristic('Timestamp'));
+    this.listCharacteristics.set('UnitReference', () => this.createDefaultCharacteristic('UnitReference'));
     return [...this.listCharacteristics.keys()].filter(value => !instanceList.includes(value));
   }
 
-  private createDefaultBammCharacteristic(characteristicName: string): Characteristic {
-    const bammc = this.modelService.getLoadedAspectModel().rdfModel.BAMMC();
-    if (!this.bammCharacteristicInstantiator) {
-      this.bammCharacteristicInstantiator = new BammCharacteristicInstantiator(
+  private createDefaultCharacteristic(characteristicName: string): Characteristic {
+    const sammC = this.modelService.getLoadedAspectModel().rdfModel.SAMMC();
+    if (!this.defaultCharacteristicInstantiator) {
+      this.defaultCharacteristicInstantiator = new PredefinedCharacteristicInstantiator(
         new MetaModelElementInstantiator(
           this.modelService.getLoadedAspectModel().rdfModel,
           this.namespacesCacheService.getCurrentCachedFile()
         )
       );
     }
-    return this.bammCharacteristicInstantiator.createCharacteristic(DataFactory.namedNode(`${bammc.getNamespace()}${characteristicName}`));
+    return this.defaultCharacteristicInstantiator.createCharacteristic(
+      DataFactory.namedNode(`${sammC.getNamespace()}${characteristicName}`)
+    );
   }
 
   private migrateCommonAttributes(oldMetaModelElement: BaseMetaModelElement) {
@@ -179,7 +181,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
               unit.name.toLowerCase().indexOf(oldMetaModelElement[oldKey].name.toLowerCase()) >= 0
           );
           if (matchedUnit) {
-            this.metaModelElement[oldKey] = this.bammUnitInstantiator.getUnit(matchedUnit.name);
+            this.metaModelElement[oldKey] = this.unitInstantiator.getUnit(matchedUnit.name);
           }
         } else {
           this.metaModelElement[oldKey] = oldMetaModelElement[oldKey];
@@ -190,8 +192,8 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
 
   private setMetaModelElementAspectUrn(modelElement: BaseMetaModelElement) {
     if (
-      this.bammCharacteristicInstantiator &&
-      this.bammCharacteristicInstantiator.getSupportedCharacteristicNames().includes(modelElement.aspectModelUrn)
+      this.defaultCharacteristicInstantiator &&
+      this.defaultCharacteristicInstantiator.getSupportedCharacteristicNames().includes(modelElement.aspectModelUrn)
     ) {
       this.metaModelElement.aspectModelUrn = modelElement.aspectModelUrn;
     } else {

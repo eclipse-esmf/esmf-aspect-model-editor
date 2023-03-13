@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -11,9 +11,9 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+<div fxLayout="row" fxlayoutgap="5px" fxLayoutAlign="space-between center">
   <mat-form-field [floatLabel]="getControl('elementCharacteristic')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="elementCharacteristic">Element Characteristic</mat-label>
+    <mat-label for="elementCharacteristic">elementCharacteristic</mat-label>
     <input
       #elementCharacteristic
       [matAutocomplete]="auto"
@@ -65,10 +65,9 @@
           <div class="ellipsis">
             <span>{{ elementCharacteristic.name }}</span>
             <span *ngIf="elementCharacteristic.description" class="horizontal-separator"></span>
-            <span *ngIf="elementCharacteristic.description" class="option-description"
-                  [title]="elementCharacteristic.description">{{
+            <span *ngIf="elementCharacteristic.description" class="option-description" [title]="elementCharacteristic.description">{{
               elementCharacteristic.description
-              }}</span>
+            }}</span>
           </div>
           <p *ngIf="elementCharacteristic.namespace" class="namespace-prefix" [title]="elementCharacteristic.namespace">
             {{ elementCharacteristic.namespace }}
@@ -76,6 +75,5 @@
         </mat-option>
       </div>
     </mat-autocomplete>
-    <mat-hint>bamm-c:elementCharacteristic</mat-hint>
   </mat-form-field>
 </div>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -69,7 +69,7 @@ export class OperationVisitor extends BaseVisitor<DefaultOperation> {
       this.setPrefix(property.aspectModelUrn);
       this.store.addQuad(
         DataFactory.namedNode(operation.aspectModelUrn),
-        this.rdfService.currentRdfModel.BAMM().OutputProperty(),
+        this.rdfService.currentRdfModel.samm.OutputProperty(),
         DataFactory.namedNode(property.aspectModelUrn)
       );
     }

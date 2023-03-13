@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,7 +14,7 @@
 import {EditorService} from '@ame/editor';
 import {ExporterHelper} from '@ame/migrator';
 import {RdfModel} from '@ame/rdf/utils';
-import {BrowserService, APP_CONFIG, AppConfig} from '@ame/shared';
+import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
 import {HttpClient} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
 import {map, switchMap} from 'rxjs';
@@ -60,7 +60,7 @@ export class MigratorApiService {
       .loadExternalModels()
       .pipe(
         map((rdfModels: RdfModel[]) =>
-          rdfModels.some(rdfModel => ExporterHelper.isVersionOutdated(rdfModel?.BAMM().version, this.config.currentBammVersion))
+          rdfModels.some(rdfModel => ExporterHelper.isVersionOutdated(rdfModel?.samm.version, this.config.currentSammVersion))
         )
       );
   }

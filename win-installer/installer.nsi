@@ -69,7 +69,7 @@ Section "Install"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" \
                    "DisplayName" "Aspect Model Editor"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" \
-                   "Publisher" "open-manufacturing.org"
+                   "Publisher" "eclipse.org"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" \
                    "DisplayVersion" "${VERSION}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" \
@@ -101,19 +101,19 @@ SectionEnd
 Function install_AME
     File /r "..\core\electron\win-unpacked\*"
 
-    CreateDirectory "$SMPROGRAMS\OMP"
+    CreateDirectory "$SMPROGRAMS\ESMF"
 
-    CreateShortCut "$SMPROGRAMS\OMP\Aspect-Model-Editor.lnk" "$INSTDIR\Aspect-Model-Editor.exe"
-    CreateShortCut "$SMPROGRAMS\OMP\Aspect-Model-Editor Uninstaller.lnk" "$INSTDIR\Uninstall.exe"
+    CreateShortCut "$SMPROGRAMS\ESMF\Aspect-Model-Editor.lnk" "$INSTDIR\Aspect-Model-Editor.exe"
+    CreateShortCut "$SMPROGRAMS\ESMF\Aspect-Model-Editor Uninstaller.lnk" "$INSTDIR\Uninstall.exe"
     CreateShortCut "$DESKTOP\Aspect-Model-Editor.lnk" "$INSTDIR\Aspect-Model-Editor.exe"
 FunctionEnd
 
 Function un.install_AME
     RMDir /r "$INSTDIR"
 
-    Delete "$SMPROGRAMS\OMP\Aspect-Model-Editor.lnk"
-    Delete "$SMPROGRAMS\OMP\Aspect-Model-Editor Uninstaller.lnk"
-    RMDir /r  "$SMPROGRAMS\OMP"
+    Delete "$SMPROGRAMS\ESMF\Aspect-Model-Editor.lnk"
+    Delete "$SMPROGRAMS\ESMF\Aspect-Model-Editor Uninstaller.lnk"
+    RMDir /r  "$SMPROGRAMS\ESMF"
 
     Delete "$DESKTOP\Aspect-Model-Editor.lnk"
 FunctionEnd

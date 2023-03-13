@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -20,14 +20,14 @@ describe('Test drag and drop', () => {
   it('Loading property element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.different:1.0.0': ['external-property-reference.txt'],
+      'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-property-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/with-childrens/external-property-reference.txt',
@@ -76,14 +76,14 @@ describe('Test drag and drop', () => {
   it('Loading operation element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.different:1.0.0': ['external-operation-reference-with-children.txt'],
+      'org.eclipse.different:1.0.0': ['external-operation-reference-with-children.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-operation-reference-with-children.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-operation-reference-with-children.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/with-childrens/external-operation-reference.txt',
@@ -151,14 +151,14 @@ describe('Test drag and drop', () => {
   it('Loading characteristic element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.different:1.0.0': ['external-characteristic-reference.txt'],
+      'org.eclipse.different:1.0.0': ['external-characteristic-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-characteristic-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-characteristic-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/with-childrens/external-characteristic-reference.txt',
@@ -208,14 +208,14 @@ describe('Test drag and drop', () => {
   it('Loading entity element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.different:1.0.0': ['external-entity-reference.txt'],
+      'org.eclipse.different:1.0.0': ['external-entity-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-entity-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-entity-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/with-childrens/external-entity-reference.txt',
@@ -266,14 +266,14 @@ describe('Test drag and drop', () => {
   it('Loading unit element from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.different:1.0.0': ['external-unit-reference.txt'],
+      'org.eclipse.different:1.0.0': ['external-unit-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-unit-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-unit-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-unit-reference.txt',
@@ -312,7 +312,7 @@ describe('Test drag and drop', () => {
   it('Loading different elements from several external files with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.different:1.0.0': [
+      'org.eclipse.different:1.0.0': [
         'external-entity-reference.txt',
         'external-characteristic-reference.txt',
         'external-property-reference.txt',
@@ -326,7 +326,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-entity-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-entity-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-entity-reference.txt',
@@ -337,7 +337,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-characteristic-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-characteristic-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-characteristic-reference.txt',
@@ -348,7 +348,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-property-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-property-reference.txt',
@@ -359,7 +359,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-operation-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-operation-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-operation-reference.txt',
@@ -370,7 +370,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-trait-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-trait-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/with-childrens/external-trait-reference.txt',
@@ -381,7 +381,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-constraint-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-constraint-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-constraint-reference.txt',
@@ -421,8 +421,8 @@ describe('Test drag and drop', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:bamm:io.openmanufacturing.digitaltwin:1.0.0#>.');
-        expect(rdf).to.contain('@prefix different: <urn:bamm:io.openmanufacturing.different:1.0.0#>.');
+        expect(rdf).to.contain('@prefix : <urn:bamm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix different: <urn:bamm:org.eclipse.different:1.0.0#>.');
         expect(rdf).to.contain('bamm:properties (:property1 :property2 :property3 :property4 different:externalProperty)');
         expect(rdf).to.contain(':property1 a bamm:Property');
         expect(rdf).to.contain('bamm:characteristic :Characteristic1');

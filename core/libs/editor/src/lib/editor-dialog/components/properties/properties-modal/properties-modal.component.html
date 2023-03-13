@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -28,7 +28,7 @@
     </ng-container>
 
     <ng-container matColumnDef="payloadName">
-      <mat-header-cell *matHeaderCellDef>Payload Name</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>payloadName</mat-header-cell>
       <mat-cell *matCellDef="let overwritten">
         <mat-form-field *ngIf="!(overwritten.disabled || overwritten.inherited)">
           <mat-label for="refines">Payload Name</mat-label>
@@ -37,7 +37,6 @@
             matInput
             name="{{ overwritten.property.name }}_payloadName"
           />
-          <mat-hint>bamm:payloadName</mat-hint>
         </mat-form-field>
       </mat-cell>
     </ng-container>

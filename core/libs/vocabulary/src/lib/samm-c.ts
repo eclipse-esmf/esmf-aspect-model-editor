@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,21 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Bamm} from './bamm';
+import {Samm} from './samm';
 import {DataFactory, NamedNode} from 'n3';
 import {BoundDefinition} from '@ame/meta-model';
 
-export class Bammc {
+export class SammC {
   private alias = 'bamm-c';
 
-  constructor(private bamm: Bamm) {}
+  constructor(private samm: Samm) {}
 
   getAlias(): string {
     return this.alias;
   }
 
   getUri(): string {
-    return `${this.bamm.getBaseUri()}characteristic:${this.bamm.version}`;
+    return `${this.samm.getBaseUri()}characteristic:${this.samm.version}`;
   }
 
   isStandardCharacteristic(elementUrn: string): boolean {
@@ -287,22 +287,22 @@ export class Bammc {
   }
 
   get metaModelPluralNames() {
-    return [this.bamm.PropertiesProperty().value, this.bamm.OperationsProperty().value, this.bamm.EventsProperty().value];
+    return [this.samm.PropertiesProperty().value, this.samm.OperationsProperty().value, this.samm.EventsProperty().value];
   }
 
   get metaModelSingularNames() {
-    return [this.bamm.Property().value, this.bamm.Operation().value, this.bamm.Event().value];
+    return [this.samm.Property().value, this.samm.Operation().value, this.samm.Event().value];
   }
 
   getMetaModelNames(plural = true): Array<string> {
     return [
-      this.bamm.Aspect().value,
+      this.samm.Aspect().value,
       ...(plural ? this.metaModelPluralNames : this.metaModelSingularNames),
-      this.bamm.OperationsProperty().value,
-      this.bamm.Characteristic().value,
-      this.bamm.Constraint().value,
-      this.bamm.Entity().value,
-      this.bamm.EventsProperty().value,
+      this.samm.OperationsProperty().value,
+      this.samm.Characteristic().value,
+      this.samm.Constraint().value,
+      this.samm.Entity().value,
+      this.samm.EventsProperty().value,
       this.LanguageConstraint().value,
       this.LocaleConstraint().value,
       this.RangeConstraint().value,

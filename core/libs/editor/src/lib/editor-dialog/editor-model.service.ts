@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,7 +13,7 @@
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {BaseMetaModelElement} from '@ame/meta-model';
-import {BammCharacteristicInstantiator, MetaModelElementInstantiator} from '@ame/instantiator';
+import {CharacteristicInstantiator, MetaModelElementInstantiator} from '@ame/instantiator';
 import {ModelService} from '@ame/rdf/services';
 
 @Injectable({
@@ -25,7 +25,7 @@ export class EditorModelService {
   private metaModelElementSubject = new BehaviorSubject<BaseMetaModelElement>(null);
   private readOnly = false;
   private saveButtonEnabled = true;
-  private bammCharacteristicInstantiator: BammCharacteristicInstantiator;
+  private characteristicInstantiator: CharacteristicInstantiator;
 
   constructor(private modelService: ModelService) {
     this.metaModelElementSubject.asObservable().subscribe(newMetaModelElement => {
@@ -54,8 +54,8 @@ export class EditorModelService {
   }
 
   _updateMetaModelElement(metaModelElement: BaseMetaModelElement): void {
-    if (!this.bammCharacteristicInstantiator) {
-      this.bammCharacteristicInstantiator = new BammCharacteristicInstantiator(
+    if (!this.characteristicInstantiator) {
+      this.characteristicInstantiator = new CharacteristicInstantiator(
         new MetaModelElementInstantiator(this.modelService.getLoadedAspectModel().rdfModel, null)
       );
     }

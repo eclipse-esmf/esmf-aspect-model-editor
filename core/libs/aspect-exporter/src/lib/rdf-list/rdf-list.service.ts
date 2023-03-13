@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,7 +14,7 @@
 import {Injectable} from '@angular/core';
 import {RdfModel} from '@ame/rdf/utils';
 import {simpleDataTypes} from '@ame/shared';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 import {BlankNode, DataFactory, NamedNode, Quad, Quad_Object, Store, Triple, Util} from 'n3';
 import {RdfListHelper} from './rdf-list-helper';
 import {RdfListConstants} from './rdf-list.constants';
@@ -35,7 +35,7 @@ import {RdfNodeService} from '../rdf-node';
 })
 export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   private store: Store;
-  private bamm: Bamm;
+  private samm: Samm;
   private rdfModel: RdfModel;
 
   constructor(private nodeService: RdfNodeService) {}
@@ -43,7 +43,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   setRdfModel(rdfModel: RdfModel) {
     this.rdfModel = rdfModel;
     this.store = this.rdfModel.store;
-    this.bamm = this.rdfModel.BAMM();
+    this.samm = this.rdfModel.SAMM();
     return this;
   }
 
@@ -105,18 +105,18 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     this.emptyList(source, property);
     this.createNewList(
       DataFactory.namedNode(source.aspectModelUrn),
-      RdfListConstants.getPredicateByKey(property, this.bamm, this.rdfModel.BAMMC())
+      RdfListConstants.getPredicateByKey(property, this.samm, this.rdfModel.SAMMC())
     );
   }
 
   emptyList(source: SourceElementType, property: ListProperties) {
-    const predicate = RdfListConstants.getPredicateByKey(property, this.bamm, this.rdfModel.BAMMC());
+    const predicate = RdfListConstants.getPredicateByKey(property, this.samm, this.rdfModel.SAMMC());
     const subject = DataFactory.namedNode(source.aspectModelUrn);
     const list = this.store.getQuads(subject, predicate, null, null)?.[0]?.object;
 
-    if (list && !this.bamm.isRdfNill(list.value)) {
+    if (list && !this.samm.isRdfNill(list.value)) {
       this.store.removeQuads([...this.getQuads(list), ...this.store.getQuads(subject, predicate, null, null)]);
-      this.store.addQuad(DataFactory.triple(subject, predicate, this.bamm.RdfNil()));
+      this.store.addQuad(DataFactory.triple(subject, predicate, this.samm.RdfNil()));
     }
   }
 
@@ -124,7 +124,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     const quads: Quad[] = [...this.store.getQuads(node, null, null, null)];
 
     for (const quad of quads) {
-      if (this.bamm.isRdfRest(quad?.predicate.value) && !this.bamm.isRdfNill(quad?.object.value)) {
+      if (this.samm.isRdfRest(quad?.predicate.value) && !this.samm.isRdfNill(quad?.object.value)) {
         quads.push(...this.getQuads(quad.object as BlankNode));
       }
     }
@@ -145,14 +145,14 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
 
       this.store.addQuad(
         element.blankNode,
-        this.bamm.PropertyProperty(),
+        this.samm.PropertyProperty(),
         DataFactory.namedNode(element.metaModelElement.property.aspectModelUrn)
       );
 
       if (element.metaModelElement.keys.optional) {
         this.store.addQuad(
           element.blankNode,
-          this.bamm.OptionalProperty(),
+          this.samm.OptionalProperty(),
           DataFactory.literal(`${element.metaModelElement.keys.optional}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy))
         );
       }
@@ -160,7 +160,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
       if (element.metaModelElement.keys.notInPayload) {
         this.store.addQuad(
           element.blankNode,
-          this.bamm.NotInPayloadProperty(),
+          this.samm.NotInPayloadProperty(),
           DataFactory.literal(`${element.metaModelElement.keys.notInPayload}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy))
         );
       }
@@ -168,7 +168,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
       if (element.metaModelElement.keys.payloadName) {
         this.store.addQuad(
           element.blankNode,
-          this.bamm.payloadNameProperty(),
+          this.samm.payloadNameProperty(),
           DataFactory.literal(`${element.metaModelElement.keys.payloadName}`, DataFactory.namedNode(simpleDataTypes.string.isDefinedBy))
         );
       }
@@ -180,7 +180,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
 
     const quads = this.store.getQuads(node, null, null, null);
     for (const quad of quads) {
-      if (this.bamm.isRdfFirst(quad?.predicate.value)) {
+      if (this.samm.isRdfFirst(quad?.predicate.value)) {
         if (!Util.isBlankNode(quad.object)) {
           listElement.push({node: quad.object});
           continue;
@@ -194,7 +194,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
         });
       }
 
-      if (this.bamm.isRdfRest(quad?.predicate.value) && !this.bamm.isRdfNill(quad?.object.value)) {
+      if (this.samm.isRdfRest(quad?.predicate.value) && !this.samm.isRdfNill(quad?.object.value)) {
         listElement.push(...this.getListElements(quad.object as BlankNode));
       }
     }
@@ -203,7 +203,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   }
 
   private getFilteredElements(source: SourceElementType, elements: ListElementType[]): StoreListReferences {
-    const relations = RdfListConstants.getRelations(this.bamm, this.rdfModel.BAMMC());
+    const relations = RdfListConstants.getRelations(this.samm, this.rdfModel.SAMMC());
     const children = relations.find(({source: sourceType}) => source instanceof sourceType).children;
     const types = children.map(child => child.type).filter(type => type);
 
@@ -235,7 +235,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   }
 
   private resolvePredicate(source: SourceElementType, element: ListElementType) {
-    const relations = RdfListConstants.getRelations(this.bamm, this.rdfModel.BAMMC());
+    const relations = RdfListConstants.getRelations(this.samm, this.rdfModel.SAMMC());
     for (const {source: sourceType, children} of relations) {
       if (!(source instanceof sourceType)) {
         continue;
@@ -253,15 +253,15 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
 
   private createNewList(subject: NamedNode, predicate: NamedNode) {
     const list = DataFactory.blankNode();
-    this.store.removeQuads(this.store.getQuads(subject, predicate, this.bamm.RdfNil(), null));
+    this.store.removeQuads(this.store.getQuads(subject, predicate, this.samm.RdfNil(), null));
     this.store.addQuad(DataFactory.triple(subject, predicate, list));
-    this.store.addQuad(DataFactory.triple(list, this.bamm.RdfRest(), this.bamm.RdfNil()));
+    this.store.addQuad(DataFactory.triple(list, this.samm.RdfRest(), this.samm.RdfNil()));
     return list;
   }
 
   private getListOrCreateNew(subject: NamedNode, predicate: NamedNode): {list: Quad_Object; created: boolean} {
     const quad = this.store.getQuads(subject, predicate, null, null)?.[0];
-    return quad && !this.bamm.isRdfNill(quad.object.value)
+    return quad && !this.samm.isRdfNill(quad.object.value)
       ? {list: quad.object, created: false}
       : {list: this.createNewList(subject, predicate), created: true};
   }
@@ -271,10 +271,10 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     let previousParent: BlankNode | NamedNode = list as BlankNode;
 
     nodes.forEach((node, index) => {
-      const nextParent = index === nodes.length - 1 ? this.bamm.RdfNil() : DataFactory.blankNode();
+      const nextParent = index === nodes.length - 1 ? this.samm.RdfNil() : DataFactory.blankNode();
       quads.push(
-        DataFactory.triple(previousParent, this.bamm.RdfFirst(), node),
-        DataFactory.triple(previousParent, this.bamm.RdfRest(), nextParent)
+        DataFactory.triple(previousParent, this.samm.RdfFirst(), node),
+        DataFactory.triple(previousParent, this.samm.RdfRest(), nextParent)
       );
       previousParent = nextParent;
     });

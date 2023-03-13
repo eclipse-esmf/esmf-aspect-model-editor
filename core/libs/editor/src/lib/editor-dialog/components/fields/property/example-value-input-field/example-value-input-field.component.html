@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -16,7 +16,6 @@
   appearance="fill"
   [matTooltip]="this.hasComplexDataType ? 'exampleValue disabled for complex datatypes' : ''"
 >
-  <mat-label for="exampleValue">Example value</mat-label>
+  <mat-label for="exampleValue">exampleValue</mat-label>
   <input [formControl]="getControl('exampleValue')" matInput name="exampleValue" />
-  <mat-hint>bamm:exampleValue</mat-hint>
 </mat-form-field>

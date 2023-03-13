@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -11,11 +11,10 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+<div fxLayout="row" fxlayoutgap="5px" fxLayoutAlign="space-between center">
   <mat-form-field [floatLabel]="getControl('dataType')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="dataType">Data type</mat-label>
-    <input #dataType [matAutocomplete]="auto" matInput name="dataType" [formControl]="getControl('dataType')"
-           data-cy="dataType"/>
+    <mat-label for="dataType">dataType</mat-label>
+    <input #dataType [matAutocomplete]="auto" matInput name="dataType" [formControl]="getControl('dataType')" data-cy="dataType" />
     <button
       *ngIf="dataTypeControl?.disabled && !metaModelElement?.isExternalReference()"
       (click)="unlockDataType()"
@@ -80,6 +79,5 @@
         </mat-optgroup>
       </ng-container>
     </mat-autocomplete>
-    <mat-hint>bamm:dataType</mat-hint>
   </mat-form-field>
 </div>

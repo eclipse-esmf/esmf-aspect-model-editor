@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -73,18 +73,18 @@ export class ModelService {
       this.currentCachedFile.reset();
     }
 
-    const bammVersion: string = loadedRdfModel.BAMM().version;
+    const sammVersion: string = loadedRdfModel.samm.version;
 
     try {
-      if (bammVersion > this.config.currentBammVersion) {
+      if (sammVersion > this.config.currentSammVersion) {
         return throwError(
-          () => `The provided Aspect Model is using BAMM version ${bammVersion} which is too high.
-            The Aspect Model Editor is currently based on BAMM ${this.config.currentBammVersion}.`
+          () => `The provided Aspect Model is using SAMM version ${sammVersion} which is too high.
+            The Aspect Model Editor is currently based on SAMM ${this.config.currentSammVersion}.`
         );
       }
 
       const rdfModel$ =
-        bammVersion < this.config.currentBammVersion ? this.migrateAspectModel(bammVersion, rdfAspectModel) : of(loadedRdfModel);
+        sammVersion < this.config.currentSammVersion ? this.migrateAspectModel(sammVersion, rdfAspectModel) : of(loadedRdfModel);
 
       return rdfModel$.pipe(
         tap(rdfModel => (this.rdfModel = rdfModel)),
@@ -110,9 +110,9 @@ export class ModelService {
     }
   }
 
-  private migrateAspectModel(bammVersion: string, rdfAspectModel: string): Observable<RdfModel> {
+  private migrateAspectModel(sammVersion: string, rdfAspectModel: string): Observable<RdfModel> {
     this.notificationsService.info({
-      title: `Migrating from BAMM version ${bammVersion} to BAMM version ${this.config.currentBammVersion}`,
+      title: `Migrating from SAMM version ${sammVersion} to SAMM version ${this.config.currentSammVersion}`,
       timeout: 5000,
     });
 
@@ -120,7 +120,7 @@ export class ModelService {
       first(),
       tap(() =>
         this.notificationsService.info({
-          title: `Successfully migrated from BAMM Version ${bammVersion} to BAMM version ${this.config.currentBammVersion} BAMM version`,
+          title: `Successfully migrated from SAMM Version ${sammVersion} to SAMM version ${this.config.currentSammVersion} SAMM version`,
           timeout: 5000,
         })
       ),
@@ -214,7 +214,7 @@ export class ModelService {
   }
 
   private isElementNameUnique(modelElement: BaseMetaModelElement): boolean {
-    modelElement.metaModelVersion = this.rdfModel.BAMM().version;
+    modelElement.metaModelVersion = this.rdfModel.SAMM().version;
     return !this.currentCachedFile.getCachedElement<BaseMetaModelElement>(`${this.rdfModel.getAspectModelUrn()}${modelElement.name}`);
   }
 

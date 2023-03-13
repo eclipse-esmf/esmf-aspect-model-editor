@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,7 +15,7 @@ import {Type} from './type';
 import {Base, BaseMetaModelElement} from './base';
 import {DefaultEntity} from './default-entity';
 import {AspectModelVisitor} from '@ame/mx-graph';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 import {DefaultScalar} from './default-scalar';
 
 export interface Characteristic extends BaseMetaModelElement {
@@ -38,7 +38,7 @@ export class DefaultCharacteristic extends Base implements Characteristic {
   }
 
   isPredefined(): boolean {
-    return this.aspectModelUrn ? this.aspectModelUrn.startsWith(`${Bamm.BASE_URI}characteristic:${this.metaModelVersion}#`) : false;
+    return this.aspectModelUrn ? this.aspectModelUrn.startsWith(`${Samm.BASE_URI}characteristic:${this.metaModelVersion}#`) : false;
   }
 
   delete(baseMetalModelElement: BaseMetaModelElement | Type) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -32,7 +32,7 @@ import {Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {ConstraintVisitor} from './constraint-visitor';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 
 describe('Constraint Visitor', () => {
   let service: ConstraintVisitor;
@@ -77,8 +77,8 @@ describe('Constraint Visitor', () => {
 
     rdfModel = {
       store: new Store(),
-      BAMM: jest.fn(() => new Bamm('')),
-      BAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+      SAMM: jest.fn(() => new Samm('')),
+      SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
       hasNamespace: jest.fn(() => false),
       addPrefix: jest.fn(() => {}),
     } as any;

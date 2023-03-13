@@ -3,7 +3,7 @@
 [[editing-model]]
 = Edit models
 
-An Aspect Model consists of different BAMM elements: one Aspect and several Properties, Operations, Characteristics, Constraints, Entities, or Events.
+An Aspect Model consists of different SAMM elements: one Aspect and several Properties, Operations, Characteristics, Constraints, Entities, or Events.
 
 An Aspect is created by default when starting an Aspect Model.
 All other elements can then be added.
@@ -11,8 +11,8 @@ Every element created in the editor can be modified.
 
 NOTE: Elements that belong to other namespaces/files cannot be edited.
 
-The naming conventions for Aspect Model elements are defined in the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/modeling-guidelines.html#naming-rules[Naming Rules (BAMM 2.0.0)^,opts=nofollow].
-The Aspect Model Editor guides you to follow all these BAMM naming conventions for your Aspect Models.
+The naming conventions for Aspect Model elements are defined in the https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/modeling-guidelines.html#naming-rules[Naming Rules (SAMM 2.0.0)^,opts=nofollow].
+The Aspect Model Editor guides you to follow all these SAMM naming conventions for your Aspect Models.
 
 [[work-with-workspace-sidebar]]
 == Work with the Workspace sidebar
@@ -70,11 +70,11 @@ Use the following advanced search possibilities for more specific search results
 
 |===
 |=position
-|BAMM elements that are named "position"
+|SAMM elements that are named "position"
 |*position
-|BAMM elements that contain "position" in their name
+|SAMM elements that contain "position" in their name
 |position$
-|BAMM elements where the name ends with "position"
+|SAMM elements where the name ends with "position"
 |===
 
 [[connecting-elements]]
@@ -133,7 +133,7 @@ image::different-constraints.png[Different Constraints]
 [[abstract-entity-case]]
 === Use Abstract Entities
 
-BAMM supports defining abstract elements (entities and properties) and the concept of inheritance in order to make semantic information reusable.
+SAMM supports defining abstract elements (entities and properties) and the concept of inheritance in order to make semantic information reusable.
 The editor allows to create abstract entities and properties and to declare relationships to inheritance via "extends".
 See https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/modeling-guidelines.html#declaring-entities[Abstract Entities]
 for more information about abstract entities and properties.

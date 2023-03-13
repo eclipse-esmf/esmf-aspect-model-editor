@@ -1,12 +1,12 @@
 {
   "name": "aspect-model-editor",
   "author": "",
-  "description": "Used to design and edit BAMM specific aspect models.",
+  "description": "Used to design and edit SAMM specific aspect models.",
   "productName": "Aspect-Model-Editor",
   "version": "",
   "main": "main.js",
   "build": {
-    "appId": "io.openmanufacturing.ame",
+    "appId": "org.eclipse.esmf.ame",
     "artifactName": "${name}-v${version}-${os}.${ext}",
     "win": {
       "target": "zip",
@@ -217,6 +217,7 @@
     "jest": "^28.1.0",
     "jest-junit": "^13.0.0",
     "jest-preset-angular": "^12.2.2",
+    "kill-port": "^2.0.1",
     "mocha": "^9.1.4",
     "mochawesome": "^7.0.0",
     "ng-packagr": "14.2.0",

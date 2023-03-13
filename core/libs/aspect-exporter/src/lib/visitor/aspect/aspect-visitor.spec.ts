@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -22,7 +22,7 @@ import {AspectVisitor} from './aspect-visitor';
 import {provideMockObject} from 'jest-helpers/utils';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 
 describe('Aspect Visitor', () => {
   let service: AspectVisitor;
@@ -60,7 +60,7 @@ describe('Aspect Visitor', () => {
     modelService = provideMockObject(ModelService);
     rdfModel = {
       store: new Store(),
-      BAMM: jest.fn(() => new Bamm('')),
+      SAMM: jest.fn(() => new Samm('')),
       hasNamespace: jest.fn(() => false),
       addPrefix: jest.fn(() => {}),
     } as any;

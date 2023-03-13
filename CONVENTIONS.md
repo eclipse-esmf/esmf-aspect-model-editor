@@ -1,10 +1,10 @@
 # Aspect Model Editor Code Conventions
 The following document contains a compilation of conventions and guidelines to format, structure and write code for the
-SDS Aspect Model Editor.
+ESMF Aspect Model Editor.
 
 ## General Conventions
 Our code conventions are based on the [Google Typescript Style Guide](https://google.github.io/styleguide/tsguide.html) but
-detailed and adjusted for the needs of the SDS Aspect Model Editor.
+detailed and adjusted for the needs of the ESMF Aspect Model Editor.
 
 ## Copyright header
 See [CONTRIBUTING](CONTRIBUTING.md)
@@ -40,4 +40,4 @@ Publishing is realized by means of [Github pages](https://docs.antora.org/antora
 ### High Level Documentation
 Technical documentation targeted towards components and architecture should be accessible via the developer documentation.
 Corresponding discussions on design etc. can be placed in the project wiki on
-[Github](https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/wiki).
+[Github](https://github.com/eclipse-esmf/esmf-aspect-model-editor/wiki).

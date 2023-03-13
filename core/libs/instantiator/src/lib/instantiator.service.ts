@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,14 +15,14 @@ import {Injectable} from '@angular/core';
 import {DataFactory, Quad_Subject, Util} from 'n3';
 import {BaseMetaModelElement, DefaultAspect} from '@ame/meta-model';
 import {
+  AbstractPropertyInstantiator,
   AspectInstantiator,
-  BammUnitInstantiator,
   EntityInstantiator,
   EntityValueInstantiator,
   EventInstantiator,
   OperationInstantiator,
   PropertyInstantiator,
-  AbstractPropertyInstantiator,
+  UnitInstantiator,
 } from './instantiators';
 import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
@@ -42,7 +42,7 @@ export class InstantiatorService {
   ) {}
 
   public instantiateFile(rdfModel: RdfModel, cachedFile: CachedFile, fileName: string): CachedFile {
-    const aspect = rdfModel.store.getSubjects(rdfModel.BAMM().RdfType(), rdfModel.BAMM().Aspect(), null)?.[0];
+    const aspect = rdfModel.store.getSubjects(rdfModel.SAMM().RdfType(), rdfModel.SAMM().Aspect(), null)?.[0];
 
     if (cachedFile.getCachedElement<DefaultAspect>(aspect?.value)) {
       return cachedFile;
@@ -91,11 +91,11 @@ export class InstantiatorService {
     cachedFile: CachedFile,
     metaModelElementInstantiator: MetaModelElementInstantiator
   ) {
-    const bamm = rdfModel.BAMM();
-    const bammc = rdfModel.BAMMC();
-    const elementType = rdfModel.store.getObjects(subject, rdfModel.BAMM().RdfType(), null)?.[0]?.value;
+    const samm = rdfModel.SAMM();
+    const sammC = rdfModel.SAMMC();
+    const elementType = rdfModel.store.getObjects(subject, rdfModel.SAMM().RdfType(), null)?.[0]?.value;
 
-    if (bamm.isPropertyElement(elementType)) {
+    if (samm.isPropertyElement(elementType)) {
       const overwrittenProperty = new PropertyInstantiator(metaModelElementInstantiator).createProperty({
         blankNode: false,
         quad: subject,
@@ -107,7 +107,7 @@ export class InstantiatorService {
       return;
     }
 
-    if (bamm.isAbstractPropertyElement(elementType)) {
+    if (samm.isAbstractPropertyElement(elementType)) {
       const overwrittenProperty = new AbstractPropertyInstantiator(metaModelElementInstantiator).createAbstractProperty({
         blankNode: false,
         quad: subject,
@@ -129,7 +129,7 @@ export class InstantiatorService {
       return;
     }
 
-    if (bammc.isStandardCharacteristic(elementType) || bamm.isCharacteristic(elementType)) {
+    if (sammC.isStandardCharacteristic(elementType) || samm.isCharacteristic(elementType)) {
       const characteristic = metaModelElementInstantiator.getCharacteristic(DataFactory.quad(null, null, subject));
       if (characteristic) {
         cachedFile.resolveIsolatedElement(characteristic);
@@ -138,7 +138,7 @@ export class InstantiatorService {
       return;
     }
 
-    if (bamm.isOperationElement(elementType)) {
+    if (samm.isOperationElement(elementType)) {
       const operation = new OperationInstantiator(metaModelElementInstantiator).createOperation({
         blankNode: false,
         quad: subject,
@@ -150,7 +150,7 @@ export class InstantiatorService {
       return;
     }
 
-    if (bamm.isEventElement(elementType)) {
+    if (samm.isEventElement(elementType)) {
       const event = new EventInstantiator(metaModelElementInstantiator).createEvent({
         blankNode: false,
         quad: subject,
@@ -162,8 +162,8 @@ export class InstantiatorService {
       return;
     }
 
-    if (bamm.isUnitElement(elementType)) {
-      const unit = new BammUnitInstantiator(metaModelElementInstantiator).createUnit(subject.value);
+    if (samm.isUnitElement(elementType)) {
+      const unit = new UnitInstantiator(metaModelElementInstantiator).createUnit(subject.value);
       if (unit) {
         cachedFile.resolveIsolatedElement(unit);
         cachedFile.removeCachedElement(unit.aspectModelUrn);
@@ -171,7 +171,7 @@ export class InstantiatorService {
       return;
     }
 
-    if (bamm.isEntity(elementType)) {
+    if (samm.isEntity(elementType)) {
       const entity = new EntityInstantiator(metaModelElementInstantiator).createEntity(rdfModel.store.getQuads(subject, null, null, null));
       if (entity) {
         cachedFile.resolveIsolatedElement(entity);
@@ -180,7 +180,7 @@ export class InstantiatorService {
       return;
     }
 
-    if (bamm.isAbstractEntity(elementType)) {
+    if (samm.isAbstractEntity(elementType)) {
       const entity = new AbstractEntityInstantiator(metaModelElementInstantiator).createAbstractEntity(
         rdfModel.store.getQuads(subject, null, null, null)
       );

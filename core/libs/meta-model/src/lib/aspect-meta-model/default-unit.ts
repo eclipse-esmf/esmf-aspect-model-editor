@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,7 +12,7 @@
  */
 
 import {AspectModelVisitor} from '@ame/mx-graph';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 import {Base, BaseMetaModelElement} from './base';
 import {QuantityKind} from './default-quantity-kind';
 
@@ -54,6 +54,6 @@ export class DefaultUnit extends Base implements Unit {
   }
 
   isPredefined(): boolean {
-    return this.aspectModelUrn ? this.aspectModelUrn.startsWith(`${Bamm.BASE_URI}unit:${this.metaModelVersion}#`) : false;
+    return this.aspectModelUrn ? this.aspectModelUrn.startsWith(`${Samm.BASE_URI}unit:${this.metaModelVersion}#`) : false;
   }
 }

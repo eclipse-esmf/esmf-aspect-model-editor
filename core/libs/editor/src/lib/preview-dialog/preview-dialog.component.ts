@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,7 +12,7 @@
  */
 import {Component, Inject, ViewChild} from '@angular/core';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {saveAs} from 'file-saver';
 
 interface PreviewDialogOptions {

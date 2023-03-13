@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,7 +15,7 @@ import {Injectable} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper, AbstractPropertyRenderService} from '@ame/mx-graph';
+import {AbstractPropertyRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper} from '@ame/mx-graph';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
 import {CanExtend, DefaultAbstractProperty, DefaultProperty} from '../aspect-meta-model';

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,20 +14,20 @@
 import {Injectable} from '@angular/core';
 import {
   DefaultConstraint,
-  DefaultRangeConstraint,
-  DefaultFixedPointConstraint,
-  DefaultLengthConstraint,
-  DefaultLanguageConstraint,
   DefaultEncodingConstraint,
-  DefaultRegularExpressionConstraint,
+  DefaultFixedPointConstraint,
+  DefaultLanguageConstraint,
+  DefaultLengthConstraint,
   DefaultLocaleConstraint,
+  DefaultRangeConstraint,
+  DefaultRegularExpressionConstraint,
   DefaultTrait,
   Trait,
   Type,
 } from '@ame/meta-model';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
-import {Bammc} from '@ame/vocabulary';
+import {SammC} from '@ame/vocabulary';
 import {mxgraph} from 'mxgraph-factory';
 import {DataFactory, NamedNode, Store} from 'n3';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
@@ -39,8 +39,8 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
     return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.store;
   }
 
-  private get bammc(): Bammc {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.BAMMC();
+  private get sammC(): SammC {
+    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.SAMMC();
   }
 
   private readonly constraintCallbacks = {
@@ -143,7 +143,7 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
     parents?.forEach(parent => {
       this.replaceConstraints(
         DataFactory.namedNode(parent.aspectModelUrn),
-        this.bammc.ConstraintProperty(),
+        this.sammC.ConstraintProperty(),
         DataFactory.namedNode(constraint.aspectModelUrn),
         DataFactory.namedNode(constraint.aspectModelUrn)
       );

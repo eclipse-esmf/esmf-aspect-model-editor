@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,8 +12,8 @@
  */
 
 export * from './aspect-instantiator';
-export * from './bamm-characteristic-instantiator';
-export * from './bamm-unit-instantiator';
+export * from './predefined-characteristic-instantiator';
+export * from './unit-instantiator';
 export * from './base-constraint-characteristic-instantiator';
 export * from './characteristic-instantiator';
 export * from './code-characteristic-instantiator';
@@ -45,5 +45,5 @@ export * from './timeseries-characteristic-instantiator';
 export * from './trait-characteristic-instantiator';
 export * from './event-instantiator';
 export * from './abstract-property-instantiator';
-export * from './bamme-predefined-entity-instantiator';
-export * from './bamme-predefined-property-instantiator';
+export * from './samm-e-predefined-entity-instantiator';
+export * from './samm-e-predefined-property-instantiator';

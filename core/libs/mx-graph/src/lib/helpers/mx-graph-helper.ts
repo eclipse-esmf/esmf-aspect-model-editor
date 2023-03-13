@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,23 +13,23 @@
 
 import {
   BaseMetaModelElement,
-  DefaultProperty,
+  CanExtend,
   DefaultCharacteristic,
   DefaultEither,
   DefaultEntity,
   DefaultEntityValue,
   DefaultEnumeration,
   DefaultOperation,
+  DefaultProperty,
   DefaultStructuredValue,
   DefaultTrait,
-  CanExtend,
 } from '@ame/meta-model';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {ExpandedModelShape, ModelCompactTreeLayout, ModelHierarchicalLayout} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {ModelBaseProperties} from '../models';
-import {mxConstants, mxCompactTreeLayout, mxHierarchicalLayout} from '../providers';
+import {mxCompactTreeLayout, mxConstants, mxHierarchicalLayout} from '../providers';
 import {MxGraphVisitorHelper, PropertyInformation} from './mx-graph-visitor-helper';
 
 export class MxGraphHelper {
@@ -373,7 +373,7 @@ export class MxGraphHelper {
     }
 
     if (baseProperties.predefined) {
-      infoLock.title += `BAMM Element\n`;
+      infoLock.title += `SAMM Element\n`;
       infoLock.classList.add('info-shape');
       iconsBar.appendChild(infoLock);
     }

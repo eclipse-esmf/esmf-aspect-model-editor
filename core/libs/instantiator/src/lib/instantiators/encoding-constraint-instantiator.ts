@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -26,11 +26,11 @@ export class EncodingConstraintInstantiator extends ConstraintInstantiator {
       return encodingConstraint;
     }
 
-    const bamm = this.metaModelElementInstantiator.bamm;
+    const samm = this.metaModelElementInstantiator.samm;
     encodingConstraint = new DefaultEncodingConstraint(null, null, null, null);
 
     quads.forEach(quad => {
-      if (bamm.isValueProperty(quad.predicate.value)) {
+      if (samm.isValueProperty(quad.predicate.value)) {
         encodingConstraint.value = quad.object.value;
       }
     });
@@ -39,6 +39,6 @@ export class EncodingConstraintInstantiator extends ConstraintInstantiator {
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.EncodingConstraint().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.EncodingConstraint().equals(nameNode);
   }
 }

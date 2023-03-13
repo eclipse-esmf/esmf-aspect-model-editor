@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -16,12 +16,12 @@ import {DataFactory, NamedNode, Quad_Object, Store, Util} from 'n3';
 import {DefaultAspect, DefaultEntity, DefaultEnumeration, DefaultOperation, DefaultProperty, DefaultStructuredValue} from '@ame/meta-model';
 import {RdfListService} from './rdf-list.service';
 import {ListProperties} from './rdf-list.types';
-import {Bamm} from '@ame/vocabulary';
+import {Samm, SammC} from '@ame/vocabulary';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {provideMockObject} from 'jest-helpers';
 import {RdfNodeService} from '../rdf-node';
 
-class MockBamm {
+class MockSamm {
   isRdfNill = jest.fn((namedNode: string) => namedNode === 'nill');
   isRdfFirst = jest.fn((namedNode: string) => namedNode === 'first');
   isRdfRest = jest.fn((namedNode: string) => namedNode === 'rest');
@@ -38,15 +38,15 @@ class MockBamm {
   ParametersProperty = jest.fn(() => DataFactory.namedNode('parameters'));
 }
 
-class MockBammc {
+class MockSammC {
   ValuesProperty = jest.fn(() => DataFactory.namedNode('values'));
   ElementsProperty = jest.fn(() => DataFactory.namedNode('elements'));
 }
 
 class MockRDFModel {
   store = new Store();
-  BAMM = jest.fn((): Bamm => new MockBamm() as any);
-  BAMMC = jest.fn((): Bamm => new MockBammc() as any);
+  SAMM = jest.fn((): Samm => new MockSamm() as any);
+  SAMMC = jest.fn((): SammC => new MockSammC() as any);
 }
 
 jest.mock('../../../../rdf/src/lib/utils/rdf-model-util');
@@ -139,10 +139,10 @@ describe('RDF Helper', () => {
   };
 
   const createEmptyList = () => {
-    const bamm = rdfModel.BAMM();
+    const samm = rdfModel.SAMM();
     const list = DataFactory.blankNode();
     rdfModel.store.addQuad(DataFactory.namedNode(subjectName), predicate, list);
-    rdfModel.store.addQuad(DataFactory.triple(list, bamm.RdfRest(), bamm.RdfNil()));
+    rdfModel.store.addQuad(DataFactory.triple(list, samm.RdfRest(), samm.RdfNil()));
   };
 
   const checkForFakeElements = (source, elements) => {
@@ -153,8 +153,8 @@ describe('RDF Helper', () => {
   describe('push()', () => {
     describe('Aspect -> Properties', () => {
       beforeEach(() => {
-        setPredicate(rdfModel.BAMM().PropertiesProperty());
-        RdfModelUtil.resolvePredicate = jest.fn(() => rdfModel.BAMM().PropertiesProperty());
+        setPredicate(rdfModel.SAMM().PropertiesProperty());
+        RdfModelUtil.resolvePredicate = jest.fn(() => rdfModel.SAMM().PropertiesProperty());
         // RdfListConstants.getRelations = jest.fn(() => null);
       });
 
@@ -246,7 +246,7 @@ describe('RDF Helper', () => {
 
     describe('Aspect -> Operations', () => {
       beforeEach(() => {
-        setPredicate(rdfModel.BAMM().OperationsProperty());
+        setPredicate(rdfModel.SAMM().OperationsProperty());
         RdfModelUtil.resolvePredicate = jest.fn(() => predicate);
       });
 
@@ -337,7 +337,7 @@ describe('RDF Helper', () => {
 
     describe('Entity -> Properties', () => {
       beforeEach(() => {
-        setPredicate(rdfModel.BAMM().PropertiesProperty());
+        setPredicate(rdfModel.SAMM().PropertiesProperty());
         RdfModelUtil.resolvePredicate = jest.fn(() => predicate);
       });
 
@@ -422,7 +422,7 @@ describe('RDF Helper', () => {
 
     describe('DefaultEnumeration -> number, string, boolean', () => {
       beforeEach(() => {
-        setPredicate(rdfModel.BAMMC().ValuesProperty());
+        setPredicate(rdfModel.SAMMC().ValuesProperty());
         RdfModelUtil.resolvePredicate = jest.fn(() => predicate);
       });
 
@@ -482,7 +482,7 @@ describe('RDF Helper', () => {
 
     describe('DefaultStructuredValue -> number, string, boolean', () => {
       beforeEach(() => {
-        setPredicate(rdfModel.BAMMC().ElementsProperty());
+        setPredicate(rdfModel.SAMMC().ElementsProperty());
         RdfModelUtil.resolvePredicate = jest.fn(() => predicate);
       });
 
@@ -544,7 +544,7 @@ describe('RDF Helper', () => {
 
   describe('remove()', () => {
     it('should remove property1', () => {
-      setPredicate(rdfModel.BAMM().PropertiesProperty());
+      setPredicate(rdfModel.SAMM().PropertiesProperty());
       createEmptyList();
 
       const source = new DefaultAspect('1', subjectName, subjectName);
@@ -557,12 +557,12 @@ describe('RDF Helper', () => {
       service.remove(source, elements[0]);
       shouldBeListAndHave({first: 1, rest: 1, list});
 
-      const remainingQuads = rdfModel.store.getQuads(null, rdfModel.BAMM().RdfFirst(), null, null);
+      const remainingQuads = rdfModel.store.getQuads(null, rdfModel.SAMM().RdfFirst(), null, null);
       expect(remainingQuads.find(quad => quad?.object.value === 'property1')).not.toBeDefined();
     });
 
     it('should remove property1 and property2', () => {
-      setPredicate(rdfModel.BAMM().PropertiesProperty());
+      setPredicate(rdfModel.SAMM().PropertiesProperty());
       createEmptyList();
 
       const source = new DefaultAspect('1', subjectName, subjectName);
@@ -580,36 +580,10 @@ describe('RDF Helper', () => {
       service.remove(source, elements[0], elements[1]);
       shouldBeListAndHave({first: 2, rest: 2, list});
 
-      const remainingQuads = rdfModel.store.getQuads(null, rdfModel.BAMM().RdfFirst(), null, null);
+      const remainingQuads = rdfModel.store.getQuads(null, rdfModel.SAMM().RdfFirst(), null, null);
       expect(remainingQuads.find(quad => quad?.object.value === 'property1')).not.toBeDefined();
       expect(remainingQuads.find(quad => quad?.object.value === 'property2')).not.toBeDefined();
     });
-
-    // TODO Test should be adjusted.
-    //   it('should remove the blank node property3', () => {
-    //     setPredicate(rdfModel.BAMM().PropertiesProperty());
-    //
-    //     // creating the blank node
-    //     const bamm = rdfModel.BAMM();
-    //     const list = DataFactory.blankNode();
-    //     const node = DataFactory.blankNode();
-    //
-    //     rdfModel.store.addQuad(DataFactory.namedNode(subjectName), predicate, list);
-    //     rdfModel.store.addQuad(DataFactory.triple(list, bamm.RdfFirst(), node));
-    //     rdfModel.store.addQuad(DataFactory.triple(list, bamm.RdfRest(), bamm.RdfNil()));
-    //     rdfModel.store.addQuad(node, rdfModel.BAMM().NameProperty(), DataFactory.namedNode('property3'));
-    //
-    //     const source = new DefaultAspect('1', subjectName, subjectName);
-    //     const elements = [new DefaultProperty('1', 'property1', 'property1', null), new DefaultProperty('1', 'property2', 'property2', null)];
-    //     service.push(source, ...elements);
-    //
-    //     shouldBeListAndHave({first: 3, rest: 3, list});
-    //
-    //     service.remove(source, new DefaultProperty('1', 'property3', 'property3', null));
-    //     shouldBeListAndHave({first: 2, rest: 2, list});
-    //
-    //     expect(rdfModel.store.getQuads(null, rdfModel.BAMM().NameProperty(), null, null).length).toBe(0);
-    //   });
   });
 
   let sourceAspect: DefaultAspect;
@@ -622,8 +596,8 @@ describe('RDF Helper', () => {
 
   describe('emptyList', () => {
     beforeEach(() => {
-      setPredicate(rdfModel.BAMM().PropertiesProperty());
-      RdfModelUtil.resolvePredicate = jest.fn(() => rdfModel.BAMM().PropertiesProperty());
+      setPredicate(rdfModel.SAMM().PropertiesProperty());
+      RdfModelUtil.resolvePredicate = jest.fn(() => rdfModel.SAMM().PropertiesProperty());
     });
 
     it('should empty the properties list', () => {
@@ -632,17 +606,17 @@ describe('RDF Helper', () => {
 
       service.emptyList(sourceAspect, ListProperties.properties);
 
-      const list = rdfModel.store.getQuads(DataFactory.namedNode(subjectName), rdfModel.BAMM().PropertiesProperty(), null, null)?.[0]
+      const list = rdfModel.store.getQuads(DataFactory.namedNode(subjectName), rdfModel.SAMM().PropertiesProperty(), null, null)?.[0]
         ?.object;
       expect(list).not.toBeUndefined();
-      expect(list.value).toBe(rdfModel.BAMM().RdfNil().value);
+      expect(list.value).toBe(rdfModel.SAMM().RdfNil().value);
     });
   });
 
   describe('createEmpty()', () => {
     beforeEach(() => {
-      setPredicate(rdfModel.BAMM().PropertiesProperty());
-      RdfModelUtil.resolvePredicate = jest.fn(() => rdfModel.BAMM().PropertiesProperty());
+      setPredicate(rdfModel.SAMM().PropertiesProperty());
+      RdfModelUtil.resolvePredicate = jest.fn(() => rdfModel.SAMM().PropertiesProperty());
     });
 
     it('should create empty list', () => {

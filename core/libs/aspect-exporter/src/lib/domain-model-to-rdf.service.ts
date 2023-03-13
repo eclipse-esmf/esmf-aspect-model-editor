@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -32,6 +32,8 @@ import {ModelService} from '@ame/rdf/services';
 import {mxgraph} from 'mxgraph-factory';
 import {filter, tap} from 'rxjs/operators';
 import {
+  AbstractEntityVisitor,
+  AbstractPropertyVisitor,
   AspectVisitor,
   CharacteristicVisitor,
   CleanupVisitor,
@@ -42,8 +44,6 @@ import {
   OperationVisitor,
   PropertyVisitor,
   UnitVisitor,
-  AbstractEntityVisitor,
-  AbstractPropertyVisitor,
 } from './visitor';
 
 @Injectable()

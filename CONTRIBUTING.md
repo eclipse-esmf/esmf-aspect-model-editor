@@ -75,10 +75,10 @@ When opening a `PR` please consider the following topics:
 
 * optional: Rebase your development on the branch to which you plan to create the `PR`.
 * Each `PR` must be linked to an `Issue`:
-    - Reference the `Issue` number in the name of your `feature branch` and the description of the `PR`.
-    - Mention the `Issue` in one of the commit messages associated to the `PR` together with a GitHub keyword like
-      `closes #IssueNumber` or `fixes #IssuesNumber`. For more details visit the
-      [GitHub documentation on linking PR with Issues](https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword)
+  - Reference the `Issue` number in the name of your `feature branch` and the description of the `PR`.
+  - Mention the `Issue` in one of the commit messages associated to the `PR` together with a GitHub keyword like
+    `closes #IssueNumber` or `fixes #IssuesNumber`. For more details visit the
+    [GitHub documentation on linking PR with Issues](https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword)
 * Each `PR` should only contain changes related to a single work item. If the changes cover more than one work item or
   feature, then create one `PR` per work item. You may need to create new more specific `Issues` to reference if you
   split up the work into multiple `feature branches`.
@@ -150,12 +150,12 @@ Label Types        | Description
   A `PR` for a bug fix has to reference an issue of type `Bug Report`.
 * The `maintainers` may assign the label `to be discussed` to a proposal when further involvement from
   the `working group` is required. This then triggers the following steps:
-    1. The `Chair` of the `working group` puts the proposal up for discussion in one of the next `working group` meetings.
-    2. The `working group` then uses Consensus Decision-Making with one of the outcomes listed below.
-    3. The label `to be discussed` is removed.
+  1. The `Chair` of the `working group` puts the proposal up for discussion in one of the next `working group` meetings.
+  2. The `working group` then uses Consensus Decision-Making with one of the outcomes listed below.
+  3. The label `to be discussed` is removed.
 
   | Decision | Next Steps |
-    | ------ | ------- |
+      | ------ | ------- |
   |`Approved`| The `Issue` or the `PR` gets the label `approved`. In the case of a `PR`, the `maintainers` merge the respective `PR`. |
   | `Discussion`| The `Issue` or the `PR` get the label `request for information`.
   |`Close` | The `Issue` or the `PR` are closed and get the label `not accepted`. |
@@ -269,4 +269,3 @@ v1.0.0-RC1, v1.0.0
 * [For a Repo](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork)
 * [Issue Creation](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue)
 * [PR Creation](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)
-

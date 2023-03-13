@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,23 +15,21 @@ import {DataFactory, NamedNode, Prefixes, Quad, Quad_Object, Quad_Subject, Store
 import * as locale from 'locale-codes';
 import {InstantiatorListElement} from './rdf-model.types';
 import {DataTypeService} from '@ame/shared';
-import {Bamm, Bammc, Bamme, Bammu} from '@ame/vocabulary';
+import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
 
 export class RdfModel {
-  private metaModelVersion;
-  private metaModelIdentifier;
-
-  private readonly bamm: Bamm;
-  private readonly bammc: Bammc;
-  private readonly bamme: Bamme;
-  private readonly bammu: Bammu;
-
   private _isExternalRef = false;
   private _aspectModelFileName: string;
   private _hasErrors = false;
   private _absoluteAspectModelFileName: string = null;
-
+  private metaModelVersion: string;
+  private metaModelIdentifier: string;
   private defaultAspectModelAlias = '';
+
+  public readonly samm: Samm;
+  public readonly sammC: SammC;
+  public readonly sammE: SammE;
+  public readonly sammU: SammU;
 
   get isExternalRef(): boolean {
     return this._isExternalRef;
@@ -50,11 +48,11 @@ export class RdfModel {
   }
 
   get hasAspect(): boolean {
-    return this.store.getSubjects(this.bamm.RdfType(), this.bamm.Aspect(), null).length > 0;
+    return this.store.getSubjects(this.samm.RdfType(), this.samm.Aspect(), null).length > 0;
   }
 
   get aspectUrn(): string {
-    return this.store.getSubjects(this.bamm.RdfType(), this.bamm.Aspect(), null)[0]?.value || this.getAspectModelUrn();
+    return this.store.getSubjects(this.samm.RdfType(), this.samm.Aspect(), null)[0]?.value || this.getAspectModelUrn();
   }
 
   set hasErrors(hasErrors: boolean) {
@@ -74,7 +72,7 @@ export class RdfModel {
       return this._absoluteAspectModelFileName;
     }
 
-    const aspect = this.store.getSubjects(null, this.BAMM().Aspect(), null)?.[0];
+    const aspect = this.store.getSubjects(null, this.samm.Aspect(), null)?.[0];
     if (aspect) {
       return aspect.value.replace('urn:bamm:', '').replace('#', ':') + '.ttl';
     }
@@ -88,10 +86,10 @@ export class RdfModel {
 
   constructor(public store: Store, public dataTypeService: DataTypeService, private prefixes: Prefixes) {
     this.resolveMetaModelVersion();
-    this.bamm = new Bamm(this.metaModelVersion, this.metaModelIdentifier);
-    this.bammc = new Bammc(this.bamm);
-    this.bamme = new Bamme(this.bamm);
-    this.bammu = new Bammu(this.bamm);
+    this.samm = new Samm(this.metaModelVersion, this.metaModelIdentifier);
+    this.sammC = new SammC(this.samm);
+    this.sammE = new SammE(this.samm);
+    this.sammU = new SammU(this.samm);
     this.setDefaultAspectModelAlias();
   }
 
@@ -163,6 +161,16 @@ export class RdfModel {
     return quad ? locale.getByTag(quad.object['language']).tag : null;
   }
 
+  getAbsoluteAspectModelFileName() {
+    const aspect = this.store.getSubjects(null, this.samm.Aspect(), null)?.[0];
+
+    if (aspect) {
+      return aspect.value.replace('urn:bamm:', '').replace('#', ':') + '.ttl';
+    }
+
+    return `${this.getAspectModelUrn().replace('urn:bamm:', '').replace('#', ':')}${this.aspectModelFileName}`;
+  }
+
   public resolveRecursiveBlankNodes(uri: string, writer: Writer): Quad[] {
     const quads: Quad[] = this.store.getQuads(DataFactory.blankNode(uri), null, null, null);
     const blankNodes = [];
@@ -171,7 +179,7 @@ export class RdfModel {
       if (Util.isBlankNode(quad.subject) && Util.isBlankNode(quad.object)) {
         const currentBlankNodes = this.resolveRecursiveBlankNodes(quad.object.value, writer);
 
-        if (currentBlankNodes.every(({predicate}) => predicate.value.startsWith(Bamm.RDF_URI))) {
+        if (currentBlankNodes.every(({predicate}) => predicate.value.startsWith(Samm.RDF_URI))) {
           blankNodes.push(...currentBlankNodes);
           continue;
         }
@@ -187,7 +195,7 @@ export class RdfModel {
         continue;
       }
 
-      if (!quad.object.value.startsWith(Bamm.RDF_URI)) {
+      if (!quad.object.value.startsWith(Samm.RDF_URI)) {
         blankNodes.push(DataFactory.quad(quad.subject, quad.predicate, quad.object));
       }
     }
@@ -199,7 +207,7 @@ export class RdfModel {
     this.store.getQuads(DataFactory.blankNode(uri), null, null, null).forEach(value => {
       if (Util.isBlankNode(value.object)) {
         this.resolveBlankNodes(value.object.value, resolvedNodes);
-      } else if (!value.object.value.startsWith(Bamm.RDF_URI)) {
+      } else if (!value.object.value.startsWith(Samm.RDF_URI)) {
         resolvedNodes.push(DataFactory.quad(value.subject, value.predicate, value.object));
       }
     });
@@ -211,17 +219,17 @@ export class RdfModel {
     const elements: InstantiatorListElement[] = [];
     const quads: Quad[] = this.store.getQuads(list, null, null, null);
     for (const quad of quads) {
-      const isRdfFirst = this.bamm.isRdfFirst(quad.predicate.value);
+      const isRdfFirst = this.samm.isRdfFirst(quad.predicate.value);
 
       if (isRdfFirst && Util.isBlankNode(quad.object)) {
         const blankNodeElements = this.store.getQuads(quad.object, null, null, null);
         elements.push({
           blankNode: true,
-          optional: blankNodeElements.find(e => e.predicate.value === this.bamm.OptionalProperty().value)?.object,
-          notInPayload: blankNodeElements.find(e => e.predicate.value === this.bamm.NotInPayloadProperty().value)?.object,
-          payloadName: blankNodeElements.find(e => e.predicate.value === this.bamm.payloadNameProperty().value)?.object,
-          quad: blankNodeElements.find(e => e.predicate.value === this.bamm.PropertyProperty().value)?.object || quad.subject,
-          extends: blankNodeElements.find(e => e.predicate.value === this.bamm.ExtendsProperty().value)?.object,
+          optional: blankNodeElements.find(e => e.predicate.value === this.samm.OptionalProperty().value)?.object,
+          notInPayload: blankNodeElements.find(e => e.predicate.value === this.samm.NotInPayloadProperty().value)?.object,
+          payloadName: blankNodeElements.find(e => e.predicate.value === this.samm.payloadNameProperty().value)?.object,
+          quad: blankNodeElements.find(e => e.predicate.value === this.samm.PropertyProperty().value)?.object || quad.subject,
+          extends: blankNodeElements.find(e => e.predicate.value === this.samm.ExtendsProperty().value)?.object,
         });
         continue;
       }
@@ -231,7 +239,7 @@ export class RdfModel {
         continue;
       }
 
-      if (this.bamm.isRdfRest(quad.predicate.value) && !this.bamm.isRdfNill(quad.object.value)) {
+      if (this.samm.isRdfRest(quad.predicate.value) && !this.samm.isRdfNill(quad.object.value)) {
         elements.push(...this.getListElements(quad.object));
       }
     }
@@ -278,23 +286,23 @@ export class RdfModel {
   }
 
   private setDefaultAspectModelAlias() {
-    const subject = this.store.getSubjects(this.bamm.RdfType(), null, null);
+    const subject = this.store.getSubjects(this.samm.RdfType(), null, null);
     this.defaultAspectModelAlias = this.getAliasByNamespace(`${subject[0].value.split('#')[0]}#`);
   }
 
-  BAMM(): Bamm {
-    return this.bamm;
+  SAMM(): Samm {
+    return this.samm;
   }
 
-  BAMMC(): Bammc {
-    return this.bammc;
+  SAMMC(): SammC {
+    return this.sammC;
   }
 
-  BAMME(): Bamme {
-    return this.bamme;
+  SAMME(): SammE {
+    return this.sammE;
   }
 
-  BAMMU(): Bammu {
-    return this.bammu;
+  SAMMU(): SammU {
+    return this.sammU;
   }
 }

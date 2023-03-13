@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -17,7 +17,7 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Aspect} from '@ame/meta-model';
 import {GeneralConfig} from '@ame/shared';
 import {NamespaceConfirmationModalComponent} from '../namespace-confirmation-modal/namespace-confirmation-modal.component';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 import {ModelService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 
@@ -34,7 +34,7 @@ export class NamespaceComponent implements OnInit {
     aspectUri: new FormControl('', Validators.required),
     aspectName: new FormControl({value: '', disabled: true}),
     aspectVersion: new FormControl(''),
-    bammVersion: new FormControl({value: GeneralConfig.bammVersion, disabled: true}),
+    sammVersion: new FormControl({value: GeneralConfig.sammVersion, disabled: true}),
   });
   aspectUri: FormControl;
   aspectUriInitialValue: string;
@@ -62,30 +62,30 @@ export class NamespaceComponent implements OnInit {
         if (loadedAspect.aspectModelUrn === `${namespaces[key]}${loadedAspect.name}`) {
           return;
         }
-        if (!Bamm.isDefaultNamespaceUri(namespaces[key])) {
+        if (!Samm.isDefaultNamespaceUri(namespaces[key])) {
           return;
         }
-        if (namespaces[key].startsWith(Bamm.XSD_URI)) {
+        if (namespaces[key].startsWith(Samm.XSD_URI)) {
           this.predefinedNamespaces.push({
             name: 'xsd',
-            value: Bamm.XSD_URI,
+            value: Samm.XSD_URI,
             version: '2001',
           });
           return;
         }
         const namespaceParts = namespaces[key].split(':');
-        if (namespaces[key].startsWith(Bamm.RDF_URI) && namespaceParts.length < 5) {
+        if (namespaces[key].startsWith(Samm.RDF_URI) && namespaceParts.length < 5) {
           this.predefinedNamespaces.push({
             name: 'rdf',
-            value: Bamm.RDF_URI,
+            value: Samm.RDF_URI,
             version: '1999',
           });
           return;
         }
-        if (namespaces[key].startsWith(Bamm.RDFS_URI) && namespaceParts.length < 5) {
+        if (namespaces[key].startsWith(Samm.RDFS_URI) && namespaceParts.length < 5) {
           this.predefinedNamespaces.push({
             name: 'rdfs',
-            value: Bamm.RDFS_URI,
+            value: Samm.RDFS_URI,
             version: '2000',
           });
           return;
@@ -104,7 +104,7 @@ export class NamespaceComponent implements OnInit {
       aspectUri: new FormControl(this.aspectUriInitialValue, Validators.required),
       aspectName: new FormControl({value: `${loadedAspect.name}`, disabled: true}),
       aspectVersion: new FormControl(aspectVersion),
-      bammVersion: new FormControl({value: GeneralConfig.bammVersion, disabled: true}),
+      sammVersion: new FormControl({value: GeneralConfig.sammVersion, disabled: true}),
     });
   }
 

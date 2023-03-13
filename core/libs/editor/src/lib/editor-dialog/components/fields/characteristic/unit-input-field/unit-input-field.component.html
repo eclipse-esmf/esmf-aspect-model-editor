@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -11,10 +11,10 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+<div fxLayout="row" fxlayoutgap="5px" fxLayoutAlign="space-between center">
   <mat-form-field [floatLabel]="getControl('unit')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="unit">Unit</mat-label>
-    <input #unit [matAutocomplete]="auto" matInput name="unit" [formControl]="unitDisplayControl" data-cy="unit"/>
+    <mat-label for="unit">unit</mat-label>
+    <input #unit [matAutocomplete]="auto" matInput name="unit" [formControl]="unitDisplayControl" data-cy="unit" />
     <button
       *ngIf="unitDisplayControl?.disabled && !metaModelElement?.isExternalReference()"
       (click)="unlockUnit()"
@@ -27,8 +27,8 @@
       <mat-icon>close</mat-icon>
     </button>
 
-    <mat-error *ngIf="unitDisplayControl?.errors?.checkShapeName"> Please select a different name as this one is of
-      different type
+    <mat-error *ngIf="unitDisplayControl?.errors?.checkShapeName">
+      Please select a different name as this one is of different type
     </mat-error>
     <mat-error *ngIf="unitDisplayControl?.errors?.checkShapeNameExtRef">
       Please select a different name as this one is of different type in the same namespace
@@ -38,8 +38,7 @@
     <mat-autocomplete #auto="matAutocomplete">
       <ng-container *ngIf="filteredUnits$ | async as filteredUnits">
         <mat-optgroup *ngIf="(unit.value || filteredUnits.length) && !unitDisplayControl.errors" label="Units">
-          <mat-option *ngIf="filteredUnits.length <= 0 && unit.value" [value]="unit.value"
-                      (click)="createNewUnit(unit.value)">
+          <mat-option *ngIf="filteredUnits.length <= 0 && unit.value" [value]="unit.value" (click)="createNewUnit(unit.value)">
             <span>
               + Create new Unit: <strong>{{ unit.value }}</strong>
             </span>
@@ -68,6 +67,5 @@
         </mat-optgroup>
       </ng-container>
     </mat-autocomplete>
-    <mat-hint>bamm:unit</mat-hint>
   </mat-form-field>
 </div>

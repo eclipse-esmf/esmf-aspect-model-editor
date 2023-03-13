@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -17,7 +17,7 @@ import {MxGraphService} from '@ame/mx-graph';
 import {InputFieldComponent} from '../../input-field.component';
 import {EditorModelService} from '../../../../editor-model.service';
 import {DataTypeService} from '@ame/shared';
-import {Bamm, Bammc} from '@ame/vocabulary';
+import {Samm, SammC} from '@ame/vocabulary';
 
 @Component({
   selector: 'ame-upper-bound-input-field',
@@ -39,7 +39,7 @@ export class UpperBoundInputFieldComponent extends InputFieldComponent<DefaultCo
   ngOnInit() {
     this.subscription = this.getMetaModelData().subscribe((modelElement: BaseMetaModelElement) => {
       this.upperBoundDefinitionList = modelElement
-        ? new Bammc(new Bamm(modelElement.metaModelVersion)).getUpperBoundDefinitionList()
+        ? new SammC(new Samm(modelElement.metaModelVersion)).getUpperBoundDefinitionList()
         : null;
       if (modelElement instanceof DefaultConstraint) {
         this.metaModelElement = modelElement;

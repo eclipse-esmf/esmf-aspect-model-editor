@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,7 +14,7 @@
 import {Base, BaseMetaModelElement} from './base';
 import {AspectModelVisitor} from '@ame/mx-graph';
 import {OverWrittenProperty} from './overwritten-property';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 
 export interface Event extends BaseMetaModelElement {
   parameters: Array<OverWrittenProperty>;
@@ -44,6 +44,6 @@ export class DefaultEvent extends Base implements Event {
   }
 
   isPredefined(): boolean {
-    return this.aspectModelUrn ? this.aspectModelUrn.startsWith(`${Bamm.BASE_URI}event:${this.metaModelVersion}#`) : false;
+    return this.aspectModelUrn ? this.aspectModelUrn.startsWith(`${Samm.BASE_URI}event:${this.metaModelVersion}#`) : false;
   }
 }

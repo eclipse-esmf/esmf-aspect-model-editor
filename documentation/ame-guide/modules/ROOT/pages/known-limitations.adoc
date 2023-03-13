@@ -8,20 +8,20 @@ All known limitations of the Aspect Model Editor, that is, features or improveme
 See also xref:known-issues.adoc#known-issues[known issues].
 
 [[current-known-limitations]]
-== Current limitations related to the BAMM Aspect Meta Model
+== Current limitations related to the SAMM Aspect Meta Model
 
-This sections lists features that are supported in Aspect Models by the BAMM Aspect Meta Model but not fully or only partially available within the Aspect Model Editor.
+This sections lists features that are supported in Aspect Models by the SAMM Aspect Meta Model but not fully or only partially available within the Aspect Model Editor.
 
 
 [cols="15%,30%,55%"]
 |===
 | Category | Title | Explanation
 
-| BAMM
+| SAMM
 | Entity: Include predefined instance
-| BAMM supports to refer to a globally pre-defined Entity instance (namespace: `bamm-e`), but the Aspect Model Editor does not.
+| SAMM supports to refer to a globally pre-defined Entity instance (namespace: `bamm-e`), but the Aspect Model Editor does not.
 
-| BAMM
+| SAMM
 | Properties: Refinement
 | It is not possible to refine Properties to make sharing of Entities easier.
 |===

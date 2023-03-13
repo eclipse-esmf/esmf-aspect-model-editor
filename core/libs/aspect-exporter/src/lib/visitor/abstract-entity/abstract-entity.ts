@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -20,12 +20,12 @@ import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {RdfService} from '@ame/rdf/services';
 import {DataFactory, Store} from 'n3';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 
 @Injectable()
 export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
   private store: Store;
-  private bamm: Bamm;
+  private samm: Samm;
 
   constructor(
     public rdfNodeService: RdfNodeService,
@@ -43,7 +43,7 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
     }
 
     this.store = this.rdfService.currentRdfModel.store;
-    this.bamm = this.rdfService.currentRdfModel.BAMM();
+    this.samm = this.rdfService.currentRdfModel.samm;
     this.setPrefix(abstractEntity.aspectModelUrn);
     const newAspectModelUrn = `${abstractEntity.aspectModelUrn.split('#')[0]}#${abstractEntity.name}`;
     abstractEntity.aspectModelUrn = newAspectModelUrn;
@@ -80,7 +80,7 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
     if (entity.extendedElement?.aspectModelUrn) {
       this.store.addQuad(
         DataFactory.namedNode(entity.aspectModelUrn),
-        this.bamm.ExtendsProperty(),
+        this.samm.ExtendsProperty(),
         DataFactory.namedNode(entity.extendedElement.aspectModelUrn)
       );
       this.setPrefix(entity.extendedElement.aspectModelUrn);

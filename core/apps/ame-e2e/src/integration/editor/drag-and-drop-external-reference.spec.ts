@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -83,14 +83,14 @@ describe('Test drag and drop', () => {
   it('can add Property from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.digitaltwin:1.0.0': ['external-property-reference.txt'],
+      'org.eclipse.digitaltwin:1.0.0': ['external-property-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-property-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-property-reference.txt',
@@ -119,14 +119,14 @@ describe('Test drag and drop', () => {
   it('can add Characteristic from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.digitaltwin:1.0.0': ['external-characteristic-reference.txt'],
+      'org.eclipse.digitaltwin:1.0.0': ['external-characteristic-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-characteristic-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-characteristic-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-characteristic-reference.txt',
@@ -154,14 +154,14 @@ describe('Test drag and drop', () => {
   it('can add Constraint from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.digitaltwin:1.0.0': ['external-constraint-reference.txt'],
+      'org.eclipse.digitaltwin:1.0.0': ['external-constraint-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-constraint-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-constraint-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-constraint-reference.txt',
@@ -198,14 +198,14 @@ describe('Test drag and drop', () => {
   it('can add Entity from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.digitaltwin:1.0.0': ['external-entity-reference.txt'],
+      'org.eclipse.digitaltwin:1.0.0': ['external-entity-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-entity-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-entity-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-entity-reference.txt',
@@ -236,14 +236,14 @@ describe('Test drag and drop', () => {
   it('can add Property from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.different:1.0.0': ['external-property-reference.txt'],
+      'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-property-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-property-reference.txt',
@@ -261,8 +261,8 @@ describe('Test drag and drop', () => {
       .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:bamm:io.openmanufacturing.digitaltwin:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:io.openmanufacturing.different:1.0.0#>.');
+        expect(rdf).to.contain('@prefix : <urn:bamm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:org.eclipse.different:1.0.0#>.');
         expect(rdf).to.contain('bamm:properties (:property1 ext-different:externalProperty)');
         expect(rdf).to.contain(':property1 a bamm:Property');
         expect(rdf).to.contain('bamm:characteristic :Characteristic1');
@@ -275,14 +275,14 @@ describe('Test drag and drop', () => {
   it('can add Characteristic from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.different:1.0.0': ['external-characteristic-reference.txt'],
+      'org.eclipse.different:1.0.0': ['external-characteristic-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-characteristic-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-characteristic-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-characteristic-reference.txt',
@@ -300,8 +300,8 @@ describe('Test drag and drop', () => {
       .then(checkAspect)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:bamm:io.openmanufacturing.digitaltwin:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:io.openmanufacturing.different:1.0.0#>.');
+        expect(rdf).to.contain('@prefix : <urn:bamm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:org.eclipse.different:1.0.0#>.');
         expect(rdf).to.contain('bamm:properties (:property1)');
         expect(rdf).to.contain(':property1 a bamm:Property');
         expect(rdf).to.contain('bamm:characteristic ext-different:ExternalCharacteristic');
@@ -313,14 +313,14 @@ describe('Test drag and drop', () => {
   it('can add Constraint from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.different:1.0.0': ['external-constraint-reference.txt'],
+      'org.eclipse.different:1.0.0': ['external-constraint-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-constraint-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-constraint-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-constraint-reference.txt',
@@ -343,8 +343,8 @@ describe('Test drag and drop', () => {
       .then(checkASpectAndChildrenConstraint)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:bamm:io.openmanufacturing.digitaltwin:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:io.openmanufacturing.different:1.0.0#>.');
+        expect(rdf).to.contain('@prefix : <urn:bamm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:org.eclipse.different:1.0.0#>.');
         expect(rdf).to.contain('bamm:properties (:property1)');
         expect(rdf).to.contain(':property1 a bamm:Property');
         expect(rdf).to.contain('bamm:characteristic :Trait1');
@@ -359,14 +359,14 @@ describe('Test drag and drop', () => {
   it('can add Entity from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.different:1.0.0': ['external-entity-reference.txt'],
+      'org.eclipse.different:1.0.0': ['external-entity-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-entity-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-entity-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-entity-reference.txt',
@@ -384,8 +384,8 @@ describe('Test drag and drop', () => {
       .then(checkAspectAndChildrenEntity)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:bamm:io.openmanufacturing.digitaltwin:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:io.openmanufacturing.different:1.0.0#>.');
+        expect(rdf).to.contain('@prefix : <urn:bamm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:org.eclipse.different:1.0.0#>.');
         expect(rdf).to.contain('bamm:properties (:property1)');
         expect(rdf).to.contain(':property1 a bamm:Property');
         expect(rdf).to.contain('bamm:characteristic :Characteristic1');
@@ -399,14 +399,14 @@ describe('Test drag and drop', () => {
   it("can add Property with children's from external reference same namespace", () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.digitaltwin:1.0.0': ['external-property-reference.txt'],
+      'org.eclipse.digitaltwin:1.0.0': ['external-property-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-property-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-property-reference.txt',
@@ -443,14 +443,14 @@ describe('Test drag and drop', () => {
   it("can add Property with children's from external reference different namespace", () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.different:1.0.0': ['external-property-reference.txt'],
+      'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'io.openmanufacturing.different:1.0.0:external-property-reference.txt'},
+        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/with-childrens/external-property-reference.txt',
@@ -468,8 +468,8 @@ describe('Test drag and drop', () => {
       .then(checkAspectTree)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:bamm:io.openmanufacturing.digitaltwin:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:io.openmanufacturing.different:1.0.0#>.');
+        expect(rdf).to.contain('@prefix : <urn:bamm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:org.eclipse.different:1.0.0#>.');
         expect(rdf).to.contain('bamm:properties (:property1 ext-different:externalPropertyWithChildren)');
         expect(rdf).to.contain(':property1 a bamm:Property');
         expect(rdf).to.contain('bamm:characteristic :Characteristic1');

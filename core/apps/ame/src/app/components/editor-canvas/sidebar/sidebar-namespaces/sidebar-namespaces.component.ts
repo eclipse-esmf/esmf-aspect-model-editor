@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,7 +12,7 @@
  */
 
 import {APP_CONFIG, AppConfig, NamespaceModel} from '@ame/shared';
-import {Component, Inject, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
 import {ExporterHelper, MigratorService} from '@ame/migrator';
@@ -72,7 +72,7 @@ export class SidebarNamespacesComponent implements OnChanges {
     }
 
     if (namespace.getFileStatus(file)?.outdated) {
-      return `Outdated file. Migrate to BAMM ${this.config.currentBammVersion}`;
+      return `Outdated file. Migrate to SAMM ${this.config.currentSammVersion}`;
     }
 
     if (namespace.getFileStatus(file)?.hasErrors) {
@@ -136,9 +136,9 @@ export class SidebarNamespacesComponent implements OnChanges {
           continue;
         }
 
-        const bamm = rdfModel?.BAMM();
-        if (bamm) {
-          namespace.setFileStatus(file, bamm.version, ExporterHelper.isVersionOutdated(bamm.version, this.config.currentBammVersion));
+        const samm = rdfModel?.samm;
+        if (samm) {
+          namespace.setFileStatus(file, samm.version, ExporterHelper.isVersionOutdated(samm.version, this.config.currentSammVersion));
         }
       }
     }

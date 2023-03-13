@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -20,7 +20,7 @@ import {GeneralConfig} from './general-config';
 })
 export class DataTypeService {
   constructor() {
-    simpleDataTypes['curie'].isDefinedBy = simpleDataTypes['curie'].isDefinedBy.replace('BAMM_VERSION', GeneralConfig.bammVersion);
+    simpleDataTypes['curie'].isDefinedBy = simpleDataTypes['curie'].isDefinedBy.replace('SAMM_VERSION', GeneralConfig.sammVersion);
   }
 
   getDataTypes(): any {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-const nxPreset = require("@nrwl/jest/preset");
+const nxPreset = require('@nrwl/jest/preset');
 module.exports = {
   ...nxPreset,
   displayName: 'rdf',
@@ -23,7 +23,7 @@ module.exports = {
     },
   },
   coverageDirectory: '../../coverage/libs/rdf',
-  transform: { '^.+.(ts|mjs|js|html)$': 'jest-preset-angular' },
+  transform: {'^.+.(ts|mjs|js|html)$': 'jest-preset-angular'},
   transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',

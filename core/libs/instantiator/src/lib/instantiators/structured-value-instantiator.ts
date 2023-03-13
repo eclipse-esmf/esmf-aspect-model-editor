@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -26,16 +26,16 @@ export class StructuredValueCharacteristicInstantiator extends CharacteristicIns
       return structuredValueCharacteristic;
     }
 
-    const bammc = this.metaModelElementInstantiator.bammc;
+    const sammC = this.metaModelElementInstantiator.sammC;
     structuredValueCharacteristic = new DefaultStructuredValue(null, null, null, null, null, null);
     structuredValueCharacteristic.fileName = this.metaModelElementInstantiator.fileName;
     quads.forEach(quad => {
-      if (bammc.isDeconstructionRuleProperty(quad.predicate.value)) {
+      if (sammC.isDeconstructionRuleProperty(quad.predicate.value)) {
         structuredValueCharacteristic.deconstructionRule = quad.object.value;
         return;
       }
 
-      if (bammc.isElementsProperty(quad.predicate.value)) {
+      if (sammC.isElementsProperty(quad.predicate.value)) {
         structuredValueCharacteristic.elements = [];
         const structuredValueElementsQuad = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
 
@@ -55,6 +55,6 @@ export class StructuredValueCharacteristicInstantiator extends CharacteristicIns
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.StructuredValueCharacteristic().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.StructuredValueCharacteristic().equals(nameNode);
   }
 }

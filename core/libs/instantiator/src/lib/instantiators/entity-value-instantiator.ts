@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,13 +12,13 @@
  */
 
 import {DataFactory, NamedNode, Quad, Quad_Object, Util} from 'n3';
-import {DefaultEntityValue, OverWrittenProperty, Entity, DefaultEntity} from '@ame/meta-model';
+import {DefaultEntity, DefaultEntityValue, Entity, OverWrittenProperty} from '@ame/meta-model';
 import {EntityInstantiator} from './entity-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 
 export class EntityValueInstantiator {
-  private bamm: Bamm = this.metaModelElementInstantiator.bamm;
+  private samm: Samm = this.metaModelElementInstantiator.samm;
 
   private get cachedFile() {
     return this.metaModelElementInstantiator.cachedFile;
@@ -62,7 +62,7 @@ export class EntityValueInstantiator {
     // saving into cache earlier to prevent infinite loop
     this.cachedFile.resolveElement(defaultEntityValue, this.isIsolated);
 
-    const properties = quads.filter(({predicate}) => !this.bamm.RdfType().equals(predicate));
+    const properties = quads.filter(({predicate}) => !this.samm.RdfType().equals(predicate));
     for (const property of properties) {
       if (Util.isLiteral(property.object)) {
         this.metaModelElementInstantiator.getProperty({quad: property.predicate}, (overwrittenProperty: OverWrittenProperty) => {
@@ -98,7 +98,7 @@ export class EntityValueInstantiator {
   }
 
   private getEntity(quads: Quad[]): Entity {
-    const quad = quads.find(({predicate}) => this.bamm.RdfType().equals(predicate));
+    const quad = quads.find(({predicate}) => this.samm.RdfType().equals(predicate));
     if (!quad) {
       return null;
     }

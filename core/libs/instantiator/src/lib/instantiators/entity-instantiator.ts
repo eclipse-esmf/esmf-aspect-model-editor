@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,7 +15,7 @@ import {DataFactory, Quad} from 'n3';
 import {DefaultEntity, Entity, OverWrittenProperty} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {AbstractEntityInstantiator} from './abstract-entity-instantiator';
-import {PredefinedEntityInstantiator} from './bamme-predefined-entity-instantiator';
+import {PredefinedEntityInstantiator} from './samm-e-predefined-entity-instantiator';
 
 export class EntityInstantiator {
   private get cachedFile() {
@@ -30,10 +30,6 @@ export class EntityInstantiator {
     return this.metaModelElementInstantiator.isIsolated;
   }
 
-  private get bamme() {
-    return this.metaModelElementInstantiator.bamme;
-  }
-
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
   createEntity(quads: Array<Quad>): Entity {
@@ -43,7 +39,7 @@ export class EntityInstantiator {
       return entity;
     }
 
-    const bamm = this.metaModelElementInstantiator.bamm;
+    const samm = this.metaModelElementInstantiator.samm;
     const defaultEntity = new DefaultEntity(null, null, null, new Array<OverWrittenProperty>());
 
     defaultEntity.setExternalReference(this.rdfModel.isExternalRef);
@@ -54,9 +50,9 @@ export class EntityInstantiator {
     const predefinedEntityInstantiator = new PredefinedEntityInstantiator(this.metaModelElementInstantiator);
 
     quads.forEach(quad => {
-      if (bamm.isExtendsProperty(quad.predicate.value)) {
+      if (samm.isExtendsProperty(quad.predicate.value)) {
         const quads = this.rdfModel.store.getQuads(quad.object, null, null, null);
-        const isEntity = quads.some(quad => bamm.isEntity(quad.object.value));
+        const isEntity = quads.some(quad => samm.isEntity(quad.object.value));
         defaultEntity.extendedElement = isEntity
           ? (this.createEntity(quads) as DefaultEntity)
           : predefinedEntityInstantiator.entityInstances[quad.object.value]
@@ -65,10 +61,10 @@ export class EntityInstantiator {
         return;
       }
 
-      if (bamm.isPropertiesProperty(quad.predicate.value)) {
+      if (samm.isPropertiesProperty(quad.predicate.value)) {
         defaultEntity.properties = this.metaModelElementInstantiator.getProperties(
           DataFactory.namedNode(quad.subject.value),
-          bamm.PropertiesProperty()
+          samm.PropertiesProperty()
         );
       }
     });

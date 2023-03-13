@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -17,8 +17,9 @@ export interface AppConfig {
   ameVersion: string;
   editorConfiguration: string;
   assetLocation: string;
-  minBammVersion: string;
-  currentBammVersion: string;
+  minSammVersion: string;
+  currentSammVersion: string;
+  sdkVersion: string;
   serviceUrl: string;
   defaultPort: string;
   api: {

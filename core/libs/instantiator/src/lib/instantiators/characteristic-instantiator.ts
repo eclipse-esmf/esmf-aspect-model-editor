@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,12 +13,12 @@
 
 import {NamedNode, Quad} from 'n3';
 import {Characteristic, DefaultCharacteristic, Type} from '@ame/meta-model';
-import {BammCharacteristicInstantiator} from './bamm-characteristic-instantiator';
+import {PredefinedCharacteristicInstantiator} from './predefined-characteristic-instantiator';
 import {BaseConstraintCharacteristicInstantiator} from './base-constraint-characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 
 export class CharacteristicInstantiator extends BaseConstraintCharacteristicInstantiator {
-  private standardCharacteristicInstantiator: BammCharacteristicInstantiator;
+  private standardCharacteristicInstantiator: PredefinedCharacteristicInstantiator;
 
   protected get namespaceCacheService() {
     return this.metaModelElementInstantiator.namespaceCacheService;
@@ -34,7 +34,7 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
 
   constructor(protected metaModelElementInstantiator: MetaModelElementInstantiator, public nextProcessor?: CharacteristicInstantiator) {
     super(metaModelElementInstantiator, nextProcessor);
-    this.standardCharacteristicInstantiator = new BammCharacteristicInstantiator(metaModelElementInstantiator);
+    this.standardCharacteristicInstantiator = new PredefinedCharacteristicInstantiator(metaModelElementInstantiator);
   }
 
   create(quad: Quad, isPredefinedCharacteristicFromExtRef?: boolean): Characteristic {
@@ -43,7 +43,7 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
       return characteristic;
     }
 
-    if (quad.object.value.startsWith(this.metaModelElementInstantiator.bammc.getNamespace())) {
+    if (quad.object.value.startsWith(this.metaModelElementInstantiator.sammC.getNamespace())) {
       const standardCharacteristic = this.standardCharacteristicInstantiator.createCharacteristic(<NamedNode>quad.object);
       if (standardCharacteristic) {
         if (isPredefinedCharacteristicFromExtRef) {
@@ -59,7 +59,7 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
 
     const typeQuad = this.metaModelElementInstantiator.rdfModel
       .findAnyProperty(quad)
-      .find(propertyQuad => this.bamm.isDataTypeProperty(propertyQuad.predicate.value));
+      .find(propertyQuad => this.samm.isDataTypeProperty(propertyQuad.predicate.value));
 
     this.metaModelElementInstantiator.getDataType(typeQuad, (entity: Type) => {
       characteristic.dataType = entity;
@@ -87,13 +87,13 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
   }
 
   isEntity(quad: Quad): boolean {
-    if (this.bamm.Entity().equals(quad.object)) {
+    if (this.samm.Entity().equals(quad.object)) {
       return true;
     }
 
     const propertyFound = this.metaModelElementInstantiator.rdfModel
       .findAnyProperty(quad)
-      .find(quadProperty => this.bamm.Entity().equals(quadProperty.subject));
+      .find(quadProperty => this.samm.Entity().equals(quadProperty.subject));
 
     return !!propertyFound;
   }

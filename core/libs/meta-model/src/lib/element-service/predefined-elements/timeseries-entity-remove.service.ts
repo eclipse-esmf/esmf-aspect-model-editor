@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,10 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {PredefinedProperties} from '@ame/vocabulary';
+import {PredefinedEntities, PredefinedProperties} from '@ame/vocabulary';
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
-import {PredefinedEntities} from '@ame/vocabulary';
 import {BaseMetaModelElement, DefaultAbstractEntity, DefaultAbstractProperty, DefaultProperty} from '../../aspect-meta-model';
 import {ModelRootService} from '../model-root.service';
 import {PredefinedRemove} from './predefined-remove.type';

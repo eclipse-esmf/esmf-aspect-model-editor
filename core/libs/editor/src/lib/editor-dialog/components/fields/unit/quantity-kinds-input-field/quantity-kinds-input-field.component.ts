@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -21,7 +21,7 @@ import {NamespacesCacheService} from '@ame/cache';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
-declare const bammuDefinition: any;
+declare const sammUDefinition: any;
 
 @Component({
   selector: 'ame-quantity-kinds-input-field',
@@ -52,7 +52,7 @@ export class QuantityKindsInputFieldComponent extends InputFieldComponent<Defaul
   }
 
   ngOnInit(): void {
-    this.supportedQuantityKinds = Object.keys(bammuDefinition.quantityKinds);
+    this.supportedQuantityKinds = Object.keys(sammUDefinition.quantityKinds);
     this.subscription = this.getMetaModelData().subscribe(() => {
       this.quantityKindValues = [];
       this.setInputControl();
