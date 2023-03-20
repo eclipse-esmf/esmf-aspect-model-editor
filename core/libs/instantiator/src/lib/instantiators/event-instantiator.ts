@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -37,7 +37,7 @@ export class EventInstantiator {
   }
 
   constructEvent(listElement: InstantiatorListElement): Event {
-    const bamm = this.metaModelElementInstantiator.bamm;
+    const samm = this.metaModelElementInstantiator.samm;
     const event = new DefaultEvent(null, null, null, new Array<OverWrittenProperty>());
     const quads = this.resolveQuads(listElement, this.rdfModel);
 
@@ -49,10 +49,10 @@ export class EventInstantiator {
     this.currentCachedFile.resolveElement(event, this.isIsolated);
 
     quads.forEach(quad => {
-      if (bamm.isParametersProperty(quad.predicate.value)) {
+      if (samm.isParametersProperty(quad.predicate.value)) {
         event.parameters = this.metaModelElementInstantiator.getProperties(
           DataFactory.namedNode(quad.subject.value),
-          bamm.ParametersProperty()
+          samm.ParametersProperty()
         );
       }
     });

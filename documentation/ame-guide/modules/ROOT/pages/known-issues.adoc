@@ -31,12 +31,12 @@ h| Error
 a| When loading a TTL file to edit an Aspect Model, an `Error when loading RDF` is shown.
 
 h| Explanation
-a| This is caused by fundamental syntax errors in the TTL being loaded. Potential underlying root cause: The used BAMM
+a| This is caused by fundamental syntax errors in the TTL being loaded. Potential underlying root cause: The used SAMM
 version is not supported by this version of the Aspect Model Editor.
 
 h| Workaround
 a|
-Check that you have not missed parts of the TTL file. Also check against syntax errors consulting https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/namespaces.html[Namespaces and versions (BAMM 2.0.0)^,opts=nofollow].
+Check that you have not missed parts of the TTL file. Also check against syntax errors consulting https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/namespaces.html[Namespaces and versions (SAMM 2.0.0)^,opts=nofollow].
 |===
 
 [[datatype-characteristic]]
@@ -62,7 +62,7 @@ a|
 _Wrong data type_
 
 Check that the data types you are using are correct, see
-https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/datatypes.html[Datatypes (BAMM 2.0.0)^,opts=nofollow]
+https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/datatypes.html[Datatypes (SAMM 2.0.0)^,opts=nofollow]
 
 _Unsupported Namespaces_
 

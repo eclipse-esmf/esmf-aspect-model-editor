@@ -5,9 +5,9 @@
 
 The Aspect Model Editor supports loading and saving Aspect Models in the official RDF/Turtle format (TTL).
 
-NOTE: In case the loaded Aspect Model has a lower BAMM version than the one that the Aspect Model Editor is currently based on, migration will start automatically.
+NOTE: In case the loaded Aspect Model has a lower SAMM version than the one that the Aspect Model Editor is currently based on, migration will start automatically.
 
-Currently, the Aspect Model Editor is based on https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0[BAMM Aspect Meta Model 2.0.0^,opts=nofollow].
+Currently, the Aspect Model Editor is based on https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0[SAMM Aspect Meta Model 2.0.0^,opts=nofollow].
 
 [[load-start-new-models]]
 == Load or start a new model

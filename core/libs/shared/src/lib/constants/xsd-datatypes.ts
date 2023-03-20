@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -20,7 +20,7 @@ export const simpleDataTypes = {
   boolean: {isDefinedBy: 'http://www.w3.org/2001/XMLSchema#boolean', description: 'true, false'},
   byte: {isDefinedBy: 'http://www.w3.org/2001/XMLSchema#byte', description: '-128…+127 (8 bit)'},
   curie: {
-    isDefinedBy: 'urn:bamm:io.openmanufacturing:meta-model:BAMM_VERSION#curie',
+    isDefinedBy: 'urn:bamm:io.openmanufacturing:meta-model:SAMM_VERSION#curie',
     description: 'Compact URI/IRI (well-known prefix + element name)',
   },
   date: {

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -11,9 +11,9 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+<div fxLayout="row" fxlayoutgap="5px" fxLayoutAlign="space-between center">
   <mat-form-field [floatLabel]="getControl('output')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="output">Output</mat-label>
+    <mat-label for="output">output</mat-label>
     <input
       #output
       [matAutocomplete]="auto"
@@ -36,7 +36,7 @@
     </button>
 
     <mat-error *ngIf="getControl('output')?.errors?.checkShapeName"
-    >Please select a different name as this one is of different type
+      >Please select a different name as this one is of different type
     </mat-error>
     <mat-error *ngIf="getControl('output')?.errors?.checkShapeNameExtRef">
       Please select a different name as this one is of different type in the same namespace
@@ -48,7 +48,8 @@
           *ngIf="!isAlreadyDefined(filteredPropertyTypes, output.value) && !getControl('output').errors"
           [disabled]="!isLowerCase(output.value)"
           [value]="!isLowerCase(output.value) ? '' : output.value"
-          (click)="createNewProperty(output.value)">
+          (click)="createNewProperty(output.value)"
+        >
           <span *ngIf="isLowerCase(output.value)">
             + Create new property: <strong>{{ output.value }}</strong>
           </span>
@@ -57,10 +58,11 @@
         <mat-option
           *ngFor="let output of filteredPropertyTypes"
           [value]="output.name"
-          (onSelectionChange)="onSelectionChange('output', output)">
+          (onSelectionChange)="onSelectionChange('output', output)"
+        >
           <div class="ellipsis">
-            {{ output.name }} <span *ngIf="output.description" class="option-description"
-                                    [title]="output.description">- {{ output.description }}</span>
+            {{ output.name }}
+            <span *ngIf="output.description" class="option-description" [title]="output.description">- {{ output.description }}</span>
             <p *ngIf="output.namespace" class="namespace-prefix" [title]="output.namespace">
               {{ output.namespace }}
             </p>
@@ -68,7 +70,6 @@
         </mat-option>
       </mat-optgroup>
     </mat-autocomplete>
-    <mat-hint>bamm:output</mat-hint>
     <mat-error *ngIf="getControl('output')?.errors?.required">Please define a output</mat-error>
     <mat-error *ngIf="getControl('output')?.errors?.disabled">No output defined</mat-error>
   </mat-form-field>

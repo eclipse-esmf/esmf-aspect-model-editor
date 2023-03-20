@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -62,14 +62,14 @@ describe('Test edit property', () => {
   it('should get error on renaming first property same as property from same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'io.openmanufacturing.digitaltwin:1.0.0': ['external-property-reference-with-children.txt'],
+      'org.eclipse.digitaltwin:1.0.0': ['external-property-reference-with-children.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-Model-Urn': 'io.openmanufacturing.digitaltwin:1.0.0:external-property-reference-with-children.txt'},
+        headers: {'Ame-Model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-property-reference-with-children.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-property-reference.txt',

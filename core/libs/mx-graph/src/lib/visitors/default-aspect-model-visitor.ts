@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -43,7 +43,7 @@ export class DefaultAspectModelVisitor<T, U> implements AspectModelVisitor<T, U>
     const item: U = element.accept(<any>this, context);
     if (wasVisited) {
       // In case the element was visited -> don't visit its lower attributes since they were already visited previously
-      // This avoids duplication of bamm-c elements
+      // This avoids duplication of samm-c elements
       // TODO: Might need further investigation
       return null;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -39,7 +39,7 @@ export class RdfNodeService {
           property =>
             rdfModel.store.getQuads(
               DataFactory.namedNode(metaModelElement.aspectModelUrn),
-              DataFactory.namedNode(rdfModel.BAMM().getAspectModelUrn(property)),
+              DataFactory.namedNode(rdfModel.SAMM().getAspectModelUrn(property)),
               null,
               null
             )?.[0]
@@ -56,10 +56,10 @@ export class RdfNodeService {
     const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
     const elementQuads: Quad[] = rdfModel.store.getQuads(DataFactory.namedNode(metaModelElement.aspectModelUrn), null, null, null);
 
-    if (!elementQuads?.some(quad => rdfModel.BAMM().RdfType().value === quad.predicate.value)) {
+    if (!elementQuads?.some(quad => rdfModel.SAMM().RdfType().value === quad.predicate.value)) {
       const newElement = DataFactory.triple(
         DataFactory.namedNode(metaModelElement.aspectModelUrn),
-        rdfModel.BAMM().RdfType(),
+        rdfModel.SAMM().RdfType(),
         DataFactory.namedNode(RdfModelUtil.getFullQualifiedModelName(metaModelElement))
       );
       rdfModel.store.addQuad(newElement);
@@ -72,7 +72,7 @@ export class RdfNodeService {
 
       const outdatedQuad = rdfModel.store.getQuads(
         DataFactory.namedNode(metaModelElement.aspectModelUrn),
-        DataFactory.namedNode(rdfModel.BAMM().getAspectModelUrn(key)),
+        DataFactory.namedNode(rdfModel.SAMM().getAspectModelUrn(key)),
         null,
         null
       );
@@ -86,9 +86,9 @@ export class RdfNodeService {
         return;
       }
 
-      const bamm = rdfModel.BAMM();
-      const bammc = rdfModel.BAMMC();
-      const bammu = rdfModel.BAMMU();
+      const samm = rdfModel.SAMM();
+      const sammC = rdfModel.SAMMC();
+      const sammU = rdfModel.SAMMU();
 
       switch (key) {
         case PropertyEnum.Description:
@@ -96,21 +96,21 @@ export class RdfNodeService {
           this.updateLocalizedValue(metaModelElement, properties, key);
           break;
         case PropertyEnum.See:
-          this.updateArrayField(metaModelElement, properties, key, bamm.getAspectModelUrn(key));
+          this.updateArrayField(metaModelElement, properties, key, samm.getAspectModelUrn(key));
           break;
         case metaModelElement instanceof DefaultEncodingConstraint && PropertyEnum.Value:
           this.addDatatype(
             metaModelElement,
-            bamm.getAspectModelUrn(key),
-            bamm.getEncodingList().find(enc => enc.value === properties[key]).isDefinedBy
+            samm.getAspectModelUrn(key),
+            samm.getEncodingList().find(enc => enc.value === properties[key]).isDefinedBy
           );
           break;
         case PropertyEnum.DataType:
-          this.addDatatype(metaModelElement, bamm.getAspectModelUrn(key), properties[key]);
+          this.addDatatype(metaModelElement, samm.getAspectModelUrn(key), properties[key]);
           break;
         case PropertyEnum.LowerBoundDefinition:
         case PropertyEnum.UpperBoundDefinition:
-          this.addDatatype(metaModelElement, bammc.getAspectModelUrn(key), bammc.getAspectModelUrn(properties[key]));
+          this.addDatatype(metaModelElement, sammC.getAspectModelUrn(key), sammC.getAspectModelUrn(properties[key]));
           break;
         case PropertyEnum.MaxValue:
         case PropertyEnum.MinValue:
@@ -118,16 +118,16 @@ export class RdfNodeService {
         case PropertyEnum.Integer:
         case PropertyEnum.LocaleCode:
         case PropertyEnum.LanguageCode:
-          this.addQuad(metaModelElement, properties[key], bammc.getAspectModelUrn(key), properties['characteristicType']);
+          this.addQuad(metaModelElement, properties[key], sammC.getAspectModelUrn(key), properties['characteristicType']);
           break;
         case PropertyEnum.CommonCode:
         case PropertyEnum.Symbol:
         case PropertyEnum.ConversionFactor:
         case PropertyEnum.NumericConversionFactor:
-          this.addQuad(metaModelElement, properties[key], bammu.getAspectModelUrn(key));
+          this.addQuad(metaModelElement, properties[key], sammU.getAspectModelUrn(key));
           break;
         default:
-          this.addQuad(metaModelElement, properties[key], bamm.getAspectModelUrn(key));
+          this.addQuad(metaModelElement, properties[key], samm.getAspectModelUrn(key));
           break;
       }
     });
@@ -142,7 +142,7 @@ export class RdfNodeService {
         continue;
       }
 
-      const bamm = rdfModel.BAMM();
+      const samm = rdfModel.SAMM();
       switch (key) {
         case PropertyEnum.Description:
         case PropertyEnum.PreferredName:
@@ -154,7 +154,7 @@ export class RdfNodeService {
             rdfModel.store.addQuad(
               DataFactory.triple(
                 DataFactory.namedNode(metaModelElement.aspectModelUrn),
-                DataFactory.namedNode(rdfModel.BAMM().getAspectModelUrn(key)),
+                DataFactory.namedNode(rdfModel.SAMM().getAspectModelUrn(key)),
                 DataFactory.literal(localeValue.value, localeValue.language)
               )
             );
@@ -162,17 +162,17 @@ export class RdfNodeService {
           break;
         case PropertyEnum.See:
           properties[key]?.forEach(value => {
-            rdfModel.store.addQuad(DataFactory.triple(element, bamm.SeeProperty(), DataFactory.namedNode(`${value}`)));
+            rdfModel.store.addQuad(DataFactory.triple(element, samm.SeeProperty(), DataFactory.namedNode(`${value}`)));
           });
           break;
         case PropertyEnum.Extends:
-          rdfModel.store.addQuad(DataFactory.triple(element, bamm.ExtendsProperty(), DataFactory.namedNode(properties[key])));
+          rdfModel.store.addQuad(DataFactory.triple(element, samm.ExtendsProperty(), DataFactory.namedNode(properties[key])));
           break;
         case PropertyEnum.Characteristic:
-          rdfModel.store.addQuad(DataFactory.triple(element, bamm.CharacteristicProperty(), DataFactory.namedNode(properties[key])));
+          rdfModel.store.addQuad(DataFactory.triple(element, samm.CharacteristicProperty(), DataFactory.namedNode(properties[key])));
           break;
         default:
-          this.addQuad(metaModelElement, properties[key], bamm.getAspectModelUrn(key));
+          this.addQuad(metaModelElement, properties[key], samm.getAspectModelUrn(key));
           break;
       }
     }
@@ -188,7 +188,7 @@ export class RdfNodeService {
       rdfModel.store.addQuad(
         DataFactory.triple(
           DataFactory.namedNode(metaModelElement.aspectModelUrn),
-          DataFactory.namedNode(rdfModel.BAMM().getAspectModelUrn(key)),
+          DataFactory.namedNode(rdfModel.SAMM().getAspectModelUrn(key)),
           DataFactory.literal(localeValue.value, localeValue.language)
         )
       );

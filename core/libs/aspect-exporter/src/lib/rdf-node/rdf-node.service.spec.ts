@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,20 +15,20 @@ import {TestBed} from '@angular/core/testing';
 import {DataFactory, Quad, Store} from 'n3';
 import {RdfNodeService} from './rdf-node.service';
 import {describe, expect, it} from '@jest/globals';
-import {Bamm, Bammc, Bammu} from '@ame/vocabulary';
+import {Samm, SammC, SammU} from '@ame/vocabulary';
 import {ModelService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
 
-class MockBamm {
+class MockSamm {
   RdfType = jest.fn(() => DataFactory.namedNode('type'));
   getAspectModelUrn = jest.fn(key => key);
 }
 
 class MockRDFModel {
   store = new Store();
-  BAMM = jest.fn((): Bamm => new MockBamm() as any as Bamm);
-  BAMMC = jest.fn((): Bammc => new MockBamm() as any as Bammc);
-  BAMMU = jest.fn((): Bammu => new MockBamm() as any as Bammu);
+  SAMM = jest.fn((): Samm => new MockSamm() as any as Samm);
+  SAMMC = jest.fn((): SammC => new MockSamm() as any as SammC);
+  SAMMU = jest.fn((): SammU => new MockSamm() as any as SammU);
 }
 
 describe('RdfNodeService', () => {

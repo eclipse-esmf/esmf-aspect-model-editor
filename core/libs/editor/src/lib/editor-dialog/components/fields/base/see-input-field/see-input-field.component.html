@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -17,7 +17,7 @@
   [matTooltip]="isInherited ? 'This was extended from ' + elementExtends.extendedElement.name : ''"
   [matTooltipPosition]="'left'"
 >
-  <mat-label for="see">See</mat-label>
+  <mat-label for="see">see</mat-label>
   <mat-chip-list #chipList>
     <mat-chip
       *ngFor="let element of elements"
@@ -43,7 +43,6 @@
     name="see"
     data-cy="see"
   />
-  <mat-hint>bamm:see</mat-hint>
 
   <mat-autocomplete #auto="matAutocomplete">
     <mat-option

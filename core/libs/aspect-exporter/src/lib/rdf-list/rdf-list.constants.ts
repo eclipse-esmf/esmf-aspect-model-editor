@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -23,66 +23,66 @@ import {
   DefaultStructuredValue,
   DefaultUnit,
 } from '@ame/meta-model';
-import {Bamm, Bammc} from '@ame/vocabulary';
+import {Samm, SammC} from '@ame/vocabulary';
 import {ListProperties, Relations} from './rdf-list.types';
 import {NamedNode} from 'n3';
 
 export class RdfListConstants {
-  static getRelations(bamm: Bamm, bammc: Bammc): Relations[] {
+  static getRelations(samm: Samm, sammC: SammC): Relations[] {
     return [
       {
         source: DefaultAspect,
         children: [
-          {type: DefaultProperty, predicate: bamm.PropertiesProperty()},
-          {type: DefaultOperation, predicate: bamm.OperationsProperty()},
-          {type: DefaultEvent, predicate: bamm.EventsProperty()},
+          {type: DefaultProperty, predicate: samm.PropertiesProperty()},
+          {type: DefaultOperation, predicate: samm.OperationsProperty()},
+          {type: DefaultEvent, predicate: samm.EventsProperty()},
         ],
       },
       {
         source: DefaultOperation,
-        children: [{type: DefaultProperty, predicate: bamm.InputProperty()}],
+        children: [{type: DefaultProperty, predicate: samm.InputProperty()}],
       },
       {
         source: DefaultEntity,
         children: [
-          {type: DefaultProperty, predicate: bamm.PropertiesProperty()},
-          {type: DefaultAbstractProperty, predicate: bamm.PropertiesProperty()},
+          {type: DefaultProperty, predicate: samm.PropertiesProperty()},
+          {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()},
         ],
       },
       {
         source: DefaultAbstractEntity,
-        children: [{type: DefaultAbstractProperty, predicate: bamm.PropertiesProperty()}],
+        children: [{type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()}],
       },
       {
         source: DefaultEnumeration,
-        children: [{predicate: bammc.ValuesProperty()}],
+        children: [{predicate: sammC.ValuesProperty()}],
       },
       {
         source: DefaultStructuredValue,
-        children: [{predicate: bammc.ElementsProperty()}],
+        children: [{predicate: sammC.ElementsProperty()}],
       },
       {
         source: DefaultUnit,
-        children: [{type: DefaultUnit, predicate: bamm.QuantityKindsProperty()}],
+        children: [{type: DefaultUnit, predicate: samm.QuantityKindsProperty()}],
       },
       {
         source: DefaultEvent,
-        children: [{type: DefaultProperty, predicate: bamm.ParametersProperty()}],
+        children: [{type: DefaultProperty, predicate: samm.ParametersProperty()}],
       },
     ];
   }
 
-  static getPredicateByKey(key: ListProperties, bamm: Bamm, bammc: Bammc): NamedNode<string> {
+  static getPredicateByKey(key: ListProperties, samm: Samm, sammC: SammC): NamedNode<string> {
     const predicates = {
-      [ListProperties.elements]: bammc.ElementsProperty(),
-      [ListProperties.values]: bammc.ValuesProperty(),
-      [ListProperties.operations]: bamm.OperationsProperty(),
-      [ListProperties.properties]: bamm.PropertiesProperty(),
-      [ListProperties.abstractProperties]: bamm.PropertiesProperty(),
-      [ListProperties.input]: bamm.InputProperty(),
-      [ListProperties.quantityKinds]: bamm.QuantityKindsProperty(),
-      [ListProperties.events]: bamm.EventsProperty(),
-      [ListProperties.parameters]: bamm.ParametersProperty(),
+      [ListProperties.elements]: sammC.ElementsProperty(),
+      [ListProperties.values]: sammC.ValuesProperty(),
+      [ListProperties.operations]: samm.OperationsProperty(),
+      [ListProperties.properties]: samm.PropertiesProperty(),
+      [ListProperties.abstractProperties]: samm.PropertiesProperty(),
+      [ListProperties.input]: samm.InputProperty(),
+      [ListProperties.quantityKinds]: samm.QuantityKindsProperty(),
+      [ListProperties.events]: samm.EventsProperty(),
+      [ListProperties.parameters]: samm.ParametersProperty(),
     };
 
     return predicates[key];

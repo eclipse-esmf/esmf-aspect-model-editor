@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Aspect, Entity, Enumeration, Operation, OverWrittenProperty, StructuredValue, Unit, Event} from '@ame/meta-model';
+import {Aspect, Entity, Enumeration, Event, Operation, OverWrittenProperty, StructuredValue, Unit} from '@ame/meta-model';
 import {BlankNode, NamedNode, Quad_Object} from 'n3';
 
 // For now ListElementType is any because

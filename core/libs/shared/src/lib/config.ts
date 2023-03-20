@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -21,8 +21,9 @@ export const config = {
   ameVersion: packageJson?.version,
   editorConfiguration: 'assets/config/editor/config/editor.xml',
   assetLocation: 'assets',
-  minBammVersion: '1.0.0',
-  currentBammVersion: '2.0.0',
+  minSammVersion: '1.0.0',
+  currentSammVersion: '2.0.0',
+  sdkVersion: '2.1.3',
   defaultPort: '9091',
   serviceUrl: `http://localhost:${defaultPort}`,
   api: {

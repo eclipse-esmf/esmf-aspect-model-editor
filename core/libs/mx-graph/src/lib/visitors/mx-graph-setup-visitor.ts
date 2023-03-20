@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -249,8 +249,8 @@ export class MxGraphSetupVisitor extends DefaultAspectModelVisitor<mxCell, mxCel
 
     if (
       this.rdfModel &&
-      !RdfModelUtil.isPredefinedCharacteristic(base.aspectModelUrn, this.rdfModel.BAMMC()) &&
-      !RdfModelUtil.isBammuDefinition(base.aspectModelUrn, this.rdfModel.BAMMU())
+      !RdfModelUtil.isPredefinedCharacteristic(base.aspectModelUrn, this.rdfModel.SAMMC()) &&
+      !RdfModelUtil.isSammUDefinition(base.aspectModelUrn, this.rdfModel.SAMMU())
     ) {
       this.shapes.set(base.name, cell);
     }

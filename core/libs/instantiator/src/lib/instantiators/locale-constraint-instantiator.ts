@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -27,11 +27,11 @@ export class LocaleConstraintInstantiator extends ConstraintInstantiator {
       return defaultLocaleConstraint;
     }
 
-    const bammc = this.metaModelElementInstantiator.bammc;
+    const sammC = this.metaModelElementInstantiator.sammC;
     defaultLocaleConstraint = new DefaultLocaleConstraint(null, null, null, null);
 
     quads.forEach(quad => {
-      if (bammc.isLocaleCodeProperty(quad.predicate.value)) {
+      if (sammC.isLocaleCodeProperty(quad.predicate.value)) {
         defaultLocaleConstraint.localeCode = quad.object.value;
       }
     });
@@ -40,6 +40,6 @@ export class LocaleConstraintInstantiator extends ConstraintInstantiator {
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.LocaleConstraint().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.LocaleConstraint().equals(nameNode);
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 export class ExporterHelper {
-  public static isVersionOutdated(fileVersion: string, currentBammVersion: string) {
-    const [b1, b2, b3] = currentBammVersion.split('.').map(x => Number(x));
+  public static isVersionOutdated(fileVersion: string, currentSammVersion: string) {
+    const [b1, b2, b3] = currentSammVersion.split('.').map(x => Number(x));
     const [f1, f2, f3] = fileVersion.split('.').map(x => Number(x));
 
     if (b1 > f1) {

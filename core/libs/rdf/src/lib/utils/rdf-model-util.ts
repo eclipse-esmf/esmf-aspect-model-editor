@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -35,19 +35,19 @@ import {DataFactory, NamedNode, Quad, Util} from 'n3';
 import {simpleDataTypes} from '@ame/shared';
 import {MetaModelElementInstantiator} from '@ame/instantiator';
 import {RdfModel} from './rdf-model';
-import {Bamm, Bammc, Bamme, Bammu} from '@ame/vocabulary';
+import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
 
 export class RdfModelUtil {
-  static isBammuDefinition(urn: string, bammu: Bammu): boolean {
-    return urn && urn.includes(bammu.getNamespace());
+  static isSammUDefinition(urn: string, sammU: SammU): boolean {
+    return urn && urn.includes(sammU.getNamespace());
   }
 
-  static isCharacteristicInstance(urn: string, bammc: Bammc): boolean {
-    return urn && urn.includes(bammc.getNamespace());
+  static isCharacteristicInstance(urn: string, sammC: SammC): boolean {
+    return urn && urn.includes(sammC.getNamespace());
   }
 
-  static isUnitInstance(urn: string, bammu: Bammu): boolean {
-    return urn && urn.includes(bammu.getNamespace());
+  static isUnitInstance(urn: string, sammU: SammU): boolean {
+    return urn && urn.includes(sammU.getNamespace());
   }
 
   static getValueWithoutUrnDefinition(value: any): string {
@@ -59,7 +59,7 @@ export class RdfModelUtil {
       return value.name;
     }
 
-    if (`${value}`.startsWith('urn:bamm') || `${value}`.startsWith(Bamm.XSD_URI) || `${value}`.startsWith(Bamm.RDF_URI)) {
+    if (`${value}`.startsWith('urn:bamm') || `${value}`.startsWith(Samm.XSD_URI) || `${value}`.startsWith(Samm.RDF_URI)) {
       return `${value}`.split('#').pop();
     }
     return `${value}`;
@@ -75,17 +75,17 @@ export class RdfModelUtil {
     rdfModel: RdfModel,
     characteristicType: Type
   ): NamedNode {
-    const bamm = rdfModel.BAMM();
-    const bammc = rdfModel.BAMMC();
+    const samm = rdfModel.SAMM();
+    const sammC = rdfModel.SAMMC();
 
     if (
       metaModelElement instanceof DefaultLengthConstraint &&
-      (bammc.isMinValueProperty(predicateUrn) || bammc.isMaxValueProperty(predicateUrn))
+      (sammC.isMinValueProperty(predicateUrn) || sammC.isMaxValueProperty(predicateUrn))
     ) {
       return this.getDataType(new DefaultScalar(simpleDataTypes?.nonNegativeInteger?.isDefinedBy));
     } else if (
       metaModelElement instanceof DefaultRangeConstraint &&
-      (bammc.isMinValueProperty(predicateUrn) || bammc.isMaxValueProperty(predicateUrn))
+      (sammC.isMinValueProperty(predicateUrn) || sammC.isMaxValueProperty(predicateUrn))
     ) {
       if (characteristicType) {
         return this.getDataType(characteristicType);
@@ -93,14 +93,14 @@ export class RdfModelUtil {
       return this.getDataType(new DefaultScalar(simpleDataTypes?.string?.isDefinedBy));
     } else if (
       metaModelElement instanceof DefaultFixedPointConstraint &&
-      (bammc.isScaleValueProperty(predicateUrn) || bammc.isIntegerValueProperty(predicateUrn))
+      (sammC.isScaleValueProperty(predicateUrn) || sammC.isIntegerValueProperty(predicateUrn))
     ) {
       return this.getDataType(new DefaultScalar(simpleDataTypes?.positiveInteger?.isDefinedBy));
-    } else if (metaModelElement instanceof DefaultProperty && bamm.isExampleValueProperty(predicateUrn)) {
+    } else if (metaModelElement instanceof DefaultProperty && samm.isExampleValueProperty(predicateUrn)) {
       return this.getDataType(metaModelElement?.getDeepLookUpDataType());
-    } else if (metaModelElement instanceof DefaultEnumeration && bammc.isValuesProperty(predicateUrn)) {
+    } else if (metaModelElement instanceof DefaultEnumeration && sammC.isValuesProperty(predicateUrn)) {
       return this.getDataType(metaModelElement.dataType);
-    } else if (metaModelElement instanceof DefaultState && bammc.isDefaultValueProperty(predicateUrn)) {
+    } else if (metaModelElement instanceof DefaultState && sammC.isDefaultValueProperty(predicateUrn)) {
       return this.getDataType(metaModelElement.dataType);
     }
 
@@ -108,10 +108,10 @@ export class RdfModelUtil {
   }
 
   static getFullQualifiedModelName(modelElement: BaseMetaModelElement) {
-    const bamm = new Bamm(modelElement.metaModelVersion);
-    const bammc = new Bammc(bamm);
-    const bamme = new Bamme(bamm);
-    const bammu = new Bammu(bamm);
+    const samm = new Samm(modelElement.metaModelVersion);
+    const sammC = new SammC(samm);
+    const sammE = new SammE(samm);
+    const sammU = new SammU(samm);
     let namespace: string;
     if (
       modelElement.className === 'DefaultCharacteristic' ||
@@ -125,13 +125,13 @@ export class RdfModelUtil {
       modelElement instanceof DefaultEvent ||
       modelElement instanceof DefaultAspect
     ) {
-      namespace = bamm.getNamespace();
+      namespace = samm.getNamespace();
     } else if (modelElement instanceof DefaultCharacteristic || modelElement instanceof DefaultConstraint) {
-      namespace = bammc.getNamespace();
+      namespace = sammC.getNamespace();
     } else if (modelElement instanceof DefaultUnit) {
-      namespace = bammu.getNamespace();
+      namespace = sammU.getNamespace();
     } else if (modelElement instanceof DefaultEntity) {
-      namespace = bamme.getNamespace();
+      namespace = sammE.getNamespace();
     } else {
       namespace = ':';
     }
@@ -141,27 +141,27 @@ export class RdfModelUtil {
   static resolvePredicate(child: BaseMetaModelElement, parent: BaseMetaModelElement, rdfModel: RdfModel): NamedNode {
     if (parent instanceof DefaultAspect) {
       if (child instanceof DefaultProperty) {
-        return rdfModel.BAMM().PropertiesProperty();
+        return rdfModel.SAMM().PropertiesProperty();
       }
       if (child instanceof DefaultOperation) {
-        return rdfModel.BAMM().OperationsProperty();
+        return rdfModel.SAMM().OperationsProperty();
       }
     }
     if (parent instanceof DefaultEither && child instanceof DefaultCharacteristic) {
       if (parent.right && parent.right.aspectModelUrn === child.aspectModelUrn) {
-        return rdfModel.BAMMC().EitherRightProperty();
+        return rdfModel.SAMMC().EitherRightProperty();
       } else if (parent.left && parent.left.aspectModelUrn === child.aspectModelUrn) {
-        return rdfModel.BAMMC().EitherLeftProperty();
+        return rdfModel.SAMMC().EitherLeftProperty();
       }
     }
     if (parent instanceof DefaultProperty && child instanceof DefaultCharacteristic) {
-      return rdfModel.BAMM().CharacteristicProperty();
+      return rdfModel.SAMM().CharacteristicProperty();
     }
     if (parent instanceof DefaultCharacteristic && child instanceof DefaultEntity) {
-      return rdfModel.BAMM().DataTypeProperty();
+      return rdfModel.SAMM().DataTypeProperty();
     }
     if (parent instanceof DefaultEntity && child instanceof DefaultProperty) {
-      return rdfModel.BAMM().PropertiesProperty();
+      return rdfModel.SAMM().PropertiesProperty();
     }
 
     return null;
@@ -172,21 +172,21 @@ export class RdfModelUtil {
   }
 
   static getEffectiveType(quad: Quad, rdfModel: RdfModel): Quad {
-    const bamm = rdfModel.BAMM();
+    const samm = rdfModel.SAMM();
 
     if (Util.isBlankNode(quad.subject)) {
       let resolvedQuad: Array<Quad>;
-      if (bamm.isDataTypeProperty(quad.predicate.value)) {
+      if (samm.isDataTypeProperty(quad.predicate.value)) {
         resolvedQuad = [quad];
       } else {
         resolvedQuad = rdfModel.store.getQuads(quad.subject, null, null, null);
       }
 
-      quad = resolvedQuad.find(propertyQuad => bamm.isDataTypeProperty(propertyQuad.predicate.value));
-    } else if (quad.predicate.value === `${bamm.getRdfSyntaxNameSpace()}type`) {
+      quad = resolvedQuad.find(propertyQuad => samm.isDataTypeProperty(propertyQuad.predicate.value));
+    } else if (quad.predicate.value === `${samm.getRdfSyntaxNameSpace()}type`) {
       quad = rdfModel.store
         .getQuads(quad.subject, null, null, null)
-        .find(propertyQuad => bamm.isDataTypeProperty(propertyQuad.predicate.value));
+        .find(propertyQuad => samm.isDataTypeProperty(propertyQuad.predicate.value));
     }
 
     return quad;
@@ -209,37 +209,37 @@ export class RdfModelUtil {
    * Check if the aspectModelUrn is a predefined characteristic
    *
    * @param aspectModelUrn urn of the characteristic
-   * @param bammc definition of the characteristic
+   * @param sammC definition of the characteristic
    * @return boolean if the characteristic is an predefined value
    */
-  static isPredefinedCharacteristic(aspectModelUrn: string, bammc: Bammc): boolean {
+  static isPredefinedCharacteristic(aspectModelUrn: string, sammC: SammC): boolean {
     return [
-      `${bammc.getNamespace()}Timestamp`,
-      `${bammc.getNamespace()}Text`,
-      `${bammc.getNamespace()}MultiLanguageText`,
-      `${bammc.getNamespace()}Boolean`,
-      `${bammc.getNamespace()}Locale`,
-      `${bammc.getNamespace()}Language`,
-      `${bammc.getNamespace()}UnitReference`,
-      `${bammc.getNamespace()}ResourcePath`,
-      `${bammc.getNamespace()}MimeType`,
+      `${sammC.getNamespace()}Timestamp`,
+      `${sammC.getNamespace()}Text`,
+      `${sammC.getNamespace()}MultiLanguageText`,
+      `${sammC.getNamespace()}Boolean`,
+      `${sammC.getNamespace()}Locale`,
+      `${sammC.getNamespace()}Language`,
+      `${sammC.getNamespace()}UnitReference`,
+      `${sammC.getNamespace()}ResourcePath`,
+      `${sammC.getNamespace()}MimeType`,
     ].some(predefinedUrn => predefinedUrn === aspectModelUrn);
   }
 
   static isEntity(quad: Quad, rdfModel: RdfModel): boolean {
-    const bamm = rdfModel.BAMM();
-    if (bamm.Entity().equals(quad.object)) {
+    const samm = rdfModel.SAMM();
+    if (samm.Entity().equals(quad.object)) {
       return true;
     }
 
-    return !!rdfModel.findAnyProperty(quad).find(quadProperty => bamm.Entity().equals(quadProperty.subject));
+    return !!rdfModel.findAnyProperty(quad).find(quadProperty => samm.Entity().equals(quadProperty.subject));
   }
 
   static isEntityValue(elementType: string, metaModelElementInstantiator: MetaModelElementInstantiator): boolean {
     let quads = metaModelElementInstantiator.rdfModel.store.getQuads(
       DataFactory.namedNode(elementType),
       null,
-      metaModelElementInstantiator.bamm.Entity(),
+      metaModelElementInstantiator.samm.Entity(),
       null
     );
 
@@ -248,7 +248,7 @@ export class RdfModelUtil {
     }
 
     const externalRdfModel = metaModelElementInstantiator.getRdfModelByElement(DataFactory.namedNode(elementType));
-    quads = externalRdfModel?.store.getQuads(DataFactory.namedNode(elementType), null, metaModelElementInstantiator.bamm.Entity(), null);
+    quads = externalRdfModel?.store.getQuads(DataFactory.namedNode(elementType), null, metaModelElementInstantiator.samm.Entity(), null);
 
     return !!quads?.length;
   }

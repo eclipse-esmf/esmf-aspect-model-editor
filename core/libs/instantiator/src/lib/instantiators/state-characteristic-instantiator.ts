@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,7 +15,7 @@ import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad, Util} from 'n3';
 import {EnumerationCharacteristicInstantiator} from './enumeration-characteristic-instantiator';
 import {EntityValueInstantiator} from './entity-value-instantiator';
-import {Characteristic, DefaultState, Enumeration, DefaultEntityValue} from '@ame/meta-model';
+import {Characteristic, DefaultEntityValue, DefaultState, Enumeration} from '@ame/meta-model';
 
 export class StateCharacteristicInstantiator extends EnumerationCharacteristicInstantiator {
   constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -28,12 +28,12 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
       return defaultState;
     }
 
-    const bammc = this.metaModelElementInstantiator.bammc;
+    const sammC = this.metaModelElementInstantiator.sammC;
     defaultState = <DefaultState>super.processElement(quads);
     defaultState.fileName = this.metaModelElementInstantiator.fileName;
 
     quads.forEach(quad => {
-      if (bammc.isDefaultValueProperty(quad.predicate.value)) {
+      if (sammC.isDefaultValueProperty(quad.predicate.value)) {
         defaultState.defaultValue = this.getDefaultValue(quad);
       }
     });
@@ -58,6 +58,6 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.StateCharacteristic().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.StateCharacteristic().equals(nameNode);
   }
 }

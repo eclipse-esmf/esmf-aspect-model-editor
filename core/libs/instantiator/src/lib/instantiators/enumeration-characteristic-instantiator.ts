@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -28,13 +28,13 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
       return enumeration;
     }
 
-    const bamm = this.metaModelElementInstantiator.bamm;
-    const bammc = this.metaModelElementInstantiator.bammc;
+    const samm = this.metaModelElementInstantiator.samm;
+    const sammC = this.metaModelElementInstantiator.sammC;
     enumeration = DefaultEnumeration.createInstance();
     enumeration.fileName = this.metaModelElementInstantiator.fileName;
 
     for (const quad of quads) {
-      if ((bamm.isValueProperty(quad.predicate.value) || bammc.isValuesProperty(quad.predicate.value)) && Util.isBlankNode(quad.object)) {
+      if ((samm.isValueProperty(quad.predicate.value) || sammC.isValuesProperty(quad.predicate.value)) && Util.isBlankNode(quad.object)) {
         enumeration.values = this.getEnumerationValues(quad);
       }
     }
@@ -68,7 +68,7 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.EnumerationCharacteristic().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.EnumerationCharacteristic().equals(nameNode);
   }
 
   private isEntityValue(quad: Quad) {
@@ -80,7 +80,7 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
     const rdfModel: RdfModel = externalRdfModel || this.metaModelElementInstantiator.rdfModel;
 
     // check if it is a valid entity value
-    const bamm = this.metaModelElementInstantiator.bamm;
+    const samm = this.metaModelElementInstantiator.samm;
     const entityValueQuads = rdfModel.store.getQuads(quad.object, null, null, null);
     if (!entityValueQuads.length) {
       return false;
@@ -93,11 +93,11 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
       entityQuads = entityRdfModel.store.getQuads(entityValueQuads[0]?.object, null, null, null);
     }
 
-    const rdfTypeQuad = entityQuads.find(({predicate}) => bamm.RdfType().equals(predicate));
+    const rdfTypeQuad = entityQuads.find(({predicate}) => samm.RdfType().equals(predicate));
     if (!rdfTypeQuad) {
       return false;
     }
 
-    return bamm.Entity().equals(rdfTypeQuad.object);
+    return samm.Entity().equals(rdfTypeQuad.object);
   }
 }

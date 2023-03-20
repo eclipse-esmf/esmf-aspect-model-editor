@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-var bammuDefinition = {
+var sammUDefinition = {
   quantityKinds: {
     absoluteActivity: {name: 'absoluteActivity', label: 'absolute activity'},
     absorbance: {name: 'absorbance', label: 'absorbance'},
@@ -859,7 +859,7 @@ var bammuDefinition = {
       symbol: 'acre',
       code: 'ACR',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '4046.873 m²',
       quantityKinds: [
@@ -880,7 +880,7 @@ var bammuDefinition = {
       symbol: 'acre-ft (US survey)',
       code: 'M67',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.233489 × 10³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -900,7 +900,7 @@ var bammuDefinition = {
       symbol: 'y (360 days)',
       code: 'M37',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '3.1104000 × 10⁷ s',
       quantityKinds: [
@@ -976,7 +976,7 @@ var bammuDefinition = {
       symbol: 'A·h',
       code: 'AMH',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: '3.6 × 10³ C',
       quantityKinds: [
@@ -995,7 +995,7 @@ var bammuDefinition = {
       symbol: 'A·min',
       code: 'N95',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: '60 C',
       quantityKinds: [
@@ -1014,7 +1014,7 @@ var bammuDefinition = {
       symbol: 'A/cm',
       code: 'A2',
       referenceUnit: function () {
-        return bammuDefinition.units['amperePerMetre'];
+        return sammUDefinition.units['amperePerMetre'];
       },
       conversionFactor: '10² A/m',
       quantityKinds: [
@@ -1051,7 +1051,7 @@ var bammuDefinition = {
       symbol: 'A/mm',
       code: 'A3',
       referenceUnit: function () {
-        return bammuDefinition.units['amperePerMetre'];
+        return sammUDefinition.units['amperePerMetre'];
       },
       conversionFactor: '10³ A/m',
       quantityKinds: [
@@ -1079,7 +1079,7 @@ var bammuDefinition = {
       symbol: 'A/cm²',
       code: 'A4',
       referenceUnit: function () {
-        return bammuDefinition.units['amperePerSquareMetre'];
+        return sammUDefinition.units['amperePerSquareMetre'];
       },
       conversionFactor: '10⁴ A/m²',
       quantityKinds: ['currentDensity', 'currentDensity'],
@@ -1108,7 +1108,7 @@ var bammuDefinition = {
       symbol: 'A/mm²',
       code: 'A7',
       referenceUnit: function () {
-        return bammuDefinition.units['amperePerSquareMetre'];
+        return sammUDefinition.units['amperePerSquareMetre'];
       },
       conversionFactor: '10⁶ A/m²',
       quantityKinds: ['currentDensity', 'currentDensity'],
@@ -1119,7 +1119,7 @@ var bammuDefinition = {
       symbol: 'A·s',
       code: 'A8',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: 'C',
       quantityKinds: [
@@ -1172,7 +1172,7 @@ var bammuDefinition = {
       symbol: 'Å',
       code: 'A11',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10⁻¹⁰ m',
       quantityKinds: [
@@ -1261,7 +1261,7 @@ var bammuDefinition = {
       symbol: 'ua',
       code: 'A12',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '1.49597870 × 10¹¹ m',
       quantityKinds: [
@@ -1328,7 +1328,7 @@ var bammuDefinition = {
       symbol: 'aJ',
       code: 'A13',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '10⁻¹⁸ J',
       quantityKinds: [
@@ -1422,7 +1422,7 @@ var bammuDefinition = {
       symbol: 'bar',
       code: 'BAR',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10⁵ Pa',
       quantityKinds: [
@@ -1457,7 +1457,7 @@ var bammuDefinition = {
       symbol: 'b',
       code: 'A14',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '10⁻²⁸ m²',
       quantityKinds: [
@@ -1478,7 +1478,7 @@ var bammuDefinition = {
       symbol: 'b/eV',
       code: 'A15',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetrePerJoule'];
+        return sammUDefinition.units['squareMetrePerJoule'];
       },
       conversionFactor: '6.241 51 × 10⁻¹⁰ m²/J',
       quantityKinds: ['spectralCrossSection', 'spectralCrossSection'],
@@ -1489,7 +1489,7 @@ var bammuDefinition = {
       symbol: 'b/sr',
       code: 'A17',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetrePerSteradian'];
+        return sammUDefinition.units['squareMetrePerSteradian'];
       },
       conversionFactor: '1 × 10⁻²⁸ m²/sr',
       quantityKinds: ['angularCrossSection', 'angularCrossSection'],
@@ -1518,7 +1518,7 @@ var bammuDefinition = {
       symbol: 'bbl (UK liq.)',
       code: 'J57',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '0.15911315 m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -1529,7 +1529,7 @@ var bammuDefinition = {
       symbol: 'bbl (UK liq.)/d',
       code: 'J59',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.8415874 × 10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -1540,7 +1540,7 @@ var bammuDefinition = {
       symbol: 'bbl (UK liq.)/h',
       code: 'J60',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.419810 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -1551,7 +1551,7 @@ var bammuDefinition = {
       symbol: 'bbl (UK liq.)/min',
       code: 'J58',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.651886 m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -1562,7 +1562,7 @@ var bammuDefinition = {
       symbol: 'bbl (UK liq.)/s',
       code: 'J61',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '0.15911315 m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -1573,7 +1573,7 @@ var bammuDefinition = {
       symbol: 'barrel (US)',
       code: 'BLL',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '158.9873 × 10⁻³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -1584,7 +1584,7 @@ var bammuDefinition = {
       symbol: 'barrel (US)/d',
       code: 'B1',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.84013 × 10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -1595,7 +1595,7 @@ var bammuDefinition = {
       symbol: 'barrel (US)/min',
       code: '5A',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.64979 × 10⁻³ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -1606,7 +1606,7 @@ var bammuDefinition = {
       symbol: 'bbl (US)/h',
       code: 'J62',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.416314 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -1617,7 +1617,7 @@ var bammuDefinition = {
       symbol: 'bbl (US)/s',
       code: 'J63',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '0.1589873 m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -1673,7 +1673,7 @@ var bammuDefinition = {
       symbol: 'Bq',
       code: 'BQL',
       referenceUnit: function () {
-        return bammuDefinition.units['curie'];
+        return sammUDefinition.units['curie'];
       },
       conversionFactor: '27.027 × 10⁻¹² Ci',
       quantityKinds: ['activity', 'activity'],
@@ -1693,7 +1693,7 @@ var bammuDefinition = {
       symbol: 'Bq/kg',
       code: 'A18',
       referenceUnit: function () {
-        return bammuDefinition.units['curiePerKilogram'];
+        return sammUDefinition.units['curiePerKilogram'];
       },
       conversionFactor: '27.027 × 10⁻¹² Ci/kg',
       quantityKinds: ['specificActivityInASample', 'specificActivityInASample'],
@@ -1722,7 +1722,7 @@ var bammuDefinition = {
       symbol: 'bp',
       code: 'H82',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '0.3527778 × 10⁻³ m',
       quantityKinds: [
@@ -1779,7 +1779,7 @@ var bammuDefinition = {
       symbol: 'Bi',
       code: 'N96',
       referenceUnit: function () {
-        return bammuDefinition.units['ampere'];
+        return sammUDefinition.units['ampere'];
       },
       conversionFactor: '10¹ A',
       quantityKinds: [
@@ -1871,7 +1871,7 @@ var bammuDefinition = {
       symbol: 'BHP',
       code: 'BHP',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '7.457 × 10² W',
       quantityKinds: [
@@ -1891,7 +1891,7 @@ var bammuDefinition = {
       symbol: 'Btu (39 °F)',
       code: 'N66',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '1.05967 × 10³ J',
       quantityKinds: [
@@ -1929,7 +1929,7 @@ var bammuDefinition = {
       symbol: 'Btu (59 °F)',
       code: 'N67',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '1.05480 × 10³ J',
       quantityKinds: [
@@ -1967,7 +1967,7 @@ var bammuDefinition = {
       symbol: 'Btu (60 °F)',
       code: 'N68',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '1.05468 × 10³ J',
       quantityKinds: [
@@ -2005,7 +2005,7 @@ var bammuDefinition = {
       symbol: 'BtuIT',
       code: 'BTU',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '1.055056 × 10³ J',
       quantityKinds: [
@@ -2043,7 +2043,7 @@ var bammuDefinition = {
       symbol: 'BtuIT·ft/(h·ft²·°F)',
       code: 'J40',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerMetreKelvin'];
+        return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '1.730735 W/(m × K)',
       quantityKinds: ['thermalConductivity', 'thermalConductivity'],
@@ -2054,7 +2054,7 @@ var bammuDefinition = {
       symbol: 'BtuIT·in/(h·ft²·°F)',
       code: 'J41',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerMetreKelvin'];
+        return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '0.1442279 W/(m × K)',
       quantityKinds: ['thermalConductivity', 'thermalConductivity'],
@@ -2065,7 +2065,7 @@ var bammuDefinition = {
       symbol: 'BtuIT·in/(s·ft²·°F)',
       code: 'J42',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerMetreKelvin'];
+        return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '5.192204 × 10² W/(m × K)',
       quantityKinds: ['thermalConductivity', 'thermalConductivity'],
@@ -2076,7 +2076,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/ft³',
       code: 'N58',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerCubicMetre'];
+        return sammUDefinition.units['joulePerCubicMetre'];
       },
       conversionFactor: '3.725895 ×10⁴ J/m³',
       quantityKinds: [
@@ -2095,7 +2095,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/°F',
       code: 'N60',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKelvin'];
+        return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '1.899101 × 10³ J/K',
       quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction'],
@@ -2106,7 +2106,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/°R',
       code: 'N62',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKelvin'];
+        return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '1.899101 × 10³ J/K',
       quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction'],
@@ -2117,7 +2117,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/h',
       code: '2I',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '2.930711× 10⁻¹ W',
       quantityKinds: [
@@ -2137,7 +2137,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/(h·ft²·°F)',
       code: 'N74',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetreKelvin'];
+        return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '5.678263 W/(m² × K)',
       quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer'],
@@ -2157,7 +2157,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/min',
       code: 'J44',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '17.584266 W',
       quantityKinds: [
@@ -2177,7 +2177,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/lb',
       code: 'AZ',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogram'];
+        return sammUDefinition.units['joulePerKilogram'];
       },
       conversionFactor: '2326 J/kg',
       quantityKinds: ['specificEnergy', 'massicEnergy', 'massicHelmholtzFreeEnergy'],
@@ -2188,7 +2188,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/(lb·°F)',
       code: 'J43',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogramKelvin'];
+        return sammUDefinition.units['joulePerKilogramKelvin'];
       },
       conversionFactor: '4.1868 × 10³ J/(kg × K)',
       quantityKinds: [
@@ -2205,7 +2205,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/(lb·°R)',
       code: 'A21',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogramKelvin'];
+        return sammUDefinition.units['joulePerKilogramKelvin'];
       },
       conversionFactor: '4186.8 J/(kg × K)',
       quantityKinds: [
@@ -2223,7 +2223,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/s',
       code: 'J45',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '1.055056 × 10³ W',
       quantityKinds: [
@@ -2243,7 +2243,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/(s·ft·°R)',
       code: 'A22',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerMetreKelvin'];
+        return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '6230.64 W/(m × K)',
       quantityKinds: ['thermalConductivity', 'thermalConductivity'],
@@ -2254,7 +2254,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/(s·ft²·°F)',
       code: 'N76',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetreKelvin'];
+        return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '2.044175 × 10⁴ W/(m² × K)',
       quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer'],
@@ -2265,7 +2265,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/(s·ft²·°R)',
       code: 'A20',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetreKelvin'];
+        return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '20441.7 W/(m² × K)',
       quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer'],
@@ -2276,7 +2276,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/ft²',
       code: 'P37',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerSquareMetre'];
+        return sammUDefinition.units['joulePerSquareMetre'];
       },
       conversionFactor: '1.135653 × 10⁴ J/m²',
       quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence'],
@@ -2287,7 +2287,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/(ft²·h)',
       code: 'N50',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '3.154591 W/m²',
       quantityKinds: [
@@ -2310,7 +2310,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/(ft²·s)',
       code: 'N53',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '1.135653 × 10⁴ W/m²',
       quantityKinds: [
@@ -2333,7 +2333,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/(in²·s)',
       code: 'N55',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '1.634246 × 10⁶ W/m²',
       quantityKinds: [
@@ -2356,7 +2356,7 @@ var bammuDefinition = {
       symbol: 'Btu',
       code: 'J39',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '1.05587 × 10³ J',
       quantityKinds: [
@@ -2394,7 +2394,7 @@ var bammuDefinition = {
       symbol: 'Btuth·ft/(h·ft²·°F)',
       code: 'J46',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerMetreKelvin'];
+        return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '1.729577 W/(m × K)',
       quantityKinds: ['thermalConductivity', 'thermalConductivity'],
@@ -2405,7 +2405,7 @@ var bammuDefinition = {
       symbol: 'Btuth·in/(h·ft²·°F)',
       code: 'J48',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerMetreKelvin'];
+        return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '0.1441314 W/(m × K)',
       quantityKinds: ['thermalConductivity', 'thermalConductivity'],
@@ -2416,7 +2416,7 @@ var bammuDefinition = {
       symbol: 'Btuth·in/(s·ft²·°F)',
       code: 'J49',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerMetreKelvin'];
+        return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '5.188732 × 10² W/(m × K)',
       quantityKinds: ['thermalConductivity', 'thermalConductivity'],
@@ -2427,7 +2427,7 @@ var bammuDefinition = {
       symbol: 'Btuth/ft³',
       code: 'N59',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerCubicMetre'];
+        return sammUDefinition.units['joulePerCubicMetre'];
       },
       conversionFactor: '3.723403 ×10⁴ J/m³',
       quantityKinds: [
@@ -2446,7 +2446,7 @@ var bammuDefinition = {
       symbol: 'Btuth/°F',
       code: 'N61',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKelvin'];
+        return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '1.897830 × 10³ J/K',
       quantityKinds: ['boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction', 'heatCapacity', 'entropy'],
@@ -2457,7 +2457,7 @@ var bammuDefinition = {
       symbol: 'Btuth/°R',
       code: 'N63',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKelvin'];
+        return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '1.897830 × 10³ J/K',
       quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction'],
@@ -2468,7 +2468,7 @@ var bammuDefinition = {
       symbol: 'Btuth/h',
       code: 'J47',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '0.2928751 W',
       quantityKinds: [
@@ -2488,7 +2488,7 @@ var bammuDefinition = {
       symbol: 'Btuth/(h·ft²·°F)',
       code: 'N75',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetreKelvin'];
+        return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '5.674466 W/(m² × K)',
       quantityKinds: ['surfaceCoefficientOfHeatTransfer', 'coefficientOfHeatTransfer'],
@@ -2499,7 +2499,7 @@ var bammuDefinition = {
       symbol: 'Btuth/min',
       code: 'J51',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '17.57250 W',
       quantityKinds: [
@@ -2519,7 +2519,7 @@ var bammuDefinition = {
       symbol: 'Btuth/lb',
       code: 'N73',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogram'];
+        return sammUDefinition.units['joulePerKilogram'];
       },
       conversionFactor: '2.324444 × 10³ J/kg',
       quantityKinds: ['specificEnergy', 'massicEnergy', 'massicHelmholtzFreeEnergy'],
@@ -2530,7 +2530,7 @@ var bammuDefinition = {
       symbol: 'Btuth/(lb·°F)',
       code: 'J50',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogramKelvin'];
+        return sammUDefinition.units['joulePerKilogramKelvin'];
       },
       conversionFactor: '4.184 × 10³ J/(kg × K)',
       quantityKinds: [
@@ -2547,7 +2547,7 @@ var bammuDefinition = {
       symbol: '(Btuth/°R)/lb',
       code: 'N64',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogramKelvin'];
+        return sammUDefinition.units['joulePerKilogramKelvin'];
       },
       conversionFactor: '4.184 × 10³ J/(kg × K)',
       quantityKinds: [
@@ -2564,7 +2564,7 @@ var bammuDefinition = {
       symbol: 'Btuth/s',
       code: 'J52',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '1.054350 × 10³ W',
       quantityKinds: [
@@ -2584,7 +2584,7 @@ var bammuDefinition = {
       symbol: 'Btuth/(s·ft²·°F)',
       code: 'N77',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetreKelvin'];
+        return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '2.042808 × 10⁴ W/(m² × K)',
       quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer'],
@@ -2595,7 +2595,7 @@ var bammuDefinition = {
       symbol: 'Btuth/ft²',
       code: 'P38',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerSquareMetre'];
+        return sammUDefinition.units['joulePerSquareMetre'];
       },
       conversionFactor: '1.134893 × 10⁴ J/m²',
       quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence'],
@@ -2606,7 +2606,7 @@ var bammuDefinition = {
       symbol: 'Btuth/(ft²·h)',
       code: 'N51',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '3.152481 W/m²',
       quantityKinds: [
@@ -2629,7 +2629,7 @@ var bammuDefinition = {
       symbol: 'Btuth/(ft²·min)',
       code: 'N52',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '1.891489 × 10² W/m²',
       quantityKinds: [
@@ -2652,7 +2652,7 @@ var bammuDefinition = {
       symbol: 'Btuth/(ft²·s)',
       code: 'N54',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '1.134893 × 10⁴ W/m²',
       quantityKinds: [
@@ -2684,7 +2684,7 @@ var bammuDefinition = {
       symbol: 'bushel (UK)',
       code: 'BUI',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '3.636872 × 10⁻² m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -2695,7 +2695,7 @@ var bammuDefinition = {
       symbol: 'bu (UK)/d',
       code: 'J64',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.209343 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -2706,7 +2706,7 @@ var bammuDefinition = {
       symbol: 'bu (UK)/h',
       code: 'J65',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.010242 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -2717,7 +2717,7 @@ var bammuDefinition = {
       symbol: 'bu (UK)/min',
       code: 'J66',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '6.061453 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -2728,7 +2728,7 @@ var bammuDefinition = {
       symbol: 'bu (UK)/s',
       code: 'J67',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.636872 × 10⁻² m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -2739,7 +2739,7 @@ var bammuDefinition = {
       symbol: 'bu (US)',
       code: 'BUA',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '3.523907 × 10⁻² m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -2750,7 +2750,7 @@ var bammuDefinition = {
       symbol: 'bu (US dry)/d',
       code: 'J68',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.078596 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -2761,7 +2761,7 @@ var bammuDefinition = {
       symbol: 'bu (US dry)/h',
       code: 'J69',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '9.788631 × 10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -2772,7 +2772,7 @@ var bammuDefinition = {
       symbol: 'bu (US dry)/min',
       code: 'J70',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '5.873178 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -2783,7 +2783,7 @@ var bammuDefinition = {
       symbol: 'bu (US dry)/s',
       code: 'J71',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.523907 × 10⁻² m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -2830,7 +2830,7 @@ var bammuDefinition = {
       symbol: 'cal₂₀',
       code: 'N69',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '4.18190',
       quantityKinds: [
@@ -2868,7 +2868,7 @@ var bammuDefinition = {
       symbol: 'calIT/(g·°C)',
       code: 'J76',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogramKelvin'];
+        return sammUDefinition.units['joulePerKilogramKelvin'];
       },
       conversionFactor: '4.1868 × 10³ J/(kg × K)',
       quantityKinds: [
@@ -2885,7 +2885,7 @@ var bammuDefinition = {
       symbol: 'cal',
       code: 'J75',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '4.19002 J',
       quantityKinds: [
@@ -2923,7 +2923,7 @@ var bammuDefinition = {
       symbol: 'calth/(cm·s·°C)',
       code: 'J78',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerMetreKelvin'];
+        return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '4.184 × 10² W/(m × K)',
       quantityKinds: ['thermalConductivity', 'thermalConductivity'],
@@ -2934,7 +2934,7 @@ var bammuDefinition = {
       symbol: 'calth/(g·°C)',
       code: 'J79',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogramKelvin'];
+        return sammUDefinition.units['joulePerKilogramKelvin'];
       },
       conversionFactor: '4.184 × 10³ J/(kg × K)',
       quantityKinds: [
@@ -2951,7 +2951,7 @@ var bammuDefinition = {
       symbol: 'calth/min',
       code: 'J81',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '6.973333 × 10⁻² W',
       quantityKinds: [
@@ -2971,7 +2971,7 @@ var bammuDefinition = {
       symbol: 'calth/s',
       code: 'J82',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '4.184 W',
       quantityKinds: [
@@ -2991,7 +2991,7 @@ var bammuDefinition = {
       symbol: 'calth/cm²',
       code: 'P39',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerSquareMetre'];
+        return sammUDefinition.units['joulePerSquareMetre'];
       },
       conversionFactor: '4.184 × 10⁴ J/m²',
       quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence'],
@@ -3002,7 +3002,7 @@ var bammuDefinition = {
       symbol: 'calth/(cm²·min)',
       code: 'N56',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '6.973333 × 10² W/m²',
       quantityKinds: [
@@ -3025,7 +3025,7 @@ var bammuDefinition = {
       symbol: 'calth/(cm²·s)',
       code: 'N57',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '4.184 × 10⁴ W/m²',
       quantityKinds: [
@@ -3057,7 +3057,7 @@ var bammuDefinition = {
       symbol: 'cd/ft²',
       code: 'P32',
       referenceUnit: function () {
-        return bammuDefinition.units['candelaPerSquareMetre'];
+        return sammUDefinition.units['candelaPerSquareMetre'];
       },
       conversionFactor: '1.076391 × 10 cd/m²',
       quantityKinds: ['luminance', 'luminance'],
@@ -3068,7 +3068,7 @@ var bammuDefinition = {
       symbol: 'cd/in²',
       code: 'P28',
       referenceUnit: function () {
-        return bammuDefinition.units['candelaPerSquareMetre'];
+        return sammUDefinition.units['candelaPerSquareMetre'];
       },
       conversionFactor: '1.550003 × 10³ cd/m²',
       quantityKinds: ['luminance', 'luminance'],
@@ -3106,7 +3106,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'CNT',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '45.359237 kg',
       quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -3117,7 +3117,7 @@ var bammuDefinition = {
       symbol: 'cg',
       code: 'CGM',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻⁵ kg',
       quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
@@ -3128,7 +3128,7 @@ var bammuDefinition = {
       symbol: 'cl',
       code: 'CLT',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁵ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -3139,7 +3139,7 @@ var bammuDefinition = {
       symbol: 'cm',
       code: 'CMT',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10⁻² m',
       quantityKinds: [
@@ -3197,7 +3197,7 @@ var bammuDefinition = {
       symbol: 'cmHg (0 °C)',
       code: 'N13',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '1.33322 × 10³ Pa',
       quantityKinds: [
@@ -3230,7 +3230,7 @@ var bammuDefinition = {
       symbol: 'cmH₂O (4 °C)',
       code: 'N14',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '9.80638 × 10 Pa',
       quantityKinds: [
@@ -3312,7 +3312,7 @@ var bammuDefinition = {
       symbol: 'cm/s',
       code: '2M',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '10⁻² m/s',
       quantityKinds: [
@@ -3336,7 +3336,7 @@ var bammuDefinition = {
       symbol: '(cm/s)/bar',
       code: 'J85',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondPascal'];
+        return sammUDefinition.units['metrePerSecondPascal'];
       },
       conversionFactor: '10⁻⁷ (m/s)/Pa',
       quantityKinds: ['groupVelocity', 'velocity', 'phaseVelocity', 'velocity', 'phaseVelocity', 'groupVelocity'],
@@ -3347,7 +3347,7 @@ var bammuDefinition = {
       symbol: '(cm/s)/K',
       code: 'J84',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondKelvin'];
+        return sammUDefinition.units['metrePerSecondKelvin'];
       },
       conversionFactor: '10⁻² (m/s)/K',
       quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'phaseVelocity', 'velocity', 'groupVelocity'],
@@ -3358,7 +3358,7 @@ var bammuDefinition = {
       symbol: 'cm/s²',
       code: 'M39',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: '10⁻² m/s²',
       quantityKinds: [
@@ -3377,7 +3377,7 @@ var bammuDefinition = {
       symbol: 'cN·m',
       code: 'J72',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonMetre'];
+        return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁻² N × m',
       quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfACouple', 'torque', 'momentOfForce'],
@@ -3388,7 +3388,7 @@ var bammuDefinition = {
       symbol: 'cP',
       code: 'C7',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '10⁻³ Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -3399,7 +3399,7 @@ var bammuDefinition = {
       symbol: 'cP/bar',
       code: 'J74',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻⁸ s',
       quantityKinds: [
@@ -3431,7 +3431,7 @@ var bammuDefinition = {
       symbol: 'cSt',
       code: '4C',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetrePerSecond'];
+        return sammUDefinition.units['squareMetrePerSecond'];
       },
       conversionFactor: '10⁻⁶ m²/s',
       quantityKinds: [
@@ -3449,7 +3449,7 @@ var bammuDefinition = {
       symbol: 'ch (US survey)',
       code: 'M49',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '2.011684 × 10 m',
       quantityKinds: [
@@ -3507,7 +3507,7 @@ var bammuDefinition = {
       symbol: 'cmil',
       code: 'M47',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '5.067075 × 10⁻¹⁰ m²',
       quantityKinds: [
@@ -3528,7 +3528,7 @@ var bammuDefinition = {
       symbol: 'clo',
       code: 'J83',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetreKelvinPerWatt'];
+        return sammUDefinition.units['squareMetreKelvinPerWatt'];
       },
       conversionFactor: '0.155 m² × K/W',
       quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation', 'coefficientOfThermalInsulation', 'thermalInsulance'],
@@ -3548,7 +3548,7 @@ var bammuDefinition = {
       symbol: 'y (365 days)',
       code: 'L95',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '3.1536 × 10⁷ s',
       quantityKinds: [
@@ -3589,7 +3589,7 @@ var bammuDefinition = {
       symbol: 'mH₂O',
       code: 'N23',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '9.80665 × 10³ Pa',
       quantityKinds: [
@@ -3622,7 +3622,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'WCD',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '3.63 m³',
       quantityKinds: ['volume', 'sectionModulus'],
@@ -3633,7 +3633,7 @@ var bammuDefinition = {
       symbol: 'cord',
       code: 'M68',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '3.624556 m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -3644,7 +3644,7 @@ var bammuDefinition = {
       symbol: 'C',
       code: 'COU',
       referenceUnit: function () {
-        return bammuDefinition.units['ampereSecond'];
+        return sammUDefinition.units['ampereSecond'];
       },
       conversionFactor: 'A × s',
       quantityKinds: [
@@ -3681,7 +3681,7 @@ var bammuDefinition = {
       symbol: 'C/cm³',
       code: 'A28',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerCubicMetre'];
+        return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁶ C/m³',
       quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'chargeDensity', 'volumeDensityOfCharge', 'volumicCharge'],
@@ -3701,7 +3701,7 @@ var bammuDefinition = {
       symbol: 'C/mm³',
       code: 'A30',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerCubicMetre'];
+        return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁹ C/m³',
       quantityKinds: ['volumeDensityOfCharge', 'volumicCharge', 'chargeDensity', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity'],
@@ -3721,7 +3721,7 @@ var bammuDefinition = {
       symbol: 'C/(kg·s)',
       code: 'A31',
       referenceUnit: function () {
-        return bammuDefinition.units['amperePerKilogram'];
+        return sammUDefinition.units['amperePerKilogram'];
       },
       conversionFactor: 'A/kg',
       quantityKinds: ['exposureRate', 'currentDensity'],
@@ -3750,7 +3750,7 @@ var bammuDefinition = {
       symbol: 'C/cm²',
       code: 'A33',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerSquareMetre'];
+        return sammUDefinition.units['coulombPerSquareMetre'];
       },
       conversionFactor: '10⁴ C/m²',
       quantityKinds: [
@@ -3777,7 +3777,7 @@ var bammuDefinition = {
       symbol: 'C/mm²',
       code: 'A35',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerSquareMetre'];
+        return sammUDefinition.units['coulombPerSquareMetre'];
       },
       conversionFactor: '10⁶ C/m²',
       quantityKinds: [
@@ -3813,7 +3813,7 @@ var bammuDefinition = {
       symbol: 'cm³',
       code: 'CMQ',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁶ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -3932,7 +3932,7 @@ var bammuDefinition = {
       symbol: 'cm³/mol',
       code: 'A36',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerMole'];
+        return sammUDefinition.units['cubicMetrePerMole'];
       },
       conversionFactor: '10⁻⁶ m³/mol',
       quantityKinds: ['molarVolume', 'molarVolume'],
@@ -3943,7 +3943,7 @@ var bammuDefinition = {
       symbol: 'cm³/s',
       code: '2J',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -3972,7 +3972,7 @@ var bammuDefinition = {
       symbol: 'dam³',
       code: 'DMA',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -3983,7 +3983,7 @@ var bammuDefinition = {
       symbol: 'dm³',
       code: 'DMQ',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -4003,7 +4003,7 @@ var bammuDefinition = {
       symbol: 'dm³/d',
       code: 'J90',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.15741 × 10⁻⁸ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -4032,7 +4032,7 @@ var bammuDefinition = {
       symbol: 'dm³/min',
       code: 'J92',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -4043,7 +4043,7 @@ var bammuDefinition = {
       symbol: 'dm³/mol',
       code: 'A37',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerMole'];
+        return sammUDefinition.units['cubicMetrePerMole'];
       },
       conversionFactor: '10⁻³ m³/mol',
       quantityKinds: ['molarVolume', 'molarVolume'],
@@ -4054,7 +4054,7 @@ var bammuDefinition = {
       symbol: 'dm³/s',
       code: 'J93',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '10⁻³ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -4065,7 +4065,7 @@ var bammuDefinition = {
       symbol: 'ft³',
       code: 'FTQ',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '2.831685 × 10⁻² m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -4076,7 +4076,7 @@ var bammuDefinition = {
       symbol: 'ft³/d',
       code: 'K22',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.277413 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -4087,7 +4087,7 @@ var bammuDefinition = {
       symbol: 'ft³/°F',
       code: 'K21',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerKelvin'];
+        return sammUDefinition.units['cubicMetrePerKelvin'];
       },
       conversionFactor: '5.097033 × 10⁻² m³/K',
       quantityKinds: ['volume', 'volumePerTemperature'],
@@ -4098,7 +4098,7 @@ var bammuDefinition = {
       symbol: 'ft³/h',
       code: '2K',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '7.86579 × 10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -4109,7 +4109,7 @@ var bammuDefinition = {
       symbol: 'ft³/min',
       code: '2L',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.719474 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -4120,7 +4120,7 @@ var bammuDefinition = {
       symbol: 'ft³/lb',
       code: 'N29',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerKilogram'];
+        return sammUDefinition.units['cubicMetrePerKilogram'];
       },
       conversionFactor: '6.242796 × 10⁻² m³/kg',
       quantityKinds: ['specificVolume', 'massicVolume', 'massicVolume', 'specificVolume'],
@@ -4131,7 +4131,7 @@ var bammuDefinition = {
       symbol: 'ft³/psi',
       code: 'K23',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerPascal'];
+        return sammUDefinition.units['cubicMetrePerPascal'];
       },
       conversionFactor: '4.107012 × 10⁻⁶ m³/Pa',
       quantityKinds: ['volume', 'volume'],
@@ -4142,7 +4142,7 @@ var bammuDefinition = {
       symbol: 'ft³/s',
       code: 'E17',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.831685 × 10⁻² m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -4153,7 +4153,7 @@ var bammuDefinition = {
       symbol: 'hm³',
       code: 'H19',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁶ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -4164,7 +4164,7 @@ var bammuDefinition = {
       symbol: 'in³',
       code: 'INQ',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '16.387064 × 10⁻⁶ m³',
       quantityKinds: ['sectionModulus', 'volume', 'volume', 'sectionModulus'],
@@ -4193,7 +4193,7 @@ var bammuDefinition = {
       symbol: 'in³/lb',
       code: 'N30',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerKilogram'];
+        return sammUDefinition.units['cubicMetrePerKilogram'];
       },
       conversionFactor: '3.612728 × 10⁻⁵ m³/kg',
       quantityKinds: ['specificVolume', 'massicVolume', 'massicVolume', 'specificVolume'],
@@ -4213,7 +4213,7 @@ var bammuDefinition = {
       symbol: 'km³',
       code: 'H20',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁹ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -4287,7 +4287,7 @@ var bammuDefinition = {
       symbol: 'm³/h',
       code: 'MQH',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -4415,7 +4415,7 @@ var bammuDefinition = {
       symbol: '(m³/s)/m²',
       code: 'P87',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: 'm/s',
       quantityKinds: [
@@ -4437,7 +4437,7 @@ var bammuDefinition = {
       symbol: 'µm³',
       code: null,
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻¹⁸ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -4448,7 +4448,7 @@ var bammuDefinition = {
       symbol: 'mi³',
       code: 'M69',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4.168182 × 10⁹ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -4459,7 +4459,7 @@ var bammuDefinition = {
       symbol: 'mm³',
       code: 'MMQ',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁹ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -4479,7 +4479,7 @@ var bammuDefinition = {
       symbol: 'yd³',
       code: 'YDQ',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '0.764555 m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -4490,7 +4490,7 @@ var bammuDefinition = {
       symbol: 'yd³/d',
       code: 'M12',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '8.849015 × 10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -4501,7 +4501,7 @@ var bammuDefinition = {
       symbol: 'yd³/°F',
       code: 'M11',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerKelvin'];
+        return sammUDefinition.units['cubicMetrePerKelvin'];
       },
       conversionFactor: '1.376199 m³/K',
       quantityKinds: ['volume', 'volumePerTemperature'],
@@ -4512,7 +4512,7 @@ var bammuDefinition = {
       symbol: 'yd³/h',
       code: 'M13',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.123764 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -4523,7 +4523,7 @@ var bammuDefinition = {
       symbol: 'yd³/min',
       code: 'M15',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.274258 × 10⁻² m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -4534,7 +4534,7 @@ var bammuDefinition = {
       symbol: 'yd³/psi',
       code: 'M14',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerPascal'];
+        return sammUDefinition.units['cubicMetrePerPascal'];
       },
       conversionFactor: '1.108893 × 10⁻⁴ m³/Pa',
       quantityKinds: ['volume', 'volume'],
@@ -4545,7 +4545,7 @@ var bammuDefinition = {
       symbol: 'yd³/s',
       code: 'M16',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '0.7645549 m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -4556,7 +4556,7 @@ var bammuDefinition = {
       symbol: 'cup (US)',
       code: 'G21',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '2.365882 × 10⁻⁴ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -4567,7 +4567,7 @@ var bammuDefinition = {
       symbol: 'Ci',
       code: 'CUR',
       referenceUnit: function () {
-        return bammuDefinition.units['becquerel'];
+        return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '3.7 × 10¹⁰ Bq',
       quantityKinds: ['activity', 'activity'],
@@ -4578,7 +4578,7 @@ var bammuDefinition = {
       symbol: 'Ci/kg',
       code: 'A42',
       referenceUnit: function () {
-        return bammuDefinition.units['becquerelPerKilogram'];
+        return sammUDefinition.units['becquerelPerKilogram'];
       },
       conversionFactor: '3.7 × 10¹⁰ Bq/kg',
       quantityKinds: ['specificActivityInASample', 'specificActivityInASample'],
@@ -4598,7 +4598,7 @@ var bammuDefinition = {
       symbol: 'd',
       code: 'DAY',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '86400 s',
       quantityKinds: [
@@ -4648,7 +4648,7 @@ var bammuDefinition = {
       symbol: 'dag',
       code: 'DJ',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻² kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -4659,7 +4659,7 @@ var bammuDefinition = {
       symbol: 'dal',
       code: 'A44',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻² m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -4670,7 +4670,7 @@ var bammuDefinition = {
       symbol: 'dam',
       code: 'A45',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10 m',
       quantityKinds: [
@@ -4728,7 +4728,7 @@ var bammuDefinition = {
       symbol: 'daPa',
       code: 'H75',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10¹ Pa',
       quantityKinds: [
@@ -4761,7 +4761,7 @@ var bammuDefinition = {
       symbol: 'daa',
       code: 'DAA',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '10³ m²',
       quantityKinds: [
@@ -4782,7 +4782,7 @@ var bammuDefinition = {
       symbol: 'dB',
       code: '2N',
       referenceUnit: function () {
-        return bammuDefinition.units['neper'];
+        return sammUDefinition.units['neper'];
       },
       conversionFactor: '0.1151293 Np',
       quantityKinds: [
@@ -4802,7 +4802,7 @@ var bammuDefinition = {
       symbol: 'dB/km',
       code: 'H51',
       referenceUnit: function () {
-        return bammuDefinition.units['belPerMetre'];
+        return sammUDefinition.units['belPerMetre'];
       },
       conversionFactor: '10⁻⁴ B/m',
       quantityKinds: ['soundPressureLevel', 'soundPowerLevel', 'soundPressureLevel', 'soundPowerLevel'],
@@ -4813,7 +4813,7 @@ var bammuDefinition = {
       symbol: 'dB/m',
       code: 'H52',
       referenceUnit: function () {
-        return bammuDefinition.units['belPerMetre'];
+        return sammUDefinition.units['belPerMetre'];
       },
       conversionFactor: '10⁻¹ B/m',
       quantityKinds: ['soundPressureLevel', 'soundPowerLevel', 'soundPressureLevel', 'soundPowerLevel'],
@@ -4824,7 +4824,7 @@ var bammuDefinition = {
       symbol: 'dg',
       code: 'DG',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻⁴ kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -4835,7 +4835,7 @@ var bammuDefinition = {
       symbol: 'dl',
       code: 'DLT',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁴ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -4846,7 +4846,7 @@ var bammuDefinition = {
       symbol: 'dl/g',
       code: '22',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerKilogram'];
+        return sammUDefinition.units['cubicMetrePerKilogram'];
       },
       conversionFactor: '10⁻¹ × m³/kg',
       quantityKinds: ['specificVolume', 'massicVolume', 'specificVolume', 'massicVolume'],
@@ -4857,7 +4857,7 @@ var bammuDefinition = {
       symbol: 'dm',
       code: 'DMT',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10⁻¹ m',
       quantityKinds: [
@@ -4915,7 +4915,7 @@ var bammuDefinition = {
       symbol: 'dN·m',
       code: 'DN',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonMetre'];
+        return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁻¹ N × m',
       quantityKinds: ['momentOfForce', 'torque', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple'],
@@ -4935,7 +4935,7 @@ var bammuDefinition = {
       symbol: 'dt or dtn',
       code: 'DTN',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10² kg',
       quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
@@ -5000,7 +5000,7 @@ var bammuDefinition = {
       symbol: '°C',
       code: 'CEL',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvin'];
+        return sammUDefinition.units['kelvin'];
       },
       conversionFactor: '1 × K',
       quantityKinds: [
@@ -5082,7 +5082,7 @@ var bammuDefinition = {
       symbol: '°F/(BtuIT/h)',
       code: 'N84',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinPerWatt'];
+        return sammUDefinition.units['kelvinPerWatt'];
       },
       conversionFactor: '1.895634 K/W',
       quantityKinds: ['thermalResistance', 'thermalResistance'],
@@ -5093,7 +5093,7 @@ var bammuDefinition = {
       symbol: '°F/(Btuth/h)',
       code: 'N85',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinPerWatt'];
+        return sammUDefinition.units['kelvinPerWatt'];
       },
       conversionFactor: '1.896903 K/W',
       quantityKinds: ['thermalResistance', 'thermalResistance'],
@@ -5104,7 +5104,7 @@ var bammuDefinition = {
       symbol: '°F·h·ft²/BtuIT',
       code: 'J22',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetreKelvinPerWatt'];
+        return sammUDefinition.units['squareMetreKelvinPerWatt'];
       },
       conversionFactor: '0.1761102 m² × K/W',
       quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation', 'thermalInsulance', 'coefficientOfThermalInsulation'],
@@ -5115,7 +5115,7 @@ var bammuDefinition = {
       symbol: '°F·h·ft²/(BtuIT·in)',
       code: 'N88',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinMetrePerWatt'];
+        return sammUDefinition.units['kelvinMetrePerWatt'];
       },
       conversionFactor: '6.933472 K × m/W',
       quantityKinds: ['thermalResistance', 'thermalResistance'],
@@ -5126,7 +5126,7 @@ var bammuDefinition = {
       symbol: '°F·h·ft²/Btuth',
       code: 'J19',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetreKelvinPerWatt'];
+        return sammUDefinition.units['squareMetreKelvinPerWatt'];
       },
       conversionFactor: '0.176228 m² × K/W',
       quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation', 'thermalInsulance', 'coefficientOfThermalInsulation'],
@@ -5137,7 +5137,7 @@ var bammuDefinition = {
       symbol: '°F·h·ft²/(Btuth·in)',
       code: 'N89',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinMetrePerWatt'];
+        return sammUDefinition.units['kelvinMetrePerWatt'];
       },
       conversionFactor: '6.938112 K × m/W',
       quantityKinds: ['thermalResistance', 'thermalResistance'],
@@ -5148,7 +5148,7 @@ var bammuDefinition = {
       symbol: '°F/bar',
       code: 'J21',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinPerPascal'];
+        return sammUDefinition.units['kelvinPerPascal'];
       },
       conversionFactor: '0.5555556 × 10⁻⁵ K/Pa',
       quantityKinds: ['temperature', 'temperature'],
@@ -5159,7 +5159,7 @@ var bammuDefinition = {
       symbol: '°F/h',
       code: 'J23',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinPerSecond'];
+        return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '1.543210 × 10⁻⁴ K/s',
       quantityKinds: ['temperatureVariationOverTime', 'temperature'],
@@ -5179,7 +5179,7 @@ var bammuDefinition = {
       symbol: '°F/min',
       code: 'J24',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinPerSecond'];
+        return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '9.259259 × 10⁻³ K/s',
       quantityKinds: ['temperatureVariationOverTime', 'temperature'],
@@ -5190,7 +5190,7 @@ var bammuDefinition = {
       symbol: '°F/s',
       code: 'J25',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinPerSecond'];
+        return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '0.5555556 K/s',
       quantityKinds: ['temperatureVariationOverTime', 'temperature'],
@@ -5201,7 +5201,7 @@ var bammuDefinition = {
       symbol: '°F/(BtuIT/s)',
       code: 'N86',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinPerWatt'];
+        return sammUDefinition.units['kelvinPerWatt'];
       },
       conversionFactor: '5.265651 × 10⁻⁴ K/W',
       quantityKinds: ['thermalResistance', 'thermalResistance'],
@@ -5212,7 +5212,7 @@ var bammuDefinition = {
       symbol: '°F/(Btuth/s)',
       code: 'N87',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinPerWatt'];
+        return sammUDefinition.units['kelvinPerWatt'];
       },
       conversionFactor: '5.269175 × 10⁻⁴ K/W',
       quantityKinds: ['thermalResistance', 'thermalResistance'],
@@ -5232,7 +5232,7 @@ var bammuDefinition = {
       symbol: '°/m',
       code: 'H27',
       referenceUnit: function () {
-        return bammuDefinition.units['radianPerMetre'];
+        return sammUDefinition.units['radianPerMetre'];
       },
       conversionFactor: '1.745329 × 10⁻² rad/m',
       quantityKinds: [
@@ -5277,7 +5277,7 @@ var bammuDefinition = {
       symbol: '°R/h',
       code: 'J28',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinPerSecond'];
+        return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '1.543210 × 10⁻⁴ K/s',
       quantityKinds: ['temperatureVariationOverTime', 'temperature'],
@@ -5288,7 +5288,7 @@ var bammuDefinition = {
       symbol: '°R/min',
       code: 'J29',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinPerSecond'];
+        return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '9.259259 × 10⁻³ K/s',
       quantityKinds: ['temperatureVariationOverTime', 'temperature'],
@@ -5299,7 +5299,7 @@ var bammuDefinition = {
       symbol: '°R/s',
       code: 'J30',
       referenceUnit: function () {
-        return bammuDefinition.units['kelvinPerSecond'];
+        return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '0.5555556 K/s',
       quantityKinds: ['temperature', 'temperatureVariationOverTime'],
@@ -5319,7 +5319,7 @@ var bammuDefinition = {
       symbol: '°',
       code: 'DD',
       referenceUnit: function () {
-        return bammuDefinition.units['rad'];
+        return sammUDefinition.units['rad'];
       },
       conversionFactor: '1.745329 × 10⁻² rad',
       quantityKinds: ['absorbedDose', 'anglePlane', 'braggAngle'],
@@ -5339,7 +5339,7 @@ var bammuDefinition = {
       symbol: 'den (g/9 km)',
       code: 'A49',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerMetre'];
+        return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '1.111111 × 10⁻⁷ kg/m',
       quantityKinds: ['linearDensity', 'linearMass', 'linearMass', 'linearDensity'],
@@ -5359,7 +5359,7 @@ var bammuDefinition = {
       symbol: 'dpt',
       code: 'Q25',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalMetre'];
+        return sammUDefinition.units['reciprocalMetre'];
       },
       conversionFactor: 'm⁻¹',
       quantityKinds: [
@@ -5466,7 +5466,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'DRI',
       referenceUnit: function () {
-        return bammuDefinition.units['gram'];
+        return sammUDefinition.units['gram'];
       },
       conversionFactor: '1.771745 g',
       quantityKinds: ['mass'],
@@ -5477,7 +5477,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'DRA',
       referenceUnit: function () {
-        return bammuDefinition.units['gram'];
+        return sammUDefinition.units['gram'];
       },
       conversionFactor: '3.887935 g',
       quantityKinds: ['mass'],
@@ -5488,7 +5488,7 @@ var bammuDefinition = {
       symbol: 'bbl (US)',
       code: 'BLD',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.15627 × 10⁻¹ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -5499,7 +5499,7 @@ var bammuDefinition = {
       symbol: 'dry gal (US)',
       code: 'GLD',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4.404884 × 10⁻³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -5510,7 +5510,7 @@ var bammuDefinition = {
       symbol: 'dry pt (US)',
       code: 'PTD',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '5.506105 × 10⁻⁴ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -5530,7 +5530,7 @@ var bammuDefinition = {
       symbol: 'dry qt (US)',
       code: 'QTD',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.101221 × 10⁻³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -5550,7 +5550,7 @@ var bammuDefinition = {
       symbol: 'dyn·m',
       code: 'M97',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonMetre'];
+        return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁻⁵ N × m',
       quantityKinds: ['momentOfForce', 'torque', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple'],
@@ -5588,7 +5588,7 @@ var bammuDefinition = {
       symbol: 'eV',
       code: 'A53',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '1.602176487 × 10⁻¹⁹ J',
       quantityKinds: [
@@ -5627,7 +5627,7 @@ var bammuDefinition = {
       symbol: 'eV/m',
       code: 'A54',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerMetre'];
+        return sammUDefinition.units['joulePerMetre'];
       },
       conversionFactor: '1.602176487 × 10⁻¹⁹ J/m',
       quantityKinds: ['totalLinearStoppingPower', 'linearEnergyTransfer', 'totalLinearStoppingPower', 'linearEnergyTransfer'],
@@ -5638,7 +5638,7 @@ var bammuDefinition = {
       symbol: 'eV·m²',
       code: 'A55',
       referenceUnit: function () {
-        return bammuDefinition.units['jouleSquareMetre'];
+        return sammUDefinition.units['jouleSquareMetre'];
       },
       conversionFactor: '1.602176487 × 10⁻¹⁹ J × m²',
       quantityKinds: ['totalAtomicStoppingPower', 'totalAtomicStoppingPower'],
@@ -5649,7 +5649,7 @@ var bammuDefinition = {
       symbol: 'eV·m²/kg',
       code: 'A56',
       referenceUnit: function () {
-        return bammuDefinition.units['jouleSquareMetrePerKilogram'];
+        return sammUDefinition.units['jouleSquareMetrePerKilogram'];
       },
       conversionFactor: '1.602176487 × 10⁻¹⁹ J × m²/kg',
       quantityKinds: ['totalMassStoppingPower', 'totalMassStoppingPower'],
@@ -5687,7 +5687,7 @@ var bammuDefinition = {
       symbol: 'EB',
       code: null,
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '10¹⁸ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -5698,7 +5698,7 @@ var bammuDefinition = {
       symbol: 'EJ',
       code: 'A68',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '10¹⁸ J',
       quantityKinds: [
@@ -5760,7 +5760,7 @@ var bammuDefinition = {
       symbol: 'Eibyte',
       code: 'E59',
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '2⁶⁰ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -5771,7 +5771,7 @@ var bammuDefinition = {
       symbol: 'FIT',
       code: 'FIT',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalSecond'];
+        return sammUDefinition.units['reciprocalSecond'];
       },
       conversionFactor: '2.77778 × 10⁻¹³ s⁻¹',
       quantityKinds: [
@@ -5802,7 +5802,7 @@ var bammuDefinition = {
       symbol: 'F/km',
       code: 'H33',
       referenceUnit: function () {
-        return bammuDefinition.units['faradPerMetre'];
+        return sammUDefinition.units['faradPerMetre'];
       },
       conversionFactor: '10⁻³ F/m',
       quantityKinds: [
@@ -5829,7 +5829,7 @@ var bammuDefinition = {
       symbol: 'fth',
       code: 'AK',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '1.8288 m',
       quantityKinds: [
@@ -5887,7 +5887,7 @@ var bammuDefinition = {
       symbol: 'fJ',
       code: 'A70',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '10⁻¹⁵ J',
       quantityKinds: [
@@ -5923,7 +5923,7 @@ var bammuDefinition = {
       symbol: 'fm',
       code: 'A71',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10⁻¹⁵ m',
       quantityKinds: [
@@ -6017,7 +6017,7 @@ var bammuDefinition = {
       symbol: 'fl oz (UK)',
       code: 'OZI',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '2.841306 × 10⁻⁵ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -6028,7 +6028,7 @@ var bammuDefinition = {
       symbol: 'fl oz (US)',
       code: 'OZA',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '2.957353 × 10⁻⁵ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -6039,7 +6039,7 @@ var bammuDefinition = {
       symbol: 'ft',
       code: 'FOT',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '0.3048 m',
       quantityKinds: [
@@ -6097,7 +6097,7 @@ var bammuDefinition = {
       symbol: 'ftH₂O (39,2 °F)',
       code: 'N15',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '2.98898 × 10³ Pa',
       quantityKinds: [
@@ -6130,7 +6130,7 @@ var bammuDefinition = {
       symbol: 'ft/°F',
       code: 'K13',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerKelvin'];
+        return sammUDefinition.units['metrePerKelvin'];
       },
       conversionFactor: '0.54864 m/K',
       quantityKinds: [
@@ -6162,7 +6162,7 @@ var bammuDefinition = {
       symbol: 'ft/h',
       code: 'K14',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '8.466667 × 10⁻⁵m/s',
       quantityKinds: [
@@ -6186,7 +6186,7 @@ var bammuDefinition = {
       symbol: 'ft/min',
       code: 'FR',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '5.08 × 10⁻³ m/s',
       quantityKinds: [
@@ -6210,7 +6210,7 @@ var bammuDefinition = {
       symbol: 'ft/psi',
       code: 'K17',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerPascal'];
+        return sammUDefinition.units['metrePerPascal'];
       },
       conversionFactor: '4.420750 × 10⁻⁵ m/Pa',
       quantityKinds: [
@@ -6242,7 +6242,7 @@ var bammuDefinition = {
       symbol: 'ft/s',
       code: 'FS',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '0.3048 m/s',
       quantityKinds: [
@@ -6266,7 +6266,7 @@ var bammuDefinition = {
       symbol: '(ft/s)/°F',
       code: 'K18',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondKelvin'];
+        return sammUDefinition.units['metrePerSecondKelvin'];
       },
       conversionFactor: '0.54864 (m/s)/K',
       quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'phaseVelocity', 'velocity', 'groupVelocity'],
@@ -6277,7 +6277,7 @@ var bammuDefinition = {
       symbol: '(ft/s)/psi',
       code: 'K19',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondPascal'];
+        return sammUDefinition.units['metrePerSecondPascal'];
       },
       conversionFactor: '4.420750 × 10⁻⁵ (m/s)/Pa',
       quantityKinds: ['phaseVelocity', 'velocity', 'groupVelocity', 'velocity', 'phaseVelocity', 'groupVelocity'],
@@ -6288,7 +6288,7 @@ var bammuDefinition = {
       symbol: 'ft/s²',
       code: 'A73',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: '0.3048 m/s²',
       quantityKinds: [
@@ -6307,7 +6307,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'E33',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '3.048 × 10⁻⁴ m',
       quantityKinds: [
@@ -6355,7 +6355,7 @@ var bammuDefinition = {
       symbol: 'ft·lbf',
       code: '85',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '1.355818 J',
       quantityKinds: [
@@ -6390,7 +6390,7 @@ var bammuDefinition = {
       symbol: 'ft·lbf/h',
       code: 'K15',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '3.766161 × 10⁻⁴ W',
       quantityKinds: [
@@ -6410,7 +6410,7 @@ var bammuDefinition = {
       symbol: 'ft·lbf/min',
       code: 'K16',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '2.259697 × 10⁻² W',
       quantityKinds: [
@@ -6430,7 +6430,7 @@ var bammuDefinition = {
       symbol: 'ft·lbf/s',
       code: 'A74',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '1.355818 W',
       quantityKinds: [
@@ -6450,7 +6450,7 @@ var bammuDefinition = {
       symbol: 'ft·pdl',
       code: 'N46',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '4.214011 × 10⁻² J',
       quantityKinds: [
@@ -6485,7 +6485,7 @@ var bammuDefinition = {
       symbol: 'ft⁴',
       code: 'N27',
       referenceUnit: function () {
-        return bammuDefinition.units['metreToTheFourthPower'];
+        return sammUDefinition.units['metreToTheFourthPower'];
       },
       conversionFactor: '8.630975 × 10⁻³ m⁴',
       quantityKinds: ['secondMomentOfArea', 'secondAxialMomentOfArea', 'secondPolarMomentOfArea'],
@@ -6496,7 +6496,7 @@ var bammuDefinition = {
       symbol: 'ft (US survey)',
       code: 'M51',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '3.048006 × 10⁻¹ m',
       quantityKinds: [
@@ -6563,7 +6563,7 @@ var bammuDefinition = {
       symbol: 'ftL',
       code: 'P29',
       referenceUnit: function () {
-        return bammuDefinition.units['candelaPerSquareMetre'];
+        return sammUDefinition.units['candelaPerSquareMetre'];
       },
       conversionFactor: '3.426259 cd/m²',
       quantityKinds: ['luminance', 'luminance'],
@@ -6583,7 +6583,7 @@ var bammuDefinition = {
       symbol: 'Fr',
       code: 'N94',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: '3.335641 × 10⁻¹⁰ C',
       quantityKinds: [
@@ -6611,7 +6611,7 @@ var bammuDefinition = {
       symbol: 'Fg',
       code: 'H79',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '0.333333333 × 10⁻³ m',
       quantityKinds: [
@@ -6669,7 +6669,7 @@ var bammuDefinition = {
       symbol: 'fur',
       code: 'M50',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '2.01168 × 10² m',
       quantityKinds: [
@@ -6727,7 +6727,7 @@ var bammuDefinition = {
       symbol: 'Gal',
       code: 'A76',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: '10⁻² m/s²',
       quantityKinds: [
@@ -6746,7 +6746,7 @@ var bammuDefinition = {
       symbol: 'gal (UK)',
       code: 'GLI',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4.546092 × 10⁻³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -6757,7 +6757,7 @@ var bammuDefinition = {
       symbol: 'gal (UK)/d',
       code: 'K26',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '5.261678 × 10⁻⁸ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -6768,7 +6768,7 @@ var bammuDefinition = {
       symbol: 'gal (UK)/h',
       code: 'K27',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.262803 × 10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -6779,7 +6779,7 @@ var bammuDefinition = {
       symbol: 'gal (UK)/s',
       code: 'K28',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.54609 × 10⁻³ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -6790,7 +6790,7 @@ var bammuDefinition = {
       symbol: 'gal (US)',
       code: 'GLL',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '3.785412 × 10⁻³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -6801,7 +6801,7 @@ var bammuDefinition = {
       symbol: 'gal (US liq.)/s',
       code: 'K30',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.785412 × 10⁻³ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -6812,7 +6812,7 @@ var bammuDefinition = {
       symbol: 'gal (US)/d',
       code: 'GB',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.381264 × 10⁻⁸ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -6832,7 +6832,7 @@ var bammuDefinition = {
       symbol: 'γ',
       code: 'P12',
       referenceUnit: function () {
-        return bammuDefinition.units['tesla'];
+        return sammUDefinition.units['tesla'];
       },
       conversionFactor: '10⁻⁹ T',
       quantityKinds: [
@@ -6889,7 +6889,7 @@ var bammuDefinition = {
       symbol: 'GiB',
       code: 'E62',
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '2³⁰ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -6900,7 +6900,7 @@ var bammuDefinition = {
       symbol: 'Gbyte',
       code: 'E34',
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '10⁹ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -6911,7 +6911,7 @@ var bammuDefinition = {
       symbol: 'GBq',
       code: 'GBQ',
       referenceUnit: function () {
-        return bammuDefinition.units['becquerel'];
+        return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '10⁹ Bq',
       quantityKinds: ['activity', 'activity'],
@@ -6949,7 +6949,7 @@ var bammuDefinition = {
       symbol: 'GC/m³',
       code: 'A84',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerCubicMetre'];
+        return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁹ C/m³',
       quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'volumeDensityOfCharge', 'volumicCharge', 'chargeDensity'],
@@ -6960,7 +6960,7 @@ var bammuDefinition = {
       symbol: 'GeV',
       code: 'A85',
       referenceUnit: function () {
-        return bammuDefinition.units['electronvolt'];
+        return sammUDefinition.units['electronvolt'];
       },
       conversionFactor: '10⁹ eV',
       quantityKinds: [
@@ -6984,7 +6984,7 @@ var bammuDefinition = {
       symbol: 'GHz',
       code: 'A86',
       referenceUnit: function () {
-        return bammuDefinition.units['hertz'];
+        return sammUDefinition.units['hertz'];
       },
       conversionFactor: '10⁹ Hz',
       quantityKinds: ['frequency', 'frequency'],
@@ -6995,7 +6995,7 @@ var bammuDefinition = {
       symbol: 'GHz·m',
       code: 'M18',
       referenceUnit: function () {
-        return bammuDefinition.units['hertzMetre'];
+        return sammUDefinition.units['hertzMetre'];
       },
       conversionFactor: '10⁹ Hz × m',
       quantityKinds: ['performanceCharacteristic', 'coefficient', 'performanceCharacteristic', 'coefficient'],
@@ -7006,7 +7006,7 @@ var bammuDefinition = {
       symbol: 'GJ',
       code: 'GV',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '10⁹ J',
       quantityKinds: [
@@ -7041,7 +7041,7 @@ var bammuDefinition = {
       symbol: 'GΩ',
       code: 'A87',
       referenceUnit: function () {
-        return bammuDefinition.units['ohm'];
+        return sammUDefinition.units['ohm'];
       },
       conversionFactor: '10⁹ Ω',
       quantityKinds: [
@@ -7065,7 +7065,7 @@ var bammuDefinition = {
       symbol: 'GΩ·m',
       code: 'A88',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmMetre'];
+        return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁹ Ω × m',
       quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
@@ -7076,7 +7076,7 @@ var bammuDefinition = {
       symbol: 'GΩ/m',
       code: 'M26',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmPerMetre'];
+        return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '10⁹ Ω/m',
       quantityKinds: ['lineicResistance', 'resistanceLoadPerUnitLength'],
@@ -7087,7 +7087,7 @@ var bammuDefinition = {
       symbol: 'GPa',
       code: 'A89',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10⁹ Pa',
       quantityKinds: [
@@ -7120,7 +7120,7 @@ var bammuDefinition = {
       symbol: 'GW',
       code: 'A90',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '10⁹ W',
       quantityKinds: [
@@ -7142,7 +7142,7 @@ var bammuDefinition = {
       symbol: 'GW·h',
       code: 'GWH',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '3.6 × 10¹² J',
       quantityKinds: [
@@ -7177,7 +7177,7 @@ var bammuDefinition = {
       symbol: 'Gi',
       code: 'N97',
       referenceUnit: function () {
-        return bammuDefinition.units['ampere'];
+        return sammUDefinition.units['ampere'];
       },
       conversionFactor: '7.957747 × 10⁻¹ A',
       quantityKinds: [
@@ -7197,7 +7197,7 @@ var bammuDefinition = {
       symbol: 'gi (UK)',
       code: 'GII',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.420653 × 10⁻⁴ m³',
       quantityKinds: ['volume', 'sectionModulus'],
@@ -7208,7 +7208,7 @@ var bammuDefinition = {
       symbol: 'gi (UK)/d',
       code: 'K32',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.644274 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -7219,7 +7219,7 @@ var bammuDefinition = {
       symbol: 'gi (UK)/h',
       code: 'K33',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.946258 × 10⁻⁸ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -7230,7 +7230,7 @@ var bammuDefinition = {
       symbol: 'gi (UK)/min',
       code: 'K34',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '0.02367755 m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -7241,7 +7241,7 @@ var bammuDefinition = {
       symbol: 'gi (UK)/s',
       code: 'K35',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.420653 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -7252,7 +7252,7 @@ var bammuDefinition = {
       symbol: 'gi (US)',
       code: 'GIA',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.182941 × 10⁻⁴ m³',
       quantityKinds: ['volume', 'sectionModulus'],
@@ -7263,7 +7263,7 @@ var bammuDefinition = {
       symbol: 'gi (US)/d',
       code: 'K36',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.369145 × 10⁻⁹ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -7274,7 +7274,7 @@ var bammuDefinition = {
       symbol: 'gi (US)/h',
       code: 'K37',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.285947 × 10⁻⁸ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -7285,7 +7285,7 @@ var bammuDefinition = {
       symbol: 'gi (US)/min',
       code: 'K38',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.971568 × 10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -7296,7 +7296,7 @@ var bammuDefinition = {
       symbol: 'gi (US)/s',
       code: 'K39',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.182941 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -7307,7 +7307,7 @@ var bammuDefinition = {
       symbol: 'gon',
       code: 'A91',
       referenceUnit: function () {
-        return bammuDefinition.units['rad'];
+        return sammUDefinition.units['rad'];
       },
       conversionFactor: '1.570796 × 10⁻² rad',
       quantityKinds: ['absorbedDose', 'anglePlane'],
@@ -7318,7 +7318,7 @@ var bammuDefinition = {
       symbol: 'gr',
       code: 'GRN',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '64.79891 × 10⁻⁶ kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -7329,7 +7329,7 @@ var bammuDefinition = {
       symbol: 'gr/gal (US)',
       code: 'K41',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '1.711806 × 10⁻² kg/m³',
       quantityKinds: [
@@ -7350,7 +7350,7 @@ var bammuDefinition = {
       symbol: 'g',
       code: 'GRM',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻³ kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -7361,7 +7361,7 @@ var bammuDefinition = {
       symbol: 'g·(cm/s)',
       code: 'M99',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramMetrePerSecond'];
+        return sammUDefinition.units['kilogramMetrePerSecond'];
       },
       conversionFactor: '10⁻⁵ kg × m/s',
       quantityKinds: ['momentum', 'momentum'],
@@ -7381,7 +7381,7 @@ var bammuDefinition = {
       symbol: 'gf/cm²',
       code: 'K31',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '98.0665 Pa',
       quantityKinds: [
@@ -7432,7 +7432,7 @@ var bammuDefinition = {
       symbol: 'g·mm',
       code: 'H84',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramMetre'];
+        return sammUDefinition.units['kilogramMetre'];
       },
       conversionFactor: '10⁻⁶ kg × m',
       quantityKinds: [
@@ -7475,7 +7475,7 @@ var bammuDefinition = {
       symbol: 'g/(cm·s)',
       code: 'N41',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '0.1 Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -7486,7 +7486,7 @@ var bammuDefinition = {
       symbol: 'g/cm³',
       code: '23',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '10³ kg/m³',
       quantityKinds: [
@@ -7552,7 +7552,7 @@ var bammuDefinition = {
       symbol: 'g/m³',
       code: 'A93',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '10⁻³ kg/m³',
       quantityKinds: [
@@ -7663,7 +7663,7 @@ var bammuDefinition = {
       symbol: 'g/l',
       code: 'GL',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: 'kg/m³',
       quantityKinds: [
@@ -7702,7 +7702,7 @@ var bammuDefinition = {
       symbol: 'g/m',
       code: 'GF',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerMetre'];
+        return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10⁻³ kg/m',
       quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
@@ -7713,7 +7713,7 @@ var bammuDefinition = {
       symbol: 'g/ml',
       code: 'GJ',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '10³ kg/m³',
       quantityKinds: [
@@ -7788,7 +7788,7 @@ var bammuDefinition = {
       symbol: 'g/mol',
       code: 'A94',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerMole'];
+        return sammUDefinition.units['kilogramPerMole'];
       },
       conversionFactor: '10⁻³ kg/mol',
       quantityKinds: ['molarMass', 'molarMass'],
@@ -7826,7 +7826,7 @@ var bammuDefinition = {
       symbol: 'g/cm²',
       code: '25',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetre'];
+        return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '10 kg/m²',
       quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass'],
@@ -7837,7 +7837,7 @@ var bammuDefinition = {
       symbol: 'g/m²',
       code: 'GM',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetre'];
+        return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '10⁻³ kg/m²',
       quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass'],
@@ -7848,7 +7848,7 @@ var bammuDefinition = {
       symbol: 'g/mm²',
       code: 'N24',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetre'];
+        return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '10³ kg/m²',
       quantityKinds: [
@@ -7880,7 +7880,7 @@ var bammuDefinition = {
       symbol: 'Gy/h',
       code: 'P61',
       referenceUnit: function () {
-        return bammuDefinition.units['grayPerSecond'];
+        return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ Gy/s',
       quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
@@ -7891,7 +7891,7 @@ var bammuDefinition = {
       symbol: 'Gy/min',
       code: 'P57',
       referenceUnit: function () {
-        return bammuDefinition.units['grayPerSecond'];
+        return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻² Gy/s',
       quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
@@ -7947,7 +7947,7 @@ var bammuDefinition = {
       symbol: 'ch (UK)',
       code: 'X1',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '20.1168 m',
       quantityKinds: [
@@ -8059,7 +8059,7 @@ var bammuDefinition = {
       symbol: 'hbar',
       code: 'HBA',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10⁷ Pa',
       quantityKinds: [
@@ -8092,7 +8092,7 @@ var bammuDefinition = {
       symbol: 'hg',
       code: 'HGM',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻¹ kg',
       quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
@@ -8103,7 +8103,7 @@ var bammuDefinition = {
       symbol: 'hl',
       code: 'HLT',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻¹ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -8123,7 +8123,7 @@ var bammuDefinition = {
       symbol: 'hm',
       code: 'HMT',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10² m',
       quantityKinds: [
@@ -8181,7 +8181,7 @@ var bammuDefinition = {
       symbol: 'hPa',
       code: 'A97',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10² Pa',
       quantityKinds: [
@@ -8286,7 +8286,7 @@ var bammuDefinition = {
       symbol: 'HK',
       code: 'P35',
       referenceUnit: function () {
-        return bammuDefinition.units['candela'];
+        return sammUDefinition.units['candela'];
       },
       conversionFactor: '0.903 cd',
       quantityKinds: ['luminousIntensity', 'luminousIntensity'],
@@ -8306,7 +8306,7 @@ var bammuDefinition = {
       symbol: 'H/kΩ',
       code: 'H03',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻³ s',
       quantityKinds: [
@@ -8340,7 +8340,7 @@ var bammuDefinition = {
       symbol: 'H/Ω',
       code: 'H04',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: 's',
       quantityKinds: [
@@ -8383,7 +8383,7 @@ var bammuDefinition = {
       symbol: 'boiler hp',
       code: 'K42',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '9.80950 × 10³ W',
       quantityKinds: [
@@ -8403,7 +8403,7 @@ var bammuDefinition = {
       symbol: 'electric hp',
       code: 'K43',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '746 W',
       quantityKinds: [
@@ -8424,7 +8424,7 @@ var bammuDefinition = {
       symbol: 'h',
       code: 'HUR',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '3600 s',
       quantityKinds: [
@@ -8555,7 +8555,7 @@ var bammuDefinition = {
       symbol: 'cwt (US)',
       code: 'CWA',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '45.3592 kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -8566,7 +8566,7 @@ var bammuDefinition = {
       symbol: 'cwt (UK)',
       code: 'CWI',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '50.80235 kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -8586,7 +8586,7 @@ var bammuDefinition = {
       symbol: 'gal (UK) /min',
       code: 'G3',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '7.57682 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -8597,7 +8597,7 @@ var bammuDefinition = {
       symbol: 'in',
       code: 'INH',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '25.4 × 10⁻³ m',
       quantityKinds: [
@@ -8673,7 +8673,7 @@ var bammuDefinition = {
       symbol: 'inHG (32 °F)',
       code: 'N16',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '3.38638 × 10³ Pa',
       quantityKinds: [
@@ -8706,7 +8706,7 @@ var bammuDefinition = {
       symbol: 'inHg (60 °F)',
       code: 'N17',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '3.37685 × 10³ Pa',
       quantityKinds: [
@@ -8757,7 +8757,7 @@ var bammuDefinition = {
       symbol: 'inH₂O (39,2 °F)',
       code: 'N18',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '2.49082 × 10² Pa',
       quantityKinds: [
@@ -8790,7 +8790,7 @@ var bammuDefinition = {
       symbol: 'inH₂O (60 °F)',
       code: 'N19',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '2.4884 × 10² Pa',
       quantityKinds: [
@@ -8823,7 +8823,7 @@ var bammuDefinition = {
       symbol: 'in/°F',
       code: 'K45',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerKelvin'];
+        return sammUDefinition.units['metrePerKelvin'];
       },
       conversionFactor: '4.572 × 10⁻² m/K',
       quantityKinds: [
@@ -8864,7 +8864,7 @@ var bammuDefinition = {
       symbol: 'in/min',
       code: 'M63',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '4.233333 × 10⁻⁴ m/s',
       quantityKinds: [
@@ -8888,7 +8888,7 @@ var bammuDefinition = {
       symbol: 'in/psi',
       code: 'K46',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerPascal'];
+        return sammUDefinition.units['metrePerPascal'];
       },
       conversionFactor: '3.683959 × 10⁻⁶ m/Pa',
       quantityKinds: [
@@ -8920,7 +8920,7 @@ var bammuDefinition = {
       symbol: 'in/s',
       code: 'IU',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '0.0254 m/s',
       quantityKinds: [
@@ -8944,7 +8944,7 @@ var bammuDefinition = {
       symbol: '(in/s)/°F',
       code: 'K47',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondKelvin'];
+        return sammUDefinition.units['metrePerSecondKelvin'];
       },
       conversionFactor: '4.572 × 10⁻² (m/s)/K',
       quantityKinds: ['phaseVelocity', 'velocity', 'groupVelocity', 'velocity', 'phaseVelocity', 'groupVelocity'],
@@ -8955,7 +8955,7 @@ var bammuDefinition = {
       symbol: '(in/s)/psi',
       code: 'K48',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondPascal'];
+        return sammUDefinition.units['metrePerSecondPascal'];
       },
       conversionFactor: '3.683959 × 10⁻⁶ (m/s)/Pa',
       quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'phaseVelocity', 'groupVelocity', 'velocity'],
@@ -8966,7 +8966,7 @@ var bammuDefinition = {
       symbol: 'in/s²',
       code: 'IV',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: '0.0254 m/s²',
       quantityKinds: [
@@ -8994,7 +8994,7 @@ var bammuDefinition = {
       symbol: 'in/y',
       code: 'M61',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '8.048774 × 10⁻¹⁰ m/s',
       quantityKinds: [
@@ -9018,7 +9018,7 @@ var bammuDefinition = {
       symbol: 'in·lb',
       code: 'IA',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramMetre'];
+        return sammUDefinition.units['kilogramMetre'];
       },
       conversionFactor: '1.15212 × 10⁻² kg × m',
       quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfACouple', 'torque', 'momentOfForce'],
@@ -9029,7 +9029,7 @@ var bammuDefinition = {
       symbol: 'in·pdl',
       code: 'N47',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '3.511677 × 10⁻³ J',
       quantityKinds: [
@@ -9064,7 +9064,7 @@ var bammuDefinition = {
       symbol: 'in⁴',
       code: 'D69',
       referenceUnit: function () {
-        return bammuDefinition.units['metreToTheFourthPower'];
+        return sammUDefinition.units['metreToTheFourthPower'];
       },
       conversionFactor: '41.62314 × 10⁻⁸ m⁴',
       quantityKinds: ['secondMomentOfArea', 'secondAxialMomentOfArea', 'secondPolarMomentOfArea'],
@@ -9075,7 +9075,7 @@ var bammuDefinition = {
       symbol: 'IK',
       code: 'P36',
       referenceUnit: function () {
-        return bammuDefinition.units['candela'];
+        return sammUDefinition.units['candela'];
       },
       conversionFactor: '1.019 cd',
       quantityKinds: ['luminousIntensity', 'luminousIntensity'],
@@ -9149,7 +9149,7 @@ var bammuDefinition = {
       symbol: 'J/d',
       code: 'P17',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '1.15741 × 10⁻⁵ W',
       quantityKinds: [
@@ -9179,7 +9179,7 @@ var bammuDefinition = {
       symbol: 'J/h',
       code: 'P16',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ W',
       quantityKinds: [
@@ -9245,7 +9245,7 @@ var bammuDefinition = {
       symbol: 'J/min',
       code: 'P15',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '1.66667 × 10⁻² W',
       quantityKinds: [
@@ -9284,7 +9284,7 @@ var bammuDefinition = {
       symbol: 'J/s',
       code: 'P14',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: 'W',
       quantityKinds: [
@@ -9305,7 +9305,7 @@ var bammuDefinition = {
       symbol: 'J/cm²',
       code: 'E43',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerSquareMetre'];
+        return sammUDefinition.units['joulePerSquareMetre'];
       },
       conversionFactor: '10⁴ J/m²',
       quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence'],
@@ -9494,7 +9494,7 @@ var bammuDefinition = {
       symbol: 'Kibyte',
       code: 'E64',
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '2¹⁰ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -9505,7 +9505,7 @@ var bammuDefinition = {
       symbol: 'kA',
       code: 'B22',
       referenceUnit: function () {
-        return bammuDefinition.units['ampere'];
+        return sammUDefinition.units['ampere'];
       },
       conversionFactor: '10³ A',
       quantityKinds: [
@@ -9525,7 +9525,7 @@ var bammuDefinition = {
       symbol: 'kA·h',
       code: 'TAH',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: '3.6 × 10⁶ C',
       quantityKinds: [
@@ -9544,7 +9544,7 @@ var bammuDefinition = {
       symbol: 'kA/m',
       code: 'B24',
       referenceUnit: function () {
-        return bammuDefinition.units['amperePerMetre'];
+        return sammUDefinition.units['amperePerMetre'];
       },
       conversionFactor: '10³ A/m',
       quantityKinds: [
@@ -9563,7 +9563,7 @@ var bammuDefinition = {
       symbol: 'kA/m²',
       code: 'B23',
       referenceUnit: function () {
-        return bammuDefinition.units['amperePerSquareMetre'];
+        return sammUDefinition.units['amperePerSquareMetre'];
       },
       conversionFactor: '10³ A/m²',
       quantityKinds: ['currentDensity', 'currentDensity'],
@@ -9574,7 +9574,7 @@ var bammuDefinition = {
       symbol: 'kbar',
       code: 'KBA',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10⁸ Pa',
       quantityKinds: [
@@ -9607,7 +9607,7 @@ var bammuDefinition = {
       symbol: 'kBd',
       code: 'K50',
       referenceUnit: function () {
-        return bammuDefinition.units['baud'];
+        return sammUDefinition.units['baud'];
       },
       conversionFactor: '10³ Bd',
       quantityKinds: null,
@@ -9618,7 +9618,7 @@ var bammuDefinition = {
       symbol: 'kBq',
       code: '2Q',
       referenceUnit: function () {
-        return bammuDefinition.units['becquerel'];
+        return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '10³ Bq',
       quantityKinds: ['activity', 'activity'],
@@ -9629,7 +9629,7 @@ var bammuDefinition = {
       symbol: 'kBq/kg',
       code: 'B25',
       referenceUnit: function () {
-        return bammuDefinition.units['becquerelPerKilogram'];
+        return sammUDefinition.units['becquerelPerKilogram'];
       },
       conversionFactor: '10³ Bq/kg',
       quantityKinds: ['specificActivityInASample', 'specificActivityInASample'],
@@ -9649,7 +9649,7 @@ var bammuDefinition = {
       symbol: 'kbit/s',
       code: 'C74',
       referenceUnit: function () {
-        return bammuDefinition.units['bitPerSecond'];
+        return sammUDefinition.units['bitPerSecond'];
       },
       conversionFactor: '10³ bit/s',
       quantityKinds: null,
@@ -9660,7 +9660,7 @@ var bammuDefinition = {
       symbol: 'kbyte',
       code: '2P',
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '10³ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -9671,7 +9671,7 @@ var bammuDefinition = {
       symbol: 'kbyte/s',
       code: 'P94',
       referenceUnit: function () {
-        return bammuDefinition.units['bytePerSecond'];
+        return sammUDefinition.units['bytePerSecond'];
       },
       conversionFactor: '10³ byte/s',
       quantityKinds: null,
@@ -9682,7 +9682,7 @@ var bammuDefinition = {
       symbol: 'kcalIT',
       code: 'E14',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '4.1868 × 10³ J',
       quantityKinds: [
@@ -9720,7 +9720,7 @@ var bammuDefinition = {
       symbol: '(kcalIT/K)/g',
       code: 'N65',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogramKelvin'];
+        return sammUDefinition.units['joulePerKilogramKelvin'];
       },
       conversionFactor: '4.1868 × 10⁶ J/(kg × K)',
       quantityKinds: [
@@ -9746,7 +9746,7 @@ var bammuDefinition = {
       symbol: 'kcal',
       code: 'K51',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '4.19002 × 10³ J',
       quantityKinds: [
@@ -9784,7 +9784,7 @@ var bammuDefinition = {
       symbol: 'kcalth',
       code: 'K53',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '4.184 × 10³ J',
       quantityKinds: [
@@ -9822,7 +9822,7 @@ var bammuDefinition = {
       symbol: 'kcalth/h',
       code: 'E15',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '1.16222 W',
       quantityKinds: [
@@ -9842,7 +9842,7 @@ var bammuDefinition = {
       symbol: 'kcalth/min',
       code: 'K54',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '69.73333 W',
       quantityKinds: [
@@ -9862,7 +9862,7 @@ var bammuDefinition = {
       symbol: 'kcalth/s',
       code: 'K55',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '4.184 × 10³ W',
       quantityKinds: [
@@ -9882,7 +9882,7 @@ var bammuDefinition = {
       symbol: 'kcd',
       code: 'P33',
       referenceUnit: function () {
-        return bammuDefinition.units['candela'];
+        return sammUDefinition.units['candela'];
       },
       conversionFactor: '10³ cd',
       quantityKinds: ['luminousIntensity', 'luminousIntensity'],
@@ -9902,7 +9902,7 @@ var bammuDefinition = {
       symbol: 'kC',
       code: 'B26',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: '10³ C',
       quantityKinds: [
@@ -9921,7 +9921,7 @@ var bammuDefinition = {
       symbol: 'kC/m³',
       code: 'B27',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerCubicMetre'];
+        return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10³ C/m³',
       quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity'],
@@ -9932,7 +9932,7 @@ var bammuDefinition = {
       symbol: 'kC/m²',
       code: 'B28',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerSquareMetre'];
+        return sammUDefinition.units['coulombPerSquareMetre'];
       },
       conversionFactor: '10³ C/m²',
       quantityKinds: [
@@ -9950,7 +9950,7 @@ var bammuDefinition = {
       symbol: 'kCi',
       code: '2R',
       referenceUnit: function () {
-        return bammuDefinition.units['becquerel'];
+        return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '3.7 × 10¹³ Bq',
       quantityKinds: ['activity', 'activity'],
@@ -9961,7 +9961,7 @@ var bammuDefinition = {
       symbol: 'keV',
       code: 'B29',
       referenceUnit: function () {
-        return bammuDefinition.units['electronvolt'];
+        return sammUDefinition.units['electronvolt'];
       },
       conversionFactor: '10³ eV',
       quantityKinds: [
@@ -9985,7 +9985,7 @@ var bammuDefinition = {
       symbol: 'kF',
       code: 'N90',
       referenceUnit: function () {
-        return bammuDefinition.units['farad'];
+        return sammUDefinition.units['farad'];
       },
       conversionFactor: '10³ F',
       quantityKinds: ['capacitance', 'capacitance'],
@@ -10005,7 +10005,7 @@ var bammuDefinition = {
       symbol: 'kg·(cm/s)',
       code: 'M98',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramMetrePerSecond'];
+        return sammUDefinition.units['kilogramMetrePerSecond'];
       },
       conversionFactor: '10⁻² kg × m/s',
       quantityKinds: ['momentum', 'momentum'],
@@ -10043,7 +10043,7 @@ var bammuDefinition = {
       symbol: 'kgf/cm²',
       code: 'E42',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '9.80665 × 10⁴ Pa',
       quantityKinds: [
@@ -10076,7 +10076,7 @@ var bammuDefinition = {
       symbol: 'kgf/mm²',
       code: 'E41',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '9.80665 × 10⁶ Pa',
       quantityKinds: [
@@ -10325,7 +10325,7 @@ var bammuDefinition = {
       symbol: 'kg/dm³',
       code: 'B34',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '10³ kg/m³',
       quantityKinds: [
@@ -10472,7 +10472,7 @@ var bammuDefinition = {
       symbol: 'kg/km',
       code: 'M31',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerMetre'];
+        return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10⁻³ kg/m',
       quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
@@ -10492,7 +10492,7 @@ var bammuDefinition = {
       symbol: 'kg/l or kg/L',
       code: 'B35',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '10³ kg/m³',
       quantityKinds: [
@@ -10543,7 +10543,7 @@ var bammuDefinition = {
       symbol: 'kg/(m·d)',
       code: 'N39',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '1.15741 × 10⁻⁵ Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -10554,7 +10554,7 @@ var bammuDefinition = {
       symbol: 'kg/(m·h)',
       code: 'N40',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -10565,7 +10565,7 @@ var bammuDefinition = {
       symbol: 'kg/(m·min)',
       code: 'N38',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '1.66667 × 10⁻² Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -10576,7 +10576,7 @@ var bammuDefinition = {
       symbol: 'kg/(m·s)',
       code: 'N37',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: 'Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -10587,7 +10587,7 @@ var bammuDefinition = {
       symbol: 'kg/mm',
       code: 'KW',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerMetre'];
+        return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10³ kg/m',
       quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
@@ -10598,7 +10598,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'KI',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerMetre'];
+        return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10³ kg/m',
       quantityKinds: ['linearMass', 'linearDensity'],
@@ -10690,7 +10690,7 @@ var bammuDefinition = {
       symbol: 'kg/cm²',
       code: 'D5',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetre'];
+        return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '10⁴ kg/m²',
       quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass'],
@@ -10746,7 +10746,7 @@ var bammuDefinition = {
       symbol: 'kH',
       code: 'P24',
       referenceUnit: function () {
-        return bammuDefinition.units['henry'];
+        return sammUDefinition.units['henry'];
       },
       conversionFactor: '10³ H',
       quantityKinds: ['permeance', 'mutualInductance', 'selfInductance', 'selfInductance', 'permeance', 'mutualInductance'],
@@ -10757,7 +10757,7 @@ var bammuDefinition = {
       symbol: 'kHz',
       code: 'KHZ',
       referenceUnit: function () {
-        return bammuDefinition.units['hertz'];
+        return sammUDefinition.units['hertz'];
       },
       conversionFactor: '10³ Hz',
       quantityKinds: ['frequency', 'frequency'],
@@ -10768,7 +10768,7 @@ var bammuDefinition = {
       symbol: 'kHz·m',
       code: 'M17',
       referenceUnit: function () {
-        return bammuDefinition.units['hertzMetre'];
+        return sammUDefinition.units['hertzMetre'];
       },
       conversionFactor: '10³ Hz × m',
       quantityKinds: ['performanceCharacteristic', 'coefficient', 'performanceCharacteristic', 'coefficient'],
@@ -10779,7 +10779,7 @@ var bammuDefinition = {
       symbol: 'kJ',
       code: 'KJO',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '10³ J',
       quantityKinds: [
@@ -10814,7 +10814,7 @@ var bammuDefinition = {
       symbol: 'kJ/d',
       code: 'P21',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '1.15741 × 10⁻² W',
       quantityKinds: [
@@ -10835,7 +10835,7 @@ var bammuDefinition = {
       symbol: 'kJ/h',
       code: 'P20',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '2.77778 × 10⁻¹ W',
       quantityKinds: [
@@ -10856,7 +10856,7 @@ var bammuDefinition = {
       symbol: 'kJ/K',
       code: 'B41',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKelvin'];
+        return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '10³ J/K',
       quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction'],
@@ -10867,7 +10867,7 @@ var bammuDefinition = {
       symbol: 'kJ/kg',
       code: 'B42',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogram'];
+        return sammUDefinition.units['joulePerKilogram'];
       },
       conversionFactor: '10³ J/kg',
       quantityKinds: ['specificEnergy', 'massicEnergy', 'specificEnthalpy', 'massicEnthalpy'],
@@ -10878,7 +10878,7 @@ var bammuDefinition = {
       symbol: 'kJ/(kg·K)',
       code: 'B43',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogramKelvin'];
+        return sammUDefinition.units['joulePerKilogramKelvin'];
       },
       conversionFactor: '10³ J/(kg × K)',
       quantityKinds: [
@@ -10896,7 +10896,7 @@ var bammuDefinition = {
       symbol: 'kJ/min',
       code: 'P19',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '1.66667 × 10 W',
       quantityKinds: [
@@ -10917,7 +10917,7 @@ var bammuDefinition = {
       symbol: 'kJ/mol',
       code: 'B44',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerMole'];
+        return sammUDefinition.units['joulePerMole'];
       },
       conversionFactor: '10³ J/mol',
       quantityKinds: ['molarThermodynamicEnergy', 'chemicalPotential', 'affinityOfAChemicalReaction', 'molarThermodynamicEnergy'],
@@ -10928,7 +10928,7 @@ var bammuDefinition = {
       symbol: 'kJ/s',
       code: 'P18',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '10³ W',
       quantityKinds: [
@@ -10949,7 +10949,7 @@ var bammuDefinition = {
       symbol: 'kl',
       code: 'K6',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: 'm³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -10960,7 +10960,7 @@ var bammuDefinition = {
       symbol: 'kl/h',
       code: '4X',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -10980,7 +10980,7 @@ var bammuDefinition = {
       symbol: 'km',
       code: 'KMT',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10³ m',
       quantityKinds: [
@@ -11038,7 +11038,7 @@ var bammuDefinition = {
       symbol: 'km/h',
       code: 'KMH',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '0.277778 m/s',
       quantityKinds: [
@@ -11062,7 +11062,7 @@ var bammuDefinition = {
       symbol: 'km/s',
       code: 'M62',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '10³ m/s',
       quantityKinds: [
@@ -11086,7 +11086,7 @@ var bammuDefinition = {
       symbol: 'km/s²',
       code: 'M38',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: '10³ m/s²',
       quantityKinds: [
@@ -11105,7 +11105,7 @@ var bammuDefinition = {
       symbol: 'kmol',
       code: 'B45',
       referenceUnit: function () {
-        return bammuDefinition.units['mole'];
+        return sammUDefinition.units['mole'];
       },
       conversionFactor: '10³ mol',
       quantityKinds: ['amountOfSubstance', 'amountOfSubstance'],
@@ -11116,7 +11116,7 @@ var bammuDefinition = {
       symbol: 'kmol/m³',
       code: 'B46',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerCubicMetre'];
+        return sammUDefinition.units['molePerCubicMetre'];
       },
       conversionFactor: '10³ mol/m³',
       quantityKinds: [
@@ -11140,7 +11140,7 @@ var bammuDefinition = {
       symbol: '(kmol/m³)/bar',
       code: 'K60',
       referenceUnit: function () {
-        return bammuDefinition.units['molPerCubicMetrePascal'];
+        return sammUDefinition.units['molPerCubicMetrePascal'];
       },
       conversionFactor: '10⁻² (mol/m³)/Pa',
       quantityKinds: [
@@ -11164,7 +11164,7 @@ var bammuDefinition = {
       symbol: '(kmol/m³)/K',
       code: 'K59',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerCubicMetreKelvin'];
+        return sammUDefinition.units['molePerCubicMetreKelvin'];
       },
       conversionFactor: '10³ (mol/m³)/K',
       quantityKinds: [
@@ -11188,7 +11188,7 @@ var bammuDefinition = {
       symbol: 'kmol/h',
       code: 'K58',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerSecond'];
+        return sammUDefinition.units['molePerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻¹ mol/s',
       quantityKinds: [
@@ -11207,7 +11207,7 @@ var bammuDefinition = {
       symbol: 'kmol/kg',
       code: 'P47',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerKilogram'];
+        return sammUDefinition.units['molePerKilogram'];
       },
       conversionFactor: '10³ mol/kg',
       quantityKinds: ['molalityOfSoluteB', 'ionicStrength'],
@@ -11218,7 +11218,7 @@ var bammuDefinition = {
       symbol: 'kmol/min',
       code: 'K61',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerSecond'];
+        return sammUDefinition.units['molePerSecond'];
       },
       conversionFactor: '16.6667 mol/s',
       quantityKinds: [
@@ -11246,7 +11246,7 @@ var bammuDefinition = {
       symbol: 'kN',
       code: 'B47',
       referenceUnit: function () {
-        return bammuDefinition.units['newton'];
+        return sammUDefinition.units['newton'];
       },
       conversionFactor: '10³ N',
       quantityKinds: ['weight', 'force', 'weight', 'force'],
@@ -11257,7 +11257,7 @@ var bammuDefinition = {
       symbol: 'kN·m',
       code: 'B48',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonMetre'];
+        return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10³ N × m',
       quantityKinds: ['momentOfForce', 'momentOfACouple', 'torque', 'torque', 'momentOfForce', 'momentOfACouple'],
@@ -11268,7 +11268,7 @@ var bammuDefinition = {
       symbol: 'kN/m',
       code: 'N31',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonPerMetre'];
+        return sammUDefinition.units['newtonPerMetre'];
       },
       conversionFactor: '10³ N/m',
       quantityKinds: ['surfaceTension', 'surfaceTension'],
@@ -11279,7 +11279,7 @@ var bammuDefinition = {
       symbol: 'kΩ',
       code: 'B49',
       referenceUnit: function () {
-        return bammuDefinition.units['ohm'];
+        return sammUDefinition.units['ohm'];
       },
       conversionFactor: '10³ Ω',
       quantityKinds: [
@@ -11303,7 +11303,7 @@ var bammuDefinition = {
       symbol: 'kΩ·m',
       code: 'B50',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmMetre'];
+        return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10³ Ω × m',
       quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
@@ -11314,7 +11314,7 @@ var bammuDefinition = {
       symbol: 'kPa',
       code: 'KPA',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10³ Pa',
       quantityKinds: [
@@ -11392,7 +11392,7 @@ var bammuDefinition = {
       symbol: 'kPa·m²/g',
       code: '33',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: '10⁶ m/s²',
       quantityKinds: [
@@ -11409,7 +11409,7 @@ var bammuDefinition = {
       symbol: 'kip',
       code: 'M75',
       referenceUnit: function () {
-        return bammuDefinition.units['newton'];
+        return sammUDefinition.units['newton'];
       },
       conversionFactor: '4.448222 × 10³ N',
       quantityKinds: ['weight', 'force', 'weight', 'force'],
@@ -11420,7 +11420,7 @@ var bammuDefinition = {
       symbol: 'klb/h',
       code: 'M90',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '0.125997889 kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -11431,7 +11431,7 @@ var bammuDefinition = {
       symbol: 'kR',
       code: 'KR',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerKilogram'];
+        return sammUDefinition.units['coulombPerKilogram'];
       },
       conversionFactor: '2.58 × 10⁻¹ C/kg',
       quantityKinds: ['exposure', 'exposure'],
@@ -11442,7 +11442,7 @@ var bammuDefinition = {
       symbol: 'ks',
       code: 'B52',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10³ s',
       quantityKinds: [
@@ -11474,7 +11474,7 @@ var bammuDefinition = {
       symbol: 'kS',
       code: 'B53',
       referenceUnit: function () {
-        return bammuDefinition.units['siemens'];
+        return sammUDefinition.units['siemens'];
       },
       conversionFactor: '10³ S',
       quantityKinds: [
@@ -11496,7 +11496,7 @@ var bammuDefinition = {
       symbol: 'kS/m',
       code: 'B54',
       referenceUnit: function () {
-        return bammuDefinition.units['siemensPerMetre'];
+        return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10³ S/m',
       quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
@@ -11507,7 +11507,7 @@ var bammuDefinition = {
       symbol: 'kT',
       code: 'P13',
       referenceUnit: function () {
-        return bammuDefinition.units['tesla'];
+        return sammUDefinition.units['tesla'];
       },
       conversionFactor: '10³ T',
       quantityKinds: [
@@ -11528,7 +11528,7 @@ var bammuDefinition = {
       symbol: 'kt',
       code: 'KTN',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁶ kg',
       quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
@@ -11539,7 +11539,7 @@ var bammuDefinition = {
       symbol: 'kvar',
       code: 'KVR',
       referenceUnit: function () {
-        return bammuDefinition.units['voltAmpere'];
+        return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: '10³ V × A',
       quantityKinds: ['apparentPower', 'reactivePower'],
@@ -11550,7 +11550,7 @@ var bammuDefinition = {
       symbol: 'kV',
       code: 'KVT',
       referenceUnit: function () {
-        return bammuDefinition.units['volt'];
+        return sammUDefinition.units['volt'];
       },
       conversionFactor: '10³ V',
       quantityKinds: [
@@ -11574,7 +11574,7 @@ var bammuDefinition = {
       symbol: 'kV·A',
       code: 'KVA',
       referenceUnit: function () {
-        return bammuDefinition.units['voltAmpere'];
+        return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: '10³ V × A',
       quantityKinds: ['apparentPower', 'apparentPower'],
@@ -11612,7 +11612,7 @@ var bammuDefinition = {
       symbol: 'kV/m',
       code: 'B55',
       referenceUnit: function () {
-        return bammuDefinition.units['voltPerMetre'];
+        return sammUDefinition.units['voltPerMetre'];
       },
       conversionFactor: '10³ V/m',
       quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
@@ -11623,7 +11623,7 @@ var bammuDefinition = {
       symbol: 'kW',
       code: 'KWT',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '10³ W',
       quantityKinds: [
@@ -11655,7 +11655,7 @@ var bammuDefinition = {
       symbol: 'kW·h',
       code: 'KWH',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '3.6 × 10⁶ J',
       quantityKinds: [
@@ -11690,7 +11690,7 @@ var bammuDefinition = {
       symbol: 'kW·h/m³',
       code: 'E46',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerCubicMetre'];
+        return sammUDefinition.units['joulePerCubicMetre'];
       },
       conversionFactor: '3.6 × 10⁶ J/m³',
       quantityKinds: [
@@ -11717,7 +11717,7 @@ var bammuDefinition = {
       symbol: 'kW·h/K',
       code: 'E47',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKelvin'];
+        return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '3.6 × 10⁶ J/K',
       quantityKinds: ['boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction'],
@@ -11728,7 +11728,7 @@ var bammuDefinition = {
       symbol: 'kW/(m·°C)',
       code: 'N82',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerMetreKelvin'];
+        return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '10³ W/(m × K)',
       quantityKinds: ['thermalConductivity', 'thermalConductivity'],
@@ -11739,7 +11739,7 @@ var bammuDefinition = {
       symbol: 'kW/(m·K)',
       code: 'N81',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerMetreKelvin'];
+        return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '10³ W/(m × K)',
       quantityKinds: ['thermalConductivity', 'thermalConductivity'],
@@ -11750,7 +11750,7 @@ var bammuDefinition = {
       symbol: 'kW/(m²·K)',
       code: 'N78',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetreKelvin'];
+        return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '10³ W/(m² × K)',
       quantityKinds: ['surfaceCoefficientOfHeatTransfer', 'coefficientOfHeatTransfer'],
@@ -11761,7 +11761,7 @@ var bammuDefinition = {
       symbol: 'kWb',
       code: 'P11',
       referenceUnit: function () {
-        return bammuDefinition.units['weber'];
+        return sammUDefinition.units['weber'];
       },
       conversionFactor: '10³ Wb',
       quantityKinds: ['magneticFluxQuantum', 'magneticFlux', 'magneticFlux'],
@@ -11772,7 +11772,7 @@ var bammuDefinition = {
       symbol: 'kWb/m',
       code: 'B56',
       referenceUnit: function () {
-        return bammuDefinition.units['weberPerMetre'];
+        return sammUDefinition.units['weberPerMetre'];
       },
       conversionFactor: '10³ Wb/m',
       quantityKinds: ['magneticVectorPotential', 'magneticVectorPotential'],
@@ -11783,7 +11783,7 @@ var bammuDefinition = {
       symbol: 'ksi',
       code: 'N20',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '6.894757 × 10⁶ Pa',
       quantityKinds: [
@@ -11825,7 +11825,7 @@ var bammuDefinition = {
       symbol: 'kn',
       code: 'KNT',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '0.514444 m/s',
       quantityKinds: [
@@ -11876,7 +11876,7 @@ var bammuDefinition = {
       symbol: 'Lb',
       code: 'P30',
       referenceUnit: function () {
-        return bammuDefinition.units['candelaPerSquareMetre'];
+        return sammUDefinition.units['candelaPerSquareMetre'];
       },
       conversionFactor: '3.183099 × 10³ cd/m²',
       quantityKinds: ['luminance', 'luminance'],
@@ -11887,7 +11887,7 @@ var bammuDefinition = {
       symbol: 'Ly',
       code: 'P40',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerSquareMetre'];
+        return sammUDefinition.units['joulePerSquareMetre'];
       },
       conversionFactor: '4.184 × 10⁴ J/m²',
       quantityKinds: ['radiantEnergyFluence', 'radianceExposure', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence'],
@@ -11925,7 +11925,7 @@ var bammuDefinition = {
       symbol: 'ly',
       code: 'B57',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '9.46073 × 10¹⁵ m',
       quantityKinds: [
@@ -12019,7 +12019,7 @@ var bammuDefinition = {
       symbol: 'liq pt (US)',
       code: 'PTL',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4. 731765 × 10⁻⁴ m³',
       quantityKinds: ['volume', 'sectionModulus', 'volume'],
@@ -12039,7 +12039,7 @@ var bammuDefinition = {
       symbol: 'liq qt (US)',
       code: 'QTL',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '9.463529 × 10⁻⁴ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -12050,7 +12050,7 @@ var bammuDefinition = {
       symbol: 'l',
       code: 'LTR',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -12079,7 +12079,7 @@ var bammuDefinition = {
       symbol: 'l/d',
       code: 'LD',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.15741 × 10⁻⁸ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -12108,7 +12108,7 @@ var bammuDefinition = {
       symbol: 'l/h',
       code: 'E32',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -12164,7 +12164,7 @@ var bammuDefinition = {
       symbol: 'l/min',
       code: 'L2',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -12193,7 +12193,7 @@ var bammuDefinition = {
       symbol: 'l/mol',
       code: 'B58',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerMole'];
+        return sammUDefinition.units['cubicMetrePerMole'];
       },
       conversionFactor: '10⁻³ m³/mol',
       quantityKinds: ['molarVolume', 'molarVolume'],
@@ -12407,7 +12407,7 @@ var bammuDefinition = {
       symbol: 'Mibyte',
       code: 'E63',
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '2²⁰ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -12418,7 +12418,7 @@ var bammuDefinition = {
       symbol: 'MA',
       code: 'H38',
       referenceUnit: function () {
-        return bammuDefinition.units['ampere'];
+        return sammUDefinition.units['ampere'];
       },
       conversionFactor: '10⁶ A',
       quantityKinds: [
@@ -12438,7 +12438,7 @@ var bammuDefinition = {
       symbol: 'MA/m²',
       code: 'B66',
       referenceUnit: function () {
-        return bammuDefinition.units['amperePerSquareMetre'];
+        return sammUDefinition.units['amperePerSquareMetre'];
       },
       conversionFactor: '10⁶ A/m²',
       quantityKinds: ['currentDensity', 'currentDensity'],
@@ -12449,7 +12449,7 @@ var bammuDefinition = {
       symbol: 'MBd',
       code: 'J54',
       referenceUnit: function () {
-        return bammuDefinition.units['baud'];
+        return sammUDefinition.units['baud'];
       },
       conversionFactor: '10⁶ Bd',
       quantityKinds: null,
@@ -12460,7 +12460,7 @@ var bammuDefinition = {
       symbol: 'MBq',
       code: '4N',
       referenceUnit: function () {
-        return bammuDefinition.units['becquerel'];
+        return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '10⁶ Bq',
       quantityKinds: ['activity', 'activity'],
@@ -12471,7 +12471,7 @@ var bammuDefinition = {
       symbol: 'MBq/kg',
       code: 'B67',
       referenceUnit: function () {
-        return bammuDefinition.units['becquerelPerKilogram'];
+        return sammUDefinition.units['becquerelPerKilogram'];
       },
       conversionFactor: '10⁶ Bq/kg',
       quantityKinds: ['specificActivityInASample', 'specificActivityInASample'],
@@ -12500,7 +12500,7 @@ var bammuDefinition = {
       symbol: 'MB',
       code: '4L',
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '10⁶ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -12511,7 +12511,7 @@ var bammuDefinition = {
       symbol: 'Mbyte/s',
       code: 'P95',
       referenceUnit: function () {
-        return bammuDefinition.units['bytePerSecond'];
+        return sammUDefinition.units['bytePerSecond'];
       },
       conversionFactor: '10⁶ byte/s',
       quantityKinds: null,
@@ -12522,7 +12522,7 @@ var bammuDefinition = {
       symbol: 'MC',
       code: 'D77',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: '10⁶ C',
       quantityKinds: [
@@ -12541,7 +12541,7 @@ var bammuDefinition = {
       symbol: 'MC/m³',
       code: 'B69',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerCubicMetre'];
+        return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁶ C/m³',
       quantityKinds: ['chargeDensity', 'volumicCharge', 'volumeDensityOfCharge', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity'],
@@ -12552,7 +12552,7 @@ var bammuDefinition = {
       symbol: 'MC/m²',
       code: 'B70',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerSquareMetre'];
+        return sammUDefinition.units['coulombPerSquareMetre'];
       },
       conversionFactor: '10⁶ C/m²',
       quantityKinds: [
@@ -12570,7 +12570,7 @@ var bammuDefinition = {
       symbol: 'MeV',
       code: 'B71',
       referenceUnit: function () {
-        return bammuDefinition.units['electronvolt'];
+        return sammUDefinition.units['electronvolt'];
       },
       conversionFactor: '10⁶ eV',
       quantityKinds: [
@@ -12594,7 +12594,7 @@ var bammuDefinition = {
       symbol: 'Mg',
       code: '2U',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10³ kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -12605,7 +12605,7 @@ var bammuDefinition = {
       symbol: 'Mg/m³',
       code: 'B72',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '10³ kg/m³',
       quantityKinds: [
@@ -12626,7 +12626,7 @@ var bammuDefinition = {
       symbol: 'MHz',
       code: 'MHZ',
       referenceUnit: function () {
-        return bammuDefinition.units['hertz'];
+        return sammUDefinition.units['hertz'];
       },
       conversionFactor: '10⁶ Hz',
       quantityKinds: ['frequency', 'frequency'],
@@ -12637,7 +12637,7 @@ var bammuDefinition = {
       symbol: 'MHz·km',
       code: 'H39',
       referenceUnit: function () {
-        return bammuDefinition.units['hertzMetre'];
+        return sammUDefinition.units['hertzMetre'];
       },
       conversionFactor: '10⁹ Hz × m',
       quantityKinds: ['performanceCharacteristic', 'coefficient', 'coefficient', 'performanceCharacteristic'],
@@ -12648,7 +12648,7 @@ var bammuDefinition = {
       symbol: 'MHz·m',
       code: 'M27',
       referenceUnit: function () {
-        return bammuDefinition.units['hertzMetre'];
+        return sammUDefinition.units['hertzMetre'];
       },
       conversionFactor: '10⁶ Hz × m',
       quantityKinds: ['performanceCharacteristic', 'coefficient', 'performanceCharacteristic', 'coefficient'],
@@ -12659,7 +12659,7 @@ var bammuDefinition = {
       symbol: 'MJ',
       code: '3B',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '10⁶ J',
       quantityKinds: [
@@ -12694,7 +12694,7 @@ var bammuDefinition = {
       symbol: 'MJ/m³',
       code: 'JM',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerCubicMetre'];
+        return sammUDefinition.units['joulePerCubicMetre'];
       },
       conversionFactor: '10⁶ J/m³',
       quantityKinds: [
@@ -12713,7 +12713,7 @@ var bammuDefinition = {
       symbol: 'MJ/kg',
       code: 'JK',
       referenceUnit: function () {
-        return bammuDefinition.units['joulePerKilogram'];
+        return sammUDefinition.units['joulePerKilogram'];
       },
       conversionFactor: '10⁶ J/kg',
       quantityKinds: ['specificThermodynamicEnergy', 'specificEnergy', 'massicEnergy'],
@@ -12733,7 +12733,7 @@ var bammuDefinition = {
       symbol: 'Ml',
       code: 'MAL',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -12744,7 +12744,7 @@ var bammuDefinition = {
       symbol: 'Mm',
       code: 'MAM',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10⁶ m',
       quantityKinds: [
@@ -12802,7 +12802,7 @@ var bammuDefinition = {
       symbol: 'MN',
       code: 'B73',
       referenceUnit: function () {
-        return bammuDefinition.units['newton'];
+        return sammUDefinition.units['newton'];
       },
       conversionFactor: '10⁶ N',
       quantityKinds: ['force', 'weight', 'weight', 'force'],
@@ -12813,7 +12813,7 @@ var bammuDefinition = {
       symbol: 'MN·m',
       code: 'B74',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonMetre'];
+        return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁶ N × m',
       quantityKinds: ['momentOfACouple', 'torque', 'momentOfForce', 'torque', 'momentOfForce', 'momentOfACouple'],
@@ -12824,7 +12824,7 @@ var bammuDefinition = {
       symbol: 'MΩ',
       code: 'B75',
       referenceUnit: function () {
-        return bammuDefinition.units['ohm'];
+        return sammUDefinition.units['ohm'];
       },
       conversionFactor: '10⁶ Ω',
       quantityKinds: [
@@ -12848,7 +12848,7 @@ var bammuDefinition = {
       symbol: 'MΩ·km',
       code: 'H88',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmMetre'];
+        return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁹ Ω × m',
       quantityKinds: ['resistivity', 'resistivity', 'residualResistivity'],
@@ -12859,7 +12859,7 @@ var bammuDefinition = {
       symbol: 'MΩ·m',
       code: 'B76',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmMetre'];
+        return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁶ Ω × m',
       quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
@@ -12870,7 +12870,7 @@ var bammuDefinition = {
       symbol: 'MΩ/km',
       code: 'H36',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmPerMetre'];
+        return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '10³ Ω/m',
       quantityKinds: ['lineicResistance', 'lineicResistance'],
@@ -12881,7 +12881,7 @@ var bammuDefinition = {
       symbol: 'MΩ/m',
       code: 'H37',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmPerMetre'];
+        return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '10⁶ Ω/m',
       quantityKinds: ['lineicResistance', 'lineicResistance'],
@@ -12892,7 +12892,7 @@ var bammuDefinition = {
       symbol: 'MPa',
       code: 'MPA',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10⁶ Pa',
       quantityKinds: [
@@ -12997,7 +12997,7 @@ var bammuDefinition = {
       symbol: 'MS/m',
       code: 'B77',
       referenceUnit: function () {
-        return bammuDefinition.units['siemensPerMetre'];
+        return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁶ S/m',
       quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
@@ -13008,7 +13008,7 @@ var bammuDefinition = {
       symbol: 'kvar',
       code: 'MAR',
       referenceUnit: function () {
-        return bammuDefinition.units['voltAmpere'];
+        return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: '10³ V × A',
       quantityKinds: ['reactivePower', 'apparentPower'],
@@ -13019,7 +13019,7 @@ var bammuDefinition = {
       symbol: 'MV',
       code: 'B78',
       referenceUnit: function () {
-        return bammuDefinition.units['volt'];
+        return sammUDefinition.units['volt'];
       },
       conversionFactor: '10⁶ V',
       quantityKinds: [
@@ -13043,7 +13043,7 @@ var bammuDefinition = {
       symbol: 'MV·A',
       code: 'MVA',
       referenceUnit: function () {
-        return bammuDefinition.units['voltAmpere'];
+        return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: '10⁶ V × A',
       quantityKinds: ['apparentPower', 'apparentPower'],
@@ -13063,7 +13063,7 @@ var bammuDefinition = {
       symbol: 'MV/m',
       code: 'B79',
       referenceUnit: function () {
-        return bammuDefinition.units['voltPerMetre'];
+        return sammUDefinition.units['voltPerMetre'];
       },
       conversionFactor: '10⁶ V/m',
       quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
@@ -13074,7 +13074,7 @@ var bammuDefinition = {
       symbol: 'MW',
       code: 'MAW',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '10⁶ W',
       quantityKinds: [
@@ -13096,7 +13096,7 @@ var bammuDefinition = {
       symbol: 'MW·h',
       code: 'MWH',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '3.6 × 10⁹ J',
       quantityKinds: [
@@ -13242,7 +13242,7 @@ var bammuDefinition = {
       symbol: 'm/(°C·m)',
       code: 'N83',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
+        return sammUDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
       },
       conversionFactor: 'K⁻¹',
       quantityKinds: ['thermalDiffusivity', 'relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient'],
@@ -13253,7 +13253,7 @@ var bammuDefinition = {
       symbol: 'm/h',
       code: 'M60',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ m/s',
       quantityKinds: [
@@ -13297,7 +13297,7 @@ var bammuDefinition = {
       symbol: 'm/min',
       code: '2X',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '0.016666 m/s',
       quantityKinds: [
@@ -13369,7 +13369,7 @@ var bammuDefinition = {
       symbol: '(m/s)/bar',
       code: 'L13',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondPascal'];
+        return sammUDefinition.units['metrePerSecondPascal'];
       },
       conversionFactor: '10⁻⁵ (m/s)/Pa',
       quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'groupVelocity', 'velocity', 'phaseVelocity'],
@@ -13425,7 +13425,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'CTM',
       referenceUnit: function () {
-        return bammuDefinition.units['milligram'];
+        return sammUDefinition.units['milligram'];
       },
       conversionFactor: '200 mg',
       quantityKinds: ['mass'],
@@ -13463,7 +13463,7 @@ var bammuDefinition = {
       symbol: 'µin',
       code: 'M7',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '25.4 × 10⁻⁹ m',
       quantityKinds: [
@@ -13521,7 +13521,7 @@ var bammuDefinition = {
       symbol: 'µA',
       code: 'B84',
       referenceUnit: function () {
-        return bammuDefinition.units['ampere'];
+        return sammUDefinition.units['ampere'];
       },
       conversionFactor: '10⁻⁶ A',
       quantityKinds: [
@@ -13541,7 +13541,7 @@ var bammuDefinition = {
       symbol: 'µbar',
       code: 'B85',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10⁻¹ Pa',
       quantityKinds: [
@@ -13574,7 +13574,7 @@ var bammuDefinition = {
       symbol: 'µBq',
       code: 'H08',
       referenceUnit: function () {
-        return bammuDefinition.units['becquerel'];
+        return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '10⁻⁶ Bq',
       quantityKinds: ['activity', 'activity'],
@@ -13585,7 +13585,7 @@ var bammuDefinition = {
       symbol: 'µC',
       code: 'B86',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: '10⁻⁶ C',
       quantityKinds: [
@@ -13604,7 +13604,7 @@ var bammuDefinition = {
       symbol: 'µC/m³',
       code: 'B87',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerCubicMetre'];
+        return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁻⁶ C/m³',
       quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'chargeDensity', 'volumeDensityOfCharge', 'volumicCharge'],
@@ -13615,7 +13615,7 @@ var bammuDefinition = {
       symbol: 'µC/m²',
       code: 'B88',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerSquareMetre'];
+        return sammUDefinition.units['coulombPerSquareMetre'];
       },
       conversionFactor: '10⁻⁶ C/m²',
       quantityKinds: [
@@ -13633,7 +13633,7 @@ var bammuDefinition = {
       symbol: 'µCi',
       code: 'M5',
       referenceUnit: function () {
-        return bammuDefinition.units['becquerel'];
+        return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '3.7 × 10⁴ Bq',
       quantityKinds: ['activity', 'activity'],
@@ -13644,7 +13644,7 @@ var bammuDefinition = {
       symbol: 'µF',
       code: '4O',
       referenceUnit: function () {
-        return bammuDefinition.units['farad'];
+        return sammUDefinition.units['farad'];
       },
       conversionFactor: '10⁻⁶ F',
       quantityKinds: ['capacitance', 'capacitance'],
@@ -13655,7 +13655,7 @@ var bammuDefinition = {
       symbol: 'µF/km',
       code: 'H28',
       referenceUnit: function () {
-        return bammuDefinition.units['faradPerMetre'];
+        return sammUDefinition.units['faradPerMetre'];
       },
       conversionFactor: '10⁻⁹ F/m',
       quantityKinds: [
@@ -13673,7 +13673,7 @@ var bammuDefinition = {
       symbol: 'µF/m',
       code: 'B89',
       referenceUnit: function () {
-        return bammuDefinition.units['faradPerMetre'];
+        return sammUDefinition.units['faradPerMetre'];
       },
       conversionFactor: '10⁻⁶ F/m',
       quantityKinds: [
@@ -13691,7 +13691,7 @@ var bammuDefinition = {
       symbol: 'µg',
       code: 'MC',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻⁹ kg',
       quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
@@ -13702,7 +13702,7 @@ var bammuDefinition = {
       symbol: 'µg/m³',
       code: 'GQ',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '10⁻⁹ kg/m³',
       quantityKinds: [
@@ -13723,7 +13723,7 @@ var bammuDefinition = {
       symbol: '(µg/m³)/bar',
       code: 'J35',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetrePascal'];
+        return sammUDefinition.units['kilogramPerCubicMetrePascal'];
       },
       conversionFactor: '10⁻¹⁴ (kg/m³)/Pa',
       quantityKinds: ['volumicMass', 'massDensity', 'density', 'massDensity', 'volumicMass', 'density'],
@@ -13761,7 +13761,7 @@ var bammuDefinition = {
       symbol: 'µGy/h',
       code: 'P63',
       referenceUnit: function () {
-        return bammuDefinition.units['grayPerSecond'];
+        return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻¹⁰ Gy/s',
       quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
@@ -13772,7 +13772,7 @@ var bammuDefinition = {
       symbol: 'µGy/min',
       code: 'P59',
       referenceUnit: function () {
-        return bammuDefinition.units['grayPerSecond'];
+        return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻⁸ Gy/s',
       quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
@@ -13783,7 +13783,7 @@ var bammuDefinition = {
       symbol: 'µGy/s',
       code: 'P55',
       referenceUnit: function () {
-        return bammuDefinition.units['grayPerSecond'];
+        return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '10⁻⁶ Gy/s',
       quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
@@ -13794,7 +13794,7 @@ var bammuDefinition = {
       symbol: 'µH',
       code: 'B90',
       referenceUnit: function () {
-        return bammuDefinition.units['henry'];
+        return sammUDefinition.units['henry'];
       },
       conversionFactor: '10⁻⁶ H',
       quantityKinds: ['selfInductance', 'mutualInductance', 'permeance', 'selfInductance', 'permeance', 'mutualInductance'],
@@ -13805,7 +13805,7 @@ var bammuDefinition = {
       symbol: 'µH/kΩ',
       code: 'G98',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻⁹ s',
       quantityKinds: [
@@ -13830,7 +13830,7 @@ var bammuDefinition = {
       symbol: 'µH/m',
       code: 'B91',
       referenceUnit: function () {
-        return bammuDefinition.units['henryPerMetre'];
+        return sammUDefinition.units['henryPerMetre'];
       },
       conversionFactor: '10⁻⁶ H/m',
       quantityKinds: [
@@ -13848,7 +13848,7 @@ var bammuDefinition = {
       symbol: 'µH/Ω',
       code: 'G99',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻⁶ s',
       quantityKinds: [
@@ -13873,7 +13873,7 @@ var bammuDefinition = {
       symbol: 'µl',
       code: '4G',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁹ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -13893,7 +13893,7 @@ var bammuDefinition = {
       symbol: 'µm',
       code: '4H',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10⁻⁶ m',
       quantityKinds: [
@@ -13971,7 +13971,7 @@ var bammuDefinition = {
       symbol: 'µmol',
       code: 'FH',
       referenceUnit: function () {
-        return bammuDefinition.units['mole'];
+        return sammUDefinition.units['mole'];
       },
       conversionFactor: '10⁻⁶ mol',
       quantityKinds: ['amountOfSubstance', 'amountOfSubstance'],
@@ -13982,7 +13982,7 @@ var bammuDefinition = {
       symbol: 'µN',
       code: 'B92',
       referenceUnit: function () {
-        return bammuDefinition.units['newton'];
+        return sammUDefinition.units['newton'];
       },
       conversionFactor: '10⁻⁶ N',
       quantityKinds: ['force', 'weight', 'weight', 'force'],
@@ -13993,7 +13993,7 @@ var bammuDefinition = {
       symbol: 'µN·m',
       code: 'B93',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonMetre'];
+        return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁻⁶ N × m',
       quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfACouple'],
@@ -14004,7 +14004,7 @@ var bammuDefinition = {
       symbol: 'µΩ',
       code: 'B94',
       referenceUnit: function () {
-        return bammuDefinition.units['ohm'];
+        return sammUDefinition.units['ohm'];
       },
       conversionFactor: '10⁻⁶ Ω',
       quantityKinds: [
@@ -14028,7 +14028,7 @@ var bammuDefinition = {
       symbol: 'µΩ·m',
       code: 'B95',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmMetre'];
+        return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁻⁶ Ω × m',
       quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
@@ -14039,7 +14039,7 @@ var bammuDefinition = {
       symbol: 'µPa',
       code: 'B96',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10⁻⁶ Pa',
       quantityKinds: [
@@ -14072,7 +14072,7 @@ var bammuDefinition = {
       symbol: 'µP',
       code: 'J32',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '10⁻⁶ Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -14083,7 +14083,7 @@ var bammuDefinition = {
       symbol: 'µrad',
       code: 'B97',
       referenceUnit: function () {
-        return bammuDefinition.units['rad'];
+        return sammUDefinition.units['rad'];
       },
       conversionFactor: '10⁻⁶ rad',
       quantityKinds: ['absorbedDose', 'anglePlane'],
@@ -14094,7 +14094,7 @@ var bammuDefinition = {
       symbol: 'µs',
       code: 'B98',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻⁶ s',
       quantityKinds: [
@@ -14117,7 +14117,7 @@ var bammuDefinition = {
       symbol: 'µS',
       code: 'B99',
       referenceUnit: function () {
-        return bammuDefinition.units['siemens'];
+        return sammUDefinition.units['siemens'];
       },
       conversionFactor: '10⁻⁶ S',
       quantityKinds: [
@@ -14139,7 +14139,7 @@ var bammuDefinition = {
       symbol: 'µS/cm',
       code: 'G42',
       referenceUnit: function () {
-        return bammuDefinition.units['siemensPerMetre'];
+        return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁻⁴ S/m',
       quantityKinds: [
@@ -14158,7 +14158,7 @@ var bammuDefinition = {
       symbol: 'µS/m',
       code: 'G43',
       referenceUnit: function () {
-        return bammuDefinition.units['siemensPerMetre'];
+        return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁻⁶ S/m',
       quantityKinds: [
@@ -14177,7 +14177,7 @@ var bammuDefinition = {
       symbol: 'µSv/h',
       code: 'P72',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '0.277777778 × 10⁻¹⁰ Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -14188,7 +14188,7 @@ var bammuDefinition = {
       symbol: 'µSv/min',
       code: 'P76',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '1.666666667 × 10⁻⁸ Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -14199,7 +14199,7 @@ var bammuDefinition = {
       symbol: 'µSv/s',
       code: 'P67',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '10⁻⁶ Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -14210,7 +14210,7 @@ var bammuDefinition = {
       symbol: 'µT',
       code: 'D81',
       referenceUnit: function () {
-        return bammuDefinition.units['tesla'];
+        return sammUDefinition.units['tesla'];
       },
       conversionFactor: '10⁻⁶ T',
       quantityKinds: [
@@ -14231,7 +14231,7 @@ var bammuDefinition = {
       symbol: 'µV',
       code: 'D82',
       referenceUnit: function () {
-        return bammuDefinition.units['volt'];
+        return sammUDefinition.units['volt'];
       },
       conversionFactor: '10⁻⁶ V',
       quantityKinds: [
@@ -14255,7 +14255,7 @@ var bammuDefinition = {
       symbol: 'µV/m',
       code: 'C3',
       referenceUnit: function () {
-        return bammuDefinition.units['voltPerMetre'];
+        return sammUDefinition.units['voltPerMetre'];
       },
       conversionFactor: '10⁻⁶ V/m',
       quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
@@ -14266,7 +14266,7 @@ var bammuDefinition = {
       symbol: 'µW',
       code: 'D80',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '10⁻⁶ W',
       quantityKinds: [
@@ -14288,7 +14288,7 @@ var bammuDefinition = {
       symbol: 'µW/m²',
       code: 'D85',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '10⁻⁶ W/m²',
       quantityKinds: [
@@ -14311,7 +14311,7 @@ var bammuDefinition = {
       symbol: 'mil',
       code: 'M43',
       referenceUnit: function () {
-        return bammuDefinition.units['rad'];
+        return sammUDefinition.units['rad'];
       },
       conversionFactor: '9.817477 × 10⁻⁴ rad',
       quantityKinds: ['absorbedDose', 'anglePlane'],
@@ -14322,7 +14322,7 @@ var bammuDefinition = {
       symbol: 'mi (US survey)',
       code: 'M52',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '1.609347 × 10³ m',
       quantityKinds: [
@@ -14380,7 +14380,7 @@ var bammuDefinition = {
       symbol: 'mile/h',
       code: 'HM',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '0.44704 m/s',
       quantityKinds: [
@@ -14404,7 +14404,7 @@ var bammuDefinition = {
       symbol: 'mi/min',
       code: 'M57',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '26.8224 m/s',
       quantityKinds: [
@@ -14428,7 +14428,7 @@ var bammuDefinition = {
       symbol: 'mi/s',
       code: 'M58',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '1.609344 × 10³ m/s',
       quantityKinds: [
@@ -14452,7 +14452,7 @@ var bammuDefinition = {
       symbol: 'mile',
       code: 'SMI',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '1609.344 m',
       quantityKinds: [
@@ -14510,7 +14510,7 @@ var bammuDefinition = {
       symbol: 'mi/s²',
       code: 'M42',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: '1.609344 × 10³ m/s²',
       quantityKinds: [
@@ -14538,7 +14538,7 @@ var bammuDefinition = {
       symbol: 'mil',
       code: '77',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '25.4 × 10⁻⁶ m',
       quantityKinds: [
@@ -14596,7 +14596,7 @@ var bammuDefinition = {
       symbol: 'mA',
       code: '4K',
       referenceUnit: function () {
-        return bammuDefinition.units['ampere'];
+        return sammUDefinition.units['ampere'];
       },
       conversionFactor: '10⁻³ A',
       quantityKinds: [
@@ -14616,7 +14616,7 @@ var bammuDefinition = {
       symbol: 'mA·h',
       code: 'E09',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: '3.6 C',
       quantityKinds: [
@@ -14689,7 +14689,7 @@ var bammuDefinition = {
       symbol: 'mbar',
       code: 'MBR',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10² Pa',
       quantityKinds: [
@@ -14785,7 +14785,7 @@ var bammuDefinition = {
       symbol: 'mcd',
       code: 'P34',
       referenceUnit: function () {
-        return bammuDefinition.units['candela'];
+        return sammUDefinition.units['candela'];
       },
       conversionFactor: '10⁻³ cd',
       quantityKinds: ['luminousIntensity', 'luminousIntensity'],
@@ -14796,7 +14796,7 @@ var bammuDefinition = {
       symbol: 'mC',
       code: 'D86',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: '10⁻³ C',
       quantityKinds: [
@@ -14815,7 +14815,7 @@ var bammuDefinition = {
       symbol: 'mC/m³',
       code: 'D88',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerCubicMetre'];
+        return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁻³ C/m³',
       quantityKinds: ['volumeDensityOfCharge', 'chargeDensity', 'volumicCharge', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity'],
@@ -14826,7 +14826,7 @@ var bammuDefinition = {
       symbol: 'mC/kg',
       code: 'C8',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerKilogram'];
+        return sammUDefinition.units['coulombPerKilogram'];
       },
       conversionFactor: '10⁻³ C/kg',
       quantityKinds: ['exposure', 'exposure'],
@@ -14837,7 +14837,7 @@ var bammuDefinition = {
       symbol: 'mC/m²',
       code: 'D89',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerSquareMetre'];
+        return sammUDefinition.units['coulombPerSquareMetre'];
       },
       conversionFactor: '10⁻³ C/m²',
       quantityKinds: [
@@ -14855,7 +14855,7 @@ var bammuDefinition = {
       symbol: 'mCi',
       code: 'MCU',
       referenceUnit: function () {
-        return bammuDefinition.units['becquerel'];
+        return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '3.7 × 10⁷ Bq',
       quantityKinds: ['activity', 'activity'],
@@ -14875,7 +14875,7 @@ var bammuDefinition = {
       symbol: 'mF',
       code: 'C10',
       referenceUnit: function () {
-        return bammuDefinition.units['farad'];
+        return sammUDefinition.units['farad'];
       },
       conversionFactor: '10⁻³ F',
       quantityKinds: ['capacitance', 'capacitance'],
@@ -14886,7 +14886,7 @@ var bammuDefinition = {
       symbol: 'mGal',
       code: 'C11',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: '10⁻⁵ m/s²',
       quantityKinds: [
@@ -14905,7 +14905,7 @@ var bammuDefinition = {
       symbol: 'mg',
       code: 'MGM',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻⁶ kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -14925,7 +14925,7 @@ var bammuDefinition = {
       symbol: 'mg/m³',
       code: 'GP',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '10⁻⁶ kg/m³',
       quantityKinds: [
@@ -14946,7 +14946,7 @@ var bammuDefinition = {
       symbol: '(mg/m³)/bar',
       code: 'L18',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetrePascal'];
+        return sammUDefinition.units['kilogramPerCubicMetrePascal'];
       },
       conversionFactor: '10⁻¹¹ (kg/m³)/Pa',
       quantityKinds: ['volumicMass', 'massDensity', 'density', 'volumicMass', 'massDensity', 'density'],
@@ -15002,7 +15002,7 @@ var bammuDefinition = {
       symbol: 'mg/h',
       code: '4M',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻¹⁰ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -15049,7 +15049,7 @@ var bammuDefinition = {
       symbol: 'mg/l',
       code: 'M1',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '10⁻³ kg/m³',
       quantityKinds: [
@@ -15070,7 +15070,7 @@ var bammuDefinition = {
       symbol: 'mg/m',
       code: 'C12',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerMetre'];
+        return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10⁻⁶ kg/m',
       quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
@@ -15144,7 +15144,7 @@ var bammuDefinition = {
       symbol: 'mg/m²',
       code: 'GO',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetre'];
+        return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '10⁻⁶ kg/m²',
       quantityKinds: ['areicMass', 'surfaceDensity', 'surfaceDensity', 'meanMassRange', 'areicMass'],
@@ -15155,7 +15155,7 @@ var bammuDefinition = {
       symbol: 'mGy',
       code: 'C13',
       referenceUnit: function () {
-        return bammuDefinition.units['gray'];
+        return sammUDefinition.units['gray'];
       },
       conversionFactor: '10⁻³ Gy',
       quantityKinds: ['specificEnergyImparted', 'massicEnergyImparted', 'massicEnergyImparted', 'specificEnergyImparted'],
@@ -15166,7 +15166,7 @@ var bammuDefinition = {
       symbol: 'mGy/h',
       code: 'P62',
       referenceUnit: function () {
-        return bammuDefinition.units['grayPerSecond'];
+        return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁷ Gy/s',
       quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
@@ -15177,7 +15177,7 @@ var bammuDefinition = {
       symbol: 'mGy/min',
       code: 'P58',
       referenceUnit: function () {
-        return bammuDefinition.units['grayPerSecond'];
+        return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻⁵ Gy/s',
       quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
@@ -15188,7 +15188,7 @@ var bammuDefinition = {
       symbol: 'mGy/s',
       code: 'P54',
       referenceUnit: function () {
-        return bammuDefinition.units['grayPerSecond'];
+        return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '10⁻³ Gy/s',
       quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
@@ -15199,7 +15199,7 @@ var bammuDefinition = {
       symbol: 'mH',
       code: 'C14',
       referenceUnit: function () {
-        return bammuDefinition.units['henry'];
+        return sammUDefinition.units['henry'];
       },
       conversionFactor: '10⁻³ H',
       quantityKinds: ['selfInductance', 'permeance', 'mutualInductance', 'selfInductance', 'permeance', 'mutualInductance'],
@@ -15210,7 +15210,7 @@ var bammuDefinition = {
       symbol: 'mH/kΩ',
       code: 'H05',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻⁶ s',
       quantityKinds: [
@@ -15235,7 +15235,7 @@ var bammuDefinition = {
       symbol: 'mH/Ω',
       code: 'H06',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻³ s',
       quantityKinds: [
@@ -15260,7 +15260,7 @@ var bammuDefinition = {
       symbol: 'mJ',
       code: 'C15',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '10⁻³ J',
       quantityKinds: [
@@ -15295,7 +15295,7 @@ var bammuDefinition = {
       symbol: 'ml',
       code: 'MLT',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁶ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -15387,7 +15387,7 @@ var bammuDefinition = {
       symbol: 'ml/kg',
       code: 'KX',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerKilogram'];
+        return sammUDefinition.units['cubicMetrePerKilogram'];
       },
       conversionFactor: '10⁻⁶ m³/kg',
       quantityKinds: ['specificVolume', 'massicVolume', 'specificVolume', 'massicVolume'],
@@ -15407,7 +15407,7 @@ var bammuDefinition = {
       symbol: 'ml/min',
       code: '41',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻⁸ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -15436,7 +15436,7 @@ var bammuDefinition = {
       symbol: 'ml/s',
       code: '40',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -15465,7 +15465,7 @@ var bammuDefinition = {
       symbol: '(ml/min)/cm²',
       code: 'M22',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecondSquareMetre'];
+        return sammUDefinition.units['cubicMetrePerSecondSquareMetre'];
       },
       conversionFactor: '2.777778 × 10⁻⁶ (m³/s)/m²',
       quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'porosity'],
@@ -15476,7 +15476,7 @@ var bammuDefinition = {
       symbol: 'ml/(cm²·s)',
       code: '35',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '10⁻² m/s',
       quantityKinds: [
@@ -15498,7 +15498,7 @@ var bammuDefinition = {
       symbol: 'mm',
       code: 'MMT',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10⁻³ m',
       quantityKinds: [
@@ -15576,7 +15576,7 @@ var bammuDefinition = {
       symbol: 'mm/(°C·m)',
       code: 'E97',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
+        return sammUDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
       },
       conversionFactor: '10⁻³ K⁻¹',
       quantityKinds: ['thermalDiffusivity', 'relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient'],
@@ -15614,7 +15614,7 @@ var bammuDefinition = {
       symbol: 'mm/s',
       code: 'C16',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '10⁻³ m/s',
       quantityKinds: [
@@ -15638,7 +15638,7 @@ var bammuDefinition = {
       symbol: 'mm/s²',
       code: 'M41',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: '10⁻³ m/s²',
       quantityKinds: [
@@ -15666,7 +15666,7 @@ var bammuDefinition = {
       symbol: 'mm²/s',
       code: 'C17',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetrePerSecond'];
+        return sammUDefinition.units['squareMetrePerSecond'];
       },
       conversionFactor: '10⁻⁶ m²/s',
       quantityKinds: [
@@ -15684,7 +15684,7 @@ var bammuDefinition = {
       symbol: 'mm⁴',
       code: 'G77',
       referenceUnit: function () {
-        return bammuDefinition.units['metreToTheFourthPower'];
+        return sammUDefinition.units['metreToTheFourthPower'];
       },
       conversionFactor: '10⁻¹² m⁴',
       quantityKinds: ['secondMomentOfArea', 'secondAxialMomentOfArea', 'secondAxialMomentOfArea', 'secondMomentOfArea'],
@@ -15695,7 +15695,7 @@ var bammuDefinition = {
       symbol: 'mmol',
       code: 'C18',
       referenceUnit: function () {
-        return bammuDefinition.units['mole'];
+        return sammUDefinition.units['mole'];
       },
       conversionFactor: '10⁻³ mol',
       quantityKinds: ['amountOfSubstance', 'amountOfSubstance'],
@@ -15715,7 +15715,7 @@ var bammuDefinition = {
       symbol: 'mmol/kg',
       code: 'D87',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerKilogram'];
+        return sammUDefinition.units['molePerKilogram'];
       },
       conversionFactor: '10⁻³ mol/kg',
       quantityKinds: ['molalityOfSoluteB', 'ionicStrength'],
@@ -15726,7 +15726,7 @@ var bammuDefinition = {
       symbol: 'mmol/l',
       code: 'M33',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerCubicMetre'];
+        return sammUDefinition.units['molePerCubicMetre'];
       },
       conversionFactor: 'mol/m³',
       quantityKinds: [
@@ -15750,7 +15750,7 @@ var bammuDefinition = {
       symbol: 'mN',
       code: 'C20',
       referenceUnit: function () {
-        return bammuDefinition.units['newton'];
+        return sammUDefinition.units['newton'];
       },
       conversionFactor: '10⁻³ N',
       quantityKinds: ['weight', 'force', 'weight', 'force'],
@@ -15761,7 +15761,7 @@ var bammuDefinition = {
       symbol: 'mN·m',
       code: 'D83',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonMetre'];
+        return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁻³ N × m',
       quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple'],
@@ -15772,7 +15772,7 @@ var bammuDefinition = {
       symbol: 'mN/m',
       code: 'C22',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonPerMetre'];
+        return sammUDefinition.units['newtonPerMetre'];
       },
       conversionFactor: '10⁻³ N/m',
       quantityKinds: ['surfaceTension', 'surfaceTension'],
@@ -15783,7 +15783,7 @@ var bammuDefinition = {
       symbol: 'mΩ',
       code: 'E45',
       referenceUnit: function () {
-        return bammuDefinition.units['ohm'];
+        return sammUDefinition.units['ohm'];
       },
       conversionFactor: '10⁻³ Ω',
       quantityKinds: [
@@ -15807,7 +15807,7 @@ var bammuDefinition = {
       symbol: 'mΩ·m',
       code: 'C23',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmMetre'];
+        return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁻³ Ω × m',
       quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
@@ -15818,7 +15818,7 @@ var bammuDefinition = {
       symbol: 'mΩ/m',
       code: 'F54',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmPerMetre'];
+        return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '10⁻³ Ω/m',
       quantityKinds: ['lineicResistance', 'lineicResistance'],
@@ -15838,7 +15838,7 @@ var bammuDefinition = {
       symbol: 'BtuIT/h',
       code: 'E16',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '293071.1 W',
       quantityKinds: ['heatFlowRate', 'power', 'activePower', 'radiantEnergyflux', 'powerForDirectCurrent', 'radiantPower', 'soundPower'],
@@ -15876,7 +15876,7 @@ var bammuDefinition = {
       symbol: 'mPa',
       code: '74',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10⁻³ Pa',
       quantityKinds: [
@@ -15918,7 +15918,7 @@ var bammuDefinition = {
       symbol: 'mPa·s',
       code: 'C24',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '10⁻³ Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -15929,7 +15929,7 @@ var bammuDefinition = {
       symbol: 'mPa·s/bar',
       code: 'L16',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻⁸ s',
       quantityKinds: [
@@ -15961,7 +15961,7 @@ var bammuDefinition = {
       symbol: 'mrad',
       code: 'C25',
       referenceUnit: function () {
-        return bammuDefinition.units['rad'];
+        return sammUDefinition.units['rad'];
       },
       conversionFactor: '10⁻³ rad',
       quantityKinds: ['anglePlane', 'absorbedDose'],
@@ -15972,7 +15972,7 @@ var bammuDefinition = {
       symbol: 'mR',
       code: '2Y',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerKilogram'];
+        return sammUDefinition.units['coulombPerKilogram'];
       },
       conversionFactor: '2.58 × 10⁻⁷ C/kg',
       quantityKinds: ['exposure', 'exposure'],
@@ -15983,7 +15983,7 @@ var bammuDefinition = {
       symbol: 'mrem',
       code: 'L31',
       referenceUnit: function () {
-        return bammuDefinition.units['sievert'];
+        return sammUDefinition.units['sievert'];
       },
       conversionFactor: '10⁻⁵ Sv',
       quantityKinds: ['doseEquivalent', 'doseEquivalent'],
@@ -15994,7 +15994,7 @@ var bammuDefinition = {
       symbol: 'ms',
       code: 'C26',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻³ s',
       quantityKinds: [
@@ -16017,7 +16017,7 @@ var bammuDefinition = {
       symbol: 'mS',
       code: 'C27',
       referenceUnit: function () {
-        return bammuDefinition.units['siemens'];
+        return sammUDefinition.units['siemens'];
       },
       conversionFactor: '10⁻³ S',
       quantityKinds: [
@@ -16039,7 +16039,7 @@ var bammuDefinition = {
       symbol: 'mS/cm',
       code: 'H61',
       referenceUnit: function () {
-        return bammuDefinition.units['siemensPerMetre'];
+        return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁻¹ S/m',
       quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
@@ -16050,7 +16050,7 @@ var bammuDefinition = {
       symbol: 'mSv',
       code: 'C28',
       referenceUnit: function () {
-        return bammuDefinition.units['sievert'];
+        return sammUDefinition.units['sievert'];
       },
       conversionFactor: '10⁻³ Sv',
       quantityKinds: ['doseEquivalent', 'doseEquivalent'],
@@ -16061,7 +16061,7 @@ var bammuDefinition = {
       symbol: 'mSv/h',
       code: 'P71',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '0.277777778 × 10⁻⁷ Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -16072,7 +16072,7 @@ var bammuDefinition = {
       symbol: 'mSv/min',
       code: 'P75',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '1.666666667 × 10⁻⁵ Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -16083,7 +16083,7 @@ var bammuDefinition = {
       symbol: 'mSv/s',
       code: 'P66',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '10⁻³ Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -16094,7 +16094,7 @@ var bammuDefinition = {
       symbol: 'mT',
       code: 'C29',
       referenceUnit: function () {
-        return bammuDefinition.units['tesla'];
+        return sammUDefinition.units['tesla'];
       },
       conversionFactor: '10⁻³ T',
       quantityKinds: [
@@ -16115,7 +16115,7 @@ var bammuDefinition = {
       symbol: 'mV',
       code: '2Z',
       referenceUnit: function () {
-        return bammuDefinition.units['volt'];
+        return sammUDefinition.units['volt'];
       },
       conversionFactor: '10⁻³ V',
       quantityKinds: [
@@ -16139,7 +16139,7 @@ var bammuDefinition = {
       symbol: 'mV·A',
       code: 'M35',
       referenceUnit: function () {
-        return bammuDefinition.units['voltAmpere'];
+        return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: '10⁻³ V × A',
       quantityKinds: ['apparentPower', 'apparentPower'],
@@ -16150,7 +16150,7 @@ var bammuDefinition = {
       symbol: 'mV/K',
       code: 'D49',
       referenceUnit: function () {
-        return bammuDefinition.units['voltPerKelvin'];
+        return sammUDefinition.units['voltPerKelvin'];
       },
       conversionFactor: '10⁻³ V/K',
       quantityKinds: ['seebeckCoefficientForSubstancesAAndB', 'thompsonCoefficient'],
@@ -16161,7 +16161,7 @@ var bammuDefinition = {
       symbol: 'mV/m',
       code: 'C30',
       referenceUnit: function () {
-        return bammuDefinition.units['voltPerMetre'];
+        return sammUDefinition.units['voltPerMetre'];
       },
       conversionFactor: '10⁻³ V/m',
       quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
@@ -16181,7 +16181,7 @@ var bammuDefinition = {
       symbol: 'mW',
       code: 'C31',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '10⁻³ W',
       quantityKinds: [
@@ -16203,7 +16203,7 @@ var bammuDefinition = {
       symbol: 'mW/m²',
       code: 'C32',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '10⁻³ W/m²',
       quantityKinds: [
@@ -16226,7 +16226,7 @@ var bammuDefinition = {
       symbol: 'mWb',
       code: 'C33',
       referenceUnit: function () {
-        return bammuDefinition.units['weber'];
+        return sammUDefinition.units['weber'];
       },
       conversionFactor: '10⁻³ Wb',
       quantityKinds: ['magneticFluxQuantum', 'magneticFlux', 'magneticFlux'],
@@ -16237,7 +16237,7 @@ var bammuDefinition = {
       symbol: "'",
       code: 'D61',
       referenceUnit: function () {
-        return bammuDefinition.units['rad'];
+        return sammUDefinition.units['rad'];
       },
       conversionFactor: '2.908882 × 10⁻⁴ rad',
       quantityKinds: ['absorbedDose', 'anglePlane'],
@@ -16248,7 +16248,7 @@ var bammuDefinition = {
       symbol: 'min',
       code: 'MIN',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '60 s',
       quantityKinds: [
@@ -16316,7 +16316,7 @@ var bammuDefinition = {
       symbol: 'mol/dm³',
       code: 'C35',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerCubicMetre'];
+        return sammUDefinition.units['molePerCubicMetre'];
       },
       conversionFactor: '10³ mol/m³',
       quantityKinds: [
@@ -16349,7 +16349,7 @@ var bammuDefinition = {
       symbol: '(mol/m³)/bar',
       code: 'L29',
       referenceUnit: function () {
-        return bammuDefinition.units['molPerCubicMetrePascal'];
+        return sammUDefinition.units['molPerCubicMetrePascal'];
       },
       conversionFactor: '10⁻⁵ (mol/m³)/Pa',
       quantityKinds: [
@@ -16391,7 +16391,7 @@ var bammuDefinition = {
       symbol: 'mol/h',
       code: 'L23',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerSecond'];
+        return sammUDefinition.units['molePerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ mol/s',
       quantityKinds: [
@@ -16419,7 +16419,7 @@ var bammuDefinition = {
       symbol: '(mol/kg)/bar',
       code: 'L25',
       referenceUnit: function () {
-        return bammuDefinition.units['molPerKilogramPascal'];
+        return sammUDefinition.units['molPerKilogramPascal'];
       },
       conversionFactor: '10⁻⁵ (mol/kg)/Pa',
       quantityKinds: [
@@ -16452,7 +16452,7 @@ var bammuDefinition = {
       symbol: 'mol/l',
       code: 'C38',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerCubicMetre'];
+        return sammUDefinition.units['molePerCubicMetre'];
       },
       conversionFactor: '10³ mol/m³',
       quantityKinds: [
@@ -16476,7 +16476,7 @@ var bammuDefinition = {
       symbol: '(mol/l)/bar',
       code: 'L27',
       referenceUnit: function () {
-        return bammuDefinition.units['molPerCubicMetrePascal'];
+        return sammUDefinition.units['molPerCubicMetrePascal'];
       },
       conversionFactor: '10⁻² (mol/m³)/Pa',
       quantityKinds: [
@@ -16500,7 +16500,7 @@ var bammuDefinition = {
       symbol: '(mol/l)/K',
       code: 'L26',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerCubicMetreKelvin'];
+        return sammUDefinition.units['molePerCubicMetreKelvin'];
       },
       conversionFactor: '10³ (mol/m³)/K',
       quantityKinds: [
@@ -16524,7 +16524,7 @@ var bammuDefinition = {
       symbol: 'mol/min',
       code: 'L30',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerSecond'];
+        return sammUDefinition.units['molePerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻² mol/s',
       quantityKinds: [
@@ -16561,7 +16561,7 @@ var bammuDefinition = {
       symbol: 'mo',
       code: 'MON',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '2.629800 × 10⁶ s',
       quantityKinds: [
@@ -16593,7 +16593,7 @@ var bammuDefinition = {
       symbol: 'nA',
       code: 'C39',
       referenceUnit: function () {
-        return bammuDefinition.units['ampere'];
+        return sammUDefinition.units['ampere'];
       },
       conversionFactor: '10⁻⁹ A',
       quantityKinds: [
@@ -16613,7 +16613,7 @@ var bammuDefinition = {
       symbol: 'nC',
       code: 'C40',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: '10⁻⁹ C',
       quantityKinds: [
@@ -16632,7 +16632,7 @@ var bammuDefinition = {
       symbol: 'nF',
       code: 'C41',
       referenceUnit: function () {
-        return bammuDefinition.units['farad'];
+        return sammUDefinition.units['farad'];
       },
       conversionFactor: '10⁻⁹ F',
       quantityKinds: ['capacitance', 'capacitance'],
@@ -16643,7 +16643,7 @@ var bammuDefinition = {
       symbol: 'nF/m',
       code: 'C42',
       referenceUnit: function () {
-        return bammuDefinition.units['faradPerMetre'];
+        return sammUDefinition.units['faradPerMetre'];
       },
       conversionFactor: '10⁻⁹ F/m',
       quantityKinds: [
@@ -16670,7 +16670,7 @@ var bammuDefinition = {
       symbol: 'nGy/h',
       code: 'P64',
       referenceUnit: function () {
-        return bammuDefinition.units['grayPerSecond'];
+        return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻¹³ Gy/s',
       quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
@@ -16681,7 +16681,7 @@ var bammuDefinition = {
       symbol: 'nGy/min',
       code: 'P60',
       referenceUnit: function () {
-        return bammuDefinition.units['grayPerSecond'];
+        return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻¹¹ Gy/s',
       quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
@@ -16692,7 +16692,7 @@ var bammuDefinition = {
       symbol: 'nGy/s',
       code: 'P56',
       referenceUnit: function () {
-        return bammuDefinition.units['grayPerSecond'];
+        return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '10⁻⁹ Gy/s',
       quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
@@ -16703,7 +16703,7 @@ var bammuDefinition = {
       symbol: 'nH',
       code: 'C43',
       referenceUnit: function () {
-        return bammuDefinition.units['henry'];
+        return sammUDefinition.units['henry'];
       },
       conversionFactor: '10⁻⁹ H',
       quantityKinds: ['selfInductance', 'mutualInductance', 'permeance', 'selfInductance', 'permeance', 'mutualInductance'],
@@ -16714,7 +16714,7 @@ var bammuDefinition = {
       symbol: 'nH/m',
       code: 'C44',
       referenceUnit: function () {
-        return bammuDefinition.units['henryPerMetre'];
+        return sammUDefinition.units['henryPerMetre'];
       },
       conversionFactor: '10⁻⁹ H/m',
       quantityKinds: [
@@ -16732,7 +16732,7 @@ var bammuDefinition = {
       symbol: 'nm',
       code: 'C45',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10⁻⁹ m',
       quantityKinds: [
@@ -16790,7 +16790,7 @@ var bammuDefinition = {
       symbol: 'nΩ',
       code: 'P22',
       referenceUnit: function () {
-        return bammuDefinition.units['ohm'];
+        return sammUDefinition.units['ohm'];
       },
       conversionFactor: '10⁻⁹ Ω',
       quantityKinds: [
@@ -16823,7 +16823,7 @@ var bammuDefinition = {
       symbol: 'ns',
       code: 'C47',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻⁹ s',
       quantityKinds: [
@@ -16846,7 +16846,7 @@ var bammuDefinition = {
       symbol: 'nS/cm',
       code: 'G44',
       referenceUnit: function () {
-        return bammuDefinition.units['siemensPerMetre'];
+        return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁻⁷ S/m',
       quantityKinds: ['conductivity', 'electrolyticConductivity', 'conductivity'],
@@ -16857,7 +16857,7 @@ var bammuDefinition = {
       symbol: 'nS/m',
       code: 'G45',
       referenceUnit: function () {
-        return bammuDefinition.units['siemensPerMetre'];
+        return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁻⁹ S/m',
       quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
@@ -16868,7 +16868,7 @@ var bammuDefinition = {
       symbol: 'nSv/h',
       code: 'P73',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '0.277777778 × 10⁻¹³ Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -16879,7 +16879,7 @@ var bammuDefinition = {
       symbol: 'nSv/min',
       code: 'P77',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '1.666666667 × 10⁻¹¹ Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -16890,7 +16890,7 @@ var bammuDefinition = {
       symbol: 'nSv/s',
       code: 'P68',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '10⁻⁹ Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -16901,7 +16901,7 @@ var bammuDefinition = {
       symbol: 'nT',
       code: 'C48',
       referenceUnit: function () {
-        return bammuDefinition.units['tesla'];
+        return sammUDefinition.units['tesla'];
       },
       conversionFactor: '10⁻⁹ T',
       quantityKinds: [
@@ -16922,7 +16922,7 @@ var bammuDefinition = {
       symbol: 'nW',
       code: 'C49',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '10⁻⁹ W',
       quantityKinds: [
@@ -16961,7 +16961,7 @@ var bammuDefinition = {
       symbol: 'n mile',
       code: 'NMI',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '1852 m',
       quantityKinds: [
@@ -17172,7 +17172,7 @@ var bammuDefinition = {
       symbol: 'N/cm',
       code: 'M23',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonPerMetre'];
+        return sammUDefinition.units['newtonPerMetre'];
       },
       conversionFactor: '10² N/m',
       quantityKinds: ['surfaceTension', 'surfaceTension'],
@@ -17201,7 +17201,7 @@ var bammuDefinition = {
       symbol: 'N/cm²',
       code: 'E01',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10⁴ Pa',
       quantityKinds: [
@@ -17234,7 +17234,7 @@ var bammuDefinition = {
       symbol: 'N/m²',
       code: 'C55',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: 'Pa',
       quantityKinds: [
@@ -17267,7 +17267,7 @@ var bammuDefinition = {
       symbol: 'N/mm²',
       code: 'C56',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '10⁶ Pa',
       quantityKinds: [
@@ -17318,7 +17318,7 @@ var bammuDefinition = {
       symbol: '(N/m²)·s',
       code: 'N36',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: 'Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -17419,7 +17419,7 @@ var bammuDefinition = {
       symbol: 'o',
       code: 'Q12',
       referenceUnit: function () {
-        return bammuDefinition.units['bit'];
+        return sammUDefinition.units['bit'];
       },
       conversionFactor: '8 bit',
       quantityKinds: ['informationEntropy'],
@@ -17430,7 +17430,7 @@ var bammuDefinition = {
       symbol: 'o/s',
       code: 'Q13',
       referenceUnit: function () {
-        return bammuDefinition.units['bitPerSecond'];
+        return sammUDefinition.units['bitPerSecond'];
       },
       conversionFactor: '8 bit/s',
       quantityKinds: null,
@@ -17457,7 +17457,7 @@ var bammuDefinition = {
       symbol: 'Ω·cm',
       code: 'C60',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmMetre'];
+        return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁻² Ω × m',
       quantityKinds: ['resistivity', 'resistivity', 'residualResistivity'],
@@ -17468,7 +17468,7 @@ var bammuDefinition = {
       symbol: 'Ω·cmil/ft',
       code: 'P23',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmMetre'];
+        return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '1.662426 × 10⁻⁹ Ω × m',
       quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
@@ -17479,7 +17479,7 @@ var bammuDefinition = {
       symbol: 'Ω·km',
       code: 'M24',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmMetre'];
+        return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10³ Ω × m',
       quantityKinds: ['resistivity', 'resistivity', 'residualResistivity'],
@@ -17499,7 +17499,7 @@ var bammuDefinition = {
       symbol: 'Ω/km',
       code: 'F56',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmPerMetre'];
+        return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '10⁻³ Ω/m',
       quantityKinds: ['lineicResistance', 'lineicResistance'],
@@ -17519,7 +17519,7 @@ var bammuDefinition = {
       symbol: 'Ω/mi',
       code: 'F55',
       referenceUnit: function () {
-        return bammuDefinition.units['ohmPerMetre'];
+        return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '6.21371 × 10⁻⁴  Ω/m',
       quantityKinds: ['lineicResistance', 'lineicResistance'],
@@ -17695,7 +17695,7 @@ var bammuDefinition = {
       symbol: 'oz',
       code: 'ONZ',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '2.834952 × 10⁻² kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -17706,7 +17706,7 @@ var bammuDefinition = {
       symbol: 'ozf',
       code: 'L40',
       referenceUnit: function () {
-        return bammuDefinition.units['newton'];
+        return sammUDefinition.units['newton'];
       },
       conversionFactor: '0.2780139 N',
       quantityKinds: ['weight', 'force', 'weight', 'force'],
@@ -17717,7 +17717,7 @@ var bammuDefinition = {
       symbol: 'ozf·in',
       code: 'L41',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonMetre'];
+        return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '7.061552 × 10⁻³ N × m',
       quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple'],
@@ -17728,7 +17728,7 @@ var bammuDefinition = {
       symbol: 'oz/in³',
       code: 'L39',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '1.729994 × 10³ kg/m³',
       quantityKinds: [
@@ -17758,7 +17758,7 @@ var bammuDefinition = {
       symbol: 'oz/d',
       code: 'L33',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '3.281194 × 10⁻⁷kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -17769,7 +17769,7 @@ var bammuDefinition = {
       symbol: 'oz/gal (UK)',
       code: 'L37',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '6.236023 kg/m³',
       quantityKinds: [
@@ -17790,7 +17790,7 @@ var bammuDefinition = {
       symbol: 'oz/gal (US)',
       code: 'L38',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '7.489152 kg/m³',
       quantityKinds: [
@@ -17811,7 +17811,7 @@ var bammuDefinition = {
       symbol: 'oz/h',
       code: 'L34',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '7.874867 × 10⁻⁶ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -17822,7 +17822,7 @@ var bammuDefinition = {
       symbol: 'oz/min',
       code: 'L35',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '4.72492 × 10⁻⁴ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -17833,7 +17833,7 @@ var bammuDefinition = {
       symbol: 'oz/s',
       code: 'L36',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '2.834952 × 10⁻² kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -17844,7 +17844,7 @@ var bammuDefinition = {
       symbol: 'oz/in²',
       code: 'N22',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetre'];
+        return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '4.394185 × 10 kg/m²',
       quantityKinds: [
@@ -17867,7 +17867,7 @@ var bammuDefinition = {
       symbol: 'oz·ft',
       code: '4R',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramMetre'];
+        return sammUDefinition.units['kilogramMetre'];
       },
       conversionFactor: '8.640934 × 10⁻³ kg × m',
       quantityKinds: ['torque', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfForce', 'momentOfACouple'],
@@ -17878,7 +17878,7 @@ var bammuDefinition = {
       symbol: 'oz·in',
       code: '4Q',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramMetre'];
+        return sammUDefinition.units['kilogramMetre'];
       },
       conversionFactor: '7.200778 × 10⁻⁴ kg × m',
       quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'momentOfACouple', 'torque'],
@@ -17889,7 +17889,7 @@ var bammuDefinition = {
       symbol: 'oz/ft²',
       code: '37',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetre'];
+        return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '0.3051517 kg/m²',
       quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass'],
@@ -17909,7 +17909,7 @@ var bammuDefinition = {
       symbol: 'oz/yd²',
       code: 'ON',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetre'];
+        return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '3.390575 × 10⁻² kg/m²',
       quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass'],
@@ -17920,7 +17920,7 @@ var bammuDefinition = {
       symbol: 'fl oz (UK)/d',
       code: 'J95',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.288549 × 10⁻¹⁰ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -17931,7 +17931,7 @@ var bammuDefinition = {
       symbol: 'fl oz (UK)/h',
       code: 'J96',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '7.892517 × 10⁻⁹ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -17942,7 +17942,7 @@ var bammuDefinition = {
       symbol: 'fl oz (UK)/min',
       code: 'J97',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.73551 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -17953,7 +17953,7 @@ var bammuDefinition = {
       symbol: 'fl oz (UK)/s',
       code: 'J98',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.841306 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -17964,7 +17964,7 @@ var bammuDefinition = {
       symbol: 'fl oz (US)/d',
       code: 'J99',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.422862 × 10⁻¹⁰ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -17975,7 +17975,7 @@ var bammuDefinition = {
       symbol: 'fl oz (US)/h',
       code: 'K10',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '8.214869 × 10⁻⁹ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -17986,7 +17986,7 @@ var bammuDefinition = {
       symbol: 'fl oz (US)/min',
       code: 'K11',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.928922 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -17997,7 +17997,7 @@ var bammuDefinition = {
       symbol: 'fl oz (US)/s',
       code: 'K12',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.957353 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -18098,7 +18098,7 @@ var bammuDefinition = {
       symbol: 'pc',
       code: 'C63',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '3.085678 × 10¹⁶ m',
       quantityKinds: [
@@ -18305,7 +18305,7 @@ var bammuDefinition = {
       symbol: 'Pa·s/bar',
       code: 'H07',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻⁵ s',
       quantityKinds: [
@@ -18362,7 +18362,7 @@ var bammuDefinition = {
       symbol: 'Pa·s/l',
       code: 'M32',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecondPerCubicMetre'];
+        return sammUDefinition.units['pascalSecondPerCubicMetre'];
       },
       conversionFactor: '10³ Pa × s/m³',
       quantityKinds: ['acousticImpedance', 'acousticImpedance'],
@@ -18382,7 +18382,7 @@ var bammuDefinition = {
       symbol: 'Pa/(kg/m²)',
       code: 'P79',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: 'm/s²',
       quantityKinds: [
@@ -18444,7 +18444,7 @@ var bammuDefinition = {
       symbol: 'PiB',
       code: 'E60',
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '2⁵⁰ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -18455,7 +18455,7 @@ var bammuDefinition = {
       symbol: 'pk (US)',
       code: 'G23',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '8.809768 × 10⁻³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -18466,7 +18466,7 @@ var bammuDefinition = {
       symbol: 'pk (UK)',
       code: 'L43',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '9.092181 × 10⁻³ m³',
       quantityKinds: ['volume', 'sectionModulus', 'volume'],
@@ -18477,7 +18477,7 @@ var bammuDefinition = {
       symbol: 'pk (UK)/d',
       code: 'L44',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.052336 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -18488,7 +18488,7 @@ var bammuDefinition = {
       symbol: 'pk (UK)/h',
       code: 'L45',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.525606 × 10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -18499,7 +18499,7 @@ var bammuDefinition = {
       symbol: 'pk (UK)/min',
       code: 'L46',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.5153635 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -18510,7 +18510,7 @@ var bammuDefinition = {
       symbol: 'pk (UK)/s',
       code: 'L47',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '9.092181 × 10⁻³ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -18521,7 +18521,7 @@ var bammuDefinition = {
       symbol: 'pk (US dry)/d',
       code: 'L48',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.019649 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -18532,7 +18532,7 @@ var bammuDefinition = {
       symbol: 'pk (US dry)/h',
       code: 'L49',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.447158 × 10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -18543,7 +18543,7 @@ var bammuDefinition = {
       symbol: 'pk (US dry)/min',
       code: 'L50',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.468295 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -18554,7 +18554,7 @@ var bammuDefinition = {
       symbol: 'pk (US dry)/s',
       code: 'L51',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '8.809768 × 10⁻³ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -18583,7 +18583,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'DWT',
       referenceUnit: function () {
-        return bammuDefinition.units['gram'];
+        return sammUDefinition.units['gram'];
       },
       conversionFactor: '1.555174 g',
       quantityKinds: ['mass'],
@@ -18594,7 +18594,7 @@ var bammuDefinition = {
       symbol: '‰/psi',
       code: 'J12',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalPascalOrPascalToThePowerMinusOne'];
+        return sammUDefinition.units['reciprocalPascalOrPascalToThePowerMinusOne'];
       },
       conversionFactor: '1.450377 × 10⁻⁷ Pa⁻¹',
       quantityKinds: ['isothermalCompressibility', 'compressibility', 'bulkCompressibility', 'isentropicCompressibility'],
@@ -18614,7 +18614,7 @@ var bammuDefinition = {
       symbol: '%/bar',
       code: 'H96',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalPascalOrPascalToThePowerMinusOne'];
+        return sammUDefinition.units['reciprocalPascalOrPascalToThePowerMinusOne'];
       },
       conversionFactor: '10⁻⁷ Pa⁻¹',
       quantityKinds: ['isothermalCompressibility', 'compressibility', 'bulkCompressibility', 'isentropicCompressibility'],
@@ -18625,7 +18625,7 @@ var bammuDefinition = {
       symbol: '%/daK',
       code: 'H73',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
+        return sammUDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
       },
       conversionFactor: '10⁻³ K⁻¹',
       quantityKinds: ['relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient'],
@@ -18672,7 +18672,7 @@ var bammuDefinition = {
       symbol: '%/in',
       code: 'H98',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalMetre'];
+        return sammUDefinition.units['reciprocalMetre'];
       },
       conversionFactor: '0.3937008 m⁻¹',
       quantityKinds: [
@@ -18707,7 +18707,7 @@ var bammuDefinition = {
       symbol: '%/K',
       code: 'H25',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
+        return sammUDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
       },
       conversionFactor: '10⁻² K⁻¹',
       quantityKinds: ['relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient'],
@@ -18718,7 +18718,7 @@ var bammuDefinition = {
       symbol: '%/m',
       code: 'H99',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalMetre'];
+        return sammUDefinition.units['reciprocalMetre'];
       },
       conversionFactor: '10⁻² m⁻¹',
       quantityKinds: [
@@ -18753,7 +18753,7 @@ var bammuDefinition = {
       symbol: '%/mm',
       code: 'J10',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalMetre'];
+        return sammUDefinition.units['reciprocalMetre'];
       },
       conversionFactor: '10 m⁻¹',
       quantityKinds: [
@@ -18860,7 +18860,7 @@ var bammuDefinition = {
       symbol: 'perm (0 °C)',
       code: 'P91',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetrePascalSecond'];
+        return sammUDefinition.units['kilogramPerSquareMetrePascalSecond'];
       },
       conversionFactor: '5.72135 × 10⁻¹¹ kg/(m² × Pa × s)',
       quantityKinds: null,
@@ -18871,7 +18871,7 @@ var bammuDefinition = {
       symbol: 'perm (23 °C)',
       code: 'P92',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetrePascalSecond'];
+        return sammUDefinition.units['kilogramPerSquareMetrePascalSecond'];
       },
       conversionFactor: '5.74525 × 10⁻¹¹ kg/(m² × Pa × s)',
       quantityKinds: null,
@@ -18909,7 +18909,7 @@ var bammuDefinition = {
       symbol: 'Pbyte',
       code: 'E36',
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '10¹⁵ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -18920,7 +18920,7 @@ var bammuDefinition = {
       symbol: 'PJ',
       code: 'C68',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '10¹⁵ J',
       quantityKinds: [
@@ -18955,7 +18955,7 @@ var bammuDefinition = {
       symbol: 'PS',
       code: 'N12',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '7.354988 × 10² W',
       quantityKinds: [
@@ -18975,7 +18975,7 @@ var bammuDefinition = {
       symbol: 'pfd',
       code: 'M86',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '0.5 kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -19004,7 +19004,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'R1',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '4.217518 × 10⁻³ m',
       quantityKinds: [
@@ -19052,7 +19052,7 @@ var bammuDefinition = {
       symbol: 'pA',
       code: 'C70',
       referenceUnit: function () {
-        return bammuDefinition.units['ampere'];
+        return sammUDefinition.units['ampere'];
       },
       conversionFactor: '10⁻¹² A',
       quantityKinds: [
@@ -19072,7 +19072,7 @@ var bammuDefinition = {
       symbol: 'pC',
       code: 'C71',
       referenceUnit: function () {
-        return bammuDefinition.units['coulomb'];
+        return sammUDefinition.units['coulomb'];
       },
       conversionFactor: '10⁻¹² C',
       quantityKinds: [
@@ -19091,7 +19091,7 @@ var bammuDefinition = {
       symbol: 'pF',
       code: '4T',
       referenceUnit: function () {
-        return bammuDefinition.units['farad'];
+        return sammUDefinition.units['farad'];
       },
       conversionFactor: '10⁻¹² F',
       quantityKinds: ['capacitance', 'capacitance'],
@@ -19102,7 +19102,7 @@ var bammuDefinition = {
       symbol: 'pF/m',
       code: 'C72',
       referenceUnit: function () {
-        return bammuDefinition.units['faradPerMetre'];
+        return sammUDefinition.units['faradPerMetre'];
       },
       conversionFactor: '10⁻¹² F/m',
       quantityKinds: [
@@ -19120,7 +19120,7 @@ var bammuDefinition = {
       symbol: 'pH',
       code: 'C73',
       referenceUnit: function () {
-        return bammuDefinition.units['henry'];
+        return sammUDefinition.units['henry'];
       },
       conversionFactor: '10⁻¹² H',
       quantityKinds: ['selfInductance', 'permeance', 'mutualInductance', 'permeance', 'mutualInductance', 'selfInductance'],
@@ -19131,7 +19131,7 @@ var bammuDefinition = {
       symbol: 'pm',
       code: 'C52',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '10⁻¹² m',
       quantityKinds: [
@@ -19198,7 +19198,7 @@ var bammuDefinition = {
       symbol: 'ps',
       code: 'H70',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻¹² s',
       quantityKinds: [
@@ -19221,7 +19221,7 @@ var bammuDefinition = {
       symbol: 'pS',
       code: 'N92',
       referenceUnit: function () {
-        return bammuDefinition.units['siemens'];
+        return sammUDefinition.units['siemens'];
       },
       conversionFactor: '10⁻¹² S',
       quantityKinds: [
@@ -19243,7 +19243,7 @@ var bammuDefinition = {
       symbol: 'pS/m',
       code: 'L42',
       referenceUnit: function () {
-        return bammuDefinition.units['siemensPerMetre'];
+        return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁻¹² S/m',
       quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
@@ -19254,7 +19254,7 @@ var bammuDefinition = {
       symbol: 'pV',
       code: 'N99',
       referenceUnit: function () {
-        return bammuDefinition.units['volt'];
+        return sammUDefinition.units['volt'];
       },
       conversionFactor: '10⁻¹² V',
       quantityKinds: [
@@ -19278,7 +19278,7 @@ var bammuDefinition = {
       symbol: 'pW',
       code: 'C75',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '10⁻¹² W',
       quantityKinds: [
@@ -19299,7 +19299,7 @@ var bammuDefinition = {
       symbol: 'pW/m²',
       code: 'C76',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '10⁻¹² W/m²',
       quantityKinds: [
@@ -19331,7 +19331,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'E19',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '3.305 m²',
       quantityKinds: [
@@ -19351,7 +19351,7 @@ var bammuDefinition = {
       symbol: 'pt (UK)',
       code: 'PTI',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '5. 68261 × 10⁻⁴ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -19362,7 +19362,7 @@ var bammuDefinition = {
       symbol: 'pt (UK)/d',
       code: 'L53',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '6.577098 × 10⁻⁹ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -19373,7 +19373,7 @@ var bammuDefinition = {
       symbol: 'pt (UK)/h',
       code: 'L54',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.578504 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -19384,7 +19384,7 @@ var bammuDefinition = {
       symbol: 'pt (UK)/min',
       code: 'L55',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '9.471022 × 10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -19395,7 +19395,7 @@ var bammuDefinition = {
       symbol: 'pt (UK)/s',
       code: 'L56',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '5.682613 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -19406,7 +19406,7 @@ var bammuDefinition = {
       symbol: 'pt (US liq.)/d',
       code: 'L57',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '5.476580 × 10⁻⁹ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -19417,7 +19417,7 @@ var bammuDefinition = {
       symbol: 'pt (US liq.)/h',
       code: 'L58',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.314379 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -19428,7 +19428,7 @@ var bammuDefinition = {
       symbol: 'pt (US liq.)/min',
       code: 'L59',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '7.886275 × 10⁻⁶ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -19439,7 +19439,7 @@ var bammuDefinition = {
       symbol: 'pt (US liq.)/s',
       code: 'L60',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.731765 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -19477,7 +19477,7 @@ var bammuDefinition = {
       symbol: 'P',
       code: '89',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '0.1 Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -19488,7 +19488,7 @@ var bammuDefinition = {
       symbol: 'P/bar',
       code: 'F06',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻⁶ s',
       quantityKinds: [
@@ -19520,7 +19520,7 @@ var bammuDefinition = {
       symbol: 'P/Pa',
       code: 'N35',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '0.1 s',
       quantityKinds: [
@@ -19543,7 +19543,7 @@ var bammuDefinition = {
       symbol: 'p',
       code: 'M78',
       referenceUnit: function () {
-        return bammuDefinition.units['newton'];
+        return sammUDefinition.units['newton'];
       },
       conversionFactor: '9.80665 × 10⁻³ N',
       quantityKinds: ['force', 'weight', 'weight', 'force'],
@@ -19554,7 +19554,7 @@ var bammuDefinition = {
       symbol: 'lb',
       code: 'LBR',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '0.45359237 kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -19592,7 +19592,7 @@ var bammuDefinition = {
       symbol: '(lb/in³)/psi',
       code: 'K76',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetrePascal'];
+        return sammUDefinition.units['kilogramPerCubicMetrePascal'];
       },
       conversionFactor: '4.014632 (kg/m³)/Pa',
       quantityKinds: ['volumicMass', 'massDensity', 'density', 'massDensity', 'volumicMass', 'density'],
@@ -19603,7 +19603,7 @@ var bammuDefinition = {
       symbol: 'lb/d',
       code: 'K66',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '5.249912 × 10⁻⁶ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -19614,7 +19614,7 @@ var bammuDefinition = {
       symbol: 'lb/°F',
       code: 'K64',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerKelvin'];
+        return sammUDefinition.units['kilogramPerKelvin'];
       },
       conversionFactor: '0.8164663 kg/K',
       quantityKinds: ['mass', 'volumicMass', 'massDensity', 'density'],
@@ -19625,7 +19625,7 @@ var bammuDefinition = {
       symbol: 'lb/gal (UK)',
       code: 'K71',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '99.77637 kg/m³',
       quantityKinds: [
@@ -19655,7 +19655,7 @@ var bammuDefinition = {
       symbol: '(lb/h)/psi',
       code: 'K74',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecondPascal'];
+        return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '1.827445 × 10⁻⁸ (kg/s)/Pa',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -19666,7 +19666,7 @@ var bammuDefinition = {
       symbol: 'lb/min',
       code: 'K78',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '7.559873 × 10⁻³ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -19686,7 +19686,7 @@ var bammuDefinition = {
       symbol: '(lb/min)/psi',
       code: 'K80',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecondPascal'];
+        return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '1.096467 × 10⁻⁶ (kg/s)/Pa',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -19697,7 +19697,7 @@ var bammuDefinition = {
       symbol: 'lb/psi',
       code: 'K77',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerPascal'];
+        return sammUDefinition.units['kilogramPerPascal'];
       },
       conversionFactor: '6.578802 × 10⁻⁵ kg/Pa',
       quantityKinds: ['volumicMass', 'massDensity', 'density', 'volumicMass', 'massDensity', 'density'],
@@ -19708,7 +19708,7 @@ var bammuDefinition = {
       symbol: 'lb/s',
       code: 'K81',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '0.4535924 kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -19728,7 +19728,7 @@ var bammuDefinition = {
       symbol: '(lb/s)/psi',
       code: 'K83',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecondPascal'];
+        return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '6.578802 × 10⁻⁵ (kg/s)/Pa',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -19739,7 +19739,7 @@ var bammuDefinition = {
       symbol: 'lb·ft²',
       code: 'K65',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramMetreSquared'];
+        return sammUDefinition.units['kilogramMetreSquared'];
       },
       conversionFactor: '4.214011 × 10⁻² kg × m²',
       quantityKinds: ['momentOfInertiaDynamicMomentOfInertia', 'momentOfInertiaDynamicMomentOfInertia'],
@@ -19750,7 +19750,7 @@ var bammuDefinition = {
       symbol: 'lb·(ft/s)',
       code: 'N10',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramMetrePerSecond'];
+        return sammUDefinition.units['kilogramMetrePerSecond'];
       },
       conversionFactor: '1.382550 × 10⁻¹ kg × m/s',
       quantityKinds: ['momentum', 'momentum'],
@@ -19761,7 +19761,7 @@ var bammuDefinition = {
       symbol: 'lbf',
       code: 'C78',
       referenceUnit: function () {
-        return bammuDefinition.units['newton'];
+        return sammUDefinition.units['newton'];
       },
       conversionFactor: '4.448222 N',
       quantityKinds: ['weight', 'force', 'weight', 'force'],
@@ -19772,7 +19772,7 @@ var bammuDefinition = {
       symbol: 'lbf·ft',
       code: 'M92',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonMetre'];
+        return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '1.355818 N × m',
       quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfACouple'],
@@ -19846,7 +19846,7 @@ var bammuDefinition = {
       symbol: 'lbf/ft²',
       code: 'K85',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '47.88026 Pa',
       quantityKinds: [
@@ -19879,7 +19879,7 @@ var bammuDefinition = {
       symbol: 'lbf/in²',
       code: 'PS',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '6.894757 × 10³ Pa',
       quantityKinds: [
@@ -19912,7 +19912,7 @@ var bammuDefinition = {
       symbol: 'psi/°F',
       code: 'K86',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalPerKelvin'];
+        return sammUDefinition.units['pascalPerKelvin'];
       },
       conversionFactor: '1.241056 × 10⁴ Pa/K',
       quantityKinds: [
@@ -19933,7 +19933,7 @@ var bammuDefinition = {
       symbol: 'lbf/yd',
       code: 'N33',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonPerMetre'];
+        return sammUDefinition.units['newtonPerMetre'];
       },
       conversionFactor: '4.864635 N/m',
       quantityKinds: ['surfaceTension', 'surfaceTension'],
@@ -19944,7 +19944,7 @@ var bammuDefinition = {
       symbol: 'lbf·s/ft²',
       code: 'K91',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '47.88026 Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -19955,7 +19955,7 @@ var bammuDefinition = {
       symbol: 'lbf·s/in²',
       code: 'K92',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '6.894757 × 10³ Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -19966,7 +19966,7 @@ var bammuDefinition = {
       symbol: 'lb·(in/s)',
       code: 'N11',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramMetrePerSecond'];
+        return sammUDefinition.units['kilogramMetrePerSecond'];
       },
       conversionFactor: '1.152125 × 10⁻² kg × m/s',
       quantityKinds: ['momentum', 'momentum'],
@@ -19977,7 +19977,7 @@ var bammuDefinition = {
       symbol: 'lb·in²',
       code: 'F20',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramMetreSquared'];
+        return sammUDefinition.units['kilogramMetreSquared'];
       },
       conversionFactor: '2.926397 × 10⁻⁴ kg × m²',
       quantityKinds: ['momentOfInertiaDynamicMomentOfInertia', 'momentOfInertiaDynamicMomentOfInertia'],
@@ -19988,7 +19988,7 @@ var bammuDefinition = {
       symbol: 'lbmol',
       code: 'P44',
       referenceUnit: function () {
-        return bammuDefinition.units['mole'];
+        return sammUDefinition.units['mole'];
       },
       conversionFactor: '453.5924 mol',
       quantityKinds: ['amountOfSubstance', 'amountOfSubstance'],
@@ -19999,7 +19999,7 @@ var bammuDefinition = {
       symbol: 'lbmol/h',
       code: 'P46',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerSecond'];
+        return sammUDefinition.units['molePerSecond'];
       },
       conversionFactor: '7.559873 mol/s',
       quantityKinds: [
@@ -20018,7 +20018,7 @@ var bammuDefinition = {
       symbol: 'lbmol/lb',
       code: 'P48',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerKilogram'];
+        return sammUDefinition.units['molePerKilogram'];
       },
       conversionFactor: '10³ mol/kg',
       quantityKinds: ['molalityOfSoluteB', 'ionicStrength'],
@@ -20029,7 +20029,7 @@ var bammuDefinition = {
       symbol: 'lbmol/s',
       code: 'P45',
       referenceUnit: function () {
-        return bammuDefinition.units['molePerSecond'];
+        return sammUDefinition.units['molePerSecond'];
       },
       conversionFactor: '4.535924 × 10² mol/s',
       quantityKinds: [
@@ -20048,7 +20048,7 @@ var bammuDefinition = {
       symbol: 'lb/ft³',
       code: '87',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '1.601846 × 10¹ kg/m³',
       quantityKinds: [
@@ -20069,7 +20069,7 @@ var bammuDefinition = {
       symbol: 'lb/in³',
       code: 'LA',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '2.767990 × 10⁴ kg/m³',
       quantityKinds: [
@@ -20090,7 +20090,7 @@ var bammuDefinition = {
       symbol: 'lb/yd³',
       code: 'K84',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '0.5932764 kg/m³',
       quantityKinds: [
@@ -20111,7 +20111,7 @@ var bammuDefinition = {
       symbol: 'lb/ft',
       code: 'P2',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerMetre'];
+        return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '1.488164 kg/m',
       quantityKinds: ['linearDensity', 'linearMass', 'linearMass', 'linearDensity'],
@@ -20122,7 +20122,7 @@ var bammuDefinition = {
       symbol: 'lb/(ft·d)',
       code: 'N44',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '1.722412 × 10⁻⁵ Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -20133,7 +20133,7 @@ var bammuDefinition = {
       symbol: 'lb/(ft·h)',
       code: 'K67',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '4.133789 × 10⁻⁴ Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -20144,7 +20144,7 @@ var bammuDefinition = {
       symbol: 'lb/(ft·min)',
       code: 'N43',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '2.480273 × 10⁻² Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -20155,7 +20155,7 @@ var bammuDefinition = {
       symbol: 'lb/(ft·s)',
       code: 'K68',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '1.488164 Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -20166,7 +20166,7 @@ var bammuDefinition = {
       symbol: 'lb/gal (US)',
       code: 'GE',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '1.198264 × 10² kg/m³',
       quantityKinds: [
@@ -20187,7 +20187,7 @@ var bammuDefinition = {
       symbol: 'lb/h',
       code: '4U',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '1.259979 × 10⁻⁴ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -20198,7 +20198,7 @@ var bammuDefinition = {
       symbol: 'lb/in',
       code: 'PO',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerMetre'];
+        return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '1.785797 × 10¹ kg/m',
       quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
@@ -20227,7 +20227,7 @@ var bammuDefinition = {
       symbol: 'lb/ft²',
       code: 'FP',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetre'];
+        return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '4.882428 kg/m²',
       quantityKinds: [
@@ -20250,7 +20250,7 @@ var bammuDefinition = {
       symbol: 'lb/in²',
       code: '80',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetre'];
+        return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '7.030696 × 10² kg/m²',
       quantityKinds: [
@@ -20273,7 +20273,7 @@ var bammuDefinition = {
       symbol: 'lb/yd²',
       code: 'N25',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSquareMetre'];
+        return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '5.424919 × 10⁻¹ kg/m²',
       quantityKinds: [
@@ -20296,7 +20296,7 @@ var bammuDefinition = {
       symbol: 'lb/yd',
       code: 'M84',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerMetre'];
+        return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '4.960546 × 10⁻¹ kg/m',
       quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
@@ -20307,7 +20307,7 @@ var bammuDefinition = {
       symbol: 'pdl',
       code: 'M76',
       referenceUnit: function () {
-        return bammuDefinition.units['newton'];
+        return sammUDefinition.units['newton'];
       },
       conversionFactor: '1.382550 × 10⁻¹ N',
       quantityKinds: ['weight', 'force', 'force', 'weight'],
@@ -20318,7 +20318,7 @@ var bammuDefinition = {
       symbol: 'pdl·ft',
       code: 'M95',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonMetre'];
+        return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '4.214011 × 10⁻² N × m',
       quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfACouple'],
@@ -20329,7 +20329,7 @@ var bammuDefinition = {
       symbol: 'pdl·in',
       code: 'M96',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonMetre'];
+        return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '3.51167710⁻³ N × m',
       quantityKinds: ['torque', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfForce', 'momentOfACouple'],
@@ -20340,7 +20340,7 @@ var bammuDefinition = {
       symbol: 'pdl/in',
       code: 'N32',
       referenceUnit: function () {
-        return bammuDefinition.units['newtonPerMetre'];
+        return sammUDefinition.units['newtonPerMetre'];
       },
       conversionFactor: '5.443110 N/m',
       quantityKinds: ['surfaceTension', 'surfaceTension'],
@@ -20351,7 +20351,7 @@ var bammuDefinition = {
       symbol: 'pdl/ft²',
       code: 'N21',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '1.488164 Pa',
       quantityKinds: [
@@ -20384,7 +20384,7 @@ var bammuDefinition = {
       symbol: 'pdl/in²',
       code: 'N26',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '2.142957 × 10² Pa',
       quantityKinds: [
@@ -20417,7 +20417,7 @@ var bammuDefinition = {
       symbol: '(pdl/ft²)·s',
       code: 'N34',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '1.488164 Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -20428,7 +20428,7 @@ var bammuDefinition = {
       symbol: '(pdl/in²)·s',
       code: 'N42',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '2.142957 × 10² Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -20466,7 +20466,7 @@ var bammuDefinition = {
       symbol: 'psi·in³/s',
       code: 'K87',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalCubicMetrePerSecond'];
+        return sammUDefinition.units['pascalCubicMetrePerSecond'];
       },
       conversionFactor: '0.112985 Pa × m³/s',
       quantityKinds: [
@@ -20487,7 +20487,7 @@ var bammuDefinition = {
       symbol: 'psi·m³/s',
       code: 'K89',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalCubicMetrePerSecond'];
+        return sammUDefinition.units['pascalCubicMetrePerSecond'];
       },
       conversionFactor: '6.894757 × 10³ Pa × m³/s',
       quantityKinds: [
@@ -20508,7 +20508,7 @@ var bammuDefinition = {
       symbol: 'psi·yd³/s',
       code: 'K90',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalCubicMetrePerSecond'];
+        return sammUDefinition.units['pascalCubicMetrePerSecond'];
       },
       conversionFactor: '5.271420 × 10³ Pa × m³/s',
       quantityKinds: [
@@ -20529,7 +20529,7 @@ var bammuDefinition = {
       symbol: 'psi·l/s',
       code: 'K88',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalCubicMetrePerSecond'];
+        return sammUDefinition.units['pascalCubicMetrePerSecond'];
       },
       conversionFactor: '6.894757 Pa × m³/s',
       quantityKinds: [
@@ -20568,7 +20568,7 @@ var bammuDefinition = {
       symbol: 'quad',
       code: 'N70',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '1.055056 × 10¹⁸ J',
       quantityKinds: [
@@ -20606,7 +20606,7 @@ var bammuDefinition = {
       symbol: 'qt (UK)',
       code: 'QTI',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.1365225 × 10⁻³ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -20617,7 +20617,7 @@ var bammuDefinition = {
       symbol: 'qt (UK liq.)/d',
       code: 'K94',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.315420 × 10⁻⁸ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -20628,7 +20628,7 @@ var bammuDefinition = {
       symbol: 'qt (UK liq.)/h',
       code: 'K95',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.157008 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -20639,7 +20639,7 @@ var bammuDefinition = {
       symbol: 'qt (UK liq.)/min',
       code: 'K96',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.894205 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -20650,7 +20650,7 @@ var bammuDefinition = {
       symbol: 'qt (UK liq.)/s',
       code: 'K97',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.136523 × 10⁻³ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -20661,7 +20661,7 @@ var bammuDefinition = {
       symbol: 'qt (US liq.)/d',
       code: 'K98',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.095316 × 10⁻⁸ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -20672,7 +20672,7 @@ var bammuDefinition = {
       symbol: 'qt (US liq.)/h',
       code: 'K99',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.628758 × 10⁻⁷ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -20683,7 +20683,7 @@ var bammuDefinition = {
       symbol: 'qt (US liq.)/min',
       code: 'L10',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.577255 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -20694,7 +20694,7 @@ var bammuDefinition = {
       symbol: 'qt (US liq.)/s',
       code: 'L11',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '9.463529 × 10⁻⁴ m³/s',
       quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -20714,7 +20714,7 @@ var bammuDefinition = {
       symbol: 'Qr (UK)',
       code: 'QTR',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '12.700 59 kg',
       quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -20734,7 +20734,7 @@ var bammuDefinition = {
       symbol: 'U or RU',
       code: 'H80',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '4.445 × 10⁻² m',
       quantityKinds: [
@@ -20782,7 +20782,7 @@ var bammuDefinition = {
       symbol: 'rad',
       code: 'C80',
       referenceUnit: function () {
-        return bammuDefinition.units['gray'];
+        return sammUDefinition.units['gray'];
       },
       conversionFactor: '10⁻² Gy',
       quantityKinds: ['absorbedDose', 'specificEnergyImparted', 'massicEnergyImparted'],
@@ -20882,7 +20882,7 @@ var bammuDefinition = {
       symbol: 'Å⁻¹',
       code: 'C85',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalMetre'];
+        return sammUDefinition.units['reciprocalMetre'];
       },
       conversionFactor: '10¹⁰ m⁻¹',
       quantityKinds: [
@@ -20928,7 +20928,7 @@ var bammuDefinition = {
       symbol: 'cm⁻¹',
       code: 'E90',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalMetre'];
+        return sammUDefinition.units['reciprocalMetre'];
       },
       conversionFactor: '10² m⁻¹',
       quantityKinds: [
@@ -20963,7 +20963,7 @@ var bammuDefinition = {
       symbol: 'cm⁻³',
       code: 'H50',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalCubicMetre'];
+        return sammUDefinition.units['reciprocalCubicMetre'];
       },
       conversionFactor: '10⁶ m⁻³',
       quantityKinds: [
@@ -20994,7 +20994,7 @@ var bammuDefinition = {
       symbol: '1/ft³',
       code: 'K20',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalCubicMetre'];
+        return sammUDefinition.units['reciprocalCubicMetre'];
       },
       conversionFactor: '35.31466 m⁻³',
       quantityKinds: [
@@ -21025,7 +21025,7 @@ var bammuDefinition = {
       symbol: '1/in³',
       code: 'K49',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalCubicMetre'];
+        return sammUDefinition.units['reciprocalCubicMetre'];
       },
       conversionFactor: '6.1023759 × 10⁴ m⁻³',
       quantityKinds: [
@@ -21091,7 +21091,7 @@ var bammuDefinition = {
       symbol: '1/mm³',
       code: 'L20',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalCubicMetre'];
+        return sammUDefinition.units['reciprocalCubicMetre'];
       },
       conversionFactor: '10⁹ m⁻³',
       quantityKinds: [
@@ -21122,7 +21122,7 @@ var bammuDefinition = {
       symbol: '1/yd³',
       code: 'M10',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalCubicMetre'];
+        return sammUDefinition.units['reciprocalCubicMetre'];
       },
       conversionFactor: '1.307951 m⁻³',
       quantityKinds: [
@@ -21153,7 +21153,7 @@ var bammuDefinition = {
       symbol: 'd⁻¹',
       code: 'E91',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalSecond'];
+        return sammUDefinition.units['reciprocalSecond'];
       },
       conversionFactor: '1.15741 × 10⁻⁵ s⁻¹',
       quantityKinds: [
@@ -21184,7 +21184,7 @@ var bammuDefinition = {
       symbol: 'eV⁻¹/m³',
       code: 'C88',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalJoulePerCubicMetre'];
+        return sammUDefinition.units['reciprocalJoulePerCubicMetre'];
       },
       conversionFactor: '6.24146 × 10¹⁸ J⁻¹/m³',
       quantityKinds: ['densityOfStates', 'densityOfStates'],
@@ -21204,7 +21204,7 @@ var bammuDefinition = {
       symbol: '1/h',
       code: 'H10',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalSecond'];
+        return sammUDefinition.units['reciprocalSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ s⁻¹',
       quantityKinds: [
@@ -21227,7 +21227,7 @@ var bammuDefinition = {
       symbol: '1/in',
       code: 'Q24',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalMetre'];
+        return sammUDefinition.units['reciprocalMetre'];
       },
       conversionFactor: '39.37008 m⁻¹',
       quantityKinds: [
@@ -21298,7 +21298,7 @@ var bammuDefinition = {
       symbol: '1/l',
       code: 'K63',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalCubicMetre'];
+        return sammUDefinition.units['reciprocalCubicMetre'];
       },
       conversionFactor: '10³ m⁻³',
       quantityKinds: [
@@ -21329,7 +21329,7 @@ var bammuDefinition = {
       symbol: '1/MK',
       code: 'M20',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
+        return sammUDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
       },
       conversionFactor: '10⁻⁶ K⁻¹',
       quantityKinds: [
@@ -21395,7 +21395,7 @@ var bammuDefinition = {
       symbol: 'min⁻¹',
       code: 'C94',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '1.666667 × 10⁻² s',
       quantityKinds: [
@@ -21427,7 +21427,7 @@ var bammuDefinition = {
       symbol: '1/mo',
       code: 'H11',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalSecond'];
+        return sammUDefinition.units['reciprocalSecond'];
       },
       conversionFactor: '3.80257 × 10⁻⁷ s⁻¹',
       quantityKinds: [
@@ -21459,7 +21459,7 @@ var bammuDefinition = {
       symbol: '1/psi',
       code: 'K93',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalPascalOrPascalToThePowerMinusOne'];
+        return sammUDefinition.units['reciprocalPascalOrPascalToThePowerMinusOne'];
       },
       conversionFactor: '1.450377 × 10⁻⁴ Pa⁻¹',
       quantityKinds: [
@@ -21537,7 +21537,7 @@ var bammuDefinition = {
       symbol: '1/in²',
       code: 'P78',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalSquareMetre'];
+        return sammUDefinition.units['reciprocalSquareMetre'];
       },
       conversionFactor: '1.550003 × 10³ m⁻²',
       quantityKinds: ['photonExposure', 'particleFluence', 'particleFluence'],
@@ -21575,7 +21575,7 @@ var bammuDefinition = {
       symbol: '1/wk',
       code: 'H85',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalSecond'];
+        return sammUDefinition.units['reciprocalSecond'];
       },
       conversionFactor: '1.647989452868 × 10⁻⁶ s⁻¹',
       quantityKinds: [
@@ -21598,7 +21598,7 @@ var bammuDefinition = {
       symbol: '1/y',
       code: 'H09',
       referenceUnit: function () {
-        return bammuDefinition.units['reciprocalSecond'];
+        return sammUDefinition.units['reciprocalSecond'];
       },
       conversionFactor: '3.16881 × 10⁻⁸ s⁻¹',
       quantityKinds: [
@@ -21621,7 +21621,7 @@ var bammuDefinition = {
       symbol: 'rem',
       code: 'D91',
       referenceUnit: function () {
-        return bammuDefinition.units['sievert'];
+        return sammUDefinition.units['sievert'];
       },
       conversionFactor: '10⁻² Sv',
       quantityKinds: ['doseEquivalent', 'doseEquivalent'],
@@ -21632,7 +21632,7 @@ var bammuDefinition = {
       symbol: 'rem/s',
       code: 'P69',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '10⁻² Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -21652,7 +21652,7 @@ var bammuDefinition = {
       symbol: 'rev',
       code: 'M44',
       referenceUnit: function () {
-        return bammuDefinition.units['rad'];
+        return sammUDefinition.units['rad'];
       },
       conversionFactor: '6.283185 rad',
       quantityKinds: ['absorbedDose', 'anglePlane'],
@@ -21663,7 +21663,7 @@ var bammuDefinition = {
       symbol: 'r/min',
       code: 'M46',
       referenceUnit: function () {
-        return bammuDefinition.units['radianPerSecond'];
+        return sammUDefinition.units['radianPerSecond'];
       },
       conversionFactor: '0.1047198 rad/s',
       quantityKinds: [
@@ -21710,7 +21710,7 @@ var bammuDefinition = {
       symbol: 'rd (US)',
       code: 'F49',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '5.029210 m',
       quantityKinds: [
@@ -21768,7 +21768,7 @@ var bammuDefinition = {
       symbol: 'R',
       code: '2C',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerKilogram'];
+        return sammUDefinition.units['coulombPerKilogram'];
       },
       conversionFactor: '2.58 × 10⁻⁴ C/kg',
       quantityKinds: ['exposure', 'exposure'],
@@ -21779,7 +21779,7 @@ var bammuDefinition = {
       symbol: 'R/s',
       code: 'D6',
       referenceUnit: function () {
-        return bammuDefinition.units['coulombPerKilogramSecond'];
+        return sammUDefinition.units['coulombPerKilogramSecond'];
       },
       conversionFactor: '2.58 × 10⁻⁴ C/(kg × s)',
       quantityKinds: ['exposureRate', 'exposureRate'],
@@ -21835,7 +21835,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'SCR',
       referenceUnit: function () {
-        return bammuDefinition.units['gram'];
+        return sammUDefinition.units['gram'];
       },
       conversionFactor: '1.295982 g',
       quantityKinds: ['mass'],
@@ -21882,7 +21882,7 @@ var bammuDefinition = {
       symbol: '"',
       code: 'D62',
       referenceUnit: function () {
-        return bammuDefinition.units['rad'];
+        return sammUDefinition.units['rad'];
       },
       conversionFactor: '4.848137 × 10⁻⁶ rad',
       quantityKinds: ['anglePlane', 'absorbedDose'],
@@ -21940,7 +21940,7 @@ var bammuDefinition = {
       symbol: 'shake',
       code: 'M56',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '10⁻⁸ s',
       quantityKinds: [
@@ -22008,7 +22008,7 @@ var bammuDefinition = {
       symbol: 'y (sidereal)',
       code: 'L96',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '3.155815 × 10⁷ s',
       quantityKinds: [
@@ -22046,7 +22046,7 @@ var bammuDefinition = {
       symbol: 'S/cm',
       code: 'H43',
       referenceUnit: function () {
-        return bammuDefinition.units['siemensPerMetre'];
+        return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10² S/m',
       quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
@@ -22084,7 +22084,7 @@ var bammuDefinition = {
       symbol: 'Sv/h',
       code: 'P70',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -22095,7 +22095,7 @@ var bammuDefinition = {
       symbol: 'Sv/min',
       code: 'P74',
       referenceUnit: function () {
-        return bammuDefinition.units['sievertPerSecond'];
+        return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '0.016666 Sv/s',
       quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
@@ -22133,7 +22133,7 @@ var bammuDefinition = {
       symbol: 'slug',
       code: 'F13',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '1.459390 × 10¹ kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -22144,7 +22144,7 @@ var bammuDefinition = {
       symbol: 'slug/ft³',
       code: 'L65',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '5.153788 × 10² kg/m³',
       quantityKinds: [
@@ -22165,7 +22165,7 @@ var bammuDefinition = {
       symbol: 'slug/d',
       code: 'L63',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '1.689109 × 10⁻⁴ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -22176,7 +22176,7 @@ var bammuDefinition = {
       symbol: 'slug/(ft·s)',
       code: 'L64',
       referenceUnit: function () {
-        return bammuDefinition.units['pascalSecond'];
+        return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '47.88026 Pa × s',
       quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
@@ -22187,7 +22187,7 @@ var bammuDefinition = {
       symbol: 'slug/h',
       code: 'L66',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '4.053861 × 10⁻³ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -22198,7 +22198,7 @@ var bammuDefinition = {
       symbol: 'slug/min',
       code: 'L67',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '0.2432317 kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -22209,7 +22209,7 @@ var bammuDefinition = {
       symbol: 'slug/s',
       code: 'L68',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '14.59390 kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -22238,7 +22238,7 @@ var bammuDefinition = {
       symbol: 'cm²',
       code: 'CMK',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '10⁻⁴ m²',
       quantityKinds: [
@@ -22259,7 +22259,7 @@ var bammuDefinition = {
       symbol: 'cm²/erg',
       code: 'D16',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetrePerJoule'];
+        return sammUDefinition.units['squareMetrePerJoule'];
       },
       conversionFactor: '10³ m²/J',
       quantityKinds: ['spectralCrossSection', 'spectralCrossSection'],
@@ -22279,7 +22279,7 @@ var bammuDefinition = {
       symbol: 'cm²/s',
       code: 'M81',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetrePerSecond'];
+        return sammUDefinition.units['squareMetrePerSecond'];
       },
       conversionFactor: '10⁻⁴ m²/s',
       quantityKinds: [
@@ -22297,7 +22297,7 @@ var bammuDefinition = {
       symbol: 'cm²/(sr·erg)',
       code: 'D17',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetrePerSteradianJoule'];
+        return sammUDefinition.units['squareMetrePerSteradianJoule'];
       },
       conversionFactor: '10³ m²/(sr × J)',
       quantityKinds: ['spectralAngularCrossSection', 'spectralAngularCrossSection'],
@@ -22308,7 +22308,7 @@ var bammuDefinition = {
       symbol: 'dam²',
       code: 'H16',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '10² m²',
       quantityKinds: [
@@ -22329,7 +22329,7 @@ var bammuDefinition = {
       symbol: 'dm²',
       code: 'DMK',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '10⁻² m²',
       quantityKinds: [
@@ -22350,7 +22350,7 @@ var bammuDefinition = {
       symbol: 'ft²',
       code: 'FTK',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '9.290304 × 10⁻² m²',
       quantityKinds: [
@@ -22371,7 +22371,7 @@ var bammuDefinition = {
       symbol: 'ft²/h',
       code: 'M79',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetrePerSecond'];
+        return sammUDefinition.units['squareMetrePerSecond'];
       },
       conversionFactor: '2.58064 × 10⁻⁵ m²/s',
       quantityKinds: [
@@ -22389,7 +22389,7 @@ var bammuDefinition = {
       symbol: 'ft²/s',
       code: 'S3',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetrePerSecond'];
+        return sammUDefinition.units['squareMetrePerSecond'];
       },
       conversionFactor: '0.09290304 m²/s',
       quantityKinds: [
@@ -22408,7 +22408,7 @@ var bammuDefinition = {
       symbol: 'hm²',
       code: 'H18',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '10⁴ m²',
       quantityKinds: [
@@ -22429,7 +22429,7 @@ var bammuDefinition = {
       symbol: 'in²',
       code: 'INK',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '6.4516 × 10⁻⁴ m²',
       quantityKinds: [
@@ -22459,7 +22459,7 @@ var bammuDefinition = {
       symbol: 'km²',
       code: 'KMK',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '10⁶ m²',
       quantityKinds: [
@@ -22630,7 +22630,7 @@ var bammuDefinition = {
       symbol: 'µm²',
       code: 'H30',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '10⁻¹² m²',
       quantityKinds: [
@@ -22651,7 +22651,7 @@ var bammuDefinition = {
       symbol: 'mi² (US survey)',
       code: 'M48',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '2.589998 × 10⁶ m²',
       quantityKinds: [
@@ -22672,7 +22672,7 @@ var bammuDefinition = {
       symbol: 'mi²',
       code: 'MIK',
       referenceUnit: function () {
-        return bammuDefinition.units['squareKilometre'];
+        return sammUDefinition.units['squareKilometre'];
       },
       conversionFactor: '2.589988 km²',
       quantityKinds: ['area', 'area'],
@@ -22683,7 +22683,7 @@ var bammuDefinition = {
       symbol: 'mm²',
       code: 'MMK',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '10⁻⁶ m²',
       quantityKinds: [
@@ -22713,7 +22713,7 @@ var bammuDefinition = {
       symbol: 'yd²',
       code: 'YDK',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetre'];
+        return sammUDefinition.units['squareMetre'];
       },
       conversionFactor: '8.361274 × 10⁻¹ m²',
       quantityKinds: [
@@ -22734,7 +22734,7 @@ var bammuDefinition = {
       symbol: 'std',
       code: 'WSD',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4.672 m³',
       quantityKinds: ['volume', 'sectionModulus'],
@@ -22745,7 +22745,7 @@ var bammuDefinition = {
       symbol: 'gn',
       code: 'K40',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: '9.80665 m/s²',
       quantityKinds: [
@@ -22764,7 +22764,7 @@ var bammuDefinition = {
       symbol: 'atm',
       code: 'ATM',
       referenceUnit: function () {
-        return bammuDefinition.units['pascal'];
+        return sammUDefinition.units['pascal'];
       },
       conversionFactor: '101325 Pa',
       quantityKinds: [
@@ -22833,7 +22833,7 @@ var bammuDefinition = {
       symbol: 'st',
       code: 'G26',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: 'm³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -22871,7 +22871,7 @@ var bammuDefinition = {
       symbol: 'sb',
       code: 'P31',
       referenceUnit: function () {
-        return bammuDefinition.units['candelaPerSquareMetre'];
+        return sammUDefinition.units['candelaPerSquareMetre'];
       },
       conversionFactor: '10⁴ cd/m²',
       quantityKinds: ['luminance', 'luminance'],
@@ -22882,7 +22882,7 @@ var bammuDefinition = {
       symbol: 'St',
       code: '91',
       referenceUnit: function () {
-        return bammuDefinition.units['squareMetrePerSecond'];
+        return sammUDefinition.units['squareMetrePerSecond'];
       },
       conversionFactor: '10⁻⁴ m²/s',
       quantityKinds: [
@@ -22927,7 +22927,7 @@ var bammuDefinition = {
       symbol: 'st',
       code: 'STI',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '6.350293 kg',
       quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
@@ -22974,7 +22974,7 @@ var bammuDefinition = {
       symbol: 'tablespoon (US)',
       code: 'G24',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.478676 × 10⁻⁵ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -22994,7 +22994,7 @@ var bammuDefinition = {
       symbol: 'teaspoon (US)',
       code: 'G25',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4.928922 × 10⁻⁶ m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -23032,7 +23032,7 @@ var bammuDefinition = {
       symbol: 'TiB',
       code: 'E61',
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '2⁴⁰ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -23142,7 +23142,7 @@ var bammuDefinition = {
       symbol: 'TB',
       code: 'E35',
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '10¹² B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -23153,7 +23153,7 @@ var bammuDefinition = {
       symbol: 'THz',
       code: 'D29',
       referenceUnit: function () {
-        return bammuDefinition.units['hertz'];
+        return sammUDefinition.units['hertz'];
       },
       conversionFactor: '10¹² Hz',
       quantityKinds: ['frequency', 'frequency'],
@@ -23164,7 +23164,7 @@ var bammuDefinition = {
       symbol: 'TJ',
       code: 'D30',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '10¹² J',
       quantityKinds: [
@@ -23199,7 +23199,7 @@ var bammuDefinition = {
       symbol: 'TΩ',
       code: 'H44',
       referenceUnit: function () {
-        return bammuDefinition.units['ohm'];
+        return sammUDefinition.units['ohm'];
       },
       conversionFactor: '10¹² Ω',
       quantityKinds: [
@@ -23223,7 +23223,7 @@ var bammuDefinition = {
       symbol: 'TW',
       code: 'D31',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '10¹² W',
       quantityKinds: [
@@ -23244,7 +23244,7 @@ var bammuDefinition = {
       symbol: 'TW·h',
       code: 'D32',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '3.6 × 10¹⁵ J',
       quantityKinds: [
@@ -23313,7 +23313,7 @@ var bammuDefinition = {
       symbol: 'tex (g/km)',
       code: 'D34',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerMetre'];
+        return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10⁻⁶ kg/m',
       quantityKinds: ['linearMass', 'linearDensity'],
@@ -23342,7 +23342,7 @@ var bammuDefinition = {
       symbol: 'thm (EC)',
       code: 'N71',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '1.05506 × 10⁸ J',
       quantityKinds: [
@@ -23380,7 +23380,7 @@ var bammuDefinition = {
       symbol: 'thm (US)',
       code: 'N72',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '1.054804 × 10⁸ J',
       quantityKinds: [
@@ -23418,7 +23418,7 @@ var bammuDefinition = {
       symbol: 'mo (30 days)',
       code: 'M36',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '2.592000 × 10⁶ s',
       quantityKinds: [
@@ -23467,7 +23467,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'R9',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10³m³',
       quantityKinds: ['volume', 'sectionModulus'],
@@ -23478,7 +23478,7 @@ var bammuDefinition = {
       symbol: 'km³/d',
       code: 'TQD',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.15741 × 10⁻² m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
@@ -23516,7 +23516,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'M85',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '2.916667 × 10⁻² kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -23527,7 +23527,7 @@ var bammuDefinition = {
       symbol: 'ton.sh-force',
       code: 'L94',
       referenceUnit: function () {
-        return bammuDefinition.units['newton'];
+        return sammUDefinition.units['newton'];
       },
       conversionFactor: '8.896443 × 10³ N',
       quantityKinds: ['weight', 'force', 'force', 'weight'],
@@ -23538,7 +23538,7 @@ var bammuDefinition = {
       symbol: 'ton (UK)/d',
       code: 'L85',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '1.175980 × 10⁻² kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23549,7 +23549,7 @@ var bammuDefinition = {
       symbol: 'RT',
       code: 'M70',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '2.831685 m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -23560,7 +23560,7 @@ var bammuDefinition = {
       symbol: 'ton (US)/d',
       code: 'L88',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '1.049982 × 10⁻² kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23571,7 +23571,7 @@ var bammuDefinition = {
       symbol: 'ton (US)/°F',
       code: 'L87',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerKelvin'];
+        return sammUDefinition.units['kilogramPerKelvin'];
       },
       conversionFactor: '1.632932 × 10³ kg/K',
       quantityKinds: ['mass', 'volumicMass', 'massDensity', 'density'],
@@ -23591,7 +23591,7 @@ var bammuDefinition = {
       symbol: '(ton (US)/h)/psi',
       code: 'L90',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecondPascal'];
+        return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '3.654889 × 10⁻⁵ (kg/s)/Pa',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23611,7 +23611,7 @@ var bammuDefinition = {
       symbol: 'ton.l/yd³ (UK)',
       code: 'L92',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '1.328939 × 10³ kg/m³',
       quantityKinds: [
@@ -23632,7 +23632,7 @@ var bammuDefinition = {
       symbol: 'ton (UK)',
       code: 'LTN',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '1.016047 × 10³ kg',
       quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
@@ -23643,7 +23643,7 @@ var bammuDefinition = {
       symbol: 'British shipping ton',
       code: 'L84',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.1893 m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -23654,7 +23654,7 @@ var bammuDefinition = {
       symbol: 'ton (US)',
       code: 'STN',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '0.9071847 × 10³ kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -23665,7 +23665,7 @@ var bammuDefinition = {
       symbol: 'ton (US) /h',
       code: '4W',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '2.519958 × 10⁻¹ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23676,7 +23676,7 @@ var bammuDefinition = {
       symbol: '(US) shipping ton',
       code: 'L86',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetre'];
+        return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.1326 m³',
       quantityKinds: ['volume', 'volume', 'sectionModulus'],
@@ -23687,7 +23687,7 @@ var bammuDefinition = {
       symbol: 'ton.s/yd³ (US)',
       code: 'L93',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '1.186553 × 10³ kg/m³',
       quantityKinds: [
@@ -23708,7 +23708,7 @@ var bammuDefinition = {
       symbol: 't·km',
       code: 'TKM',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramMetre'];
+        return sammUDefinition.units['kilogramMetre'];
       },
       conversionFactor: '10⁶ kg × m',
       quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
@@ -23719,7 +23719,7 @@ var bammuDefinition = {
       symbol: 't',
       code: 'TNE',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10³ kg',
       quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
@@ -23730,7 +23730,7 @@ var bammuDefinition = {
       symbol: 't/bar',
       code: 'L70',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerPascal'];
+        return sammUDefinition.units['kilogramPerPascal'];
       },
       conversionFactor: '10⁻² kg/Pa',
       quantityKinds: ['density', 'massDensity', 'volumicMass', 'volumicMass', 'massDensity', 'density'],
@@ -23741,7 +23741,7 @@ var bammuDefinition = {
       symbol: 't/m³',
       code: 'D41',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetre'];
+        return sammUDefinition.units['kilogramPerCubicMetre'];
       },
       conversionFactor: '10³ kg/m³',
       quantityKinds: [
@@ -23762,7 +23762,7 @@ var bammuDefinition = {
       symbol: '(t/m³)/bar',
       code: 'L77',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerCubicMetrePascal'];
+        return sammUDefinition.units['kilogramPerCubicMetrePascal'];
       },
       conversionFactor: '10⁻² (kg/m³)/Pa',
       quantityKinds: ['volumicMass', 'massDensity', 'density', 'density', 'massDensity', 'volumicMass'],
@@ -23782,7 +23782,7 @@ var bammuDefinition = {
       symbol: 't/d',
       code: 'L71',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '1.15741 × 10⁻² kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23793,7 +23793,7 @@ var bammuDefinition = {
       symbol: '(t/d)/bar',
       code: 'L73',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecondPascal'];
+        return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '1.15741 × 10⁻⁷ (kg/s)/Pa',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23813,7 +23813,7 @@ var bammuDefinition = {
       symbol: 't/h',
       code: 'E18',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻¹ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23824,7 +23824,7 @@ var bammuDefinition = {
       symbol: '(t/h)/bar',
       code: 'L75',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecondPascal'];
+        return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '2.77778 × 10⁻⁶ (kg/s)/Pa',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23844,7 +23844,7 @@ var bammuDefinition = {
       symbol: 't/K',
       code: 'L69',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerKelvin'];
+        return sammUDefinition.units['kilogramPerKelvin'];
       },
       conversionFactor: '10³ kg/K',
       quantityKinds: ['mass', 'volumicMass', 'massDensity', 'density'],
@@ -23855,7 +23855,7 @@ var bammuDefinition = {
       symbol: 't/min',
       code: 'L78',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '16.6667 kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23866,7 +23866,7 @@ var bammuDefinition = {
       symbol: '(t/min)/bar',
       code: 'L80',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecondPascal'];
+        return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '1.66667 × 10⁻⁴ (kg/s)/Pa',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23886,7 +23886,7 @@ var bammuDefinition = {
       symbol: 't/mo',
       code: 'M88',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '3.80257053768 × 10⁻⁴ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23897,7 +23897,7 @@ var bammuDefinition = {
       symbol: 't/s',
       code: 'L81',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '10³ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23908,7 +23908,7 @@ var bammuDefinition = {
       symbol: '(t/s)/bar',
       code: 'L83',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecondPascal'];
+        return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '10⁻² (kg/s)/Pa',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23928,7 +23928,7 @@ var bammuDefinition = {
       symbol: 't/y',
       code: 'M89',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogramPerSecond'];
+        return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '3.168808781 × 10⁻⁵ kg/s',
       quantityKinds: ['massFlowRate', 'massFlowRate'],
@@ -23984,7 +23984,7 @@ var bammuDefinition = {
       symbol: 'y (tropical)',
       code: 'D42',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '3.155692 5 × 10⁷ s',
       quantityKinds: [
@@ -24007,7 +24007,7 @@ var bammuDefinition = {
       symbol: 'tr oz',
       code: 'APZ',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '3.110348 × 10⁻³ kg',
       quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
@@ -24018,7 +24018,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'LBT',
       referenceUnit: function () {
-        return bammuDefinition.units['gram'];
+        return sammUDefinition.units['gram'];
       },
       conversionFactor: '373.2417 g',
       quantityKinds: ['mass'],
@@ -24047,7 +24047,7 @@ var bammuDefinition = {
       symbol: 'u',
       code: 'D43',
       referenceUnit: function () {
-        return bammuDefinition.units['kilogram'];
+        return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '1.660 538 782 × 10⁻²⁷ kg',
       quantityKinds: [
@@ -24070,7 +24070,7 @@ var bammuDefinition = {
       symbol: 'unit pole',
       code: 'P53',
       referenceUnit: function () {
-        return bammuDefinition.units['weber'];
+        return sammUDefinition.units['weber'];
       },
       conversionFactor: '1.256637 × 10⁻⁷ Wb',
       quantityKinds: ['magneticFluxQuantum', 'magneticFlux', 'magneticFluxQuantum'],
@@ -24081,7 +24081,7 @@ var bammuDefinition = {
       symbol: 'gal (US) /min',
       code: 'G2',
       referenceUnit: function () {
-        return bammuDefinition.units['cubicMetrePerSecond'];
+        return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '6.309020 × 10⁻⁵ m³/s',
       quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
@@ -24101,7 +24101,7 @@ var bammuDefinition = {
       symbol: 'var',
       code: 'D44',
       referenceUnit: function () {
-        return bammuDefinition.units['voltAmpere'];
+        return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: 'V × A',
       quantityKinds: ['apparentPower', 'reactivePower'],
@@ -24138,7 +24138,7 @@ var bammuDefinition = {
       symbol: 'V·A',
       code: 'D46',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: 'W',
       quantityKinds: [
@@ -24230,7 +24230,7 @@ var bammuDefinition = {
       symbol: 'V/µs',
       code: 'H24',
       referenceUnit: function () {
-        return bammuDefinition.units['voltPerSecond'];
+        return sammUDefinition.units['voltPerSecond'];
       },
       conversionFactor: '10⁶ V/s',
       quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
@@ -24241,7 +24241,7 @@ var bammuDefinition = {
       symbol: 'V/mm',
       code: 'D51',
       referenceUnit: function () {
-        return bammuDefinition.units['voltPerMetre'];
+        return sammUDefinition.units['voltPerMetre'];
       },
       conversionFactor: '10³ V/m',
       quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
@@ -24297,7 +24297,7 @@ var bammuDefinition = {
       symbol: null,
       code: 'F80',
       referenceUnit: function () {
-        return bammuDefinition.units['watt'];
+        return sammUDefinition.units['watt'];
       },
       conversionFactor: '7.46043 × 10² W',
       quantityKinds: [
@@ -24326,7 +24326,7 @@ var bammuDefinition = {
       symbol: 'W·h',
       code: 'WHR',
       referenceUnit: function () {
-        return bammuDefinition.units['joule'];
+        return sammUDefinition.units['joule'];
       },
       conversionFactor: '3.6 × 10³ J',
       quantityKinds: [
@@ -24398,7 +24398,7 @@ var bammuDefinition = {
       symbol: 'W/(m·°C)',
       code: 'N80',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerMetreKelvin'];
+        return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: 'W/(m × K)',
       quantityKinds: ['thermalConductivity', 'thermalConductivity'],
@@ -24418,7 +24418,7 @@ var bammuDefinition = {
       symbol: 'W/cm²',
       code: 'N48',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '10⁴ W/m²',
       quantityKinds: [
@@ -24441,7 +24441,7 @@ var bammuDefinition = {
       symbol: 'W/in²',
       code: 'N49',
       referenceUnit: function () {
-        return bammuDefinition.units['wattPerSquareMetre'];
+        return sammUDefinition.units['wattPerSquareMetre'];
       },
       conversionFactor: '1.550003 × 10³ W/m²',
       quantityKinds: [
@@ -24565,7 +24565,7 @@ var bammuDefinition = {
       symbol: 'Wb/mm',
       code: 'D60',
       referenceUnit: function () {
-        return bammuDefinition.units['weberPerMetre'];
+        return sammUDefinition.units['weberPerMetre'];
       },
       conversionFactor: '10³ Wb/m',
       quantityKinds: ['magneticVectorPotential', 'magneticVectorPotential'],
@@ -24585,7 +24585,7 @@ var bammuDefinition = {
       symbol: 'wk',
       code: 'WEE',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '6.048 × 10⁵ s',
       quantityKinds: [
@@ -24671,7 +24671,7 @@ var bammuDefinition = {
       symbol: 'yd',
       code: 'YRD',
       referenceUnit: function () {
-        return bammuDefinition.units['metre'];
+        return sammUDefinition.units['metre'];
       },
       conversionFactor: '0.9144 m',
       quantityKinds: [
@@ -24729,7 +24729,7 @@ var bammuDefinition = {
       symbol: 'yd/°F',
       code: 'L98',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerKelvin'];
+        return sammUDefinition.units['metrePerKelvin'];
       },
       conversionFactor: '1.64592 m/K',
       quantityKinds: [
@@ -24761,7 +24761,7 @@ var bammuDefinition = {
       symbol: 'yd/h',
       code: 'M66',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '2.54 × 10⁻⁴ m/s',
       quantityKinds: [
@@ -24785,7 +24785,7 @@ var bammuDefinition = {
       symbol: 'yd/min',
       code: 'M65',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '1.524 × 10⁻² m/s',
       quantityKinds: [
@@ -24809,7 +24809,7 @@ var bammuDefinition = {
       symbol: 'yd/psi',
       code: 'L99',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerPascal'];
+        return sammUDefinition.units['metrePerPascal'];
       },
       conversionFactor: '1.326225 × 10⁻⁴ m/Pa',
       quantityKinds: [
@@ -24841,7 +24841,7 @@ var bammuDefinition = {
       symbol: 'yd/s',
       code: 'M64',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecond'];
+        return sammUDefinition.units['metrePerSecond'];
       },
       conversionFactor: '9.144 × 10⁻¹ m/s',
       quantityKinds: [
@@ -24865,7 +24865,7 @@ var bammuDefinition = {
       symbol: 'yd/s²',
       code: 'M40',
       referenceUnit: function () {
-        return bammuDefinition.units['metrePerSecondSquared'];
+        return sammUDefinition.units['metrePerSecondSquared'];
       },
       conversionFactor: '9.144 × 10⁻¹ m/s²',
       quantityKinds: [
@@ -24884,7 +24884,7 @@ var bammuDefinition = {
       symbol: 'y',
       code: 'ANN',
       referenceUnit: function () {
-        return bammuDefinition.units['secondUnitOfTime'];
+        return sammUDefinition.units['secondUnitOfTime'];
       },
       conversionFactor: '3.15576 × 10⁷ s',
       quantityKinds: [
@@ -24907,7 +24907,7 @@ var bammuDefinition = {
       symbol: 'YiB',
       code: null,
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '2⁸⁰ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -24918,7 +24918,7 @@ var bammuDefinition = {
       symbol: 'YB',
       code: null,
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '10²⁴ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -24929,7 +24929,7 @@ var bammuDefinition = {
       symbol: 'ZiB',
       code: null,
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '2⁷⁰ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],
@@ -24940,7 +24940,7 @@ var bammuDefinition = {
       symbol: 'ZB',
       code: null,
       referenceUnit: function () {
-        return bammuDefinition.units['byte'];
+        return sammUDefinition.units['byte'];
       },
       conversionFactor: '10²¹ B',
       quantityKinds: ['informationEntropy', 'informationEntropy'],

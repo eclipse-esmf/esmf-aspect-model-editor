@@ -4,12 +4,11 @@
 
 <div fxLayout="column">
   <mat-form-field [floatLabel]="getControl('value')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="value">Value</mat-label>
+    <mat-label for="value">value</mat-label>
     <mat-select [formControl]="getControl('value')" name="value">
       <mat-option *ngFor="let encoding of encodingList" [value]="encoding.value">
         {{ encoding.value }}
       </mat-option>
     </mat-select>
-    <mat-hint>bamm:value</mat-hint>
   </mat-form-field>
 </div>

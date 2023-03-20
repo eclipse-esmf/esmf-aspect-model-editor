@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -12,12 +12,11 @@
   -->
 
 <mat-form-field [floatLabel]="getControl('defaultValue')?.disabled ? 'always' : 'auto'" appearance="fill">
-  <mat-label for="dataType">Default value</mat-label>
+  <mat-label for="dataType">defaultValue</mat-label>
   <input matInput [formControl]="getControl('defaultValue')" data-cy="defaultValue" [matAutocomplete]="auto" />
   <mat-autocomplete #auto="matAutocomplete">
     <mat-option *ngFor="let entityValue of entityValues" [value]="entityValue.name">
       {{ entityValue.name }}
     </mat-option>
   </mat-autocomplete>
-  <mat-hint>bamm:defaultValue</mat-hint>
 </mat-form-field>

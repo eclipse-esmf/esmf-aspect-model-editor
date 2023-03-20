@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,9 +14,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {LoadingScreenComponent} from './loading-screen.component';
-import {expect, describe, it, beforeEach} from '@jest/globals';
+import {beforeEach, describe, expect, it} from '@jest/globals';
 import {CommonModule} from '@angular/common';
-import {MatDialogModule, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
@@ -30,8 +30,10 @@ describe('LoadingScreenComponent', () => {
       declarations: [LoadingScreenComponent],
       imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule],
       schemas: [NO_ERRORS_SCHEMA],
-      providers:  [{provide: MAT_DIALOG_DATA, useValue: {}},
-      {provide: MatDialogRef, useValue: {}}]
+      providers: [
+        {provide: MAT_DIALOG_DATA, useValue: {}},
+        {provide: MatDialogRef, useValue: {}},
+      ],
     }).compileComponents();
   });
 

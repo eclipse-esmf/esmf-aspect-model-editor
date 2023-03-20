@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,8 +12,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {BaseMetaModelElement, DefaultTrait, DefaultEntityValue} from '@ame/meta-model';
-import {ExpandedEllipseShape, ExpandedRoundBorderShape, ExpandedModelShape} from '@ame/shared';
+import {BaseMetaModelElement, DefaultEntityValue, DefaultTrait} from '@ame/meta-model';
+import {ExpandedEllipseShape, ExpandedModelShape, ExpandedRoundBorderShape} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {mxGeometry} from '../providers';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';

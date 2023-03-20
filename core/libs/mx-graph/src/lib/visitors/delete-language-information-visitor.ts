@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,7 +12,7 @@
  */
 
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -25,7 +25,20 @@
  */
 
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+/*
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -39,7 +52,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -53,17 +66,17 @@
 
 import {
   BaseMetaModelElement,
-  DefaultAspect,
-  DefaultProperty,
-  DefaultConstraint,
-  DefaultCharacteristic,
-  DefaultEntity,
-  DefaultOperation,
-  DefaultUnit,
-  DefaultQuantityKind,
-  DefaultEvent,
   DefaultAbstractEntity,
   DefaultAbstractProperty,
+  DefaultAspect,
+  DefaultCharacteristic,
+  DefaultConstraint,
+  DefaultEntity,
+  DefaultEvent,
+  DefaultOperation,
+  DefaultProperty,
+  DefaultQuantityKind,
+  DefaultUnit,
 } from '@ame/meta-model';
 import {LogService} from '@ame/shared';
 import {MxGraphHelper} from '../helpers';

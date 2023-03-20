@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -27,24 +27,24 @@ export class RangeConstraintInstantiator extends ConstraintInstantiator {
       return defaultRangeConstraint;
     }
 
-    const bammc = this.metaModelElementInstantiator.bammc;
+    const sammC = this.metaModelElementInstantiator.sammC;
     defaultRangeConstraint = new DefaultRangeConstraint(null, null, null, null, null, null, null);
 
     quads.forEach(quad => {
-      if (bammc.isMinValueProperty(quad.predicate.value)) {
+      if (sammC.isMinValueProperty(quad.predicate.value)) {
         defaultRangeConstraint.minValue = quad.object.value;
-      } else if (bammc.isMaxValueProperty(quad.predicate.value)) {
+      } else if (sammC.isMaxValueProperty(quad.predicate.value)) {
         defaultRangeConstraint.maxValue = quad.object.value;
-      } else if (bammc.isUpperBoundDefinitionProperty(quad.predicate.value)) {
-        defaultRangeConstraint.upperBoundDefinition = BoundDefinition[quad.object.value.replace(bammc.getNamespace(), '')];
-      } else if (bammc.isLowerBoundDefinitionProperty(quad.predicate.value)) {
-        defaultRangeConstraint.lowerBoundDefinition = BoundDefinition[quad.object.value.replace(bammc.getNamespace(), '')];
+      } else if (sammC.isUpperBoundDefinitionProperty(quad.predicate.value)) {
+        defaultRangeConstraint.upperBoundDefinition = BoundDefinition[quad.object.value.replace(sammC.getNamespace(), '')];
+      } else if (sammC.isLowerBoundDefinitionProperty(quad.predicate.value)) {
+        defaultRangeConstraint.lowerBoundDefinition = BoundDefinition[quad.object.value.replace(sammC.getNamespace(), '')];
       }
     });
     return defaultRangeConstraint;
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.RangeConstraint().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.RangeConstraint().equals(nameNode);
   }
 }

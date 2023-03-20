@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,7 +12,7 @@
  */
 
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {BammCharacteristicInstantiator} from './bamm-characteristic-instantiator';
+import {PredefinedCharacteristicInstantiator} from './predefined-characteristic-instantiator';
 import {BaseMetaModelElement, Characteristic, DefaultProperty, OverWrittenProperty, OverWrittenPropertyKeys} from '@ame/meta-model';
 import {InstantiatorListElement} from '@ame/rdf/utils';
 
@@ -32,7 +32,7 @@ export class PropertyInstantiator {
   }
 
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
-    this.predefinedCharacteristics = new BammCharacteristicInstantiator(metaModelElementInstantiator).predefinedCharacteristics;
+    this.predefinedCharacteristics = new PredefinedCharacteristicInstantiator(metaModelElementInstantiator).predefinedCharacteristics;
   }
 
   public createProperty(listElement: InstantiatorListElement): OverWrittenProperty {
@@ -49,7 +49,7 @@ export class PropertyInstantiator {
   }
 
   private constructProperty(listElement: InstantiatorListElement): OverWrittenProperty {
-    const bamm = this.metaModelElementInstantiator.bamm;
+    const samm = this.metaModelElementInstantiator.samm;
     const property = new DefaultProperty(null, null, null, null);
     const quads = this.rdfModel.findAnyProperty(listElement.quad) || [];
     property.setExternalReference(this.rdfModel.isExternalRef);
@@ -63,7 +63,7 @@ export class PropertyInstantiator {
     this.currentCachedFile.resolveElement(property, this.isIsolated);
 
     for (const quad of quads) {
-      if (bamm.isCharacteristicProperty(quad.predicate.value)) {
+      if (samm.isCharacteristicProperty(quad.predicate.value)) {
         const objectValue = quad.object.value;
         const recursiveModelElement = this.metaModelElementInstantiator.recursiveModelElements.get(quad.object.value);
 
@@ -81,11 +81,11 @@ export class PropertyInstantiator {
         });
       }
 
-      if (bamm.isExampleValueProperty(quad.predicate.value)) {
+      if (samm.isExampleValueProperty(quad.predicate.value)) {
         property.exampleValue = quad.object.value;
       }
 
-      if (bamm.isExtendsProperty(quad.predicate.value)) {
+      if (samm.isExtendsProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getProperty({quad: quad.object}, extractedProperty => {
           property.extendedElement = extractedProperty?.property;
           if (property.extendedElement) {

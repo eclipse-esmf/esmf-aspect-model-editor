@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NotificationsService, SearchService} from '@ame/shared';
 import {provideMockObject} from '../../../../../../../../../jest-helpers';
@@ -15,7 +28,7 @@ import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 jest.mock('../../../../../../../../instantiator/src/lib/meta-model-element-instantiator');
-jest.mock('../../../../../../../../instantiator/src/lib/instantiators/bamme-predefined-entity-instantiator', () => {
+jest.mock('../../../../../../../../instantiator/src/lib/instantiators/samm-e-predefined-entity-instantiator', () => {
   class PredefinedEntityInstantiator {
     entityInstances = {};
   }

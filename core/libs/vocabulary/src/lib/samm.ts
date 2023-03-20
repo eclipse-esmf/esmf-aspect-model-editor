@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,7 +13,7 @@
 
 import {DataFactory, NamedNode} from 'n3';
 
-export class Bamm {
+export class Samm {
   static readonly XSD_URI = 'http://www.w3.org/2001/XMLSchema';
   static readonly RDF_URI = 'http://www.w3.org/1999/02/22-rdf-syntax-ns';
   static readonly RDFS_URI = 'http://www.w3.org/2000/01/rdf-schema';
@@ -25,7 +25,7 @@ export class Bamm {
 
   static isDefaultNamespaceUri(value: string) {
     return (
-      value.startsWith(Bamm.XSD_URI) || value.startsWith(Bamm.RDF_URI) || value.startsWith(Bamm.RDFS_URI) || value.startsWith(Bamm.BASE_URI)
+      value.startsWith(Samm.XSD_URI) || value.startsWith(Samm.RDF_URI) || value.startsWith(Samm.RDFS_URI) || value.startsWith(Samm.BASE_URI)
     );
   }
 
@@ -34,7 +34,7 @@ export class Bamm {
   }
 
   getBaseUri(): string {
-    return this.identifier || Bamm.BASE_URI;
+    return this.identifier || Samm.BASE_URI;
   }
 
   getUri(): string {
@@ -50,11 +50,11 @@ export class Bamm {
   }
 
   getRdfSyntaxNameSpace(): string {
-    return `${Bamm.RDF_URI}#`;
+    return `${Samm.RDF_URI}#`;
   }
 
   getXSDNameSpace(): string {
-    return `${Bamm.XSD_URI}#`;
+    return `${Samm.XSD_URI}#`;
   }
 
   RdfType(): NamedNode {

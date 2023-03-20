@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -19,8 +19,7 @@
     [matTooltipPosition]="'left'"
     appearance="fill"
   >
-    <mat-label for="description">Description({{ locale }})</mat-label>
+    <mat-label for="description">description({{ locale }})</mat-label>
     <textarea matInput [formControl]="getControl('description' + locale)" name="description{{ locale }}" data-cy="description"></textarea>
-    <mat-hint>bamm:description</mat-hint>
   </mat-form-field>
 </ng-container>

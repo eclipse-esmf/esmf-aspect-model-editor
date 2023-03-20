@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -16,6 +16,8 @@ import {NgModule} from '@angular/core';
 import {DomainModelToRdfService} from './domain-model-to-rdf.service';
 import {RdfNodeService} from './rdf-node';
 import {
+  AbstractEntityVisitor,
+  AbstractPropertyVisitor,
   AspectVisitor,
   CharacteristicVisitor,
   CleanupVisitor,
@@ -26,8 +28,6 @@ import {
   OperationVisitor,
   PropertyVisitor,
   UnitVisitor,
-  AbstractEntityVisitor,
-  AbstractPropertyVisitor,
 } from './visitor';
 
 @NgModule({

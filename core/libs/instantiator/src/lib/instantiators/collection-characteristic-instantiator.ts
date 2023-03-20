@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -38,14 +38,14 @@ export class CollectionCharacteristicInstantiator extends CharacteristicInstanti
   }
 
   private initProperties(collectionCharacteristic: Collection, quads: Array<Quad>): Collection {
-    const bamm = this.metaModelElementInstantiator.bamm;
-    const bammc = this.metaModelElementInstantiator.bammc;
+    const samm = this.metaModelElementInstantiator.samm;
+    const sammC = this.metaModelElementInstantiator.sammC;
     for (const quad of quads) {
-      if (bamm.isDataTypeProperty(quad.predicate.value)) {
+      if (samm.isDataTypeProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getDataType(quad, (entity: Type) => {
           collectionCharacteristic.dataType = entity;
         });
-      } else if (bammc.isElementCharacteristicProperty(quad.predicate.value)) {
+      } else if (sammC.isElementCharacteristicProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.loadCharacteristic(quad, false, (characteristic: Characteristic) => {
           collectionCharacteristic.elementCharacteristic = characteristic;
         });
@@ -58,6 +58,6 @@ export class CollectionCharacteristicInstantiator extends CharacteristicInstanti
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.CollectionCharacteristic().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.CollectionCharacteristic().equals(nameNode);
   }
 }

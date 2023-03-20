@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -29,7 +29,7 @@ export class MeasurementCharacteristicInstantiator extends CharacteristicInstant
     measurement = new DefaultMeasurement(null, null, null, null, null);
 
     quads.forEach(quad => {
-      if (this.metaModelElementInstantiator.bammc.isUnitProperty(quad.predicate.value)) {
+      if (this.metaModelElementInstantiator.sammC.isUnitProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getUnit(quad, (unit: Unit) => {
           measurement.unit = unit;
         });
@@ -40,6 +40,6 @@ export class MeasurementCharacteristicInstantiator extends CharacteristicInstant
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.MeasurementCharacteristic().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.MeasurementCharacteristic().equals(nameNode);
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -31,7 +31,6 @@ import {
 import {InstantiatorService} from './instantiator.service';
 import {
   AbstractPropertyInstantiator,
-  BammUnitInstantiator,
   CharacteristicInstantiator,
   CodeCharacteristicInstantiator,
   CollectionCharacteristicInstantiator,
@@ -62,21 +61,22 @@ import {
   StructuredValueCharacteristicInstantiator,
   TimeSeriesCharacteristicInstantiator,
   TraitCharacteristicInstantiator,
+  UnitInstantiator,
 } from './instantiators';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {InstantiatorListElement, RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {NotificationsService} from '@ame/shared';
-import {PredefinedEntityInstantiator} from './instantiators/bamme-predefined-entity-instantiator';
+import {PredefinedEntityInstantiator} from './instantiators/samm-e-predefined-entity-instantiator';
 
 export class MetaModelElementInstantiator {
   private characteristicInstantiator: CharacteristicInstantiator;
   private constraintInstantiator: ConstraintInstantiator;
   private queueInstantiators: Function[] = [];
 
-  public bamm = this.rdfModel.BAMM();
-  public bammc = this.rdfModel.BAMMC();
-  public bamme = this.rdfModel.BAMME();
-  public bammu = this.rdfModel.BAMMU();
+  public samm = this.rdfModel.SAMM();
+  public sammC = this.rdfModel.SAMMC();
+  public sammE = this.rdfModel.SAMME();
+  public sammU = this.rdfModel.SAMMU();
   public isIsolated = false;
 
   constructor(
@@ -132,14 +132,14 @@ export class MetaModelElementInstantiator {
     }
 
     if (Util.isBlankNode(element.quad)) {
-      const firstQuad = this.rdfModel.store.getQuads(element.quad, null, null, null).find(e => this.bamm.isRdfFirst(e.predicate.value));
+      const firstQuad = this.rdfModel.store.getQuads(element.quad, null, null, null).find(e => this.samm.isRdfFirst(e.predicate.value));
       quads = firstQuad ? this.rdfModel.store.getQuads(firstQuad.object, null, null, null) : [];
       element.quad = firstQuad.object;
     } else {
       quads = this.rdfModel.store.getQuads(element.quad, null, null, null);
     }
 
-    const hasAbstractProperties = quads.some(quad => this.bamm.isAbstractPropertyElement(quad.object.value));
+    const hasAbstractProperties = quads.some(quad => this.samm.isAbstractPropertyElement(quad.object.value));
 
     if (quads.length) {
       return hasAbstractProperties
@@ -247,7 +247,7 @@ export class MetaModelElementInstantiator {
   loadCharacteristic(quad: Quad, isPropertyExtRef: boolean, callback: Function): void {
     if (
       this.rdfModel.store.getQuads(quad.object, null, null, null).length ||
-      RdfModelUtil.isPredefinedCharacteristic(quad.object.value, this.rdfModel.BAMMC())
+      RdfModelUtil.isPredefinedCharacteristic(quad.object.value, this.rdfModel.SAMMC())
     ) {
       return callback(this.characteristicInstantiator.create(quad, isPropertyExtRef));
     }
@@ -349,7 +349,7 @@ export class MetaModelElementInstantiator {
       });
     }
 
-    const quadPropertyRefined = this.rdfModel.store.getQuads(quad.subject, this.bamm.ExtendsProperty(), null, null);
+    const quadPropertyRefined = this.rdfModel.store.getQuads(quad.subject, this.samm.ExtendsProperty(), null, null);
     if (quadPropertyRefined && quadPropertyRefined.length > 0) {
       const entity = new EntityInstantiator(this).createEntity(quadPropertyRefined);
       return callback(this.cachedFile.resolveElement(entity, this.isIsolated));
@@ -360,7 +360,7 @@ export class MetaModelElementInstantiator {
 
   getUnit(quad: Quad, callback: Function): void {
     if (this.rdfModel.store.getQuads(quad.object, null, null, null).length) {
-      const unit = new BammUnitInstantiator(this).createUnit(quad.object.value);
+      const unit = new UnitInstantiator(this).createUnit(quad.object.value);
       return callback(unit);
     }
 
@@ -405,13 +405,13 @@ export class MetaModelElementInstantiator {
     let typeQuad: Quad;
 
     quads.forEach(quad => {
-      if (this.bamm.isDescriptionProperty(quad.predicate.value)) {
+      if (this.samm.isDescriptionProperty(quad.predicate.value)) {
         this.addDescription(quad, metaModelElement);
-      } else if (this.bamm.isPreferredNameProperty(quad.predicate.value)) {
+      } else if (this.samm.isPreferredNameProperty(quad.predicate.value)) {
         this.addPreferredName(quad, metaModelElement);
-      } else if (this.bamm.isSeeProperty(quad.predicate.value)) {
+      } else if (this.samm.isSeeProperty(quad.predicate.value)) {
         metaModelElement.addSeeReference(quad.object.value);
-      } else if (quad.predicate.value === this.bamm.RdfType().value) {
+      } else if (quad.predicate.value === this.samm.RdfType().value) {
         typeQuad = quad;
       }
     });
@@ -425,7 +425,7 @@ export class MetaModelElementInstantiator {
     }
 
     if (!metaModelElement.metaModelVersion) {
-      metaModelElement.metaModelVersion = rdfModel.BAMM().version;
+      metaModelElement.metaModelVersion = rdfModel.SAMM().version;
     }
   }
 
@@ -450,7 +450,7 @@ export class MetaModelElementInstantiator {
       this.instantiatorService.instantiateFile(externalRdfModel, cachedFile, fileName);
     }
 
-    const predefinedUnit = new BammUnitInstantiator(this).createPredefinedUnit(quad.value);
+    const predefinedUnit = new UnitInstantiator(this).createPredefinedUnit(quad.value);
 
     if (predefinedUnit) {
       // Is not assignable to T

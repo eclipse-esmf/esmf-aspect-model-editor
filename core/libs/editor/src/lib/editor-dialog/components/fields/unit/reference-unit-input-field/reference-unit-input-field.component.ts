@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -17,20 +17,20 @@ import {DefaultDuration, DefaultUnit, Unit} from '@ame/meta-model';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 import {Observable} from 'rxjs';
-import {BammUnitInstantiator, MetaModelElementInstantiator} from '@ame/instantiator';
+import {MetaModelElementInstantiator, UnitInstantiator} from '@ame/instantiator';
 import {NamespacesCacheService} from '@ame/cache';
 import {ModelService} from '@ame/rdf/services';
 import {SearchService} from '@ame/shared';
 import {MatOptionSelectionChange} from '@angular/material/core';
 
-declare const bammuDefinition: any;
+declare const sammUDefinition: any;
 
 @Component({
   selector: 'ame-reference-unit-input-field',
   templateUrl: './reference-unit-input-field.component.html',
 })
 export class ReferenceUnitInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit, OnDestroy {
-  private bammUnitInstantiator: BammUnitInstantiator;
+  private unitInstantiator: UnitInstantiator;
 
   public filteredPredefinedUnits$: Observable<Array<any>>;
   public filteredUnits$: Observable<Array<DefaultUnit>>;
@@ -45,14 +45,14 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
     private modelService: ModelService
   ) {
     super(metaModelDialogService, namespacesCacheService, searchService);
-    this.bammUnitInstantiator = new BammUnitInstantiator(
+    this.unitInstantiator = new UnitInstantiator(
       new MetaModelElementInstantiator(this.modelService.getLoadedAspectModel().rdfModel, this.currentCachedFile)
     );
   }
 
   ngOnInit(): void {
     this.subscription = this.getMetaModelData().subscribe(metaModelElement => {
-      this.units = metaModelElement ? Object.keys(bammuDefinition.units).map(key => bammuDefinition.units[key]) : null;
+      this.units = metaModelElement ? Object.keys(sammUDefinition.units).map(key => sammUDefinition.units[key]) : null;
       if (this.metaModelElement instanceof DefaultDuration) {
         this.units = this.units.filter(unit => unit.quantityKinds && unit.quantityKinds.includes('time'));
       }
@@ -96,7 +96,7 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
 
   onPredefinedUnitChange(predefinedUnit: Unit, event: MatOptionSelectionChange) {
     if (predefinedUnit && event.isUserInput) {
-      const newPredefinedUnit = this.bammUnitInstantiator.getUnit(predefinedUnit?.name);
+      const newPredefinedUnit = this.unitInstantiator.getUnit(predefinedUnit?.name);
       this.referenceUnitControl.setValue(newPredefinedUnit);
       this.unitDisplayControl.patchValue(newPredefinedUnit.name);
       this.unitDisplayControl.disable();

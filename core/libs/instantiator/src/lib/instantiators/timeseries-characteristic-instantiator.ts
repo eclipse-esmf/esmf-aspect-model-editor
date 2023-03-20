@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -26,6 +26,6 @@ export class TimeSeriesCharacteristicInstantiator extends SortedSetCharacteristi
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.TimeSeriesCharacteristic().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.TimeSeriesCharacteristic().equals(nameNode);
   }
 }

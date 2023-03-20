@@ -93,14 +93,14 @@
           }
         }
       },
-      "urn_bamm_io.openmanufacturing.digitaltwin_1.0.0_Characteristic1": {
+      "urn_bamm_org.eclipse.digitaltwin_1.0.0_Characteristic1": {
         "type": "string"
       },
       "AspectDefault": {
         "type": "object",
         "properties": {
           "property1": {
-            "$ref": "#/components/schemas/urn_bamm_io.openmanufacturing.digitaltwin_1.0.0_Characteristic1"
+            "$ref": "#/components/schemas/urn_bamm_org.eclipse.digitaltwin_1.0.0_Characteristic1"
           }
         },
         "required": [

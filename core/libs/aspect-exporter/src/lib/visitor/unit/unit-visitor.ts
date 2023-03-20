@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -19,7 +19,7 @@ import {MxGraphHelper} from '@ame/mx-graph';
 import {RdfNodeService} from '../../rdf-node';
 import {DefaultUnit} from '@ame/meta-model';
 import {RdfService} from '@ame/rdf/services';
-import {Bamm, Bammu} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 
 @Injectable()
 export class UnitVisitor extends BaseVisitor<DefaultUnit> {
@@ -27,12 +27,8 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
     return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.store;
   }
 
-  private get bammu(): Bammu {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.BAMMU();
-  }
-
-  private get bamm(): Bamm {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.BAMM();
+  private get samm(): Samm {
+    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.SAMM();
   }
 
   constructor(private rdfNodeService: RdfNodeService, rdfService: RdfService) {
@@ -70,14 +66,14 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
     if (unit.referenceUnit?.aspectModelUrn) {
       this.store.addQuad(
         DataFactory.namedNode(unit.aspectModelUrn),
-        this.bamm.ReferenceUnitProperty(),
+        this.samm.ReferenceUnitProperty(),
         DataFactory.namedNode(unit.referenceUnit.aspectModelUrn)
       );
       this.setPrefix(unit.referenceUnit.aspectModelUrn);
     }
 
     // update quantity kinds
-    this.store.removeQuads(this.store.getQuads(DataFactory.namedNode(unit.aspectModelUrn), this.bamm.QuantityKindProperty(), null, null));
+    this.store.removeQuads(this.store.getQuads(DataFactory.namedNode(unit.aspectModelUrn), this.samm.QuantityKindProperty(), null, null));
 
     for (const quantityKind of unit.quantityKinds || []) {
       if (!quantityKind?.aspectModelUrn) {
@@ -87,7 +83,7 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
       this.store.addQuad(
         DataFactory.triple(
           DataFactory.namedNode(unit.aspectModelUrn),
-          this.bamm.QuantityKindProperty(),
+          this.samm.QuantityKindProperty(),
           DataFactory.namedNode(quantityKind.aspectModelUrn)
         )
       );

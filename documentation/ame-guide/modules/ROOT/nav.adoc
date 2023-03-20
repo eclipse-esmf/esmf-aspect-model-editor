@@ -13,7 +13,7 @@
 * xref:validation-and-notifications.adoc[Validation and notifications]
 * xref:model-versions.adoc[Aspect Model versions]
 * xref:namespaces-references.adoc[Namespaces and external references]
-* xref:import-and-export-namespaces.adoc[Import and export a namespace]
+* xref:import-and-export-namespaces.adoc[Import and export namespaces]
 * xref:use-external-references.adoc[Use external references]
 * xref:generate-json.adoc[Generate JSON]
 * xref:support.adoc[Support]

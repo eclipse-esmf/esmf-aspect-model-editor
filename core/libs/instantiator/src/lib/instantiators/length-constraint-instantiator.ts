@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -27,13 +27,13 @@ export class LengthConstraintInstantiator extends ConstraintInstantiator {
       return defaultLengthConstraint;
     }
 
-    const bammc = this.metaModelElementInstantiator.bammc;
+    const sammC = this.metaModelElementInstantiator.sammC;
     defaultLengthConstraint = new DefaultLengthConstraint(null, null, null, null, null);
 
     quads.forEach(quad => {
-      if (bammc.isMinValueProperty(quad.predicate.value)) {
+      if (sammC.isMinValueProperty(quad.predicate.value)) {
         defaultLengthConstraint.minValue = Number(quad.object.value);
-      } else if (bammc.isMaxValueProperty(quad.predicate.value)) {
+      } else if (sammC.isMaxValueProperty(quad.predicate.value)) {
         defaultLengthConstraint.maxValue = Number(quad.object.value);
       }
     });
@@ -42,6 +42,6 @@ export class LengthConstraintInstantiator extends ConstraintInstantiator {
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.LengthConstraint().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.LengthConstraint().equals(nameNode);
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -26,7 +26,7 @@ import {OperationModelService} from './operation-model.service';
 import {PropertyModelService} from './property-model.service';
 import {TraitModelService} from './trait-model.service';
 import {UnitModelService} from './unit-model.service';
-import {TimeSeriesEntityRemoveService, Point3dRemoveService, FileResourceRemoveService} from './predefined-elements';
+import {FileResourceRemoveService, Point3dRemoveService, TimeSeriesEntityRemoveService} from './predefined-elements';
 
 const predefinedModels = {
   [PredefinedEntities.TimeSeriesEntity]: TimeSeriesEntityRemoveService,

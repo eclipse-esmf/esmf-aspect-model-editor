@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -45,11 +45,11 @@ export class ModelApiService {
   private readonly LATEST_FILENAME = ':latest.ttl';
 
   getDefaultAspectModel(): Observable<string> {
-    return this.http.get('assets/aspect-models/io.openmanufacturing.examples.movement/1.0.0/Default.ttl', {responseType: 'text'});
+    return this.http.get('assets/aspect-models/org.eclipse.examples.movement/1.0.0/Default.ttl', {responseType: 'text'});
   }
 
   getMovementAspectModel(): Observable<string> {
-    return this.http.get('assets/aspect-models/io.openmanufacturing.examples.movement/1.0.0/Movement.ttl', {responseType: 'text'});
+    return this.http.get('assets/aspect-models/org.eclipse.examples.movement/1.0.0/Movement.ttl', {responseType: 'text'});
   }
 
   loadAspectModelByUrn(urn: string): Observable<string> {

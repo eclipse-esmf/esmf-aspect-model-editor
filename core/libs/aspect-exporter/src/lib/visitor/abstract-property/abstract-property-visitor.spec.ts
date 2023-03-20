@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,7 +14,7 @@
 import {DefaultAbstractProperty} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 import {TestBed} from '@angular/core/testing';
 import {describe, expect, it} from '@jest/globals';
 import {provideMockObject} from 'jest-helpers';
@@ -49,7 +49,7 @@ describe('Property Visitor', () => {
     modelService = provideMockObject(ModelService);
     rdfModel = {
       store: new Store(),
-      BAMM: jest.fn(() => new Bamm('')),
+      SAMM: jest.fn(() => new Samm('')),
       hasNamespace: jest.fn(() => false),
       addPrefix: jest.fn(() => {}),
     } as any;

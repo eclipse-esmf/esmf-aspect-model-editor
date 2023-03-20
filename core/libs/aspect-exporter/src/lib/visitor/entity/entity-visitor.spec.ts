@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -22,7 +22,7 @@ import {MxGraphService} from '@ame/mx-graph';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {EntityVisitor} from './entity-visitor';
-import {Bamm} from '@ame/vocabulary';
+import {Samm} from '@ame/vocabulary';
 
 describe('Entity Visitor', () => {
   let service: EntityVisitor;
@@ -62,8 +62,8 @@ describe('Entity Visitor', () => {
     modelService = provideMockObject(ModelService);
     rdfModel = {
       store: new Store(),
-      BAMM: jest.fn(() => new Bamm('')),
-      BAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+      SAMM: jest.fn(() => new Samm('')),
+      SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
       hasNamespace: jest.fn(() => false),
       addPrefix: jest.fn(() => {}),
     } as any;

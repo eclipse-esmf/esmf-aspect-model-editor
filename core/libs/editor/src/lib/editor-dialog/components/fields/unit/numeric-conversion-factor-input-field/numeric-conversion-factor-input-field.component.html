@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -13,8 +13,7 @@
 
 <div fxLayout="column" *ngIf="metaModelElement?.conversionFactor || !metaModelElement?.isPredefined()">
   <mat-form-field [floatLabel]="getControl('numericConversionFactor')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="numericConversionFactor">NumericConversionFactor</mat-label>
+    <mat-label for="numericConversionFactor">numericConversionFactor</mat-label>
     <input [formControl]="getControl('numericConversionFactor')" matInput name="numericConversionFactor" />
-    <mat-hint>unit:numericConversionFactor</mat-hint>
   </mat-form-field>
 </div>

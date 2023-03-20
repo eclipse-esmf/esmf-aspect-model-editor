@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,7 +15,7 @@ import {FormControl} from '@angular/forms';
 import {BaseMetaModelElement, DefaultConstraint} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {DataTypeService} from '@ame/shared';
-import {Bamm, Bammc} from '@ame/vocabulary';
+import {Samm, SammC} from '@ame/vocabulary';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -39,7 +39,7 @@ export class LowerBoundInputFieldComponent extends InputFieldComponent<DefaultCo
   ngOnInit() {
     this.subscription = this.getMetaModelData().subscribe((modelElement: BaseMetaModelElement) => {
       this.lowerBoundDefinitionList = modelElement
-        ? new Bammc(new Bamm(modelElement.metaModelVersion)).getLowerBoundDefinitionList()
+        ? new SammC(new Samm(modelElement.metaModelVersion)).getLowerBoundDefinitionList()
         : null;
       if (modelElement instanceof DefaultConstraint) {
         this.metaModelElement = modelElement;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,27 +13,27 @@
 
 import {DefaultAbstractEntity, DefaultEntity} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {PredefinedPropertyInstantiator} from './bamme-predefined-property-instantiator';
+import {PredefinedPropertyInstantiator} from './samm-e-predefined-property-instantiator';
 
 export class PredefinedEntityInstantiator {
   public entityInstances: {[key: string]: Function} = {};
 
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
-    this.entityInstances[this.metaModelElementInstantiator.bamme.TimeSeriesEntity] = this.createTimeSeriesEntity.bind(this);
-    this.entityInstances[this.metaModelElementInstantiator.bamme.Point3d] = this.createPoint3D.bind(this);
-    this.entityInstances[this.metaModelElementInstantiator.bamme.FileResource] = this.createFileResource.bind(this);
+    this.entityInstances[this.metaModelElementInstantiator.sammE.TimeSeriesEntity] = this.createTimeSeriesEntity.bind(this);
+    this.entityInstances[this.metaModelElementInstantiator.sammE.Point3d] = this.createPoint3D.bind(this);
+    this.entityInstances[this.metaModelElementInstantiator.sammE.FileResource] = this.createFileResource.bind(this);
   }
 
   private createTimeSeriesEntity() {
     const {propertyInstances} = new PredefinedPropertyInstantiator(this.metaModelElementInstantiator);
 
-    const {bamm, bamme} = this.metaModelElementInstantiator;
-    const timestampProperty = propertyInstances[bamme.timestampProperty]();
-    const valueProperty = propertyInstances[bamme.valueProperty]();
+    const {samm, sammE} = this.metaModelElementInstantiator;
+    const timestampProperty = propertyInstances[sammE.timestampProperty]();
+    const valueProperty = propertyInstances[sammE.valueProperty]();
 
     const timeSeriesEntity = new DefaultAbstractEntity(
-      bamm.version,
-      bamme.TimeSeriesEntity,
+      samm.version,
+      sammE.TimeSeriesEntity,
       'TimeSeriesEntity',
       [
         {property: timestampProperty, keys: {}},
@@ -53,15 +53,15 @@ export class PredefinedEntityInstantiator {
 
   private createPoint3D() {
     const {propertyInstances} = new PredefinedPropertyInstantiator(this.metaModelElementInstantiator);
-    const {bamm, bamme} = this.metaModelElementInstantiator;
+    const {samm, sammE} = this.metaModelElementInstantiator;
     const point3dEntity = new DefaultAbstractEntity(
-      bamm.version,
-      bamme.Point3d,
+      samm.version,
+      sammE.Point3d,
       'Point3d',
       [
-        {property: propertyInstances[bamme.xProperty](), keys: {}},
-        {property: propertyInstances[bamme.yProperty](), keys: {}},
-        {property: propertyInstances[bamme.zProperty](), keys: {}},
+        {property: propertyInstances[sammE.xProperty](), keys: {}},
+        {property: propertyInstances[sammE.yProperty](), keys: {}},
+        {property: propertyInstances[sammE.zProperty](), keys: {}},
       ],
       true
     );
@@ -74,14 +74,14 @@ export class PredefinedEntityInstantiator {
 
   private createFileResource() {
     const {propertyInstances} = new PredefinedPropertyInstantiator(this.metaModelElementInstantiator);
-    const {bamm, bamme} = this.metaModelElementInstantiator;
+    const {samm, sammE} = this.metaModelElementInstantiator;
     const fileResourceEntity = new DefaultEntity(
-      bamm.version,
-      bamme.FileResource,
+      samm.version,
+      sammE.FileResource,
       'FileResource',
       [
-        {property: propertyInstances[bamme.resourceProperty](), keys: {}},
-        {property: propertyInstances[bamme.mimeTypeProperty](), keys: {}},
+        {property: propertyInstances[sammE.resourceProperty](), keys: {}},
+        {property: propertyInstances[sammE.mimeTypeProperty](), keys: {}},
       ],
       true
     );

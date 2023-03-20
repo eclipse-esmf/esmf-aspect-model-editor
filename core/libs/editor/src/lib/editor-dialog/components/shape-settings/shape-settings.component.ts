@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -120,7 +120,7 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
       if (
         RdfModelUtil.isCharacteristicInstance(
           selectedModelElement.aspectModelUrn,
-          this.modelService.getLoadedAspectModel().rdfModel.BAMMC()
+          this.modelService.getLoadedAspectModel().rdfModel.SAMMC()
         )
       ) {
         this.metaModelClassName = selectedModelElement.aspectModelUrn.split('#')[1].replace('Default', '');

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -37,7 +37,7 @@ import {
 } from '@ame/meta-model';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
-import {Bamm, Bammc} from '@ame/vocabulary';
+import {Samm, SammC} from '@ame/vocabulary';
 import {mxgraph} from 'mxgraph-factory';
 import {DataFactory, Literal, NamedNode, Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
@@ -50,12 +50,12 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.store;
   }
 
-  private get bamm(): Bamm {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.BAMM();
+  private get samm(): Samm {
+    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.SAMM();
   }
 
-  private get bammc(): Bammc {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.BAMMC();
+  private get sammC(): SammC {
+    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.SAMMC();
   }
 
   private readonly characteristicsCallback = {
@@ -106,7 +106,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     if (characteristic.baseCharacteristic?.aspectModelUrn) {
       this.store.addQuad(
         DataFactory.namedNode(characteristic.aspectModelUrn),
-        this.bammc.BaseCharacteristicProperty(),
+        this.sammC.BaseCharacteristicProperty(),
         DataFactory.namedNode(characteristic.baseCharacteristic.aspectModelUrn)
       );
       this.setPrefix(characteristic.baseCharacteristic.aspectModelUrn);
@@ -114,7 +114,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
 
     // update constraints
     this.store.removeQuads(
-      this.store.getQuads(DataFactory.namedNode(characteristic.aspectModelUrn), this.bammc.ConstraintProperty(), null, null)
+      this.store.getQuads(DataFactory.namedNode(characteristic.aspectModelUrn), this.sammC.ConstraintProperty(), null, null)
     );
 
     for (const constraint of characteristic.constraints || []) {
@@ -125,7 +125,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
       this.store.addQuad(
         DataFactory.triple(
           DataFactory.namedNode(characteristic.aspectModelUrn),
-          this.bammc.ConstraintProperty(),
+          this.sammC.ConstraintProperty(),
           DataFactory.namedNode(constraint.aspectModelUrn)
         )
       );
@@ -171,7 +171,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
       );
     }
 
-    this.removeOldAndAddNewReference(DataFactory.namedNode(characteristic.aspectModelUrn), this.bammc.DefaultValueProperty(), object);
+    this.removeOldAndAddNewReference(DataFactory.namedNode(characteristic.aspectModelUrn), this.sammC.DefaultValueProperty(), object);
   }
 
   private updateDuration(characteristic: DefaultDuration) {
@@ -196,7 +196,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
       // Updating Left
       this.store.addQuad(
         DataFactory.namedNode(characteristic.aspectModelUrn),
-        this.bammc.EitherLeftProperty(),
+        this.sammC.EitherLeftProperty(),
         DataFactory.namedNode(characteristic.left.aspectModelUrn)
       );
       this.setPrefix(characteristic.left.aspectModelUrn);
@@ -206,7 +206,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
       // Updating Right
       this.store.addQuad(
         DataFactory.namedNode(characteristic.aspectModelUrn),
-        this.bammc.EitherRightProperty(),
+        this.sammC.EitherRightProperty(),
         DataFactory.namedNode(characteristic.right.aspectModelUrn)
       );
       this.setPrefix(characteristic.right.aspectModelUrn);
@@ -222,7 +222,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     // remove deconstructionRule
     this.store.addQuad(
       DataFactory.namedNode(characteristic.aspectModelUrn),
-      this.bammc.DeconstructionRuleProperty(),
+      this.sammC.DeconstructionRuleProperty(),
       DataFactory.literal(characteristic.deconstructionRule)
     );
 
@@ -273,7 +273,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
 
     this.store.addQuad(
       DataFactory.namedNode(characteristic.aspectModelUrn),
-      this.bammc.UnitProperty(),
+      this.sammC.UnitProperty(),
       DataFactory.namedNode(characteristic.unit.aspectModelUrn)
     );
     this.setPrefix(characteristic.unit.aspectModelUrn);
@@ -286,7 +286,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
 
     this.store.addQuad(
       DataFactory.namedNode(characteristic.aspectModelUrn),
-      this.bammc.ElementCharacteristicProperty(),
+      this.sammC.ElementCharacteristicProperty(),
       DataFactory.namedNode(characteristic.elementCharacteristic.aspectModelUrn)
     );
     this.setPrefix(characteristic.elementCharacteristic.aspectModelUrn);
@@ -316,7 +316,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
         !parent.isPredefined() &&
         this.removeOldAndAddNewReference(
           DataFactory.namedNode(parent.aspectModelUrn),
-          parent instanceof DefaultCollection ? this.bammc.ElementCharacteristicProperty() : this.bamm.CharacteristicProperty(),
+          parent instanceof DefaultCollection ? this.sammC.ElementCharacteristicProperty() : this.samm.CharacteristicProperty(),
           DataFactory.namedNode(characteristic.aspectModelUrn)
         );
     }

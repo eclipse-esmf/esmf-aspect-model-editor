@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,11 +14,11 @@
 import {NamedNode, Quad, Util} from 'n3';
 import {BaseMetaModelElement, DefaultConstraint} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {Bamm, Bammc} from '@ame/vocabulary';
+import {Samm, SammC} from '@ame/vocabulary';
 
 export class BaseConstraintCharacteristicInstantiator {
-  public bamm: Bamm;
-  public bammc: Bammc;
+  public samm: Samm;
+  public sammC: SammC;
 
   protected get cachedFile() {
     return this.metaModelElementInstantiator.cachedFile;
@@ -32,8 +32,8 @@ export class BaseConstraintCharacteristicInstantiator {
     protected metaModelElementInstantiator: MetaModelElementInstantiator,
     public nextProcessor?: BaseConstraintCharacteristicInstantiator
   ) {
-    this.bamm = metaModelElementInstantiator.bamm;
-    this.bammc = metaModelElementInstantiator.bammc;
+    this.samm = metaModelElementInstantiator.samm;
+    this.sammC = metaModelElementInstantiator.sammC;
   }
 
   create(quad: Quad): BaseMetaModelElement {
@@ -45,7 +45,7 @@ export class BaseConstraintCharacteristicInstantiator {
     const propertyQuads: Array<Quad> = this.metaModelElementInstantiator.rdfModel.findAnyProperty(quad);
     const elementQuad = (
       Util.isBlankNode(quad.object) ? this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value) : propertyQuads
-    ).find(q => q.predicate.equals(this.bamm.RdfType()));
+    ).find(q => q.predicate.equals(this.samm.RdfType()));
 
     if (!this.shouldProcess(<NamedNode>elementQuad.object)) {
       return this.nextProcessor !== null ? this.nextProcessor.create(quad) : null;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,7 +15,7 @@ import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {Characteristic, DefaultCharacteristic, DefaultScalar} from '@ame/meta-model';
 import {DataTypeService} from '@ame/shared';
 
-export class BammCharacteristicInstantiator {
+export class PredefinedCharacteristicInstantiator {
   private characteristicInstanceList: {[key: string]: Function} = {};
 
   private readonly dataTypeService: DataTypeService;
@@ -26,22 +26,22 @@ export class BammCharacteristicInstantiator {
 
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
     this.dataTypeService = metaModelElementInstantiator.rdfModel.dataTypeService;
-    const bammc = metaModelElementInstantiator.bammc;
-    this.characteristicInstanceList[`${bammc.getNamespace()}Timestamp`] = this.createTimestampCharacteristic;
-    this.characteristicInstanceList[`${bammc.getNamespace()}Text`] = this.createTextCharacteristic;
-    this.characteristicInstanceList[`${bammc.getNamespace()}MultiLanguageText`] = this.createMultiLanguageTextCharacteristic;
-    this.characteristicInstanceList[`${bammc.getNamespace()}Boolean`] = this.createBooleanCharacteristic;
-    this.characteristicInstanceList[`${bammc.getNamespace()}Locale`] = this.createLocaleCharacteristic;
-    this.characteristicInstanceList[`${bammc.getNamespace()}Language`] = this.createLanguageCharacteristic;
-    this.characteristicInstanceList[`${bammc.getNamespace()}UnitReference`] = this.createUnitReferenceCharacteristic;
-    this.characteristicInstanceList[`${bammc.getNamespace()}ResourcePath`] = this.createResourcePathCharacteristic;
-    this.characteristicInstanceList[`${bammc.getNamespace()}MimeType`] = this.createMimeTypeCharacteristic;
+    const sammC = metaModelElementInstantiator.sammC;
+    this.characteristicInstanceList[`${sammC.getNamespace()}Timestamp`] = this.createTimestampCharacteristic;
+    this.characteristicInstanceList[`${sammC.getNamespace()}Text`] = this.createTextCharacteristic;
+    this.characteristicInstanceList[`${sammC.getNamespace()}MultiLanguageText`] = this.createMultiLanguageTextCharacteristic;
+    this.characteristicInstanceList[`${sammC.getNamespace()}Boolean`] = this.createBooleanCharacteristic;
+    this.characteristicInstanceList[`${sammC.getNamespace()}Locale`] = this.createLocaleCharacteristic;
+    this.characteristicInstanceList[`${sammC.getNamespace()}Language`] = this.createLanguageCharacteristic;
+    this.characteristicInstanceList[`${sammC.getNamespace()}UnitReference`] = this.createUnitReferenceCharacteristic;
+    this.characteristicInstanceList[`${sammC.getNamespace()}ResourcePath`] = this.createResourcePathCharacteristic;
+    this.characteristicInstanceList[`${sammC.getNamespace()}MimeType`] = this.createMimeTypeCharacteristic;
   }
 
   createTextCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator, dataTypeService: DataTypeService): Characteristic {
     const characteristic = new DefaultCharacteristic(
-      metaModelElementInstantiator.bamm.version,
-      metaModelElementInstantiator.bammc.getAspectModelUrn('Text'),
+      metaModelElementInstantiator.samm.version,
+      metaModelElementInstantiator.sammC.getAspectModelUrn('Text'),
       'Text',
       new DefaultScalar(`${dataTypeService.getDataType('string').isDefinedBy}`)
     );
@@ -61,8 +61,8 @@ export class BammCharacteristicInstantiator {
     dataTypeService?: DataTypeService
   ): Characteristic {
     const characteristic = new DefaultCharacteristic(
-      metaModelElementInstantiator.bamm.version,
-      metaModelElementInstantiator.bammc.getAspectModelUrn('Timestamp'),
+      metaModelElementInstantiator.samm.version,
+      metaModelElementInstantiator.sammC.getAspectModelUrn('Timestamp'),
       'Timestamp',
       new DefaultScalar(`${dataTypeService.getDataType('dateTime').isDefinedBy}`)
     );
@@ -78,8 +78,8 @@ export class BammCharacteristicInstantiator {
     dataTypeService: DataTypeService
   ): Characteristic {
     const characteristic = new DefaultCharacteristic(
-      metaModelElementInstantiator.bamm.version,
-      metaModelElementInstantiator.bammc.getAspectModelUrn('MultiLanguageText'),
+      metaModelElementInstantiator.samm.version,
+      metaModelElementInstantiator.sammC.getAspectModelUrn('MultiLanguageText'),
       'MultiLanguageText',
       new DefaultScalar(`${dataTypeService.getDataType('langString').isDefinedBy}`)
     );
@@ -99,8 +99,8 @@ export class BammCharacteristicInstantiator {
     dataTypeService: DataTypeService
   ): Characteristic {
     const characteristic = new DefaultCharacteristic(
-      metaModelElementInstantiator.bamm.version,
-      metaModelElementInstantiator.bammc.getAspectModelUrn('Boolean'),
+      metaModelElementInstantiator.samm.version,
+      metaModelElementInstantiator.sammC.getAspectModelUrn('Boolean'),
       'Boolean',
       new DefaultScalar(`${dataTypeService.getDataType('boolean').isDefinedBy}`)
     );
@@ -113,8 +113,8 @@ export class BammCharacteristicInstantiator {
 
   createLocaleCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator, dataTypeService: DataTypeService): Characteristic {
     const characteristic = new DefaultCharacteristic(
-      metaModelElementInstantiator.bamm.version,
-      metaModelElementInstantiator.bammc.getAspectModelUrn('Locale'),
+      metaModelElementInstantiator.samm.version,
+      metaModelElementInstantiator.sammC.getAspectModelUrn('Locale'),
       'Locale',
       new DefaultScalar(`${dataTypeService.getDataType('string').isDefinedBy}`)
     );
@@ -130,8 +130,8 @@ export class BammCharacteristicInstantiator {
     dataTypeService: DataTypeService
   ): Characteristic {
     const characteristic = new DefaultCharacteristic(
-      metaModelElementInstantiator.bamm.version,
-      metaModelElementInstantiator.bammc.getAspectModelUrn('Language'),
+      metaModelElementInstantiator.samm.version,
+      metaModelElementInstantiator.sammC.getAspectModelUrn('Language'),
       'Language',
       new DefaultScalar(`${dataTypeService.getDataType('string').isDefinedBy}`)
     );
@@ -147,8 +147,8 @@ export class BammCharacteristicInstantiator {
     dataTypeService: DataTypeService
   ): Characteristic {
     const characteristic = new DefaultCharacteristic(
-      metaModelElementInstantiator.bamm.version,
-      metaModelElementInstantiator.bammc.getAspectModelUrn('UnitReference'),
+      metaModelElementInstantiator.samm.version,
+      metaModelElementInstantiator.sammC.getAspectModelUrn('UnitReference'),
       'UnitReference',
       new DefaultScalar(`${dataTypeService.getDataType('curie').isDefinedBy}`)
     );
@@ -164,8 +164,8 @@ export class BammCharacteristicInstantiator {
     dataTypeService: DataTypeService
   ): Characteristic {
     const characteristic = new DefaultCharacteristic(
-      metaModelElementInstantiator.bamm.version,
-      metaModelElementInstantiator.bammc.getAspectModelUrn('ResourcePath'),
+      metaModelElementInstantiator.samm.version,
+      metaModelElementInstantiator.sammC.getAspectModelUrn('ResourcePath'),
       'ResourcePath',
       new DefaultScalar(`${dataTypeService.getDataType('anyURI').isDefinedBy}`)
     );
@@ -181,8 +181,8 @@ export class BammCharacteristicInstantiator {
     dataTypeService: DataTypeService
   ): Characteristic {
     const characteristic = new DefaultCharacteristic(
-      metaModelElementInstantiator.bamm.version,
-      metaModelElementInstantiator.bammc.getAspectModelUrn('MimeType'),
+      metaModelElementInstantiator.samm.version,
+      metaModelElementInstantiator.sammC.getAspectModelUrn('MimeType'),
       'MimeType',
       new DefaultScalar(`${dataTypeService.getDataType('string').isDefinedBy}`)
     );

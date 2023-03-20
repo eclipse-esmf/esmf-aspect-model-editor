@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -13,8 +13,7 @@
 
 <div fxLayout="column" *ngIf="metaModelElement?.symbol || !metaModelElement?.isPredefined()">
   <mat-form-field [floatLabel]="getControl('symbol')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="symbol">Symbol</mat-label>
+    <mat-label for="symbol">symbol</mat-label>
     <input [formControl]="getControl('symbol')" matInput name="symbol" />
-    <mat-hint>unit:symbol</mat-hint>
   </mat-form-field>
 </div>

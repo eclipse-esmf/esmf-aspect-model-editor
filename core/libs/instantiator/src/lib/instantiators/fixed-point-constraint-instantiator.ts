@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -27,13 +27,13 @@ export class FixedPointConstraintInstantiator extends ConstraintInstantiator {
       return defaultFixedPointConstraint;
     }
 
-    const bammc = this.metaModelElementInstantiator.bammc;
+    const sammC = this.metaModelElementInstantiator.sammC;
     defaultFixedPointConstraint = new DefaultFixedPointConstraint(null, null, null, null, null);
 
     quads.forEach(quad => {
-      if (bammc.isScaleValueProperty(quad.predicate.value)) {
+      if (sammC.isScaleValueProperty(quad.predicate.value)) {
         defaultFixedPointConstraint.scale = Number(quad.object.value);
-      } else if (bammc.isIntegerValueProperty(quad.predicate.value)) {
+      } else if (sammC.isIntegerValueProperty(quad.predicate.value)) {
         defaultFixedPointConstraint.integer = Number(quad.object.value);
       }
     });
@@ -42,6 +42,6 @@ export class FixedPointConstraintInstantiator extends ConstraintInstantiator {
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.FixedPointConstraint().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.FixedPointConstraint().equals(nameNode);
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -28,7 +28,7 @@ export class EitherCharacteristicInstantiator extends CharacteristicInstantiator
 
     defaultEither = new DefaultEither(null, null, null, null, null);
     for (const quad of quads) {
-      if (this.bammc.isEitherLeftProperty(quad.predicate.value)) {
+      if (this.sammC.isEitherLeftProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.loadCharacteristic(
           quad,
           false,
@@ -37,7 +37,7 @@ export class EitherCharacteristicInstantiator extends CharacteristicInstantiator
         continue;
       }
 
-      if (this.bammc.isEitherRightProperty(quad.predicate.value)) {
+      if (this.sammC.isEitherRightProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.loadCharacteristic(
           quad,
           false,
@@ -52,6 +52,6 @@ export class EitherCharacteristicInstantiator extends CharacteristicInstantiator
   }
 
   public shouldProcess(nameNode: NamedNode): boolean {
-    return this.bammc.EitherCharacteristic().equals(nameNode);
+    return this.sammC.EitherCharacteristic().equals(nameNode);
   }
 }

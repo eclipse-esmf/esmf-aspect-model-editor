@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -19,7 +19,7 @@
 
 <mat-dialog-content class="info-content">
   <section class="left">
-    <p>The Aspect Model Editor is the visual editor for BAMM specific Aspect Models as part of the Nexeed Digital Twin System.</p>
+    <p>The Aspect Model Editor is the visual editor for SAMM specific Aspect Models as part of the Nexeed Digital Twin System.</p>
     <p>
       Please refer to the
       <a href="{{ AMEDocumentationLink }}" target="_blank" rel="noopener">Documentation</a>
@@ -28,7 +28,7 @@
 
     <p>
       Please refer to the
-      <a href="{{ BAMMDocumentationLink }}" target="_blank" rel="noopener">Specification</a>
+      <a href="{{ SAMMDocumentationLink }}" target="_blank" rel="noopener">Specification</a>
       for general help about the Digital Twin System and the Aspect Meta Model.
     </p>
   </section>
@@ -40,7 +40,11 @@
     </p>
     <p>
       <span>BAMM version:</span>
-      <span>{{ config.currentBammVersion }}</span>
+      <span>{{ config.currentSammVersion }}</span>
+    </p>
+    <p>
+      <span>ESMF SDK version:</span>
+      <span>{{ config.sdkVersion }}</span>
     </p>
   </section>
 </mat-dialog-content>

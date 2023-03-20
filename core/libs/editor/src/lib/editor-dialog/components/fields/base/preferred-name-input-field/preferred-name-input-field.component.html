@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -14,11 +14,10 @@
 <mat-form-field
   *ngFor="let locale of metaModelElement?.getAllLocalesPreferredNames()"
   [floatLabel]="getControl('preferredName' + locale)?.disabled ? 'always' : 'auto'"
-  [matTooltip]="isInherited(locale) ?  'This was extended from ' + elementExtends.extendedElement.name : ''"
+  [matTooltip]="isInherited(locale) ? 'This was extended from ' + elementExtends.extendedElement.name : ''"
   [matTooltipPosition]="'left'"
   appearance="fill"
 >
-  <mat-label for="preferredName">Preferred name({{ locale }})</mat-label>
+  <mat-label for="preferredName">preferredName({{ locale }})</mat-label>
   <input matInput [formControl]="getControl('preferredName' + locale)" name="preferredName{{ locale }}" data-cy="preferredName" />
-  <mat-hint>bamm:preferredName</mat-hint>
 </mat-form-field>

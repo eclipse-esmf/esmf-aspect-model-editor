@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -26,14 +26,14 @@ export class SingleEntityInstantiator extends CharacteristicInstantiator {
       return defaultSingleEntity;
     }
 
-    const bamm = this.metaModelElementInstantiator.bamm;
+    const samm = this.metaModelElementInstantiator.samm;
     defaultSingleEntity = new DefaultSingleEntity(null, null, null, null);
     defaultSingleEntity.fileName = this.metaModelElementInstantiator.fileName;
 
     this.metaModelElementInstantiator.initBaseProperties(quads, defaultSingleEntity, this.metaModelElementInstantiator.rdfModel);
 
     quads.forEach(quad => {
-      if (bamm.isDataTypeProperty(quad.predicate.value)) {
+      if (samm.isDataTypeProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getDataType(quad, (entity: Type) => {
           defaultSingleEntity.dataType = entity;
         });
@@ -44,6 +44,6 @@ export class SingleEntityInstantiator extends CharacteristicInstantiator {
   }
 
   shouldProcess(nameNode: NamedNode): boolean {
-    return this.metaModelElementInstantiator.bammc.SingleEntityCharacteristic().equals(nameNode);
+    return this.metaModelElementInstantiator.sammC.SingleEntityCharacteristic().equals(nameNode);
   }
 }

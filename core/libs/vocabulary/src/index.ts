@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './lib/bamm';
-export * from './lib/bammc';
-export * from './lib/bammu';
-export * from './lib/bamme';
+export * from './lib/samm';
+export * from './lib/samm-c';
+export * from './lib/samm-u';
+export * from './lib/samm-e';

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,7 +14,7 @@
 import {DataFactory, Quad} from 'n3';
 import {DefaultAbstractEntity} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {PredefinedEntityInstantiator} from './bamme-predefined-entity-instantiator';
+import {PredefinedEntityInstantiator} from './samm-e-predefined-entity-instantiator';
 
 export class AbstractEntityInstantiator {
   private get cachedFile() {
@@ -29,8 +29,8 @@ export class AbstractEntityInstantiator {
     return this.metaModelElementInstantiator.isIsolated;
   }
 
-  private get bamme() {
-    return this.metaModelElementInstantiator.bamme;
+  private get sammE() {
+    return this.metaModelElementInstantiator.sammE;
   }
 
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
@@ -41,7 +41,7 @@ export class AbstractEntityInstantiator {
       return abstractEntity;
     }
 
-    const bamm = this.metaModelElementInstantiator.bamm;
+    const samm = this.metaModelElementInstantiator.samm;
     const defaultAbstractEntity = new DefaultAbstractEntity(null, null, null, []);
     defaultAbstractEntity.setExternalReference(this.rdfModel.isExternalRef);
     defaultAbstractEntity.fileName = this.metaModelElementInstantiator.fileName;
@@ -49,17 +49,17 @@ export class AbstractEntityInstantiator {
     this.metaModelElementInstantiator.initBaseProperties(quads, defaultAbstractEntity, this.metaModelElementInstantiator.rdfModel);
 
     quads.forEach(quad => {
-      if (bamm.isExtendsProperty(quad.predicate.value)) {
-        defaultAbstractEntity.extendedElement = this.bamme.isTimeSeriesEntity(quad.object.value)
-          ? new PredefinedEntityInstantiator(this.metaModelElementInstantiator).entityInstances[this.bamme.TimeSeriesEntity]()
+      if (samm.isExtendsProperty(quad.predicate.value)) {
+        defaultAbstractEntity.extendedElement = this.sammE.isTimeSeriesEntity(quad.object.value)
+          ? new PredefinedEntityInstantiator(this.metaModelElementInstantiator).entityInstances[this.sammE.TimeSeriesEntity]()
           : this.createAbstractEntity(this.rdfModel.store.getQuads(quad.object, null, null, null));
         return;
       }
 
-      if (bamm.isPropertiesProperty(quad.predicate.value)) {
+      if (samm.isPropertiesProperty(quad.predicate.value)) {
         defaultAbstractEntity.properties = this.metaModelElementInstantiator.getProperties(
           DataFactory.namedNode(quad.subject.value),
-          bamm.PropertiesProperty()
+          samm.PropertiesProperty()
         );
       }
     });

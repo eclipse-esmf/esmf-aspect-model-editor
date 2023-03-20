@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -13,9 +13,8 @@
 
 <div fxLayout="column" [formGroup]="parentForm">
   <mat-form-field [floatLabel]="getControl('value')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="value">Value</mat-label>
+    <mat-label for="value">value</mat-label>
     <input matInput name="value" [formControl]="getControl('value')" data-cy="value" />
-    <mat-hint>bamm:value</mat-hint>
     <mat-error *ngIf="getControl('value').errors?.required">Value is required</mat-error>
   </mat-form-field>
 </div>

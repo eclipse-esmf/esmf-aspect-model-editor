@@ -3,7 +3,7 @@
 [[release-notes]]
 = Release notes
 
-Find the release notes for the Aspect Model Editor at the https://github.com/OpenManufacturingPlatform/sds-aspect-model-editor/releases[GitHub releases overview^, opts=nofollow].
+Find the release notes for the Aspect Model Editor at the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[GitHub releases overview^, opts=nofollow].
 
 ++++
 <style>
