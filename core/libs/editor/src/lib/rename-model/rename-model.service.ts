@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {RdfModel} from '@ame/rdf/utils';
 import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {first} from 'rxjs/operators';
@@ -21,16 +20,7 @@ import {RenameModelComponent} from './rename-model.component';
 export class RenameModelDialogService {
   constructor(private matDialog: MatDialog) {}
 
-  open(namespaces: string[], rdfModel: RdfModel) {
-    return this.matDialog
-      .open(RenameModelComponent, {
-        data: {
-          namespaces,
-          rdfModel,
-        },
-        width: '550px',
-      })
-      .afterClosed()
-      .pipe(first());
+  open() {
+    return this.matDialog.open(RenameModelComponent, {width: '550px'}).afterClosed().pipe(first());
   }
 }

@@ -68,13 +68,16 @@ export class RdfModel {
   }
 
   get absoluteAspectModelFileName(): string {
+    const aspect = this.store.getSubjects(null, this.samm.Aspect(), null)?.[0];
     if (this._absoluteAspectModelFileName) {
+      if (aspect) {
+        return this.nameBasedOnASpect;
+      }
       return this._absoluteAspectModelFileName;
     }
 
-    const aspect = this.store.getSubjects(null, this.samm.Aspect(), null)?.[0];
     if (aspect) {
-      return aspect.value.replace('urn:bamm:', '').replace('#', ':') + '.ttl';
+      return this.nameBasedOnASpect;
     }
 
     if (this.aspectModelFileName) {
@@ -82,6 +85,11 @@ export class RdfModel {
     }
 
     return null;
+  }
+
+  private get nameBasedOnASpect() {
+    const aspect = this.store.getSubjects(null, this.samm.Aspect(), null)?.[0];
+    return aspect ? aspect.value.replace('urn:bamm:', '').replace('#', ':') + '.ttl' : null;
   }
 
   constructor(public store: Store, public dataTypeService: DataTypeService, private prefixes: Prefixes) {
@@ -159,16 +167,6 @@ export class RdfModel {
 
   getLocale(quad: Quad) {
     return quad ? locale.getByTag(quad.object['language']).tag : null;
-  }
-
-  getAbsoluteAspectModelFileName() {
-    const aspect = this.store.getSubjects(null, this.samm.Aspect(), null)?.[0];
-
-    if (aspect) {
-      return aspect.value.replace('urn:bamm:', '').replace('#', ':') + '.ttl';
-    }
-
-    return `${this.getAspectModelUrn().replace('urn:bamm:', '').replace('#', ':')}${this.aspectModelFileName}`;
   }
 
   public resolveRecursiveBlankNodes(uri: string, writer: Writer): Quad[] {

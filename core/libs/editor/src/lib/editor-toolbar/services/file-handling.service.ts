@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ConfirmDialogService, EditorService, ExportWorkspaceComponent, RenameModelDialogService, ZipUploaderComponent} from '@ame/editor';
+import {ConfirmDialogService, EditorService, RenameModelDialogService} from '@ame/editor';
 import {MatDialog} from '@angular/material/dialog';
 import {LoadModelDialogComponent} from '../../load-model-dialog';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
@@ -23,10 +23,6 @@ import {ModelService, RdfService} from '@ame/rdf/services';
 import {ModelApiService} from '@ame/api';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfModel} from '@ame/rdf/utils';
-
-enum InternalErrors {
-  RENAME_ABORT = 'RENAME_ABORT',
-}
 
 @Injectable({
   providedIn: 'root',
@@ -104,25 +100,16 @@ export class FileHandlingService {
 
     this.loadingScreenService.open(loadingScreenOptions);
     return this.modelService.synchronizeModelToRdf().pipe(
-      switchMap(() => {
-        const fileName = this.modelService.getLoadedAspectModel().aspect
-          ? `${this.modelService.getLoadedAspectModel().aspect?.name}.ttl`
-          : this.rdfService.currentRdfModel.aspectModelFileName || 'undefined.ttl';
-
-        if (fileName !== 'undefined.ttl') {
-          return of(fileName);
-        }
-
-        return this.modelApiService
-          .getNamespacesAppendWithFiles()
-          .pipe(switchMap(namespaces => this.openRenameModal(namespaces).pipe(map(result => result?.name || fileName))));
+      map(() => {
+        return this.rdfService.currentRdfModel.aspectModelFileName || 'undefined.ttl';
       }),
-      tap(fileName => {
-        return saveAs(
-          new Blob([this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel)], {
-            type: 'text/turtle;charset=utf-8',
-          }),
-          fileName
+      switchMap(fileName => {
+        const rdfModelTtl = this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel);
+        return this.modelApiService.formatModel(rdfModelTtl).pipe(
+          tap(formattedModel => {
+            console.log(formattedModel);
+            saveAs(new Blob([formattedModel], {type: 'text/turtle;charset=utf-8'}), fileName);
+          })
         );
       }),
       catchError(error => {
@@ -141,30 +128,24 @@ export class FileHandlingService {
   saveAspectModelToWorkspace(): Observable<any> {
     return this.modelService.synchronizeModelToRdf().pipe(
       switchMap(() => this.modelApiService.getNamespacesAppendWithFiles()),
-      switchMap((namespaces: string[]) =>
-        this.openRenameModal(namespaces).pipe(
-          switchMap(result => (result ? of(result) : throwError(() => ({type: InternalErrors.RENAME_ABORT}))))
-        )
-      ),
-      switchMap((result: {name: string; namespaces: string[]}) => this.openConfirmDialog(result.namespaces)),
-      switchMap(() => {
+      switchMap((namespaces: string[]) => this.openConfirmDialog(namespaces)),
+      switchMap(result => {
+        if (result === false) {
+          return of(null);
+        }
+
         this.editorService.updateLastSavedRdf(
           false,
           this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel),
           new Date()
         );
-        return this.editorService.saveModel();
-      }),
-      tap(rdfModel => {
-        if (rdfModel instanceof RdfModel) {
-          this.namespaceCacheService.getCurrentCachedFile().fileName = rdfModel.aspectModelFileName;
-        }
-      }),
-      catchError(error => {
-        if (error?.type === InternalErrors.RENAME_ABORT) {
-          this.logService.logInfo('Aspect-less file: Rename abort');
-        }
-        return of(null);
+        return this.editorService.saveModel().pipe(
+          tap(rdfModel => {
+            if (rdfModel instanceof RdfModel) {
+              this.namespaceCacheService.getCurrentCachedFile().fileName = rdfModel.aspectModelFileName;
+            }
+          })
+        );
       })
     );
   }
@@ -186,38 +167,14 @@ export class FileHandlingService {
     return of(null);
   }
 
-  private openRenameModal(namespaces: string[]) {
-    const currentRdfModel = this.rdfService.currentRdfModel;
-    if (currentRdfModel.hasAspect || currentRdfModel.aspectModelFileName) {
-      return of({namespaces});
-    }
-
-    return this.renameDialogService.open(namespaces, currentRdfModel).pipe(
-      map(result => {
-        if (!result) {
-          return null;
-        }
-
-        currentRdfModel.aspectModelFileName = result.name;
-        // Resetting absolute file name to be reconstructed on save
-        currentRdfModel.absoluteAspectModelFileName = '';
-        return {namespaces, ...(result || {})};
-      })
-    );
-  }
-
-  openExportDialog(): Observable<any> {
-    return this.matDialog.open(ExportWorkspaceComponent, {disableClose: true}).afterClosed().pipe(first());
-  }
-
   addFileToNamespace(file: File) {
     const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = () => {
       this.modelApiService
-        .saveModel(reader.result.toString())
+        .formatModel(reader.result.toString())
         .pipe(
-          first(),
+          switchMap(formattedModel => this.modelApiService.saveModel(formattedModel)),
           catchError(error => {
             this.logService.logError(`'Error adding file to namespaces. ${JSON.stringify(error)}.`);
             this.notificationsService.error({title: 'Error adding file to namespaces'});
@@ -231,10 +188,6 @@ export class FileHandlingService {
           },
         });
     };
-  }
-
-  uploadZip(file: File) {
-    this.matDialog.open(ZipUploaderComponent, {data: {file, name: file.name}, disableClose: true});
   }
 
   validateFile(loadingScreenOptions: LoadingScreenOptions, callback?: Function) {

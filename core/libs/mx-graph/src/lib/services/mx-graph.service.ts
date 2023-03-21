@@ -462,7 +462,7 @@ export class MxGraphService {
    * @returns array with all available cells(mx elements)
    */
   getAllCells(): mxgraph.mxCell[] {
-    return this.mxGraphAttributeService.graph.getChildVertices(this.mxGraphAttributeService.graph.getDefaultParent());
+    return this.mxGraphAttributeService.graph?.getChildVertices?.(this.mxGraphAttributeService.graph.getDefaultParent());
   }
 
   /**

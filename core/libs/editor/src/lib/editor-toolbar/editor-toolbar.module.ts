@@ -20,13 +20,10 @@ import {LoadModelDialogModule} from '../load-model-dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
   DocumentComponent,
-  ExportWorkspaceComponent,
   GenerateOpenApiComponent,
   LanguageSelectorModalComponent,
   SearchBarComponent,
   ThemeSwitcherComponent,
-  WorkspaceSummaryComponent,
-  ZipUploaderComponent,
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -47,6 +44,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {GenerateDocumentationComponent} from './components/generate-documentation/generate-documentation.component';
 import {ConnectWithDialogModule} from '../connect-with-dialog/connect-with-dialog.module';
 import {MatSelectModule} from '@angular/material/select';
+import {NamespaceManagerModule} from '@ame/namespace-manager';
 
 @NgModule({
   imports: [
@@ -75,13 +73,11 @@ import {MatSelectModule} from '@angular/material/select';
     MatProgressSpinnerModule,
     ReactiveFormsModule,
     MatSelectModule,
+    NamespaceManagerModule,
   ],
   declarations: [
     EditorToolbarComponent,
-    ExportWorkspaceComponent,
-    WorkspaceSummaryComponent,
     SearchBarComponent,
-    ZipUploaderComponent,
     DocumentComponent,
     NotificationsComponent,
     ThemeSwitcherComponent,

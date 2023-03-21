@@ -308,7 +308,9 @@ export class EditorService {
       tap((aspect: Aspect) => {
         this.removeOldGraph();
         this.initializeNewGraph(aspect);
-        this.titleService.setTitle(`${namespaceFileName || aspect?.aspectModelUrn}.ttl - Aspect Model Editor`);
+        this.titleService.setTitle(
+          `${aspect ? '[Aspect' : '[Shared'} Model] ${namespaceFileName || aspect?.aspectModelUrn} - Aspect Model Editor`
+        );
       }),
       catchError(error => {
         this.logService.logError('Error on loading aspect model', error);
@@ -386,7 +388,6 @@ export class EditorService {
             return;
           }
           newInstance = DefaultAspect.createInstance();
-          this.modelService.addAspect(newInstance);
           break;
         case 'property':
           newInstance = DefaultProperty.createInstance();
@@ -421,6 +422,34 @@ export class EditorService {
         default:
           return;
       }
+
+      if (newInstance instanceof DefaultAspect) {
+        this.confirmDialogService
+          .open({
+            phrases: [
+              'You are about to create an Aspect which will transform this Shared Model into an Aspect Model.',
+              'The current name of the Model will be replaced by the name of the Aspect.',
+            ],
+            title: 'Create new Aspect',
+            closeButtonText: 'Cancel',
+            okButtonText: 'Create Aspect',
+          })
+          .subscribe(confirmed => {
+            if (!confirmed) {
+              return;
+            }
+            this.modelService.addAspect(newInstance);
+            const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(newInstance);
+            this.rdfService.currentRdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
+            metaModelElement ? this.mxGraphService.renderModelElement(metaModelElement, [], x, y) : this.openAlertBox();
+
+            this.titleService.setTitle(
+              `[Aspect Model] ${this.rdfService.currentRdfModel.absoluteAspectModelFileName} - Aspect Model Editor`
+            );
+          });
+        return;
+      }
+
       const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(newInstance);
       metaModelElement ? this.mxGraphService.renderModelElement(metaModelElement, [], x, y) : this.openAlertBox();
     } else {

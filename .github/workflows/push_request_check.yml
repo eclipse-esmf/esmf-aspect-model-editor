@@ -2,7 +2,7 @@ name: Check New Pull Request
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
     branches: [ '**' ]
 

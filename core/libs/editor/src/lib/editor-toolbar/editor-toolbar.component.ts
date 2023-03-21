@@ -30,6 +30,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
 import {mxgraph} from 'mxgraph-factory';
 import {ModelService} from '@ame/rdf/services';
+import {NamespacesManagerService} from '@ame/namespace-manager';
 
 @Component({
   selector: 'ame-editor-toolbar',
@@ -67,7 +68,8 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private namespaceManagerService: NamespacesManagerService
   ) {}
 
   ngOnInit(): void {
@@ -140,11 +142,14 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   openExportDialog() {
-    this.fileHandlingService.openExportDialog().subscribe();
+    this.namespaceManagerService.exportNamespaces();
   }
 
   addFileToNamespace(event: any) {
-    this.validateFile(this.onAddFileToNamespace.bind(this, event.target.files[0]));
+    this.validateFile(() => {
+      this.onAddFileToNamespace(event.target.files[0]);
+      event.target.value = '';
+    });
   }
 
   onAddFileToNamespace(file: File) {
@@ -161,7 +166,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
       return;
     }
 
-    this.fileHandlingService.uploadZip(file);
+    this.namespaceManagerService.importNamespaces(file).subscribe();
     event.target.value = '';
   }
 

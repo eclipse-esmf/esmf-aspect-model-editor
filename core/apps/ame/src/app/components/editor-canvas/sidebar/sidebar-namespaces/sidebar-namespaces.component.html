@@ -14,7 +14,7 @@
 <div class="container">
   <div *ngIf="namespaces?.length > 0" class="namespaces">
     <div class="title">Workspace</div>
-    <p *ngIf="!hasCurrentFile" class="description">To see your current Aspect Model save to namespace</p>
+    <p *ngIf="!hasCurrentFile" class="description">To see your current Model in the below list, save it to workspace.</p>
     <button
       *ngIf="isWorkspaceOutdated"
       (click)="migrateWorkspace()"
@@ -82,5 +82,15 @@
         </ng-container>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="!namespaces?.length" class="no-namespaces">
+    <p class="no-namespaces__title">No namespaces to show</p>
+    <p class="no-namespaces__description">
+      The namespaces can be imported either by clicking the plus button above then import namespaces or click the button bellow
+    </p>
+    <button (click)="zipInput.click()" mat-stroked-button color="primary">Import namespaces</button>
+
+    <input style="display: none" type="file" (change)="importNamespace($event)" #zipInput accept=".zip" />
   </div>
 </div>

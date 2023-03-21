@@ -71,8 +71,7 @@ export class MxGraphSetupVisitor extends DefaultAspectModelVisitor<mxCell, mxCel
   visitEntity(entity: DefaultEntity, context: mxCell): mxCell {
     if (this.shapes.get(entity.name)) {
       const cellTmp = this.shapes.get(entity.name);
-      // Todo It may be that characteristics are not connected.
-      if (!this.currentCachedFile.getIsolatedElement(entity.aspectModelUrn)) {
+      if (context) {
         this.mxGraphService.assignToParent(cellTmp, context);
       }
       return;

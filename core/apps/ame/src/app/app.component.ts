@@ -24,6 +24,7 @@ import {StartLoadModalComponent} from './components/start-load-modal/start-load-
 import {ConfigurationService} from '@ame/settings-dialog';
 import {ThemeService} from '@ame/mx-graph';
 import {MigratorService} from '@ame/migrator';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'ame-root',
@@ -45,7 +46,8 @@ export class AppComponent implements OnInit {
     private electronTunnelService: ElectronTunnelService,
     private configurationService: ConfigurationService,
     private themeService: ThemeService,
-    private migratorService: MigratorService
+    private migratorService: MigratorService,
+    private router: Router
   ) {
     this.domainModelToRdf.listenForStoreUpdates();
   }
@@ -63,6 +65,7 @@ export class AppComponent implements OnInit {
     this.migratorService.startMigrating().subscribe(() => {
       this.startApplication();
       this.editorService.refreshSidebarNamespaces();
+      this.router.navigate([{outlets: {migrator: null, 'export-namespaces': null, 'import-namespaces': null}}]);
     });
   }
 

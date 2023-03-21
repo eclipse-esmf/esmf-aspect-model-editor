@@ -43,6 +43,10 @@ export const SELECTOR_notificationsClearButton = '[data-cy="clear-notifications"
 export const SELECTOR_alertRightButton = '[data-cy="alert-right-btn"]';
 export const SELECTOR_alertLeftButton = '[data-cy="alert-left-btn"]';
 
+// Rename shared model Modal
+export const FIELD_renameModelInput = '[data-cy="file-rename"]';
+export const BUTTON_renameModelConfirm = '[data-cy="file-rename-confirm"]';
+
 // Loading screen
 export const SELECTOR_loadingCloseButton = '[data-cy="close-loading-modal"]';
 

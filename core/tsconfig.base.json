@@ -28,6 +28,7 @@
       "@ame/aspect-exporter": ["libs/aspect-exporter/src/index.ts"],
       "@ame/cache": ["libs/cache/src/index.ts"],
       "@ame/connection": ["libs/connection/src/index.ts"],
+      "@ame/namespace-manager": ["libs/namespace-manager/src/index.ts"],
       "@ame/editor": ["libs/editor/src/index.ts"],
       "@ame/instantiator": ["libs/instantiator/src/index.ts"],
       "@ame/meta-model": ["libs/meta-model/src/index.ts"],

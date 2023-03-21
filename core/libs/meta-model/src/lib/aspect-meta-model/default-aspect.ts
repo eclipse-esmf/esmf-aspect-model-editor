@@ -32,7 +32,7 @@ export class DefaultAspect extends Base implements Aspect {
   }
 
   static createInstance() {
-    return new DefaultAspect(null, null, 'aspect');
+    return new DefaultAspect(null, null, 'Aspect');
   }
 
   constructor(

@@ -1,0 +1,34 @@
+<!--
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<h2 mat-dialog-title>Export workspace</h2>
+<p>Please select the namespace that you would like to export as an Aspect Model Package.</p>
+
+<mat-dialog-content class="namespaces">
+  <section class="namespace-list">
+    <h4 class="column-title">Namespaces</h4>
+
+    <mat-checkbox
+      *ngFor="let item of namespaces | keyvalue"
+      [value]="item.key"
+      (change)="toggleNamespace($event, item.key)"
+      class="namespace"
+      >{{ item.key }}</mat-checkbox
+    >
+  </section>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button mat-dialog-close>Cancel</button>
+  <button [disabled]="!selectedNamespaces.length" (click)="validate()" mat-flat-button color="primary">Next</button>
+</mat-dialog-actions>
