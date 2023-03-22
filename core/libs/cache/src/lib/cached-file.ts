@@ -207,6 +207,7 @@ export class CachedFile {
       newCachedElements.set(newKey, element);
     });
     this.cachedElements = newCachedElements;
+    this.namespace = this.namespace.replace(oldValue, newValue);
   }
 
   addAnonymousElement(modelElement: BaseMetaModelElement, name?: string) {

@@ -13,6 +13,7 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ElementModel} from '@ame/shared';
+import {ModelService} from '@ame/rdf/services';
 
 @Component({
   selector: 'ame-sidebar-new-element',
@@ -22,8 +23,13 @@ import {ElementModel} from '@ame/shared';
 export class SidebarNewElementComponent implements OnInit {
   @Output()
   public openWorkspaces: EventEmitter<void> = new EventEmitter();
-
   public elements: ElementModel[];
+
+  constructor(private modelService: ModelService) {}
+
+  public isDisplayed(element: ElementModel): boolean {
+    return !(this.modelService.getLoadedAspectModel().aspect && element.type === 'aspect');
+  }
 
   public ngOnInit() {
     this.elements = [

@@ -14,6 +14,8 @@
 /// <reference types="Cypress" />
 
 import {
+  BUTTON_renameModelConfirm,
+  FIELD_renameModelInput,
   GENERATION_tbDownloadDoc,
   GENERATION_tbGenerateOpenApiButton,
   GENERATION_tbOutputButton,
@@ -70,10 +72,16 @@ describe('Test generation and download from valid Aspect Model', () => {
   });
 
   it('Cannot generate valid shared Aspect Model', () => {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
+    });
+
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.getHTMLCell('AspectDefault').click({force: true}))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
+      .then(() => cy.get(FIELD_renameModelInput).type('sharedModel'))
+      .then(() => cy.get(BUTTON_renameModelConfirm).click().wait(500))
       .then(() => cy.get(SELECTOR_tbGenerateDocumentButton).should('be.disabled'))
       .then(() => cy.get(SELECTOR_tbGenerateDocumentButton).should('be.disabled'));
   });

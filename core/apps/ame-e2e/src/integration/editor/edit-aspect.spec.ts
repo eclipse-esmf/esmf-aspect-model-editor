@@ -13,7 +13,13 @@
 
 /// <reference types="Cypress" />
 
-import {FIELD_name, SELECTOR_editorSaveButton, SELECTOR_tbDeleteButton} from '../../support/constants';
+import {
+  BUTTON_renameModelConfirm,
+  FIELD_name,
+  FIELD_renameModelInput,
+  SELECTOR_editorSaveButton,
+  SELECTOR_tbDeleteButton,
+} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 import {Aspect} from '@ame/meta-model';
 
@@ -39,10 +45,6 @@ describe('Test editing Aspect', () => {
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain(':NewAspect');
           expect(rdf).to.contain(':NewAspect a bamm:Aspect');
-          cy.clickShape('NewAspect');
-          cy.getAspect().then((aspect: Aspect) => {
-            expect(aspect.name).to.equal('NewAspect');
-          });
         })
       );
   });
@@ -53,17 +55,18 @@ describe('Test editing Aspect', () => {
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() => cy.clickShape('property3'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
-      .then(() => {
-        cy.getAspect().then((aspect: Aspect) => expect(aspect.properties).to.have.length(2));
-        cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('bamm:properties (:property2 :property4)'));
-      });
+      .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('bamm:properties (:property2 :property4)')));
   });
 
   it('can delete existing aspect', () => {
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
+    });
     cy.shapeExists('NewAspect')
       .then(() => cy.clickShape('NewAspect'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
-      .then(() => cy.getAspect().then((aspect: Aspect) => assert.isNull(aspect)))
+      .then(() => cy.get(FIELD_renameModelInput).type('sharedModel'))
+      .then(() => cy.get(BUTTON_renameModelConfirm).click().wait(500))
       .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).not.to.contain('NewAspect')));
   });
 });

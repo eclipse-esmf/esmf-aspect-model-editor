@@ -126,6 +126,27 @@
   }
 }
 
+.no-namespaces {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 1rem;
+
+  &__title {
+    font-size: 18px;
+  }
+
+  &__description {
+    opacity: 0.75;
+    line-height: 1.75;
+    margin-top: 10px;
+  }
+
+  button {
+    margin-top: 10px;
+  }
+}
+
 .selected {
   font-weight: bold;
 

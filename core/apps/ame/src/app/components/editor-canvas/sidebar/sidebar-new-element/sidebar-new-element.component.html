@@ -21,5 +21,7 @@
       <div class="description">The root of all locally available namespaces</div>
     </div>
   </div>
-  <ame-sidebar-element *ngFor="let element of elements" [element]="element"> </ame-sidebar-element>
+  <ng-container *ngFor="let element of elements">
+    <ame-sidebar-element *ngIf="isDisplayed(element)" [element]="element"> </ame-sidebar-element>
+  </ng-container>
 </div>

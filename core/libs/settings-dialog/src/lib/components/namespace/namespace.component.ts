@@ -14,7 +14,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Aspect} from '@ame/meta-model';
 import {GeneralConfig} from '@ame/shared';
 import {NamespaceConfirmationModalComponent} from '../namespace-confirmation-modal/namespace-confirmation-modal.component';
 import {Samm} from '@ame/vocabulary';
@@ -45,66 +44,60 @@ export class NamespaceComponent implements OnInit {
 
   ngOnInit() {
     this.predefinedNamespaces = [];
+    this.loadedRdfModel = this.modelService.getLoadedAspectModel().rdfModel;
+    const [namespace, version, modelName] = this.loadedRdfModel.absoluteAspectModelFileName.replace('.ttl', '').split(':');
 
-    const loadedAspectModel = this.modelService.getLoadedAspectModel();
-    const loadedAspect = loadedAspectModel.aspect;
-    this.loadedRdfModel = loadedAspectModel.rdfModel;
-    if (loadedAspect) {
-      const namespaceAspectParts = loadedAspect.aspectModelUrn.split(':');
-      this.aspectVersionInitialValue = namespaceAspectParts[3].split('#')[0];
-      this.aspectUriInitialValue = `${namespaceAspectParts[2]}`;
+    this.aspectUriInitialValue = namespace;
+    this.aspectVersionInitialValue = version;
 
-      this.initForm(loadedAspect, this.aspectVersionInitialValue);
-
-      const namespaces = loadedAspectModel.rdfModel.getNamespaces();
-
-      Object.keys(namespaces).forEach(key => {
-        if (loadedAspect.aspectModelUrn === `${namespaces[key]}${loadedAspect.name}`) {
-          return;
-        }
-        if (!Samm.isDefaultNamespaceUri(namespaces[key])) {
-          return;
-        }
-        if (namespaces[key].startsWith(Samm.XSD_URI)) {
-          this.predefinedNamespaces.push({
-            name: 'xsd',
-            value: Samm.XSD_URI,
-            version: '2001',
-          });
-          return;
-        }
-        const namespaceParts = namespaces[key].split(':');
-        if (namespaces[key].startsWith(Samm.RDF_URI) && namespaceParts.length < 5) {
-          this.predefinedNamespaces.push({
-            name: 'rdf',
-            value: Samm.RDF_URI,
-            version: '1999',
-          });
-          return;
-        }
-        if (namespaces[key].startsWith(Samm.RDFS_URI) && namespaceParts.length < 5) {
-          this.predefinedNamespaces.push({
-            name: 'rdfs',
-            value: Samm.RDFS_URI,
-            version: '2000',
-          });
-          return;
-        }
-        this.predefinedNamespaces.push({
-          name: `${namespaceParts[3]}`,
-          value: `${namespaceParts[0]}:${namespaceParts[1]}:${namespaceParts[2]}`,
-          version: `${namespaceParts[4].replace('#', '')}`,
-        });
-      });
-    }
-  }
-
-  private initForm(loadedAspect: Aspect, aspectVersion: string): void {
     this.namespaceForm = new FormGroup({
-      aspectUri: new FormControl(this.aspectUriInitialValue, Validators.required),
-      aspectName: new FormControl({value: `${loadedAspect.name}`, disabled: true}),
-      aspectVersion: new FormControl(aspectVersion),
+      aspectUri: new FormControl(namespace, Validators.required),
+      aspectName: new FormControl({value: modelName, disabled: true}),
+      aspectVersion: new FormControl(version),
       sammVersion: new FormControl({value: GeneralConfig.sammVersion, disabled: true}),
+    });
+
+    const namespaces = this.loadedRdfModel.getNamespaces();
+
+    Object.keys(namespaces).forEach(key => {
+      if (key === '') {
+        return;
+      }
+
+      if (!Samm.isDefaultNamespaceUri(namespaces[key])) {
+        return;
+      }
+
+      if (namespaces[key].startsWith(Samm.XSD_URI)) {
+        this.predefinedNamespaces.push({
+          name: 'xsd',
+          value: Samm.XSD_URI,
+          version: '2001',
+        });
+        return;
+      }
+      const namespaceParts = namespaces[key].split(':');
+      if (namespaces[key].startsWith(Samm.RDF_URI) && namespaceParts.length < 5) {
+        this.predefinedNamespaces.push({
+          name: 'rdf',
+          value: Samm.RDF_URI,
+          version: '1999',
+        });
+        return;
+      }
+      if (namespaces[key].startsWith(Samm.RDFS_URI) && namespaceParts.length < 5) {
+        this.predefinedNamespaces.push({
+          name: 'rdfs',
+          value: Samm.RDFS_URI,
+          version: '2000',
+        });
+        return;
+      }
+      this.predefinedNamespaces.push({
+        name: `${namespaceParts[3]}`,
+        value: `${namespaceParts[0]}:${namespaceParts[1]}:${namespaceParts[2]}`,
+        version: `${namespaceParts[4].replace('#', '')}`,
+      });
     });
   }
 

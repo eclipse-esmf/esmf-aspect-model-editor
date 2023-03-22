@@ -11,13 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './export-workspace/export-workspace.component';
 export * from './generate-open-api/generate-open-api.component';
 export * from './generate-documentation/generate-documentation.component';
 export * from './search-bar/search-bar.component';
-export * from './zip-uploader/zip-uploader.component';
-export * from './zip-uploader/zip-uploader.service';
-export * from './workspace-summary/workspace-summary.component';
 export * from './help/document.component';
 export * from './theme-switcher/theme-switcher.component';
 export * from './language-sector-modal/language-selector-modal.component';

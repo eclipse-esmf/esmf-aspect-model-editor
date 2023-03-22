@@ -12,25 +12,36 @@
   -->
 
 <div class="dialog-header">
-  <h3 matDialogTitle class="dialog-title">Name the file</h3>
+  <h3 matDialogTitle class="dialog-title">Declare name of Shared Model</h3>
   <button class="close-button" mat-icon-button tabindex="-1" (click)="closeAndGiveResult(false)">
     <mat-icon>close</mat-icon>
   </button>
 </div>
 
-<mat-dialog-content>
-  <p>Since your model does not have an Aspect, you need to give a name to your file.</p>
+<mat-dialog-content *ngIf="fileNameControl">
+  <p>
+    You are about to remove the Aspect which will transform this Aspect Model into a Shared Model. Please choose a name for this Shared
+    Model.
+  </p>
 
   <mat-form-field>
-    <input [formControl]="fileNameControl" name="file-name" matInput placeholder="File name" />
+    <input [formControl]="fileNameControl" name="file-name" matInput placeholder="Name" data-cy="file-rename" />
     <span matSuffix>.ttl</span>
     <mat-error *ngIf="fileNameControl.getError('required')">This field is required</mat-error>
-    <mat-error *ngIf="fileNameControl.getError('pattern')">No special characters</mat-error>
-    <mat-error *ngIf="fileNameControl.getError('sameNamespace')">This file already exists in your namespace</mat-error>
+    <mat-error *ngIf="fileNameControl.getError('pattern')">The name cam have only letters and numbers</mat-error>
+    <mat-error *ngIf="fileNameControl.getError('sameFile')">This file already exists in your namespace</mat-error>
   </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-raised-button (click)="closeAndGiveResult(false)">Close</button>
-  <button mat-raised-button color="primary" (click)="closeAndGiveResult(true)">Save name</button>
+  <button mat-flat-button (click)="closeAndGiveResult(false)">Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    data-cy="file-rename-confirm"
+    [disabled]="!fileNameControl?.valid"
+    (click)="closeAndGiveResult(true)"
+  >
+    Remove Aspect
+  </button>
 </mat-dialog-actions>

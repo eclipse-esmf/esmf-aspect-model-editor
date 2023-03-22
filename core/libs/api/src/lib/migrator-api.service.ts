@@ -74,8 +74,9 @@ export class MigratorApiService {
   }
 
   public rewriteFile(payload: any) {
-    return this.modelApiService
-      .saveModel(payload.serializedUpdatedModel, payload.rdfModel.aspectUrn)
-      .pipe(switchMap(() => this.modelApiService.deleteNamespace(payload.oldNamespaceFile)));
+    return this.modelApiService.formatModel(payload.serializedUpdatedModel).pipe(
+      switchMap(formattedModel => this.modelApiService.saveModel(formattedModel, payload.rdfModel.aspectUrn)),
+      switchMap(() => this.modelApiService.deleteNamespace(payload.oldNamespaceFile))
+    );
   }
 }

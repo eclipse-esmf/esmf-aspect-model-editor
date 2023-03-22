@@ -16,6 +16,7 @@ import {Component, EventEmitter, Inject, Input, OnChanges, Output, SimpleChanges
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
 import {ExporterHelper, MigratorService} from '@ame/migrator';
+import {NamespacesManagerService} from '@ame/namespace-manager';
 
 @Component({
   selector: 'ame-sidebar-namespaces',
@@ -53,6 +54,7 @@ export class SidebarNamespacesComponent implements OnChanges {
     public namespaceService: NamespacesCacheService,
     private rdfService: RdfService,
     private migratorService: MigratorService,
+    private namespaceManagerService: NamespacesManagerService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
@@ -123,12 +125,23 @@ export class SidebarNamespacesComponent implements OnChanges {
     this.loadNamespaceFile.emit(`${namespace.name}:${namespaceFile}`);
   }
 
+  public importNamespace(event: any) {
+    const file = event?.target?.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.namespaceManagerService.importNamespaces(file).subscribe();
+    event.target.value = '';
+  }
+
   private mergeRdfWithNamespaces() {
     for (const namespace of this.namespaces) {
       for (const file of namespace.files) {
         const rdfModel = this.rdfService.externalRdfModels.find(rdf => {
           const mainPrefix = rdf.getPrefixes()[''];
-          return rdf.aspectModelFileName === file && mainPrefix?.substring(0, mainPrefix.length - 1)?.endsWith(namespace.name);
+          return rdf.absoluteAspectModelFileName === `${mainPrefix.replace('urn:bamm:', '').replace('#', '')}:${file}`;
         });
 
         if (!rdfModel && !this.isCurrentFile(namespace.name, file)) {

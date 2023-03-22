@@ -24,6 +24,7 @@
     "libs/aspect-exporter/src/**/*.ts",
     "libs/cache/src/**/*.ts",
     "libs/connection/src/**/*.ts",
+    "libs/namespace-manager/src/**/*.ts",
     "libs/editor/src/**/*.ts",
     "libs/instantiator/src/**/*.ts",
     "libs/meta-model/src/**/*.ts",

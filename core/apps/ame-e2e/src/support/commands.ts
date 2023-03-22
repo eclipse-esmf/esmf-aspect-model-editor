@@ -407,6 +407,10 @@ Cypress.Commands.add('shapesConnected', (sourceShapeName: string, targetShapeNam
 
 Cypress.Commands.add('startModelling', () => {
   cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+
+  // bypass format request
+  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+
   return cy
     .then(() => cy.get(SELECTOR_tbLoadButton).click({force: true}))
     .then(() => cy.get('[data-cy="create-model"]').click({force: true}))

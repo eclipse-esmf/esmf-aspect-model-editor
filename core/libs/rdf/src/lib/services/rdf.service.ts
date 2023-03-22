@@ -144,9 +144,10 @@ export class RdfService {
 
   saveModel(rdfModel: RdfModel): Observable<RdfModel> {
     const rdfContent = this.serializeModel(rdfModel);
-    return this.modelApiService
-      .saveModel(rdfContent, rdfModel.absoluteAspectModelFileName)
-      .pipe(switchMap(() => this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.aspectModelFileName, rdfContent))));
+    return this.modelApiService.formatModel(rdfContent).pipe(
+      switchMap(formattedModel => this.modelApiService.saveModel(formattedModel, rdfModel.absoluteAspectModelFileName)),
+      switchMap(() => this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.aspectModelFileName, rdfContent)))
+    );
   }
 
   loadModelLatest(): Observable<RdfModel> {

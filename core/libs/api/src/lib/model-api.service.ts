@@ -76,6 +76,14 @@ export class ModelApiService {
     );
   }
 
+  formatModel(rdfContent: string): Observable<string> {
+    const headers = new HttpHeaderBuilder().withContentTypeRdfTurtle().build();
+    return this.http.post(`${this.serviceUrl}${this.api.models}/format`, rdfContent, {headers, responseType: 'text'}).pipe(
+      timeout(this.requestTimeout),
+      catchError(res => throwError(() => res))
+    );
+  }
+
   uploadZip(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('zipFile', file);

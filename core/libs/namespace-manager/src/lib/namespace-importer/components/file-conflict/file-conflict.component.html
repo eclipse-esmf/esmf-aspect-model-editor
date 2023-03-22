@@ -1,0 +1,30 @@
+<!--
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<h2 mat-dialog-title class="properties-title">Namespace conflict</h2>
+<p>The following namespace(s) already exist. Please choose whether you want to keep the existing or replace.</p>
+
+<mat-dialog-content>
+  <div *ngFor="let namespace of namespacesToReplace" class="namespace">
+    <span class="namespace-name">{{ namespace }}</span>
+    <mat-button-toggle-group value="replace">
+      <mat-button-toggle value="keep" (click)="keepNamespace(namespace)">Keep</mat-button-toggle>
+      <mat-button-toggle value="replace" (click)="replaceNamespace(namespace)">Replace</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button *ngIf="conflictFiles.replace?.length" (click)="goToImport()">Next</button>
+</mat-dialog-actions>

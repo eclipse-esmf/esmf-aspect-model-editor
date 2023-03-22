@@ -228,6 +228,28 @@
         }
       }
     },
+    "namespace-manager": {
+      "projectType": "library",
+      "root": "libs/namespace-manager",
+      "sourceRoot": "libs/namespace-manager/src",
+      "prefix": "ame",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/namespace-manager"],
+          "options": {
+            "jestConfig": "libs/namespace-manager/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/namespace-manager/src/**/*.ts", "libs/namespace-manager/src/**/*.html"]
+          }
+        }
+      }
+    },
     "editor": {
       "projectType": "library",
       "root": "libs/editor",

@@ -25,16 +25,10 @@ import {
 import {cyHelp} from '../../support/helpers';
 
 describe('Test drag and drop', () => {
-  it('can add new Aspect', () => {
+  it('can add new Property', () => {
     cy.visitDefault();
-    cy.startModelling().then(() =>
-      cy.dragElement(SELECTOR_ecAspect, 350, 300).then(() => {
-        assert(cy.contains('.toast-warning', 'An AspectModel can contain only one Aspect element.'));
-      })
-    );
+    cy.startModelling().then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300).then(() => cy.clickShape('property2')));
   });
-
-  it('can add new Property', () => cy.dragElement(SELECTOR_ecProperty, 100, 300).then(() => cy.clickShape('property2')));
 
   it('can add new Operation', () => cy.dragElement(SELECTOR_ecOperation, 350, 300).then(() => cy.clickShape('Characteristic1')));
 
