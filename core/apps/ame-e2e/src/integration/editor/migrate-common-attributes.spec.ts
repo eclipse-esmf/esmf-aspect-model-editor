@@ -48,11 +48,11 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm:Characteristic;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>.'
+          ':Characteristic1 a samm:Characteristic;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>.'
         )
       );
   });
@@ -65,11 +65,11 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:Code;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>.'
+          ':Characteristic1 a samm-c:Code;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>.'
         )
       );
   });
@@ -92,12 +92,12 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:Collection;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>;\n' +
-            '    bamm-c:elementCharacteristic :Characteristic2.'
+          ':Characteristic1 a samm-c:Collection;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>;\n' +
+            '    samm-c:elementCharacteristic :Characteristic2.'
         );
       });
   });
@@ -110,12 +110,12 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:List;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>;\n' +
-            '    bamm-c:elementCharacteristic :Characteristic2.'
+          ':Characteristic1 a samm-c:List;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>;\n' +
+            '    samm-c:elementCharacteristic :Characteristic2.'
         )
       );
   });
@@ -128,12 +128,12 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:Set;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>;\n' +
-            '    bamm-c:elementCharacteristic :Characteristic2.'
+          ':Characteristic1 a samm-c:Set;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>;\n' +
+            '    samm-c:elementCharacteristic :Characteristic2.'
         )
       );
   });
@@ -146,12 +146,12 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:SortedSet;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>;\n' +
-            '    bamm-c:elementCharacteristic :Characteristic2.'
+          ':Characteristic1 a samm-c:SortedSet;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>;\n' +
+            '    samm-c:elementCharacteristic :Characteristic2.'
         )
       );
   });
@@ -164,12 +164,12 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:TimeSeries;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>;\n' +
-            '    bamm-c:elementCharacteristic :Characteristic2.\n'
+          ':Characteristic1 a samm-c:TimeSeries;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>;\n' +
+            '    samm-c:elementCharacteristic :Characteristic2.\n'
         )
       );
   });
@@ -183,12 +183,12 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:Enumeration;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>;\n' +
-            '    bamm-c:values ("1" "2" "a" "b" "3" "4").'
+          ':Characteristic1 a samm-c:Enumeration;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>;\n' +
+            '    samm-c:values ("1" "2" "a" "b" "3" "4").'
         );
       });
   });
@@ -202,13 +202,13 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:State;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>;\n' +
-            '    bamm-c:values ("1" "2" "a" "b" "3" "4");\n' +
-            '    bamm-c:defaultValue "testState".'
+          ':Characteristic1 a samm-c:State;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>;\n' +
+            '    samm-c:values ("1" "2" "a" "b" "3" "4");\n' +
+            '    samm-c:defaultValue "testState".'
         );
       });
   });
@@ -222,12 +222,12 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:Duration;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>;\n' +
-            '    bamm-c:unit unit:commonYear.'
+          ':Characteristic1 a samm-c:Duration;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>;\n' +
+            '    samm-c:unit unit:commonYear.'
         )
       );
   });
@@ -243,12 +243,12 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:Measurement;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>;\n' +
-            '    bamm-c:unit unit:ampere.'
+          ':Characteristic1 a samm-c:Measurement;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>;\n' +
+            '    samm-c:unit unit:ampere.'
         )
       );
   });
@@ -261,11 +261,11 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:SingleEntity;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>.'
+          ':Characteristic1 a samm-c:SingleEntity;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>.'
         )
       );
   });
@@ -280,11 +280,11 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:SingleEntity;\n' +
-            '    bamm:dataType xsd:string;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>.'
+          ':Characteristic1 a samm-c:SingleEntity;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>.'
         )
       );
   });
@@ -301,12 +301,12 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:Measurement;\n' +
-            '    bamm:dataType :Entity1;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>;\n' +
-            '    bamm-c:unit unit:acre.'
+          ':Characteristic1 a samm-c:Measurement;\n' +
+            '    samm:dataType :Entity1;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>;\n' +
+            '    samm-c:unit unit:acre.'
         )
       )
       .then(() => cy.dbClickShape('Characteristic1'))
@@ -320,12 +320,12 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':Characteristic1 a bamm-c:Duration;\n' +
-            '    bamm:dataType :Entity1;\n' +
-            '    bamm:preferredName "testPreferredName"@en;\n' +
-            '    bamm:description "testDescription"@en;\n' +
-            '    bamm:see <http://see.de>;\n' +
-            '    bamm-c:unit unit:day.'
+          ':Characteristic1 a samm-c:Duration;\n' +
+            '    samm:dataType :Entity1;\n' +
+            '    samm:preferredName "testPreferredName"@en;\n' +
+            '    samm:description "testDescription"@en;\n' +
+            '    samm:see <http://see.de>;\n' +
+            '    samm-c:unit unit:day.'
         )
       );
   });

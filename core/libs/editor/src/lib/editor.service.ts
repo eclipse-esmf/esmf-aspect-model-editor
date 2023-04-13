@@ -438,14 +438,16 @@ export class EditorService {
             if (!confirmed) {
               return;
             }
+            const rdfModel = this.rdfService.currentRdfModel;
+            if (!rdfModel.originalAbsoluteFileName) {
+              rdfModel.originalAbsoluteFileName = rdfModel.absoluteAspectModelFileName;
+            }
             this.modelService.addAspect(newInstance);
             const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(newInstance);
-            this.rdfService.currentRdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
+            rdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
             metaModelElement ? this.mxGraphService.renderModelElement(metaModelElement, [], x, y) : this.openAlertBox();
 
-            this.titleService.setTitle(
-              `[Aspect Model] ${this.rdfService.currentRdfModel.absoluteAspectModelFileName} - Aspect Model Editor`
-            );
+            this.titleService.setTitle(`[Aspect Model] ${rdfModel.absoluteAspectModelFileName} - Aspect Model Editor`);
           });
         return;
       }
@@ -687,7 +689,7 @@ export class EditorService {
 
         const namespaces = this.sidebarService.namespaces;
         const aspectModelFileName = this.rdfService.currentRdfModel.absoluteAspectModelFileName.split(':')[2];
-        const aspectModelNamespace = this.rdfService.currentRdfModel.getAspectModelUrn().replace('urn:bamm:', '').replace('#', '');
+        const aspectModelNamespace = this.rdfService.currentRdfModel.getAspectModelUrn().replace('urn:samm:', '').replace('#', '');
 
         const isNamespaceInWorkspace = namespaces.find(
           namespace => namespace.name === aspectModelNamespace && namespace.files.includes(aspectModelFileName)

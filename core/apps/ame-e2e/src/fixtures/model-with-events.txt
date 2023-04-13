@@ -9,141 +9,141 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#> .
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.0.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.0.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.0.0#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix : <urn:bamm:comfort:2.1.0#> .
+@prefix : <urn:samm:comfort:2.1.0#> .
 
-:Seats a bamm:Aspect ;
-   bamm:description "Seat interface and datatypes."@en ;
-   bamm:properties ( ) ;
-   bamm:operations ( :Move :MoveComponent :CurrentPosition ) ;
-   bamm:events ( :SeatMoving :PassengerPresent ) .
+:Seats a samm:Aspect ;
+   samm:description "Seat interface and datatypes."@en ;
+   samm:properties ( ) ;
+   samm:operations ( :Move :MoveComponent :CurrentPosition ) ;
+   samm:events ( :SeatMoving :PassengerPresent ) .
 
-:Move a bamm:Operation ;
-   bamm:description "Set the desired seat position"@en ;
-   bamm:input ( :seat ) .
+:Move a samm:Operation ;
+   samm:description "Set the desired seat position"@en ;
+   samm:input ( :seat ) .
 
-:MoveComponent a bamm:Operation ;
-   bamm:description "Set a seat component position"@en ;
-   bamm:input ( :seat :component :position ) .
+:MoveComponent a samm:Operation ;
+   samm:description "Set a seat component position"@en ;
+   samm:input ( :seat :component :position ) .
 
-:CurrentPosition a bamm:Operation ;
-   bamm:description "Get the current position of the seat"@en ;
-   bamm:input ( :row :index ) ;
-   bamm:output :seat .
+:CurrentPosition a samm:Operation ;
+   samm:description "Get the current position of the seat"@en ;
+   samm:input ( :row :index ) ;
+   samm:output :seat .
 
-:SeatMoving a bamm:Event ;
-   bamm:description "The event of a seat beginning movement"@en ;
-   bamm:parameters ( :status :row :index :component ) .
+:SeatMoving a samm:Event ;
+   samm:description "The event of a seat beginning movement"@en ;
+   samm:parameters ( :status :row :index :component ) .
 
-:PassengerPresent a bamm:Event ;
-   bamm:description "When the seat passenger status changes"@en ;
-   bamm:parameters ( :status :row :index ) .
+:PassengerPresent a samm:Event ;
+   samm:description "When the seat passenger status changes"@en ;
+   samm:parameters ( :status :row :index ) .
 
-:seat a bamm:Property ;
-   bamm:description "The desired seat position"@en ;
-   bamm:characteristic :CharacteristicSeat .
+:seat a samm:Property ;
+   samm:description "The desired seat position"@en ;
+   samm:characteristic :CharacteristicSeat .
 
-:component a bamm:Property ;
-   bamm:description "The seat component that is moving"@en ;
-   bamm:characteristic :CharacteristicSeatComponent .
+:component a samm:Property ;
+   samm:description "The seat component that is moving"@en ;
+   samm:characteristic :CharacteristicSeatComponent .
 
-:position a bamm:Property ;
-   bamm:description "The various positions of the seat"@en ;
-   bamm:characteristic :CharacteristicPosition .
+:position a samm:Property ;
+   samm:description "The various positions of the seat"@en ;
+   samm:characteristic :CharacteristicPosition .
 
-:row a bamm:Property ;
-   bamm:description "The row, front 0 and +1 toward rear"@en ;
-   bamm:characteristic :CharacteristicRow .
+:row a samm:Property ;
+   samm:description "The row, front 0 and +1 toward rear"@en ;
+   samm:characteristic :CharacteristicRow .
 
-:index a bamm:Property ;
-   bamm:description "The index within the row, 0 left most, +1 toward right"@en ;
-   bamm:characteristic :CharacteristicIndex .
+:index a samm:Property ;
+   samm:description "The index within the row, 0 left most, +1 toward right"@en ;
+   samm:characteristic :CharacteristicIndex .
 
-:status a bamm:Property ;
-   bamm:description "The movement status, moving (1), not moving (0)"@en ;
-   bamm:characteristic :CharacteristicStatus .
+:status a samm:Property ;
+   samm:description "The movement status, moving (1), not moving (0)"@en ;
+   samm:characteristic :CharacteristicStatus .
 
-:CharacteristicSeat a bamm-c:SingleEntity ;
-   bamm:description "The desired seat position"@en ;
-   bamm:dataType :Seat .
+:CharacteristicSeat a samm-c:SingleEntity ;
+   samm:description "The desired seat position"@en ;
+   samm:dataType :Seat .
 
-:CharacteristicSeatComponent a bamm-c:Enumeration ;
-   bamm:dataType xsd:integer ;
-   bamm-c:values ( 0 1 2 3 4 ) .
+:CharacteristicSeatComponent a samm-c:Enumeration ;
+   samm:dataType xsd:integer ;
+   samm-c:values ( 0 1 2 3 4 ) .
 
-:CharacteristicPosition a bamm-c:SingleEntity ;
-   bamm:description "The various positions of the seat"@en ;
-   bamm:dataType :Position .
+:CharacteristicPosition a samm-c:SingleEntity ;
+   samm:description "The various positions of the seat"@en ;
+   samm:dataType :Position .
 
-:CharacteristicRow a bamm:Characteristic ;
-   bamm:description "The row, front 0 and +1 toward rear"@en ;
-   bamm:dataType xsd:integer .
+:CharacteristicRow a samm:Characteristic ;
+   samm:description "The row, front 0 and +1 toward rear"@en ;
+   samm:dataType xsd:integer .
 
-:CharacteristicIndex a bamm:Characteristic ;
-   bamm:description "The index within the row, 0 left most, +1 toward right"@en ;
-   bamm:dataType xsd:integer .
+:CharacteristicIndex a samm:Characteristic ;
+   samm:description "The index within the row, 0 left most, +1 toward right"@en ;
+   samm:dataType xsd:integer .
 
-:CharacteristicStatus a bamm:Characteristic ;
-   bamm:description "The movement status, moving (1), not moving (0)"@en ;
-   bamm:dataType xsd:integer .
+:CharacteristicStatus a samm:Characteristic ;
+   samm:description "The movement status, moving (1), not moving (0)"@en ;
+   samm:dataType xsd:integer .
 
-:Seat a bamm:Entity ;
-   bamm:description "The structure used to describe the seat's position in the vehicle"@en ;
-   bamm:properties ( :location :position ) .
+:Seat a samm:Entity ;
+   samm:description "The structure used to describe the seat's position in the vehicle"@en ;
+   samm:properties ( :location :position ) .
 
-:Position a bamm:Entity ;
-   bamm:description "The position of the entire seat"@en ;
-   bamm:properties ( :base :cushion :lumbar :sideBolster :headRestraint ) .
+:Position a samm:Entity ;
+   samm:description "The position of the entire seat"@en ;
+   samm:properties ( :base :cushion :lumbar :sideBolster :headRestraint ) .
 
-:location a bamm:Property ;
-   bamm:description "The location of the seat in the vehicle"@en ;
-   bamm:characteristic :CharacteristicSeatLocation .
+:location a samm:Property ;
+   samm:description "The location of the seat in the vehicle"@en ;
+   samm:characteristic :CharacteristicSeatLocation .
 
-:base a bamm:Property ;
-   bamm:description "The position of the base 0 front, 1000 back"@en ;
-   bamm:characteristic :CharacteristicMovement .
+:base a samm:Property ;
+   samm:description "The position of the base 0 front, 1000 back"@en ;
+   samm:characteristic :CharacteristicMovement .
 
-:cushion a bamm:Property ;
-   bamm:description "The position of the cushion 0 short, 1000 long"@en ;
-   bamm:characteristic :CharacteristicMovement .
+:cushion a samm:Property ;
+   samm:description "The position of the cushion 0 short, 1000 long"@en ;
+   samm:characteristic :CharacteristicMovement .
 
-:lumbar a bamm:Property ;
-   bamm:description "The position of the lumbar support"@en ;
-   bamm:characteristic :CharacteristicMovement .
+:lumbar a samm:Property ;
+   samm:description "The position of the lumbar support"@en ;
+   samm:characteristic :CharacteristicMovement .
 
-:sideBolster a bamm:Property ;
-   bamm:description "The position of the side bolster"@en ;
-   bamm:characteristic :CharacteristicMovement .
+:sideBolster a samm:Property ;
+   samm:description "The position of the side bolster"@en ;
+   samm:characteristic :CharacteristicMovement .
 
-:headRestraint a bamm:Property ;
-   bamm:description "The position of the head restraint 0 down, 1000 up"@en ;
-   bamm:characteristic :CharacteristicMovement .
+:headRestraint a samm:Property ;
+   samm:description "The position of the head restraint 0 down, 1000 up"@en ;
+   samm:characteristic :CharacteristicMovement .
 
-:CharacteristicSeatLocation a bamm-c:SingleEntity ;
-   bamm:description "The location of the seat in the vehicle"@en ;
-   bamm:dataType :SeatLocation .
+:CharacteristicSeatLocation a samm-c:SingleEntity ;
+   samm:description "The location of the seat in the vehicle"@en ;
+   samm:dataType :SeatLocation .
 
-:CharacteristicMovement a bamm-c:Trait ;
-   bamm:description "The movement of a seat component"@en ;
-   bamm-c:baseCharacteristic :CharacteristicMovementBase ;
-   bamm-c:constraint [
-      a bamm-c:RangeConstraint ;
-      bamm-c:minValue "-1000"^^xsd:short ;
-      bamm-c:maxValue "1000"^^xsd:short ;
-      bamm-c:lowerBoundDefinition bamm-c:AT_LEAST ;
-      bamm-c:upperBoundDefinition bamm-c:AT_MOST
+:CharacteristicMovement a samm-c:Trait ;
+   samm:description "The movement of a seat component"@en ;
+   samm-c:baseCharacteristic :CharacteristicMovementBase ;
+   samm-c:constraint [
+      a samm-c:RangeConstraint ;
+      samm-c:minValue "-1000"^^xsd:short ;
+      samm-c:maxValue "1000"^^xsd:short ;
+      samm-c:lowerBoundDefinition samm-c:AT_LEAST ;
+      samm-c:upperBoundDefinition samm-c:AT_MOST
    ] .
 
-:SeatLocation a bamm:Entity ;
-   bamm:description "The location of the seat in the vehicle"@en ;
-   bamm:properties ( :row :index ) .
+:SeatLocation a samm:Entity ;
+   samm:description "The location of the seat in the vehicle"@en ;
+   samm:properties ( :row :index ) .
 
-:CharacteristicMovementBase a bamm:Characteristic ;
-   bamm:description "The movement of a seat component"@en ;
-   bamm:dataType xsd:short .
+:CharacteristicMovementBase a samm:Characteristic ;
+   samm:description "The movement of a seat component"@en ;
+   samm:dataType xsd:short .

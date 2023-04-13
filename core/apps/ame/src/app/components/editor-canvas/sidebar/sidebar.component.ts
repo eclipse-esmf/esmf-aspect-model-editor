@@ -128,7 +128,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
 
   public getNamespaceElements(namespaceFolder: string, namespaceFile: string) {
     this.selectedNamespaceElements = [];
-    const cachedFile = this.namespaceCacheService.getNamespace(`urn:bamm:${namespaceFolder}#`)?.get(`${namespaceFolder}:${namespaceFile}`);
+    const cachedFile = this.namespaceCacheService.getNamespace(`urn:samm:${namespaceFolder}#`)?.get(`${namespaceFolder}:${namespaceFile}`);
     if (cachedFile) {
       this.selectedNamespaceElements = cachedFile
         .getAllElements<BaseMetaModelElement>()

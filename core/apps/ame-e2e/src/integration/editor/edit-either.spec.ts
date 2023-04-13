@@ -70,12 +70,12 @@ describe('Test editing Either', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('Either1 a bamm-c:Either');
-        expect(rdf).to.contain('bamm-c:left :LeftCharacteristic');
-        expect(rdf).to.contain('bamm-c:right :RightCharacteristic');
-        expect(rdf).to.contain('LeftCharacteristic a bamm:Characteristic');
-        expect(rdf).to.contain('RightCharacteristic a bamm:Characteristic');
-        expect(rdf).not.contain('bamm:dataType');
+        expect(rdf).to.contain('Either1 a samm-c:Either');
+        expect(rdf).to.contain('samm-c:left :LeftCharacteristic');
+        expect(rdf).to.contain('samm-c:right :RightCharacteristic');
+        expect(rdf).to.contain('LeftCharacteristic a samm:Characteristic');
+        expect(rdf).to.contain('RightCharacteristic a samm:Characteristic');
+        expect(rdf).not.contain('samm:dataType');
       });
   });
 
@@ -101,9 +101,9 @@ describe('Test editing Either', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:preferredName "new-preferredName"@en');
-        expect(rdf).to.contain('bamm:description "New description for the new created characteristic"@en');
-        expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
+        expect(rdf).to.contain('samm:preferredName "new-preferredName"@en');
+        expect(rdf).to.contain('samm:description "New description for the new created characteristic"@en');
+        expect(rdf).to.contain('samm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
       })
       .then(() => cy.getAspect())
       .then(aspect => {
@@ -150,17 +150,17 @@ describe('Test editing Either', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('Either1 a bamm-c:Either');
-        expect(rdf).to.contain('bamm-c:left :NewLeftCharacteristic');
-        expect(rdf).to.contain('bamm-c:right :NewRightCharacteristic');
-        expect(rdf).to.contain('NewLeftCharacteristic a bamm:Characteristic');
-        expect(rdf).to.contain('NewRightCharacteristic a bamm:Characteristic');
-        expect(rdf).to.contain('bamm:preferredName "new-preferredName"@en');
-        expect(rdf).to.contain('bamm:description "New description for the new created characteristic"@en');
-        expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
-        expect(rdf).to.contain('LeftCharacteristic a bamm:Characteristic');
-        expect(rdf).to.contain('RightCharacteristic a bamm:Characteristic');
-        expect(rdf).not.contain('bamm:dataType');
+        expect(rdf).to.contain('Either1 a samm-c:Either');
+        expect(rdf).to.contain('samm-c:left :NewLeftCharacteristic');
+        expect(rdf).to.contain('samm-c:right :NewRightCharacteristic');
+        expect(rdf).to.contain('NewLeftCharacteristic a samm:Characteristic');
+        expect(rdf).to.contain('NewRightCharacteristic a samm:Characteristic');
+        expect(rdf).to.contain('samm:preferredName "new-preferredName"@en');
+        expect(rdf).to.contain('samm:description "New description for the new created characteristic"@en');
+        expect(rdf).to.contain('samm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
+        expect(rdf).to.contain('LeftCharacteristic a samm:Characteristic');
+        expect(rdf).to.contain('RightCharacteristic a samm:Characteristic');
+        expect(rdf).not.contain('samm:dataType');
       });
   });
 
@@ -180,17 +180,17 @@ describe('Test editing Either', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('Either1 a bamm-c:Either');
-        expect(rdf).to.contain('bamm:preferredName "new-preferredName"@en');
-        expect(rdf).to.contain('bamm:description "New description for the new created characteristic"@en');
-        expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
+        expect(rdf).to.contain('Either1 a samm-c:Either');
+        expect(rdf).to.contain('samm:preferredName "new-preferredName"@en');
+        expect(rdf).to.contain('samm:description "New description for the new created characteristic"@en');
+        expect(rdf).to.contain('samm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
 
-        expect(rdf).to.contain('LeftCharacteristic a bamm:Characteristic');
-        expect(rdf).to.contain('RightCharacteristic a bamm:Characteristic');
+        expect(rdf).to.contain('LeftCharacteristic a samm:Characteristic');
+        expect(rdf).to.contain('RightCharacteristic a samm:Characteristic');
 
-        expect(rdf).not.contain('bamm:dataType');
-        expect(rdf).not.contain('bamm-c:left :NewLeftCharacteristic');
-        expect(rdf).not.contain('bamm-c:right :NewRightCharacteristic');
+        expect(rdf).not.contain('samm:dataType');
+        expect(rdf).not.contain('samm-c:left :NewLeftCharacteristic');
+        expect(rdf).not.contain('samm-c:right :NewRightCharacteristic');
       });
   });
 
@@ -225,17 +225,17 @@ describe('Test editing Either', () => {
       .then(hasAddOverlay => expect(hasAddOverlay).equal(true))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('Either1 a bamm:Characteristic');
-        expect(rdf).to.contain('bamm:preferredName "new-preferredName"@en');
-        expect(rdf).to.contain('bamm:description "New description for the new created characteristic"@en');
-        expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
+        expect(rdf).to.contain('Either1 a samm:Characteristic');
+        expect(rdf).to.contain('samm:preferredName "new-preferredName"@en');
+        expect(rdf).to.contain('samm:description "New description for the new created characteristic"@en');
+        expect(rdf).to.contain('samm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
 
-        expect(rdf).to.contain('LeftCharacteristic a bamm:Characteristic');
-        expect(rdf).to.contain('RightCharacteristic a bamm:Characteristic');
+        expect(rdf).to.contain('LeftCharacteristic a samm:Characteristic');
+        expect(rdf).to.contain('RightCharacteristic a samm:Characteristic');
 
-        expect(rdf).not.contain('bamm:dataType');
-        expect(rdf).not.contain('bamm-c:left :LeftCharacteristic');
-        expect(rdf).not.contain('bamm-c:right :RightCharacteristic');
+        expect(rdf).not.contain('samm:dataType');
+        expect(rdf).not.contain('samm-c:left :LeftCharacteristic');
+        expect(rdf).not.contain('samm-c:right :RightCharacteristic');
       });
   });
 
@@ -273,16 +273,16 @@ describe('Test editing Either', () => {
         .then(() => cy.clickAddRightShapeIcon('Either1'))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('Either1 a bamm-c:Either');
-          expect(rdf).not.contain('bamm-c:left :Characteristic1');
-          expect(rdf).not.contain('bamm-c:right :Characteristic2');
-          expect(rdf).to.contain('bamm:preferredName "new-preferredName"@en');
-          expect(rdf).to.contain('bamm:description "New description for the new created characteristic"@en');
-          expect(rdf).to.contain('bamm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
+          expect(rdf).to.contain('Either1 a samm-c:Either');
+          expect(rdf).not.contain('samm-c:left :Characteristic1');
+          expect(rdf).not.contain('samm-c:right :Characteristic2');
+          expect(rdf).to.contain('samm:preferredName "new-preferredName"@en');
+          expect(rdf).to.contain('samm:description "New description for the new created characteristic"@en');
+          expect(rdf).to.contain('samm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
 
-          expect(rdf).not.contain('bamm:dataType');
-          expect(rdf).not.contain('bamm-c:left :LeftCharacteristic');
-          expect(rdf).not.contain('bamm-c:right :RightCharacteristic');
+          expect(rdf).not.contain('samm:dataType');
+          expect(rdf).not.contain('samm-c:left :LeftCharacteristic');
+          expect(rdf).not.contain('samm-c:right :RightCharacteristic');
         });
     });
   });
@@ -295,8 +295,8 @@ describe('Test editing Either', () => {
       .then(aspect => assert.isNull(aspect.properties[0].property.characteristic))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('Characteristic1 a bamm:Characteristic');
-        expect(rdf).to.contain('Characteristic2 a bamm:Characteristic');
+        expect(rdf).to.contain('Characteristic1 a samm:Characteristic');
+        expect(rdf).to.contain('Characteristic2 a samm:Characteristic');
         expect(rdf).not.contain('Either1');
       });
   });

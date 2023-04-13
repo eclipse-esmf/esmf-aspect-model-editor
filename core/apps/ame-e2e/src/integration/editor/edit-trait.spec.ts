@@ -40,7 +40,7 @@ describe('Test editing Trait', () => {
           .then(() => {
             cy.getUpdatedRDF().then(() => {
               // TODO: resolve after validator fix
-              // expect(rdf).to.contain('bamm:description "New description for the new created trait"@en');
+              // expect(rdf).to.contain('samm:description "New description for the new created trait"@en');
               cy.getAspect().then(aspect => {
                 expect(aspect.properties[0].property.characteristic.getDescription('en')).to.equal(
                   'New description for the new created trait'
@@ -61,7 +61,7 @@ describe('Test editing Trait', () => {
           .click({force: true})
           .then(() => {
             cy.getUpdatedRDF().then(rdf => {
-              expect(rdf).to.contain('bamm:preferredName "new-preferredName"@en');
+              expect(rdf).to.contain('samm:preferredName "new-preferredName"@en');
             });
           });
       });

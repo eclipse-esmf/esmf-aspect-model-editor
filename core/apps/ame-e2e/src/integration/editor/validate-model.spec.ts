@@ -24,7 +24,7 @@ describe('Test validate Aspect', () => {
       .then(() => cy.get('.cdk-overlay-container').should('not.be.visible', 8000))
       .then(() => cy.get(SELECTOR_notificationsButton).click({force: true}))
       .then(() => {
-        assert(cy.contains('.message-title', 'Mandatory property bamm:characteristic is missing on :property1.'));
+        assert(cy.contains('.message-title', 'Mandatory property samm:characteristic is missing on :property1.'));
         cy.get(SELECTOR_notificationsDialogCloseButton).click({force: true});
       });
   });

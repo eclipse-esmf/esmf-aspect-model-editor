@@ -30,7 +30,7 @@ export enum PredefinedEntities {
 }
 
 export class SammE {
-  private alias = 'bamm-e';
+  private alias = 'samm-e';
 
   get TimeSeriesEntity() {
     return this.getNamespace() + PredefinedEntities.TimeSeriesEntity;

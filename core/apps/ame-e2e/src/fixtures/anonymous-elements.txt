@@ -9,32 +9,32 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#> .
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.0.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.0.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.0.0#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix : <urn:bamm:org.eclipse:1.0.0#> .
+@prefix : <urn:samm:org.eclipse:1.0.0#> .
 
-:AspectDefault a bamm:Aspect ;
-    bamm:properties (:property1 :property2 :property3) ;
-    bamm:operations () .
+:AspectDefault a samm:Aspect ;
+    samm:properties (:property1 :property2 :property3) ;
+    samm:operations () .
 
-:property1 a bamm:Property ;
-    bamm:characteristic :Characteristic1 .
+:property1 a samm:Property ;
+    samm:characteristic :Characteristic1 .
 
-:property2 a bamm:Property ;
-    bamm:characteristic [ a bamm:Characteristic; bamm:dataType xsd:string ] .
+:property2 a samm:Property ;
+    samm:characteristic [ a samm:Characteristic; samm:dataType xsd:string ] .
 
-:property3 a bamm:Property ;
-    bamm:characteristic [
-        a bamm-c:Trait ;
-        bamm-c:baseCharacteristic [ a bamm:Characteristic ] ;
-        bamm-c:constraint [ a bamm:Constraint ] ;
-        bamm-c:constraint [ a bamm:Constraint ]
+:property3 a samm:Property ;
+    samm:characteristic [
+        a samm-c:Trait ;
+        samm-c:baseCharacteristic [ a samm:Characteristic ] ;
+        samm-c:constraint [ a samm:Constraint ] ;
+        samm-c:constraint [ a samm:Constraint ]
     ] .
 
-:Characteristic1 a bamm:Characteristic ;
-    bamm:dataType xsd:string .
+:Characteristic1 a samm:Characteristic ;
+    samm:dataType xsd:string .

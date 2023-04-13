@@ -36,7 +36,7 @@ version is not supported by this version of the Aspect Model Editor.
 
 h| Workaround
 a|
-Check that you have not missed parts of the TTL file. Also check against syntax errors consulting https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/namespaces.html[Namespaces and versions (SAMM 2.0.0)^,opts=nofollow].
+Check that you have not missed parts of the TTL file. Also check against syntax errors consulting https://eclipse-esmf.github.io/samm-specification/2.0.0/namespaces.html[Namespaces and versions (SAMM 2.0.0)^,opts=nofollow].
 |===
 
 [[datatype-characteristic]]
@@ -48,11 +48,11 @@ h| Error
 a|
 "resultMessage":"The dataType (see value) that is used as dataType on the Characteristic (see focusNode) is neither an allowed XSD or RDF type nor a type that is defined as rdfs:Class."
 
-"focusNode":"urn:bamm:com.your.example.namespace:aspect-model:AngularVelocityHistory:1.1.1#AngularVelocityTimeSeries"
+"focusNode":"urn:samm:com.your.example.namespace:aspect-model:AngularVelocityHistory:1.1.1#AngularVelocityTimeSeries"
 
-"resultPath":"urn:bamm:com.your.example.namespace:meta-model:1.2.0#dataType" "resultSeverity":"http://www.w3.org/ns/shacl#Violation"
+"resultPath":"urn:samm:com.your.example.namespace:meta-model:1.2.0#dataType" "resultSeverity":"http://www.w3.org/ns/shacl#Violation"
 
-"value":"urn:bamm:com.your.example.namespace:aspect-model:AngularVelocityHistory:1.1.1#AngularVelocityTimeSeriesEntity"
+"value":"urn:samm:com.your.example.namespace:aspect-model:AngularVelocityHistory:1.1.1#AngularVelocityTimeSeriesEntity"
 
 h| Explanation
 a| This can happen if a namespace version is not supported anymore or when setting an unsupported dataType.
@@ -62,7 +62,7 @@ a|
 _Wrong data type_
 
 Check that the data types you are using are correct, see
-https://openmanufacturingplatform.github.io/sds-bamm-aspect-meta-model/bamm-specification/2.0.0/datatypes.html[Datatypes (SAMM 2.0.0)^,opts=nofollow]
+https://eclipse-esmf.github.io/samm-specification/2.0.0/datatypes.html[Datatypes (SAMM 2.0.0)^,opts=nofollow]
 
 _Unsupported Namespaces_
 
@@ -145,6 +145,24 @@ a| Electron/Windows locks these files and recognizes that they are already used 
 
 h| Workaround
 a| Launch only one instance of the Aspect Model Editor.
+|===
+
+[[import-export-problems-win]]
+=== Import/Export problems with Windows
+
+[%noheader,cols="15%,85%"]
+|===
+h| Error
+a|
+From time to time Windows may block some files during import or export and errors may occur.
+
+h| Explanation
+a| Unknown root cause.
+
+h| Workaround
+a|
+
+Restarting the Aspect Model Editor can solve the problem. Please save all files first.
 |===
 
 [[aspect-model-editor-installation-cannot-write-all-files]]

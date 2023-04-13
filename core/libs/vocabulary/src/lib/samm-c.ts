@@ -16,7 +16,7 @@ import {DataFactory, NamedNode} from 'n3';
 import {BoundDefinition} from '@ame/meta-model';
 
 export class SammC {
-  private alias = 'bamm-c';
+  private alias = 'samm-c';
 
   constructor(private samm: Samm) {}
 

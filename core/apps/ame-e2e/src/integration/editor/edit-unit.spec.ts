@@ -49,10 +49,10 @@ describe('Test editing Unit', () => {
       })
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('Quantifiable1 a bamm-c:Quantifiable');
-          expect(rdf).to.contain('bamm-c:unit :CustomUnit1');
+          expect(rdf).to.contain('Quantifiable1 a samm-c:Quantifiable');
+          expect(rdf).to.contain('samm-c:unit :CustomUnit1');
           expect(rdf).to.contain('CustomUnit1 a unit:Unit');
-          expect(rdf).to.contain('bamm:dataType xsd:string');
+          expect(rdf).to.contain('samm:dataType xsd:string');
         });
       });
   });
@@ -78,13 +78,13 @@ describe('Test editing Unit', () => {
       })
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('Quantifiable1 a bamm-c:Quantifiable');
-          expect(rdf).to.contain('bamm-c:unit :CustomUnit2');
+          expect(rdf).to.contain('Quantifiable1 a samm-c:Quantifiable');
+          expect(rdf).to.contain('samm-c:unit :CustomUnit2');
           expect(rdf).to.contain('CustomUnit2 a unit:Unit');
           expect(rdf).to.contain('CustomUnit1 a unit:Unit');
-          expect(rdf).to.contain('bamm:dataType xsd:string');
+          expect(rdf).to.contain('samm:dataType xsd:string');
 
-          expect(rdf).not.contain('bamm-c:unit :CustomUnit1');
+          expect(rdf).not.contain('samm-c:unit :CustomUnit1');
         });
       });
   });
@@ -101,13 +101,13 @@ describe('Test editing Unit', () => {
       })
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('Quantifiable1 a bamm-c:Quantifiable');
+          expect(rdf).to.contain('Quantifiable1 a samm-c:Quantifiable');
           expect(rdf).to.contain('CustomUnit2 a unit:Unit');
           expect(rdf).to.contain('CustomUnit1 a unit:Unit');
-          expect(rdf).to.contain('bamm:dataType xsd:string');
+          expect(rdf).to.contain('samm:dataType xsd:string');
 
-          expect(rdf).not.contain('bamm-c:unit :CustomUnit1');
-          expect(rdf).not.contain('bamm-c:unit :CustomUnit2');
+          expect(rdf).not.contain('samm-c:unit :CustomUnit1');
+          expect(rdf).not.contain('samm-c:unit :CustomUnit2');
         });
       });
   });
@@ -134,13 +134,13 @@ describe('Test editing Unit', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('Quantifiable1 a bamm-c:Quantifiable');
+          expect(rdf).to.contain('Quantifiable1 a samm-c:Quantifiable');
           expect(rdf).to.contain('CustomUnit1 a unit:Unit');
-          expect(rdf).to.contain('bamm:dataType xsd:string');
+          expect(rdf).to.contain('samm:dataType xsd:string');
 
           expect(rdf).not.contain('CustomUnit2 a unit:Unit');
-          expect(rdf).not.contain('bamm-c:unit :CustomUnit1');
-          expect(rdf).not.contain('bamm-c:unit :CustomUnit2');
+          expect(rdf).not.contain('samm-c:unit :CustomUnit1');
+          expect(rdf).not.contain('samm-c:unit :CustomUnit2');
         })
       );
   });
@@ -165,10 +165,10 @@ describe('Test editing Unit', () => {
       .then(hasAddOverlay => expect(hasAddOverlay).equal(true))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('Measurement1 a bamm-c:Measurement');
+          expect(rdf).to.contain('Measurement1 a samm-c:Measurement');
           expect(rdf).to.contain('CustomUnit1 a unit:Unit');
-          expect(rdf).to.contain('bamm-c:unit :CustomUnit1');
-          expect(rdf).to.contain('bamm:dataType xsd:string');
+          expect(rdf).to.contain('samm-c:unit :CustomUnit1');
+          expect(rdf).to.contain('samm:dataType xsd:string');
         });
       });
   });
@@ -193,10 +193,10 @@ describe('Test editing Unit', () => {
       .then(hasAddOverlay => expect(hasAddOverlay).equal(true))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('Duration1 a bamm-c:Duration');
+          expect(rdf).to.contain('Duration1 a samm-c:Duration');
           expect(rdf).to.contain('CustomUnit1 a unit:Unit');
-          expect(rdf).to.contain('bamm-c:unit :CustomUnit1');
-          expect(rdf).to.contain('bamm:dataType xsd:string');
+          expect(rdf).to.contain('samm-c:unit :CustomUnit1');
+          expect(rdf).to.contain('samm:dataType xsd:string');
         });
       });
   });
@@ -211,12 +211,12 @@ describe('Test editing Unit', () => {
       .then(hasAddOverlay => expect(hasAddOverlay).equal(true))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('Duration1 a bamm-c:Duration');
+          expect(rdf).to.contain('Duration1 a samm-c:Duration');
           expect(rdf).to.contain('CustomUnit1 a unit:Unit');
-          expect(rdf).to.contain('bamm-c:unit unit:day');
-          expect(rdf).to.contain('bamm:dataType xsd:string');
+          expect(rdf).to.contain('samm-c:unit unit:day');
+          expect(rdf).to.contain('samm:dataType xsd:string');
 
-          expect(rdf).not.contain('bamm-c:unit :CustomUnit1');
+          expect(rdf).not.contain('samm-c:unit :CustomUnit1');
           expect(rdf).not.contain('day a unit:Unit');
         });
       });
@@ -234,8 +234,8 @@ describe('Test editing Unit', () => {
             expect(rdf).to.contain('CustomUnit1 a unit:Unit');
 
             expect(rdf).not.contain('Duration1');
-            expect(rdf).not.contain('bamm-c:unit :CustomUnit1');
-            expect(rdf).not.contain('bamm:dataType xsd:string');
+            expect(rdf).not.contain('samm-c:unit :CustomUnit1');
+            expect(rdf).not.contain('samm:dataType xsd:string');
           });
         });
     });

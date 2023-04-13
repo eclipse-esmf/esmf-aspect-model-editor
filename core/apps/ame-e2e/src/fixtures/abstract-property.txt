@@ -9,31 +9,31 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#> .
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.0.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.0.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.0.0#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix : <urn:bamm:org.eclipse:1.0.0#> .
+@prefix : <urn:samm:org.eclipse:1.0.0#> .
 
-:AspectWithAbstractProperties a bamm:Aspect ;
-  bamm:properties ( [ bamm:extends :abstractProperty1; bamm:characteristic :Characteristic1] [bamm:extends :abstractProperty2; bamm:characteristic :Characteristic1]) ;
-  bamm:operations ( ) .
+:AspectWithAbstractProperties a samm:Aspect ;
+  samm:properties ( [ samm:extends :abstractProperty1; samm:characteristic :Characteristic1] [samm:extends :abstractProperty2; samm:characteristic :Characteristic1]) ;
+  samm:operations ( ) .
 
-:abstractProperty1 a bamm:AbstractProperty;
-  bamm:description "Description"@en;
-  bamm:preferredName "Preferred Name"@ro;
-  bamm:see <http://test.com>.
+:abstractProperty1 a samm:AbstractProperty;
+  samm:description "Description"@en;
+  samm:preferredName "Preferred Name"@ro;
+  samm:see <http://test.com>.
 
-:abstractProperty2 a bamm:AbstractProperty;
-  bamm:extends :abstractProperty3.
+:abstractProperty2 a samm:AbstractProperty;
+  samm:extends :abstractProperty3.
 
-:abstractProperty3 a bamm:AbstractProperty;
-  bamm:description "Description"@en;
-  bamm:preferredName "Preferred Name"@ro;
-  bamm:see <http://test.com>.
+:abstractProperty3 a samm:AbstractProperty;
+  samm:description "Description"@en;
+  samm:preferredName "Preferred Name"@ro;
+  samm:see <http://test.com>.
 
-:Characteristic1 a bamm:Characteristic;
-  bamm:dataType xsd:string.
+:Characteristic1 a samm:Characteristic;
+  samm:dataType xsd:string.

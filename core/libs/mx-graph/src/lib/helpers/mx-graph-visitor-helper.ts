@@ -480,7 +480,7 @@ export class MxGraphVisitorHelper {
 
   static getModelInfo(modelElement: BaseMetaModelElement, rdfModel: RdfModel): ModelBaseProperties {
     try {
-      const [currentNamespace] = rdfModel.getAspectModelUrn().replace('urn:bamm:', '').split(':');
+      const [currentNamespace] = rdfModel.getAspectModelUrn().replace('urn:samm:', '').split(':');
       const [, elementNamespace] = MxGraphHelper.getNamespaceFromElement(modelElement);
 
       const aspectVersionedNamespace = rdfModel.getAspectModelUrn().replace('#', '');

@@ -240,12 +240,12 @@ describe('Create and Edit Abstract Entity', () => {
       cy.then(() => cy.getUpdatedRDF()).then(rdf => {
         console.log(rdf);
         expect(rdf).to.contain(
-          `:Entity1 a bamm:Entity;\n    bamm:properties ([ bamm:extends :abstractProperty1 ] [ bamm:extends :abstractProperty2 ]);\n    bamm:extends :AbstractEntity1.`
+          `:Entity1 a samm:Entity;\n    samm:properties ([ samm:extends :abstractProperty1 ] [ samm:extends :abstractProperty2 ]);\n    samm:extends :AbstractEntity1.`
         );
         expect(rdf).to.contain(
-          `:AbstractEntity1 a bamm:AbstractEntity;\n` +
-            `    bamm:properties (:abstractProperty1 :abstractProperty2);\n    bamm:preferredName "Preferred Name 1"@en;\n` +
-            `    bamm:description "Description 1"@en;\n    bamm:see <http://test1.com>.`
+          `:AbstractEntity1 a samm:AbstractEntity;\n` +
+            `    samm:properties (:abstractProperty1 :abstractProperty2);\n    samm:preferredName "Preferred Name 1"@en;\n` +
+            `    samm:description "Description 1"@en;\n    samm:see <http://test1.com>.`
         );
       });
     });

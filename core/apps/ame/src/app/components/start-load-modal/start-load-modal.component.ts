@@ -17,6 +17,7 @@ import {ModelApiService} from '@ame/api';
 import {EditorService} from '@ame/editor';
 import {NotificationsService} from '@ame/shared';
 import {first, Observable, of, switchMap} from 'rxjs';
+import {MigratorService} from '@ame/migrator';
 
 @Component({
   selector: 'ame-start-load-modal',
@@ -31,6 +32,7 @@ export class StartLoadModalComponent {
     private editorService: EditorService,
     private notificationsService: NotificationsService,
     private matDialogRef: MatDialogRef<StartLoadModalComponent>,
+    private migratorService: MigratorService,
     @Inject(MAT_DIALOG_DATA) private data: {aspectModel: string}
   ) {}
 
@@ -56,7 +58,7 @@ export class StartLoadModalComponent {
   private loadNewAspectModel(aspectModel: Observable<string>, callback: Function, isDefault?: boolean) {
     aspectModel
       .pipe(
-        switchMap(model => this.editorService.loadNewAspectModel(model, '', isDefault)),
+        switchMap(model => this.editorService.loadNewAspectModel(this.migratorService.detectBammAndReplaceWithSamm(model), '', isDefault)),
         first()
       )
       .subscribe(() => {

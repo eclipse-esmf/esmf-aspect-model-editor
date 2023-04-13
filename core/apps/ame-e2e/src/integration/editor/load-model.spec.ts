@@ -95,10 +95,10 @@ describe('Test load different characteristics', () => {
         .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('bamm-c:constraint :Constraint1');
-          expect(rdf).to.contain('Constraint1 a bamm-c:LengthConstraint');
-          expect(rdf).to.contain('bamm-c:minValue "1"^^xsd:nonNegativeInteger');
-          expect(rdf).to.contain('bamm-c:maxValue "10"^^xsd:nonNegativeInteger');
+          expect(rdf).to.contain('samm-c:constraint :Constraint1');
+          expect(rdf).to.contain('Constraint1 a samm-c:LengthConstraint');
+          expect(rdf).to.contain('samm-c:minValue "1"^^xsd:nonNegativeInteger');
+          expect(rdf).to.contain('samm-c:maxValue "10"^^xsd:nonNegativeInteger');
           cy.clickShape('Constraint1');
         });
     });
@@ -117,7 +117,7 @@ describe('Test load different characteristics', () => {
             .click({force: true});
         })
         .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
-        .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('bamm-c:unit unit:amperePerMetre')));
+        .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm-c:unit unit:amperePerMetre')));
     });
 
     it('can modify dataType', () => {
@@ -127,7 +127,7 @@ describe('Test load different characteristics', () => {
           cy.get(FIELD_dataType).clear({force: true}).type('double', {force: true}).get(FIELD_dataTypeOption).eq(0).click({force: true})
         )
         .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
-        .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('bamm:dataType xsd:double')));
+        .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:dataType xsd:double')));
     });
 
     it('can add FixedPointConstraint', () => {
@@ -142,10 +142,10 @@ describe('Test load different characteristics', () => {
         .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('bamm-c:constraint :Constraint2');
-          expect(rdf).to.contain('Constraint2 a bamm-c:FixedPointConstraint');
-          expect(rdf).to.contain('bamm-c:integer "1"^^xsd:positiveInteger');
-          expect(rdf).to.contain('bamm-c:scale "1"^^xsd:positiveInteger');
+          expect(rdf).to.contain('samm-c:constraint :Constraint2');
+          expect(rdf).to.contain('Constraint2 a samm-c:FixedPointConstraint');
+          expect(rdf).to.contain('samm-c:integer "1"^^xsd:positiveInteger');
+          expect(rdf).to.contain('samm-c:scale "1"^^xsd:positiveInteger');
         });
     });
 
@@ -177,7 +177,7 @@ describe('Test load different characteristics', () => {
         .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('bamm-c:scale "10"^^xsd:positiveInteger');
+          expect(rdf).to.contain('samm-c:scale "10"^^xsd:positiveInteger');
           const label = cyHelp.getShapeLabelByKey('Constraint2', META_MODEL_scale);
           label.should('exist');
           label.should('contain.text', `${META_MODEL_scale} = 10`);
@@ -196,9 +196,9 @@ describe('Test load different characteristics', () => {
         .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('bamm-c:constraint :Constraint3');
-          expect(rdf).to.contain('Constraint3 a bamm-c:EncodingConstraint');
-          expect(rdf).to.contain('bamm:value bamm:US-ASCII');
+          expect(rdf).to.contain('samm-c:constraint :Constraint3');
+          expect(rdf).to.contain('Constraint3 a samm-c:EncodingConstraint');
+          expect(rdf).to.contain('samm:value samm:US-ASCII');
 
           const label = cyHelp.getShapeLabelByKey('Constraint3', META_MODEL_value);
           label.should('exist');
@@ -219,9 +219,9 @@ describe('Test load different characteristics', () => {
         .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('bamm-c:constraint :Constraint4');
-          expect(rdf).to.contain('Constraint4 a bamm-c:RegularExpressionConstraint');
-          expect(rdf).to.contain('bamm:value "*"');
+          expect(rdf).to.contain('samm-c:constraint :Constraint4');
+          expect(rdf).to.contain('Constraint4 a samm-c:RegularExpressionConstraint');
+          expect(rdf).to.contain('samm:value "*"');
 
           const label = cyHelp.getShapeLabelByKey('Constraint4', META_MODEL_value);
           label.should('exist');
@@ -243,9 +243,9 @@ describe('Test load different characteristics', () => {
         .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('bamm-c:constraint :Constraint5');
-          expect(rdf).to.contain('Constraint5 a bamm-c:RangeConstraint');
-          expect(rdf).to.contain('bamm:value "*"');
+          expect(rdf).to.contain('samm-c:constraint :Constraint5');
+          expect(rdf).to.contain('Constraint5 a samm-c:RangeConstraint');
+          expect(rdf).to.contain('samm:value "*"');
           const minValue = cyHelp.getShapeLabelByKey('Constraint5', META_MODEL_minValue);
           minValue.should('exist');
           minValue.should('contain.text', `${META_MODEL_minValue} = 1`);
@@ -274,9 +274,9 @@ describe('Test load different characteristics', () => {
         .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('bamm-c:constraint :Constraint6');
-          expect(rdf).to.contain('Constraint6 a bamm-c:LocaleConstraint');
-          expect(rdf).to.contain('bamm-c:localeCode "de-DE"');
+          expect(rdf).to.contain('samm-c:constraint :Constraint6');
+          expect(rdf).to.contain('Constraint6 a samm-c:LocaleConstraint');
+          expect(rdf).to.contain('samm-c:localeCode "de-DE"');
 
           const minValue = cyHelp.getShapeLabelByKey('Constraint6', META_MODEL_localeCode);
           minValue.should('exist');
@@ -302,9 +302,9 @@ describe('Test load different characteristics', () => {
         .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('bamm-c:constraint :Constraint7');
-          expect(rdf).to.contain('Constraint7 a bamm-c:LanguageConstraint');
-          expect(rdf).to.contain('bamm-c:languageCode "en"');
+          expect(rdf).to.contain('samm-c:constraint :Constraint7');
+          expect(rdf).to.contain('Constraint7 a samm-c:LanguageConstraint');
+          expect(rdf).to.contain('samm-c:languageCode "en"');
 
           const minValue = cyHelp.getShapeLabelByKey('Constraint7', META_MODEL_languageCode);
           minValue.should('exist');

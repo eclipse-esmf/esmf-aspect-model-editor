@@ -48,15 +48,15 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:operation1)');
-          expect(rdf).to.contain(':operation1 a bamm:Operation');
-          expect(rdf).to.contain('bamm:input (:property2 :property3 :property4)');
-          expect(rdf).to.contain('bamm:output :property5');
-          expect(rdf).to.contain(':property2 a bamm:Property');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).to.contain(':property4 a bamm:Property');
-          expect(rdf).to.contain(':property5 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:operation1)');
+          expect(rdf).to.contain(':operation1 a samm:Operation');
+          expect(rdf).to.contain('samm:input (:property2 :property3 :property4)');
+          expect(rdf).to.contain('samm:output :property5');
+          expect(rdf).to.contain(':property2 a samm:Property');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).to.contain(':property4 a samm:Property');
+          expect(rdf).to.contain(':property5 a samm:Property');
         })
       );
   });
@@ -79,15 +79,15 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:newOperation)');
-          expect(rdf).to.contain(':newOperation a bamm:Operation');
-          expect(rdf).to.contain('bamm:input (:property2 :property3 :property4)');
-          expect(rdf).to.contain('bamm:output :property5');
-          expect(rdf).to.contain(':property2 a bamm:Property');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).to.contain(':property4 a bamm:Property');
-          expect(rdf).to.contain(':property5 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:newOperation)');
+          expect(rdf).to.contain(':newOperation a samm:Operation');
+          expect(rdf).to.contain('samm:input (:property2 :property3 :property4)');
+          expect(rdf).to.contain('samm:output :property5');
+          expect(rdf).to.contain(':property2 a samm:Property');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).to.contain(':property4 a samm:Property');
+          expect(rdf).to.contain(':property5 a samm:Property');
         })
       );
   });
@@ -109,15 +109,15 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:newOperation)');
-          expect(rdf).to.contain(':newOperation a bamm:Operation');
-          expect(rdf).to.contain('bamm:input (:property3)');
-          expect(rdf).to.contain('bamm:output :property5');
-          expect(rdf).not.contain(':property2 a bamm:Property');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).not.contain(':property4 a bamm:Property');
-          expect(rdf).to.contain(':property5 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:newOperation)');
+          expect(rdf).to.contain(':newOperation a samm:Operation');
+          expect(rdf).to.contain('samm:input (:property3)');
+          expect(rdf).to.contain('samm:output :property5');
+          expect(rdf).not.contain(':property2 a samm:Property');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).not.contain(':property4 a samm:Property');
+          expect(rdf).to.contain(':property5 a samm:Property');
         })
       );
   });
@@ -137,13 +137,13 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:newOperation)');
-          expect(rdf).to.contain(':newOperation a bamm:Operation');
-          expect(rdf).to.contain('bamm:input (:property3)');
-          expect(rdf).not.contain('bamm:output :property5');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).not.contain(':property5 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:newOperation)');
+          expect(rdf).to.contain(':newOperation a samm:Operation');
+          expect(rdf).to.contain('samm:input (:property3)');
+          expect(rdf).not.contain('samm:output :property5');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).not.contain(':property5 a samm:Property');
         })
       );
   });
@@ -192,15 +192,15 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:newOperation)');
-          expect(rdf).to.contain(':newOperation a bamm:Operation');
-          expect(rdf).to.contain('bamm:input (:property3 :addInputProperty1 :addInputProperty2)');
-          expect(rdf).to.contain('bamm:output :addOutputProperty1');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty2 a bamm:Property');
-          expect(rdf).to.contain(':addOutputProperty1 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:newOperation)');
+          expect(rdf).to.contain(':newOperation a samm:Operation');
+          expect(rdf).to.contain('samm:input (:property3 :addInputProperty1 :addInputProperty2)');
+          expect(rdf).to.contain('samm:output :addOutputProperty1');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty2 a samm:Property');
+          expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
         })
       );
   });
@@ -222,15 +222,15 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:newOperation)');
-          expect(rdf).to.contain(':newOperation a bamm:Operation');
-          expect(rdf).to.contain('bamm:input (:addInputProperty1)');
-          expect(rdf).to.contain('bamm:output :addOutputProperty1');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty2 a bamm:Property');
-          expect(rdf).to.contain(':addOutputProperty1 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:newOperation)');
+          expect(rdf).to.contain(':newOperation a samm:Operation');
+          expect(rdf).to.contain('samm:input (:addInputProperty1)');
+          expect(rdf).to.contain('samm:output :addOutputProperty1');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty2 a samm:Property');
+          expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
         })
       );
   });
@@ -260,16 +260,16 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:newOperation)');
-          expect(rdf).to.contain(':newOperation a bamm:Operation');
-          expect(rdf).to.contain('bamm:input (:addInputProperty1)');
-          expect(rdf).to.contain('bamm:output :addNewOutputProperty1');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty2 a bamm:Property');
-          expect(rdf).to.contain(':addOutputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addNewOutputProperty1 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:newOperation)');
+          expect(rdf).to.contain(':newOperation a samm:Operation');
+          expect(rdf).to.contain('samm:input (:addInputProperty1)');
+          expect(rdf).to.contain('samm:output :addNewOutputProperty1');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty2 a samm:Property');
+          expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addNewOutputProperty1 a samm:Property');
         })
       );
   });
@@ -309,17 +309,17 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:newOperation)');
-          expect(rdf).to.contain(':newOperation a bamm:Operation');
-          expect(rdf).to.contain('bamm:input (:addInputProperty1 :addNewOutputProperty1)');
-          expect(rdf).to.contain('bamm:output :addNewOutputProperty2');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty2 a bamm:Property');
-          expect(rdf).to.contain(':addOutputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addNewOutputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addNewOutputProperty2 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:newOperation)');
+          expect(rdf).to.contain(':newOperation a samm:Operation');
+          expect(rdf).to.contain('samm:input (:addInputProperty1 :addNewOutputProperty1)');
+          expect(rdf).to.contain('samm:output :addNewOutputProperty2');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty2 a samm:Property');
+          expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addNewOutputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addNewOutputProperty2 a samm:Property');
         })
       )
       .then(() => cy.dbClickShape('newOperation'))
@@ -346,17 +346,17 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:newOperation)');
-          expect(rdf).to.contain(':newOperation a bamm:Operation');
-          expect(rdf).to.contain('bamm:input (:addInputProperty1)');
-          expect(rdf).to.contain('bamm:output :addNewOutputProperty1');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty2 a bamm:Property');
-          expect(rdf).to.contain(':addOutputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addNewOutputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addNewOutputProperty2 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:newOperation)');
+          expect(rdf).to.contain(':newOperation a samm:Operation');
+          expect(rdf).to.contain('samm:input (:addInputProperty1)');
+          expect(rdf).to.contain('samm:output :addNewOutputProperty1');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty2 a samm:Property');
+          expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addNewOutputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addNewOutputProperty2 a samm:Property');
         })
       );
   });
@@ -386,16 +386,16 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:newOperation)');
-          expect(rdf).to.contain(':newOperation a bamm:Operation');
-          expect(rdf).to.contain('bamm:input (:addInputProperty1 :addNewOutputProperty1)');
-          expect(rdf).to.contain('bamm:output :addNewOutputProperty1');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty2 a bamm:Property');
-          expect(rdf).to.contain(':addOutputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addNewOutputProperty1 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:newOperation)');
+          expect(rdf).to.contain(':newOperation a samm:Operation');
+          expect(rdf).to.contain('samm:input (:addInputProperty1 :addNewOutputProperty1)');
+          expect(rdf).to.contain('samm:output :addNewOutputProperty1');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty2 a samm:Property');
+          expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addNewOutputProperty1 a samm:Property');
         })
       )
       .then(() => cy.dbClickShape('newOperation'))
@@ -422,16 +422,16 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:newOperation)');
-          expect(rdf).to.contain(':newOperation a bamm:Operation');
-          expect(rdf).to.contain('bamm:input (:addInputProperty1 :addNewOutputProperty1)');
-          expect(rdf).to.contain('bamm:output :addNewOutputProperty2');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty2 a bamm:Property');
-          expect(rdf).to.contain(':addOutputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addNewOutputProperty1 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:newOperation)');
+          expect(rdf).to.contain(':newOperation a samm:Operation');
+          expect(rdf).to.contain('samm:input (:addInputProperty1 :addNewOutputProperty1)');
+          expect(rdf).to.contain('samm:output :addNewOutputProperty2');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty2 a samm:Property');
+          expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addNewOutputProperty1 a samm:Property');
         })
       );
   });
@@ -452,15 +452,15 @@ describe('Test edit operation', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:operations (:newOperation)');
-          expect(rdf).to.contain(':newOperation a bamm:Operation');
-          expect(rdf).to.contain('bamm:input ()');
-          expect(rdf).to.contain('bamm:output :addNewOutputProperty2');
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty1 a bamm:Property');
-          expect(rdf).to.contain(':addInputProperty2 a bamm:Property');
-          expect(rdf).to.contain(':addOutputProperty1 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:operations (:newOperation)');
+          expect(rdf).to.contain(':newOperation a samm:Operation');
+          expect(rdf).to.contain('samm:input ()');
+          expect(rdf).to.contain('samm:output :addNewOutputProperty2');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty1 a samm:Property');
+          expect(rdf).to.contain(':addInputProperty2 a samm:Property');
+          expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
         })
       );
   });

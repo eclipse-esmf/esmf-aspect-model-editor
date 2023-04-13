@@ -31,6 +31,9 @@ export class RdfModel {
   public readonly sammE: SammE;
   public readonly sammU: SammU;
 
+  public originalAbsoluteFileName = null;
+  public loadedFromWorkspace = false;
+
   get isExternalRef(): boolean {
     return this._isExternalRef;
   }
@@ -64,7 +67,7 @@ export class RdfModel {
   }
 
   set absoluteAspectModelFileName(absoluteFileName: string) {
-    this._absoluteAspectModelFileName = absoluteFileName.replace('urn:bamm:', '');
+    this._absoluteAspectModelFileName = absoluteFileName.replace('urn:samm:', '');
   }
 
   get absoluteAspectModelFileName(): string {
@@ -81,7 +84,7 @@ export class RdfModel {
     }
 
     if (this.aspectModelFileName) {
-      return `${this.getAspectModelUrn().replace('urn:bamm:', '').replace('#', ':')}${this.aspectModelFileName}`;
+      return `${this.getAspectModelUrn().replace('urn:samm:', '').replace('#', ':')}${this.aspectModelFileName}`;
     }
 
     return null;
@@ -89,7 +92,7 @@ export class RdfModel {
 
   private get nameBasedOnASpect() {
     const aspect = this.store.getSubjects(null, this.samm.Aspect(), null)?.[0];
-    return aspect ? aspect.value.replace('urn:bamm:', '').replace('#', ':') + '.ttl' : null;
+    return aspect ? aspect.value.replace('urn:samm:', '').replace('#', ':') + '.ttl' : null;
   }
 
   constructor(public store: Store, public dataTypeService: DataTypeService, private prefixes: Prefixes) {
@@ -268,10 +271,11 @@ export class RdfModel {
 
   private resolveMetaModelVersion(): void {
     const metaModelPrefix =
-      this.store.getQuads(null, null, null, null).find(quad => quad.object.value.startsWith('urn:bamm:io.openmanufacturing:meta-model:'))
+      this.store.getQuads(null, null, null, null).find(quad => quad.object.value.startsWith('urn:samm:org.eclipse.esmf.samm:meta-model:'))
         ?.object?.value ||
-      this.store.getQuads(null, null, null, null).find(quad => quad.predicate.value.startsWith('urn:bamm:io.openmanufacturing:meta-model:'))
-        ?.predicate?.value;
+      this.store
+        .getQuads(null, null, null, null)
+        .find(quad => quad.predicate.value.startsWith('urn:samm:org.eclipse.esmf.samm:meta-model:'))?.predicate?.value;
 
     if (metaModelPrefix) {
       const prefixPart = metaModelPrefix.split(':');

@@ -54,7 +54,7 @@ export abstract class BaseModelService {
     metaModelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 
     if (aspect && metaModelElement instanceof DefaultAspect && aspect.aspectModelUrn !== metaModelElement.aspectModelUrn) {
-      const aspectModelFileName = aspect.aspectModelUrn.replace('urn:bamm:', '').replace('#', ':') + '.ttl';
+      const aspectModelFileName = aspect.aspectModelUrn.replace('urn:samm:', '').replace('#', ':') + '.ttl';
 
       this.modelApiService
         .getNamespacesAppendWithFiles()
