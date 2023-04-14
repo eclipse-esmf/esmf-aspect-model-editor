@@ -177,6 +177,11 @@ jobs:
           script-file: win-installer/installer.nsi
           arguments: "-V3 -DVERSION=${{ github.event.inputs.release_version }}"
 
+      # License report is executed only once on Windows, because it is identical for all.
+      - name: Create license report
+        if: matrix.os == 'windows-latest'
+        run: npm run license-report > license-report.html
+        working-directory: core
 
       - name: "Create GitHub release Mac (full)"
         if: ${{ (matrix.os == 'macos-latest') &&  (!contains( github.ref, '-rc' )) }}
@@ -244,7 +249,9 @@ jobs:
           target_commitish: ${{ env.release_branch_name }}
           draft: false
           prerelease: false
-          files: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
+          files: |
+            core/license-report.html
+            win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
