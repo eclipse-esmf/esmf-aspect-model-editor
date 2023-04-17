@@ -9,7 +9,7 @@
 ** xref:edit-models.adoc[Edit models]
 ** xref:edit-elements.adoc[Edit elements]
 ** xref:navigate-models.adoc[Navigate models]
-** xref:shared-models.adoc[Shared models]
+** xref:shared-models.adoc[Shared Models]
 ** xref:migration-of-models.adoc[Migration of models]
 * xref:validation-and-notifications.adoc[Validation and notifications]
 * xref:model-versions.adoc[Aspect Model versions]

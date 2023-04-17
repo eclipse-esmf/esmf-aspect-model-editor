@@ -147,24 +147,6 @@ h| Workaround
 a| Launch only one instance of the Aspect Model Editor.
 |===
 
-[[import-export-problems-win]]
-=== Import/Export problems with Windows
-
-[%noheader,cols="15%,85%"]
-|===
-h| Error
-a|
-From time to time Windows may block some files during import or export and errors may occur.
-
-h| Explanation
-a| Unknown root cause.
-
-h| Workaround
-a|
-
-Restarting the Aspect Model Editor can solve the problem. Please save all files first.
-|===
-
 [[aspect-model-editor-installation-cannot-write-all-files]]
 === Aspect Model Editor installation cannot write all files
 

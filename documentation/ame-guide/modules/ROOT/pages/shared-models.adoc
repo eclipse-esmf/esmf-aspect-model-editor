@@ -1,9 +1,9 @@
 :page-partial:
 
 [[shared-models]]
-= Shared models
+= Shared Models
 
-NOTE: One can opt to delete the aspect from the model, thereby allowing the creation of aspect models that do not necessarily have aspects.
+NOTE: One can opt to delete the Aspect from the model, thereby allowing the creation of aspect models that do not necessarily have aspects.
 This can prove advantageous, particularly when developing broadly defined elements for use in various aspect models.
 
 If you need to delete an Aspect element, you can choose a new file name to describe the Shared Model that will result from the deletion.
