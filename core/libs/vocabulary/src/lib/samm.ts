@@ -17,11 +17,11 @@ export class Samm {
   static readonly XSD_URI = 'http://www.w3.org/2001/XMLSchema';
   static readonly RDF_URI = 'http://www.w3.org/1999/02/22-rdf-syntax-ns';
   static readonly RDFS_URI = 'http://www.w3.org/2000/01/rdf-schema';
-  static readonly BASE_URI = 'urn:bamm:io.openmanufacturing:';
+  static readonly BASE_URI = 'urn:samm:org.eclipse.esmf.samm:';
 
-  private alias = 'bamm';
+  private alias = 'samm';
 
-  constructor(public version: string, public identifier: string = 'urn:bamm:io.openmanufacturing:') {}
+  constructor(public version: string, public identifier: string = 'urn:samm:org.eclipse.esmf.samm:') {}
 
   static isDefaultNamespaceUri(value: string) {
     return (

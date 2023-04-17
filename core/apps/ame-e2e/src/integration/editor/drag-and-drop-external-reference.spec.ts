@@ -108,11 +108,11 @@ describe('Test drag and drop', () => {
       .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:property1 :externalProperty)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
-        expect(rdf).not.contain(':externalProperty a bamm:Property');
+        expect(rdf).to.contain('samm:properties (:property1 :externalProperty)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+        expect(rdf).not.contain(':externalProperty a samm:Property');
       });
   });
 
@@ -144,10 +144,10 @@ describe('Test drag and drop', () => {
       .then(checkAspect)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :ExternalCharacteristic');
-        expect(rdf).not.contain(':ExternalCharacteristic a bamm:Characteristic');
+        expect(rdf).to.contain('samm:properties (:property1)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :ExternalCharacteristic');
+        expect(rdf).not.contain(':ExternalCharacteristic a samm:Characteristic');
       });
   });
 
@@ -184,14 +184,14 @@ describe('Test drag and drop', () => {
       .then(checkASpectAndChildrenConstraint)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :Trait1');
-        expect(rdf).to.contain('bamm-c:baseCharacteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
-        expect(rdf).to.contain('bamm-c:constraint :ExternalConstraint');
+        expect(rdf).to.contain('samm:properties (:property1)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Trait1');
+        expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+        expect(rdf).to.contain('samm-c:constraint :ExternalConstraint');
 
-        expect(rdf).not.contain(':ExternalConstraint a bamm:Constraint');
+        expect(rdf).not.contain(':ExternalConstraint a samm:Constraint');
       });
   });
 
@@ -223,13 +223,13 @@ describe('Test drag and drop', () => {
       .then(checkAspectAndChildrenEntity)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
-        expect(rdf).to.contain('bamm:dataType :ExternalEntity');
+        expect(rdf).to.contain('samm:properties (:property1)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+        expect(rdf).to.contain('samm:dataType :ExternalEntity');
 
-        expect(rdf).not.contain(':ExternalEntity a bamm:Entity');
+        expect(rdf).not.contain(':ExternalEntity a samm:Entity');
       });
   });
 
@@ -261,14 +261,14 @@ describe('Test drag and drop', () => {
       .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:bamm:org.eclipse.digitaltwin:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:org.eclipse.different:1.0.0#>.');
-        expect(rdf).to.contain('bamm:properties (:property1 ext-different:externalProperty)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
+        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
+        expect(rdf).to.contain('samm:properties (:property1 ext-different:externalProperty)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
 
-        expect(rdf).not.contain(':externalProperty a bamm:Property');
+        expect(rdf).not.contain(':externalProperty a samm:Property');
       });
   });
 
@@ -300,13 +300,13 @@ describe('Test drag and drop', () => {
       .then(checkAspect)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:bamm:org.eclipse.digitaltwin:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:org.eclipse.different:1.0.0#>.');
-        expect(rdf).to.contain('bamm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic ext-different:ExternalCharacteristic');
+        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
+        expect(rdf).to.contain('samm:properties (:property1)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic ext-different:ExternalCharacteristic');
 
-        expect(rdf).not.contain(':ExternalCharacteristic a bamm:Characteristic');
+        expect(rdf).not.contain(':ExternalCharacteristic a samm:Characteristic');
       });
   });
 
@@ -343,16 +343,16 @@ describe('Test drag and drop', () => {
       .then(checkASpectAndChildrenConstraint)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:bamm:org.eclipse.digitaltwin:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:org.eclipse.different:1.0.0#>.');
-        expect(rdf).to.contain('bamm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :Trait1');
-        expect(rdf).to.contain('bamm-c:baseCharacteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
-        expect(rdf).to.contain('bamm-c:constraint ext-different:ExternalConstraint');
+        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
+        expect(rdf).to.contain('samm:properties (:property1)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Trait1');
+        expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+        expect(rdf).to.contain('samm-c:constraint ext-different:ExternalConstraint');
 
-        expect(rdf).not.contain(':ExternalConstraint a bamm:Constraint');
+        expect(rdf).not.contain(':ExternalConstraint a samm:Constraint');
       });
   });
 
@@ -384,15 +384,15 @@ describe('Test drag and drop', () => {
       .then(checkAspectAndChildrenEntity)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:bamm:org.eclipse.digitaltwin:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:org.eclipse.different:1.0.0#>.');
-        expect(rdf).to.contain('bamm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
-        expect(rdf).to.contain('bamm:dataType ext-different:ExternalEntity');
+        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
+        expect(rdf).to.contain('samm:properties (:property1)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+        expect(rdf).to.contain('samm:dataType ext-different:ExternalEntity');
 
-        expect(rdf).not.contain(':ExternalEntity a bamm:Entity');
+        expect(rdf).not.contain(':ExternalEntity a samm:Entity');
       });
   });
 
@@ -424,19 +424,19 @@ describe('Test drag and drop', () => {
       .then(checkAspectTree)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:property1 :externalPropertyWithChildren)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
+        expect(rdf).to.contain('samm:properties (:property1 :externalPropertyWithChildren)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
 
-        expect(rdf).not.contain(':externalPropertyWithChildren a bamm:Property');
-        expect(rdf).not.contain(':ChildrenCharacteristic1 a bamm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity1 a bamm:Entity');
-        expect(rdf).not.contain(':childrenProperty1 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty2 a bamm:Property');
-        expect(rdf).not.contain('bamm:characteristic bamm-c:Boolean');
-        expect(rdf).not.contain(':ChildrenCharacteristic2 a bamm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity2 a bamm:Entity');
+        expect(rdf).not.contain(':externalPropertyWithChildren a samm:Property');
+        expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
       });
   });
 
@@ -468,21 +468,21 @@ describe('Test drag and drop', () => {
       .then(checkAspectTree)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:bamm:org.eclipse.digitaltwin:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:bamm:org.eclipse.different:1.0.0#>.');
-        expect(rdf).to.contain('bamm:properties (:property1 ext-different:externalPropertyWithChildren)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
+        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
+        expect(rdf).to.contain('samm:properties (:property1 ext-different:externalPropertyWithChildren)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
 
-        expect(rdf).not.contain(':externalPropertyWithChildren a bamm:Property');
-        expect(rdf).not.contain(':ChildrenCharacteristic1 a bamm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity1 a bamm:Entity');
-        expect(rdf).not.contain(':childrenProperty1 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty2 a bamm:Property');
-        expect(rdf).not.contain('bamm:characteristic bamm-c:Boolean');
-        expect(rdf).not.contain(':ChildrenCharacteristic2 a bamm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity2 a bamm:Entity');
+        expect(rdf).not.contain(':externalPropertyWithChildren a samm:Property');
+        expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
       });
   });
 

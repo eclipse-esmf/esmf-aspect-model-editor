@@ -42,8 +42,8 @@ describe('Test editing Entity', () => {
         expect(entity.properties[0].property.name).to.be.equal('property2');
       });
     cy.getUpdatedRDF().then(rdf => {
-      expect(rdf).to.contain('bamm:properties (:property2)');
-      expect(rdf).to.contain(':property2 a bamm:Property');
+      expect(rdf).to.contain('samm:properties (:property2)');
+      expect(rdf).to.contain(':property2 a samm:Property');
     });
     cy.clickAddShapePlusIcon('Entity1').then(() => {
       cy.shapeExists('property3').then(() => {
@@ -53,8 +53,8 @@ describe('Test editing Entity', () => {
           expect(entity.properties[1].property.name).to.be.equal('property3');
         });
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':property3 a bamm:Property');
-          expect(rdf).to.contain('bamm:properties (:property2 :property3)');
+          expect(rdf).to.contain(':property3 a samm:Property');
+          expect(rdf).to.contain('samm:properties (:property2 :property3)');
         });
       });
     });
@@ -70,8 +70,8 @@ describe('Test editing Entity', () => {
           cy.clickAddShapePlusIcon('property1').then(() => {
             cy.clickConnectShapes('Characteristic1', 'Entity1');
             cy.getUpdatedRDF().then(rdf2 => {
-              expect(rdf2).to.contain('bamm:dataType :Entity1');
-              expect(rdf2).to.contain(':Entity1 a bamm:Entity');
+              expect(rdf2).to.contain('samm:dataType :Entity1');
+              expect(rdf2).to.contain(':Entity1 a samm:Entity');
             });
           });
         });
@@ -91,9 +91,9 @@ describe('Test editing Entity', () => {
           cy.clickConnectShapes('Entity1', 'property2');
           cy.clickConnectShapes('Entity1', 'property3');
           cy.getUpdatedRDF().then(rdf2 => {
-            expect(rdf2).to.contain('bamm:dataType :Entity1');
-            expect(rdf2).to.contain(':Entity1 a bamm:Entity');
-            expect(rdf2).to.contain('bamm:properties (:property2 :property3)');
+            expect(rdf2).to.contain('samm:dataType :Entity1');
+            expect(rdf2).to.contain(':Entity1 a samm:Entity');
+            expect(rdf2).to.contain('samm:properties (:property2 :property3)');
           });
         });
       });
@@ -105,8 +105,8 @@ describe('Test editing Entity', () => {
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain(':NewEntity');
-          expect(rdf).to.contain(':NewEntity a bamm:Entity');
-          expect(rdf).to.contain('bamm:properties (:property2 :property3)');
+          expect(rdf).to.contain(':NewEntity a samm:Entity');
+          expect(rdf).to.contain('samm:properties (:property2 :property3)');
           cy.clickShape('NewEntity').then(shape => {
             assert.isNotNull(shape);
           });
@@ -123,8 +123,8 @@ describe('Test editing Entity', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(':NewEntity');
-        expect(rdf).to.contain(':NewEntity a bamm:Entity');
-        expect(rdf).to.contain('bamm:properties (:newProperty2 :property3)');
+        expect(rdf).to.contain(':NewEntity a samm:Entity');
+        expect(rdf).to.contain('samm:properties (:newProperty2 :property3)');
         cy.clickShape('NewEntity').then(shape => assert.isNotNull(shape));
         cy.getAspect().then(aspect =>
           expect(aspect.properties[0].property.characteristic.dataType.properties[0].property.name).to.equal('newProperty2')
@@ -141,8 +141,8 @@ describe('Test editing Entity', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(':NewEntity1');
-        expect(rdf).to.contain(':NewEntity1 a bamm:Entity');
-        expect(rdf).to.contain('bamm:properties (:newProperty2 :newProperty3)');
+        expect(rdf).to.contain(':NewEntity1 a samm:Entity');
+        expect(rdf).to.contain('samm:properties (:newProperty2 :newProperty3)');
         cy.clickShape('NewEntity1').then(shape => {
           assert.isNotNull(shape);
         });
@@ -193,8 +193,8 @@ describe('Test editing Entity', () => {
       .then(() => cy.shapeExists('property6'))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':Entity1 a bamm:Entity;\n' + '    bamm:properties (:property5 :property6).');
-          expect(rdf).to.contain(':NewEntity a bamm:Entity;\n' + '    bamm:properties (:property2 :property3).');
+          expect(rdf).to.contain(':Entity1 a samm:Entity;\n' + '    samm:properties (:property5 :property6).');
+          expect(rdf).to.contain(':NewEntity a samm:Entity;\n' + '    samm:properties (:property2 :property3).');
         });
       });
   });
@@ -205,28 +205,28 @@ describe('Test editing Entity', () => {
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain(
-            ':property1 a bamm:Property;\n' +
-              '    bamm:characteristic :Characteristic1.\n' +
-              ':Characteristic1 a bamm:Characteristic;\n' +
-              '    bamm:dataType :NewEntity.\n' +
-              ':Entity1 a bamm:Entity;\n' +
-              '    bamm:properties (:property5 :property6).\n' +
-              ':property2 a bamm:Property.\n' +
-              ':property3 a bamm:Property.\n' +
-              ':NewEntity a bamm:Entity;\n' +
-              '    bamm:properties (:property2 :property3).\n' +
-              ':newProperty2 a bamm:Property.\n' +
-              ':newProperty3 a bamm:Property.\n' +
-              ':property4 a bamm:Property;\n' +
-              '    bamm:characteristic :Characteristic2.\n' +
-              ':Characteristic2 a bamm:Characteristic;\n' +
-              '    bamm:dataType :Entity1.\n' +
-              ':property5 a bamm:Property.\n' +
-              ':property6 a bamm:Property.\n' +
-              ':NewAspect a bamm:Aspect;\n' +
-              '    bamm:properties (:property1 :property4);\n' +
-              '    bamm:operations ();\n' +
-              '    bamm:events ().'
+            ':property1 a samm:Property;\n' +
+              '    samm:characteristic :Characteristic1.\n' +
+              ':Characteristic1 a samm:Characteristic;\n' +
+              '    samm:dataType :NewEntity.\n' +
+              ':Entity1 a samm:Entity;\n' +
+              '    samm:properties (:property5 :property6).\n' +
+              ':property2 a samm:Property.\n' +
+              ':property3 a samm:Property.\n' +
+              ':NewEntity a samm:Entity;\n' +
+              '    samm:properties (:property2 :property3).\n' +
+              ':newProperty2 a samm:Property.\n' +
+              ':newProperty3 a samm:Property.\n' +
+              ':property4 a samm:Property;\n' +
+              '    samm:characteristic :Characteristic2.\n' +
+              ':Characteristic2 a samm:Characteristic;\n' +
+              '    samm:dataType :Entity1.\n' +
+              ':property5 a samm:Property.\n' +
+              ':property6 a samm:Property.\n' +
+              ':NewAspect a samm:Aspect;\n' +
+              '    samm:properties (:property1 :property4);\n' +
+              '    samm:operations ();\n' +
+              '    samm:events ().'
           );
         });
       });
@@ -252,24 +252,24 @@ describe('Test editing Entity', () => {
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain(
-            ':property1 a bamm:Property;\n' +
-              '    bamm:characteristic :Characteristic1.\n' +
-              ':Characteristic1 a bamm:Characteristic;\n' +
-              '    bamm:dataType :NewEntity.\n' +
-              ':Entity1 a bamm:Entity;\n' +
-              '    bamm:properties ().\n' +
-              ':NewEntity a bamm:Entity;\n' +
-              '    bamm:properties ().\n' +
-              ':newProperty2 a bamm:Property.\n' +
-              ':newProperty3 a bamm:Property.\n' +
-              ':property4 a bamm:Property;\n' +
-              '    bamm:characteristic :Characteristic2.\n' +
-              ':Characteristic2 a bamm:Characteristic;\n' +
-              '    bamm:dataType :Entity1.\n' +
-              ':NewAspect a bamm:Aspect;\n' +
-              '    bamm:properties (:property1 :property4);\n' +
-              '    bamm:operations ();\n' +
-              '    bamm:events ().'
+            ':property1 a samm:Property;\n' +
+              '    samm:characteristic :Characteristic1.\n' +
+              ':Characteristic1 a samm:Characteristic;\n' +
+              '    samm:dataType :NewEntity.\n' +
+              ':Entity1 a samm:Entity;\n' +
+              '    samm:properties ().\n' +
+              ':NewEntity a samm:Entity;\n' +
+              '    samm:properties ().\n' +
+              ':newProperty2 a samm:Property.\n' +
+              ':newProperty3 a samm:Property.\n' +
+              ':property4 a samm:Property;\n' +
+              '    samm:characteristic :Characteristic2.\n' +
+              ':Characteristic2 a samm:Characteristic;\n' +
+              '    samm:dataType :Entity1.\n' +
+              ':NewAspect a samm:Aspect;\n' +
+              '    samm:properties (:property1 :property4);\n' +
+              '    samm:operations ();\n' +
+              '    samm:events ().'
           );
         });
       });

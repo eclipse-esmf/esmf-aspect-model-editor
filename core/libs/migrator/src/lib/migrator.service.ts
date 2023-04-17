@@ -10,29 +10,108 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {MigratorApiService} from '@ame/api';
+import {MigratorApiService, ModelApiService} from '@ame/api';
 import {Injectable} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Router} from '@angular/router';
-import {of, switchMap, tap} from 'rxjs';
+import {catchError, forkJoin, map, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
 import {MigratorComponent} from './components';
+import {NotificationsService} from '@ame/shared';
+
+const prefixesToMigrate = {
+  'meta-model': 'samm',
+  characteristic: 'samm-c',
+  entity: 'samm-e',
+  unit: 'unit',
+};
+
+const newUrn = 'urn:samm:org.eclipse.esmf.samm';
+// eslint-disable-next-line no-useless-escape
+const oldUrnRegex = /@prefix\s+(\w+-?\w+:)\s+<urn:bamm:io.openmanufacturing:([\w-]+):([\d\.]+)#>/gim;
 
 @Injectable({
   providedIn: 'root',
 })
 export class MigratorService {
   private _dialog: MatDialogRef<MigratorComponent>;
-
   public increaseNamespaceVersion = true;
 
   get dialogRef() {
     return this._dialog;
   }
 
-  constructor(private dialog: MatDialog, private migratorApi: MigratorApiService, private router: Router) {}
+  constructor(
+    private dialog: MatDialog,
+    private router: Router,
+    private migratorApi: MigratorApiService,
+    private modelApiService: ModelApiService,
+    private notificationService: NotificationsService
+  ) {}
 
   public startMigrating() {
-    return this.migratorApi.hasFilesToMigrate().pipe(switchMap(hasFiles => (hasFiles ? this.openDialog() : of(null))));
+    return this.migrateWorkspaceToSAMM().pipe(
+      switchMap(dialog$ =>
+        this.migratorApi.hasFilesToMigrate().pipe(
+          switchMap(hasFiles => {
+            if (hasFiles) {
+              this.router.navigate([{outlets: {migrator: 'start-migration'}}]);
+            } else {
+              this.dialogRef.close();
+              this.router.navigate([{outlets: {migrator: null}}]);
+            }
+            return dialog$;
+          })
+        )
+      )
+    );
+  }
+
+  private migrateWorkspaceToSAMM() {
+    this.router.navigate([{outlets: {migrator: 'samm-migration'}}]);
+    const dialog$ = this.openDialog();
+
+    return this.modelApiService.getAllNamespacesFilesContent().pipe(
+      map(files => {
+        return files.reduce((acc, file) => {
+          const newSammFile = this.detectBammAndReplaceWithSamm(file.aspectMetaModel);
+          if (file.aspectMetaModel !== newSammFile) {
+            file.aspectMetaModel = newSammFile;
+            return acc.concat([this.modelApiService.saveModel(newSammFile, file.fileName)]);
+          }
+          return acc;
+        }, []);
+      }),
+      mergeMap((requests: Observable<any>[]) => {
+        if (requests.length) {
+          this.notificationService.info({
+            title: 'Migrated models from BAMM to SAMM',
+          });
+          this.router.navigate([{outlets: {migrator: 'samm-migration'}}], {queryParams: {status: 'migrating'}});
+          return forkJoin(requests).pipe(map(() => dialog$));
+        }
+        return of(dialog$);
+      }),
+      catchError(() => of(dialog$))
+    );
+  }
+
+  public detectBammAndReplaceWithSamm(fileContent: string) {
+    const responses: RegExpExecArray[] = [];
+    let regexResponse: RegExpExecArray;
+    do {
+      regexResponse = oldUrnRegex.exec(fileContent);
+      regexResponse && responses.push(regexResponse);
+    } while (regexResponse !== null);
+
+    for (const [match, , type, version] of responses) {
+      fileContent = fileContent.replace(match, `@prefix ${prefixesToMigrate[type]}: <${newUrn}:${type}:${version}#>`);
+    }
+
+    for (const [, prefix, type] of responses) {
+      fileContent = fileContent.replace(new RegExp(prefix, 'g'), prefixesToMigrate[type] + ':');
+    }
+
+    return fileContent;
   }
 
   private openDialog() {

@@ -9,25 +9,25 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:2.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:2.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:2.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:2.0.0#> .
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.0.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.0.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.0.0#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix : <urn:bamm:org.eclipse:1.0.0#> .
+@prefix : <urn:samm:org.eclipse:1.0.0#> .
 
-:AspectDefault a bamm:Aspect;
-    bamm:properties (:property1);
-    bamm:operations ().
-:property1 a bamm:Property;
-    bamm:characteristic :Characteristic1.
-:Characteristic1 a bamm-c:Enumeration;
-    bamm:dataType :Entity1;
-    bamm-c:values (:test1 :test2 :test3).
-:Entity1 a bamm:Entity;
-    bamm:properties (:property2 :property3).
+:AspectDefault a samm:Aspect;
+    samm:properties (:property1);
+    samm:operations ().
+:property1 a samm:Property;
+    samm:characteristic :Characteristic1.
+:Characteristic1 a samm-c:Enumeration;
+    samm:dataType :Entity1;
+    samm-c:values (:test1 :test2 :test3).
+:Entity1 a samm:Entity;
+    samm:properties (:property2 :property3).
 :test1 a :Entity1;
     :property2 "test1p2";
     :property3 "test1p3".
@@ -37,11 +37,11 @@
 :test3 a :Entity1;
     :property2 "test3p2";
     :property3 "test3p3".
-:property2 a bamm:Property;
-    bamm:characteristic :Characteristic2.
-:property3 a bamm:Property;
-    bamm:characteristic :Characteristic3.
-:Characteristic2 a bamm:Characteristic;
-    bamm:dataType xsd:string.
-:Characteristic3 a bamm:Characteristic;
-    bamm:dataType xsd:string.
+:property2 a samm:Property;
+    samm:characteristic :Characteristic2.
+:property3 a samm:Property;
+    samm:characteristic :Characteristic3.
+:Characteristic2 a samm:Characteristic;
+    samm:dataType xsd:string.
+:Characteristic3 a samm:Characteristic;
+    samm:dataType xsd:string.

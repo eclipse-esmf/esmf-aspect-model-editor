@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ConfirmDialogService, EditorService, RenameModelDialogService} from '@ame/editor';
+import {ConfirmDialogService, EditorService} from '@ame/editor';
 import {MatDialog} from '@angular/material/dialog';
 import {LoadModelDialogComponent} from '../../load-model-dialog';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
@@ -23,6 +23,7 @@ import {ModelService, RdfService} from '@ame/rdf/services';
 import {ModelApiService} from '@ame/api';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfModel} from '@ame/rdf/utils';
+import {MigratorService} from '@ame/migrator';
 
 @Injectable({
   providedIn: 'root',
@@ -36,10 +37,10 @@ export class FileHandlingService {
     private rdfService: RdfService,
     private modelApiService: ModelApiService,
     private confirmDialogService: ConfirmDialogService,
-    private renameDialogService: RenameModelDialogService,
     private notificationsService: NotificationsService,
     private loadingScreenService: LoadingScreenService,
-    private namespaceCacheService: NamespacesCacheService
+    private namespaceCacheService: NamespacesCacheService,
+    private migratorService: MigratorService
   ) {}
 
   openLoadNewAspectModelDialog(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
@@ -53,7 +54,13 @@ export class FileHandlingService {
             return of(null);
           }
           this.loadingScreenService.open({...loadingScreenOptions});
-          return this.editorService.loadNewAspectModel(rdfAspectModel, '').pipe(
+          const migratedModel = this.migratorService.detectBammAndReplaceWithSamm(rdfAspectModel);
+          if (migratedModel !== rdfAspectModel) {
+            this.notificationsService.info({
+              title: 'Model migrated from BAMM to SAMM',
+            });
+          }
+          return this.editorService.loadNewAspectModel(migratedModel, '').pipe(
             first(),
             catchError(error => {
               this.notificationsService.error({
@@ -128,26 +135,55 @@ export class FileHandlingService {
   saveAspectModelToWorkspace(): Observable<any> {
     return this.modelService.synchronizeModelToRdf().pipe(
       switchMap(() => this.modelApiService.getNamespacesAppendWithFiles()),
-      switchMap((namespaces: string[]) => this.openConfirmDialog(namespaces)),
-      switchMap(result => {
-        if (result === false) {
+      switchMap((namespaces: string[]) => this.getModelLoaderState().pipe(map(modelState => ({...modelState, namespaces})))),
+      switchMap(modelState => this.openConfirmDialog(modelState.namespaces).pipe(map(overwrite => ({...modelState, overwrite})))),
+      switchMap(modelState => {
+        if (modelState.overwrite === false) {
           return of(null);
         }
 
-        this.editorService.updateLastSavedRdf(
-          false,
-          this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel),
-          new Date()
-        );
-        return this.editorService.saveModel().pipe(
+        this.editorService.updateLastSavedRdf(false, this.rdfService.serializeModel(this.rdfService.currentRdfModel), new Date());
+        const changeFileName = modelState.loadedFromWorkspace && modelState.isNameChanged && modelState.overwrite === null;
+
+        return (changeFileName ? this.modelApiService.deleteNamespace(modelState.originalModelName) : of(null)).pipe(
+          switchMap(() => this.editorService.saveModel()),
           tap(rdfModel => {
             if (rdfModel instanceof RdfModel) {
               this.namespaceCacheService.getCurrentCachedFile().fileName = rdfModel.aspectModelFileName;
             }
+
+            if (changeFileName) {
+              this.notificationsService.info({
+                title: 'Model file was renamed',
+                message: `File ${modelState.oldFileName} was renamed to ${modelState.newFileName}`,
+              });
+            }
+
+            this.rdfService.currentRdfModel.originalAbsoluteFileName = null;
+            this.rdfService.currentRdfModel.loadedFromWorkspace = true;
           })
         );
       })
     );
+  }
+
+  private getModelLoaderState() {
+    const rdfModel = this.rdfService.currentRdfModel;
+    const response = {
+      /** Original model absolute file urn */
+      originalModelName: rdfModel.originalAbsoluteFileName,
+      /** New model absolute file urn */
+      newModelName: rdfModel.absoluteAspectModelFileName,
+      /** Original file name */
+      oldFileName: rdfModel.originalAbsoluteFileName?.split(':')?.pop(),
+      /** New model name got after renaming or removing the Aspect */
+      newFileName: rdfModel.absoluteAspectModelFileName?.split(':')?.pop(),
+      /** Boolean representing if model was loaded from workspace */
+      loadedFromWorkspace: rdfModel.loadedFromWorkspace,
+      /** Boolean representing if the original file name was changed */
+      isNameChanged: rdfModel.originalAbsoluteFileName && rdfModel.originalAbsoluteFileName !== rdfModel.absoluteAspectModelFileName,
+    };
+    return of(response);
   }
 
   private openConfirmDialog(namespaces: string[]) {

@@ -7,4 +7,4 @@ nav:
 asciidoc:
   attributes:
     currently-supported-bamm: 2.0.0
-    bamm-link: https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/2.0.0/index.html[2.0.0]
+    samm-link: https://eclipse-esmf.github.io/samm-specification/2.0.0/index.html[2.0.0]

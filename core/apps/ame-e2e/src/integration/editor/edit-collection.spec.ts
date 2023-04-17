@@ -205,8 +205,8 @@ describe('Test editing different Collections', () => {
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain(`bamm:characteristic :${characteristic}`);
-        expect(rdf).to.contain(`${characteristic} a bamm-c:${type}`);
+        expect(rdf).to.contain(`samm:characteristic :${characteristic}`);
+        expect(rdf).to.contain(`${characteristic} a samm-c:${type}`);
       })
       .then(() => cy.clickShape(characteristic))
       .then(() => cy.getAspect())
@@ -229,7 +229,7 @@ describe('Test editing different Collections', () => {
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
-      .then(rdf => expect(rdf).to.contain('bamm-c:elementCharacteristic :Characteristic2'))
+      .then(rdf => expect(rdf).to.contain('samm-c:elementCharacteristic :Characteristic2'))
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.properties[0].property.characteristic.elementCharacteristic.name).to.equal('Characteristic2');
@@ -251,7 +251,7 @@ describe('Test editing different Collections', () => {
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
-      .then(rdf => expect(rdf).to.contain('bamm:dataType :Entity1'));
+      .then(rdf => expect(rdf).to.contain('samm:dataType :Entity1'));
   };
 
   const addTraitToCollection = (characteristic: string) => {
@@ -259,11 +259,11 @@ describe('Test editing different Collections', () => {
       .then(() => cy.dbClickShape(characteristic))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain(':Property1Trait a bamm-c:Trait');
-        expect(rdf).to.contain(`bamm-c:baseCharacteristic :${characteristic}`);
-        expect(rdf).to.contain('bamm-c:constraint :Constraint1');
-        expect(rdf).to.contain('bamm:characteristic :Property1Trait');
-        expect(rdf).to.contain('Constraint1 a bamm:Constraint');
+        expect(rdf).to.contain(':Property1Trait a samm-c:Trait');
+        expect(rdf).to.contain(`samm-c:baseCharacteristic :${characteristic}`);
+        expect(rdf).to.contain('samm-c:constraint :Constraint1');
+        expect(rdf).to.contain('samm:characteristic :Property1Trait');
+        expect(rdf).to.contain('Constraint1 a samm:Constraint');
       })
       .then(() => cy.clickShape('Constraint1'))
       .then(() => cy.getAspect())
@@ -281,8 +281,8 @@ describe('Test editing different Collections', () => {
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm-c:elementCharacteristic :NewCharacteristic');
-        expect(rdf).to.contain('NewCharacteristic a bamm:Characteristic');
+        expect(rdf).to.contain('samm-c:elementCharacteristic :NewCharacteristic');
+        expect(rdf).to.contain('NewCharacteristic a samm:Characteristic');
       })
       .then(() => cy.getAspect())
       .then(aspect => {
@@ -300,7 +300,7 @@ describe('Test editing different Collections', () => {
       )
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).not.contain('bamm-c:elementCharacteristic :NewCharacteristic');
+        expect(rdf).not.contain('samm-c:elementCharacteristic :NewCharacteristic');
         expect(rdf).to.contain('NewCharacteristic');
       })
       .then(() => cy.clickShape('NewCharacteristic'))
@@ -318,8 +318,8 @@ describe('Test editing different Collections', () => {
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:dataType :NewEntity');
-        expect(rdf).to.contain('NewEntity a bamm:Entity');
+        expect(rdf).to.contain('samm:dataType :NewEntity');
+        expect(rdf).to.contain('NewEntity a samm:Entity');
       });
   };
 

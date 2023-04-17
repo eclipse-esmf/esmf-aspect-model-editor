@@ -88,7 +88,7 @@ describe('Test enumeration entity value', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm-c:values (:ev1).');
+        expect(rdf).to.contain('samm-c:values (:ev1).');
         expect(rdf).to.contain(':ev1 a :NewEntity;');
         expect(rdf).to.contain(':property2 :ev2;');
         expect(rdf).to.contain(':property3 :ev3.');
@@ -187,8 +187,8 @@ describe('Test enumeration entity value', () => {
       .then(() => testEntityValuesExists(['EntityValue1', 'EntityValue2', 'EntityValue3']))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('bamm-c:values (:EntityValue1 :EntityValue2 :EntityValue3)');
-          expect(rdf).to.contain(':Entity1 a bamm:Entity;');
+          expect(rdf).to.contain('samm-c:values (:EntityValue1 :EntityValue2 :EntityValue3)');
+          expect(rdf).to.contain(':Entity1 a samm:Entity;');
           expect(rdf).to.contain(':EntityValue1 a :Entity1;');
           expect(rdf).to.contain(':property2 "TestPropertyValue1"');
           expect(rdf).to.contain(':EntityValue2 a :Entity1;');
@@ -218,8 +218,8 @@ describe('Test enumeration entity value', () => {
       .then(() => testEntityValuesExists(['EntityValue']))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm-c:values (:EntityValue).');
-        expect(rdf).to.contain(':Entity1 a bamm:Entity;');
+        expect(rdf).to.contain('samm-c:values (:EntityValue).');
+        expect(rdf).to.contain(':Entity1 a samm:Entity;');
         expect(rdf).to.contain(':EntityValue a :Entity1');
       });
   });
@@ -271,8 +271,8 @@ describe('Test enumeration entity value', () => {
       .then(() => testEntityValuesExists(['test1', 'test2', 'test3']))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('bamm-c:values (:test1 :test2 :test3)');
-          expect(rdf).to.contain(':Entity1 a bamm:Entity;');
+          expect(rdf).to.contain('samm-c:values (:test1 :test2 :test3)');
+          expect(rdf).to.contain(':Entity1 a samm:Entity;');
           expect(rdf).to.contain(':test1 a :Entity1;');
           expect(rdf).to.contain(':property2 "test1p2"');
           expect(rdf).to.contain(':property3 "test1p3"');
@@ -335,8 +335,8 @@ describe('Test enumeration entity value', () => {
       .then(() => testEntityValuesExists(['edit1', 'edit2', 'edit3']))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('bamm-c:values (:edit1 :edit2 :edit3)');
-          expect(rdf).to.contain(':Entity1 a bamm:Entity;');
+          expect(rdf).to.contain('samm-c:values (:edit1 :edit2 :edit3)');
+          expect(rdf).to.contain(':Entity1 a samm:Entity;');
           expect(rdf).to.contain(':edit1 a :Entity1;');
           expect(rdf).to.contain(':property2 "property2Edit1"');
           expect(rdf).to.contain(':property3 "property3Edit1"');
@@ -379,8 +379,8 @@ describe('Test enumeration entity value', () => {
       .then(() => testEntityValuesExists(['edit1', 'editOnlyOnEntityValue', 'edit3']))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('bamm-c:values (:edit1 :editOnlyOnEntityValue :edit3)');
-          expect(rdf).to.contain(':Entity1 a bamm:Entity;');
+          expect(rdf).to.contain('samm-c:values (:edit1 :editOnlyOnEntityValue :edit3)');
+          expect(rdf).to.contain(':Entity1 a samm:Entity;');
           expect(rdf).to.contain(':edit1 a :Entity1;');
           expect(rdf).to.contain(':property2 "property2Edit1"');
           expect(rdf).to.contain(':property3 "property3Edit1"');
@@ -447,7 +447,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.clickShape('Characteristic1'))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('bamm-c:values (:test2 :test3)');
+          expect(rdf).to.contain('samm-c:values (:test2 :test3)');
           expect(rdf).to.not.contain('test1');
           testEntityValuesExists(['test2', 'test3']);
           testEntityValuesDoesNotExist(['test1']);
@@ -463,7 +463,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('bamm-c:values (:test3)');
+          expect(rdf).to.contain('samm-c:values (:test3)');
           expect(rdf).to.not.contain('test2');
           testEntityValuesExists(['test3']);
           testEntityValuesDoesNotExist(['test2']);
@@ -492,17 +492,17 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
-          ':AspectDefault a bamm:Aspect;\n' +
-            '    bamm:properties (:property1);\n' +
-            '    bamm:operations ();\n' +
-            '    bamm:events ().\n' +
-            ':property1 a bamm:Property;\n' +
-            '    bamm:characteristic :Characteristic1.\n' +
-            ':Characteristic1 a bamm-c:Enumeration;\n' +
-            '    bamm:dataType :Entity1;\n' +
-            '    bamm-c:values (:FillGapEntityValue :EntityValue1).\n' +
-            ':Entity1 a bamm:Entity;\n' +
-            '    bamm:properties ().\n' +
+          ':AspectDefault a samm:Aspect;\n' +
+            '    samm:properties (:property1);\n' +
+            '    samm:operations ();\n' +
+            '    samm:events ().\n' +
+            ':property1 a samm:Property;\n' +
+            '    samm:characteristic :Characteristic1.\n' +
+            ':Characteristic1 a samm-c:Enumeration;\n' +
+            '    samm:dataType :Entity1;\n' +
+            '    samm-c:values (:FillGapEntityValue :EntityValue1).\n' +
+            ':Entity1 a samm:Entity;\n' +
+            '    samm:properties ().\n' +
             ':FillGapEntityValue a :Entity1.\n' +
             ':EntityValue1 a :Entity1.'
         )
@@ -520,17 +520,17 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
-          ':AspectDefault a bamm:Aspect;\n' +
-            '    bamm:properties (:property1);\n' +
-            '    bamm:operations ();\n' +
-            '    bamm:events ().\n' +
-            ':property1 a bamm:Property;\n' +
-            '    bamm:characteristic :Characteristic1.\n' +
-            ':Characteristic1 a bamm-c:Enumeration;\n' +
-            '    bamm:dataType :Entity1;\n' +
-            '    bamm-c:values (:FillGapEntityValue).\n' +
-            ':Entity1 a bamm:Entity;\n' +
-            '    bamm:properties ().\n' +
+          ':AspectDefault a samm:Aspect;\n' +
+            '    samm:properties (:property1);\n' +
+            '    samm:operations ();\n' +
+            '    samm:events ().\n' +
+            ':property1 a samm:Property;\n' +
+            '    samm:characteristic :Characteristic1.\n' +
+            ':Characteristic1 a samm-c:Enumeration;\n' +
+            '    samm:dataType :Entity1;\n' +
+            '    samm-c:values (:FillGapEntityValue).\n' +
+            ':Entity1 a samm:Entity;\n' +
+            '    samm:properties ().\n' +
             ':FillGapEntityValue a :Entity1.'
         );
       });

@@ -21,10 +21,10 @@ import {APP_CONFIG, AppConfig} from '@ame/shared';
 import {Router} from '@angular/router';
 
 export const defaultNamespaces = (sammVersion: string) => [
-  `urn:bamm:io.openmanufacturing:meta-model:${sammVersion}#`,
-  `urn:bamm:io.openmanufacturing:characteristic:${sammVersion}#`,
-  `urn:bamm:io.openmanufacturing:entity:${sammVersion}#`,
-  `urn:bamm:io.openmanufacturing:unit:${sammVersion}#`,
+  `urn:samm:org.eclipse.esmf.samm:meta-model:${sammVersion}#`,
+  `urn:samm:org.eclipse.esmf.samm:characteristic:${sammVersion}#`,
+  `urn:samm:org.eclipse.esmf.samm:entity:${sammVersion}#`,
+  `urn:samm:org.eclipse.esmf.samm:unit:${sammVersion}#`,
 
   `http://www.w3.org/1999/02/22-rdf-syntax-ns#`,
   `http://www.w3.org/2000/01/rdf-schema#`,
@@ -85,7 +85,7 @@ export class VersionMigrationComponent implements OnInit {
     for (const namespace in this.namespaces) {
       for (let i = 0; i < this.namespaces[namespace].length; i++) {
         const rdfModel = this.rdfService.externalRdfModels.find(
-          rdf => rdf.getPrefixes()[''].startsWith(`urn:bamm:${namespace}`) && rdf.aspectModelFileName === this.namespaces[namespace][i].name
+          rdf => rdf.getPrefixes()[''].startsWith(`urn:samm:${namespace}`) && rdf.aspectModelFileName === this.namespaces[namespace][i].name
         );
         const serializedUpdatedModel = this.rewriteStore(rdfModel, this.namespaces[namespace][i]);
         if (serializedUpdatedModel) {

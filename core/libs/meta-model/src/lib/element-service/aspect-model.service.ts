@@ -55,7 +55,7 @@ export class AspectModelService extends BaseModelService {
 
     this.rdfService.currentRdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
     this.aspectRenderer.update({cell});
-    this.titleService.setTitle(`[Aspect Model] ${metaModelElement?.aspectModelUrn.replace('urn:bamm:', '')}.ttl - Aspect Model Editor`);
+    this.titleService.setTitle(`[Aspect Model] ${metaModelElement?.aspectModelUrn.replace('urn:samm:', '')}.ttl - Aspect Model Editor`);
   }
 
   delete(cell: mxgraph.mxCell) {

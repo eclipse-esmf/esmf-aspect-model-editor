@@ -44,7 +44,7 @@ describe('Test editing Aspect', () => {
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain(':NewAspect');
-          expect(rdf).to.contain(':NewAspect a bamm:Aspect');
+          expect(rdf).to.contain(':NewAspect a samm:Aspect');
         })
       );
   });
@@ -55,7 +55,7 @@ describe('Test editing Aspect', () => {
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() => cy.clickShape('property3'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
-      .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('bamm:properties (:property2 :property4)')));
+      .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:properties (:property2 :property4)')));
   });
 
   it('can delete existing aspect', () => {

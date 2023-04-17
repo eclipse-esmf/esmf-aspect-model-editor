@@ -17,6 +17,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {RouterModule, Routes} from '@angular/router';
 import {
   LoadingMigratingComponent,
@@ -26,9 +27,11 @@ import {
   StartMigratingComponent,
   VersionMigrationComponent,
 } from './components';
+import {SammMigrationComponent} from './components/samm-migration/samm-migration.component';
 
 const routes: Routes = [
-  {path: '', component: StartMigratingComponent, outlet: 'migrator'},
+  {path: 'start-migration', component: StartMigratingComponent, outlet: 'migrator'},
+  {path: 'samm-migration', component: SammMigrationComponent, outlet: 'migrator'},
   {path: 'migrating', component: LoadingMigratingComponent, outlet: 'migrator'},
   {path: 'status', component: MigrationStatusComponent, outlet: 'migrator'},
   {path: 'increase-version', component: VersionMigrationComponent, outlet: 'migrator'},
@@ -43,6 +46,7 @@ const routes: Routes = [
     MatCheckboxModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     RouterModule.forChild(routes),
   ],
   declarations: [
@@ -52,6 +56,7 @@ const routes: Routes = [
     VersionMigrationComponent,
     MigrationSuccessComponent,
     MigrationStatusComponent,
+    SammMigrationComponent,
   ],
 })
 export class MigratorModule {}

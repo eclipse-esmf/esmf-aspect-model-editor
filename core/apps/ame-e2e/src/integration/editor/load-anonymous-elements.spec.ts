@@ -46,26 +46,26 @@ describe('Test load aspect model with anonymous elements', () => {
 
             cy.getUpdatedRDF().then(rdf => {
               expect(rdf).to.contain(
-                ':AspectDefault a bamm:Aspect;\n' +
-                  '    bamm:properties (:property1 :property2 :property3);\n' +
-                  '    bamm:operations ();\n' +
-                  '    bamm:events ().\n' +
-                  ':property1 a bamm:Property;\n' +
-                  '    bamm:characteristic :Characteristic1.\n' +
-                  ':property2 a bamm:Property;\n' +
-                  '    bamm:characteristic :Characteristic2.\n' +
-                  ':property3 a bamm:Property;\n' +
-                  '    bamm:characteristic :Trait1.\n' +
-                  ':Characteristic1 a bamm:Characteristic;\n' +
-                  '    bamm:dataType xsd:string.\n' +
-                  ':Characteristic2 a bamm:Characteristic;\n' +
-                  '    bamm:dataType xsd:string.\n' +
-                  ':Trait1 a bamm-c:Trait;\n' +
-                  '    bamm-c:baseCharacteristic :Characteristic3;\n' +
-                  '    bamm-c:constraint :Constraint1, :Constraint2.\n' +
-                  ':Characteristic3 a bamm:Characteristic.\n' +
-                  ':Constraint1 a bamm:Constraint.\n' +
-                  ':Constraint2 a bamm:Constraint.\n'
+                ':AspectDefault a samm:Aspect;\n' +
+                  '    samm:properties (:property1 :property2 :property3);\n' +
+                  '    samm:operations ();\n' +
+                  '    samm:events ().\n' +
+                  ':property1 a samm:Property;\n' +
+                  '    samm:characteristic :Characteristic1.\n' +
+                  ':property2 a samm:Property;\n' +
+                  '    samm:characteristic :Characteristic2.\n' +
+                  ':property3 a samm:Property;\n' +
+                  '    samm:characteristic :Trait1.\n' +
+                  ':Characteristic1 a samm:Characteristic;\n' +
+                  '    samm:dataType xsd:string.\n' +
+                  ':Characteristic2 a samm:Characteristic;\n' +
+                  '    samm:dataType xsd:string.\n' +
+                  ':Trait1 a samm-c:Trait;\n' +
+                  '    samm-c:baseCharacteristic :Characteristic3;\n' +
+                  '    samm-c:constraint :Constraint1, :Constraint2.\n' +
+                  ':Characteristic3 a samm:Characteristic.\n' +
+                  ':Constraint1 a samm:Constraint.\n' +
+                  ':Constraint2 a samm:Constraint.\n'
               );
             });
           });

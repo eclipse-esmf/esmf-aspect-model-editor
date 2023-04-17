@@ -15,18 +15,6 @@ export class ExporterHelper {
     const [b1, b2, b3] = currentSammVersion.split('.').map(x => Number(x));
     const [f1, f2, f3] = fileVersion.split('.').map(x => Number(x));
 
-    if (b1 > f1) {
-      return true;
-    }
-
-    if (b2 > f2) {
-      return true;
-    }
-
-    if (b3 > f3) {
-      return true;
-    }
-
-    return false;
+    return b1 > f1 || b2 > f2 || b3 > f3;
   }
 }
