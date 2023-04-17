@@ -63,8 +63,8 @@ export class NamespaceConfirmationModalComponent {
   }
 
   private updateNamespaceKey(): void {
-    const newUrn = 'urn:bamm:' + this.newNamespace + ':' + this.newVersion + '#';
-    const oldUrn = 'urn:bamm:' + this.oldNamespace + ':' + this.oldVersion + '#';
+    const newUrn = 'urn:samm:' + this.newNamespace + ':' + this.newVersion + '#';
+    const oldUrn = 'urn:samm:' + this.oldNamespace + ':' + this.oldVersion + '#';
 
     this.namespaceCacheService.updateNamespaceKey(oldUrn, newUrn);
   }

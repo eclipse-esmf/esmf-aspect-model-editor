@@ -19,7 +19,7 @@ This sections lists features that are supported in Aspect Models by the SAMM Asp
 
 | SAMM
 | Entity: Include predefined instance
-| SAMM supports to refer to a globally pre-defined Entity instance (namespace: `bamm-e`), but the Aspect Model Editor does not.
+| SAMM supports to refer to a globally pre-defined Entity instance (namespace: `samm-e`), but the Aspect Model Editor does not.
 
 | SAMM
 | Properties: Refinement

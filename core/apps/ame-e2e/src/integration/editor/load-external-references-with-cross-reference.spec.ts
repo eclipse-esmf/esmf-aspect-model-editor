@@ -162,21 +162,21 @@ describe('Test load external reference with cross references', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:externalPropertyWithCrossRef1 different:externalPropertyWithCrossRef2)');
-        expect(rdf).to.contain('bamm:operations (:externalOperationWithCrossRef1 different:externalOperationWithCrossRef2)');
+        expect(rdf).to.contain('samm:properties (:externalPropertyWithCrossRef1 different:externalPropertyWithCrossRef2)');
+        expect(rdf).to.contain('samm:operations (:externalOperationWithCrossRef1 different:externalOperationWithCrossRef2)');
 
-        expect(rdf).not.contain(':externalPropertyWithCrossRef1 a bamm:Property');
-        expect(rdf).not.contain(':externalPropertyWithCrossRef2 a bamm:Property');
-        expect(rdf).not.contain(':ExternalCharacteristicWithCrossRef1 a bamm:Characteristic');
-        expect(rdf).not.contain(':ExternalCharacteristicWithCrossRef2 a bamm:Characteristic');
-        expect(rdf).not.contain(':ExternalEntityWithCrossRef1 a bamm:Entity');
-        expect(rdf).not.contain(':ExternalEntityWithCrossRef2 a bamm:Entity');
-        expect(rdf).not.contain(':childrenProperty1 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty2 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty3 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty4 a bamm:Property');
-        expect(rdf).not.contain('bamm:characteristic bamm-c:Text');
-        expect(rdf).not.contain('bamm:characteristic bamm-c:boolean');
+        expect(rdf).not.contain(':externalPropertyWithCrossRef1 a samm:Property');
+        expect(rdf).not.contain(':externalPropertyWithCrossRef2 a samm:Property');
+        expect(rdf).not.contain(':ExternalCharacteristicWithCrossRef1 a samm:Characteristic');
+        expect(rdf).not.contain(':ExternalCharacteristicWithCrossRef2 a samm:Characteristic');
+        expect(rdf).not.contain(':ExternalEntityWithCrossRef1 a samm:Entity');
+        expect(rdf).not.contain(':ExternalEntityWithCrossRef2 a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty3 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty4 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Text');
+        expect(rdf).not.contain('samm:characteristic samm-c:boolean');
       });
   });
 
@@ -263,16 +263,16 @@ describe('Test load external reference with cross references', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:externalPropertyWithCrossRef)');
-        expect(rdf).to.contain('bamm:operations (:externalOperationWithCrossRef)');
+        expect(rdf).to.contain('samm:properties (:externalPropertyWithCrossRef)');
+        expect(rdf).to.contain('samm:operations (:externalOperationWithCrossRef)');
 
-        expect(rdf).not.contain(':externalPropertyWithCrossRef a bamm:Property');
-        expect(rdf).not.contain(':ExternalCharacteristicWithCrossRef a bamm:Characteristic');
-        expect(rdf).not.contain(':ExternalEntityWithCrossRef a bamm:Entity');
-        expect(rdf).not.contain(':childrenProperty1 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty2 a bamm:Property');
-        expect(rdf).not.contain('bamm:characteristic bamm-c:Text');
-        expect(rdf).not.contain('bamm:characteristic bamm-c:boolean');
+        expect(rdf).not.contain(':externalPropertyWithCrossRef a samm:Property');
+        expect(rdf).not.contain(':ExternalCharacteristicWithCrossRef a samm:Characteristic');
+        expect(rdf).not.contain(':ExternalEntityWithCrossRef a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Text');
+        expect(rdf).not.contain('samm:characteristic samm-c:boolean');
       });
   });
 });

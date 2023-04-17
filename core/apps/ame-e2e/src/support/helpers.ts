@@ -127,8 +127,8 @@ export class cyHelp {
           for (let i = 1; i <= number; i++) {
             propertiesRDFList = propertiesRDFList + `:property${i} `;
           }
-          expect(rdf).to.contain(`bamm:properties (${propertiesRDFList.trim()})`);
-          expect(rdf).to.contain(`:property${number} a bamm:Property`);
+          expect(rdf).to.contain(`samm:properties (${propertiesRDFList.trim()})`);
+          expect(rdf).to.contain(`:property${number} a samm:Property`);
         });
       });
     });

@@ -86,12 +86,16 @@ export class ElementModelService {
     if (modelElement instanceof DefaultAspect) {
       this.renameModelService.open().subscribe(data => {
         if (data?.name) {
+          const rdfModel = this.rdfService.currentRdfModel;
           this.modelService.removeAspect();
           this.removeElementData(cell);
-          this.rdfService.currentRdfModel.absoluteAspectModelFileName = '';
+          if (!rdfModel.originalAbsoluteFileName) {
+            rdfModel.originalAbsoluteFileName = rdfModel.absoluteAspectModelFileName;
+          }
+          rdfModel.absoluteAspectModelFileName = '';
           this.currentCachedFile.fileName = '';
-          this.rdfService.currentRdfModel.aspectModelFileName = data.name;
-          this.titleService.setTitle(`[Shared Model] ${this.rdfService.currentRdfModel.absoluteAspectModelFileName} - Aspect Model Editor`);
+          rdfModel.aspectModelFileName = data.name;
+          this.titleService.setTitle(`[Shared Model] ${rdfModel.absoluteAspectModelFileName} - Aspect Model Editor`);
         }
       });
       return;

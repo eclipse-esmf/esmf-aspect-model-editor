@@ -118,7 +118,7 @@ export class SidebarNamespacesComponent implements OnChanges {
 
   public isCurrentFile(namespace: string, namespaceFile: string): boolean {
     const cachedFile = this.namespaceService.getCurrentCachedFile();
-    return `${cachedFile?.namespace}${cachedFile?.fileName}` === `urn:bamm:${namespace}#${namespaceFile}`;
+    return `${cachedFile?.namespace}${cachedFile?.fileName}` === `urn:samm:${namespace}#${namespaceFile}`;
   }
 
   public onLoadAspectModel(namespace: NamespaceModel, namespaceFile: string) {
@@ -141,7 +141,7 @@ export class SidebarNamespacesComponent implements OnChanges {
       for (const file of namespace.files) {
         const rdfModel = this.rdfService.externalRdfModels.find(rdf => {
           const mainPrefix = rdf.getPrefixes()[''];
-          return rdf.absoluteAspectModelFileName === `${mainPrefix.replace('urn:bamm:', '').replace('#', '')}:${file}`;
+          return rdf.absoluteAspectModelFileName === `${mainPrefix.replace('urn:samm:', '').replace('#', '')}:${file}`;
         });
 
         if (!rdfModel && !this.isCurrentFile(namespace.name, file)) {

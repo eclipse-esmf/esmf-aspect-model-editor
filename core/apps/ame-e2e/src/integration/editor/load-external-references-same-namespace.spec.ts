@@ -60,16 +60,16 @@ describe('Test load external reference with same namespace', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:externalPropertyWithChildren)');
+        expect(rdf).to.contain('samm:properties (:externalPropertyWithChildren)');
 
-        expect(rdf).not.contain(':externalPropertyWithChildren a bamm:Property');
-        expect(rdf).not.contain(':ChildrenCharacteristic1 a bamm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity1 a bamm:Entity');
-        expect(rdf).not.contain(':childrenProperty1 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty2 a bamm:Property');
-        expect(rdf).not.contain('bamm:characteristic bamm-c:Boolean');
-        expect(rdf).not.contain(':ChildrenCharacteristic2 a bamm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity2 a bamm:Entity');
+        expect(rdf).not.contain(':externalPropertyWithChildren a samm:Property');
+        expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
       });
   });
 
@@ -132,19 +132,19 @@ describe('Test load external reference with same namespace', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:operations (:externalOperationWithChildren)');
+        expect(rdf).to.contain('samm:operations (:externalOperationWithChildren)');
 
-        expect(rdf).not.contain(':externalOperationWithChildren a bamm:Operation');
-        expect(rdf).not.contain(':childrenProperty1 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty2 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty3 a bamm:Property');
-        expect(rdf).not.contain(':ChildrenCharacteristic1 a bamm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity1 a bamm:Entity');
-        expect(rdf).not.contain(':childrenProperty1 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty2 a bamm:Property');
-        expect(rdf).not.contain('bamm:characteristic bamm-c:Boolean');
-        expect(rdf).not.contain(':ChildrenCharacteristic2 a bamm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity2 a bamm:Entity');
+        expect(rdf).not.contain(':externalOperationWithChildren a samm:Operation');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty3 a samm:Property');
+        expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
       });
   });
 
@@ -191,17 +191,17 @@ describe('Test load external reference with same namespace', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :ExternalCharacteristicWithChildren');
+        expect(rdf).to.contain('samm:properties (:property1)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :ExternalCharacteristicWithChildren');
 
-        expect(rdf).not.contain(':ExternalCharacteristicWithChildren a bamm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity1 a bamm:Entity');
-        expect(rdf).not.contain(':childrenProperty1 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty2 a bamm:Property');
-        expect(rdf).not.contain('bamm:characteristic bamm-c:Boolean');
-        expect(rdf).not.contain(':ChildrenCharacteristic2 a bamm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity2 a bamm:Entity');
+        expect(rdf).not.contain(':ExternalCharacteristicWithChildren a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
       });
   });
 
@@ -240,12 +240,12 @@ describe('Test load external reference with same namespace', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:dataType xsd:string');
-        expect(rdf).to.contain('bamm:characteristic :Quantifiable1');
-        expect(rdf).to.contain(':Quantifiable1 a bamm-c:Quantifiable');
-        expect(rdf).to.contain('bamm-c:unit :ExternalUnit');
+        expect(rdf).to.contain('samm:properties (:property1)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:dataType xsd:string');
+        expect(rdf).to.contain('samm:characteristic :Quantifiable1');
+        expect(rdf).to.contain(':Quantifiable1 a samm-c:Quantifiable');
+        expect(rdf).to.contain('samm-c:unit :ExternalUnit');
 
         expect(rdf).not.contain(':ExternalUnit a unit:Unit');
       });
@@ -294,16 +294,16 @@ describe('Test load external reference with same namespace', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
-        expect(rdf).to.contain('bamm:dataType :ExternalEntityWithChildren');
+        expect(rdf).to.contain('samm:characteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+        expect(rdf).to.contain('samm:dataType :ExternalEntityWithChildren');
 
-        expect(rdf).not.contain(':ExternalEntityWithChildren a bamm:Entity');
-        expect(rdf).not.contain(':childrenProperty1 a bamm:Property');
-        expect(rdf).not.contain(':childrenProperty2 a bamm:Property');
-        expect(rdf).not.contain('bamm:characteristic bamm-c:Boolean');
-        expect(rdf).not.contain(':ChildrenCharacteristic2 a bamm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity2 a bamm:Entity');
+        expect(rdf).not.contain(':ExternalEntityWithChildren a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
       });
   });
 
@@ -419,31 +419,31 @@ describe('Test load external reference with same namespace', () => {
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('bamm:operations (:operation1 :externalOperation)');
-        expect(rdf).to.contain('bamm:input (:property1)');
-        expect(rdf).to.contain('bamm:output :property2');
-        expect(rdf).not.contain('bamm:input ()');
+        expect(rdf).to.contain('samm:operations (:operation1 :externalOperation)');
+        expect(rdf).to.contain('samm:input (:property1)');
+        expect(rdf).to.contain('samm:output :property2');
+        expect(rdf).not.contain('samm:input ()');
 
-        expect(rdf).to.contain('bamm:properties (:property1 :property2 :property3 :property4 :externalProperty)');
-        expect(rdf).to.contain(':property1 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a bamm:Characteristic');
-        expect(rdf).to.contain('bamm:dataType :ExternalEntity');
-        expect(rdf).to.contain(':property2 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :ExternalCharacteristic');
-        expect(rdf).to.contain(':property3 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :ExternalTrait');
-        expect(rdf).to.contain(':property4 a bamm:Property');
-        expect(rdf).to.contain('bamm:characteristic :Property4Trait');
-        expect(rdf).to.contain(':Property4Trait a bamm-c:Trait');
-        expect(rdf).to.contain('bamm-c:baseCharacteristic :Characteristic1');
-        expect(rdf).to.contain('bamm-c:constraint :Constraint1');
-        expect(rdf).to.contain(':Constraint1 a bamm:Constraint');
+        expect(rdf).to.contain('samm:properties (:property1 :property2 :property3 :property4 :externalProperty)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+        expect(rdf).to.contain('samm:dataType :ExternalEntity');
+        expect(rdf).to.contain(':property2 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :ExternalCharacteristic');
+        expect(rdf).to.contain(':property3 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :ExternalTrait');
+        expect(rdf).to.contain(':property4 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Property4Trait');
+        expect(rdf).to.contain(':Property4Trait a samm-c:Trait');
+        expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic1');
+        expect(rdf).to.contain('samm-c:constraint :Constraint1');
+        expect(rdf).to.contain(':Constraint1 a samm:Constraint');
 
-        expect(rdf).not.contain(':externalProperty a bamm:Property');
-        expect(rdf).not.contain(':ExternalEntity a bamm:Entity');
-        expect(rdf).not.contain(':ExternalCharacteristic a bamm:Characteristic');
-        expect(rdf).not.contain(':ExternalTraita bamm-c:Trait');
+        expect(rdf).not.contain(':externalProperty a samm:Property');
+        expect(rdf).not.contain(':ExternalEntity a samm:Entity');
+        expect(rdf).not.contain(':ExternalCharacteristic a samm:Characteristic');
+        expect(rdf).not.contain(':ExternalTraita samm-c:Trait');
       });
   });
 });

@@ -48,8 +48,6 @@ export class RdfService {
     if (!environment.production) {
       window['angular.rdfService'] = this;
     }
-
-    window['_rdfService'] = this;
   }
 
   serializeModel(rdfModel: RdfModel): string {
@@ -168,6 +166,7 @@ export class RdfService {
           this.currentRdfModel.absoluteAspectModelFileName ||
           namespaceFileName ||
           `${this.currentRdfModel.getAspectModelUrn().replace('#', ':')}NewModel.ttl`;
+        this.currentRdfModel.loadedFromWorkspace = !!namespaceFileName;
 
         this.currentRdfModel.aspectModelFileName = this.currentRdfModel.absoluteAspectModelFileName;
         subject.next(this.currentRdfModel);

@@ -76,12 +76,12 @@ describe('Test edit Events', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:events (:event1)');
-          expect(rdf).to.contain(':event1 a bamm:Event');
-          expect(rdf).to.contain('bamm:parameters (:property2 :property3)');
-          expect(rdf).to.contain(':property2 a bamm:Property');
-          expect(rdf).to.contain(':property3 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:events (:event1)');
+          expect(rdf).to.contain(':event1 a samm:Event');
+          expect(rdf).to.contain('samm:parameters (:property2 :property3)');
+          expect(rdf).to.contain(':property2 a samm:Property');
+          expect(rdf).to.contain(':property3 a samm:Property');
         })
       );
   });
@@ -102,12 +102,12 @@ describe('Test edit Events', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:events (:newEvent)');
-          expect(rdf).to.contain(':newEvent a bamm:Event');
-          expect(rdf).to.contain('bamm:parameters (:property2 :property3)');
-          expect(rdf).to.contain(':property2 a bamm:Property');
-          expect(rdf).to.contain(':property3 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:events (:newEvent)');
+          expect(rdf).to.contain(':newEvent a samm:Event');
+          expect(rdf).to.contain('samm:parameters (:property2 :property3)');
+          expect(rdf).to.contain(':property2 a samm:Property');
+          expect(rdf).to.contain(':property3 a samm:Property');
         })
       );
   });
@@ -126,12 +126,12 @@ describe('Test edit Events', () => {
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(':AspectDefault a bamm:Aspect');
-          expect(rdf).to.contain('bamm:events (:newEvent)');
-          expect(rdf).to.contain(':newEvent a bamm:Event');
-          expect(rdf).to.contain('bamm:parameters (:property3)');
-          expect(rdf).not.contain(':property2 a bamm:Property');
-          expect(rdf).to.contain(':property3 a bamm:Property');
+          expect(rdf).to.contain(':AspectDefault a samm:Aspect');
+          expect(rdf).to.contain('samm:events (:newEvent)');
+          expect(rdf).to.contain(':newEvent a samm:Event');
+          expect(rdf).to.contain('samm:parameters (:property3)');
+          expect(rdf).not.contain(':property2 a samm:Property');
+          expect(rdf).to.contain(':property3 a samm:Property');
         })
       );
   });

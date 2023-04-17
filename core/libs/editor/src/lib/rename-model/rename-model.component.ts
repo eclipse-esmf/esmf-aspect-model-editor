@@ -32,14 +32,14 @@ export class RenameModelComponent {
     private modelApiService: ModelApiService
   ) {
     const rdfModel = this.rdfService.currentRdfModel;
-    this.modelApiService.getNamespacesAppendWithFiles().subscribe((namespaces: string) => {
+    this.modelApiService.getNamespacesAppendWithFiles().subscribe((namespaces: string[]) => {
+      namespaces = namespaces.map(namespace => namespace.toLowerCase());
       this.fileNameControl = new FormControl('', [
         Validators.required,
         Validators.pattern('[a-zA-Z0-9]+'),
         (control: AbstractControl) => {
-          return namespaces.includes(`${rdfModel.getAspectModelUrn().replace('urn:bamm:', '').replace('#', ':')}${control.value}.ttl`)
-            ? {sameFile: true}
-            : null;
+          const searchTerm = `${rdfModel.getAspectModelUrn().replace('urn:samm:', '').replace('#', ':')}${control.value}.ttl`.toLowerCase();
+          return namespaces.includes(searchTerm) ? {sameFile: true} : null;
         },
       ]);
       this.fileNameControl.markAsTouched();

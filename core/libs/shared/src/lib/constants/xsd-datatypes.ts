@@ -20,7 +20,7 @@ export const simpleDataTypes = {
   boolean: {isDefinedBy: 'http://www.w3.org/2001/XMLSchema#boolean', description: 'true, false'},
   byte: {isDefinedBy: 'http://www.w3.org/2001/XMLSchema#byte', description: '-128…+127 (8 bit)'},
   curie: {
-    isDefinedBy: 'urn:bamm:io.openmanufacturing:meta-model:SAMM_VERSION#curie',
+    isDefinedBy: 'urn:samm:org.eclipse.esmf.samm:meta-model:SAMM_VERSION#curie',
     description: 'Compact URI/IRI (well-known prefix + element name)',
   },
   date: {

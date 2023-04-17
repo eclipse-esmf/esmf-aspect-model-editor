@@ -21,7 +21,7 @@ import {environment} from 'environments/environment';
 import {MxGraphGeometryProviderService, MxGraphSetupService} from '.';
 import {MxGraphCharacteristicHelper, MxGraphHelper, PropertyInformation} from '../helpers';
 import {mxCell, mxConstants, mxUtils} from '../providers';
-import {Base, BaseMetaModelElement, DefaultAbstractProperty, DefaultEntityValue, DefaultProperty} from '@ame/meta-model';
+import {BaseMetaModelElement, DefaultAbstractProperty, DefaultCharacteristic, DefaultEntityValue, DefaultProperty} from '@ame/meta-model';
 import {MxAttributeName} from '../models';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {CollapsedOverlay, ExpandedOverlay, NotificationsService} from '@ame/shared';
@@ -105,12 +105,14 @@ export class MxGraphService {
    * @returns the cell that you want to resolve
    */
   resolveCellByModelElement(metaModelElement: BaseMetaModelElement): mxgraph.mxCell {
-    return this.mxGraphAttributeService.graph
-      .getChildVertices(this.mxGraphAttributeService.graph.getDefaultParent())
-      .find(
-        cell =>
-          MxGraphHelper.getModelElement(cell) && MxGraphHelper.getModelElement(cell).aspectModelUrn === metaModelElement.aspectModelUrn
-      );
+    if (metaModelElement instanceof DefaultCharacteristic && metaModelElement.isPredefined()) {
+      return null;
+    }
+
+    return this.mxGraphAttributeService.graph.getChildVertices(this.mxGraphAttributeService.graph.getDefaultParent()).find(cell => {
+      const metaModel = MxGraphHelper.getModelElement(cell);
+      return metaModel?.aspectModelUrn === metaModelElement.aspectModelUrn;
+    });
   }
 
   /**
@@ -497,46 +499,19 @@ export class MxGraphService {
       .forEach(entityValueCell => this.updateEntityValuesWithReference(MxGraphHelper.getModelElement(entityValueCell)));
   }
 
-  private applyDelta(cell, deltaX, deltaY, formattedCells) {
+  private applyDelta(cell: mxgraph.mxCell, deltaX: number, deltaY: number, formattedCells: mxgraph.mxCell[]) {
     if (!cell || formattedCells.includes(cell)) {
       return;
     }
+
     formattedCells.push(cell);
     cell.geometry.x += deltaX;
     cell.geometry.y += deltaY;
 
     const edgesToRedraw = this.graph.getOutgoingEdges(cell);
-    const modelElement = MxGraphHelper.getModelElement(cell);
-
-    Object.keys(modelElement)
-      .filter(attributeName => attributeName !== 'parents')
-      .forEach(attributeName => {
-        const attributeValue: any = modelElement[attributeName];
-        if (attributeValue instanceof Base) {
-          return this.applyDelta(this.resolveCellByModelElement(attributeValue), deltaX, deltaY, formattedCells);
-        }
-
-        if (attributeValue?.property && attributeValue?.keys) {
-          return this.applyDelta(this.resolveCellByModelElement(attributeValue.property), deltaX, deltaY, formattedCells);
-        }
-
-        if (Array.isArray(attributeValue)) {
-          return attributeValue.forEach(arrayElement => {
-            if (arrayElement instanceof Base) {
-              return this.applyDelta(this.resolveCellByModelElement(arrayElement), deltaX, deltaY, formattedCells);
-            }
-            if (arrayElement?.value instanceof DefaultEntityValue) {
-              this.applyDelta(this.resolveCellByModelElement(arrayElement.value), deltaX, deltaY, formattedCells);
-            }
-            if (arrayElement.property && arrayElement.keys) {
-              this.applyDelta(this.resolveCellByModelElement(arrayElement.property), deltaX, deltaY, formattedCells);
-            }
-            return null;
-          });
-        }
-      });
-    edgesToRedraw.forEach(edge => {
+    for (const edge of edgesToRedraw) {
+      this.applyDelta(edge.target, deltaX, deltaY, formattedCells);
       this.graph.resetEdge(edge);
-    });
+    }
   }
 }

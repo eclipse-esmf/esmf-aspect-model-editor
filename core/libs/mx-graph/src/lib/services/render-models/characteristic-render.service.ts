@@ -173,7 +173,9 @@ export class CharacteristicRenderService extends BaseRenderService {
 
   private handleOverlay(cell: mxgraph.mxCell) {
     if (!(this.metaModelElement instanceof DefaultEither)) {
-      this.mxGraphShapeOverlayService.removeOverlay(cell, null);
+      this.mxGraphShapeOverlayService.removeOverlay(cell, MxGraphHelper.getNewShapeOverlayButton(cell));
+      this.mxGraphShapeOverlayService.removeOverlay(cell, MxGraphHelper.getTopOverlayButton(cell));
+
       if (this.metaModelElement?.isPredefined()) {
         this.mxGraphShapeOverlayService.addTopShapeOverlay(cell);
       } else {
