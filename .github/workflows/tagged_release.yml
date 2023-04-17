@@ -140,7 +140,6 @@ jobs:
             curl.exe -sL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $RESPONSE_JSON.assets[2].url -o backend/ame-backend.exe
           }
 
-
       - name: Install node modules
         run: npm install
         working-directory: core
@@ -186,7 +185,7 @@ jobs:
       - name: "Create GitHub release Mac (full)"
         if: ${{ (matrix.os == 'macos-latest') &&  (!contains( github.ref, '-rc' )) }}
         uses: softprops/action-gh-release@v1
-        id: esmf_ame_mac_release
+        id: esmf_ame_mac_release_full
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
@@ -197,10 +196,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: "Create GitHub pre-release Mac (full)"
+      - name: "Create GitHub pre-release Mac"
         if: ${{ (matrix.os == 'macos-latest') &&  (contains( github.ref, '-rc' )) }}
         uses: softprops/action-gh-release@v1
-        id: esmf_ame_mac_release
+        id: esmf_ame_mac_release_rc
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
@@ -214,7 +213,7 @@ jobs:
       - name: "Create GitHub release Linux (full)"
         if: ${{ (matrix.os == 'ubuntu-latest') &&  (!contains( github.ref, '-rc' )) }}
         uses: softprops/action-gh-release@v1
-        id: esmf_ame_linux_release
+        id: esmf_ame_linux_release_full
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
@@ -225,10 +224,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: "Create GitHub pre-release Linux (full)"
+      - name: "Create GitHub pre-release Linux"
         if: ${{ (matrix.os == 'ubuntu-latest') &&  (contains( github.ref, '-rc' )) }}
         uses: softprops/action-gh-release@v1
-        id: esmf_ame_linux_release
+        id: esmf_ame_linux_release_rc
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
@@ -242,7 +241,7 @@ jobs:
       - name: "Create GitHub release Windows (full)"
         if: ${{ (matrix.os == 'windows-latest') && (!contains( github.ref, '-rc' )) }}
         uses: softprops/action-gh-release@v1
-        id: esmf_ame_win_release
+        id: esmf_ame_win_release_full
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
@@ -255,10 +254,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: "Create GitHub pre-release Windows (full)"
+      - name: "Create GitHub pre-release Windows"
         if: ${{ (matrix.os == 'windows-latest') && (contains( github.ref, '-rc' )) }}
         uses: softprops/action-gh-release@v1
-        id: esmf_ame_win_release
+        id: esmf_ame_win_release_rc
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
