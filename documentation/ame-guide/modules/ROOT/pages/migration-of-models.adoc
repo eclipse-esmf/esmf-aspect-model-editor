@@ -6,7 +6,7 @@
 There are three different ways to migrate an Aspect Model:
 
 * Automatic migration when starting the application.
-* Loading a (syntactically valid) Aspect Model base on an older meta model version
+* Loading a (syntactically valid) Aspect Model based on an older meta model version
 
 [[automatic-migration]]
 == Automatic migration when starting the application
