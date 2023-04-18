@@ -23,7 +23,7 @@ export const config = {
   assetLocation: 'assets',
   minSammVersion: '1.0.0',
   currentSammVersion: '2.0.0',
-  sdkVersion: '2.1.3',
+  sdkVersion: '2.2.0',
   defaultPort: '9091',
   serviceUrl: `http://localhost:${defaultPort}`,
   api: {

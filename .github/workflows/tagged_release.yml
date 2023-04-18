@@ -44,15 +44,18 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Set versions
+        if: matrix.os == 'ubuntu-latest'
         run: |
           release_version=${{ github.event.inputs.release_version }}
           release_branch_name=${release_version%.*}.x
           echo "release_branch_name=$release_branch_name" >> $GITHUB_ENV
 
       - name: Set antora version
+        if: matrix.os == 'ubuntu-latest'
         run: yq eval -i '.version = "${{ github.event.inputs.release_version }}"' documentation/ame-guide/antora.yml
 
       - name: Commit version changes and push to upstream repository
+        if: matrix.os == 'ubuntu-latest'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: ${{ env.release_branch_name }}
@@ -189,7 +192,6 @@ jobs:
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: ${{ env.release_branch_name }}
           draft: false
           prerelease: false
           files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
@@ -203,7 +205,6 @@ jobs:
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: ${{ env.release_branch_name }}
           draft: false
           prerelease: true
           files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
@@ -245,7 +246,6 @@ jobs:
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: ${{ env.release_branch_name }}
           draft: false
           prerelease: false
           files: |
@@ -261,7 +261,6 @@ jobs:
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: ${{ env.release_branch_name }}
           draft: false
           prerelease: true
           files: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe

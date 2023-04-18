@@ -66,7 +66,7 @@ describe('Abstract Entity Visitor', () => {
       addPrefix: jest.fn(() => {}),
     } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
-    entity = new DefaultAbstractEntity('1', 'bamm#abstractEntity1', 'abstractEntity1', null);
+    entity = new DefaultAbstractEntity('1', 'samm#abstractEntity1', 'abstractEntity1', null);
     entity.properties = [property];
 
     rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
@@ -105,6 +105,6 @@ describe('Abstract Entity Visitor', () => {
       description: [],
       see: [],
     });
-    expect(entity.aspectModelUrn).toBe('bamm#entity2');
+    expect(entity.aspectModelUrn).toBe('samm#entity2');
   });
 });

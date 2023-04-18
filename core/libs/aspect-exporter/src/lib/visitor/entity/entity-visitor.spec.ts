@@ -68,8 +68,8 @@ describe('Entity Visitor', () => {
       addPrefix: jest.fn(() => {}),
     } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
-    entity = new DefaultEntity('1', 'bamm#entity1', 'entity1', null);
-    property = new DefaultProperty('1', 'bamm#property1', 'property1', null);
+    entity = new DefaultEntity('1', 'samm#entity1', 'entity1', null);
+    property = new DefaultProperty('1', 'samm#property1', 'property1', null);
     overwrittenProperty = {property: property, keys: {}};
     entity.properties = [overwrittenProperty];
 

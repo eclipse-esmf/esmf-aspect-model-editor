@@ -20,9 +20,9 @@ This project includes the Aspect model editor and their documentation.
 
 Are you having trouble with Aspect Model Editor? We want to help!
 
-* Check the [developer documentation](https://openmanufacturingplatform.github.io)
+* Check the [developer documentation](https://eclipse-esmf.github.io)
 * Check the
-  BAMM [specification](https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/2.0.0/index.html)
+  SAMM [specification](https://eclipse-esmf.github.io/samm-specification/2.0.0/index.html)
 * Having issues with the Aspect Model Editor? Open
   a [GitHub issue](https://github.com/eclipse-esmf/esmf-aspect-model-editor/issues).
 
