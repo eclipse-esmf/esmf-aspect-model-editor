@@ -162,7 +162,7 @@ jobs:
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: 4.2.1
+          target_commitish: v4.2.1
           draft: false
           prerelease: false
           files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
@@ -175,7 +175,7 @@ jobs:
         id: esmf_ame_mac_release_rc
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
-          target_commitish: 4.2.1
+          target_commitish: v4.2.1
           draft: false
           prerelease: true
           files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
@@ -189,7 +189,7 @@ jobs:
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: 4.2.1
+          target_commitish: v4.2.1
           draft: false
           prerelease: false
           files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
@@ -203,7 +203,7 @@ jobs:
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: 4.2.1
+          target_commitish: v4.2.1
           draft: false
           prerelease: true
           files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
@@ -217,7 +217,7 @@ jobs:
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: 4.2.1
+          target_commitish: v4.2.1
           draft: false
           prerelease: false
           files: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
@@ -231,7 +231,7 @@ jobs:
         with:
           body: "Release version ${{ github.event.inputs.release_version }}."
           tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: 4.2.1
+          target_commitish: v4.2.1
           draft: false
           prerelease: true
           files: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
