@@ -179,90 +179,62 @@ jobs:
           script-file: win-installer/installer.nsi
           arguments: "-V3 -DVERSION=${{ github.event.inputs.release_version }}"
 
-      # License report is executed only once on Windows, because it is identical for all.
-      - name: Create license report
-        if: matrix.os == 'windows-latest'
-        run: npm run license-report > license-report.html
-        working-directory: core
-
-      - name: "Create GitHub release Mac (full)"
-        if: ${{ (matrix.os == 'macos-latest') &&  (!contains( github.ref, '-rc' )) }}
-        uses: softprops/action-gh-release@v1
-        id: esmf_ame_mac_release_full
+      - name: Create GitHub release (Mac)
+        if: ${{ (matrix.os == 'macos-latest') && (!contains( github.ref, '-rc' )) }}
+        uses: svenstaro/upload-release-action@latest
         with:
-          body: "Release version ${{ github.event.inputs.release_version }}."
-          tag_name: v${{ github.event.inputs.release_version }}
-          draft: false
+          overwrite: true
           prerelease: false
-          files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
+          tag: ${{ github.ref }}
 
-      - name: "Create GitHub pre-release Mac"
-        if: ${{ (matrix.os == 'macos-latest') &&  (contains( github.ref, '-rc' )) }}
-        uses: softprops/action-gh-release@v1
-        id: esmf_ame_mac_release_rc
+      - name: Create GitHub pre-release (Mac)
+        if: ${{ (matrix.os == 'macos-latest') && (contains( github.ref, '-rc' )) }}
+        uses: svenstaro/upload-release-action@latest
         with:
-          body: "Release version ${{ github.event.inputs.release_version }}."
-          tag_name: v${{ github.event.inputs.release_version }}
-          draft: false
+          overwrite: true
           prerelease: true
-          files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
+          tag: ${{ github.ref }}
 
-      - name: "Create GitHub release Linux (full)"
-        if: ${{ (matrix.os == 'ubuntu-latest') &&  (!contains( github.ref, '-rc' )) }}
-        uses: softprops/action-gh-release@v1
-        id: esmf_ame_linux_release_full
+      - name: Create GitHub release (Linux)
+        if: ${{ (matrix.os == 'ubuntu-latest') && (!contains( github.ref, '-rc' )) }}
+        uses: svenstaro/upload-release-action@latest
         with:
-          body: "Release version ${{ github.event.inputs.release_version }}."
-          tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: ${{ env.release_branch_name }}
-          draft: false
+          overwrite: true
           prerelease: false
-          files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
+          tag: ${{ github.ref }}
 
-      - name: "Create GitHub pre-release Linux"
-        if: ${{ (matrix.os == 'ubuntu-latest') &&  (contains( github.ref, '-rc' )) }}
-        uses: softprops/action-gh-release@v1
-        id: esmf_ame_linux_release_rc
+      - name: Create GitHub pre-release (Linux)
+        if: ${{ (matrix.os == 'ubuntu-latest') && (contains( github.ref, '-rc' )) }}
+        uses: svenstaro/upload-release-action@latest
         with:
-          body: "Release version ${{ github.event.inputs.release_version }}."
-          tag_name: v${{ github.event.inputs.release_version }}
-          target_commitish: ${{ env.release_branch_name }}
-          draft: false
+          overwrite: true
           prerelease: true
-          files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
+          tag: ${{ github.ref }}
 
-      - name: "Create GitHub release Windows (full)"
+      - name: Create GitHub release (Windows)
         if: ${{ (matrix.os == 'windows-latest') && (!contains( github.ref, '-rc' )) }}
-        uses: softprops/action-gh-release@v1
-        id: esmf_ame_win_release_full
+        uses: svenstaro/upload-release-action@latest
         with:
-          body: "Release version ${{ github.event.inputs.release_version }}."
-          tag_name: v${{ github.event.inputs.release_version }}
-          draft: false
+          overwrite: true
           prerelease: false
-          files: |
-            core/license-report.html
-            win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
+          tag: ${{ github.ref }}
 
-      - name: "Create GitHub pre-release Windows"
+      - name: Create GitHub pre-release (Windows)
         if: ${{ (matrix.os == 'windows-latest') && (contains( github.ref, '-rc' )) }}
-        uses: softprops/action-gh-release@v1
-        id: esmf_ame_win_release_rc
+        uses: svenstaro/upload-release-action@latest
         with:
-          body: "Release version ${{ github.event.inputs.release_version }}."
-          tag_name: v${{ github.event.inputs.release_version }}
-          draft: false
+          overwrite: true
           prerelease: true
-          files: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
+          tag: ${{ github.ref }}
