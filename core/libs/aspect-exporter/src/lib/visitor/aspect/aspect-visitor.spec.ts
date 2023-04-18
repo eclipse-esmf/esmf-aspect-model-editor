@@ -65,7 +65,7 @@ describe('Aspect Visitor', () => {
       addPrefix: jest.fn(() => {}),
     } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
-    aspect = new DefaultAspect('1', 'bamm#aspect', 'aspect1', null);
+    aspect = new DefaultAspect('1', 'samm#aspect', 'aspect1', null);
 
     rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
     rdfNodeService.modelService = modelService;
@@ -96,7 +96,7 @@ describe('Aspect Visitor', () => {
     expect(rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.operations);
     expect(rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.events);
 
-    const property = new DefaultProperty('2', 'bamm#property', 'property1', null);
+    const property = new DefaultProperty('2', 'samm#property', 'property1', null);
     aspect.properties = [{property, keys: {}}];
 
     service.visit(aspectCell as any);
@@ -114,6 +114,6 @@ describe('Aspect Visitor', () => {
       description: [],
       see: [],
     });
-    expect(aspect.aspectModelUrn).toBe('bamm#aspect2');
+    expect(aspect.aspectModelUrn).toBe('samm#aspect2');
   });
 });

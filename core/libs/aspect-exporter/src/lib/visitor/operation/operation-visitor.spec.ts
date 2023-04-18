@@ -65,7 +65,7 @@ describe('Operation Visitor', () => {
       addPrefix: jest.fn(() => {}),
     } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
-    operation = new DefaultOperation('1', 'bamm#operation1', 'operation1', [], null);
+    operation = new DefaultOperation('1', 'samm#operation1', 'operation1', [], null);
 
     rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
     rdfNodeService.modelService = modelService;

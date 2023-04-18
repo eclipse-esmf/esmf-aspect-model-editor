@@ -6,5 +6,5 @@ nav:
   - modules/ROOT/nav.adoc
 asciidoc:
   attributes:
-    currently-supported-bamm: 2.0.0
+    currently-supported-samm: 2.0.0
     samm-link: https://eclipse-esmf.github.io/samm-specification/2.0.0/index.html[2.0.0]

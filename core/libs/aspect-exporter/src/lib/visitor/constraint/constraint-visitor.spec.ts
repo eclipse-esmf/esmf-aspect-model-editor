@@ -88,27 +88,27 @@ describe('Constraint Visitor', () => {
     rdfService.currentRdfModel = rdfModel;
     rdfService.externalRdfModels = [];
 
-    constraint = new DefaultConstraint('1', 'bamm#constraint1', 'constraint1');
+    constraint = new DefaultConstraint('1', 'samm#constraint1', 'constraint1');
     rangeConstraint = new DefaultRangeConstraint(
       '1',
-      'bamm#rangeConstraint',
+      'samm#rangeConstraint',
       'rangeConstraint',
       BoundDefinition.AT_MOST,
       BoundDefinition.AT_LEAST,
       0,
       100
     );
-    fixedPointConstraint = new DefaultFixedPointConstraint('1', 'bamm#fixedPointConstraint', 'fixedPointConstraint', 1, 2);
-    lengthConstraint = new DefaultLengthConstraint('1', 'bamm#lengthConstraint', 'lengthConstraint', 100, 200);
-    languageConstraint = new DefaultLanguageConstraint('1', 'bamm#languageConstraint', 'languageConstraint', 'en');
-    encodingConstraint = new DefaultEncodingConstraint('1', 'bamm#encodingConstraint', 'encodingConstraint', 'encodingValue');
+    fixedPointConstraint = new DefaultFixedPointConstraint('1', 'samm#fixedPointConstraint', 'fixedPointConstraint', 1, 2);
+    lengthConstraint = new DefaultLengthConstraint('1', 'samm#lengthConstraint', 'lengthConstraint', 100, 200);
+    languageConstraint = new DefaultLanguageConstraint('1', 'samm#languageConstraint', 'languageConstraint', 'en');
+    encodingConstraint = new DefaultEncodingConstraint('1', 'samm#encodingConstraint', 'encodingConstraint', 'encodingValue');
     regularExpressionConstraint = new DefaultRegularExpressionConstraint(
       '1',
-      'bamm#regularExpressionConstraint',
+      'samm#regularExpressionConstraint',
       'regularExpressionConstraint',
       'regularExpressionValue'
     );
-    localeConstraint = new DefaultLocaleConstraint('1', 'bamm#localeConstraint', 'localeConstraint', 'en');
+    localeConstraint = new DefaultLocaleConstraint('1', 'samm#localeConstraint', 'localeConstraint', 'en');
 
     rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
     rdfNodeService.modelService = modelService;

@@ -55,7 +55,7 @@ describe('Property Visitor', () => {
     } as any;
 
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
-    abstractProperty = new DefaultAbstractProperty('1', 'bamm#abstractProperty1', 'abstractProperty1', null);
+    abstractProperty = new DefaultAbstractProperty('1', 'samm#abstractProperty1', 'abstractProperty1', null);
 
     rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
     rdfService.currentRdfModel = rdfModel;

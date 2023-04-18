@@ -21,10 +21,11 @@ import {MatDialogRef} from '@angular/material/dialog';
   styleUrls: ['./document.component.scss'],
 })
 export class DocumentComponent {
-  AMEDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-documentation/ame-guide/4.2.1/introduction.html';
-  SAMMDocumentationLink = 'https://openmanufacturingplatform.github.io/sds-documentation/bamm-specification/2.0.0/index.html';
+  AMEDocumentationLink = 'https://eclipse-esmf.github.io/ame-guide/4.3.0/introduction.html';
+  SAMMDocumentationLink = 'https://eclipse-esmf.github.io/samm-specification/2.0.0/index.html';
 
-  constructor(private dialogRef: MatDialogRef<DocumentComponent>, @Inject(APP_CONFIG) public config: AppConfig) {}
+  constructor(private dialogRef: MatDialogRef<DocumentComponent>, @Inject(APP_CONFIG) public config: AppConfig) {
+  }
 
   onClose(): void {
     this.dialogRef.close();

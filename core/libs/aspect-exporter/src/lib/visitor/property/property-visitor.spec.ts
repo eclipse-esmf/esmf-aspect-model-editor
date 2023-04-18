@@ -65,7 +65,7 @@ describe('Property Visitor', () => {
       addPrefix: jest.fn(() => {}),
     } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
-    property = new DefaultProperty('1', 'bamm#property1', 'property1', null);
+    property = new DefaultProperty('1', 'samm#property1', 'property1', null);
 
     rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
     rdfNodeService.modelService = modelService;
