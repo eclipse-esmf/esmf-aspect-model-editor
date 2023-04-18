@@ -1,6 +1,6 @@
 name: ame-guide
 title: Aspect Model Editor
-version: "master"
+version: master
 start_page: ROOT:introduction.adoc
 nav:
   - modules/ROOT/nav.adoc
