@@ -56,13 +56,13 @@ jobs:
 
       - name: Commit version changes and push to upstream repository
         if: matrix.os == 'ubuntu-latest'
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          branch: ${{ env.release_branch_name }}
-          commit_user_name: github-actions
-          commit_user_email: github-actions@github.com
-          commit_author: Author <actions@github.com>
-          file_pattern: 'documentation/ame-guide/antora.yml'
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+          git checkout -b ${{ env.release_branch_name }}
+          git add documentation/ame-guide/antora.yml
+          git commit -m "Set version to ${{ github.event.inputs.release_version }}"
+          git push origin ${{ env.release_branch_name }}
 
       - name: Download aspect model service into project (Mac)
         if: matrix.os == 'macos-latest'
@@ -187,7 +187,7 @@ jobs:
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
-          tag: ${{ github.ref }}
+          tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub pre-release (Mac)
         if: ${{ (matrix.os == 'macos-latest') && (contains( github.ref, '-rc' )) }}
@@ -197,7 +197,7 @@ jobs:
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
-          tag: ${{ github.ref }}
+          tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub release (Linux)
         if: ${{ (matrix.os == 'ubuntu-latest') && (!contains( github.ref, '-rc' )) }}
@@ -207,7 +207,7 @@ jobs:
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
-          tag: ${{ github.ref }}
+          tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub pre-release (Linux)
         if: ${{ (matrix.os == 'ubuntu-latest') && (contains( github.ref, '-rc' )) }}
@@ -217,7 +217,7 @@ jobs:
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
-          tag: ${{ github.ref }}
+          tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub release (Windows)
         if: ${{ (matrix.os == 'windows-latest') && (!contains( github.ref, '-rc' )) }}
@@ -227,7 +227,7 @@ jobs:
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
-          tag: ${{ github.ref }}
+          tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub pre-release (Windows)
         if: ${{ (matrix.os == 'windows-latest') && (contains( github.ref, '-rc' )) }}
@@ -237,4 +237,4 @@ jobs:
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
-          tag: ${{ github.ref }}
+          tag: v${{ github.event.inputs.release_version }}
