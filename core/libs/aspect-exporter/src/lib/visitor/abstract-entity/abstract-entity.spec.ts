@@ -66,7 +66,6 @@ describe('Abstract Entity Visitor', () => {
       addPrefix: jest.fn(() => {}),
     } as any;
     modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
-    entity = new DefaultAbstractEntity('1', 'bamm#abstractEntity1', 'abstractEntity1', null);
     entity = new DefaultAbstractEntity('1', 'samm#abstractEntity1', 'abstractEntity1', null);
     entity.properties = [property];
 
