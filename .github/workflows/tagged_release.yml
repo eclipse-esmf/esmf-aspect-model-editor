@@ -18,11 +18,8 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
-
-      - name: Setup Git
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+        with:
+          ref: v4.2.1
 
       - name: Cache node modules
         uses: actions/cache@v3
@@ -42,27 +39,6 @@ jobs:
           node-version: '18'
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
-
-      - name: Set versions
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          release_version=${{ github.event.inputs.release_version }}
-          release_branch_name=${release_version%.*}.x
-          echo "release_branch_name=$release_branch_name" >> $GITHUB_ENV
-
-      - name: Set antora version
-        if: matrix.os == 'ubuntu-latest'
-        run: yq eval -i '.version = "${{ github.event.inputs.release_version }}"' documentation/ame-guide/antora.yml
-
-      - name: Commit version changes and push to upstream repository
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
-          git checkout -b ${{ env.release_branch_name }}
-          git add documentation/ame-guide/antora.yml
-          git commit -m "Set version to ${{ github.event.inputs.release_version }}"
-          git push origin ${{ env.release_branch_name }}
 
       - name: Download aspect model service into project (Mac)
         if: matrix.os == 'macos-latest'
@@ -179,62 +155,85 @@ jobs:
           script-file: win-installer/installer.nsi
           arguments: "-V3 -DVERSION=${{ github.event.inputs.release_version }}"
 
-      - name: Create GitHub release (Mac)
-        if: ${{ (matrix.os == 'macos-latest') && (!contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
+      - name: "Create GitHub release Mac (full)"
+        if: ${{ (matrix.os == 'macos-latest') &&  (!contains( github.ref, '-rc' )) }}
+        uses: softprops/action-gh-release@v1
+        id: esmf_ame_mac_release_full
         with:
-          overwrite: true
+          body: "Release version ${{ github.event.inputs.release_version }}."
+          tag_name: v${{ github.event.inputs.release_version }}
+          target_commitish: 4.2.1
+          draft: false
           prerelease: false
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
-          tag: v${{ github.event.inputs.release_version }}
+          files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: Create GitHub pre-release (Mac)
-        if: ${{ (matrix.os == 'macos-latest') && (contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
+      - name: "Create GitHub pre-release Mac"
+        if: ${{ (matrix.os == 'macos-latest') &&  (contains( github.ref, '-rc' )) }}
+        uses: softprops/action-gh-release@v1
+        id: esmf_ame_mac_release_rc
         with:
-          overwrite: true
+          body: "Release version ${{ github.event.inputs.release_version }}."
+          target_commitish: 4.2.1
+          draft: false
           prerelease: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
-          tag: v${{ github.event.inputs.release_version }}
+          files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: Create GitHub release (Linux)
-        if: ${{ (matrix.os == 'ubuntu-latest') && (!contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
+      - name: "Create GitHub release Linux (full)"
+        if: ${{ (matrix.os == 'ubuntu-latest') &&  (!contains( github.ref, '-rc' )) }}
+        uses: softprops/action-gh-release@v1
+        id: esmf_ame_linux_release_full
         with:
-          overwrite: true
+          body: "Release version ${{ github.event.inputs.release_version }}."
+          tag_name: v${{ github.event.inputs.release_version }}
+          target_commitish: 4.2.1
+          draft: false
           prerelease: false
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
-          tag: v${{ github.event.inputs.release_version }}
+          files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: Create GitHub pre-release (Linux)
-        if: ${{ (matrix.os == 'ubuntu-latest') && (contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
+      - name: "Create GitHub pre-release Linux"
+        if: ${{ (matrix.os == 'ubuntu-latest') &&  (contains( github.ref, '-rc' )) }}
+        uses: softprops/action-gh-release@v1
+        id: esmf_ame_linux_release_rc
         with:
-          overwrite: true
+          body: "Release version ${{ github.event.inputs.release_version }}."
+          tag_name: v${{ github.event.inputs.release_version }}
+          target_commitish: 4.2.1
+          draft: false
           prerelease: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
-          tag: v${{ github.event.inputs.release_version }}
+          files: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: Create GitHub release (Windows)
+      - name: "Create GitHub release Windows (full)"
         if: ${{ (matrix.os == 'windows-latest') && (!contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
+        uses: softprops/action-gh-release@v1
+        id: esmf_ame_win_release_full
         with:
-          overwrite: true
+          body: "Release version ${{ github.event.inputs.release_version }}."
+          tag_name: v${{ github.event.inputs.release_version }}
+          target_commitish: 4.2.1
+          draft: false
           prerelease: false
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
-          tag: v${{ github.event.inputs.release_version }}
+          files: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: Create GitHub pre-release (Windows)
+      - name: "Create GitHub pre-release Windows"
         if: ${{ (matrix.os == 'windows-latest') && (contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
+        uses: softprops/action-gh-release@v1
+        id: esmf_ame_win_release_rc
         with:
-          overwrite: true
+          body: "Release version ${{ github.event.inputs.release_version }}."
+          tag_name: v${{ github.event.inputs.release_version }}
+          target_commitish: 4.2.1
+          draft: false
           prerelease: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
-          tag: v${{ github.event.inputs.release_version }}
+          files: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
