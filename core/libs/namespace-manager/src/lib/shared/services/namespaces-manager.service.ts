@@ -20,6 +20,7 @@ import {catchError, first, of, switchMap, tap} from 'rxjs';
 import {RootExportNamespacesComponent} from '../../namespace-exporter/components';
 import {RootNamespacesImporterComponent} from '../../namespace-importer/components';
 import {NamespacesSession} from '../models';
+import {SidebarService} from '@ame/shared';
 
 const NAMESPACES_SESSION_NAME = 'NAMESPACES_SESSION';
 export let NAMESPACES_SESSION: InjectionToken<NamespacesSession>;
@@ -32,7 +33,8 @@ export class NamespacesManagerService {
     private modelApiService: ModelApiService,
     private matDialog: MatDialog,
     private router: Router,
-    private editorService: EditorService
+    private editorService: EditorService,
+    private sidebarService: SidebarService
   ) {}
 
   importNamespaces(zip: File) {
@@ -43,7 +45,7 @@ export class NamespacesManagerService {
     return this.session.modalRef.afterOpened().pipe(
       tap(() =>
         this.setOnClose(() => {
-          this.editorService.loadExternalModels().subscribe(() => this.editorService.refreshSidebarNamespaces());
+          this.editorService.loadExternalModels().subscribe(() => this.sidebarService.refreshSidebarNamespaces());
           this.router.navigate([{outlets: {'import-namespaces': null}}]);
         })
       ),
@@ -66,7 +68,7 @@ export class NamespacesManagerService {
     });
   }
 
-  validateExport(files: string[]) {
+  validateExport(files: {namespace: string; files: string[]}[]) {
     this.session.state.validating$.next(true);
     return this.modelApiService.validateFilesForExport(files).pipe(
       tap(result => {

@@ -67,7 +67,7 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
           EditorDialogValidators.duplicateNameWithDifferentType(
             this.namespacesCacheService,
             this.metaModelElement,
-            this.rdfService.externalRdfModels,
+            this.rdfService,
             DefaultProperty
           ),
         ]

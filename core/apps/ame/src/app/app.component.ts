@@ -16,7 +16,7 @@ import {Title} from '@angular/platform-browser';
 import {Observable, of} from 'rxjs';
 import {catchError, first, switchMap, tap} from 'rxjs/operators';
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
-import {BrowserService, ElectronTunnelService, LogService, NotificationsService} from '@ame/shared';
+import {BrowserService, ElectronTunnelService, LogService, NotificationsService, SidebarService} from '@ame/shared';
 import {EditorService} from '@ame/editor';
 import {ModelApiService} from '@ame/api';
 import {MatDialog} from '@angular/material/dialog';
@@ -47,6 +47,7 @@ export class AppComponent implements OnInit {
     private configurationService: ConfigurationService,
     private themeService: ThemeService,
     private migratorService: MigratorService,
+    private sidebarService: SidebarService,
     private router: Router
   ) {
     this.domainModelToRdf.listenForStoreUpdates();
@@ -64,7 +65,7 @@ export class AppComponent implements OnInit {
 
     this.migratorService.startMigrating().subscribe(() => {
       this.startApplication();
-      this.editorService.refreshSidebarNamespaces();
+      this.sidebarService.refreshSidebarNamespaces();
       this.router.navigate([{outlets: {migrator: null, 'export-namespaces': null, 'import-namespaces': null}}]);
     });
   }

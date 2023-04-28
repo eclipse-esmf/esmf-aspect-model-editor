@@ -17,7 +17,14 @@ import {MatDialog} from '@angular/material/dialog';
 import {LoadModelDialogComponent} from '../../load-model-dialog';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
 import {Observable, of, throwError} from 'rxjs';
-import {LoadingScreenOptions, LoadingScreenService, LogService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
+import {
+  LoadingScreenOptions,
+  LoadingScreenService,
+  LogService,
+  NotificationsService,
+  SaveValidateErrorsCodes,
+  SidebarService,
+} from '@ame/shared';
 import {saveAs} from 'file-saver';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {ModelApiService} from '@ame/api';
@@ -40,7 +47,8 @@ export class FileHandlingService {
     private notificationsService: NotificationsService,
     private loadingScreenService: LoadingScreenService,
     private namespaceCacheService: NamespacesCacheService,
-    private migratorService: MigratorService
+    private migratorService: MigratorService,
+    private sidebarService: SidebarService
   ) {}
 
   openLoadNewAspectModelDialog(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
@@ -114,7 +122,6 @@ export class FileHandlingService {
         const rdfModelTtl = this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel);
         return this.modelApiService.formatModel(rdfModelTtl).pipe(
           tap(formattedModel => {
-            console.log(formattedModel);
             saveAs(new Blob([formattedModel], {type: 'text/turtle;charset=utf-8'}), fileName);
           })
         );
@@ -145,7 +152,7 @@ export class FileHandlingService {
         this.editorService.updateLastSavedRdf(false, this.rdfService.serializeModel(this.rdfService.currentRdfModel), new Date());
         const changeFileName = modelState.loadedFromWorkspace && modelState.isNameChanged && modelState.overwrite === null;
 
-        return (changeFileName ? this.modelApiService.deleteNamespace(modelState.originalModelName) : of(null)).pipe(
+        return (changeFileName ? this.modelApiService.deleteFile(modelState.originalModelName) : of(null)).pipe(
           switchMap(() => this.editorService.saveModel()),
           tap(rdfModel => {
             if (rdfModel instanceof RdfModel) {
@@ -208,9 +215,19 @@ export class FileHandlingService {
     reader.readAsText(file);
     reader.onload = () => {
       this.modelApiService
-        .formatModel(reader.result.toString())
+        .formatModel(this.migratorService.detectBammAndReplaceWithSamm(reader.result.toString()))
         .pipe(
-          switchMap(formattedModel => this.modelApiService.saveModel(formattedModel)),
+          switchMap(formattedModel =>
+            this.rdfService.loadExternalReferenceModelIntoStore({fileName: file.name, aspectMetaModel: formattedModel}).pipe(
+              map(rdfModel => ({
+                formattedModel,
+                absoluteAspectModelFileName: rdfModel.absoluteAspectModelFileName,
+              }))
+            )
+          ),
+          switchMap(({formattedModel, absoluteAspectModelFileName}) =>
+            this.modelApiService.saveModel(formattedModel, absoluteAspectModelFileName)
+          ),
           catchError(error => {
             this.logService.logError(`'Error adding file to namespaces. ${JSON.stringify(error)}.`);
             this.notificationsService.error({title: 'Error adding file to namespaces'});
@@ -220,7 +237,7 @@ export class FileHandlingService {
         .subscribe({
           complete: () => {
             this.notificationsService.success({title: 'Successfully added file to namespaces'});
-            this.editorService.refreshSidebarNamespaces();
+            this.sidebarService.refreshSidebarNamespaces();
           },
         });
     };

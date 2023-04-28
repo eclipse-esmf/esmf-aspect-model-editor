@@ -106,13 +106,13 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
             EditorDialogValidators.duplicateNameWithDifferentType(
               this.namespacesCacheService,
               this.metaModelElement,
-              this.rdfService.externalRdfModels,
+              this.rdfService,
               DefaultAbstractEntity
             ),
             EditorDialogValidators.duplicateNameWithDifferentType(
               this.namespacesCacheService,
               this.metaModelElement,
-              this.rdfService.externalRdfModels,
+              this.rdfService,
               DefaultEntity
             ),
           ],

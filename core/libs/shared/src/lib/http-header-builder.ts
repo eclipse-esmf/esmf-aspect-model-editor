@@ -30,6 +30,16 @@ export class HttpHeaderBuilder {
     return this;
   }
 
+  withNamespace(namespace: string): HttpHeaderBuilder {
+    this.httpHeaders = this.httpHeaders.append('namespace', namespace);
+    return this;
+  }
+
+  withFileName(file: string): HttpHeaderBuilder {
+    this.httpHeaders = this.httpHeaders.append('file-name', file);
+    return this;
+  }
+
   build(): HttpHeaders {
     return this.httpHeaders;
   }

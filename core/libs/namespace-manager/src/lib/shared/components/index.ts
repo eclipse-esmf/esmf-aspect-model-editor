@@ -13,3 +13,4 @@
 
 export * from './error/error.component';
 export * from './workspace-summary/workspace-summary.component';
+export * from './clipboard-copy-button/clipboard-copy-button.component';

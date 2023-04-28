@@ -46,8 +46,7 @@ export class ExportSummaryComponent {
         this.downloadFile(this.url);
         this.dialogRef.close();
       },
-      error: error => {
-        console.log(error);
+      error: () => {
         this.notificationService.error({title: 'Namespace export error', message: 'Could not export package due to an internal error'});
       },
     });

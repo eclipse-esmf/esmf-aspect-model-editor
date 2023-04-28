@@ -75,12 +75,12 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
 
   public ngOnInit() {
     this.initNamespaces();
-    this.refreshNamespacesSubscription = this.editorService.onRefreshNamespaces.subscribe(() => {
+    this.refreshNamespacesSubscription = this.sidebarService.onRefreshNamespaces.subscribe(() => {
       this.sidebarService.resetNamespaces();
       this.initNamespaces();
     });
 
-    this.refreshSideBarSubscription = this.editorService.onRefreshSideBar$.subscribe(() => {
+    this.refreshSideBarSubscription = this.sidebarService.onRefreshSideBar$.subscribe(() => {
       this.view = 'default';
     });
   }
@@ -114,7 +114,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
       })
       .subscribe(confirmed => {
         if (confirmed) {
-          this.modelApiService.deleteNamespace(aspectModelFileName).subscribe(() => {
+          this.modelApiService.deleteFile(aspectModelFileName).subscribe(() => {
             this.sidebarService.resetNamespaces();
             this.initNamespaces();
           });
@@ -141,29 +141,28 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     }
   }
 
-  public confirmLoadingFile(namespaceFileName: string) {
-    const serializeModel = this.rdfService.serializeModel(this.rdfService.currentRdfModel);
-
+  public confirmLoadingFile(absoluteFileName: string) {
     this.confirmDialogService
       .open({
-        phrases: [`You are about to load ${namespaceFileName}.`, 'Do you want to save the current Aspect Model in the workspace first?'],
+        phrases: [`You are about to load ${absoluteFileName}.`, 'Do you want to save the current Aspect Model in the workspace first?'],
         title: 'Save current Aspect Model',
         closeButtonText: "Don't save",
         okButtonText: 'Save',
       })
       .subscribe(confirmed => {
         if (confirmed) {
+          const serializeModel = this.rdfService.serializeModel(this.rdfService.currentRdfModel);
           this.editorService.updateLastSavedRdf(false, serializeModel, new Date());
           this.editorService.saveModel().subscribe();
         }
         // TODO improve this functionality
-        this.loadNamespaceFile(namespaceFileName);
+        this.loadNamespaceFile(absoluteFileName);
       });
   }
 
-  private loadNamespaceFile(namespaceFileName: string) {
+  private loadNamespaceFile(absoluteFileName: string) {
     const subscription = this.modelApiService
-      .loadAspectModelByUrn(namespaceFileName)
+      .getAspectMetaModel(absoluteFileName)
       .pipe(
         first(),
         tap(() => {
@@ -177,7 +176,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
           this.loadingScreenService.open(loadingScreenOptions);
         }),
         switchMap(aspectModel =>
-          this.editorService.loadNewAspectModel(aspectModel, namespaceFileName).pipe(
+          this.editorService.loadNewAspectModel(aspectModel, absoluteFileName).pipe(
             first(),
             catchError(error => {
               console.groupCollapsed('sidebar.component -> loadNamespaceFile', error);

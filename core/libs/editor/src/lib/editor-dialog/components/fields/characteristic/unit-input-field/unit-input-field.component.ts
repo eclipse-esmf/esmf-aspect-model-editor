@@ -95,7 +95,7 @@ export class UnitInputFieldComponent
       EditorDialogValidators.duplicateNameWithDifferentType(
         this.namespacesCacheService,
         this.metaModelElement,
-        this.rdfService.externalRdfModels,
+        this.rdfService,
         DefaultUnit
       ),
       ...(this.unitRequired ? [Validators.required] : []),

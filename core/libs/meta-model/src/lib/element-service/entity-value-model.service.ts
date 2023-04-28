@@ -12,22 +12,15 @@
  */
 
 import {Injectable} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseMetaModelElement, DefaultEntityValue, EntityValueProperty} from '@ame/meta-model';
 import {BaseModelService} from './base-model-service';
 import {EntityValueRenderService, MxGraphHelper} from '@ame/mx-graph';
-import {ModelService} from '@ame/rdf/services';
 
 @Injectable({providedIn: 'root'})
 export class EntityValueModelService extends BaseModelService {
-  constructor(
-    namespacesCacheService: NamespacesCacheService,
-
-    modelService: ModelService,
-    private entityValueRenderService: EntityValueRenderService
-  ) {
-    super(namespacesCacheService, modelService);
+  constructor(private entityValueRenderService: EntityValueRenderService) {
+    super();
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {

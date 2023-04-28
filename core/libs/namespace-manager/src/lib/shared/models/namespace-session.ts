@@ -59,13 +59,12 @@ export class NamespacesSession implements NamespacesSessionInterface {
   }
 
   private processValidFiles(files: ValidFile[]) {
-    this.files = files.map(({aspectModelFileName}) => aspectModelFileName);
+    this.files = files.map(({fileName, namespace}) => `${namespace}:${fileName}`);
 
     const {replace, keep} = files.reduce(
       (acc, validation) => {
-        const namespaceSections = validation.aspectModelFileName.split(':');
-        const file = namespaceSections.pop();
-        const namespace = namespaceSections.join(':');
+        const file = validation.fileName;
+        const namespace = validation.namespace;
 
         (validation.fileAlreadyDefined ? acc.replace : acc.keep).add(namespace);
 

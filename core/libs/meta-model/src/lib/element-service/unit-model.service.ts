@@ -15,10 +15,8 @@ import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 
 import {BaseModelService} from './base-model-service';
-import {NamespacesCacheService} from '@ame/cache';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService, UnitRenderService} from '@ame/mx-graph';
 import {BaseMetaModelElement, DefaultQuantityKind, DefaultUnit} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
 import {SammU} from '@ame/vocabulary';
 
 declare const sammUDefinition: any;
@@ -30,14 +28,12 @@ export class UnitModelService extends BaseModelService {
   }
 
   constructor(
-    namespacesCacheService: NamespacesCacheService,
-    modelService: ModelService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphService: MxGraphService,
     private unitRenderer: UnitRenderService
   ) {
-    super(namespacesCacheService, modelService);
+    super();
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {

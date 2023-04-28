@@ -32,6 +32,26 @@ mat-checkbox {
     .mat-checkbox-inner-container {
       margin-right: 1rem;
     }
+
+    .mat-checkbox-label {
+      display: flex;
+      gap: 20px;
+    }
+  }
+}
+
+.checkbox-info {
+  display: flex;
+  flex-direction: column;
+
+  .dependencies {
+    font-size: 12px;
+    line-height: 1.1;
+  }
+
+  .namespace {
+    font-size: 15px;
+    font-weight: 500;
   }
 }
 
@@ -45,7 +65,7 @@ mat-checkbox {
   }
 
   mat-checkbox:not(:last-child) {
-    margin-bottom: 10px;
+    margin-bottom: 18px;
 
     :ng-deep {
       .mat-checkbox-inner-container {

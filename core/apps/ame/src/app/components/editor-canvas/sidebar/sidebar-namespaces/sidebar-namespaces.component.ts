@@ -117,8 +117,8 @@ export class SidebarNamespacesComponent implements OnChanges {
   }
 
   public isCurrentFile(namespace: string, namespaceFile: string): boolean {
-    const cachedFile = this.namespaceService.getCurrentCachedFile();
-    return `${cachedFile?.namespace}${cachedFile?.fileName}` === `urn:samm:${namespace}#${namespaceFile}`;
+    const currentRdfModel = this.rdfService.currentRdfModel;
+    return (currentRdfModel.originalAbsoluteFileName || currentRdfModel.absoluteAspectModelFileName) === `${namespace}:${namespaceFile}`;
   }
 
   public onLoadAspectModel(namespace: NamespaceModel, namespaceFile: string) {

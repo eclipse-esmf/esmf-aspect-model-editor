@@ -73,7 +73,7 @@ export class EntityValueModalComponent {
       this.entityValueName = new FormControl('', [
         Validators.required,
         EditorDialogValidators.noWhiteSpace,
-        EditorDialogValidators.duplicateName(this.namespacesCacheService, this.entityValue, this.rdfService.externalRdfModels),
+        EditorDialogValidators.duplicateName(this.namespacesCacheService, this.entityValue, this.rdfService),
       ]);
     }
     this.buildForm();

@@ -33,7 +33,9 @@ export class ExportValidateComponent implements OnInit {
 
         this.router.navigate([{outlets: {'export-namespaces': 'summary'}}]);
       },
-      error: () => this.router.navigate([{outlets: {'export-namespaces': 'error'}}]),
+      error: () => {
+        this.router.navigate([{outlets: {'export-namespaces': 'error'}}]);
+      },
     });
   }
 }

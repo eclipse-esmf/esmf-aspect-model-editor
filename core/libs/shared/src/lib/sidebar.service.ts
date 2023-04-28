@@ -15,6 +15,7 @@ import {CachedFile} from '@ame/cache';
 import {EditorService} from '@ame/editor';
 import {NamespaceModel} from '@ame/shared';
 import {Injectable, Injector} from '@angular/core';
+import {Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +27,18 @@ export class SidebarService {
     return this._namespaces;
   }
 
+  public onRefreshNamespaces: Subject<void> = new Subject();
+  public onRefreshSideBar$: Subject<void> = new Subject();
+
   constructor(private injector: Injector) {}
+
+  refreshSidebarNamespaces() {
+    this.onRefreshNamespaces.next();
+  }
+
+  refreshSidebar() {
+    this.onRefreshSideBar$.next();
+  }
 
   resetNamespaces() {
     this._namespaces = [];

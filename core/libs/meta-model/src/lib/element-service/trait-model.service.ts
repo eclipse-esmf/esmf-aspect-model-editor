@@ -12,7 +12,6 @@
  */
 
 import {Injectable} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
 import {
   ModelInfo,
   MxGraphAttributeService,
@@ -24,7 +23,6 @@ import {
 import {mxgraph} from 'mxgraph-factory';
 import {ShapeConnectorService} from '@ame/connection';
 import {BaseMetaModelElement, DefaultCharacteristic, DefaultEither, DefaultEntity, DefaultProperty, DefaultTrait} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
 import {BaseModelService} from './base-model-service';
 
 interface EitherInformation {
@@ -36,15 +34,13 @@ interface EitherInformation {
 @Injectable({providedIn: 'root'})
 export class TraitModelService extends BaseModelService {
   constructor(
-    protected modelService: ModelService,
-    protected namespacesCacheService: NamespacesCacheService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphService: MxGraphService,
     private shapeConnectorService: ShapeConnectorService,
     private traitRendererService: TraitRenderService
   ) {
-    super(namespacesCacheService, modelService);
+    super();
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {

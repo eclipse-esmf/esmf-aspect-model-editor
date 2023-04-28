@@ -89,7 +89,7 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
           EditorDialogValidators.duplicateNameWithDifferentType(
             this.namespacesCacheService,
             this.metaModelElement,
-            this.rdfService.externalRdfModels,
+            this.rdfService,
             DefaultProperty
           ),
         ]

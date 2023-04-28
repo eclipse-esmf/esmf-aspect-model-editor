@@ -74,7 +74,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
           EditorDialogValidators.duplicateNameWithDifferentType(
             this.namespacesCacheService,
             this.metaModelElement,
-            this.rdfService.externalRdfModels,
+            this.rdfService,
             DefaultCharacteristic
           ),
         ]

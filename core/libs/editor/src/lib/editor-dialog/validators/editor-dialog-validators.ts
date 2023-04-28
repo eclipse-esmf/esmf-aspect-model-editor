@@ -16,7 +16,7 @@ import {NamespacesCacheService} from '@ame/cache';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {RFC2141} from 'urn-lib';
 import {DataFactory} from 'n3';
-import {RdfModel} from '@ame/rdf/utils';
+import {RdfService} from '@ame/rdf/services';
 
 export class EditorDialogValidators {
   static namingLowerCase(control: AbstractControl) {
@@ -67,7 +67,7 @@ export class EditorDialogValidators {
   static duplicateName(
     namespaceCacheService: NamespacesCacheService,
     metaModelElement: BaseMetaModelElement,
-    extRdfModels: Array<RdfModel>,
+    rdfService: RdfService,
     haveTheSameName = true
   ): ValidatorFn {
     return (control: AbstractControl) => {
@@ -83,7 +83,14 @@ export class EditorDialogValidators {
       const aspectModelUrn = `${primaryNamespace}#${control.value}`;
 
       let foundExternalElement: BaseMetaModelElement;
-      for (const rdfModel of extRdfModels) {
+      for (const rdfModel of rdfService.externalRdfModels) {
+        if (
+          (rdfService.currentRdfModel.originalAbsoluteFileName || rdfService.currentRdfModel.absoluteAspectModelFileName) ===
+          rdfModel.absoluteAspectModelFileName
+        ) {
+          continue;
+        }
+
         const element = rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null)?.[0]?.subject;
 
         if (element) {
@@ -121,14 +128,14 @@ export class EditorDialogValidators {
   static duplicateNameWithDifferentType(
     namespaceCacheService: NamespacesCacheService,
     metaModelElement: BaseMetaModelElement,
-    extRdfModels: Array<RdfModel>,
+    rdfService: RdfService,
     modelType: Function
   ): ValidatorFn {
     return (control: AbstractControl) => {
       const duplicateNameValidation = EditorDialogValidators.duplicateName(
         namespaceCacheService,
         metaModelElement,
-        extRdfModels,
+        rdfService,
         false
       )(control);
 

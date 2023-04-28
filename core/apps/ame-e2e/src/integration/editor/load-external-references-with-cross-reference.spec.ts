@@ -39,7 +39,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-entity-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/same-namespace/external-entity-reference.txt',
@@ -50,7 +50,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-characteristic-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/same-namespace/external-characteristic-reference.txt',
@@ -61,7 +61,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/same-namespace/external-property-reference.txt',
@@ -72,7 +72,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-operation-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-operation-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/same-namespace/external-operation-reference.txt',
@@ -84,7 +84,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-entity-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/different-namespace/external-entity-reference.txt',
@@ -95,7 +95,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-characteristic-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/different-namespace/external-characteristic-reference.txt',
@@ -106,7 +106,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/different-namespace/external-property-reference.txt',
@@ -117,7 +117,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-operation-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-operation-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/different-namespace/external-operation-reference.txt',
@@ -196,7 +196,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-entity-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/mixing-namespace/external-entity-reference.txt',
@@ -207,7 +207,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/mixing-namespace/external-property-reference.txt',
@@ -218,7 +218,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-operation-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-operation-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/mixing-namespace/external-operation-reference.txt',
@@ -230,7 +230,7 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-characteristic-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
       },
       {
         fixture: '/external-reference/cross-references/mixing-namespace/external-characteristic-reference.txt',
