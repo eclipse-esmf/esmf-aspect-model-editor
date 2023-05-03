@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {Router} from '@angular/router';
 import {NamespacesManagerService} from '../../../shared';
@@ -38,10 +38,9 @@ export class SelectNamespacesComponent implements OnInit {
   public namespacesDependencies: {[namespace: string]: {disabled: boolean; dependencies: string[]; files: string[]; checked: boolean}} = {};
 
   private readonly namespaceSplitter = ':';
-  private rdfService: RdfService = inject(RdfService);
   private visitedNamespaces = [];
 
-  constructor(private namespacesManager: NamespacesManagerService, private router: Router) {}
+  constructor(private namespacesManager: NamespacesManagerService, private rdfService: RdfService, private router: Router) {}
 
   ngOnInit(): void {
     this.namespacesDependencies = this.rdfService.externalRdfModels.reduce((acc, rdfModel) => {
