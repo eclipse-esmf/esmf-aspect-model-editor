@@ -28,7 +28,7 @@ class MockSamm {
   RdfNil = jest.fn(() => DataFactory.namedNode('nill'));
   RdfFirst = jest.fn(() => DataFactory.namedNode('first'));
   RdfRest = jest.fn(() => DataFactory.namedNode('rest'));
-  NameProperty = jest.fn(() => DataFactory.namedNode('bammName'));
+  NameProperty = jest.fn(() => DataFactory.namedNode('sammName'));
   PropertiesProperty = jest.fn(() => DataFactory.namedNode('properties'));
   OperationsProperty = jest.fn(() => DataFactory.namedNode('operations'));
   EventsProperty = jest.fn(() => DataFactory.namedNode('events'));

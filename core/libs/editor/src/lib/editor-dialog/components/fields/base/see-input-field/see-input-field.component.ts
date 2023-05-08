@@ -120,7 +120,7 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
       this.searchControl.disable();
     }
     this.elements = [...(this.decodeUriComponent(this.getCurrentValue())?.split(',') || [])].map(urn => ({
-      name: urn.includes('#') && urn.startsWith('urn:bamm') ? urn.split('#')[1] : '',
+      name: urn.includes('#') && urn.startsWith('urn:samm') ? urn.split('#')[1] : '',
       urn,
     }));
 
