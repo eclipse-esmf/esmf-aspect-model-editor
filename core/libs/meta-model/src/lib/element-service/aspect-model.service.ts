@@ -12,28 +12,16 @@
  */
 
 import {Injectable} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
 import {BaseModelService} from './base-model-service';
 import {BaseMetaModelElement, DefaultAspect, OverWrittenPropertyKeys} from '@ame/meta-model';
-import {ModelService, RdfService} from '@ame/rdf/services';
 import {mxgraph} from 'mxgraph-factory';
 import {AspectRenderService, MxGraphHelper} from '@ame/mx-graph';
 import {Title} from '@angular/platform-browser';
-import {EditorService} from '@ame/editor';
-import {ModelApiService} from '@ame/api';
 
 @Injectable({providedIn: 'root'})
 export class AspectModelService extends BaseModelService {
-  constructor(
-    namespacesCacheService: NamespacesCacheService,
-    modelService: ModelService,
-    editorService: EditorService,
-    modelApiService: ModelApiService,
-    private aspectRenderer: AspectRenderService,
-    private titleService: Title,
-    private rdfService: RdfService
-  ) {
-    super(namespacesCacheService, modelService, editorService, modelApiService);
+  constructor(private aspectRenderer: AspectRenderService, private titleService: Title) {
+    super();
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {
@@ -42,6 +30,9 @@ export class AspectModelService extends BaseModelService {
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement: DefaultAspect = MxGraphHelper.getModelElement(cell);
+    if (!this.rdfService.currentRdfModel.originalAbsoluteFileName && form.name !== metaModelElement.name) {
+      this.rdfService.currentRdfModel.originalAbsoluteFileName = this.rdfService.currentRdfModel.absoluteAspectModelFileName;
+    }
     super.update(cell, form);
 
     if (form.editedProperties) {

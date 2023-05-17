@@ -23,24 +23,24 @@ import {
 import {mxgraph} from 'mxgraph-factory';
 import {NamespacesCacheService} from '@ame/cache';
 import {MxGraphHelper} from '@ame/mx-graph';
-import {ModelService} from '@ame/rdf/services';
+import {ModelService, RdfService} from '@ame/rdf/services';
 import {EditorService} from '@ame/editor';
 import {ModelApiService} from '@ame/api';
-import {map} from 'rxjs';
+import {of, switchMap} from 'rxjs';
+import {inject} from '@angular/core';
 
 export abstract class BaseModelService {
-  abstract isApplicable(metaModelElement: BaseMetaModelElement): boolean;
-
-  constructor(
-    protected namespacesCacheService: NamespacesCacheService,
-    protected modelService: ModelService,
-    protected editorService?: EditorService,
-    protected modelApiService?: ModelApiService
-  ) {}
+  protected rdfService: RdfService = inject(RdfService);
+  protected namespacesCacheService: NamespacesCacheService = inject(NamespacesCacheService);
+  protected modelService: ModelService = inject(ModelService);
+  protected editorService: EditorService = inject(EditorService);
+  protected modelApiService: ModelApiService = inject(ModelApiService);
 
   get currentCachedFile() {
     return this.namespacesCacheService.getCurrentCachedFile();
   }
+
+  abstract isApplicable(metaModelElement: BaseMetaModelElement): boolean;
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement = MxGraphHelper.getModelElement(cell);
@@ -59,11 +59,11 @@ export abstract class BaseModelService {
       this.modelApiService
         .getNamespacesAppendWithFiles()
         .pipe(
-          map((fileNames: string[]) => {
-            if (fileNames.find(fileName => fileName === aspectModelFileName)) {
-              this.editorService.addAspectModelFileIntoStore(aspectModelFileName).subscribe();
-            }
-          })
+          switchMap((fileNames: string[]) =>
+            fileNames.find(fileName => fileName === aspectModelFileName)
+              ? this.editorService.addAspectModelFileIntoStore(aspectModelFileName)
+              : of(null)
+          )
         )
         .subscribe();
     }

@@ -36,7 +36,8 @@ export class RenameModelComponent {
       namespaces = namespaces.map(namespace => namespace.toLowerCase());
       this.fileNameControl = new FormControl('', [
         Validators.required,
-        Validators.pattern('[a-zA-Z0-9]+'),
+        // eslint-disable-next-line no-useless-escape
+        Validators.pattern('[0-9a-zA-Z_. -]+'),
         (control: AbstractControl) => {
           const searchTerm = `${rdfModel.getAspectModelUrn().replace('urn:samm:', '').replace('#', ':')}${control.value}.ttl`.toLowerCase();
           return namespaces.includes(searchTerm) ? {sameFile: true} : null;

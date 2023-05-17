@@ -38,15 +38,19 @@ export class ImportSummaryComponent {
     this.importSession.state.importing$.next(true);
     const files = this.importSession.files;
     const {replace, keep} = this.importSession.conflictFiles;
-    const toOverwrite = [...keep, ...replace].reduce((acc: string[], namespace: string) => {
-      return [...acc, ...files.filter((file: string) => file.startsWith(namespace))];
-    }, []);
+    const toOverwrite = Array.from(new Set([...keep, ...replace])).map(namespace => ({
+      namespace,
+      files: files.filter(file => file.startsWith(namespace)).map(file => file.replace(namespace, '')),
+    }));
 
     this.modelApiService.replaceFiles(toOverwrite).subscribe({
       next: () => {
         this.importSession.state.importing$.next(false);
         this.notificationService.success({title: `Package was imported`});
-        toOverwrite.forEach(file => this.editorService.addAspectModelFileIntoStore(file).subscribe());
+
+        toOverwrite.forEach(entry =>
+          entry.files.forEach(file => this.editorService.addAspectModelFileIntoStore(`${entry.namespace}:${file}`).subscribe())
+        );
         this.dialogRef.close();
       },
       error: httpError => {

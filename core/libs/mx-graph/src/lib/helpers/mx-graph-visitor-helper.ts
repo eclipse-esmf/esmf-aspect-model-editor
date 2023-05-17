@@ -62,8 +62,8 @@ export class MxGraphVisitorHelper {
     if (
       metaModelElement.dataType &&
       ((metaModelElement.dataType.getUrn() &&
-          !metaModelElement.dataType.getUrn().startsWith('urn') &&
-          !(metaModelElement instanceof DefaultEither)) ||
+        !metaModelElement.dataType.getUrn().startsWith('urn') &&
+        !(metaModelElement instanceof DefaultEither)) ||
         (metaModelElement.dataType.getUrn().includes('meta-model') && metaModelElement.dataType.getUrn().includes('#curie')))
     ) {
       return {

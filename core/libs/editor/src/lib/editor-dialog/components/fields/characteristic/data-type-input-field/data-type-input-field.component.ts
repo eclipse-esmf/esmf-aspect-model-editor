@@ -91,7 +91,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
           EditorDialogValidators.duplicateNameWithDifferentType(
             this.namespacesCacheService,
             this.metaModelElement,
-            this.rdfService.externalRdfModels,
+            this.rdfService,
             DefaultEntity
           ),
         ]

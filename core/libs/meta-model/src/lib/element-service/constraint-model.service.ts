@@ -12,12 +12,10 @@
  */
 
 import {Injectable} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 import {ConstraintRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {Base, BaseMetaModelElement, DefaultConstraint, DefaultTrait} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
 import {
   DefaultEncodingConstraint,
   DefaultFixedPointConstraint,
@@ -31,14 +29,12 @@ import {
 @Injectable({providedIn: 'root'})
 export class ConstraintModelService extends BaseModelService {
   constructor(
-    namespacesCacheService: NamespacesCacheService,
-    modelService: ModelService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphService: MxGraphService,
     private constraintRenderer: ConstraintRenderService
   ) {
-    super(namespacesCacheService, modelService);
+    super();
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {

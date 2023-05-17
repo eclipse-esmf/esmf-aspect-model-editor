@@ -90,7 +90,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-property-reference.txt',
@@ -126,7 +126,10 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-characteristic-reference.txt'},
+        headers: {
+          namespace: 'org.eclipse.digitaltwin:1.0.0',
+          'file-name': 'external-characteristic-reference.txt',
+        },
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-characteristic-reference.txt',
@@ -161,7 +164,10 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-constraint-reference.txt'},
+        headers: {
+          namespace: 'org.eclipse.digitaltwin:1.0.0',
+          'file-name': 'external-constraint-reference.txt',
+        },
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-constraint-reference.txt',
@@ -205,7 +211,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-entity-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-entity-reference.txt',
@@ -243,7 +249,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-property-reference.txt',
@@ -282,7 +288,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-characteristic-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-characteristic-reference.txt',
@@ -320,7 +326,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-constraint-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-constraint-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-constraint-reference.txt',
@@ -366,7 +372,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-entity-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/without-childrens/external-entity-reference.txt',
@@ -406,7 +412,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-property-reference.txt',
@@ -450,7 +456,7 @@ describe('Test drag and drop', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-model-Urn': 'org.eclipse.different:1.0.0:external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/different-namespace/with-childrens/external-property-reference.txt',

@@ -12,22 +12,15 @@
  */
 
 import {Injectable} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
 import {BaseModelService} from './base-model-service';
 import {BaseMetaModelElement, DefaultEvent} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
 import {mxgraph} from 'mxgraph-factory';
 import {EventRenderService, MxGraphService} from '@ame/mx-graph';
 
 @Injectable({providedIn: 'root'})
 export class EventModelService extends BaseModelService {
-  constructor(
-    namespacesCacheService: NamespacesCacheService,
-    modelService: ModelService,
-    private mxGraphService: MxGraphService,
-    private aspectRenderer: EventRenderService
-  ) {
-    super(namespacesCacheService, modelService);
+  constructor(private mxGraphService: MxGraphService, private aspectRenderer: EventRenderService) {
+    super();
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {

@@ -50,11 +50,12 @@
               [class.hasErrors]="namespace.getFileStatus(file)?.hasErrors"
               [matTooltip]="getTooltip(namespace, file)"
               (click)="onSelectNamespaceFile(namespace, file)"
+              matTooltipPosition="right"
               class="file-name"
             >
               <mat-icon *ngIf="!namespace.getFileStatus(file)?.hasErrors">description</mat-icon>
               <mat-icon class="error-icon" *ngIf="namespace.getFileStatus(file)?.hasErrors">error_outline</mat-icon>
-              <span>
+              <span [matTooltip]="file.length > 25 ? file : ''" matTooltipPosition="right">
                 {{ file }}
               </span>
             </div>

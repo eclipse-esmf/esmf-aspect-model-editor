@@ -27,7 +27,7 @@ import {
   ImportSummaryComponent,
   ImportValidateComponent,
 } from './namespace-importer/components';
-import {WorkspaceSummaryComponent} from './shared/components';
+import {ClipboardCopyButtonComponent, WorkspaceSummaryComponent} from './shared/components';
 import {NamespaceImporterRouterModule} from './namespace-importer';
 import {NamespaceExporterRouterModule} from './namespace-exporter';
 import {NamespacesManagerService} from './shared';
@@ -72,6 +72,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     RootNamespacesImporterComponent,
     RootExportNamespacesComponent,
     SelectNamespacesComponent,
+    ClipboardCopyButtonComponent,
   ],
   providers: [NamespacesManagerService],
 })

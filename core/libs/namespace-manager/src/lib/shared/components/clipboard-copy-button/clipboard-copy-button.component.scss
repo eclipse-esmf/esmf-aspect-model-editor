@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-h2[mat-dialog-title] {
-  margin: 0;
-}
-
-.actions {
-  display: flex;
-  justify-content: space-between;
+.copy-summary {
+  mat-icon {
+    margin-right: 10px;
+  }
 }

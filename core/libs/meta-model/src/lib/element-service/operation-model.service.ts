@@ -12,11 +12,9 @@
  */
 
 import {Injectable} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 import {BaseMetaModelElement, DefaultOperation, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
 import {
   ModelInfo,
   MxGraphAttributeService,
@@ -30,15 +28,13 @@ import {ShapeConnectorService} from '@ame/connection';
 @Injectable({providedIn: 'root'})
 export class OperationModelService extends BaseModelService {
   constructor(
-    namespacesCacheService: NamespacesCacheService,
-    modelService: ModelService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private shapeConnectorService: ShapeConnectorService,
     private mxGraphService: MxGraphService,
     private operationRender: OperationRenderService
   ) {
-    super(namespacesCacheService, modelService);
+    super();
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {

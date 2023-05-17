@@ -12,7 +12,7 @@
  */
 
 import {Inject, Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {catchError, map, mergeMap, tap, timeout} from 'rxjs/operators';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, LogService} from '@ame/shared';
@@ -42,7 +42,7 @@ export class ModelApiService {
     }
   }
 
-  private readonly LATEST_FILENAME = ':latest.ttl';
+  private readonly LATEST_FILENAME = 'latest.ttl';
 
   getDefaultAspectModel(): Observable<string> {
     return this.http.get('assets/aspect-models/org.eclipse.examples.movement/1.0.0/Default.ttl', {responseType: 'text'});
@@ -52,10 +52,10 @@ export class ModelApiService {
     return this.http.get('assets/aspect-models/org.eclipse.examples.movement/1.0.0/Movement.ttl', {responseType: 'text'});
   }
 
-  loadAspectModelByUrn(urn: string): Observable<string> {
+  loadLatest(): Observable<string> {
     return this.http
       .get<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withUrn(urn).build(),
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withFileName(this.LATEST_FILENAME).build(),
         responseType: 'text' as 'json',
       })
       .pipe(
@@ -64,12 +64,12 @@ export class ModelApiService {
       );
   }
 
-  loadLatest(): Observable<string> {
-    return this.loadAspectModelByUrn(this.LATEST_FILENAME);
-  }
-
-  saveModel(rdfContent: string, aspectUrn?: string): Observable<string> {
-    const headers = aspectUrn ? new HttpHeaderBuilder().withUrn(aspectUrn).build() : undefined;
+  saveModel(rdfContent: string, absoluteModelName?: string): Observable<string> {
+    let headers: HttpHeaders;
+    if (absoluteModelName) {
+      const [namespace, version, file] = absoluteModelName.split(':');
+      headers = new HttpHeaderBuilder().withNamespace(`${namespace}:${version}`).withFileName(file).build();
+    }
     return this.http.post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent, {headers}).pipe(
       timeout(this.requestTimeout),
       catchError(res => throwError(() => res))
@@ -91,14 +91,14 @@ export class ModelApiService {
     return this.http.post(`${this.serviceUrl}${this.api.package}/validate-import-zip`, formData);
   }
 
-  replaceFiles(files: string[]): Observable<any> {
+  replaceFiles(files: {namespace: string; files: string[]}[]): Observable<any> {
     return this.http.post(`${this.serviceUrl}${this.api.package}/import`, files);
   }
 
   saveLatest(rdfContent: string): Observable<string> {
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withUrn(':latest.ttl').build(),
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withFileName(this.LATEST_FILENAME).build(),
       })
       .pipe(
         timeout(this.requestTimeout),
@@ -106,10 +106,11 @@ export class ModelApiService {
       );
   }
 
-  deleteNamespace(namespace: string): Observable<string> {
+  deleteFile(absoluteModelName: string): Observable<string> {
+    const [namespace, version, file] = absoluteModelName.split(':');
     return this.http
       .delete<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withUrn(namespace).build(),
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withNamespace(`${namespace}:${version}`).withFileName(file).build(),
       })
       .pipe(
         timeout(this.requestTimeout),
@@ -129,13 +130,12 @@ export class ModelApiService {
   getNamespacesAppendWithFiles(): Observable<any> {
     return this.getNamespacesStructure().pipe(
       timeout(this.requestTimeout),
-      catchError(res => throwError(() => res)),
-      map(data =>
-        Object.keys(data).reduce(
+      map(data => {
+        return Object.keys(data).reduce(
           (fileNames, namespace) => [...fileNames, ...data[namespace].map((fileName: string) => `${namespace}:${fileName}`)],
           []
-        )
-      )
+        );
+      })
     );
   }
 
@@ -143,9 +143,14 @@ export class ModelApiService {
     return this.getNamespacesAppendWithFiles().pipe(
       map(aspectModelFileNames =>
         aspectModelFileNames.reduce(
-          (files, fileName) =>
-            fileName !== rdfModel?.absoluteAspectModelFileName
-              ? [...files, this.getAspectMetaModel(fileName).pipe(map(aspectMetaModel => new FileContentModel(fileName, aspectMetaModel)))]
+          (files: string[], absoluteFileName: string) =>
+            absoluteFileName !== rdfModel?.absoluteAspectModelFileName
+              ? [
+                  ...files,
+                  this.getAspectMetaModel(absoluteFileName).pipe(
+                    map(aspectMetaModel => new FileContentModel(absoluteFileName, aspectMetaModel))
+                  ),
+                ]
               : files,
           []
         )
@@ -155,7 +160,7 @@ export class ModelApiService {
     );
   }
 
-  validateFilesForExport(files: string[]): Observable<any> {
+  validateFilesForExport(files: {namespace: string; files: string[]}[]): Observable<any> {
     return this.http.post(`${this.serviceUrl}${this.api.package}/validate-models-for-export`, files);
   }
 
@@ -165,10 +170,11 @@ export class ModelApiService {
     });
   }
 
-  getAspectMetaModel(aspectModelFileName: string): Observable<string> {
+  getAspectMetaModel(absoluteModelName: string): Observable<string> {
+    const [namespace, version, file] = absoluteModelName.split(':');
     return this.http
       .get<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withUrn(aspectModelFileName).build(),
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withNamespace(`${namespace}:${version}`).withFileName(file).build(),
         responseType: 'text' as 'json',
       })
       .pipe(

@@ -19,12 +19,26 @@
     <h4 class="column-title">Namespaces</h4>
 
     <mat-checkbox
-      *ngFor="let item of namespaces | keyvalue"
+      *ngFor="let item of namespacesDependencies | keyvalue"
       [value]="item.key"
+      [checked]="item.value.checked"
+      [disabled]="item.value.disabled"
       (change)="toggleNamespace($event, item.key)"
       class="namespace"
-      >{{ item.key }}</mat-checkbox
     >
+      <div class="checkbox-info">
+        <span class="namespace">{{ item.key }}</span>
+        <span class="dependencies" *ngIf="item.value.dependencies.length"
+          >Dependencies: <strong>{{ item.value.dependencies.join(', ') }}</strong></span
+        >
+      </div>
+      <mat-icon
+        *ngIf="item.value.dependencies.length"
+        matTooltip="This namespace has elements from other namespaces. If selected, the dependencies will be automatically selected."
+        matTooltipPosition="right"
+        >info_outline</mat-icon
+      >
+    </mat-checkbox>
   </section>
 </mat-dialog-content>
 

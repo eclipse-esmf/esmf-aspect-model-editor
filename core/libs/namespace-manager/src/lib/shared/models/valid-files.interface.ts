@@ -14,7 +14,8 @@
 import {ViolationReport} from './violation-report';
 
 export interface ValidFile {
-  aspectModelFileName: string;
+  fileName: string;
+  namespace: string;
   violationReport: ViolationReport;
   fileAlreadyDefined: boolean;
 }

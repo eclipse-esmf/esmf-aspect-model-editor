@@ -52,6 +52,10 @@
 
     .list {
       margin-top: 20px;
+
+      mat-icon {
+        min-width: 24px;
+      }
     }
 
     .namespace {
@@ -83,9 +87,15 @@
       &-name {
         display: flex;
         align-items: center;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
 
         span {
           margin-left: 5px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
 
         .error-icon {
@@ -97,12 +107,6 @@
         .show-more {
           visibility: visible;
         }
-      }
-
-      &-name {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
       }
 
       .show-more {

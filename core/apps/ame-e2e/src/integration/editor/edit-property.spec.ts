@@ -69,7 +69,7 @@ describe('Test edit property', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {'Ame-Model-Urn': 'org.eclipse.digitaltwin:1.0.0:external-property-reference-with-children.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference-with-children.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-property-reference.txt',

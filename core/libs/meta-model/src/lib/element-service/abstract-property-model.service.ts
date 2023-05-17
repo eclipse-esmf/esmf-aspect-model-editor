@@ -12,26 +12,22 @@
  */
 
 import {Injectable} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 import {AbstractPropertyRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper} from '@ame/mx-graph';
 import {BaseMetaModelElement} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
 import {CanExtend, DefaultAbstractProperty, DefaultProperty} from '../aspect-meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 
 @Injectable({providedIn: 'root'})
 export class AbstractPropertyModelService extends BaseModelService {
   constructor(
-    namespacesCacheService: NamespacesCacheService,
-    modelService: ModelService,
     private mxGraphService: MxGraphService,
     private abstractPropertyRenderer: AbstractPropertyRenderService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private languageService: LanguageSettingsService
   ) {
-    super(namespacesCacheService, modelService);
+    super();
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {

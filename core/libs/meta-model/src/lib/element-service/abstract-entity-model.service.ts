@@ -12,7 +12,6 @@
  */
 
 import {Injectable} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 import {EntityValueService} from '@ame/editor';
@@ -34,15 +33,12 @@ import {
   DefaultProperty,
   OverWrittenPropertyKeys,
 } from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {BaseEntityModelService} from './base-entity-model.service';
 
 @Injectable({providedIn: 'root'})
 export class AbstractEntityModelService extends BaseModelService {
   constructor(
-    protected namespacesCacheService: NamespacesCacheService,
-    protected modelService: ModelService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private entityValueService: EntityValueService,
     private mxGraphService: MxGraphService,
@@ -51,7 +47,7 @@ export class AbstractEntityModelService extends BaseModelService {
     private baseEntityModel: BaseEntityModelService,
     private languageService: LanguageSettingsService
   ) {
-    super(namespacesCacheService, modelService);
+    super();
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {

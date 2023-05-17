@@ -80,7 +80,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
 
     const nameValidators = [
       Validators.required,
-      EditorDialogValidators.duplicateName(this.namespacesCacheService, this.metaModelElement, this.rdfService.externalRdfModels),
+      EditorDialogValidators.duplicateName(this.namespacesCacheService, this.metaModelElement, this.rdfService),
     ];
 
     if (this.metaModelElement instanceof DefaultUnit) {

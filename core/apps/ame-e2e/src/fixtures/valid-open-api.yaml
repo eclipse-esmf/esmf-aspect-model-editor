@@ -73,13 +73,13 @@ components:
         code:
           type: string
           nullable: true
-    urn_bamm_org.eclipse.digitaltwin_1.0.0_Characteristic1:
+    urn_samm_org.eclipse.digitaltwin_1.0.0_Characteristic1:
       type: string
     AspectDefault:
       type: object
       properties:
         property1:
-          $ref: '#/components/schemas/urn_bamm_org.eclipse.digitaltwin_1.0.0_Characteristic1'
+          $ref: '#/components/schemas/urn_samm_org.eclipse.digitaltwin_1.0.0_Characteristic1'
       required:
         - property1
   responses:

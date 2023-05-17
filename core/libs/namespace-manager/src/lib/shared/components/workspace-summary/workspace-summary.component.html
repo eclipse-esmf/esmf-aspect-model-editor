@@ -26,9 +26,9 @@
           *ngFor="let value of violation.value"
           (click)="errors = value.violationError; visibleStep = errors?.length ? step.hasErrors : step.noError"
         >
-          <div class="content">
+          <div class="content" [matTooltip]="value.file.length > 25 ? value.file : ''" matTooltipPosition="right">
             <mat-icon>description</mat-icon>
-            <span>{{ value.file }}</span>
+            <span class="file-name">{{ value.file }}</span>
           </div>
           <div class="status">
             <mat-icon *ngIf="value.violationError?.length" matTooltip="This file has errors" matTooltipPosition="right" class="violation"
@@ -100,13 +100,3 @@
     </div>
   </div>
 </mat-dialog-content>
-
-<button
-  (click)="copySummaryToClipboard()"
-  class="copy-summary"
-  matTooltip="You can also copy the validation result to clipboard"
-  mat-button
->
-  <mat-icon>content_copy</mat-icon>
-  <span>Copy to clipboard</span>
-</button>

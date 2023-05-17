@@ -77,7 +77,7 @@ export class RightInputFieldComponent extends InputFieldComponent<DefaultEither>
             EditorDialogValidators.duplicateNameWithDifferentType(
               this.namespacesCacheService,
               this.metaModelElement,
-              this.rdfService.externalRdfModels,
+              this.rdfService,
               DefaultCharacteristic
             ),
           ],

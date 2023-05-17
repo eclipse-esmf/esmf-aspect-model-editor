@@ -12,8 +12,6 @@
  */
 
 import {Injectable} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
-import {ShapeConnectorService} from '@ame/connection';
 import {
   CharacteristicRenderService,
   EnumerationRenderService,
@@ -22,7 +20,6 @@ import {
   MxGraphService,
   MxGraphShapeOverlayService,
 } from '@ame/mx-graph';
-import {ModelService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {mxgraph} from 'mxgraph-factory';
 import {
@@ -41,22 +38,17 @@ import {
 import {DefaultCharacteristic} from '../aspect-meta-model/default-characteristic';
 import {DefaultEntity} from '../aspect-meta-model/default-entity';
 import {BaseModelService} from './base-model-service';
-import {EntityValueModelService} from '@ame/meta-model';
 
 @Injectable({providedIn: 'root'})
 export class CharacteristicModelService extends BaseModelService {
   constructor(
-    namespaceCacheService: NamespacesCacheService,
-    modelService: ModelService,
-    protected mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    protected mxGraphAttributeService: MxGraphAttributeService,
-    protected mxGraphService: MxGraphService,
-    protected shapeConnectorService: ShapeConnectorService,
-    protected entityValueModelService: EntityValueModelService,
+    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
+    private mxGraphAttributeService: MxGraphAttributeService,
+    private mxGraphService: MxGraphService,
     private characteristicRenderer: CharacteristicRenderService,
     private enumerationRenderer: EnumerationRenderService
   ) {
-    super(namespaceCacheService, modelService);
+    super();
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {

@@ -27,7 +27,7 @@ const prefixesToMigrate = {
 
 const newUrn = 'urn:samm:org.eclipse.esmf.samm';
 // eslint-disable-next-line no-useless-escape
-const oldUrnRegex = /@prefix\s+(\w+-?\w+:)\s+<urn:bamm:io.openmanufacturing:([\w-]+):([\d\.]+)#>/gim;
+const oldUrnRegex = /@prefix\s+(\w+-?\w+:)\s+<urn:samm:io.openmanufacturing:([\w-]+):([\d\.]+)#>/gim;
 
 @Injectable({
   providedIn: 'root',

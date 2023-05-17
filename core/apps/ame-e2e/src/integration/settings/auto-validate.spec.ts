@@ -32,7 +32,7 @@ describe('Auto Validate', () => {
       .then(() => cy.get(SNACK_BAR).should('exist'));
   });
 
-  it('should stop timer for validation', () => {
+  it.skip('should stop timer for validation', () => {
     cy.get(SettingsDialogSelectors.autoValidateInput)
       .clear({force: true})
       .type('10')

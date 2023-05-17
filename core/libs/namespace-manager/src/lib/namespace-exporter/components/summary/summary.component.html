@@ -17,7 +17,12 @@
 
 <ame-workspace-summary></ame-workspace-summary>
 
-<mat-dialog-actions align="end">
-  <button mat-flat-button mat-dialog-close>Dismiss</button>
-  <button *ngIf="!missingElements.length" mat-flat-button color="primary" (click)="export()">Export</button>
+<mat-dialog-actions class="modal-actions">
+  <div class="actions-left">
+    <ame-clipboard-copy-button></ame-clipboard-copy-button>
+  </div>
+  <div class="actions-right">
+    <button mat-flat-button mat-dialog-close>Dismiss</button>
+    <button *ngIf="!missingElements.length" mat-flat-button color="primary" (click)="export()">Export</button>
+  </div>
 </mat-dialog-actions>

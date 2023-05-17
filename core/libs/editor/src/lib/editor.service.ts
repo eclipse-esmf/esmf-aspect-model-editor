@@ -33,7 +33,6 @@ import {
   Observable,
   of,
   retryWhen,
-  Subject,
   Subscription,
   switchMap,
   tap,
@@ -99,9 +98,6 @@ export class EditorService {
   private lastSavedRDF$ = new BehaviorSubject<Partial<ILastSavedModel>>({});
   public loadModel$ = new BehaviorSubject(null);
   public delayedBindings: Array<any> = [];
-
-  public onRefreshNamespaces: Subject<void> = new Subject();
-  public onRefreshSideBar$: Subject<void> = new Subject();
 
   public get savedRdf$() {
     return this.lastSavedRDF$.asObservable();
@@ -228,7 +224,7 @@ export class EditorService {
   }
 
   loadNewAspectModel(rdfAspectModel: string, namespaceFileName?: string, isDefault?: boolean) {
-    this.refreshSidebar();
+    this.sidebarService.refreshSidebar();
     this.removeLastSavedRdf();
     this.notificationsService.info({title: 'Loading model', timeout: 2000});
 
@@ -446,7 +442,6 @@ export class EditorService {
             const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(newInstance);
             rdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
             metaModelElement ? this.mxGraphService.renderModelElement(metaModelElement, [], x, y) : this.openAlertBox();
-
             this.titleService.setTitle(`[Aspect Model] ${rdfModel.absoluteAspectModelFileName} - Aspect Model Editor`);
           });
         return;
@@ -727,7 +722,7 @@ export class EditorService {
         this.notificationsService.info({title: 'Aspect model was saved to the local folder'});
         this.logService.logInfo('Aspect model was saved to the local folder');
         this.refreshSaveModel();
-        this.refreshSidebarNamespaces();
+        this.sidebarService.refreshSidebarNamespaces();
       }),
       catchError(error => {
         // TODO Should be refined
@@ -752,14 +747,6 @@ export class EditorService {
         content: 'To start modelling, please create a new or load an existing model first. After that you can add new node types',
       },
     });
-  }
-
-  refreshSidebarNamespaces() {
-    this.onRefreshNamespaces.next();
-  }
-
-  refreshSidebar() {
-    this.onRefreshSideBar$.next();
   }
 
   private saveCompleteError(error) {

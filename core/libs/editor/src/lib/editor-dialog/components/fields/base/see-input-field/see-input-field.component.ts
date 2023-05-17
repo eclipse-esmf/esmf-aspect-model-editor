@@ -129,9 +129,9 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
         !fieldValue
           ? []
           : this.modelElements.filter(
-            ({name, aspectModelUrn}) =>
-              name?.toLowerCase().includes(fieldValue?.toLowerCase()) && !this.elements.find(el => el.urn === aspectModelUrn)
-          )
+              ({name, aspectModelUrn}) =>
+                name?.toLowerCase().includes(fieldValue?.toLowerCase()) && !this.elements.find(el => el.urn === aspectModelUrn)
+            )
       )
     );
   }
