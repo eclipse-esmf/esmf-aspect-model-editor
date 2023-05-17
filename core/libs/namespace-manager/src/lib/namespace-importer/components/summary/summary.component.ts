@@ -40,7 +40,7 @@ export class ImportSummaryComponent {
     const {replace, keep} = this.importSession.conflictFiles;
     const toOverwrite = Array.from(new Set([...keep, ...replace])).map(namespace => ({
       namespace,
-      files: files.filter(file => file.startsWith(namespace)).map(file => file.replace(namespace, '')),
+      files: files.filter(file => file.startsWith(namespace)).map(file => file.replace(`${namespace}:`, '')),
     }));
 
     this.modelApiService.replaceFiles(toOverwrite).subscribe({
