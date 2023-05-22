@@ -72,7 +72,8 @@ export class SelectNamespacesComponent implements OnInit {
   }
 
   validate() {
-    const validatePayload = this.selectedNamespaces.map(namespace => ({namespace, files: this.namespacesDependencies[namespace].files}));
+    const namespaces = Array.from(new Set(this.selectedNamespaces));
+    const validatePayload = namespaces.map(namespace => ({namespace, files: this.namespacesDependencies[namespace].files}));
     this.namespacesManager.validateExport(validatePayload).subscribe();
     this.router.navigate([{outlets: {'export-namespaces': 'validate'}}]);
   }
