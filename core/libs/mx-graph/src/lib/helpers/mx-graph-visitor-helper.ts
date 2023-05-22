@@ -266,8 +266,8 @@ export class MxGraphVisitorHelper {
   }
 
   static addNumericConversionFactor(unit: Unit): PropertyInformation {
-    if (unit.conversionFactor) {
-      return {label: `numericConversionFactor = ${unit.numericConversionFactor}`, key: 'conversionFactor'};
+    if (unit.numericConversionFactor) {
+      return {label: `numericConversionFactor = ${unit.numericConversionFactor}`, key: 'numericConversionFactor'};
     }
     return null;
   }

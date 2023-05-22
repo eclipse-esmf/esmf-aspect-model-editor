@@ -105,6 +105,9 @@ export class RdfNodeService {
             samm.getEncodingList().find(enc => enc.value === properties[key]).isDefinedBy
           );
           break;
+        case PropertyEnum.NumericConversionFactor:
+          this.addQuad(metaModelElement, properties[key], samm.getAspectModelUrn(key));
+          break;
         case PropertyEnum.DataType:
           this.addDatatype(metaModelElement, samm.getAspectModelUrn(key), properties[key]);
           break;
@@ -120,10 +123,7 @@ export class RdfNodeService {
         case PropertyEnum.LanguageCode:
           this.addQuad(metaModelElement, properties[key], sammC.getAspectModelUrn(key), properties['characteristicType']);
           break;
-        case PropertyEnum.CommonCode:
-        case PropertyEnum.Symbol:
         case PropertyEnum.ConversionFactor:
-        case PropertyEnum.NumericConversionFactor:
           this.addQuad(metaModelElement, properties[key], sammU.getAspectModelUrn(key));
           break;
         default:

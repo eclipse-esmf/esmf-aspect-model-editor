@@ -37,6 +37,8 @@ import {MetaModelElementInstantiator} from '@ame/instantiator';
 import {RdfModel} from './rdf-model';
 import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
 
+declare const sammUDefinition: any;
+
 export class RdfModelUtil {
   static isSammUDefinition(urn: string, sammU: SammU): boolean {
     return urn && urn.includes(sammU.getNamespace());
@@ -102,6 +104,8 @@ export class RdfModelUtil {
       return this.getDataType(metaModelElement.dataType);
     } else if (metaModelElement instanceof DefaultState && sammC.isDefaultValueProperty(predicateUrn)) {
       return this.getDataType(metaModelElement.dataType);
+    } else if (metaModelElement instanceof DefaultUnit && samm.isNumericConversionFactorProperty(predicateUrn)) {
+      return this.getDataType(new DefaultScalar(simpleDataTypes?.double?.isDefinedBy));
     }
 
     return null;
@@ -129,7 +133,7 @@ export class RdfModelUtil {
     } else if (modelElement instanceof DefaultCharacteristic || modelElement instanceof DefaultConstraint) {
       namespace = sammC.getNamespace();
     } else if (modelElement instanceof DefaultUnit) {
-      namespace = sammU.getNamespace();
+      namespace = modelElement.name in sammUDefinition.units ? sammU.getNamespace() : samm.getNamespace();
     } else if (modelElement instanceof DefaultEntity) {
       namespace = sammE.getNamespace();
     } else {
