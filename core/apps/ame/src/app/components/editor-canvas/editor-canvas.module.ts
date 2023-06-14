@@ -33,6 +33,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {AngularSplitModule} from 'angular-split';
 import {FormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     AngularSplitModule,
     FormsModule,
     MatDialogModule,
+    MatProgressSpinnerModule,
   ],
   declarations: [
     EditorCanvasComponent,

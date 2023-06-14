@@ -51,7 +51,10 @@ export class RdfListConstants {
       },
       {
         source: DefaultAbstractEntity,
-        children: [{type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()}],
+        children: [
+          {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()},
+          {type: DefaultProperty, predicate: samm.PropertiesProperty()},
+        ],
       },
       {
         source: DefaultEnumeration,

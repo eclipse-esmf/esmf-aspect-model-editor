@@ -1,0 +1,49 @@
+{
+  "metaModelVersion": "2.0.0",
+  "aspectModelUrn": "urn:samm:newNamespace:1.0.0#AspectSharedSameNamespace",
+  "name": "AspectSharedSameNamespace",
+  "see": [],
+  "anonymouseNode": false,
+  "externalReference": false,
+  "preferredNames": {},
+  "descriptions": {},
+  "properties": [
+    {
+      "property": {
+        "metaModelVersion": "2.0.0",
+        "aspectModelUrn": "urn:samm:newNamespace:1.0.0#property1",
+        "name": "property1",
+        "see": [],
+        "anonymouseNode": false,
+        "externalReference": false,
+        "preferredNames": {},
+        "descriptions": {},
+        "characteristic": {
+          "metaModelVersion": "2.0.0",
+          "aspectModelUrn": "urn:samm:newNamespace:1.0.0#Characteristic1",
+          "name": "Characteristic1",
+          "see": [],
+          "anonymouseNode": false,
+          "externalReference": false,
+          "preferredNames": {},
+          "descriptions": {},
+          "dataType": {
+            "urn": "http://www.w3.org/2001/XMLSchema#string"
+          },
+          "fileName": "AspectSharedSameNamespace.ttl"
+        },
+        "exampleValue": "Any property value 1",
+        "predefined": false,
+        "fileName": "AspectSharedSameNamespace.ttl"
+      },
+      "keys": {
+        "optional": false,
+        "notInPayload": false
+      }
+    }
+  ],
+  "operations": [],
+  "events": [],
+  "isCollectionAspect": false,
+  "fileName": "AspectSharedSameNamespace.ttl"
+}

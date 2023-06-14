@@ -14,7 +14,27 @@
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphAttributeService} from '@ame/mx-graph';
 import {mxgraph, mxgraphFactory} from 'mxgraph-factory';
-import {FIELD_name, SELECTOR_dialogInputModel, SELECTOR_editorSaveButton, SELECTOR_tbLoadButton, SIDEBAR_CLOSE_BUTTON} from './constants';
+import {
+  FIELD_name,
+  SELECTOR_dialogInputModel,
+  SELECTOR_editorSaveButton,
+  SELECTOR_fileMenuLoadAspectModelButton,
+  SELECTOR_namespace,
+  SELECTOR_namespaceFile,
+  SELECTOR_namespaceFileMenuButton,
+  SELECTOR_namespaceFileName,
+  SELECTOR_namespaceName,
+  SELECTOR_namespaceTabSaveButton,
+  SELECTOR_namespaceTabValueInput,
+  SELECTOR_namespaceTabVersionInput,
+  SELECTOR_openNamespacesButton,
+  SELECTOR_settingsButton,
+  SELECTOR_settingsModalCloseButton,
+  SELECTOR_tbLoadButton,
+  SELECTOR_tbSaveButton,
+  SELECTOR_tbSaveMenuSaveToWorkspaceButton,
+  SIDEBAR_CLOSE_BUTTON,
+} from './constants';
 
 const {mxConstants} = mxgraphFactory({});
 
@@ -196,5 +216,42 @@ export class cyHelp {
     cy.get(SELECTOR_tbLoadButton).click({force: true});
     cy.get('[data-cy="create-model"]').click({force: true});
     cy.get(SELECTOR_dialogInputModel).invoke('val', rdfModel).trigger('input');
+  }
+
+  static loadModelFromWorkspace(namespaceName: string, fileNamePartial: string) {
+    cy.get(SELECTOR_openNamespacesButton).click({force: true}).wait(1000);
+    cy.get(SELECTOR_namespace)
+      .find(SELECTOR_namespaceName)
+      .contains(namespaceName)
+      .parents(SELECTOR_namespace)
+      .find(SELECTOR_namespaceFileName)
+      .filter((index, element) => {
+        const text = Cypress.$(element).text();
+        return text.includes(fileNamePartial);
+      })
+      .parents(SELECTOR_namespaceFile)
+      .find(SELECTOR_namespaceFileMenuButton)
+      .click({force: true});
+    cy.get(SELECTOR_fileMenuLoadAspectModelButton).click();
+    cy.get('button').contains("Don't save").click();
+    cy.wait(1000);
+  }
+
+  static saveCurrentModelToWorkspace() {
+    cy.get(SELECTOR_tbSaveButton).click();
+    cy.get(SELECTOR_tbSaveMenuSaveToWorkspaceButton).click();
+  }
+
+  static updateNamespace(name: string, version: string) {
+    this.openSettingsTab(2);
+    cy.get(SELECTOR_namespaceTabValueInput).clear().type(name);
+    cy.get(SELECTOR_namespaceTabVersionInput).clear().type(version);
+    cy.get(SELECTOR_namespaceTabSaveButton).click();
+    cy.get('button').contains('Save').click();
+  }
+
+  static openSettingsTab(tabIndex: number) {
+    cy.get(SELECTOR_settingsButton).click().wait(1000);
+    cy.get(`.mat-tab-labels :nth-child(${tabIndex + 1})`).click();
   }
 }

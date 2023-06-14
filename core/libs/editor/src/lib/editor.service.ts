@@ -82,6 +82,7 @@ import {RdfModel} from '@ame/rdf/utils';
 import {Title} from '@angular/platform-browser';
 import {OpenApi, ViolationError} from './editor-toolbar';
 import mxCell = mxgraph.mxCell;
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -221,6 +222,32 @@ export class EditorService {
     const edgeToRemove = parentEntityValueCell.edges.find(edge => edge.target === childEntityValueCell);
 
     this.mxGraphService.removeCells([edgeToRemove]);
+  }
+
+  handleFileVersionConflicts(fileName: string, fileContent: string): Observable<RdfModel> {
+    const currentModel = this.rdfService.currentRdfModel;
+
+    if (!currentModel.loadedFromWorkspace || !currentModel.isSameFile(fileName)) return of(this.rdfService.currentRdfModel);
+
+    return this.rdfService.isSameModelContent(fileName, fileContent, currentModel).pipe(
+      switchMap(isSameModelContent =>
+        !isSameModelContent ? this.openReloadConfirmationDialog(currentModel.absoluteAspectModelFileName) : of(false)
+      ),
+      switchMap(isApprove => (isApprove ? this.loadNewAspectModel(fileContent) : of(null))),
+      map(() => this.rdfService.currentRdfModel)
+    );
+  }
+
+  openReloadConfirmationDialog(fileName: string): Observable<boolean> {
+    return this.confirmDialogService.open({
+      phrases: [
+        `A different version of ${fileName} has been loaded to a workspace.`,
+        'Reloading will replace current Aspect Model with the version from a workspace, all unsaved changes will be lost. Reload?',
+      ],
+      title: 'Current Aspect Model changed',
+      closeButtonText: 'Keep current',
+      okButtonText: 'Reload',
+    });
   }
 
   loadNewAspectModel(rdfAspectModel: string, namespaceFileName?: string, isDefault?: boolean) {

@@ -19,6 +19,7 @@ import {NamespaceConfirmationModalComponent} from '../namespace-confirmation-mod
 import {Samm} from '@ame/vocabulary';
 import {ModelService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
+import {filter, tap} from 'rxjs';
 
 @Component({
   selector: 'ame-namespace',
@@ -108,27 +109,31 @@ export class NamespaceComponent implements OnInit {
     );
   }
 
-  onSubmit(): void {
-    const newNamespace = this.namespaceForm?.get('aspectUri')?.value;
-    const newVersion = this.namespaceForm?.get('aspectVersion')?.value;
+  onSubmit(formValue): void {
+    const newNamespace = formValue.aspectUri;
+    const newVersion = formValue.aspectVersion;
     const config = {
       data: {
         oldNamespace: this.aspectUriInitialValue,
-        newNamespace: newNamespace,
         oldVersion: this.aspectVersionInitialValue,
-        newVersion: newVersion,
         rdfModel: this.loadedRdfModel,
+        newNamespace,
+        newVersion,
       },
     };
+
     this.matDialog
       .open(NamespaceConfirmationModalComponent, config)
       .afterClosed()
-      .subscribe((save: boolean) => {
-        if (save) {
+      .pipe(
+        filter(isApproved => isApproved),
+        tap(() => {
           this.aspectUriInitialValue = newNamespace;
           this.aspectVersionInitialValue = newVersion;
-        }
-      });
+          this.onClose();
+        })
+      )
+      .subscribe();
   }
 
   onClose(): void {

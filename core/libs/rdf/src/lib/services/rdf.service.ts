@@ -10,12 +10,12 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {DataFactory, Parser, Quad, Store, Util, Writer} from 'n3';
-import {map, Observable, Subject, switchMap, throwError} from 'rxjs';
-import {Injectable} from '@angular/core';
+import {DataFactory, Parser, Prefixes, Quad, Store, Util, Writer} from 'n3';
+import {map, Observable, of, Subject, switchMap, throwError} from 'rxjs';
+import {Inject, Injectable} from '@angular/core';
 import {environment} from 'environments/environment';
 import {ModelApiService} from '@ame/api';
-import {DataTypeService, FileContentModel, LogService, SaveValidateErrorsCodes} from '@ame/shared';
+import {APP_CONFIG, AppConfig, DataTypeService, FileContentModel, LogService, SaveValidateErrorsCodes} from '@ame/shared';
 import {Samm} from '@ame/vocabulary';
 import {RdfModel} from '../utils';
 
@@ -44,7 +44,12 @@ export class RdfService {
     this._currentRdfModel = rdfModel;
   }
 
-  constructor(private modelApiService: ModelApiService, private dataTypeService: DataTypeService, private logService: LogService) {
+  constructor(
+    private modelApiService: ModelApiService,
+    private dataTypeService: DataTypeService,
+    private logService: LogService,
+    @Inject(APP_CONFIG) public config: AppConfig
+  ) {
     if (!environment.production) {
       window['angular.rdfService'] = this;
     }
@@ -161,6 +166,12 @@ export class RdfService {
       if (quad) {
         store.addQuad(quad);
       } else if (prefixes) {
+        if (this.haveIncorrectCorrectPrefixes(prefixes)) {
+          const incorrectPrefixes = `Incorrect prefixes, please check SAMM specification: https://eclipse-esmf.github.io/samm-specification/${this.config.currentSammVersion}/namespaces.html`;
+          this.logService.logInfo(incorrectPrefixes);
+          subject.error(incorrectPrefixes);
+          subject.complete();
+        }
         this.currentRdfModel = new RdfModel(store, this.dataTypeService, prefixes);
         this.currentRdfModel.absoluteAspectModelFileName =
           this.currentRdfModel.absoluteAspectModelFileName ||
@@ -181,6 +192,12 @@ export class RdfService {
     });
 
     return subject;
+  }
+
+  private haveIncorrectCorrectPrefixes(prefixes: any): boolean {
+    return Object.keys(prefixes)
+      .filter((prefix: any) => !['rdf', 'rdfs', 'samm', 'samm-u', 'samm-c', 'samm-e', 'unit', 'xsd'].includes(prefix))
+      .some(key => !Samm.isSammPrefix(prefixes[key]));
   }
 
   loadExternalReferenceModelIntoStore(fileContent: FileContentModel): Observable<RdfModel> {
@@ -215,6 +232,13 @@ export class RdfService {
     return subject;
   }
 
+  isSameModelContent(absoluteFileName: string, fileContent: string, modelToCompare: RdfModel): Observable<boolean> {
+    if (modelToCompare.absoluteAspectModelFileName !== absoluteFileName) return of(false);
+
+    const serializedModel: string = this.serializeModel(modelToCompare);
+    return this.modelApiService.formatModel(serializedModel).pipe(map(formattedModel => formattedModel === fileContent));
+  }
+
   writeBlankNodes(quad: Quad, rdfModel: RdfModel, writer: Writer, metaModelNames: string[]) {
     const blankNodes = rdfModel.resolveRecursiveBlankNodes(quad.object.value, writer);
     const isBlankNode = blankNodes.some(({object}) => metaModelNames.includes(object.value));
@@ -228,6 +252,13 @@ export class RdfService {
       this.namedNode(quad.subject.value),
       this.namedNode(quad.predicate.value),
       writer.list(blankNodes.map(({object}) => object))
+    );
+  }
+
+  removeExternalModel(modelName: string): void {
+    this.externalRdfModels = this.externalRdfModels.reduce<RdfModel[]>(
+      (models, model) => (model.absoluteAspectModelFileName !== modelName ? [...models, model] : models),
+      []
     );
   }
 }

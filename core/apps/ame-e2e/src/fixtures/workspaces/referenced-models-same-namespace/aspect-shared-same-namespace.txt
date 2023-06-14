@@ -1,0 +1,24 @@
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#>.
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.0.0#>.
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.0.0#>.
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.0.0#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix : <urn:samm:same.namespace:1.0.0#>.
+
+:AspectSharedSameNamespace a samm:Aspect;
+    samm:preferredName "Aspect 1"@en;
+    samm:description "This is an aspect 1"@en;
+    samm:properties (:property1);
+    samm:operations ();
+    samm:events ().
+:property1 a samm:Property;
+    samm:preferredName "Property 1"@en;
+    samm:description "This is a property 1"@en;
+    samm:characteristic :Characteristic1;
+    samm:exampleValue "Any property value 1".
+:Characteristic1 a samm:Characteristic;
+    samm:preferredName "Characteristic 1"@en;
+    samm:description "This is a characteristic 1"@en;
+    samm:dataType xsd:string.

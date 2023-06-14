@@ -176,7 +176,9 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.get('.mat-cell').should('contain', 'property1'))
         .then(() => cy.get('.mat-cell').get('input').should('not.be.disabled'))
         .then(() => cy.wait(500).get('.mat-dialog-container .close-button').click())
-        .then(() => cy.get(SELECTOR_editorCancelButton).click({force: true}));
+        .then(() => cy.get(SELECTOR_editorCancelButton).click({force: true}))
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => expect(rdf).to.contain(':AbstractEntity1 a samm:AbstractEntity;\n    samm:properties (:property1).'));
     });
 
     it('AbstractEntity2 should inherit property1', () => {

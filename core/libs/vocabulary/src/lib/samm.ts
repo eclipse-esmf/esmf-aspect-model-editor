@@ -29,6 +29,10 @@ export class Samm {
     );
   }
 
+  static isSammPrefix(value: string): boolean {
+    return value.startsWith('urn:samm');
+  }
+
   getAlias(): string {
     return this.alias;
   }

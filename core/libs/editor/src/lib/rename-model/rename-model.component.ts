@@ -32,7 +32,7 @@ export class RenameModelComponent {
     private modelApiService: ModelApiService
   ) {
     const rdfModel = this.rdfService.currentRdfModel;
-    this.modelApiService.getNamespacesAppendWithFiles().subscribe((namespaces: string[]) => {
+    this.modelApiService.getNamespacesAppendWithFiles().subscribe(namespaces => {
       namespaces = namespaces.map(namespace => namespace.toLowerCase());
       this.fileNameControl = new FormControl('', [
         Validators.required,

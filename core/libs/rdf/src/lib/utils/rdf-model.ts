@@ -11,11 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DataFactory, NamedNode, Prefixes, Quad, Quad_Object, Quad_Subject, Store, Util, Writer} from 'n3';
+import {DataFactory, NamedNode, Prefixes, Quad, Quad_Graph, Quad_Object, Quad_Predicate, Quad_Subject, Store, Util, Writer} from 'n3';
 import * as locale from 'locale-codes';
 import {InstantiatorListElement} from './rdf-model.types';
 import {DataTypeService} from '@ame/shared';
 import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
+import {RdfModelUtil} from '@ame/rdf/utils/rdf-model-util';
+
+interface QuadComponents {
+  subject?: Quad_Subject;
+  predicate?: Quad_Predicate;
+  object?: Quad_Object;
+  graph?: Quad_Graph;
+}
 
 export class RdfModel {
   private _isExternalRef = false;
@@ -88,6 +96,26 @@ export class RdfModel {
     }
 
     return null;
+  }
+
+  get isNamespaceChanged(): boolean {
+    return this.isNamespaceNameChanged || this.isNamespaceVersionChanged;
+  }
+
+  get isNamespaceNameChanged(): boolean {
+    if (!this.originalAbsoluteFileName || !this.absoluteAspectModelFileName) return false;
+    return (
+      RdfModelUtil.getNamespaceNameFromRdf(this.originalAbsoluteFileName) !==
+      RdfModelUtil.getNamespaceNameFromRdf(this.absoluteAspectModelFileName)
+    );
+  }
+
+  get isNamespaceVersionChanged(): boolean {
+    if (!this.originalAbsoluteFileName || !this.absoluteAspectModelFileName) return false;
+    return (
+      RdfModelUtil.getNamespaceVersionFromRdf(this.originalAbsoluteFileName) !==
+      RdfModelUtil.getNamespaceVersionFromRdf(this.absoluteAspectModelFileName)
+    );
   }
 
   private get nameBasedOnASpect() {
@@ -267,6 +295,40 @@ export class RdfModel {
     } else {
       return this.store.getQuads(quad, null, null, null);
     }
+  }
+
+  updateQuads(query: QuadComponents, replacement: QuadComponents): number {
+    const quads: Quad[] = this.getQuads(query);
+    return quads.reduce((counter, quad) => {
+      this.modifyQuad(replacement, quad);
+      return ++counter;
+    }, 0);
+  }
+
+  getQuads(query: QuadComponents): Quad[] {
+    return this.store.getQuads(query.subject || null, query.predicate || null, query.object || null, query.graph || null);
+  }
+
+  modifyQuad(replacement: QuadComponents, quad: Quad): void {
+    const updatedQuad: [Quad_Subject, Quad_Predicate, Quad_Object, Quad_Graph] = [
+      replacement.subject || quad.subject,
+      replacement.predicate || quad.predicate,
+      replacement.object || quad.object,
+      replacement.graph || quad.graph,
+    ];
+    this.store.addQuad(...updatedQuad);
+    this.store.removeQuad(quad);
+  }
+
+  updateAbsoluteFileName(newNamespace: string, newVersion: string): void {
+    if (!this.originalAbsoluteFileName) this.originalAbsoluteFileName = this.absoluteAspectModelFileName;
+
+    const fileName = RdfModelUtil.getFileNameFromRdf(this.absoluteAspectModelFileName);
+    this.absoluteAspectModelFileName = RdfModelUtil.buildAbsoluteFileName(newNamespace, newVersion, fileName);
+  }
+
+  isSameFile(absoluteFileName: string): boolean {
+    return this.loadedFromWorkspace && this.absoluteAspectModelFileName === absoluteFileName;
   }
 
   private resolveMetaModelVersion(): void {

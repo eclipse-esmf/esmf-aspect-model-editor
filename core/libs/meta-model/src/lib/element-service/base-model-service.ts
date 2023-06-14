@@ -59,7 +59,7 @@ export abstract class BaseModelService {
       this.modelApiService
         .getNamespacesAppendWithFiles()
         .pipe(
-          switchMap((fileNames: string[]) =>
+          switchMap(fileNames =>
             fileNames.find(fileName => fileName === aspectModelFileName)
               ? this.editorService.addAspectModelFileIntoStore(aspectModelFileName)
               : of(null)

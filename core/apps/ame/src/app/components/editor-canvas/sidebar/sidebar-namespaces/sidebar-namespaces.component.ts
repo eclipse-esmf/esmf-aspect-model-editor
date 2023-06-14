@@ -156,4 +156,8 @@ export class SidebarNamespacesComponent implements OnChanges {
       }
     }
   }
+
+  refreshSidebar() {
+    this.refresh.emit();
+  }
 }

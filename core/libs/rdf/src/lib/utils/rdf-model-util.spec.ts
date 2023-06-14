@@ -75,11 +75,11 @@ describe('Test RDF Model Util', () => {
 
     test('should return DefaultLengthConstraint urn', () => {
       const metaModelElement = DefaultLengthConstraint.createInstance();
-      const samm = {} as Samm;
-      const sammC = {
-        isMinValueProperty: (value): boolean => !!value,
-        isMaxValueProperty: (value): boolean => !!value,
-      } as SammC;
+      const samm: Samm = <Samm>{};
+      const sammC: SammC = <SammC>{
+        isMinValueProperty: value => !!value,
+        isMaxValueProperty: value => !!value,
+      };
 
       rdfModel.SAMM = () => samm;
       rdfModel.SAMMC = () => sammC;
@@ -92,11 +92,11 @@ describe('Test RDF Model Util', () => {
 
     test('should return DefaultFixedPointConstraint urn', () => {
       const metaModelElement = DefaultFixedPointConstraint.createInstance();
-      const samm = {} as Samm;
-      const sammC = {
-        isScaleValueProperty: (_value): boolean => true,
-        isIntegerValueProperty: (_value): boolean => true,
-      } as SammC;
+      const samm: Samm = <Samm>{};
+      const sammC: SammC = <any>{
+        isScaleValueProperty: () => true,
+        isIntegerValueProperty: () => true,
+      };
 
       rdfModel.SAMM = () => samm;
       rdfModel.SAMMC = () => sammC;
@@ -109,10 +109,10 @@ describe('Test RDF Model Util', () => {
 
     test('should return DefaultProperty urn', () => {
       const metaModelElement = DefaultProperty.createInstance();
-      const samm = {
-        isExampleValueProperty: (_value): boolean => true,
-      } as Samm;
-      const sammC = {} as SammC;
+      const samm: Samm = <any>{
+        isExampleValueProperty: () => true,
+      };
+      const sammC: SammC = <SammC>{};
 
       rdfModel.SAMM = () => samm;
       rdfModel.SAMMC = () => sammC;
@@ -125,11 +125,11 @@ describe('Test RDF Model Util', () => {
 
     test('should return DefaultRangeConstraint urn', () => {
       const metaModelElement = DefaultRangeConstraint.createInstance();
-      const samm = {} as Samm;
-      const sammC = {
-        isMinValueProperty: (value): boolean => !!value,
-        isMaxValueProperty: (value): boolean => !!value,
-      } as SammC;
+      const samm: Samm = <Samm>{};
+      const sammC: SammC = <SammC>{
+        isMinValueProperty: value => !!value,
+        isMaxValueProperty: value => !!value,
+      };
 
       rdfModel.SAMM = () => samm;
       rdfModel.SAMMC = () => sammC;
@@ -142,10 +142,10 @@ describe('Test RDF Model Util', () => {
 
     test('should return DefaultEnumeration urn', () => {
       const metaModelElement = DefaultEnumeration.createInstance();
-      const samm = {} as Samm;
-      const sammC = {
-        isValuesProperty: (_value): boolean => true,
-      } as SammC;
+      const samm: Samm = <Samm>{};
+      const sammC: SammC = <any>{
+        isValuesProperty: () => true,
+      };
 
       rdfModel.SAMM = () => samm;
       rdfModel.SAMMC = () => sammC;
@@ -158,11 +158,11 @@ describe('Test RDF Model Util', () => {
 
     test('should return DefaultState urn', () => {
       const metaModelElement = DefaultState.createInstance();
-      const samm = {} as Samm;
-      const sammC = {
-        isValuesProperty: (_value): boolean => false,
-        isDefaultValueProperty: (_value): boolean => true,
-      } as SammC;
+      const samm: Samm = <Samm>{};
+      const sammC: SammC = <any>{
+        isValuesProperty: () => false,
+        isDefaultValueProperty: () => true,
+      };
 
       rdfModel.SAMM = () => samm;
       rdfModel.SAMMC = () => sammC;
@@ -175,11 +175,11 @@ describe('Test RDF Model Util', () => {
 
     test('should return NULL', () => {
       const metaModelElement = DefaultState.createInstance();
-      const samm = {} as Samm;
-      const sammC = {
-        isValuesProperty: (_value): boolean => false,
-        isDefaultValueProperty: (_value): boolean => false,
-      } as SammC;
+      const samm: Samm = <Samm>{};
+      const sammC: SammC = <any>{
+        isValuesProperty: () => false,
+        isDefaultValueProperty: () => false,
+      };
 
       rdfModel.SAMM = () => samm;
       rdfModel.SAMMC = () => sammC;
@@ -196,12 +196,12 @@ describe('Test RDF Model Util', () => {
     test('should return properties property', () => {
       const parent = Object.create(DefaultAspect.prototype);
       const child = Object.create(DefaultProperty.prototype);
-      const propertiesProperty = {
+      const propertiesProperty: NamedNode = <NamedNode>{
         id: 'propertiesPropertyNode',
-      } as NamedNode;
-      const samm = {
-        PropertiesProperty: (): NamedNode => propertiesProperty,
-      } as Samm;
+      };
+      const samm: Samm = <Samm>{
+        PropertiesProperty: () => propertiesProperty,
+      };
 
       rdfModel.SAMM = () => samm;
 
@@ -211,12 +211,12 @@ describe('Test RDF Model Util', () => {
     test('should return operations property', () => {
       const parent = Object.create(DefaultAspect.prototype);
       const child = Object.create(DefaultOperation.prototype);
-      const operationsProperty = {
+      const operationsProperty: NamedNode = <NamedNode>{
         id: 'operationsPropertyNode',
-      } as NamedNode;
-      const samm = {
-        OperationsProperty: (): NamedNode => operationsProperty,
-      } as Samm;
+      };
+      const samm: Samm = <Samm>{
+        OperationsProperty: () => operationsProperty,
+      };
 
       rdfModel.SAMM = () => samm;
 
@@ -226,12 +226,12 @@ describe('Test RDF Model Util', () => {
     test('should return characteristic property', () => {
       const parent = Object.create(DefaultProperty.prototype);
       const child = Object.create(DefaultCharacteristic.prototype);
-      const characteristicProperty = {
+      const characteristicProperty: NamedNode = <NamedNode>{
         id: 'characteristicPropertyNode',
-      } as NamedNode;
-      const samm = {
-        CharacteristicProperty: (): NamedNode => characteristicProperty,
-      } as Samm;
+      };
+      const samm: Samm = <Samm>{
+        CharacteristicProperty: () => characteristicProperty,
+      };
 
       rdfModel.SAMM = () => samm;
 
@@ -241,12 +241,12 @@ describe('Test RDF Model Util', () => {
     test('should return type property', () => {
       const parent = Object.create(DefaultCharacteristic.prototype);
       const child = Object.create(DefaultEntity.prototype);
-      const dataTypeProperty = {
+      const dataTypeProperty: NamedNode = <NamedNode>{
         id: 'dataTypePropertyNode',
-      } as NamedNode;
-      const samm = {
-        DataTypeProperty: (): NamedNode => dataTypeProperty,
-      } as Samm;
+      };
+      const samm: Samm = <Samm>{
+        DataTypeProperty: () => dataTypeProperty,
+      };
 
       rdfModel.SAMM = () => samm;
 
@@ -256,12 +256,12 @@ describe('Test RDF Model Util', () => {
     test('should return properties property', () => {
       const parent = Object.create(DefaultEntity.prototype);
       const child = Object.create(DefaultProperty.prototype);
-      const propertiesProperty = {
+      const propertiesProperty: NamedNode = <NamedNode>{
         id: 'propertiesPropertyNode',
-      } as NamedNode;
-      const samm = {
-        PropertiesProperty: (): NamedNode => propertiesProperty,
-      } as Samm;
+      };
+      const samm: Samm = <Samm>{
+        PropertiesProperty: () => propertiesProperty,
+      };
 
       rdfModel.SAMM = () => samm;
 
@@ -276,12 +276,12 @@ describe('Test RDF Model Util', () => {
       const child = Object.create(DefaultCharacteristic.prototype);
       child.aspectModelUrn = rightPropertyUrn;
 
-      const rightProperty = {
+      const rightProperty: NamedNode = <NamedNode>{
         id: 'rightPropertyNode',
-      } as NamedNode;
-      const sammC = {
-        EitherRightProperty: (): NamedNode => rightProperty,
-      } as SammC;
+      };
+      const sammC: SammC = <SammC>{
+        EitherRightProperty: () => rightProperty,
+      };
 
       rdfModel.SAMMC = () => sammC;
 
@@ -297,12 +297,12 @@ describe('Test RDF Model Util', () => {
       const child = Object.create(DefaultCharacteristic.prototype);
       child.aspectModelUrn = leftPropertyUrn;
 
-      const leftProperty = {
+      const leftProperty: NamedNode = <NamedNode>{
         id: 'leftPropertyNode',
-      } as NamedNode;
-      const sammC = {
-        EitherLeftProperty: (): NamedNode => leftProperty,
-      } as SammC;
+      };
+      const sammC: SammC = <SammC>{
+        EitherLeftProperty: () => leftProperty,
+      };
 
       rdfModel.SAMMC = () => sammC;
 
@@ -319,6 +319,131 @@ describe('Test RDF Model Util', () => {
       child.aspectModelUrn = propertyUrn;
 
       expect(RdfModelUtil.resolvePredicate(child, parent, rdfModel)).toBe(null);
+    });
+  });
+
+  describe('getUrnFromFileName', () => {
+    test('should construct URN based on passed file name', () => {
+      const fileName = 'namespace_name:1.0.0:Aspect1.ttl';
+      const expected = 'urn:samm:namespace_name:1.0.0';
+      const expectation = RdfModelUtil.getUrnFromFileName(fileName);
+      expect(expectation).toEqual(expected);
+    });
+
+    test('should throw on incorrect param', () => {
+      const fileName = 'namespace_name';
+      const expectation = () => RdfModelUtil.getUrnFromFileName(fileName);
+      expect(expectation).toThrow();
+    });
+  });
+
+  describe('getNamespaceFromRdf', () => {
+    test('should return namespace', () => {
+      const fileName = 'namespace_name:1.0.0:Aspect1.ttl';
+      const expected = 'namespace_name:1.0.0';
+      const expectation = RdfModelUtil.getNamespaceFromRdf(fileName);
+      expect(expectation).toEqual(expected);
+    });
+
+    test('should throw on incorrect param', () => {
+      const fileName = 'namespace_name';
+      const expectation = () => RdfModelUtil.getNamespaceFromRdf(fileName);
+      expect(expectation).toThrow();
+    });
+  });
+
+  describe('getNamespaceNameFromRdf', () => {
+    test('should return namespace name', () => {
+      const fileName = 'namespace_name:1.0.0:Aspect1.ttl';
+      const expected = 'namespace_name';
+      const expectation = RdfModelUtil.getNamespaceNameFromRdf(fileName);
+      expect(expectation).toEqual(expected);
+    });
+
+    test('should throw on incorrect param', () => {
+      const fileName = 'namespace_name';
+      const expectation = () => RdfModelUtil.getNamespaceNameFromRdf(fileName);
+      expect(expectation).toThrow();
+    });
+  });
+
+  describe('getNamespaceVersionFromRdf', () => {
+    test('should return namespace version', () => {
+      const fileName = 'namespace_name:1.0.0:Aspect1.ttl';
+      const expected = '1.0.0';
+      const expectation = RdfModelUtil.getNamespaceVersionFromRdf(fileName);
+      expect(expectation).toEqual(expected);
+    });
+
+    test('should throw on incorrect param', () => {
+      const fileName = 'namespace_name';
+      const expectation = () => RdfModelUtil.getNamespaceVersionFromRdf(fileName);
+      expect(expectation).toThrow();
+    });
+  });
+
+  describe('getFileNameFromRdf', () => {
+    test('should return file name', () => {
+      const fileName = 'namespace_name:1.0.0:Aspect1.ttl';
+      const expected = 'Aspect1.ttl';
+      const expectation = RdfModelUtil.getFileNameFromRdf(fileName);
+      expect(expectation).toEqual(expected);
+    });
+
+    test('should throw on incorrect param', () => {
+      const fileName = 'namespace_name';
+      const expectation = () => RdfModelUtil.getFileNameFromRdf(fileName);
+      expect(expectation).toThrow();
+    });
+  });
+
+  describe('splitRdfIntoChunks', () => {
+    test('should return 3 chunks', () => {
+      const fileName = 'namespace_name:1.0.0:Aspect1.ttl';
+      const expected = ['namespace_name', '1.0.0', 'Aspect1.ttl'];
+      const expectation = RdfModelUtil.splitRdfIntoChunks(fileName);
+      expect(expectation).toEqual(expected);
+    });
+
+    test('should throw on less chunks', () => {
+      const fileName = 'namespace_name:1.0.0';
+      const expectation = () => RdfModelUtil.splitRdfIntoChunks(fileName);
+      expect(expectation).toThrow();
+    });
+
+    test('should throw on more chunks', () => {
+      const fileName = 'namespace_name:1.0.0:Aspect1.ttl:something';
+      const expectation = () => RdfModelUtil.splitRdfIntoChunks(fileName);
+      expect(expectation).toThrow();
+    });
+
+    test('should throw on no chunks', () => {
+      const fileName = 'namespace_name';
+      const expectation = () => RdfModelUtil.splitRdfIntoChunks(fileName);
+      expect(expectation).toThrow();
+    });
+
+    test('should throw on empty string', () => {
+      const fileName = '';
+      const expectation = () => RdfModelUtil.splitRdfIntoChunks(fileName);
+      expect(expectation).toThrow();
+    });
+
+    test('should throw on "null"', () => {
+      const fileName = null;
+      const expectation = () => RdfModelUtil.splitRdfIntoChunks(fileName);
+      expect(expectation).toThrow();
+    });
+  });
+
+  describe('buildAbsoluteFileName', () => {
+    test('should return consolidated file name', () => {
+      const namespace = 'namespace_name';
+      const namespaceVersion = '1.0.0';
+      const fileName = 'Aspect1.ttl';
+      const expected = 'namespace_name:1.0.0:Aspect1.ttl';
+      const expectation = RdfModelUtil.buildAbsoluteFileName(namespace, namespaceVersion, fileName);
+      expect(expectation).toEqual(expected);
     });
   });
 });

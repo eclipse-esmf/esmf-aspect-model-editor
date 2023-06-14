@@ -45,7 +45,7 @@ export class MigratorService {
     private router: Router,
     private migratorApi: MigratorApiService,
     private modelApiService: ModelApiService,
-    private notificationService: NotificationsService
+    private notificationsService: NotificationsService
   ) {}
 
   public startMigrating() {
@@ -83,7 +83,7 @@ export class MigratorService {
       }),
       mergeMap((requests: Observable<any>[]) => {
         if (requests.length) {
-          this.notificationService.info({
+          this.notificationsService.info({
             title: 'Migrated models from BAMM to SAMM',
           });
           this.router.navigate([{outlets: {migrator: 'samm-migration'}}], {queryParams: {status: 'migrating'}});
@@ -112,6 +112,20 @@ export class MigratorService {
     }
 
     return fileContent;
+  }
+
+  // This method is based on "detectBammAndReplaceWithSamm", in addition, it
+  // shows the corresponding notification. Potentially can replace direct usage
+  // of "detectBammAndReplaceWithSamm" method.
+  bammToSamm(model: string): string {
+    const migratedModel = this.detectBammAndReplaceWithSamm(model);
+    if (migratedModel !== model) {
+      this.notificationsService.info({
+        title: 'Model migrated from BAMM to SAMM',
+      });
+    }
+
+    return migratedModel;
   }
 
   private openDialog() {

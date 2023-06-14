@@ -35,15 +35,15 @@ paths:
             type: string
             format: uuid
       responses:
-        "200":
+        '200':
           $ref: '#/components/responses/AspectDefault'
-        "401":
+        '401':
           $ref: '#/components/responses/ClientError'
-        "402":
+        '402':
           $ref: '#/components/responses/Unauthorized'
-        "403":
+        '403':
           $ref: '#/components/responses/Forbidden'
-        "404":
+        '404':
           $ref: '#/components/responses/NotFoundError'
 components:
   schemas:
