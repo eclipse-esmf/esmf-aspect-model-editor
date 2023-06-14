@@ -13,7 +13,10 @@
 
 <div class="container">
   <div *ngIf="namespaces?.length > 0" class="namespaces">
-    <div class="title">Workspace</div>
+    <div class="header">
+      <div class="title">Workspace</div>
+      <mat-icon class="refresh-icon" (click)="refreshSidebar()">refresh</mat-icon>
+    </div>
     <p *ngIf="!hasCurrentFile" class="description">To see your current Model in the below list, save it to workspace.</p>
     <button
       *ngIf="isWorkspaceOutdated"
@@ -28,14 +31,14 @@
     </button>
 
     <div class="list">
-      <div *ngFor="let namespace of namespaces" class="namespace">
+      <div *ngFor="let namespace of namespaces" class="namespace" data-cy="namespace">
         <div
           class="folder"
           [ngClass]="{selected: isSelectedNamespace(namespace.name), outdated: namespace.outdated}"
           [title]="namespace.name"
         >
           <mat-icon>folder</mat-icon>
-          <span>{{ namespace.name }}</span>
+          <span data-cy="namespaceName">{{ namespace.name }}</span>
         </div>
         <ng-container *ngFor="let file of namespace.files">
           <div
@@ -44,6 +47,7 @@
               selected: isSelectedNamespaceFile(namespace.name, file),
               'current-file': isCurrentFile(namespace.name, file)
             }"
+            data-cy="namespaceFile"
           >
             <div
               [class.outdated]="namespace.getFileStatus(file)?.outdated"
@@ -55,16 +59,17 @@
             >
               <mat-icon *ngIf="!namespace.getFileStatus(file)?.hasErrors">description</mat-icon>
               <mat-icon class="error-icon" *ngIf="namespace.getFileStatus(file)?.hasErrors">error_outline</mat-icon>
-              <span [matTooltip]="file.length > 25 ? file : ''" matTooltipPosition="right">
+              <span [matTooltip]="file.length > 25 ? file : ''" matTooltipPosition="right" data-cy="namespaceFileName">
                 {{ file }}
               </span>
             </div>
-            <mat-icon class="show-more material-icons" [matMenuTriggerFor]="menu">more_horiz</mat-icon>
+            <mat-icon class="show-more material-icons" [matMenuTriggerFor]="menu" data-cy="namespaceFileMenuButton">more_horiz</mat-icon>
             <mat-menu #menu="matMenu">
               <button
                 [disabled]="isCurrentFile(namespace.name, file)"
                 (click)="onDeleteNamespace(namespace.name + ':' + file)"
                 mat-menu-item
+                data-cy="fileMenuDeleteButton"
               >
                 Delete
               </button>
@@ -74,10 +79,13 @@
                 "
                 (click)="onLoadAspectModel(namespace, file)"
                 mat-menu-item
+                data-cy="fileMenuLoadAspectModelButton"
               >
                 Load Aspect Model
               </button>
-              <button mat-menu-item (click)="copyNamespace(namespace.name + ':' + file)">Copy to clipboard</button>
+              <button mat-menu-item (click)="copyNamespace(namespace.name + ':' + file)" data-cy="fileMenuCopyToClipboardButton">
+                Copy to clipboard
+              </button>
             </mat-menu>
           </div>
         </ng-container>

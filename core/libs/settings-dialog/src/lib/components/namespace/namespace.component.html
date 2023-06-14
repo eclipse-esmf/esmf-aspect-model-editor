@@ -25,22 +25,22 @@
   <div class="namespace-fields">
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">Value</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="aspectUri" />
+      <input matInput spellcheck="false" class="form-control" formControlName="aspectUri" data-cy="namespaceTabValueInput" />
     </mat-form-field>
 
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">Version</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="aspectVersion" />
+      <input matInput spellcheck="false" class="form-control" formControlName="aspectVersion" data-cy="namespaceTabVersionInput" />
     </mat-form-field>
 
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">Name</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="aspectName" />
+      <input matInput spellcheck="false" class="form-control" formControlName="aspectName" data-cy="namespaceTabFileNameInput" />
     </mat-form-field>
 
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">SAMM Version</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="sammVersion" />
+      <input matInput spellcheck="false" class="form-control" formControlName="sammVersion" data-cy="namespaceTabSammVersionInput" />
     </mat-form-field>
   </div>
 
@@ -48,10 +48,10 @@
     <button *ngIf="!areSameAspectValues()" mat-flat-button type="button" (click)="onClose()">Discard changes</button>
     <button
       [disabled]="areSameAspectValues() || namespaceForm.invalid"
-      (click)="onSubmit()"
+      (click)="onSubmit(namespaceForm.value)"
       mat-flat-button
       color="primary"
-      data-cy="saveButton"
+      data-cy="namespaceTabSaveButton"
     >
       Apply
     </button>

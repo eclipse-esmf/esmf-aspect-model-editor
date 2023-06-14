@@ -32,6 +32,7 @@ import {
 import {ElementModel, LoadingScreenOptions, LoadingScreenService, NamespaceModel, NotificationsService, SidebarService} from '@ame/shared';
 import {catchError, finalize, first, Subscription, switchMap, tap, throwError} from 'rxjs';
 import {RdfService} from '@ame/rdf/services';
+import {RdfModelUtil} from '@ame/rdf/utils';
 
 @Component({
   selector: 'ame-editor-sidebar',
@@ -42,6 +43,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
   @ViewChild('sidebarNamespaces') sidebarNamespaces;
   @Output() closeSidebar = new EventEmitter();
 
+  public loadingNamespaces = false;
   public selectedNamespace: string = null;
   public selectedNamespaceElements: ElementModel[];
 
@@ -225,21 +227,27 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
   }
 
   public initNamespaces() {
-    this.modelApiService.getNamespacesAppendWithFiles().subscribe((data: string[]) => {
-      this.sidebarService.resetNamespaces();
-      data.forEach((namespace: string) => {
-        const namespaceParts = namespace.split(':');
-        const namespaceFolder = namespace.slice(0, namespace.lastIndexOf(':'));
-        const namespaceFile = namespaceParts[namespaceParts.length - 1];
+    this.loadingNamespaces = true;
+    this.modelApiService
+      .getNamespacesAppendWithFiles()
+      .pipe(
+        tap(data => {
+          this.sidebarService.resetNamespaces();
+          data.forEach((namespace: string) => {
+            const namespaceFolder = RdfModelUtil.getNamespaceFromRdf(namespace);
+            const namespaceFile = RdfModelUtil.getFileNameFromRdf(namespace);
 
-        const parentNamespace = this.sidebarService.namespaces.find((ns: NamespaceModel) => ns.name === namespaceFolder);
-        if (!parentNamespace) {
-          this.sidebarService.namespaces.push(new NamespaceModel(namespaceFolder, [namespaceFile]));
-        } else {
-          parentNamespace.files.push(namespaceFile);
-        }
-      });
-    });
+            const parentNamespace = this.sidebarService.namespaces.find((ns: NamespaceModel) => ns.name === namespaceFolder);
+            if (!parentNamespace) {
+              this.sidebarService.namespaces.push(new NamespaceModel(namespaceFolder, [namespaceFile]));
+            } else {
+              parentNamespace.files.push(namespaceFile);
+            }
+          });
+        }),
+        finalize(() => (this.loadingNamespaces = false))
+      )
+      .subscribe();
   }
 
   private getType(modelElement: BaseMetaModelElement) {

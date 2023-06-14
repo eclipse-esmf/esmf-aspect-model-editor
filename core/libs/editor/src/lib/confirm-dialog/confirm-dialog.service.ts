@@ -15,6 +15,7 @@ import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {first} from 'rxjs/operators';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
+import {Observable} from 'rxjs';
 
 export interface DialogOptions {
   phrases: string[];
@@ -27,7 +28,7 @@ export interface DialogOptions {
 export class ConfirmDialogService {
   constructor(private matDialog: MatDialog) {}
 
-  open({phrases, title, closeButtonText, okButtonText}: DialogOptions) {
+  open({phrases, title, closeButtonText, okButtonText}: DialogOptions): Observable<boolean> {
     return this.matDialog
       .open(ConfirmDialogComponent, {
         data: {

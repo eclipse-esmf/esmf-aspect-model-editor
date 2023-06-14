@@ -228,28 +228,6 @@
         }
       }
     },
-    "namespace-manager": {
-      "projectType": "library",
-      "root": "libs/namespace-manager",
-      "sourceRoot": "libs/namespace-manager/src",
-      "prefix": "ame",
-      "architect": {
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/namespace-manager"],
-          "options": {
-            "jestConfig": "libs/namespace-manager/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/namespace-manager/src/**/*.ts", "libs/namespace-manager/src/**/*.html"]
-          }
-        }
-      }
-    },
     "editor": {
       "projectType": "library",
       "root": "libs/editor",
@@ -360,6 +338,28 @@
         }
       }
     },
+    "namespace-manager": {
+      "projectType": "library",
+      "root": "libs/namespace-manager",
+      "sourceRoot": "libs/namespace-manager/src",
+      "prefix": "ame",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/namespace-manager"],
+          "options": {
+            "jestConfig": "libs/namespace-manager/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/namespace-manager/src/**/*.ts", "libs/namespace-manager/src/**/*.html"]
+          }
+        }
+      }
+    },
     "rdf": {
       "projectType": "library",
       "root": "libs/rdf",
@@ -425,6 +425,39 @@
           }
         }
       }
+    },
+    "utils": {
+      "root": "libs/utils",
+      "sourceRoot": "libs/utils/src",
+      "projectType": "library",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/js:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/libs/utils",
+            "main": "libs/utils/src/index.ts",
+            "tsConfig": "libs/utils/tsconfig.lib.json",
+            "assets": ["libs/utils/*.md"]
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/utils/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/utils"],
+          "options": {
+            "jestConfig": "libs/utils/jest.config.ts",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
     },
     "vocabulary": {
       "projectType": "library",

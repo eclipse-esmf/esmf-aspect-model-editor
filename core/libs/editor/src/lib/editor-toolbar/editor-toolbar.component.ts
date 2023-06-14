@@ -12,8 +12,8 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {finalize, first} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
+import {finalize, first, switchMap} from 'rxjs/operators';
+import {Observable, Subscription, take} from 'rxjs';
 import {
   MxGraphAttributeService,
   MxGraphHelper,
@@ -31,6 +31,8 @@ import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-di
 import {mxgraph} from 'mxgraph-factory';
 import {ModelService} from '@ame/rdf/services';
 import {NamespacesManagerService} from '@ame/namespace-manager';
+import {RdfModel} from '@ame/rdf/utils';
+import {readFile} from '@ame/utils';
 
 @Component({
   selector: 'ame-editor-toolbar',
@@ -145,18 +147,15 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.namespaceManagerService.exportNamespaces();
   }
 
-  addFileToNamespace(event: any) {
+  addFileToNamespace(event: any): void {
     this.validateFile(() => {
-      this.onAddFileToNamespace(event.target.files[0]);
+      this.onAddFileToNamespace(event.target.files[0]).pipe(take(1)).subscribe();
       event.target.value = '';
     });
   }
 
-  onAddFileToNamespace(file: File) {
-    this.loadingScreenOptions.title = 'Add file to workspace';
-    this.loadingScreenOptions.hasCloseButton = true;
-
-    this.fileHandlingService.addFileToNamespace(file);
+  onAddFileToNamespace(file: File): Observable<RdfModel> {
+    return readFile(file).pipe(switchMap(fileContent => this.fileHandlingService.addFileToWorkspace(file.name, fileContent)));
   }
 
   uploadZip(event: any) {

@@ -256,4 +256,34 @@ export class RdfModelUtil {
 
     return !!quads?.length;
   }
+
+  static getUrnFromFileName(fileName: string): string {
+    return `urn:samm:${this.getNamespaceFromRdf(fileName)}`;
+  }
+
+  static getNamespaceFromRdf(fileName: string): string {
+    return `${this.getNamespaceNameFromRdf(fileName)}:${this.getNamespaceVersionFromRdf(fileName)}`;
+  }
+
+  static getNamespaceNameFromRdf(fileName: string): string {
+    return this.splitRdfIntoChunks(fileName)[0];
+  }
+
+  static getNamespaceVersionFromRdf(fileName: string): string {
+    return this.splitRdfIntoChunks(fileName)[1];
+  }
+
+  static getFileNameFromRdf(fileName: string): string {
+    return this.splitRdfIntoChunks(fileName)[2];
+  }
+
+  static splitRdfIntoChunks(fileName: string): [string, string, string] {
+    const chunks: string[] = fileName.split(':');
+    if (chunks.length !== 3) throw new Error(`Unable to extract namespace name from "${fileName}": it should match "x:y:z" pattern`);
+    return chunks as [string, string, string];
+  }
+
+  static buildAbsoluteFileName(namespace: string, namespaceVersion: string, fileName: string): string {
+    return `${namespace}:${namespaceVersion}:${fileName}`;
+  }
 }

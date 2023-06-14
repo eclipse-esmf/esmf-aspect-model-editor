@@ -127,11 +127,11 @@ export class ModelApiService {
   }
 
   // TODO In the backend a defined object should be returned
-  getNamespacesAppendWithFiles(): Observable<any> {
+  getNamespacesAppendWithFiles(): Observable<string[]> {
     return this.getNamespacesStructure().pipe(
       timeout(this.requestTimeout),
       map(data => {
-        return Object.keys(data).reduce(
+        return Object.keys(data).reduce<string[]>(
           (fileNames, namespace) => [...fileNames, ...data[namespace].map((fileName: string) => `${namespace}:${fileName}`)],
           []
         );
@@ -142,8 +142,8 @@ export class ModelApiService {
   getAllNamespacesFilesContent(rdfModel?: RdfModel): Observable<FileContentModel[]> {
     return this.getNamespacesAppendWithFiles().pipe(
       map(aspectModelFileNames =>
-        aspectModelFileNames.reduce(
-          (files: string[], absoluteFileName: string) =>
+        aspectModelFileNames.reduce<any[]>(
+          (files, absoluteFileName) =>
             absoluteFileName !== rdfModel?.absoluteAspectModelFileName
               ? [
                   ...files,

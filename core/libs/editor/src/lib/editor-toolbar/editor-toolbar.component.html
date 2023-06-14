@@ -24,7 +24,14 @@
     >
       <mat-icon class="material-icons">add_box</mat-icon>
     </button>
-    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Save" [matMenuTriggerFor]="saveMenu">
+    <button
+      mat-button
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      matTooltip="Save"
+      [matMenuTriggerFor]="saveMenu"
+      data-cy="tbSaveButton"
+    >
       <mat-icon class="material-icons">save</mat-icon>
     </button>
     <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" matTooltip="Add file to namespace" (click)="fileInput.click()">
@@ -183,19 +190,19 @@
 </mat-menu>
 
 <mat-menu #saveMenu="matMenu">
-  <button mat-menu-item (click)="exportAsAspectModelFile()">
+  <button mat-menu-item (click)="exportAsAspectModelFile()" data-cy="tbSaveMenuExportAspectModelButton">
     <mat-icon class="material-icons">file_download</mat-icon>
     <span>Export Aspect Model</span>
   </button>
-  <button mat-menu-item (click)="openExportDialog()">
+  <button mat-menu-item (click)="openExportDialog()" data-cy="tbSaveMenuExportNamespaceButton">
     <mat-icon class="material-icons">file_download</mat-icon>
     <span>Export Namespace</span>
   </button>
-  <button mat-menu-item (click)="copyToClipboard()">
+  <button mat-menu-item (click)="copyToClipboard()" data-cy="tbSaveMenuCopyToClipboardButton">
     <mat-icon class="material-icons">content_copy</mat-icon>
     <span>Copy to Clipboard</span>
   </button>
-  <button mat-menu-item (click)="saveAspectModelToWorkspace()">
+  <button mat-menu-item (click)="saveAspectModelToWorkspace()" data-cy="tbSaveMenuSaveToWorkspaceButton">
     <mat-icon class="material-icons">save</mat-icon>
     <span>Save to Workspace</span>
   </button>

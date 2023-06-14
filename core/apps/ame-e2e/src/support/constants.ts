@@ -16,11 +16,38 @@ export const SELECTOR_tbDeleteButton = '[data-cy="tbDeleteButton"]';
 export const SELECTOR_tbConnectButton = '[data-cy="tbConnectButton"]';
 export const SELECTOR_modalsDropdown = '[data-cy="models-drop-down"]';
 export const SELECTOR_tbLoadButton = '[data-cy="tbLoadButton"]';
+export const SELECTOR_tbSaveButton = '[data-cy="tbSaveButton"]';
 export const SELECTOR_tbValidateButton = '[data-cy="tbValidateButton"]';
 export const SELECTOR_tbGenerateDocumentButton = '[data-cy="tbGenerateDocumentButton"]';
 export const SELECTOR_tbPrintButton = '[data-cy="tbPrintButton"]';
 export const SELECTOR_tbOpenApiButton = '[data-cy="tbOpenApiButton"]';
 export const SELECTOR_tbCollapseToggle = '[data-cy="collapseExpandToggle"]';
+
+// Editor toolbar "save" menu
+export const SELECTOR_tbSaveMenuExportAspectModelButton = '[data-cy="tbSaveMenuExportAspectModelButton"]';
+export const SELECTOR_tbSaveMenuExportNamespaceButton = '[data-cy="tbSaveMenuExportNamespaceButton"]';
+export const SELECTOR_tbSaveMenuCopyToClipboardButton = '[data-cy="tbSaveMenuCopyToClipboardButton"]';
+export const SELECTOR_tbSaveMenuSaveToWorkspaceButton = '[data-cy="tbSaveMenuSaveToWorkspaceButton"]';
+
+// Workspace (sidebar)
+export const SELECTOR_namespace = '[data-cy="namespace"]';
+export const SELECTOR_namespaceName = '[data-cy="namespaceName"]';
+export const SELECTOR_namespaceFile = '[data-cy="namespaceFile"]';
+export const SELECTOR_namespaceFileName = '[data-cy="namespaceFileName"]';
+export const SELECTOR_namespaceFileMenuButton = '[data-cy="namespaceFileMenuButton"]';
+export const SELECTOR_fileMenuDeleteButton = '[data-cy="fileMenuDeleteButton"]';
+export const SELECTOR_fileMenuLoadAspectModelButton = '[data-cy="fileMenuLoadAspectModelButton"]';
+export const SELECTOR_fileMenuCopyToClipboardButton = '[data-cy="fileMenuCopyToClipboardButton"]';
+
+// Settings modal
+export const SELECTOR_settingsModalCloseButton = '[data-cy="settingsModalCloseButton"]';
+
+// Settings -> Namespace
+export const SELECTOR_namespaceTabValueInput = '[data-cy="namespaceTabValueInput"]';
+export const SELECTOR_namespaceTabVersionInput = '[data-cy="namespaceTabVersionInput"]';
+export const SELECTOR_namespaceTabFileNameInput = '[data-cy="namespaceTabFileNameInput"]';
+export const SELECTOR_namespaceTabSammVersionInput = '[data-cy="namespaceTabSammVersionInput"]';
+export const SELECTOR_namespaceTabSaveButton = '[data-cy="namespaceTabSaveButton"]';
 
 export const SELECTOR_addEntityValue = '[data-cy="addNewEntityValueButton"]';
 export const SELECTOR_clearEntityValueButton = '[data-cy="clear-entityValue-button"]';

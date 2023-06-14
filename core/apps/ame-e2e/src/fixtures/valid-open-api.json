@@ -17,9 +17,7 @@
   "paths": {
     "/{tenant-id}/aspect-default": {
       "get": {
-        "tags": [
-          "AspectDefault"
-        ],
+        "tags": ["AspectDefault"],
         "operationId": "getAspectDefault",
         "parameters": [
           {
@@ -57,9 +55,7 @@
     "schemas": {
       "ErrorResponse": {
         "type": "object",
-        "required": [
-          "error"
-        ],
+        "required": ["error"],
         "properties": {
           "error": {
             "$ref": "#/components/schemas/Error"
@@ -68,9 +64,7 @@
       },
       "Error": {
         "type": "object",
-        "required": [
-          "details"
-        ],
+        "required": ["details"],
         "properties": {
           "message": {
             "type": "string",
@@ -103,9 +97,7 @@
             "$ref": "#/components/schemas/urn_samm_org.eclipse.digitaltwin_1.0.0_Characteristic1"
           }
         },
-        "required": [
-          "property1"
-        ]
+        "required": ["property1"]
       }
     },
     "responses": {

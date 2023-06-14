@@ -52,6 +52,8 @@ export class NamespaceConfirmationModalComponent {
   }
 
   onSave() {
+    this.rdfModel.updateAbsoluteFileName(this.newNamespace, this.newVersion);
+
     if (this.oldNamespace !== this.newNamespace) {
       this.updateAllNamespacesFromCurrentCachedFile(this.oldNamespace, this.newNamespace);
     }
@@ -59,6 +61,7 @@ export class NamespaceConfirmationModalComponent {
     if (this.oldVersion !== this.newVersion) {
       this.updateAllNamespacesFromCurrentCachedFile(this.oldVersion, this.newVersion);
     }
+
     this.updateNamespaceKey();
   }
 

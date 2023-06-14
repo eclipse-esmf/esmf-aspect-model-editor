@@ -1,15 +1,19 @@
 {
   "extends": ["plugin:cypress/recommended", "../../.eslintrc.json"],
-  "ignorePatterns": ["!**/*"],
+  "ignorePatterns": ["!**/*", "*.html"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {}
+      "rules": {
+        "cypress/no-unnecessary-waiting": "warn",
+        "cypress/unsafe-to-chain-command": "off"
+      }
     },
     {
       "files": ["src/plugins/index.js"],
       "rules": {
         "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/no-empty-function": "off",
         "no-undef": "off"
       }
     }

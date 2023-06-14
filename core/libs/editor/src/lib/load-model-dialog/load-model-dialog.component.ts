@@ -13,8 +13,9 @@
 import {Component, ViewChild} from '@angular/core';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {MatDialogRef} from '@angular/material/dialog';
-import {take} from 'rxjs/operators';
+import {take, tap} from 'rxjs/operators';
 import {ModelApiService} from '@ame/api';
+import {readFile} from '@ame/utils';
 
 @Component({
   selector: 'ame-load-model-dialog',
@@ -57,10 +58,11 @@ export class LoadModelDialogComponent {
       });
   }
 
-  onLoadFromFile(event) {
-    const reader = new FileReader();
-    reader.readAsText(event.target.files[0]);
-
-    reader.onload = () => (this.rdfAspectModel = reader.result.toString());
+  onLoadFromFile(event: Event): void {
+    const target: HTMLInputElement = event.target as HTMLInputElement;
+    const files: FileList = target.files;
+    readFile(files[0])
+      .pipe(tap(parsedFile => (this.rdfAspectModel = parsedFile)))
+      .subscribe();
   }
 }
