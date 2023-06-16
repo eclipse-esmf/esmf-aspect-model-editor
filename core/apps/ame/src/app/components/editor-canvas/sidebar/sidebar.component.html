@@ -17,8 +17,8 @@
       <mat-icon>close</mat-icon>
     </button>
 
-    <div class="namespaces-spinner">
-      <mat-spinner *ngIf="loadingNamespaces" [diameter]="30"></mat-spinner>
+    <div *ngIf="loadingNamespaces" class="namespaces-spinner">
+      <mat-spinner [diameter]="30"></mat-spinner>
     </div>
 
     <ame-sidebar-namespaces
