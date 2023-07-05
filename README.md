@@ -28,6 +28,11 @@ Are you having trouble with Aspect Model Editor? We want to help!
 
 ### Getting started
 
+#### Artifacts to use
+You can either use the releases provided in this repository, or you can clone the repositories to run the aspect model editor. Feel free to contribute.
+
+If you want to run the aspect model editor from repositories, please ensure to clone and start the [backend](https://github.com/eclipse-esmf/esmf-aspect-model-editor-backend) first.
+
 #### Setup
 
 * Download & Install [Node.js](https://nodejs.org/en/download/)
@@ -36,6 +41,9 @@ Are you having trouble with Aspect Model Editor? We want to help!
 #### Install & Run
 
 ```bash
+# enter the core directory where the package.json is located
+cd core
+
 npm install
 npm run start
 ```
@@ -59,8 +67,8 @@ npm run electron-start-mac-prod
 Unix:
 
 ```bash
-npm run electron-start-unix-dev
-npm run electron-start-unix-prod
+npm run electron-start-linux-dev
+npm run electron-start-linux-prod
 ```
 
 #### Running E2E (Cypress) Test
