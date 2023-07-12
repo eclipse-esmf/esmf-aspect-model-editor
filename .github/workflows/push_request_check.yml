@@ -5,6 +5,8 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ '**' ]
+    paths-ignore:
+      - 'documentation/decisions/**'
 
 # Tests are done in Ubuntu because Mac and Windows random failures, and it is not stable.
 jobs:
