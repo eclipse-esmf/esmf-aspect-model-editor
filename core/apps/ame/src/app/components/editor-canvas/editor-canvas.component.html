@@ -12,16 +12,18 @@
   -->
 
 <div fxLayout="column" class="editor-canvas-layout">
-  <ame-editor-toolbar (editSelectedCell)="onEditSelectedCell()" (closeEditDialog)="closeShapeSettings()"></ame-editor-toolbar>
+  <ame-editor-toolbar (closeEditDialog)="closeShapeSettings()"></ame-editor-toolbar>
 
   <div class="content">
     <ame-editor-sidebar></ame-editor-sidebar>
     <as-split direction="horizontal">
       <as-split-area [size]="70">
-        <div class="canvas">
-          <div #graph id="graph"></div>
-          <ame-editor-canvas-menu></ame-editor-canvas-menu>
-        </div>
+        <ame-mx-editor>
+          <div class="canvas">
+            <div #graph id="graph"></div>
+            <ame-editor-canvas-menu></ame-editor-canvas-menu>
+          </div>
+        </ame-mx-editor>
       </as-split-area>
       <as-split-area [size]="30" [visible]="isShapeSettingOpened" [maxSize]="80" [minSize]="30">
         <ame-shape-settings

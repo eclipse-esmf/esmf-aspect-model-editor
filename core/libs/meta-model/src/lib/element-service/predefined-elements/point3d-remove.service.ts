@@ -61,6 +61,10 @@ export class Point3dRemoveService implements PredefinedRemove {
       return false;
     }
 
+    for (const edge of this.mxGraphService.graph.getIncomingEdges(cell)) {
+      MxGraphHelper.removeRelation(MxGraphHelper.getModelElement(edge.source), MxGraphHelper.getModelElement(cell));
+    }
+
     [cell, ...this.mxGraphService.graph.getOutgoingEdges(cell).map(e => e.target)].forEach(c => {
       const modelElement = MxGraphHelper.getModelElement(c);
       const elementModelService = this.modelRootService.getElementModelService(modelElement);

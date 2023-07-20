@@ -15,13 +15,15 @@ import {Component, Input} from '@angular/core';
 import {DefaultEvent} from '@ame/meta-model';
 import {ModelElementEditorComponent} from '..';
 import {EditorModelService} from '../../editor-model.service';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'ame-event',
   templateUrl: './event.component.html',
 })
 export class EventComponent extends ModelElementEditorComponent<DefaultEvent> {
-  @Input() parentForm;
+  @Input() parentForm: FormGroup;
+  public element$ = this.metaModelDialogService.getMetaModelElement();
 
   constructor(public metaModelDialogService: EditorModelService) {
     super(metaModelDialogService);

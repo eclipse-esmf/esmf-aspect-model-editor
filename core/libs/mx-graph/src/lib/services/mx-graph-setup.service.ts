@@ -20,7 +20,7 @@ import {Inject, Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
-import {MxGraphHelper, PropertyInformation} from '../helpers';
+import {MxGraphHelper, ShapeAttribute} from '../helpers';
 import {mxConstants, mxEditor, mxLayoutManager, mxOutline, mxPoint, mxRectangle, mxStackLayout, mxUtils} from '../providers';
 import {DefaultAbstractProperty, DefaultEntity, DefaultEntityValue, DefaultProperty, DefaultTrait} from '@ame/meta-model';
 import {ConfigurationService} from '@ame/settings-dialog';
@@ -130,7 +130,7 @@ export class MxGraphSetupService {
         }
       }
 
-      configuration.fields.forEach((propLabel: PropertyInformation) => {
+      configuration.fields.forEach((propLabel: ShapeAttribute) => {
         const [propName, ...propValue] = propLabel.label.split(' = ');
         table.innerHTML += `<tr><td>${propName}</td><td>${propValue.join(' = ')}</td></tr>`;
       });

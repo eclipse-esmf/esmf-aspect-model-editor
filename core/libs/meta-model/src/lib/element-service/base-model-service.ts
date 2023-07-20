@@ -26,7 +26,6 @@ import {MxGraphHelper} from '@ame/mx-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {EditorService} from '@ame/editor';
 import {ModelApiService} from '@ame/api';
-import {of, switchMap} from 'rxjs';
 import {inject} from '@angular/core';
 
 export abstract class BaseModelService {
@@ -37,64 +36,53 @@ export abstract class BaseModelService {
   protected modelApiService: ModelApiService = inject(ModelApiService);
 
   get currentCachedFile() {
-    return this.namespacesCacheService.getCurrentCachedFile();
+    return this.namespacesCacheService.currentCachedFile;
   }
 
   abstract isApplicable(metaModelElement: BaseMetaModelElement): boolean;
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement = MxGraphHelper.getModelElement(cell);
+    const modelElement = MxGraphHelper.getModelElement(cell);
+    if (!modelElement) {
+      return;
+    }
     // Add common operations
 
     // update name
     const aspect = Object.assign({}, this.modelService.getLoadedAspectModel()?.aspect);
     const aspectModelUrn = this.modelService.getLoadedAspectModel().rdfModel.getAspectModelUrn();
-    this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${metaModelElement.name}`, `${aspectModelUrn}${form.name}`);
-    metaModelElement.name = form.name;
-    metaModelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 
-    if (aspect && metaModelElement instanceof DefaultAspect && aspect.aspectModelUrn !== metaModelElement.aspectModelUrn) {
-      const aspectModelFileName = aspect.aspectModelUrn.replace('urn:samm:', '').replace('#', ':') + '.ttl';
+    this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
+    modelElement.name = form.name;
+    modelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 
-      this.modelApiService
-        .getNamespacesAppendWithFiles()
-        .pipe(
-          switchMap(fileNames =>
-            fileNames.find(fileName => fileName === aspectModelFileName)
-              ? this.editorService.addAspectModelFileIntoStore(aspectModelFileName)
-              : of(null)
-          )
-        )
-        .subscribe();
+    if (aspect && modelElement instanceof DefaultAspect) {
+      this.rdfService.currentRdfModel.setAspect(modelElement.aspectModelUrn);
     }
 
     // update descriptions (multiple locales)
-    this.updateDescriptionWithLocales(metaModelElement, form);
+    this.updateDescriptionWithLocales(modelElement, form);
 
     // update preferred name (multiple locales)
-    this.updatePreferredWithLocales(metaModelElement, form);
+    this.updatePreferredWithLocales(modelElement, form);
 
     // update see
-    this.updateSee(metaModelElement, form);
+    this.updateSee(modelElement, form);
   }
 
   delete(cell: mxgraph.mxCell) {
     // Add common operations
-    const modelElement = MxGraphHelper.getModelElement(cell);
+    const modeElement = MxGraphHelper.getModelElement(cell);
     for (const edge of (cell.edges?.length && cell.edges) || []) {
-      const edgeSourceModelElement = MxGraphHelper.getModelElement(edge.source);
-      if (
-        edgeSourceModelElement &&
-        !(edgeSourceModelElement instanceof DefaultEnumeration) &&
-        !edgeSourceModelElement.isExternalReference()
-      ) {
-        this.currentCachedFile.removeCachedElement(modelElement.aspectModelUrn);
-        (<Base>edgeSourceModelElement).delete(modelElement);
+      const sourceNode = MxGraphHelper.getModelElement<Base>(edge.source);
+      if (sourceNode && !(sourceNode instanceof DefaultEnumeration) && !sourceNode.isExternalReference()) {
+        this.currentCachedFile.removeCachedElement(modeElement.aspectModelUrn);
+        sourceNode.delete(modeElement);
       }
     }
 
-    if (!modelElement.isExternalReference()) {
-      this.currentCachedFile.removeCachedElement(modelElement.aspectModelUrn);
+    if (!modeElement.isExternalReference()) {
+      this.currentCachedFile.removeCachedElement(modeElement.aspectModelUrn);
     }
   }
 
@@ -148,21 +136,23 @@ export abstract class BaseModelService {
     });
   }
 
-  protected addNewEntityValues(newEntityValues: DefaultEntityValue[]) {
+  protected addNewEntityValues(newEntityValues: DefaultEntityValue[], parent: BaseMetaModelElement) {
     for (const entityValue of newEntityValues) {
-      this.currentCachedFile.resolveCachedElement(entityValue);
+      MxGraphHelper.establishRelation(parent, entityValue);
+      this.currentCachedFile.resolveElement(entityValue);
     }
   }
 
-  protected deleteEntityValue(entityValue: DefaultEntityValue) {
+  protected deleteEntityValue(entityValue: DefaultEntityValue, parent: BaseMetaModelElement) {
+    MxGraphHelper.removeRelation(parent, entityValue);
     // delete the element
-    this.namespacesCacheService.getCurrentCachedFile().removeCachedElement(entityValue.aspectModelUrn);
+    this.namespacesCacheService.currentCachedFile.removeElement(entityValue.aspectModelUrn);
     // now delete other underlying entity values that don't belong to an enumeration
     entityValue.properties.forEach((property: EntityValueProperty) => {
       if (property.value instanceof DefaultEntityValue) {
         // this is another complex value, check if it belongs to an enumeration
         if (!property.value.parents?.length) {
-          this.deleteEntityValue(property.value);
+          this.deleteEntityValue(property.value, entityValue);
         }
       }
     });

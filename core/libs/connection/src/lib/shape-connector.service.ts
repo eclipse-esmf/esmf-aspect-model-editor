@@ -12,44 +12,6 @@
  */
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
-import {
-  AbstractEntityAbstractEntityConnectionHandler,
-  AbstractEntityAbstractPropertyConnectionHandler,
-  AbstractEntityConnectionHandler,
-  AbstractEntityPropertyConnectionHandler,
-  AbstractPropertyAbstractPropertyConnectionHandler,
-  AspectConnectionHandler,
-  AspectEventConnectionHandler,
-  AspectPropertyConnectionHandler,
-  CharacteristicConnectionHandler,
-  CharacteristicEntityConnectionHandler,
-  CharacteristicUnitConnectionHandler,
-  CollectionCharacteristicConnectionHandler,
-  EitherCharacteristicLeftConnectionHandler,
-  EitherCharacteristicRightConnectionHandler,
-  EitherConnectionHandler,
-  EntityAbstractEntityConnectionHandler,
-  EntityConnectionHandler,
-  EntityEntityConnectionHandler,
-  EntityPropertyConnectionHandler,
-  EntityValueConnectionHandler,
-  EnumerationEntityValueConnectionHandler,
-  EventConnectionHandler,
-  EventPropertyConnectionHandler,
-  OperationConnectionHandler,
-  OperationPropertyInputConnectionHandler,
-  OperationPropertyOutputConnectionHandler,
-  PropertyAbstractPropertyConnectionHandler,
-  PropertyCharacteristicConnectionHandler,
-  PropertyConnectionHandler,
-  PropertyPropertyConnectionHandler,
-  ShapeMultiConnector,
-  ShapeSingleConnector,
-  StructuredValueCharacteristicPropertyConnectionHandler,
-  StructuredValueConnectionHandler,
-  TraitConnectionHandler,
-  TraitWithCharacteristicOrConstraintConnectionHandler,
-} from './shape-connection-handler';
 import {ShapeConnectorUtil} from './shape-connector-util';
 import {
   BaseMetaModelElement,
@@ -68,6 +30,45 @@ import {
 import {environment} from 'environments/environment';
 import {LogService, NotificationsService} from '@ame/shared';
 import {ModelInfo} from '@ame/mx-graph';
+import {
+  AbstractEntityConnectionHandler,
+  AspectConnectionHandler,
+  CharacteristicConnectionHandler,
+  EitherConnectionHandler,
+  EntityConnectionHandler,
+  EntityValueConnectionHandler,
+  EventConnectionHandler,
+  OperationConnectionHandler,
+  PropertyConnectionHandler,
+  StructuredValueConnectionHandler,
+  TraitConnectionHandler,
+} from './single-connection-handlers';
+import {SingleShapeConnector, MultiShapeConnector} from './models';
+import {
+  AspectPropertyConnectionHandler,
+  AspectEventConnectionHandler,
+  EventPropertyConnectionHandler,
+  OperationPropertyInputConnectionHandler,
+  OperationPropertyOutputConnectionHandler,
+  EitherCharacteristicLeftConnectionHandler,
+  EitherCharacteristicRightConnectionHandler,
+  PropertyCharacteristicConnectionHandler,
+  CharacteristicEntityConnectionHandler,
+  TraitWithCharacteristicOrConstraintConnectionHandler,
+  CollectionCharacteristicConnectionHandler,
+  EntityPropertyConnectionHandler,
+  EntityEntityConnectionHandler,
+  AbstractEntityAbstractEntityConnectionHandler,
+  EntityAbstractEntityConnectionHandler,
+  AbstractEntityPropertyConnectionHandler,
+  PropertyPropertyConnectionHandler,
+  PropertyAbstractPropertyConnectionHandler,
+  AbstractEntityAbstractPropertyConnectionHandler,
+  AbstractPropertyAbstractPropertyConnectionHandler,
+  EnumerationEntityValueConnectionHandler,
+  StructuredValueCharacteristicPropertyConnectionHandler,
+  CharacteristicUnitConnectionHandler,
+} from './multi-shape-connection-handlers';
 import mxCell = mxgraph.mxCell;
 
 @Injectable({
@@ -123,7 +124,7 @@ export class ShapeConnectorService {
       return;
     }
 
-    let connectionHandler: ShapeSingleConnector<BaseMetaModelElement>;
+    let connectionHandler: SingleShapeConnector<BaseMetaModelElement>;
 
     switch (true) {
       case metaModel instanceof DefaultAspect:
@@ -173,7 +174,7 @@ export class ShapeConnectorService {
     childSource: mxCell,
     modelInfo?: ModelInfo
   ): boolean {
-    let connectionHandler: ShapeMultiConnector<BaseMetaModelElement, BaseMetaModelElement>;
+    let connectionHandler: MultiShapeConnector<BaseMetaModelElement, BaseMetaModelElement>;
 
     switch (true) {
       case ShapeConnectorUtil.isAspectPropertyConnection(parentModel, childModel):

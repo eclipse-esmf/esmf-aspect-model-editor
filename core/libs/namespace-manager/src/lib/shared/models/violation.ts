@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DetailViolationInfo} from '../../../../../editor/src/lib/editor-toolbar/interfaces/detail-violation-info';
+import {DetailViolationInfo} from '@ame/editor';
 
 export interface Violation {
   key: string;

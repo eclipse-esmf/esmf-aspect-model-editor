@@ -85,10 +85,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
     this.metaModelElement = newCharacteristicType;
     if (!this.unitInstantiator) {
       this.unitInstantiator = new UnitInstantiator(
-        new MetaModelElementInstantiator(
-          this.modelService.getLoadedAspectModel().rdfModel,
-          this.namespacesCacheService.getCurrentCachedFile()
-        )
+        new MetaModelElementInstantiator(this.modelService.getLoadedAspectModel().rdfModel, this.namespacesCacheService.currentCachedFile)
       );
     }
 
@@ -159,10 +156,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
     const sammC = this.modelService.getLoadedAspectModel().rdfModel.SAMMC();
     if (!this.defaultCharacteristicInstantiator) {
       this.defaultCharacteristicInstantiator = new PredefinedCharacteristicInstantiator(
-        new MetaModelElementInstantiator(
-          this.modelService.getLoadedAspectModel().rdfModel,
-          this.namespacesCacheService.getCurrentCachedFile()
-        )
+        new MetaModelElementInstantiator(this.modelService.getLoadedAspectModel().rdfModel, this.namespacesCacheService.currentCachedFile)
       );
     }
     return this.defaultCharacteristicInstantiator.createCharacteristic(
@@ -202,11 +196,11 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
   }
 
   private getMetaModelElementTypeWhenChange(createInstanceFunction: Function) {
-    const ModelElementType = createInstanceFunction();
-    if (ModelElementType.aspectModelUrn === this.selectedMetaModelElement.aspectModelUrn) {
+    const modelElementType = createInstanceFunction();
+    if (modelElementType.aspectModelUrn === this.selectedMetaModelElement.aspectModelUrn) {
       this.metaModelElement = this.selectedMetaModelElement;
       return;
     }
-    return ModelElementType;
+    return modelElementType;
   }
 }

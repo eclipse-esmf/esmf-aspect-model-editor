@@ -37,29 +37,27 @@ export class PropertyModelService extends BaseModelService {
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement: DefaultProperty = MxGraphHelper.getModelElement(cell);
-    if (metaModelElement.extendedElement) {
+    const modelElement = MxGraphHelper.getModelElement<DefaultProperty>(cell);
+    if (modelElement.extendedElement) {
       return;
     }
 
-    metaModelElement.exampleValue = form.exampleValue;
+    modelElement.exampleValue = form.exampleValue;
     super.update(cell, form);
 
-    metaModelElement.extendedElement = [DefaultProperty, DefaultAbstractProperty].some(c => form?.extends instanceof c)
-      ? form.extends
-      : null;
+    modelElement.extendedElement = [DefaultProperty, DefaultAbstractProperty].some(c => form?.extends instanceof c) ? form.extends : null;
     this.updatePropertiesNames(cell);
     this.propertyRenderer.update({cell});
   }
 
   delete(cell: mxgraph.mxCell) {
-    const modelElement: DefaultProperty = MxGraphHelper.getModelElement(cell);
+    const node = MxGraphHelper.getModelElement<DefaultProperty>(cell);
 
     const parents = this.mxGraphService.resolveParents(cell);
     for (const parent of parents) {
       const parentModel = MxGraphHelper.getModelElement(parent);
       if (parentModel instanceof DefaultStructuredValue) {
-        parentModel.delete(modelElement);
+        parentModel.delete(node);
         MxGraphHelper.updateLabel(parent, this.mxGraphService.graph, this.languageSettingsService);
       }
     }
@@ -67,7 +65,7 @@ export class PropertyModelService extends BaseModelService {
     this.updateExtends(cell);
 
     super.delete(cell);
-    this.entityValueService.onPropertyRemove(modelElement, () => {
+    this.entityValueService.onPropertyRemove(node, () => {
       this.mxGraphService.removeCells([cell]);
     });
   }
@@ -78,9 +76,9 @@ export class PropertyModelService extends BaseModelService {
     const modelElement = MxGraphHelper.getModelElement(cell);
 
     for (const parentCell of parents) {
-      const parent = MxGraphHelper.getModelElement(parentCell);
-      parent.name = `[${modelElement.name}]`;
-      parent.aspectModelUrn = `${parent.aspectModelUrn.split('#')[0]}#${parent.name}`;
+      const parentModelElement = MxGraphHelper.getModelElement(parentCell);
+      parentModelElement.name = `[${modelElement.name}]`;
+      parentModelElement.aspectModelUrn = `${parentModelElement.aspectModelUrn.split('#')[0]}#${parentModelElement.name}`;
       this.updateCell(parentCell);
     }
   }
@@ -99,7 +97,7 @@ export class PropertyModelService extends BaseModelService {
       const element = MxGraphHelper.getModelElement<CanExtend>(edge.source);
       if (element instanceof DefaultProperty && isDeleting) {
         element.extendedElement = null;
-        this.mxGraphService.graph.removeCells([edge.source]);
+        this.mxGraphService.removeCells([edge.source]);
         continue;
       }
 

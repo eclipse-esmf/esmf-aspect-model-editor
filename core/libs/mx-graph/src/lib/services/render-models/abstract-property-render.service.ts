@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {DefaultAbstractProperty} from '@ame/meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
@@ -22,11 +22,14 @@ import {BaseRenderService} from './base-render-service';
 import {NamespacesCacheService} from '@ame/cache';
 import {ShapeConnectorService} from '@ame/connection';
 import {RdfService} from '@ame/rdf/services';
+import {FiltersService} from '@ame/loader-filters';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AbstractPropertyRenderService extends BaseRenderService {
+  private filtersService = inject(FiltersService);
+
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
@@ -57,7 +60,9 @@ export class AbstractPropertyRenderService extends BaseRenderService {
     const extendsElement = metaModelElement.extendedElement as DefaultAbstractProperty;
     const cachedEntity = this.namespacesCacheService.resolveCachedElement(extendsElement);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
-    const entityCell = resolvedCell ? resolvedCell : this.mxGraphService.renderModelElement(extendsElement);
+    const entityCell = resolvedCell
+      ? resolvedCell
+      : this.mxGraphService.renderModelElement(this.filtersService.createNode(extendsElement, {parent: metaModelElement}));
     this.shapeConnectorService.connectShapes(metaModelElement, extendsElement, cell, entityCell);
   }
 }

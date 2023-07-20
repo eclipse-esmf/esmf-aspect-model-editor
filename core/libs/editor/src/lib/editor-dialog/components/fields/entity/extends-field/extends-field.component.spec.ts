@@ -38,6 +38,8 @@ jest.mock('../../../../../../../../instantiator/src/lib/instantiators/samm-e-pre
   };
 });
 
+jest.mock('../../../../../../../../shared/src/lib/constants/xsd-datatypes.ts', () => ({}));
+
 describe('EntityExtendsFieldComponent', () => {
   let component: EntityExtendsFieldComponent;
   let fixture: ComponentFixture<EntityExtendsFieldComponent>;

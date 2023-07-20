@@ -10,7 +10,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {DefaultConstraint} from './default-constraint';
 
 export interface EncodingConstraint {
@@ -28,9 +27,5 @@ export class DefaultEncodingConstraint extends DefaultConstraint implements Enco
 
   constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public value: string) {
     super(metaModelVersion, aspectModelUrn, name);
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitConstraint(this, context);
   }
 }

@@ -28,23 +28,23 @@ export class EntityValueModelService extends BaseModelService {
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement: DefaultEntityValue = MxGraphHelper.getModelElement(cell);
+    const modelElement = MxGraphHelper.getModelElement<DefaultEntityValue>(cell);
     // update name
     const aspectModelUrn = this.modelService.getLoadedAspectModel().rdfModel.getAspectModelUrn();
-    this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${metaModelElement.name}`, `${aspectModelUrn}${form.name}`);
-    metaModelElement.name = form.name;
-    metaModelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
+    this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
+    modelElement.name = form.name;
+    modelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 
     // in case some entity values are no longer assigned as property values to the current entity, remove them from the model
-    this.removeObsoleteEntityValues(metaModelElement);
+    this.removeObsoleteEntityValues(modelElement);
 
     const newEntityValues = form.newEntityValues;
     // check if there are any new entity values to add to the cache service
     if (newEntityValues) {
-      this.addNewEntityValues(newEntityValues);
+      this.addNewEntityValues(newEntityValues, modelElement);
     }
 
-    this.updatePropertiesEntityValues(metaModelElement, form);
+    this.updatePropertiesEntityValues(modelElement, form);
     this.entityValueRenderService.update({cell, form});
   }
 
@@ -63,7 +63,7 @@ export class EntityValueModelService extends BaseModelService {
   private removeObsoleteEntityValues(metaModelElement: DefaultEntityValue) {
     metaModelElement.properties.forEach((property: EntityValueProperty) => {
       if (property.value instanceof DefaultEntityValue && !property.value.parents?.length) {
-        this.deleteEntityValue(property.value);
+        this.deleteEntityValue(property.value, metaModelElement);
       }
     });
   }

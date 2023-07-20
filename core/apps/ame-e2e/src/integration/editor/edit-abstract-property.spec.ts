@@ -21,13 +21,20 @@ import {
   SELECTOR_ecAbstractProperty,
   SELECTOR_editorSaveButton,
   SELECTOR_tbLoadButton,
+  SELECTOR_ecAbstractEntity,
+  SELECTOR_ecProperty,
+  SELECTOR_ecEntity,
+  SELECTOR_editorCancelButton,
 } from '../../support/constants';
 
 describe('Create and Edit Abstract Property', () => {
   describe('Property -> Abstract Property', () => {
     it('should create', () => {
       cy.visitDefault();
-      cy.startModelling().then(() => cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300).then(() => cy.clickShape('abstractProperty1')));
+      cy.startModelling().then(() => {
+        cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300).then(() => cy.clickShape('abstractProperty1'));
+        cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300).then(() => cy.clickShape('AbstractEntity1'));
+      });
     });
 
     it('should edit', () => {
@@ -38,6 +45,7 @@ describe('Create and Edit Abstract Property', () => {
         .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
         .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
+        .then(() => cy.clickConnectShapes('AbstractEntity1', 'abstractProperty1'))
         .then(() => cy.clickConnectShapes('abstractProperty1', 'property2'))
         .then(() => cy.getCellLabel('[abstractProperty1]', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name @en'))
         .then(() => cy.getCellLabel('[abstractProperty1]', 'description').should('eq', 'Inherited\ndescription = Description @en'))
@@ -80,12 +88,18 @@ describe('Create and Edit Abstract Property', () => {
   describe('Abstract Property export', () => {
     it('should create model', () => {
       cy.visitDefault();
-      cy.startModelling();
+      cy.startModelling().then(() => {
+        cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300).then(() => cy.clickShape('AbstractEntity1'));
+      });
       cy.clickAddShapePlusIcon('Characteristic1')
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
         .then(() => cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300).then(() => cy.clickShape('abstractProperty1')))
         .then(() => cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300).then(() => cy.clickShape('abstractProperty2')))
+
+        .then(() => cy.clickConnectShapes('AbstractEntity1', 'abstractProperty1'))
+        .then(() => cy.clickConnectShapes('AbstractEntity1', 'abstractProperty2'))
+
         .then(() => cy.clickConnectShapes('property2', 'abstractProperty1'))
         .then(() => cy.clickConnectShapes('property3', 'abstractProperty2'))
 
@@ -123,6 +137,49 @@ describe('Create and Edit Abstract Property', () => {
           `:abstractProperty2 a samm:AbstractProperty;\n    samm:preferredName "Preferred Name 2"@en;\n    samm:description "Description 2"@en;\n    samm:see <http://test2.com>.`
         );
       });
+    });
+  });
+
+  describe('Abstract Property can be connected to another shape only if it is connected to AbstractEntity', () => {
+    it('should not be able to connect abstract property to a property', () => {
+      cy.visitDefault();
+      cy.startModelling().then(() => {
+        cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300).then(() => cy.clickShape('abstractProperty1'));
+      });
+
+      cy.dragElement(SELECTOR_ecProperty, 350, 300)
+        .then(() => cy.clickShape('property1'))
+        .then(() => cy.clickConnectShapes('property1', 'abstractProperty1'))
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => {
+          expect(rdf).not.contain('samm:extends :abstractProperty1');
+        });
+    });
+
+    it('should be able to connect abstract property to a property, if abstract property belongs to abstract entity', () => {
+      cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300)
+        .then(() => cy.clickShape('AbstractEntity1'))
+        .then(() => cy.clickConnectShapes('abstractProperty1', 'AbstractEntity1'))
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => {
+          expect(rdf).contain(':abstractProperty1 a samm:AbstractProperty');
+        })
+        .then(() => cy.clickShape('property1'));
+
+      cy.dragElement(SELECTOR_ecEntity, 350, 300)
+        .then(() => cy.clickShape('Entity1'))
+        .then(() => cy.clickConnectShapes('property1', 'Entity1'))
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => {
+          expect(rdf).contain('Entity1 a samm:Entity');
+        });
+
+      cy.clickConnectShapes('AbstractEntity1', 'Entity1')
+        .then(() => cy.dbClickShape('AbstractEntity1'))
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => {
+          expect(rdf).contain('extends :abstractProperty1');
+        });
     });
   });
 });

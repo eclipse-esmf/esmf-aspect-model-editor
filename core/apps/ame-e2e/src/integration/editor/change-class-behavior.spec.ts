@@ -62,6 +62,7 @@ describe('Constraint', () => {
   for (const field of fields) {
     describe(`${field.name} Field`, () => {
       it('should create and rename Constraint', () => {
+        cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {});
         cy.visitDefault();
         cy.startModelling()
           .then(() => cy.get('ame-loading-screen', {timeout: 15000}).should('not.exist'))
@@ -77,6 +78,7 @@ describe('Constraint', () => {
             .click({force: true})
             .get(`mat-option[cy-value="${classType}"]`)
             .click({force: true})
+            .wait(250)
             .then(() => cy.get(field.selector).should('have.value', field.value));
         });
       }
@@ -88,6 +90,7 @@ describe('Characteristic', () => {
   for (const field of fields) {
     describe(`${field.name} Field`, () => {
       it('should create and rename Characteristic', () => {
+        cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {});
         cy.visitDefault();
         cy.startModelling()
           .then(() => cy.shapeExists('AspectDefault'))

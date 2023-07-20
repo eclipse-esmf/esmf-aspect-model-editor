@@ -1,0 +1,14 @@
+= Unit
+
+[[custom-units]]
+== Custom Units
+
+The Semantic Aspect Meta Model (SAMM) includes a comprehensive catalog of physical units and quantity kinds, providing a rich foundation for representing various quantities. For instance, the catalog encompasses predefined units like "metre," "inch," "millimetre," and more, under the quantity kind of "length." This catalog aligns with the UNECE Recommendation 20 https://eclipse-esmf.github.io/samm-specification/snapshot/appendix/bibliography.html#rec20[[rec20\]] and offers approximately 1,800 predefined units.
+
+To cater to specific requirements, the Aspect Model Editor empowers users to create their own custom units. With this, users can define and utilize unique units within the system, expanding the capabilities of representation and analysis.
+
+image::edit-custom-unit.png[width=100%]
+
+image::custom-unit-shape.png[width=100%]
+
+For more information on adding custom Units, see https://eclipse-esmf.github.io/samm-specification/2.0.0/units.html[Units^ (SAMM 2.0.0)^,opts=nofollow]

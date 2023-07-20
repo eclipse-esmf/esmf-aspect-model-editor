@@ -11,23 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {ShapeConnectorService} from '@ame/connection';
 import {DefaultEntity, DefaultEntityValue, DefaultEnumeration, DefaultState, EntityValueProperty} from '@ame/meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
-import {RendererUpdatePayload} from '../../models';
+import {EdgeStyles, RendererUpdatePayload} from '../../models';
 import {MxGraphAttributeService} from '../mx-graph-attribute.service';
 import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 import {RdfService} from '@ame/rdf/services';
+import {FiltersService} from '@ame/loader-filters';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EntityValueRenderService extends BaseRenderService {
+  private filtersService = inject(FiltersService);
+
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
@@ -67,14 +70,16 @@ export class EntityValueRenderService extends BaseRenderService {
     this.shapeConnectorService.createAndConnectShape(modelElement, parent);
     this.mxGraphShapeOverlay.removeOverlaysByConnection(modelElement, parent);
 
-    const parentModel = MxGraphHelper.getModelElement<DefaultEnumeration>(parent);
-    if (parentModel.dataType instanceof DefaultEntity) {
+    const parentModelElement = MxGraphHelper.getModelElement<DefaultEnumeration>(parent);
+    MxGraphHelper.establishRelation(parentModelElement, modelElement);
+    MxGraphHelper.establishRelation(modelElement, parentModelElement.dataType as DefaultEntity);
+    if (parentModelElement.dataType instanceof DefaultEntity) {
       this.connectEntityValueWithChildren(modelElement);
     }
   }
 
   delete(cell: mxgraph.mxCell) {
-    const modelElement: DefaultEntityValue = MxGraphHelper.getModelElement(cell);
+    const modelElement = MxGraphHelper.getModelElement<DefaultEntityValue>(cell);
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
     this.updateEnumeration(modelElement, incomingEdges);
     this.mxGraphService.updateEnumerationsWithEntityValue(modelElement);
@@ -130,25 +135,27 @@ export class EntityValueRenderService extends BaseRenderService {
 
     if (!inGraph) {
       // Render ChildEntityValue
-      this.mxGraphService.renderModelElement(child);
+      this.mxGraphService.renderModelElement(this.filtersService.createNode(child, {parent}));
 
       // Connect ChildEntityValue with its entity
       this.mxGraphService.assignToParent(
         this.mxGraphService.resolveCellByModelElement(child.entity),
-        this.mxGraphService.resolveCellByModelElement(child)
+        this.mxGraphService.resolveCellByModelElement(child),
+        EdgeStyles.entityValueEntityEdge
       );
     }
 
     // Connect EntityValue with ChildEntityValue
     this.mxGraphService.assignToParent(
       this.mxGraphService.resolveCellByModelElement(child),
-      this.mxGraphService.resolveCellByModelElement(parent)
+      this.mxGraphService.resolveCellByModelElement(parent),
+      EdgeStyles.entityValueEntityEdge
     );
   }
 
   private removeChildrenEntityValuesIfNecessary(cell: mxgraph.mxCell) {
     const children = this.mxGraphService.graph.getOutgoingEdges(cell);
-    const modelElement: DefaultEntityValue = MxGraphHelper.getModelElement(cell);
+    const modelElement = MxGraphHelper.getModelElement<DefaultEntityValue>(cell);
 
     if (!children.length) {
       return;
@@ -164,18 +171,22 @@ export class EntityValueRenderService extends BaseRenderService {
             return false;
           }
 
-          const parent = MxGraphHelper.getModelElement(edge.source);
-          if (!(parent instanceof DefaultEntityValue) || !(parent instanceof DefaultEnumeration) || !(parent instanceof DefaultState)) {
+          const parentModelElement = MxGraphHelper.getModelElement(edge.source);
+          if (
+            !(parentModelElement instanceof DefaultEntityValue) ||
+            !(parentModelElement instanceof DefaultEnumeration) ||
+            !(parentModelElement instanceof DefaultState)
+          ) {
             return false;
           }
 
-          return parent.aspectModelUrn !== modelElement.aspectModelUrn;
+          return parentModelElement.aspectModelUrn !== modelElement.aspectModelUrn;
         });
-        const entityValue: DefaultEntityValue = MxGraphHelper.getModelElement(child);
-        const isPartOfTheModel = modelElement.properties.some((prop: EntityValueProperty) => prop.value === entityValue);
-        if (!isLinkedToOtherEntityValues && !entityValue.parents?.length && !isPartOfTheModel) {
+        const childModelElement = MxGraphHelper.getModelElement(child);
+        const isPartOfTheModel = modelElement.properties.some((prop: EntityValueProperty) => prop.value === childModelElement);
+        if (!isLinkedToOtherEntityValues && !childModelElement.parents?.length && !isPartOfTheModel) {
           this.delete(child);
-        } else if (!isLinkedToOtherEntityValues && entityValue.parents?.length > 0 && !isPartOfTheModel && connectingEdge) {
+        } else if (!isLinkedToOtherEntityValues && childModelElement.parents?.length > 0 && !isPartOfTheModel && connectingEdge) {
           this.mxGraphService.removeCells([connectingEdge]);
         }
       });

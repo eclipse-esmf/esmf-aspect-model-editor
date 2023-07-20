@@ -11,11 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, inject} from '@angular/core';
 import {DefaultEntityValue, SearchResult} from '@ame/meta-model';
 import {ModelStyleResolver, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {mxCellSearchOption, SearchService} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
+import {FILTER_ATTRIBUTES, FilterAttributesService, ModelFilter} from '@ame/loader-filters';
 import mxCell = mxgraph.mxCell;
 
 @Component({
@@ -26,8 +27,10 @@ import mxCell = mxgraph.mxCell;
 export class SearchBarComponent {
   @ViewChild('searchInputField') searchInputField;
 
-  searchResults: SearchResult[];
-  fontIcon = 'search';
+  public readonly DEFAULT = ModelFilter.DEFAULT;
+  public searchResults: SearchResult[];
+  public fontIcon = 'search';
+  public filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
 
   constructor(private mxGraphService: MxGraphService, private searchService: SearchService) {}
 
@@ -57,8 +60,8 @@ export class SearchBarComponent {
   }
 
   goToCell(cell: mxgraph.mxCell) {
-    const element = MxGraphHelper.getModelElement(cell);
-    this.mxGraphService.navigateToCellByUrn(element.aspectModelUrn);
+    const modelElement = MxGraphHelper.getModelElement(cell);
+    this.mxGraphService.navigateToCellByUrn(modelElement.aspectModelUrn);
     this.searchInputField.nativeElement.blur();
     this.searchResults = [];
   }

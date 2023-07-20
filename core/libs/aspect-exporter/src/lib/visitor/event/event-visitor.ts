@@ -12,10 +12,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
 import {DataFactory, Store} from 'n3';
 import {BaseVisitor} from '../base-visitor';
-import {MxGraphHelper} from '@ame/mx-graph';
 import {ListProperties, RdfListService, RdfNodeService} from '@ame/aspect-exporter';
 import {DefaultEvent} from '@ame/meta-model';
 import {RdfService} from '@ame/rdf/services';
@@ -30,8 +28,7 @@ export class EventVisitor extends BaseVisitor<DefaultEvent> {
     super(rdfService);
   }
 
-  visit(cell: mxgraph.mxCell): DefaultEvent {
-    const event: DefaultEvent = MxGraphHelper.getModelElement<DefaultEvent>(cell);
+  visit(event: DefaultEvent): DefaultEvent {
     this.setPrefix(event.aspectModelUrn);
     const oldAspectModelUrn = event.aspectModelUrn;
     this.addProperties(event);

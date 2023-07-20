@@ -49,7 +49,7 @@ export class ElementModelService {
   ) {}
 
   get currentCachedFile() {
-    return this.namespacesCacheService.getCurrentCachedFile();
+    return this.namespacesCacheService.currentCachedFile;
   }
 
   updateElement(cell: mxgraph.mxCell, form: {[key: string]: any}) {
@@ -82,27 +82,13 @@ export class ElementModelService {
       return;
     }
 
-    const modelElement = MxGraphHelper.getModelElement(cell);
-    if (modelElement instanceof DefaultAspect) {
-      this.renameModelService.open().subscribe(data => {
-        if (data?.name) {
-          const rdfModel = this.rdfService.currentRdfModel;
-          this.modelService.removeAspect();
-          this.removeElementData(cell);
-          if (!rdfModel.originalAbsoluteFileName) {
-            rdfModel.originalAbsoluteFileName = rdfModel.absoluteAspectModelFileName;
-          }
-          rdfModel.absoluteAspectModelFileName = '';
-          this.currentCachedFile.fileName = '';
-          rdfModel.aspectModelFileName = data.name;
-          this.titleService.setTitle(`[Shared Model] ${rdfModel.absoluteAspectModelFileName} - Aspect Model Editor`);
-        }
-      });
+    if (this.handleAspectRemoval(cell)) {
       return;
     }
 
-    if (this.modelRootService.isPredefined(modelElement)) {
-      const service = this.modelRootService.getPredefinedService(modelElement);
+    const elementModel = MxGraphHelper.getModelElement(cell);
+    if (this.modelRootService.isPredefined(elementModel)) {
+      const service = this.modelRootService.getPredefinedService(elementModel);
       if (service?.delete && service?.delete?.(cell)) {
         return;
       }
@@ -111,15 +97,11 @@ export class ElementModelService {
     this.removeElementData(cell);
   }
 
-  private removeElementData(cell: mxgraph.mxCell) {
-    const modelElement = MxGraphHelper.getModelElement(cell);
-    const elementModelService = this.modelRootService.getElementModelService(modelElement);
-    elementModelService?.delete(cell);
-  }
-
   decoupleElements(edge: mxgraph.mxCell) {
     const sourceModelElement = MxGraphHelper.getModelElement(edge.source);
     const targetModelElement = MxGraphHelper.getModelElement(edge.target);
+
+    MxGraphHelper.removeRelation(sourceModelElement, targetModelElement);
 
     if (sourceModelElement.isExternalReference()) {
       return;
@@ -174,6 +156,31 @@ export class ElementModelService {
     this.mxGraphService.removeCells([edge]);
   }
 
+  private handleAspectRemoval(cell: mxgraph.mxCell) {
+    const modelElement = MxGraphHelper.getModelElement(cell);
+    if (!(modelElement instanceof DefaultAspect)) {
+      return false;
+    }
+
+    this.renameModelService.open().subscribe(data => {
+      if (!data?.name) {
+        return;
+      }
+
+      const rdfModel = this.rdfService.currentRdfModel;
+      this.modelService.removeAspect();
+      this.removeElementData(cell);
+      if (!rdfModel.originalAbsoluteFileName) {
+        rdfModel.originalAbsoluteFileName = rdfModel.absoluteAspectModelFileName;
+      }
+      rdfModel.absoluteAspectModelFileName = '';
+      this.currentCachedFile.fileName = '';
+      rdfModel.aspectModelFileName = data.name;
+      this.titleService.setTitle(`[Shared Model] ${rdfModel.absoluteAspectModelFileName} - Aspect Model Editor`);
+    });
+    return true;
+  }
+
   private handleAbstractEntityRemoval(edge: mxgraph.mxCell) {
     if (!(MxGraphHelper.getModelElement(edge.target) instanceof DefaultAbstractEntity)) {
       return false;
@@ -187,6 +194,11 @@ export class ElementModelService {
         .getOutgoingEdges(parent)
         .map(e => e.target)
         .filter(c => !!MxGraphHelper.getModelElement<DefaultProperty>(c)?.extendedElement);
+
+      for (const property of properties) {
+        MxGraphHelper.removeRelation(MxGraphHelper.getModelElement(parent), MxGraphHelper.getModelElement(property));
+      }
+
       toRemove.push(...properties);
     }
 
@@ -202,7 +214,9 @@ export class ElementModelService {
       (source instanceof DefaultProperty && target instanceof DefaultAbstractProperty) ||
       (source instanceof DefaultProperty && target instanceof DefaultProperty)
     ) {
-      this.currentCachedFile.removeCachedElement(MxGraphHelper.getModelElement(edge.source).aspectModelUrn);
+      const sourceElement = MxGraphHelper.getModelElement(edge.source);
+      MxGraphHelper.removeRelation(sourceElement, MxGraphHelper.getModelElement(edge.target));
+      this.currentCachedFile.removeCachedElement(sourceElement.aspectModelUrn);
       this.mxGraphService.removeCells([edge, edge.source]);
       return true;
     }
@@ -265,6 +279,7 @@ export class ElementModelService {
     if (MxGraphHelper.isComplexEnumeration(source)) {
       this.mxGraphShapeOverlayService.removeComplexTypeShapeOverlays(edge.source);
     }
+    MxGraphHelper.removeRelation(source, target);
     (source as any).delete(target);
     this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(new Array(edge), source);
     edge.target.removeEdge(edge, false);
@@ -293,5 +308,21 @@ export class ElementModelService {
       this.currentCachedFile.removeCachedElement(targetModelElement.aspectModelUrn);
       this.mxGraphService.removeCells([edge.target]);
     }
+  }
+
+  private removeElementData(cell: mxgraph.mxCell) {
+    const modelElement = MxGraphHelper.getModelElement(cell);
+    const elementModelService = this.modelRootService.getElementModelService(modelElement);
+
+    for (const parent of modelElement.parents) {
+      MxGraphHelper.removeRelation(parent, modelElement);
+    }
+
+    for (const child of modelElement.children) {
+      MxGraphHelper.removeRelation(modelElement, child);
+    }
+
+    elementModelService?.delete(cell);
+    this.namespacesCacheService.currentCachedFile.removeElement(MxGraphHelper.getModelElement(cell).aspectModelUrn);
   }
 }

@@ -12,10 +12,11 @@
  */
 
 import {NamedNode, Quad} from 'n3';
-import {Characteristic, DefaultCharacteristic, Type} from '@ame/meta-model';
+import {Characteristic, DefaultCharacteristic, Type, DefaultEntity} from '@ame/meta-model';
 import {PredefinedCharacteristicInstantiator} from './predefined-characteristic-instantiator';
 import {BaseConstraintCharacteristicInstantiator} from './base-constraint-characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
+import {syncElementWithChildren} from '../helpers';
 
 export class CharacteristicInstantiator extends BaseConstraintCharacteristicInstantiator {
   private standardCharacteristicInstantiator: PredefinedCharacteristicInstantiator;
@@ -63,6 +64,10 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
 
     this.metaModelElementInstantiator.getDataType(typeQuad, (entity: Type) => {
       characteristic.dataType = entity;
+      if (entity instanceof DefaultEntity) {
+        characteristic.children.push(entity);
+        syncElementWithChildren(characteristic);
+      }
     });
 
     // Anonymous nodes are stored in the array for later processing of the name
@@ -78,7 +83,9 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
       characteristic.aspectModelUrn = `${this.metaModelElementInstantiator.rdfModel.getAspectModelUrn()}${characteristic.name}`;
       this.cachedFile.addAnonymousElement(characteristic, initialName);
     }
-    return this.cachedFile.resolveElement<Characteristic>(characteristic, this.isIsolated);
+
+    syncElementWithChildren(characteristic);
+    return this.cachedFile.resolveElement<Characteristic>(characteristic);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

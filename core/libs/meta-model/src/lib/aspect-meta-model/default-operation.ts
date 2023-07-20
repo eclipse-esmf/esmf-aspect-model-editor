@@ -12,7 +12,6 @@
  */
 
 import {Base, BaseMetaModelElement} from './base';
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {OverWrittenProperty} from './overwritten-property';
 
 export interface Operation extends BaseMetaModelElement {
@@ -37,10 +36,6 @@ export class DefaultOperation extends Base implements Operation {
     public output?: OverWrittenProperty
   ) {
     super(metaModelVersion, aspectModelUrn, name);
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitOperation(this, context);
   }
 
   delete(baseMetalModelElement: BaseMetaModelElement) {

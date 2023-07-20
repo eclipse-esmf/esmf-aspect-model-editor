@@ -1,0 +1,122 @@
+:page-partial:
+
+[[editing-model]]
+= Edit models
+
+An Aspect Model consists of different SAMM elements: one Aspect and several Properties, Characteristics, Entities,
+Units, Constraints, Traits, Operations, and Events.
+
+When using the Aspect Model Editor, while creating a new model an Aspect element is created by default.
+All other elements can then be added.
+Every element created in the editor can be modified.
+
+NOTE: Elements that are references from models in another namespace, can only be edited when working in the namespace they belong to.
+
+The naming conventions for Aspect Model elements are defined in the https://eclipse-esmf.github.io/samm-specification/2.0.0/modeling-guidelines.html#naming-rules[Naming Rules (SAMM 2.0.0)^,opts=nofollow].
+The Aspect Model Editor guides you to follow all these SAMM naming conventions for your Aspect Models.
+
+[[work-with-workspace-sidebar]]
+== Work with the Workspace sidebar
+
+image::ame-ui-overview-workspace-numbers.png[width=100%]
+
+1. To open a list of all the namespaces and files that are currently available, click the Workspace icon image:elements/workspace.png[Workspace icon, width=32px].
++
+For more information, see xref:namespace/namespaces-references.adoc#namespaces-external-references[Namespaces and external references].
+
+2. The Workspace sidebar also offers all types of elements to drag and drop into your Aspect Model.
+From here you can add new Properties, Characteristics, Entities,
+Units, Constraints, Traits, Operations, and Events
+by dragging an element from the sidebar to the diagram area.
+
+[[adding-elements]]
+== Add elements
+
+There are three different ways to add an element:
+
+* Use the Add icon
+* Use drag-and-drop from the Workspace sidebar
+* Use drag-and-drop from the Panel
+
+[[adding-simple-way]]
+=== Use the Add icon
+
+To add and connect the next logical element, click the Add icon at the bottom edge of any existing element.
+
+* After an Aspect a default Property will be added.
+* After a Property a default Characteristic will be added.
+* After a Characteristic a default Entity will be added.
+* After an Entity a default Property will be added.
++
+image::adding-elements-all.png[width=80%]
+
+NOTE: For Characteristics, you will also find an Add icon on the top to insert a Constraint between the Property and the Characteristic.
+This also creates a Trait that is connected to the property and constraint.
+
+image::adding-elements.png[width=100%]
+
+[[adding-dedicated-way]]
+=== Use drag-and-drop from the Workspace sidebar
+
+Drag and drop one of the available elements from the xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar].
+You have the option to create new elements or to use already xref:namespace/use-external-references.adoc#add-external-references[existing elements] from other namespaces.
+
+NOTE: In order to prevent formatting issues, it is a best practice to always connect a new element with another element directly after adding it.
+See also xref:support/known-issues.adoc[known issues].
+
+
+[[searching-elements]]
+== Find elements
+
+Use the search bar in the xref:getting-started/ui-overview.adoc#toolbar[toolbar] to find elements.
+By selecting an element it will be highlighted and centered in the diagram area.
+
+image::element-search.png[width=100%]
+
+Use the following advanced search possibilities for more specific search results:
+[cols="30%,70%"]
+
+|===
+|=position
+|SAMM elements that are named "position"
+|*position
+|SAMM elements that contain "position" in their name
+|position$
+|SAMM elements where the name ends with "position"
+|===
+
+[[connecting-elements]]
+== Connect elements
+
+In some situations you might want to connect elements manually, e.g., when you want to reuse a Characteristic and connect a second Property to it.
+
+To connect two elements manually, proceed as follows:
+
+. Click both elements while holding the CTRL key on your keyboard.
+. Click the *Connect* icon in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
++
+image::connecting-elements.png[width=100%]
+
+→ Both elements are now connected.
+
+Tip: Alternatively, you can use the context menu (right mouse click) to access the action items.
+
+
+== Delete elements
+
+To delete the *selected* element you have three options:
+
+* Use the delete key on your keyboard
+* Right mouse click > Delete
+* Click the Delete icon from the toolbar
+
+== Format the graph
+
+To format the graph use the respective icon from the toolbar
+image:toolbar-icons/format.png[,15%,15%].
+
+++++
+<style>
+  .imageblock {flex-direction: row !important;}
+</style>
+++++

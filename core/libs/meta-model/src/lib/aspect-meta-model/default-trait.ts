@@ -10,7 +10,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {BaseMetaModelElement} from './base';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 import {Constraint, DefaultConstraint} from './default-constraint';
@@ -45,10 +44,6 @@ export class DefaultTrait extends DefaultCharacteristic implements Trait {
 
   getConstraints(): Array<Constraint> {
     return this.constraints;
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitCharacteristic(this, context);
   }
 
   delete(baseMetaModelElement: BaseMetaModelElement) {

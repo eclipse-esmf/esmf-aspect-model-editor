@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {syncElementWithChildren} from '../helpers';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {PredefinedCharacteristicInstantiator} from './predefined-characteristic-instantiator';
 import {BaseMetaModelElement, Characteristic, DefaultProperty, OverWrittenProperty, OverWrittenPropertyKeys} from '@ame/meta-model';
@@ -36,7 +37,7 @@ export class PropertyInstantiator {
   }
 
   public createProperty(listElement: InstantiatorListElement): OverWrittenProperty {
-    const property = this.currentCachedFile.getElement<DefaultProperty>(listElement.quad.value, this.isIsolated);
+    const property = this.currentCachedFile.getElement<DefaultProperty>(listElement.quad.value);
     return property ? {property, keys: this.resolveOverwrittenKeys(listElement)} : this.constructProperty(listElement);
   }
 
@@ -60,7 +61,7 @@ export class PropertyInstantiator {
       property.aspectModelUrn = listElement.quad.value;
     }
     // resolving element to not enter in infinite loop
-    this.currentCachedFile.resolveElement(property, this.isIsolated);
+    this.currentCachedFile.resolveElement(property);
 
     for (const quad of quads) {
       if (samm.isCharacteristicProperty(quad.predicate.value)) {
@@ -78,6 +79,9 @@ export class PropertyInstantiator {
             this.metaModelElementInstantiator.recursiveModelElements.set(objectValue, new Array<BaseMetaModelElement>());
             property.characteristic = characteristic;
           }
+
+          if (property.characteristic) property.children.push(property.characteristic);
+          syncElementWithChildren(property);
         });
       }
 
@@ -90,6 +94,8 @@ export class PropertyInstantiator {
           property.extendedElement = extractedProperty?.property;
           if (property.extendedElement) {
             property.name = `[${property.extendedElement.name}]`;
+            property.children.push(property.extendedElement);
+            syncElementWithChildren(property);
           }
         });
       }

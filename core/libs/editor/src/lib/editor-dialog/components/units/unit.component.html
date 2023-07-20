@@ -18,3 +18,5 @@
 <ame-conversion-factor-input-field [parentForm]="parentForm"></ame-conversion-factor-input-field>
 <ame-numeric-conversion-factor-input-field [parentForm]="parentForm"></ame-numeric-conversion-factor-input-field>
 <ame-quantity-kinds-input-field [parentForm]="parentForm"></ame-quantity-kinds-input-field>
+<ame-element-list label="Parents" iconRotation="rotate270" [elements]="(element$ | async)?.parents"></ame-element-list>
+<ame-element-list label="Children" [elements]="(element$ | async)?.children"></ame-element-list>

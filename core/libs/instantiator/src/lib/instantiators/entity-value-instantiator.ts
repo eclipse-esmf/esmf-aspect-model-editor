@@ -16,6 +16,7 @@ import {DefaultEntity, DefaultEntityValue, Entity, OverWrittenProperty} from '@a
 import {EntityInstantiator} from './entity-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {Samm} from '@ame/vocabulary';
+import {syncElementWithChildren} from '../helpers';
 
 export class EntityValueInstantiator {
   private samm: Samm = this.metaModelElementInstantiator.samm;
@@ -47,7 +48,7 @@ export class EntityValueInstantiator {
     }
 
     const subject = quads[0].subject.value;
-    const cachedElement = this.cachedFile.getElement<DefaultEntityValue>(subject, this.isIsolated);
+    const cachedElement = this.cachedFile.getElement<DefaultEntityValue>(subject);
     if (cachedElement) {
       return cachedElement;
     }
@@ -59,23 +60,27 @@ export class EntityValueInstantiator {
     defaultEntityValue.fileName = this.metaModelElementInstantiator.fileName;
     defaultEntityValue.setExternalReference(this.rdfModel.isExternalRef);
 
+    if (defaultEntityValue.entity) defaultEntityValue.children.push(defaultEntityValue.entity);
+
     // saving into cache earlier to prevent infinite loop
-    this.cachedFile.resolveElement(defaultEntityValue, this.isIsolated);
+    this.cachedFile.resolveElement(defaultEntityValue);
 
     const properties = quads.filter(({predicate}) => !this.samm.RdfType().equals(predicate));
     for (const property of properties) {
       if (Util.isLiteral(property.object)) {
         this.metaModelElementInstantiator.getProperty({quad: property.predicate}, (overwrittenProperty: OverWrittenProperty) => {
           defaultEntityValue.addProperty(overwrittenProperty, property.object.value);
+          syncElementWithChildren(defaultEntityValue);
         });
         continue;
       }
 
-      const value = this.cachedFile.getElement<DefaultEntityValue>(property.object.value, this.isIsolated);
+      const value = this.cachedFile.getElement<DefaultEntityValue>(property.object.value);
 
       if (value) {
         this.metaModelElementInstantiator.getProperty({quad: property.predicate}, (overwrittenProperty: OverWrittenProperty) => {
           defaultEntityValue.addProperty(overwrittenProperty, value);
+          syncElementWithChildren(defaultEntityValue);
         });
       } else {
         this.metaModelElementInstantiator.addInstantiatorFunctionToQueue(
@@ -84,7 +89,7 @@ export class EntityValueInstantiator {
       }
     }
 
-    return this.cachedFile.resolveElement(defaultEntityValue, this.isIsolated);
+    return this.cachedFile.resolveElement(defaultEntityValue);
   }
 
   private instantiateEntityValue(property: Quad, defaultEntityValue: DefaultEntityValue) {
@@ -108,7 +113,7 @@ export class EntityValueInstantiator {
     }
 
     return (
-      this.cachedFile.getElement(quad.object.value, this.isIsolated) ||
+      this.cachedFile.getElement(quad.object.value) ||
       new EntityInstantiator(this.metaModelElementInstantiator).createEntity(
         this.metaModelElementInstantiator.rdfModel.findAnyProperty(DataFactory.namedNode(quad.object.value))
       )

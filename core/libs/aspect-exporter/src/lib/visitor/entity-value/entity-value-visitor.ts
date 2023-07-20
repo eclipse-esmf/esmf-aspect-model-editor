@@ -13,9 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {DefaultEntityValue} from '@ame/meta-model';
-import {MxGraphHelper} from '@ame/mx-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
-import {mxgraph} from 'mxgraph-factory';
 import {DataFactory} from 'n3';
 import {BaseVisitor} from '../base-visitor';
 
@@ -25,8 +23,8 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
     super(rdfService);
   }
 
-  visit(cell: mxgraph.mxCell): DefaultEntityValue {
-    return this.visitModel(MxGraphHelper.getModelElement<DefaultEntityValue>(cell));
+  visit(entityValue: DefaultEntityValue): DefaultEntityValue {
+    return this.visitModel(entityValue);
   }
 
   visitModel(entityValue: DefaultEntityValue) {

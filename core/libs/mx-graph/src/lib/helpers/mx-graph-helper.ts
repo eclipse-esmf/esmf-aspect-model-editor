@@ -14,6 +14,7 @@
 import {
   BaseMetaModelElement,
   CanExtend,
+  DefaultAspect,
   DefaultCharacteristic,
   DefaultEither,
   DefaultEntity,
@@ -26,23 +27,34 @@ import {
 } from '@ame/meta-model';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {LanguageSettingsService} from '@ame/settings-dialog';
-import {ExpandedModelShape, ModelCompactTreeLayout, ModelHierarchicalLayout} from '@ame/shared';
+import {basicShapeGeometry, ModelCompactTreeLayout, ModelHierarchicalLayout, modelRelations} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {ModelBaseProperties} from '../models';
 import {mxCompactTreeLayout, mxConstants, mxHierarchicalLayout} from '../providers';
-import {MxGraphVisitorHelper, PropertyInformation} from './mx-graph-visitor-helper';
+import {MxGraphVisitorHelper, ShapeAttribute} from './mx-graph-visitor-helper';
+import {ModelNode, ModelTree} from '@ame/loader-filters';
 
 export class MxGraphHelper {
   /**
-   * Gets the model element for a cell
+   * Gets the node element for a cell
    *
    * @param cell mx element
    */
-  static getModelElement<T = BaseMetaModelElement>(cell: mxgraph.mxCell): T {
+  static getElementNode<U extends BaseMetaModelElement = BaseMetaModelElement>(cell: mxgraph.mxCell): ModelNode<U> {
     if (typeof cell?.['getMetaModelElement'] === 'function') {
       return (<any>cell).getMetaModelElement();
     }
     return null;
+  }
+
+  /**
+   * Gets the element model for a cell
+   *
+   * @param cell mx element
+   */
+  static getModelElement<U extends BaseMetaModelElement = BaseMetaModelElement>(cell: mxgraph.mxCell): U {
+    const node = this.getElementNode<U>(cell);
+    return node ? node.element : null;
   }
 
   /**
@@ -52,7 +64,7 @@ export class MxGraphHelper {
    * @param parent BaseMetaModelElement
    */
   static isOptionalProperty(child: DefaultProperty, parent: BaseMetaModelElement) {
-    if (!(parent instanceof DefaultEntity) || !(child instanceof DefaultProperty)) {
+    if (!(parent instanceof DefaultAspect || parent instanceof DefaultEntity) || !(child instanceof DefaultProperty)) {
       return false;
     }
 
@@ -96,13 +108,8 @@ export class MxGraphHelper {
    *
    */
   static isCharacteristicWithoutDataType(cell: mxgraph.mxCell): boolean {
-    if (MxGraphHelper.getModelElement<DefaultCharacteristic>(cell)) {
-      const characteristic = MxGraphHelper.getModelElement(cell) as DefaultCharacteristic;
-
-      return !characteristic.dataType;
-    }
-
-    return false;
+    const modelElement = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
+    return modelElement ? !modelElement?.dataType : false;
   }
 
   static getCellAttribute(newValue) {
@@ -118,8 +125,8 @@ export class MxGraphHelper {
    * @param cell mx element
    * @param metaModelObject internal model
    */
-  static setModelElement(cell: mxgraph.mxCell, metaModelObject: BaseMetaModelElement) {
-    cell['getMetaModelElement'] = (): BaseMetaModelElement => metaModelObject;
+  static setElementNode(cell: mxgraph.mxCell, node: ModelTree) {
+    cell['getMetaModelElement'] = (): ModelTree => node;
   }
 
   /**
@@ -139,12 +146,66 @@ export class MxGraphHelper {
       );
   }
 
+  /**
+   * Adds child into children array from parent.
+   * Adds parent into parents array from child.
+   *
+   * @param parent parent for child
+   * @param child child for parent
+   */
+  static establishRelation(parent: BaseMetaModelElement, child: BaseMetaModelElement) {
+    const hasRelation = modelRelations.some(relation => {
+      if (!(parent instanceof relation.from)) {
+        return false;
+      }
+
+      if (!relation.to.some(defaultClass => child instanceof defaultClass)) {
+        return false;
+      }
+
+      return true;
+    });
+
+    if (hasRelation) {
+      parent.children.push(child);
+      child.parents.push(parent);
+    }
+  }
+
+  /**
+   * Removes child from children array from parent.
+   * Removes parent from parents array from child.
+   *
+   * @param parent parent for child
+   * @param child child for parent
+   */
+  static removeRelation(parent: BaseMetaModelElement, child: BaseMetaModelElement) {
+    const isRemovable = this.isRemovable(parent, child);
+    if (!isRemovable || (parent.isExternalReference() && child.isPredefined())) {
+      return;
+    }
+
+    parent.children = parent.children.filter(c => c.aspectModelUrn !== child.aspectModelUrn);
+    child.parents = child.parents.filter(p => p.aspectModelUrn !== parent.aspectModelUrn);
+  }
+
+  private static isRemovable(element: BaseMetaModelElement, elementToRemove: BaseMetaModelElement) {
+    const elementNamespace = element.aspectModelUrn.split('#')[0];
+    const toRemoveNamespace = elementToRemove.aspectModelUrn?.split('#')[0];
+
+    if (!toRemoveNamespace) {
+      return false;
+    }
+
+    return elementNamespace !== toRemoveNamespace || !(element.isExternalReference() || elementToRemove.isExternalReference());
+  }
+
   static isEntityCycleInheritance(child: mxgraph.mxCell, parent: BaseMetaModelElement, graph: mxgraph.mxGraph): boolean {
     const nextGeneration = graph.getOutgoingEdges(child)?.map(edge => edge.target) || [];
 
     for (const cell of nextGeneration) {
-      const model = MxGraphHelper.getModelElement(cell);
-      return model.aspectModelUrn === parent.aspectModelUrn || this.isEntityCycleInheritance(cell, parent, graph);
+      const modelElement = MxGraphHelper.getModelElement(cell);
+      return modelElement.aspectModelUrn === parent.aspectModelUrn || this.isEntityCycleInheritance(cell, parent, graph);
     }
 
     return false;
@@ -201,16 +262,16 @@ export class MxGraphHelper {
   }
 
   static createEdgeLabel(cell: mxgraph.mxCell, graph: mxgraph.mxGraph): HTMLElement {
-    const sourceElement: BaseMetaModelElement = MxGraphHelper.getModelElement(cell.source);
-    const targetElement: BaseMetaModelElement = MxGraphHelper.getModelElement(cell.target);
+    const sourceModelElement = MxGraphHelper.getModelElement(cell.source);
+    const targetModelElement = MxGraphHelper.getModelElement(cell.target);
 
-    if (sourceElement instanceof DefaultOperation) {
-      const isInput = sourceElement?.input?.some(overwrittenProp => overwrittenProp?.property === targetElement);
+    if (sourceModelElement instanceof DefaultOperation) {
+      const isInput = sourceModelElement?.input?.some(overwrittenProp => overwrittenProp?.property === targetModelElement);
       const p = document.createElement('p');
       p.className += ' edge-label operation';
-      if (targetElement === sourceElement?.output?.property && isInput) {
+      if (targetModelElement === sourceModelElement?.output?.property && isInput) {
         p.innerText = 'input-output';
-      } else if (targetElement === sourceElement?.output?.property) {
+      } else if (targetModelElement === sourceModelElement?.output?.property) {
         p.innerText = 'output';
       } else if (isInput) {
         p.innerText = 'input';
@@ -219,25 +280,25 @@ export class MxGraphHelper {
       }
       return p;
     }
-    if (sourceElement instanceof DefaultEither) {
+    if (sourceModelElement instanceof DefaultEither) {
       const p = document.createElement('p');
       p.className += ' edge-label characteristic';
-      if (targetElement === sourceElement?.left) {
+      if (targetModelElement === sourceModelElement?.left) {
         p.innerText = 'left';
-      } else if (targetElement === sourceElement?.right) {
+      } else if (targetModelElement === sourceModelElement?.right) {
         p.innerText = 'right';
       } else {
         return null;
       }
       return p;
     }
-    if (targetElement instanceof DefaultProperty && sourceElement instanceof DefaultEntity) {
+    if (targetModelElement instanceof DefaultProperty && sourceModelElement instanceof DefaultEntity) {
       const entityIncomingEdges = graph.getIncomingEdges(cell.source);
       let hasEnumeration = false;
       if (entityIncomingEdges) {
         entityIncomingEdges.forEach((c: mxgraph.mxCell) => {
           // first check if it has a parent Enumeration
-          if (this.getModelElement(c.source) instanceof DefaultEnumeration) {
+          if (this.getElementNode(c.source) instanceof DefaultEnumeration) {
             hasEnumeration = true;
           }
         });
@@ -245,7 +306,7 @@ export class MxGraphHelper {
       if (!hasEnumeration) {
         return null;
       }
-      const overwrittenProp = sourceElement.properties.find(prop => prop.property === targetElement);
+      const overwrittenProp = sourceModelElement.properties.find(prop => prop.property === targetModelElement);
       if (overwrittenProp.keys.notInPayload) {
         const p = document.createElement('p');
         p.className += ' edge-label property';
@@ -280,6 +341,11 @@ export class MxGraphHelper {
   static createPropertiesLabel(cell: mxgraph.mxCell) {
     const modelElement = MxGraphHelper.getModelElement(cell);
     if (!modelElement) {
+      return null;
+    }
+
+    const node = this.getElementNode(cell);
+    if (node.filterType === 'properties' && !(modelElement instanceof DefaultProperty || modelElement instanceof DefaultAspect)) {
       return null;
     }
 
@@ -345,8 +411,8 @@ export class MxGraphHelper {
       cell.geometry.height = title.clientHeight + 15;
     } else if (!isSmallShape) {
       cell.geometry.height =
-        elementsSize < cell.geometry.height && elementsSize < ExpandedModelShape.expandedElementHeight
-          ? ExpandedModelShape.expandedElementHeight
+        elementsSize < cell.geometry.height && elementsSize < basicShapeGeometry.expandedHeight
+          ? basicShapeGeometry.expandedHeight
           : elementsSize;
       div.style.height = cell.geometry.height + 'px';
     }
@@ -387,7 +453,7 @@ export class MxGraphHelper {
     return iconsBar;
   }
 
-  private static createSpanElement(content: PropertyInformation) {
+  private static createSpanElement(content: ShapeAttribute) {
     const span = document.createElement('span');
     content.extended && (span.style.opacity = '0.75');
     span.classList.add('element-info');

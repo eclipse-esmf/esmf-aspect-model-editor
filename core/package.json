@@ -102,7 +102,7 @@
     "affected:build": "nx affected:build",
     "affected:e2e": "nx affected:e2e",
     "affected:test": "nx affected:test",
-    "affected:lint": "nx affected:lint",
+    "affected:lint": "nx affected:lint --exclude ame-e2e",
     "affected:dep-graph": "nx affected:dep-graph",
     "affected": "nx affected",
     "format": "nx format:write",

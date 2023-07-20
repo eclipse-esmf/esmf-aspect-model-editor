@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {ShapeConnectorService} from '@ame/connection';
 import {RdfService} from '@ame/rdf/services';
@@ -21,13 +21,16 @@ import {mxgraph} from 'mxgraph-factory';
 import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
 import {MxGraphService} from '../mx-graph.service';
 import {MxGraphHelper, MxGraphVisitorHelper} from '../../helpers';
-import {MxGraphSetupVisitor} from '../../visitors';
+import {MxGraphRenderer} from '../../renderers';
 import {MetaModelElementInstantiator, PredefinedEntityInstantiator} from '@ame/instantiator';
+import {DefaultFilter, FiltersService} from '@ame/loader-filters';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BaseEntityRendererService {
+  private filtersService = inject(FiltersService);
+
   constructor(
     private mxGraphService: MxGraphService,
     private languageSettingsService: LanguageSettingsService,
@@ -58,7 +61,7 @@ export class BaseEntityRendererService {
       this.cleanUpAbstractConnections(cell);
     }
 
-    const mxGraphSetupVisitor = new MxGraphSetupVisitor(
+    const mxGraphSetupVisitor = new MxGraphRenderer(
       this.mxGraphService,
       this.mxGraphShapeOverlayService,
       this.namespacesCacheService,
@@ -74,7 +77,8 @@ export class BaseEntityRendererService {
         return;
       }
 
-      mxGraphSetupVisitor.visit(extendsElement, cell);
+      const [filteredElement] = new DefaultFilter().filter([extendsElement]);
+      mxGraphSetupVisitor.render(filteredElement, cell);
       predefinedCell = this.mxGraphService.resolveCellByModelElement(extendsElement);
 
       // setting to null to create the properties after abstract properties
@@ -85,7 +89,9 @@ export class BaseEntityRendererService {
 
     const cachedEntity = this.namespacesCacheService.resolveCachedElement(extendsElement);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
-    const entityCell = resolvedCell ? resolvedCell : this.mxGraphService.renderModelElement(extendsElement);
+    const entityCell = resolvedCell
+      ? resolvedCell
+      : this.mxGraphService.renderModelElement(this.filtersService.createNode(extendsElement, {parent: metaModelElement}));
     this.shapeConnectorService.connectShapes(metaModelElement, extendsElement, cell, entityCell);
 
     this.updateCell(cell);
@@ -94,7 +100,7 @@ export class BaseEntityRendererService {
   private hasPredefinedAbstractEntity(cell: mxgraph.mxCell): mxgraph.mxCell {
     const children = this.mxGraphService.graph.getOutgoingEdges(cell).map(e => e.target);
     const predefinedEntityInstantiator = new PredefinedEntityInstantiator(
-      new MetaModelElementInstantiator(this.rdfService.currentRdfModel, this.namespacesCacheService.getCurrentCachedFile())
+      new MetaModelElementInstantiator(this.rdfService.currentRdfModel, this.namespacesCacheService.currentCachedFile)
     );
 
     for (const child of children) {
@@ -137,7 +143,7 @@ export class BaseEntityRendererService {
       return;
     }
 
-    const entityChildModel = MxGraphHelper.getModelElement<DefaultAbstractEntity>(entityChildEdge.target);
+    const entityChildModelElement = MxGraphHelper.getModelElement<DefaultAbstractEntity>(entityChildEdge.target);
     const extendedProperties = childrenEdges
       .map(e => e.target)
       .filter(c => {
@@ -146,12 +152,12 @@ export class BaseEntityRendererService {
           return false;
         }
 
-        return entityChildModel.properties.some(
+        return entityChildModelElement.properties.some(
           ({property}) => property.aspectModelUrn === childModelElement.extendedElement?.aspectModelUrn
         );
       });
 
-    this.mxGraphService.graph.removeCells([entityChildEdge, ...extendedProperties]);
+    this.mxGraphService.removeCells([entityChildEdge, ...extendedProperties]);
   }
 
   private updateCell(cell: mxgraph.mxCell) {

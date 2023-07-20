@@ -114,7 +114,7 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
 
     this.headers = this.standardHeaders;
     if (this.data.metaModelElement instanceof DefaultEntity) {
-      const entityValues = this.cacheService.getCurrentCachedFile().getCachedEntityValues();
+      const entityValues = this.cacheService.currentCachedFile.getCachedEntityValues();
       entityValues.forEach((entityValue: DefaultEntityValue) => {
         if (entityValue.entity.aspectModelUrn === this.data.metaModelElement.aspectModelUrn) {
           this.headers = this.enumerationEntityHeaders;

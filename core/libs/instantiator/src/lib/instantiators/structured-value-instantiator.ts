@@ -14,6 +14,7 @@ import {CharacteristicInstantiator} from './characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad, Util} from 'n3';
 import {Characteristic, DefaultStructuredValue, OverWrittenProperty} from '@ame/meta-model';
+import {syncElementWithChildren} from '../helpers';
 
 export class StructuredValueCharacteristicInstantiator extends CharacteristicInstantiator {
   constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -21,7 +22,7 @@ export class StructuredValueCharacteristicInstantiator extends CharacteristicIns
   }
 
   protected processElement(quads: Array<Quad>): Characteristic {
-    let structuredValueCharacteristic = this.cachedFile.getElement<DefaultStructuredValue>(quads[0]?.subject.value, this.isIsolated);
+    let structuredValueCharacteristic = this.cachedFile.getElement<DefaultStructuredValue>(quads[0]?.subject.value);
     if (structuredValueCharacteristic) {
       return structuredValueCharacteristic;
     }
@@ -43,6 +44,8 @@ export class StructuredValueCharacteristicInstantiator extends CharacteristicIns
           if (Util.isNamedNode(elementQuad.object)) {
             this.metaModelElementInstantiator.getProperty({quad: elementQuad.object}, (extProperty: OverWrittenProperty) => {
               structuredValueCharacteristic.elements[index] = extProperty;
+              if (extProperty) structuredValueCharacteristic.children.push(extProperty.property);
+              syncElementWithChildren(structuredValueCharacteristic);
             });
           } else {
             structuredValueCharacteristic.elements[index] = elementQuad.object.value;

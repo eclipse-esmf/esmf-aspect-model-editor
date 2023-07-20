@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './mx-cell-config';
 export * from './model-style';
 export * from './model-info';
 export * from './renderer-update-payload';
 export * from './theme-colors';
+export * from './shape-configuration';

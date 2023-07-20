@@ -13,7 +13,6 @@
 
 import {Injectable} from '@angular/core';
 import {
-  BaseMetaModelElement,
   CanExtend,
   DefaultCharacteristic,
   DefaultCode,
@@ -35,10 +34,8 @@ import {
   DefaultTimeSeries,
   DefaultTrait,
 } from '@ame/meta-model';
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {Samm, SammC} from '@ame/vocabulary';
-import {mxgraph} from 'mxgraph-factory';
 import {DataFactory, Literal, NamedNode, Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
@@ -76,19 +73,13 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     DefaultStructuredValue: (characteristic: DefaultStructuredValue) => this.updateStructuredValue(characteristic),
   };
 
-  constructor(
-    private rdfNodeService: RdfNodeService,
-    private rdfListService: RdfListService,
-    private mxGraphService: MxGraphService,
-    rdfService: RdfService
-  ) {
+  constructor(private rdfNodeService: RdfNodeService, private rdfListService: RdfListService, rdfService: RdfService) {
     super(rdfService);
   }
 
-  visit(cell: mxgraph.mxCell): DefaultCharacteristic {
-    const characteristic = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
+  visit(characteristic: DefaultCharacteristic): DefaultCharacteristic {
     this.setPrefix(characteristic.aspectModelUrn);
-    this.updateParents(cell);
+    this.updateParents(characteristic);
 
     if (characteristic.isPredefined()) {
       return characteristic;
@@ -292,9 +283,8 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     this.setPrefix(characteristic.elementCharacteristic.aspectModelUrn);
   }
 
-  private updateParents(cell: mxgraph.mxCell): string {
-    const characteristic = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
-    const parents = this.getParents(cell);
+  private updateParents(characteristic: DefaultCharacteristic): string {
+    const parents = characteristic.parents;
 
     for (const parent of parents) {
       if (parent instanceof DefaultTrait || parent instanceof DefaultEither) {
@@ -322,11 +312,5 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     }
 
     return characteristic.aspectModelUrn;
-  }
-
-  private getParents(cell: mxgraph.mxCell): BaseMetaModelElement[] {
-    return this.mxGraphService
-      .resolveParents(cell)
-      .map((parent: mxgraph.mxCell) => MxGraphHelper.getModelElement<DefaultProperty | DefaultCharacteristic>(parent));
   }
 }

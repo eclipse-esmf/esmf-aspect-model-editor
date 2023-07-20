@@ -14,6 +14,7 @@ import {CharacteristicInstantiator} from './characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad} from 'n3';
 import {Characteristic, DefaultMeasurement, Unit} from '@ame/meta-model';
+import {syncElementWithChildren} from '../helpers';
 
 export class MeasurementCharacteristicInstantiator extends CharacteristicInstantiator {
   constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -21,7 +22,7 @@ export class MeasurementCharacteristicInstantiator extends CharacteristicInstant
   }
 
   protected processElement(quads: Array<Quad>): Characteristic {
-    let measurement = this.cachedFile.getElement<DefaultMeasurement>(quads[0]?.subject.value, this.isIsolated);
+    let measurement = this.cachedFile.getElement<DefaultMeasurement>(quads[0]?.subject.value);
     if (measurement) {
       return measurement;
     }
@@ -32,6 +33,8 @@ export class MeasurementCharacteristicInstantiator extends CharacteristicInstant
       if (this.metaModelElementInstantiator.sammC.isUnitProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getUnit(quad, (unit: Unit) => {
           measurement.unit = unit;
+          if (unit) measurement.children.push(unit);
+          syncElementWithChildren(measurement);
         });
       }
     });

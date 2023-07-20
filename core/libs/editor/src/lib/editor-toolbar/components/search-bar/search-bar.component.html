@@ -24,6 +24,14 @@
       spellcheck="false"
       data-cy="searchInputField"
     />
+    <mat-icon
+      *ngIf="filterAttributes.activeFilter !== DEFAULT"
+      class="search-bar-container__prefix"
+      matPrefix
+      matTooltip="Remove filter mode to find all elements"
+    >
+      info_outline
+    </mat-icon>
     <mat-icon class="search-bar-container__icon material-icons" (click)="focusOnSearchInputField()">search</mat-icon>
   </mat-form-field>
   <mat-autocomplete (optionSelected)="goToSearchResult($event)" [panelWidth]="500" [displayWith]="displayCellId" #auto="matAutocomplete">

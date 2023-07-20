@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {DefaultProperty} from './default-property';
 import {DefaultAbstractProperty} from './default-abstract-property';
 import {BaseMetaModelElement} from './base';
@@ -64,10 +63,6 @@ export class DefaultAbstractEntity extends CanExtendsWithProperties implements E
 
   isPredefined() {
     return this.predefined;
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitAbstractEntity(this, context);
   }
 
   delete(baseMetalModelElement: BaseMetaModelElement) {

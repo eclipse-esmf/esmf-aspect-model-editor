@@ -40,10 +40,10 @@ export class AspectRenderService extends BaseRenderService {
   }
 
   delete(cell: mxgraph.mxCell) {
-    const aspectModelElement = MxGraphHelper.getModelElement(cell);
+    const modelElement = MxGraphHelper.getModelElement(cell);
     const store = this.rdfService.currentRdfModel.store;
 
-    const aspectQuads = store.getQuads(new NamedNode(aspectModelElement.aspectModelUrn), null, null, null);
+    const aspectQuads = store.getQuads(new NamedNode(modelElement.aspectModelUrn), null, null, null);
     store.removeQuads(aspectQuads);
 
     this.mxGraphService.removeCells([cell]);

@@ -1,0 +1,56 @@
+= Entity
+
+[[adding-entity-instance]]
+== Add Entity instances to complex data types
+
+To add an Entity instance as a complex value data type for an Enumeration Characteristic, proceed as follows:
+
+. Click the Add button at the data type attribute field.
++
+image::entity-instance-add-icon.png[width=80%]
+
+. In the displayed dialog, enter the Entity instance name and the values of its properties.
++
+image::entity-instance-add-dialog.png[width=80%]
+
+. Click *Save*.
+
+→ Now the Enumeration Characteristics Edit dialog displays a table with the information you just entered.
+
+image::entity-instance-new-value.png[width=100%]
+
+Now you can also create Entity instances using the Add icon image:add.png[Add icon] at the Enumeration Characteristic element in the Aspect Model.
+Note that first an Entity had to be created before an instance can be added.
+
+image::adding-entity-value-instance-plus-icon.png[width=100%]
+
+== Add nested Entity instances
+
+The properties of the Entity instance described above had simple values.
+However, they can also have complex values.
+To achieve that, use nested Entity instances.
+
+NOTE: Nested instances can only be created once the model allows it.
+It is important to construct your model first and then create the instances.
+
+To create a nested Entity instance, proceed as follows:
+
+. Double-click on an existing Entity instance element to show its attributes in the xref:modeling/edit-elements.adoc#edit-elements-general[Edit dialog].
++
+image::entity-instance-single-complex-values.png[width=80%]
+
+. Start typing a new Entity instance name and then select it from the drop-down menu.
++
+Note that complex values have an icon that identifies them, i.e., a new Entity instance should be created here.
+Once created, the attribute field is read-only and you can only remove a nested Entity instance with the Delete icon if another Entity instance is to be created or used for it.
++
+image::create-new-nested-entity-instance.png[width=80%]
+
+. Click *Save*.
++
+image::save-nested-entity-instance.png[width=80%]
+
+→ Now the new nested Entity instance is related as a property value to the overarching Entity instance.
+
+image::new-created-nested-entity-instance.png[width=100%]
+

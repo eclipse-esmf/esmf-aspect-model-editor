@@ -1,0 +1,136 @@
+= Characteristic
+
+[[edit-characteristics]]
+== Characteristic attributes
+
+Depending on the *Characteristic class* (i.e., Characteristics' classes and instances), different attributes are available.
+For the correct understanding of Characteristics, see https://eclipse-esmf.github.io/samm-specification/2.0.0/characteristics.html[Characteristics and Constraints (SAMM 2.0.0)^,opts=nofollow].
+In the following, handling Characteristics with the Aspect Model Editor will be explained.
+
+&nbsp;
+
+[[choosing-characteristic-subclass]]
+=== Choose a Characteristic class
+
+For a new Characteristic, first choose a *Characteristic class* value from the drop-down menu of the Characteristic class attribute in the Edit dialog.
+
+→ This will auto-populate the Edit dialog with the corresponding attribute fields.
+
+&nbsp;
+
+
+[[choose-correct-datatype]]
+=== Data type attribute
+
+SAMM allows two kinds of data types: simple types (scalars) and complex types (Entities).
+
+* For using a *simple data type*, populate the data type field with a value like `xsd:float`,
+`xsd:integer` or `xsd:string` (no quotation marks, no spaces), see https://eclipse-esmf.github.io/samm-specification/2.0.0/datatypes.html[Data Types (SAMM 2.0.0)^,opts=nofollow].
++
+NOTE: Make sure that you do not include a space character as they are not accepted.
+
+* For using a *complex data type*, relate this Characteristic with an Entity, which will then be the data type of the Characteristic.
+
+&nbsp;
+
+[[enumeration-characteristic]]
+=== Enumeration Characteristics
+
+An Enumeration Characteristic can have simple data types or complex data types.
+
+
+[[characteristic-enumeration]]
+==== Simple data types for Enumeration Characteristics
+
+If your Characteristic is an Enumeration, provide the possible values as a space-separated list of strings, e.g., `red yellow green`.
+See also https://eclipse-esmf.github.io/samm-specification/2.0.0/modeling-guidelines.html#declaring-enumerations[Declaring Enumerations(SAMM 2.0.0)^,opts=nofollow].
+
+If no data type is selected, `string` is selected as default for the values.
+
+image::char-enumeration-ame-201-1.png[width=100%]
+
+[[characteristic-enumeration-complex-values]]
+==== Complex data types for Enumeration Characteristics
+
+If the Characteristic is an Enumeration and the data type is an Entity, the possible values for this enumeration are the instances of the provided Entity.
+
+image::char-enumeration-ame-complex-values.png[width=100%]
+
+
+
+[[characteristic-structure-value]]
+=== Structured Value Characteristics
+
+Structured Value Characteristics allow to semantically describe formatted string-like values like a date, email, or product's type part number.
+For example, for such type part numbers, the parts should be semantically described separately and the composition of those into one string should be described via a regular expression.
+For more background on Structured Values, see https://eclipse-esmf.github.io/samm-specification/2.0.0/characteristics.html#structured-value-characteristic[Structured Value(SAMM 2.0.0)^,opts=nofollow]
+
+For Structured Value Characteristics, the following attributes have to be defined:
+
+[cols="30%,70%"]
+|===
+|_Deconstruction rule name_
+|A single choice for choosing a predefined rule or defining a custom rule. image:structured-value-deconstruction-rule-name.png[Structured Value deconstruction rule name]
+|_Deconstruction rule_
+|
+
+* If the `Custom Rule` is selected for the `Deconstruction rule name` attribute, this input option will be enabled and you can write your own rule.
+
+* If anything else is selected, this attribute will be populated with a predefined rule and it is disabled.
+
+* For a piece of your regex to correspond with a property in `samm-c:elements` it needs to be wrapped in round parentheses. This piece with round parentheses is called `capture group`.
+
+image:structured-value-deconstruction-rule.png[Structured Value deconstruction rule]
+
+|_Elements_
+| Opens up a dialog containing a table with two columns. One column shows all the capture groups from the `Deconstruction rule` attribute and the second column allows to choose or create a Property for the corresponding capture group. image:structured-value-elements.png[Structured Value elements] image:structured-value-elements-dialog.png[Structured Value elements dialog]
+
+|===
+
+To edit a new Structured Value Characteristic, proceed as follows:
+
+. In the xref:modeling/edit-elements.adoc#edit-elements-general[Edit dialog], choose the Characteristic class StructuredValue.
+
+. Enter values for the attributes _Deconstruction rule name_, _Deconstruction rule_, and _Elements_.
+
+. Click *Save*.
+
+→ Now you can see the changes in editor.
+
+image::structured-value-model.png[width=100%]
+
+To create a new element from such a Structured Value Characteristic, proceed as follows:
+
+* Click the Add icon image:add.png[Add icon] on the Structured Value Characteristic shape.
+
+→ As a result, a new Property is created.
+
+NOTE: A new Property created from a Structured Value Characteristic, is automatically inserted as an attribute in the Structured Value Characteristic and the `(regex)` capture group is automatically appended to `deconstructionRule`.
+
+image::structured-value-add-icon.png[New Property from Structured Value,width=100%]
+
+&nbsp;
+
+[[choose-correct-unit]]
+=== Unit as an attribute for Characteristics
+
+As an attribute for Characteristics, a Unit can be optional or mandatory.
+
+If your Characteristic is a *Quantifiable* (see https://eclipse-esmf.github.io/samm-specification/2.0.0/characteristics.html[Characteristics (SAMM 2.0.0)^,opts=nofollow]), Unit is an optional attribute (only exception for not having a Unit: unit-less countable Quantifiable).
+
+For the Characteristic classes *Duration* and *Measurement* the Unit attribute is mandatory.
+
+Entering a value to the Unit attribute field is done through a search:
+
+* Start typing the Unit you are searching for.
+* You may also use advanced search syntax (=metre, *metre, perSecond$) as explained in xref:getting-started/edit-models.adoc#searching-elements[Search Elements].
+* Select your Unit from the drop-down menu of the Unit attribute.
++
+image::unit.png[width=100%]
+
+For a complete list of supported Units refer to the https://eclipse-esmf.github.io/samm-specification/2.0.0/appendix/unitcatalog.html[Unit Catalog (SAMM 2.0.0)^,opts=nofollow].
+
+Further explanations about using Units can be found in https://eclipse-esmf.github.io/samm-specification/2.0.0/characteristics.html[Characteristics (SAMM 2.0.0)^,opts=nofollow].
+
+NOTE: Do not include space characters as they are not accepted.
+

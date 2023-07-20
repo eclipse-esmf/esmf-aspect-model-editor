@@ -115,7 +115,7 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
         property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
       return entityValue.entity.aspectModelUrn === characteristic?.dataType?.['aspectModelUrn'];
     };
-    const existingEntityValues = this.namespacesCacheService.getCurrentCachedFile().getCachedEntityValues().filter(entityValueFilter);
+    const existingEntityValues = this.namespacesCacheService.currentCachedFile.getCachedEntityValues().filter(entityValueFilter);
     const newEntityValues = this.parentForm.get('newEntityValues')?.value?.filter(entityValueFilter) || [];
     return [...existingEntityValues, ...newEntityValues];
   }
@@ -129,7 +129,7 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
     ) {
       const namespace = this.metaModelElement.entity.aspectModelUrn.split('#')[0];
       return (
-        !this.namespacesCacheService.getCurrentCachedFile().getCachedElement(`${namespace}#${entityValueName}`) &&
+        !this.namespacesCacheService.currentCachedFile.getCachedElement(`${namespace}#${entityValueName}`) &&
         !this.parentForm.get('newEntityValues')?.value?.some(ev => ev.name === entityValueName)
       );
     }

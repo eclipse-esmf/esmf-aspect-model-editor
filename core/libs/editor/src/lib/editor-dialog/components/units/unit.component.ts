@@ -12,6 +12,7 @@
  */
 import {Component, Input} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {EditorModelService} from '../../editor-model.service';
 
 @Component({
   selector: 'ame-unit',
@@ -19,4 +20,7 @@ import {FormGroup} from '@angular/forms';
 })
 export class UnitComponent {
   @Input() parentForm: FormGroup;
+  public element$ = this.metaModelDialogService.getMetaModelElement();
+
+  constructor(public metaModelDialogService: EditorModelService) {}
 }

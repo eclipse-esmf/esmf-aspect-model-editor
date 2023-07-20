@@ -17,6 +17,13 @@
   cursor: grab;
   padding: 10px 0;
 
+  &.locked {
+    opacity: 0.75;
+    filter: grayscale(1);
+    cursor: not-allowed;
+    user-select: none;
+  }
+
   .icon {
     display: flex;
     justify-content: center;

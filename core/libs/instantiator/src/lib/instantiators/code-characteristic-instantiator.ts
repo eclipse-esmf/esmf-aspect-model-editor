@@ -11,9 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {NamedNode, Quad} from 'n3';
-import {Characteristic, DefaultCode, Type} from '@ame/meta-model';
+import {Characteristic, DefaultCode, DefaultEntity, Type} from '@ame/meta-model';
 import {CharacteristicInstantiator} from './characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
+import {syncElementWithChildren} from '../helpers';
 
 export class CodeCharacteristicInstantiator extends CharacteristicInstantiator {
   constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -21,7 +22,7 @@ export class CodeCharacteristicInstantiator extends CharacteristicInstantiator {
   }
 
   protected processElement(quads: Array<Quad>): Characteristic {
-    const code = this.cachedFile.getElement<Characteristic>(quads[0]?.subject.value, this.isIsolated);
+    const code = this.cachedFile.getElement<Characteristic>(quads[0]?.subject.value);
     if (code) {
       return code;
     }
@@ -33,6 +34,10 @@ export class CodeCharacteristicInstantiator extends CharacteristicInstantiator {
       if (samm.isDataTypeProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getDataType(quad, (entity: Type) => {
           defaultCode.dataType = entity;
+          if (entity instanceof DefaultEntity) {
+            defaultCode.children.push(entity);
+            syncElementWithChildren(defaultCode);
+          }
         });
       }
     });

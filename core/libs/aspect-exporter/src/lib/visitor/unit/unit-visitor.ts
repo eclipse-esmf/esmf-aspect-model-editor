@@ -12,10 +12,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
 import {DataFactory, Store} from 'n3';
 import {BaseVisitor} from '../base-visitor';
-import {MxGraphHelper} from '@ame/mx-graph';
 import {RdfNodeService} from '../../rdf-node';
 import {DefaultUnit} from '@ame/meta-model';
 import {RdfService} from '@ame/rdf/services';
@@ -35,8 +33,7 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
     super(rdfService);
   }
 
-  visit(cell: mxgraph.mxCell): DefaultUnit {
-    const unit: DefaultUnit = MxGraphHelper.getModelElement<DefaultUnit>(cell);
+  visit(unit: DefaultUnit): DefaultUnit {
     this.setPrefix(unit.aspectModelUrn);
     const oldAspectModelUrn = unit.aspectModelUrn;
     this.addProperties(unit);

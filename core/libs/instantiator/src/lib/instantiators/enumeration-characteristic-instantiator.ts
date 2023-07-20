@@ -12,10 +12,10 @@
  */
 import {NamedNode, Quad, Util} from 'n3';
 import {Characteristic, DefaultEntityValue, DefaultEnumeration} from '@ame/meta-model';
-import {EntityValueInstantiator} from './entity-value-instantiator';
 import {CharacteristicInstantiator} from './characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {RdfModel} from '@ame/rdf/utils';
+import {syncElementWithChildren} from '../helpers';
 
 export class EnumerationCharacteristicInstantiator extends CharacteristicInstantiator {
   constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -23,7 +23,7 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
   }
 
   protected processElement(quads: Array<Quad>): Characteristic {
-    let enumeration = this.cachedFile.getElement<DefaultEnumeration>(quads[0]?.subject.value, this.isIsolated);
+    let enumeration = this.cachedFile.getElement<DefaultEnumeration>(quads[0]?.subject.value);
     if (enumeration) {
       return enumeration;
     }
@@ -38,6 +38,12 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
         enumeration.values = this.getEnumerationValues(quad);
       }
     }
+
+    if (enumeration.values[0] instanceof DefaultEntityValue) {
+      enumeration.children.push(...(enumeration.values as DefaultEntityValue[]));
+    }
+
+    syncElementWithChildren(enumeration);
     return enumeration;
   }
 
@@ -56,15 +62,6 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
       values.push(`${entityValueQuad.object.value}`);
     }
     return values;
-  }
-
-  private instantiateEntityValue(quadValue: Quad, enumeration: DefaultEnumeration) {
-    const entityValue = new EntityValueInstantiator(this.metaModelElementInstantiator).createEntityValue(
-      this.metaModelElementInstantiator.rdfModel.findAnyProperty(quadValue),
-      quadValue.object
-    );
-    enumeration.values?.push(entityValue);
-    entityValue?.addParent(enumeration);
   }
 
   shouldProcess(nameNode: NamedNode): boolean {

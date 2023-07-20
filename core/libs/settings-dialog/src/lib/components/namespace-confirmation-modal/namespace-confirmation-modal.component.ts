@@ -36,7 +36,7 @@ export class NamespaceConfirmationModalComponent {
   rdfModel: RdfModel;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: NewNamespaceDialogOptions,
+    @Inject(MAT_DIALOG_DATA) data: NewNamespaceDialogOptions,
     private namespaceCacheService: NamespacesCacheService,
     private namespaceConfirmationDialogRef: MatDialogRef<NamespaceConfirmationModalComponent>
   ) {
@@ -63,6 +63,7 @@ export class NamespaceConfirmationModalComponent {
     }
 
     this.updateNamespaceKey();
+    this.namespaceConfirmationDialogRef.close(true);
   }
 
   private updateNamespaceKey(): void {
@@ -70,14 +71,16 @@ export class NamespaceConfirmationModalComponent {
     const oldUrn = 'urn:samm:' + this.oldNamespace + ':' + this.oldVersion + '#';
 
     this.namespaceCacheService.updateNamespaceKey(oldUrn, newUrn);
+    if (this.rdfModel.aspect) {
+      const [, aspectName] = this.rdfModel.aspect.value.split('#');
+      this.rdfModel.setAspect(`${newUrn}${aspectName}`);
+    }
   }
 
   private updateAllNamespacesFromCurrentCachedFile(oldValue: string, newValue: string): void {
-    const currentCachedFile = this.namespaceCacheService.getCurrentCachedFile();
+    const currentCachedFile = this.namespaceCacheService.currentCachedFile;
 
     currentCachedFile.updateCachedElementsNamespace(oldValue, newValue);
     this.rdfModel.updatePrefix('', oldValue, newValue);
-
-    this.namespaceConfirmationDialogRef.close(true);
   }
 }

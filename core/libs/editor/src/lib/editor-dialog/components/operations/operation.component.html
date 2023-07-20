@@ -14,3 +14,5 @@
 <ame-base-input [parentForm]="parentForm"></ame-base-input>
 <ame-input-chiplist-field [parentForm]="parentForm"></ame-input-chiplist-field>
 <ame-output-input-field [parentForm]="parentForm"></ame-output-input-field>
+<ame-element-list label="Parents" iconRotation="rotate270" [elements]="(element$ | async)?.parents"></ame-element-list>
+<ame-element-list label="Children" [elements]="(element$ | async)?.children"></ame-element-list>

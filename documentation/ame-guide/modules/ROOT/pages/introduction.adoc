@@ -25,7 +25,7 @@ The Aspect Model Editor focuses on practitioners, such as domain experts or data
 
 Especially for expert teams who model Aspects together, the visual representation of Aspect Models provides a low entry barrier and easy understanding, and facilitates collaboration.
 
-In addition to that, constant background validation ensures that your Aspect Models correspond to the SAMM Aspect Meta Model, enabling reusablity of your Aspect Models and automation of the downstream process steps for your Aspect Models.
+In addition to that, constant background validation ensures that your Aspect Models correspond to the SAMM Aspect Meta Model, enabling re-usability of your Aspect Models and automation of the downstream process steps for your Aspect Models.
 
 == Capabilities
 
@@ -33,8 +33,9 @@ In addition to that, constant background validation ensures that your Aspect Mod
 - Navigate and edit your Aspect Models conveniently with a collapsed/extended view for your model details, auto-formatting, auto-saving, drag-and-drop of model elements, and many more.
 - Manage namespaces for your Aspect Models.
 - Save and export your Aspect Models and namespaces.
-- Generate HTML documentation from your Aspect Models.
 - Generate JSON/JSON Schema from your Aspect Models.
+- Generate HTML documentation from your Aspect Models.
+- Generate OpenAPI specification from your Aspect Models.
 - Validate your Aspect Models continuously in the background and directly go from the validation results list to those locations in your Aspect Model where validation was not completed successfully.
 
 == About Aspects and Aspect Models
@@ -53,12 +54,6 @@ For more information on Aspects and Aspect Models, refer to https://eclipse-esmf
 
 SPDX-License-Identifier: MPL-2.0
 
-This program and the accompanying materials are made under the terms of https://github.com/eclipse-esmf/esmf-aspect-model-editor/blob/main/LICENSE[Mozilla Public License,V. 2.0^,opts=nofollow].
+This program and the accompanying materials are made under the terms of https://github.com/eclipse-esmf/esmf-aspect-model-editor/blob/main/LICENSE[Mozilla Public License,V. 2.0, window=_blank, opts=nofollow].
 
-All contained third-party materials are listed in the https://github.com/eclipse-esmf/esmf-aspect-model-editor/blob/main/NOTICE.md[NOTICE.md^,opts=nofollow] file.
-
-++++
-<style>
-  .imageblock {flex-direction: row !important;}
-</style>
-++++
+All contained third-party materials are listed in the https://github.com/eclipse-esmf/esmf-aspect-model-editor/blob/main/NOTICE.md[NOTICE.md,window=_blank, opts=nofollow] file.

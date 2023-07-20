@@ -22,7 +22,7 @@ export class FixedPointConstraintInstantiator extends ConstraintInstantiator {
   }
 
   protected processElement(quads: Array<Quad>): Constraint {
-    let defaultFixedPointConstraint = this.cachedFile.getElement<DefaultFixedPointConstraint>(quads[0]?.subject.value, this.isIsolated);
+    let defaultFixedPointConstraint = this.cachedFile.getElement<DefaultFixedPointConstraint>(quads[0]?.subject.value);
     if (defaultFixedPointConstraint) {
       return defaultFixedPointConstraint;
     }

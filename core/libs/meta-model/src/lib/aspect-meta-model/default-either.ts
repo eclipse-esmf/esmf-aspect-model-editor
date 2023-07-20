@@ -10,7 +10,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 import {BaseMetaModelElement} from './base';
 
@@ -38,9 +37,5 @@ export class DefaultEither extends DefaultCharacteristic implements Either {
     } else if (this.right?.aspectModelUrn === baseMetalModelElement.aspectModelUrn) {
       this.right = null;
     }
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitCharacteristic(this, context);
   }
 }

@@ -16,22 +16,8 @@ import {NamespacesCacheService} from '@ame/cache';
 import {EditorService} from '@ame/editor';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
-import {ElementModel} from '@ame/shared';
+import {ElementModel, elementShortcuts} from '@ame/shared';
 import {environment} from 'environments/environment';
-
-export const elementShortcuts = {
-  aspect: 'A',
-  property: 'P',
-  operation: 'O',
-  characteristic: 'C',
-  entity: 'E',
-  constraint: 'C',
-  trait: 'T',
-  unit: 'U',
-  event: 'E',
-  abstractEntity: 'AE',
-  abstractProperty: 'AP',
-};
 
 @Component({
   selector: 'ame-sidebar-element',
@@ -42,11 +28,14 @@ export class SidebarElementComponent implements AfterViewInit {
   @Input() public element: ElementModel;
   @ViewChild('container') public container: any;
 
-  public dataCy = '';
   public elementShortcut = elementShortcuts;
 
   get getIconClass(): string {
     return this.element.type.toLowerCase();
+  }
+
+  get dataCy() {
+    return !environment.production ? `dragDrop${this.element.type.charAt(0).toUpperCase() + this.element.type.slice(1)}` : '';
   }
 
   constructor(
@@ -61,11 +50,9 @@ export class SidebarElementComponent implements AfterViewInit {
       // for drag and drop
       this.container.nativeElement.attributes['element-type'] = this.element.type.toLowerCase();
       this.container.nativeElement.attributes['urn'] = this.element.aspectModelUrn;
-      if (!environment.production) {
-        // for drag and drop cypress
-        this.dataCy = `dragDrop${this.element.type.charAt(0).toUpperCase() + this.element.type.slice(1)}`;
+      if (!this.element.locked) {
+        this.editorService.makeDraggable(this.container.nativeElement, this.createDraggableShadowElement('shadowElementRectangle'));
       }
-      this.editorService.makeDraggable(this.container.nativeElement, this.createDraggableShadowElement('shadowElementRectangle'));
     });
   }
 
@@ -88,6 +75,9 @@ export class SidebarElementComponent implements AfterViewInit {
   }
 
   private createDraggableShadowElement(styleClass: string) {
+    if (this.element.locked) {
+      return null;
+    }
     // TODO: Check for possible memory leaks
     const dragShadowElement = this.renderer.createElement('div');
     dragShadowElement.className = styleClass;

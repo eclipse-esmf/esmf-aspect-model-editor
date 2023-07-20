@@ -36,7 +36,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 export class GenerateHandlingService {
   private readonly noRdfModelAvailable = 'No Rdf model available.';
   private get currentCachedFile() {
-    return this.namespaceCacheService.getCurrentCachedFile();
+    return this.namespaceCacheService.currentCachedFile;
   }
 
   constructor(

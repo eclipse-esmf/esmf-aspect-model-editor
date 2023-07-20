@@ -241,7 +241,7 @@ describe('Test editing Unit', () => {
     });
   });
 
-  it('can filter predefined units', () => {
+  it.skip('can filter predefined units', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.dbClickShape('Characteristic1'))

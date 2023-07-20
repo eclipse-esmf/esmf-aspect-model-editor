@@ -27,7 +27,7 @@ import {
   DefaultProperty,
   DefaultUnit,
 } from '@ame/meta-model';
-import {MxGraphAttributeService, MxGraphHelper} from '@ame/mx-graph';
+import {MxGraphAttributeService} from '@ame/mx-graph';
 import {ModelService} from '@ame/rdf/services';
 import {mxgraph} from 'mxgraph-factory';
 import {filter, tap} from 'rxjs/operators';
@@ -53,7 +53,7 @@ export class DomainModelToRdfService {
   }
 
   get currentCachedFile() {
-    return this.namespacesCacheService.getCurrentCachedFile();
+    return this.namespacesCacheService.currentCachedFile;
   }
 
   private working = false;
@@ -95,18 +95,30 @@ export class DomainModelToRdfService {
   private updateRdfStore() {
     this.cleanupVisitorService.removeStoreElements();
 
-    for (const cell of this.graph.getChildCells(this.graph.getDefaultParent())) {
-      this.visitCell(cell);
+    const rootElements = this.namespacesCacheService.currentCachedFile.getAllElements().filter(e => !e.parents.length);
+    for (const element of rootElements) {
+      this.visitLayer(element);
     }
   }
 
-  private visitCell(cell: mxgraph.mxCell) {
-    const metaModelElement = MxGraphHelper.getModelElement(cell);
-    if (metaModelElement?.isExternalReference()) {
+  private visitLayer(element: BaseMetaModelElement, visited = {}) {
+    if (visited[element.aspectModelUrn]) {
       return;
     }
 
-    this.getVisitorService(metaModelElement)?.visit(cell);
+    this.exportElement(element);
+    visited[element.aspectModelUrn] = true;
+    for (const child of element.children) {
+      this.visitLayer(child, visited);
+    }
+  }
+
+  private exportElement(element: BaseMetaModelElement) {
+    if (element?.isExternalReference()) {
+      return;
+    }
+
+    this.getVisitorService(element)?.visit(element as any);
   }
 
   private getVisitorService(metaModelElement: BaseMetaModelElement) {

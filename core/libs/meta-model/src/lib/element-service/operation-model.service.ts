@@ -11,24 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 import {BaseMetaModelElement, DefaultOperation, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
-import {
-  ModelInfo,
-  MxGraphAttributeService,
-  MxGraphHelper,
-  MxGraphService,
-  MxGraphShapeOverlayService,
-  OperationRenderService,
-} from '@ame/mx-graph';
+import {ModelInfo, MxGraphAttributeService, MxGraphHelper, MxGraphService, OperationRenderService} from '@ame/mx-graph';
 import {ShapeConnectorService} from '@ame/connection';
+import {FiltersService} from '@ame/loader-filters';
 
 @Injectable({providedIn: 'root'})
 export class OperationModelService extends BaseModelService {
+  private filtersService = inject(FiltersService);
+
   constructor(
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private shapeConnectorService: ShapeConnectorService,
     private mxGraphService: MxGraphService,
@@ -42,22 +37,22 @@ export class OperationModelService extends BaseModelService {
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement: DefaultOperation = MxGraphHelper.getModelElement(cell);
+    const modelElement = MxGraphHelper.getModelElement<DefaultOperation>(cell);
     super.update(cell, form);
 
     const inputList = form.inputChipList;
     const output = form.outputValue;
 
-    this.removeInputDependency(cell, metaModelElement.input, output);
+    this.removeInputDependency(cell, modelElement.input, output);
     this.addInputProperties(cell, inputList);
-    metaModelElement.input = inputList.map(input => ({property: input, keys: {}}));
+    modelElement.input = inputList.map(input => ({property: input, keys: {}}));
 
-    this.removeOutputDependency(cell, metaModelElement.output, metaModelElement.input);
+    this.removeOutputDependency(cell, modelElement.output, modelElement.input);
     if (output) {
       this.addOutputProperties(cell, output);
-      metaModelElement.output = {property: output, keys: {}};
+      modelElement.output = {property: output, keys: {}};
     } else {
-      metaModelElement.output = output;
+      modelElement.output = output;
     }
 
     this.operationRender.update({cell});
@@ -101,7 +96,9 @@ export class OperationModelService extends BaseModelService {
       const cachedProperty = this.namespacesCacheService.resolveCachedElement(property);
       const operation = MxGraphHelper.getModelElement(cell);
       const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedProperty);
-      const propertyCell = resolvedCell ? resolvedCell : this.mxGraphService.renderModelElement(cachedProperty);
+      const propertyCell = resolvedCell
+        ? resolvedCell
+        : this.mxGraphService.renderModelElement(this.filtersService.createNode(cachedProperty, {parent: operation}));
       this.shapeConnectorService.connectShapes(operation, cachedProperty, cell, propertyCell, ModelInfo.IS_OPERATION_INPUT);
     });
   }
@@ -110,7 +107,9 @@ export class OperationModelService extends BaseModelService {
     const cachedProperty = this.namespacesCacheService.resolveCachedElement(property);
     const operation = MxGraphHelper.getModelElement(cell);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedProperty);
-    const propertyCell = resolvedCell ? resolvedCell : this.mxGraphService.renderModelElement(cachedProperty);
+    const propertyCell = resolvedCell
+      ? resolvedCell
+      : this.mxGraphService.renderModelElement(this.filtersService.createNode(cachedProperty, {parent: operation}));
     this.shapeConnectorService.connectShapes(operation, cachedProperty, cell, propertyCell, ModelInfo.IS_OPERATION_OUTPUT);
   }
 }

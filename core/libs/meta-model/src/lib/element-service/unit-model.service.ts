@@ -41,20 +41,20 @@ export class UnitModelService extends BaseModelService {
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement: DefaultUnit = MxGraphHelper.getModelElement(cell);
+    const modelElement = MxGraphHelper.getModelElement<DefaultUnit>(cell);
     super.update(cell, form);
-    metaModelElement.referenceUnit = form.referenceUnit;
-    metaModelElement.code = form.code;
-    metaModelElement.conversionFactor = form.conversionFactor;
-    metaModelElement.numericConversionFactor = form.numericConversionFactor;
-    metaModelElement.quantityKinds = form.quanitKinds;
-    metaModelElement.symbol = form.symbol;
+    modelElement.referenceUnit = form.referenceUnit;
+    modelElement.code = form.code;
+    modelElement.conversionFactor = form.conversionFactor;
+    modelElement.numericConversionFactor = form.numericConversionFactor;
+    modelElement.quantityKinds = form.quanitKinds;
+    modelElement.symbol = form.symbol;
 
     // update quantity kind
-    metaModelElement.quantityKinds = form.quantityKindsChipList.map(qk => {
+    modelElement.quantityKinds = form.quantityKindsChipList.map(qk => {
       const urn = `${this.sammU.getNamespace()}${qk}`;
       const quantityKind = sammUDefinition.quantityKinds[qk];
-      return new DefaultQuantityKind(metaModelElement.metaModelVersion, urn, qk, quantityKind.label);
+      return new DefaultQuantityKind(modelElement.metaModelVersion, urn, qk, quantityKind.label);
     });
 
     this.unitRenderer.update({cell, form});

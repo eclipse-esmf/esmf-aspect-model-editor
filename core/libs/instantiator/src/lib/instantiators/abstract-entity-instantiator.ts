@@ -15,6 +15,7 @@ import {DataFactory, Quad} from 'n3';
 import {DefaultAbstractEntity} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {PredefinedEntityInstantiator} from './samm-e-predefined-entity-instantiator';
+import {syncElementWithChildren} from '../helpers';
 
 export class AbstractEntityInstantiator {
   private get cachedFile() {
@@ -25,10 +26,6 @@ export class AbstractEntityInstantiator {
     return this.metaModelElementInstantiator.rdfModel;
   }
 
-  private get isIsolated() {
-    return this.metaModelElementInstantiator.isIsolated;
-  }
-
   private get sammE() {
     return this.metaModelElementInstantiator.sammE;
   }
@@ -36,7 +33,7 @@ export class AbstractEntityInstantiator {
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
   createAbstractEntity(quads: Quad[]): DefaultAbstractEntity {
-    const abstractEntity = this.cachedFile.getElement<DefaultAbstractEntity>(quads[0]?.subject.value, this.isIsolated);
+    const abstractEntity = this.cachedFile.getElement<DefaultAbstractEntity>(quads[0]?.subject.value);
     if (abstractEntity) {
       return abstractEntity;
     }
@@ -53,6 +50,8 @@ export class AbstractEntityInstantiator {
         defaultAbstractEntity.extendedElement = this.sammE.isTimeSeriesEntity(quad.object.value)
           ? new PredefinedEntityInstantiator(this.metaModelElementInstantiator).entityInstances[this.sammE.TimeSeriesEntity]()
           : this.createAbstractEntity(this.rdfModel.store.getQuads(quad.object, null, null, null));
+
+        defaultAbstractEntity.children.push(defaultAbstractEntity.extendedElement);
         return;
       }
 
@@ -61,9 +60,12 @@ export class AbstractEntityInstantiator {
           DataFactory.namedNode(quad.subject.value),
           samm.PropertiesProperty()
         );
+
+        defaultAbstractEntity.children.push(...defaultAbstractEntity.properties.map(e => e.property));
       }
     });
 
-    return this.cachedFile.resolveElement<DefaultAbstractEntity>(defaultAbstractEntity, this.isIsolated);
+    syncElementWithChildren(defaultAbstractEntity);
+    return this.cachedFile.resolveElement<DefaultAbstractEntity>(defaultAbstractEntity);
   }
 }

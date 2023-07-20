@@ -21,7 +21,7 @@ export class SortedSetCharacteristicInstantiator extends CollectionCharacteristi
     super(metaModelElementInstantiator, nextProcessor);
   }
 
-  protected creatCollectionObject(): Collection {
+  protected createCollectionObject(): Collection {
     return new DefaultSortedSet(null, null, null, null);
   }
 

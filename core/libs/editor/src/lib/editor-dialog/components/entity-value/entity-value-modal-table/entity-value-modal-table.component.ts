@@ -85,7 +85,7 @@ export class EntityValueModalTableComponent implements OnChanges {
         property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
       return entityValue.entity.aspectModelUrn === characteristic?.dataType?.['aspectModelUrn'];
     };
-    const existingEntityValues = this.namespacesCacheService.getCurrentCachedFile().getCachedEntityValues().filter(entityValueFilter);
+    const existingEntityValues = this.namespacesCacheService.currentCachedFile.getCachedEntityValues().filter(entityValueFilter);
     const newEntityValues = this.form.get('newEntityValues')?.value?.filter(entityValueFilter) || [];
     return [...existingEntityValues, ...newEntityValues];
   }
@@ -99,7 +99,7 @@ export class EntityValueModalTableComponent implements OnChanges {
     ) {
       const namespace = this.entity.aspectModelUrn.split('#')[0];
       return (
-        !this.namespacesCacheService.getCurrentCachedFile().getCachedElement(`${namespace}#${entityValueName}`) &&
+        !this.namespacesCacheService.currentCachedFile.getCachedElement(`${namespace}#${entityValueName}`) &&
         !this.form.get('newEntityValues')?.value?.some(ev => ev.name === entityValueName)
       );
     }

@@ -13,21 +13,17 @@
 
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
-import {NamespacesCacheService} from '@ame/cache';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {BaseMetaModelElement, BaseModelService, DefaultQuantifiable, DefaultUnit} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
 
 @Injectable({providedIn: 'root'})
 export class QuantifiableModelService extends BaseModelService {
   constructor(
-    namespacesCacheService: NamespacesCacheService,
-    modelService: ModelService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphService: MxGraphService
   ) {
-    super(namespacesCacheService, modelService);
+    super();
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {

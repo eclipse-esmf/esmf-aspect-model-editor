@@ -1,0 +1,51 @@
+:page-partial:
+
+[[known-limitations]]
+= Known limitations
+
+All known limitations of the Aspect Model Editor, that is, features or improvements that are not yet implemented, are listed here.
+
+See also xref:support/known-issues.adoc#known-issues[known issues].
+
+[[current-known-limitations]]
+== Current limitations related to the SAMM Aspect Meta Model
+
+This sections lists features that are supported in Aspect Models by the SAMM Aspect Meta Model but not fully or only partially available within the Aspect Model Editor.
+
+
+[cols="15%,30%,55%"]
+|===
+| Category | Title | Explanation
+
+| SAMM
+| Entity: Include predefined instance
+| SAMM supports to refer to a globally pre-defined Entity instance (namespace: `samm-e`), but the Aspect Model Editor does not.
+
+| SAMM
+| Properties: Refinement
+| It is not possible to refine Properties to make sharing of Entities easier.
+|===
+
+[[current-known-limitations-ux]]
+== Current limitations related to usability
+
+This sections lists features that can be achieved within the Aspect Model Editor, but with a substantial limitation in the usability.
+
+[cols="15%,30%,55%"]
+|===
+| Category | Title | Explanation
+
+| Usability
+| Copy & paste, undo & redo
+| Popular editing features such as copy & paste and undo & redo are not supported. Users want to use familiar keyboard shortcuts for editing their Aspect Models.
+
+| Usability
+| Aspect Repository and Entity Repository
+| This version of the Aspect Model Editor supports only file-based operations. Users also want to share Aspects and Entities for reuse.
+|===
+
+++++
+<style>
+  .imageblock {flex-direction: row !important;}
+</style>
+++++

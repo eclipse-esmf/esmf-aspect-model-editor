@@ -29,7 +29,6 @@ import {
   SELECTOR_namespaceTabVersionInput,
   SELECTOR_openNamespacesButton,
   SELECTOR_settingsButton,
-  SELECTOR_settingsModalCloseButton,
   SELECTOR_tbLoadButton,
   SELECTOR_tbSaveButton,
   SELECTOR_tbSaveMenuSaveToWorkspaceButton,
@@ -58,6 +57,35 @@ export class cyHelp {
     return mxGraphAttributeService.graph
       .getChildCells(mxGraphAttributeService.graph.getDefaultParent(), true, false)
       .find(cell => cell && cell.id === name);
+  }
+
+  /**
+   * Finds the first shape which meets the condition
+   *
+   * @param shapeName The name of the target shape
+   * @param shapeFieldsPartialMatch An array of fields to compare with (partial matching is supported)
+   * @param win Window type for "Application Under Test(AUT)", can be accessed via "cy.window()"
+   */
+  static findShapeByFields(shapeName: string, shapeFieldsPartialMatch: object[], win: Cypress.AUTWindow): mxgraph.mxCell {
+    const mxGraphAttributeService: MxGraphAttributeService = win['angular.mxGraphAttributeService'];
+
+    // Get all cells
+    return mxGraphAttributeService.graph.getChildCells(null, true, false).find((cell: any) => {
+      if (!cell) return false;
+      if (cell.id !== shapeName) return false;
+
+      // Check if this is the target cell (if it matches all the specified conditions for fields)
+      return shapeFieldsPartialMatch.reduce((isMatch, field) => {
+        const conditions = Object.entries(field);
+        // Check if the field matches the specified conditions for a specific field
+        const isTargetCell = cell.configuration.fields.some(cellField => {
+          const missedCondition = conditions.find(([key, value]) => cellField[key] !== value);
+          return !missedCondition;
+        });
+
+        return isTargetCell ? isMatch : false;
+      }, true);
+    });
   }
 
   static hasAddShapeOverlay(cellName: string) {
@@ -196,6 +224,7 @@ export class cyHelp {
   static renameElement(oldName: string, newName: string) {
     return cy
       .then(() => cy.dbClickShape(oldName))
+      .then(() => cy.get('#graph').click())
       .then(() => cy.get(FIELD_name).clear({force: true}).type(newName, {force: true}))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}));
   }

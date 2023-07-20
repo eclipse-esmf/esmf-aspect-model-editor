@@ -13,6 +13,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {PreviousFormDataSnapshot} from '../../interfaces';
+import {EditorModelService} from '../../editor-model.service';
 
 @Component({
   selector: 'ame-constraint',
@@ -23,8 +24,9 @@ export class ConstraintComponent implements OnDestroy, AfterViewInit {
   public previousData: PreviousFormDataSnapshot = {};
 
   @Input() parentForm: FormGroup;
+  public element$ = this.metaModelDialogService.getMetaModelElement();
 
-  constructor(private changeDetector: ChangeDetectorRef) {}
+  constructor(private changeDetector: ChangeDetectorRef, public metaModelDialogService: EditorModelService) {}
 
   ngAfterViewInit(): void {
     this.changeDetector.detectChanges();

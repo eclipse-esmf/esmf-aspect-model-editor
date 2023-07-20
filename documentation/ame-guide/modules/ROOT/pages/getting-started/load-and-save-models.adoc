@@ -1,0 +1,61 @@
+:page-partial:
+
+[[load-and-save-models]]
+= Load and save models
+
+The Aspect Model Editor supports loading and saving Aspect Models in the official RDF/Turtle format (TTL).
+
+NOTE: In case the loaded Aspect Model has a lower SAMM version than the one that the Aspect Model Editor is currently based on, migration will start automatically.
+
+Currently, the Aspect Model Editor is based on https://eclipse-esmf.github.io/samm-specification/2.0.0/index.html[SAMM Aspect Meta Model 2.0.0^,opts=nofollow].
+
+[[load-start-new-models]]
+== Load or start a new model
+
+To start modeling, proceed as follows:
+
+WARNING: Already opened Aspect Models will be lost when loading a new one.
+Always make sure to save the previous Aspect Model first.
+
+. Click the *New/Load* icon in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+. Click *Create/Upload Aspect Model*.
+. Choose one of the following options:
++
+* Click *Models/Default Aspect Model* to start from the Default Aspect Model.
+* Click *Models/Movement Example* to start from the Movement Example.
+* Click *Load from File* to open a file containing TTL code.
+* Copy and paste TTL code of an existing model into the text area.
++
+image::start-modeling-ui.png[width=80%]
+. As an expert you are able to modify the shown TTL code manually within the text area.
++
+image::start-modeling-edit-ui.png[width=80%]
+. Click *Start modeling*.
+
+[[save-models]]
+== Save models
+
+To save a model, proceed as follows:
+
+. Click *Save* in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+. Choose one of the following options:
++
+* Click *Export Aspect Model* to export the model.
+* Click *Export Namespace* to export one of the existing namespaces.
+* Click *Save to Workspace* to save the current namespace to the Workspace.
+
+TIP: For saving a new version of a model without overriding the existing one, see xref:modeling/model-versions.adoc[Model versions].
+
+[[auto-save]]
+== Auto-save
+
+The Aspect Model Editor will auto-save your model in the background every 5 minutes, please confirm.
+After restarting The Aspect Model Editor you will be asked whether you want to load the auto-saved model or dismiss it and start from scratch.
+
+image::autosaving.png[width=100%]
+
+++++
+<style>
+  .imageblock {flex-direction: row !important;}
+</style>
+++++

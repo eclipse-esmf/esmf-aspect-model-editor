@@ -54,7 +54,7 @@ export class TimeSeriesEntityRemoveService implements PredefinedRemove {
   }
 
   public decouple(edge: mxgraph.mxCell, source: BaseMetaModelElement) {
-    if (!source?.['isPredefined']?.()) {
+    if (!source?.isPredefined()) {
       return false;
     }
 
@@ -74,6 +74,10 @@ export class TimeSeriesEntityRemoveService implements PredefinedRemove {
   private handleTimeSeriesEntityTreeRemoval(cell: mxgraph.mxCell) {
     const cellStack = this.mxGraphService.graph.getOutgoingEdges(cell).map(edge => edge.target);
     const cellsToBeRemoved = [];
+
+    for (const edge of this.mxGraphService.graph.getIncomingEdges(cell)) {
+      MxGraphHelper.removeRelation(MxGraphHelper.getModelElement(edge.source), MxGraphHelper.getModelElement(cell));
+    }
 
     while (cellStack.length) {
       const lastCell = cellStack.pop();

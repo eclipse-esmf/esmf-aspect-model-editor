@@ -26,17 +26,18 @@
     padding-top: 0;
     padding-bottom: 0;
     width: 250px;
+  }
 
-    mat-icon {
-      color: #007bc7;
-    }
+  &__prefix {
+    position: relative;
+    top: 3px;
   }
 
   &__icon {
+    color: #007bc7;
     position: absolute;
     right: 5px;
     top: 50%;
-    -ms-transform: translateY(-50%);
     transform: translateY(-50%);
   }
 

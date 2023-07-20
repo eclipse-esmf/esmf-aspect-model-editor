@@ -25,6 +25,8 @@ import {UpdatedProperties} from '../properties';
 export class AspectComponent extends ModelElementEditorComponent<DefaultAspect> {
   @Input() parentForm;
 
+  public element$ = this.metaModelDialogService.getMetaModelElement();
+
   constructor(public metaModelDialogService: EditorModelService) {
     super(metaModelDialogService);
   }

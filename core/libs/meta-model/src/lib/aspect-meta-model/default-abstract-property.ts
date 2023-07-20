@@ -12,7 +12,6 @@
  */
 
 import {BaseMetaModelElement} from './base';
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {CanExtend} from './can-extend';
 
 interface AbstractProperty {
@@ -38,10 +37,6 @@ export class DefaultAbstractProperty extends CanExtend implements AbstractProper
 
   isPredefined() {
     return this.predefined;
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitAbstractProperty(this, context);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

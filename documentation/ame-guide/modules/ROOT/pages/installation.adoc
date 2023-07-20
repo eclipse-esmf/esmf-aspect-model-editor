@@ -11,10 +11,16 @@ Before you install the latest version of the Aspect Model Editor, make sure you 
 
 * Login with administrator permissions to install or uninstall the Aspect Model Editor.
 * If you have previously installed the Aspect Model Editor, see xref:installation.adoc#upgrade[Upgrade].
+* Download the installation file for your system at https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor^, opts=nofollow]. +
+We offer assets for following OS:
+    ** Linux
+    ** Mac
+    ** Windows
+
 
 
 [[installation]]
-== Install the Aspect Model Editor
+== Install the Aspect Model Editor on Windows
 
 To install the Aspect Model Editor, proceed as follows:
 
@@ -27,7 +33,7 @@ image::installation-01.png[width=100% !important]
 +
 . Click *Install*.
 +
-NOTE: Long paths and paths containing whitespaces may lead to incorrect installation or incorrect behavior of the application. Choose a short destination path without whitespaces &ndash; preferably those suggested by the installer by default. For further information see xref::known-issues.adoc#aspect-model-editor-service-down[Known Issues].
+NOTE: Long paths and paths containing whitespaces may lead to incorrect installation or incorrect behavior of the application. Choose a short destination path without whitespaces &ndash; preferably those suggested by the installer by default. For further information see xref:support/known-issues.adoc[].
 +
 image::installation-02.png[width=100% !important]
 +
@@ -42,7 +48,7 @@ image::installation-04.png[width=100% !important]
 
 
 [[startup]]
-== Start the Aspect Model Editor
+=== Start the Aspect Model Editor
 
 To run the Aspect Model Editor, no administration permissions are required.
 
@@ -51,22 +57,22 @@ Use one of the following alternatives:
 * Navigate to the previously chosen installation location of the Aspect Model Editor and double-click the `Aspect-Model-Editor.exe` file.
 
 * On Windows, press the *Windows key*, type `Aspect` to filter for the Aspect Model Editor, and click *Open*.
-+
+
 image::search-app.png[width=50% !important]
 
 
 [[check-installation]]
-== Verify the installation
+=== Verify the installation
 
 To verify that your installation was executed successfully, proceed as follows:
 
 . Open the Aspect Model Editor.
-. Open the _Movement_ example that came with the editor (see xref::load-and-save-models.adoc#load-start-new-models[Load or start a new model]).
-. Click *Validate* in the xref:ui-overview.adoc#toolbar[toolbar].
+. Open the _Movement_ example that came with the editor (see xref:getting-started/load-and-save-models.adoc#load-start-new-models[Load or start a new model]).
+. Click *Validate* in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 
-→ If the validation of the built-in example is executed, your installation was successful. In that case, the background validation service is working properly and you can start working with the Aspect Model Editor.
+→ If the validation of the built-in example is executed, your installation was successful. In that case, the background validation service is working properly, and you can start working with the Aspect Model Editor.
 
-For more information on validation, see xref:validation-and-notifications.adoc#notifications[Validation and notifications].
+For more information on validation, see xref:getting-started/validation-and-notifications.adoc#notifications[Validation and notifications].
 
 [[uninstaller]]
 == Uninstall the Aspect Model Editor
@@ -81,7 +87,7 @@ To uninstall the Aspect Model Editor, proceed as follows:
 image::uninstall-01.png[width=50% !important]
 . Click *Uninstall* to start the process.
 +
-image::uninstall-02.png[width=50% !important]
+image::uninstall-02.png[width=100% !important]
 . Click *Finish* to close the Uninstaller.
 +
 image::uninstall-03.png[width=50% !important]
@@ -100,7 +106,23 @@ To upgrade the Aspect Model Editor to the latest version, proceed as follows:
 
 . Run a new installation with your required version of the Aspect Model Editor. See xref::installation.adoc#installation[Install the Aspect Model Editor].
 
-NOTE: You can have only one installation of the Aspect Model Editor on your local machine. In case you have already an older version, uninstall it first and then install the new version.
+NOTE: You can have only one installation of the Aspect Model Editor on your local machine. In case you have already an older version, uninstall it first and then install the latest version.
+
+== Install the Aspect Model Editor on Mac
+
+Download the .dmg asset and install it locally. +
+In case you are prompted, agree that the sources come from a trustful source.
+
+By default, the Workspace is created at
+_/Users/<YOUR-USER-NAME>/aspect-model-editor_ .
+
+== Install the Aspect Model Editor on Linux
+
+Download the Linux asset and install it locally. +
+In case you are prompted, agree that the sources come from a trustful source.
+
+By default, the Workspace is created at
+_/Users/<YOUR-USER-NAME>/aspect-model-editor_ .
 
 ++++
 <style>

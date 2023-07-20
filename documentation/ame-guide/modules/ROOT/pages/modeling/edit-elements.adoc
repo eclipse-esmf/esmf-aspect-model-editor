@@ -1,0 +1,71 @@
+:page-partial:
+
+[[edit-elements]]
+= Edit elements
+
+The elements of an Aspect Model &ndash; such as Properties, Operations, Characteristics, Constraints, Entities, or Events &ndash; have attributes, which can be edited in the xref:getting-started/ui-overview.adoc#edit-dialog[Edit dialog].
+
+Elements that belong to other namespaces/files cannot be edited. Switch to the respective namespace if you need any changes.
+
+For an overview of Aspect Model elements, see https://eclipse-esmf.github.io/samm-specification/2.0.0/meta-model-elements.html[Meta Model Elements (SAMM 2.0.0)^,opts=nofollow].
+
+[[edit-elements-general]]
+== Edit elements with the Edit dialog
+
+To edit the attributes for an element, proceed as follows:
+
+. Double-click an element to open it in the Edit dialog.
++
+Alternatively, select the element and click the Edit icon image:toolbar-icons/edit.png[Edit icon] in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+
+. In the Edit dialog, change the attributes of the element.
++
+Mandatory attribute fields are marked with an asterisk (*).
++
+TIP: Jump from one attribute field to the next by pressing the *Tab* key on your keyboard.
+
+. Click the *Save* button.
++
+TIP: Save and close the Edit dialog by pressing *Control + Enter* on your keyboard.
++
+image::edit-elements-02.png[Save changes in Edit dialog,width=70%]
+
+→ As a result, the attributes for the element of your Aspect Model have been changed and saved.
+
+[[unique-element-names]]
+[[edit-aspect]]
+== Unique element names
+
+Element names can be changed but should be unique throughout the Aspect Model.
+
+The name of the Aspect also serves as the name of the Aspect Model.
+However, if the aspect name is removed, it is possible to assign a customized name for the aspect model, see xref:modeling/shared-models.adoc[Shared models].
+
+NOTE: The attributes `preferredName` and `description` are non-unique to allow for supporting multiple languages.
+That means, these attributes can be defined multiple times for different languages but only once for a specific language.
+For adding or removing languages, see xref:getting-started/settings.adoc#language-settings[language settings].
+
+The Aspect Model Editor takes care of valid names.
+For more information, see https://eclipse-esmf.github.io/samm-specification/2.0.0/modeling-guidelines.html#naming-rules[Naming rules (SAMM 2.0.0)^,opts=nofollow].
+
+[[samm-see-attribute]]
+== The `samm:see` attribute
+
+Use the `samm:see` attribute to add references to related elements in an external taxonomy, ontology, or standards document to Aspect Models.
+
+* The value of the `samm:see` attribute must be a URI.
+* To set multiple values for the `samm:see` attribute, separate them by commas.
+
+The meaning of the reference is informative only and implies no semantics such as equality or subsumption in either direction.
+For more information, see https://eclipse-esmf.github.io/samm-specification/2.0.0/modeling-guidelines.html#adding-external-references[Adding external references (SAMM 2.0.0)^,opts=nofollow].
+
+
+
+
+
+
+++++
+<style>
+  .imageblock {flex-direction: row !important;}
+</style>
+++++

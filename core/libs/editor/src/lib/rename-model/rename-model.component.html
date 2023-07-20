@@ -28,7 +28,9 @@
     <input [formControl]="fileNameControl" name="file-name" matInput placeholder="Name" data-cy="file-rename" />
     <span matSuffix>.ttl</span>
     <mat-error *ngIf="fileNameControl.getError('required')">This field is required</mat-error>
-    <mat-error *ngIf="fileNameControl.getError('pattern')">The name cam have only letters and numbers</mat-error>
+    <mat-error *ngIf="fileNameControl.getError('pattern')"
+      >Allowed characters: alphanumeric, space, dot(.), minus(-) and underscore(_)</mat-error
+    >
     <mat-error *ngIf="fileNameControl.getError('sameFile')">This file already exists in your namespace</mat-error>
   </mat-form-field>
 </mat-dialog-content>

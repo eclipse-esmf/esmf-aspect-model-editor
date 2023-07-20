@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementRef, Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {
   AlertService,
   FileContentModel,
@@ -29,6 +29,7 @@ import {
   delayWhen,
   first,
   forkJoin,
+  map,
   mergeMap,
   Observable,
   of,
@@ -47,11 +48,11 @@ import {
   MxGraphHelper,
   MxGraphService,
   MxGraphSetupService,
-  MxGraphSetupVisitor,
+  MxGraphRenderer,
   MxGraphShapeOverlayService,
   MxGraphShapeSelectorService,
-  MxGraphVisitorHelper,
   mxUtils,
+  ShapeConfiguration,
 } from '@ame/mx-graph';
 import {
   Aspect,
@@ -81,13 +82,15 @@ import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {Title} from '@angular/platform-browser';
 import {OpenApi, ViolationError} from './editor-toolbar';
-import mxCell = mxgraph.mxCell;
-import {map} from 'rxjs/operators';
+import {FiltersService, FILTER_ATTRIBUTES, FilterAttributesService} from '@ame/loader-filters';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EditorService {
+  private filtersService = inject(FiltersService);
+  private filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
+
   private get settings() {
     return this.configurationService.getSettings();
   }
@@ -105,7 +108,7 @@ export class EditorService {
   }
 
   public get currentCachedFile(): CachedFile {
-    return this.namespaceCacheService.getCurrentCachedFile();
+    return this.namespaceCacheService.currentCachedFile;
   }
 
   constructor(
@@ -181,6 +184,10 @@ export class EditorService {
     this.mxGraphAttributeService.graph.addListener(
       mxEvent.CELLS_REMOVED,
       mxUtils.bind(this, (_source: mxgraph.mxGraph, event: mxgraph.mxEventObject) => {
+        if (this.filterAttributes.isFiltering) {
+          return;
+        }
+
         const changedCells: Array<mxgraph.mxCell> = event.getProperty('cells');
         changedCells.forEach(cell => {
           if (!MxGraphHelper.getModelElement(cell)) {
@@ -192,8 +199,8 @@ export class EditorService {
             return;
           }
 
-          const sourceElement = MxGraphHelper.getModelElement(edgeParent.source) as Base;
-          if (!sourceElement.isExternalReference()) {
+          const sourceElement = MxGraphHelper.getModelElement<Base>(edgeParent.source);
+          if (sourceElement && !sourceElement?.isExternalReference()) {
             sourceElement.delete(MxGraphHelper.getModelElement(cell));
           }
         });
@@ -256,12 +263,9 @@ export class EditorService {
     this.notificationsService.info({title: 'Loading model', timeout: 2000});
 
     return this.rdfService.loadModel(rdfAspectModel, namespaceFileName).pipe(
+      switchMap(loadedRdfModel => this.loadExternalModels(loadedRdfModel).pipe(map(() => loadedRdfModel))),
       switchMap(loadedRdfModel =>
-        this.loadExternalModels(loadedRdfModel).pipe(
-          switchMap(() =>
-            this.loadCurrentModel(loadedRdfModel, rdfAspectModel, namespaceFileName || loadedRdfModel.absoluteAspectModelFileName)
-          )
-        )
+        this.loadCurrentModel(loadedRdfModel, rdfAspectModel, namespaceFileName || loadedRdfModel.absoluteAspectModelFileName)
       ),
       tap(() => {
         if (!isDefault) {
@@ -330,7 +334,7 @@ export class EditorService {
       first(),
       tap((aspect: Aspect) => {
         this.removeOldGraph();
-        this.initializeNewGraph(aspect);
+        this.initializeNewGraph();
         this.titleService.setTitle(
           `${aspect ? '[Aspect' : '[Shared'} Model] ${namespaceFileName || aspect?.aspectModelUrn} - Aspect Model Editor`
         );
@@ -347,10 +351,10 @@ export class EditorService {
     this.mxGraphService.deleteAllShapes();
   }
 
-  private initializeNewGraph(aspect: Aspect) {
+  private initializeNewGraph() {
     try {
       const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
-      const mxGraphSetupVisitor = new MxGraphSetupVisitor(
+      const mxGraphRenderer = new MxGraphRenderer(
         this.mxGraphService,
         this.mxGraphShapeOverlayService,
         this.namespaceCacheService,
@@ -361,13 +365,11 @@ export class EditorService {
       this.mxGraphService
         .updateGraph(() => {
           this.mxGraphService.firstTimeFold = true;
-          if (aspect) {
-            mxGraphSetupVisitor.visit(<DefaultAspect>aspect, null);
-          }
+          const rootElements = this.namespaceCacheService.currentCachedFile.getAllElements().filter(e => !e.parents.length);
+          const filtered = this.filtersService.filter(rootElements);
 
-          const isolatedElements = this.namespaceCacheService.getCurrentCachedFile().getIsolatedElements();
-          if (isolatedElements.size) {
-            Array.from(isolatedElements.values()).forEach(isoElement => mxGraphSetupVisitor.visit(isoElement, null));
+          for (const elementTree of filtered) {
+            mxGraphRenderer.render(elementTree, null);
           }
         })
         .pipe(
@@ -386,11 +388,17 @@ export class EditorService {
     }
   }
 
-  makeDraggable(element: ElementRef, dragElement: ElementRef) {
+  makeDraggable(element: HTMLDivElement, dragElement: HTMLDivElement) {
     const ds = mxUtils.makeDraggable(
       element,
       this.mxGraphAttributeService.graph,
       (_graph, _evt, _cell, x, y) => {
+        const locked = (<any>element).attributes['locked'];
+        dragElement.style.display = locked ? 'none' : 'block';
+        if (locked) {
+          return;
+        }
+
         const elementType: string = (<any>element).attributes['element-type'];
         const urn: string = (<any>element).attributes['urn'];
         this.createElement(x, y, elementType, urn);
@@ -442,50 +450,38 @@ export class EditorService {
         case 'abstractproperty':
           newInstance = DefaultAbstractProperty.createInstance();
           break;
-        default:
-          return;
       }
 
       if (newInstance instanceof DefaultAspect) {
-        this.confirmDialogService
-          .open({
-            phrases: [
-              'You are about to create an Aspect which will transform this Shared Model into an Aspect Model.',
-              'The current name of the Model will be replaced by the name of the Aspect.',
-            ],
-            title: 'Create new Aspect',
-            closeButtonText: 'Cancel',
-            okButtonText: 'Create Aspect',
-          })
-          .subscribe(confirmed => {
-            if (!confirmed) {
-              return;
-            }
-            const rdfModel = this.rdfService.currentRdfModel;
-            if (!rdfModel.originalAbsoluteFileName) {
-              rdfModel.originalAbsoluteFileName = rdfModel.absoluteAspectModelFileName;
-            }
-            this.modelService.addAspect(newInstance);
-            const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(newInstance);
-            rdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
-            metaModelElement ? this.mxGraphService.renderModelElement(metaModelElement, [], x, y) : this.openAlertBox();
-            this.titleService.setTitle(`[Aspect Model] ${rdfModel.absoluteAspectModelFileName} - Aspect Model Editor`);
-          });
+        this.createAspect(newInstance, {x, y});
         return;
       }
 
       const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(newInstance);
-      metaModelElement ? this.mxGraphService.renderModelElement(metaModelElement, [], x, y) : this.openAlertBox();
+      metaModelElement
+        ? this.mxGraphService.renderModelElement(this.filtersService.createNode(metaModelElement), {
+            shapeAttributes: [],
+            geometry: {x, y},
+          })
+        : this.openAlertBox();
+
+      if (metaModelElement instanceof Base) {
+        this.namespaceCacheService.currentCachedFile.resolveElement(metaModelElement);
+      }
     } else {
       const element: BaseMetaModelElement = this.namespaceCacheService.findElementOnExtReference(aspectModelUrn);
       if (!this.mxGraphService.resolveCellByModelElement(element)) {
-        this.mxGraphService.renderModelElement(
-          element,
-          MxGraphVisitorHelper.getElementProperties(element, this.languageSettingsService),
-          x,
-          y
+        const renderer = new MxGraphRenderer(
+          this.mxGraphService,
+          this.mxGraphShapeOverlayService,
+          this.namespaceCacheService,
+          this.languageSettingsService,
+          null
         );
-        this.renderImportedChildElements(element);
+
+        const filteredElements = this.filtersService.filter([element]);
+        renderer.render(filteredElements[0], null);
+
         this.mxGraphService.formatCell(this.mxGraphService.resolveCellByModelElement(element));
         this.mxGraphService.formatShapes();
       } else {
@@ -498,64 +494,37 @@ export class EditorService {
     }
   }
 
-  renderImportedChildElements(modelElement: BaseMetaModelElement) {
-    if (modelElement instanceof DefaultUnit) {
-      return;
-    }
-
-    const context: mxgraph.mxCell = this.mxGraphService.resolveCellByModelElement(modelElement);
-
-    Object.values(modelElement).forEach((value: any) => {
-      if (value instanceof Base) {
-        const elementCell = this.mxGraphService.resolveCellByModelElement(value);
-
-        if (elementCell) {
-          this.mxGraphService.assignToParent(elementCell, context);
+  private createAspect(aspectInstance: DefaultAspect, geometry: ShapeConfiguration['geometry']) {
+    this.confirmDialogService
+      .open({
+        phrases: [
+          'You are about to create an Aspect which will transform this Shared Model into an Aspect Model.',
+          'The current name of the Model will be replaced by the name of the Aspect.',
+        ],
+        title: 'Create new Aspect',
+        closeButtonText: 'Cancel',
+        okButtonText: 'Create Aspect',
+      })
+      .subscribe(confirmed => {
+        if (!confirmed) {
           return;
         }
-
-        this.assignToContext(value, context);
-        this.renderImportedChildElements(value);
-        return;
-      }
-
-      if (Array.isArray(value)) {
-        this.renderMetaModelElementsArray(value, context);
-      }
-    });
-  }
-
-  private renderMetaModelElementsArray(elements: any[], context: mxgraph.mxCell) {
-    for (const entry of elements) {
-      let element = entry instanceof Base ? entry : null;
-
-      if (entry.property && entry.keys) {
-        element = entry.property;
-      } else if (entry.key && entry.value instanceof DefaultEntityValue) {
-        element = entry.value;
-      }
-
-      if (!element) {
-        continue;
-      }
-
-      const elementCell = this.mxGraphService.resolveCellByModelElement(element);
-      if (elementCell) {
-        this.mxGraphService.assignToParent(elementCell, context);
-        continue;
-      }
-
-      this.assignToContext(element, context);
-      this.renderImportedChildElements(element);
-    }
-  }
-
-  private assignToContext(element: BaseMetaModelElement, context: mxCell) {
-    const childCell = this.mxGraphService.renderModelElement(
-      element,
-      MxGraphVisitorHelper.getElementProperties(element, this.languageSettingsService)
-    );
-    this.mxGraphService.assignToParent(childCell, context);
+        const rdfModel = this.rdfService.currentRdfModel;
+        if (!rdfModel.originalAbsoluteFileName) {
+          rdfModel.originalAbsoluteFileName = rdfModel.absoluteAspectModelFileName;
+        }
+        this.modelService.addAspect(aspectInstance);
+        rdfModel.setAspect(aspectInstance.aspectModelUrn);
+        const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(aspectInstance);
+        rdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
+        metaModelElement
+          ? this.mxGraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
+              shapeAttributes: [],
+              geometry,
+            })
+          : this.openAlertBox();
+        this.titleService.setTitle(`[Aspect Model] ${rdfModel.absoluteAspectModelFileName} - Aspect Model Editor`);
+      });
   }
 
   deleteSelectedElements() {
@@ -777,7 +746,8 @@ export class EditorService {
   }
 
   private saveCompleteError(error) {
-    this.logService.logError(`Error occurred while saving the current model (${error})`);
-    this.notificationsService.error({title: 'Saving completed with errors'});
+    console.log(error);
+    this.logService.logError(`Error occurred while saving the current model (${JSON.stringify(error)})`);
+    this.notificationsService.error({title: 'Saving completed with errors', message: error?.error?.error?.message || ''});
   }
 }

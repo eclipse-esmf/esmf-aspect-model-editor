@@ -35,7 +35,7 @@ export class AbstractPropertyModelService extends BaseModelService {
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement: DefaultAbstractProperty = MxGraphHelper.getModelElement(cell);
+    const metaModelElement = MxGraphHelper.getModelElement<DefaultAbstractProperty>(cell);
     metaModelElement.exampleValue = form.exampleValue;
 
     super.update(cell, form);
@@ -47,7 +47,7 @@ export class AbstractPropertyModelService extends BaseModelService {
   delete(cell: mxgraph.mxCell) {
     this.updateExtends(cell);
     super.delete(cell);
-    this.mxGraphService.graph.removeCells([cell]);
+    this.mxGraphService.removeCells([cell]);
   }
 
   private updatePropertiesNames(cell: mxgraph.mxCell) {
@@ -56,19 +56,22 @@ export class AbstractPropertyModelService extends BaseModelService {
     const modelElement = MxGraphHelper.getModelElement(cell);
 
     for (const parentCell of parents) {
-      const parent = MxGraphHelper.getModelElement(parentCell);
-      parent.name = `[${modelElement.name}]`;
-      parent.aspectModelUrn = `${parent.aspectModelUrn.split('#')[0]}#${parent.name}`;
+      const parentElement = MxGraphHelper.getModelElement(parentCell);
+      parentElement.name = `[${modelElement.name}]`;
+      parentElement.aspectModelUrn = `${parentElement.aspectModelUrn.split('#')[0]}#${parentElement.name}`;
       this.updateCell(parentCell);
     }
   }
 
   private updateExtends(cell: mxgraph.mxCell, isDeleting = true) {
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
+    const modelElement = MxGraphHelper.getModelElement(cell);
+
     for (const edge of incomingEdges) {
       const element = MxGraphHelper.getModelElement<CanExtend>(edge.source);
       if (element instanceof DefaultProperty && isDeleting) {
-        this.mxGraphService.graph.removeCells([edge.source]);
+        MxGraphHelper.removeRelation(element, modelElement);
+        this.mxGraphService.removeCells([edge.source]);
         continue;
       }
 

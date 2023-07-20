@@ -15,7 +15,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as locale from 'locale-codes';
 import {Observable, of} from 'rxjs';
-import {DeleteLanguageInformationVisitor, MxGraphAttributeService, MxGraphService, MxGraphShapeSelectorService} from '@ame/mx-graph';
+import {ShapeLanguageRemover, MxGraphAttributeService, MxGraphService, MxGraphShapeSelectorService} from '@ame/mx-graph';
 import {LanguageSettingsService} from '../../services';
 import {AlertService, LoadingScreenService, LogService} from '@ame/shared';
 import {ModelService} from '@ame/rdf/services';
@@ -123,13 +123,13 @@ export class LanguageSettingsComponent implements OnInit, AfterViewInit {
 
       try {
         this.mxGraphService.updateGraph(() => {
-          new DeleteLanguageInformationVisitor(
+          new ShapeLanguageRemover(
             this.deletedLanguages.map(entry => entry.languageCode),
             this.mxGraphService,
             this.mxGraphShapeSelectorService,
             this.logService,
             this.mxGraphAttributeService
-          ).visit();
+          ).removeUnnecessaryLanguages();
         });
       } finally {
         loadingScreen.close();

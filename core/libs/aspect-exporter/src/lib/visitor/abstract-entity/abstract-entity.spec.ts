@@ -80,13 +80,8 @@ describe('Abstract Entity Visitor', () => {
     service = TestBed.inject(AbstractEntityVisitor);
   });
 
-  const getEntityCell = () => ({
-    getMetaModelElement: jest.fn(() => entity),
-  });
-
   it('should update store width default properties', () => {
-    const entityCell = getEntityCell();
-    service.visit(entityCell as any);
+    service.visit(entity);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(entity, {
       preferredName: [],
@@ -97,9 +92,8 @@ describe('Abstract Entity Visitor', () => {
   });
 
   it('should update entity name', () => {
-    const entityCell = getEntityCell();
     entity.name = 'entity2';
-    service.visit(entityCell as any);
+    service.visit(entity);
     expect(rdfNodeService.update).toHaveBeenCalledWith(entity, {
       preferredName: [],
       description: [],

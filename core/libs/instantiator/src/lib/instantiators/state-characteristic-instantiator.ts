@@ -15,7 +15,8 @@ import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad, Util} from 'n3';
 import {EnumerationCharacteristicInstantiator} from './enumeration-characteristic-instantiator';
 import {EntityValueInstantiator} from './entity-value-instantiator';
-import {Characteristic, DefaultEntityValue, DefaultState, Enumeration} from '@ame/meta-model';
+import {Characteristic, DefaultEntityValue, DefaultEnumeration, DefaultState, Enumeration} from '@ame/meta-model';
+import {syncElementWithChildren} from '../helpers';
 
 export class StateCharacteristicInstantiator extends EnumerationCharacteristicInstantiator {
   constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -23,25 +24,37 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
   }
 
   protected processElement(quads: Array<Quad>): Characteristic {
-    let defaultState = this.cachedFile.getElement<DefaultState>(quads[0]?.subject.value, this.isIsolated);
+    let defaultState = this.cachedFile.getElement<DefaultState>(quads[0]?.subject.value);
     if (defaultState) {
       return defaultState;
     }
 
     const sammC = this.metaModelElementInstantiator.sammC;
-    defaultState = <DefaultState>super.processElement(quads);
+    const defaultEnumeration = <DefaultEnumeration>super.processElement(quads);
+
+    defaultState = new DefaultState(
+      defaultEnumeration.metaModelVersion,
+      defaultEnumeration.aspectModelUrn,
+      defaultEnumeration.name,
+      defaultEnumeration.values,
+      null,
+      defaultEnumeration.dataType
+    );
+
     defaultState.fileName = this.metaModelElementInstantiator.fileName;
 
     quads.forEach(quad => {
       if (sammC.isDefaultValueProperty(quad.predicate.value)) {
         defaultState.defaultValue = this.getDefaultValue(quad);
+        if (defaultState.defaultValue instanceof DefaultEntityValue) defaultState.children.push(defaultState.defaultValue);
       }
     });
 
+    syncElementWithChildren(defaultState);
     return defaultState;
   }
 
-  protected creatEnumerationObject(): Enumeration {
+  protected createEnumerationObject(): Enumeration {
     return new DefaultState(null, null, null, null, null);
   }
 

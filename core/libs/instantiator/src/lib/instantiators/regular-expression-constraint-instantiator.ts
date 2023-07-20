@@ -22,10 +22,7 @@ export class RegularExpressionConstraintInstantiator extends ConstraintInstantia
   }
 
   protected processElement(quads: Array<Quad>): Constraint {
-    let regularExpressionConstraint = this.cachedFile.getElement<DefaultRegularExpressionConstraint>(
-      quads[0]?.subject.value,
-      this.isIsolated
-    );
+    let regularExpressionConstraint = this.cachedFile.getElement<DefaultRegularExpressionConstraint>(quads[0]?.subject.value);
     if (regularExpressionConstraint) {
       return regularExpressionConstraint;
     }

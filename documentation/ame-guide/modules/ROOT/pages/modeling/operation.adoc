@@ -1,0 +1,35 @@
+= Operation
+
+[[edit-operations]]
+== Operation attributes
+
+Operations can have multiple inputs and one output:
+
+[cols="30%,70%"]
+|===
+|_Inputs_
+|A list of references to Properties that describe the input to the Operation. The attribute must be present but the list may be empty.
+|_Outputs_
+|A single reference to a Property that describes the output of the Operation.
+|===
+
+Multiple Properties can be entered for the Input attribute.
+
+To add Properties to the Input or Output attribute, proceed as follows:
+
+. In the xref:modeling/edit-elements.adoc#edit-elements-general[Edit dialog], select the Input or Output attribute field.
+. Start typing a new or existing Property name.
+. In the displayed drop-down menu, click the new or existing Property name to add it as a value for the Input/Output attribute.
+
+→ Now a Property has been added to the Input/Output attribute of the Operation.
+
+[cols="1,1"]
+|===
+|image:operation-input.png[Operation input attribute drop-down menu,width=90%]
+|image:operation-output.png[Operation output attribute drop-down menu,width=90%]
+|image:operation-input-chiplist.png[Operation input attribute result,width=90%]
+|image:operation-output-result.png[Operation output attribute result,width=90%]
+|===
+
+NOTE: Currently, no Properties can be optionally set in Operations.
+See https://eclipse-esmf.github.io/samm-specification/2.0.0/modeling-guidelines.html#optional-properties[Optional Properties (SAMM 2.0.0)^,opts=nofollow].

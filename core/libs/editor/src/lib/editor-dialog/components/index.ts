@@ -25,3 +25,5 @@ export * from './units';
 export * from './events';
 export * from './abstract-entities';
 export * from './abstract-property';
+export * from './element-list/element-list.component';
+export * from './element-list/element-list.pipe';

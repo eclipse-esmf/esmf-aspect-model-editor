@@ -1,0 +1,121 @@
+# Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+#
+# See the AUTHORS file(s) distributed with this work for
+# additional information regarding authorship.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.0.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.0.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.0.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:org.eclipse.digitaltwin:1.0.0#> .
+
+:PredefinedAndCustomCharacteristicsSameName a samm:Aspect;
+    samm:properties (
+        :withCustomBoolean
+        :withPredefinedBoolean
+        :withCustomLanguage
+        :withPredefinedLanguage
+        :withCustomLocale
+        :withPredefinedLocale
+        :withCustomMultiLanguageText
+        :withPredefinedMultiLanguageText
+        :withCustomMimeType
+        :withPredefinedMimeType
+        :withCustomResourcePath
+        :withPredefinedResourcePath
+        :withCustomText
+        :withPredefinedText
+        :withCustomTimestamp
+        :withPredefinedTimestamp
+    );
+    samm:operations ();
+    samm:events ().
+
+:withCustomBoolean a samm:Property ;
+    samm:characteristic :Boolean .
+
+:withPredefinedBoolean a samm:Property ;
+    samm:characteristic samm-c:Boolean .
+
+:withCustomLanguage a samm:Property ;
+    samm:characteristic :Language .
+
+:withPredefinedLanguage a samm:Property ;
+    samm:characteristic samm-c:Language .
+
+:withCustomLocale a samm:Property ;
+    samm:characteristic :Locale .
+
+:withPredefinedLocale a samm:Property ;
+    samm:characteristic samm-c:Locale .
+
+:withCustomMultiLanguageText a samm:Property ;
+    samm:characteristic :MultiLanguageText .
+
+:withPredefinedMultiLanguageText a samm:Property ;
+    samm:characteristic samm-c:MultiLanguageText .
+
+:withCustomMimeType a samm:Property ;
+    samm:characteristic :MimeType .
+
+:withPredefinedMimeType a samm:Property ;
+    samm:characteristic samm-c:MimeType .
+
+:withCustomResourcePath a samm:Property ;
+    samm:characteristic :ResourcePath .
+
+:withPredefinedResourcePath a samm:Property ;
+    samm:characteristic samm-c:ResourcePath .
+
+:withCustomText a samm:Property ;
+    samm:characteristic :Text .
+
+:withPredefinedText a samm:Property ;
+    samm:characteristic samm-c:Text .
+
+:withCustomTimestamp a samm:Property ;
+    samm:characteristic :Timestamp .
+
+:withPredefinedTimestamp a samm:Property ;
+    samm:characteristic samm-c:Timestamp .
+
+:Boolean a samm:Characteristic;
+    samm:description "Custom 'Boolean' characteristic."@en ;
+    samm:dataType xsd:boolean .
+
+:Language a samm:Characteristic;
+    samm:description "Custom 'Language' characteristic."@en ;
+    samm:dataType xsd:string .
+
+:Locale a samm:Characteristic;
+    samm:description "Custom 'Locale' characteristic."@en ;
+    samm:dataType xsd:string .
+
+:MultiLanguageText a samm:Characteristic;
+    samm:description "Custom 'MultiLanguageText' characteristic."@en ;
+    samm:dataType rdf:langString .
+
+:MimeType a samm:Characteristic;
+    samm:description "Custom 'MimeType' characteristic."@en ;
+    samm:dataType xsd:string .
+
+:ResourcePath a samm:Characteristic;
+    samm:description "Custom 'ResourcePath' characteristic."@en ;
+    samm:dataType xsd:anyURI .
+
+:Text a samm:Characteristic;
+    samm:description "Custom 'Text' characteristic."@en ;
+    samm:dataType xsd:string .
+
+:Timestamp a samm:Characteristic;
+    samm:description "Custom 'Timestamp' characteristic."@en ;
+    samm:dataType xsd:dateTime .

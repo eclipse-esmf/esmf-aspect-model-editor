@@ -14,7 +14,7 @@
 import {Injectable, Injector} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphAttributeService, MxGraphShapeSelectorService} from '.';
-import {MxGraphHelper, MxGraphVisitorHelper, PropertyInformation} from '../helpers';
+import {MxGraphHelper, MxGraphVisitorHelper, ShapeAttribute} from '../helpers';
 import {mxCellOverlay, mxConstants, mxEvent, mxImage} from '../providers';
 import {
   BaseMetaModelElement,
@@ -36,9 +36,10 @@ import {
 } from '@ame/meta-model';
 import {BrowserService} from '@ame/shared';
 import {ShapeConnectorService} from '@ame/connection';
-import {ModelInfo, ModelStyleResolver} from '../models';
+import {ModelInfo} from '../models';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {RdfService} from '@ame/rdf/services';
+import {FiltersService, ModelNode} from '@ame/loader-filters';
 
 @Injectable()
 export class MxGraphShapeOverlayService {
@@ -46,12 +47,15 @@ export class MxGraphShapeOverlayService {
     private browserService: BrowserService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private mxGraphAttributeService: MxGraphAttributeService,
+    private filtersService: FiltersService,
     private injector: Injector
   ) {}
 
   public removeOverlay(cell: mxgraph.mxCell, overlay: mxgraph.mxCellOverlay): void {
     if (overlay) {
       this.mxGraphAttributeService.graph.removeCellOverlay(cell, overlay);
+    } else {
+      this.mxGraphAttributeService.graph.removeCellOverlay(cell);
     }
   }
 
@@ -61,7 +65,13 @@ export class MxGraphShapeOverlayService {
    * @param cell mx element
    */
   public addTopShapeOverlay(cell: mxgraph.mxCell): void {
-    if (cell.style?.includes('characteristic') && !(MxGraphHelper.getModelElement(cell) instanceof DefaultEither)) {
+    const modelElement = MxGraphHelper.getModelElement(cell);
+
+    if (!this.filtersService.currentFilter.hasOverlay(modelElement)) {
+      return;
+    }
+
+    if (cell.style?.includes('characteristic') && !(modelElement instanceof DefaultEither)) {
       const overlay = this.createIconShapeOverlay('add-outline-frame', 'Add Trait');
       overlay.align = mxConstants.ALIGN_CENTER;
       overlay.verticalAlign = mxConstants.ALIGN_TOP;
@@ -159,8 +169,12 @@ export class MxGraphShapeOverlayService {
    * @param cell mx element
    */
   addBottomShapeOverlay(cell: mxgraph.mxCell): void {
+    const modelElement = MxGraphHelper.getModelElement(cell);
+    if (!this.filtersService.currentFilter.hasOverlay(modelElement)) {
+      return;
+    }
+
     if (cell.style !== 'unit' && cell.style !== 'constraint' && cell.style !== 'entityValue') {
-      const modelElement: BaseMetaModelElement = MxGraphHelper.getModelElement(cell);
       let overlayTooltip = 'Add ';
       let modelInfo = ModelInfo.IS_CHARACTERISTIC;
 
@@ -168,7 +182,7 @@ export class MxGraphShapeOverlayService {
         return;
       }
 
-      if (modelElement?.['isPredefined']?.()) {
+      if (modelElement?.isPredefined()) {
         return;
       }
 
@@ -234,6 +248,11 @@ export class MxGraphShapeOverlayService {
   }
 
   private createAddIconShapeOverlay(overlayTooltip: string, cell: mxgraph.mxCell, modelInfo: ModelInfo) {
+    const modelElement = MxGraphHelper.getModelElement(cell);
+    if (!this.filtersService.currentFilter.hasOverlay(modelElement)) {
+      return;
+    }
+
     const overlay = this.createIconShapeOverlay('add-frame', overlayTooltip);
     overlay.align = mxConstants.ALIGN_CENTER;
     this.addShapeOverlayListener(overlay, cell, modelInfo);
@@ -247,6 +266,10 @@ export class MxGraphShapeOverlayService {
     cell: mxgraph.mxCell,
     modelInfo: ModelInfo
   ) {
+    const modelElement = MxGraphHelper.getModelElement(cell);
+    if (!this.filtersService.currentFilter.hasOverlay(modelElement)) {
+      return;
+    }
     const overlay = this.createIconShapeOverlay(svg, overlayTooltip);
     overlay.align = align;
     overlay.offset.x = overlay.offset.x - offset;
@@ -321,6 +344,10 @@ export class MxGraphShapeOverlayService {
    * Add icon in to mxGraph cell for complex data type enumerations
    */
   addComplexEnumerationShapeOverlay(cell: mxgraph.mxCell): void {
+    const modelElement = MxGraphHelper.getModelElement(cell);
+    if (!this.filtersService.currentFilter.hasOverlay(modelElement)) {
+      return;
+    }
     if (!this.mxGraphAttributeService.graph.isCellCollapsed(cell)) {
       const overlay = this.createIconShapeOverlay('batch', 'Complex data types Enumeration');
 
@@ -367,7 +394,7 @@ export class MxGraphShapeOverlayService {
   }
 
   public checkAndAddShapeActionIcon(incomingEdges: Array<mxgraph.mxCell>, modelElement: BaseMetaModelElement): void {
-    if (!incomingEdges.length) {
+    if (!incomingEdges.length || !this.filtersService.currentFilter.hasOverlay(modelElement)) {
       return;
     }
 
@@ -391,33 +418,33 @@ export class MxGraphShapeOverlayService {
   }
 
   public createShape(
-    modelElement: BaseMetaModelElement,
+    node: ModelNode<BaseMetaModelElement>,
     geometry?: mxgraph.mxGeometry,
-    cellConfiguration?: PropertyInformation[]
+    cellConfiguration?: ShapeAttribute[]
   ): mxgraph.mxCell {
     const graph = this.mxGraphAttributeService.graph;
     const element = document.createElement('model');
 
-    element.setAttribute('label', modelElement.name);
+    element.setAttribute('label', node.element.name);
     element.setAttribute('parent', 'yes');
-    element.setAttribute('name', modelElement.name);
+    element.setAttribute('name', node.element.name);
 
     const modelElementCell = graph.insertVertex(
       graph.getDefaultParent(),
-      modelElement.name,
+      node.element.name,
       element,
       geometry.x,
       geometry.y,
       geometry.width,
       geometry.height,
-      ModelStyleResolver.resolve(modelElement)
+      node.shape.mxGraphStyle
     );
 
     const rdfService = this.injector.get(RdfService);
 
-    modelElementCell.setId(modelElement.name);
+    modelElementCell.setId(node.element.name);
     modelElementCell['configuration'] = {
-      baseProperties: MxGraphVisitorHelper.getModelInfo(modelElement, rdfService.currentRdfModel),
+      baseProperties: MxGraphVisitorHelper.getModelInfo(node.element, rdfService.currentRdfModel),
       fields: cellConfiguration,
     };
     graph.foldingEnabled = false;

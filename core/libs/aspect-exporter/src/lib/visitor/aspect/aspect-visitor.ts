@@ -13,9 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {DefaultAspect} from '@ame/meta-model';
-import {MxGraphHelper} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
-import {mxgraph} from 'mxgraph-factory';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
@@ -26,8 +24,7 @@ export class AspectVisitor extends BaseVisitor<DefaultAspect> {
     super(rdfService);
   }
 
-  visit(cell: mxgraph.mxCell): DefaultAspect {
-    const aspect: DefaultAspect = MxGraphHelper.getModelElement(cell);
+  visit(aspect: DefaultAspect): DefaultAspect {
     this.setPrefix(aspect.aspectModelUrn);
     aspect.aspectModelUrn = `${aspect.aspectModelUrn.split('#')[0]}#${aspect.name}`;
     this.updateProperties(aspect);

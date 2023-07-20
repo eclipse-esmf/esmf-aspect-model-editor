@@ -15,6 +15,7 @@ import {DefaultOperation, DefaultProperty, Operation, OverWrittenProperty} from 
 import {DataFactory} from 'n3';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {InstantiatorListElement, RdfModel} from '@ame/rdf/utils';
+import {syncElementWithChildren} from '../helpers';
 
 export class OperationInstantiator {
   private get rdfModel() {
@@ -32,7 +33,7 @@ export class OperationInstantiator {
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
   public createOperation(listElement: InstantiatorListElement): Operation {
-    const operation = this.currentCachedFile.getElement<DefaultOperation>(listElement.quad.value, this.isIsolated);
+    const operation = this.currentCachedFile.getElement<DefaultOperation>(listElement.quad.value);
     return operation ? operation : this.constructOperation(listElement);
   }
 
@@ -46,14 +47,17 @@ export class OperationInstantiator {
 
     this.metaModelElementInstantiator.initBaseProperties(quads, operation, this.rdfModel);
     // resolving element to not enter in infinite loop
-    this.currentCachedFile.resolveElement(operation, this.isIsolated);
+    this.currentCachedFile.resolveElement(operation);
 
     quads.forEach(quad => {
       if (samm.isInputProperty(quad.predicate.value)) {
         operation.input = this.metaModelElementInstantiator.getProperties(DataFactory.namedNode(quad.subject.value), samm.InputProperty());
+        operation.input && operation.children.push(...operation.input.map(i => i.property));
       } else if (samm.isOutputProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.loadOutputProperty(quad, false, (property: DefaultProperty) => {
           operation.output = {keys: {}, property: property};
+          if (property) operation.children.push(property);
+          syncElementWithChildren(operation);
         });
       }
     });

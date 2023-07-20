@@ -50,7 +50,7 @@ import * as locale from 'locale-codes';
 import {ModelBaseProperties} from '../models';
 import {MxGraphHelper} from './mx-graph-helper';
 
-export interface PropertyInformation {
+export interface ShapeAttribute {
   label: string;
   key: string;
   lang?: string;
@@ -58,7 +58,7 @@ export interface PropertyInformation {
 }
 
 export class MxGraphVisitorHelper {
-  static addDataType(metaModelElement: Characteristic): PropertyInformation {
+  static addDataType(metaModelElement: Characteristic): ShapeAttribute {
     if (
       metaModelElement.dataType &&
       ((metaModelElement.dataType.getUrn() &&
@@ -75,7 +75,7 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addValues(characteristic: Characteristic): PropertyInformation {
+  static addValues(characteristic: Characteristic): ShapeAttribute {
     if (
       characteristic instanceof DefaultEnumeration &&
       characteristic.values?.length &&
@@ -89,7 +89,7 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addDefaultValue(characteristic: Characteristic): PropertyInformation {
+  static addDefaultValue(characteristic: Characteristic): ShapeAttribute {
     if (characteristic instanceof DefaultState && characteristic.defaultValue) {
       return {
         label: `defaultValue = ${RdfModelUtil.getValuesWithoutUrnDefinition(Array(characteristic.defaultValue))}`,
@@ -99,10 +99,7 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addLocalizedDescriptions(
-    metaModelElement: CanExtend | Base,
-    languageSettingsService: LanguageSettingsService
-  ): PropertyInformation[] {
+  static addLocalizedDescriptions(metaModelElement: CanExtend | Base, languageSettingsService: LanguageSettingsService): ShapeAttribute[] {
     const languages: string[] =
       metaModelElement.getAllLocalesDescriptions().length >= ((metaModelElement as CanExtend)?.extendedDescription?.size || 0)
         ? metaModelElement.getAllLocalesDescriptions()
@@ -131,7 +128,7 @@ export class MxGraphVisitorHelper {
   static addLocalizedPreferredNames(
     metaModelElement: CanExtend | Base,
     languageSettingsService: LanguageSettingsService
-  ): PropertyInformation[] {
+  ): ShapeAttribute[] {
     const languages: string[] =
       metaModelElement.getAllLocalesPreferredNames().length >= ((metaModelElement as CanExtend)?.extendedPreferredName?.size || 0)
         ? metaModelElement.getAllLocalesPreferredNames()
@@ -156,14 +153,14 @@ export class MxGraphVisitorHelper {
       .filter(e => !!e);
   }
 
-  static addExtends(element: any): PropertyInformation {
+  static addExtends(element: any): ShapeAttribute {
     if (element.extendedElement !== null && element.extendedElement !== undefined) {
       return {label: `extends = ${element.extendedElement.name}`, key: 'extends'};
     }
     return null;
   }
 
-  static addValue(constraint: Constraint): PropertyInformation {
+  static addValue(constraint: Constraint): ShapeAttribute {
     if (constraint instanceof DefaultEncodingConstraint || constraint instanceof DefaultRegularExpressionConstraint) {
       if (constraint.value !== null && constraint.value !== undefined) {
         return {label: `value = ${RdfModelUtil.getValueWithoutUrnDefinition(constraint.value)}`, key: 'value'};
@@ -172,7 +169,7 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addSee(metaModelElement: Base): PropertyInformation {
+  static addSee(metaModelElement: Base): ShapeAttribute {
     if (metaModelElement.getSeeReferences()?.length > 0 || (metaModelElement as CanExtend)?.extendedSee?.length) {
       let extended = false;
       let elements = (metaModelElement.getSeeReferences() || []).map(e =>
@@ -195,7 +192,7 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addMinValue(constraint: Constraint): PropertyInformation {
+  static addMinValue(constraint: Constraint): ShapeAttribute {
     if (
       (constraint instanceof DefaultLengthConstraint || constraint instanceof DefaultRangeConstraint) &&
       constraint.minValue !== null &&
@@ -206,7 +203,7 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addMaxValue(constraint: Constraint): PropertyInformation {
+  static addMaxValue(constraint: Constraint): ShapeAttribute {
     if (
       (constraint instanceof DefaultLengthConstraint || constraint instanceof DefaultRangeConstraint) &&
       constraint.maxValue !== null &&
@@ -217,8 +214,8 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addBoundDefinition(constraint: Constraint): PropertyInformation[] {
-    const bounds: PropertyInformation[] = [];
+  static addBoundDefinition(constraint: Constraint): ShapeAttribute[] {
+    const bounds: ShapeAttribute[] = [];
     if (constraint instanceof DefaultRangeConstraint) {
       if (constraint.upperBoundDefinition) {
         bounds.push({label: `upperBoundDefinition = ${constraint.upperBoundDefinition}`, key: 'upperBoundDefinition'});
@@ -230,84 +227,84 @@ export class MxGraphVisitorHelper {
     return bounds;
   }
 
-  static addLanguageCode(constraint: Constraint): PropertyInformation {
+  static addLanguageCode(constraint: Constraint): ShapeAttribute {
     if (constraint instanceof DefaultLanguageConstraint && constraint.languageCode !== null && constraint.languageCode !== undefined) {
       return {label: `languageCode = ${constraint.languageCode}`, key: 'languageCode'};
     }
     return null;
   }
 
-  static addScale(constraint: Constraint): PropertyInformation {
+  static addScale(constraint: Constraint): ShapeAttribute {
     if (constraint instanceof DefaultFixedPointConstraint && constraint.scale !== null && constraint.scale !== undefined) {
       return {label: `scale = ${constraint.scale}`, key: 'scale'};
     }
     return null;
   }
 
-  static addInteger(constraint: Constraint): PropertyInformation {
+  static addInteger(constraint: Constraint): ShapeAttribute {
     if (constraint instanceof DefaultFixedPointConstraint && constraint.integer !== null && constraint.integer !== undefined) {
       return {label: `integer = ${constraint.integer}`, key: 'integer'};
     }
     return null;
   }
 
-  static addLocaleCode(constraint: Constraint): PropertyInformation {
+  static addLocaleCode(constraint: Constraint): ShapeAttribute {
     if (constraint instanceof DefaultLocaleConstraint && constraint.localeCode) {
       return {label: `localeCode = ${constraint.localeCode}`, key: 'localeCode'};
     }
     return null;
   }
 
-  static addConversionFactor(unit: Unit): PropertyInformation {
+  static addConversionFactor(unit: Unit): ShapeAttribute {
     if (unit.conversionFactor) {
       return {label: `conversionFactor = ${unit.conversionFactor}`, key: 'conversionFactor'};
     }
     return null;
   }
 
-  static addNumericConversionFactor(unit: Unit): PropertyInformation {
-    if (unit.numericConversionFactor) {
-      return {label: `numericConversionFactor = ${unit.numericConversionFactor}`, key: 'numericConversionFactor'};
+  static addNumericConversionFactor(unit: Unit): ShapeAttribute {
+    if (unit.conversionFactor) {
+      return {label: `numericConversionFactor = ${unit.numericConversionFactor}`, key: 'conversionFactor'};
     }
     return null;
   }
 
-  static addSymbol(unit: Unit): PropertyInformation {
+  static addSymbol(unit: Unit): ShapeAttribute {
     if (unit.symbol) {
       return {label: `symbol = ${unit.symbol}`, key: 'symbol'};
     }
     return null;
   }
 
-  static addCode(unit: Unit): PropertyInformation {
+  static addCode(unit: Unit): ShapeAttribute {
     if (unit.code) {
       return {label: `code = ${unit.code}`, key: 'code'};
     }
     return null;
   }
 
-  static addReferenceUnit(unit: Unit): PropertyInformation {
+  static addReferenceUnit(unit: Unit): ShapeAttribute {
     if (unit.referenceUnit) {
       return {label: `referenceUnit = ${unit.referenceUnit.name}`, key: 'referenceUnit'};
     }
     return null;
   }
 
-  static addExampleValue(property: Property): PropertyInformation {
+  static addExampleValue(property: Property): ShapeAttribute {
     if (property.exampleValue) {
       return {label: `exampleValue = ${property.exampleValue}`, key: 'exampleValue'};
     }
     return null;
   }
 
-  static addIsCollectionAspect(aspect: Aspect): PropertyInformation {
+  static addIsCollectionAspect(aspect: Aspect): ShapeAttribute {
     if (aspect.isCollectionAspect) {
       return {label: `isCollectionAspect = ${aspect.isCollectionAspect}`, key: 'isCollectionAspect'};
     }
     return null;
   }
 
-  static addQuantityKinds(quantityKinds: Array<QuantityKind>): PropertyInformation {
+  static addQuantityKinds(quantityKinds: Array<QuantityKind>): ShapeAttribute {
     if (quantityKinds) {
       const quantityKindLabels = [];
       quantityKinds.forEach(quantityKind => {
@@ -323,14 +320,14 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addDeconstructionRule(characteristic: Characteristic): PropertyInformation {
+  static addDeconstructionRule(characteristic: Characteristic): ShapeAttribute {
     if (characteristic instanceof DefaultStructuredValue && characteristic.deconstructionRule) {
       return {label: `deconstructionRule = ${characteristic.deconstructionRule}`, key: 'deconstructionRule'};
     }
     return null;
   }
 
-  static addElements(characteristic: Characteristic): PropertyInformation {
+  static addElements(characteristic: Characteristic): ShapeAttribute {
     if (characteristic instanceof DefaultStructuredValue && characteristic.elements && characteristic.elements.length > 0) {
       return {label: `elements = ${this.getElementList(characteristic).join(' ')}`, key: 'elements'};
     }

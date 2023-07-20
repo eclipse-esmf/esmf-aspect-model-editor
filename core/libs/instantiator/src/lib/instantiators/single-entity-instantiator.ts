@@ -13,7 +13,8 @@
 import {CharacteristicInstantiator} from './characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad} from 'n3';
-import {Characteristic, DefaultSingleEntity, Type} from '@ame/meta-model';
+import {Characteristic, DefaultEntity, DefaultSingleEntity, Type} from '@ame/meta-model';
+import {syncElementWithChildren} from '../helpers';
 
 export class SingleEntityInstantiator extends CharacteristicInstantiator {
   constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -21,7 +22,7 @@ export class SingleEntityInstantiator extends CharacteristicInstantiator {
   }
 
   protected processElement(quads: Array<Quad>): Characteristic {
-    let defaultSingleEntity = this.cachedFile.getElement<DefaultSingleEntity>(quads[0]?.subject.value, this.isIsolated);
+    let defaultSingleEntity = this.cachedFile.getElement<DefaultSingleEntity>(quads[0]?.subject.value);
     if (defaultSingleEntity) {
       return defaultSingleEntity;
     }
@@ -36,6 +37,8 @@ export class SingleEntityInstantiator extends CharacteristicInstantiator {
       if (samm.isDataTypeProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getDataType(quad, (entity: Type) => {
           defaultSingleEntity.dataType = entity;
+          if (entity instanceof DefaultEntity) defaultSingleEntity.children.push(entity);
+          syncElementWithChildren(defaultSingleEntity);
         });
       }
     });

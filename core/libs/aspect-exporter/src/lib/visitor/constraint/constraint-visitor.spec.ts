@@ -116,13 +116,8 @@ describe('Constraint Visitor', () => {
     service = TestBed.inject(ConstraintVisitor);
   });
 
-  const getConstraintCell = (c: DefaultConstraint) => ({
-    getMetaModelElement: jest.fn(() => c),
-  });
-
   it('should update store with default constraint properties', () => {
-    const constraintCell = getConstraintCell(constraint);
-    service.visit(constraintCell as any);
+    service.visit(constraint);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(constraint, {
       preferredName: [],
@@ -132,8 +127,7 @@ describe('Constraint Visitor', () => {
   });
 
   it('should update store with default range constraint properties', () => {
-    const constraintCell = getConstraintCell(rangeConstraint);
-    service.visit(constraintCell as any);
+    service.visit(rangeConstraint);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(rangeConstraint, {
       preferredName: [],
@@ -149,8 +143,7 @@ describe('Constraint Visitor', () => {
   });
 
   it('should update store with default fixed point constraint properties', () => {
-    const constraintCell = getConstraintCell(fixedPointConstraint);
-    service.visit(constraintCell as any);
+    service.visit(fixedPointConstraint);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(fixedPointConstraint, {
       preferredName: [],
@@ -164,8 +157,7 @@ describe('Constraint Visitor', () => {
   });
 
   it('should update store with default length constraint properties', () => {
-    const constraintCell = getConstraintCell(lengthConstraint);
-    service.visit(constraintCell as any);
+    service.visit(lengthConstraint);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(lengthConstraint, {
       preferredName: [],
@@ -179,8 +171,7 @@ describe('Constraint Visitor', () => {
   });
 
   it('should update store with default language constraint properties', () => {
-    const constraintCell = getConstraintCell(languageConstraint);
-    service.visit(constraintCell as any);
+    service.visit(languageConstraint);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(languageConstraint, {
       preferredName: [],
@@ -193,8 +184,7 @@ describe('Constraint Visitor', () => {
   });
 
   it('should update store with default encoding constraint properties', () => {
-    const constraintCell = getConstraintCell(encodingConstraint);
-    service.visit(constraintCell as any);
+    service.visit(encodingConstraint);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(encodingConstraint, {
       preferredName: [],
@@ -207,8 +197,7 @@ describe('Constraint Visitor', () => {
   });
 
   it('should update store with default regular expression constraint properties', () => {
-    const constraintCell = getConstraintCell(regularExpressionConstraint);
-    service.visit(constraintCell as any);
+    service.visit(regularExpressionConstraint);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(regularExpressionConstraint, {
       preferredName: [],
@@ -221,8 +210,7 @@ describe('Constraint Visitor', () => {
   });
 
   it('should update store with default locale constraint properties', () => {
-    const constraintCell = getConstraintCell(localeConstraint);
-    service.visit(constraintCell as any);
+    service.visit(localeConstraint);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(localeConstraint, {
       preferredName: [],

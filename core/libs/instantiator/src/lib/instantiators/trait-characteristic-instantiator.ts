@@ -14,6 +14,7 @@ import {CharacteristicInstantiator} from './characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad} from 'n3';
 import {Characteristic, Constraint, DefaultTrait} from '@ame/meta-model';
+import {syncElementWithChildren} from '../helpers';
 
 export class TraitCharacteristicInstantiator extends CharacteristicInstantiator {
   constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -21,7 +22,7 @@ export class TraitCharacteristicInstantiator extends CharacteristicInstantiator 
   }
 
   protected processElement(quads: Array<Quad>): Characteristic {
-    let defaultTrait = this.cachedFile.getElement<DefaultTrait>(quads[0]?.subject.value, this.isIsolated);
+    let defaultTrait = this.cachedFile.getElement<DefaultTrait>(quads[0]?.subject.value);
     if (defaultTrait) {
       return defaultTrait;
     }
@@ -32,14 +33,16 @@ export class TraitCharacteristicInstantiator extends CharacteristicInstantiator 
 
     quads.forEach(quad => {
       if (sammC.isBaseCharacteristicProperty(quad.predicate.value)) {
-        this.metaModelElementInstantiator.loadCharacteristic(
-          quad,
-          false,
-          (extReference: Characteristic) => (defaultTrait.baseCharacteristic = extReference)
-        );
+        this.metaModelElementInstantiator.loadCharacteristic(quad, false, (extReference: Characteristic) => {
+          defaultTrait.baseCharacteristic = extReference;
+          if (extReference) defaultTrait.children.push(extReference);
+          syncElementWithChildren(defaultTrait);
+        });
       } else if (sammC.isConstraintProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.loadConstraint(quad, (constraint: Constraint) => {
           defaultTrait.constraints.push(constraint);
+          if (constraint) defaultTrait.children.push(constraint);
+          syncElementWithChildren(defaultTrait);
         });
       }
     });

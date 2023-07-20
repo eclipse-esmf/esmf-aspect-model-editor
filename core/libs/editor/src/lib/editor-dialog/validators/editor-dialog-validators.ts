@@ -95,7 +95,7 @@ export class EditorDialogValidators {
 
         if (element) {
           const [namespace] = element.value.split('#');
-          namespaceCacheService.sidebarService.loadNamespaceFiles(namespace, namespaceCacheService.getCurrentCachedFile());
+          namespaceCacheService.sidebarService.loadNamespaceFiles(namespace, namespaceCacheService.currentCachedFile);
           const files = namespaceCacheService.getFiles(namespace);
           foundExternalElement = files.reduce<BaseMetaModelElement>((acc, file) => acc || file.getEitherElement(element.value), null);
           if (foundExternalElement) {
@@ -111,9 +111,8 @@ export class EditorDialogValidators {
         };
       }
 
-      const modelElementDefinedInCurrentCachedFile = namespaceCacheService
-        .getCurrentCachedFile()
-        .getEitherElement<BaseMetaModelElement>(aspectModelUrn);
+      const modelElementDefinedInCurrentCachedFile =
+        namespaceCacheService.currentCachedFile.getEitherElement<BaseMetaModelElement>(aspectModelUrn);
 
       return modelElementDefinedInCurrentCachedFile &&
         (!haveTheSameName || modelElementDefinedInCurrentCachedFile.name !== metaModelElement.name)
@@ -165,7 +164,7 @@ export class EditorDialogValidators {
         return null;
       }
       const aspectModelUrn = `${namespace}#${control.value}`;
-      return namespacesCacheService.getCurrentCachedFile().getCachedElement<BaseMetaModelElement>(aspectModelUrn)
+      return namespacesCacheService.currentCachedFile.getCachedElement<BaseMetaModelElement>(aspectModelUrn)
         ? {
             checkShapeName: true,
           }

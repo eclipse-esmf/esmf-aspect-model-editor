@@ -12,7 +12,6 @@
  */
 
 import {Base, BaseMetaModelElement} from './base';
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {OverWrittenProperty} from './overwritten-property';
 import {Samm} from '@ame/vocabulary';
 
@@ -31,10 +30,6 @@ export class DefaultEvent extends Base implements Event {
 
   constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public parameters: Array<OverWrittenProperty> = []) {
     super(metaModelVersion, aspectModelUrn, name);
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitEvent(this, context);
   }
 
   delete(baseMetalModelElement: BaseMetaModelElement) {

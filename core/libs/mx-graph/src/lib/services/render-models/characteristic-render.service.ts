@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {ShapeConnectorService} from '@ame/connection';
 import {
   BaseMetaModelElement,
@@ -37,12 +37,14 @@ import {BaseRenderService} from './base-render-service';
 import {UnitRenderService} from './unit-render.service';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
+import {FiltersService} from '@ame/loader-filters';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CharacteristicRenderService extends BaseRenderService {
   private metaModelElement;
+  private filtersService = inject(FiltersService);
 
   constructor(
     mxGraphService: MxGraphService,
@@ -96,7 +98,7 @@ export class CharacteristicRenderService extends BaseRenderService {
       metaModel instanceof DefaultProperty && toRemove.push(edge);
     }
 
-    this.mxGraphService.graph.removeCells(toRemove);
+    this.mxGraphService.removeCells(toRemove);
   }
 
   private addStructuredValueProperties(cell: mxgraph.mxCell) {
@@ -111,7 +113,7 @@ export class CharacteristicRenderService extends BaseRenderService {
         this.metaModelElement,
         element.property,
         cell,
-        propertyCell || this.mxGraphService.renderModelElement(element.property)
+        propertyCell || this.mxGraphService.renderModelElement(this.filtersService.createNode(element.property, {parent: modelElement}))
       );
 
       propertyCell = this.mxGraphService.resolveCellByModelElement(element.property);
@@ -127,7 +129,10 @@ export class CharacteristicRenderService extends BaseRenderService {
         element.property,
         element.property.characteristic,
         propertyCell,
-        childCharacteristicCell || this.mxGraphService.renderModelElement(element.property.characteristic)
+        childCharacteristicCell ||
+          this.mxGraphService.renderModelElement(
+            this.filtersService.createNode(element.property.characteristic, {parent: element.property})
+          )
       );
 
       childCharacteristicCell = this.mxGraphService.resolveCellByModelElement(element.property.characteristic);
@@ -146,14 +151,28 @@ export class CharacteristicRenderService extends BaseRenderService {
 
   private removeEverythingForStructuredValue(cell: mxgraph.mxCell) {
     const outGoingEdges = this.mxGraphService.graph.getOutgoingEdges(cell);
-    this.mxGraphService.graph.removeCells(outGoingEdges || []);
+    const characteristic = MxGraphHelper.getModelElement(cell);
+    for (const edge of outGoingEdges) {
+      const modelElement = MxGraphHelper.getModelElement(edge.target);
+      MxGraphHelper.removeRelation(characteristic, modelElement);
+      if (modelElement?.isPredefined()) {
+        this.mxGraphService.removeCells([edge.target]);
+      }
+    }
+    this.mxGraphService.removeCells(outGoingEdges || []);
   }
 
   private removeEitherTargetShape(cell: mxgraph.mxCell, left: DefaultCharacteristic, right: DefaultCharacteristic) {
+    const characteristic = MxGraphHelper.getModelElement(cell);
     this.mxGraphService.graph.getOutgoingEdges(cell).forEach(edge => {
       const modelElement = MxGraphHelper.getModelElement(edge.target);
       if (modelElement && modelElement.aspectModelUrn !== left.aspectModelUrn && modelElement.aspectModelUrn !== right.aspectModelUrn) {
-        this.mxGraphService.graph.removeCells([edge], true);
+        MxGraphHelper.removeRelation(characteristic, modelElement);
+        if (modelElement?.isPredefined()) {
+          this.mxGraphService.removeCells([edge.target], true);
+        } else {
+          this.mxGraphService.removeCells([edge], true);
+        }
       }
     });
   }
@@ -166,7 +185,9 @@ export class CharacteristicRenderService extends BaseRenderService {
       this.metaModelElement,
       cachedCharacteristic,
       cell,
-      childCell ? childCell : this.mxGraphService.renderModelElement(cachedCharacteristic),
+      childCell
+        ? childCell
+        : this.mxGraphService.renderModelElement(this.filtersService.createNode(cachedCharacteristic, {parent: this.metaModelElement})),
       modelInfo
     );
   }
@@ -201,7 +222,7 @@ export class CharacteristicRenderService extends BaseRenderService {
     this.mxGraphService.graph.getOutgoingEdges(cell).forEach(edge => {
       const targetMetaModel = MxGraphHelper.getModelElement(edge.target);
       if (targetMetaModel instanceof DefaultCharacteristic) {
-        this.mxGraphService.graph.removeCells([edge], true);
+        this.mxGraphService.removeCells([edge], true);
       }
     });
   }
@@ -229,7 +250,9 @@ export class CharacteristicRenderService extends BaseRenderService {
     }
     const cachedEntity = this.namespacesCacheService.resolveCachedElement(newDataType);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
-    const entityCell = resolvedCell ? resolvedCell : this.mxGraphService.renderModelElement(newDataType);
+    const entityCell = resolvedCell
+      ? resolvedCell
+      : this.mxGraphService.renderModelElement(this.filtersService.createNode(newDataType, {parent: this.metaModelElement}));
     this.shapeConnectorService.connectShapes(this.metaModelElement, newDataType, cell, entityCell);
   }
 
@@ -248,12 +271,15 @@ export class CharacteristicRenderService extends BaseRenderService {
 
   private removeOutgoingComplexDataType(cell: mxgraph.mxCell) {
     const outGoingEdges = this.mxGraphService.graph.getOutgoingEdges(cell);
+    const characteristic = MxGraphHelper.getModelElement(cell);
+
     if (outGoingEdges.length) {
       outGoingEdges.forEach(edge => {
         const modelElement = MxGraphHelper.getModelElement(edge.target);
         if (modelElement instanceof DefaultEntity) {
+          MxGraphHelper.removeRelation(characteristic, modelElement);
           this.metaModelElement.delete(modelElement);
-          this.mxGraphService.graph.removeCells([edge], true);
+          this.mxGraphService.removeCells([edge], true);
         }
       });
     }
@@ -278,26 +304,34 @@ export class CharacteristicRenderService extends BaseRenderService {
       let unitCell = this.mxGraphService.resolveCellByModelElement(unit);
       if (!unitCell) {
         // if there is no cell (new custom unit)
-        unitCell = this.mxGraphService.renderModelElement(unit);
+        unitCell = this.mxGraphService.renderModelElement(this.filtersService.createNode(unit, {parent: modelElement}));
       }
       this.shapeConnectorService.connectShapes(modelElement, unit, cell, unitCell);
     } else if (unit && !isSameUnit) {
-      this.removeCharacteristic(cell, MxGraphHelper.getModelElement(cell));
+      this.removeCharacteristic(cell, MxGraphHelper.getModelElement<DefaultCharacteristic>(cell));
       this.unitRendererService.create(cell, unit);
     }
   }
 
   private unassignUnit(cell: mxgraph.mxCell) {
-    const oldUnitCell = this.mxGraphService.graph
+    const edgeToOldUnit = this.mxGraphService.graph
       .getOutgoingEdges(cell)
       .find(edge => MxGraphHelper.getModelElement(edge.target) instanceof DefaultUnit);
-    if (!oldUnitCell) {
+
+    if (!edgeToOldUnit) {
       return;
     }
-    if (MxGraphHelper.getModelElement<DefaultUnit>(oldUnitCell.target).isPredefined()) {
-      this.mxGraphService.graph.removeCells([oldUnitCell.target], true);
-    } else {
-      this.mxGraphService.graph.removeCells([oldUnitCell]);
+
+    const parent = MxGraphHelper.getModelElement(cell);
+    const unit = MxGraphHelper.getModelElement<DefaultUnit>(edgeToOldUnit.target);
+
+    if (unit?.isPredefined()) {
+      MxGraphHelper.removeRelation(parent, unit);
+      this.namespacesCacheService.currentCachedFile.removeElement(unit.aspectModelUrn);
+      this.mxGraphService.removeCells([edgeToOldUnit.target], true);
+    } else if (edgeToOldUnit) {
+      MxGraphHelper.removeRelation(parent, unit);
+      this.mxGraphService.removeCells([edgeToOldUnit]);
     }
   }
 
@@ -311,7 +345,7 @@ export class CharacteristicRenderService extends BaseRenderService {
             modelElement.aspectModelUrn !== elementCharacteristic.aspectModelUrn &&
             modelElement instanceof DefaultCharacteristic
           ) {
-            this.mxGraphService.graph.removeCells([edge], true);
+            this.mxGraphService.removeCells([edge], true);
           }
         });
         const cachedCharacteristic = this.namespacesCacheService.resolveCachedElement(elementCharacteristic);
@@ -321,7 +355,9 @@ export class CharacteristicRenderService extends BaseRenderService {
           this.metaModelElement,
           cachedCharacteristic,
           cell,
-          childCell ? childCell : this.mxGraphService.renderModelElement(cachedCharacteristic),
+          childCell
+            ? childCell
+            : this.mxGraphService.renderModelElement(this.filtersService.createNode(cachedCharacteristic, {parent: this.metaModelElement})),
           ModelInfo.IS_CHARACTERISTIC
         );
       } else {
@@ -332,13 +368,13 @@ export class CharacteristicRenderService extends BaseRenderService {
 
   private removeCharacteristic(cell: mxgraph.mxCell, modelElement: DefaultCharacteristic) {
     const edgesToRemove = cell.edges?.filter(edge => {
-      const sourceModel = MxGraphHelper.getModelElement(edge.source);
-      if (modelElement.aspectModelUrn !== sourceModel.aspectModelUrn) {
+      const sourceModelElement = MxGraphHelper.getModelElement(edge.source);
+      if (modelElement.aspectModelUrn !== sourceModelElement.aspectModelUrn) {
         return false;
       }
 
-      const targetModel = MxGraphHelper.getModelElement(edge.target);
-      return targetModel instanceof DefaultCharacteristic && targetModel.aspectModelUrn !== sourceModel.aspectModelUrn;
+      const targetModelElement = MxGraphHelper.getModelElement(edge.target);
+      return targetModelElement instanceof DefaultCharacteristic && targetModelElement.aspectModelUrn !== sourceModelElement.aspectModelUrn;
     });
 
     this.mxGraphService.removeCells(edgesToRemove || []);

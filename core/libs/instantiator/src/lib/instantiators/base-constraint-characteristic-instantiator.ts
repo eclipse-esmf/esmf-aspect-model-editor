@@ -37,7 +37,7 @@ export class BaseConstraintCharacteristicInstantiator {
   }
 
   create(quad: Quad): BaseMetaModelElement {
-    const cachedElement = this.cachedFile.getElement<BaseMetaModelElement>(quad.object.value, this.isIsolated);
+    const cachedElement = this.cachedFile.getElement<BaseMetaModelElement>(quad.object.value);
     if (cachedElement) {
       return cachedElement;
     }
@@ -55,7 +55,7 @@ export class BaseConstraintCharacteristicInstantiator {
     const element = this.processElement(propertyQuads);
     element.fileName = this.metaModelElementInstantiator.fileName;
 
-    (<DefaultConstraint>element).setAnonymouseNode(Util.isBlankNode(quad.object));
+    (<DefaultConstraint>element).setAnonymousNode(Util.isBlankNode(quad.object));
     this.metaModelElementInstantiator.initBaseProperties(propertyQuads, element, this.metaModelElementInstantiator.rdfModel);
 
     return element;

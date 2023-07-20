@@ -5,14 +5,14 @@
 
 == Screen resolution
 
-A screen resolution of 1920 * 1080 px (HD) for the most comfortable working experience is recommended. The Aspect Model Editor is not designed for mobile devices.
+For a comfortable working experience, we recommend a screen resolution of 1920 x 1080 pixel. The Aspect Model Editor is not designed for mobile devices.
 
 == Windows
 
 To use the Aspect Model Editor on Windows, you need:
 
 * 64-bit based laptop or PC
-** Check on Windows: Windows Start button → System information → Expected: x64-based PC
+** Check on Windows: Windows Start button → System information → System Type → Expected: x64-based PC
 * Windows 7, Windows 8, Windows 8.1, Windows 10, or later
 * An Intel Pentium 4 processor or later that is SSE3-capable
 
@@ -32,8 +32,4 @@ To use the Aspect Model Editor on Linux, you need:
 * 64-bit Ubuntu 18.04+, Debian 10+, openSUSE 15.2+, or Fedora Linux 32+
 * An Intel Pentium 4 processor or later that is SSE3-capable
 
-++++
-<style>
-  .imageblock {flex-direction: row !important;}
-</style>
-++++
+

@@ -17,7 +17,6 @@ import {LookUpDatatype} from './look-up-datatype';
 import {Type} from './type';
 import {DefaultScalar} from './default-scalar';
 import {DefaultTrait} from './default-trait';
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {DefaultAbstractProperty} from './default-abstract-property';
 import {CanExtend} from './can-extend';
 
@@ -55,10 +54,6 @@ export class DefaultProperty extends CanExtend implements Property {
       return this.characteristic?.baseCharacteristic?.dataType;
     }
     return this.characteristic ? this.characteristic.dataType : null;
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitProperty(this, context);
   }
 
   delete(baseMetalModelElement: BaseMetaModelElement) {
