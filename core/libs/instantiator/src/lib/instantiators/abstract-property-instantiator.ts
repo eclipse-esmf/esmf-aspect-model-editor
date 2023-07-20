@@ -14,6 +14,7 @@
 import {InstantiatorListElement} from '@ame/rdf/utils';
 import {DefaultAbstractProperty, OverWrittenProperty, OverWrittenPropertyKeys} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
+import {syncElementWithChildren} from '../helpers';
 
 export class AbstractPropertyInstantiator {
   private get rdfModel() {
@@ -31,7 +32,7 @@ export class AbstractPropertyInstantiator {
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
   public createAbstractProperty(listElement: InstantiatorListElement): OverWrittenProperty<DefaultAbstractProperty> {
-    const property = this.currentCachedFile.getElement<DefaultAbstractProperty>(listElement.quad.value, this.isIsolated);
+    const property = this.currentCachedFile.getElement<DefaultAbstractProperty>(listElement.quad.value);
     return property ? {property, keys: this.resolveOverwrittenKeys(listElement)} : this.constructAbstractProperty(listElement);
   }
 
@@ -52,7 +53,7 @@ export class AbstractPropertyInstantiator {
 
     this.metaModelElementInstantiator.initBaseProperties(quads, property, this.rdfModel);
     // resolving element to not enter in infinite loop
-    this.currentCachedFile.resolveElement(property, this.isIsolated);
+    this.currentCachedFile.resolveElement(property);
 
     for (const quad of quads) {
       if (samm.isExampleValueProperty(quad.predicate.value)) {
@@ -62,10 +63,12 @@ export class AbstractPropertyInstantiator {
       if (samm.isExtendsProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getProperty({quad: quad.object}, extractedAbstractProperty => {
           property.extendedElement = extractedAbstractProperty?.property;
+          property.extendedElement ? property.children.push(property.extendedElement) : null;
         });
       }
     }
 
+    syncElementWithChildren(property);
     return {
       property,
       keys: this.resolveOverwrittenKeys(listElement),

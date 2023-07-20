@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {Samm} from '@ame/vocabulary';
 import {Base, BaseMetaModelElement} from './base';
 import {QuantityKind} from './default-quantity-kind';
@@ -47,10 +46,6 @@ export class DefaultUnit extends Base implements Unit {
     public quantityKinds: Array<QuantityKind> = []
   ) {
     super(metaModelVersion, aspectModelUrn, name);
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitUnit(this, context);
   }
 
   isPredefined(): boolean {

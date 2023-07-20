@@ -1,0 +1,39 @@
+= Traits
+[[trait-case]]
+
+There are two ways of adding a Trait:
+
+* Drag and drop one from the Workspace sidebar
+* Click the top Add icon at a Characteristic
+
+Clicking the top Add icon image:add.png[Add icon] of a Characteristic will add a new Trait, taking the Characteristic's position and connecting the Trait to the initial Characteristic as well as a newly created Constraint.
+In this scenario, the newly created Trait takes the name of the parent attribute as a prefix to its own name.
+
+A Trait has an Add icon image:add.png[Add icon] on the bottom of the element, which is always visible:
+
+* When clicking the "Add" icon image:add.png[Add icon], a Characteristic is created and connected to the Trait.
+
+* If there is already a Characteristic connected to the Trait, each Trait Add icon image:add.png[Add icon] click will create a new Constraint and connect it to the Trait.
++
+image::trait.png[width=80%]
+
+[[trait-example]]
+=== Trait Example
+
+Try out the following example to learn how to connect two Properties to the same Characteristic with each Property having different Constraints.
+
+For a new model that only has an Aspect so far:
+
+. Create two Properties by clicking twice on the Aspect's Add icon image:add.png[Add icon].
+. For each Property create a Characteristic by clicking the top "Add" icon image:add.png[Add icon] of each Property.
+. Click the top Add icon image:add.png[Add icon] of each Characteristic to create a Trait and a Constraint for each Property.
+. Remove the second Characteristic.
+. Connect the second Trait with the first Characteristic:
+.. Click the Trait,
+.. Then CTRL+click the Abstract Entity and click the Connect icon image:toolbar-icons/connect.png[Connect icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+. Click the Format icon image:toolbar-icons/format.png[Format icon].
+
+→ As a result you have connected two Properties to the same Characteristic with each Property having different Constraints.
+
+image::different-constraints.png[Different Constraints]
+

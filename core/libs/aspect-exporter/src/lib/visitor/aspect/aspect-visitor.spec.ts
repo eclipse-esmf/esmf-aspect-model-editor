@@ -78,13 +78,8 @@ describe('Aspect Visitor', () => {
     service = TestBed.inject(AspectVisitor);
   });
 
-  const getAspectCell = () => ({
-    getMetaModelElement: jest.fn(() => aspect),
-  });
-
   it('should update store width default properties', () => {
-    const aspectCell = getAspectCell();
-    service.visit(aspectCell as any);
+    service.visit(aspect);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(aspect, {
       preferredName: [],
@@ -99,16 +94,15 @@ describe('Aspect Visitor', () => {
     const property = new DefaultProperty('2', 'samm#property', 'property1', null);
     aspect.properties = [{property, keys: {}}];
 
-    service.visit(aspectCell as any);
+    service.visit(aspect);
 
     expect(rdfListService.push).toHaveBeenCalledWith(aspect, {property, keys: {}});
   });
 
   it('should update aspect name', () => {
-    const aspectCell = getAspectCell();
-    service.visit(aspectCell as any);
+    service.visit(aspect);
     aspect.name = 'aspect2';
-    service.visit(aspectCell as any);
+    service.visit(aspect);
     expect(rdfNodeService.update).toHaveBeenCalledWith(aspect, {
       preferredName: [],
       description: [],

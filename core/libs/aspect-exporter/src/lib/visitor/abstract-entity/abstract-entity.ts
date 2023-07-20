@@ -12,11 +12,10 @@
  */
 
 import {Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {BaseVisitor} from '../base-visitor';
 import {DefaultAbstractEntity} from '@ame/meta-model';
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {MxGraphService} from '@ame/mx-graph';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {RdfService} from '@ame/rdf/services';
 import {DataFactory, Store} from 'n3';
@@ -36,8 +35,7 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
     super(rdfService);
   }
 
-  visit(cell: mxgraph.mxCell): DefaultAbstractEntity {
-    const abstractEntity: DefaultAbstractEntity = MxGraphHelper.getModelElement(cell);
+  visit(abstractEntity: DefaultAbstractEntity): DefaultAbstractEntity {
     if (abstractEntity.isPredefined()) {
       return null;
     }

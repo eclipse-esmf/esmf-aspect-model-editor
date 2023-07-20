@@ -283,16 +283,13 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
 
     const duplicateElements = [];
 
-    this.namespaceCacheService
-      .getCurrentCachedFile()
-      ?.getAllElements<BaseMetaModelElement>()
-      .forEach(currentFileElement =>
-        cachedFile.getAllElements<BaseMetaModelElement>().forEach(cachedFileElement => {
-          if (currentFileElement.aspectModelUrn === cachedFileElement.aspectModelUrn) {
-            duplicateElements.push(currentFileElement.aspectModelUrn);
-          }
-        })
-      );
+    this.namespaceCacheService.currentCachedFile?.getAllElements<BaseMetaModelElement>().forEach(currentFileElement =>
+      cachedFile.getAllElements<BaseMetaModelElement>().forEach(cachedFileElement => {
+        if (currentFileElement.aspectModelUrn === cachedFileElement.aspectModelUrn) {
+          duplicateElements.push(currentFileElement.aspectModelUrn);
+        }
+      })
+    );
 
     if (duplicateElements.length) {
       this.notificationsService.warning({

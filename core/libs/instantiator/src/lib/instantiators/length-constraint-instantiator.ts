@@ -22,7 +22,7 @@ export class LengthConstraintInstantiator extends ConstraintInstantiator {
   }
 
   protected processElement(quads: Array<Quad>): Constraint {
-    let defaultLengthConstraint = this.cachedFile.getElement<DefaultLengthConstraint>(quads[0]?.subject.value, this.isIsolated);
+    let defaultLengthConstraint = this.cachedFile.getElement<DefaultLengthConstraint>(quads[0]?.subject.value);
     if (defaultLengthConstraint) {
       return defaultLengthConstraint;
     }

@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+cd core
+npm run format:write -- --uncommited && npm run affected:lint -- --uncommited --parallel
+

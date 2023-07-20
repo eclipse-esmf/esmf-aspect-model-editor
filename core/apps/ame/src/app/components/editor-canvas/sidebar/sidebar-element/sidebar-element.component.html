@@ -14,8 +14,9 @@
 <div
   *ngIf="element"
   #container
-  [ngClass]="{'element-imported': elementImported()}"
+  [ngClass]="{'element-imported': elementImported(), locked: element.locked}"
   [attr.data-cy]="dataCy"
+  [attr.locked]="element.locked ? 'locked' : null"
   [title]="elementImported() ? 'Element already imported' : element.name + ' - Drag to the right to add'"
   class="container"
 >

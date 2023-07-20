@@ -43,24 +43,27 @@
 </div>
 
 <div class="shape-settings__actions">
-  <button
-    *ngIf="metaModelDialogService.isSaveButtonEnabled()"
-    (click)="onClose()"
-    type="button"
-    mat-flat-button
-    data-cy="editorCancelButton"
-  >
-    Cancel
-  </button>
-  <button
-    *ngIf="metaModelDialogService.isSaveButtonEnabled()"
-    [disabled]="!formGroup.valid"
-    (click)="onSave()"
-    mat-flat-button
-    color="primary"
-    type="button"
-    data-cy="editorSaveButton"
-  >
-    Save
-  </button>
+  <ame-locate-element></ame-locate-element>
+  <div class="actions">
+    <button
+      *ngIf="metaModelDialogService.isSaveButtonEnabled()"
+      (click)="onClose()"
+      type="button"
+      mat-flat-button
+      data-cy="editorCancelButton"
+    >
+      Cancel
+    </button>
+    <button
+      *ngIf="metaModelDialogService.isSaveButtonEnabled()"
+      [disabled]="!formGroup.valid || metaModelElement?.isExternalReference()"
+      (click)="onSave()"
+      mat-flat-button
+      color="primary"
+      type="button"
+      data-cy="editorSaveButton"
+    >
+      Save
+    </button>
+  </div>
 </div>

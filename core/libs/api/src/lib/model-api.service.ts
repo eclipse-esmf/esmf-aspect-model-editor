@@ -80,7 +80,10 @@ export class ModelApiService {
     const headers = new HttpHeaderBuilder().withContentTypeRdfTurtle().build();
     return this.http.post(`${this.serviceUrl}${this.api.models}/format`, rdfContent, {headers, responseType: 'text'}).pipe(
       timeout(this.requestTimeout),
-      catchError(res => throwError(() => res))
+      catchError(res => {
+        res.error = JSON.parse(res.error)?.error;
+        return throwError(() => res);
+      })
     );
   }
 

@@ -13,7 +13,7 @@
 import {DefaultQuantifiable} from './default-quantifiable';
 import {Type} from './type';
 import {Unit} from './default-unit';
-import {AspectModelVisitor} from '@ame/mx-graph';
+import {ModelRenderer} from '@ame/mx-graph';
 
 export class DefaultMeasurement extends DefaultQuantifiable {
   static createInstance() {
@@ -26,9 +26,5 @@ export class DefaultMeasurement extends DefaultQuantifiable {
 
   constructor(metaModelVersion: string, aspectModelUrn: string, name: string, unit: Unit, dataType?: Type) {
     super(metaModelVersion, aspectModelUrn, name, dataType, unit);
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitCharacteristic(this, context);
   }
 }

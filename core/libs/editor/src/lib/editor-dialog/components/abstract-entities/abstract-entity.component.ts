@@ -13,14 +13,15 @@
 import {Component, Input} from '@angular/core';
 import {UpdatedProperties} from '../properties';
 import {EditorModelService} from '../../editor-model.service';
-import {FormControl} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'ame-abstract-entity',
   templateUrl: './abstract-entity.component.html',
 })
 export class AbstractEntityComponent {
-  @Input() parentForm;
+  @Input() public parentForm: FormGroup;
+  public element$ = this.metaModelDialogService.getMetaModelElement();
 
   constructor(public metaModelDialogService: EditorModelService) {}
 

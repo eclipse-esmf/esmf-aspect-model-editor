@@ -45,6 +45,14 @@ export enum ModelStyle {
   EVENT = 'event',
 }
 
+export enum EdgeStyles {
+  entityValueEntityEdge = 'entityValueEntityEdge',
+  optionalPropertyEdge = 'optionalPropertyEdge',
+  abstractPropertyEdge = 'abstractPropertyEdge',
+  abstractElementEdge = 'abstractElementEdge',
+  defaultEdge = 'defaultEdge',
+}
+
 export class ModelStyleResolver {
   static resolve(metaModelElement: BaseMetaModelElement): ModelStyle {
     if (metaModelElement instanceof DefaultAspect) {

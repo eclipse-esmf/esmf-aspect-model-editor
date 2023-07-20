@@ -22,7 +22,7 @@ export class RangeConstraintInstantiator extends ConstraintInstantiator {
   }
 
   protected processElement(quads: Array<Quad>): Constraint {
-    let defaultRangeConstraint = this.cachedFile.getElement<DefaultRangeConstraint>(quads[0]?.subject.value, this.isIsolated);
+    let defaultRangeConstraint = this.cachedFile.getElement<DefaultRangeConstraint>(quads[0]?.subject.value);
     if (defaultRangeConstraint) {
       return defaultRangeConstraint;
     }

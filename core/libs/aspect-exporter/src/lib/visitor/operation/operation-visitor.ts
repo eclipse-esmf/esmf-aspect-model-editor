@@ -12,10 +12,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
 import {DataFactory, Store} from 'n3';
 import {BaseVisitor} from '../base-visitor';
-import {MxGraphHelper} from '@ame/mx-graph';
 import {ListProperties, RdfListService, RdfNodeService} from '@ame/aspect-exporter';
 import {DefaultOperation} from '@ame/meta-model';
 import {RdfService} from '@ame/rdf/services';
@@ -30,8 +28,7 @@ export class OperationVisitor extends BaseVisitor<DefaultOperation> {
     super(rdfService);
   }
 
-  visit(cell: mxgraph.mxCell): DefaultOperation {
-    const operation: DefaultOperation = MxGraphHelper.getModelElement<DefaultOperation>(cell);
+  visit(operation: DefaultOperation): DefaultOperation {
     this.setPrefix(operation.aspectModelUrn);
     const oldAspectModelUrn = operation.aspectModelUrn;
     this.addProperties(operation);

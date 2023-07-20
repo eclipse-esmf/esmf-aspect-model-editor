@@ -13,19 +13,20 @@
 
 import {Injectable} from '@angular/core';
 import {BaseMetaModelElement, DefaultEntityValue, DefaultTrait} from '@ame/meta-model';
-import {ExpandedEllipseShape, ExpandedModelShape, ExpandedRoundBorderShape} from '@ame/shared';
+import {circleShapeGeometry, basicShapeGeometry, smallBasicShapeGeometry} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {mxGeometry} from '../providers';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
+import {ModelNode} from '@ame/loader-filters';
 
 @Injectable()
 export class MxGraphGeometryProviderService {
   constructor(private mxGraphAttributeService: MxGraphAttributeService) {}
 
-  public createGeometry(metaModelElement: BaseMetaModelElement, x?: number, y?: number, w?: number, h?: number): mxgraph.mxGeometry {
+  public createGeometry(node: ModelNode<BaseMetaModelElement>, x?: number, y?: number): mxgraph.mxGeometry {
     return this.mxGraphAttributeService.inCollapsedMode
-      ? this.createCollapsedGeometry(metaModelElement, x, y, w, h)
-      : this.createExpandedGeometry(metaModelElement, x, y);
+      ? new mxGeometry(x, y, node.shape.collapsedWidth, node.shape.collapsedHeight)
+      : new mxGeometry(x, y, node.shape.expandedWith, node.shape.expandedHeight);
   }
 
   /**
@@ -35,8 +36,8 @@ export class MxGraphGeometryProviderService {
    */
   public upgradeTraitGeometry(cell: mxgraph.mxCell, geometry: mxgraph.mxGeometry, isVertex: boolean): void {
     if (cell.style.includes('trait') && isVertex && geometry != null) {
-      geometry.width = ExpandedEllipseShape.collapsedEllipseElementWidth;
-      geometry.height = ExpandedEllipseShape.collapsedEllipseElementHeight;
+      geometry.width = circleShapeGeometry.collapsedWidth;
+      geometry.height = circleShapeGeometry.collapsedHeight;
     }
   }
 
@@ -47,23 +48,19 @@ export class MxGraphGeometryProviderService {
    */
   public upgradeEntityValueGeometry(cell: mxgraph.mxCell, geometry: mxgraph.mxGeometry, isVertex: boolean): void {
     if (cell.style.includes('entityValue') && isVertex && geometry != null) {
-      geometry.width = ExpandedRoundBorderShape.collapsedRoundBorderWidth;
-      geometry.height = ExpandedRoundBorderShape.collapsedRoundBorderHeight;
+      geometry.width = smallBasicShapeGeometry.collapsedWidth;
+      geometry.height = smallBasicShapeGeometry.collapsedHeight;
     }
-  }
-
-  public createDefaultGeometry(): mxgraph.mxGeometry {
-    return new mxGeometry(0, 0, ExpandedModelShape.expandedElementWidth, ExpandedModelShape.parameterHeight);
   }
 
   private createExpandedGeometry(metaModelElement: BaseMetaModelElement, x?: number, y?: number): mxgraph.mxGeometry {
     switch (true) {
       case this.isEllipseShape(metaModelElement):
-        return new mxGeometry(x, y, ExpandedEllipseShape.expandedEllipseElementWidth, ExpandedEllipseShape.expandedEllipseElementHeight);
+        return new mxGeometry(x, y, circleShapeGeometry.expandedWith, circleShapeGeometry.expandedHeight);
       case this.isRoundedBorderShape(metaModelElement):
-        return new mxGeometry(x, y, ExpandedRoundBorderShape.expandedRoundBorderWidth, ExpandedRoundBorderShape.expandedRoundBorderHeight);
+        return new mxGeometry(x, y, smallBasicShapeGeometry.expandedWith, smallBasicShapeGeometry.expandedHeight);
       default:
-        return new mxGeometry(x, y, ExpandedModelShape.expandedElementWidth, ExpandedModelShape.expandedElementHeight);
+        return new mxGeometry(x, y, basicShapeGeometry.expandedWith, basicShapeGeometry.expandedHeight);
     }
   }
 
@@ -76,16 +73,11 @@ export class MxGraphGeometryProviderService {
   ): mxgraph.mxGeometry {
     switch (true) {
       case this.isEllipseShape(metaModelElement):
-        return new mxGeometry(x, y, ExpandedEllipseShape.collapsedEllipseElementWidth, ExpandedEllipseShape.collapsedEllipseElementHeight);
+        return new mxGeometry(x, y, circleShapeGeometry.collapsedWidth, circleShapeGeometry.collapsedHeight);
       case this.isRoundedBorderShape(metaModelElement):
-        return new mxGeometry(
-          x,
-          y,
-          ExpandedRoundBorderShape.collapsedRoundBorderWidth,
-          ExpandedRoundBorderShape.collapsedRoundBorderHeight
-        );
+        return new mxGeometry(x, y, smallBasicShapeGeometry.collapsedWidth, smallBasicShapeGeometry.collapsedHeight);
       default:
-        return new mxGeometry(x, y, w ? w : ExpandedModelShape.collapsedElementWidth, h ? h : ExpandedModelShape.collapsedElementHeight);
+        return new mxGeometry(x, y, w ? w : basicShapeGeometry.collapsedWidth, h ? h : basicShapeGeometry.collapsedHeight);
     }
   }
 

@@ -1,0 +1,34 @@
+= Property
+
+[[properties-configuration]]
+== Properties Configuration for Aspects and Events
+
+The Aspect as well as Entity elements can contain additional Properties.
+Entities are wrappers for encapsulating multiple Properties, so apart from its standard attributes the most important thing is to add the relevant Properties.
+
+To add and configure Properties, open the *Properties Configuration* by clicking the *Configure* button.
+
+[cols="30%,70%"]
+|===
+|_Name_
+|Name of the Property
+|_Optional_
+|This means that the content may or may not be provided in the API response of the corresponding implementation of the Aspect
+|_Not in Payload_
+|This means that the content will not be provided in the API response. (Usage of the Property in the Aspect Model is for explanations only.)
+|_Payload Name_
+|Overrides the Property's name in the runtime payload.
+|===
+
+image::edit-properties-informations-dialog.png[width=100%]
+
+[[edit-properties]]
+== Property attributes
+
+Properties can contain an example value:
+
+[cols="30%,70%"]
+|===
+|_Example value_
+|This provides an example value for the Property, which requires that the entered data type has been defined in a corresponding Characteristic. It is important to ensure that the data type has the correct format. Find the https://eclipse-esmf.github.io/samm-specification/2.0.0/datatypes.html[Data Types (SAMM 2.0.0)^,opts=nofollow] with an example value.
+|===

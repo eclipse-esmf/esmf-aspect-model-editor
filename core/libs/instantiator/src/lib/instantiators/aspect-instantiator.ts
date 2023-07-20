@@ -39,10 +39,11 @@ export class AspectInstantiator {
     const samm = this.metaModelElementInstantiator.samm;
     const aspectNode = this.rdfModel.store.getQuads(aspectSubject, this.rdfModel.SAMM().RdfType(), this.rdfModel.SAMM().Aspect(), null)[0]
       .subject;
-    const properties = this.metaModelElementInstantiator.getProperties(aspectNode, samm.PropertiesProperty());
-    const operations = this.metaModelElementInstantiator.getOperations(aspectNode, samm.OperationsProperty());
-    const events = this.metaModelElementInstantiator.getEvents(aspectNode, samm.EventsProperty());
-    const aspect = new DefaultAspect(null, null, null, properties, operations, events);
+    const aspect = new DefaultAspect(null, null, null);
+
+    this.metaModelElementInstantiator.getProperties(aspectNode, samm.PropertiesProperty(), aspect);
+    this.metaModelElementInstantiator.getOperations(aspectNode, samm.OperationsProperty(), aspect);
+    this.metaModelElementInstantiator.getEvents(aspectNode, samm.EventsProperty(), aspect);
 
     aspect.fileName = this.metaModelElementInstantiator.fileName;
 

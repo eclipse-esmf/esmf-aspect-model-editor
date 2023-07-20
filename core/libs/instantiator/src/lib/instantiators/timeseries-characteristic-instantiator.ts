@@ -21,7 +21,7 @@ export class TimeSeriesCharacteristicInstantiator extends SortedSetCharacteristi
     super(metaModelElementInstantiator, nextProcessor);
   }
 
-  protected creatCollectionObject(): Collection {
+  protected createCollectionObject(): Collection {
     return new DefaultTimeSeries(null, null, null, null, null);
   }
 

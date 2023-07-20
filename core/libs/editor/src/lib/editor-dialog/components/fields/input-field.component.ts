@@ -15,7 +15,7 @@ import {Directive, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/co
 import {FormControl, FormGroup} from '@angular/forms';
 import {EditorModelService} from '../../editor-model.service';
 import {Observable, of, startWith, Subscription} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {
   BaseMetaModelElement,
   CanExtend,
@@ -53,7 +53,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
   protected fieldName: string = null;
 
   get currentCachedFile() {
-    return this.namespacesCacheService.getCurrentCachedFile();
+    return this.namespacesCacheService.currentCachedFile;
   }
 
   get elementExtends() {
@@ -69,7 +69,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCurrentValue(key: string, _locale?: string) {
-    if (typeof this.metaModelElement?.['isPredefined'] === 'function' && this.metaModelElement?.['isPredefined']()) {
+    if (this.metaModelElement?.isPredefined()) {
       return this.metaModelElement?.[key] || '';
     }
 
@@ -146,6 +146,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
       ? of([])
       : control?.valueChanges.pipe(
           startWith(''),
+          filter(value => value !== null),
           map((value: string) => {
             const entities = this.currentCachedFile.getCachedEntities()?.map(entity => ({
               name: entity.name,
@@ -166,6 +167,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
       ? of([])
       : control?.valueChanges.pipe(
           startWith(''),
+          filter(value => value !== null),
           map((value: string) => {
             const entities = this.currentCachedFile.getCachedAbstractEntities()?.map(abstractEntity => ({
               name: abstractEntity.name,
@@ -184,6 +186,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
   initFilteredPropertyTypes(control: FormControl): Observable<Array<FilteredType>> {
     return control?.valueChanges.pipe(
       startWith(''),
+      filter(value => value !== null),
       map((value: string) => {
         const properties: Array<FilteredType> = this.currentCachedFile.getCachedProperties()?.map(property => ({
           name: property.name,
@@ -199,6 +202,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
   initFilteredAbstractPropertyTypes(control: FormControl): Observable<Array<FilteredType>> {
     return control?.valueChanges.pipe(
       startWith(''),
+      filter(value => value !== null),
       map((value: string) => {
         const properties: Array<FilteredType> = this.currentCachedFile.getCachedAbstractProperties()?.map(property => ({
           name: property.name,
@@ -214,6 +218,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
   initFilteredCharacteristicTypes(control: FormControl, elementAspectUrn: string): Observable<Array<FilteredType>> {
     return control?.valueChanges.pipe(
       startWith(''),
+      filter(value => value !== null),
       map((value: string) => {
         const characteristics: Array<FilteredType> = this.currentCachedFile
           .getCachedCharacteristics()
@@ -234,6 +239,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
     const units = this.currentCachedFile.getCachedUnits();
     return control?.valueChanges.pipe(
       startWith(''),
+      filter(value => value !== null),
       map((value: string) => {
         if (!value) {
           return units;
@@ -246,6 +252,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
 
   initFilteredPredefinedUnits(control: FormControl, units: Array<Unit>, searchService: SearchService) {
     return control?.valueChanges.pipe(
+      filter(value => value !== null),
       map((value: string) => {
         if (!value) {
           return units;

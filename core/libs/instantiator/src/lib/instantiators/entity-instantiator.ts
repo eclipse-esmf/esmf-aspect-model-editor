@@ -16,6 +16,7 @@ import {DefaultEntity, Entity, OverWrittenProperty} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {AbstractEntityInstantiator} from './abstract-entity-instantiator';
 import {PredefinedEntityInstantiator} from './samm-e-predefined-entity-instantiator';
+import {syncElementWithChildren} from '../helpers';
 
 export class EntityInstantiator {
   private get cachedFile() {
@@ -33,7 +34,7 @@ export class EntityInstantiator {
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
   createEntity(quads: Array<Quad>): Entity {
-    const entity = this.cachedFile.getElement<Entity>(quads[0]?.subject.value, this.isIsolated);
+    const entity = this.cachedFile.getElement<Entity>(quads[0]?.subject.value);
 
     if (entity) {
       return entity;
@@ -58,6 +59,7 @@ export class EntityInstantiator {
           : predefinedEntityInstantiator.entityInstances[quad.object.value]
           ? predefinedEntityInstantiator.entityInstances[quad.object.value]()
           : new AbstractEntityInstantiator(this.metaModelElementInstantiator).createAbstractEntity(quads);
+        if (defaultEntity.extendedElement) defaultEntity.children.push(defaultEntity.extendedElement);
         return;
       }
 
@@ -66,9 +68,11 @@ export class EntityInstantiator {
           DataFactory.namedNode(quad.subject.value),
           samm.PropertiesProperty()
         );
+        defaultEntity.children.push(...defaultEntity.properties.map(p => p.property));
       }
     });
 
-    return <Entity>this.cachedFile.resolveElement(defaultEntity, this.isIsolated);
+    syncElementWithChildren(defaultEntity);
+    return <Entity>this.cachedFile.resolveElement(defaultEntity);
   }
 }

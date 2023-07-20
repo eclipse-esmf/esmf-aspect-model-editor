@@ -84,13 +84,8 @@ describe('Entity Visitor', () => {
     service = TestBed.inject(EntityVisitor);
   });
 
-  const getEntityCell = () => ({
-    getMetaModelElement: jest.fn(() => entity),
-  });
-
   it('should update store width default properties', () => {
-    const entityCell = getEntityCell();
-    service.visit(entityCell as any);
+    service.visit(entity);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(entity, {
       preferredName: [],

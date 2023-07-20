@@ -74,11 +74,11 @@ export class TraitModelService extends BaseModelService {
     });
 
     super.delete(cell);
-    const modelElement = MxGraphHelper.getModelElement(cell);
+    const elementModel = MxGraphHelper.getModelElement(cell);
     const outgoingEdges = this.mxGraphAttributeService.graph.getOutgoingEdges(cell);
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
-    this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
-    this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, modelElement);
+    this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, elementModel);
+    this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, elementModel);
     this.mxGraphService.removeCells([cell]);
     this.reconnectShapePair(sourceTargetPair, informationOfEithers);
   }
@@ -86,8 +86,8 @@ export class TraitModelService extends BaseModelService {
   // Used to reconnect Characteristic with Properties if you delete theTrait
   private getSourceTargetPairForReconnect(cell: mxgraph.mxCell) {
     const sourceTargetPair = new Map();
-    const modelElement = MxGraphHelper.getModelElement(cell);
-    if (!modelElement.isExternalReference()) {
+    const elementModel = MxGraphHelper.getModelElement(cell);
+    if (!elementModel.isExternalReference()) {
       const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
       const outgoingEdges = this.mxGraphAttributeService.graph.getOutgoingEdges(cell);
 

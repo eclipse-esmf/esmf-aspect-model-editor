@@ -17,6 +17,8 @@ import {
   Characteristic,
   Constraint,
   DefaultAbstractProperty,
+  DefaultAspect,
+  DefaultEntity,
   DefaultEntityValue,
   DefaultProperty,
   DefaultScalar,
@@ -65,8 +67,9 @@ import {
 } from './instantiators';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {InstantiatorListElement, RdfModel, RdfModelUtil} from '@ame/rdf/utils';
-import {NotificationsService} from '@ame/shared';
+import {GeneralConfig, NotificationsService} from '@ame/shared';
 import {PredefinedEntityInstantiator} from './instantiators/samm-e-predefined-entity-instantiator';
+import {syncElementWithChildren} from './helpers';
 
 export class MetaModelElementInstantiator {
   private characteristicInstantiator: CharacteristicInstantiator;
@@ -105,13 +108,18 @@ export class MetaModelElementInstantiator {
     }
   }
 
-  getProperties(subject: Quad_Subject, predicate: NamedNode): Array<OverWrittenProperty> {
+  getProperties(subject: Quad_Subject, predicate: NamedNode, parent?: DefaultAspect | DefaultEntity): Array<OverWrittenProperty> {
     const properties: Array<OverWrittenProperty> = [];
     this.rdfModel.store.getQuads(subject, predicate, null, null).forEach(propertyQuad => {
       const elements = this.rdfModel.getListElements(propertyQuad.object);
 
       for (const element of elements) {
         this.getProperty(element, (property: OverWrittenProperty) => {
+          if (parent) {
+            parent.properties.push(property);
+            parent.children.push(property.property);
+            syncElementWithChildren(parent);
+          }
           properties.push(property);
         });
       }
@@ -159,13 +167,18 @@ export class MetaModelElementInstantiator {
     });
   }
 
-  getOperations(subject: Quad_Subject, predicate: NamedNode): Array<Operation> {
+  getOperations(subject: Quad_Subject, predicate: NamedNode, parent?: DefaultAspect): Array<Operation> {
     const operations: Array<Operation> = [];
     this.rdfModel.store.getQuads(subject, predicate, null, null).forEach(propertyQuad => {
       const elements = this.rdfModel.getListElements(propertyQuad.object);
 
       for (const element of elements) {
         this.getOperation(element, (operation: Operation) => {
+          if (parent) {
+            parent.operations.push(operation);
+            parent.children.push(operation);
+            syncElementWithChildren(parent);
+          }
           operations.push(operation);
         });
       }
@@ -193,13 +206,18 @@ export class MetaModelElementInstantiator {
     });
   }
 
-  getEvents(subject: Quad_Subject, predicate: NamedNode): Array<Event> {
+  getEvents(subject: Quad_Subject, predicate: NamedNode, parent?: DefaultAspect): Array<Event> {
     const events: Array<Event> = [];
     this.rdfModel.store.getQuads(subject, predicate, null, null).forEach(propertyQuad => {
       const elements = this.rdfModel.getListElements(propertyQuad.object);
 
       for (const element of elements) {
         this.getEvent(element, (event: Event) => {
+          if (parent) {
+            parent.events.push(event);
+            parent.children.push(event);
+            syncElementWithChildren(parent);
+          }
           events.push(event);
         });
       }
@@ -329,7 +347,7 @@ export class MetaModelElementInstantiator {
     const quadEntity = this.rdfModel.store.getQuads(typeQuad.object, null, null, null);
     if (quadEntity && quadEntity.length > 0 && RdfModelUtil.isEntity(quadEntity[0], this.rdfModel)) {
       const entity = new EntityInstantiator(this).createEntity(quadEntity);
-      return callback(this.cachedFile.resolveElement(entity, this.isIsolated));
+      return callback(this.cachedFile.resolveElement(entity));
     }
 
     const extReference = this.namespaceCacheService.findElementOnExtReference<Entity>(typeQuad.object.value);
@@ -341,7 +359,8 @@ export class MetaModelElementInstantiator {
     if (
       !quadEntity.length &&
       !typeQuad.object.value.startsWith('http://www.w3.org/2001/XMLSchema') &&
-      !typeQuad.object.value.startsWith('http://www.w3.org/1999/02/22-rdf-syntax-ns')
+      !typeQuad.object.value.startsWith('http://www.w3.org/1999/02/22-rdf-syntax-ns') &&
+      !typeQuad.object.value.startsWith(`urn:samm:org.eclipse.esmf.samm:meta-model:${GeneralConfig.sammVersion}#curie`)
     ) {
       this.addInstantiatorFunctionToQueue(() => {
         const {externalReference} = this.getExternalElement(typeQuad.object);
@@ -352,7 +371,7 @@ export class MetaModelElementInstantiator {
     const quadPropertyRefined = this.rdfModel.store.getQuads(quad.subject, this.samm.ExtendsProperty(), null, null);
     if (quadPropertyRefined && quadPropertyRefined.length > 0) {
       const entity = new EntityInstantiator(this).createEntity(quadPropertyRefined);
-      return callback(this.cachedFile.resolveElement(entity, this.isIsolated));
+      return callback(this.cachedFile.resolveElement(entity));
     }
 
     return callback(new DefaultScalar(typeQuad.object.value));

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {ShapeConnectorService} from '@ame/connection';
 import {
@@ -31,6 +31,7 @@ import {BaseRenderService} from './base-render-service';
 import {EntityValueRenderService} from './entity-value-render.service';
 import {UnitRenderService} from './unit-render.service';
 import {RdfService} from '@ame/rdf/services';
+import {FiltersService} from '@ame/loader-filters';
 
 interface EnumerationForm {
   chipList: DefaultEntityValue[];
@@ -43,6 +44,8 @@ interface EnumerationForm {
   providedIn: 'root',
 })
 export class EnumerationRenderService extends BaseRenderService {
+  private filtersService = inject(FiltersService);
+
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
@@ -85,7 +88,7 @@ export class EnumerationRenderService extends BaseRenderService {
       metaModel instanceof DefaultProperty && toRemove.push(edge);
     }
 
-    this.mxGraphService.graph.removeCells(toRemove);
+    this.mxGraphService.removeCells(toRemove);
   }
 
   private handleEntityDataType(cell: mxgraph.mxCell, dataType: DefaultEntity) {
@@ -96,49 +99,50 @@ export class EnumerationRenderService extends BaseRenderService {
   }
 
   private removeFloatingEntityValues(cell: mxgraph.mxCell) {
-    const metaModelElement = MxGraphHelper.getModelElement<DefaultEnumeration>(cell);
+    const modelElement = MxGraphHelper.getModelElement<DefaultEnumeration>(cell);
     const outGoingCells =
       this.mxGraphService.graph.getOutgoingEdges(cell)?.filter(edge => {
-        const metaModel = MxGraphHelper.getModelElement<DefaultEntityValue>(edge.target);
+        const childModelElement = MxGraphHelper.getModelElement<DefaultEntityValue>(edge.target);
 
-        if (metaModel instanceof DefaultEntity) {
+        if (childModelElement instanceof DefaultEntity) {
           return true;
         }
 
-        if (!(metaModel instanceof DefaultEntityValue)) {
+        if (!(childModelElement instanceof DefaultEntityValue)) {
           return false;
         }
 
-        if (
-          metaModel.entity.aspectModelUrn === metaModelElement.dataType?.getUrn() ||
-          (metaModel.parents.some(parent => parent.aspectModelUrn === metaModelElement.aspectModelUrn) && metaModel.parents.length - 1 > 0)
-        ) {
-          return false;
-        }
-
-        return true;
+        return !this.hasSameEntityAsEnumeration(childModelElement, modelElement);
       }) || [];
 
     this.mxGraphService.removeCells(
       outGoingCells.map(edge => {
-        const metaModel = MxGraphHelper.getModelElement(edge.target);
-        if (metaModel instanceof DefaultEntity) {
+        const modelElement = MxGraphHelper.getModelElement(edge.target);
+        if (modelElement instanceof DefaultEntity) {
           return edge;
         }
 
-        if (!metaModel.isExternalReference()) {
-          this.namespaceCacheService.getCurrentCachedFile().removeCachedElement(metaModel.aspectModelUrn);
+        if (!modelElement.isExternalReference()) {
+          this.namespaceCacheService.currentCachedFile.removeCachedElement(modelElement.aspectModelUrn);
         }
         return edge.target;
       })
     );
   }
 
+  private hasSameEntityAsEnumeration(childModelElement: DefaultEntityValue, modelElement: DefaultEnumeration) {
+    return (
+      childModelElement.entity.aspectModelUrn === modelElement.dataType?.getUrn() ||
+      (childModelElement.parents.some(parent => parent.aspectModelUrn === modelElement.aspectModelUrn) &&
+        childModelElement.parents.length > 1)
+    );
+  }
+
   private handleBottomOverlay(cell: mxgraph.mxCell) {
-    const metaModelElement = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
-    if (!(metaModelElement instanceof DefaultEither)) {
+    const modelElement = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
+    if (!(modelElement instanceof DefaultEither)) {
       this.mxGraphShapeOverlayService.removeOverlay(cell, null);
-      if (metaModelElement?.isPredefined()) {
+      if (modelElement?.isPredefined()) {
         this.mxGraphShapeOverlayService.addTopShapeOverlay(cell);
       } else {
         this.mxGraphShapeOverlayService.addTopShapeOverlay(cell);
@@ -153,7 +157,9 @@ export class EnumerationRenderService extends BaseRenderService {
     }
 
     if (newDataType instanceof DefaultEntity) {
-      const entityCell = this.mxGraphService.renderModelElement(newDataType);
+      const entityCell = this.mxGraphService.renderModelElement(
+        this.filtersService.createNode(newDataType, {parent: MxGraphHelper.getModelElement(cell)})
+      );
       this.shapeConnectorService.connectShapes(MxGraphHelper.getModelElement(cell), newDataType, cell, entityCell);
     }
   }
@@ -161,13 +167,13 @@ export class EnumerationRenderService extends BaseRenderService {
   private removeElementCharacteristic(cell: mxgraph.mxCell) {
     const modelElement = MxGraphHelper.getModelElement(cell);
     const edgesToRemove = cell.edges?.filter(edge => {
-      const sourceModel = MxGraphHelper.getModelElement(edge.source);
-      if (modelElement.aspectModelUrn !== sourceModel.aspectModelUrn) {
+      const sourceNode = MxGraphHelper.getModelElement(edge.source);
+      if (modelElement.aspectModelUrn !== sourceNode.aspectModelUrn) {
         return false;
       }
 
       const targetModel = MxGraphHelper.getModelElement(edge.target);
-      return targetModel instanceof DefaultCharacteristic && targetModel.aspectModelUrn !== sourceModel.aspectModelUrn;
+      return targetModel instanceof DefaultCharacteristic && targetModel.aspectModelUrn !== sourceNode.aspectModelUrn;
     });
 
     this.mxGraphService.removeCells(edgesToRemove || []);

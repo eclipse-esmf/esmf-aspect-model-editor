@@ -11,17 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, Inject, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {ElementModel} from '@ame/shared';
+import {FILTER_ATTRIBUTES, FilterAttributesService, ModelFilter} from '@ame/loader-filters';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'ame-sidebar-namespace-elements',
   styleUrls: ['./sidebar-namespace-elements.component.scss'],
   templateUrl: './sidebar-namespace-elements.component.html',
 })
-export class SidebarNamespaceElementsComponent implements OnChanges {
+export class SidebarNamespaceElementsComponent implements OnChanges, OnDestroy {
   @Input() public namespace: string;
   @Input() public elements: ElementModel[];
+
+  private subscription = new Subscription();
 
   public filteredElements: ElementModel[];
   public elementsTypes = [
@@ -42,15 +46,37 @@ export class SidebarNamespaceElementsComponent implements OnChanges {
     return namespaceParts[namespaceParts.length - 1];
   }
 
+  constructor(@Inject(FILTER_ATTRIBUTES) private filterAttributes: FilterAttributesService) {
+    this.subscription = this.filterAttributes.activeFilter$.subscribe(filter => {
+      if (!this.elements || !this.elements.length) {
+        return;
+      }
+
+      if (filter === ModelFilter.PROPERTIES) {
+        this.elementsTypes.forEach(type => (type.elements = []));
+        this.filterElements(this.elements.filter(e => e.type === 'property'));
+      } else {
+        this.filterElements(this.elements);
+      }
+    });
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty('elements')) {
       this.filterElements(this.elements);
     }
   }
 
+  public ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
   public filterElements(elements: ElementModel[]) {
     this.filteredElements = elements;
     for (const type of this.elementsTypes) {
+      if (this.filterAttributes.activeFilter === ModelFilter.PROPERTIES && type.type !== 'property') {
+        continue;
+      }
       type.elements = elements.filter(e => e.type === type.type);
     }
   }

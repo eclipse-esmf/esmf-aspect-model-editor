@@ -68,6 +68,10 @@ button:not([mat-menu-item]) {
   }
 }
 
+button[disabled] {
+  cursor: not-allowed;
+}
+
 .search {
   height: 100%;
   margin-left: 15px;

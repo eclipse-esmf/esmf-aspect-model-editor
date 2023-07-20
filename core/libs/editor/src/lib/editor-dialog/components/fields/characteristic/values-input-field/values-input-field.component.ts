@@ -52,7 +52,7 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
   }
 
   get currentCachedFile() {
-    return this.namespacesCacheService.getCurrentCachedFile();
+    return this.namespacesCacheService.currentCachedFile;
   }
 
   ngOnInit(): void {

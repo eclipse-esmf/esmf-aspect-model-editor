@@ -77,13 +77,8 @@ describe('Property Visitor', () => {
     service = TestBed.inject(PropertyVisitor);
   });
 
-  const getPropertyCell = () => ({
-    getMetaModelElement: jest.fn(() => property),
-  });
-
   it('should update store width default properties', () => {
-    const propertyCell = getPropertyCell();
-    service.visit(propertyCell as any);
+    service.visit(property);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(property, {
       exampleValue: undefined,

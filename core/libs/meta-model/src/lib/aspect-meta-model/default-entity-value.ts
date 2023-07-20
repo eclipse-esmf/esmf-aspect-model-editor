@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AspectModelVisitor} from '@ame/mx-graph';
-import {Base, BaseMetaModelElement} from './base';
+import {Base, BaseMetaModelElement, ModelRelationArray} from './base';
 import {DefaultEntity} from './default-entity';
 import {DefaultEnumeration} from './default-enumeration';
 import {DefaultProperty} from './default-property';
@@ -26,7 +25,6 @@ export interface EntityValueProperty {
 
 export interface EntityValueProperties {
   properties: EntityValueProperty[];
-  parents: DefaultEnumeration[];
 }
 
 export interface EntityValue extends BaseMetaModelElement, EntityValueProperties {}
@@ -34,7 +32,7 @@ export interface EntityValue extends BaseMetaModelElement, EntityValueProperties
 // Draft class, to be updated if needed
 export class DefaultEntityValue extends Base implements EntityValue {
   public properties: EntityValueProperty[] = [];
-  public parents: DefaultEnumeration[] = [];
+  public parents: DefaultEnumeration[] = new ModelRelationArray();
 
   static createInstance() {
     return new DefaultEntityValue(null, 'EntityValue', null, null, []);
@@ -53,10 +51,6 @@ export class DefaultEntityValue extends Base implements EntityValue {
   ) {
     super(metaModelVersion, aspectModelUrn, name);
     this.properties = properties?.map(key => ({key, value: ''})) || [];
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitEntityValue(this, context);
   }
 
   public addProperty(overWrittenProperty: OverWrittenProperty<any>, value: string | DefaultEntityValue = '') {

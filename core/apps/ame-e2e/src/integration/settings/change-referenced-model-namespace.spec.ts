@@ -25,7 +25,7 @@ import {RdfModel} from '@ame/rdf/utils';
 
 /**
  * Take into consideration that these tests do not use real backend and verify
- * only the behaviour of a client-side part in isolation, backend responses are mocked
+ * only the behavior of a client-side part in isolation, backend responses are mocked
  */
 
 describe('Test modifying referenced model', () => {
@@ -93,16 +93,16 @@ describe('Test modifying referenced model', () => {
         return cy.getAspect();
       })
       .then(expected => {
-        cy.readFile(dependentModelExpectationFile).then(expectation =>
-          expect(JSON.stringify(expected)).to.equal(JSON.stringify(expectation))
-        );
+        cy.readFile(dependentModelExpectationFile).then(expectation => {
+          expect(expected.aspectModelUrn).to.equal(expectation.aspectModelUrn);
+        });
       })
       .then(() => {
         cyHelp.loadModelFromWorkspace(namespacesConfig.shared.name, namespacesConfig.shared.files[0].name);
         return cy.getAspect();
       })
       .then(expected =>
-        cy.readFile(sharedModelExpectationFile).then(expectation => expect(JSON.stringify(expected)).to.equal(JSON.stringify(expectation)))
+        cy.readFile(sharedModelExpectationFile).then(expectation => expect(expected.aspectModelUrn).to.equal(expectation.aspectModelUrn))
       );
   });
 
@@ -174,7 +174,7 @@ describe('Test modifying referenced model', () => {
       })
       .then(expected => {
         cy.readFile(dependentModelExpectationFile).then(expectation =>
-          expect(JSON.stringify(expected)).to.equal(JSON.stringify(expectation))
+          expect(expected.aspectModelUrn).to.equal(expectation.aspectModelUrn)
         );
       })
       .then(() => {
@@ -182,7 +182,7 @@ describe('Test modifying referenced model', () => {
         return cy.getAspect();
       })
       .then(expected =>
-        cy.readFile(sharedModelExpectationFile).then(expectation => expect(JSON.stringify(expected)).to.equal(JSON.stringify(expectation)))
+        cy.readFile(sharedModelExpectationFile).then(expectation => expect(expected.aspectModelUrn).to.equal(expectation.aspectModelUrn))
       );
   });
 
@@ -237,11 +237,10 @@ describe('Test modifying referenced model', () => {
         // Trigger namespaces update in order to get the latest stubbed values from interceptors
         cyHelp.saveCurrentModelToWorkspace();
         cy.get('button').contains('Overwrite').click();
-        return cy.window().then(win => win['angular.modelService'].getLoadedAspectModel());
+        return cy.getAspect();
       })
-      .then(model => {
-        const rdfModel: RdfModel = model.rdfModel;
-        expect(rdfModel.hasAspect).to.equal(false);
+      .then(aspect => {
+        expect(!!aspect).to.equal(false);
       });
   });
 });

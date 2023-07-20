@@ -12,11 +12,10 @@
  */
 
 import {Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {BaseVisitor} from '../base-visitor';
-import {Characteristic, DefaultCharacteristic, DefaultEntity} from '@ame/meta-model';
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {DefaultCharacteristic, DefaultEntity} from '@ame/meta-model';
+import {MxGraphService} from '@ame/mx-graph';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {RdfService} from '@ame/rdf/services';
 import {DataFactory, Store} from 'n3';
@@ -36,13 +35,16 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
     super(rdfService);
   }
 
-  visit(cell: mxgraph.mxCell): DefaultEntity {
+  visit(entity: DefaultEntity): DefaultEntity {
+    if (entity.isPredefined()) {
+      return null;
+    }
+
     this.store = this.rdfService.currentRdfModel.store;
     this.samm = this.rdfService.currentRdfModel.samm;
-    const entity: DefaultEntity = MxGraphHelper.getModelElement(cell);
     this.setPrefix(entity.aspectModelUrn);
     const newAspectModelUrn = `${entity.aspectModelUrn.split('#')[0]}#${entity.name}`;
-    this.updateParents(cell);
+    this.updateParents(entity);
     entity.aspectModelUrn = newAspectModelUrn;
     this.updateProperties(entity);
     this.updateExtends(entity);
@@ -73,17 +75,11 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
     }
   }
 
-  private updateParents(cell: mxgraph.mxCell) {
-    const entity = MxGraphHelper.getModelElement<DefaultEntity>(cell);
-    const parents = this.graphService
-      .resolveParents(cell)
-      ?.map((parent: mxgraph.mxCell) => MxGraphHelper.getModelElement<Characteristic>(parent))
-      ?.filter(metaModelElement => metaModelElement instanceof DefaultCharacteristic);
+  private updateParents(entity: DefaultEntity) {
+    const parents = entity.parents.filter(metaModelElement => metaModelElement instanceof DefaultCharacteristic);
 
-    if (parents) {
-      for (const parent of parents) {
-        this.rdfNodeService.update(parent, {dataType: entity.aspectModelUrn});
-      }
+    for (const parent of parents) {
+      this.rdfNodeService.update(parent, {dataType: entity.aspectModelUrn});
     }
   }
 

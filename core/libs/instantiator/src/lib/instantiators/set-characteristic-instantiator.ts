@@ -21,7 +21,7 @@ export class SetCharacteristicInstantiator extends CollectionCharacteristicInsta
     super(metaModelElementInstantiator, nextProcessor);
   }
 
-  protected creatCollectionObject(): Collection {
+  protected createCollectionObject(): Collection {
     return new DefaultSet(null, null, null, null);
   }
 

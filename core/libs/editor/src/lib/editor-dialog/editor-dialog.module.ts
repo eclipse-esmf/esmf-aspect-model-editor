@@ -43,6 +43,7 @@ import {
   DefaultValueInputFieldComponent,
   DescriptionInputFieldComponent,
   ElementCharacteristicInputFieldComponent,
+  ElementListComponent,
   EncodingInputFieldComponent,
   EntityComponent,
   EntityExtendsFieldComponent,
@@ -79,6 +80,7 @@ import {
   ScaleInputFieldComponent,
   SeeInputFieldComponent,
   ShapeSettingsComponent,
+  ModelElementParser,
   StateCharacteristicComponent,
   StructuredValueComponent,
   StructuredValuePropertiesComponent,
@@ -89,6 +91,7 @@ import {
   UnitInputFieldComponent,
   UpperBoundInputFieldComponent,
   ValuesInputFieldComponent,
+  LocateElementComponent,
 } from './components';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {CommonModule} from '@angular/common';
@@ -181,6 +184,9 @@ import {MatDialogModule} from '@angular/material/dialog';
     StructuredValuePropertyFieldComponent,
     StructuredValuePropertiesComponent,
     EntityExtendsFieldComponent,
+    ElementListComponent,
+    ModelElementParser,
+    LocateElementComponent,
   ],
   exports: [ShapeSettingsComponent],
 })

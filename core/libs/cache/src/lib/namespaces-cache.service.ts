@@ -20,8 +20,15 @@ import {Base} from '@ame/meta-model';
   providedIn: 'root',
 })
 export class NamespacesCacheService {
-  private namespaces = new Map<string, Map<string, CachedFile>>();
-  private currentCachedFile: CachedFile;
+  #namespaces = new Map<string, Map<string, CachedFile>>();
+  #currentCachedFile: CachedFile;
+
+  /**
+   * Return the file the user is working on
+   */
+  get currentCachedFile(): CachedFile {
+    return this.#currentCachedFile;
+  }
 
   constructor(public sidebarService: SidebarService) {}
 
@@ -32,7 +39,7 @@ export class NamespacesCacheService {
    * @returns CachedFile[]
    */
   getFiles(namespace: string = ''): CachedFile[] {
-    return Array.from(this.namespaces.entries())
+    return Array.from(this.#namespaces.entries())
       .filter(([existingNamespace]) => existingNamespace.includes(namespace || ''))
       .reduce((acc, [, mapFile]) => [...acc, ...mapFile.values()], []);
   }
@@ -43,7 +50,7 @@ export class NamespacesCacheService {
    * @param namespaceKey - namespace name
    */
   getNamespace(namespaceKey: string): Map<string, CachedFile> {
-    return this.namespaces.get(namespaceKey);
+    return this.#namespaces.get(namespaceKey);
   }
 
   /**
@@ -53,12 +60,12 @@ export class NamespacesCacheService {
    * @param fileKey - fileName
    */
   addFile(namespaceKey: string, fileKey: string): CachedFile {
-    let namespace = this.namespaces.get(namespaceKey);
+    let namespace = this.#namespaces.get(namespaceKey);
 
     if (!namespace) {
       namespace = new Map<string, CachedFile>();
       namespace.set(fileKey, new CachedFile(fileKey, namespaceKey));
-      this.namespaces.set(namespaceKey, namespace);
+      this.#namespaces.set(namespaceKey, namespace);
       return namespace.get(fileKey);
     }
 
@@ -77,21 +84,14 @@ export class NamespacesCacheService {
    * @param filePath array which contains 2 strings: `[namespace, fileName]`
    */
   getFile(filePath: [string, string]): CachedFile {
-    return Array.isArray(filePath) && filePath.length === 2 ? this.namespaces?.get(filePath[0])?.get(filePath[1]) : null;
-  }
-
-  /**
-   * Return the file the user is working on
-   */
-  getCurrentCachedFile(): CachedFile {
-    return this.currentCachedFile;
+    return Array.isArray(filePath) && filePath.length === 2 ? this.#namespaces?.get(filePath[0])?.get(filePath[1]) : null;
   }
 
   /**
    * Sets the file the user is working on
    */
   setCurrentCachedFile(file: CachedFile) {
-    this.currentCachedFile = file;
+    this.#currentCachedFile = file;
   }
 
   /**
@@ -102,9 +102,9 @@ export class NamespacesCacheService {
    */
   findElementOnExtReference<T>(aspectModelUrn: string): T {
     const [namespace] = aspectModelUrn.split('#');
-    const cachedFiles = Array.from(this.namespaces.get(namespace + '#')?.values() || []);
+    const cachedFiles = Array.from(this.#namespaces.get(namespace + '#')?.values() || []);
     return cachedFiles
-      .find(cachedFile => this.currentCachedFile !== cachedFile && !!cachedFile.getEitherElement(aspectModelUrn))
+      .find(cachedFile => this.#currentCachedFile !== cachedFile && !!cachedFile.getEitherElement(aspectModelUrn))
       ?.getEitherElement(aspectModelUrn);
   }
 
@@ -115,7 +115,7 @@ export class NamespacesCacheService {
    * @param fileKey - fileName
    */
   removeFile(namespaceKey: string, fileKey: string): void {
-    const namespace = this.namespaces.get(namespaceKey);
+    const namespace = this.#namespaces.get(namespaceKey);
     if (!namespace) {
       return;
     }
@@ -129,8 +129,8 @@ export class NamespacesCacheService {
    * Remove all namespaces and the current cache file
    */
   removeAll(): void {
-    this.currentCachedFile = null;
-    this.namespaces = new Map<string, Map<string, CachedFile>>();
+    this.#currentCachedFile = null;
+    this.#namespaces = new Map<string, Map<string, CachedFile>>();
   }
 
   /**
@@ -140,10 +140,10 @@ export class NamespacesCacheService {
    * @param newUrn - new namespace key
    */
   updateNamespaceKey(oldUrn: string, newUrn: string) {
-    const values = this.namespaces.get(oldUrn);
+    const values = this.#namespaces.get(oldUrn);
 
-    this.namespaces.delete(oldUrn);
-    this.namespaces.set(newUrn, values);
+    this.#namespaces.delete(oldUrn);
+    this.#namespaces.set(newUrn, values);
   }
 
   /**
@@ -154,7 +154,7 @@ export class NamespacesCacheService {
   resolveCachedElement(element: Base) {
     let cachedProperty = this.findElementOnExtReference<Base>(element.aspectModelUrn);
     if (!cachedProperty) {
-      cachedProperty = this.currentCachedFile.resolveCachedElement(element);
+      cachedProperty = this.#currentCachedFile.resolveCachedElement(element);
     }
     return cachedProperty;
   }

@@ -14,37 +14,62 @@ import {IsNamed} from './is-named';
 import {IsVersioned} from './is-versioned';
 import {IsDescribed} from './is-described';
 import {ExternalReference} from './external-reference';
-import {AspectModelVisitor} from '@ame/mx-graph';
 
 export interface BaseElement extends IsNamed, IsVersioned {}
 
 export interface BaseMetaModelElement extends BaseElement, IsDescribed, ExternalReference {
   fileName: string;
+  parents: BaseMetaModelElement[];
+  children: BaseMetaModelElement[];
   get className(): string;
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T;
+  isPredefined(): boolean;
+}
+
+export class ModelRelationArray<T extends BaseMetaModelElement> extends Array<T> {
+  push(...items: T[]): number {
+    let pushedItemsCount = 0;
+    for (const item of items) {
+      const existent = this.some(e => e.aspectModelUrn === item.aspectModelUrn);
+      if (existent) {
+        continue;
+      }
+
+      super.push(item);
+      ++pushedItemsCount;
+    }
+
+    return pushedItemsCount;
+  }
 }
 
 export abstract class Base implements BaseMetaModelElement {
   public preferredNames: Map<string, string>;
   public descriptions: Map<string, string>;
   public see?: Array<string> = [];
-  public anonymouseNode = false;
+  public anonymousNode = false;
   public externalReference = false;
+  public predefined = false;
   public fileName: string;
 
-  abstract get className();
+  public parents: BaseMetaModelElement[];
+  public children: BaseMetaModelElement[];
+
+  abstract get className(): string;
 
   protected constructor(public metaModelVersion: string, public aspectModelUrn: string, public name: string) {
     this.preferredNames = new Map();
     this.descriptions = new Map();
+
+    this.children = new ModelRelationArray();
+    this.parents = new ModelRelationArray();
   }
 
   isAnonymousNode(): boolean {
-    return this.anonymouseNode;
+    return this.anonymousNode;
   }
 
-  setAnonymouseNode(value: boolean) {
-    this.anonymouseNode = value;
+  setAnonymousNode(value: boolean) {
+    this.anonymousNode = value;
   }
 
   addDescription(locale: string, description: string) {
@@ -95,8 +120,6 @@ export abstract class Base implements BaseMetaModelElement {
     return this.see.push(reference);
   }
 
-  abstract accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T;
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   delete(_baseMetalModelElement: BaseMetaModelElement) {
     // This is intentional
@@ -113,5 +136,9 @@ export abstract class Base implements BaseMetaModelElement {
 
   isExternalReference() {
     return this.externalReference;
+  }
+
+  isPredefined() {
+    return this.predefined;
   }
 }

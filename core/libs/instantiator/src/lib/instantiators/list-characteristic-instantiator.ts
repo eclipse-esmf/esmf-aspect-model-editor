@@ -21,7 +21,7 @@ export class ListCharacteristicInstantiator extends CollectionCharacteristicInst
     super(metaModelElementInstantiator, nextProcessor);
   }
 
-  protected creatCollectionObject(): Collection {
+  protected createCollectionObject(): Collection {
     return new DefaultList(null, null, null, null);
   }
 

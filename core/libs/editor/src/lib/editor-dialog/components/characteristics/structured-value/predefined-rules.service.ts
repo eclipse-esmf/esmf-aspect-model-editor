@@ -23,7 +23,7 @@ export const predefinedRules = {
       {
         label: 'username',
         property: true,
-        characteristic: {type: simpleDataTypes.string, name: 'UsernameCharacteristic'},
+        characteristic: {type: simpleDataTypes?.string, name: 'UsernameCharacteristic'},
       },
       {
         label: '@',
@@ -32,7 +32,7 @@ export const predefinedRules = {
       {
         label: 'host',
         property: true,
-        characteristic: {type: simpleDataTypes.string, name: 'HostCharacteristic'},
+        characteristic: {type: simpleDataTypes?.string, name: 'HostCharacteristic'},
       },
     ],
   },
@@ -42,7 +42,7 @@ export const predefinedRules = {
       {
         label: 'year',
         property: true,
-        characteristic: {type: simpleDataTypes.int, name: 'YearCharacteristic'},
+        characteristic: {type: simpleDataTypes?.int, name: 'YearCharacteristic'},
       },
       {
         label: '-',
@@ -51,7 +51,7 @@ export const predefinedRules = {
       {
         label: 'month',
         property: true,
-        characteristic: {type: simpleDataTypes.int, name: 'MonthCharacteristic'},
+        characteristic: {type: simpleDataTypes?.int, name: 'MonthCharacteristic'},
       },
       {
         label: '-',
@@ -60,7 +60,7 @@ export const predefinedRules = {
       {
         label: 'day',
         property: true,
-        characteristic: {type: simpleDataTypes.int, name: 'DayCharacteristic'},
+        characteristic: {type: simpleDataTypes?.int, name: 'DayCharacteristic'},
       },
     ],
   },
@@ -74,17 +74,17 @@ export const predefinedRules = {
       {
         label: 'red',
         property: true,
-        characteristic: {type: simpleDataTypes.string, name: 'RedCharacteristic'},
+        characteristic: {type: simpleDataTypes?.string, name: 'RedCharacteristic'},
       },
       {
         label: 'green',
         property: true,
-        characteristic: {type: simpleDataTypes.string, name: 'GreenCharacteristic'},
+        characteristic: {type: simpleDataTypes?.string, name: 'GreenCharacteristic'},
       },
       {
         label: 'blue',
         property: true,
-        characteristic: {type: simpleDataTypes.string, name: 'BlueCharacteristic'},
+        characteristic: {type: simpleDataTypes?.string, name: 'BlueCharacteristic'},
       },
     ],
   },

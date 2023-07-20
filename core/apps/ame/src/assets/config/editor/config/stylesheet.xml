@@ -129,4 +129,8 @@
 		<add as="rounded" value="1"/>
 		<add as="fillOpacity" value="70"/>
 	</add>
+
+	<!-- Filtered properties -->
+	<add as="filteredProperties_entity" extend="trait"></add>
+	<add as="filteredProperties_either" extend="trait"></add>
 </mxStylesheet>

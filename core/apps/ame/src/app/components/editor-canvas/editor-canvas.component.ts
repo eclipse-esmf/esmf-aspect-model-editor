@@ -11,28 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {mxgraph} from 'mxgraph-factory';
-import {ElementModelService} from '@ame/meta-model';
-import {
-  mxConstants,
-  mxEvent,
-  MxGraphAttributeService,
-  MxGraphHelper,
-  MxGraphService,
-  MxGraphShapeSelectorService,
-  mxUtils,
-} from '@ame/mx-graph';
-import {BindingsService, LogService} from '@ame/shared';
-import {EditorService, ShapeSettingsComponent} from '@ame/editor';
+import {BaseMetaModelElement, ElementModelService} from '@ame/meta-model';
+import {MxGraphService} from '@ame/mx-graph';
+import {LogService} from '@ame/shared';
+import {ShapeSettingsService} from '@ame/editor';
 import {ModelService} from '@ame/rdf/services';
 import {FormGroup} from '@angular/forms';
-
-const PURPLE_BLUE = '#448ee4';
-const BLACK = 'black';
 
 @Component({
   selector: 'ame-editor-canvas',
@@ -40,58 +29,41 @@ const BLACK = 'black';
   styleUrls: ['./editor-canvas.component.scss'],
 })
 export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
-  @ViewChild(ShapeSettingsComponent) shapeSettingsComponent: ShapeSettingsComponent;
-  @ViewChild('graph') graphElement: ElementRef<HTMLDivElement>;
-
   private unsubscribe: Subject<void> = new Subject();
-  private selectedShapeForUpdate: mxgraph.mxCell | null;
-  private shapesToHighlight: Array<mxgraph.mxCell> | null;
 
-  public isShapeSettingOpened = false;
-  public modelElement = null;
+  private get selectedShapeForUpdate(): mxgraph.mxCell | null {
+    return this.shapeSettingsService.selectedShapeForUpdate;
+  }
+
+  public get isShapeSettingOpened() {
+    return this.shapeSettingsService.isShapeSettingOpened;
+  }
+
+  public get modelElement(): BaseMetaModelElement {
+    return this.shapeSettingsService.modelElement;
+  }
 
   constructor(
-    private editorService: EditorService,
+    private shapeSettingsService: ShapeSettingsService,
     private mxGraphService: MxGraphService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private modelService: ModelService,
     private logService: LogService,
-    private bindingsService: BindingsService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private elementModelService: ElementModelService,
     private changeDetector: ChangeDetectorRef
-  ) {}
-
-  ngAfterViewInit(): void {
-    this.mxGraphAttributeService.graph.addListener(
-      mxEvent.MOVE_CELLS,
-      mxUtils.bind(this, () => {
-        this.mxGraphAttributeService.graph.resetEdgesOnMove = true;
+  ) {
+    this.shapeSettingsService.onSettingsOpened$.subscribe(() =>
+      requestAnimationFrame(() => {
+        this.changeDetector.detectChanges();
       })
     );
-    this.mxGraphAttributeService.graph.addListener(mxEvent.FOLD_CELLS, () => this.mxGraphService.formatShapes());
-    this.mxGraphAttributeService.graph.addListener(mxEvent.DOUBLE_CLICK, () => this.onEditSelectedCell());
-    // actions for context menu
-    this.bindingsService.registerAction('editElement', () => this.onEditSelectedCell());
-    this.bindingsService.registerAction('deleteElement', () => this.editorService.deleteSelectedElements());
+  }
 
-    // actions for hotkeys
-    this.editorService.bindAction(
-      'deleteElement',
-      mxUtils.bind(this, () => this.editorService.deleteSelectedElements())
-    );
-
-    this.graphElement.nativeElement.addEventListener('wheel', evt => {
-      if (evt.altKey) {
-        evt.preventDefault();
-      }
-    });
-
-    this.mxGraphAttributeService.graph
-      .getSelectionModel()
-      .addListener(mxEvent.CHANGE, selectionModel => this.onSelectedCell(selectionModel.cells));
+  ngAfterViewInit(): void {
+    this.shapeSettingsService.setGraphListeners();
+    this.shapeSettingsService.setContextMenuActions();
+    this.shapeSettingsService.setHotKeysActions();
   }
 
   ngOnInit() {
@@ -102,7 +74,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
       )
       .subscribe(params => {
         if (this.mxGraphService.navigateToCellByUrn(params?.get('urn'))) {
-          this.onEditSelectedCell();
+          this.shapeSettingsService.editSelectedCell();
         } else {
           this.closeShapeSettings();
         }
@@ -116,7 +88,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
 
   closeShapeSettings() {
     if (this.modelService.getLoadedAspectModel().rdfModel) {
-      this.isShapeSettingOpened = false;
+      this.shapeSettingsService.closeShapeSettings();
       this.changeDetector.detectChanges();
     }
   }
@@ -132,46 +104,8 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   resetSelectedShapeForUpdate() {
-    this.isShapeSettingOpened = false;
-    this.selectedShapeForUpdate = null;
-  }
-
-  onEditSelectedCell() {
-    this.selectedShapeForUpdate = this.mxGraphShapeSelectorService.getSelectedShape();
-
-    if (!this.selectedShapeForUpdate) {
-      return;
-    }
-
-    this.isShapeSettingOpened = true;
-    this.modelElement = MxGraphHelper.getModelElement(this.selectedShapeForUpdate);
-    this.changeDetector.detectChanges();
-  }
-
-  onSelectedCell(cells: Array<mxgraph.mxCell>) {
-    if (this.shapesToHighlight) {
-      this.setCellColor(BLACK);
-    }
-
-    if (!cells.length || cells.length >= 2) {
-      return;
-    }
-
-    this.shapesToHighlight = [];
-    const selectedCell = cells[0];
-
-    if (!selectedCell.isEdge()) {
-      this.shapesToHighlight.push(...this.mxGraphAttributeService.graph.getOutgoingEdges(selectedCell));
-      const elementShapes = this.shapesToHighlight.filter(edge => MxGraphHelper.getModelElement(edge.target)).map(edge => edge.target);
-      this.shapesToHighlight.push(...elementShapes);
-      this.setCellColor(PURPLE_BLUE);
-    }
-
-    this.changeDetector.detectChanges();
-  }
-
-  private setCellColor(value: string) {
-    this.mxGraphAttributeService.graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, value, this.shapesToHighlight);
+    this.shapeSettingsService.closeShapeSettings();
+    this.shapeSettingsService.unselectShapeForUpdate();
   }
 
   ngOnDestroy(): void {

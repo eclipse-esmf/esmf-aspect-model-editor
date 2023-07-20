@@ -38,6 +38,7 @@ import {
 import {DefaultCharacteristic} from '../aspect-meta-model/default-characteristic';
 import {DefaultEntity} from '../aspect-meta-model/default-entity';
 import {BaseModelService} from './base-model-service';
+import {FiltersService} from '@ame/loader-filters';
 
 @Injectable({providedIn: 'root'})
 export class CharacteristicModelService extends BaseModelService {
@@ -46,7 +47,8 @@ export class CharacteristicModelService extends BaseModelService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphService: MxGraphService,
     private characteristicRenderer: CharacteristicRenderService,
-    private enumerationRenderer: EnumerationRenderService
+    private enumerationRenderer: EnumerationRenderService,
+    private filtersService: FiltersService
   ) {
     super();
   }
@@ -56,6 +58,7 @@ export class CharacteristicModelService extends BaseModelService {
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
+    const originalModelElement = MxGraphHelper.getModelElement(cell);
     const {metaModelElement, cell: newCell} = this.onChangedMetaModel(cell, form);
 
     if (!metaModelElement) {
@@ -76,7 +79,7 @@ export class CharacteristicModelService extends BaseModelService {
     this.updateDatatype(metaModelElement, form);
     this.handleStructuredValue(cell, form);
 
-    this.updateFields(metaModelElement, form);
+    this.updateFields(metaModelElement, form, originalModelElement);
     if (metaModelElement instanceof DefaultEnumeration || metaModelElement instanceof DefaultState) {
       if (metaModelElement instanceof DefaultState) {
         metaModelElement.defaultValue = form.defaultValue;
@@ -89,12 +92,12 @@ export class CharacteristicModelService extends BaseModelService {
 
   delete(cell: mxgraph.mxCell): void {
     super.delete(cell);
-    const modelElement = MxGraphHelper.getModelElement(cell);
+    const elementModel = MxGraphHelper.getModelElement(cell);
     const outgoingEdges = this.mxGraphAttributeService.graph.getOutgoingEdges(cell);
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
     this.removePredefinedUnit(outgoingEdges);
-    this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
-    this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, modelElement);
+    this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, elementModel);
+    this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, elementModel);
     this.mxGraphService.removeCells([cell]);
   }
 
@@ -108,9 +111,10 @@ export class CharacteristicModelService extends BaseModelService {
   }
 
   private onChangedMetaModel(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    let metaModelElement: DefaultCharacteristic = MxGraphHelper.getModelElement(cell);
+    let metaModelElement = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
     if (form.changedMetaModel) {
       this.changeMetaModel(metaModelElement, form, cell);
+      const originalModelElement = metaModelElement;
       metaModelElement = form.changedMetaModel;
 
       if (!metaModelElement.isPredefined()) {
@@ -128,6 +132,10 @@ export class CharacteristicModelService extends BaseModelService {
         )
       ) {
         // in case this is a predefined characteristic, no need to update anything
+        const children = [...(originalModelElement.children || [])];
+        for (const child of children) {
+          MxGraphHelper.removeRelation(originalModelElement, child);
+        }
         this.characteristicRenderer.update({cell, form});
         return {};
       }
@@ -136,7 +144,7 @@ export class CharacteristicModelService extends BaseModelService {
   }
 
   private handleStructuredValue(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement: DefaultCharacteristic = MxGraphHelper.getModelElement(cell);
+    const metaModelElement = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
     if (!(metaModelElement instanceof DefaultStructuredValue)) {
       return;
     }
@@ -149,9 +157,10 @@ export class CharacteristicModelService extends BaseModelService {
       metaModelElement.elements = form.elements;
       form.elements.forEach(element => {
         if (typeof element !== 'string' && element?.property instanceof DefaultProperty) {
-          this.namespacesCacheService.getCurrentCachedFile().resolveElement(element.property);
+          this.namespacesCacheService.currentCachedFile.resolveElement(element.property);
+          MxGraphHelper.establishRelation(metaModelElement, element);
           if (element.property.characteristic) {
-            this.namespacesCacheService.getCurrentCachedFile().resolveElement(element.property.characteristic);
+            this.namespacesCacheService.currentCachedFile.resolveElement(element.property.characteristic);
           }
         }
       });
@@ -159,13 +168,12 @@ export class CharacteristicModelService extends BaseModelService {
   }
 
   private removeUnusedEntityValues(metaModelElement: BaseMetaModelElement) {
-    const unusedEntityValues = this.namespacesCacheService
-      .getCurrentCachedFile()
+    const unusedEntityValues = this.namespacesCacheService.currentCachedFile
       .getCachedEntityValues()
       .filter(ev => ev.parents?.length <= 1 && ev.parents?.some(parent => parent.aspectModelUrn === metaModelElement.aspectModelUrn));
 
     for (const ev of unusedEntityValues) {
-      this.namespacesCacheService.getCurrentCachedFile().removeCachedElement(ev.aspectModelUrn);
+      this.namespacesCacheService.currentCachedFile.removeCachedElement(ev.aspectModelUrn);
     }
   }
 
@@ -173,15 +181,18 @@ export class CharacteristicModelService extends BaseModelService {
     this.mxGraphAttributeService.graph.getOutgoingEdges(cell).forEach(edge => {
       const modelElement = MxGraphHelper.getModelElement(edge.target);
       if (modelElement instanceof DefaultEntityValue) {
+        MxGraphHelper.removeRelation(MxGraphHelper.getModelElement(cell), modelElement);
         this.currentCachedFile.removeCachedElement(modelElement.aspectModelUrn);
       }
     });
   }
 
-  private updateParentModel(cell: mxgraph.mxCell, value: any) {
-    this.mxGraphAttributeService.graph.getIncomingEdges(cell).forEach(cellParent => {
-      const modelElementParent = MxGraphHelper.getModelElement<Base>(cellParent.source);
+  private updateParentModel(cell: mxgraph.mxCell, value: any, oldModel?: BaseMetaModelElement) {
+    this.mxGraphAttributeService.graph.getIncomingEdges(cell).forEach(edgeToParent => {
+      const modelElementParent = MxGraphHelper.getModelElement<Base>(edgeToParent.source);
       if (modelElementParent) {
+        MxGraphHelper.removeRelation(modelElementParent, oldModel);
+        MxGraphHelper.establishRelation(modelElementParent, value);
         modelElementParent.update(value);
       }
     });
@@ -200,12 +211,9 @@ export class CharacteristicModelService extends BaseModelService {
     }
   }
 
-  private updateFields(metaModelElement: DefaultCharacteristic, form: {[key: string]: any}) {
+  private updateFields(metaModelElement: DefaultCharacteristic, form: {[key: string]: any}, originalModelElement?: BaseMetaModelElement) {
     if (metaModelElement instanceof DefaultQuantifiable) {
-      metaModelElement.unit = form.unit;
-      if (form.unit && !form.unit?.isPredefined()) {
-        this.currentCachedFile.resolveCachedElement(form.unit);
-      }
+      this.handleQuantifiableUnit(metaModelElement, form, originalModelElement as DefaultQuantifiable);
     } else if (metaModelElement instanceof DefaultEnumeration && metaModelElement.dataType instanceof DefaultEntity) {
       // complex enumeration
       metaModelElement.createdFromEditor = true;
@@ -217,7 +225,36 @@ export class CharacteristicModelService extends BaseModelService {
       metaModelElement.elementCharacteristic = form.elementCharacteristic;
       if (form.elementCharacteristic) {
         this.namespacesCacheService.resolveCachedElement(form.elementCharacteristic);
+        MxGraphHelper.establishRelation(metaModelElement, form.elementCharacteristic);
       }
+    }
+  }
+
+  private handleQuantifiableUnit(
+    metaModelElement: DefaultQuantifiable,
+    form: {[key: string]: any},
+    originalModelElement?: DefaultQuantifiable
+  ) {
+    if (metaModelElement.unit) {
+      if (
+        metaModelElement.unit?.aspectModelUrn !== form.unit?.aspectModelUrn ||
+        metaModelElement.className !== originalModelElement.className
+      ) {
+        MxGraphHelper.removeRelation(metaModelElement, metaModelElement.unit);
+      }
+    }
+
+    if (originalModelElement?.unit) {
+      MxGraphHelper.removeRelation(originalModelElement, originalModelElement.unit);
+    }
+
+    metaModelElement.unit = form.unit;
+    if (form.unit instanceof DefaultUnit) {
+      MxGraphHelper.establishRelation(metaModelElement, form.unit);
+    }
+
+    if (form.unit && !form.unit?.isPredefined()) {
+      this.currentCachedFile.resolveCachedElement(form.unit);
     }
   }
 
@@ -238,17 +275,17 @@ export class CharacteristicModelService extends BaseModelService {
   }
 
   private updateComplexEnumeration(metaModelElement: DefaultEnumeration, form: {[key: string]: any}) {
-    const deletedEntityValues: DefaultEntityValue[] = form.deleteEntityValues || [];
-    deletedEntityValues.forEach(entityValue => this.deleteEntityValue(entityValue));
+    const deletedEntityValues: DefaultEntityValue[] = form.deletedEntityValues || [];
+    deletedEntityValues.forEach(entityValue => this.deleteEntityValue(entityValue, metaModelElement));
 
     // create new entity values (add to cache service)
-    this.addNewEntityValues(form.chipList || []);
+    this.addNewEntityValues(form.chipList || [], metaModelElement);
     metaModelElement.values = [...form.chipList];
   }
 
   private changeMetaModel(metaModelElement: DefaultCharacteristic, form: {[key: string]: any}, cell: mxgraph.mxCell) {
-    this.updateParentModel(cell, form.changedMetaModel);
+    this.updateParentModel(cell, form.changedMetaModel, metaModelElement);
     this.updateModelElementCache(metaModelElement, form.changedMetaModel);
-    MxGraphHelper.setModelElement(cell, form.changedMetaModel);
+    MxGraphHelper.setElementNode(cell, this.filtersService.createNode(form.changedMetaModel));
   }
 }

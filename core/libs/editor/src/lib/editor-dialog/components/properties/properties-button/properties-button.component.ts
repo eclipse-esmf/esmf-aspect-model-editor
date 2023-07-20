@@ -41,7 +41,7 @@ export class PropertiesButtonComponent implements OnInit {
 
   public metaModelElement: DefaultEntity | DefaultAspect | DefaultAbstractEntity;
   public get isPredefined(): boolean {
-    return typeof this.metaModelElement?.['isPredefined'] === 'function' && this.metaModelElement?.['isPredefined']();
+    return this.metaModelElement?.isPredefined();
   }
 
   constructor(private matDialog: MatDialog, private metaModelDialogService: EditorModelService) {}
@@ -77,7 +77,7 @@ export class PropertiesButtonComponent implements OnInit {
           return;
         }
 
-        this.propertiesClone = JSON.parse(JSON.stringify(this.metaModelElement.properties)) as Array<OverWrittenProperty>;
+        this.propertiesClone = this.metaModelElement.properties.map(({property, keys}) => ({property, keys: {...keys}}));
         for (const {
           property: {aspectModelUrn},
           keys,

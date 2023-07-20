@@ -28,6 +28,7 @@ export class CharacteristicComponent implements OnInit, OnDestroy {
 
   @Input() parentForm;
 
+  public element$ = this.metaModelDialogService.getMetaModelElement();
   constructor(public metaModelDialogService: EditorModelService, private changeDetector: ChangeDetectorRef) {}
 
   ngOnDestroy() {

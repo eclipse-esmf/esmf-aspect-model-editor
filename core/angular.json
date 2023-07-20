@@ -272,6 +272,28 @@
         }
       }
     },
+    "loader-filters": {
+      "projectType": "library",
+      "root": "libs/loader-filters",
+      "sourceRoot": "libs/loader-filters/src",
+      "prefix": "ame",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/loader-filters"],
+          "options": {
+            "jestConfig": "libs/loader-filters/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/loader-filters/src/**/*.ts", "libs/loader-filters/src/**/*.html"]
+          }
+        }
+      }
+    },
     "meta-model": {
       "projectType": "library",
       "root": "libs/meta-model",

@@ -20,9 +20,10 @@ import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import {ConnectWithDialogComponent} from './connect-with-dialog.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
-  imports: [CommonModule, MatDialogModule, MatInputModule, MatIconModule, FormsModule, MatButtonModule, MatMenuModule],
+  imports: [CommonModule, MatDialogModule, MatInputModule, MatIconModule, FormsModule, MatButtonModule, MatMenuModule, MatTooltipModule],
   declarations: [ConnectWithDialogComponent],
   exports: [ConnectWithDialogComponent],
 })

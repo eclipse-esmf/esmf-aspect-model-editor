@@ -12,17 +12,17 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {MetaModelElementInstantiator, UnitInstantiator} from '@ame/instantiator';
+import {MatOptionSelectionChange} from '@angular/material/core';
 import {FormControl, Validators} from '@angular/forms';
+import {DefaultDuration, DefaultMeasurement, DefaultQuantifiable, DefaultUnit, Unit} from '@ame/meta-model';
+import {SearchService} from '@ame/shared';
+import {ModelService, RdfService} from '@ame/rdf/services';
+import {NamespacesCacheService} from '@ame/cache';
 import {Observable} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
-import {DefaultDuration, DefaultMeasurement, DefaultQuantifiable, DefaultUnit, Unit} from '@ame/meta-model';
-import {MetaModelElementInstantiator, UnitInstantiator} from '@ame/instantiator';
-import {EditorModelService} from '../../../../editor-model.service';
-import {NamespacesCacheService} from '@ame/cache';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {SearchService} from '@ame/shared';
 import {EditorDialogValidators} from '../../../../validators';
-import {MatOptionSelectionChange} from '@angular/material/core';
+import {EditorModelService} from '../../../../editor-model.service';
 
 declare const sammUDefinition: any;
 
@@ -112,7 +112,7 @@ export class UnitInputFieldComponent
       )
     );
 
-    this.parentForm.setControl('changedUnit', new FormControl(unitName ? this.unitInstantiator.getUnit(unitName) : null));
+    this.parentForm.setControl('changedUnit', new FormControl(this.getPredefinedUnit(unitName) || unit));
     this.filteredUnits$ = this.initFilteredUnits(this.unitDisplayControl, this.searchService);
     this.filteredPredefinedUnits$ = this.initFilteredPredefinedUnits(this.unitDisplayControl, this.units, this.searchService);
   }
@@ -132,5 +132,9 @@ export class UnitInputFieldComponent
     this.unitDisplayControl.patchValue('');
     this.parentForm.get('unit').setValue(null);
     this.parentForm.get('unit').markAllAsTouched();
+  }
+
+  getPredefinedUnit(unitName: string) {
+    return this.unitInstantiator.createPredefinedUnit(unitName);
   }
 }

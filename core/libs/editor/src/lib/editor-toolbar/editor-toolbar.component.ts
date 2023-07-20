@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {finalize, first, switchMap} from 'rxjs/operators';
-import {Observable, Subscription, take} from 'rxjs';
+import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, inject} from '@angular/core';
+import {finalize, first, switchMap, take} from 'rxjs/operators';
+import {Observable, Subscription} from 'rxjs';
 import {
   MxGraphAttributeService,
   MxGraphHelper,
@@ -22,7 +22,7 @@ import {
   MxGraphShapeSelectorService,
 } from '@ame/mx-graph';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
-import {BindingsService, LoadingScreenOptions, NotificationsService, relations} from '@ame/shared';
+import {BindingsService, LoadingScreenOptions, NotificationsService, cellRelations} from '@ame/shared';
 import {EditorService} from '../editor.service';
 import {ShapeConnectorService} from '@ame/connection';
 import {FileHandlingService, GenerateHandlingService, InformationHandlingService} from './services';
@@ -33,6 +33,8 @@ import {ModelService} from '@ame/rdf/services';
 import {NamespacesManagerService} from '@ame/namespace-manager';
 import {RdfModel} from '@ame/rdf/utils';
 import {readFile} from '@ame/utils';
+import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService, ModelFilter} from '@ame/loader-filters';
+import {ShapeSettingsService} from '../editor-dialog';
 
 @Component({
   selector: 'ame-editor-toolbar',
@@ -40,12 +42,14 @@ import {readFile} from '@ame/utils';
   styleUrls: ['./editor-toolbar.component.scss'],
 })
 export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy {
-  @Output() editSelectedCell = new EventEmitter<any>();
   @Output() closeEditDialog = new EventEmitter<any>();
 
+  public filtersService = inject(FiltersService);
+  public filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
   public isAllShapesExpanded = true;
   public settings: Settings;
   public serializedModel: string;
+  public filterTypes = ModelFilter;
 
   private checkChangesInterval: NodeJS.Timeout;
 
@@ -71,7 +75,8 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private matDialog: MatDialog,
-    private namespaceManagerService: NamespacesManagerService
+    private namespaceManagerService: NamespacesManagerService,
+    private shapeSettingsService: ShapeSettingsService
   ) {}
 
   ngOnInit(): void {
@@ -99,6 +104,10 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
         (document.activeElement as HTMLButtonElement).blur();
       }
     });
+  }
+
+  editSelectedCell() {
+    this.shapeSettingsService.editSelectedCell();
   }
 
   openSettingsDialog() {
@@ -289,7 +298,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     const secondElement = selectedCells[1].style.split(';')[0];
     const modelElements = selectedCells.map(e => MxGraphHelper.getModelElement(e));
 
-    if (secondElement !== firstElement && relations[secondElement].includes(firstElement)) {
+    if (secondElement !== firstElement && cellRelations[secondElement].includes(firstElement)) {
       modelElements.reverse();
       selectedCells.reverse();
     }

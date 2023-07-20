@@ -12,8 +12,8 @@
   -->
 
 <h2 mat-dialog-title>
-  Connect <span class="element-icon element-icon--small" [ngClass]="getClass(connectWithCell)">{{ getFirstLetter(connectWithCell) }}</span
-  >{{ connectWithModel.name }} with...
+  Connect <span class="element-icon element-icon--small" [ngClass]="getClass(connectWithModel)">{{ getFirstLetter(connectWithModel) }}</span
+  >{{ connectWithModel?.name }} with...
 </h2>
 
 <mat-dialog-content>
@@ -28,10 +28,16 @@
         (click)="selectedElement = element"
         class="element"
       >
-        <span class="element-icon element-icon--big" [ngClass]="getClass(element.cell)">{{ getFirstLetter(element.cell) }}</span>
+        <span class="element-icon element-icon--big" [ngClass]="getClass(element.model)">{{ getFirstLetter(element.model) }}</span>
         <div class="element-content">
           <span class="element-name">{{ element.model.name }}</span>
-          <span class="element-description">{{ element.model.getDescription('en') }}</span>
+          <span
+            *ngIf="element.model.getDescription('en') as description"
+            class="element-description"
+            [matTooltip]="description"
+            [matTooltipDisabled]="description.length < 80"
+            >{{ description }}</span
+          >
         </div>
       </div>
     </ng-container>

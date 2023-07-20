@@ -61,7 +61,7 @@ export class EditorModelService {
     }
 
     this.dataChangedEventQueue = [];
-    this.readOnly = typeof metaModelElement?.['isPredefined'] === 'function' && metaModelElement?.['isPredefined']();
+    this.readOnly = metaModelElement?.isPredefined();
     this.saveButtonEnabled = true;
     this.metaModelElementSubject.next(metaModelElement);
   }

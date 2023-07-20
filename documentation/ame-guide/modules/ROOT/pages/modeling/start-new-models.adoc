@@ -1,0 +1,24 @@
+:page-partial:
+
+[[start-new-models]]
+= Start a new model
+
+To start modeling, proceed as follows:
+
+WARNING: Already opened Aspect Models will be lost when loading a new one. Always make sure to save the previous Aspect Model first.
+
+. Click the *New/Load* icon in the xref:getting-started/ui-overview.adoc#toolbar[Toolbar].
+. Click *Create/Upload Aspect Model*.
+. Click *Models/Default Aspect Model* to start from the default Aspect Model.
++
+image::start-modeling-ui.png[width=80%]
+. You can also modify the shown TTL code manually within the text area.
++
+image::start-modeling-edit-ui.png[width=80%]
+. Click *Start modeling*.
+
+++++
+<style>
+  .imageblock {flex-direction: row !important;}
+</style>
+++++

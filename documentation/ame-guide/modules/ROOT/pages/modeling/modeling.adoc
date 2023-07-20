@@ -1,0 +1,21 @@
+= Modeling
+
+This section guides you through recurring task with the Aspect Model Editor for creating, editing, and saving an Aspect Model.
+
+** xref:modeling/start-new-models.adoc[]
+** xref:modeling/edit-elements.adoc[]
+***  xref:modeling/abstract-prop.adoc[]
+***  xref:modeling/property.adoc[]
+***  xref:modeling/characteristic.adoc[]
+***  xref:modeling/abstract-entity.adoc[]
+***  xref:modeling/entity.adoc[]
+***  xref:modeling/unit.adoc[]
+***  xref:modeling/constraint.adoc[]
+***  xref:modeling/trait.adoc[]
+***  xref:modeling/operation.adoc[]
+***  xref:modeling/event.adoc[]
+** xref:modeling/shared-models.adoc[]
+** xref:modeling/migration-of-models.adoc[]
+** xref:modeling/model-versions.adoc[Aspect Model versions]
+
+//TODO later rework this chapter to work with the Movement example - we can even show how we changed it for the Semantic Stack commercial version

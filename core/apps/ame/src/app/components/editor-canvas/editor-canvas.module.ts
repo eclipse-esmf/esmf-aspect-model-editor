@@ -34,6 +34,8 @@ import {AngularSplitModule} from 'angular-split';
 import {FormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MxEditorComponent} from './mx-editor/mx-editor.component';
+import {SidebarElementFilter} from './sidebar/sidebar-new-element/elements-filter.pipe';
 
 @NgModule({
   imports: [
@@ -62,6 +64,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     SidebarNamespaceElementsComponent,
     NamespaceElementListComponent,
     NamespaceFilterComponent,
+    MxEditorComponent,
+    SidebarElementFilter,
   ],
   exports: [EditorCanvasComponent],
 })

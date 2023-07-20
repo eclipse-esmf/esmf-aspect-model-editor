@@ -32,9 +32,7 @@ import {
 export class CachedFile {
   private anonymousElements: {element: BaseMetaModelElement; name: string}[] = [];
   private cachedElements: Map<string, any> = new Map<string, BaseMetaModelElement>();
-  private isolatedElements: Map<string, any> = new Map<string, BaseMetaModelElement>();
   private _aspect: Aspect;
-  private _fileName: string;
 
   get aspect(): Aspect {
     return this._aspect;
@@ -48,16 +46,16 @@ export class CachedFile {
 
   constructor(public fileName: string, public namespace: string) {}
 
-  resolveElement<T>(element: T & IsNamed, isolated = false): T {
-    return isolated ? this.resolveIsolatedElement(element) : this.resolveCachedElement(element);
+  resolveElement<T>(element: T & IsNamed): T {
+    return this.resolveCachedElement(element);
+  }
+
+  removeElement(key: string) {
+    this.removeCachedElement(key);
   }
 
   removeCachedElement(key: string) {
     this.cachedElements.delete(key);
-  }
-
-  removeIsolatedElement(key: string) {
-    this.isolatedElements.delete(key);
   }
 
   removeAspect() {
@@ -66,21 +64,20 @@ export class CachedFile {
 
   reset() {
     this.cachedElements = new Map<string, BaseMetaModelElement>();
-    this.isolatedElements = new Map<string, BaseMetaModelElement>();
     this._aspect = null;
     this.anonymousElements = [];
   }
 
-  getElement<T>(key: string, isolated = false): T {
-    return isolated ? this.isolatedElements.get(key) || this.cachedElements.get(key) : this.cachedElements.get(key);
+  getElement<T>(key: string): T {
+    return this.cachedElements.get(key);
   }
 
   getEitherElement<T>(key: string): T {
-    return this.isolatedElements.get(key) || this.cachedElements.get(key);
+    return this.cachedElements.get(key);
   }
 
-  getAllElements<T>(): Array<T> {
-    return [...this.isolatedElements.values(), ...this.cachedElements.values()];
+  getAllElements<T extends BaseMetaModelElement>(): Array<T> {
+    return [...this.cachedElements.values()];
   }
 
   getCachedElement<T>(key: string): T {
@@ -175,25 +172,6 @@ export class CachedFile {
       (acc: DefaultEvent[], item: any) => (item instanceof DefaultEvent && !item.isPredefined() ? [...acc, item] : acc),
       []
     );
-  }
-
-  getIsolatedElement<T>(key: string): T {
-    return this.isolatedElements.get(key);
-  }
-
-  getIsolatedElements(): Map<string, BaseMetaModelElement> {
-    return this.isolatedElements;
-  }
-
-  resolveIsolatedElement<T>(instance: T & IsNamed): T {
-    const aspectModelUrn = instance.aspectModelUrn;
-    const resolvedInstance: T = this.getIsolatedElement(aspectModelUrn);
-    if (resolvedInstance) {
-      return resolvedInstance;
-    }
-
-    this.isolatedElements.set(aspectModelUrn, instance);
-    return instance;
   }
 
   updateCachedElementsNamespace(oldValue: string, newValue: string) {

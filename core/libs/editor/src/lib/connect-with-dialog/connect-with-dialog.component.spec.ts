@@ -23,19 +23,19 @@ import {provideMockObject} from 'jest-helpers';
 import {mxgraph} from 'mxgraph-factory';
 import {ConnectWithDialogComponent} from './connect-with-dialog.component';
 
-type Cell = Partial<mxgraph.mxCell & {getMetaModelElement: () => BaseMetaModelElement}>;
+type Cell = Partial<mxgraph.mxCell & {getMetaModelElement: () => {element: BaseMetaModelElement}}>;
 
 const cell: Cell = {
   getMetaModelElement: () => new DefaultAspect('aspect', 'aspect', 'aspect', [], []) as any,
   style: 'aspect',
 };
 const cells: Cell[] = [
-  {style: 'property', getMetaModelElement: () => new DefaultProperty('property', 'property', 'property', null) as any},
+  {style: 'property', getMetaModelElement: () => ({element: new DefaultProperty('property', 'property', 'property', null)} as any)},
   {
     style: 'characteristic',
-    getMetaModelElement: () => new DefaultCharacteristic('characteristic', 'characteristic', 'characteristic') as any,
+    getMetaModelElement: () => ({element: new DefaultCharacteristic('characteristic', 'characteristic', 'characteristic')} as any),
   },
-  {style: 'entity', getMetaModelElement: () => new DefaultEntity('entity', 'entity', 'entity', []) as any},
+  {style: 'entity', getMetaModelElement: () => ({element: new DefaultEntity('entity', 'entity', 'entity', [])} as any)},
 ];
 
 describe('RdfNodeService', () => {
@@ -76,29 +76,29 @@ describe('RdfNodeService', () => {
 
   describe('getClass', () => {
     it('should return property', () => {
-      expect(component.getClass(cells[0] as any)).toBe('property');
+      expect(component.getClass(cells[0].getMetaModelElement().element)).toBe('property');
     });
 
     it('should return characteristic', () => {
-      expect(component.getClass(cells[1] as any)).toBe('characteristic');
+      expect(component.getClass(cells[1].getMetaModelElement().element)).toBe('characteristic');
     });
 
     it('should return entity', () => {
-      expect(component.getClass(cells[2] as any)).toBe('entity');
+      expect(component.getClass(cells[2].getMetaModelElement().element)).toBe('entity');
     });
   });
 
   describe('getFirstLetter', () => {
     it('should return P', () => {
-      expect(component.getFirstLetter(cells[0] as any)).toBe('P');
+      expect(component.getFirstLetter(cells[0].getMetaModelElement().element)).toBe('P');
     });
 
     it('should return C', () => {
-      expect(component.getFirstLetter(cells[1] as any)).toBe('C');
+      expect(component.getFirstLetter(cells[1].getMetaModelElement().element)).toBe('C');
     });
 
     it('should return E', () => {
-      expect(component.getFirstLetter(cells[2] as any)).toBe('E');
+      expect(component.getFirstLetter(cells[2].getMetaModelElement().element)).toBe('E');
     });
   });
 

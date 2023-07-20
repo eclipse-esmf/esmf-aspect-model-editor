@@ -13,7 +13,35 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ElementModel} from '@ame/shared';
+import {FiltersService} from '@ame/loader-filters';
 import {ModelService} from '@ame/rdf/services';
+import {
+  DefaultAspect,
+  DefaultAbstractProperty,
+  DefaultProperty,
+  DefaultCharacteristic,
+  DefaultAbstractEntity,
+  DefaultEntity,
+  DefaultUnit,
+  DefaultConstraint,
+  DefaultTrait,
+  DefaultOperation,
+  DefaultEvent,
+} from '@ame/meta-model';
+
+const elementMap = {
+  aspect: DefaultAspect,
+  abstractProperty: DefaultAbstractProperty,
+  property: DefaultProperty,
+  characteristic: DefaultCharacteristic,
+  abstractEntity: DefaultAbstractEntity,
+  entity: DefaultEntity,
+  unit: DefaultUnit,
+  constraint: DefaultConstraint,
+  trait: DefaultTrait,
+  operation: DefaultOperation,
+  event: DefaultEvent,
+};
 
 @Component({
   selector: 'ame-sidebar-new-element',
@@ -25,11 +53,7 @@ export class SidebarNewElementComponent implements OnInit {
   public openWorkspaces: EventEmitter<void> = new EventEmitter();
   public elements: ElementModel[];
 
-  constructor(private modelService: ModelService) {}
-
-  public isDisplayed(element: ElementModel): boolean {
-    return !(this.modelService.getLoadedAspectModel().aspect && element.type === 'aspect');
-  }
+  constructor(private filtersService: FiltersService, private modelService: ModelService) {}
 
   public ngOnInit() {
     this.elements = [
@@ -45,5 +69,18 @@ export class SidebarNewElementComponent implements OnInit {
       new ElementModel(null, 'Operation', 'operation', 'An Operation represents an action that can be triggered on the Aspect'),
       new ElementModel(null, 'Event', 'event', 'A definition of an Event supported by the Aspect'),
     ];
+  }
+
+  public isVisible(element: ElementModel) {
+    const visibleElements = this.filtersService.currentFilter.visibleElements;
+    if (this.isAspectHidden(element)) {
+      return false;
+    }
+
+    return visibleElements.some(c => elementMap[element.type] === c);
+  }
+
+  private isAspectHidden(element: ElementModel): boolean {
+    return !!(element.type === 'aspect' && this.modelService.getLoadedAspectModel().aspect);
   }
 }

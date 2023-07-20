@@ -12,5 +12,6 @@
  */
 
 export class ElementModel {
-  constructor(public aspectModelUrn, public name, public type, public description) {}
+  public locked = false;
+  constructor(public aspectModelUrn: string, public name: string, public type: string, public description: string) {}
 }

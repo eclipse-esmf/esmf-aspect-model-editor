@@ -30,6 +30,7 @@
       "@ame/connection": ["libs/connection/src/index.ts"],
       "@ame/editor": ["libs/editor/src/index.ts"],
       "@ame/instantiator": ["libs/instantiator/src/index.ts"],
+      "@ame/loader-filters": ["libs/loader-filters/src/index.ts"],
       "@ame/meta-model": ["libs/meta-model/src/index.ts"],
       "@ame/migrator": ["libs/migrator/src/index.ts"],
       "@ame/mx-graph": ["libs/mx-graph/src/index.ts"],

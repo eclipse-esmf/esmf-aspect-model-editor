@@ -43,8 +43,6 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   public metaModelClassName: string;
   public metaModelElement: BaseMetaModelElement;
   public selectedMetaModelElement: BaseMetaModelElement;
-  public listConstraintNames: string[];
-  public listCharacteristics: Map<string, Function> = new Map();
   public tmpCharacteristic: Characteristic;
   public units: Unit[] = [];
   public formGroup: FormGroup = new FormGroup({});
@@ -81,10 +79,12 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    this.metaModelDialogService.getMetaModelElement().subscribe(metaModelElement => {
+    const sub = this.metaModelDialogService.getMetaModelElement().subscribe(metaModelElement => {
       this.metaModelElement = metaModelElement;
+      this.formGroup == new FormGroup({});
       this.changeDetector.detectChanges();
     });
+    this.subscription.add(sub);
   }
 
   ngOnDestroy(): void {
@@ -152,39 +152,11 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  isAspect(): boolean {
-    return this.isOpened && this.metaModelElement instanceof DefaultAspect;
-  }
-
-  isProperty(): boolean {
-    return this.isOpened && this.metaModelElement instanceof DefaultProperty;
-  }
-
-  isOperation(): boolean {
-    return this.isOpened && this.metaModelElement instanceof DefaultOperation;
-  }
-
-  isEntity(): boolean {
-    return this.isOpened && this.metaModelElement instanceof DefaultEntity;
-  }
-
-  isUnit(): boolean {
-    return this.isOpened && this.metaModelElement instanceof DefaultUnit;
-  }
-
   isCharacteristic(): boolean {
     return this.isOpened && this.metaModelElement instanceof DefaultCharacteristic;
   }
 
-  isTrait(): boolean {
-    return this.isOpened && this.metaModelElement instanceof DefaultTrait;
-  }
-
   isConstraint(): boolean {
     return this.metaModelElement instanceof DefaultConstraint;
-  }
-
-  isEvent(): boolean {
-    return this.isOpened && this.metaModelElement instanceof DefaultEvent;
   }
 }

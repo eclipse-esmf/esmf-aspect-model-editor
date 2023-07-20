@@ -75,6 +75,10 @@ export class FileResourceRemoveService implements PredefinedRemove {
     const toRemove = [cell];
     const stack = this.mxGraphService.graph.getOutgoingEdges(cell).map(edge => edge.target);
 
+    for (const edge of this.mxGraphService.graph.getIncomingEdges(cell)) {
+      MxGraphHelper.removeRelation(MxGraphHelper.getModelElement(edge.source), MxGraphHelper.getModelElement(cell));
+    }
+
     while (stack.length) {
       const lastCell = stack.pop();
       stack.push(...this.mxGraphService.graph.getOutgoingEdges(lastCell).map(edge => edge.target));

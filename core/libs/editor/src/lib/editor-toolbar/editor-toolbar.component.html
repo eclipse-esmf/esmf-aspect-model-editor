@@ -40,13 +40,7 @@
   </div>
 
   <div class="menu-items__group">
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      (click)="editSelectedCell.emit()"
-      matTooltip="Edit highlighted cell"
-    >
+    <button mat-button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" (click)="editSelectedCell()" matTooltip="Edit highlighted cell">
       <mat-icon class="material-icons">edit</mat-icon>
     </button>
     <button
@@ -140,6 +134,20 @@
     </button>
   </div>
 
+  <div class="menu-items__group">
+    <button
+      mat-button
+      [matMenuTriggerFor]="filters"
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      [matTooltip]="filterAttributes.activeFilter === filterTypes.DEFAULT ? 'Model unfiltered' : 'Model filtered by Properties'"
+      data-cy="tbFilters"
+    >
+      <mat-icon *ngIf="filterAttributes.activeFilter === filterTypes.DEFAULT" class="material-icons">filter_alt_off</mat-icon>
+      <mat-icon *ngIf="filterAttributes.activeFilter === filterTypes.PROPERTIES" class="material-icons">filter_alt</mat-icon>
+    </button>
+  </div>
+
   <div class="menu-items-group search">
     <ame-search-bar></ame-search-bar>
   </div>
@@ -220,15 +228,53 @@
 </mat-menu>
 
 <mat-menu #downloadJson="matMenu">
-  <button mat-menu-item (click)="generateJsonSample()" matTooltip="Generate sample JSON payload" data-cy="tbOpenJsonPayloadButton">
+  <button
+    mat-menu-item
+    (click)="generateJsonSample()"
+    matTooltipPosition="right"
+    matTooltip="Generate sample JSON payload"
+    data-cy="tbOpenJsonPayloadButton"
+  >
     <mat-icon class="material-icons">file_download</mat-icon>
     <span>Generate sample JSON payload</span>
   </button>
-  <button mat-menu-item (click)="generateJsonSchema()" matTooltip="Generate JSON schema" data-cy="tbOpenJsonSchemaButton">
+  <button
+    mat-menu-item
+    (click)="generateJsonSchema()"
+    matTooltipPosition="right"
+    matTooltip="Generate JSON schema"
+    data-cy="tbOpenJsonSchemaButton"
+  >
     <mat-icon class="material-icons">file_download</mat-icon>
     <span>Generate JSON schema</span>
   </button>
 </mat-menu>
 
+<mat-menu #filters="matMenu">
+  <button
+    [disabled]="filterAttributes.activeFilter === filterTypes.DEFAULT"
+    (click)="filtersService.renderByFilter(filterTypes.DEFAULT)"
+    mat-menu-item
+    matTooltipPosition="right"
+    matTooltip="Displays the entire model"
+    data-cy="tbFilterByOriginal"
+  >
+    <mat-icon class="material-icons">filter_alt_off</mat-icon>
+    <span>None</span>
+  </button>
+  <button
+    [disabled]="filterAttributes.activeFilter === filterTypes.PROPERTIES"
+    (click)="filtersService.renderByFilter(filterTypes.PROPERTIES)"
+    mat-menu-item
+    matTooltipPosition="right"
+    matTooltip="Filters by properties"
+    data-cy="tbFilterByProperties"
+  >
+    <mat-icon class="material-icons">filter_alt</mat-icon>
+    <span>By properties</span>
+  </button>
+</mat-menu>
+
+<!-- Uploader -->
 <input style="display: none" type="file" (change)="addFileToNamespace($event)" #fileInput accept=".ttl" />
 <input style="display: none" type="file" (change)="uploadZip($event)" #zipInput accept=".zip" />

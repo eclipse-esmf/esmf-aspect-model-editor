@@ -60,7 +60,8 @@ export abstract class BaseRenderService {
         ({property: prop}) => prop.aspectModelUrn === property.aspectModelUrn
       ).keys;
 
-      this.graph.removeCells([e]);
+      this.mxGraphService.removeCells([e]);
+      MxGraphHelper.establishRelation(modelElement, property);
       this.graph.insertEdge(
         this.graph.getDefaultParent(),
         null,
@@ -82,9 +83,9 @@ export abstract class BaseRenderService {
     const parents = this.mxGraphService.resolveParents(cell);
 
     for (const parent of parents) {
-      const parentMetaModel = MxGraphHelper.getModelElement(parent);
-      parent['configuration'].fields = MxGraphVisitorHelper.getElementProperties(parentMetaModel, this.languageSettingsService);
-      parent['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(parentMetaModel, this.rdfService.currentRdfModel);
+      const parentElementModel = MxGraphHelper.getModelElement(parent);
+      parent['configuration'].fields = MxGraphVisitorHelper.getElementProperties(parentElementModel, this.languageSettingsService);
+      parent['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(parentElementModel, this.rdfService.currentRdfModel);
       this.graph.labelChanged(parent, MxGraphHelper.createPropertiesLabel(parent));
     }
   }

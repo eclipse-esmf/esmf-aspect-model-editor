@@ -12,3 +12,4 @@
   -->
 <ame-base-input [parentForm]="parentForm"></ame-base-input>
 <ame-properties-button (overwrite)="overwriteProperties($event)"></ame-properties-button>
+<ame-element-list label="Children" [elements]="(element$ | async)?.children"></ame-element-list>

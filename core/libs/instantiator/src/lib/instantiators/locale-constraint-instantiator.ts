@@ -22,7 +22,7 @@ export class LocaleConstraintInstantiator extends ConstraintInstantiator {
   }
 
   protected processElement(quads: Array<Quad>): Constraint {
-    let defaultLocaleConstraint = this.cachedFile.getElement<DefaultLocaleConstraint>(quads[0]?.subject.value, this.isIsolated);
+    let defaultLocaleConstraint = this.cachedFile.getElement<DefaultLocaleConstraint>(quads[0]?.subject.value);
     if (defaultLocaleConstraint) {
       return defaultLocaleConstraint;
     }

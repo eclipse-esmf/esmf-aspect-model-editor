@@ -55,7 +55,7 @@ export class AbstractEntityModelService extends BaseModelService {
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement: DefaultAbstractEntity = MxGraphHelper.getModelElement(cell);
+    const metaModelElement = MxGraphHelper.getModelElement<DefaultAbstractEntity>(cell);
 
     if (form.editedProperties) {
       for (const {property, keys} of metaModelElement.properties) {
@@ -65,8 +65,7 @@ export class AbstractEntityModelService extends BaseModelService {
         keys.payloadName = newKeys.payloadName;
       }
 
-      this.namespacesCacheService
-        .getCurrentCachedFile()
+      this.namespacesCacheService.currentCachedFile
         .getCachedEntityValues()
         ?.filter((entityValue: DefaultEntityValue) => entityValue.entity === metaModelElement)
         ?.forEach((entityValue: DefaultEntityValue) => {
@@ -91,22 +90,29 @@ export class AbstractEntityModelService extends BaseModelService {
 
     const extendingProperties = [];
     for (const edge of incomingEdges) {
-      const properties = this.mxGraphService.graph.getOutgoingEdges(edge.source).filter(e => {
-        const property = MxGraphHelper.getModelElement<DefaultProperty>(e.target);
-        return property instanceof DefaultProperty && !!property.extendedElement;
-      });
-      extendingProperties.push(...properties.map(e => e.target));
+      const properties = this.mxGraphService.graph
+        .getOutgoingEdges(edge.source)
+        .filter(e => {
+          const property = MxGraphHelper.getModelElement<DefaultProperty>(e.target);
+          return property instanceof DefaultProperty && !!property.extendedElement;
+        })
+        .map(e => e.target);
+      extendingProperties.push(...properties);
 
       const entity = MxGraphHelper.getModelElement<DefaultEntity>(edge.source);
       entity.extendedElement = null;
-      edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
-        MxGraphHelper.getModelElement(edge.source),
-        this.languageService
-      );
-      this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));
+
+      MxGraphHelper.removeRelation(entity, modelElement);
+      for (const property of properties) {
+        MxGraphHelper.removeRelation(entity, MxGraphHelper.getModelElement(property));
+      }
+
+      edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(entity, this.languageService);
+      this.mxGraphService.graph.labelChanged(edge.source, entity);
     }
 
-    this.mxGraphService.graph.removeCells(extendingProperties);
+    this.mxGraphService.removeCells(extendingProperties);
+    this.namespacesCacheService.currentCachedFile.removeElement(modelElement.aspectModelUrn);
     super.delete(cell);
 
     this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
@@ -119,20 +125,19 @@ export class AbstractEntityModelService extends BaseModelService {
 
       const entityValuesToDelete = [];
       for (const edge of cell.edges) {
-        const edgeSourceModelElement = MxGraphHelper.getModelElement(edge.source);
-        if (edgeSourceModelElement && !edgeSourceModelElement.isExternalReference()) {
+        const modelElement = MxGraphHelper.getModelElement(edge.source);
+        if (modelElement && !modelElement.isExternalReference()) {
           this.currentCachedFile.removeCachedElement(modelElement.aspectModelUrn);
-          (<Base>edgeSourceModelElement).delete(modelElement);
+          (<Base>modelElement).delete(modelElement);
         }
 
-        if (edgeSourceModelElement instanceof DefaultEnumeration) {
+        if (modelElement instanceof DefaultEnumeration) {
           // we need to remove and add back the + button for enumeration
           this.mxGraphShapeOverlayService.removeComplexTypeShapeOverlays(edge.source);
           this.mxGraphShapeOverlayService.addBottomShapeOverlay(edge.source);
-          this.mxGraphService.removeCellChild(edge.source, 'values');
         }
 
-        if (edgeSourceModelElement instanceof DefaultEntityValue && edge.source.style.includes('entityValue')) {
+        if (modelElement instanceof DefaultEntityValue && edge.source.style.includes('entityValue')) {
           entityValuesToDelete.push(edge.source);
         }
       }

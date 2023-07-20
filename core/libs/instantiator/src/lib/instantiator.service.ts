@@ -101,8 +101,7 @@ export class InstantiatorService {
         quad: subject,
       });
       if (overwrittenProperty?.property) {
-        cachedFile.resolveIsolatedElement(overwrittenProperty.property);
-        cachedFile.removeCachedElement(overwrittenProperty.property.aspectModelUrn);
+        cachedFile.resolveCachedElement(overwrittenProperty.property);
       }
       return;
     }
@@ -114,8 +113,7 @@ export class InstantiatorService {
       });
 
       if (overwrittenProperty?.property) {
-        cachedFile.resolveIsolatedElement(overwrittenProperty.property);
-        cachedFile.removeCachedElement(overwrittenProperty.property.aspectModelUrn);
+        cachedFile.resolveCachedElement(overwrittenProperty.property);
       }
       return;
     }
@@ -123,8 +121,7 @@ export class InstantiatorService {
     if (elementType.endsWith('Constraint')) {
       const constraint = metaModelElementInstantiator.getConstraint(DataFactory.quad(null, null, subject));
       if (constraint) {
-        cachedFile.resolveIsolatedElement(constraint);
-        cachedFile.removeCachedElement(constraint.aspectModelUrn);
+        cachedFile.resolveCachedElement(constraint);
       }
       return;
     }
@@ -132,8 +129,7 @@ export class InstantiatorService {
     if (sammC.isStandardCharacteristic(elementType) || samm.isCharacteristic(elementType)) {
       const characteristic = metaModelElementInstantiator.getCharacteristic(DataFactory.quad(null, null, subject));
       if (characteristic) {
-        cachedFile.resolveIsolatedElement(characteristic);
-        cachedFile.removeCachedElement(characteristic.aspectModelUrn);
+        cachedFile.resolveCachedElement(characteristic);
       }
       return;
     }
@@ -144,8 +140,7 @@ export class InstantiatorService {
         quad: subject,
       });
       if (operation) {
-        cachedFile.resolveIsolatedElement(operation);
-        cachedFile.removeCachedElement(operation.aspectModelUrn);
+        cachedFile.resolveCachedElement(operation);
       }
       return;
     }
@@ -156,8 +151,7 @@ export class InstantiatorService {
         quad: subject,
       });
       if (event) {
-        cachedFile.resolveIsolatedElement(event);
-        cachedFile.removeCachedElement(event.aspectModelUrn);
+        cachedFile.resolveCachedElement(event);
       }
       return;
     }
@@ -165,8 +159,7 @@ export class InstantiatorService {
     if (samm.isUnitElement(elementType)) {
       const unit = new UnitInstantiator(metaModelElementInstantiator).createUnit(subject.value);
       if (unit) {
-        cachedFile.resolveIsolatedElement(unit);
-        cachedFile.removeCachedElement(unit.aspectModelUrn);
+        cachedFile.resolveCachedElement(unit);
       }
       return;
     }
@@ -174,8 +167,7 @@ export class InstantiatorService {
     if (samm.isEntity(elementType)) {
       const entity = new EntityInstantiator(metaModelElementInstantiator).createEntity(rdfModel.store.getQuads(subject, null, null, null));
       if (entity) {
-        cachedFile.resolveIsolatedElement(entity);
-        cachedFile.removeCachedElement(entity.aspectModelUrn);
+        cachedFile.resolveCachedElement(entity);
       }
       return;
     }
@@ -185,8 +177,7 @@ export class InstantiatorService {
         rdfModel.store.getQuads(subject, null, null, null)
       );
       if (entity) {
-        cachedFile.resolveIsolatedElement(entity);
-        cachedFile.removeCachedElement(entity.aspectModelUrn);
+        cachedFile.resolveCachedElement(entity);
       }
       return;
     }
@@ -197,8 +188,7 @@ export class InstantiatorService {
         subject
       );
       if (entityValue) {
-        cachedFile.resolveIsolatedElement(entityValue);
-        cachedFile.removeCachedElement(entityValue.aspectModelUrn);
+        cachedFile.resolveCachedElement(entityValue);
       }
     }
   }

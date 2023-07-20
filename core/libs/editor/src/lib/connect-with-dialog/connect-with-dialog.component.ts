@@ -16,6 +16,7 @@ import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {Component, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {mxgraph} from 'mxgraph-factory';
+import {ModelElementParser} from '../editor-dialog';
 
 interface Element {
   cell: mxgraph.mxCell;
@@ -32,6 +33,8 @@ export class ConnectWithDialogComponent {
   public selectedElement: Element;
   public connectWithModel: BaseMetaModelElement;
 
+  private elementParser = new ModelElementParser();
+
   constructor(
     private mxGraphService: MxGraphService,
     private dialogRef: MatDialogRef<ConnectWithDialogComponent>,
@@ -43,21 +46,18 @@ export class ConnectWithDialogComponent {
     });
   }
 
-  getClass(cell: mxgraph.mxCell) {
-    const [elementClass] = cell.style.split(';');
-    return elementClass || '';
+  getClass(element: BaseMetaModelElement) {
+    return this.elementParser.transform(element).type;
   }
 
-  getFirstLetter(cell: mxgraph.mxCell) {
-    const elementClass = this.getClass(cell);
-    const firstLetter = elementClass?.[0] || '';
-    return firstLetter.toUpperCase();
+  getFirstLetter(element: BaseMetaModelElement) {
+    return this.elementParser.transform(element).shortcut;
   }
 
   isFiltered(element: Element, searched: string) {
     return (
       element.model.name.toLowerCase().includes(searched.toLowerCase()) &&
-      element.model.aspectModelUrn !== this.connectWithModel.aspectModelUrn
+      element.model.aspectModelUrn !== this.connectWithModel?.aspectModelUrn
     );
   }
 

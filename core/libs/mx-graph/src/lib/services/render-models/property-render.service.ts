@@ -48,7 +48,8 @@ export class PropertyRenderService extends BaseRenderService {
   }
 
   private handleExtendsElement(cell: mxgraph.mxCell) {
-    const metaModelElement = MxGraphHelper.getModelElement<DefaultProperty>(cell);
+    const node = MxGraphHelper.getElementNode<DefaultProperty>(cell);
+    const metaModelElement = node.element;
     if (!metaModelElement.extendedElement) {
       return;
     }
@@ -56,7 +57,11 @@ export class PropertyRenderService extends BaseRenderService {
     const extendsElement = metaModelElement.extendedElement as DefaultAbstractProperty;
     const cachedEntity = this.namespacesCacheService.resolveCachedElement(extendsElement);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
-    const entityCell = resolvedCell ? resolvedCell : this.mxGraphService.renderModelElement(extendsElement);
+    const entityCell = resolvedCell
+      ? resolvedCell
+      : this.mxGraphService.renderModelElement(
+          node.children.find(childNode => childNode.element.aspectModelUrn === extendsElement.aspectModelUrn)
+        );
     this.shapeConnectorService.connectShapes(metaModelElement, extendsElement, cell, entityCell);
   }
 }

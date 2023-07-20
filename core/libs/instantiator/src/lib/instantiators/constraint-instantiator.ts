@@ -52,7 +52,7 @@ export class ConstraintInstantiator extends BaseConstraintCharacteristicInstanti
       this.cachedFile.addAnonymousElement(constraint, constraint.name);
     }
 
-    return <DefaultConstraint>this.cachedFile.resolveElement(constraint, this.isIsolated);
+    return <DefaultConstraint>this.cachedFile.resolveElement(constraint);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

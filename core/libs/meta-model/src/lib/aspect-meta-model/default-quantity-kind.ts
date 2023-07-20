@@ -11,11 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {IsNamed} from './is-named';
-import {Base} from './base';
-import {AspectModelVisitor} from '@ame/mx-graph';
+import {Base, BaseMetaModelElement} from './base';
 
-export interface QuantityKind extends IsNamed {
+export interface QuantityKind extends BaseMetaModelElement {
   label: string;
 }
 
@@ -26,9 +24,5 @@ export class DefaultQuantityKind extends Base implements QuantityKind {
 
   constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public label: string) {
     super(metaModelVersion, aspectModelUrn, name);
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitQuantityKind(this, context);
   }
 }

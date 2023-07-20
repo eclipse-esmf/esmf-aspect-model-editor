@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {DefaultCharacteristic} from './default-characteristic';
 import {Type} from './type';
 
@@ -26,9 +25,5 @@ export class DefaultSingleEntity extends DefaultCharacteristic {
 
   constructor(metaModelVersion: string, aspectModelUrn: string, name: string, dataType?: Type) {
     super(metaModelVersion, aspectModelUrn, name, dataType);
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitCharacteristic(this, context);
   }
 }

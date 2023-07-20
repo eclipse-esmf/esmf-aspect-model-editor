@@ -16,3 +16,4 @@ export * from './pipes';
 export * from './validators';
 export * from './editor-dialog.module';
 export * from './editor-model.service';
+export * from './services';

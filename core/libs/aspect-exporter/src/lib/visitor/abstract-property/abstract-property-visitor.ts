@@ -12,10 +12,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
 import {DataFactory, Store} from 'n3';
 import {BaseVisitor} from '../base-visitor';
-import {MxGraphHelper} from '@ame/mx-graph';
 import {RdfNodeService} from '../../rdf-node';
 import {DefaultAbstractProperty} from '@ame/meta-model';
 import {RdfService} from '@ame/rdf/services';
@@ -30,8 +28,7 @@ export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty
     super(rdfService);
   }
 
-  visit(cell: mxgraph.mxCell): DefaultAbstractProperty {
-    const abstractProperty: DefaultAbstractProperty = MxGraphHelper.getModelElement<DefaultAbstractProperty>(cell);
+  visit(abstractProperty: DefaultAbstractProperty): DefaultAbstractProperty {
     if (abstractProperty.isPredefined()) {
       return null;
     }

@@ -15,6 +15,7 @@ import {DefaultEvent, Event, OverWrittenProperty} from '@ame/meta-model';
 import {DataFactory} from 'n3';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {InstantiatorListElement, RdfModel} from '@ame/rdf/utils';
+import {syncElementWithChildren} from '../helpers';
 
 export class EventInstantiator {
   private get rdfModel() {
@@ -32,7 +33,7 @@ export class EventInstantiator {
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
   public createEvent(listElement: InstantiatorListElement): Event {
-    const event = this.currentCachedFile.getElement<DefaultEvent>(listElement.quad.value, this.isIsolated);
+    const event = this.currentCachedFile.getElement<DefaultEvent>(listElement.quad.value);
     return event ? event : this.constructEvent(listElement);
   }
 
@@ -46,7 +47,7 @@ export class EventInstantiator {
 
     this.metaModelElementInstantiator.initBaseProperties(quads, event, this.rdfModel);
     // resolving element to not enter in infinite loop
-    this.currentCachedFile.resolveElement(event, this.isIsolated);
+    this.currentCachedFile.resolveElement(event);
 
     quads.forEach(quad => {
       if (samm.isParametersProperty(quad.predicate.value)) {
@@ -56,6 +57,9 @@ export class EventInstantiator {
         );
       }
     });
+
+    event.children.push(...event.parameters.map(p => p.property));
+    syncElementWithChildren(event);
 
     return event;
   }

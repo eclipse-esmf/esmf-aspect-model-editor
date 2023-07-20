@@ -236,17 +236,15 @@ describe('Test edit property', () => {
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
+        expect(rdf).to.contain(':property1 a samm:Property.');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic;\n' + '    samm:dataType xsd:string.\n');
         expect(rdf).to.contain(
-          ':property1 a samm:Property.\n' +
-            ':Characteristic1 a samm:Characteristic;\n' +
-            '    samm:dataType xsd:string.\n' +
-            ':NewAspect a samm:Aspect;\n' +
+          ':NewAspect a samm:Aspect;\n' +
             '    samm:properties (:newProperty :property1);\n' +
             '    samm:operations ();\n' +
-            '    samm:events ().\n' +
-            ':newProperty a samm:Property;\n' +
-            '    samm:characteristic :Characteristic1.'
+            '    samm:events ().\n'
         );
+        expect(rdf).to.contain(':newProperty a samm:Property;\n' + '    samm:characteristic :Characteristic1.');
       });
   });
 

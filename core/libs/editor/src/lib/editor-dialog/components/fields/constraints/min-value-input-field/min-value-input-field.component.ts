@@ -18,6 +18,7 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 import {DataTypeService} from '@ame/shared';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
+import {ModelNode} from '@ame/loader-filters';
 
 @Component({
   selector: 'ame-min-value-input-field',

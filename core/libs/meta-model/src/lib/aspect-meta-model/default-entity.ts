@@ -14,7 +14,6 @@ import {BaseMetaModelElement} from './base';
 import {HasProperties} from './has-properties';
 import {Type} from './type';
 import {OverWrittenProperty} from './overwritten-property';
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {CanExtendsWithProperties} from './can-extend';
 import {DefaultAbstractEntity} from './default-abstract-entity';
 import {DefaultProperty} from './default-property';
@@ -59,10 +58,6 @@ export class DefaultEntity extends CanExtendsWithProperties implements Entity {
 
   getUrn(): string {
     return this.aspectModelUrn;
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitEntity(this, context);
   }
 
   isPredefined() {

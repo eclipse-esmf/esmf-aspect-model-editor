@@ -17,7 +17,6 @@ import {HasProperties} from './has-properties';
 import {DefaultProperty} from './default-property';
 import {DefaultOperation} from './default-operation';
 import {OverWrittenProperty} from './overwritten-property';
-import {AspectModelVisitor} from '@ame/mx-graph';
 import {DefaultEvent} from './default-event';
 
 export interface Aspect extends BaseMetaModelElement, HasProperties {
@@ -45,10 +44,6 @@ export class DefaultAspect extends Base implements Aspect {
     public isCollectionAspect: boolean = false
   ) {
     super(metaModelVersion, aspectModelUrn, name);
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitAspect(this, context);
   }
 
   delete(baseMetalModelElement: BaseMetaModelElement) {

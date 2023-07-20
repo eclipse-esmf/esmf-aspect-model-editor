@@ -11,22 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {DefaultUnit} from '@ame/meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
-import {MxGraphSetupVisitor} from '../../visitors';
+import {MxGraphRenderer} from '../../renderers';
 import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 import {RdfService} from '@ame/rdf/services';
+import {FiltersService} from '@ame/loader-filters';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UnitRenderService extends BaseRenderService {
+  private filterService = inject(FiltersService);
+
   constructor(
     mxGraphService: MxGraphService,
     languageSettingsService: LanguageSettingsService,
@@ -41,22 +44,28 @@ export class UnitRenderService extends BaseRenderService {
     this.removeFrom(parentCell);
 
     // create shape for new unit
-    new MxGraphSetupVisitor(
+    new MxGraphRenderer(
       this.mxGraphService,
       this.mxGraphShapeOverlayService,
       this.namespacesCacheService,
       this.languageSettingsService,
       null
-    ).visitUnit(unit, parentCell);
+    ).renderUnit(this.filterService.createNode(unit, {parent: MxGraphHelper.getModelElement(parentCell)}), parentCell);
   }
 
   removeFrom(parentCell: mxgraph.mxCell) {
     const edges = this.mxGraphService.graph.getOutgoingEdges(parentCell);
-    const unitCell = edges.find(edge => MxGraphHelper.getModelElement(edge?.target) instanceof DefaultUnit);
-    if (unitCell && (MxGraphHelper.getModelElement(unitCell.target) as DefaultUnit).isPredefined()) {
-      this.mxGraphService.graph.removeCells([unitCell.target], true);
-    } else if (unitCell) {
-      this.mxGraphService.graph.removeCells([unitCell], true);
+    const edgeToUnit = edges.find(edge => MxGraphHelper.getModelElement(edge?.target) instanceof DefaultUnit);
+    const unit = edgeToUnit ? MxGraphHelper.getModelElement<DefaultUnit>(edgeToUnit.target) : null;
+    const parent = MxGraphHelper.getModelElement(parentCell);
+
+    if (edgeToUnit && unit?.isPredefined()) {
+      MxGraphHelper.removeRelation(parent, unit);
+      this.namespacesCacheService.currentCachedFile.removeElement(unit.aspectModelUrn);
+      this.mxGraphService.removeCells([edgeToUnit.target], true);
+    } else if (edgeToUnit) {
+      MxGraphHelper.removeRelation(parent, unit);
+      this.mxGraphService.removeCells([edgeToUnit], true);
     }
   }
 

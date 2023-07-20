@@ -32,7 +32,7 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
   public control: FormControl;
 
   get currentCacheFile() {
-    return this.namespaceCacheService.getCurrentCachedFile();
+    return this.namespaceCacheService.currentCachedFile;
   }
 
   constructor(private namespaceCacheService: NamespacesCacheService, private rdfService: RdfService) {}

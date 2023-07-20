@@ -14,13 +14,13 @@
 import {Injectable} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {BaseMetaModelElement} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
+import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModelElementNamingService {
-  constructor(private namespacesCacheService: NamespacesCacheService, private modelService: ModelService) {}
+  constructor(private namespacesCacheService: NamespacesCacheService, private rdfService: RdfService) {}
   /**
    * Creates a new instance of the element and assigns it a default name
    *
@@ -28,7 +28,7 @@ export class ModelElementNamingService {
    * @returns element being created
    */
   resolveMetaModelElement(baseMetaModelElement: BaseMetaModelElement): BaseMetaModelElement {
-    return this.namespacesCacheService.getCurrentCachedFile().resolveCachedElement(this.resolveElementNaming(baseMetaModelElement));
+    return this.namespacesCacheService.currentCachedFile.resolveCachedElement(this.resolveElementNaming(baseMetaModelElement));
   }
 
   /**
@@ -40,13 +40,25 @@ export class ModelElementNamingService {
    * @param parentName name of the parent element
    * @returns element with filled version,name,urn
    */
-  resolveElementNaming(baseMetaModelElement: BaseMetaModelElement, parentName?: string): BaseMetaModelElement {
-    const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
+  resolveElementNaming<T extends BaseMetaModelElement = BaseMetaModelElement>(baseMetaModelElement: T, parentName?: string): T {
+    const rdfModel = this.rdfService.currentRdfModel;
+    const elements = {};
 
     if (!rdfModel) {
       return null;
     }
+
     const mainAspectModelUrn = rdfModel.getAspectModelUrn();
+    for (const extRdfModel of this.rdfService.externalRdfModels) {
+      if (!Object.values(extRdfModel.getPrefixes()).includes(mainAspectModelUrn)) {
+        continue;
+      }
+
+      for (const subject of extRdfModel.store.getSubjects(null, null, null)) {
+        elements[subject.value] = true;
+      }
+    }
+
     let counter = 1;
     const name = baseMetaModelElement.name;
     baseMetaModelElement.metaModelVersion = rdfModel.SAMM().version;
@@ -55,9 +67,10 @@ export class ModelElementNamingService {
       baseMetaModelElement.name = `${parentNamePrefix || ''}${name}${parentName ? '' : counter++}`;
       parentName = undefined;
     } while (
-      this.namespacesCacheService
-        .getCurrentCachedFile()
-        .getCachedElement<BaseMetaModelElement>(`${mainAspectModelUrn}${baseMetaModelElement.name}`)
+      elements[`${mainAspectModelUrn}${baseMetaModelElement.name}`] ||
+      this.namespacesCacheService.currentCachedFile.getCachedElement<BaseMetaModelElement>(
+        `${mainAspectModelUrn}${baseMetaModelElement.name}`
+      )
     );
     baseMetaModelElement.aspectModelUrn = `${mainAspectModelUrn}${baseMetaModelElement.name}`;
     return baseMetaModelElement;

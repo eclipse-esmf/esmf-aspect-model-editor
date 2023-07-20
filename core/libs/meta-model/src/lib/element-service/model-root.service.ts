@@ -26,9 +26,9 @@ import {OperationModelService} from './operation-model.service';
 import {PropertyModelService} from './property-model.service';
 import {TraitModelService} from './trait-model.service';
 import {UnitModelService} from './unit-model.service';
-import {FileResourceRemoveService, Point3dRemoveService, TimeSeriesEntityRemoveService} from './predefined-elements';
+import {FileResourceRemoveService, Point3dRemoveService, PredefinedRemove, TimeSeriesEntityRemoveService} from './predefined-elements';
 
-const predefinedModels = {
+const predefinedModels: {[key: string]: ProviderToken<PredefinedRemove>} = {
   [PredefinedEntities.TimeSeriesEntity]: TimeSeriesEntityRemoveService,
   [PredefinedProperties.value]: TimeSeriesEntityRemoveService,
   [PredefinedProperties.timestamp]: TimeSeriesEntityRemoveService,
@@ -83,7 +83,7 @@ export class ModelRootService {
 
   public getPredefinedService(modelElement: BaseMetaModelElement) {
     if (!this.isPredefined(modelElement)) {
-      return;
+      return null;
     }
 
     return this.injector.get(predefinedModels[modelElement.name]);

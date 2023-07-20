@@ -22,7 +22,7 @@ export class LanguageConstraintInstantiator extends ConstraintInstantiator {
   }
 
   protected processElement(quads: Array<Quad>): Constraint {
-    let defaultLanguageConstraint = this.cachedFile.getElement<DefaultLanguageConstraint>(quads[0]?.subject.value, this.isIsolated);
+    let defaultLanguageConstraint = this.cachedFile.getElement<DefaultLanguageConstraint>(quads[0]?.subject.value);
     if (defaultLanguageConstraint) {
       return defaultLanguageConstraint;
     }

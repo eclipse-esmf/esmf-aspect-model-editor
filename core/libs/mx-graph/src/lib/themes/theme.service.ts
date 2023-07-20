@@ -46,6 +46,8 @@ export class ThemeService {
       trait: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.trait},
       unit: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.unit},
       entityValue: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.entityValue},
+      filteredProperties_entity: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.entity},
+      filteredProperties_either: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.characteristic},
     };
   }
 
@@ -61,7 +63,11 @@ export class ThemeService {
   }
 
   applyShapeStyle(shape: mxgraph.mxCell) {
-    const shapeStyle = this.graph.getModel().getStyle(shape).split(';')[0];
+    const shapeStyle = this.graph.getModel().getStyle(shape)?.split(';')[0];
+    if (!shapeStyle) {
+      return;
+    }
+
     const style = [...Object.entries(this.theme[shapeStyle]), ...Object.entries(this.getDefaultShapesColors)].reduce(
       (acc, [key, value]) => `${acc};${key}=${value}`,
       ''

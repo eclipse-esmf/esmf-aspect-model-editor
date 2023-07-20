@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultAbstractEntity, DefaultEntity} from '@ame/meta-model';
+import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultEntity, DefaultProperty} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {PredefinedPropertyInstantiator} from './samm-e-predefined-property-instantiator';
 
@@ -28,8 +28,8 @@ export class PredefinedEntityInstantiator {
     const {propertyInstances} = new PredefinedPropertyInstantiator(this.metaModelElementInstantiator);
 
     const {samm, sammE} = this.metaModelElementInstantiator;
-    const timestampProperty = propertyInstances[sammE.timestampProperty]();
-    const valueProperty = propertyInstances[sammE.valueProperty]();
+    const timestampProperty: DefaultProperty = propertyInstances[sammE.timestampProperty]();
+    const valueProperty: DefaultAbstractProperty = propertyInstances[sammE.valueProperty]();
 
     const timeSeriesEntity = new DefaultAbstractEntity(
       samm.version,
@@ -48,6 +48,9 @@ export class PredefinedEntityInstantiator {
       'An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded.'
     );
 
+    timestampProperty.parents.push(timeSeriesEntity);
+    valueProperty.parents.push(timeSeriesEntity);
+    timeSeriesEntity.children.push(timestampProperty, valueProperty);
     return timeSeriesEntity;
   }
 
@@ -69,6 +72,9 @@ export class PredefinedEntityInstantiator {
     point3dEntity.addPreferredName('en', 'Point 3D');
     point3dEntity.addDescription('en', 'Defines a position in a three dimensional space.');
 
+    point3dEntity.children.push(...point3dEntity.properties.map(p => p.property));
+    point3dEntity.children.forEach(child => child.parents.push(point3dEntity));
+
     return point3dEntity;
   }
 
@@ -88,6 +94,9 @@ export class PredefinedEntityInstantiator {
 
     fileResourceEntity.addPreferredName('en', 'File Resource');
     fileResourceEntity.addDescription('en', 'A file in a specific format');
+
+    fileResourceEntity.children.push(...fileResourceEntity.properties.map(p => p.property));
+    fileResourceEntity.children.forEach(child => child.parents.push(fileResourceEntity));
 
     return fileResourceEntity;
   }

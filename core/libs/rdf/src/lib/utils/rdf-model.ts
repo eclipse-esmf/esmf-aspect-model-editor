@@ -41,6 +41,7 @@ export class RdfModel {
 
   public originalAbsoluteFileName = null;
   public loadedFromWorkspace = false;
+  public aspect: Quad_Subject;
 
   get isExternalRef(): boolean {
     return this._isExternalRef;
@@ -58,12 +59,8 @@ export class RdfModel {
     this._aspectModelFileName = value.split(':')[2] || value;
   }
 
-  get hasAspect(): boolean {
-    return this.store.getSubjects(this.samm.RdfType(), this.samm.Aspect(), null).length > 0;
-  }
-
   get aspectUrn(): string {
-    return this.store.getSubjects(this.samm.RdfType(), this.samm.Aspect(), null)[0]?.value || this.getAspectModelUrn();
+    return this.aspect?.value || this.getAspectModelUrn();
   }
 
   set hasErrors(hasErrors: boolean) {
@@ -79,15 +76,14 @@ export class RdfModel {
   }
 
   get absoluteAspectModelFileName(): string {
-    const aspect = this.store.getSubjects(null, this.samm.Aspect(), null)?.[0];
     if (this._absoluteAspectModelFileName) {
-      if (aspect) {
+      if (this.aspect) {
         return this.nameBasedOnASpect;
       }
       return this._absoluteAspectModelFileName;
     }
 
-    if (aspect) {
+    if (this.aspect) {
       return this.nameBasedOnASpect;
     }
 
@@ -119,8 +115,7 @@ export class RdfModel {
   }
 
   private get nameBasedOnASpect() {
-    const aspect = this.store.getSubjects(null, this.samm.Aspect(), null)?.[0];
-    return aspect ? aspect.value.replace('urn:samm:', '').replace('#', ':') + '.ttl' : null;
+    return this.aspect ? this.aspect.value.replace('urn:samm:', '').replace('#', ':') + '.ttl' : null;
   }
 
   constructor(public store: Store, public dataTypeService: DataTypeService, private prefixes: Prefixes) {
@@ -130,6 +125,16 @@ export class RdfModel {
     this.sammE = new SammE(this.samm);
     this.sammU = new SammU(this.samm);
     this.setDefaultAspectModelAlias();
+    const aspect = this.store.getSubjects(this.samm.RdfType(), this.samm.Aspect(), null)[0];
+    this.setAspect(aspect?.value);
+  }
+
+  setAspect(aspectUrn: string) {
+    this.aspect = aspectUrn ? DataFactory.namedNode(aspectUrn) : null;
+  }
+
+  removeAspectFromStore() {
+    this.aspect = null;
   }
 
   getMetaModelVersion(): string {
@@ -351,7 +356,7 @@ export class RdfModel {
 
   private setDefaultAspectModelAlias() {
     const subject = this.store.getSubjects(this.samm.RdfType(), null, null);
-    this.defaultAspectModelAlias = this.getAliasByNamespace(`${subject[0].value.split('#')[0]}#`);
+    this.defaultAspectModelAlias = this.getAliasByNamespace(`${subject[0]?.value.split('#')[0]}#`);
   }
 
   SAMM(): Samm {

@@ -15,6 +15,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {
   BaseMetaModelElement,
+  Constraint,
   DefaultConstraint,
   DefaultEncodingConstraint,
   DefaultFixedPointConstraint,
@@ -63,18 +64,33 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
     this.setPreviousData();
 
     const createInstanceFunction = this.listConstraints.get(constraint);
-    const defaultConstraint = createInstanceFunction();
+    const newConstraintType = this.getMetaModelElementTypeWhenChange(createInstanceFunction);
 
     const oldMetaModelElement = this.metaModelElement;
-    this.metaModelElement = defaultConstraint;
+    this.metaModelElement = newConstraintType;
 
     this.metaModelElement.name = oldMetaModelElement.name;
+    this.metaModelElement.aspectModelUrn = oldMetaModelElement.aspectModelUrn;
     this.migrateCommonAttributes(oldMetaModelElement);
 
     this.addLanguageSettings(this.metaModelElement);
-    this.updateFields(defaultConstraint);
+    this.setMetaModelElementAspectUrn(newConstraintType);
+    this.updateFields(newConstraintType);
 
     this.selectedConstraint.emit(constraint);
+  }
+
+  private getMetaModelElementTypeWhenChange(createInstanceFunction: Function) {
+    const modelElementType = createInstanceFunction();
+    if (modelElementType.aspectModelUrn === this.selectedMetaModelElement.aspectModelUrn) {
+      this.metaModelElement = this.selectedMetaModelElement;
+      return;
+    }
+    return modelElementType;
+  }
+
+  private setMetaModelElementAspectUrn(modelElement: Constraint) {
+    this.metaModelElement.aspectModelUrn = `${this.modelService.getLoadedAspectModel().rdfModel.getAspectModelUrn()}${modelElement.name}`;
   }
 
   private initConstraintList(): void {

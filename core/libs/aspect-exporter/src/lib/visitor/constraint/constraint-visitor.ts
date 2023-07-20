@@ -22,13 +22,11 @@ import {
   DefaultRangeConstraint,
   DefaultRegularExpressionConstraint,
   DefaultTrait,
-  Trait,
   Type,
 } from '@ame/meta-model';
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {SammC} from '@ame/vocabulary';
-import {mxgraph} from 'mxgraph-factory';
 import {DataFactory, NamedNode, Store} from 'n3';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {BaseVisitor} from '../base-visitor';
@@ -58,16 +56,12 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
     super(rdfService);
   }
 
-  visit(cell: mxgraph.mxCell): DefaultConstraint {
-    const constraint = MxGraphHelper.getModelElement<DefaultConstraint>(cell);
+  visit(constraint: DefaultConstraint): DefaultConstraint {
     this.setPrefix(constraint.aspectModelUrn);
-    this.updateParents(cell);
+    this.updateParents(constraint);
     this.updateProperties(constraint);
 
-    let defaultTrait: DefaultTrait;
-    if (cell.edges?.[0]?.source) {
-      defaultTrait = MxGraphHelper.getModelElement<DefaultTrait>(cell.edges[0].source);
-    }
+    const defaultTrait: DefaultTrait = constraint.parents.find(e => e instanceof DefaultTrait) as DefaultTrait;
 
     if (constraint instanceof DefaultRangeConstraint && defaultTrait) {
       this.constraintCallbacks[constraint.className]?.(constraint, defaultTrait.baseCharacteristic?.dataType);
@@ -135,12 +129,8 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
     this.rdfNodeService.update(constraint, {localeCode: constraint.localeCode});
   }
 
-  private updateParents(cell: mxgraph.mxCell) {
-    const constraint = MxGraphHelper.getModelElement<DefaultConstraint>(cell);
-
-    const parents = this.mxGraphService.resolveParents(cell)?.map((parent: mxgraph.mxCell) => MxGraphHelper.getModelElement<Trait>(parent));
-
-    parents?.forEach(parent => {
+  private updateParents(constraint: DefaultConstraint) {
+    constraint.parents?.forEach(parent => {
       this.replaceConstraints(
         DataFactory.namedNode(parent.aspectModelUrn),
         this.sammC.ConstraintProperty(),

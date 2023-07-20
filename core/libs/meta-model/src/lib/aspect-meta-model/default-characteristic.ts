@@ -11,11 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {Samm} from '@ame/vocabulary';
 import {Type} from './type';
 import {Base, BaseMetaModelElement} from './base';
 import {DefaultEntity} from './default-entity';
-import {AspectModelVisitor} from '@ame/mx-graph';
-import {Samm} from '@ame/vocabulary';
 import {DefaultScalar} from './default-scalar';
 
 export interface Characteristic extends BaseMetaModelElement {
@@ -51,9 +50,5 @@ export class DefaultCharacteristic extends Base implements Characteristic {
     if (baseMetalModelElement instanceof DefaultEntity || baseMetalModelElement instanceof DefaultScalar) {
       this.dataType = baseMetalModelElement;
     }
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitCharacteristic(this, context);
   }
 }

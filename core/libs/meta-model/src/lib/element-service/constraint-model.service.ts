@@ -15,7 +15,7 @@ import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 import {ConstraintRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {Base, BaseMetaModelElement, DefaultConstraint, DefaultTrait} from '@ame/meta-model';
+import {Base, BaseMetaModelElement, DefaultCharacteristic, DefaultConstraint, DefaultScalar, DefaultTrait} from '@ame/meta-model';
 import {
   DefaultEncodingConstraint,
   DefaultFixedPointConstraint,
@@ -25,6 +25,7 @@ import {
   DefaultRangeConstraint,
   DefaultRegularExpressionConstraint,
 } from '../aspect-meta-model';
+import {FiltersService} from '@ame/loader-filters';
 
 @Injectable({providedIn: 'root'})
 export class ConstraintModelService extends BaseModelService {
@@ -32,23 +33,28 @@ export class ConstraintModelService extends BaseModelService {
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphService: MxGraphService,
-    private constraintRenderer: ConstraintRenderService
+    private constraintRenderer: ConstraintRenderService,
+    private filtersService: FiltersService
   ) {
     super();
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    let metaModelElement: DefaultConstraint = MxGraphHelper.getModelElement(cell);
+    let metaModelElement = MxGraphHelper.getModelElement<DefaultConstraint>(cell);
     if (form.changedMetaModel) {
+      this.currentCachedFile.removeCachedElement(metaModelElement?.aspectModelUrn);
+      this.currentCachedFile.resolveCachedElement(form.changedMetaModel);
       cell = this.mxGraphService.resolveCellByModelElement(metaModelElement);
 
-      if (cell.edges) {
-        const trait: DefaultTrait = MxGraphHelper.getModelElement(cell.edges[0].source);
+      cell.edges?.forEach(({source}) => {
+        const trait = MxGraphHelper.getModelElement<DefaultTrait>(source);
         trait.constraints = trait.constraints.filter(constraint => constraint.aspectModelUrn !== metaModelElement.aspectModelUrn);
-      }
+        MxGraphHelper.removeRelation(trait, metaModelElement);
+        MxGraphHelper.establishRelation(trait, form.changedMetaModel);
+      });
 
       this.updateModelOfParent(cell, form.changedMetaModel);
-      MxGraphHelper.setModelElement(cell, form.changedMetaModel);
+      MxGraphHelper.setElementNode(cell, this.filtersService.createNode(form.changedMetaModel));
       metaModelElement = form.changedMetaModel; // set the changed meta model as the actual
     }
     super.update(cell, form);
@@ -63,20 +69,18 @@ export class ConstraintModelService extends BaseModelService {
 
   delete(cell: mxgraph.mxCell) {
     super.delete(cell);
-    const modelElement = MxGraphHelper.getModelElement(cell);
+    const elementModel = MxGraphHelper.getModelElement(cell);
     const outgoingEdges = this.mxGraphAttributeService.graph.getOutgoingEdges(cell);
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
-    this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
-    this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, modelElement);
+    this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, elementModel);
+    this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, elementModel);
     this.mxGraphService.removeCells([cell]);
   }
 
   private updateModelOfParent(cell: mxgraph.mxCell, value: any) {
     this.mxGraphAttributeService.graph.getIncomingEdges(cell).forEach(cellParent => {
-      const modelElementParent = MxGraphHelper.getModelElement(cellParent.source);
-      if (modelElementParent) {
-        (<Base>modelElementParent).update(value);
-      }
+      const parentModel = MxGraphHelper.getModelElement<Base>(cellParent.source);
+      parentModel?.update(value);
     });
   }
 

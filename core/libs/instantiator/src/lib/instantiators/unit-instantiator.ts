@@ -11,9 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {DataFactory} from 'n3';
-import {DefaultQuantityKind, DefaultUnit, Entity, QuantityKind, Unit} from '@ame/meta-model';
+import {DefaultQuantityKind, DefaultUnit, QuantityKind, Unit} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {Samm, SammU} from '@ame/vocabulary';
+import {syncElementWithChildren} from '../helpers';
 
 declare const sammUDefinition: any;
 
@@ -40,7 +41,7 @@ export class UnitInstantiator {
 
   getUnit(name: string): Unit {
     const unit = this.createUnit(name);
-    return <Unit>this.cachedFile.resolveElement(unit, this.isIsolated);
+    return unit.isPredefined() ? unit : this.cachedFile.resolveElement(unit);
   }
 
   createQuantityKind(name: string): QuantityKind {
@@ -59,13 +60,13 @@ export class UnitInstantiator {
       : null;
   }
 
-  createUnit(urn: string): Unit {
+  createUnit(urn: string, parent?: Unit): Unit {
     if (!urn) {
       return null;
     }
 
     const quantityKindNames = new Array<string>();
-    const predefinedUnit = this.createPredefinedUnit(urn);
+    const predefinedUnit = this.createPredefinedUnit(urn, parent);
 
     if (predefinedUnit) {
       return predefinedUnit;
@@ -75,7 +76,7 @@ export class UnitInstantiator {
     defaultUnit.fileName = this.metaModelElementInstantiator.fileName;
     const unitPropertyQuads = this.metaModelElementInstantiator.rdfModel.store.getQuads(DataFactory.namedNode(urn), null, null, null);
     [, defaultUnit.name] = urn.split('#');
-    const alreadyDefinedUnit = this.cachedFile.getElement<Entity>(unitPropertyQuads[0]?.subject.value, this.isIsolated);
+    const alreadyDefinedUnit = this.cachedFile.getElement<Unit>(unitPropertyQuads[0]?.subject.value);
 
     if (alreadyDefinedUnit) {
       return alreadyDefinedUnit;
@@ -88,6 +89,7 @@ export class UnitInstantiator {
         defaultUnit.symbol = quad.object.value;
       } else if (this.samm.isReferenceUnitProperty(quad.predicate.value)) {
         defaultUnit.referenceUnit = this.createUnit(quad.object.value);
+        if (defaultUnit.referenceUnit) defaultUnit.children.push(defaultUnit);
       } else if (this.samm.isConversionFactorProperty(quad.predicate.value)) {
         defaultUnit.conversionFactor = quad.object.value;
       } else if (this.samm.isNumericConversionFactorProperty(quad.predicate.value)) {
@@ -106,12 +108,14 @@ export class UnitInstantiator {
       if (quantityKind) {
         defaultUnit.quantityKinds.push(quantityKind);
       }
+      defaultUnit.children.push(...defaultUnit.quantityKinds);
     });
 
-    return <Unit>this.cachedFile.resolveElement(defaultUnit, this.isIsolated);
+    syncElementWithChildren(defaultUnit);
+    return <Unit>this.cachedFile.resolveElement(defaultUnit);
   }
 
-  createPredefinedUnit(name: string) {
+  createPredefinedUnit(name: string, parent?: Unit) {
     const defaultUnit = new DefaultUnit(this.samm.version, null, null, null, null, null);
     const unit = sammUDefinition.units[name.replace(this.sammU.getNamespace(), '')];
 
@@ -121,9 +125,12 @@ export class UnitInstantiator {
       defaultUnit.aspectModelUrn = `${this.metaModelElementInstantiator.sammU.getDefaultUnitUri()}#${defaultUnit.name}`;
       defaultUnit.symbol = unit.symbol;
       defaultUnit.code = unit.code;
-      defaultUnit.referenceUnit = unit.referenceUnit ? this.createUnit(unit.referenceUnit().name) : null;
       defaultUnit.conversionFactor = unit.conversionFactor;
       defaultUnit.quantityKinds = unit.quantityKinds;
+
+      if (!parent) {
+        defaultUnit.referenceUnit = unit.referenceUnit ? this.createUnit(unit.referenceUnit().name, defaultUnit) : null;
+      }
 
       return defaultUnit;
     }

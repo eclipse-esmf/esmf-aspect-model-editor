@@ -14,6 +14,7 @@ import {NamedNode, Quad} from 'n3';
 import {Characteristic, DefaultDuration, Unit} from '@ame/meta-model';
 import {CharacteristicInstantiator} from './characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
+import {syncElementWithChildren} from '../helpers';
 
 export class DurationCharacteristicInstantiator extends CharacteristicInstantiator {
   constructor(metaModelElementInstantiator: MetaModelElementInstantiator, nextProcessor: CharacteristicInstantiator) {
@@ -21,7 +22,7 @@ export class DurationCharacteristicInstantiator extends CharacteristicInstantiat
   }
 
   protected processElement(quads: Array<Quad>): Characteristic {
-    let durationCharacteristic = this.cachedFile.getElement<DefaultDuration>(quads[0]?.subject.value, this.isIsolated);
+    let durationCharacteristic = this.cachedFile.getElement<DefaultDuration>(quads[0]?.subject.value);
     if (durationCharacteristic) {
       return durationCharacteristic;
     }
@@ -31,6 +32,8 @@ export class DurationCharacteristicInstantiator extends CharacteristicInstantiat
       if (this.metaModelElementInstantiator.sammC.isUnitProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.getUnit(quad, (unit: Unit) => {
           durationCharacteristic.unit = unit;
+          if (unit) durationCharacteristic.children.push(unit);
+          syncElementWithChildren(durationCharacteristic);
         });
       }
     });

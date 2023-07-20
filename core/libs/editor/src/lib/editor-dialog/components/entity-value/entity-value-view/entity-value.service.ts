@@ -16,13 +16,14 @@ import {DefaultEntity, DefaultEntityValue, DefaultEnumeration, DefaultProperty, 
 import {ConfirmDialogService} from '@ame/editor';
 import {NamespacesCacheService} from '@ame/cache';
 import {NotificationsService} from '@ame/shared';
+import {MxGraphHelper} from '@ame/mx-graph';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EntityValueService {
   get currentCachedFile() {
-    return this.namespacesCacheService.getCurrentCachedFile();
+    return this.namespacesCacheService.currentCachedFile;
   }
 
   constructor(
@@ -66,6 +67,7 @@ export class EntityValueService {
 
     for (const entityValue of entityValues) {
       entityValue.addProperty(property);
+      MxGraphHelper.establishRelation(entityValue, property.property);
     }
 
     this.notifications.warning({

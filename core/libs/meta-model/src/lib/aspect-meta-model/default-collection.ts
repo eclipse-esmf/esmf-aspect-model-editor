@@ -14,7 +14,6 @@ import {Type} from './type';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 import {BaseMetaModelElement} from './base';
 import {DefaultEntity} from './default-entity';
-import {AspectModelVisitor} from '@ame/mx-graph';
 
 export interface Collection extends Characteristic {
   elementCharacteristic?: Characteristic;
@@ -51,9 +50,5 @@ export class DefaultCollection extends DefaultCharacteristic implements Collecti
     if (baseMetalModelElement instanceof DefaultCharacteristic) {
       this.elementCharacteristic = baseMetalModelElement;
     }
-  }
-
-  accept<T, U>(visitor: AspectModelVisitor<T, U>, context: U): T {
-    return visitor.visitCharacteristic(this, context);
   }
 }

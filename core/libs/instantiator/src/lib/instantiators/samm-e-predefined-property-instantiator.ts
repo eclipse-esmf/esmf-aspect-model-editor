@@ -52,6 +52,9 @@ export class PredefinedPropertyInstantiator {
     timestampProperty.addPreferredName('en', 'Timestamp');
     timestampProperty.addDescription('en', 'The specific point in time when the corresponding value was recorded.');
 
+    timestampProperty.children.push(timestampProperty.characteristic);
+    timestampProperty.characteristic.parents.push(timestampProperty);
+
     return timestampProperty;
   }
 
@@ -102,6 +105,9 @@ export class PredefinedPropertyInstantiator {
     resourceProperty.addPreferredName('en', 'Resource');
     resourceProperty.addDescription('en', 'Location of a resource');
 
+    resourceProperty.children.push(resourceProperty.characteristic);
+    resourceProperty.characteristic.parents.push(resourceProperty);
+
     return resourceProperty;
   }
 
@@ -122,6 +128,9 @@ export class PredefinedPropertyInstantiator {
 
     mimeTypeProperty.addPreferredName('en', 'MIME Type');
     mimeTypeProperty.addDescription('en', 'A MIME type as defined in RFC 2046');
+
+    mimeTypeProperty.children.push(mimeTypeProperty.characteristic);
+    mimeTypeProperty.characteristic.parents.push(mimeTypeProperty);
 
     return mimeTypeProperty;
   }

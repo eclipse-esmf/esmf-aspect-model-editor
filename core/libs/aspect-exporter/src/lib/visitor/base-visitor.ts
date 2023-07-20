@@ -11,14 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {BaseMetaModelElement} from '@ame/meta-model';
 import {RdfService} from '@ame/rdf/services';
-import {mxgraph} from 'mxgraph-factory';
 import {DataFactory} from 'n3';
 
 export abstract class BaseVisitor<T> {
   constructor(protected rdfService: RdfService) {}
 
-  abstract visit(cell: mxgraph.mxCell): T;
+  abstract visit(element: BaseMetaModelElement): T;
 
   protected setPrefix(aspectModelUrn: string) {
     const namespace = `${aspectModelUrn.split('#')[0]}#`;

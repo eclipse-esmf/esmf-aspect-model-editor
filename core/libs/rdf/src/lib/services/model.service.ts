@@ -36,7 +36,7 @@ export class ModelService {
   }
 
   get currentCachedFile(): CachedFile {
-    return this.namespaceCacheService.getCurrentCachedFile();
+    return this.namespaceCacheService.currentCachedFile;
   }
 
   constructor(
@@ -55,6 +55,7 @@ export class ModelService {
 
   removeAspect() {
     this.aspect = null;
+    this.rdfService.currentRdfModel.removeAspectFromStore();
   }
 
   addAspect(aspect: Aspect) {

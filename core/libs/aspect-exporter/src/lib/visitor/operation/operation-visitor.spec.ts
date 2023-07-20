@@ -13,24 +13,15 @@
 
 import {TestBed} from '@angular/core/testing';
 import {describe, expect, it} from '@jest/globals';
-import {Store} from 'n3';
-import {provideMockObject} from '../../../../../../jest-helpers';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {OperationVisitor} from './operation-visitor';
 import {DefaultOperation} from '@ame/meta-model';
-import {MxGraphService} from '@ame/mx-graph';
-import {RdfModel} from '@ame/rdf/utils';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {Samm} from '@ame/vocabulary';
+import {RdfService} from '@ame/rdf/services';
 
 describe('Operation Visitor', () => {
   let service: OperationVisitor;
-  let rdfNodeService: jest.Mocked<RdfNodeService>;
-  let rdfService: jest.Mocked<RdfService>;
-
-  let modelService: jest.Mocked<ModelService>;
-  let rdfModel: jest.Mocked<RdfModel>;
+  let rdfNodeService: RdfNodeService;
   let operation: DefaultOperation;
 
   beforeEach(() => {
@@ -39,51 +30,31 @@ describe('Operation Visitor', () => {
         OperationVisitor,
         {
           provide: RdfNodeService,
-          useValue: provideMockObject(RdfNodeService),
+          useValue: {update: jest.fn()},
         },
         {
           provide: RdfService,
-          useValue: provideMockObject(RdfService),
+          useValue: {
+            currentRdfModel: {hasNamespace: jest.fn(() => true)},
+            externalRdfModels: [],
+          },
         },
         {
           provide: RdfListService,
-          useValue: provideMockObject(RdfListService),
-        },
-        {
-          provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
+          useValue: {
+            createEmpty: jest.fn(),
+          },
         },
       ],
     });
 
-    modelService = provideMockObject(ModelService);
-    rdfModel = {
-      store: new Store(),
-      SAMM: jest.fn(() => new Samm('')),
-      SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
-      hasNamespace: jest.fn(() => false),
-      addPrefix: jest.fn(() => {}),
-    } as any;
-    modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
+    rdfNodeService = TestBed.inject(RdfNodeService);
     operation = new DefaultOperation('1', 'samm#operation1', 'operation1', [], null);
-
-    rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
-    rdfNodeService.modelService = modelService;
-
-    rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
-    rdfService.currentRdfModel = rdfModel;
-    rdfService.externalRdfModels = [];
-
     service = TestBed.inject(OperationVisitor);
   });
 
-  const getOperationCell = () => ({
-    getMetaModelElement: jest.fn(() => operation),
-  });
-
   it('should update store width default operations', () => {
-    const propertyCell = getOperationCell();
-    service.visit(propertyCell as any);
+    service.visit(operation);
 
     expect(rdfNodeService.update).toHaveBeenCalledWith(operation, {
       preferredName: [],

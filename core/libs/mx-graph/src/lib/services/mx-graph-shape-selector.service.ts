@@ -57,11 +57,7 @@ export class MxGraphShapeSelectorService {
 
   public getSelectedShape(): mxgraph.mxCell {
     const selectedCell = this.getSelectedCells()?.[0];
-    if (selectedCell) {
-      return !MxGraphHelper.getModelElement(selectedCell) ? selectedCell.getParent() : selectedCell;
-    }
-
-    return null;
+    return selectedCell ? (selectedCell.isEdge() ? null : selectedCell) : null;
   }
 
   /**

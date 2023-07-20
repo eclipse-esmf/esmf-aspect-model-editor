@@ -1,0 +1,9 @@
+= Generate other artifacts out of your Aspect Model
+
+This section shows how to use the Aspect Model Editor for generating other artifacts out of your Aspect Model.
+
+** xref:generate/generate-json.adoc[]
+** xref:generate/generate-html.adoc[]
+** xref:generate/generate-openapi-doc.adoc[]
+
+

@@ -140,7 +140,7 @@ export class FileHandlingService {
         this.logService.logError(`Error while exporting the Aspect Model. ${JSON.stringify(error)}.`);
         this.notificationsService.error({
           title: 'Error while exporting the Aspect Model',
-          message: `${error}`,
+          message: `${error?.error?.message || error}`,
           timeout: 5000,
         });
         return throwError(() => error);
@@ -174,7 +174,7 @@ export class FileHandlingService {
       switchMap(() => this.editorService.saveModel()),
       tap(rdfModel => {
         if (rdfModel instanceof RdfModel) {
-          this.namespaceCacheService.getCurrentCachedFile().fileName = rdfModel.aspectModelFileName;
+          this.namespaceCacheService.currentCachedFile.fileName = rdfModel.aspectModelFileName;
         }
 
         if (isChangeFileName) {
@@ -304,7 +304,7 @@ export class FileHandlingService {
           message: 'Unfortunately the validation could not be completed. Please retry or contact support',
           timeout: 5000,
         });
-        this.logService.logError(`Error occurred while validating the current model (${error})`);
+        this.logService.logError(`Error occurred while validating the current model (${JSON.stringify(error)})`);
         return throwError(() => 'Validation completed with errors');
       }),
       finalize(() => localStorage.removeItem('validating'))
@@ -380,7 +380,7 @@ export class FileHandlingService {
     return this.updateAffectedModels(affectedModels, originalNamespace, newNamespace);
   }
 
-  private updateAffectedQuads(originalNamespace: string, newNamespace: string): RdfModel[] {
+  public updateAffectedQuads(originalNamespace: string, newNamespace: string): RdfModel[] {
     const subjects = this.rdfService.currentRdfModel.store.getSubjects(null, null, null);
     const models = this.rdfService.externalRdfModels;
     const affectedModels: RdfModel[] = [];

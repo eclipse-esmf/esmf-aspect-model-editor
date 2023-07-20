@@ -22,6 +22,6 @@
     </div>
   </div>
   <ng-container *ngFor="let element of elements">
-    <ame-sidebar-element *ngIf="isDisplayed(element)" [element]="element"> </ame-sidebar-element>
+    <ame-sidebar-element *ngIf="isVisible(element)" [element]="element"> </ame-sidebar-element>
   </ng-container>
 </div>
