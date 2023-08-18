@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -189,6 +190,11 @@ declare global {
        * Removes elements from see field. If none passed, will remove all elements
        */
       removeSeeElements(...elements: string[]): Chainable;
+
+      /**
+       * Checks whether two elements are connected or not
+       */
+      isConnected(sourceShapeParams: {name: string; fields?: object[]}, targetShapeParams: {name: string; fields?: object[]}): Chainable;
     }
   }
 }
@@ -428,7 +434,7 @@ Cypress.Commands.add('addSeeElements', (...elements: string[]) => {
 
 Cypress.Commands.add('removeSeeElements', (...elements: string[]) => {
   if (elements.length === 0) {
-    cy.get('[data-cy="see-remove-chip"]').click({force: true, multiple: true});
+    cy.get('[data-cy="see-remove-chip"]').each(element => cy.wrap(element).click());
     return;
   }
 
@@ -436,3 +442,21 @@ Cypress.Commands.add('removeSeeElements', (...elements: string[]) => {
     cy.get(FIELD_see).clear({force: true}).get(`[data-cy="chip__${element}"] [data-cy="see-remove-chip"]`).click({force: true});
   }
 });
+
+Cypress.Commands.add(
+  'isConnected',
+  (sourceShapeParams: {name: string; fields?: object[]}, targetShapeParams: {name: string; fields?: object[]}) => {
+    return cy.window().then(win => {
+      const sourceCell = cyHelp.findShapeByName(sourceShapeParams.name, win);
+      if (!sourceCell) {
+        throw new Error(`Shape ${sourceShapeParams.name} not found`);
+      }
+      const targetCell = cyHelp.findShapeByFields(targetShapeParams.name, targetShapeParams.fields || [], win);
+      if (!targetCell) {
+        throw new Error(`Shape ${targetShapeParams.name} not found`);
+      }
+      const mxGraphAttributeService: MxGraphAttributeService = win['angular.mxGraphAttributeService'];
+      return mxGraphAttributeService.graph.getOutgoingEdges(sourceCell).some(edge => edge.target === targetCell);
+    });
+  }
+);

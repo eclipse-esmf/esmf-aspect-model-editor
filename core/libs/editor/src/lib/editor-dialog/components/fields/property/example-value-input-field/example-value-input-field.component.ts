@@ -13,7 +13,6 @@
 
 import {Component, OnInit} from '@angular/core';
 import {InputFieldComponent} from '../../input-field.component';
-import {EditorModelService} from '../../../../editor-model.service';
 import {DefaultProperty} from '@ame/meta-model';
 import {FormControl} from '@angular/forms';
 
@@ -23,10 +22,6 @@ import {FormControl} from '@angular/forms';
 })
 export class ExampleValueInputFieldComponent extends InputFieldComponent<DefaultProperty> implements OnInit {
   public hasComplexDataType = false;
-
-  constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
-  }
 
   ngOnInit() {
     this.subscription = this.getMetaModelData().subscribe(() => this.initForm());

@@ -93,7 +93,7 @@ export class EntityValueService {
     this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(result => {
       if (result) {
         for (const entityValue of entityValues) {
-          this.currentCachedFile.removeCachedElement(entityValue.aspectModelUrn);
+          this.currentCachedFile.removeElement(entityValue.aspectModelUrn);
         }
         acceptCallback?.();
       }
@@ -144,7 +144,7 @@ export class EntityValueService {
 
       // if the instance is not used by another characteristic, remove it
       if (entityValue.parents.length <= 0) {
-        this.currentCachedFile.removeCachedElement(entityValue.aspectModelUrn);
+        this.currentCachedFile.removeElement(entityValue.aspectModelUrn);
       }
     }
 

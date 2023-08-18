@@ -76,13 +76,13 @@ export abstract class BaseModelService {
     for (const edge of (cell.edges?.length && cell.edges) || []) {
       const sourceNode = MxGraphHelper.getModelElement<Base>(edge.source);
       if (sourceNode && !(sourceNode instanceof DefaultEnumeration) && !sourceNode.isExternalReference()) {
-        this.currentCachedFile.removeCachedElement(modeElement.aspectModelUrn);
+        this.currentCachedFile.removeElement(modeElement.aspectModelUrn);
         sourceNode.delete(modeElement);
       }
     }
 
     if (!modeElement.isExternalReference()) {
-      this.currentCachedFile.removeCachedElement(modeElement.aspectModelUrn);
+      this.currentCachedFile.removeElement(modeElement.aspectModelUrn);
     }
   }
 

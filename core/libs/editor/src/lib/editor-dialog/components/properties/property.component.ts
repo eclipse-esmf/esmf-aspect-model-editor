@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Component, Input} from '@angular/core';
+import {Component, Input, inject} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {EditorModelService} from '../../editor-model.service';
 
@@ -20,7 +20,6 @@ import {EditorModelService} from '../../editor-model.service';
 })
 export class PropertyComponent {
   @Input() parentForm: FormGroup;
+  private metaModelDialogService = inject(EditorModelService);
   public element$ = this.metaModelDialogService.getMetaModelElement();
-
-  constructor(private metaModelDialogService: EditorModelService) {}
 }

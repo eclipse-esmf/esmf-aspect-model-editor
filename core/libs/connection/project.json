@@ -1,0 +1,23 @@
+{
+  "name": "connection",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/connection/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/connection"],
+      "options": {
+        "jestConfig": "libs/connection/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/connection/src/**/*.ts", "libs/connection/src/**/*.html"]
+      }
+    }
+  }
+}

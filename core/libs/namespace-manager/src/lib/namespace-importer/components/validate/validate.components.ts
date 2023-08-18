@@ -17,7 +17,7 @@ import {NAMESPACES_SESSION} from '../../../shared';
 import {NamespacesSessionInterface} from '../../../shared/models';
 
 @Component({
-  selector: 'ame-validate',
+  selector: 'ame-import-validate',
   templateUrl: './validate.components.html',
   styleUrls: [`validate.components.scss`],
 })

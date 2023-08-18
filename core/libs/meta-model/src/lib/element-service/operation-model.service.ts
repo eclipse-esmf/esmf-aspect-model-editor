@@ -67,18 +67,21 @@ export class OperationModelService extends BaseModelService {
     const operation = MxGraphHelper.getModelElement<DefaultOperation>(cell);
     this.mxGraphAttributeService.graph.getOutgoingEdges(cell).forEach(edge => {
       const modelElement = MxGraphHelper.getModelElement(edge.target);
+      const inputProperty = input.find(value => value.property.aspectModelUrn === modelElement.aspectModelUrn);
       if (
         modelElement instanceof DefaultProperty &&
         operation.output?.property.aspectModelUrn !== modelElement.aspectModelUrn &&
         output?.property?.aspectModelUrn !== modelElement.aspectModelUrn &&
-        input.find(value => value.property.aspectModelUrn === modelElement.aspectModelUrn)
+        inputProperty
       ) {
         this.mxGraphService.removeCells([cell.removeEdge(edge, true)]);
+        MxGraphHelper.removeRelation(operation, inputProperty.property);
       }
     });
   }
 
   private removeOutputDependency(cell: mxgraph.mxCell, output: OverWrittenProperty, input: Array<OverWrittenProperty>) {
+    const operation = MxGraphHelper.getModelElement<DefaultOperation>(cell);
     this.mxGraphAttributeService.graph.getOutgoingEdges(cell).forEach(edge => {
       const modelElement = MxGraphHelper.getModelElement(edge.target);
       if (
@@ -87,6 +90,7 @@ export class OperationModelService extends BaseModelService {
         !input.find(value => value.property.aspectModelUrn === modelElement.aspectModelUrn)
       ) {
         this.mxGraphService.removeCells([cell.removeEdge(edge, true)]);
+        MxGraphHelper.removeRelation(operation, output.property);
       }
     });
   }

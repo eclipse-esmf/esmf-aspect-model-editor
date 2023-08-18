@@ -11,15 +11,13 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="column">
-  <mat-form-field [floatLabel]="getControl('languageCode')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="languageCode">languageCode</mat-label>
-    <input matInput [formControl]="getControl('languageCode')" [matAutocomplete]="auto" name="languageCode" data-cy="languageCode" />
-    <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let lang of filteredLanguages | async" [value]="lang.tag" class="language-code">
-        {{ lang.tag }}<br /><span class="option-description">{{ lang.name }}</span>
-      </mat-option>
-    </mat-autocomplete>
-    <mat-error *ngIf="getControl('languageCode').errors?.required">Language Code is required</mat-error>
-  </mat-form-field>
-</div>
+<mat-form-field [floatLabel]="getControl('languageCode')?.disabled ? 'always' : 'auto'" appearance="fill">
+  <mat-label for="languageCode">languageCode</mat-label>
+  <input matInput [formControl]="getControl('languageCode')" [matAutocomplete]="auto" name="languageCode" data-cy="languageCode" />
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let lang of filteredLanguages | async" [value]="lang.tag" class="language-code">
+      {{ lang.tag }}<br /><span class="option-description">{{ lang.name }}</span>
+    </mat-option>
+  </mat-autocomplete>
+  <mat-error *ngIf="getControl('languageCode').errors?.required">Language Code is required</mat-error>
+</mat-form-field>

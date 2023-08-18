@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Directive, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {Directive, Input, OnChanges, OnDestroy, SimpleChanges, inject} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {EditorModelService} from '../../editor-model.service';
 import {Observable, of, startWith, Subscription} from 'rxjs';
@@ -46,6 +46,11 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
   @Input() public parentForm: FormGroup;
   @Input() previousData: PreviousFormDataSnapshot = {};
 
+  public metaModelDialogService = inject(EditorModelService);
+  public namespacesCacheService = inject(NamespacesCacheService);
+  public searchService = inject(SearchService);
+  public mxGraphService = inject(MxGraphService);
+
   public metaModelElement: T;
   public subscription: Subscription = new Subscription();
   public formSubscription: Subscription = new Subscription(); // subscriptions from form controls are added here
@@ -59,13 +64,6 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
   get elementExtends() {
     return this.metaModelElement as any as CanExtend;
   }
-
-  protected constructor(
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService?: NamespacesCacheService,
-    public searchService?: SearchService,
-    public mxGraphService?: MxGraphService
-  ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCurrentValue(key: string, _locale?: string) {

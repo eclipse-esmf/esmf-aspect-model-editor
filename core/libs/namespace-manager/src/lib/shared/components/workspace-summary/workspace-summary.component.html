@@ -13,52 +13,48 @@
 
 <mat-dialog-content class="dialog-content">
   <div class="namespace-column">
-    <mat-selection-list [multiple]="false">
-      <mat-expansion-panel *ngFor="let violation of violations" [expanded]="true">
-        <mat-expansion-panel-header>
-          <mat-panel-title matTooltip="Package for namespace {{ violation.key }}" matTooltipPosition="right">
-            <mat-icon>folder</mat-icon>
-            <span>{{ violation.key }}</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
+    <div *ngFor="let violation of violations" class="namespace">
+      <div class="namespace-title">
+        <mat-icon>folder</mat-icon>
+        <span>{{ violation.key }}</span>
+      </div>
+      <div
+        class="option"
+        *ngFor="let value of violation.value"
+        (click)="errors = value.violationError; visibleStep = errors?.length ? step.hasErrors : step.noError"
+      >
+        <div class="content" [matTooltip]="value.file.length > 25 ? value.file : ''" matTooltipPosition="right">
+          <mat-icon>description</mat-icon>
+          <span class="file-name">{{ value.file }}</span>
+        </div>
 
-        <mat-list-option
-          *ngFor="let value of violation.value"
-          (click)="errors = value.violationError; visibleStep = errors?.length ? step.hasErrors : step.noError"
+        <mat-icon *ngIf="value.violationError?.length" matTooltip="This file has errors" matTooltipPosition="right" class="violation">
+          error
+        </mat-icon>
+        <mat-icon
+          *ngIf="!value.violationError?.length"
+          matTooltip="This file was validated with success"
+          matTooltipPosition="right"
+          class="success"
         >
-          <div class="content" [matTooltip]="value.file.length > 25 ? value.file : ''" matTooltipPosition="right">
-            <mat-icon>description</mat-icon>
-            <span class="file-name">{{ value.file }}</span>
-          </div>
-          <div class="status">
-            <mat-icon *ngIf="value.violationError?.length" matTooltip="This file has errors" matTooltipPosition="right" class="violation"
-              >error
-            </mat-icon>
-            <mat-icon
-              *ngIf="!value.violationError?.length"
-              matTooltip="This file was validated with success"
-              matTooltipPosition="right"
-              class="success"
-              >done
-            </mat-icon>
-          </div>
-        </mat-list-option>
-      </mat-expansion-panel>
+          done
+        </mat-icon>
+      </div>
+    </div>
 
-      <mat-list-option *ngIf="missingElements?.length" class="missing-elements" (click)="visibleStep = step.missingElement">
-        <div class="content">
-          <mat-icon>sim_card_alert</mat-icon>
-          <span>Missing files</span>
-        </div>
-      </mat-list-option>
+    <div *ngIf="missingElements?.length" class="option missing-elements" (click)="visibleStep = step.missingElement">
+      <div class="content">
+        <mat-icon>sim_card_alert</mat-icon>
+        <span>Missing files</span>
+      </div>
+    </div>
 
-      <mat-list-option *ngIf="invalidFiles?.length" class="incorrect-files" (click)="visibleStep = step.incorrectFile">
-        <div class="content">
-          <mat-icon>error</mat-icon>
-          <span>Incorrect files</span>
-        </div>
-      </mat-list-option>
-    </mat-selection-list>
+    <div *ngIf="invalidFiles?.length" class="option incorrect-files" (click)="visibleStep = step.incorrectFile">
+      <div class="content">
+        <mat-icon>error</mat-icon>
+        <span>Incorrect files</span>
+      </div>
+    </div>
   </div>
 
   <div class="errors-column">

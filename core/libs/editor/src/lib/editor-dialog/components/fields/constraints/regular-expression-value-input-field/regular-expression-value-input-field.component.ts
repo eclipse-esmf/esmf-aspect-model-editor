@@ -13,7 +13,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {DefaultRegularExpressionConstraint} from '@ame/meta-model';
-import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -24,8 +23,8 @@ export class RegularExpressionValueInputFieldComponent
   extends InputFieldComponent<DefaultRegularExpressionConstraint>
   implements OnInit, OnDestroy
 {
-  constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
+  constructor() {
+    super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'value';
   }

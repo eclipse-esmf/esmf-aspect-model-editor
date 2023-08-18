@@ -15,8 +15,7 @@ import {Injectable} from '@angular/core';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {BaseVisitor} from '../base-visitor';
 import {DefaultAbstractEntity} from '@ame/meta-model';
-import {MxGraphService} from '@ame/mx-graph';
-import {RdfNodeService} from '../../rdf-node/rdf-node.service';
+import {RdfNodeService} from '../../rdf-node';
 import {RdfService} from '@ame/rdf/services';
 import {DataFactory, Store} from 'n3';
 import {Samm} from '@ame/vocabulary';
@@ -26,12 +25,7 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
   private store: Store;
   private samm: Samm;
 
-  constructor(
-    public rdfNodeService: RdfNodeService,
-    public graphService: MxGraphService,
-    public rdfListService: RdfListService,
-    public rdfService: RdfService
-  ) {
+  constructor(public rdfNodeService: RdfNodeService, public rdfListService: RdfListService, public rdfService: RdfService) {
     super(rdfService);
   }
 
@@ -51,7 +45,6 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
   }
 
   private updateProperties(abstractEntity: DefaultAbstractEntity) {
-    this.rdfListService.setRdfModel(this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel);
     this.rdfNodeService.update(abstractEntity, {
       preferredName: abstractEntity.getAllLocalesPreferredNames()?.map(language => ({
         language,

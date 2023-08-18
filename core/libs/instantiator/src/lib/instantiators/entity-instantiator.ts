@@ -27,10 +27,6 @@ export class EntityInstantiator {
     return this.metaModelElementInstantiator.rdfModel;
   }
 
-  private get isIsolated() {
-    return this.metaModelElementInstantiator.isIsolated;
-  }
-
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
   createEntity(quads: Array<Quad>): Entity {
@@ -64,11 +60,11 @@ export class EntityInstantiator {
       }
 
       if (samm.isPropertiesProperty(quad.predicate.value)) {
-        defaultEntity.properties = this.metaModelElementInstantiator.getProperties(
+        this.metaModelElementInstantiator.getProperties(
           DataFactory.namedNode(quad.subject.value),
-          samm.PropertiesProperty()
+          samm.PropertiesProperty(),
+          defaultEntity
         );
-        defaultEntity.children.push(...defaultEntity.properties.map(p => p.property));
       }
     });
 

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, Input, inject} from '@angular/core';
 import {DefaultEvent} from '@ame/meta-model';
 import {ModelElementEditorComponent} from '..';
 import {EditorModelService} from '../../editor-model.service';
@@ -23,9 +23,6 @@ import {FormGroup} from '@angular/forms';
 })
 export class EventComponent extends ModelElementEditorComponent<DefaultEvent> {
   @Input() parentForm: FormGroup;
+  public metaModelDialogService = inject(EditorModelService);
   public element$ = this.metaModelDialogService.getMetaModelElement();
-
-  constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
-  }
 }

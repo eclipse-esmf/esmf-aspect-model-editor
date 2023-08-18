@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {NotificationsService} from '@ame/shared';
 import {VisibleStep} from 'libs/editor/src/lib/editor-toolbar/enum';
 import {ViolationError} from '@ame/editor';
@@ -24,6 +24,8 @@ import {NamespacesSessionInterface, MissingElement, Violation} from '../../model
   styleUrls: ['./workspace-summary.component.scss'],
 })
 export class WorkspaceSummaryComponent {
+  private importSession: NamespacesSessionInterface = inject(NAMESPACES_SESSION);
+
   public readonly icons = {
     violation: 'error',
     success: 'done',
@@ -37,10 +39,7 @@ export class WorkspaceSummaryComponent {
   public violations: Violation[] = this.importSession.violations;
   public errors: ViolationError[];
 
-  constructor(
-    private notificationService: NotificationsService,
-    @Inject(NAMESPACES_SESSION) private importSession: NamespacesSessionInterface
-  ) {}
+  constructor(private notificationService: NotificationsService) {}
 
   async copySummaryToClipboard() {
     const textToClipboard = JSON.stringify(

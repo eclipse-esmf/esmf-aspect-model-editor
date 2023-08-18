@@ -38,7 +38,7 @@ import {RdfService} from '@ame/rdf/services';
 import {Samm, SammC} from '@ame/vocabulary';
 import {DataFactory, Literal, NamedNode, Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
-import {RdfNodeService} from '../../rdf-node/rdf-node.service';
+import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
 
 @Injectable()

@@ -12,14 +12,8 @@
  */
 
 :host {
-  display: block;
-  position: relative;
-}
-
-.close-button {
-  position: absolute;
-  top: -10px;
-  right: -10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .table-container {
@@ -66,26 +60,19 @@ table {
     }
 
     tbody {
+      td {
+        vertical-align: middle;
+      }
+
       .mat-column-date {
-        flex: none;
         padding-top: 5px;
-        vertical-align: top;
       }
 
       .mat-column-type {
-        flex: none;
-        vertical-align: top;
-
-        mat-icon {
-          padding-top: 10px;
-          display: block;
-        }
+        text-align: center;
       }
 
       .mat-column-options {
-        flex: none;
-        vertical-align: top;
-
         button {
           padding-top: 5px;
           display: block;
@@ -93,12 +80,7 @@ table {
       }
 
       .mat-column-expand {
-        flex: none;
-        vertical-align: top;
-        padding-right: 0;
-
         mat-icon {
-          padding-top: 5px;
           display: block;
           cursor: pointer;
         }

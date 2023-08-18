@@ -16,7 +16,7 @@ import {ListProperties, RdfListService} from '../../rdf-list';
 import {BaseVisitor} from '../base-visitor';
 import {DefaultCharacteristic, DefaultEntity} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
-import {RdfNodeService} from '../../rdf-node/rdf-node.service';
+import {RdfNodeService} from '../../rdf-node';
 import {RdfService} from '@ame/rdf/services';
 import {DataFactory, Store} from 'n3';
 import {Samm} from '@ame/vocabulary';
@@ -52,7 +52,6 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
   }
 
   private updateProperties(entity: DefaultEntity) {
-    this.rdfListService.setRdfModel(this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel);
     this.rdfNodeService.update(entity, {
       preferredName: entity.getAllLocalesPreferredNames()?.map(language => ({
         language,

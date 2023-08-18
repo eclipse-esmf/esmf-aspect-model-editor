@@ -13,7 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {Store} from 'n3';
-import {RdfNodeService} from '../../rdf-node/rdf-node.service';
+import {RdfNodeService} from '../../rdf-node';
 
 @Injectable()
 export class CleanupVisitor {

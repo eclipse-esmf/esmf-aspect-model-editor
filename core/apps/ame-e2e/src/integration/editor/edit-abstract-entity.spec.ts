@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -111,7 +112,7 @@ describe('Create and Edit Abstract Entity', () => {
         .clickShape('Characteristic1') // To lost focus on AbstractEntity2
         .then(() => cy.clickConnectShapes('AbstractEntity2', 'AbstractEntity1'))
         .then(() => cy.get(SELECTOR_notificationsButton).click({force: true}))
-        .then(() => cy.wait(500).get('.mat-cell').contains('Recursive elements').should('exist'))
+        .then(() => cy.wait(500).get('.mat-mdc-cell').contains('Recursive elements').should('exist'))
         .then(() => cy.wait(500).get('[data-cy="close-notifications"]').click({force: true}));
     });
 
@@ -145,9 +146,9 @@ describe('Create and Edit Abstract Entity', () => {
       cy.clickConnectShapes('AbstractEntity1', 'abstractProperty1')
         .then(() => cy.dbClickShape('AbstractEntity1'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
-        .then(() => cy.get('.mat-cell').should('contain', 'abstractProperty1'))
-        .then(() => cy.get('.mat-cell').get('input').should('not.be.disabled'))
-        .then(() => cy.wait(500).get('.mat-dialog-container .close-button').click())
+        .then(() => cy.get('.mat-mdc-cell').should('contain', 'abstractProperty1'))
+        .then(() => cy.get('.mat-mdc-cell').get('input').should('not.be.disabled'))
+        .then(() => cy.wait(500).get('mat-dialog-container .close-button').click())
         .then(() => cy.get(SELECTOR_editorCancelButton).click({force: true}));
     });
 
@@ -157,9 +158,9 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.clickConnectShapes('AbstractEntity2', 'AbstractEntity1'))
         .then(() => cy.dbClickShape('AbstractEntity2'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
-        .then(() => cy.get('.mat-cell').should('contain', 'abstractProperty1'))
-        .then(() => cy.get('.mat-cell').get('input').should('be.disabled'))
-        .then(() => cy.wait(500).get('.mat-dialog-container .close-button').click());
+        .then(() => cy.get('.mat-mdc-cell').should('contain', 'abstractProperty1'))
+        .then(() => cy.get('.mat-mdc-cell').get('input').should('be.disabled'))
+        .then(() => cy.wait(500).get('mat-dialog-container .close-button').click());
     });
   });
 
@@ -173,9 +174,9 @@ describe('Create and Edit Abstract Entity', () => {
       cy.clickConnectShapes('AbstractEntity1', 'property1')
         .then(() => cy.dbClickShape('AbstractEntity1'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
-        .then(() => cy.get('.mat-cell').should('contain', 'property1'))
-        .then(() => cy.get('.mat-cell').get('input').should('not.be.disabled'))
-        .then(() => cy.wait(500).get('.mat-dialog-container .close-button').click())
+        .then(() => cy.get('.mat-mdc-cell').should('contain', 'property1'))
+        .then(() => cy.get('.mat-mdc-cell').get('input').should('not.be.disabled'))
+        .then(() => cy.wait(500).get('mat-dialog-container .close-button').click())
         .then(() => cy.get(SELECTOR_editorCancelButton).click({force: true}))
         .then(() => cy.getUpdatedRDF())
         .then(rdf => expect(rdf).to.contain(':AbstractEntity1 a samm:AbstractEntity;\n    samm:properties (:property1).'));
@@ -187,9 +188,9 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.clickConnectShapes('AbstractEntity2', 'AbstractEntity1'))
         .then(() => cy.dbClickShape('AbstractEntity2'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
-        .then(() => cy.get('.mat-cell').should('contain', 'property1'))
-        .then(() => cy.get('.mat-cell').get('input').should('be.disabled'))
-        .then(() => cy.wait(500).get('.mat-dialog-container .close-button').click());
+        .then(() => cy.get('.mat-mdc-cell').should('contain', 'property1'))
+        .then(() => cy.get('.mat-mdc-cell').get('input').should('be.disabled'))
+        .then(() => cy.wait(500).get('mat-dialog-container .close-button').click());
     });
   });
 

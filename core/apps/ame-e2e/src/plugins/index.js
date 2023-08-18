@@ -11,4 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-module.exports = () => {};
+const wp = require('@cypress/webpack-preprocessor');
+
+module.exports = on => {
+  on(
+    'file:preprocessor',
+    wp({
+      webpackOptions: {
+        resolve: {
+          extensions: ['.ts', '.js'],
+        },
+        module: {
+          rules: [
+            {
+              test: /\.tsx?$/,
+              exclude: /node_modules/,
+              loader: 'ts-loader',
+            },
+          ],
+        },
+      },
+    })
+  );
+};

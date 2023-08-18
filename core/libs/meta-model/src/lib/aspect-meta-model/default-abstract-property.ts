@@ -19,8 +19,7 @@ interface AbstractProperty {
 }
 
 export class DefaultAbstractProperty extends CanExtend implements AbstractProperty {
-  public extendedElement: DefaultAbstractProperty;
-  public readonly predefined: boolean;
+  public extendedElement: DefaultAbstractProperty = null;
 
   static createInstance() {
     return new DefaultAbstractProperty(null, null, 'abstractProperty', null);
@@ -30,7 +29,7 @@ export class DefaultAbstractProperty extends CanExtend implements AbstractProper
     return 'DefaultAbstractProperty';
   }
 
-  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public exampleValue?: any, predefined: boolean = false) {
+  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public exampleValue?: any, predefined = false) {
     super(metaModelVersion, aspectModelUrn, name);
     this.predefined = predefined;
   }

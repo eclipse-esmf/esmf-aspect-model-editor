@@ -70,6 +70,38 @@ export class MxGraphShapeSelectorService {
       : null;
   }
 
+  /**
+   * Selects the cluster from which the selected cell is part of
+   */
+  public selectTree() {
+    const graph = this.mxGraphAttributeService.graph;
+    const selectedCell = graph.getSelectionCell();
+    const cellsToSelect = [];
+    const stack = [selectedCell];
+
+    while (stack.length) {
+      const cell = stack.pop();
+      if (!cellsToSelect.includes(cell)) {
+        cellsToSelect.push(cell);
+      }
+
+      cell.edges.forEach(edge => {
+        cellsToSelect.push(edge);
+
+        if (!cellsToSelect.includes(edge.target)) {
+          cellsToSelect.push(edge.target);
+          stack.push(edge.target);
+        }
+
+        if (!cellsToSelect.includes(edge.source)) {
+          cellsToSelect.push(edge.source);
+          stack.push(edge.source);
+        }
+      });
+    }
+    graph.selectCellsForEvent(cellsToSelect);
+  }
+
   private getExternalUpperReferenceCells(cell: mxgraph.mxCell, currentSelection: mxgraph.mxCell[]): mxgraph.mxCell[] {
     let upperCells = [];
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);

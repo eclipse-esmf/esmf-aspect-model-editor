@@ -12,8 +12,11 @@
   -->
 
 <h2 mat-dialog-title class="properties-title">Validation result</h2>
-<p *ngIf="!missingElements.length">Namespaces have been validated and <b>can be exported</b>.</p>
-<p *ngIf="missingElements.length">Namespaces can not be exported due to <b>missing files</b>.</p>
+
+<mat-dialog-content>
+  <p *ngIf="!missingElements.length">Namespaces have been validated and <b>can be exported</b>.</p>
+  <p *ngIf="missingElements.length">Namespaces can not be exported due to <b>missing files</b>.</p>
+</mat-dialog-content>
 
 <ame-workspace-summary></ame-workspace-summary>
 

@@ -15,7 +15,6 @@ import {FormControl} from '@angular/forms';
 import {BaseMetaModelElement, DefaultConstraint} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {InputFieldComponent} from '../../input-field.component';
-import {EditorModelService} from '../../../../editor-model.service';
 import {DataTypeService} from '@ame/shared';
 import {Samm, SammC} from '@ame/vocabulary';
 
@@ -26,12 +25,8 @@ import {Samm, SammC} from '@ame/vocabulary';
 export class UpperBoundInputFieldComponent extends InputFieldComponent<DefaultConstraint> implements OnInit, OnDestroy {
   public upperBoundDefinitionList = [];
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService
-  ) {
-    super(metaModelDialogService);
+  constructor(public dataTypeService: DataTypeService, public mxGraphService: MxGraphService) {
+    super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'upperBoundDefinition';
   }

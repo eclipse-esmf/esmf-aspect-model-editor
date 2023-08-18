@@ -216,7 +216,7 @@ export class ElementModelService {
     ) {
       const sourceElement = MxGraphHelper.getModelElement(edge.source);
       MxGraphHelper.removeRelation(sourceElement, MxGraphHelper.getModelElement(edge.target));
-      this.currentCachedFile.removeCachedElement(sourceElement.aspectModelUrn);
+      this.currentCachedFile.removeElement(sourceElement.aspectModelUrn);
       this.mxGraphService.removeCells([edge, edge.source]);
       return true;
     }
@@ -305,7 +305,7 @@ export class ElementModelService {
       sourceModelElement.values.splice(entityValueIndex, 1);
       targetModelElement.parents.splice(enumerationIndex, 1);
 
-      this.currentCachedFile.removeCachedElement(targetModelElement.aspectModelUrn);
+      this.currentCachedFile.removeElement(targetModelElement.aspectModelUrn);
       this.mxGraphService.removeCells([edge.target]);
     }
   }

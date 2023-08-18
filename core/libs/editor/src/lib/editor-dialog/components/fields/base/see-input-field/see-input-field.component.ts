@@ -14,12 +14,11 @@
 import {Component, Injector, OnInit, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {BaseMetaModelElement, CanExtend, DefaultProperty} from '@ame/meta-model';
-import {EditorModelService} from '../../../../editor-model.service';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {map, Observable} from 'rxjs';
-import {MatChipList} from '@angular/material/chips';
+import {MatChipGrid} from '@angular/material/chips';
 
 interface SeeElement {
   name?: string;
@@ -33,13 +32,14 @@ interface SeeElement {
 })
 export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
   @ViewChild('see', {static: true}) seeInput;
-  @ViewChild('chipList', {static: true, read: MatChipList}) chipList: MatChipList;
+  @ViewChild('chipList', {static: true, read: MatChipGrid}) chipList: MatChipGrid;
 
   public shapes$: Observable<BaseMetaModelElement[]>;
   public searchControl = new FormControl('', {
     validators: [EditorDialogValidators.seeURI],
     updateOn: 'change',
   });
+  public chipControl = new FormControl();
   public elements: SeeElement[] = [];
 
   get isInherited(): boolean {
@@ -55,8 +55,8 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
     return this.mxGraphService.getAllCells().map(cell => MxGraphHelper.getModelElement(cell));
   }
 
-  constructor(public metaModelDialogService: EditorModelService, private injector: Injector) {
-    super(metaModelDialogService);
+  constructor(private injector: Injector) {
+    super();
     this.fieldName = 'see';
     this.mxGraphService = this.injector.get(MxGraphService);
   }
@@ -118,6 +118,7 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
 
     if (this.parentForm.get(this.fieldName).disabled) {
       this.searchControl.disable();
+      this.chipControl.disable();
     }
     this.elements = [...(this.decodeUriComponent(this.getCurrentValue())?.split(',') || [])].map(urn => ({
       name: urn.includes('#') && urn.startsWith('urn:samm') ? urn.split('#')[1] : '',

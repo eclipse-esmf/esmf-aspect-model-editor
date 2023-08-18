@@ -1,0 +1,28 @@
+{
+  "name": "ame-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/ame-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "cypress.config.js",
+        "devServerTarget": "ame:serve:development",
+        "tsConfig": "apps/ame-e2e/tsconfig.cypress.json"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "ame:serve-coverage:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/ame-e2e/**/*.{js,ts}"]
+      }
+    }
+  }
+}

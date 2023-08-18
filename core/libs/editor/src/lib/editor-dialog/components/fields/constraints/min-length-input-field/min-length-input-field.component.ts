@@ -13,7 +13,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {DefaultLengthConstraint} from '@ame/meta-model';
-import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -21,8 +20,8 @@ import {InputFieldComponent} from '../../input-field.component';
   templateUrl: './min-length-input-field.component.html',
 })
 export class MinLengthInputFieldComponent extends InputFieldComponent<DefaultLengthConstraint> implements OnInit, OnDestroy {
-  constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
+  constructor() {
+    super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'minValue';
   }

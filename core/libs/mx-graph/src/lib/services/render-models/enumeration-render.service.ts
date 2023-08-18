@@ -123,7 +123,7 @@ export class EnumerationRenderService extends BaseRenderService {
         }
 
         if (!modelElement.isExternalReference()) {
-          this.namespaceCacheService.currentCachedFile.removeCachedElement(modelElement.aspectModelUrn);
+          this.namespaceCacheService.currentCachedFile.removeElement(modelElement.aspectModelUrn);
         }
         return edge.target;
       })
@@ -141,7 +141,7 @@ export class EnumerationRenderService extends BaseRenderService {
   private handleBottomOverlay(cell: mxgraph.mxCell) {
     const modelElement = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
     if (!(modelElement instanceof DefaultEither)) {
-      this.mxGraphShapeOverlayService.removeOverlay(cell, null);
+      this.mxGraphShapeOverlayService.removeOverlay(cell);
       if (modelElement?.isPredefined()) {
         this.mxGraphShapeOverlayService.addTopShapeOverlay(cell);
       } else {

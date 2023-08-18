@@ -10,10 +10,11 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {EditorModelService} from '../../editor-model.service';
 import {PreviousFormDataSnapshot} from '../../interfaces';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'ame-characteristic',
@@ -25,11 +26,12 @@ export class CharacteristicComponent implements OnInit, OnDestroy {
   public property = false;
   public selectedCharacteristic: string;
   public previousData: PreviousFormDataSnapshot = {};
-
-  @Input() parentForm;
-
+  public metaModelDialogService = inject(EditorModelService);
   public element$ = this.metaModelDialogService.getMetaModelElement();
-  constructor(public metaModelDialogService: EditorModelService, private changeDetector: ChangeDetectorRef) {}
+
+  @Input() parentForm: FormGroup;
+
+  constructor(private changeDetector: ChangeDetectorRef) {}
 
   ngOnDestroy() {
     this.subscription?.unsubscribe();

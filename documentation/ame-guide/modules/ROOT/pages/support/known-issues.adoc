@@ -213,6 +213,29 @@ a|
 * Use zoom or fit to screen or map preview to detect elements that may be far away
 |===
 
+[[overlap-issue]]
+=== Dragging elements may lead to overlap
+
+[%noheader,cols="15%,85%"]
+|===
+h| Error
+a| After importing elements from workspace the element subtree overlaps the present model or the overlap happened from other reason
+
+h| Explanation
+a| This happens due autoformat not being enabled or/and the hierarchical layout is disabled
+
+
+h| Workaround
+a|
+One of the following options can be used to fix the problem:
+
+1. Right click on the imported element, select the option "Select all references" and drag the elements to a free space
+2. Manually select the desired elements and drag them to a free space
+3. Switch to hierarchical layout from settings and:
+  a. (autoformat disabled) Click format button from toolbar. All elements will be rearranged without overlapping
+  b. (autoformat enabled) When importing from workspace, the format happens automatically and the elements will not overlap. In case of overlapping click format button.
+|===
+
 [[uninstaller-not-available]]
 === Uninstaller not available
 

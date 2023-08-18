@@ -90,6 +90,7 @@ import {FiltersService, FILTER_ATTRIBUTES, FilterAttributesService} from '@ame/l
 export class EditorService {
   private filtersService = inject(FiltersService);
   private filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
+  private configurationService = inject(ConfigurationService);
 
   private get settings() {
     return this.configurationService.getSettings();
@@ -122,7 +123,6 @@ export class EditorService {
     private rdfService: RdfService,
     private instantiatorService: InstantiatorService,
     private namespaceCacheService: NamespacesCacheService,
-    private configurationService: ConfigurationService,
     private languageSettingsService: LanguageSettingsService,
     private modelElementNamingService: ModelElementNamingService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
@@ -478,6 +478,8 @@ export class EditorService {
           this.languageSettingsService,
           null
         );
+
+        this.mxGraphService.setCoordinatesForNextCellRender(x, y);
 
         const filteredElements = this.filtersService.filter([element]);
         renderer.render(filteredElements[0], null);

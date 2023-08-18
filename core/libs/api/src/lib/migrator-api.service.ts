@@ -16,7 +16,7 @@ import {ExporterHelper} from '@ame/migrator';
 import {RdfModel} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
 import {HttpClient} from '@angular/common/http';
-import {Inject, Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {map, switchMap} from 'rxjs';
 import {ModelApiService} from './model-api.service';
 
@@ -38,6 +38,7 @@ export interface FileStatus {
   providedIn: 'root',
 })
 export class MigratorApiService {
+  private config: AppConfig = inject(APP_CONFIG);
   private defaultPort = this.config.defaultPort;
   private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
@@ -46,8 +47,7 @@ export class MigratorApiService {
     private http: HttpClient,
     private browserService: BrowserService,
     private modelApiService: ModelApiService,
-    private editorService: EditorService,
-    @Inject(APP_CONFIG) private config: AppConfig
+    private editorService: EditorService
   ) {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('e2e=true')) {
       const remote = window.require('@electron/remote');

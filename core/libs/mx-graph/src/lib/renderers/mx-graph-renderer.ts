@@ -56,7 +56,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     this.shapes = new Map<string, mxCell>();
   }
 
-  render(elementTree: ModelTree, parent: mxCell): mxCell {
+  render(elementTree: ModelTree<BaseMetaModelElement>, parent: mxCell): mxCell {
     const wasVisited = this.visitedElements.includes(elementTree.element);
     const item: mxCell = this.renderElement(elementTree, parent);
     !wasVisited && this.visitedElements.push(elementTree.element);
@@ -65,14 +65,14 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
       // In case the element was visited -> don't visit its lower attributes since they were already visited previously
       // This avoids duplication of samm-c elements
       // TODO: Might need further investigation
-      return null;
+      return item;
     }
 
     for (const child of elementTree.children) {
       this.render(child, item);
     }
 
-    return null;
+    return item;
   }
 
   // ==========================================================================================
@@ -288,7 +288,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     }
   }
 
-  private createMxCell(node: ModelTree, mxCellAttributes: ShapeAttribute[]): mxCell {
+  private createMxCell(node: ModelTree<BaseMetaModelElement>, mxCellAttributes: ShapeAttribute[]): mxCell {
     return this.mxGraphService.renderModelElement(node, {shapeAttributes: mxCellAttributes, geometry: {}});
   }
 
@@ -312,7 +312,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     return cell;
   }
 
-  private assignToParent(cell: mxCell, context: mxCell, node: ModelTree) {
+  private assignToParent(cell: mxCell, context: mxCell, node: ModelTree<BaseMetaModelElement>) {
     this.mxGraphService.assignToParent(cell, context, node.fromParentArrow);
     this.removeActionIcons(node.element, cell);
   }

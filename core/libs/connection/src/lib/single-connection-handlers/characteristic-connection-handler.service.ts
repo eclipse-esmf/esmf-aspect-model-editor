@@ -79,7 +79,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     );
 
     const traitShape = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(this.currentCachedFile.resolveCachedElement(defaultTrait), {
+      this.filtersService.createNode(this.currentCachedFile.resolveElement(defaultTrait), {
         parent: MxGraphHelper.getModelElement(source),
       })
     );
@@ -208,7 +208,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     // connect: Entity - EntityValue
     this.mxGraphService.assignToParent(entityCell, entityValueCell);
     this.mxGraphService.graph.labelChanged(source, MxGraphHelper.createPropertiesLabel(source));
-    this.currentCachedFile.resolveCachedElement(entityValue);
+    this.currentCachedFile.resolveElement(entityValue);
     this.mxGraphService.formatShapes();
   }
 
@@ -222,7 +222,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
   private addConstraint(defaultTrait: DefaultTrait, traitShape: mxgraph.mxCell) {
     const defaultConstraint = this.modelElementNamingService.resolveElementNaming(DefaultConstraint.createInstance());
     const constraintShape = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(this.currentCachedFile.resolveCachedElement(defaultConstraint), {
+      this.filtersService.createNode(this.currentCachedFile.resolveElement(defaultConstraint), {
         parent: MxGraphHelper.getModelElement(traitShape),
       })
     );

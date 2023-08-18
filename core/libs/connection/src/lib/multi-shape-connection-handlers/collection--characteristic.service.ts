@@ -15,10 +15,7 @@ export class CollectionCharacteristicConnectionHandler implements MultiShapeConn
       if (outEdge.target && !(outEdge.target.getMetaModelElement() instanceof DefaultEntity)) {
         const entity = outEdge.target.getMetaModelElement();
         MxGraphHelper.removeRelation(parentMetaModel, entity);
-
-        if (parentMetaModel.elementCharacteristic !== childMetaModel) {
-          this.mxGraphService.removeCells([parent.removeEdge(outEdge, true)]);
-        }
+        this.mxGraphService.removeCells([parent.removeEdge(outEdge, true)]);
       }
     });
 

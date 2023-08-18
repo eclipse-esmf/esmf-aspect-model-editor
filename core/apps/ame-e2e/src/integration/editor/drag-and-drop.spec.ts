@@ -14,7 +14,6 @@
 /// <reference types="Cypress" />
 
 import {
-  SELECTOR_ecAspect,
   SELECTOR_ecCharacteristic,
   SELECTOR_ecConstraint,
   SELECTOR_ecEntity,

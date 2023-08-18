@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, inject} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {NamespacesCacheService} from '@ame/cache';
 import {EditorDialogValidators} from '@ame/editor';
@@ -31,11 +31,12 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
   public filteredProperties$: Observable<any>;
   public control: FormControl;
 
+  private namespaceCacheService = inject(NamespacesCacheService);
   get currentCacheFile() {
     return this.namespaceCacheService.currentCachedFile;
   }
 
-  constructor(private namespaceCacheService: NamespacesCacheService, private rdfService: RdfService) {}
+  constructor(private rdfService: RdfService) {}
 
   ngOnInit() {
     this.control = new FormControl(

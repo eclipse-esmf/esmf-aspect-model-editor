@@ -13,88 +13,73 @@
 
 import {DefaultAbstractEntity, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {RdfModel} from '@ame/rdf/utils';
+import {RdfService} from '@ame/rdf/services';
 import {Samm} from '@ame/vocabulary';
 import {TestBed} from '@angular/core/testing';
 import {describe, expect, it} from '@jest/globals';
-import {provideMockObject} from 'jest-helpers';
 import {Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AbstractEntityVisitor} from './abstract-entity';
+import {MockProviders} from 'ng-mocks';
 
 describe('Abstract Entity Visitor', () => {
   let service: AbstractEntityVisitor;
-  let rdfNodeService: jest.Mocked<RdfNodeService>;
-  let rdfListService: jest.Mocked<RdfListService>;
 
-  let modelService: jest.Mocked<ModelService>;
-  let rdfModel: jest.Mocked<RdfModel>;
-  let rdfService: jest.Mocked<RdfService>;
-  let entity: DefaultAbstractEntity;
+  const rdfModel = {
+    store: new Store(),
+    SAMM: jest.fn(() => new Samm('')),
+    hasNamespace: jest.fn(() => false),
+    addPrefix: jest.fn(() => {}),
+  };
   const property: OverWrittenProperty = {property: new DefaultProperty('', '', '', null), keys: {}};
+  const entity = new DefaultAbstractEntity('1', 'samm#abstractEntity1', 'abstractEntity1', [property]);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         AbstractEntityVisitor,
-        {
-          provide: RdfNodeService,
-          useValue: provideMockObject(RdfNodeService),
-        },
+        MockProviders(MxGraphService),
         {
           provide: RdfListService,
-          useValue: provideMockObject(RdfListService),
+          useValue: {
+            push: jest.fn(),
+          },
         },
         {
-          provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
+          provide: RdfNodeService,
+          useValue: {
+            update: jest.fn(),
+          },
         },
         {
           provide: RdfService,
-          useValue: provideMockObject(RdfService),
+          useValue: {
+            currentRdfModel: rdfModel,
+            externalRdfModels: [],
+          },
         },
       ],
     });
 
-    modelService = provideMockObject(ModelService);
-    rdfModel = {
-      store: new Store(),
-      SAMM: jest.fn(() => new Samm('')),
-      hasNamespace: jest.fn(() => false),
-      addPrefix: jest.fn(() => {}),
-    } as any;
-    modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
-    entity = new DefaultAbstractEntity('1', 'samm#abstractEntity1', 'abstractEntity1', null);
-    entity.properties = [property];
-
-    rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
-    rdfService.currentRdfModel = rdfModel;
-    rdfService.externalRdfModels = [];
-
-    rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
-    rdfNodeService.modelService = modelService;
-
-    rdfListService = TestBed.inject(RdfListService) as jest.Mocked<RdfListService>;
     service = TestBed.inject(AbstractEntityVisitor);
   });
 
   it('should update store width default properties', () => {
     service.visit(entity);
 
-    expect(rdfNodeService.update).toHaveBeenCalledWith(entity, {
+    expect(service.rdfNodeService.update).toHaveBeenCalledWith(entity, {
       preferredName: [],
       description: [],
       see: [],
     });
-    expect(rdfListService.push).toHaveBeenCalledWith(entity, property);
+    expect(service.rdfListService.push).toHaveBeenCalledWith(entity, property);
   });
 
   it('should update entity name', () => {
     entity.name = 'entity2';
     service.visit(entity);
-    expect(rdfNodeService.update).toHaveBeenCalledWith(entity, {
+    expect(service.rdfNodeService.update).toHaveBeenCalledWith(entity, {
       preferredName: [],
       description: [],
       see: [],

@@ -245,7 +245,7 @@ describe('Test editing different Collections', () => {
           .get(FIELD_dataType)
           .clear({force: true})
           .type('Entity1', {force: true})
-          .get('.mat-option-text')
+          .get('.mat-mdc-option')
           .contains('Entity1')
           .click({force: true})
       )

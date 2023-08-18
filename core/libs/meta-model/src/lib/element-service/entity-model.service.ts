@@ -93,7 +93,7 @@ export class EntityModelService extends BaseModelService {
       for (const edge of cell.edges) {
         const sourceModelElement = MxGraphHelper.getModelElement<Base>(edge.source);
         if (sourceModelElement && !sourceModelElement.isExternalReference()) {
-          this.currentCachedFile.removeCachedElement(modelElement.aspectModelUrn);
+          this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
           sourceModelElement.delete(modelElement);
         }
 

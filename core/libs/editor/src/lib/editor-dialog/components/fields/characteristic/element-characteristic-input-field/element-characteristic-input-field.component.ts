@@ -16,12 +16,9 @@ import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
 import {Characteristic, DefaultCharacteristic, DefaultCollection} from '@ame/meta-model';
-import {EditorModelService} from '../../../../editor-model.service';
-import {NamespacesCacheService} from '@ame/cache';
-import {NotificationsService, SearchService} from '@ame/shared';
+import {NotificationsService} from '@ame/shared';
 import {EditorDialogValidators} from '../../../../validators';
 import {RdfService} from '@ame/rdf/services';
-import {MxGraphService} from '@ame/mx-graph';
 
 @Component({
   selector: 'ame-element-characteristic-input-field',
@@ -33,15 +30,8 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
   elementCharacteristicDisplayControl: FormControl;
   elementCharacteristicControl: FormControl;
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService: NamespacesCacheService,
-    private notificationsService: NotificationsService,
-    public rdfService: RdfService,
-    public searchService?: SearchService,
-    public mxGraphService?: MxGraphService
-  ) {
-    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
+  constructor(private notificationsService: NotificationsService, public rdfService: RdfService) {
+    super();
     this.fieldName = 'elementCharacteristic';
   }
 

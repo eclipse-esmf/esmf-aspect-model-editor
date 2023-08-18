@@ -25,10 +25,11 @@ import {
   DefaultProperty,
   DefaultQuantityKind,
   DefaultUnit,
+  BaseMetaModelElement,
 } from '@ame/meta-model';
 
 export interface ModelRenderer<T, U> {
-  render(elementTree: ModelTree, context: U): T;
+  render(elementTree: ModelTree<BaseMetaModelElement>, context: U): T;
 
   renderProperty(property: ModelTree<DefaultProperty>, context: U): T;
 

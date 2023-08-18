@@ -26,10 +26,6 @@ export class EventInstantiator {
     return this.metaModelElementInstantiator.cachedFile;
   }
 
-  private get isIsolated() {
-    return this.metaModelElementInstantiator.isIsolated;
-  }
-
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
   public createEvent(listElement: InstantiatorListElement): Event {

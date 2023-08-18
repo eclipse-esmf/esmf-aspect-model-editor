@@ -23,9 +23,8 @@ import {
   OverWrittenProperty,
   Property,
 } from '@ame/meta-model';
-import {EditorModelService, FormFieldHelper} from '@ame/editor';
+import {FormFieldHelper} from '@ame/editor';
 import {InputFieldComponent} from '../../fields';
-import {NamespacesCacheService} from '@ame/cache';
 import {MatTableDataSource} from '@angular/material/table';
 import {map, Observable, startWith} from 'rxjs';
 
@@ -45,12 +44,8 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
 
   public readonly displayedColumns = ['key', 'value'];
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService: NamespacesCacheService,
-    private changeDetector: ChangeDetectorRef
-  ) {
-    super(metaModelDialogService);
+  constructor(private changeDetector: ChangeDetectorRef) {
+    super();
   }
 
   ngOnInit(): void {
@@ -129,7 +124,7 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
     ) {
       const namespace = this.metaModelElement.entity.aspectModelUrn.split('#')[0];
       return (
-        !this.namespacesCacheService.currentCachedFile.getCachedElement(`${namespace}#${entityValueName}`) &&
+        !this.namespacesCacheService.currentCachedFile.getElement(`${namespace}#${entityValueName}`) &&
         !this.parentForm.get('newEntityValues')?.value?.some(ev => ev.name === entityValueName)
       );
     }

@@ -1,0 +1,23 @@
+{
+  "name": "migrator",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/migrator/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/migrator"],
+      "options": {
+        "jestConfig": "libs/migrator/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/migrator/src/**/*.ts", "libs/migrator/src/**/*.html"]
+      }
+    }
+  }
+}

@@ -52,12 +52,12 @@ export class AspectInstantiator {
     this.recursiveModelElements.forEach((recursiveProperties: BaseMetaModelElement[], key: string) => {
       recursiveProperties.forEach((property: BaseMetaModelElement) => {
         if (property && property instanceof DefaultProperty) {
-          property.characteristic = this.cachedFile.getCachedElement(key);
+          property.characteristic = this.cachedFile.getElement(key);
         }
       });
     });
 
     this.cachedFile.aspect = aspect;
-    return <Aspect>this.metaModelElementInstantiator.cachedFile.resolveCachedElement(aspect);
+    return <Aspect>this.metaModelElementInstantiator.cachedFile.resolveElement(aspect);
   }
 }

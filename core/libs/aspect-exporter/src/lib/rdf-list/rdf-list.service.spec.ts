@@ -20,6 +20,7 @@ import {Samm, SammC} from '@ame/vocabulary';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {provideMockObject} from 'jest-helpers';
 import {RdfNodeService} from '../rdf-node';
+import {ModelService} from '@ame/rdf/services';
 
 class MockSamm {
   isRdfNill = jest.fn((namedNode: string) => namedNode === 'nill');
@@ -66,13 +67,18 @@ describe('RDF Helper', () => {
           provide: RdfNodeService,
           useValue: provideMockObject(RdfNodeService),
         },
+        {
+          provide: ModelService,
+          useValue: {
+            getLoadedAspectModel: () => ({rdfModel}),
+          },
+        },
       ],
       imports: [],
     });
 
     rdfModel = new MockRDFModel() as any;
     service = TestBed.inject(RdfListService);
-    service.setRdfModel(rdfModel);
   });
 
   const getRdfFirstCount = (list: Quad_Object) => {

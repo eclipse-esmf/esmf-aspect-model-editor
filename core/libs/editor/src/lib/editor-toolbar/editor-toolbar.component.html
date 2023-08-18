@@ -178,7 +178,7 @@
     mat-button
     data-cy="notifications-button"
   >
-    <mat-icon [matBadge]="notificationsService.badgeText | async" matBadgeColor="warn">notifications</mat-icon>
+    <mat-icon [matBadge]="notificationsService.badgeText | async">notifications</mat-icon>
   </button>
   <button [matTooltipShowDelay]="0" [matTooltipHideDelay]="0" (click)="openHelpDialog()" matTooltip="Help" mat-button data-cy="help-button">
     <mat-icon>help</mat-icon>

@@ -26,10 +26,6 @@ export class OperationInstantiator {
     return this.metaModelElementInstantiator.cachedFile;
   }
 
-  private get isIsolated() {
-    return this.metaModelElementInstantiator.isIsolated;
-  }
-
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
   public createOperation(listElement: InstantiatorListElement): Operation {

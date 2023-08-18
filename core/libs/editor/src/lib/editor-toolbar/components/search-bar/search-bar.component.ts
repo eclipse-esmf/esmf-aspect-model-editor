@@ -18,6 +18,7 @@ import {mxCellSearchOption, SearchService} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {FILTER_ATTRIBUTES, FilterAttributesService, ModelFilter} from '@ame/loader-filters';
 import mxCell = mxgraph.mxCell;
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'ame-search-bar',
@@ -28,16 +29,21 @@ export class SearchBarComponent {
   @ViewChild('searchInputField') searchInputField;
 
   public readonly DEFAULT = ModelFilter.DEFAULT;
+  public searchControl = new FormControl('');
   public searchResults: SearchResult[];
-  public fontIcon = 'search';
   public filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
 
-  constructor(private mxGraphService: MxGraphService, private searchService: SearchService) {}
+  constructor(private mxGraphService: MxGraphService, private searchService: SearchService) {
+    this.searchControl.valueChanges.subscribe(value => {
+      if (!value) this.searchResults = [];
+      else this.searchResults = this.searchForCell();
+    });
+  }
 
   searchForCell(): SearchResult[] {
     const graphCells = this.mxGraphService.getAllCells();
     return this.searchService
-      .search<mxgraph.mxCell>(this.searchInputField.nativeElement.value, graphCells, mxCellSearchOption)
+      .search<mxgraph.mxCell>(this.searchControl.value, graphCells, mxCellSearchOption)
       ?.map((cell: mxgraph.mxCell) => {
         const modelElement = MxGraphHelper.getModelElement(cell);
         if (modelElement.isExternalReference()) {
@@ -46,11 +52,6 @@ export class SearchBarComponent {
         }
         return {cell};
       });
-  }
-
-  searchForCellsAndInstances() {
-    this.searchResults = this.searchForCell();
-    this.changeIcon();
   }
 
   goToSearchResult(event) {
@@ -73,9 +74,8 @@ export class SearchBarComponent {
   focusOnSearchInputField() {
     this.searchInputField.nativeElement.focus();
 
-    if (!!this.searchInputField.nativeElement.value) {
-      this.searchInputField.nativeElement.value = '';
-      this.changeIcon();
+    if (this.searchInputField.nativeElement.value) {
+      this.searchControl.patchValue('');
     }
   }
 
@@ -86,16 +86,8 @@ export class SearchBarComponent {
 
   getFirstLetterOfType(cell: mxCell) {
     if (MxGraphHelper.getModelElement(cell) instanceof DefaultEntityValue) {
-      return 'V';
+      return 'Ev';
     }
     return this.getCellType(cell)[0];
-  }
-
-  private changeIcon() {
-    if (!!this.searchInputField.nativeElement.value) {
-      this.fontIcon = 'close';
-    } else {
-      this.fontIcon = 'search';
-    }
   }
 }

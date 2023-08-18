@@ -18,8 +18,8 @@
   [matTooltipPosition]="'left'"
 >
   <mat-label for="see">see</mat-label>
-  <mat-chip-list #chipList>
-    <mat-chip
+  <mat-chip-grid [formControl]="chipControl" #chipList>
+    <mat-chip-row
       *ngFor="let element of elements"
       [matTooltip]="element.urn"
       [attr.data-cy]="'chip__' + (element.name || element.urn)"
@@ -30,8 +30,8 @@
       <button data-cy="see-remove-chip" matChipRemove>
         <mat-icon>cancel</mat-icon>
       </button>
-    </mat-chip>
-  </mat-chip-list>
+    </mat-chip-row>
+  </mat-chip-grid>
 
   <input
     [formControl]="searchControl"

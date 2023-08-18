@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {DataFactory, Parser, Prefixes, Quad, Store, Util, Writer} from 'n3';
+import {DataFactory, Parser, Quad, Store, Util, Writer} from 'n3';
 import {map, Observable, of, Subject, switchMap, throwError} from 'rxjs';
 import {Inject, Injectable} from '@angular/core';
 import {environment} from 'environments/environment';

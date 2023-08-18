@@ -14,7 +14,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {DefaultEntityValue, DefaultState, EntityValue} from '@ame/meta-model';
-import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -24,8 +23,8 @@ import {InputFieldComponent} from '../../input-field.component';
 export class DefaultValueEntityInputFieldComponent extends InputFieldComponent<DefaultState> implements OnInit, OnDestroy {
   entityValues: EntityValue[];
 
-  constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
+  constructor() {
+    super();
     this.fieldName = 'defaultValue';
   }
 

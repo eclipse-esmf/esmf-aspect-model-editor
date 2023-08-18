@@ -80,28 +80,3 @@
 mat-option {
   line-height: 25px;
 }
-
-::ng-deep {
-  .toolbar-search {
-    .mat-form-field-wrapper {
-      padding-bottom: 0 !important;
-
-      .mat-form-field-flex {
-        height: 40px !important;
-        margin-top: -2px;
-
-        .mat-form-field-infix {
-          padding: 10px 9px 5px;
-          height: 0;
-          margin-top: 2px;
-          display: flex;
-          align-items: center;
-
-          mat-icon {
-            padding-top: 3px;
-          }
-        }
-      }
-    }
-  }
-}

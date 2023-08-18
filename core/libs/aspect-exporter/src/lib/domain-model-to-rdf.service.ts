@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {
   BaseMetaModelElement,
@@ -48,6 +48,9 @@ import {
 
 @Injectable()
 export class DomainModelToRdfService {
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private namespacesCacheService = inject(NamespacesCacheService);
+
   get graph(): mxgraph.mxGraph {
     return this.mxGraphAttributeService.graph;
   }
@@ -71,9 +74,7 @@ export class DomainModelToRdfService {
     private eventVisitorService: EventVisitor,
     private unitVisitorService: UnitVisitor,
     private modelService: ModelService,
-    private cleanupVisitorService: CleanupVisitor,
-    private namespacesCacheService: NamespacesCacheService,
-    private mxGraphAttributeService: MxGraphAttributeService
+    private cleanupVisitorService: CleanupVisitor
   ) {}
 
   listenForStoreUpdates() {

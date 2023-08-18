@@ -11,20 +11,20 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div class="main-title" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
-  <mat-form-field appearance="fill">
-    <mat-label>Find complex value</mat-label>
-    <input (input)="sendNewSearchValue($event)" matInput type="search" data-cy="searchEntityValueInputField" />
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
-  <button
-    mat-flat-button
-    color="accent"
-    class="add-button"
-    [disabled]="disableAddNewEntityValue"
-    (click)="add.emit()"
-    data-cy="addNewEntityValueButton"
-  >
-    <mat-icon [matTooltip]="'Add a complex value'">add</mat-icon>
-  </button>
-</div>
+<mat-form-field appearance="fill">
+  <mat-label>Find complex value</mat-label>
+  <input (input)="sendNewSearchValue($event)" matInput type="search" data-cy="searchEntityValueInputField" />
+  <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
+
+<button
+  [disabled]="disableAddNewEntityValue"
+  [matTooltip]="'Add a complex value'"
+  (click)="add.emit()"
+  mat-fab
+  color="accent"
+  class="add-button"
+  data-cy="addNewEntityValueButton"
+>
+  <mat-icon>add</mat-icon>
+</button>

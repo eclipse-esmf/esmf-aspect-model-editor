@@ -1,0 +1,23 @@
+{
+  "name": "loader-filters",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/loader-filters/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/loader-filters"],
+      "options": {
+        "jestConfig": "libs/loader-filters/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/loader-filters/src/**/*.ts", "libs/loader-filters/src/**/*.html"]
+      }
+    }
+  }
+}

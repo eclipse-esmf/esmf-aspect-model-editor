@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Inject, Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {catchError, map, mergeMap, tap, timeout} from 'rxjs/operators';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
@@ -24,6 +24,7 @@ import {OpenApi, ViolationError} from '@ame/editor';
   providedIn: 'root',
 })
 export class ModelApiService {
+  private config: AppConfig = inject(APP_CONFIG);
   private defaultPort = this.config.defaultPort;
   private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
@@ -33,8 +34,7 @@ export class ModelApiService {
     private http: HttpClient,
     private loggerService: LogService,
     private browserService: BrowserService,
-    private modelValidatorService: ModelValidatorService,
-    @Inject(APP_CONFIG) private config: AppConfig
+    private modelValidatorService: ModelValidatorService
   ) {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('e2e=true')) {
       const remote = window.require('@electron/remote');

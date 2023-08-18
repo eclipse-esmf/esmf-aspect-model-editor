@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {NamespacesCacheService} from '@ame/cache';
 import {
   BaseMetaModelElement,
   DefaultAbstractEntity,
@@ -25,7 +24,6 @@ import {
   DefaultProperty,
   DefaultUnit,
 } from '@ame/meta-model';
-import {EditorModelService} from '../../../../editor-model.service';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 import {RdfService} from '@ame/rdf/services';
@@ -35,14 +33,8 @@ import {RdfService} from '@ame/rdf/services';
   templateUrl: './name-input-field.component.html',
 })
 export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService: NamespacesCacheService,
-    private rdfService: RdfService
-  ) {
-    super(metaModelDialogService, namespacesCacheService);
-    this.fieldName = 'name';
-  }
+  public fieldName = 'name';
+  private rdfService = inject(RdfService);
 
   ngOnInit(): void {
     this.subscription = this.getMetaModelData().subscribe(() => this.setNameControl());

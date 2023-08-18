@@ -19,8 +19,7 @@ import {Entity} from './default-entity';
 import {OverWrittenProperty} from './overwritten-property';
 
 export class DefaultAbstractEntity extends CanExtendsWithProperties implements Entity {
-  public extendedElement: DefaultAbstractEntity;
-  public readonly predefined: boolean;
+  public extendedElement: DefaultAbstractEntity = null;
 
   public get className(): string {
     return 'DefaultAbstractEntity';
@@ -39,7 +38,7 @@ export class DefaultAbstractEntity extends CanExtendsWithProperties implements E
     aspectModelUrn: string,
     name: string,
     public properties: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>[] = [],
-    predefined: boolean = false
+    predefined = false
   ) {
     super(metaModelVersion, aspectModelUrn, name);
     this.predefined = predefined;

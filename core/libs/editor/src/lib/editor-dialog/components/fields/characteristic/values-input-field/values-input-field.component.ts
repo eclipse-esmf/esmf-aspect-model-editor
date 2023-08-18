@@ -13,13 +13,12 @@
 
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {MatChipInputEvent, MatChipList} from '@angular/material/chips';
+import {MatChipInputEvent, MatChipGrid} from '@angular/material/chips';
 import {debounceTime} from 'rxjs/operators';
 import {ENTER} from '@angular/cdk/keycodes';
 import {InputFieldComponent} from '../../input-field.component';
 import {BaseMetaModelElement, DefaultEntity, DefaultEntityValue, DefaultEnumeration} from '@ame/meta-model';
 import {DataTypeService} from '@ame/shared';
-import {EditorModelService} from '../../../../editor-model.service';
 import {NamespacesCacheService} from '@ame/cache';
 
 @Component({
@@ -28,12 +27,11 @@ import {NamespacesCacheService} from '@ame/cache';
   styleUrls: ['./values-input-field.component.scss'],
 })
 export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumeration> implements OnInit, OnDestroy {
-  @ViewChild('chipList') chipList: MatChipList;
+  @ViewChild('chipList') chipList: MatChipGrid;
 
   readonly separatorKeysCodes: number[] = [ENTER];
 
   public visible = true;
-  public selectable = true;
   public removable = true;
   public addOnBlur = true;
   public hasComplexValues = false;
@@ -43,12 +41,8 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
     return this.enumValues as DefaultEntityValue[];
   }
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService: NamespacesCacheService,
-    private dataTypeService: DataTypeService
-  ) {
-    super(metaModelDialogService);
+  constructor(public namespacesCacheService: NamespacesCacheService, private dataTypeService: DataTypeService) {
+    super();
   }
 
   get currentCachedFile() {

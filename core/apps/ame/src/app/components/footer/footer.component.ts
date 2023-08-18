@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {EditorService} from '@ame/editor';
 
 @Component({
@@ -20,7 +20,6 @@ import {EditorService} from '@ame/editor';
   styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent {
+  private editorService = inject(EditorService);
   public savedModel$ = this.editorService.savedRdf$;
-
-  constructor(private editorService: EditorService) {}
 }

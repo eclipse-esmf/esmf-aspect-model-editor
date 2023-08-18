@@ -13,20 +13,7 @@
 
 import {ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {
-  BaseMetaModelElement,
-  Characteristic,
-  DefaultAspect,
-  DefaultCharacteristic,
-  DefaultConstraint,
-  DefaultEntity,
-  DefaultEvent,
-  DefaultOperation,
-  DefaultProperty,
-  DefaultTrait,
-  DefaultUnit,
-  Unit,
-} from '@ame/meta-model';
+import {BaseMetaModelElement, Characteristic, DefaultCharacteristic, DefaultConstraint, Unit} from '@ame/meta-model';
 import {EditorModelService} from '../../editor-model.service';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {LogService} from '@ame/shared';

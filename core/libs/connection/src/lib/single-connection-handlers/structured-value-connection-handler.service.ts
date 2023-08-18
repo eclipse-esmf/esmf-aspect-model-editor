@@ -31,7 +31,7 @@ export class StructuredValueConnectionHandler implements SingleShapeConnector<St
     );
     this.mxGraphService.graph.labelChanged(source, MxGraphHelper.createPropertiesLabel(source));
     this.mxGraphService.assignToParent(propertyCell, source);
-    this.currentCachedFile.resolveCachedElement(property);
+    this.currentCachedFile.resolveElement(property);
 
     this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();

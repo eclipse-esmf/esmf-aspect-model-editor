@@ -14,7 +14,6 @@
 import {Component, OnInit} from '@angular/core';
 import {InputFieldComponent} from '../../input-field.component';
 import {DefaultUnit} from '@ame/meta-model';
-import {EditorModelService} from '../../../../editor-model.service';
 import {FormControl} from '@angular/forms';
 
 @Component({
@@ -22,10 +21,6 @@ import {FormControl} from '@angular/forms';
   templateUrl: './code-input-field.component.html',
 })
 export class CodeInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
-  constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
-  }
-
   ngOnInit(): void {
     this.subscription = this.getMetaModelData().subscribe(() => this.initCodeForm());
   }

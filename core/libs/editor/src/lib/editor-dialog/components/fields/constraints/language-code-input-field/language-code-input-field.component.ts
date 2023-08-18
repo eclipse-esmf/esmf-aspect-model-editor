@@ -16,7 +16,6 @@ import {Observable, of} from 'rxjs';
 import * as locale from 'locale-codes';
 import {DefaultLanguageConstraint} from '@ame/meta-model';
 import {InputFieldComponent} from '../../input-field.component';
-import {EditorModelService} from '../../../../editor-model.service';
 import {RdfModelUtil} from '@ame/rdf/utils';
 
 @Component({
@@ -35,8 +34,8 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 export class LanguageCodeInputFieldComponent extends InputFieldComponent<DefaultLanguageConstraint> implements OnInit, OnDestroy {
   public filteredLanguages: Observable<Array<locale.ILocale>>;
 
-  constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
+  constructor() {
+    super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'languageCode';
   }

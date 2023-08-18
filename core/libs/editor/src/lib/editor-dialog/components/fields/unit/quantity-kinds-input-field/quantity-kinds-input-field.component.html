@@ -1,33 +1,32 @@
 <!--
   ~ Copyright (c) 2021 Robert Bosch Manufacturing Solutions GmbH. All rights reserved.
   -->
-<div fxLayout="row" fxlayoutgap="5px" fxLayoutAlign="space-between center">
-  <mat-form-field [floatLabel]="inputControl?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="input">quantityKinds</mat-label>
-    <mat-chip-list #chipList [formControl]="getControl('quantityKindsChipList')">
-      <mat-chip *ngFor="let input of quantityKindValues" [selectable]="selectable" [removable]="editable" (removed)="remove(input)">
-        {{ input }}
-        <mat-icon matChipRemove *ngIf="editable" data-cy="input">close</mat-icon>
-      </mat-chip>
-      <input
-        *ngIf="editable"
-        matInput
-        #input
-        name="quantityKindValues"
-        [formControl]="inputControl"
-        [matAutocomplete]="auto"
-        [matChipInputFor]="chipList"
-        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        placeholder="add value, click on tooltip"
-        data-cy="quantityKindValues"
-      />
-    </mat-chip-list>
-    <mat-autocomplete #auto="matAutocomplete">
-      <mat-optgroup *ngIf="filteredQuantityKinds$ | async as filteredQuantityKinds" label="Quantity Kind">
-        <mat-option *ngFor="let qk of filteredQuantityKinds" [value]="qk" (onSelectionChange)="onSelectionChange(qk)">
-          {{ qk }}
-        </mat-option>
-      </mat-optgroup>
-    </mat-autocomplete>
-  </mat-form-field>
-</div>
+<mat-form-field [floatLabel]="inputControl?.disabled ? 'always' : 'auto'" appearance="fill">
+  <mat-label for="input">quantityKinds</mat-label>
+  <mat-chip-grid #chipList [formControl]="chipListControl">
+    <mat-chip-row *ngFor="let input of quantityKindValues" [disabled]="!editable" [removable]="editable" (removed)="remove(input)">
+      {{ input }}
+      <button matChipRemove *ngIf="editable" data-cy="input">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip-row>
+    <input
+      #input
+      [formControl]="inputControl"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [placeholder]="editable ? 'Search quantity kinds...' : ''"
+      matInput
+      name="quantityKindValues"
+      data-cy="quantityKindValues"
+    />
+  </mat-chip-grid>
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-optgroup *ngIf="filteredQuantityKinds$ | async as filteredQuantityKinds" label="Quantity Kind">
+      <mat-option *ngFor="let qk of filteredQuantityKinds" [value]="qk" (onSelectionChange)="onSelectionChange(qk)">
+        {{ qk }}
+      </mat-option>
+    </mat-optgroup>
+  </mat-autocomplete>
+</mat-form-field>

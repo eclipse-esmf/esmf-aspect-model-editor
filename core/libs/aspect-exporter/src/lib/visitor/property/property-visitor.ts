@@ -24,7 +24,7 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
     return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.store;
   }
 
-  constructor(private rdfNodeService: RdfNodeService, rdfService: RdfService) {
+  constructor(public rdfNodeService: RdfNodeService, rdfService: RdfService) {
     super(rdfService);
   }
 

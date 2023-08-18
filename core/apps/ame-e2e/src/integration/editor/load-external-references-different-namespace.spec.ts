@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -70,6 +71,66 @@ describe('Test drag and drop', () => {
         expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
         expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
         expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
+      });
+  });
+
+  it('Loading model with "Entity" -> "Property (external, with children, different namespace)" relations', () => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
+    });
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-property-reference.txt'},
+      },
+      {
+        fixture: '/external-reference/different-namespace/with-childrens/external-property-reference.txt',
+      }
+    );
+
+    cy.visitDefault();
+    cy.fixture('/external-reference/different-namespace/entity-external-property-with-children-reference')
+      .as('rdfString')
+      .then(rdfString => cyHelp.loadCustomModel(rdfString))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
+      .then(() => cy.getAspect())
+      .then(aspect => {
+        const aspectParams = {name: 'AspectDefault'};
+        expect(aspect.name).to.equal('AspectDefault');
+        expect(aspect.properties).to.be.length(1);
+
+        const localPropertyParams = {name: 'property1'};
+        const localProperty = aspect.properties[0].property;
+        expect(localProperty.name).to.equal(localPropertyParams.name);
+        cy.isConnected(aspectParams, localPropertyParams).should('be.true');
+
+        const localCharacteristicParams = {name: 'Characteristic1'};
+        const localCharacteristic = localProperty.characteristic;
+        expect(localCharacteristic.name).to.equal(localCharacteristicParams.name);
+        cy.isConnected(localPropertyParams, localCharacteristicParams).should('be.true');
+
+        const localEntityParams = {name: 'Entity1'};
+        const localEntity = localCharacteristic.dataType;
+        expect(localEntity.name).to.equal(localEntityParams.name);
+        cy.isConnected(localCharacteristicParams, localEntityParams).should('be.true');
+
+        const externalPropertyParams = {name: 'childrenProperty1'};
+        const externalProperty = localEntity.properties[0].property;
+        expect(externalProperty.name).to.equal(externalPropertyParams.name);
+        cy.isConnected(localEntityParams, externalPropertyParams).should('be.true');
+
+        const externalCharacteristicParams = {name: 'ChildrenCharacteristic2'};
+        const externalCharacteristic = externalProperty.characteristic;
+        expect(externalCharacteristic.name).to.equal(externalCharacteristicParams.name);
+        cy.isConnected(externalPropertyParams, externalCharacteristicParams).should('be.true');
+
+        const externalEntityParams = {name: 'ChildrenEntity2'};
+        const externalEntity = externalCharacteristic.dataType;
+        expect(externalEntity.name).to.equal(externalEntityParams.name);
+        cy.isConnected(externalCharacteristicParams, externalEntityParams).should('be.true');
       });
   });
 

@@ -19,4 +19,5 @@ export enum AssetsPath {
   DeleteIcon = 'config/editor/img/delete.svg',
   AddConstraintIcon = 'config/editor/img/add-outline-frame.svg',
   AddShapeIcon = 'config/editor/img/add-frame.svg',
+  Tree = 'config/editor/img/tree.svg',
 }

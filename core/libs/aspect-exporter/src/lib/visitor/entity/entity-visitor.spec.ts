@@ -12,86 +12,69 @@
  */
 
 import {DefaultEntity, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {RdfModel} from '@ame/rdf/utils';
+import {RdfService} from '@ame/rdf/services';
 import {TestBed} from '@angular/core/testing';
 import {describe, expect, it} from '@jest/globals';
-import {provideMockObject} from 'jest-helpers';
 import {Store} from 'n3';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {EntityVisitor} from './entity-visitor';
 import {Samm} from '@ame/vocabulary';
+import {MockProviders} from 'ng-mocks';
 
 describe('Entity Visitor', () => {
   let service: EntityVisitor;
-  let rdfNodeService: jest.Mocked<RdfNodeService>;
-  let rdfListService: jest.Mocked<RdfListService>;
 
-  let modelService: jest.Mocked<ModelService>;
-  let rdfModel: jest.Mocked<RdfModel>;
-  let rdfService: jest.Mocked<RdfService>;
-  let entity: DefaultEntity;
-  let property: DefaultProperty;
-  let overwrittenProperty: OverWrittenProperty;
+  const rdfModel = {
+    store: new Store(),
+    SAMM: jest.fn(() => new Samm('')),
+    SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+    hasNamespace: jest.fn(() => false),
+    addPrefix: jest.fn(() => {}),
+  };
+  const property = new DefaultProperty('1', 'samm#property1', 'property1', null);
+  const overwrittenProperty: OverWrittenProperty = {property, keys: {}};
+  const entity = new DefaultEntity('1', 'samm#entity1', 'entity1', [overwrittenProperty]);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         EntityVisitor,
+        MockProviders(MxGraphService),
+        {
+          provide: RdfListService,
+          useValue: {
+            push: jest.fn(),
+          },
+        },
         {
           provide: RdfNodeService,
-          useValue: provideMockObject(RdfNodeService),
+          useValue: {
+            update: jest.fn(),
+          },
         },
         {
           provide: RdfService,
-          useValue: provideMockObject(RdfService),
-        },
-        {
-          provide: RdfListService,
-          useValue: provideMockObject(RdfListService),
-        },
-        {
-          provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
+          useValue: {
+            currentRdfModel: rdfModel,
+            externalRdfModels: [],
+          },
         },
       ],
     });
 
-    modelService = provideMockObject(ModelService);
-    rdfModel = {
-      store: new Store(),
-      SAMM: jest.fn(() => new Samm('')),
-      SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
-      hasNamespace: jest.fn(() => false),
-      addPrefix: jest.fn(() => {}),
-    } as any;
-    modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
-    entity = new DefaultEntity('1', 'samm#entity1', 'entity1', null);
-    property = new DefaultProperty('1', 'samm#property1', 'property1', null);
-    overwrittenProperty = {property: property, keys: {}};
-    entity.properties = [overwrittenProperty];
-
-    rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
-    rdfNodeService.modelService = modelService;
-
-    rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
-    rdfService.currentRdfModel = rdfModel;
-    rdfService.externalRdfModels = [];
-
-    rdfListService = TestBed.inject(RdfListService) as jest.Mocked<RdfListService>;
     service = TestBed.inject(EntityVisitor);
   });
 
   it('should update store width default properties', () => {
     service.visit(entity);
 
-    expect(rdfNodeService.update).toHaveBeenCalledWith(entity, {
+    expect(service.rdfNodeService.update).toHaveBeenCalledWith(entity, {
       preferredName: [],
       description: [],
       see: [],
     });
-    expect(rdfListService.push).toHaveBeenCalledWith(entity, {property: property, keys: {}});
+    expect(service.rdfListService.push).toHaveBeenCalledWith(entity, overwrittenProperty);
   });
 });

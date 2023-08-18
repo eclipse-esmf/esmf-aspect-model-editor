@@ -28,7 +28,7 @@ export class ModelElementNamingService {
    * @returns element being created
    */
   resolveMetaModelElement(baseMetaModelElement: BaseMetaModelElement): BaseMetaModelElement {
-    return this.namespacesCacheService.currentCachedFile.resolveCachedElement(this.resolveElementNaming(baseMetaModelElement));
+    return this.namespacesCacheService.currentCachedFile.resolveElement(this.resolveElementNaming(baseMetaModelElement));
   }
 
   /**
@@ -68,9 +68,7 @@ export class ModelElementNamingService {
       parentName = undefined;
     } while (
       elements[`${mainAspectModelUrn}${baseMetaModelElement.name}`] ||
-      this.namespacesCacheService.currentCachedFile.getCachedElement<BaseMetaModelElement>(
-        `${mainAspectModelUrn}${baseMetaModelElement.name}`
-      )
+      this.namespacesCacheService.currentCachedFile.getElement<BaseMetaModelElement>(`${mainAspectModelUrn}${baseMetaModelElement.name}`)
     );
     baseMetaModelElement.aspectModelUrn = `${mainAspectModelUrn}${baseMetaModelElement.name}`;
     return baseMetaModelElement;

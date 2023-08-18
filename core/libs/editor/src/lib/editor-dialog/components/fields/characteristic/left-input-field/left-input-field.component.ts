@@ -16,12 +16,10 @@ import {FormControl, Validators} from '@angular/forms';
 import {map, Observable} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
 import {Characteristic, DefaultCharacteristic, DefaultEither} from '@ame/meta-model';
-import {EditorModelService} from '../../../../editor-model.service';
 import {NamespacesCacheService} from '@ame/cache';
 import {EditorDialogValidators} from '../../../../validators';
-import {NotificationsService, SearchService} from '@ame/shared';
+import {NotificationsService} from '@ame/shared';
 import {RdfService} from '@ame/rdf/services';
-import {MxGraphService} from '@ame/mx-graph';
 
 @Component({
   selector: 'ame-left-input-field',
@@ -34,14 +32,11 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
   leftCharacteristicControl: FormControl;
 
   constructor(
-    public metaModelDialogService: EditorModelService,
     public namespacesCacheService: NamespacesCacheService,
     private notificationsService: NotificationsService,
-    public rdfService: RdfService,
-    public searchService?: SearchService,
-    public mxGraphService?: MxGraphService
+    public rdfService: RdfService
   ) {
-    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
+    super();
     this.fieldName = 'leftCharacteristic';
   }
 

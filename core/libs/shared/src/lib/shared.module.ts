@@ -17,11 +17,9 @@ import {AlertComponent, LoadingScreenComponent} from './components';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
-import {APP_CONFIG, config} from './config';
 
 @NgModule({
   declarations: [LoadingScreenComponent, AlertComponent],
-  providers: [{provide: APP_CONFIG, useValue: config}],
   imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule],
 })
 export class SharedModule {}

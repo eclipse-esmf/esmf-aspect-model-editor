@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -21,14 +22,14 @@ import {
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 import Chainable = Cypress.Chainable;
-import {RdfModel} from '@ame/rdf/utils';
 
 /**
  * Take into consideration that these tests do not use real backend and verify
  * only the behavior of a client-side part in isolation, backend responses are mocked
  */
 
-describe('Test modifying referenced model', () => {
+// disabled until cypress team fixes cy.readFile
+describe.skip('Test modifying referenced model', () => {
   it('Moves referenced model from different namespace to a new one, migrates dependent models', () => {
     const sharedModelExpectationFile =
       'apps/ame-e2e/src/fixtures/workspaces/referenced-models-different-namespaces/parsed-models/shared-model-changed-namespace/aspect-shared-different-namespaces.json';

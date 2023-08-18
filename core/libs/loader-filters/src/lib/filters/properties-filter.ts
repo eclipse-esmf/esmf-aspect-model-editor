@@ -32,7 +32,7 @@ export class PropertiesFilterLoader implements FilterLoader {
   filterType: ModelFilter = ModelFilter.PROPERTIES;
   visibleElements = [DefaultAspect, DefaultProperty];
 
-  filter(rootElements: BaseMetaModelElement[]): ModelTree[] {
+  filter(rootElements: BaseMetaModelElement[]): ModelTree<BaseMetaModelElement>[] {
     return rootElements
       .map(element => {
         this.cache = {};
@@ -41,12 +41,12 @@ export class PropertiesFilterLoader implements FilterLoader {
       .filter(tree => tree);
   }
 
-  generateTree(element: BaseMetaModelElement, options?: ModelTreeOptions): ModelTree {
+  generateTree(element: BaseMetaModelElement, options?: ModelTreeOptions): ModelTree<BaseMetaModelElement> {
     if (!element || element instanceof DefaultEntityValue) {
       return null;
     }
 
-    const elementTree: ModelTree = {
+    const elementTree: ModelTree<BaseMetaModelElement> = {
       element,
       fromParentArrow: options?.parent ? this.getArrowStyle(element, options.parent) : null,
       shape: {...this.getShapeGeometry(element), mxGraphStyle: this.getMxGraphStyle(element)},
@@ -84,11 +84,11 @@ export class PropertiesFilterLoader implements FilterLoader {
 
       if (child instanceof DefaultEither) {
         const [leftTree, rightTree] = this.generateEitherTree(child, elementTree);
-        if (leftTree?.children?.length) {
+        if (leftTree.children?.length) {
           elementTree.children?.push(leftTree);
         }
 
-        if (rightTree?.children?.length) {
+        if (rightTree.children?.length) {
           elementTree.children?.push(rightTree);
         }
         continue;
@@ -144,7 +144,10 @@ export class PropertiesFilterLoader implements FilterLoader {
     return element instanceof DefaultEntity || element instanceof DefaultAspect;
   }
 
-  private generateEitherTree(element: DefaultEither, parentNode: ModelTree): [ModelTree, ModelTree] {
+  private generateEitherTree(
+    element: DefaultEither,
+    parentNode: ModelTree<BaseMetaModelElement>
+  ): [ModelTree<BaseMetaModelElement>, ModelTree<BaseMetaModelElement>] {
     return [
       this.generateTree(element.left, {notAllowed: [DefaultEntity], parent: element, parentNode}),
       this.generateTree(element.right, {notAllowed: [DefaultEntity], parent: element, parentNode}),
@@ -171,7 +174,7 @@ export class PropertiesFilterLoader implements FilterLoader {
     );
   }
 
-  private isValid(tree: ModelTree): boolean {
+  private isValid(tree: ModelTree<BaseMetaModelElement>): boolean {
     return tree && (tree.children.length > 0 || tree.element instanceof DefaultProperty || tree.element instanceof DefaultAspect);
   }
 }

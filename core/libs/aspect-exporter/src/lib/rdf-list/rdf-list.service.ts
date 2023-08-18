@@ -29,22 +29,29 @@ import {
   StoreListReferences,
 } from './rdf-list.types';
 import {RdfNodeService} from '../rdf-node';
+import {ModelService} from '@ame/rdf/services';
+import {environment} from 'environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
-  private store: Store;
-  private samm: Samm;
-  private rdfModel: RdfModel;
+  private get rdfModel(): RdfModel {
+    return this.modelService.getLoadedAspectModel().rdfModel;
+  }
 
-  constructor(private nodeService: RdfNodeService) {}
+  private get store(): Store {
+    return this.rdfModel.store;
+  }
 
-  setRdfModel(rdfModel: RdfModel) {
-    this.rdfModel = rdfModel;
-    this.store = this.rdfModel.store;
-    this.samm = this.rdfModel.SAMM();
-    return this;
+  private get samm(): Samm {
+    return this.rdfModel.SAMM();
+  }
+
+  constructor(private nodeService: RdfNodeService, private modelService: ModelService) {
+    if (!environment.production) {
+      window['angular.rdfListService'] = this;
+    }
   }
 
   push(source: SourceElementType, ...elements: ListElementType[]) {

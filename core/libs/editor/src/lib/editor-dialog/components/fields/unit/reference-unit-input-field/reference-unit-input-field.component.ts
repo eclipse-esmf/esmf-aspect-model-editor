@@ -14,13 +14,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {DefaultDuration, DefaultUnit, Unit} from '@ame/meta-model';
-import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 import {Observable} from 'rxjs';
 import {MetaModelElementInstantiator, UnitInstantiator} from '@ame/instantiator';
-import {NamespacesCacheService} from '@ame/cache';
 import {ModelService} from '@ame/rdf/services';
-import {SearchService} from '@ame/shared';
 import {MatOptionSelectionChange} from '@angular/material/core';
 
 declare const sammUDefinition: any;
@@ -38,13 +35,8 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
   public unitDisplayControl: FormControl;
   public referenceUnitControl: FormControl;
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService: NamespacesCacheService,
-    public searchService: SearchService,
-    private modelService: ModelService
-  ) {
-    super(metaModelDialogService, namespacesCacheService, searchService);
+  constructor(private modelService: ModelService) {
+    super();
     this.unitInstantiator = new UnitInstantiator(
       new MetaModelElementInstantiator(this.modelService.getLoadedAspectModel().rdfModel, this.currentCachedFile)
     );

@@ -11,12 +11,10 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div class="dialog-header">
-  <h3 matDialogTitle class="dialog-title">Declare name of Shared Model</h3>
-  <button class="close-button" mat-icon-button tabindex="-1" (click)="closeAndGiveResult(false)">
-    <mat-icon>close</mat-icon>
-  </button>
-</div>
+<h3 mat-dialog-title class="dialog-title">Declare name of Shared Model</h3>
+<button class="close-button" mat-icon-button tabindex="-1" (click)="closeAndGiveResult(false)">
+  <mat-icon>close</mat-icon>
+</button>
 
 <mat-dialog-content *ngIf="fileNameControl">
   <p>

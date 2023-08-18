@@ -20,7 +20,7 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   templateUrl: './rename-model.component.html',
-  styles: ['.dialog-title { font-size: 24px !important; } .close-button {top: -10px}'],
+  styles: ['.dialog-title { font-size: 24px !important; }'],
 })
 export class RenameModelComponent {
   public fileNameControl: FormControl;

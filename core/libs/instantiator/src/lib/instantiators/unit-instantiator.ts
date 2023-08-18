@@ -26,10 +26,6 @@ export class UnitInstantiator {
     return this.metaModelElementInstantiator.cachedFile;
   }
 
-  private get isIsolated() {
-    return this.metaModelElementInstantiator.isIsolated;
-  }
-
   private get rdfModel() {
     return this.metaModelElementInstantiator.rdfModel;
   }

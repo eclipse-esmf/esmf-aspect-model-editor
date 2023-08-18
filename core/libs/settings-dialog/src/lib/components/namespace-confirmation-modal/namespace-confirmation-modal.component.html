@@ -11,13 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div class="dialog-header">
-  <h3 matDialogTitle>New Aspect Namespace</h3>
-  <button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
-    <mat-icon>close</mat-icon>
-  </button>
-</div>
-<div class="dialog-content">
+<h3 mat-dialog-title>New Aspect Namespace</h3>
+<button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+  <mat-icon>close</mat-icon>
+</button>
+<mat-dialog-content>
   Are you sure you want to change the current
   <span *ngIf="newNamespace !== oldNamespace"
     >namespace to <span class="bold-text">{{ newNamespace }}</span></span
@@ -28,8 +26,8 @@
     <span class="bold-text">{{ newVersion }}</span>
   </span>
   ?
-</div>
-<div class="dialog-actions">
-  <button mat-raised-button (click)="onSave()">Save</button>
-  <button mat-button type="button" (click)="onClose()">Cancel</button>
-</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()">Save</button>
+</mat-dialog-actions>

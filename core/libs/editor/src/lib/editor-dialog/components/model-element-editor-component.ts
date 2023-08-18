@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Directive, OnDestroy} from '@angular/core';
+import {Directive, OnDestroy, inject} from '@angular/core';
 import {tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {EditorModelService} from '../editor-model.service';
@@ -20,13 +20,11 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 
 @Directive()
 export abstract class ModelElementEditorComponent<T extends BaseMetaModelElement> implements OnDestroy {
-  metaModelElement: T;
-
-  subscription: Subscription;
-  formSubscription: Subscription = new Subscription(); // subscriptions from form controls are added here
-  formGroup: FormGroup;
-
-  protected constructor(public metaModelDialogService: EditorModelService) {}
+  public metaModelDialogService = inject(EditorModelService);
+  public metaModelElement: T;
+  public subscription: Subscription;
+  public formSubscription: Subscription = new Subscription(); // subscriptions from form controls are added here
+  public formGroup: FormGroup;
 
   ngOnDestroy() {
     this.subscription?.unsubscribe();
