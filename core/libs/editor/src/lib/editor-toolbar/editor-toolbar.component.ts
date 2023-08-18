@@ -24,7 +24,7 @@ import {
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
 import {BindingsService, LoadingScreenOptions, NotificationsService, cellRelations} from '@ame/shared';
 import {EditorService} from '../editor.service';
-import {ShapeConnectorService} from '@ame/connection';
+import {ShapeConnectorService, ShapeConnectorUtil} from '@ame/connection';
 import {FileHandlingService, GenerateHandlingService, InformationHandlingService} from './services';
 import {MatDialog} from '@angular/material/dialog';
 import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
@@ -35,6 +35,7 @@ import {RdfModel} from '@ame/rdf/utils';
 import {readFile} from '@ame/utils';
 import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService, ModelFilter} from '@ame/loader-filters';
 import {ShapeSettingsService} from '../editor-dialog';
+import {BaseMetaModelElement} from '@ame/meta-model';
 
 @Component({
   selector: 'ame-editor-toolbar',
@@ -91,6 +92,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.bindingsService.registerAction('format', () => this.onFormat());
     this.bindingsService.registerAction('copy-to-clipboard', () => this.fileHandlingService.copyToClipboard());
     this.bindingsService.registerAction('connect-with', () => this.openConnectWithDialog());
+    this.bindingsService.registerAction('select-tree', () => this.mxGraphShapeSelectorService.selectTree());
   }
 
   ngOnDestroy() {
@@ -298,7 +300,11 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     const secondElement = selectedCells[1].style.split(';')[0];
     const modelElements = selectedCells.map(e => MxGraphHelper.getModelElement(e));
 
-    if (secondElement !== firstElement && cellRelations[secondElement].includes(firstElement)) {
+    if (
+      secondElement !== firstElement &&
+      cellRelations[secondElement].includes(firstElement) &&
+      !this.isConnectionException(modelElements[0], modelElements[1])
+    ) {
       modelElements.reverse();
       selectedCells.reverse();
     }
@@ -336,5 +342,9 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   hasAspectElement(): boolean {
     return !!this.modelService.getLoadedAspectModel().aspect;
+  }
+
+  private isConnectionException(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return ShapeConnectorUtil.isStructuredValuePropertyConnection(parentModel, childModel);
   }
 }

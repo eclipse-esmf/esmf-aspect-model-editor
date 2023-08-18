@@ -17,7 +17,17 @@
   align-items: center;
   border-bottom: 1px solid #cfd0d1;
   padding-right: 20px;
-  height: 50px;
+  height: 55px;
+  overflow: hidden;
+
+  ::ng-deep {
+    .mat-badge-medium .mat-badge-content {
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      font-size: 1rem;
+    }
+  }
 }
 
 .editor-icon-active {
@@ -29,20 +39,17 @@ button:not([mat-menu-item]) {
   height: 100%;
 
   mat-icon {
+    margin-right: 0;
+    height: 24px;
+    width: 24px;
+    font-size: 24px;
+
     &.rotate-45 {
       transform: rotate(45deg);
     }
 
     &.rotate-90 {
       transform: rotate(-90deg);
-    }
-  }
-
-  & ::ng-deep {
-    .mat-button-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
   }
 }
@@ -74,7 +81,6 @@ button[disabled] {
 
 .search {
   height: 100%;
-  margin-left: 15px;
 }
 
 .actions {

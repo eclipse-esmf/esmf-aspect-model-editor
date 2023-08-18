@@ -11,6 +11,28 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+:host {
+  min-width: 980px;
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
+
+  ::ng-deep {
+    mat-form-field {
+      .mat-mdc-form-field-flex,
+      .mat-mdc-form-field-infix,
+      textarea {
+        height: 100% !important;
+      }
+
+      .mat-form-field-wrapper {
+        background-color: aliceblue;
+        padding-bottom: 0;
+      }
+    }
+  }
+}
+
 .info {
   background-color: #2196f3;
   border-radius: 4px;
@@ -19,7 +41,6 @@
   color: white;
   font-size: 16px;
   padding: 10px;
-  margin-bottom: 20px;
 
   mat-icon {
     margin-right: 15px;
@@ -32,26 +53,9 @@
 }
 
 textarea {
-  height: calc(67vh - 340px);
+  // height: calc(67vh - 340px);
   line-height: 1.5;
   resize: none;
-}
-
-:host {
-  ::ng-deep {
-    mat-form-field {
-      .mat-form-field-wrapper {
-        background-color: aliceblue;
-        padding-bottom: 0;
-      }
-    }
-  }
-}
-
-:host {
-  min-width: 980px;
-  height: 80%;
-  display: block;
 }
 
 .header {
@@ -59,17 +63,33 @@ textarea {
   position: relative;
   margin-bottom: 10px;
 
-  button {
-    top: 0;
-    right: 0;
-    position: absolute;
+  h2 {
+    font-weight: 400;
+    margin-bottom: 0;
+  }
+}
+
+.modeling-options {
+  margin: 0;
+
+  &-message {
+    margin-bottom: 10px;
   }
 }
 
 mat-dialog-content {
-  max-height: none !important;
+  display: flex;
+  flex-direction: column;
+
+  mat-form-field {
+    flex-grow: 1;
+  }
 }
 
-mat-dialog-actions button {
-  margin-left: 10px;
+mat-dialog-actions {
+  padding: 0 24px 20px 24px;
+
+  button {
+    margin-left: 10px;
+  }
 }

@@ -17,7 +17,9 @@ import packageJson from '../../../../package.json';
 
 const defaultPort = '9091';
 
-export const config = {
+export const config: AppConfig = {
+  environment: 'dev',
+  ameService: 'http://localhost:9091',
   ameVersion: packageJson?.version,
   editorConfiguration: 'assets/config/editor/config/editor.xml',
   assetLocation: 'assets',
@@ -33,4 +35,7 @@ export const config = {
   },
 };
 
-export const APP_CONFIG = new InjectionToken<AppConfig>('app.config');
+export const APP_CONFIG = new InjectionToken<AppConfig>('app.config', {
+  providedIn: 'root',
+  factory: () => config,
+});

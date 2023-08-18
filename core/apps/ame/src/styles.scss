@@ -11,15 +11,35 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-@import 'node_modules/ngx-toastr/toastr';
 @import './assets/styles/colors.scss';
 @import './assets/styles/theme.scss';
 @import './assets/styles/shape-label.scss';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+* {
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
+}
 
 body,
 html {
+  --mdc-dialog-supporting-text-tracking: 0;
+  --mdc-dialog-supporting-text-size: 14px;
+  --mat-menu-item-label-text-size: 14px;
+  --mdc-plain-tooltip-supporting-text-size: 14px;
+  --mat-menu-item-icon-color: #787878;
+  --mdc-dialog-subhead-size: 22px;
+
   padding: 0;
   margin: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+h3 {
+  font-weight: 400;
 }
 
 .mat-row {
@@ -34,24 +54,6 @@ html {
   &:hover {
     background-color: #eee;
   }
-}
-
-body,
-html {
-  padding: 0;
-  margin: 0;
-}
-
-.mat-optgroup-label {
-  font-weight: bold !important;
-  font-size: 17px !important;
-  color: rgb(34, 34, 34) !important;
-  padding-top: 14px !important;
-  padding-bottom: 14px !important;
-}
-
-.mat-optgroup .mat-option-text {
-  padding-left: 20px !important;
 }
 
 .ellipsis {
@@ -78,10 +80,6 @@ html {
   content: ' - ';
 }
 
-.mat-dialog-content {
-  max-height: 60vh !important;
-}
-
 mat-form-field {
   width: 100%;
 }
@@ -90,33 +88,8 @@ mat-form-field {
   overflow-y: auto !important;
 }
 
-body {
-  overflow: hidden;
-}
-
-.container-content {
-  overflow: hidden !important;
-}
-
-.content {
-  overflow: hidden !important;
-}
-
-body > div.cdk-overlay-container > div.cdk-global-overlay-wrapper {
-  justify-content: center;
-  align-items: center;
-}
-
 .loader-backdrop {
   position: fixed !important;
-}
-
-.top-space {
-  padding-top: 25px;
-}
-
-.mat-header-cell {
-  white-space: nowrap !important;
 }
 
 mat-cell > mat-icon {
@@ -124,39 +97,7 @@ mat-cell > mat-icon {
 }
 
 mat-icon {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px; /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
-
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
-
-  /* Support for IE. */
-  font-feature-settings: 'liga';
-}
-
-.footer-modal {
-  mat-dialog-container {
-    overflow: hidden !important;
-  }
-}
-
-.settings-dialog-container .mat-dialog-container {
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
+  color: #787878;
 }
 
 ::-webkit-scrollbar {
@@ -229,6 +170,12 @@ mat-icon {
   display: inline-block !important;
 }
 
+.mxRubberband {
+  background-color: blue;
+  opacity: 0.2;
+  position: absolute;
+}
+
 // Tooltip that is displayed when hovering over collapsed cells
 .cell-tooltip {
   font-size: 13px;
@@ -265,12 +212,13 @@ mat-icon {
   display: inline-flex;
   position: relative;
   width: 100%;
+}
 
-  .close-button {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
+.close-button {
+  position: absolute !important;
+  top: 5px;
+  right: 5px;
+  z-index: 2 !important;
 }
 
 .dialog-actions {
@@ -284,29 +232,6 @@ mat-icon {
 
 .toast-top-right {
   top: 60px !important;
-}
-
-mat-icon {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px; /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-  color: #787878;
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
-  /* Support for IE. */
-  font-feature-settings: 'liga';
 }
 
 .mat-select-panel {

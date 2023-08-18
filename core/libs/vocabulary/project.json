@@ -1,0 +1,23 @@
+{
+  "name": "vocabulary",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/vocabulary/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/vocabulary"],
+      "options": {
+        "jestConfig": "libs/vocabulary/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/vocabulary/src/**/*.ts", "libs/vocabulary/src/**/*.html"]
+      }
+    }
+  }
+}

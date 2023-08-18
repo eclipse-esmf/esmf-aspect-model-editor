@@ -28,10 +28,6 @@ export class PropertyInstantiator {
     return this.metaModelElementInstantiator.cachedFile;
   }
 
-  private get isIsolated() {
-    return this.metaModelElementInstantiator.isIsolated;
-  }
-
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
     this.predefinedCharacteristics = new PredefinedCharacteristicInstantiator(metaModelElementInstantiator).predefinedCharacteristics;
   }

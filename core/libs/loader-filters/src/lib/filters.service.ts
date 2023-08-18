@@ -14,7 +14,7 @@
 import {Inject, Injectable, Injector} from '@angular/core';
 import {DefaultFilter} from './filters/default-filter';
 import {PropertiesFilterLoader} from './filters/properties-filter';
-import {FilterLoader, ModelFilter, ModelNode, ModelTree, ModelTreeOptions} from './models';
+import {FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from './models';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphHelper, MxGraphRenderer, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {NamespacesCacheService} from '@ame/cache';
@@ -29,8 +29,8 @@ export type Filters = {
 };
 
 export type FilteredTrees = {
-  default: ModelTree[];
-  properties: ModelTree[];
+  default: ModelTree<BaseMetaModelElement>[];
+  properties: ModelTree<BaseMetaModelElement>[];
 };
 
 @Injectable({providedIn: 'root'})
@@ -40,7 +40,8 @@ export class FiltersService {
     [ModelFilter.PROPERTIES]: () => this.selectPropertiesFilter(),
   };
   public filteredTree: Partial<FilteredTrees> = {};
-  public currentFilter: FilterLoader;
+  // TODO: To check why is behaving weirdly with BaseMetaModel instead of any
+  public currentFilter: FilterLoader<any>;
 
   constructor(
     private injector: Injector,
@@ -61,25 +62,25 @@ export class FiltersService {
     this.filterAttributesService.activeFilter = ModelFilter.PROPERTIES;
   }
 
-  filter(elements: BaseMetaModelElement[]): ModelTree[] {
+  filter(elements: BaseMetaModelElement[]): ModelTree<BaseMetaModelElement>[] {
     this.filteredTree[this.filterAttributesService.activeFilter] = this.currentFilter.filter(elements);
     this.currentFilter.cache = {};
     return this.filteredTree[this.filterAttributesService.activeFilter];
   }
 
-  createNode<T extends BaseMetaModelElement>(element: T, options?: ModelTreeOptions): ModelNode<T> {
-    const node = this.updateNodeInfo({element, filterType: this.currentFilter.filterType}, options);
-    return this.updateNodeTree(node, options);
+  createNode<T extends BaseMetaModelElement = BaseMetaModelElement>(element: T, options?: ModelTreeOptions): ModelTree<T> {
+    const node = this.updateNodeInfo<T>({element, filterType: this.currentFilter.filterType}, options);
+    return this.updateNodeTree<T>(node, options);
   }
 
-  updateNodeInfo<T extends BaseMetaModelElement>(node: ModelNode<T>, options?: ModelTreeOptions): ModelNode<T> {
+  updateNodeInfo<T extends BaseMetaModelElement = BaseMetaModelElement>(node: ModelTree<T>, options?: ModelTreeOptions): ModelTree<T> {
     node.fromParentArrow = options?.parent ? this.currentFilter.getArrowStyle(node.element, options.parent) : null;
     node.shape = {...this.currentFilter.getShapeGeometry(node.element), mxGraphStyle: this.currentFilter.getMxGraphStyle(node.element)};
     node.filterType = this.currentFilter.filterType;
     return node;
   }
 
-  updateNodeTree<T extends BaseMetaModelElement>(node: ModelNode<T>, options?: ModelTreeOptions): ModelTree<T> {
+  updateNodeTree<T extends BaseMetaModelElement = BaseMetaModelElement>(node: ModelTree<T>, options?: ModelTreeOptions): ModelTree<T> {
     return this.currentFilter.generateTree(node.element, options);
   }
 

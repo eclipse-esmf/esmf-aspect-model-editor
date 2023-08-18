@@ -16,9 +16,7 @@ import {BaseMetaModelElement, DefaultRangeConstraint, DefaultTrait, Type} from '
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {DataTypeService} from '@ame/shared';
-import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
-import {ModelNode} from '@ame/loader-filters';
 
 @Component({
   selector: 'ame-max-value-input-field',
@@ -27,12 +25,8 @@ import {ModelNode} from '@ame/loader-filters';
 export class MaxValueInputFieldComponent extends InputFieldComponent<DefaultRangeConstraint> implements OnInit, OnDestroy {
   public rangeConstraintDataType: Type;
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService
-  ) {
-    super(metaModelDialogService);
+  constructor(public dataTypeService: DataTypeService, public mxGraphService: MxGraphService) {
+    super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'maxValue';
   }

@@ -13,7 +13,6 @@
 import {DefaultQuantifiable} from './default-quantifiable';
 import {Type} from './type';
 import {Unit} from './default-unit';
-import {ModelRenderer} from '@ame/mx-graph';
 
 export class DefaultMeasurement extends DefaultQuantifiable {
   static createInstance() {

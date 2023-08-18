@@ -55,6 +55,5 @@ import {ConfigurationComponent, LanguageSettingsComponent, NamespaceComponent, N
     MatTooltipModule,
   ],
   exports: [SettingDialogComponent],
-  entryComponents: [SettingDialogComponent],
 })
 export class SettingDialogModule {}

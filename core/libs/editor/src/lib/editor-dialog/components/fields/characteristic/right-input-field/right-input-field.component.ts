@@ -15,13 +15,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {map, Observable} from 'rxjs';
 import {Characteristic, DefaultCharacteristic, DefaultEither} from '@ame/meta-model';
-import {NamespacesCacheService} from '@ame/cache';
 import {InputFieldComponent} from '../../input-field.component';
 import {EditorDialogValidators} from '../../../../validators';
-import {EditorModelService} from '../../../../editor-model.service';
-import {NotificationsService, SearchService} from '@ame/shared';
+import {NotificationsService} from '@ame/shared';
 import {RdfService} from '@ame/rdf/services';
-import {MxGraphService} from '@ame/mx-graph';
 
 @Component({
   selector: 'ame-right-input-field',
@@ -33,15 +30,8 @@ export class RightInputFieldComponent extends InputFieldComponent<DefaultEither>
   rightControl: FormControl;
   rightCharacteristicControl: FormControl;
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService: NamespacesCacheService,
-    private notificationsService: NotificationsService,
-    public rdfService: RdfService,
-    public searchService?: SearchService,
-    public mxGraphService?: MxGraphService
-  ) {
-    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
+  constructor(private notificationsService: NotificationsService, public rdfService: RdfService) {
+    super();
     this.fieldName = 'rightCharacteristic';
   }
 

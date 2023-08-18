@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {DataFactory, Store} from 'n3';
 import {BaseVisitor} from '../base-visitor';
 import {RdfNodeService} from '../../rdf-node';
@@ -20,11 +20,13 @@ import {RdfService} from '@ame/rdf/services';
 
 @Injectable()
 export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty> {
+  private rdfNodeService = inject(RdfNodeService);
+
   private get store(): Store {
     return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.store;
   }
 
-  constructor(private rdfNodeService: RdfNodeService, rdfService: RdfService) {
+  constructor(rdfService: RdfService) {
     super(rdfService);
   }
 

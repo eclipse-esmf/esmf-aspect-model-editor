@@ -32,6 +32,10 @@ export class LanguageSettingsComponent implements OnInit, AfterViewInit {
   languageList: FormArray;
   deletedLanguages: Array<any> = [];
 
+  get languageFormGroup() {
+    return this.form.get('languages') as FormArray;
+  }
+
   constructor(
     private dialogRef: MatDialogRef<LanguageSettingsComponent>,
     private fb: FormBuilder,
@@ -67,7 +71,7 @@ export class LanguageSettingsComponent implements OnInit, AfterViewInit {
     return this.form.get('languages') as FormArray;
   }
 
-  private createLanguage(language: string = null, restored: boolean = false): FormGroup {
+  private createLanguage(language: string = null, restored = false): FormGroup {
     return this.fb.group({
       languageCode: [language, Validators.compose([Validators.required])],
       restored: restored,

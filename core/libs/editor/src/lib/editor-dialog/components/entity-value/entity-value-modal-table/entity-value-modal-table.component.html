@@ -49,7 +49,6 @@
         <button
           *ngIf="getComplexDisplayControl(property.name)?.disabled"
           (click)="unlockEntityValue(property)"
-          class="close-button"
           data-cy="clear-entityValue-button"
           matSuffix
           mat-icon-button

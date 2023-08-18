@@ -44,7 +44,7 @@ export class InstantiatorService {
   public instantiateFile(rdfModel: RdfModel, cachedFile: CachedFile, fileName: string): CachedFile {
     const aspect = rdfModel.store.getSubjects(rdfModel.SAMM().RdfType(), rdfModel.SAMM().Aspect(), null)?.[0];
 
-    if (cachedFile.getCachedElement<DefaultAspect>(aspect?.value)) {
+    if (cachedFile.getElement<DefaultAspect>(aspect?.value)) {
       return cachedFile;
     }
 
@@ -66,8 +66,7 @@ export class InstantiatorService {
     const uniqueSubjects = rdfModel.store
       .getSubjects(null, null, null)
       .reduce(
-        (subjects, subject) =>
-          !Util.isBlankNode(subject) && !cachedFile.getCachedElement(subject.value) ? [...subjects, subject] : subjects,
+        (subjects, subject) => (!Util.isBlankNode(subject) && !cachedFile.getElement(subject.value) ? [...subjects, subject] : subjects),
         []
       );
 
@@ -101,7 +100,7 @@ export class InstantiatorService {
         quad: subject,
       });
       if (overwrittenProperty?.property) {
-        cachedFile.resolveCachedElement(overwrittenProperty.property);
+        cachedFile.resolveElement(overwrittenProperty.property);
       }
       return;
     }
@@ -113,7 +112,7 @@ export class InstantiatorService {
       });
 
       if (overwrittenProperty?.property) {
-        cachedFile.resolveCachedElement(overwrittenProperty.property);
+        cachedFile.resolveElement(overwrittenProperty.property);
       }
       return;
     }
@@ -121,7 +120,7 @@ export class InstantiatorService {
     if (elementType.endsWith('Constraint')) {
       const constraint = metaModelElementInstantiator.getConstraint(DataFactory.quad(null, null, subject));
       if (constraint) {
-        cachedFile.resolveCachedElement(constraint);
+        cachedFile.resolveElement(constraint);
       }
       return;
     }
@@ -129,7 +128,7 @@ export class InstantiatorService {
     if (sammC.isStandardCharacteristic(elementType) || samm.isCharacteristic(elementType)) {
       const characteristic = metaModelElementInstantiator.getCharacteristic(DataFactory.quad(null, null, subject));
       if (characteristic) {
-        cachedFile.resolveCachedElement(characteristic);
+        cachedFile.resolveElement(characteristic);
       }
       return;
     }
@@ -140,7 +139,7 @@ export class InstantiatorService {
         quad: subject,
       });
       if (operation) {
-        cachedFile.resolveCachedElement(operation);
+        cachedFile.resolveElement(operation);
       }
       return;
     }
@@ -151,7 +150,7 @@ export class InstantiatorService {
         quad: subject,
       });
       if (event) {
-        cachedFile.resolveCachedElement(event);
+        cachedFile.resolveElement(event);
       }
       return;
     }
@@ -159,7 +158,7 @@ export class InstantiatorService {
     if (samm.isUnitElement(elementType)) {
       const unit = new UnitInstantiator(metaModelElementInstantiator).createUnit(subject.value);
       if (unit) {
-        cachedFile.resolveCachedElement(unit);
+        cachedFile.resolveElement(unit);
       }
       return;
     }
@@ -167,7 +166,7 @@ export class InstantiatorService {
     if (samm.isEntity(elementType)) {
       const entity = new EntityInstantiator(metaModelElementInstantiator).createEntity(rdfModel.store.getQuads(subject, null, null, null));
       if (entity) {
-        cachedFile.resolveCachedElement(entity);
+        cachedFile.resolveElement(entity);
       }
       return;
     }
@@ -177,7 +176,7 @@ export class InstantiatorService {
         rdfModel.store.getQuads(subject, null, null, null)
       );
       if (entity) {
-        cachedFile.resolveCachedElement(entity);
+        cachedFile.resolveElement(entity);
       }
       return;
     }
@@ -188,7 +187,7 @@ export class InstantiatorService {
         subject
       );
       if (entityValue) {
-        cachedFile.resolveCachedElement(entityValue);
+        cachedFile.resolveElement(entityValue);
       }
     }
   }

@@ -11,46 +11,33 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {InputFieldComponent} from '../../input-field.component';
-import {EditorModelService} from '../../../../editor-model.service';
 import {DefaultOperation, DefaultProperty, Property} from '@ame/meta-model';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {NamespacesCacheService} from '@ame/cache';
-import {MatChipList} from '@angular/material/chips';
 import {ENTER} from '@angular/cdk/keycodes';
 import {EditorDialogValidators} from '../../../../validators';
 import {RdfService} from '@ame/rdf/services';
 import {ErrorStateMatcher} from '@angular/material/core';
-import {MxGraphService} from '@ame/mx-graph';
-import {SearchService} from '@ame/shared';
 
 @Component({
   selector: 'ame-input-chiplist-field',
   templateUrl: './input-chiplist-field.component.html',
 })
 export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {
-  @ViewChild('chipList') inputChipList: MatChipList;
-  @ViewChild('input') inputValue;
-
-  public filteredPropertyTypes$: Observable<any[]>;
-  public inputControl: FormControl;
+  @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
 
   readonly separatorKeysCodes: number[] = [ENTER];
 
-  public selectable = true;
+  public filteredPropertyTypes$: Observable<any[]>;
   public removable = true;
   public inputValues: Array<Property>;
+  public chipControl = new FormControl();
+  public searchControl: FormControl<string>;
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService: NamespacesCacheService,
-    public rdfService: RdfService,
-    public searchService?: SearchService,
-    public mxGraphService?: MxGraphService
-  ) {
-    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
+  constructor(public rdfService: RdfService) {
+    super();
   }
 
   ngOnInit(): void {
@@ -62,13 +49,12 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
 
   hasErrors(): ErrorStateMatcher {
     return {
-      isErrorState: () => !!this.getControl('inputValues')?.errors,
+      isErrorState: () => !!this.searchControl?.errors,
     };
   }
 
   ngOnDestroy() {
     super.ngOnDestroy();
-    this.parentForm.removeControl('inputValues');
   }
 
   setInputControl() {
@@ -78,22 +64,19 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
       this.inputValues.push(...inputValueList);
     }
 
-    this.parentForm.setControl(
-      'inputValues',
-      new FormControl(
-        {
-          value: '',
-          disabled: this.metaModelElement.isExternalReference(),
-        },
-        [
-          EditorDialogValidators.duplicateNameWithDifferentType(
-            this.namespacesCacheService,
-            this.metaModelElement,
-            this.rdfService,
-            DefaultProperty
-          ),
-        ]
-      )
+    this.searchControl = new FormControl(
+      {
+        value: '',
+        disabled: this.metaModelElement.isExternalReference(),
+      },
+      [
+        EditorDialogValidators.duplicateNameWithDifferentType(
+          this.namespacesCacheService,
+          this.metaModelElement,
+          this.rdfService,
+          DefaultProperty
+        ),
+      ]
     );
 
     this.parentForm.setControl(
@@ -104,31 +87,22 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
       })
     );
 
-    this.inputControl = this.parentForm.get('inputValues') as FormControl;
-    this.filteredPropertyTypes$ = this.initFilteredPropertyTypes(this.inputControl);
+    if (this.metaModelElement?.isExternalReference()) this.chipControl.disable();
+
+    this.filteredPropertyTypes$ = this.initFilteredPropertyTypes(this.searchControl);
   }
 
   onSelectionChange(fieldPath: string, newValue: any) {
-    if (fieldPath !== 'input') {
+    if (fieldPath !== 'input' || newValue === null) {
       return;
     }
 
-    if (newValue === null) {
-      return; // happens on reset form
-    }
-
     let property = this.currentCachedFile.getCachedProperties().find(p => p.aspectModelUrn === newValue.urn);
-
     if (!property) {
       property = this.namespacesCacheService.findElementOnExtReference<Property>(newValue.urn);
     }
 
-    this.parentForm.setControl('input', new FormControl(property));
-
-    this.inputValue.nativeElement.value = '';
-
-    this.inputValues.push(property);
-    this.parentForm.get('inputChipList').setValue(this.inputValues);
+    this.addProperty(property);
   }
 
   createNewProperty(propertyName: string) {
@@ -138,12 +112,7 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
 
     const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${propertyName}`;
     const newProperty = new DefaultProperty(this.metaModelElement.metaModelVersion, urn, propertyName, null);
-
-    this.parentForm.setControl('input', new FormControl(newProperty));
-    this.inputValue.nativeElement.value = '';
-
-    this.inputValues.push(newProperty);
-    this.parentForm.get('inputChipList').setValue(this.inputValues);
+    this.addProperty(newProperty);
   }
 
   remove(value: Property) {
@@ -151,6 +120,14 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
 
     if (index >= 0) {
       this.inputValues.splice(index, 1);
+      this.parentForm.get('inputChipList').setValue([...this.inputValues]);
     }
+  }
+
+  private addProperty(property: DefaultProperty | Property) {
+    this.inputValues.push(property);
+    this.parentForm.get('inputChipList').setValue([...this.inputValues]);
+    this.searchInput.nativeElement.value = '';
+    this.searchControl.setValue(null);
   }
 }

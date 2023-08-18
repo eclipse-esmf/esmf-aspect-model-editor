@@ -32,7 +32,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {ModelBaseProperties} from '../models';
 import {mxCompactTreeLayout, mxConstants, mxHierarchicalLayout} from '../providers';
 import {MxGraphVisitorHelper, ShapeAttribute} from './mx-graph-visitor-helper';
-import {ModelNode, ModelTree} from '@ame/loader-filters';
+import {ModelTree} from '@ame/loader-filters';
 
 export class MxGraphHelper {
   /**
@@ -40,7 +40,7 @@ export class MxGraphHelper {
    *
    * @param cell mx element
    */
-  static getElementNode<U extends BaseMetaModelElement = BaseMetaModelElement>(cell: mxgraph.mxCell): ModelNode<U> {
+  static getElementNode<U extends BaseMetaModelElement = BaseMetaModelElement>(cell: mxgraph.mxCell): ModelTree<U> {
     if (typeof cell?.['getMetaModelElement'] === 'function') {
       return (<any>cell).getMetaModelElement();
     }
@@ -125,8 +125,8 @@ export class MxGraphHelper {
    * @param cell mx element
    * @param metaModelObject internal model
    */
-  static setElementNode(cell: mxgraph.mxCell, node: ModelTree) {
-    cell['getMetaModelElement'] = (): ModelTree => node;
+  static setElementNode(cell: mxgraph.mxCell, node: ModelTree<BaseMetaModelElement>) {
+    cell['getMetaModelElement'] = (): ModelTree<BaseMetaModelElement> => node;
   }
 
   /**
@@ -191,11 +191,7 @@ export class MxGraphHelper {
 
   private static isRemovable(element: BaseMetaModelElement, elementToRemove: BaseMetaModelElement) {
     const elementNamespace = element.aspectModelUrn.split('#')[0];
-    const toRemoveNamespace = elementToRemove.aspectModelUrn?.split('#')[0];
-
-    if (!toRemoveNamespace) {
-      return false;
-    }
+    const toRemoveNamespace = elementToRemove.aspectModelUrn.split('#')[0];
 
     return elementNamespace !== toRemoveNamespace || !(element.isExternalReference() || elementToRemove.isExternalReference());
   }
@@ -235,7 +231,11 @@ export class MxGraphHelper {
     if (cell) {
       graphLayout.execute(graph.getDefaultParent(), cell);
     } else {
-      graphLayout.execute(graph.getDefaultParent());
+      graph.getChildVertices(graph.getDefaultParent())?.forEach(element => {
+        if (this.getModelElement(element).parents.length === 0) {
+          graphLayout.execute(graph.getDefaultParent(), element);
+        }
+      });
     }
   }
 
@@ -249,11 +249,7 @@ export class MxGraphHelper {
     graphLayout.interRankCellSpacing = inCollapsedMode
       ? ModelHierarchicalLayout.collapsedInterRankCellSpacing
       : ModelHierarchicalLayout.expandedInterRankCellSpacing;
-    if (cell) {
-      graphLayout.execute(graph.getDefaultParent(), cell);
-    } else {
-      graphLayout.execute(graph.getDefaultParent());
-    }
+    graphLayout.execute(graph.getDefaultParent(), cell);
   }
 
   static getCellHeight(cell: mxgraph.mxCell) {
@@ -474,5 +470,9 @@ export class MxGraphHelper {
     const [namespace] = element?.aspectModelUrn.split('#') || ['', ''];
     const splitted = namespace.split(':');
     return [splitted.pop(), splitted.pop()];
+  }
+
+  static isChildOf(parent: BaseMetaModelElement, child: BaseMetaModelElement) {
+    return parent.children.some(el => el.aspectModelUrn === child.aspectModelUrn);
   }
 }

@@ -12,12 +12,12 @@
   -->
 
 <div class="search-bar-container">
-  <mat-form-field appearance="outline" class="toolbar-search">
+  <mat-form-field class="toolbar-search">
     <input
       matInput
       #searchInputField
       [matAutocomplete]="auto"
-      (keyup)="searchForCellsAndInstances()"
+      [formControl]="searchControl"
       type="search"
       color="primary"
       placeholder="Search element"
@@ -32,8 +32,11 @@
     >
       info_outline
     </mat-icon>
-    <mat-icon class="search-bar-container__icon material-icons" (click)="focusOnSearchInputField()">search</mat-icon>
+    <mat-icon *ngIf="!searchInputField.value" class="search-bar-container__icon material-icons" (click)="focusOnSearchInputField()"
+      >search</mat-icon
+    >
   </mat-form-field>
+
   <mat-autocomplete (optionSelected)="goToSearchResult($event)" [panelWidth]="500" [displayWith]="displayCellId" #auto="matAutocomplete">
     <mat-option *ngFor="let searchResult of searchResults" [value]="searchResult" class="search-bar-container__option">
       <ng-container *ngIf="searchResult.cell">

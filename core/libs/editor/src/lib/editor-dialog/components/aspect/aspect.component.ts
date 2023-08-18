@@ -15,7 +15,6 @@ import {Component, Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {DefaultAspect} from '@ame/meta-model';
 import {ModelElementEditorComponent} from '..';
-import {EditorModelService} from '../../editor-model.service';
 import {UpdatedProperties} from '../properties';
 
 @Component({
@@ -26,10 +25,6 @@ export class AspectComponent extends ModelElementEditorComponent<DefaultAspect> 
   @Input() parentForm;
 
   public element$ = this.metaModelDialogService.getMetaModelElement();
-
-  constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
-  }
 
   overwriteProperties(data: UpdatedProperties) {
     this.parentForm.setControl('editedProperties', new FormControl(data));

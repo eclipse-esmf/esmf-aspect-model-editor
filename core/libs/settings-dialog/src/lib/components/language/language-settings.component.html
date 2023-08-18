@@ -13,46 +13,49 @@
 
 <form [formGroup]="form">
   <div formArrayName="languages" class="language-scroll">
-    <div *ngFor="let languages of getLanguageFormGroup().controls; let i = index" class="row">
-      <button mat-icon-button class="delete-icon" (click)="deleteLanguage(i)">
+    <mat-form-field *ngFor="let languages of languageFormGroup.controls; let i = index" [formGroupName]="i" class="row">
+      <input
+        [matAutocomplete]="auto"
+        (ngModelChange)="doFilterLanguage($event)"
+        formControlName="languageCode"
+        data-cy="langCode"
+        spellcheck="false"
+        matInput
+      />
+      <button *ngIf="languageFormGroup.controls.length > 1" (click)="deleteLanguage(i)" matSuffix mat-icon-button class="delete-icon">
         <mat-icon>delete</mat-icon>
       </button>
-      <mat-form-field [formGroupName]="i">
-        <input
-          [matAutocomplete]="auto"
-          (ngModelChange)="doFilterLanguage($event)"
-          formControlName="languageCode"
-          data-cy="langCode"
-          spellcheck="false"
-          matInput
-        />
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayLanguageWithTag">
-          <mat-option *ngFor="let language of filteredLanguageList | async" [value]="language.tag">
-            {{ language.name }} ({{ language.tag }})
-          </mat-option>
-        </mat-autocomplete>
-        <mat-hint *ngIf="!getLanguagesFormGroup(i).controls['languageCode'].value">Select language</mat-hint>
-        <mat-error
-          *ngIf="
-            getLanguagesFormGroup(i).controls['languageCode']?.touched &&
-            getLanguagesFormGroup(i).controls['languageCode'].hasError('required')
-          "
-        >
-          Start typing to select language or delete this row.
-        </mat-error>
-      </mat-form-field>
-    </div>
+      <mat-hint *ngIf="!getLanguagesFormGroup(i).controls['languageCode'].value">Select language</mat-hint>
+      <mat-error
+        *ngIf="
+          getLanguagesFormGroup(i).controls['languageCode']?.touched &&
+          getLanguagesFormGroup(i).controls['languageCode'].hasError('required')
+        "
+      >
+        Start typing to select language or delete this row.
+      </mat-error>
+
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayLanguageWithTag">
+        <mat-option *ngFor="let language of filteredLanguageList | async" [value]="language.tag">
+          {{ language.name }} ({{ language.tag }})
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
   </div>
 
-  <button mat-flat-button (click)="addLanguage()" class="add-language" data-cy="addLang">
-    <mat-icon>add</mat-icon>
-    <span>Add Language</span>
-  </button>
-
   <div class="dialog-actions">
-    <button mat-flat-button (click)="onClose()">Cancel</button>
-    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!form.valid || !languageList.length" data-cy="saveButton">
-      Save
-    </button>
+    <div class="left-actions">
+      <button mat-flat-button (click)="addLanguage()" class="add-language" data-cy="addLang">
+        <mat-icon>add</mat-icon>
+        <span>Add Language</span>
+      </button>
+    </div>
+
+    <div class="right-actions">
+      <button mat-flat-button (click)="onClose()">Cancel</button>
+      <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!form.valid || !languageList.length" data-cy="saveButton">
+        Save
+      </button>
+    </div>
   </div>
 </form>

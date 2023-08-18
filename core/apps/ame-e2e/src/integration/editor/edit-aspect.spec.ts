@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -21,7 +22,6 @@ import {
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
-import {Aspect} from '@ame/meta-model';
 
 describe('Test editing Aspect', () => {
   it('can add new', () => {

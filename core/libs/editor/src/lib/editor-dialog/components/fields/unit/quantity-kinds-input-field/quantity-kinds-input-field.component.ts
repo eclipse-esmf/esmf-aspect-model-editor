@@ -14,10 +14,8 @@
 import {ENTER} from '@angular/cdk/keycodes';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatChipList} from '@angular/material/chips';
 import {DefaultQuantityKind, DefaultUnit} from '@ame/meta-model';
-import {map, Observable, startWith} from 'rxjs';
-import {NamespacesCacheService} from '@ame/cache';
+import {map, Observable} from 'rxjs';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -28,27 +26,22 @@ declare const sammUDefinition: any;
   templateUrl: './quantity-kinds-input-field.component.html',
 })
 export class QuantityKindsInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
-  @ViewChild('quantityKindsChipList') quantityKindsChipList: MatChipList;
   @ViewChild('input') inputValue: any;
-
-  filteredQuantityKinds$: Observable<any[]>;
-
-  supportedQuantityKinds = [];
-
-  inputControl: FormControl;
-
   readonly separatorKeysCodes: number[] = [ENTER];
 
+  public filteredQuantityKinds$: Observable<any[]>;
+  public supportedQuantityKinds = [];
+  public inputControl: FormControl;
   public selectable = true;
   public editable = true;
   public quantityKindValues: Array<string>;
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService: NamespacesCacheService,
-    public editorModelService: EditorModelService
-  ) {
-    super(metaModelDialogService, namespacesCacheService);
+  get chipListControl(): FormControl {
+    return this.parentForm.get('quantityKindsChipList') as FormControl;
+  }
+
+  constructor(public metaModelDialogService: EditorModelService) {
+    super();
   }
 
   ngOnInit(): void {
@@ -60,7 +53,7 @@ export class QuantityKindsInputFieldComponent extends InputFieldComponent<Defaul
   }
 
   setInputControl() {
-    this.editable = !this.metaModelElement.isExternalReference() && !this.metaModelElement.isPredefined();
+    this.editable = !this.metaModelDialogService.isReadOnly();
     this.quantityKindValues = [
       ...((this.metaModelElement?.quantityKinds?.map(value => (value instanceof DefaultQuantityKind ? value.name : value)) as any) || []),
     ];
@@ -74,7 +67,7 @@ export class QuantityKindsInputFieldComponent extends InputFieldComponent<Defaul
       'quantityKindsChipList',
       new FormControl({
         value: this.quantityKindValues,
-        disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
+        disabled: this.metaModelDialogService.isReadOnly(),
       })
     );
 
@@ -85,8 +78,7 @@ export class QuantityKindsInputFieldComponent extends InputFieldComponent<Defaul
     return control?.valueChanges.pipe(
       map((value: string) => {
         return value ? this.supportedQuantityKinds?.filter(qk => qk.startsWith(value)) : this.supportedQuantityKinds;
-      }),
-      startWith(this.supportedQuantityKinds)
+      })
     );
   }
 
@@ -104,6 +96,7 @@ export class QuantityKindsInputFieldComponent extends InputFieldComponent<Defaul
 
     if (index >= 0) {
       this.quantityKindValues.splice(index, 1);
+      this.parentForm.get('quantityKindsChipList').setValue(this.quantityKindValues);
     }
   }
 }

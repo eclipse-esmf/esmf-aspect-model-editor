@@ -1,0 +1,23 @@
+{
+  "name": "namespace-manager",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/namespace-manager/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/namespace-manager"],
+      "options": {
+        "jestConfig": "libs/namespace-manager/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/namespace-manager/src/**/*.ts", "libs/namespace-manager/src/**/*.html"]
+      }
+    }
+  }
+}

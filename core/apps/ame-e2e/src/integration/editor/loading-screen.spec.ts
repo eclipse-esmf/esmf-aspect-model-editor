@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -15,15 +16,13 @@
 
 import {
   GENERATION_tbOpenDoc,
-  SELECTOR_dialogDefaultAspectButton,
   SELECTOR_dialogStartButton,
   SELECTOR_loadingCloseButton,
-  SELECTOR_modalsDropdown,
   SELECTOR_tbGenerateDocumentButton,
-  SELECTOR_tbLoadButton,
   SELECTOR_tbPrintButton,
   SELECTOR_tbValidateButton,
 } from '../../support/constants';
+import {cyHelp} from '../../support/helpers';
 
 describe('Test loading screen', () => {
   it('can cancel loading model', () => {
@@ -32,13 +31,10 @@ describe('Test loading screen', () => {
       delay: 5000,
     });
     cy.visitDefault();
-    cy.get(SELECTOR_tbLoadButton)
-      .click({force: true})
-      .then(() => cy.get(SELECTOR_tbLoadButton).click({force: true}))
-      .then(() => cy.get('[data-cy="create-model"]').click({force: true}))
-      .then(() => cy.get(SELECTOR_modalsDropdown).click({force: true}))
-      .then(() => cy.get(SELECTOR_dialogDefaultAspectButton).click({force: true}).wait(200))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(200))
+    cy.fixture('all-characteristic')
+      .as('rdfString')
+      .then(rdfString => cyHelp.loadCustomModel(rdfString))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}))
       .then(() => cy.get(SELECTOR_loadingCloseButton).click({force: true}))
       .then(() => cy.get('.cdk-overlay-container').should('not.be.visible', 8000));
   });

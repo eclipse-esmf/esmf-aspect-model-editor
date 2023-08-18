@@ -23,7 +23,7 @@ import {InputFieldComponent} from '../../input-field.component';
 })
 export class SymbolInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
   constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
+    super();
   }
 
   ngOnInit(): void {

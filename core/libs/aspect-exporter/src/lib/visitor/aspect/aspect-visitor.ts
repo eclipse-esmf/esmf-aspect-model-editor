@@ -32,7 +32,6 @@ export class AspectVisitor extends BaseVisitor<DefaultAspect> {
   }
 
   private updateProperties(aspect: DefaultAspect) {
-    this.rdfListService.setRdfModel(this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel);
     this.rdfNodeService.update(aspect, {
       preferredName: aspect.getAllLocalesPreferredNames().map(language => ({
         language,

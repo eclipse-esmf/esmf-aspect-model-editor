@@ -17,13 +17,13 @@ import {circleShapeGeometry, basicShapeGeometry, smallBasicShapeGeometry} from '
 import {mxgraph} from 'mxgraph-factory';
 import {mxGeometry} from '../providers';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
-import {ModelNode} from '@ame/loader-filters';
+import {ModelTree} from '@ame/loader-filters';
 
 @Injectable()
 export class MxGraphGeometryProviderService {
   constructor(private mxGraphAttributeService: MxGraphAttributeService) {}
 
-  public createGeometry(node: ModelNode<BaseMetaModelElement>, x?: number, y?: number): mxgraph.mxGeometry {
+  public createGeometry(node: ModelTree<BaseMetaModelElement>, x?: number, y?: number): mxgraph.mxGeometry {
     return this.mxGraphAttributeService.inCollapsedMode
       ? new mxGeometry(x, y, node.shape.collapsedWidth, node.shape.collapsedHeight)
       : new mxGeometry(x, y, node.shape.expandedWith, node.shape.expandedHeight);

@@ -25,10 +25,6 @@ export class AbstractPropertyInstantiator {
     return this.metaModelElementInstantiator.cachedFile;
   }
 
-  private get isIsolated() {
-    return this.metaModelElementInstantiator.isIsolated;
-  }
-
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {}
 
   public createAbstractProperty(listElement: InstantiatorListElement): OverWrittenProperty<DefaultAbstractProperty> {

@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -18,20 +19,17 @@ import {
   SELECTOR_alertRightButton,
   SELECTOR_dialogInputModel,
   SELECTOR_dialogStartButton,
-  SELECTOR_settingsButton,
   SELECTOR_tbLoadButton,
 } from '../../support/constants';
 
 describe('Test language settings', () => {
   it('can open settings dialog', () => {
     cy.visitDefault();
-    cy.startModelling().then(() => cy.get(SELECTOR_settingsButton).click({force: true}));
+    cy.startModelling();
   });
 
   it('can see default language', () => {
-    cy.get('.mat-tab-labels :nth-child(2)')
-      .click({force: true})
-      .then(() => cy.get('[data-cy=langCode]').should('exist').should('have.value', 'English (en)'));
+    cyHelp.openSettingsTab(1).then(() => cy.get('[data-cy=langCode]').should('exist').should('have.value', 'English (en)'));
   });
 
   // Skipped until detect changes is fixed
@@ -39,16 +37,11 @@ describe('Test language settings', () => {
     cy.get('[data-cy="addLang"]')
       .click({force: true})
       .then(() =>
-        cy.get('[data-cy="langCode"]').get('input:last').type('German').wait(1500).get('.mat-option-text:first').click({force: true})
+        cy.get('[data-cy="langCode"]').get('input:last').type('German').wait(1500).get('.mat-mdc-option:first').click({force: true})
       )
       .then(() => cy.get('[data-cy="saveButton"]').click({force: true}))
-      .then(() =>
-        cy
-          .get(SELECTOR_settingsButton)
-          .click({force: true})
-          .then(() => cy.get('.mat-tab-labels :nth-child(2)').click({force: true}))
-          .then(() => cy.get('[data-cy="langCode"]').get('input:last').should('exist').should('have.value', 'German (de)'))
-      );
+      .then(() => cyHelp.openSettingsTab(1))
+      .then(() => cy.get('[data-cy="langCode"]').get('input:last').should('exist').should('have.value', 'German (de)'));
   });
 
   // Skipped until detect changes is fixed
@@ -58,8 +51,7 @@ describe('Test language settings', () => {
       .then(() => cy.get('[data-cy="saveButton"]').click({force: true}))
       .then(() => cy.visitDefault());
     cy.startModelling()
-      .then(() => cy.get(SELECTOR_settingsButton).click({force: true}))
-      .then(() => cy.get('.mat-tab-labels :nth-child(2)').click({force: true}))
+      .then(() => cyHelp.openSettingsTab(1))
       .then(() => cy.get('[data-cy="langCode"]').should('have.value', 'English (en)'));
   });
 
@@ -76,8 +68,7 @@ describe('Test language settings', () => {
           .click({force: true})
           .then(() => {
             cy.get('.cdk-overlay-container').should('not.be.visible');
-            cy.get(SELECTOR_settingsButton).click({force: true});
-            cy.get('.mat-tab-labels :nth-child(2)').click({force: true});
+            cyHelp.openSettingsTab(1);
             cy.get('[data-cy=langCode]').should('have.length', 3);
             cy.get('.delete-icon:last').click({force: true});
             cy.get('.delete-icon:last').click({force: true});

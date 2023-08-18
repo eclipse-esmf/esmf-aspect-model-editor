@@ -70,16 +70,17 @@ import {InstantiatorListElement, RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {GeneralConfig, NotificationsService} from '@ame/shared';
 import {PredefinedEntityInstantiator} from './instantiators/samm-e-predefined-entity-instantiator';
 import {syncElementWithChildren} from './helpers';
+import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
 
 export class MetaModelElementInstantiator {
   private characteristicInstantiator: CharacteristicInstantiator;
   private constraintInstantiator: ConstraintInstantiator;
   private queueInstantiators: Function[] = [];
 
-  public samm = this.rdfModel.SAMM();
-  public sammC = this.rdfModel.SAMMC();
-  public sammE = this.rdfModel.SAMME();
-  public sammU = this.rdfModel.SAMMU();
+  public samm: Samm;
+  public sammC: SammC;
+  public sammE: SammE;
+  public sammU: SammU;
   public isIsolated = false;
 
   constructor(
@@ -91,6 +92,10 @@ export class MetaModelElementInstantiator {
     public recursiveModelElements?: Map<string, Array<BaseMetaModelElement>>,
     public notificationsService?: NotificationsService
   ) {
+    this.samm = this.rdfModel.samm;
+    this.sammC = this.rdfModel.sammC;
+    this.sammE = this.rdfModel.sammE;
+    this.sammU = this.rdfModel.sammU;
     this.characteristicInstantiator = this.setupCharacteristicInstantiators();
     this.constraintInstantiator = this.setupConstraintInstantiators();
   }
@@ -415,7 +420,7 @@ export class MetaModelElementInstantiator {
     do {
       tmpName = `${name}${counter++}`;
       tmpAspectModelUrn = `${this.rdfModel.getAspectModelUrn()}${tmpName}`;
-    } while (this.cachedFile.getCachedElement<BaseMetaModelElement>(tmpAspectModelUrn));
+    } while (this.cachedFile.getElement<BaseMetaModelElement>(tmpAspectModelUrn));
     modelElement.aspectModelUrn = tmpAspectModelUrn;
     modelElement.name = tmpName;
   }

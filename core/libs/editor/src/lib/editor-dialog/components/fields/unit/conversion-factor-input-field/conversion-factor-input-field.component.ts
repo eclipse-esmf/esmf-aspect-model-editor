@@ -14,7 +14,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {DefaultUnit} from '@ame/meta-model';
-import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -22,10 +21,6 @@ import {InputFieldComponent} from '../../input-field.component';
   templateUrl: './conversion-factor-input-field.component.html',
 })
 export class ConversionFactorInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
-  constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
-  }
-
   ngOnInit(): void {
     this.subscription = this.getMetaModelData().subscribe(() => this.initConversionFactorForm());
   }

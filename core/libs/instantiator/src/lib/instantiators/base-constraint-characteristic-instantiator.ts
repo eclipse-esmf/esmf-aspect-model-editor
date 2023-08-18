@@ -24,10 +24,6 @@ export class BaseConstraintCharacteristicInstantiator {
     return this.metaModelElementInstantiator.cachedFile;
   }
 
-  protected get isIsolated() {
-    return this.metaModelElementInstantiator.isIsolated;
-  }
-
   constructor(
     protected metaModelElementInstantiator: MetaModelElementInstantiator,
     public nextProcessor?: BaseConstraintCharacteristicInstantiator

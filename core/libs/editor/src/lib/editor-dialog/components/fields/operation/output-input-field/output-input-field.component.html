@@ -11,66 +11,55 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="row" fxlayoutgap="5px" fxLayoutAlign="space-between center">
-  <mat-form-field [floatLabel]="getControl('output')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="output">output</mat-label>
-    <input
-      #output
-      [matAutocomplete]="auto"
-      spellcheck="false"
-      matInput
-      name="output"
-      [formControl]="getControl('output')"
-      data-cy="output"
-    />
-    <button
-      *ngIf="outputControl?.disabled && !metaModelElement?.isExternalReference()"
-      (click)="unlockOutput()"
-      class="close-button"
-      data-cy="clear-output-button"
-      matSuffix
-      mat-icon-button
-      tabindex="-1"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
+<mat-form-field [floatLabel]="getControl('output')?.disabled ? 'always' : 'auto'" appearance="fill">
+  <mat-label for="output">output</mat-label>
+  <input #output [matAutocomplete]="auto" spellcheck="false" matInput name="output" [formControl]="getControl('output')" data-cy="output" />
+  <button
+    *ngIf="outputControl?.disabled && !metaModelElement?.isExternalReference()"
+    (click)="unlockOutput()"
+    data-cy="clear-output-button"
+    matSuffix
+    mat-icon-button
+    tabindex="-1"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
 
-    <mat-error *ngIf="getControl('output')?.errors?.checkShapeName"
-      >Please select a different name as this one is of different type
-    </mat-error>
-    <mat-error *ngIf="getControl('output')?.errors?.checkShapeNameExtRef">
-      Please select a different name as this one is of different type in the same namespace
-    </mat-error>
+  <mat-error *ngIf="getControl('output')?.errors?.checkShapeName"
+    >Please select a different name as this one is of different type
+  </mat-error>
+  <mat-error *ngIf="getControl('output')?.errors?.checkShapeNameExtRef">
+    Please select a different name as this one is of different type in the same namespace
+  </mat-error>
 
-    <mat-autocomplete #auto="matAutocomplete" class="characteristic-output-autocomplete">
-      <mat-optgroup *ngIf="filteredPropertyTypes$ | async as filteredPropertyTypes" label="Property">
-        <mat-option
-          *ngIf="!isAlreadyDefined(filteredPropertyTypes, output.value) && !getControl('output').errors"
-          [disabled]="!isLowerCase(output.value)"
-          [value]="!isLowerCase(output.value) ? '' : output.value"
-          (click)="createNewProperty(output.value)"
-        >
-          <span *ngIf="isLowerCase(output.value)">
-            + Create new property: <strong>{{ output.value }}</strong>
-          </span>
-          <span *ngIf="!isLowerCase(output.value)">Please provide the name for the new Property in lower case.</span>
-        </mat-option>
-        <mat-option
-          *ngFor="let output of filteredPropertyTypes"
-          [value]="output.name"
-          (onSelectionChange)="onSelectionChange('output', output)"
-        >
-          <div class="ellipsis">
-            {{ output.name }}
-            <span *ngIf="output.description" class="option-description" [title]="output.description">- {{ output.description }}</span>
-            <p *ngIf="output.namespace" class="namespace-prefix" [title]="output.namespace">
-              {{ output.namespace }}
-            </p>
-          </div>
-        </mat-option>
-      </mat-optgroup>
-    </mat-autocomplete>
-    <mat-error *ngIf="getControl('output')?.errors?.required">Please define a output</mat-error>
-    <mat-error *ngIf="getControl('output')?.errors?.disabled">No output defined</mat-error>
-  </mat-form-field>
-</div>
+  <mat-autocomplete #auto="matAutocomplete" class="characteristic-output-autocomplete">
+    <mat-optgroup *ngIf="filteredPropertyTypes$ | async as filteredPropertyTypes" label="Property">
+      <mat-option
+        *ngIf="!isAlreadyDefined(filteredPropertyTypes, output.value) && !getControl('output').errors"
+        [disabled]="!isLowerCase(output.value)"
+        [value]="!isLowerCase(output.value) ? '' : output.value"
+        (click)="createNewProperty(output.value)"
+      >
+        <span *ngIf="isLowerCase(output.value)">
+          + Create new property: <strong>{{ output.value }}</strong>
+        </span>
+        <span *ngIf="!isLowerCase(output.value)">Please provide the name for the new Property in lower case.</span>
+      </mat-option>
+      <mat-option
+        *ngFor="let output of filteredPropertyTypes"
+        [value]="output.name"
+        (onSelectionChange)="onSelectionChange('output', output)"
+      >
+        <div class="ellipsis">
+          {{ output.name }}
+          <span *ngIf="output.description" class="option-description" [title]="output.description">- {{ output.description }}</span>
+          <p *ngIf="output.namespace" class="namespace-prefix" [title]="output.namespace">
+            {{ output.namespace }}
+          </p>
+        </div>
+      </mat-option>
+    </mat-optgroup>
+  </mat-autocomplete>
+  <mat-error *ngIf="getControl('output')?.errors?.required">Please define a output</mat-error>
+  <mat-error *ngIf="getControl('output')?.errors?.disabled">No output defined</mat-error>
+</mat-form-field>

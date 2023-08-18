@@ -173,7 +173,7 @@ export class CharacteristicModelService extends BaseModelService {
       .filter(ev => ev.parents?.length <= 1 && ev.parents?.some(parent => parent.aspectModelUrn === metaModelElement.aspectModelUrn));
 
     for (const ev of unusedEntityValues) {
-      this.namespacesCacheService.currentCachedFile.removeCachedElement(ev.aspectModelUrn);
+      this.namespacesCacheService.currentCachedFile.removeElement(ev.aspectModelUrn);
     }
   }
 
@@ -182,7 +182,7 @@ export class CharacteristicModelService extends BaseModelService {
       const modelElement = MxGraphHelper.getModelElement(edge.target);
       if (modelElement instanceof DefaultEntityValue) {
         MxGraphHelper.removeRelation(MxGraphHelper.getModelElement(cell), modelElement);
-        this.currentCachedFile.removeCachedElement(modelElement.aspectModelUrn);
+        this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
       }
     });
   }
@@ -205,9 +205,9 @@ export class CharacteristicModelService extends BaseModelService {
     if (!(oldValue instanceof DefaultCharacteristic)) {
       return;
     }
-    this.currentCachedFile.removeCachedElement(oldValue?.aspectModelUrn);
+    this.currentCachedFile.removeElement(oldValue?.aspectModelUrn);
     if (!newValue?.isPredefined()) {
-      this.currentCachedFile.resolveCachedElement(newValue);
+      this.currentCachedFile.resolveElement(newValue);
     }
   }
 
@@ -254,7 +254,7 @@ export class CharacteristicModelService extends BaseModelService {
     }
 
     if (form.unit && !form.unit?.isPredefined()) {
-      this.currentCachedFile.resolveCachedElement(form.unit);
+      this.currentCachedFile.resolveElement(form.unit);
     }
   }
 

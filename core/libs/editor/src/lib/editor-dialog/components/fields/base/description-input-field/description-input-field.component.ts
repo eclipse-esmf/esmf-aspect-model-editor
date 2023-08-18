@@ -30,7 +30,7 @@ import {InputFieldComponent} from '../../input-field.component';
 })
 export class DescriptionInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
   constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
+    super();
     this.fieldName = 'description';
   }
 

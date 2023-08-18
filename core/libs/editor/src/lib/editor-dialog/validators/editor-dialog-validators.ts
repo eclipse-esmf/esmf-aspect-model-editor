@@ -164,7 +164,7 @@ export class EditorDialogValidators {
         return null;
       }
       const aspectModelUrn = `${namespace}#${control.value}`;
-      return namespacesCacheService.currentCachedFile.getCachedElement<BaseMetaModelElement>(aspectModelUrn)
+      return namespacesCacheService.currentCachedFile.getElement<BaseMetaModelElement>(aspectModelUrn)
         ? {
             checkShapeName: true,
           }

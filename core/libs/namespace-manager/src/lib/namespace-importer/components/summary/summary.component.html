@@ -12,8 +12,11 @@
   -->
 
 <h2 mat-dialog-title class="properties-title">Validation result</h2>
-<p *ngIf="!missingElements.length">The package has been validated and <b>can be imported</b>.</p>
-<p *ngIf="missingElements.length">The package can not be imported due to <b>missing files</b>.</p>
+
+<mat-dialog-content>
+  <p *ngIf="!missingElements.length">The package has been validated and <b>can be imported</b>.</p>
+  <p *ngIf="missingElements.length">The package can not be imported due to <b>missing files</b>.</p>
+</mat-dialog-content>
 
 <ame-workspace-summary></ame-workspace-summary>
 

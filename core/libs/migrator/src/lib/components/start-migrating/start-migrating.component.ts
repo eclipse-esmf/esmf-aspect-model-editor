@@ -12,7 +12,7 @@
  */
 import {MigratorApiService} from '@ame/api';
 import {APP_CONFIG, AppConfig} from '@ame/shared';
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, inject} from '@angular/core';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {Router} from '@angular/router';
 import {MigratorService} from '../../migrator.service';
@@ -24,14 +24,10 @@ import {MigratorService} from '../../migrator.service';
 })
 export class StartMigratingComponent {
   public migrateLoading = false;
+  private migratorService = inject(MigratorService);
   public increaseVersion = this.migratorService.increaseNamespaceVersion;
 
-  constructor(
-    @Inject(APP_CONFIG) public config: AppConfig,
-    private migratorApiService: MigratorApiService,
-    private migratorService: MigratorService,
-    private router: Router
-  ) {}
+  constructor(@Inject(APP_CONFIG) public config: AppConfig, private migratorApiService: MigratorApiService, private router: Router) {}
 
   migrate() {
     this.migrateLoading = true;

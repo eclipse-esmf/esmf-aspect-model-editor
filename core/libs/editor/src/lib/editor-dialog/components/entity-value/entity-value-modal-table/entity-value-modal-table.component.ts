@@ -99,7 +99,7 @@ export class EntityValueModalTableComponent implements OnChanges {
     ) {
       const namespace = this.entity.aspectModelUrn.split('#')[0];
       return (
-        !this.namespacesCacheService.currentCachedFile.getCachedElement(`${namespace}#${entityValueName}`) &&
+        !this.namespacesCacheService.currentCachedFile.getElement(`${namespace}#${entityValueName}`) &&
         !this.form.get('newEntityValues')?.value?.some(ev => ev.name === entityValueName)
       );
     }

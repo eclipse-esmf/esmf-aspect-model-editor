@@ -16,7 +16,6 @@ import {FormControl, Validators} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {DefaultStructuredValue, OverWrittenProperty} from '@ame/meta-model';
 import {debounceTime, Subscription, take} from 'rxjs';
-import {EditorModelService} from '../../../editor-model.service';
 import {EditorDialogValidators} from '../../../validators';
 import {InputFieldComponent} from '../../fields';
 import {StructuredValueVanillaGroups} from './elements-input-field/model';
@@ -59,12 +58,8 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
     return hasErrors;
   }
 
-  constructor(
-    private predefinedRulesService: PredefinedRulesService,
-    public metaModelDialogService: EditorModelService,
-    private matDialog: MatDialog
-  ) {
-    super(metaModelDialogService);
+  constructor(private predefinedRulesService: PredefinedRulesService, private matDialog: MatDialog) {
+    super();
   }
 
   ngOnInit(): void {

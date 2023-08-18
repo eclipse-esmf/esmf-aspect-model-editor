@@ -51,8 +51,12 @@
   </ng-container>
 
   <ng-container *ngIf="view === 'default'">
-    <mat-icon *ngIf="!viewExpanded" class="expand-btn" (click)="expand(true)">navigate_next</mat-icon>
-    <mat-icon *ngIf="viewExpanded" class="collapse-btn" (click)="collapse()">navigate_before</mat-icon>
+    <div class="panel-actions">
+      <button mat-icon-button (click)="viewExpanded ? collapse() : expand(true)">
+        <mat-icon *ngIf="!viewExpanded">navigate_next</mat-icon>
+        <mat-icon *ngIf="viewExpanded">navigate_before</mat-icon>
+      </button>
+    </div>
     <ame-sidebar-new-element class="namespaces" (openWorkspaces)="goToNamespaces()"></ame-sidebar-new-element>
   </ng-container>
 </div>

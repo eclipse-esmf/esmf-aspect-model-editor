@@ -46,7 +46,7 @@ export class EditorModelService {
   }
 
   isReadOnly(): boolean {
-    return this.readOnly;
+    return this.metaModelElement?.isPredefined() || this.metaModelElement?.isExternalReference();
   }
 
   getMetaModelElement(): Observable<BaseMetaModelElement> {
@@ -61,7 +61,7 @@ export class EditorModelService {
     }
 
     this.dataChangedEventQueue = [];
-    this.readOnly = metaModelElement?.isPredefined();
+    this.readOnly = metaModelElement?.isPredefined() || metaModelElement.isExternalReference();
     this.saveButtonEnabled = true;
     this.metaModelElementSubject.next(metaModelElement);
   }

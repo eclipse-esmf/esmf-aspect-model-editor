@@ -1,0 +1,23 @@
+{
+  "name": "aspect-exporter",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/aspect-exporter/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/aspect-exporter"],
+      "options": {
+        "jestConfig": "libs/aspect-exporter/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/aspect-exporter/src/**/*.ts", "libs/aspect-exporter/src/**/*.html"]
+      }
+    }
+  }
+}

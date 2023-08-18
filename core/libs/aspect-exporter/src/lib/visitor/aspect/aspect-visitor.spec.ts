@@ -19,91 +19,78 @@ import {Store} from 'n3';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AspectVisitor} from './aspect-visitor';
-import {provideMockObject} from 'jest-helpers/utils';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {RdfModel} from '@ame/rdf/utils';
+import {RdfService} from '@ame/rdf/services';
 import {Samm} from '@ame/vocabulary';
+import {MockProviders} from 'ng-mocks';
 
 describe('Aspect Visitor', () => {
   let service: AspectVisitor;
-  let rdfNodeService: jest.Mocked<RdfNodeService>;
-  let rdfService: jest.Mocked<RdfService>;
-  let rdfListService: jest.Mocked<RdfListService>;
 
-  let modelService: jest.Mocked<ModelService>;
-  let rdfModel: jest.Mocked<RdfModel>;
-  let aspect: DefaultAspect;
+  const rdfModel = {
+    store: new Store(),
+    SAMM: jest.fn(() => new Samm('')),
+    hasNamespace: jest.fn(() => false),
+    addPrefix: jest.fn(() => {}),
+  };
+  const aspect = new DefaultAspect('1', 'samm#aspect', 'aspect1', null);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         AspectVisitor,
+        MockProviders(MxGraphService),
+        {
+          provide: RdfListService,
+          useValue: {
+            push: jest.fn(),
+            createEmpty: jest.fn(),
+          },
+        },
         {
           provide: RdfNodeService,
-          useValue: provideMockObject(RdfNodeService),
+          useValue: {
+            update: jest.fn(),
+          },
         },
         {
           provide: RdfService,
-          useValue: provideMockObject(RdfService),
-        },
-        {
-          provide: RdfListService,
-          useValue: provideMockObject(RdfListService),
-        },
-        {
-          provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
+          useValue: {
+            currentRdfModel: rdfModel,
+            externalRdfModels: [],
+          },
         },
       ],
     });
 
-    modelService = provideMockObject(ModelService);
-    rdfModel = {
-      store: new Store(),
-      SAMM: jest.fn(() => new Samm('')),
-      hasNamespace: jest.fn(() => false),
-      addPrefix: jest.fn(() => {}),
-    } as any;
-    modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
-    aspect = new DefaultAspect('1', 'samm#aspect', 'aspect1', null);
-
-    rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
-    rdfNodeService.modelService = modelService;
-
-    rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
-    rdfService.currentRdfModel = rdfModel;
-    rdfService.externalRdfModels = [];
-
-    rdfListService = TestBed.inject(RdfListService) as jest.Mocked<RdfListService>;
     service = TestBed.inject(AspectVisitor);
   });
 
   it('should update store width default properties', () => {
     service.visit(aspect);
 
-    expect(rdfNodeService.update).toHaveBeenCalledWith(aspect, {
+    expect(service.rdfNodeService.update).toHaveBeenCalledWith(aspect, {
       preferredName: [],
       description: [],
       see: [],
     });
 
-    expect(rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.properties);
-    expect(rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.operations);
-    expect(rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.events);
+    expect(service.rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.properties);
+    expect(service.rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.operations);
+    expect(service.rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.events);
 
     const property = new DefaultProperty('2', 'samm#property', 'property1', null);
     aspect.properties = [{property, keys: {}}];
 
     service.visit(aspect);
 
-    expect(rdfListService.push).toHaveBeenCalledWith(aspect, {property, keys: {}});
+    expect(service.rdfListService.push).toHaveBeenCalledWith(aspect, {property, keys: {}});
   });
 
   it('should update aspect name', () => {
     service.visit(aspect);
     aspect.name = 'aspect2';
     service.visit(aspect);
-    expect(rdfNodeService.update).toHaveBeenCalledWith(aspect, {
+    expect(service.rdfNodeService.update).toHaveBeenCalledWith(aspect, {
       preferredName: [],
       description: [],
       see: [],

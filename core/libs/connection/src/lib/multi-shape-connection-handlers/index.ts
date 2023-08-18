@@ -18,6 +18,7 @@ export * from './operation--output-property.service';
 export * from './property--abstract-property.service';
 export * from './property--characteristic.service';
 export * from './property--property.service';
+export * from './property--structured-value.service';
 export * from './structured-value--property.service';
 export * from './trait--characteristic--constraint.service';
 export * from './characteristic--unit.service';

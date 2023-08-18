@@ -19,14 +19,12 @@ import {Samm} from '@ame/vocabulary';
 import {syncElementWithChildren} from '../helpers';
 
 export class EntityValueInstantiator {
-  private samm: Samm = this.metaModelElementInstantiator.samm;
+  private get samm(): Samm {
+    return this.metaModelElementInstantiator.samm;
+  }
 
   private get cachedFile() {
     return this.metaModelElementInstantiator.cachedFile;
-  }
-
-  private get isIsolated() {
-    return this.metaModelElementInstantiator.isIsolated;
   }
 
   private get namespaceCacheService() {

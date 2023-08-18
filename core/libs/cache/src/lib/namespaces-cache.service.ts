@@ -38,7 +38,7 @@ export class NamespacesCacheService {
    *
    * @returns CachedFile[]
    */
-  getFiles(namespace: string = ''): CachedFile[] {
+  getFiles(namespace = ''): CachedFile[] {
     return Array.from(this.#namespaces.entries())
       .filter(([existingNamespace]) => existingNamespace.includes(namespace || ''))
       .reduce((acc, [, mapFile]) => [...acc, ...mapFile.values()], []);
@@ -154,7 +154,7 @@ export class NamespacesCacheService {
   resolveCachedElement(element: Base) {
     let cachedProperty = this.findElementOnExtReference<Base>(element.aspectModelUrn);
     if (!cachedProperty) {
-      cachedProperty = this.#currentCachedFile.resolveCachedElement(element);
+      cachedProperty = this.#currentCachedFile.resolveElement(element);
     }
     return cachedProperty;
   }

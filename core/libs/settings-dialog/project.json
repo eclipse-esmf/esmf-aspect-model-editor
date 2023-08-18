@@ -1,0 +1,23 @@
+{
+  "name": "settings-dialog",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/settings-dialog/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/settings-dialog"],
+      "options": {
+        "jestConfig": "libs/settings-dialog/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/settings-dialog/src/**/*.ts", "libs/settings-dialog/src/**/*.html"]
+      }
+    }
+  }
+}

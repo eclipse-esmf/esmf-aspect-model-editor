@@ -22,8 +22,7 @@ import {DefaultAbstractProperty} from './default-abstract-property';
 export interface Entity extends BaseMetaModelElement, HasProperties, Type {}
 
 export class DefaultEntity extends CanExtendsWithProperties implements Entity {
-  public extendedElement: DefaultAbstractEntity | DefaultEntity;
-  public readonly predefined: boolean;
+  public extendedElement: DefaultAbstractEntity | DefaultEntity = null;
 
   public get className() {
     return 'DefaultEntity';

@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -26,7 +27,8 @@ import {
   SELECTOR_tbPrintButton,
 } from '../../support/constants';
 
-describe('Test generation and download from valid Aspect Model', () => {
+// Disabled until cy.readFile is fixed by the cypress team
+describe.skip('Test generation and download from valid Aspect Model', () => {
   it('Can generate valid JSON Open Api Specification', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept(

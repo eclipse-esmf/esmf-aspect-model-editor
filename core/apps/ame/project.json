@@ -1,0 +1,113 @@
+{
+  "name": "ame",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/ame/src",
+  "prefix": "ame",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/ame",
+        "index": "apps/ame/src/index.html",
+        "main": "apps/ame/src/main.ts",
+        "polyfills": "apps/ame/src/polyfills.ts",
+        "tsConfig": "apps/ame/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/ame/src/assets",
+          {
+            "glob": "**/*",
+            "input": "./node_modules/mxgraph/javascript/src",
+            "output": "apps/ame/src/assets/mxgraph"
+          }
+        ],
+        "styles": ["node_modules/ngx-toastr/toastr.css", "apps/ame/src/styles.scss"],
+        "scripts": ["node_modules/mxgraph/javascript/mxClient.js", "apps/ame/src/assets/samm-units.js"],
+        "allowedCommonJsDependencies": ["file-saver", "urn-lib", "mxgraph-factory", "locale-codes", "rdf-parse", "streamify-string"]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "4mb",
+              "maximumError": "6mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "10kb",
+              "maximumError": "20kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "environments/environment.ts",
+              "with": "environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": {
+            "scripts": true,
+            "styles": true,
+            "fonts": false
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": true,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "ame:build:production"
+        },
+        "development": {
+          "browserTarget": "ame:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "serve-coverage": {
+      "executor": "ngx-build-plus:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "ame:build:production"
+        },
+        "development": {
+          "browserTarget": "ame:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "ame:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/ame/src/**/*.ts", "apps/ame/src/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/ame"],
+      "options": {
+        "jestConfig": "apps/ame/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

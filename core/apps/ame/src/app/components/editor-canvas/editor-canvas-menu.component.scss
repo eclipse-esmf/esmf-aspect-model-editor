@@ -23,12 +23,16 @@
   button {
     background-color: #fff;
     border-radius: 0;
-    min-width: 40px;
-    padding: 0;
     color: #707070;
 
     &:not(:last-child) {
       border-bottom: 1px solid #bfc0c2;
+    }
+
+    ::ng-deep {
+      .mat-mdc-button-persistent-ripple {
+        border-radius: 0;
+      }
     }
   }
 }

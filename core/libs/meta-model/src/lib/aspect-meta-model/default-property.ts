@@ -26,8 +26,7 @@ export interface Property extends BaseMetaModelElement, LookUpDatatype {
 }
 
 export class DefaultProperty extends CanExtend implements Property {
-  public extendedElement: DefaultProperty | DefaultAbstractProperty;
-  public readonly predefined: boolean;
+  public extendedElement: DefaultProperty | DefaultAbstractProperty = null;
 
   static createInstance() {
     return new DefaultProperty(null, null, 'property', null);
@@ -42,7 +41,7 @@ export class DefaultProperty extends CanExtend implements Property {
     aspectModelUrn: string,
     name: string,
     public characteristic: Characteristic,
-    predefined: boolean = false,
+    predefined = false,
     public exampleValue?: any
   ) {
     super(metaModelVersion, aspectModelUrn, name);

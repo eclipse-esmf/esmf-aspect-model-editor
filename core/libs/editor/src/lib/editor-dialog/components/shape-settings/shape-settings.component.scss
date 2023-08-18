@@ -27,22 +27,31 @@
   flex-direction: column;
 }
 
+.close-button {
+  top: unset;
+}
+
 .shape-settings {
   &__header {
     width: 100%;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 10px 15px;
+    padding: 15px 15px;
     box-sizing: border-box;
     border-bottom: 1px solid #cfd0d1;
 
     &__title {
       margin: 0;
-      font-size: 21px;
     }
 
     &__description {
       margin: 0;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
     }
   }
 
@@ -50,16 +59,12 @@
     flex: 1;
     padding: 10px 15px;
     overflow-y: auto;
-
-    ::ng-deep mat-form-field {
-      margin-top: 8px;
-    }
   }
 
   &__actions {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     padding: 10px 15px;
     border-top: 1px solid #cfd0d1;
 

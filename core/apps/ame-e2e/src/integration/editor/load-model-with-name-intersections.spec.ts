@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -15,8 +16,6 @@
 
 import {SELECTOR_dialogStartButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
-import {MxGraphAttributeService} from '@ame/mx-graph';
-import Chainable = Cypress.Chainable;
 
 describe('Test models with intersected names', () => {
   describe('PredefinedAndCustomCharacteristicsSameName', () => {
@@ -47,10 +46,10 @@ describe('Test models with intersected names', () => {
         fields: [{label: "description = Custom 'Boolean' characteristic. @en"}, {label: 'dataType = boolean'}],
       };
 
-      isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
-      isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
     });
 
     it('should have properties connected with the appropriate "Language" characteristic', () => {
@@ -65,10 +64,10 @@ describe('Test models with intersected names', () => {
         fields: [{label: "description = Custom 'Language' characteristic. @en"}, {label: 'dataType = string'}],
       };
 
-      isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
-      isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
     });
 
     it('should have properties connected with the appropriate "Locale" characteristic', () => {
@@ -83,10 +82,10 @@ describe('Test models with intersected names', () => {
         fields: [{label: "description = Custom 'Locale' characteristic. @en"}, {label: 'dataType = string'}],
       };
 
-      isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
-      isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
     });
 
     it('should have properties connected with the appropriate "MultiLanguageText" characteristic', () => {
@@ -101,10 +100,10 @@ describe('Test models with intersected names', () => {
         fields: [{label: "description = Custom 'MultiLanguageText' characteristic. @en"}, {label: 'dataType = langString'}],
       };
 
-      isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
-      isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
     });
 
     it('should have properties connected with the appropriate "MimeType" characteristic', () => {
@@ -119,10 +118,10 @@ describe('Test models with intersected names', () => {
         fields: [{label: "description = Custom 'MimeType' characteristic. @en"}, {label: 'dataType = string'}],
       };
 
-      isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
-      isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
     });
 
     it('should have properties connected with the appropriate "ResourcePath" characteristic', () => {
@@ -137,10 +136,10 @@ describe('Test models with intersected names', () => {
         fields: [{label: "description = Custom 'ResourcePath' characteristic. @en"}, {label: 'dataType = anyURI'}],
       };
 
-      isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
-      isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
     });
 
     it('should have properties connected with the appropriate "Text" characteristic', () => {
@@ -155,10 +154,10 @@ describe('Test models with intersected names', () => {
         fields: [{label: "description = Custom 'Text' characteristic. @en"}, {label: 'dataType = string'}],
       };
 
-      isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
-      isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
     });
 
     it('should have properties connected with the appropriate "Timestamp" characteristic', () => {
@@ -173,10 +172,10 @@ describe('Test models with intersected names', () => {
         fields: [{label: "description = Custom 'Timestamp' characteristic. @en"}, {label: 'dataType = dateTime'}],
       };
 
-      isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
-      isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
     });
 
     // Can be added back after fixing https://rb-tracker.bosch.com/tracker01/browse/RBS-10152
@@ -193,29 +192,10 @@ describe('Test models with intersected names', () => {
         fields: [{label: "description = Custom 'UnitReference' characteristic. @en"}, {label: 'dataType = curie'}],
       };
 
-      isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
-      isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
-      isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, predefinedCharacteristicParams).should('be.true');
+      cy.isConnected(propertyForCustomCharacteristicParams, predefinedCharacteristicParams).should('not.be.true');
+      cy.isConnected(propertyForPredefinedCharacteristicParams, customCharacteristicParams).should('not.be.true');
     });
   });
 });
-
-// Can be adjusted and made reusable if needed
-function isConnected(
-  sourceShapeParams: {name: string; fields?: object[]},
-  targetShapeParams: {name: string; fields?: object[]}
-): Chainable {
-  return cy.window().then(win => {
-    const sourceCell = cyHelp.findShapeByName(sourceShapeParams.name, win);
-    if (!sourceCell) {
-      throw new Error(`Shape ${sourceShapeParams.name} not found`);
-    }
-    const targetCell = cyHelp.findShapeByFields(targetShapeParams.name, targetShapeParams.fields || [], win);
-    if (!targetCell) {
-      throw new Error(`Shape ${targetShapeParams.name} not found`);
-    }
-    const mxGraphAttributeService: MxGraphAttributeService = win['angular.mxGraphAttributeService'];
-    return mxGraphAttributeService.graph.getOutgoingEdges(sourceCell).some(edge => edge.target === targetCell);
-  });
-}

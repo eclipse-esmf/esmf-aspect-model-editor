@@ -13,15 +13,11 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {InputFieldComponent} from '../../input-field.component';
-import {EditorModelService} from '../../../../editor-model.service';
 import {DefaultOperation, DefaultProperty, Property} from '@ame/meta-model';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {NamespacesCacheService} from '@ame/cache';
 import {EditorDialogValidators} from '../../../../validators';
 import {RdfService} from '@ame/rdf/services';
-import {SearchService} from '@ame/shared';
-import {MxGraphService} from '@ame/mx-graph';
 
 @Component({
   selector: 'ame-output-input-field',
@@ -33,14 +29,8 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
   outputControl: FormControl;
   newPropertyControl: FormControl;
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService: NamespacesCacheService,
-    public rdfService: RdfService,
-    public searchService?: SearchService,
-    public mxGraphService?: MxGraphService
-  ) {
-    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
+  constructor(public rdfService: RdfService) {
+    super();
   }
 
   ngOnInit(): void {

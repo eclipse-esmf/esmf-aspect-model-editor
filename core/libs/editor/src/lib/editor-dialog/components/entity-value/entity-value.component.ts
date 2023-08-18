@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 Bosch Software Innovations GmbH. All rights reserved.
  */
-import {Component, Input} from '@angular/core';
+import {Component, Input, inject} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {EditorModelService} from '../../editor-model.service';
 
@@ -12,7 +12,6 @@ import {EditorModelService} from '../../editor-model.service';
 export class EntityValueComponent {
   @Input() parentForm: FormGroup;
 
+  public metaModelDialogService = inject(EditorModelService);
   public element$ = this.metaModelDialogService.getMetaModelElement();
-
-  constructor(public metaModelDialogService: EditorModelService) {}
 }

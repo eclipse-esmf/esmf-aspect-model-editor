@@ -127,7 +127,7 @@ export class AbstractEntityModelService extends BaseModelService {
       for (const edge of cell.edges) {
         const modelElement = MxGraphHelper.getModelElement(edge.source);
         if (modelElement && !modelElement.isExternalReference()) {
-          this.currentCachedFile.removeCachedElement(modelElement.aspectModelUrn);
+          this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
           (<Base>modelElement).delete(modelElement);
         }
 

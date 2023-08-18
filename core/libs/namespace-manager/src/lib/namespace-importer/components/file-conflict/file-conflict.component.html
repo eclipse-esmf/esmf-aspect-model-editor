@@ -12,9 +12,9 @@
   -->
 
 <h2 mat-dialog-title class="properties-title">Namespace conflict</h2>
-<p>The following namespace(s) already exist. Please choose whether you want to keep the existing or replace.</p>
 
 <mat-dialog-content>
+  <p>The following namespace(s) already exist. Please choose whether you want to keep the existing or replace.</p>
   <div *ngFor="let namespace of namespacesToReplace" class="namespace">
     <span class="namespace-name">{{ namespace }}</span>
     <mat-button-toggle-group value="replace">

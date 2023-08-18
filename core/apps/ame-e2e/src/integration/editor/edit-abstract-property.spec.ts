@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -24,7 +25,6 @@ import {
   SELECTOR_ecAbstractEntity,
   SELECTOR_ecProperty,
   SELECTOR_ecEntity,
-  SELECTOR_editorCancelButton,
 } from '../../support/constants';
 
 describe('Create and Edit Abstract Property', () => {

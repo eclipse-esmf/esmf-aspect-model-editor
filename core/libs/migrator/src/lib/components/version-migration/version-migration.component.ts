@@ -16,7 +16,7 @@ import {map, of, switchMap, tap} from 'rxjs';
 import {EditorService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {APP_CONFIG, AppConfig} from '@ame/shared';
 import {Router} from '@angular/router';
 
@@ -38,6 +38,7 @@ export const defaultNamespaces = (sammVersion: string) => [
 })
 export class VersionMigrationComponent implements OnInit {
   public namespaces: {[namespace: string]: {name: string; migrated: boolean}[]};
+  private config: AppConfig = inject(APP_CONFIG);
   private defaultNamespaces = defaultNamespaces(this.config.currentSammVersion);
 
   constructor(
@@ -45,8 +46,7 @@ export class VersionMigrationComponent implements OnInit {
     private modelApiService: ModelApiService,
     private migratorApiService: MigratorApiService,
     private editorService: EditorService,
-    private router: Router,
-    @Inject(APP_CONFIG) private config: AppConfig
+    private router: Router
   ) {}
 
   ngOnInit(): void {

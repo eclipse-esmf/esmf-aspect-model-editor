@@ -1,0 +1,23 @@
+{
+  "name": "rdf",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/rdf/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/rdf"],
+      "options": {
+        "jestConfig": "libs/rdf/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/rdf/src/**/*.ts", "libs/rdf/src/**/*.html"]
+      }
+    }
+  }
+}

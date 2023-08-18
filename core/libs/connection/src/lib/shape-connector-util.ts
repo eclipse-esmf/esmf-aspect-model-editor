@@ -59,6 +59,10 @@ export class ShapeConnectorUtil {
     return parentModel instanceof DefaultCharacteristic && childModel instanceof DefaultEntity;
   }
 
+  static isPropertyStructuredValueConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return parentModel instanceof DefaultProperty && childModel instanceof DefaultStructuredValue;
+  }
+
   static isPropertyCharacteristicConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
     return parentModel instanceof DefaultProperty && childModel instanceof DefaultCharacteristic;
   }

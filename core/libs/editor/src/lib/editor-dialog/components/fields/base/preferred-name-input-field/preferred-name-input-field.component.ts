@@ -14,7 +14,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {BaseMetaModelElement, CanExtend, DefaultCharacteristic, DefaultProperty} from '@ame/meta-model';
-import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -22,10 +21,7 @@ import {InputFieldComponent} from '../../input-field.component';
   templateUrl: './preferred-name-input-field.component.html',
 })
 export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
-  constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
-    this.fieldName = 'preferredName';
-  }
+  public fieldName = 'preferredName';
 
   ngOnInit(): void {
     this.subscription = this.getMetaModelData().subscribe(() => this.setPreferredNameNameControls());

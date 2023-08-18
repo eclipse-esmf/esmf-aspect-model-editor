@@ -46,15 +46,18 @@ export class CachedFile {
 
   constructor(public fileName: string, public namespace: string) {}
 
-  resolveElement<T>(element: T & IsNamed): T {
-    return this.resolveCachedElement(element);
+  resolveElement<T>(instance: T & IsNamed): T {
+    const aspectModelUrn = instance.aspectModelUrn;
+    const resolvedInstance: T = this.getElement(aspectModelUrn);
+    if (resolvedInstance) {
+      return resolvedInstance;
+    }
+
+    this.cachedElements.set(aspectModelUrn, instance);
+    return instance;
   }
 
-  removeElement(key: string) {
-    this.removeCachedElement(key);
-  }
-
-  removeCachedElement(key: string) {
+  removeElement(key: string): void {
     this.cachedElements.delete(key);
   }
 
@@ -78,21 +81,6 @@ export class CachedFile {
 
   getAllElements<T extends BaseMetaModelElement>(): Array<T> {
     return [...this.cachedElements.values()];
-  }
-
-  getCachedElement<T>(key: string): T {
-    return this.cachedElements.get(key);
-  }
-
-  resolveCachedElement<T>(instance: T & IsNamed): T {
-    const aspectModelUrn = instance.aspectModelUrn;
-    const resolvedInstance: T = this.getCachedElement(aspectModelUrn);
-    if (resolvedInstance) {
-      return resolvedInstance;
-    }
-
-    this.cachedElements.set(aspectModelUrn, instance);
-    return instance;
   }
 
   updateCachedElementKey(oldKey: string, newKey: string) {

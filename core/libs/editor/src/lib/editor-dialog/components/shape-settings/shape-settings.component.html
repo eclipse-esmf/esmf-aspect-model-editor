@@ -18,10 +18,13 @@
       {{ metaModelElement?.aspectModelUrn?.split('#')[0] }}
     </p>
   </div>
-  <div class="splitter"></div>
-  <button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
-    <mat-icon>close</mat-icon>
-  </button>
+
+  <div class="actions">
+    <ame-locate-element></ame-locate-element>
+    <button mat-icon-button tabindex="-1" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 </div>
 
 <div class="shape-settings__content">
@@ -43,27 +46,24 @@
 </div>
 
 <div class="shape-settings__actions">
-  <ame-locate-element></ame-locate-element>
-  <div class="actions">
-    <button
-      *ngIf="metaModelDialogService.isSaveButtonEnabled()"
-      (click)="onClose()"
-      type="button"
-      mat-flat-button
-      data-cy="editorCancelButton"
-    >
-      Cancel
-    </button>
-    <button
-      *ngIf="metaModelDialogService.isSaveButtonEnabled()"
-      [disabled]="!formGroup.valid || metaModelElement?.isExternalReference()"
-      (click)="onSave()"
-      mat-flat-button
-      color="primary"
-      type="button"
-      data-cy="editorSaveButton"
-    >
-      Save
-    </button>
-  </div>
+  <button
+    *ngIf="metaModelDialogService.isSaveButtonEnabled()"
+    (click)="onClose()"
+    type="button"
+    mat-flat-button
+    data-cy="editorCancelButton"
+  >
+    Cancel
+  </button>
+  <button
+    *ngIf="metaModelDialogService.isSaveButtonEnabled()"
+    [disabled]="!formGroup.valid || metaModelElement?.isExternalReference()"
+    (click)="onSave()"
+    mat-flat-button
+    color="primary"
+    type="button"
+    data-cy="editorSaveButton"
+  >
+    Save
+  </button>
 </div>

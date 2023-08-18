@@ -18,61 +18,49 @@ import {MxGraphService} from '@ame/mx-graph';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {PropertyVisitor} from './property-visitor';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {RdfModel} from '@ame/rdf/utils/rdf-model';
+import {RdfService} from '@ame/rdf/services';
 import {DefaultProperty} from '@ame/meta-model';
-import {provideMockObject} from '../../../../../../jest-helpers';
 import {Samm} from '@ame/vocabulary';
+import {MockProviders} from 'ng-mocks';
 
 describe('Property Visitor', () => {
   let service: PropertyVisitor;
-  let rdfNodeService: jest.Mocked<RdfNodeService>;
-  let rdfService: jest.Mocked<RdfService>;
 
-  let modelService: jest.Mocked<ModelService>;
-  let rdfModel: jest.Mocked<RdfModel>;
-  let property: DefaultProperty;
+  const rdfModel = {
+    store: new Store(),
+    SAMM: jest.fn(() => new Samm('')),
+    SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+    hasNamespace: jest.fn(() => false),
+    addPrefix: jest.fn(() => {}),
+  };
+  const property = new DefaultProperty('1', 'samm#property1', 'property1', null);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         PropertyVisitor,
+        MockProviders(MxGraphService),
+        {
+          provide: RdfListService,
+          useValue: {
+            push: jest.fn(),
+          },
+        },
         {
           provide: RdfNodeService,
-          useValue: provideMockObject(RdfNodeService),
+          useValue: {
+            update: jest.fn(),
+          },
         },
         {
           provide: RdfService,
-          useValue: provideMockObject(RdfService),
-        },
-        {
-          provide: RdfListService,
-          useValue: provideMockObject(RdfListService),
-        },
-        {
-          provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
+          useValue: {
+            currentRdfModel: rdfModel,
+            externalRdfModels: [],
+          },
         },
       ],
     });
-
-    modelService = provideMockObject(ModelService);
-    rdfModel = {
-      store: new Store(),
-      SAMM: jest.fn(() => new Samm('')),
-      SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
-      hasNamespace: jest.fn(() => false),
-      addPrefix: jest.fn(() => {}),
-    } as any;
-    modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
-    property = new DefaultProperty('1', 'samm#property1', 'property1', null);
-
-    rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
-    rdfNodeService.modelService = modelService;
-
-    rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
-    rdfService.currentRdfModel = rdfModel;
-    rdfService.externalRdfModels = [];
 
     service = TestBed.inject(PropertyVisitor);
   });
@@ -80,7 +68,7 @@ describe('Property Visitor', () => {
   it('should update store width default properties', () => {
     service.visit(property);
 
-    expect(rdfNodeService.update).toHaveBeenCalledWith(property, {
+    expect(service.rdfNodeService.update).toHaveBeenCalledWith(property, {
       exampleValue: undefined,
       preferredName: [],
       description: [],

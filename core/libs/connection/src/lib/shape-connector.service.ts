@@ -68,6 +68,7 @@ import {
   EnumerationEntityValueConnectionHandler,
   StructuredValueCharacteristicPropertyConnectionHandler,
   CharacteristicUnitConnectionHandler,
+  PropertyStructuredValueConnectionHandler,
 } from './multi-shape-connection-handlers';
 import mxCell = mxgraph.mxCell;
 
@@ -103,6 +104,7 @@ export class ShapeConnectorService {
     private entityAbstractEntityConnectionHandler: EntityAbstractEntityConnectionHandler,
     private abstractEntityPropertyConnectionHandler: AbstractEntityPropertyConnectionHandler,
     private propertyPropertyConnectionHandler: PropertyPropertyConnectionHandler,
+    private propertyStructuredValueConnectionHandler: PropertyStructuredValueConnectionHandler,
     private propertyAbstractPropertyConnectionHandler: PropertyAbstractPropertyConnectionHandler,
     private abstractEntityAbstractPropertyConnectionHandler: AbstractEntityAbstractPropertyConnectionHandler,
     private abstractPropertyAbstractPropertyConnectionHandler: AbstractPropertyAbstractPropertyConnectionHandler,
@@ -206,6 +208,9 @@ export class ShapeConnectorService {
         break;
       case ShapeConnectorUtil.isStructuredValuePropertyConnection(parentModel, childModel):
         connectionHandler = this.structuredValuePropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isPropertyStructuredValueConnection(parentModel, childModel):
+        connectionHandler = this.propertyStructuredValueConnectionHandler;
         break;
       case ShapeConnectorUtil.isPropertyCharacteristicConnection(parentModel, childModel):
         connectionHandler = this.propertyCharacteristicConnectionHandler;

@@ -11,12 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div mat-dialog-title class="header">
-  <h2>{{ title }}</h2>
-  <button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
-    <mat-icon>close</mat-icon>
-  </button>
-</div>
+<h2 mat-dialog-title>{{ title }}</h2>
+<button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+  <mat-icon>close</mat-icon>
+</button>
+
 <mat-dialog-content>
   <mat-form-field appearance="outline">
     <textarea [(ngModel)]="content" data-cy="dialogContent" spellcheck="false" matInput></textarea>

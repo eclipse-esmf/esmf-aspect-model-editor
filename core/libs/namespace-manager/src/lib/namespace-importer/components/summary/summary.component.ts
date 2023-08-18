@@ -12,7 +12,7 @@
  */
 
 import {FileHandlingService} from '@ame/editor';
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {WorkspaceSummaryComponent, NAMESPACES_SESSION} from '../../../shared';
 import {NamespacesSessionInterface, MissingElement} from '../../../shared/models';
@@ -23,13 +23,10 @@ import {take, tap} from 'rxjs/operators';
   styleUrls: ['./summary.component.scss'],
 })
 export class ImportSummaryComponent {
+  private importSession: NamespacesSessionInterface = inject(NAMESPACES_SESSION);
   public missingElements: MissingElement[] = this.importSession.missingElements;
 
-  constructor(
-    private dialogRef: MatDialogRef<WorkspaceSummaryComponent>,
-    private fileHandlingService: FileHandlingService,
-    @Inject(NAMESPACES_SESSION) private importSession: NamespacesSessionInterface
-  ) {}
+  constructor(private dialogRef: MatDialogRef<WorkspaceSummaryComponent>, private fileHandlingService: FileHandlingService) {}
 
   importFiles() {
     this.dialogRef.close();

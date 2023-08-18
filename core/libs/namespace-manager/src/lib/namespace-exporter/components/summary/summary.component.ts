@@ -13,7 +13,7 @@
 
 import {ModelApiService} from '@ame/api';
 import {NotificationsService} from '@ame/shared';
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {WorkspaceSummaryComponent, NAMESPACES_SESSION} from '../../../shared';
 import {NamespacesSessionInterface, MissingElement} from '../../../shared/models';
@@ -24,14 +24,15 @@ import {NamespacesSessionInterface, MissingElement} from '../../../shared/models
 })
 export class ExportSummaryComponent {
   private readonly packageName = 'namespaces.zip';
+  private importSession: NamespacesSessionInterface = inject(NAMESPACES_SESSION);
   private url: string;
+
   public missingElements: MissingElement[] = this.importSession.missingElements;
 
   constructor(
     private modelApiService: ModelApiService,
     private dialogRef: MatDialogRef<WorkspaceSummaryComponent>,
-    private notificationService: NotificationsService,
-    @Inject(NAMESPACES_SESSION) private importSession: NamespacesSessionInterface
+    private notificationService: NotificationsService
   ) {}
 
   export() {

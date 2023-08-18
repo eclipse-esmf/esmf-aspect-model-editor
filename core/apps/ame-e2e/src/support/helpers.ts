@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -215,11 +216,12 @@ export class cyHelp {
   }
 
   /**
+   * Renames a graph element from an old name to a new name.
    *
-   * @param oldName
-   * @param newName
-   * @param oldLabel optional: if element label is different from name
-   * @returns
+   * @static
+   * @param {string} oldName - The current name of the element.
+   * @param {string} newName - The new name for the element.
+   * @returns {Cypress.Chainable} Returns a chainable Cypress command.
    */
   static renameElement(oldName: string, newName: string) {
     return cy
@@ -281,6 +283,6 @@ export class cyHelp {
 
   static openSettingsTab(tabIndex: number) {
     cy.get(SELECTOR_settingsButton).click().wait(1000);
-    cy.get(`.mat-tab-labels :nth-child(${tabIndex + 1})`).click();
+    return cy.get(`.mat-mdc-tab-labels .mdc-tab`).eq(tabIndex).click({force: true});
   }
 }

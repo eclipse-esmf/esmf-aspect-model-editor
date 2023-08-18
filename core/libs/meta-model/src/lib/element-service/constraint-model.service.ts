@@ -15,7 +15,7 @@ import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 import {ConstraintRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {Base, BaseMetaModelElement, DefaultCharacteristic, DefaultConstraint, DefaultScalar, DefaultTrait} from '@ame/meta-model';
+import {Base, BaseMetaModelElement, DefaultConstraint, DefaultTrait} from '@ame/meta-model';
 import {
   DefaultEncodingConstraint,
   DefaultFixedPointConstraint,
@@ -42,8 +42,8 @@ export class ConstraintModelService extends BaseModelService {
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     let metaModelElement = MxGraphHelper.getModelElement<DefaultConstraint>(cell);
     if (form.changedMetaModel) {
-      this.currentCachedFile.removeCachedElement(metaModelElement?.aspectModelUrn);
-      this.currentCachedFile.resolveCachedElement(form.changedMetaModel);
+      this.currentCachedFile.removeElement(metaModelElement?.aspectModelUrn);
+      this.currentCachedFile.resolveElement(form.changedMetaModel);
       cell = this.mxGraphService.resolveCellByModelElement(metaModelElement);
 
       cell.edges?.forEach(({source}) => {

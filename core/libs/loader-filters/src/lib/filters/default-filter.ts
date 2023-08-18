@@ -73,7 +73,7 @@ export class DefaultFilter implements FilterLoader {
     DefaultUnit,
   ];
 
-  filter(rootElements: BaseMetaModelElement[]): ModelTree[] {
+  filter(rootElements: BaseMetaModelElement[]): ModelTree<BaseMetaModelElement>[] {
     return rootElements.map(element => this.generateTree(element));
   }
 
@@ -82,7 +82,7 @@ export class DefaultFilter implements FilterLoader {
       return null;
     }
 
-    const elementTree: ModelTree = {
+    const elementTree: ModelTree<BaseMetaModelElement> = {
       element,
       fromParentArrow: this.getArrowStyle(element, options?.parent),
       children: new ChildrenArray(),

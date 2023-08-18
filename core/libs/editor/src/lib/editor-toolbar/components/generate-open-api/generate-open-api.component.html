@@ -13,57 +13,59 @@
 
 <form [formGroup]="form">
   <h2 mat-dialog-title>Generate OpenAPI specification</h2>
-  <p>Configuration</p>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Language</mat-label>
-    <mat-select [formControl]="getControl('language')" data-cy="tbLanguageButton">
-      <mat-option *ngFor="let language of languages" [value]="language.tag">{{ language.name }}</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <mat-dialog-content>
+    <p>Configuration</p>
+    <mat-form-field appearance="fill">
+      <mat-label>Language</mat-label>
+      <mat-select [formControl]="getControl('language')" data-cy="tbLanguageButton">
+        <mat-option *ngFor="let language of languages" [value]="language.tag">{{ language.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Output File format</mat-label>
-    <mat-select [formControl]="getControl('output')" data-cy="tbOutputButton">
-      <mat-option data-cy="tbOutputButton-json" value="json">JSON</mat-option>
-      <mat-option data-cy="tbOutputButton-yaml" value="yaml">YAML</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Output File format</mat-label>
+      <mat-select [formControl]="getControl('output')" data-cy="tbOutputButton">
+        <mat-option data-cy="tbOutputButton-json" value="json">JSON</mat-option>
+        <mat-option data-cy="tbOutputButton-yaml" value="yaml">YAML</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>BaseUrl - the base URL for the Aspect API</mat-label>
-    <input matInput [formControl]="getControl('baseUrl')" placeholder="https://example.com" />
-    <mat-error *ngIf="getControl('baseUrl')?.errors?.invalidUrl">Please add a valid url</mat-error>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>BaseUrl - the base URL for the Aspect API</mat-label>
+      <input matInput [formControl]="getControl('baseUrl')" placeholder="https://example.com" />
+      <mat-error *ngIf="getControl('baseUrl')?.errors?.invalidUrl">Please add a valid url</mat-error>
+    </mat-form-field>
 
-  <section>
-    <mat-checkbox
-      [formControl]="getControl('includeQueryApi')"
-      class="checkbox-margin"
-      matTooltip="if set to true, a path section for the Query API Endpoint of the Aspect API will be included in the specification."
-    >
-      IncludeQueryApi
-    </mat-checkbox>
+    <section>
+      <mat-checkbox
+        [formControl]="getControl('includeQueryApi')"
+        class="checkbox-margin"
+        matTooltip="if set to true, a path section for the Query API Endpoint of the Aspect API will be included in the specification."
+      >
+        IncludeQueryApi
+      </mat-checkbox>
 
-    <mat-checkbox
-      [formControl]="getControl('useSemanticVersion')"
-      class="checkbox-margin"
-      matTooltip=" if set to true, the complete semantic version of the Aspect Model will be used as
+      <mat-checkbox
+        [formControl]="getControl('useSemanticVersion')"
+        class="checkbox-margin"
+        matTooltip=" if set to true, the complete semantic version of the Aspect Model will be used as
       the version of the API. Otherwise only the major part of the Aspect Version is used as the version of the API."
-    >
-      UseSemanticVersion
-    </mat-checkbox>
-  </section>
+      >
+        UseSemanticVersion
+      </mat-checkbox>
+    </section>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Paging type/option</mat-label>
-    <mat-select [formControl]="getControl('paging')">
-      <mat-option value="NO_PAGING">No paging</mat-option>
-      <mat-option value="CURSOR_BASED_PAGING">Cursor based paging</mat-option>
-      <mat-option value="OFFSET_BASED_PAGING">Offset based paging</mat-option>
-      <mat-option value="TIME_BASED_PAGING">Time based paging</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Paging type/option</mat-label>
+      <mat-select [formControl]="getControl('paging')">
+        <mat-option value="NO_PAGING">No paging</mat-option>
+        <mat-option value="CURSOR_BASED_PAGING">Cursor based paging</mat-option>
+        <mat-option value="OFFSET_BASED_PAGING">Offset based paging</mat-option>
+        <mat-option value="TIME_BASED_PAGING">Time based paging</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
 
   <mat-dialog-actions align="end">
     <button mat-flat-button (click)="close()">Cancel</button>

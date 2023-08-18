@@ -208,8 +208,8 @@ describe('Test edit operation', () => {
   it('can delete input and property3 and addInputProperty2 in edit view', () => {
     cy.shapeExists('newOperation')
       .then(() => cy.dbClickShape('newOperation'))
-      .then(() => cy.get('[data-cy=input]').eq(0).click({force: true}))
-      .then(() => cy.get('[data-cy=input]').eq(1).click({force: true}))
+      .then(() => cy.get('[data-cy="input"]').eq(0).click({force: true}))
+      .then(() => cy.get('[data-cy="input"]').eq(1).click({force: true}))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
         cy.getAspect().then(aspect => {
@@ -238,7 +238,7 @@ describe('Test edit operation', () => {
   it('can delete output in edit view', () => {
     cy.shapeExists('newOperation')
       .then(() => cy.dbClickShape('newOperation'))
-      .then(() => cy.get('[data-cy=clear-output-button]').click({force: true}))
+      .then(() => cy.get('[data-cy="clear-output-button"]').click({force: true}))
       .then(() =>
         cy
           .get(FIELD_output)
@@ -277,7 +277,7 @@ describe('Test edit operation', () => {
   it('change property from input to output and back', () => {
     cy.shapeExists('newOperation')
       .then(() => cy.dbClickShape('newOperation'))
-      .then(() => cy.get('[data-cy=clear-output-button]').click({force: true}))
+      .then(() => cy.get('[data-cy="clear-output-button"]').click({force: true}))
       .then(() =>
         cy
           .get(FIELD_inputValues)
@@ -323,8 +323,8 @@ describe('Test edit operation', () => {
         })
       )
       .then(() => cy.dbClickShape('newOperation'))
-      .then(() => cy.get('[data-cy=input]').eq(1).click({force: true}))
-      .then(() => cy.get('[data-cy=clear-output-button]').click({force: true}))
+      .then(() => cy.get('[data-cy="input"]').eq(1).click({force: true}))
+      .then(() => cy.get('[data-cy="clear-output-button"]').click({force: true}))
       .then(() =>
         cy
           .get(FIELD_output)
@@ -399,7 +399,7 @@ describe('Test edit operation', () => {
         })
       )
       .then(() => cy.dbClickShape('newOperation'))
-      .then(() => cy.get('[data-cy=clear-output-button]').click({force: true}))
+      .then(() => cy.get('[data-cy="clear-output-button"]').click({force: true}))
       .then(() =>
         cy
           .get(FIELD_output)
@@ -439,8 +439,8 @@ describe('Test edit operation', () => {
   it('can delete all input properties in edit view', () => {
     cy.shapeExists('newOperation')
       .then(() => cy.dbClickShape('newOperation'))
-      .then(() => cy.get('[data-cy=input]').eq(0).click({force: true}))
-      .then(() => cy.get('[data-cy=input]').eq(0).click({force: true}))
+      .then(() => cy.get('[data-cy="input"]').eq(0).click({force: true}))
+      .then(() => cy.get('[data-cy="input"]').eq(0).click({force: true}))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() =>
         cy.getAspect().then(aspect => {

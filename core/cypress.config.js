@@ -41,6 +41,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       return require('apps/ame-e2e/src/plugins/index.js')(on, config);
     },
+    testIsolation: false,
     specPattern: 'apps/ame-e2e/src/integration',
     supportFile: 'apps/ame-e2e/src/support/index.ts',
     baseUrl: 'http://localhost:4200/',

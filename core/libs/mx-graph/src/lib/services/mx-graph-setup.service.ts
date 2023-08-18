@@ -348,6 +348,10 @@ export class MxGraphSetupService {
           this.bindingsService.fireAction('connect-with');
         });
       }
+
+      menu.addItem('Select all references', this.resolveAssetsIcon(AssetsPath.Tree), () => {
+        this.bindingsService.fireAction('select-tree');
+      });
     }
 
     menu.addItem('Format', this.resolveAssetsIcon(AssetsPath.FormatIcon), () => {

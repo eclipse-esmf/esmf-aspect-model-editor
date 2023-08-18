@@ -11,16 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamespacesCacheService} from '@ame/cache';
 import {MetaModelElementInstantiator, PredefinedEntityInstantiator} from '@ame/instantiator';
 import {DefaultAbstractEntity, DefaultEntity} from '@ame/meta-model';
-import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
-import {NotificationsService, SearchService} from '@ame/shared';
+import {NotificationsService} from '@ame/shared';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {combineLatest, map, Observable, of} from 'rxjs';
-import {EditorModelService} from '../../../../editor-model.service';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -48,15 +45,8 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
     return this.metaModelElement instanceof DefaultAbstractEntity;
   }
 
-  constructor(
-    private notificationsService: NotificationsService,
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService: NamespacesCacheService,
-    public rdfService: RdfService,
-    public searchService?: SearchService,
-    public mxGraphService?: MxGraphService
-  ) {
-    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
+  constructor(private notificationsService: NotificationsService, public rdfService: RdfService) {
+    super();
     this.fieldName = 'extends';
   }
 

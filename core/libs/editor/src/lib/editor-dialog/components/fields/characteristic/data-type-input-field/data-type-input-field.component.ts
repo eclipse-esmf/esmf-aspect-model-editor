@@ -17,9 +17,7 @@ import {map, startWith} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
 import {DefaultCharacteristic, DefaultEither, DefaultEntity, DefaultScalar, DefaultStructuredValue, Entity} from '@ame/meta-model';
-import {DataTypeService, SearchService} from '@ame/shared';
-import {EditorModelService} from '../../../../editor-model.service';
-import {NamespacesCacheService} from '@ame/cache';
+import {DataTypeService} from '@ame/shared';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {EditorDialogValidators} from '../../../../validators';
@@ -40,15 +38,8 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
 
   public entitiesDisabled = false;
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public namespacesCacheService: NamespacesCacheService,
-    public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService,
-    public rdfService: RdfService,
-    public searchService?: SearchService
-  ) {
-    super(metaModelDialogService, namespacesCacheService, searchService, mxGraphService);
+  constructor(public dataTypeService: DataTypeService, public mxGraphService: MxGraphService, public rdfService: RdfService) {
+    super();
     this.fieldName = 'dataTypeEntity';
   }
 
@@ -122,7 +113,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     }
 
     if (newValue.complex) {
-      let entity = this.currentCachedFile.getCachedElement(newValue.urn);
+      let entity = this.currentCachedFile.getElement(newValue.urn);
 
       if (!entity) {
         entity = this.namespacesCacheService.findElementOnExtReference<Entity>(newValue.urn);

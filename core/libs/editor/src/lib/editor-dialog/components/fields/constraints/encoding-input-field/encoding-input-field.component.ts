@@ -14,7 +14,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {BaseMetaModelElement, DefaultEncodingConstraint} from '@ame/meta-model';
 import {InputFieldComponent} from '../../input-field.component';
-import {EditorModelService} from '../../../../editor-model.service';
 import {Samm} from '@ame/vocabulary';
 import {RdfModelUtil} from '@ame/rdf/utils';
 
@@ -25,8 +24,8 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 export class EncodingInputFieldComponent extends InputFieldComponent<DefaultEncodingConstraint> implements OnInit, OnDestroy {
   public encodingList = [];
 
-  constructor(public metaModelDialogService: EditorModelService) {
-    super(metaModelDialogService);
+  constructor() {
+    super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'value';
   }

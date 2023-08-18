@@ -21,7 +21,7 @@ export type ClassImplementing<BaseMetaModelElement, Args extends any[] = any[]> 
 
 export type ArrowStyle = 'entityValueEntityEdge' | 'optionalPropertyEdge' | 'abstractPropertyEdge' | 'abstractElementEdge' | 'defaultEdge';
 
-export class ChildrenArray<T extends ModelTree> extends Array<ModelTree> {
+export class ChildrenArray<T extends ModelTree<BaseMetaModelElement>> extends Array<ModelTree<BaseMetaModelElement>> {
   push(...items: T[]): number {
     let pushed = 0;
     for (const item of items) {
@@ -36,7 +36,7 @@ export class ChildrenArray<T extends ModelTree> extends Array<ModelTree> {
   }
 }
 
-export interface ModelTree<T = BaseMetaModelElement> {
+export interface ModelTree<T extends BaseMetaModelElement> {
   /**
    * The meta model element which will be rendered
    */
@@ -55,7 +55,7 @@ export interface ModelTree<T = BaseMetaModelElement> {
   /**
    * ModelTree structures which represents the element's children
    */
-  children?: ChildrenArray<ModelTree>;
+  children?: ChildrenArray<ModelTree<BaseMetaModelElement>>;
   /**
    * Identifier for used filtering
    */
@@ -70,28 +70,26 @@ export type ModelTreeOptions = Partial<{
   /**
    * Parent node from the filtered structure
    */
-  parentNode: ModelNode<BaseMetaModelElement>;
+  parentNode: ModelTree<BaseMetaModelElement>;
   /**
    * Any class in this list will not be considered for the next filter loop
    */
   notAllowed: ClassImplementing<BaseMetaModelElement>[];
 }>;
 
-export type ModelNode<T> = ModelTree<T>;
-
 export enum ModelFilter {
   DEFAULT = 'default',
   PROPERTIES = 'properties',
 }
 
-export interface FilterLoader {
+export interface FilterLoader<T extends BaseMetaModelElement = BaseMetaModelElement> {
   cache: {[key: string]: boolean};
   filterType: ModelFilter;
-  visibleElements: ClassImplementing<BaseMetaModelElement>[];
-  filter(rootElements: BaseMetaModelElement[]): ModelTree[];
-  generateTree<T extends BaseMetaModelElement>(element: T, options?: ModelTreeOptions): ModelTree<T>;
-  getArrowStyle(element: BaseMetaModelElement, parent: BaseMetaModelElement): ArrowStyle;
-  getShapeGeometry(element: BaseMetaModelElement): ShapeGeometry;
-  getMxGraphStyle(element: BaseMetaModelElement): string;
-  hasOverlay(element?: BaseMetaModelElement): boolean;
+  visibleElements: ClassImplementing<T>[];
+  filter(rootElements: T[]): ModelTree<T>[];
+  generateTree(element: T, options?: ModelTreeOptions): ModelTree<T>;
+  getArrowStyle(element: T, parent: T): ArrowStyle;
+  getShapeGeometry(element: T): ShapeGeometry;
+  getMxGraphStyle(element: T): string;
+  hasOverlay(element?: T): boolean;
 }

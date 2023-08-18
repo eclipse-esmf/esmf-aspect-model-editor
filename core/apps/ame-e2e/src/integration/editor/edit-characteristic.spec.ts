@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -30,6 +31,8 @@ import {
   META_MODEL_preferredName,
   META_MODEL_see,
   META_MODEL_values,
+  SELECTOR_ecEntity,
+  SELECTOR_ecProperty,
   SELECTOR_editorCancelButton,
   SELECTOR_editorSaveButton,
   SELECTOR_tbDeleteButton,
@@ -83,7 +86,7 @@ describe('Test editing Characteristic', () => {
           .get(FIELD_dataType)
           .clear({force: true})
           .type('integer', {force: true})
-          .get('.mat-option-text')
+          .get('.mat-mdc-option')
           .eq(1)
           .contains('integer')
           .click({force: true})
@@ -133,7 +136,7 @@ describe('Test editing Characteristic', () => {
   it('can edit see http attributes to urns', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
-      .then(() => cy.removeSeeElements().addSeeElements('urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001'))
+      .then(() => cy.removeSeeElements().addSeeElements('urn:irdi:eclass:0173-1#02-AAO677', 'urn:irdi:iec:0112/2///62683#ACC011#001'))
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
 
       .then(() =>
@@ -391,6 +394,42 @@ describe('Structured Value Characteristic', () => {
     }
   }
 
+  function createStructuredValueModel() {
+    return cy
+      .dbClickShape('Characteristic1')
+      .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('StructuredValue').click({force: true}))
+      .then(() => cy.get(FIELD_deconstructionRuleSelect).click({force: true}))
+      .then(() => cy.contains('Email Address').click({force: true}))
+      .wait(500)
+      .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
+      .then(() => shouldHaveValues(['([\\\\w\\\\.-]+)', '([\\\\w\\\\.-]+\\\\.\\\\w{2,4})'], ['username', 'host']))
+      .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled').click({force: true}))
+      .wait(200)
+      .then(() => cy.shapeExists('username'))
+      .then(() => cy.shapeExists('host'))
+      .then(() =>
+        cy
+          .shapeExists('UsernameCharacteristic')
+          .then(() => cyHelp.hasAddShapeOverlay('UsernameCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+      )
+      .then(() =>
+        cy
+          .shapeExists('HostCharacteristic')
+          .then(() => cyHelp.hasAddShapeOverlay('HostCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+      )
+      .then(() => cy.dbClickShape('Characteristic1'))
+      .then(() => cy.get(FIELD_deconstructionRuleInput).should('not.be.enabled'))
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => {
+        expect(rdf).to.contain(
+          ':Characteristic1 a samm-c:StructuredValue;\n' +
+            '    samm:dataType xsd:string;\n' +
+            '    samm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})";\n' +
+            '    samm-c:elements (:username "@" :host).'
+        );
+      });
+  }
+
   // Tests
   describe('Create new structured value Custom mode', () => {
     it('should extract groups', () => {
@@ -471,41 +510,7 @@ describe('Structured Value Characteristic', () => {
 
   describe('Create new structured value with predefined rules', () => {
     it('should create Email Address', () => {
-      startApplication()
-        .then(() => cy.dbClickShape('Characteristic1'))
-        .then(() =>
-          cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('StructuredValue').click({force: true})
-        )
-        .then(() => cy.get(FIELD_deconstructionRuleSelect).click({force: true}))
-        .then(() => cy.contains('Email Address').click({force: true}))
-        .wait(500)
-        .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
-        .then(() => shouldHaveValues(['([\\\\w\\\\.-]+)', '([\\\\w\\\\.-]+\\\\.\\\\w{2,4})'], ['username', 'host']))
-        .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled').click({force: true}))
-        .wait(200)
-        .then(() => cy.shapeExists('username'))
-        .then(() => cy.shapeExists('host'))
-        .then(() =>
-          cy
-            .shapeExists('UsernameCharacteristic')
-            .then(() => cyHelp.hasAddShapeOverlay('UsernameCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
-        )
-        .then(() =>
-          cy
-            .shapeExists('HostCharacteristic')
-            .then(() => cyHelp.hasAddShapeOverlay('HostCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
-        )
-        .then(() => cy.dbClickShape('Characteristic1'))
-        .then(() => cy.get(FIELD_deconstructionRuleInput).should('not.be.enabled'))
-        .then(() => cy.getUpdatedRDF())
-        .then(rdf => {
-          expect(rdf).to.contain(
-            ':Characteristic1 a samm-c:StructuredValue;\n' +
-              '    samm:dataType xsd:string;\n' +
-              '    samm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})";\n' +
-              '    samm-c:elements (:username "@" :host).'
-          );
-        });
+      startApplication().then(() => createStructuredValueModel());
     });
 
     it('should create ISO 8601 Date', () => {
@@ -594,6 +599,154 @@ describe('Structured Value Characteristic', () => {
               '    samm-c:elements ("0x" :red :green :blue).'
           );
         });
+    });
+  });
+
+  describe('Allowed connections', () => {
+    describe('Property -> StructuredValue', () => {
+      before(() => {
+        startApplication();
+        createStructuredValueModel();
+        cy.clickShape('host');
+        cy.get(SELECTOR_tbDeleteButton).click();
+        cy.clickShape('username');
+        cy.get(SELECTOR_tbDeleteButton).click();
+      });
+
+      it('should connect first Property -> StructuredValue', () => {
+        cy.dragElement(SELECTOR_ecProperty, 350, 300);
+        cy.clickConnectShapes('property2', 'HostCharacteristic');
+        cy.clickConnectShapes('Characteristic1', 'property2');
+
+        const characteristicParams = {name: 'Characteristic1'};
+        const childrenParams = [{name: 'property2'}];
+
+        childrenParams.forEach(childParams => cy.isConnected(characteristicParams, childParams).should('be.true'));
+
+        cy.getUpdatedRDF().then(rdf => {
+          expect(rdf).to.contain(
+            ':Characteristic1 a samm-c:StructuredValue;\n' +
+              '    samm:dataType xsd:string;\n' +
+              '    samm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})";\n' +
+              '    samm-c:elements (:property2 "@").'
+          );
+        });
+      });
+
+      it('should connect second Property -> StructuredValue', () => {
+        cy.dragElement(SELECTOR_ecProperty, 350, 300);
+        cy.clickConnectShapes('property3', 'UsernameCharacteristic');
+        cy.clickConnectShapes('Characteristic1', 'property3');
+
+        const characteristicParams = {name: 'Characteristic1'};
+        const childrenParams = [{name: 'property2'}, {name: 'property3'}];
+
+        childrenParams.forEach(childParams => cy.isConnected(characteristicParams, childParams).should('be.true'));
+
+        cy.getUpdatedRDF().then(rdf => {
+          expect(rdf).to.contain(
+            ':Characteristic1 a samm-c:StructuredValue;\n' +
+              '    samm:dataType xsd:string;\n' +
+              '    samm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})";\n' +
+              '    samm-c:elements (:property2 "@" :property3).'
+          );
+        });
+      });
+
+      it('should attach new Property', () => {
+        cy.clickAddShapePlusIcon('Characteristic1');
+
+        const characteristicParams = {name: 'Characteristic1'};
+        const childrenParams = [{name: 'property2'}, {name: 'property3'}, {name: 'property4'}];
+
+        childrenParams.forEach(childParams => cy.isConnected(characteristicParams, childParams).should('be.true'));
+
+        cy.getUpdatedRDF().then(rdf => {
+          expect(rdf).to.contain(
+            ':Characteristic1 a samm-c:StructuredValue;\n' +
+              '    samm:dataType xsd:string;\n' +
+              '    samm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})(regex)";\n' +
+              '    samm-c:elements (:property2 "@" :property3 :property4).'
+          );
+        });
+      });
+    });
+
+    describe('StructuredValue -> Property', () => {
+      before(() => {
+        startApplication();
+        createStructuredValueModel();
+      });
+
+      it('should connect first Property -> StructuredValue', () => {
+        cy.dragElement(SELECTOR_ecProperty, 350, 300);
+        cy.clickConnectShapes('property2', 'Characteristic1');
+
+        const propertyParams = {name: 'property2'};
+        const childrenParams = [{name: 'Characteristic1'}];
+
+        childrenParams.forEach(childParams => cy.isConnected(propertyParams, childParams).should('be.true'));
+
+        cy.getUpdatedRDF().then(rdf => {
+          expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic :Characteristic1.');
+          expect(rdf).to.contain(':property2 a samm:Property;\n' + '    samm:characteristic :Characteristic1.');
+        });
+      });
+    });
+  });
+
+  describe('Restricted connections', () => {
+    before(() => {
+      startApplication();
+      createStructuredValueModel();
+    });
+
+    it('should restrict StructuredValue -> Entity connection', () => {
+      cy.dragElement(SELECTOR_ecEntity, 350, 300);
+      cy.clickConnectShapes('Characteristic1', 'Entity1');
+
+      const characteristicParams = {name: 'Characteristic1'};
+      const entityParams = {name: 'Entity1'};
+      const childrenParams = [{name: 'username'}, {name: 'host'}];
+
+      cy.get('#toast-container').contains('Unable to connect elements').click();
+      cy.get('#toast-container').should('be.empty');
+      cy.isConnected(characteristicParams, entityParams).should('be.false');
+      childrenParams.forEach(childParams => cy.isConnected(characteristicParams, childParams).should('be.true'));
+    });
+
+    it('should restrict recursive StructuredValue -> Property connection', () => {
+      cy.clickConnectShapes('Characteristic1', 'property1');
+
+      const characteristicParams = {name: 'Characteristic1'};
+      const parentParams = {name: 'property1'};
+      const childrenParams = [{name: 'username'}, {name: 'host'}];
+
+      cy.get('#toast-container').contains('Unable to connect elements').click();
+      cy.get('#toast-container').should('be.empty');
+      cy.isConnected(characteristicParams, parentParams).should('be.false');
+      cy.isConnected(parentParams, characteristicParams).should('be.true');
+      childrenParams.forEach(childParams => {
+        cy.isConnected(childParams, characteristicParams).should('be.false');
+        cy.isConnected(characteristicParams, childParams).should('be.true');
+      });
+    });
+
+    it('should restrict recursive Property -> StructuredValue connection', () => {
+      cy.clickConnectShapes('username', 'Characteristic1');
+
+      const characteristicParams = {name: 'Characteristic1'};
+      const parentParams = {name: 'property1'};
+      const childrenParams = [{name: 'username'}, {name: 'host'}];
+
+      cy.get('#toast-container').contains('Unable to connect elements').click();
+      cy.get('#toast-container').should('be.empty');
+      cy.isConnected(characteristicParams, parentParams).should('be.false');
+      cy.isConnected(parentParams, characteristicParams).should('be.true');
+      childrenParams.forEach(childParams => {
+        cy.isConnected(childParams, characteristicParams).should('be.false');
+        cy.isConnected(characteristicParams, childParams).should('be.true');
+      });
     });
   });
 });

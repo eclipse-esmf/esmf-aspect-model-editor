@@ -1,0 +1,23 @@
+{
+  "name": "instantiator",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/instantiator/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/instantiator"],
+      "options": {
+        "jestConfig": "libs/instantiator/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/instantiator/src/**/*.ts", "libs/instantiator/src/**/*.html"]
+      }
+    }
+  }
+}

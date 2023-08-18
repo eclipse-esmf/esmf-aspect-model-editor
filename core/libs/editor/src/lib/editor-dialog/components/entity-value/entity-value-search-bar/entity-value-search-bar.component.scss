@@ -11,17 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-.add-button {
-  margin-top: 5px;
-  margin-left: 10px;
-  height: 54px;
-
-  mat-icon {
-    color: #fff;
-  }
+:host {
+  display: flex;
 }
 
-.main-title {
-  display: flex;
-  align-items: center;
+mat-form-field {
+  margin-right: 10px;
+}
+
+button[mat-fab] {
+  box-shadow: none;
+
+  mat-icon {
+    color: white;
+  }
 }

@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-header>Notifications</h2>
+<h2 mat-dialog-title>Notifications</h2>
 <button class="close-button" data-cy="close-notifications" mat-icon-button tabindex="-1" (click)="onClose()">
   <mat-icon>close</mat-icon>
 </button>
@@ -21,7 +21,6 @@
     <span>Clear table</span>
   </button>
 
-  <caption></caption>
   <table [dataSource]="notificationsService.getNotifications()" mat-table class="mat-elevation-z2 notifications-table">
     <ng-container matColumnDef="expand">
       <th mat-header-cell *matHeaderCellDef></th>

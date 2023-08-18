@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Inject, Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {Observable, Observer, of, Subject, throwError} from 'rxjs';
 import {catchError, first, map, switchMap, tap} from 'rxjs/operators';
 import {Aspect, BaseMetaModelElement, DefaultAbstractProperty, DefaultProperty, LoadedAspectModel} from '@ame/meta-model';
@@ -39,14 +39,14 @@ export class ModelService {
     return this.namespaceCacheService.currentCachedFile;
   }
 
+  private config: AppConfig = inject(APP_CONFIG);
   constructor(
     private rdfService: RdfService,
     private namespaceCacheService: NamespacesCacheService,
     private modelApiService: ModelApiService,
     private notificationsService: NotificationsService,
     private instantiatorService: InstantiatorService,
-    private logService: LogService,
-    @Inject(APP_CONFIG) private config: AppConfig
+    private logService: LogService
   ) {
     if (!environment.production) {
       window['angular.modelService'] = this;
@@ -183,16 +183,16 @@ export class ModelService {
 
   private processAnonymousElements() {
     this.currentCachedFile.getAnonymousElements().forEach((modelElementNamePair: {element: BaseMetaModelElement; name: string}) => {
-      this.currentCachedFile.removeCachedElement(modelElementNamePair.element.aspectModelUrn);
+      this.currentCachedFile.removeElement(modelElementNamePair.element.aspectModelUrn);
       if (modelElementNamePair.name) {
         modelElementNamePair.element.name = modelElementNamePair.name; // assign initial name
         if (this.isElementNameUnique(modelElementNamePair.element)) {
           // if unique, resolve the instance
-          this.currentCachedFile.resolveCachedElement(modelElementNamePair.element);
+          this.currentCachedFile.resolveElement(modelElementNamePair.element);
         } else {
           // else resolve the naming
           this.setUniqueElementName(modelElementNamePair.element, modelElementNamePair.name);
-          this.currentCachedFile.resolveCachedElement(modelElementNamePair.element);
+          this.currentCachedFile.resolveElement(modelElementNamePair.element);
           this.notificationsService.info({
             title: 'Renamed anonymous element',
             message: `The anonymous element ${modelElementNamePair.name} was renamed to ${modelElementNamePair.element.name}`,
@@ -202,7 +202,7 @@ export class ModelService {
         }
       } else {
         this.setUniqueElementName(modelElementNamePair.element);
-        this.currentCachedFile.resolveCachedElement(modelElementNamePair.element);
+        this.currentCachedFile.resolveElement(modelElementNamePair.element);
         this.notificationsService.info({
           title: 'Renamed anonymous element',
           message: `The anonymous element was named to ${modelElementNamePair.element.name}`,
@@ -216,7 +216,7 @@ export class ModelService {
 
   private isElementNameUnique(modelElement: BaseMetaModelElement): boolean {
     modelElement.metaModelVersion = this.rdfModel.SAMM().version;
-    return !this.currentCachedFile.getCachedElement<BaseMetaModelElement>(`${this.rdfModel.getAspectModelUrn()}${modelElement.name}`);
+    return !this.currentCachedFile.getElement<BaseMetaModelElement>(`${this.rdfModel.getAspectModelUrn()}${modelElement.name}`);
   }
 
   public setUniqueElementName(modelElement: BaseMetaModelElement, name?: string) {
@@ -232,7 +232,7 @@ export class ModelService {
     do {
       tmpName = `${name}${counter++}`;
       tmpAspectModelUrn = `${this.rdfModel.getAspectModelUrn()}${tmpName}`;
-    } while (this.currentCachedFile.getCachedElement<BaseMetaModelElement>(tmpAspectModelUrn));
+    } while (this.currentCachedFile.getElement<BaseMetaModelElement>(tmpAspectModelUrn));
     modelElement.aspectModelUrn = tmpAspectModelUrn;
     modelElement.name = tmpName;
   }
