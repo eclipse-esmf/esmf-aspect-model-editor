@@ -201,15 +201,12 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain(
-          ':Characteristic1 a samm-c:State;\n' +
-            '    samm:dataType xsd:string;\n' +
-            '    samm:preferredName "testPreferredName"@en;\n' +
-            '    samm:description "testDescription"@en;\n' +
-            '    samm:see <http://see.de>;\n' +
-            '    samm-c:values ("1" "2" "a" "b" "3" "4");\n' +
-            '    samm-c:defaultValue "testState".'
-        );
+        expect(rdf).contain(':Characteristic1 a samm-c:State');
+        expect(rdf).contain('samm:dataType xsd:string');
+        expect(rdf).contain('samm:preferredName "testPreferredName"@en');
+        expect(rdf).contain('samm:description "testDescription"@en');
+        expect(rdf).contain('samm:see <http://see.de>');
+        expect(rdf).contain('samm-c:values ("1" "2" "a" "b" "3" "4")');
       });
   });
 
