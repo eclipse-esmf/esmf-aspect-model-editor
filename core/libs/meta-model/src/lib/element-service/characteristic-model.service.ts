@@ -220,7 +220,7 @@ export class CharacteristicModelService extends BaseModelService {
       this.updateComplexEnumeration(metaModelElement, form);
     } else if (metaModelElement instanceof DefaultEnumeration) {
       // simple enumeration
-      metaModelElement.values = form.chipList.map(chip => chip.name) || null;
+      metaModelElement.values = form.chipList.map(name => name) || null;
     } else if (metaModelElement instanceof DefaultCollection) {
       metaModelElement.elementCharacteristic = form.elementCharacteristic;
       if (form.elementCharacteristic) {
