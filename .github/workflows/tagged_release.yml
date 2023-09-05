@@ -50,6 +50,13 @@ jobs:
           release_branch_name=${release_version%.*}.x
           echo "release_branch_name=$release_branch_name" >> $GITHUB_ENV
 
+      - name: Get glibc version
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          version=$(ldd --version | head -n 1 | awk '{print $NF}')
+          echo "GLIBC_VERSION=$version" >> $GITHUB_ENV
+          echo "::set-output name=glibc_version::$version"
+
       - name: Set antora version
         if: matrix.os == 'ubuntu-latest'
         run: yq eval -i '.version = "${{ github.event.inputs.release_version }}"' documentation/ame-guide/antora.yml
@@ -166,7 +173,9 @@ jobs:
 
       - name: Build electron app (Linux)
         if: matrix.os == 'ubuntu-latest'
-        run: npm run electron-builder-linux-prod
+        run: |
+          npm run electron-builder-linux-prod
+          mv core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-${{ env.GLIBC_VERSION }}.tar.gz
         working-directory: core
 
       - name: Build electron app (Windows)
@@ -208,7 +217,7 @@ jobs:
           overwrite: true
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
+          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-V${{ env.GLIBC_VERSION }}.tar.gz
           tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub pre-release (Linux)
@@ -218,7 +227,7 @@ jobs:
           overwrite: true
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz
+          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-V${{ env.GLIBC_VERSION }}.tar.gz
           tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub release (Windows)
