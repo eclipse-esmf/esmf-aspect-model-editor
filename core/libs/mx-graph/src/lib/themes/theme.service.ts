@@ -58,21 +58,23 @@ export class ThemeService {
   applyTheme(theme: string) {
     this.setCssVars(theme);
     this.graph.getChildVertices(this.graph.getDefaultParent()).forEach((shape: mxgraph.mxCell) => {
-      this.applyShapeStyle(shape);
+      this.graph.setCellStyle(this.generateThemeStyle(shape.style), [shape]);
     });
   }
 
-  applyShapeStyle(shape: mxgraph.mxCell) {
-    const shapeStyle = this.graph.getModel().getStyle(shape)?.split(';')[0];
+  generateThemeStyle(cellStyle: string) {
+    const shapeStyle = cellStyle?.split(';')[0];
     if (!shapeStyle) {
-      return;
+      return '';
     }
 
-    const style = [...Object.entries(this.theme[shapeStyle]), ...Object.entries(this.getDefaultShapesColors)].reduce(
-      (acc, [key, value]) => `${acc};${key}=${value}`,
-      ''
+    return (
+      shapeStyle +
+      [...Object.entries(this.theme[shapeStyle]), ...Object.entries(this.getDefaultShapesColors)].reduce(
+        (acc, [key, value]) => `${acc};${key}=${value}`,
+        ''
+      )
     );
-    this.graph.setCellStyle(`${shapeStyle}${style}`, [shape]);
   }
 
   setCssVars(theme: string) {

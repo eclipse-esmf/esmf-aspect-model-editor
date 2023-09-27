@@ -13,6 +13,7 @@
 
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
+import {ShapeConnectorService} from '@ame/connection';
 import {Injectable} from '@angular/core';
 import {CanExtend, DefaultAbstractEntity, DefaultEntity} from '../aspect-meta-model';
 
@@ -20,7 +21,11 @@ import {CanExtend, DefaultAbstractEntity, DefaultEntity} from '../aspect-meta-mo
   providedIn: 'root',
 })
 export class BaseEntityModelService {
-  constructor(private mxGraphService: MxGraphService, private notificationService: NotificationsService) {}
+  constructor(
+    private mxGraphService: MxGraphService,
+    private notificationService: NotificationsService,
+    private shapeConnectorService: ShapeConnectorService
+  ) {}
 
   checkExtendedElement(metaModelElement: CanExtend, extendedElement: CanExtend) {
     if (extendedElement && ![DefaultEntity, DefaultAbstractEntity].some(c => extendedElement instanceof c)) {
@@ -36,6 +41,15 @@ export class BaseEntityModelService {
         timeout: 5000,
       });
       return;
+    }
+
+    if (extendedElement && extendedElement instanceof DefaultAbstractEntity && !extendedElement.predefined) {
+      this.shapeConnectorService.connectShapes(
+        metaModelElement,
+        extendedElement,
+        this.mxGraphService.resolveCellByModelElement(metaModelElement),
+        resolvedCell
+      );
     }
 
     metaModelElement.extendedElement = extendedElement;

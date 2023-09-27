@@ -24,6 +24,8 @@ import {
 import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
 import {ShapeGeometry, basicShapeGeometry, circleShapeGeometry} from '@ame/shared';
 import {MxGraphHelper} from '@ame/mx-graph';
+import {Injector} from '@angular/core';
+import {ShapeSettingsStateService} from '@ame/editor';
 
 const allowedElements = [DefaultAspect, DefaultProperty, DefaultEntity, DefaultEither];
 
@@ -32,7 +34,14 @@ export class PropertiesFilterLoader implements FilterLoader {
   filterType: ModelFilter = ModelFilter.PROPERTIES;
   visibleElements = [DefaultAspect, DefaultProperty];
 
+  constructor(private injector: Injector) {}
+
   filter(rootElements: BaseMetaModelElement[]): ModelTree<BaseMetaModelElement>[] {
+    const shapeSettingsStateService = this.injector.get(ShapeSettingsStateService);
+    if (shapeSettingsStateService.isShapeSettingOpened) {
+      shapeSettingsStateService.closeShapeSettings();
+    }
+
     return rootElements
       .map(element => {
         this.cache = {};

@@ -62,6 +62,9 @@ export const SELECTOR_settingsButton = '[data-cy="settings-button"]';
 export const SELECTOR_notificationsButton = '[data-cy="notifications-button"]';
 export const SELECTOR_helpButton = '[data-cy="help-button"]';
 
+// Export namespace
+export const SELECTOR_enNamespaceList = '[data-cy="enNamespaceList"]';
+
 // Notifications
 export const SELECTOR_notificationsDialogCloseButton = '[data-cy="close-notifications"]';
 export const SELECTOR_notificationsClearButton = '[data-cy="clear-notifications"]';
@@ -116,6 +119,18 @@ export const FIELD_deconstructionRuleInput = '[data-cy="deconstruction-rule-inpu
 export const FIELD_deconstructionRuleSelect = '[data-cy="deconstruction-rule-select"]';
 export const FIELD_elementsModalButton = '[data-cy="elements-modal-button"]';
 export const SELECTOR_removeEntityValue = '[data-cy="remove-entity-value"]';
+export const PROP_configuration = '.properties-button > p > span';
+export const SELECTOR_configureProp = '[data-cy="properties-modal-button"]';
+export const SELECTOR_outgoingEdges = '.mat-expansion-panel-header-title > h3';
+export const FIELD_error = '.mat-mdc-form-field-error-wrapper';
+export const SELECTOR_resizeWindow = '.as-split-gutter-icon';
+export const SELECTOR_saveProperties = '[data-cy="propertiesSaveButton"]';
+export const SELECTOR_locateElement = '[data-cy="locateElement"]';
+export const SELECTOR_configuredProperty = ':nth-child(2) > .cdk-column-name > span';
+export const SELECTOR_configuredPropertyCheckBox = '#mat-mdc-checkbox-1-input';
+export const SELECTOR_configuredPropertyPayload = '#mat-input-42';
+export const SELECTOR_exampleProperty =
+  'ame-example-value-input-field > .mat-mdc-form-field > .mat-mdc-text-field-wrapper > .mat-mdc-form-field-flex > .mat-mdc-form-field-infix';
 
 // Search model
 export const SELECTOR_searchInputField = '[data-cy="searchInputField"]';
@@ -146,6 +161,7 @@ export const META_MODEL_minValue = 'minValue';
 export const META_MODEL_maxValue = 'maxValue';
 export const META_MODEL_localeCode = 'localeCode';
 export const META_MODEL_languageCode = 'languageCode';
+export const META_MODEL_exampleValue = 'exampleValue';
 
 // Settings Dialog
 export enum SettingsDialogSelectors {

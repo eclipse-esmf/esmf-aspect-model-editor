@@ -78,7 +78,6 @@ describe('Constraint', () => {
             .click({force: true})
             .get(`mat-option[cy-value="${classType}"]`)
             .click({force: true})
-            .wait(250)
             .then(() => cy.get(field.selector).should('have.value', field.value));
         });
       }

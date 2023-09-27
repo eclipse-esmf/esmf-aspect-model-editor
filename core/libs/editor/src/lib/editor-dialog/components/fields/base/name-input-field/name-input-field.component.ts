@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {
   BaseMetaModelElement,
@@ -27,17 +27,24 @@ import {
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 import {RdfService} from '@ame/rdf/services';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'ame-name-input-field',
   templateUrl: './name-input-field.component.html',
 })
-export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
+export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit, OnDestroy {
   public fieldName = 'name';
   private rdfService = inject(RdfService);
+  private nameSubscription = new Subscription();
 
   ngOnInit(): void {
     this.subscription = this.getMetaModelData().subscribe(() => this.setNameControl());
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
+    this.nameSubscription.unsubscribe();
   }
 
   private isDisabled() {
@@ -45,7 +52,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
   }
 
   private setNameControl() {
-    const nameControl = this.parentForm.get('name');
+    let nameControl = this.parentForm.get('name');
     if (nameControl?.value) {
       nameControl.updateValueAndValidity();
     }
@@ -62,7 +69,24 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
         }
       )
     );
-    this.parentForm.get('name').markAsTouched();
+    nameControl = this.parentForm.get('name');
+
+    this.nameSubscription.add(
+      nameControl.valueChanges.subscribe(() => {
+        const validation = EditorDialogValidators.duplicateName(
+          this.namespacesCacheService,
+          this.metaModelElement,
+          this.rdfService
+        )(nameControl);
+        if (validation) {
+          nameControl.setErrors({
+            ...(nameControl.errors || {}),
+            ...(validation || {}),
+          });
+        }
+      })
+    );
+    nameControl.markAsTouched();
   }
 
   private getNameValidators(): any[] {
@@ -70,10 +94,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
       return [];
     }
 
-    const nameValidators = [
-      Validators.required,
-      EditorDialogValidators.duplicateName(this.namespacesCacheService, this.metaModelElement, this.rdfService),
-    ];
+    const nameValidators = [Validators.required];
 
     if (this.metaModelElement instanceof DefaultUnit) {
       return nameValidators;

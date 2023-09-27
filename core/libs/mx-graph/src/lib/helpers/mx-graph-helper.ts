@@ -27,14 +27,16 @@ import {
 } from '@ame/meta-model';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {LanguageSettingsService} from '@ame/settings-dialog';
-import {basicShapeGeometry, ModelCompactTreeLayout, ModelHierarchicalLayout, modelRelations} from '@ame/shared';
+import {basicShapeGeometry, ModelCompactTreeLayout, ModelHierarchicalLayout} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {ModelBaseProperties} from '../models';
 import {mxCompactTreeLayout, mxConstants, mxHierarchicalLayout} from '../providers';
 import {MxGraphVisitorHelper, ShapeAttribute} from './mx-graph-visitor-helper';
-import {ModelTree} from '@ame/loader-filters';
+import {ModelFilter, ModelTree, filterRelations} from '@ame/loader-filters';
 
 export class MxGraphHelper {
+  static filterMode: ModelFilter = ModelFilter.DEFAULT;
+
   /**
    * Gets the node element for a cell
    *
@@ -154,7 +156,7 @@ export class MxGraphHelper {
    * @param child child for parent
    */
   static establishRelation(parent: BaseMetaModelElement, child: BaseMetaModelElement) {
-    const hasRelation = modelRelations.some(relation => {
+    const hasRelation = filterRelations.some(relation => {
       if (!(parent instanceof relation.from)) {
         return false;
       }
@@ -163,7 +165,7 @@ export class MxGraphHelper {
         return false;
       }
 
-      return true;
+      return !relation.isExceptions(child, this.filterMode);
     });
 
     if (hasRelation) {
@@ -288,6 +290,7 @@ export class MxGraphHelper {
       }
       return p;
     }
+
     if (targetModelElement instanceof DefaultProperty && sourceModelElement instanceof DefaultEntity) {
       const entityIncomingEdges = graph.getIncomingEdges(cell.source);
       let hasEnumeration = false;

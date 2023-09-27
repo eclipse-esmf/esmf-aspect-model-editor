@@ -13,7 +13,7 @@
 import {Component, Input} from '@angular/core';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
-import {ShapeSettingsService} from '../../services';
+import {ShapeSettingsService, ShapeSettingsStateService} from '../../services';
 
 @Component({
   selector: 'ame-element-list',
@@ -25,14 +25,18 @@ export class ElementListComponent {
   @Input() public iconRotation: 'rotate0' | 'rotate90' | 'rotate270' = 'rotate90';
   @Input() public elements: BaseMetaModelElement[] = [];
 
-  constructor(private mxGraphService: MxGraphService, private shapeSettingsService: ShapeSettingsService) {}
+  constructor(
+    private mxGraphService: MxGraphService,
+    private shapeSettingsService: ShapeSettingsService,
+    private shapeSettingsStateService: ShapeSettingsStateService
+  ) {}
 
   editElementModel(elementModel: BaseMetaModelElement) {
     const cell = this.mxGraphService.resolveCellByModelElement(elementModel);
     this.shapeSettingsService.editModel(elementModel);
     if (cell) {
       this.mxGraphService.navigateToCell(cell, true);
-      this.shapeSettingsService.selectedShapeForUpdate = cell;
+      this.shapeSettingsStateService.selectedShapeForUpdate = cell;
     }
   }
 

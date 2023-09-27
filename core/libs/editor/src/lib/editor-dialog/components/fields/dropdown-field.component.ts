@@ -16,7 +16,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {EditorModelService} from '../../editor-model.service';
 import {tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
-import {DefaultCharacteristic, DefaultConstraint} from '@ame/meta-model';
+import {BaseMetaModelElement, DefaultCharacteristic, DefaultConstraint} from '@ame/meta-model';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {ModelService} from '@ame/rdf/services';
@@ -31,13 +31,16 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   public subscription: Subscription = new Subscription();
   public selectedMetaModelElement: T;
   public metaModelClassName: string;
+  public get originalCharacteristic(): BaseMetaModelElement {
+    return this.editorModelService.originalMetaModel;
+  }
 
   protected _previousData: PreviousFormDataSnapshot = {};
 
   @Output() previousData = new EventEmitter<PreviousFormDataSnapshot>();
 
   protected constructor(
-    public metaModelDialogService: EditorModelService,
+    public editorModelService: EditorModelService,
     public modelService: ModelService,
     public languageSettings: LanguageSettingsService
   ) {}
@@ -72,7 +75,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   }
 
   public getMetaModelData() {
-    return this.metaModelDialogService.getMetaModelElement().pipe(
+    return this.editorModelService.getMetaModelElement().pipe(
       tap(metaModelElement => {
         this.metaModelElement = <T>metaModelElement;
       })
@@ -105,7 +108,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
 
   public updateFields(modelElement: T) {
     this.metaModelElement.metaModelVersion = this.modelService.getLoadedAspectModel().rdfModel.getMetaModelVersion();
-    this.metaModelDialogService._updateMetaModelElement(this.metaModelElement);
+    this.editorModelService._updateMetaModelElement(this.metaModelElement);
     this.parentForm.setControl('changedMetaModel', new FormControl(modelElement));
   }
 

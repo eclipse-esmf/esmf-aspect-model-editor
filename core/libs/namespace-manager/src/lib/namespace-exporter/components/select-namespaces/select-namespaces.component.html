@@ -25,6 +25,7 @@
       [disabled]="item.value.disabled"
       (change)="toggleNamespace($event, item.key)"
       class="namespace"
+      data-cy="enNamespaceList"
     >
       <div class="checkbox-info">
         <span class="namespace">{{ item.key }}</span>

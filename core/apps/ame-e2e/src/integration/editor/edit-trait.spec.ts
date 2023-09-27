@@ -13,7 +13,8 @@
 
 /// <reference types="Cypress" />
 
-import {FIELD_descriptionen, FIELD_preferredNameen, SELECTOR_editorSaveButton} from '../../support/constants';
+import {FIELD_descriptionen, FIELD_preferredNameen} from '../../support/constants';
+import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Trait', () => {
   it('can add new and rename', () => {
@@ -34,20 +35,17 @@ describe('Test editing Trait', () => {
     cy.shapeExists('Property1Trait').then(() => {
       cy.dbClickShape('Property1Trait').then(() => {
         cy.get(FIELD_descriptionen).clear({force: true}).type('New description for the new created trait', {force: true});
-        cy.get(SELECTOR_editorSaveButton)
-          .focus()
-          .click({force: true})
-          .then(() => {
-            cy.getUpdatedRDF().then(() => {
-              // TODO: resolve after validator fix
-              // expect(rdf).to.contain('samm:description "New description for the new created trait"@en');
-              cy.getAspect().then(aspect => {
-                expect(aspect.properties[0].property.characteristic.getDescription('en')).to.equal(
-                  'New description for the new created trait'
-                );
-              });
+        cyHelp.clickSaveButton().then(() => {
+          cy.getUpdatedRDF().then(() => {
+            // TODO: resolve after validator fix
+            // expect(rdf).to.contain('samm:description "New description for the new created trait"@en');
+            cy.getAspect().then(aspect => {
+              expect(aspect.properties[0].property.characteristic.getDescription('en')).to.equal(
+                'New description for the new created trait'
+              );
             });
           });
+        });
       });
     });
   });
@@ -56,14 +54,11 @@ describe('Test editing Trait', () => {
     cy.shapeExists('Property1Trait').then(() => {
       cy.dbClickShape('Property1Trait').then(() => {
         cy.get(FIELD_preferredNameen).clear({force: true}).type('new-preferredName');
-        cy.get(SELECTOR_editorSaveButton)
-          .focus()
-          .click({force: true})
-          .then(() => {
-            cy.getUpdatedRDF().then(rdf => {
-              expect(rdf).to.contain('samm:preferredName "new-preferredName"@en');
-            });
+        cyHelp.clickSaveButton().then(() => {
+          cy.getUpdatedRDF().then(rdf => {
+            expect(rdf).to.contain('samm:preferredName "new-preferredName"@en');
           });
+        });
       });
     });
   });

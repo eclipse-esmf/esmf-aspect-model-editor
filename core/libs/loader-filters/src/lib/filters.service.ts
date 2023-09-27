@@ -16,12 +16,14 @@ import {DefaultFilter} from './filters/default-filter';
 import {PropertiesFilterLoader} from './filters/properties-filter';
 import {FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from './models';
 import {BaseMetaModelElement} from '@ame/meta-model';
-import {MxGraphHelper, MxGraphRenderer, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphRenderer, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {NamespacesCacheService} from '@ame/cache';
 import {ModelService} from '@ame/rdf/services';
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {LoadingScreenService} from '@ame/shared';
 import {FILTER_ATTRIBUTES, FilterAttributesService} from './active-filter.session';
+import {switchMap} from 'rxjs';
+import {EditorService} from '@ame/editor';
 
 export type Filters = {
   default: FilterLoader;
@@ -58,7 +60,7 @@ export class FiltersService {
   }
 
   selectPropertiesFilter() {
-    this.currentFilter = new PropertiesFilterLoader();
+    this.currentFilter = new PropertiesFilterLoader(this.injector);
     this.filterAttributesService.activeFilter = ModelFilter.PROPERTIES;
   }
 
@@ -86,42 +88,52 @@ export class FiltersService {
 
   renderByFilter(filter: ModelFilter) {
     const mxGraphService = this.injector.get(MxGraphService);
+    const editorService = this.injector.get(EditorService);
     let selectedCell = mxGraphService.graph.selectionModel.cells?.[0];
     const selectedModelElement = selectedCell && MxGraphHelper.getModelElement(selectedCell);
 
     this.loadingScreen
       .open({title: 'Changing filter...', content: 'Please wait until the filtering is done'})
       .afterOpened()
-      .subscribe(() => {
-        this.filterAttributesService.isFiltering = true;
-        this.filtersMethods[filter]?.();
-        const namespaceCacheService = this.injector.get(NamespacesCacheService);
-        const mxGraphSetupVisitor = new MxGraphRenderer(
-          mxGraphService,
-          this.injector.get(MxGraphShapeOverlayService),
-          namespaceCacheService,
-          this.injector.get(LanguageSettingsService),
-          this.injector.get(ModelService).getLoadedAspectModel().rdfModel
-        );
+      .pipe(
+        switchMap(() => {
+          MxGraphHelper.filterMode = filter;
+          this.filterAttributesService.isFiltering = true;
+          this.filtersMethods[filter]?.();
+          const namespaceCacheService = this.injector.get(NamespacesCacheService);
+          const mxGraphSetupVisitor = new MxGraphRenderer(
+            mxGraphService,
+            this.injector.get(MxGraphShapeOverlayService),
+            namespaceCacheService,
+            this.injector.get(LanguageSettingsService),
+            this.injector.get(ModelService).getLoadedAspectModel().rdfModel
+          );
 
-        const currentFile = namespaceCacheService.currentCachedFile;
-        const rootElements = currentFile.getAllElements().filter(e => e.parents.length <= 0);
-        const filteredElements = this.filter(rootElements);
+          const currentFile = namespaceCacheService.currentCachedFile;
+          const rootElements = currentFile.getAllElements().filter(e => e.parents.length <= 0);
+          const filteredElements = this.filter(rootElements);
 
-        mxGraphService.deleteAllShapes();
-        mxGraphService
-          .updateGraph(() => {
+          mxGraphService.deleteAllShapes();
+
+          return mxGraphService.updateGraph(() => {
             for (const elementTree of filteredElements) {
               mxGraphSetupVisitor.render(elementTree, null);
             }
-          })
-          .subscribe(() => {
-            mxGraphService.formatShapes(true);
-            this.filterAttributesService.isFiltering = false;
-            selectedCell = selectedModelElement && mxGraphService.resolveCellByModelElement(selectedModelElement);
-            if (selectedCell) mxGraphService.navigateToCellByUrn(selectedModelElement.aspectModelUrn);
-            this.loadingScreen.close();
+            this.injector.get(MxGraphAttributeService).inCollapsedMode && mxGraphService.foldCells();
           });
+        }),
+        switchMap(() => {
+          mxGraphService.formatShapes(true);
+          this.filterAttributesService.isFiltering = false;
+          selectedCell = selectedModelElement && mxGraphService.resolveCellByModelElement(selectedModelElement);
+          if (selectedCell) mxGraphService.navigateToCellByUrn(selectedModelElement.aspectModelUrn);
+
+          return editorService.validate();
+        })
+      )
+      .subscribe(() => {
+        localStorage.removeItem('validating');
+        this.loadingScreen.close();
       });
   }
 }

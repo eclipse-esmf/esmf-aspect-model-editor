@@ -14,7 +14,7 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ModelApiService} from '@ame/api';
 import {NamespacesCacheService} from '@ame/cache';
-import {ConfirmDialogService, EditorService} from '@ame/editor';
+import {ConfirmDialogService, EditorService, ShapeSettingsStateService} from '@ame/editor';
 import {
   BaseMetaModelElement,
   DefaultAbstractEntity,
@@ -63,6 +63,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     private notificationsService: NotificationsService,
     private elementRef: ElementRef,
     private rdfService: RdfService,
+    private shapeSettingsStateService: ShapeSettingsStateService,
     public sidebarService: SidebarService
   ) {}
 
@@ -191,7 +192,12 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
               });
               return throwError(() => error);
             }),
-            finalize(() => this.loadingScreenService.close())
+            finalize(() => {
+              this.loadingScreenService.close();
+              if (this.shapeSettingsStateService.isShapeSettingOpened) {
+                this.shapeSettingsStateService.closeShapeSettings();
+              }
+            })
           )
         )
       )

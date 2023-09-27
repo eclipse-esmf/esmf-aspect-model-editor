@@ -19,7 +19,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {BaseMetaModelElement, ElementModelService} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {LogService} from '@ame/shared';
-import {ShapeSettingsService} from '@ame/editor';
+import {ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
 import {ModelService} from '@ame/rdf/services';
 import {FormGroup} from '@angular/forms';
 
@@ -32,11 +32,11 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   private unsubscribe: Subject<void> = new Subject();
 
   private get selectedShapeForUpdate(): mxgraph.mxCell | null {
-    return this.shapeSettingsService.selectedShapeForUpdate;
+    return this.shapeSettingsStateService.selectedShapeForUpdate;
   }
 
   public get isShapeSettingOpened() {
-    return this.shapeSettingsService.isShapeSettingOpened;
+    return this.shapeSettingsStateService.isShapeSettingOpened;
   }
 
   public get modelElement(): BaseMetaModelElement {
@@ -45,6 +45,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
 
   constructor(
     private shapeSettingsService: ShapeSettingsService,
+    private shapeSettingsStateService: ShapeSettingsStateService,
     private mxGraphService: MxGraphService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -53,7 +54,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
     private elementModelService: ElementModelService,
     private changeDetector: ChangeDetectorRef
   ) {
-    this.shapeSettingsService.onSettingsOpened$.subscribe(() =>
+    this.shapeSettingsStateService.onSettingsOpened$.subscribe(() =>
       requestAnimationFrame(() => {
         this.changeDetector.detectChanges();
       })
@@ -88,7 +89,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
 
   closeShapeSettings() {
     if (this.modelService.getLoadedAspectModel().rdfModel) {
-      this.shapeSettingsService.closeShapeSettings();
+      this.shapeSettingsStateService.closeShapeSettings();
       this.changeDetector.detectChanges();
     }
   }
@@ -104,7 +105,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   resetSelectedShapeForUpdate() {
-    this.shapeSettingsService.closeShapeSettings();
+    this.shapeSettingsStateService.closeShapeSettings();
     this.shapeSettingsService.unselectShapeForUpdate();
   }
 

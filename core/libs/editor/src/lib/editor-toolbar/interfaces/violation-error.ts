@@ -15,4 +15,5 @@ export interface ViolationError {
   message: string;
   focusNode: string;
   fix: string[];
+  errorCode?: string;
 }

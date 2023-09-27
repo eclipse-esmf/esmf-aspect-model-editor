@@ -12,3 +12,4 @@
  */
 
 export * from './filter-loader.interface';
+export * from './filter-relations';

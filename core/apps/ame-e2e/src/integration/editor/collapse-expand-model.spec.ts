@@ -21,6 +21,7 @@ describe('Test collapse/expand model', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_tbCollapseToggle).click({force: true}))
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       .then(() => cy.wait(500))
       .then(() => cyHelp.testShapeInCollapsedMode('AspectDefault'))
       .then(() => cyHelp.testShapeInCollapsedMode('property1'))
@@ -54,8 +55,8 @@ describe('Test collapse/expand model', () => {
         .then(() => {
           // collapse
           cy.get(SELECTOR_tbCollapseToggle).click({force: true});
-          cy.getHTMLCell('Characteristic1').click({force: true}).wait(1000); // wait for tooltip
-          cy.get('.mxTooltip')
+          cy.getHTMLCell('Characteristic1').click({force: true}); // wait for tooltip
+          cy.get('.mxTooltip', {timeout: 10000})
             .should('be.visible')
             .should('contain', 'Characteristic1')
             .get('.cell-tooltip table')

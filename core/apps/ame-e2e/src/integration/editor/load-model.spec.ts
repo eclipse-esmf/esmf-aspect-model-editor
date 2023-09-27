@@ -93,7 +93,7 @@ describe('Test load different characteristics', () => {
           cy.get('[data-cy="minValue"]').type('1', {force: true}).click({force: true});
           cy.get('[data-cy="maxValue"]').type('10', {force: true}).click({force: true});
         })
-        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain('samm-c:constraint :Constraint1');
@@ -117,7 +117,7 @@ describe('Test load different characteristics', () => {
             .contains('amperePerMetre')
             .click({force: true});
         })
-        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm-c:unit unit:amperePerMetre')));
     });
 
@@ -127,7 +127,7 @@ describe('Test load different characteristics', () => {
         .then(() =>
           cy.get(FIELD_dataType).clear({force: true}).type('double', {force: true}).get(FIELD_dataTypeOption).eq(0).click({force: true})
         )
-        .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:dataType xsd:double')));
     });
 
@@ -135,12 +135,17 @@ describe('Test load different characteristics', () => {
       cy.clickAddTraitPlusIcon('TestMeasurement')
         .then(() => cy.dbClickShape('Constraint2'))
         .then(() => {
-          cy.get(FIELD_constraintName).click({force: true}).get('mat-option').contains('FixedPointConstraint').click({force: true});
+          cy.get(FIELD_constraintName)
+            .click({force: true})
+            .then(() => cyHelp.forceChangeDetection())
+            .get('mat-option')
+            .contains('FixedPointConstraint')
+            .click({force: true});
           cy.get(SELECTOR_editorSaveButton).should('be.disabled');
           cy.get('[data-cy="scale"]').type('1', {force: true}).click({force: true});
           cy.get('[data-cy="integer"]').type('1', {force: true}).click({force: true});
         })
-        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain('samm-c:constraint :Constraint2');
@@ -154,6 +159,7 @@ describe('Test load different characteristics', () => {
       cy.dbClickShape('Constraint2')
         .then(() => cy.get('[data-cy="scale"]').clear({force: true}).type('-1', {force: true}))
         .then(() => cy.get('[data-cy="integer"]').click({force: true}))
+        .then(() => cyHelp.forceChangeDetection())
         .then(() => {
           cy.get('mat-error').should('have.text', 'Please provide a positive number');
           cy.get(SELECTOR_editorSaveButton).should('be.disabled');
@@ -165,6 +171,7 @@ describe('Test load different characteristics', () => {
       cy.dbClickShape('Constraint2')
         .then(() => cy.get('[data-cy="integer"]').clear({force: true}).type('-1', {force: true}))
         .then(() => cy.get('[data-cy="scale"]').click({force: true}))
+        .then(() => cyHelp.forceChangeDetection())
         .then(() => {
           cy.get('mat-error').should('have.text', 'Please provide a positive integer');
           cy.get(SELECTOR_editorSaveButton).should('be.disabled');
@@ -175,7 +182,7 @@ describe('Test load different characteristics', () => {
     it('can modify scale', () => {
       cy.dbClickShape('Constraint2')
         .then(() => cy.get('[data-cy="scale"]').clear({force: true}).type('10', {force: true}).click({force: true}))
-        .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain('samm-c:scale "10"^^xsd:positiveInteger');
@@ -194,7 +201,7 @@ describe('Test load different characteristics', () => {
         .then(() => cy.get(SELECTOR_editorCancelButton).focus().click({force: true}))
         .then(() => cy.dbClickShape('Constraint3'))
         .then(() => cy.get('mat-option').contains('EncodingConstraint').click({force: true}))
-        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain('samm-c:constraint :Constraint3');
@@ -217,7 +224,7 @@ describe('Test load different characteristics', () => {
           cy.get('mat-option').contains('RegularExpressionConstraint').click({force: true});
         })
         .then(() => cy.get('[data-cy="value"]').type('*', {force: true}))
-        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain('samm-c:constraint :Constraint4');
@@ -241,7 +248,7 @@ describe('Test load different characteristics', () => {
           cy.get('[data-cy="maxValue"]').type('100', {force: true});
           cy.get('[data-cy="minValue"]').type('1', {force: true});
         })
-        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain('samm-c:constraint :Constraint5');
@@ -272,7 +279,7 @@ describe('Test load different characteristics', () => {
             .contains('de-DE')
             .click({force: true});
         })
-        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain('samm-c:constraint :Constraint6');
@@ -300,7 +307,7 @@ describe('Test load different characteristics', () => {
             .contains('en')
             .click({force: true});
         })
-        .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain('samm-c:constraint :Constraint7');

@@ -13,7 +13,8 @@
 
 /// <reference types="Cypress" />
 
-import {FIELD_extends, SELECTOR_editorSaveButton, SELECTOR_tbDeleteButton} from '../../support/constants';
+import {FIELD_extends, SELECTOR_tbDeleteButton} from '../../support/constants';
+import {cyHelp} from '../../support/helpers';
 
 describe('Time Series Entity', () => {
   function createFileResourceEntity() {
@@ -21,7 +22,7 @@ describe('Time Series Entity', () => {
       .then(() => cy.dbClickShape('Entity1'))
       .then(() => cy.get(FIELD_extends).type('FileResource', {force: true}))
       .then(() => cy.get('[data-cy="FileResource"]').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}));
+      .then(() => cyHelp.clickSaveButton());
   }
 
   it('should create FileResource with its properties', () => {

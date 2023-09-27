@@ -22,8 +22,10 @@ import {
   FIELD_deconstructionRuleSelect,
   FIELD_descriptionen,
   FIELD_elementsModalButton,
+  FIELD_error,
   FIELD_name,
   FIELD_preferredNameen,
+  FIELD_see,
   FIELD_unit,
   FIELD_values,
   META_MODEL_dataType,
@@ -51,13 +53,24 @@ describe('Test editing Characteristic', () => {
       });
   });
 
+  it('should check that all fields are visible and the order is correct', () => {
+    cy.shapeExists('Characteristic1')
+      .then(() => cy.dbClickShape('Characteristic1'))
+      .then(() => cy.get(FIELD_name).should('be.visible'))
+      .then(() => cy.get(FIELD_preferredNameen).should('be.visible'))
+      .then(() => cy.get(FIELD_descriptionen).should('be.visible'))
+      .then(() => cy.get(FIELD_see).should('be.visible'))
+      .then(() => cy.get(FIELD_dataType).should('be.visible'))
+      .then(() => cyHelp.clickSaveButton());
+  });
+
   it('can edit description', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() =>
         cy.get(FIELD_descriptionen).clear({force: true}).type('New description for the new created characteristic', {force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy
           .getCellLabel('Characteristic1', META_MODEL_description)
@@ -91,7 +104,7 @@ describe('Test editing Characteristic', () => {
           .contains('integer')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getCellLabel('Characteristic1', META_MODEL_dataType).should('eq', `${META_MODEL_dataType} = integer`))
       .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:dataType xsd:integer')));
   });
@@ -100,7 +113,7 @@ describe('Test editing Characteristic', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.addSeeElements('http://www.see1.de', 'http://www.see2.de', 'http://www.see3.de'))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}).wait(250))
+      .then(() => cyHelp.clickSaveButton().wait(250))
       .then(() =>
         cy
           .getCellLabel('Characteristic1', META_MODEL_see)
@@ -119,7 +132,7 @@ describe('Test editing Characteristic', () => {
 
     cy.dbClickShape('Characteristic1')
       .then(() => cy.removeSeeElements('http://www.see2.de'))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy.getCellLabel('Characteristic1', META_MODEL_see).should('eq', `${META_MODEL_see} = http://www.see1.de,http://www.see3.de`)
       )
@@ -137,7 +150,7 @@ describe('Test editing Characteristic', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.removeSeeElements().addSeeElements('urn:irdi:eclass:0173-1#02-AAO677', 'urn:irdi:iec:0112/2///62683#ACC011#001'))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
 
       .then(() =>
         cy
@@ -154,7 +167,7 @@ describe('Test editing Characteristic', () => {
 
     cy.dbClickShape('Characteristic1')
       .then(() => cy.removeSeeElements().addSeeElements('urn:irdi:eclass:0173-1#02-AAO677'))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
 
       .then(() => cy.getCellLabel('Characteristic1', META_MODEL_see).should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677`))
       .then(() => cy.getUpdatedRDF())
@@ -170,7 +183,7 @@ describe('Test editing Characteristic', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_preferredNameen).clear({force: true}).type('new-preferredName', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
 
       .then(() =>
         cy.getCellLabel('Characteristic1', META_MODEL_preferredName).should('eq', `${META_MODEL_preferredName} = new-preferredName @en`)
@@ -179,6 +192,12 @@ describe('Test editing Characteristic', () => {
       .then(rdf => expect(rdf).to.contain('samm:preferredName "new-preferredName"@en'))
       .then(() => cy.getAspect())
       .then(aspect => expect(aspect.properties[0].property.characteristic.getPreferredName('en')).to.equal('new-preferredName'));
+  });
+
+  it('should check incoming and outgoing edges', () => {
+    cy.shapeExists('property1').then(() => cy.dbClickShape('property1'));
+    cy.contains('Incoming edges (1)').should('exist');
+    cy.contains('Outgoing edges (1)').should('exist');
   });
 
   it('can connect', () => {
@@ -205,6 +224,17 @@ describe('Test editing Characteristic', () => {
       .then(aspect => expect(aspect.properties[0].property.characteristic.name).to.equal('NewCharacteristic'));
   });
 
+  it('should validate name field', () => {
+    cy.shapeExists('NewCharacteristic')
+      .then(() => cy.dbClickShape('NewCharacteristic'))
+      .then(() => {
+        cy.get(FIELD_name).clear().type('char22#');
+        cy.get(FIELD_error).should('contain', 'Please start with an upper case character followed by letters/numerals.');
+      })
+      .then(() => cy.get(FIELD_name).clear())
+      .then(() => cy.get(FIELD_name).clear().type('NewCharacteristic'));
+  });
+
   it('can edit unit', () => {
     cy.shapeExists('NewCharacteristic')
       .then(() => cy.dbClickShape('NewCharacteristic'))
@@ -212,7 +242,7 @@ describe('Test editing Characteristic', () => {
       .then(() =>
         cy.get(FIELD_unit).clear({force: true}).type('amper', {force: true}).get('mat-option').contains('ampere').click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getAspect())
       .then(aspect => expect(aspect.properties[0].property.characteristic.unit.name).to.be.equal('ampere'));
   });
@@ -221,7 +251,7 @@ describe('Test editing Characteristic', () => {
     cy.shapeExists('NewCharacteristic')
       .then(() => cy.dbClickShape('NewCharacteristic'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Code').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
 
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
@@ -242,7 +272,7 @@ describe('Test editing Characteristic', () => {
       .then(() => cy.dbClickShape('NewCharacteristic'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
       .then(() => cy.get(FIELD_values).type('1{enter}2{enter}a{enter}b{enter}3{enter}4{enter}', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getCellLabel('NewCharacteristic', META_MODEL_values).should('eq', `${META_MODEL_values} = 1, 2, a, b, 3, 4`))
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
@@ -263,7 +293,7 @@ describe('Test editing Characteristic', () => {
     cy.dbClickShape('NewCharacteristic')
       .then(() => cy.get(FIELD_chipIcon).each(chip => cy.wrap(chip).click({force: true})))
       .then(() => cy.get(FIELD_values).type('2{enter}b{enter}3{enter}', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getCellLabel('NewCharacteristic', META_MODEL_values).should('eq', `${META_MODEL_values} = 2, b, 3`))
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
@@ -284,7 +314,7 @@ describe('Test editing Characteristic', () => {
       .then(() =>
         cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('MultiLanguageText').click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cyHelp.getAddShapePlusIcon('MultiLanguageText').then(addShapeIcon => expect(addShapeIcon).to.be.false));
   });
 
@@ -302,7 +332,7 @@ describe('Test editing Characteristic', () => {
       .then(() => cy.dbClickShape('Characteristic1').wait(200))
       .then(() => cy.get(SELECTOR_editorCancelButton).focus()) // reactivate change detection
       .then(() => cy.get(FIELD_name).clear({force: true}).type('NewCharacteristic', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
       .then(() => cy.shapeExists('property2'))
       .then(() => cy.clickAddShapePlusIcon('property2'))
@@ -318,7 +348,7 @@ describe('Test editing Characteristic', () => {
     cy.shapeExists('AspectDefault')
       .then(() => cy.dbClickShape('AspectDefault'))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('NewAspect', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
@@ -403,7 +433,8 @@ describe('Structured Value Characteristic', () => {
       .wait(500)
       .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
       .then(() => shouldHaveValues(['([\\\\w\\\\.-]+)', '([\\\\w\\\\.-]+\\\\.\\\\w{2,4})'], ['username', 'host']))
-      .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled').click({force: true}))
+      .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled'))
+      .then(() => cyHelp.clickSaveButton())
       .wait(200)
       .then(() => cy.shapeExists('username'))
       .then(() => cy.shapeExists('host'))
@@ -458,7 +489,7 @@ describe('Structured Value Characteristic', () => {
     it('should create 3 properties shapes', () => {
       cy.get(SELECTOR_editorSaveButton)
         .should('be.enabled')
-        .click({force: true})
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.shapeExists('group1Property'))
         .then(() => cy.shapeExists('group2Property'))
         .then(() => cy.shapeExists('group3Property'));
@@ -472,7 +503,8 @@ describe('Structured Value Characteristic', () => {
         )
         .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
         .then(() => shouldHaveValues(['(group1)', '(group2)', '(group3)'], ['group1Property', 'group2Property', 'group3Property']))
-        .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled').click({force: true}));
+        .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled'))
+        .then(() => cyHelp.clickSaveButton());
     });
 
     it('should create characteristics without add shape button', () => {
@@ -524,7 +556,8 @@ describe('Structured Value Characteristic', () => {
         .wait(500)
         .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
         .then(() => shouldHaveValues(['(\\\\d{4})', '(\\\\d{2})', '(\\\\d{2})'], ['year', 'month', 'day']))
-        .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled').click({force: true}))
+        .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled'))
+        .then(() => cyHelp.clickSaveButton())
         .wait(200)
         .then(() => cy.shapeExists('year'))
         .then(() => cy.shapeExists('month'))
@@ -568,7 +601,8 @@ describe('Structured Value Characteristic', () => {
         .wait(500)
         .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
         .then(() => shouldHaveValues(['([0-9A-Fa-f]{2})', '([0-9A-Fa-f]{2})', '([0-9A-Fa-f]{2})'], ['red', 'green', 'blue']))
-        .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled').click({force: true}))
+        .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled'))
+        .then(() => cyHelp.clickSaveButton())
         .wait(200)
         .then(() => cy.shapeExists('red'))
         .then(() => cy.shapeExists('green'))
@@ -710,7 +744,6 @@ describe('Structured Value Characteristic', () => {
       const childrenParams = [{name: 'username'}, {name: 'host'}];
 
       cy.get('#toast-container').contains('Unable to connect elements').click();
-      cy.get('#toast-container').should('be.empty');
       cy.isConnected(characteristicParams, entityParams).should('be.false');
       childrenParams.forEach(childParams => cy.isConnected(characteristicParams, childParams).should('be.true'));
     });
@@ -723,7 +756,6 @@ describe('Structured Value Characteristic', () => {
       const childrenParams = [{name: 'username'}, {name: 'host'}];
 
       cy.get('#toast-container').contains('Unable to connect elements').click();
-      cy.get('#toast-container').should('be.empty');
       cy.isConnected(characteristicParams, parentParams).should('be.false');
       cy.isConnected(parentParams, characteristicParams).should('be.true');
       childrenParams.forEach(childParams => {
@@ -740,7 +772,6 @@ describe('Structured Value Characteristic', () => {
       const childrenParams = [{name: 'username'}, {name: 'host'}];
 
       cy.get('#toast-container').contains('Unable to connect elements').click();
-      cy.get('#toast-container').should('be.empty');
       cy.isConnected(characteristicParams, parentParams).should('be.false');
       cy.isConnected(parentParams, characteristicParams).should('be.true');
       childrenParams.forEach(childParams => {

@@ -18,10 +18,10 @@ import {
   SELECTOR_dialogInputModel,
   SELECTOR_dialogStartButton,
   SELECTOR_ecEvent,
-  SELECTOR_editorSaveButton,
   SELECTOR_tbDeleteButton,
   SELECTOR_tbLoadButton,
 } from '../../support/constants';
+import {cyHelp} from '../../support/helpers';
 
 describe('Test edit Events', () => {
   it('can load events', () => {
@@ -90,7 +90,7 @@ describe('Test edit Events', () => {
     cy.shapeExists('event1')
       .then(() => cy.dbClickShape('event1'))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('newEvent', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');

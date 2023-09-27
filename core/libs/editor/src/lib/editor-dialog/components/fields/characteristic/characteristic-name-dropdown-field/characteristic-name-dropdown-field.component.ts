@@ -55,13 +55,13 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
   @Output() selectedCharacteristic = new EventEmitter<string>();
 
   constructor(
-    public metaModelDialogService: EditorModelService,
+    public editorModelService: EditorModelService,
     public modelService: ModelService,
     public languageSettings: LanguageSettingsService,
     private namespacesCacheService: NamespacesCacheService,
     private modelElementNamingService: ModelElementNamingService
   ) {
-    super(metaModelDialogService, modelService, languageSettings);
+    super(editorModelService, modelService, languageSettings);
   }
 
   ngOnInit(): void {
@@ -99,6 +99,10 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
         this.metaModelElement.name = this.selectedMetaModelElement.name;
       } else if (oldCharacteristic.isPredefined() && selectedCharacteristic.isPredefined()) {
         this.metaModelElement = this.modelElementNamingService.resolveElementNaming(newCharacteristicType) as DefaultCharacteristic;
+        if (this.originalCharacteristic && !this.originalCharacteristic.isPredefined()) {
+          this.metaModelElement.name = this.originalCharacteristic.name;
+          this.metaModelElement.aspectModelUrn = this.originalCharacteristic.aspectModelUrn;
+        }
       } else {
         this.metaModelElement.name = oldMetaModelElement.name;
         this.migrateCommonAttributes(oldMetaModelElement);

@@ -21,7 +21,8 @@ import {
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
-import Chainable = Cypress.Chainable;
+import {setUpDynamicModellingInterceptors, setUpStaticModellingInterceptors} from '../../support/api-mocks';
+import {awaitFormatModelRequest} from '../../support/api-mock-helpers';
 
 /**
  * Take into consideration that these tests do not use real backend and verify
@@ -60,8 +61,8 @@ describe.skip('Test modifying referenced model', () => {
       },
     };
 
-    setUpStaticInterceptors();
-    setUpDynamicInterceptors(namespacesConfig);
+    setUpStaticModellingInterceptors();
+    setUpDynamicModellingInterceptors(namespacesConfig);
 
     cy.visitDefault();
     cy.fixture(namespacesConfig.shared.files[0].response.fixture)
@@ -77,14 +78,14 @@ describe.skip('Test modifying referenced model', () => {
       .then(({body}) => {
         // Update interceptors to return the most recent value
         namespacesConfig.dependent.files[0].response = body;
-        setUpDynamicInterceptors(namespacesConfig);
+        setUpDynamicModellingInterceptors(namespacesConfig);
       })
       .then(() => awaitFormatModelRequest(`@prefix : <${newUrn}#>`))
       .then(({body}) => {
         // Update interceptors to return the most recent value
         namespacesConfig.shared.files[0].response = body;
         namespacesConfig.shared.name = newNamespace;
-        setUpDynamicInterceptors(namespacesConfig);
+        setUpDynamicModellingInterceptors(namespacesConfig);
       })
       .then(() => {
         // Trigger namespaces update in order to get the latest stubbed values from interceptors
@@ -132,8 +133,8 @@ describe.skip('Test modifying referenced model', () => {
       },
     };
 
-    setUpStaticInterceptors();
-    setUpDynamicInterceptors(namespacesConfig);
+    setUpStaticModellingInterceptors();
+    setUpDynamicModellingInterceptors(namespacesConfig);
 
     cy.visitDefault();
     cy.fixture(namespacesConfig.same.files[0].response.fixture)
@@ -149,7 +150,7 @@ describe.skip('Test modifying referenced model', () => {
       .then(({body}) => {
         // Update interceptors to return the most recent value
         namespacesConfig.same.files[1].response = body;
-        setUpDynamicInterceptors(namespacesConfig);
+        setUpDynamicModellingInterceptors(namespacesConfig);
       })
       .then(() => awaitFormatModelRequest(`@prefix : <${newUrn}#>`))
       .then(({body}) => {
@@ -164,7 +165,7 @@ describe.skip('Test modifying referenced model', () => {
           ],
         };
         namespacesConfig.same.files = [namespacesConfig.same.files[1]];
-        setUpDynamicInterceptors(namespacesConfig);
+        setUpDynamicModellingInterceptors(namespacesConfig);
       })
       .then(() => {
         // Trigger namespaces update in order to get the latest stubbed values from interceptors
@@ -202,15 +203,15 @@ describe.skip('Test modifying referenced model', () => {
       },
     };
 
-    setUpStaticInterceptors();
-    setUpDynamicInterceptors(namespacesConfig);
+    setUpStaticModellingInterceptors();
+    setUpDynamicModellingInterceptors(namespacesConfig);
 
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.getAspect())
       .then(({body}) => {
         namespacesConfig.main.files[0].response = body;
-        setUpDynamicInterceptors(namespacesConfig);
+        setUpDynamicModellingInterceptors(namespacesConfig);
       })
       .then(() => {
         cyHelp.saveCurrentModelToWorkspace();
@@ -220,7 +221,7 @@ describe.skip('Test modifying referenced model', () => {
       .then(({body}) => {
         // Update interceptors to return the most recent value
         namespacesConfig.main.files[0].response = body;
-        setUpDynamicInterceptors(namespacesConfig);
+        setUpDynamicModellingInterceptors(namespacesConfig);
       })
       .then(() => cy.dbClickShape('AspectDefault'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click())
@@ -232,7 +233,7 @@ describe.skip('Test modifying referenced model', () => {
         // Update interceptors to return the most recent value
         namespacesConfig.main.files[0].name = sharedModelFileName;
         namespacesConfig.main.files[0].response = body;
-        setUpDynamicInterceptors(namespacesConfig);
+        setUpDynamicModellingInterceptors(namespacesConfig);
       })
       .then(() => {
         // Trigger namespaces update in order to get the latest stubbed values from interceptors
@@ -245,48 +246,3 @@ describe.skip('Test modifying referenced model', () => {
       });
   });
 });
-
-function setUpStaticInterceptors(): void {
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', {}).as('formatModel');
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models', {});
-  cy.intercept('DELETE', 'http://localhost:9091/ame/api/models', {});
-}
-
-function setUpDynamicInterceptors(namespacesConfig: any): void {
-  const values: any[] = Object.values(namespacesConfig);
-
-  // Set up namespaces structure to return
-  cy.intercept(
-    'GET',
-    'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true',
-    values.reduce(
-      (acc, value) => ({
-        ...acc,
-        [value.name]: value.files.map(f => f.name),
-      }),
-      {}
-    )
-  );
-
-  // Set up files content to return
-  values.forEach(value => {
-    value.files.forEach(file => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: 'http://localhost:9091/ame/api/models',
-          headers: {namespace: value.name, 'file-name': file.name},
-        },
-        file.response
-      );
-    });
-  });
-}
-
-function awaitFormatModelRequest(toInclude: string): Chainable {
-  return cy.wait('@formatModel').then(({request}) => {
-    cy.wrap(request.body).should('include', toInclude);
-    return cy.wrap(request);
-  });
-}

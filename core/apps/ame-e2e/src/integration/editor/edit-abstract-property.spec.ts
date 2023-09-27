@@ -20,12 +20,12 @@ import {
   SELECTOR_dialogInputModel,
   SELECTOR_dialogStartButton,
   SELECTOR_ecAbstractProperty,
-  SELECTOR_editorSaveButton,
   SELECTOR_tbLoadButton,
   SELECTOR_ecAbstractEntity,
   SELECTOR_ecProperty,
   SELECTOR_ecEntity,
 } from '../../support/constants';
+import {cyHelp} from '../../support/helpers';
 
 describe('Create and Edit Abstract Property', () => {
   describe('Property -> Abstract Property', () => {
@@ -42,7 +42,7 @@ describe('Create and Edit Abstract Property', () => {
         .then(() => cy.get(FIELD_preferredNameen).focus().type('Preferred Name'))
         .then(() => cy.get(FIELD_descriptionen).focus().type('Description'))
         .then(() => cy.addSeeElements('http://test.com'))
-        .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
         .then(() => cy.clickConnectShapes('AbstractEntity1', 'abstractProperty1'))
@@ -107,13 +107,13 @@ describe('Create and Edit Abstract Property', () => {
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 1', {force: true}))
         .then(() => cy.get(FIELD_descriptionen).type('Description 1', {force: true}))
         .then(() => cy.addSeeElements('http://test1.com'))
-        .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}).wait(500))
+        .then(() => cyHelp.clickSaveButton().wait(500))
 
         .then(() => cy.dbClickShape('abstractProperty2'))
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 2', {force: true}))
         .then(() => cy.get(FIELD_descriptionen).type('Description 2', {force: true}))
         .then(() => cy.addSeeElements('http://test2.com'))
-        .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}).wait(500));
+        .then(() => cyHelp.clickSaveButton().wait(500));
 
       cy.getCellLabel('[abstractProperty1]', 'extends').should('eq', 'extends = abstractProperty1');
       cy.getCellLabel('[abstractProperty1]', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name 1 @en');

@@ -17,26 +17,23 @@ import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSele
 import {BindingsService} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {EditorService} from '../../editor.service';
-import {BehaviorSubject} from 'rxjs';
+import {ShapeSettingsStateService} from './shape-settings-state.service';
 
 const PURPLE_BLUE = '#448ee4';
 const BLACK = 'black';
 
 @Injectable({providedIn: 'root'})
 export class ShapeSettingsService {
-  public selectedShapeForUpdate: mxgraph.mxCell;
-  public isShapeSettingOpened = false;
   public modelElement: BaseMetaModelElement = null;
   private shapesToHighlight: Array<mxgraph.mxCell> | null;
-
-  onSettingsOpened$ = new BehaviorSubject(this.isShapeSettingOpened);
 
   constructor(
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphService: MxGraphService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private bindingsService: BindingsService,
-    private editorService: EditorService
+    private editorService: EditorService,
+    private shapeSettingsStateService: ShapeSettingsStateService
   ) {}
 
   setGraphListeners() {
@@ -86,34 +83,25 @@ export class ShapeSettingsService {
     this.mxGraphAttributeService.graph.addListener(mxEvent.DOUBLE_CLICK, () => this.editSelectedCell());
   }
 
-  openShapeSettings() {
-    this.isShapeSettingOpened = true;
-    this.onSettingsOpened$.next(this.isShapeSettingOpened);
-  }
-
-  closeShapeSettings() {
-    this.isShapeSettingOpened = false;
-    this.onSettingsOpened$.next(this.isShapeSettingOpened);
-  }
-
   unselectShapeForUpdate() {
-    this.selectedShapeForUpdate = null;
+    this.shapeSettingsStateService.selectedShapeForUpdate = null;
   }
 
   editSelectedCell() {
-    this.selectedShapeForUpdate = this.mxGraphShapeSelectorService.getSelectedShape();
+    this.shapeSettingsStateService.selectedShapeForUpdate = this.mxGraphShapeSelectorService.getSelectedShape();
 
-    if (!this.selectedShapeForUpdate || this.selectedShapeForUpdate?.isEdge()) {
-      this.selectedShapeForUpdate = null;
+    if (!this.shapeSettingsStateService.selectedShapeForUpdate || this.shapeSettingsStateService.selectedShapeForUpdate?.isEdge()) {
+      this.shapeSettingsStateService.selectedShapeForUpdate = null;
       return;
     }
 
-    this.openShapeSettings();
-    this.modelElement = MxGraphHelper.getModelElement(this.selectedShapeForUpdate);
+    this.shapeSettingsStateService.openShapeSettings();
+    this.modelElement = MxGraphHelper.getModelElement(this.shapeSettingsStateService.selectedShapeForUpdate);
   }
 
   editModel(elementModel: BaseMetaModelElement) {
-    this.openShapeSettings();
+    console.log('in editModel');
+    this.shapeSettingsStateService.openShapeSettings();
     this.modelElement = elementModel;
   }
 
