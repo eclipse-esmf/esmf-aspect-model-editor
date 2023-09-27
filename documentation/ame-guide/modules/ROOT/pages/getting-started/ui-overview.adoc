@@ -1,5 +1,3 @@
-:page-partial:
-
 [[aspect-model-editor-ui-overview]]
 = Aspect Model Editor UI overview
 
@@ -10,14 +8,15 @@ image::ame-ui-overview-numbers.png[Numbered UI overview, width=100%]
 The numbers in the image above indicate the following UI elements of the Aspect Model Editor:
 
 1. xref:getting-started/ui-overview.adoc#toolbar[Toolbar]
-2. xref:getting-started/ui-overview.adoc#settings[Settings]
-3. xref:getting-started/ui-overview.adoc#notifications[Notifications]
-4. xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar]
-5. xref:getting-started/ui-overview.adoc#map[Map]
-6. xref:getting-started/ui-overview.adoc#edit-dialog[Edit dialog]
-7. xref:getting-started/ui-overview.adoc#add-icon[Add icon]
-8. xref:getting-started/ui-overview.adoc#navigation[Navigation]
-9. xref:getting-started/ui-overview.adoc#search[Search]
+2. xref:getting-started/ui-overview.adoc#map[Map]
+3. xref:getting-started/ui-overview.adoc#navigation[Navigation]
+4. xref:getting-started/ui-overview.adoc#search[Search]
+5. xref:getting-started/ui-overview.adoc#settings[Settings]
+6. xref:getting-started/ui-overview.adoc#notifications[Notifications]
+7. xref:getting-started/ui-overview.adoc#help[Help]
+8. xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar]
+9. xref:getting-started/ui-overview.adoc#edit-dialog[Edit dialog]
+
 
 [[toolbar]]
 == Toolbar
@@ -107,48 +106,15 @@ For more information, see xref:getting-started/validation-and-notifications.adoc
 
 |===
 
-[[workspace-sidebar]]
-== Workspace sidebar
-
-The Workspace sidebar &ndash; see screenshot below &ndash; allows you to access namespaces (1) and to drag and drop elements to the graph area canvas (2). 
-
-image::ame-ui-overview-workspace-numbers.png[width=100%]
-
-Expand the Workspace sidebar to view the description of each element.
-
-To add an element to your model drag and drop it on the graph area canvas, edit its details, and connect it with the rest of the graph.
-
-For more information, see xref:getting-started/edit-models.adoc[Edit models].
 
 [[map]]
 == Map
 
-With the map, you can easily navigate your Aspect Model in the graph area canvas. 
+With the map, you can easily navigate your Aspect Model in the graph area canvas.
 
 To toggle its visibility, click the Show/Hide map icon image:toolbar-icons/minimap.png[Map toggle icon] in the toolbar.
 
 For more information, see xref:getting-started/navigate-models.adoc[Navigate models].
-
-[[edit-dialog]]
-== Edit dialog
-
-Edit the attributes of a selected element of your Aspect Model with the Edit dialog.
-
-To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Edit icon image:toolbar-icons/edit.png[Edit icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
-
-For more information, see xref:modeling/edit-elements.adoc[Edit elements].
-
-[[add-icon]]
-== Add icon
-
-Add the next logical element with the Add icon image:add.png[Add icon].
-
-For example, the Add icon at the top of a Characteristic element creates a Trait connected to:
-* The parent Property
-* An existing Characteristic
-* A new Constraint
-
-For more information, see xref:getting-started/edit-models.adoc#adding-elements[Use the Add icon].
 
 [[navigation]]
 == Navigation
@@ -160,12 +126,37 @@ Optimize your current view of the model with the navigation:
 * Zoom in
 * Zoom out
 
-image::zoom-fit.png[Zoom icons, width=100%]
+image:zoom-fit.png[]
 
 For more information, see xref:getting-started/navigate-models.adoc[Navigate models].
 
-++++
-<style>
-  .imageblock {flex-direction: row !important;}
-</style>
-++++
+[[help]]
+== Help
+
+The help icon image:toolbar-icons/info.png[] opens a page which lists details about the application and provides
+a link to the documentation.
+
+Example:
+image:help-docs.png[]
+
+[[workspace-sidebar]]
+== Workspace sidebar
+
+The Workspace sidebar &ndash; see screenshot below &ndash; allows you to access namespaces (1) and to drag and drop elements to the graph area canvas (2).
+
+image::ame-ui-overview-workspace-numbers.png[width=100%]
+
+Expand the Workspace sidebar to view the description of each element.
+
+To add an element to your model drag and drop it on the graph area canvas, edit its details, and connect it with the rest of the graph.
+
+For more information, see xref:getting-started/edit-models.adoc[Edit models].
+
+[[edit-dialog]]
+== Edit dialog
+
+Edit the attributes of a selected element of your Aspect Model with the Edit dialog.
+
+To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Edit icon image:toolbar-icons/edit.png[Edit icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+
+For more information, see xref:modeling/edit-elements.adoc[Edit elements].

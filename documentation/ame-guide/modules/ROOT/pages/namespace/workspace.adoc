@@ -1,0 +1,63 @@
+[[workspace-directory]]
+= Workspace directory
+
+The workspace is a simple folder structure on your local machine.
+
+By default, the Aspect Model Editor file directory is located at following path:
+
+* `+C:\Users\<YOUR-USER-NAME>\aspect-model-editor+` (on Windows)
+* `+/Users/<YOUR-USER-NAME>/aspect-model-editor+` (on Mac or Linux)
+
+There you can add the folder structure for all your Aspect Models.
+On your local file directory you can manually create such folders for the different namespaces and the version.
+Of course creating and deleting namespaces is also possible with this editor**.**
+
+Structure is visible in the xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar].
+
+image::namespace-file-structure.png[width=100%]
+
+Namespaces that do not follow this file structure might not work and might break the external references feature.
+
+== Action dialog in workspace
+
+The currently loaded Aspect Model is highlighted gray.
+
+The ... icon next to a model opens the options to
+
+* Delete
+* Load Aspect Model
+* Copy to clipboard
+
+image::workspace-action.png[]
+
+If you just select another Aspect Model, it will not be loaded but its elements will be listed in the left sidebar.
+
+== Create a namespace
+
+TIP: The namespace structure is created automatically if you start with the *+* icon.
+
+* If you select "Create/upload Aspect model", model and later click "Save to Workspace" the folder
+*org.eclipse.digitaltwin* will be created on your file system and the Workspace will show it respectively.
+* If you import a zip with models into your workspace, and it contains valid models with namespaces which
+did not exist in your workplace yet, these will be created additionally.
+
+TIP: In case you have manually added or deleted a file on your local Aspect Model Editor file directory it might happen
+that the change is not instantly visible on the Workspace. In such a case click the *refresh* icon to update the Workspace view.
+
+== Delete a namespace
+
+By deleting the last Aspect Model of a namespace, the folder will be deleted as well.
+
+== Troubleshooting
+=== Aspect Model is marked with a red exclamation mark
+Let us assume you have manually added a new ttl file to the namespace folder on your local file directory
+reserved for the Workspace.
+
+As the file was most probably not created in scope of that namespace, the Aspect Model Editor shows the error marker,
+as it will not be able to load this Aspect Model.
+
+In such a case you will need some expert who can fix it with a text editor.
+
+image::workspace-warning.png[]
+
+=== Aspect Model is marked with a red question mark

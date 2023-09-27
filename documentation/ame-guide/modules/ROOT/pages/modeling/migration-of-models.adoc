@@ -1,5 +1,3 @@
-:page-partial:
-
 [[migration-of-models]]
 = Migration of models
 
@@ -14,18 +12,16 @@ There are three different ways to migrate an Aspect Model:
 As soon as the application is started and an Aspect Model with an older version is found in the workspace.
 The migration from a BAMM 2.0.0-based Aspect Model is automatically migrated to the latest SAMM version.
 
+TIP: On this version you can migrate from BAMM 2.0.0 to SAMM 2.0.0.
+In case you have old models based on BAMM 1.0.0 and need to migrate to BAMM 2.0.0 first, please use the Aspect Model Editor in version 4.2.1.
+
 [[loading-old-model]]
 == Loading a (syntactically valid) Aspect Model based on an older version
 
 A migration of an Aspect Model in an old version can also be loaded as usual.
 The tool automatically recognises the older version and migrates it to the latest SAMM version.
 
-image::load-old-model.png[width=100%]
+image::load-old-model.png[]
 
-image::migrate-notification.png[width=200px]
+image:migrate-notification.png[]
 
-++++
-<style>
-  .imageblock {flex-direction: row !important;}
-</style>
-++++

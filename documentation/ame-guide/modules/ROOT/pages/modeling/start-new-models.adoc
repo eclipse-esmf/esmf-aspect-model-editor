@@ -1,24 +1,31 @@
-:page-partial:
-
-[[start-new-models]]
-= Start a new model
+[[new-model]]
+= Create a new model
 
 To start modeling, proceed as follows:
 
-WARNING: Already opened Aspect Models will be lost when loading a new one. Always make sure to save the previous Aspect Model first.
-
-. Click the *New/Load* icon in the xref:getting-started/ui-overview.adoc#toolbar[Toolbar].
-. Click *Create/Upload Aspect Model*.
+. Click the *+* icon in the toolbar.
+. Click *Create/Upload Aspect Model*. +
+image:create-new-model.png[width=80%]
 . Click *Models/Default Aspect Model* to start from the default Aspect Model.
 +
 image::start-modeling-ui.png[width=80%]
 . You can also modify the shown TTL code manually within the text area.
 +
-image::start-modeling-edit-ui.png[width=80%]
+image:start-modeling-edit-ui.png[width=80%]
 . Click *Start modeling*.
 
-++++
-<style>
-  .imageblock {flex-direction: row !important;}
-</style>
-++++
+== Save the model
+
+The model will be saved in your local workspace directory with the name of the Aspect element.
+
+image:save-to-workspace.png[width=80%]
+
+WARNING: If you have already opened an Aspect Model in the Editor and have not saved it before creating or loading a new one, it will be lost.
+Always make sure to save the previous Aspect Model first.
+
+In the Workspace you can find all models stored so far.
+
+image:see-model-in-workspace.png[width=80%]
+
+As you can see in the screenshot, the models are separated by namespace. +
+To learn more about namespaces see xref:namespace/namespaces-references.adoc[].
