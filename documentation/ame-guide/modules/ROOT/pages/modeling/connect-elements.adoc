@@ -14,7 +14,7 @@ image::connecting-elements.png[width=100%]
 
 * If only one direction is permitted, the arrow will be set respectively.
 * If both directions are permitted, the arrow will be set for the element selected first to the element selected second.
-* Tf a connection is not permitted, a respective warning will appear and the elements will not be connected.
+* If a connection is not permitted, a respective warning will appear and the elements will not be connected.
 
 TIP: Alternatively, you can use the context menu (right mouse click) to access the action items.
 
