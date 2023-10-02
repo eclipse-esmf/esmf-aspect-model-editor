@@ -175,7 +175,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           npm run electron-builder-linux-prod
-          mv core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-${{ env.GLIBC_VERSION }}.tar.gz
+          mv electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-${{ env.GLIBC_VERSION }}.tar.gz
         working-directory: core
 
       - name: Build electron app (Windows)
