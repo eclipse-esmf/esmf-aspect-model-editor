@@ -175,7 +175,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           npm run electron-builder-linux-prod
-          mv electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-${{ env.GLIBC_VERSION }}.tar.gz
+          mv electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
         working-directory: core
 
       - name: Build electron app (Windows)
@@ -217,7 +217,7 @@ jobs:
           overwrite: true
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-V${{ env.GLIBC_VERSION }}.tar.gz
+          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
           tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub pre-release (Linux)
@@ -227,7 +227,7 @@ jobs:
           overwrite: true
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-V${{ env.GLIBC_VERSION }}.tar.gz
+          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
           tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub release (Windows)
