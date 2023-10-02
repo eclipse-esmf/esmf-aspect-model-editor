@@ -14,12 +14,12 @@
 import Chainable = Cypress.Chainable;
 
 export function awaitValidateModelRequest(toInclude: string): Chainable {
-  return cy.wait(10000)
-    .then(() => cy.wait('@validateModel', {timeout: 30000})
-      .then(({request}) => {
-        cy.wrap(request.body).should('include', toInclude);
-        return cy.wrap(request);
-      }));
+  return cy.wait(10000).then(() =>
+    cy.wait('@validateModel', {timeout: 30000}).then(({request}) => {
+      cy.wrap(request.body).should('include', toInclude);
+      return cy.wrap(request);
+    })
+  );
 }
 
 export function awaitFormatModelRequest(toInclude: string): Chainable {
