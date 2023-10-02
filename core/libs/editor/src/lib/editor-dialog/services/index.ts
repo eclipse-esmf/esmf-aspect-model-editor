@@ -11,3 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 export * from './shape-settings.service';
+export * from './shape-settings-state.service';

@@ -31,8 +31,9 @@ import './constants';
 // When a command from ./commands is ready to use, import with `import * as commands from './commands'` syntax
 // import * as commands from './commands';
 import './commands';
-
 import './helpers';
+import './api-mocks';
+import './api-mock-helpers';
 
 before(function before() {
   // Do not truncate assertion outputs of arrays and objects

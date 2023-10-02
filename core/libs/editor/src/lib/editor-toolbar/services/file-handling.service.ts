@@ -80,18 +80,26 @@ export class FileHandlingService {
 
           this.loadingScreenService.open(loadingScreenOptions);
           const migratedModel = this.migratorService.bammToSamm(rdfAspectModel);
-          return this.editorService.loadNewAspectModel(migratedModel, '').pipe(
-            first(),
-            catchError(error => {
-              this.notificationsService.error({
-                title: 'Error when loading Aspect Model. Reverting to previous Aspect Model',
-                message: `${error}`,
-                timeout: 5000,
-              });
-              return of(null);
-            }),
-            finalize(() => this.loadingScreenService.close())
-          );
+          return this.modelApiService
+            .validate(migratedModel)
+            .pipe(
+              switchMap(validations => {
+                const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
+                return found ? throwError(() => found.message) : this.editorService.loadNewAspectModel(migratedModel, '');
+              })
+            )
+            .pipe(
+              first(),
+              catchError(error => {
+                this.notificationsService.error({
+                  title: 'Error when loading Aspect Model. Reverting to previous Aspect Model',
+                  message: `${error}`,
+                  timeout: 5000,
+                });
+                return of(null);
+              }),
+              finalize(() => this.loadingScreenService.close())
+            );
         })
       );
   }
@@ -257,13 +265,19 @@ export class FileHandlingService {
     let newModelAbsoluteFileName: string;
 
     return this.modelApiService.formatModel(migratedFile).pipe(
-      tap(formattedModel => (newModelContent = formattedModel)),
-      switchMap(() =>
-        this.rdfService.loadExternalReferenceModelIntoStore({
-          fileName,
-          aspectMetaModel: newModelContent,
-        })
-      ),
+      switchMap(formattedModel => {
+        newModelContent = formattedModel;
+        return this.modelApiService.validate(migratedFile);
+      }),
+      switchMap(validations => {
+        const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
+        return found
+          ? throwError(() => found.message)
+          : this.rdfService.loadExternalReferenceModelIntoStore({
+              fileName,
+              aspectMetaModel: newModelContent,
+            });
+      }),
       tap(({absoluteAspectModelFileName}) => (newModelAbsoluteFileName = absoluteAspectModelFileName)),
       switchMap(() => this.modelApiService.saveModel(newModelContent, newModelAbsoluteFileName)),
       tap(() => {

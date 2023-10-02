@@ -13,13 +13,7 @@
 
 /// <reference types="Cypress" />
 
-import {
-  FIELD_characteristicName,
-  FIELD_name,
-  FIELD_unit,
-  SELECTOR_editorSaveButton,
-  SELECTOR_tbDeleteButton,
-} from '../../support/constants';
+import {FIELD_characteristicName, FIELD_name, FIELD_unit, SELECTOR_tbDeleteButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Unit', () => {
@@ -38,7 +32,7 @@ describe('Test editing Unit', () => {
           .contains('CustomUnit1')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cyHelp.hasAddShapeOverlay('Quantifiable1'))
       .then(hasAddOverlay => expect(hasAddOverlay).equal(true))
       .then(() => {
@@ -69,7 +63,7 @@ describe('Test editing Unit', () => {
           .contains('CustomUnit2')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => {
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
@@ -92,7 +86,7 @@ describe('Test editing Unit', () => {
   it('can remove unit connection in edit view', () => {
     cy.dbClickShape('Quantifiable1')
       .then(() => cy.get('[data-cy=clear-unit-button]').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => {
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
@@ -123,7 +117,7 @@ describe('Test editing Unit', () => {
           .contains('CustomUnit2')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.clickShape('CustomUnit2'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() =>
@@ -156,11 +150,11 @@ describe('Test editing Unit', () => {
           .contains('CustomUnit1')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('Quantifiable1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Measurement').click({force: true}))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('Measurement1', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cyHelp.hasAddShapeOverlay('Measurement1'))
       .then(hasAddOverlay => expect(hasAddOverlay).equal(true))
       .then(() => {
@@ -188,7 +182,7 @@ describe('Test editing Unit', () => {
           .contains('CustomUnit1')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cyHelp.hasAddShapeOverlay('Duration1'))
       .then(hasAddOverlay => expect(hasAddOverlay).equal(true))
       .then(() => {
@@ -206,7 +200,7 @@ describe('Test editing Unit', () => {
       .then(() => cy.dbClickShape('Duration1'))
       .then(() => cy.get('[data-cy=clear-unit-button]').click({force: true}))
       .then(() => cy.get(FIELD_unit).clear({force: true}).type('day').get('mat-option').eq(1).contains('day').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cyHelp.hasAddShapeOverlay('Duration1'))
       .then(hasAddOverlay => expect(hasAddOverlay).equal(true))
       .then(() => {

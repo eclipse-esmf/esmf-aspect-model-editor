@@ -51,6 +51,23 @@ export class cyHelp {
       });
   }
 
+  public static forceChangeDetection() {
+    let angular;
+    let $document;
+    return cy
+      .window()
+      .then(win => (angular = win['ng']))
+      .then(() => cy.document().then(d => ($document = d)))
+      .then(() => {
+        const app = angular.getComponent($document.querySelector('ame-root'));
+        angular.applyChanges(app);
+      });
+  }
+
+  public static clickSaveButton() {
+    return this.forceChangeDetection().then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}));
+  }
+
   // TODO: after we replace the add buttons with those from label, change this
   public static findShapeByName(name: string, win: Window): mxgraph.mxCell {
     const mxGraphAttributeService: MxGraphAttributeService = win['angular.mxGraphAttributeService'];
@@ -228,7 +245,7 @@ export class cyHelp {
       .then(() => cy.dbClickShape(oldName))
       .then(() => cy.get('#graph').click())
       .then(() => cy.get(FIELD_name).clear({force: true}).type(newName, {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}));
+      .then(() => this.clickSaveButton());
   }
 
   static assertNullMultiLanguageValues(modelElement: BaseMetaModelElement, langTag: string) {

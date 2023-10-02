@@ -17,7 +17,6 @@ import {catchError, map, mergeMap, tap, timeout} from 'rxjs/operators';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, LogService} from '@ame/shared';
 import {ModelValidatorService} from './model-validator.service';
-import {RdfModel} from '@ame/rdf/utils';
 import {OpenApi, ViolationError} from '@ame/editor';
 
 @Injectable({
@@ -142,12 +141,12 @@ export class ModelApiService {
     );
   }
 
-  getAllNamespacesFilesContent(rdfModel?: RdfModel): Observable<FileContentModel[]> {
+  getAllNamespacesFilesContent(exceptionFileName?: string | undefined): Observable<FileContentModel[]> {
     return this.getNamespacesAppendWithFiles().pipe(
       map(aspectModelFileNames =>
         aspectModelFileNames.reduce<any[]>(
           (files, absoluteFileName) =>
-            absoluteFileName !== rdfModel?.absoluteAspectModelFileName
+            absoluteFileName !== exceptionFileName
               ? [
                   ...files,
                   this.getAspectMetaModel(absoluteFileName).pipe(

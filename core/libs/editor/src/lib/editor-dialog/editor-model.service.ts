@@ -26,9 +26,17 @@ export class EditorModelService {
   private readOnly = false;
   private saveButtonEnabled = true;
   private characteristicInstantiator: CharacteristicInstantiator;
+  public originalMetaModel: BaseMetaModelElement;
 
   constructor(private modelService: ModelService) {
     this.metaModelElementSubject.asObservable().subscribe(newMetaModelElement => {
+      if (this.originalMetaModel && !newMetaModelElement) {
+        this.originalMetaModel = null;
+      }
+
+      if (!this.originalMetaModel && newMetaModelElement) {
+        this.originalMetaModel = newMetaModelElement;
+      }
       this.metaModelElement = newMetaModelElement;
     });
   }
@@ -54,6 +62,11 @@ export class EditorModelService {
   }
 
   _updateMetaModelElement(metaModelElement: BaseMetaModelElement): void {
+    if (metaModelElement === null) {
+      this.metaModelElementSubject.next(metaModelElement);
+      return;
+    }
+
     if (!this.characteristicInstantiator) {
       this.characteristicInstantiator = new CharacteristicInstantiator(
         new MetaModelElementInstantiator(this.modelService.getLoadedAspectModel().rdfModel, null)

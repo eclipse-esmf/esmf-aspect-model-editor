@@ -56,12 +56,12 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
   }
 
   getCurrentValue() {
-    return (
-      this.previousData?.['dataType'] ||
-      this.previousData?.['newDataType'] ||
-      this.previousData?.[this.fieldName] ||
-      this.metaModelElement?.dataType
-    );
+    return !this.metaModelElement.isPredefined()
+      ? this.previousData?.['dataType'] ||
+          this.previousData?.['newDataType'] ||
+          this.previousData?.[this.fieldName] ||
+          this.metaModelElement?.dataType
+      : this.metaModelElement?.dataType;
   }
 
   setDataTypeControl() {

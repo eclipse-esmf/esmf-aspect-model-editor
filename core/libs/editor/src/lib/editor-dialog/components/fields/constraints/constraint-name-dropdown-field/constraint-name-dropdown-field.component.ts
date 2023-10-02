@@ -41,12 +41,12 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
   @Output() selectedConstraint = new EventEmitter<string>();
 
   constructor(
-    public metaModelDialogService: EditorModelService,
+    public editorModelService: EditorModelService,
     public modelService: ModelService,
     public namespacesCacheService: NamespacesCacheService,
     public languageSettings: LanguageSettingsService
   ) {
-    super(metaModelDialogService, modelService, languageSettings);
+    super(editorModelService, modelService, languageSettings);
   }
 
   ngOnInit(): void {

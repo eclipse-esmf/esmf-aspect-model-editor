@@ -16,7 +16,7 @@
  * https://github.com/jgraph/mxgraph/blob/master/javascript/examples/extendcanvas.html
  */
 
-import {Inject, Injectable} from '@angular/core';
+import {Inject, Injectable, NgZone} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
@@ -44,52 +44,56 @@ export class MxGraphSetupService {
     private bindingsService: BindingsService,
     private browserService: BrowserService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private mxGraphAttributeService: MxGraphAttributeService
+    private mxGraphAttributeService: MxGraphAttributeService,
+    private ngZone: NgZone
   ) {}
 
   setUp() {
-    const editor = (this.mxGraphAttributeService.editor = new mxEditor(
-      mxUtils.load(this.appConfig.editorConfiguration).getDocumentElement()
-    ));
-    this.graph = this.mxGraphAttributeService.graph = (editor as any).graph;
+    this.ngZone.runOutsideAngular(() => {
+      const editor = (this.mxGraphAttributeService.editor = new mxEditor(
+        mxUtils.load(this.appConfig.editorConfiguration).getDocumentElement()
+      ));
+      this.graph = this.mxGraphAttributeService.graph = (editor as any).graph;
 
-    this.scrollTileSize = new mxRectangle(0, 0, this.graph.container.clientWidth, this.graph.container.clientHeight);
-    this.graphSizeDidChange = this.graph.sizeDidChange;
-    this.graphCellRedraw = this.graph.cellRenderer.redraw;
+      this.scrollTileSize = new mxRectangle(0, 0, this.graph.container.clientWidth, this.graph.container.clientHeight);
+      this.graphSizeDidChange = this.graph.sizeDidChange;
+      this.graphCellRedraw = this.graph.cellRenderer.redraw;
 
-    this.graph.setPanning(true);
-    this.graph.setCellsEditable(false);
-    this.graph.setCellsResizable(false);
-    this.graph.graphHandler.setRemoveCellsFromParent(false);
-    this.graph.setAllowDanglingEdges(false);
-    this.graph.setCellsDisconnectable(false);
+      this.graph.setPanning(true);
+      this.graph.setCellsEditable(false);
+      this.graph.setCellsResizable(false);
+      this.graph.graphHandler.setRemoveCellsFromParent(false);
+      this.graph.setAllowDanglingEdges(false);
+      this.graph.setCellsDisconnectable(false);
 
-    this.graph.popupMenuHandler.factoryMethod = (menu: mxgraph.mxPopupMenu, cell: mxgraph.mxCell) => this.getPopupFactoryMethod(menu, cell);
-    this.graph.view.getBackgroundPageBounds = () => this.getBackgroundPageBounds();
-    this.graph.getPreferredPageSize = () => this.getPreferredPageSize();
-    this.graph.sizeDidChange = () => this.sizeDidChange();
-    this.graph.convertValueToString = (cell: mxgraph.mxCell) => this.convertValueToString(cell);
-    this.graph.cellRenderer.redraw = (state, force, rendering) => this.redraw(state, force, rendering);
-    this.graph.getTooltipForCell = (cell: mxgraph.mxCell) => this.getTooltipForCell(cell);
-    this.graph.isCellVisible = (cell: mxgraph.mxCell) => this.isCellVisible(cell);
-    this.graph.setHtmlLabels(true);
+      this.graph.popupMenuHandler.factoryMethod = (menu: mxgraph.mxPopupMenu, cell: mxgraph.mxCell) =>
+        this.getPopupFactoryMethod(menu, cell);
+      this.graph.view.getBackgroundPageBounds = () => this.getBackgroundPageBounds();
+      this.graph.getPreferredPageSize = () => this.getPreferredPageSize();
+      this.graph.sizeDidChange = () => this.sizeDidChange();
+      this.graph.convertValueToString = (cell: mxgraph.mxCell) => this.convertValueToString(cell);
+      this.graph.cellRenderer.redraw = (state, force, rendering) => this.redraw(state, force, rendering);
+      this.graph.getTooltipForCell = (cell: mxgraph.mxCell) => this.getTooltipForCell(cell);
+      this.graph.isCellVisible = (cell: mxgraph.mxCell) => this.isCellVisible(cell);
+      this.graph.setHtmlLabels(true);
 
-    this.initializeGraphConstants();
-    this.initLayout();
+      this.initializeGraphConstants();
+      this.initLayout();
 
-    this.graph.getLabel = (cell): any => {
-      if (!cell.value && this.configurationService.getSettings().showConnectionLabels) {
-        // label for edges
-        return MxGraphHelper.createEdgeLabel(cell, this.graph);
-      }
+      this.graph.getLabel = (cell): any => {
+        if (!cell.value && this.configurationService.getSettings().showConnectionLabels) {
+          // label for edges
+          return MxGraphHelper.createEdgeLabel(cell, this.graph);
+        }
 
-      if (!cell.connectable) {
-        // label for sub cells
-        return;
-      }
+        if (!cell.connectable) {
+          // label for sub cells
+          return;
+        }
 
-      return MxGraphHelper.createPropertiesLabel(cell);
-    };
+        return MxGraphHelper.createPropertiesLabel(cell);
+      };
+    });
   }
 
   // construct the path for the asset

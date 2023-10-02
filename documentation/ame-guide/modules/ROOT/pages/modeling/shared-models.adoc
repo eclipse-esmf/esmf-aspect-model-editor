@@ -7,25 +7,20 @@ to support you defining model parts, which can be reused in multiple other model
 TIP: In case you want to extract a part of an Aspect Model graph into a "shared model" please make sure to delete the Aspect element from the model. Creating "shared models" proves advantageous, particularly when developing broadly defined elements for use in various Aspect Models.
 
 After deleting the Aspect element, you can choose a new file name to describe the resulting "shared model".
-This file can then be saved in the workspace like any other ttl file. +
+This file can then be saved in the workspace like any other ttl file.
 
-image::shared-model-file-name.png[Save changes in Edit dialog,width=50%]
+image:shared-model-file-name.png[Save changes in Edit dialog,width=50%]
 
 As a result, you create a valid ttl file, which just does not contain the "Aspect" element.
 From all other points of view the lifecycle of such a model is similar with the one of an Aspect Model.
 
-image::shared-model-view.png[width=100%]
+image::shared-model-view.png[]
 
 Such a model can be referenced from multiple other shared models and Aspect Models.
 As soon as you define such a reference the "shared model" it treated like a dependency from the Aspect Model's perspective.
 
 When using the "shared model", the process is the same as with external references, see xref:namespace/use-external-references.adoc[Use external references].
 
-image::use-shared-models.png[width=100%]
+image::use-shared-models.png[]
 
 TIP: In case you need to convert a "shared model" into an Aspect Model, simply add an Aspect element as the first element in the graph.
-++++
-<style>
-  .imageblock {flex-direction: row !important;}
-</style>
-++++

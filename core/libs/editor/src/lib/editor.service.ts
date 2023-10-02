@@ -64,7 +64,6 @@ import {
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
-  DefaultEntityValue,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
@@ -83,26 +82,24 @@ import {RdfModel} from '@ame/rdf/utils';
 import {Title} from '@angular/platform-browser';
 import {OpenApi, ViolationError} from './editor-toolbar';
 import {FiltersService, FILTER_ATTRIBUTES, FilterAttributesService} from '@ame/loader-filters';
+import {ShapeSettingsStateService} from './editor-dialog';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EditorService {
-  private filtersService = inject(FiltersService);
+  loadModel$ = new BehaviorSubject<any>(null);
+  delayedBindings: Array<any> = [];
+
+  private filtersService: FiltersService = inject(FiltersService);
   private filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
-  private configurationService = inject(ConfigurationService);
+  private configurationService: ConfigurationService = inject(ConfigurationService);
 
-  private get settings() {
-    return this.configurationService.getSettings();
-  }
-
-  private validateModel$ = new BehaviorSubject(this.settings.autoValidationEnabled);
+  private validateModel$ = new BehaviorSubject<boolean>(this.settings.autoValidationEnabled);
   private validateModelSubscription$: Subscription;
-  private saveModel$ = new BehaviorSubject(this.settings.autoSaveEnabled);
+  private saveModel$ = new BehaviorSubject<boolean>(this.settings.autoSaveEnabled);
   private saveLatestModelSubscription$: Subscription;
   private lastSavedRDF$ = new BehaviorSubject<Partial<ILastSavedModel>>({});
-  public loadModel$ = new BehaviorSubject(null);
-  public delayedBindings: Array<any> = [];
 
   public get savedRdf$() {
     return this.lastSavedRDF$.asObservable();
@@ -110,6 +107,10 @@ export class EditorService {
 
   public get currentCachedFile(): CachedFile {
     return this.namespaceCacheService.currentCachedFile;
+  }
+
+  private get settings() {
+    return this.configurationService.getSettings();
   }
 
   constructor(
@@ -131,7 +132,8 @@ export class EditorService {
     private confirmDialogService: ConfirmDialogService,
     private elementModelService: ElementModelService,
     private titleService: Title,
-    private sidebarService: SidebarService
+    private sidebarService: SidebarService,
+    private shapeSettingsStateService: ShapeSettingsStateService
   ) {
     if (!environment.production) {
       window['angular.editorService'] = this;
@@ -223,14 +225,6 @@ export class EditorService {
     this.mxGraphAttributeService.editor.addAction(actionName, callback);
   }
 
-  removeEntityValueToEntityValueEdge(parentEntityValue: DefaultEntityValue, childEntityValue: DefaultEntityValue): void {
-    const parentEntityValueCell = this.mxGraphService.resolveCellByModelElement(parentEntityValue);
-    const childEntityValueCell = this.mxGraphService.resolveCellByModelElement(childEntityValue);
-    const edgeToRemove = parentEntityValueCell.edges.find(edge => edge.target === childEntityValueCell);
-
-    this.mxGraphService.removeCells([edgeToRemove]);
-  }
-
   handleFileVersionConflicts(fileName: string, fileContent: string): Observable<RdfModel> {
     const currentModel = this.rdfService.currentRdfModel;
 
@@ -287,44 +281,47 @@ export class EditorService {
     return this.instantiatorService.instantiateFile(extRdfModel, findCacheFile, fileName);
   }
 
-  public loadExternalModels(loadedRdfModel?: RdfModel) {
+  loadExternalModels(loadedRdfModel?: RdfModel): Observable<RdfModel[]> {
     this.rdfService.externalRdfModels = [];
-    return this.modelApiService.getAllNamespacesFilesContent(loadedRdfModel).pipe(
-      mergeMap((fileContentModels: Array<FileContentModel>) => {
-        if (fileContentModels.length) {
-          return forkJoin(fileContentModels.map(fileContent => this.rdfService.loadExternalReferenceModelIntoStore(fileContent)));
-        }
-        return of([]);
-      })
-    );
-  }
-
-  public addAspectModelFileIntoStore(aspectModelFileName: string): Observable<string> {
     return this.modelApiService
-      .getAspectMetaModel(aspectModelFileName)
+      .getAllNamespacesFilesContent(loadedRdfModel?.absoluteAspectModelFileName)
       .pipe(
-        tap(aspectModel => this.rdfService.loadExternalReferenceModelIntoStore(new FileContentModel(aspectModelFileName, aspectModel)))
+        mergeMap((fileContentModels: Array<FileContentModel>) =>
+          fileContentModels.length
+            ? forkJoin(fileContentModels.map(fileContent => this.rdfService.loadExternalReferenceModelIntoStore(fileContent)))
+            : of([])
+        )
       );
   }
 
-  public removeAspectModelFileFromStore(aspectModelFileName: string) {
+  loadModels(): Observable<RdfModel[]> {
+    return this.modelApiService
+      .getAllNamespacesFilesContent()
+      .pipe(
+        mergeMap((fileContentModels: FileContentModel[]) =>
+          fileContentModels.length ? this.rdfService.parseModels(fileContentModels) : of([])
+        )
+      );
+  }
+
+  removeAspectModelFileFromStore(aspectModelFileName: string) {
     const index = this.rdfService.externalRdfModels.findIndex(
       extRdfModel => extRdfModel.absoluteAspectModelFileName === aspectModelFileName
     );
     this.rdfService.externalRdfModels.splice(index, 1);
   }
 
-  public generateJsonSample(rdfModel: RdfModel) {
+  generateJsonSample(rdfModel: RdfModel): Observable<string> {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
     return this.modelApiService.generateJsonSample(serializedModel);
   }
 
-  public generateJsonSchema(rdfModel: RdfModel, language: string) {
+  generateJsonSchema(rdfModel: RdfModel, language: string): Observable<string> {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
     return this.modelApiService.generateJsonSchema(serializedModel, language);
   }
 
-  public generateOpenApiSpec(rdfModel: RdfModel, openApi: OpenApi) {
+  generateOpenApiSpec(rdfModel: RdfModel, openApi: OpenApi): Observable<string> {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
     return this.modelApiService.generateOpenApiSpec(serializedModel, openApi);
   }
@@ -365,21 +362,21 @@ export class EditorService {
       this.mxGraphService
         .updateGraph(() => {
           this.mxGraphService.firstTimeFold = true;
+          MxGraphHelper.filterMode = this.filtersService.currentFilter.filterType;
           const rootElements = this.namespaceCacheService.currentCachedFile.getAllElements().filter(e => !e.parents.length);
           const filtered = this.filtersService.filter(rootElements);
 
           for (const elementTree of filtered) {
             mxGraphRenderer.render(elementTree, null);
           }
+
+          this.mxGraphAttributeService.inCollapsedMode && this.mxGraphService.foldCells();
         })
-        .pipe(
-          tap(() => {
-            this.mxGraphService.formatShapes(true);
-            this.mxGraphSetupService.centerGraph();
-          }),
-          switchMap(() => this.validate())
-        )
-        .subscribe(() => localStorage.removeItem(ValidateStatus.validating));
+        .subscribe(() => {
+          this.mxGraphService.formatShapes(true);
+          this.mxGraphSetupService.centerGraph();
+          localStorage.removeItem(ValidateStatus.validating);
+        });
     } catch (error) {
       console.groupCollapsed('editor.service', error);
       console.groupEnd();
@@ -553,6 +550,10 @@ export class EditorService {
   }
 
   private deleteElements(cells: mxgraph.mxCell[]): void {
+    if (this.shapeSettingsStateService.isShapeSettingOpened && cells.includes(this.shapeSettingsStateService.selectedShapeForUpdate)) {
+      this.shapeSettingsStateService.closeShapeSettings();
+    }
+
     cells.forEach((cell: mxgraph.mxCell) => {
       this.mxGraphAttributeService.graph.setCellStyles(
         mxConstants.STYLE_STROKECOLOR,
@@ -610,7 +611,7 @@ export class EditorService {
     }
   }
 
-  validateModel() {
+  validateModel(): Observable<ViolationError[]> {
     return this.validateModel$.asObservable().pipe(
       delayWhen(() => timer(this.settings.validationTimerSeconds * 1000)),
       switchMap(() => this.validate().pipe(first())),
@@ -734,7 +735,7 @@ export class EditorService {
     );
   }
 
-  getSerializedModel() {
+  getSerializedModel(): string {
     return this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel);
   }
 

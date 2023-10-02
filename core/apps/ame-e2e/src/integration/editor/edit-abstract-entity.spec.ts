@@ -25,7 +25,6 @@ import {
   SELECTOR_ecAbstractProperty,
   SELECTOR_ecEntity,
   SELECTOR_editorCancelButton,
-  SELECTOR_editorSaveButton,
   SELECTOR_notificationsButton,
   SELECTOR_tbDeleteButton,
   SELECTOR_tbLoadButton,
@@ -46,7 +45,7 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.get(FIELD_preferredNameen).focus().type('Preferred Name'))
         .then(() => cy.get(FIELD_descriptionen).focus().type('Description'))
         .then(() => cy.addSeeElements('http://test.com'))
-        .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.clickConnectShapes('AbstractEntity1', 'Entity1'))
         .then(() => cy.getCellLabel('Entity1', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name @en'))
         .then(() => cy.getCellLabel('Entity1', 'description').should('eq', 'Inherited\ndescription = Description @en'))
@@ -56,7 +55,7 @@ describe('Create and Edit Abstract Entity', () => {
     it('should edit entity1', () => {
       cy.dbClickShape('Entity1')
         .then(() => cy.get(FIELD_descriptionen).clear({force: true}).type('Entity Description'))
-        .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getCellLabel('Entity1', 'description').should('eq', 'description = Entity Description @en'))
         .then(() => cy.getCellLabel('Entity1', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name @en'))
         .then(() => cy.getCellLabel('Entity1', 'see').should('eq', 'Inherited\nsee = http://test.com'));
@@ -69,7 +68,7 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.get('[data-cy="clear-extends-button"]').click({force: true}))
         .then(() => cy.get(FIELD_extends).focus().type('AbstractEntity2'))
         .then(() => cy.get('mat-option').contains('AbstractEntity2').first().click({force: true}))
-        .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getCellLabel('Entity1', 'extends').should('eq', 'extends = AbstractEntity2'));
     });
 
@@ -99,7 +98,7 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.get(FIELD_preferredNameen).focus().type('Preferred Name'))
         .then(() => cy.get(FIELD_descriptionen).focus().type('Description'))
         .then(() => cy.addSeeElements('http://test.com'))
-        .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+        .then(() => cyHelp.clickSaveButton())
         .then(() => cy.dbClickShape('AbstractEntity1'))
         .then(() => cy.get(FIELD_preferredNameen).should('have.value', 'Preferred Name'))
         .then(() => cy.get(FIELD_descriptionen).should('have.value', 'Description'))
@@ -231,7 +230,7 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 1', {force: true}))
         .then(() => cy.get(FIELD_descriptionen).type('Description 1', {force: true}))
         .then(() => cy.addSeeElements('http://test1.com'))
-        .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}).wait(500));
+        .then(() => cyHelp.clickSaveButton().wait(500));
 
       cy.getCellLabel('Entity1', 'extends').should('eq', 'extends = AbstractEntity1');
       cy.getCellLabel('Entity1', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name 1 @en');

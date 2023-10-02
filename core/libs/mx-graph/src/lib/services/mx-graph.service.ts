@@ -133,7 +133,6 @@ export class MxGraphService {
    * @throws {Error} - If there are issues in shape creation or overlay operations.
    */
   renderModelElement(node: ModelTree<BaseMetaModelElement>, configuration?: ShapeConfiguration): mxgraph.mxCell {
-    let modelShape: mxgraph.mxCell;
     const geometry = this.mxGraphGeometryProviderService.createGeometry(
       node,
       (configuration && configuration.geometry.x) || this.nextCellCoordinates?.x || 0,
@@ -141,29 +140,25 @@ export class MxGraphService {
     );
 
     this.nextCellCoordinates = null;
+    let cellStyle = node.shape.mxGraphStyle || '';
 
-    try {
-      modelShape = this.mxGraphShapeOverlayService.createShape(node, geometry, configuration?.shapeAttributes || []);
-      MxGraphHelper.setElementNode(modelShape, node);
-
-      this.themeService.applyShapeStyle(modelShape);
-
-      if (node.element.isExternalReference()) {
-        const style = this.graph.getModel().getStyle(modelShape);
-        const newStyle = mxUtils.setStyle(style, mxConstants.STYLE_FILL_OPACITY, 80);
-        this.graph.setCellStyle(newStyle, [modelShape]);
-      }
-
-      this.mxGraphShapeOverlayService.checkComplexEnumerationOverlays(node.element, modelShape);
-
-      if (!node.element.isExternalReference()) {
-        this.mxGraphShapeOverlayService.addBottomShapeOverlay(modelShape);
-        this.mxGraphShapeOverlayService.addTopShapeOverlay(modelShape);
-      }
-    } finally {
-      this.mxGraphAttributeService.inCollapsedMode ? this.foldCell(modelShape) : this.expandCell(modelShape);
-      this.graph.resizeCell(modelShape, geometry);
+    cellStyle = this.themeService.generateThemeStyle(cellStyle);
+    if (node.element.isExternalReference()) {
+      cellStyle = mxUtils.setStyle(cellStyle, mxConstants.STYLE_FILL_OPACITY, 80);
     }
+
+    node.shape.mxGraphStyle = cellStyle;
+    const modelShape = this.mxGraphShapeOverlayService.createShape(node, geometry, configuration?.shapeAttributes || []);
+    MxGraphHelper.setElementNode(modelShape, node);
+
+    this.mxGraphShapeOverlayService.checkComplexEnumerationOverlays(node.element, modelShape);
+
+    if (!node.element.isExternalReference()) {
+      this.mxGraphShapeOverlayService.addBottomShapeOverlay(modelShape);
+      this.mxGraphShapeOverlayService.addTopShapeOverlay(modelShape);
+    }
+    this.graph.labelChanged(modelShape, MxGraphHelper.createPropertiesLabel(modelShape));
+    this.mxGraphAttributeService.inCollapsedMode && this.foldCell(modelShape);
     return modelShape;
   }
 
@@ -252,12 +247,12 @@ export class MxGraphService {
 
   /** Expand all cells*/
   expandCells() {
-    this.updateGraph(() => {
-      const cells = this.graph.getChildCells(this.graph.getDefaultParent(), true, false);
-      this.graph.foldCells(false, true, cells);
-      this.mxGraphAttributeService.inCollapsedMode = false;
+    const cells = this.graph.getChildCells(this.graph.getDefaultParent(), true, false);
+    this.graph.foldCells(false, true, cells);
+    this.mxGraphAttributeService.inCollapsedMode = false;
 
-      cells.forEach(cell => {
+    return this.updateGraph(() => {
+      for (const cell of cells) {
         this.graph.resizeCell(
           cell,
           this.mxGraphGeometryProviderService.createGeometry(MxGraphHelper.getElementNode(cell), cell?.geometry?.x, cell?.geometry?.y)
@@ -272,13 +267,13 @@ export class MxGraphService {
 
           MxGraphHelper.setConstrainOverlayOffset(overlay, cell);
         });
-      });
-      this.formatShapes(true);
-    }).subscribe(() => {
+      }
+
       const selectedCell = this.mxGraphShapeSelectorService.getSelectedShape();
       if (selectedCell) {
         this.navigateToCell(selectedCell, true);
       }
+
       if (this.firstTimeFold) {
         this.firstTimeFold = false;
         this.formatShapes(true);
@@ -289,11 +284,12 @@ export class MxGraphService {
 
   /** Collapse all cells */
   foldCells() {
-    this.updateGraph(() => {
-      const cells = this.graph.getChildCells(this.graph.getDefaultParent(), true, false);
-      this.graph.foldCells(true, true, cells);
+    const cells = this.graph.getChildCells(this.graph.getDefaultParent(), true, false);
+    this.graph.foldCells(true, true, cells);
+    this.mxGraphAttributeService.inCollapsedMode = true;
 
-      cells.forEach(cell => {
+    return this.updateGraph(() => {
+      for (const cell of cells) {
         const modelElement = MxGraphHelper.getModelElement(cell);
         if (MxGraphHelper.isComplexEnumeration(modelElement)) {
           this.mxGraphShapeOverlayService.removeOverlay(cell, MxGraphHelper.getRightOverlayButton(cell));
@@ -309,11 +305,8 @@ export class MxGraphService {
         const isVertex = this.graph.model.isVertex(cell);
         this.mxGraphGeometryProviderService.upgradeTraitGeometry(cell, geometry, isVertex);
         this.mxGraphGeometryProviderService.upgradeEntityValueGeometry(cell, geometry, isVertex);
-      });
+      }
 
-      this.mxGraphAttributeService.inCollapsedMode = true;
-      this.formatShapes(true);
-    }).subscribe(() => {
       const selectedCell = this.mxGraphShapeSelectorService.getSelectedShape();
       if (selectedCell) {
         this.navigateToCell(selectedCell, true);
@@ -333,6 +326,12 @@ export class MxGraphService {
    */
   expandCell(cell: mxgraph.mxCell): void {
     this.graph.foldCells(false, false, [cell]);
+    cell.overlays?.forEach(overlay => {
+      overlay.image.width = overlayGeometry.expandedWith;
+      overlay.image.height = overlayGeometry.expandedHeight;
+
+      MxGraphHelper.setConstrainOverlayOffset(overlay, cell);
+    });
   }
 
   /**
@@ -342,6 +341,13 @@ export class MxGraphService {
    */
   foldCell(cell: mxgraph.mxCell): void {
     this.graph.foldCells(true, false, [cell]);
+    cell.overlays?.forEach(overlay => {
+      overlay.image.width = overlayGeometry.collapsedWidth;
+      overlay.image.height = overlayGeometry.collapsedHeight;
+
+      MxGraphHelper.setConstrainOverlayOffset(overlay, cell);
+    });
+    this.graph.refresh();
   }
 
   /** Re-formats entire schematic. */

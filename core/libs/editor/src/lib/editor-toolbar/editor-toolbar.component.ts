@@ -22,7 +22,7 @@ import {
   MxGraphShapeSelectorService,
 } from '@ame/mx-graph';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
-import {BindingsService, LoadingScreenOptions, NotificationsService, cellRelations} from '@ame/shared';
+import {BindingsService, LoadingScreenOptions, LoadingScreenService, NotificationsService, cellRelations} from '@ame/shared';
 import {EditorService} from '../editor.service';
 import {ShapeConnectorService, ShapeConnectorUtil} from '@ame/connection';
 import {FileHandlingService, GenerateHandlingService, InformationHandlingService} from './services';
@@ -77,7 +77,8 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private matDialog: MatDialog,
     private namespaceManagerService: NamespacesManagerService,
-    private shapeSettingsService: ShapeSettingsService
+    private shapeSettingsService: ShapeSettingsService,
+    private loadingScreenService: LoadingScreenService
   ) {}
 
   ngOnInit(): void {
@@ -251,13 +252,18 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   onToggleExpand() {
-    if (this.isAllShapesExpanded) {
-      this.mxGraphService.foldCells();
-    } else {
-      this.mxGraphService.expandCells();
-    }
-    this.isAllShapesExpanded = !this.isAllShapesExpanded;
-    this.mxGraphService.formatShapes(true);
+    this.loadingScreenService
+      .open({
+        title: this.isAllShapesExpanded ? 'Folding...' : 'Expanding...',
+        content: 'Please wait until the action is finished!',
+      })
+      .afterOpened()
+      .pipe(switchMap(() => (this.isAllShapesExpanded ? this.mxGraphService.foldCells() : this.mxGraphService.expandCells())))
+      .subscribe(() => {
+        this.isAllShapesExpanded = !this.isAllShapesExpanded;
+        this.mxGraphService.formatShapes(true);
+        this.loadingScreenService.close();
+      });
   }
 
   openConnectWithDialog() {
@@ -281,7 +287,16 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   onFormat() {
-    this.editorService.formatAspect();
+    this.loadingScreenService
+      .open({
+        title: 'Formatting...',
+        content: 'Please wait until formatting finishes',
+      })
+      .afterOpened()
+      .subscribe(() => {
+        this.editorService.formatAspect();
+        this.loadingScreenService.close();
+      });
   }
 
   onConnect() {

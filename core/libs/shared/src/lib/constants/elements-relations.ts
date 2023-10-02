@@ -11,24 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-  DefaultAbstractEntity,
-  DefaultAbstractProperty,
-  DefaultAspect,
-  DefaultCharacteristic,
-  DefaultCollection,
-  DefaultConstraint,
-  DefaultEither,
-  DefaultEntity,
-  DefaultEntityValue,
-  DefaultEvent,
-  DefaultOperation,
-  DefaultProperty,
-  DefaultStructuredValue,
-  DefaultTrait,
-  DefaultUnit,
-} from '@ame/meta-model';
-
 export enum Elements {
   aspect = 'aspect',
   property = 'property',
@@ -62,62 +44,3 @@ export const cellRelations = {
   [Elements.filteredProperties_entity]: [Elements.property],
   [Elements.filteredProperties_either]: [Elements.property],
 };
-
-export const modelRelations = [
-  {
-    from: DefaultAspect,
-    to: [DefaultProperty, DefaultOperation, DefaultEvent],
-  },
-  {
-    from: DefaultProperty,
-    to: [DefaultCharacteristic, DefaultTrait, DefaultAbstractProperty, DefaultProperty],
-  },
-  {
-    from: DefaultAbstractProperty,
-    to: [DefaultAbstractProperty],
-  },
-  {
-    from: DefaultTrait,
-    to: [DefaultConstraint, DefaultCharacteristic],
-  },
-  {
-    from: DefaultCollection,
-    to: [DefaultCharacteristic],
-  },
-  {
-    from: DefaultStructuredValue,
-    to: [DefaultProperty],
-  },
-  {
-    from: DefaultEither,
-    to: [DefaultCharacteristic],
-  },
-  {
-    from: DefaultCharacteristic,
-    to: [DefaultEntity, DefaultEntityValue, DefaultUnit],
-  },
-  {
-    from: DefaultEntity,
-    to: [DefaultProperty, DefaultEntity, DefaultAbstractEntity],
-  },
-  {
-    from: DefaultEntityValue,
-    to: [DefaultEntityValue, DefaultEntity],
-  },
-  {
-    from: DefaultEvent,
-    to: [DefaultProperty],
-  },
-  {
-    from: DefaultOperation,
-    to: [DefaultProperty],
-  },
-  {
-    from: DefaultUnit,
-    to: [DefaultUnit],
-  },
-  {
-    from: DefaultAbstractEntity,
-    to: [DefaultAbstractEntity, DefaultProperty, DefaultAbstractProperty],
-  },
-];

@@ -17,7 +17,7 @@ import {ShapeGeometry} from '@ame/shared';
 /**
  * Generates class type which implements an interface
  */
-export type ClassImplementing<BaseMetaModelElement, Args extends any[] = any[]> = new (...args: Args) => BaseMetaModelElement;
+export type ClassReference<T = BaseMetaModelElement, Args extends any[] = any[]> = new (...args: Args) => T;
 
 export type ArrowStyle = 'entityValueEntityEdge' | 'optionalPropertyEdge' | 'abstractPropertyEdge' | 'abstractElementEdge' | 'defaultEdge';
 
@@ -74,7 +74,7 @@ export type ModelTreeOptions = Partial<{
   /**
    * Any class in this list will not be considered for the next filter loop
    */
-  notAllowed: ClassImplementing<BaseMetaModelElement>[];
+  notAllowed: ClassReference<BaseMetaModelElement>[];
 }>;
 
 export enum ModelFilter {
@@ -85,7 +85,7 @@ export enum ModelFilter {
 export interface FilterLoader<T extends BaseMetaModelElement = BaseMetaModelElement> {
   cache: {[key: string]: boolean};
   filterType: ModelFilter;
-  visibleElements: ClassImplementing<T>[];
+  visibleElements: ClassReference<T>[];
   filter(rootElements: T[]): ModelTree<T>[];
   generateTree(element: T, options?: ModelTreeOptions): ModelTree<T>;
   getArrowStyle(element: T, parent: T): ArrowStyle;

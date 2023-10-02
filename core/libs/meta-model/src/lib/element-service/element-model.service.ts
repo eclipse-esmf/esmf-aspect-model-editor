@@ -58,6 +58,7 @@ export class ElementModelService {
     }
     const characteristicModelService = this.injector.get(CharacteristicModelService);
     const modelElement = MxGraphHelper.getModelElement(cell);
+
     const modelService =
       modelElement instanceof DefaultEnumeration ? characteristicModelService : this.modelRootService.getElementModelService(modelElement);
     modelService.update(cell, form);

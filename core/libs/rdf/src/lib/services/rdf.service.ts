@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {DataFactory, Parser, Quad, Store, Util, Writer} from 'n3';
-import {map, Observable, of, Subject, switchMap, throwError} from 'rxjs';
+import {forkJoin, map, Observable, of, Subject, switchMap, throwError} from 'rxjs';
 import {Inject, Injectable} from '@angular/core';
 import {environment} from 'environments/environment';
 import {ModelApiService} from '@ame/api';
@@ -153,10 +153,6 @@ export class RdfService {
     );
   }
 
-  loadModelLatest(): Observable<RdfModel> {
-    return this.modelApiService.loadLatest().pipe(switchMap(rdf => this.loadModel(rdf)));
-  }
-
   loadModel(rdf: string, namespaceFileName?: string): Observable<RdfModel> {
     const subject = new Subject<RdfModel>();
     const store: Store = new Store();
@@ -230,6 +226,40 @@ export class RdfService {
     });
 
     return subject;
+  }
+
+  parseModels(fileContentModels: FileContentModel[]): Observable<RdfModel[]> {
+    return forkJoin(fileContentModels.map(fileContent => this.parseModel(fileContent)));
+  }
+
+  parseModel(fileContent: FileContentModel): Observable<RdfModel> {
+    const subject = new Subject<RdfModel>();
+    const store: Store = new Store();
+    const parser = new Parser();
+
+    parser.parse(fileContent.aspectMetaModel, (error, quad, prefixes) => {
+      let rdfModel: RdfModel;
+
+      if (quad) {
+        store.addQuad(quad);
+      } else if (prefixes) {
+        rdfModel = new RdfModel(store, this.dataTypeService, prefixes);
+      }
+
+      if (error) {
+        rdfModel = new RdfModel(store, this.dataTypeService, {});
+        rdfModel.hasErrors = true;
+        this.logService.logInfo(`Error when parsing RDF ${error}`);
+      }
+
+      if (prefixes || error) {
+        rdfModel.aspectModelFileName = fileContent.fileName;
+        subject.next(rdfModel);
+        subject.complete();
+      }
+    });
+
+    return subject.asObservable();
   }
 
   isSameModelContent(absoluteFileName: string, fileContent: string, modelToCompare: RdfModel): Observable<boolean> {

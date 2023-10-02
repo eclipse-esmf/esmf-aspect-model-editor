@@ -14,6 +14,7 @@
 import {Component} from '@angular/core';
 import {EditorService} from '@ame/editor';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
+import {LoadingScreenService} from '@ame/shared';
 
 @Component({
   selector: 'ame-editor-canvas-menu',
@@ -23,23 +24,63 @@ import {ConfigurationService, Settings} from '@ame/settings-dialog';
 export class EditorCanvasMenuComponent {
   settings: Settings;
 
-  constructor(private editorService: EditorService, public configurationService: ConfigurationService) {
+  constructor(
+    private editorService: EditorService,
+    public configurationService: ConfigurationService,
+    private loadingScreenService: LoadingScreenService
+  ) {
     this.settings = configurationService.getSettings();
   }
 
   zoomIn() {
-    this.editorService.zoomIn();
+    this.loadingScreenService
+      .open({
+        title: 'Zooming in...',
+        content: 'Please wait until zoom finishes',
+      })
+      .afterOpened()
+      .subscribe(() => {
+        this.editorService.zoomIn();
+        this.loadingScreenService.close();
+      });
   }
 
   zoomOut() {
-    this.editorService.zoomOut();
+    this.loadingScreenService
+      .open({
+        title: 'Zooming out...',
+        content: 'Please wait until zoom finishes',
+      })
+      .afterOpened()
+      .subscribe(() => {
+        this.editorService.zoomOut();
+        this.loadingScreenService.close();
+      });
   }
 
   fit() {
-    this.editorService.fit();
+    this.loadingScreenService
+      .open({
+        title: 'Fitting...',
+        content: 'Please wait until fitting finishes',
+      })
+      .afterOpened()
+      .subscribe(() => {
+        this.editorService.fit();
+        this.loadingScreenService.close();
+      });
   }
 
   actualSize() {
-    this.editorService.actualSize();
+    this.loadingScreenService
+      .open({
+        title: 'Fit to view...',
+        content: 'Please wait until fitting finishes',
+      })
+      .afterOpened()
+      .subscribe(() => {
+        this.editorService.actualSize();
+        this.loadingScreenService.close();
+      });
   }
 }

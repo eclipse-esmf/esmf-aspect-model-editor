@@ -13,7 +13,7 @@
 
 /// <reference types="Cypress" />
 import {cyHelp} from '../../support/helpers';
-import {FIELD_characteristicName, SELECTOR_editorSaveButton, SELECTOR_tbDeleteButton} from '../../support/constants';
+import {FIELD_characteristicName, SELECTOR_tbDeleteButton} from '../../support/constants';
 
 describe('Test create recursive element', () => {
   function checkIfAspectHasCharacteristic(aspect: any) {
@@ -96,7 +96,7 @@ describe('Test create recursive element', () => {
     cy.shapeExists('NewCharacteristic')
       .then(() => cy.dbClickShape('NewCharacteristic'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Text').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic samm-c:MultiLanguageText.');
@@ -111,7 +111,7 @@ describe('Test create recursive element', () => {
     cy.shapeExists('MultiLanguageText')
       .then(() => cy.dbClickShape('MultiLanguageText'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Characteristic').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.clickConnectShapes('Characteristic1', 'NewEntity'))
       .then(() => cy.clickConnectShapes('Characteristic1', 'newProperty2'))
       .then(() => cy.clickConnectShapes('Characteristic1', 'newProperty3'))

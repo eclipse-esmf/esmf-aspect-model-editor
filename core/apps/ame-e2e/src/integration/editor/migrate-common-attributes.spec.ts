@@ -25,8 +25,8 @@ import {
   FIELD_unit,
   FIELD_values,
   SELECTOR_ecCharacteristic,
-  SELECTOR_editorSaveButton,
 } from '../../support/constants';
+import {cyHelp} from '../../support/helpers';
 
 describe('Test migration of common attributes on Constraint/Characteristic type change', () => {
   it('can add new', () => {
@@ -44,7 +44,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() =>
         cy.get(FIELD_dataType).clear({force: true}).type('string', {force: true}).get(FIELD_dataTypeOption).eq(1).click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
@@ -61,7 +61,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Code').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
@@ -88,7 +88,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
           .contains('Characteristic2')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
@@ -106,7 +106,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('List').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
@@ -124,7 +124,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Set').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
@@ -142,7 +142,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('SortedSet').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
@@ -160,7 +160,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('TimeSeries').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
@@ -179,7 +179,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
       .then(() => cy.get(FIELD_values).type('1{enter}2{enter}a{enter}b{enter}3{enter}4{enter}', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
@@ -198,7 +198,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('State').click({force: true}))
       .then(() => cy.get(FIELD_defaultValue).type('testState', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).contain(':Characteristic1 a samm-c:State');
@@ -215,7 +215,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Duration').click({force: true}))
       .then(() => cy.get(FIELD_unit).clear({force: true}).type('commonYe').get('mat-option').contains('commonYear').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
@@ -236,7 +236,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.get(FIELD_unit).should('have.value', 'commonYear'))
       .then(() => cy.get('[data-cy=clear-unit-button]').click({force: true}))
       .then(() => cy.get(FIELD_unit).clear({force: true}).type('ampe').get('mat-option').contains('ampere').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
@@ -254,7 +254,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('SingleEntity').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
@@ -273,7 +273,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Characteristic').click({force: true}))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('SingleEntity').click({force: true}))
       .then(() => cy.get(FIELD_name).should('have.value', 'Characteristic1'))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(
@@ -292,7 +292,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Measurement').click({force: true}))
       .then(() => cy.get(FIELD_unit).should('have.value', ''))
       .then(() => cy.get(FIELD_unit).clear({force: true}).type('acr').get('mat-option').contains('acre').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cy.shapeExists('Entity1'))
       .then(() => cy.getUpdatedRDF())
@@ -313,7 +313,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() =>
         cy.get(FIELD_unit).clear({force: true}).type('day').get('mat-option[data-unit-cy="day"]').contains('day').click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
         expect(rdf).to.contain(

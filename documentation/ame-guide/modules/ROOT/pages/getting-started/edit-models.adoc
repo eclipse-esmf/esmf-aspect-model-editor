@@ -88,18 +88,10 @@ Use the following advanced search possibilities for more specific search results
 [[connecting-elements]]
 == Connect elements
 
-In some situations you might want to connect elements manually, e.g., when you want to reuse a Characteristic and connect a second Property to it.
+In some situations you might want to connect elements manually, e.g., when you want to reuse a Characteristic
+and connect a second Property to it.
 
-To connect two elements manually, proceed as follows:
-
-. Click both elements while holding the CTRL key on your keyboard.
-. Click the *Connect* icon in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
-+
-image::connecting-elements.png[width=100%]
-
-→ Both elements are now connected.
-
-Tip: Alternatively, you can use the context menu (right mouse click) to access the action items.
+Find details on the various options on how to create the connection at xref:modeling/connect-elements.adoc[].
 
 
 == Delete elements

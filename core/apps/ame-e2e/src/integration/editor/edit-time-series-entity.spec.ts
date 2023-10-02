@@ -17,10 +17,10 @@ import {
   FIELD_extends,
   SELECTOR_dialogInputModel,
   SELECTOR_dialogStartButton,
-  SELECTOR_editorSaveButton,
   SELECTOR_tbDeleteButton,
   SELECTOR_tbLoadButton,
 } from '../../support/constants';
+import {cyHelp} from '../../support/helpers';
 
 describe('Time Series Entity', () => {
   function createTimeSeriesEntity() {
@@ -28,7 +28,7 @@ describe('Time Series Entity', () => {
       .then(() => cy.dbClickShape('Entity1'))
       .then(() => cy.get(FIELD_extends).type('TimeSeriesEntity', {force: true}))
       .then(() => cy.get('[data-cy="TimeSeriesEntity"]').click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}));
+      .then(() => cyHelp.clickSaveButton());
   }
 
   it('should create TimeSeriesEntity with its properties', () => {

@@ -1,4 +1,4 @@
-= Traits
+= Trait
 [[trait-case]]
 
 There are two ways of adding a Trait:

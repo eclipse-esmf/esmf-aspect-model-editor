@@ -44,7 +44,7 @@ describe('Test enumeration entity value', () => {
       .then(() =>
         cy.get(FIELD_dataType).clear().type('NewEntity', {force: true}).get('.mat-mdc-option').contains('NewEntity').click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.shapeExists('NewEntity'))
       .then(() => cy.clickAddShapePlusIcon('NewEntity'))
       .then(() => cy.clickAddShapePlusIcon('NewEntity'))
@@ -80,7 +80,7 @@ describe('Test enumeration entity value', () => {
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}))
       .then(() => cy.wait(200))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.wait(200))
       .then(() => {
         cy.shapeExists('ev1');
@@ -106,10 +106,10 @@ describe('Test enumeration entity value', () => {
       })
       .then(() => cy.dbClickShape('ev2'))
       .then(() => cy.get(FIELD_name).should('exist').click({force: true}).clear({force: true}).type('ev2edit', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('ev3'))
       .then(() => cy.get(FIELD_name).should('exist').click({force: true}).clear({force: true}).type('ev3edit', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => {
         cy.shapeExists('ev2edit');
         cy.shapeExists('ev3edit');
@@ -118,7 +118,7 @@ describe('Test enumeration entity value', () => {
       .then(() => {
         cy.get(FIELD_propertyValueComplex).eq(0).should('have.value', 'ev2edit');
         cy.get(FIELD_propertyValueComplex).eq(1).should('have.value', 'ev3edit');
-        cy.get(SELECTOR_editorSaveButton).click({force: true});
+        cyHelp.clickSaveButton();
       });
   });
 
@@ -128,12 +128,12 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.dbClickShape('ev2edit'))
       .then(() => {
         cy.get(FIELD_propertyValueNotComplex).eq(0).should('exist').type('ev2Value', {force: true});
-        cy.get(SELECTOR_editorSaveButton).click({force: true});
+        cyHelp.clickSaveButton();
       })
       .then(() => cy.dbClickShape('ev3edit'))
       .then(() => {
         cy.get(FIELD_propertyValueNotComplex).eq(0).should('exist').type('ev3Value', {force: true});
-        cy.get(SELECTOR_editorSaveButton).click({force: true});
+        cyHelp.clickSaveButton();
       })
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -183,7 +183,7 @@ describe('Test enumeration entity value', () => {
           .then(() => checkMatCellValues([4], ['property2']))
           .then(() => checkMatCellValues([5], ['TestPropertyValue3']));
       })
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.clickShape('Characteristic1'))
       .then(() => testEntityValuesExists(['EntityValue1', 'EntityValue2', 'EntityValue3']))
       .then(() => {
@@ -215,7 +215,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}))
       .then(() => cy.wait(200))
       .then(() => checkMatPanelTitleValues([0], ['EntityValue']))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}).wait(1000))
+      .then(() => cyHelp.clickSaveButton().wait(1000))
       .then(() => testEntityValuesExists(['EntityValue']))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
@@ -242,7 +242,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityValue', {force: true}))
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
       .then(() => checkMatPanelTitleValues([0], ['EntityValue']))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}));
+      .then(() => cyHelp.clickSaveButton());
   });
 
   it('import new model with entity values', () => {
@@ -294,7 +294,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get('mat-cell').should(cells => expect(cells).to.have.lengthOf(4)))
       .then(() => checkMatPanelTitleValues([0], ['test2']))
       .then(() => checkMatCellValues([0, 1, 2, 3], ['property2', 'test2p2', 'property3', 'test2p3']))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}));
+      .then(() => cyHelp.clickSaveButton());
   });
 
   it('edit all entity values', () => {
@@ -303,21 +303,21 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get(FIELD_name).clear({force: true}).type('edit1', {force: true}))
       .then(() => cy.get(FIELD_propertyValueNotComplex).eq(0).clear({force: true}).type('property2Edit1', {force: true}))
       .then(() => cy.get(FIELD_propertyValueNotComplex).eq(1).clear({force: true}).type('property3Edit1', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}).wait(200))
+      .then(() => cyHelp.clickSaveButton().wait(200))
 
       .shapeExists('test2')
       .then(() => cy.dbClickShape('test2'))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('edit2', {force: true}))
       .then(() => cy.get(FIELD_propertyValueNotComplex).eq(0).clear({force: true}).type('property2Edit2', {force: true}))
       .then(() => cy.get(FIELD_propertyValueNotComplex).eq(1).clear({force: true}).type('property3Edit2', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}).wait(200))
+      .then(() => cyHelp.clickSaveButton().wait(200))
 
       .shapeExists('test3')
       .then(() => cy.dbClickShape('test3'))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('edit3', {force: true}))
       .then(() => cy.get(FIELD_propertyValueNotComplex).eq(0).clear({force: true}).type('property2Edit3', {force: true}))
       .then(() => cy.get(FIELD_propertyValueNotComplex).eq(1).clear({force: true}).type('property3Edit3', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}).wait(200))
+      .then(() => cyHelp.clickSaveButton().wait(200))
 
       .shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
@@ -362,7 +362,7 @@ describe('Test enumeration entity value', () => {
       .then(() =>
         cy.get(FIELD_propertyValueNotComplex).eq(1).should('exist').clear({force: true}).type('editOnlyOnEntityValueProp3', {force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}).wait(200))
+      .then(() => cyHelp.clickSaveButton().wait(200))
 
       .dbClickShape('Characteristic1')
       .then(() => {
@@ -405,7 +405,7 @@ describe('Test enumeration entity value', () => {
           .get(SELECTOR_editorSaveButton)
           .should('be.disabled')
           .then(() => cy.get(FIELD_propertyValueNotComplex).eq(0).should('exist').clear().type('editOnlyOnEntityValueProp2'))
-          .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
+          .then(() => cyHelp.clickSaveButton())
       );
   });
 
@@ -416,10 +416,11 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}).wait(200))
       .then(() => cy.get(`input[type="checkbox"][name="property2_${FIELD_optional}"]`).click({force: true}))
       .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}).wait(200))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}).wait(200))
+      .then(() => cyHelp.clickSaveButton().wait(200))
       .then(() => cy.dbClickShape('edit1').wait(200))
       .then(() => cy.get(FIELD_propertyValueNotComplex).eq(0).should('exist').clear({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled').click({force: true}));
+      .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled'))
+      .then(() => cyHelp.clickSaveButton());
   });
 
   it('delete all entity value one by one', () => {
@@ -444,7 +445,7 @@ describe('Test enumeration entity value', () => {
         checkMatPanelTitleValues([1], ['test3']);
         checkMatCellValues([4, 5, 6, 7], ['property2', 'test3p2', 'property3', 'test3p3']);
       })
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.clickShape('Characteristic1'))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
@@ -461,7 +462,7 @@ describe('Test enumeration entity value', () => {
         checkMatPanelTitleValues([0], ['test3']);
         checkMatCellValues([0, 1, 2, 3], ['property2', 'test3p2', 'property3', 'test3p3']);
       })
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain('samm-c:values (:test3)');
@@ -483,7 +484,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get(FIELD_entityValueName).should('be.visible').type('FillGapEntityValue'))
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
       .then(() => checkMatPanelTitleValues([0], ['FillGapEntityValue']))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cyHelp.hasAddShapeOverlay('Characteristic1'))
       .then(() => {
@@ -562,7 +563,7 @@ describe('Test enumeration entity value', () => {
           .contains('NewEntity')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.shapeExists('NewEntity'));
   });
 
@@ -586,7 +587,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityValue'))
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
       .then(() => checkMatPanelTitleValues([0], ['EntityValue']))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.shapeExists('NewEntity'));
   });
 
@@ -612,7 +613,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get(FIELD_entityValueName).eq(0).should('exist').type('ev2'))
       .then(() => cy.get(FIELD_propertyValueNotComplex).should('exist').type('TestPropertyValue2'))
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('Characteristic2'))
       .then(() => {
         cy.get(FIELD_characteristicName).click({force: true});
@@ -646,7 +647,7 @@ describe('Test enumeration entity value', () => {
           .click({force: true})
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
       .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}).wait(200))
@@ -677,7 +678,7 @@ describe('Test enumeration entity value', () => {
           .click({force: true})
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => {
         cy.shapesConnected('Characteristic1', 'ev6');
         cy.shapesConnected('Characteristic1', 'ev5');
@@ -706,7 +707,7 @@ describe('Test enumeration entity value', () => {
           .contains('ev2')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}).wait(200))
+      .then(() => cyHelp.clickSaveButton().wait(200))
       .then(() => {
         cy.shapesConnected('Characteristic1', 'ev6');
         cy.shapesConnected('Characteristic1', 'ev5');
@@ -732,7 +733,7 @@ describe('Test enumeration entity value', () => {
           .get('.mat-mdc-option')
           .contains('ev4')
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}).wait(200))
+      .then(() => cyHelp.clickSaveButton().wait(200))
       .then(() => {
         cy.shapesConnected('Characteristic1', 'ev6');
         cy.shapesConnected('Characteristic1', 'ev5');
@@ -748,7 +749,7 @@ describe('Test enumeration entity value', () => {
 
     cy.dbClickShape('Characteristic1')
       .then(() => cy.get('.complex-value-items .bosch-ic-delete').eq(0).click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() => {
         cy.shapesConnected('Characteristic1', 'ev6');
         cy.shapesConnected('ev6', 'ev4');

@@ -14,11 +14,22 @@
 
 /// <reference types="Cypress" />
 
-import {SELECTOR_tbDeleteButton} from '../../support/constants';
+import {
+  FIELD_descriptionen,
+  FIELD_extends,
+  FIELD_name,
+  FIELD_preferredNameen,
+  FIELD_see,
+  META_MODEL_description,
+  META_MODEL_preferredName,
+  META_MODEL_see,
+  SELECTOR_configureProp,
+  SELECTOR_tbDeleteButton,
+} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Entity', () => {
-  it('can add new', () => {
+  it('should add new entity', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.shapeExists('Characteristic1'))
@@ -32,7 +43,7 @@ describe('Test editing Entity', () => {
       });
   });
 
-  it('can add properties', () => {
+  it('should add properties', () => {
     cy.shapeExists('Entity1')
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
       .then(() => cy.shapeExists('property2'))
@@ -61,7 +72,7 @@ describe('Test editing Entity', () => {
     });
   });
 
-  it('can connect', () => {
+  it('should connect', () => {
     cy.shapeExists('property3')
       .then(() => cy.clickShape('Characteristic1'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
@@ -79,7 +90,7 @@ describe('Test editing Entity', () => {
       });
   });
 
-  it('can connect properties', () => {
+  it('should connect properties', () => {
     cy.shapeExists('Entity1')
       .then(() => cy.clickShape('Entity1'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
@@ -100,7 +111,7 @@ describe('Test editing Entity', () => {
       });
   });
 
-  it('can edit entity name', () => {
+  it('should edit entity name', () => {
     cy.shapeExists('Entity1')
       .then(() => cyHelp.renameElement('Entity1', 'NewEntity'))
       .then(() => {
@@ -118,7 +129,73 @@ describe('Test editing Entity', () => {
       });
   });
 
-  it('can edit property name', () => {
+  it('should validate name', () => {
+    cy.shapeExists('NewEntity')
+      .then(() => cy.dbClickShape('NewEntity'))
+      .then(() => {
+        cy.get(FIELD_name).clear().type('entity23$%$');
+        cy.get(FIELD_preferredNameen).click();
+        cy.get(FIELD_name).should('be.visible').click();
+        cy.get('ame-name-input-field mat-error').should(
+          'contain',
+          'Please start with an upper case character followed by letters/numerals.'
+        );
+      })
+      .then(() => cy.get(FIELD_name).clear())
+      .then(() => cy.get(FIELD_name).clear().type('NewEntity'));
+  });
+
+  it('should check that all fields are visible and the order is correct', () => {
+    cy.shapeExists('NewEntity')
+      .then(() => cy.dbClickShape('NewEntity'))
+      .then(() => cy.get(FIELD_name).should('be.visible'))
+      .then(() => cy.get(FIELD_preferredNameen).clear().type('New Preffered Name for entity'))
+      .then(() => cy.get(FIELD_descriptionen).clear().type('This is an entity'))
+      .then(() => cy.get(FIELD_see).should('be.visible'))
+      .then(() => cy.get(FIELD_extends).should('be.visible'))
+      .then(() => cy.get(SELECTOR_configureProp).should('be.visible').should('have.text', 'Configure'))
+      .then(() => cyHelp.clickSaveButton());
+  });
+
+  it('should check incoming and outgoing edges', () => {
+    cy.shapeExists('NewEntity').then(() => cy.dbClickShape('NewEntity'));
+    cy.contains('Incoming edges (1)').should('exist');
+    cy.contains('Outgoing edges (2)').should('exist');
+  });
+
+  it('should edit preferredName', () => {
+    cy.shapeExists('NewEntity')
+      .then(() => cy.dbClickShape('NewEntity'))
+      .then(() => cy.get(FIELD_preferredNameen).clear().type('New Preffered Name for entity'))
+      .then(() => cyHelp.clickSaveButton())
+      .then(() =>
+        cy
+          .getCellLabel('NewEntity', META_MODEL_preferredName)
+          .should('eq', `${META_MODEL_preferredName} = New Preffered Name for entity @en`)
+      )
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => expect(rdf).to.contain('samm:preferredName "New Preffered Name for entity"@en'));
+  });
+
+  it('should edit description', () => {
+    cy.shapeExists('NewEntity')
+      .then(() => cy.dbClickShape('NewEntity'))
+      .then(() => cy.get(FIELD_descriptionen).clear({force: true}).type('New description for the entity', {force: true}))
+      .then(() => cyHelp.clickSaveButton())
+      .then(() =>
+        cy.getCellLabel('NewEntity', META_MODEL_description).should('eq', `${META_MODEL_description} = New description for the entity @en`)
+      )
+      .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:description "New description for the entity"@en')))
+      .then(() =>
+        cy
+          .getAspect()
+          .then(aspect =>
+            expect(aspect.properties[0].property.characteristic.dataType.getDescription('en')).to.equal('New description for the entity')
+          )
+      );
+  });
+
+  it('should edit property name', () => {
     cy.shapeExists('property2')
       .then(() => cyHelp.renameElement('property2', 'newProperty2'))
       .then(() => cy.getUpdatedRDF())
@@ -133,7 +210,7 @@ describe('Test editing Entity', () => {
       });
   });
 
-  it('can edit entity and property name', () => {
+  it('should edit entity and property name', () => {
     cy.shapeExists('NewEntity')
       .then(() => cyHelp.renameElement('NewEntity', 'NewEntity1'))
       .then(() => cy.wait(1000))
@@ -159,7 +236,7 @@ describe('Test editing Entity', () => {
       });
   });
 
-  it('can delete existing', () => {
+  it('should delete existing entity', () => {
     cy.shapeExists('NewEntity1')
       .then(() => cy.clickShape('NewEntity1'))
       .then(() => cy.get(SELECTOR_tbDeleteButton))
@@ -174,7 +251,7 @@ describe('Test editing Entity', () => {
       });
   });
 
-  it('add new default entity rename it and add new default entity', () => {
+  it('should add new default entity, rename it and add new default entity', () => {
     cy.clickAddShapePlusIcon('Characteristic1')
       .then(() => cy.shapeExists('Entity1'))
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
@@ -200,7 +277,7 @@ describe('Test editing Entity', () => {
       });
   });
 
-  it('rename aspect and save model', () => {
+  it('should rename aspect and save model', () => {
     cy.shapeExists('AspectDefault')
       .then(() => cyHelp.renameElement('AspectDefault', 'NewAspect'))
       .then(() => {
@@ -233,7 +310,7 @@ describe('Test editing Entity', () => {
       });
   });
 
-  it('can delete existing properties', () => {
+  it('should delete existing properties', () => {
     cy.shapeExists('property2')
       .then(() => cy.clickShape('property2'))
       .then(() => cy.get(SELECTOR_tbDeleteButton))

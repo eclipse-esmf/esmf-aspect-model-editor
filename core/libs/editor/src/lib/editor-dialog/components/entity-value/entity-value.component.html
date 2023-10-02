@@ -13,5 +13,5 @@
 
 <ame-name-input-field [parentForm]="parentForm"></ame-name-input-field>
 <ame-entity-value-table [parentForm]="parentForm"> </ame-entity-value-table>
-<ame-element-list label="Parents" iconRotation="rotate270" [elements]="(element$ | async)?.parents"></ame-element-list>
-<ame-element-list label="Children" [elements]="(element$ | async)?.children"></ame-element-list>
+<ame-element-list label="Incoming edges" iconRotation="rotate270" [elements]="(element$ | async)?.parents"></ame-element-list>
+<ame-element-list label="Outgoing edges" [elements]="(element$ | async)?.children"></ame-element-list>

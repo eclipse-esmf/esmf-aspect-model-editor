@@ -13,14 +13,7 @@
 
 /// <reference types="Cypress" />
 
-import {
-  FIELD_inputValues,
-  FIELD_name,
-  FIELD_output,
-  SELECTOR_ecOperation,
-  SELECTOR_editorSaveButton,
-  SELECTOR_tbDeleteButton,
-} from '../../support/constants';
+import {FIELD_inputValues, FIELD_name, FIELD_output, SELECTOR_ecOperation, SELECTOR_tbDeleteButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
 describe('Test edit operation', () => {
@@ -65,7 +58,7 @@ describe('Test edit operation', () => {
     cy.shapeExists('operation1')
       .then(() => cy.dbClickShape('operation1'))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('newOperation', {force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
@@ -178,7 +171,7 @@ describe('Test edit operation', () => {
           .contains('addOutputProperty1')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
@@ -210,7 +203,7 @@ describe('Test edit operation', () => {
       .then(() => cy.dbClickShape('newOperation'))
       .then(() => cy.get('[data-cy="input"]').eq(0).click({force: true}))
       .then(() => cy.get('[data-cy="input"]').eq(1).click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
@@ -248,7 +241,7 @@ describe('Test edit operation', () => {
           .contains('addNewOutputProperty1')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
@@ -296,7 +289,7 @@ describe('Test edit operation', () => {
           .contains('addNewOutputProperty2')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
@@ -334,7 +327,7 @@ describe('Test edit operation', () => {
           .contains('addNewOutputProperty1')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
@@ -373,7 +366,7 @@ describe('Test edit operation', () => {
           .contains('addNewOutputProperty1')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
@@ -409,7 +402,7 @@ describe('Test edit operation', () => {
           .contains('addNewOutputProperty2')
           .click({force: true})
       )
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
@@ -441,7 +434,7 @@ describe('Test edit operation', () => {
       .then(() => cy.dbClickShape('newOperation'))
       .then(() => cy.get('[data-cy="input"]').eq(0).click({force: true}))
       .then(() => cy.get('[data-cy="input"]').eq(0).click({force: true}))
-      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
