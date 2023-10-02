@@ -18,7 +18,7 @@ image::connecting-elements.png[width=100%]
 
 TIP: Alternatively, you can use the context menu (right mouse click) to access the action items.
 
-The larger the diagram, the harder it might get to select elements that are fare away.
+The larger the diagram, the harder it might get to select elements that are far away.
 
 In case you cannot connect two elements just the way you are most familiar with, try one of these procedures.
 
