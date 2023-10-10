@@ -114,8 +114,9 @@ export class VersionMigrationComponent implements OnInit {
 
     for (const namespace of toMigrate) {
       const namespacePieces = namespace.split(':');
-      const version = namespacePieces.pop().replace('#', '');
-      const newNamespace = `${namespacePieces.join(':')}:${this.getNewVersion(version)}#`;
+      const oldVersion = namespacePieces.pop().replace('#', '');
+      const newVersion = this.getNewVersion(oldVersion);
+      const newNamespace = `${namespacePieces.join(':')}:${newVersion}#`;
 
       rdfModel.store.getQuads(null, null, null, null).forEach(({subject, predicate, object}) => {
         if (!(subject.value.includes(namespace) || object.value.includes(namespace) || predicate.value.includes(namespace))) {
@@ -141,6 +142,11 @@ export class VersionMigrationComponent implements OnInit {
 
       const prefix = Object.entries(prefixes).find(([, value]) => value === namespace)?.[0];
       rdfModel.updatePrefix(prefix, namespace, newNamespace);
+      rdfModel.updateAspectVersion(oldVersion, newVersion);
+
+      if (prefix === '') {
+        rdfModel.updateAbsoluteFileName(namespacePieces[2], newVersion);
+      }
     }
 
     returnObject.serializedUpdatedModel = this.rdfService.serializeModel(rdfModel);

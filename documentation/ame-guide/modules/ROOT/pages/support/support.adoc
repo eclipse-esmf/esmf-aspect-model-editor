@@ -5,7 +5,7 @@
 
 For troubleshooting, have a look at the xref:support/known-issues.adoc#known-issues[known issues] and the xref:support/known-limitations.adoc#known-limitations[known limitations] of the Aspect Model Editor.
 
-As the Aspect Model Editor relies on the SAMM specification, also check out the https://eclipse-esmf.github.io/samm-specification/2.0.0/index.html[SAMM Aspect Meta Model version 2.0.0^,opts=nofollow].
+As the Aspect Model Editor relies on the SAMM specification, also check out the https://eclipse-esmf.github.io/samm-specification/2.1.0/index.html[SAMM Aspect Meta Model version 2.1.0^,opts=nofollow].
 
 For further support, open an https://github.com/eclipse-esmf/esmf-aspect-model-editor/issues[issue in GitHub^,opts=nofollow].
 To enable the community to give you the best possible advice, please include the following to your issue:

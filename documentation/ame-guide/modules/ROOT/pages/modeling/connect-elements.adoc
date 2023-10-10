@@ -14,11 +14,11 @@ image::connecting-elements.png[width=100%]
 
 * If only one direction is permitted, the arrow will be set respectively.
 * If both directions are permitted, the arrow will be set for the element selected first to the element selected second.
-* If a connection is not permitted, a respective warning will appear and the elements will not be connected.
+* Tf a connection is not permitted, a respective warning will appear and the elements will not be connected.
 
 TIP: Alternatively, you can use the context menu (right mouse click) to access the action items.
 
-The larger the diagram, the harder it might get to select elements that are far away.
+The larger the diagram, the harder it might get elements that are fare away.
 
 In case you cannot connect two elements just the way you are most familiar with, try one of these procedures.
 
@@ -28,7 +28,7 @@ In case you cannot connect two elements just the way you are most familiar with,
 * Right-click to access the context menu.
 * Select *connect with ...*.
 * The new pop-up displays all the elements of the model. +
-  In case there are too many elements, type the name in the search field.
+  In case there are too element many type the name in the search field.
 * Select the target element.
 * Click *Connect* to confirm.
 

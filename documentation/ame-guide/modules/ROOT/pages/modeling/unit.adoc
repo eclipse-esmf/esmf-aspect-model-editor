@@ -11,4 +11,4 @@ image::edit-custom-unit.png[width=100%]
 
 image::custom-unit-shape.png[width=100%]
 
-For more information on adding custom Units, see https://eclipse-esmf.github.io/samm-specification/2.0.0/units.html[Units^ (SAMM 2.0.0)^,opts=nofollow]
+For more information on adding custom Units, see https://eclipse-esmf.github.io/samm-specification/2.1.0/units.html[Units^ (SAMM 2.1.0)^,opts=nofollow]

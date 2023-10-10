@@ -35,8 +35,12 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
 
   public dataTypeControl: FormControl;
   public dataTypeEntityControl: FormControl;
+  public elementCharacteristicControl: FormControl;
+  public elementCharacteristicDisplayControl: FormControl;
 
   public entitiesDisabled = false;
+
+  public isDisabled = false;
 
   constructor(public dataTypeService: DataTypeService, public mxGraphService: MxGraphService, public rdfService: RdfService) {
     super();
@@ -48,6 +52,8 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
       this.setDataTypeControl();
       this.entitiesDisabled = this.metaModelElement instanceof DefaultStructuredValue || this.hasStructuredValueAsGrandParent();
     });
+
+    this.enableWhenEmpty(() => this.dataTypeControl, 'elementCharacteristic');
   }
 
   ngOnDestroy() {
@@ -57,9 +63,9 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
 
   getCurrentValue() {
     return !this.metaModelElement.isPredefined()
-      ? this.previousData?.['dataType'] ||
-          this.previousData?.['newDataType'] ||
-          this.previousData?.[this.fieldName] ||
+      ? this.previousData?.['dataType'] ??
+          this.previousData?.['newDataType'] ??
+          this.previousData?.[this.fieldName] ??
           this.metaModelElement?.dataType
       : this.metaModelElement?.dataType;
   }
@@ -68,6 +74,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     if (this.metaModelElement instanceof DefaultEither) {
       return;
     }
+
     const dataType = this.getCurrentValue();
     const value = dataType ? RdfModelUtil.getValueWithoutUrnDefinition(dataType?.getUrn()) : null;
 
@@ -76,7 +83,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement?.isExternalReference(),
+          disabled: !!value || this.metaModelElement?.isExternalReference() || this.isDisabled,
         },
         [
           EditorDialogValidators.duplicateNameWithDifferentType(
@@ -119,9 +126,9 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
         entity = this.namespacesCacheService.findElementOnExtReference<Entity>(newValue.urn);
       }
 
-      this.parentForm.setControl('dataTypeEntity', new FormControl(entity));
+      this.parentForm.get('dataTypeEntity').setValue(entity);
     } else {
-      this.parentForm.setControl('dataTypeEntity', new FormControl(new DefaultScalar(newValue.urn)));
+      this.parentForm.get('dataTypeEntity').setValue(new DefaultScalar(newValue.urn));
     }
 
     this.dataTypeControl.patchValue(newValue.name);
@@ -137,7 +144,12 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     const newEntity = new DefaultEntity(this.metaModelElement.metaModelVersion, urn, entityName);
 
     // set the control of newDatatype
-    this.parentForm.setControl('newDataType', new FormControl(newEntity));
+    const newDataTypeControl = this.parentForm.get('newDataType');
+    if (newDataTypeControl) {
+      newDataTypeControl.setValue(newEntity);
+    } else {
+      this.parentForm.setControl('newDataType', new FormControl(newEntity));
+    }
 
     this.dataTypeControl.patchValue(entityName);
     this.dataTypeEntityControl.setValue(newEntity);
@@ -147,8 +159,8 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
   unlockDataType() {
     this.dataTypeControl.enable();
     this.dataTypeControl.patchValue('');
-    this.dataTypeEntityControl.patchValue('');
-    this.parentForm.setControl('newDataType', new FormControl(null));
+    this.parentForm.get(this.fieldName).patchValue('');
+    this.parentForm.get('newDataType')?.setValue(null);
     this.dataTypeEntityControl.markAllAsTouched();
   }
 

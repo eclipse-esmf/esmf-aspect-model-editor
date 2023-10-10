@@ -7,7 +7,7 @@ The elements of an Aspect Model &ndash; such as Properties, Operations, Characte
 
 Elements that belong to other namespaces/files cannot be edited. Switch to the respective namespace if you need any changes.
 
-For an overview of Aspect Model elements, see https://eclipse-esmf.github.io/samm-specification/2.0.0/meta-model-elements.html[Meta Model Elements (SAMM 2.0.0)^,opts=nofollow].
+For an overview of Aspect Model elements, see https://eclipse-esmf.github.io/samm-specification/2.1.0/meta-model-elements.html[Meta Model Elements (SAMM 2.1.0)^,opts=nofollow].
 
 [[edit-elements-general]]
 == Edit elements with the Edit dialog
@@ -46,7 +46,7 @@ That means, these attributes can be defined multiple times for different languag
 For adding or removing languages, see xref:getting-started/settings.adoc#language-settings[language settings].
 
 The Aspect Model Editor takes care of valid names.
-For more information, see https://eclipse-esmf.github.io/samm-specification/2.0.0/modeling-guidelines.html#naming-rules[Naming rules (SAMM 2.0.0)^,opts=nofollow].
+For more information, see https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidelines.html#naming-rules[Naming rules (SAMM 2.1.0)^,opts=nofollow].
 
 [[samm-see-attribute]]
 == The `samm:see` attribute
@@ -57,7 +57,7 @@ Use the `samm:see` attribute to add references to related elements in an externa
 * To set multiple values for the `samm:see` attribute, separate them by commas.
 
 The meaning of the reference is informative only and implies no semantics such as equality or subsumption in either direction.
-For more information, see https://eclipse-esmf.github.io/samm-specification/2.0.0/modeling-guidelines.html#adding-external-references[Adding external references (SAMM 2.0.0)^,opts=nofollow].
+For more information, see https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidelines.html#adding-external-references[Adding external references (SAMM 2.1.0)^,opts=nofollow].
 
 
 

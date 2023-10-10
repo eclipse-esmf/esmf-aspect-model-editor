@@ -12,5 +12,5 @@
  */
 
 export const GeneralConfig = {
-  sammVersion: '2.0.0',
+  sammVersion: '2.1.0',
 };

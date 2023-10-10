@@ -21,14 +21,14 @@ describe('Test load external reference with same namespace', () => {
   it('Loading property element with there children from external file with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.digitaltwin:1.0.0': ['external-property-reference-with-children.txt'],
+      'org.eclipse.examples:1.0.0': ['external-property-reference-with-children.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference-with-children.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-property-reference-with-children.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-property-reference.txt',
@@ -77,14 +77,14 @@ describe('Test load external reference with same namespace', () => {
   it('Loading operation element with there children from external file with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.digitaltwin:1.0.0': ['external-operation-reference-with-children.txt'],
+      'org.eclipse.examples:1.0.0': ['external-operation-reference-with-children.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-operation-reference-with-children.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-operation-reference-with-children.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-operation-reference.txt',
@@ -152,14 +152,14 @@ describe('Test load external reference with same namespace', () => {
   it('Loading characteristic element with there children from external file with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.digitaltwin:1.0.0': ['external-characteristic-reference-with-children.txt'],
+      'org.eclipse.examples:1.0.0': ['external-characteristic-reference-with-children.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-characteristic-reference-with-children.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-characteristic-reference-with-children.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-characteristic-reference.txt',
@@ -209,14 +209,14 @@ describe('Test load external reference with same namespace', () => {
   it('Loading custom unit element from external file with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.digitaltwin:1.0.0': ['external-unit-reference.txt'],
+      'org.eclipse.examples:1.0.0': ['external-unit-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-unit-reference.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-unit-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-unit-reference.txt',
@@ -255,14 +255,14 @@ describe('Test load external reference with same namespace', () => {
   it('Loading entity element with there children from external file with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.digitaltwin:1.0.0': ['external-entity-reference-with-children.txt'],
+      'org.eclipse.examples:1.0.0': ['external-entity-reference-with-children.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference-with-children.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-entity-reference-with-children.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-entity-reference.txt',
@@ -311,7 +311,7 @@ describe('Test load external reference with same namespace', () => {
   it('Loading different elements from several external files with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.digitaltwin:1.0.0': [
+      'org.eclipse.examples:1.0.0': [
         'external-entity-reference.txt',
         'external-characteristic-reference.txt',
         'external-property-reference.txt',
@@ -325,7 +325,7 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-entity-reference.txt',
@@ -336,7 +336,7 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-characteristic-reference.txt',
@@ -347,7 +347,7 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-property-reference.txt',
@@ -358,7 +358,7 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-operation-reference.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-operation-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-operation-reference.txt',
@@ -369,7 +369,7 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-trait-reference.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-trait-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-trait-reference.txt',
@@ -380,7 +380,7 @@ describe('Test load external reference with same namespace', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-constraint-reference.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-constraint-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-constraint-reference.txt',

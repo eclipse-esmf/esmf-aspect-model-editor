@@ -15,6 +15,7 @@ import {Subscription} from 'rxjs';
 import {EditorModelService} from '../../editor-model.service';
 import {PreviousFormDataSnapshot} from '../../interfaces';
 import {FormGroup} from '@angular/forms';
+import {CharacteristicClassType} from '@ame/editor';
 
 @Component({
   selector: 'ame-characteristic',
@@ -24,10 +25,24 @@ export class CharacteristicComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
 
   public property = false;
-  public selectedCharacteristic: string;
+  public selectedCharacteristic: CharacteristicClassType;
   public previousData: PreviousFormDataSnapshot = {};
   public metaModelDialogService = inject(EditorModelService);
   public element$ = this.metaModelDialogService.getMetaModelElement();
+
+  public characteristicClassType = CharacteristicClassType;
+  allowedClassesForElementCharacteristic: CharacteristicClassType[] = [
+    this.characteristicClassType.Collection,
+    this.characteristicClassType.Set,
+    this.characteristicClassType.SortedSet,
+    this.characteristicClassType.List,
+    this.characteristicClassType.TimeSeries,
+  ];
+  allowedClassesForUnit: CharacteristicClassType[] = [
+    this.characteristicClassType.Measurement,
+    this.characteristicClassType.Quantifiable,
+    this.characteristicClassType.Duration,
+  ];
 
   @Input() parentForm: FormGroup;
 
@@ -53,7 +68,15 @@ export class CharacteristicComponent implements OnInit, OnDestroy {
     });
   }
 
-  onClassChange(characteristic: string) {
+  onClassChange(characteristic: CharacteristicClassType) {
     this.selectedCharacteristic = characteristic;
+  }
+
+  isElementCharacteristicAllowed(): boolean {
+    return this.allowedClassesForElementCharacteristic.includes(this.selectedCharacteristic);
+  }
+
+  isUnitAllowed(): boolean {
+    return this.allowedClassesForUnit.includes(this.selectedCharacteristic);
   }
 }

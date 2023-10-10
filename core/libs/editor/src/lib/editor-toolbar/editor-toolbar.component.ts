@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, inject} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, inject, OnDestroy, OnInit, Output} from '@angular/core';
 import {finalize, first, switchMap, take} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
 import {
@@ -22,7 +22,7 @@ import {
   MxGraphShapeSelectorService,
 } from '@ame/mx-graph';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
-import {BindingsService, LoadingScreenOptions, LoadingScreenService, NotificationsService, cellRelations} from '@ame/shared';
+import {BindingsService, cellRelations, LoadingScreenOptions, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {EditorService} from '../editor.service';
 import {ShapeConnectorService, ShapeConnectorUtil} from '@ame/connection';
 import {FileHandlingService, GenerateHandlingService, InformationHandlingService} from './services';
@@ -144,15 +144,24 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.loadingScreenOptions.title = 'Saving Aspect Model';
     this.loadingScreenOptions.hasCloseButton = false;
 
-    this.fileHandlingService.exportAsAspectModelFile(this.loadingScreenOptions).subscribe();
+    const subscription$ = this.fileHandlingService
+      .exportAsAspectModelFile(this.loadingScreenOptions)
+      .pipe(finalize(() => subscription$.unsubscribe()))
+      .subscribe();
   }
 
   saveAspectModelToWorkspace() {
-    this.fileHandlingService.saveAspectModelToWorkspace().subscribe();
+    const subscription$ = this.fileHandlingService
+      .saveAspectModelToWorkspace()
+      .pipe(finalize(() => subscription$.unsubscribe()))
+      .subscribe();
   }
 
   copyToClipboard() {
-    this.fileHandlingService.copyToClipboard();
+    const subscription$ = this.fileHandlingService
+      .copyToClipboard()
+      .pipe(finalize(() => subscription$.unsubscribe()))
+      .subscribe();
   }
 
   openExportDialog() {
@@ -177,7 +186,10 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
       return;
     }
 
-    this.namespaceManagerService.importNamespaces(file).subscribe();
+    const subscription = this.namespaceManagerService
+      .importNamespaces(file)
+      .pipe(finalize(() => subscription.unsubscribe()))
+      .subscribe();
     event.target.value = '';
   }
 

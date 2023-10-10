@@ -25,10 +25,10 @@ import {first} from 'rxjs';
 const nonDependentNamespaces = [
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
   'http://www.w3.org/2000/01/rdf-schema#',
-  'urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#',
-  'urn:samm:org.eclipse.esmf.samm:characteristic:2.0.0#',
-  'urn:samm:org.eclipse.esmf.samm:entity:2.0.0#',
-  'urn:samm:org.eclipse.esmf.samm:unit:2.0.0#',
+  'urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#',
+  'urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#',
+  'urn:samm:org.eclipse.esmf.samm:entity:2.1.0#',
+  'urn:samm:org.eclipse.esmf.samm:unit:2.1.0#',
   'http://www.w3.org/2001/XMLSchema#',
 ];
 

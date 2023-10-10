@@ -30,5 +30,5 @@ Properties can contain an example value:
 [cols="30%,70%"]
 |===
 |_Example value_
-|This provides an example value for the Property, which requires that the entered data type has been defined in a corresponding Characteristic. It is important to ensure that the data type has the correct format. Find the https://eclipse-esmf.github.io/samm-specification/2.0.0/datatypes.html[Data Types (SAMM 2.0.0)^,opts=nofollow] with an example value.
+|This provides an example value for the Property, which requires that the entered data type has been defined in a corresponding Characteristic. It is important to ensure that the data type has the correct format. Find the https://eclipse-esmf.github.io/samm-specification/2.1.0/datatypes.html[Data Types (SAMM 2.1.0)^,opts=nofollow] with an example value.
 |===

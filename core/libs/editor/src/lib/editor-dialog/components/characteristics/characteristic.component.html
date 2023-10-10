@@ -22,33 +22,33 @@
   <ame-data-type-input-field
     [previousData]="previousData || {}"
     [parentForm]="parentForm"
-    *ngIf="selectedCharacteristic !== 'Either'"
+    *ngIf="selectedCharacteristic !== characteristicClassType.Either"
   ></ame-data-type-input-field>
 
-  <ng-container *ngIf="['Collection', 'Set', 'SortedSet', 'List', 'TimeSeries'].includes(selectedCharacteristic)">
+  <ng-container *ngIf="isElementCharacteristicAllowed()">
     <ame-element-characteristic-input-field
       [previousData]="previousData || {}"
       [parentForm]="parentForm"
     ></ame-element-characteristic-input-field>
   </ng-container>
 
-  <ng-container *ngIf="selectedCharacteristic === 'Enumeration'">
+  <ng-container *ngIf="selectedCharacteristic === characteristicClassType.Enumeration">
     <ame-values-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-values-input-field>
   </ng-container>
 
-  <ng-container *ngIf="['Measurement', 'Quantifiable', 'Duration'].includes(selectedCharacteristic)">
+  <ng-container *ngIf="isUnitAllowed()">
     <ame-unit-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-unit-input-field>
   </ng-container>
 
-  <ng-container *ngIf="selectedCharacteristic === 'State'">
+  <ng-container *ngIf="selectedCharacteristic === characteristicClassType.State">
     <ame-state-characteristic [previousData]="previousData || {}" [parentForm]="parentForm"></ame-state-characteristic>
   </ng-container>
 
-  <ng-container *ngIf="selectedCharacteristic === 'StructuredValue'">
+  <ng-container *ngIf="selectedCharacteristic === characteristicClassType.StructuredValue">
     <ame-structured-value [parentForm]="parentForm"></ame-structured-value>
   </ng-container>
 
-  <ng-container *ngIf="selectedCharacteristic === 'Either'">
+  <ng-container *ngIf="selectedCharacteristic === characteristicClassType.Either">
     <ame-left-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-left-input-field>
     <ame-right-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-right-input-field>
   </ng-container>

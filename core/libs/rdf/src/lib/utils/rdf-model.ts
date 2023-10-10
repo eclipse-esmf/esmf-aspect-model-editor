@@ -129,11 +129,17 @@ export class RdfModel {
     this.setAspect(aspect?.value);
   }
 
-  setAspect(aspectUrn: string) {
+  setAspect(aspectUrn: string): void {
     this.aspect = aspectUrn ? DataFactory.namedNode(aspectUrn) : null;
   }
 
-  removeAspectFromStore() {
+  updateAspectVersion(oldVersion: string, newVersion: string): void {
+    if (this.aspect) {
+      this.aspect = DataFactory.namedNode(this.aspect.id.replace(oldVersion, newVersion));
+    }
+  }
+
+  removeAspectFromStore(): void {
     this.aspect = null;
   }
 
@@ -155,7 +161,7 @@ export class RdfModel {
 
   addPrefix(alias: string, namespace: any): void {
     const inPrefixes = Object.values(this.prefixes).some(value => value === namespace);
-    if (alias === '' && !inPrefixes) {
+    if ((alias === '' || alias === undefined) && !inPrefixes) {
       const matched = namespace.match(/[a-zA-Z]+/gi); //NOSONAR
       if (matched.length) {
         let newAlias = `ext-${matched[matched.length - 1]}`;
@@ -356,7 +362,15 @@ export class RdfModel {
 
   private setDefaultAspectModelAlias() {
     const subject = this.store.getSubjects(this.samm.RdfType(), null, null);
-    this.defaultAspectModelAlias = this.getAliasByNamespace(`${subject[0]?.value.split('#')[0]}#`);
+    const namespace = `${subject[0]?.value.split('#')[0]}#`;
+
+    this.defaultAspectModelAlias = this.getAliasByNamespace(namespace);
+
+    // Special case when aspect models are defined manually without prefix.
+    if (this.defaultAspectModelAlias === undefined) {
+      this.addPrefix('default', namespace);
+      this.defaultAspectModelAlias = this.getAliasByNamespace(namespace);
+    }
   }
 
   SAMM(): Samm {

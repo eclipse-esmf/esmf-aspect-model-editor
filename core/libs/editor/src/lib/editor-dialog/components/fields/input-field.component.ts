@@ -54,6 +54,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
   public metaModelElement: T;
   public subscription: Subscription = new Subscription();
   public formSubscription: Subscription = new Subscription(); // subscriptions from form controls are added here
+  public frozen: boolean;
   protected resetFormOnDestroy = true;
   protected fieldName: string = null;
 
@@ -118,25 +119,6 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
   cleanSubscriptions() {
     this.formSubscription.unsubscribe();
     this.formSubscription = new Subscription();
-  }
-
-  private resetForm() {
-    if (!this.parentForm) {
-      return;
-    }
-    // we need to keep the meta model changed form field
-    const changedMetaModel = this.parentForm.value.changedMetaModel;
-    if (changedMetaModel) {
-      return;
-    }
-    Object.keys(this.parentForm.controls).forEach((key: string) => {
-      if (key === 'changedMetaModel') {
-        return;
-      }
-      this.parentForm.setControl(key, new FormControl());
-    });
-    this.parentForm.reset();
-    this.parentForm.setControl('changedMetaModel', new FormControl());
   }
 
   initFilteredEntities(control: FormControl, disabled = false) {
@@ -349,6 +331,49 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
         return null;
       })
       .filter(cell => cell);
+  }
+
+  enableWhenEmpty(currentControl: () => FormControl, dependantControlKey: string) {
+    const subscription = this.parentForm.valueChanges.subscribe(() => {
+      const charElementControl = this.parentForm.get(dependantControlKey);
+      if (!charElementControl) {
+        return;
+      }
+
+      if (charElementControl.value && currentControl().enabled) {
+        currentControl().disable();
+        this.frozen = true;
+      }
+
+      const charElementSubscription = charElementControl.valueChanges.subscribe(value => {
+        this.frozen = !!value;
+        this.frozen ? currentControl().disable() : currentControl().enable();
+      });
+
+      subscription.unsubscribe();
+      this.formSubscription.add(charElementSubscription);
+    });
+
+    this.formSubscription.add(subscription);
+  }
+
+  private resetForm() {
+    if (!this.parentForm) {
+      return;
+    }
+    // we need to keep the meta model changed form field
+    const changedMetaModel = this.parentForm.value.changedMetaModel;
+    if (changedMetaModel) {
+      return;
+    }
+    Object.keys(this.parentForm.controls).forEach((key: string) => {
+      if (key === 'changedMetaModel') {
+        return;
+      }
+      this.parentForm.setControl(key, new FormControl());
+    });
+    this.parentForm.reset();
+    this.parentForm.setControl('changedMetaModel', new FormControl());
   }
 
   private searchExtElement(value: string): mxgraph.mxCell[] {

@@ -37,7 +37,7 @@ describe('VersionMigrationComponent', () => {
         {
           provide: APP_CONFIG,
           useValue: {
-            currentSammVersion: '2.0.0',
+            currentSammVersion: '2.1.0',
           },
         },
         {

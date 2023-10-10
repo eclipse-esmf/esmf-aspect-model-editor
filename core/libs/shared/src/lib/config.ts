@@ -24,8 +24,8 @@ export const config: AppConfig = {
   editorConfiguration: 'assets/config/editor/config/editor.xml',
   assetLocation: 'assets',
   minSammVersion: '1.0.0',
-  currentSammVersion: '2.0.0',
-  sdkVersion: '2.2.0',
+  currentSammVersion: '2.1.0',
+  sdkVersion: '2.3.2',
   defaultPort: '9091',
   serviceUrl: `http://localhost:${defaultPort}`,
   api: {

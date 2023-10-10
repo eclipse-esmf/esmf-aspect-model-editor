@@ -2,7 +2,7 @@
 
 This section guides you through your first steps with the Aspect Model Editor for creating, editing, and saving an Aspect Model.
 
-For more information on the underlying specification, see https://eclipse-esmf.github.io/samm-specification/2.0.0/index.html[SAMM Aspect Meta Model version 2.0.0^,opts=nofollow].
+For more information on the underlying specification, see https://eclipse-esmf.github.io/samm-specification/2.1.0/index.html[SAMM Aspect Meta Model version 2.1.0^,opts=nofollow].
 
 NOTE: The Aspect Model Editor does currently not support shortcuts for editing all elements of an Aspect Model.
 Please use the icons and buttons as provided in the user interface (e.g., xref:getting-started/ui-overview.adoc#toolbar[toolbar], xref:getting-started/ui-overview.adoc#add-icon[Add icon] as well as right click for context menu).

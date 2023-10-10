@@ -83,14 +83,14 @@ describe('Test drag and drop', () => {
   it('can add Property from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.digitaltwin:1.0.0': ['external-property-reference.txt'],
+      'org.eclipse.examples:1.0.0': ['external-property-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-property-reference.txt',
@@ -119,7 +119,7 @@ describe('Test drag and drop', () => {
   it('can add Characteristic from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.digitaltwin:1.0.0': ['external-characteristic-reference.txt'],
+      'org.eclipse.examples:1.0.0': ['external-characteristic-reference.txt'],
     });
 
     cy.intercept(
@@ -127,7 +127,7 @@ describe('Test drag and drop', () => {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
         headers: {
-          namespace: 'org.eclipse.digitaltwin:1.0.0',
+          namespace: 'org.eclipse.examples:1.0.0',
           'file-name': 'external-characteristic-reference.txt',
         },
       },
@@ -157,7 +157,7 @@ describe('Test drag and drop', () => {
   it('can add Constraint from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.digitaltwin:1.0.0': ['external-constraint-reference.txt'],
+      'org.eclipse.examples:1.0.0': ['external-constraint-reference.txt'],
     });
 
     cy.intercept(
@@ -165,7 +165,7 @@ describe('Test drag and drop', () => {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
         headers: {
-          namespace: 'org.eclipse.digitaltwin:1.0.0',
+          namespace: 'org.eclipse.examples:1.0.0',
           'file-name': 'external-constraint-reference.txt',
         },
       },
@@ -204,14 +204,14 @@ describe('Test drag and drop', () => {
   it('can add Entity from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.digitaltwin:1.0.0': ['external-entity-reference.txt'],
+      'org.eclipse.examples:1.0.0': ['external-entity-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-entity-reference.txt',
@@ -267,7 +267,7 @@ describe('Test drag and drop', () => {
       .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
         expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
         expect(rdf).to.contain('samm:properties (:property1 ext-different:externalProperty)');
         expect(rdf).to.contain(':property1 a samm:Property');
@@ -306,7 +306,7 @@ describe('Test drag and drop', () => {
       .then(checkAspect)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
         expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
         expect(rdf).to.contain('samm:properties (:property1)');
         expect(rdf).to.contain(':property1 a samm:Property');
@@ -349,7 +349,7 @@ describe('Test drag and drop', () => {
       .then(checkASpectAndChildrenConstraint)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
         expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
         expect(rdf).to.contain('samm:properties (:property1)');
         expect(rdf).to.contain(':property1 a samm:Property');
@@ -390,7 +390,7 @@ describe('Test drag and drop', () => {
       .then(checkAspectAndChildrenEntity)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
         expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
         expect(rdf).to.contain('samm:properties (:property1)');
         expect(rdf).to.contain(':property1 a samm:Property');
@@ -405,14 +405,14 @@ describe('Test drag and drop', () => {
   it("can add Property with children's from external reference same namespace", () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.digitaltwin:1.0.0': ['external-property-reference.txt'],
+      'org.eclipse.examples:1.0.0': ['external-property-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-property-reference.txt',
@@ -474,7 +474,7 @@ describe('Test drag and drop', () => {
       .then(checkAspectTree)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.digitaltwin:1.0.0#>.');
+        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
         expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
         expect(rdf).to.contain('samm:properties (:property1 ext-different:externalPropertyWithChildren)');
         expect(rdf).to.contain(':property1 a samm:Property');

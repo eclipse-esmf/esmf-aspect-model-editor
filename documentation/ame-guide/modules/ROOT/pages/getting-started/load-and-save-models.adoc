@@ -7,7 +7,7 @@ The Aspect Model Editor supports loading and saving Aspect Models in the officia
 
 NOTE: In case the loaded Aspect Model has a lower SAMM version than the one that the Aspect Model Editor is currently based on, migration will start automatically.
 
-Currently, the Aspect Model Editor is based on https://eclipse-esmf.github.io/samm-specification/2.0.0/index.html[SAMM Aspect Meta Model 2.0.0^,opts=nofollow].
+Currently, the Aspect Model Editor is based on https://eclipse-esmf.github.io/samm-specification/2.1.0/index.html[SAMM Aspect Meta Model 2.1.0^,opts=nofollow].
 
 [[load-start-new-models]]
 == Load or start a new model

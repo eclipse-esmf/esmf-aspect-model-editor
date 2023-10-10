@@ -12,7 +12,7 @@
  */
 
 import {NamedNode, Quad} from 'n3';
-import {Characteristic, DefaultCharacteristic, Type, DefaultEntity} from '@ame/meta-model';
+import {Characteristic, DefaultCharacteristic, DefaultEntity, Type} from '@ame/meta-model';
 import {PredefinedCharacteristicInstantiator} from './predefined-characteristic-instantiator';
 import {BaseConstraintCharacteristicInstantiator} from './base-constraint-characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
@@ -80,7 +80,13 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
       const randomNumber = crypto.getRandomValues(array).toString().substr(2, 9);
 
       characteristic.name = characteristic.name ? characteristic.name : 'characteristic_' + randomNumber;
-      characteristic.aspectModelUrn = `${this.metaModelElementInstantiator.rdfModel.getAspectModelUrn()}${characteristic.name}`;
+
+      const aspectModelUrn = this.metaModelElementInstantiator.rdfModel.getAspectModelUrn();
+
+      characteristic.aspectModelUrn = aspectModelUrn
+        ? `${aspectModelUrn}${characteristic.name}`
+        : `${quad.subject.id.split('#')[0]}#${characteristic.name}`;
+
       this.cachedFile.addAnonymousElement(characteristic, initialName);
     }
 

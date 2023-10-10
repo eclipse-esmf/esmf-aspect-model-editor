@@ -32,4 +32,4 @@ To add Properties to the Input or Output attribute, proceed as follows:
 |===
 
 NOTE: Currently, no Properties can be optionally set in Operations.
-See https://eclipse-esmf.github.io/samm-specification/2.0.0/modeling-guidelines.html#optional-properties[Optional Properties (SAMM 2.0.0)^,opts=nofollow].
+See https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidelines.html#optional-properties[Optional Properties (SAMM 2.1.0)^,opts=nofollow].

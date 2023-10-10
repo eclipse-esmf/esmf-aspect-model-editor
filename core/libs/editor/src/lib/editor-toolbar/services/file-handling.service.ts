@@ -16,7 +16,7 @@ import {ConfirmDialogService, DialogOptions, EditorService} from '@ame/editor';
 import {MatDialog} from '@angular/material/dialog';
 import {LoadModelDialogComponent} from '../../load-model-dialog';
 import {catchError, filter, finalize, first, map, switchMap, tap} from 'rxjs/operators';
-import {forkJoin, Observable, of, throwError} from 'rxjs';
+import {forkJoin, from, Observable, of, throwError} from 'rxjs';
 import {
   LoadingScreenOptions,
   LoadingScreenService,
@@ -104,23 +104,27 @@ export class FileHandlingService {
       );
   }
 
-  copyToClipboard() {
+  copyToClipboard(): Observable<any> {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
-      this.notificationsService.error({
-        title: 'No RDF Model',
-        message: 'No Rdf model available.',
-        timeout: 5000,
+      return throwError(() => {
+        this.logService.logError('No Rdf model available. ');
+        return 'No Rdf model available. ';
       });
-      return;
     }
 
-    navigator.clipboard.writeText(this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel)).then(() => {
-      this.notificationsService.success({
-        title: 'Copied to Clipboard',
-        message: 'The Aspect Model has been copied to clipboard (as ttl code)',
-        timeout: 5000,
-      });
-    });
+    return this.modelService.synchronizeModelToRdf().pipe(
+      map(() => this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel)),
+      switchMap(serializedModel => this.modelApiService.formatModel(serializedModel)),
+      switchMap(formattedModel => from(navigator.clipboard.writeText(formattedModel))),
+      tap(() => {
+        this.notificationsService.success({
+          title: 'Copied to Clipboard',
+          message: 'The Aspect Model has been copied to clipboard (as ttl code)',
+          timeout: 5000,
+        });
+      }),
+      first()
+    );
   }
 
   exportAsAspectModelFile(loadingScreenOptions): Observable<any> {
@@ -230,7 +234,14 @@ export class FileHandlingService {
     return of(null);
   }
 
-  importFilesToWorkspace(files: string[], conflictFiles: {replace: string[]; keep: string[]}, showLoading = true): Observable<RdfModel[]> {
+  importFilesToWorkspace(
+    files: string[],
+    conflictFiles: {
+      replace: string[];
+      keep: string[];
+    },
+    showLoading = true
+  ): Observable<RdfModel[]> {
     const loadingOptions: LoadingScreenOptions = {
       title: 'Importing files into the workspace',
       hasCloseButton: false,

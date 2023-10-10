@@ -22,7 +22,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 })
 export class DocumentComponent {
   AMEDocumentationLink = 'https://eclipse-esmf.github.io/ame-guide/introduction.html';
-  SAMMDocumentationLink = 'https://eclipse-esmf.github.io/samm-specification/2.0.0/index.html';
+  SAMMDocumentationLink = 'https://eclipse-esmf.github.io/samm-specification/2.1.0/index.html';
 
   constructor(private dialogRef: MatDialogRef<DocumentComponent>, @Inject(APP_CONFIG) public config: AppConfig) {}
 
