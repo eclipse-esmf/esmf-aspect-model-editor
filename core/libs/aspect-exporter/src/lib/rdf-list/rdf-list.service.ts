@@ -193,12 +193,10 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
           continue;
         }
 
-        const [, name] = quad.object.value.split('#');
-        listElement.push({
-          node: quad.object,
-          // trim the double quotes (")
-          name: name?.replace(/^"(.+(?="$))"$/, '$1'),
-        });
+        const resolvedQuad = this.rdfModel
+          .resolveBlankNodes(quad.object.value)
+          .filter(quad => this.samm.isPropertyProperty(quad.predicate.value))[0];
+        listElement.push({node: resolvedQuad.object});
       }
 
       if (this.samm.isRdfRest(quad?.predicate.value) && !this.samm.isRdfNill(quad?.object.value)) {
