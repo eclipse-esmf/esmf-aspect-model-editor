@@ -59,7 +59,7 @@ export class EntityInstantiator {
         const findElementOnExtReference =
           this.metaModelElementInstantiator.namespaceCacheService.findElementOnExtReference<DefaultAbstractEntity>(quad.object.value);
 
-        if (storedQuads.some(quad => samm.isEntity(quad.object.value))) {
+        if (storedQuads.some(quad => samm.isEntity(quad.object.value) || samm.isAbstractEntity(quad.object.value))) {
           defaultEntity.extendedElement = findElementOnExtReference || (this.createEntity(storedQuads) as DefaultEntity);
         } else if (predefinedEntityInstantiator.entityInstances[quad.object.value]) {
           defaultEntity.extendedElement = predefinedEntityInstantiator.entityInstances[quad.object.value]();
