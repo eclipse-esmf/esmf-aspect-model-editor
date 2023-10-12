@@ -71,6 +71,7 @@ import {GeneralConfig, NotificationsService} from '@ame/shared';
 import {PredefinedEntityInstantiator} from './instantiators/samm-e-predefined-entity-instantiator';
 import {syncElementWithChildren} from './helpers';
 import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
+import {setUniqueElementName} from '@ame/utils';
 
 export class MetaModelElementInstantiator {
   private characteristicInstantiator: CharacteristicInstantiator;
@@ -407,24 +408,6 @@ export class MetaModelElementInstantiator {
     return this.constraintInstantiator.create(quad);
   }
 
-  public setUniqueElementName(modelElement: BaseMetaModelElement, name?: string) {
-    name = name || `${modelElement.className}`.replace('Default', '');
-
-    if (modelElement instanceof DefaultProperty || modelElement instanceof DefaultAbstractProperty) {
-      name = name[0].toLowerCase() + name.substring(1);
-    }
-
-    let counter = 1;
-    let tmpAspectModelUrn: string = null;
-    let tmpName: string = null;
-    do {
-      tmpName = `${name}${counter++}`;
-      tmpAspectModelUrn = `${this.rdfModel.getAspectModelUrn()}${tmpName}`;
-    } while (this.cachedFile.getElement<BaseMetaModelElement>(tmpAspectModelUrn));
-    modelElement.aspectModelUrn = tmpAspectModelUrn;
-    modelElement.name = tmpName;
-  }
-
   initBaseProperties(quads: Array<Quad>, metaModelElement: BaseMetaModelElement, rdfModel: RdfModel) {
     let typeQuad: Quad;
 
@@ -444,7 +427,7 @@ export class MetaModelElementInstantiator {
       [, metaModelElement.name] = typeQuad.subject.value.split('#');
       metaModelElement.aspectModelUrn = typeQuad.subject.value;
     } else {
-      this.setUniqueElementName(metaModelElement);
+      setUniqueElementName(metaModelElement, this.rdfModel, this.namespaceCacheService);
       metaModelElement.aspectModelUrn = `${this.rdfModel.getAspectModelUrn()}${metaModelElement.name}`;
     }
 

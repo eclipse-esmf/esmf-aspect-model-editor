@@ -14,7 +14,7 @@
 import {SidebarService} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {CachedFile} from './cached-file';
-import {Base} from '@ame/meta-model';
+import {Base, BaseMetaModelElement} from '@ame/meta-model';
 
 @Injectable({
   providedIn: 'root',
@@ -157,5 +157,23 @@ export class NamespacesCacheService {
       cachedProperty = this.#currentCachedFile.resolveElement(element);
     }
     return cachedProperty;
+  }
+
+  /**
+   * Retrieves a BaseMetaModelElement from a specified namespace using the provided aspectModelUrn.
+   *
+   * @param {string} namespace - The namespace from which the element should be retrieved.
+   * @param {string} aspectModelUrn - The URN of the aspect model element to find.
+   * @returns {BaseMetaModelElement | null} The found BaseMetaModelElement or null if not found.
+   */
+  getElementFromNamespace(namespace: string, aspectModelUrn: string): BaseMetaModelElement {
+    for (const value of this.getNamespace(namespace).values()) {
+      const element = value.getElement<BaseMetaModelElement>(aspectModelUrn);
+      if (element) {
+        return element;
+      }
+    }
+
+    return null;
   }
 }

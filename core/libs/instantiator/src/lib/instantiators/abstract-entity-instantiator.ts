@@ -47,9 +47,23 @@ export class AbstractEntityInstantiator {
 
     quads.forEach(quad => {
       if (samm.isExtendsProperty(quad.predicate.value)) {
-        defaultAbstractEntity.extendedElement = this.sammE.isTimeSeriesEntity(quad.object.value)
-          ? new PredefinedEntityInstantiator(this.metaModelElementInstantiator).entityInstances[this.sammE.TimeSeriesEntity]()
-          : this.createAbstractEntity(this.rdfModel.store.getQuads(quad.object, null, null, null));
+        if (this.sammE.isTimeSeriesEntity(quad.object.value)) {
+          defaultAbstractEntity.extendedElement = new PredefinedEntityInstantiator(this.metaModelElementInstantiator).entityInstances[
+            this.sammE.TimeSeriesEntity
+          ]();
+        } else {
+          let storedQuads = this.rdfModel.store.getQuads(quad.object, null, null, null);
+
+          if (!storedQuads.length) {
+            storedQuads = this.metaModelElementInstantiator
+              .getExternalElement(quad.object)
+              .externalRdfModel.store.getQuads(quad.object, null, null, null);
+          }
+
+          const findElementOnExtReference =
+            this.metaModelElementInstantiator.namespaceCacheService.findElementOnExtReference<DefaultAbstractEntity>(quad.object.value);
+          defaultAbstractEntity.extendedElement = findElementOnExtReference || this.createAbstractEntity(storedQuads);
+        }
 
         defaultAbstractEntity.children.push(defaultAbstractEntity.extendedElement);
         return;
