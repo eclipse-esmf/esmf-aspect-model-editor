@@ -29,6 +29,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
 
   elementCharacteristicDisplayControl: FormControl;
   elementCharacteristicControl: FormControl;
+  isDisabled = false;
 
   constructor(private notificationsService: NotificationsService, public rdfService: RdfService) {
     super();
@@ -36,7 +37,11 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
   }
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => this.setElementCharacteristicControl());
+    this.subscription = this.getMetaModelData().subscribe(() => {
+      this.setElementCharacteristicControl();
+    });
+
+    this.enableWhenEmpty(() => this.elementCharacteristicDisplayControl, 'dataTypeEntity');
   }
 
   ngOnDestroy() {
@@ -58,7 +63,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement.isExternalReference(),
+          disabled: !!value || this.metaModelElement.isExternalReference() || this.isDisabled,
         },
         [
           EditorDialogValidators.duplicateNameWithDifferentType(
@@ -75,7 +80,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
       'elementCharacteristic',
       new FormControl({
         value: elementCharacteristic,
-        disabled: this.metaModelElement?.isExternalReference(),
+        disabled: this.metaModelElement?.isExternalReference() || this.isDisabled,
       })
     );
 
@@ -105,7 +110,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
       defaultCharacteristic = this.namespacesCacheService.findElementOnExtReference<Characteristic>(newValue.urn);
     }
 
-    this.parentForm.setControl('elementCharacteristic', new FormControl(defaultCharacteristic));
+    this.parentForm.get('elementCharacteristic').setValue(defaultCharacteristic);
 
     this.elementCharacteristicDisplayControl.patchValue(newValue.name);
     this.elementCharacteristicControl.setValue(defaultCharacteristic);
@@ -126,7 +131,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
     }
 
     const newCharacteristic = new DefaultCharacteristic(this.metaModelElement.metaModelVersion, urn, characteristicName, null);
-    this.parentForm.setControl('elementCharacteristic', new FormControl(newCharacteristic));
+    this.parentForm.get('elementCharacteristic').setValue(newCharacteristic);
 
     this.elementCharacteristicDisplayControl.patchValue(characteristicName);
     this.elementCharacteristicControl.setValue(newCharacteristic);
@@ -137,7 +142,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
     this.elementCharacteristicDisplayControl.enable();
     this.elementCharacteristicDisplayControl.patchValue('');
     this.elementCharacteristicControl.patchValue('');
-    this.parentForm.setControl('elementCharacteristic', new FormControl(null));
+    this.parentForm.get('elementCharacteristic').setValue(null);
     this.elementCharacteristicControl.markAllAsTouched();
   }
 }

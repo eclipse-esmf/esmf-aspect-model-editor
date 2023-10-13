@@ -3,7 +3,7 @@
 
 SAMM supports defining abstract elements (entities and properties) and the concept of inheritance in order to make semantic information reusable.
 The editor allows to create abstract entities and properties and to declare relationships to inheritance via "extends".
-See https://eclipse-esmf.github.io/samm-specification/2.0.0/modeling-guidelines.html#declaring-entities[Abstract Entities]
+See https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidelines.html#declaring-entities[Abstract Entities]
 for more information about abstract entities and properties.
 
 There are two different ways to create an abstract entity:

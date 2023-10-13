@@ -12,13 +12,13 @@
  */
 
 export enum SammVersion {
-  SAMM_2_0_0 = '2.0.0',
+  SAMM_2_1_0 = '2.1.0',
 }
 
 export class KnownVersion {
   public static fromVersionString(version: string): SammVersion {
-    if (SammVersion.SAMM_2_0_0 === version) {
-      return SammVersion.SAMM_2_0_0;
+    if (SammVersion.SAMM_2_1_0 === version) {
+      return SammVersion.SAMM_2_1_0;
     }
 
     return null;

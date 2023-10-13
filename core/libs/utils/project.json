@@ -1,34 +1,23 @@
 {
   "name": "utils",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/utils/src",
   "projectType": "library",
+  "sourceRoot": "libs/utils/src",
+  "prefix": "ame",
   "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/utils",
-        "main": "libs/utils/src/index.ts",
-        "tsConfig": "libs/utils/tsconfig.lib.json",
-        "assets": ["libs/utils/*.md"]
-      }
-    },
-    "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["libs/utils/**/*.ts"]
-      }
-    },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/utils"],
       "options": {
-        "jestConfig": "libs/utils/jest.config.ts",
+        "jestConfig": "libs/utils/jest.config.js",
         "passWithNoTests": true
       }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/utils/src/**/*.ts", "libs/utils/src/**/*.html"]
+      }
     }
-  },
-  "tags": []
+  }
 }

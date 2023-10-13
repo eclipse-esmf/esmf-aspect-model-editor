@@ -22,7 +22,7 @@ Are you having trouble with Aspect Model Editor? We want to help!
 
 * Check the [developer documentation](https://eclipse-esmf.github.io)
 * Check the
-  SAMM [specification](https://eclipse-esmf.github.io/samm-specification/2.0.0/index.html)
+  SAMM [specification](https://eclipse-esmf.github.io/samm-specification/2.1.0/index.html)
 * Having issues with the Aspect Model Editor? Open
   a [GitHub issue](https://github.com/eclipse-esmf/esmf-aspect-model-editor/issues).
 

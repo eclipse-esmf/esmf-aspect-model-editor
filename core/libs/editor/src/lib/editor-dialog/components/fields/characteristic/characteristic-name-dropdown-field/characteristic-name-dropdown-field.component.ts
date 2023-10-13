@@ -40,6 +40,7 @@ import {LanguageSettingsService} from '@ame/settings-dialog';
 import {DataFactory} from 'n3';
 import {EditorModelService} from '../../../../editor-model.service';
 import {DropdownFieldComponent} from '../../dropdown-field.component';
+import {CharacteristicClassType} from '@ame/editor';
 
 @Component({
   selector: 'ame-characteristic-name-dropdown-field',
@@ -52,7 +53,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
   public unitInstantiator: UnitInstantiator;
   public units: Array<Unit> = [];
 
-  @Output() selectedCharacteristic = new EventEmitter<string>();
+  @Output() selectedCharacteristic = new EventEmitter<CharacteristicClassType>();
 
   constructor(
     public editorModelService: EditorModelService,
@@ -70,7 +71,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
       this.getMetaModelData().subscribe(() => {
         this.selectedMetaModelElement = this.metaModelElement;
         this.setMetaModelClassName();
-        this.selectedCharacteristic.emit(this.metaModelClassName);
+        this.selectedCharacteristic.emit(this.metaModelClassName as CharacteristicClassType);
       })
     );
   }
@@ -112,7 +113,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
     this.setMetaModelElementAspectUrn(newCharacteristicType);
     this.updateFields(newCharacteristicType);
 
-    this.selectedCharacteristic.emit(characteristic);
+    this.selectedCharacteristic.emit(characteristic as CharacteristicClassType);
   }
 
   private initListCharacteristics(): void {
@@ -124,21 +125,21 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
 
   private createCharacteristicClassesList() {
     const characteristicList = [...this.listCharacteristics.keys()];
-    this.listCharacteristics.set('Characteristic', DefaultCharacteristic.createInstance);
-    this.listCharacteristics.set('Code', DefaultCode.createInstance);
-    this.listCharacteristics.set('Collection', DefaultCollection.createInstance);
-    this.listCharacteristics.set('Duration', DefaultDuration.createInstance);
-    this.listCharacteristics.set('Either', DefaultEither.createInstance);
-    this.listCharacteristics.set('Enumeration', DefaultEnumeration.createInstance);
-    this.listCharacteristics.set('List', DefaultList.createInstance);
-    this.listCharacteristics.set('Measurement', DefaultMeasurement.createInstance);
-    this.listCharacteristics.set('Quantifiable', DefaultQuantifiable.createInstance);
-    this.listCharacteristics.set('Set', DefaultSet.createInstance);
-    this.listCharacteristics.set('SortedSet', DefaultSortedSet.createInstance);
-    this.listCharacteristics.set('SingleEntity', DefaultSingleEntity.createInstance);
-    this.listCharacteristics.set('State', DefaultState.createInstance);
-    this.listCharacteristics.set('StructuredValue', DefaultStructuredValue.createInstance);
-    this.listCharacteristics.set('TimeSeries', DefaultTimeSeries.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.Characteristic, DefaultCharacteristic.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.Code, DefaultCode.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.Collection, DefaultCollection.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.Duration, DefaultDuration.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.Either, DefaultEither.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.Enumeration, DefaultEnumeration.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.List, DefaultList.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.Measurement, DefaultMeasurement.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.Quantifiable, DefaultQuantifiable.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.Set, DefaultSet.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.SortedSet, DefaultSortedSet.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.SingleEntity, DefaultSingleEntity.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.State, DefaultState.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.StructuredValue, DefaultStructuredValue.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.TimeSeries, DefaultTimeSeries.createInstance);
     return [...this.listCharacteristics.keys()].filter(value => !characteristicList.includes(value));
   }
 

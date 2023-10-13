@@ -22,6 +22,7 @@ import {ModelApiService} from '@ame/api';
 import {RdfService} from './rdf.service';
 import {APP_CONFIG, AppConfig, LogService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
 import {RdfModel} from '../utils';
+import {setUniqueElementName} from '@ame/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -191,7 +192,7 @@ export class ModelService {
           this.currentCachedFile.resolveElement(modelElementNamePair.element);
         } else {
           // else resolve the naming
-          this.setUniqueElementName(modelElementNamePair.element, modelElementNamePair.name);
+          setUniqueElementName(modelElementNamePair.element, this.rdfModel, this.namespaceCacheService, modelElementNamePair.name);
           this.currentCachedFile.resolveElement(modelElementNamePair.element);
           this.notificationsService.info({
             title: 'Renamed anonymous element',
@@ -201,7 +202,7 @@ export class ModelService {
           });
         }
       } else {
-        this.setUniqueElementName(modelElementNamePair.element);
+        setUniqueElementName(modelElementNamePair.element, this.rdfModel, this.namespaceCacheService);
         this.currentCachedFile.resolveElement(modelElementNamePair.element);
         this.notificationsService.info({
           title: 'Renamed anonymous element',
@@ -217,23 +218,5 @@ export class ModelService {
   private isElementNameUnique(modelElement: BaseMetaModelElement): boolean {
     modelElement.metaModelVersion = this.rdfModel.SAMM().version;
     return !this.currentCachedFile.getElement<BaseMetaModelElement>(`${this.rdfModel.getAspectModelUrn()}${modelElement.name}`);
-  }
-
-  public setUniqueElementName(modelElement: BaseMetaModelElement, name?: string) {
-    name = name || `${modelElement.className}`.replace('Default', '');
-
-    if (modelElement instanceof DefaultProperty || modelElement instanceof DefaultAbstractProperty) {
-      name = name[0].toLowerCase() + name.substring(1);
-    }
-
-    let counter = 1;
-    let tmpAspectModelUrn: string = null;
-    let tmpName: string = null;
-    do {
-      tmpName = `${name}${counter++}`;
-      tmpAspectModelUrn = `${this.rdfModel.getAspectModelUrn()}${tmpName}`;
-    } while (this.currentCachedFile.getElement<BaseMetaModelElement>(tmpAspectModelUrn));
-    modelElement.aspectModelUrn = tmpAspectModelUrn;
-    modelElement.name = tmpName;
   }
 }

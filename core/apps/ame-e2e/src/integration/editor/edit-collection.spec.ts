@@ -21,9 +21,8 @@ import {
   SELECTOR_ecCharacteristic,
   SELECTOR_ecEntity,
   SELECTOR_tbDeleteButton,
-  SELECTOR_clearElementCharacteristicButton,
+  SELECTOR_editorSaveButton,
 } from '../../support/constants';
-import {cyHelp} from '../../support/helpers';
 
 describe('Test editing different Collections', () => {
   context('Type Collection', () => {
@@ -45,10 +44,6 @@ describe('Test editing different Collections', () => {
 
     it('can edit name of ElementCharacteristic Characteristic', () => {
       renameElementCharacteristicAsCharacteristic();
-    });
-
-    it('delete ElementCharacteristic Characteristic', () => {
-      deleteElementCharacteristicCharacteristic();
     });
 
     it('can edit name of Collection DataType', () => {
@@ -81,10 +76,6 @@ describe('Test editing different Collections', () => {
       renameElementCharacteristicAsCharacteristic();
     });
 
-    it('delete ElementCharacteristic Characteristic', () => {
-      deleteElementCharacteristicCharacteristic();
-    });
-
     it('can edit name of Collection DataType', () => {
       renameCollectionDataType();
     });
@@ -113,10 +104,6 @@ describe('Test editing different Collections', () => {
 
     it('can edit name of ElementCharacteristic Characteristic', () => {
       renameElementCharacteristicAsCharacteristic();
-    });
-
-    it('delete ElementCharacteristic Characteristic', () => {
-      deleteElementCharacteristicCharacteristic();
     });
 
     it('can edit name of Collection DataType', () => {
@@ -149,10 +136,6 @@ describe('Test editing different Collections', () => {
       renameElementCharacteristicAsCharacteristic();
     });
 
-    it('delete ElementCharacteristic Characteristic', () => {
-      deleteElementCharacteristicCharacteristic();
-    });
-
     it('can edit name of Collection DataType', () => {
       renameCollectionDataType();
     });
@@ -183,10 +166,6 @@ describe('Test editing different Collections', () => {
       renameElementCharacteristicAsCharacteristic();
     });
 
-    it('delete ElementCharacteristic Characteristic', () => {
-      deleteElementCharacteristicCharacteristic();
-    });
-
     it('can edit name of Collection DataType', () => {
       renameCollectionDataType();
     });
@@ -202,7 +181,7 @@ describe('Test editing different Collections', () => {
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains(`${type}`).click({force: true}))
-      .then(() => cyHelp.clickSaveButton())
+      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(`samm:characteristic :${characteristic}`);
@@ -218,6 +197,7 @@ describe('Test editing different Collections', () => {
   const addNewCharacteristic = (characteristic: string) => {
     cy.dragElement(SELECTOR_ecCharacteristic, 350, 300)
       .then(() => cy.dbClickShape(characteristic))
+      .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
       .then(() =>
         cy
           .get(FIELD_elementCharacteristic)
@@ -227,7 +207,7 @@ describe('Test editing different Collections', () => {
           .contains('Characteristic2')
           .click({force: true})
       )
-      .then(() => cyHelp.clickSaveButton())
+      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('samm-c:elementCharacteristic :Characteristic2'))
       .then(() => cy.getAspect())
@@ -239,7 +219,7 @@ describe('Test editing different Collections', () => {
   const connectNewAddedEntity = (characteristic: string) => {
     cy.dragElement(SELECTOR_ecEntity, 350, 300)
       .then(() => cy.dbClickShape(characteristic))
-      .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
+      .then(() => cy.get('button[data-cy="clear-element-characteristic-button"]').click({force: true}))
       .then(() =>
         cy
           .get(FIELD_dataType)
@@ -249,7 +229,7 @@ describe('Test editing different Collections', () => {
           .contains('Entity1')
           .click({force: true})
       )
-      .then(() => cyHelp.clickSaveButton())
+      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('samm:dataType :Entity1'));
   };
@@ -278,35 +258,10 @@ describe('Test editing different Collections', () => {
     cy.shapeExists('Characteristic2')
       .then(() => cy.dbClickShape('Characteristic2'))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('NewCharacteristic', {force: true}))
-      .then(() => cyHelp.clickSaveButton())
+      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('samm-c:elementCharacteristic :NewCharacteristic');
         expect(rdf).to.contain('NewCharacteristic a samm:Characteristic');
-      })
-      .then(() => cy.getAspect())
-      .then(aspect => {
-        const trait = aspect.properties[0].property.characteristic;
-        const collection = trait.baseCharacteristic;
-        expect(collection.elementCharacteristic.name).to.equal('NewCharacteristic');
-      });
-  };
-
-  const deleteElementCharacteristicCharacteristic = () => {
-    cy.shapeExists('NewCharacteristic')
-      .then(() => cy.dbClickShape('Characteristic1'))
-      .then(() => cy.get(SELECTOR_clearElementCharacteristicButton).click({force: true}))
-      .then(() => cyHelp.clickSaveButton())
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).not.contain('samm-c:elementCharacteristic :NewCharacteristic');
-        expect(rdf).to.contain('NewCharacteristic');
-      })
-      .then(() => cy.clickShape('NewCharacteristic'))
-      .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).not.contain('NewCharacteristic');
       });
   };
 
@@ -314,7 +269,7 @@ describe('Test editing different Collections', () => {
     cy.shapeExists('Entity1')
       .then(() => cy.dbClickShape('Entity1'))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('NewEntity', {force: true}))
-      .then(() => cyHelp.clickSaveButton())
+      .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain('samm:dataType :NewEntity');

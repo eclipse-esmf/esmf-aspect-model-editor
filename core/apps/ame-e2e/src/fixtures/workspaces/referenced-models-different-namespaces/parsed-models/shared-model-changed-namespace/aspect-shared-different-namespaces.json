@@ -1,5 +1,5 @@
 {
-  "metaModelVersion": "2.0.0",
+  "metaModelVersion": "2.1.0",
   "aspectModelUrn": "urn:samm:newNamespace:1.0.0#AspectSharedDifferentNamespaces",
   "name": "AspectSharedDifferentNamespaces",
   "see": [],
@@ -10,7 +10,7 @@
   "properties": [
     {
       "property": {
-        "metaModelVersion": "2.0.0",
+        "metaModelVersion": "2.1.0",
         "aspectModelUrn": "urn:samm:newNamespace:1.0.0#property1",
         "name": "property1",
         "see": [],
@@ -19,7 +19,7 @@
         "preferredNames": {},
         "descriptions": {},
         "characteristic": {
-          "metaModelVersion": "2.0.0",
+          "metaModelVersion": "2.1.0",
           "aspectModelUrn": "urn:samm:newNamespace:1.0.0#Characteristic1",
           "name": "Characteristic1",
           "see": [],

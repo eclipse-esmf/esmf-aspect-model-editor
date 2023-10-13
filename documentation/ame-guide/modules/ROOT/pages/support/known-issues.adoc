@@ -36,7 +36,7 @@ version is not supported by this version of the Aspect Model Editor.
 
 h| Workaround
 a|
-Check that you have not missed parts of the TTL file. Also check against syntax errors consulting https://eclipse-esmf.github.io/samm-specification/2.0.0/namespaces.html[Namespaces and versions (SAMM 2.0.0)^,opts=nofollow].
+Check that you have not missed parts of the TTL file. Also check against syntax errors consulting https://eclipse-esmf.github.io/samm-specification/2.1.0/namespaces.html[Namespaces and versions (SAMM 2.1.0)^,opts=nofollow].
 |===
 
 [[datatype-characteristic]]
@@ -62,7 +62,7 @@ a|
 _Wrong data type_
 
 Check that the data types you are using are correct, see
-https://eclipse-esmf.github.io/samm-specification/2.0.0/datatypes.html[Datatypes (SAMM 2.0.0)^,opts=nofollow]
+https://eclipse-esmf.github.io/samm-specification/2.1.0/datatypes.html[Datatypes (SAMM 2.1.0)^,opts=nofollow]
 
 _Unsupported Namespaces_
 

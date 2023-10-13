@@ -24,3 +24,21 @@ export interface IEnumEntityValue {
   entityValue: DefaultEntityValue;
   parentEntityValue?: DefaultEntityValue;
 }
+
+export enum CharacteristicClassType {
+  Collection = 'Collection',
+  Set = 'Set',
+  SortedSet = 'SortedSet',
+  List = 'List',
+  TimeSeries = 'TimeSeries',
+  Measurement = 'Measurement',
+  Quantifiable = 'Quantifiable',
+  Duration = 'Duration',
+  Either = 'Either',
+  Characteristic = 'Characteristic',
+  Code = 'Code',
+  Enumeration = 'Enumeration',
+  SingleEntity = 'SingleEntity',
+  State = 'State',
+  StructuredValue = 'StructuredValue',
+}

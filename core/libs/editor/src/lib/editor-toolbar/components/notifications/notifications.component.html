@@ -18,7 +18,7 @@
 
 <mat-dialog-content class="table-container">
   <button (click)="clearAllNotifications()" mat-button color="primary" data-cy="clear-notifications">
-    <span>Clear table</span>
+    <span>Clear notifications</span>
   </button>
 
   <table [dataSource]="notificationsService.getNotifications()" mat-table class="mat-elevation-z2 notifications-table">

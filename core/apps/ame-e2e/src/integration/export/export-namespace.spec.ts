@@ -27,7 +27,7 @@ describe('Export namespace', () => {
   it('should have all namespaces ready for export from the very start', () => {
     const namespacesConfig = {
       aspectDefault: {
-        name: 'org.eclipse.digitaltwin:1.0.0',
+        name: 'org.eclipse.examples.aspect:1.0.0',
         files: [
           {
             name: 'AspectDefault.ttl',
@@ -62,7 +62,7 @@ describe('Export namespace', () => {
   it('should have all namespaces ready for export after switching between models', () => {
     const namespacesConfig = {
       aspectDefault: {
-        name: 'org.eclipse.digitaltwin:1.0.0',
+        name: 'org.eclipse.examples.aspect:1.0.0',
         files: [
           {
             name: 'AspectDefault.ttl',

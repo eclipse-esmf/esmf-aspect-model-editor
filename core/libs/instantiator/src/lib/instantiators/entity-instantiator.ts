@@ -12,7 +12,7 @@
  */
 
 import {DataFactory, Quad} from 'n3';
-import {DefaultEntity, Entity, OverWrittenProperty} from '@ame/meta-model';
+import {DefaultAbstractEntity, DefaultEntity, Entity, OverWrittenProperty} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {AbstractEntityInstantiator} from './abstract-entity-instantiator';
 import {PredefinedEntityInstantiator} from './samm-e-predefined-entity-instantiator';
@@ -48,14 +48,32 @@ export class EntityInstantiator {
 
     quads.forEach(quad => {
       if (samm.isExtendsProperty(quad.predicate.value)) {
-        const quads = this.rdfModel.store.getQuads(quad.object, null, null, null);
-        const isEntity = quads.some(quad => samm.isEntity(quad.object.value));
-        defaultEntity.extendedElement = isEntity
-          ? (this.createEntity(quads) as DefaultEntity)
-          : predefinedEntityInstantiator.entityInstances[quad.object.value]
-          ? predefinedEntityInstantiator.entityInstances[quad.object.value]()
-          : new AbstractEntityInstantiator(this.metaModelElementInstantiator).createAbstractEntity(quads);
-        if (defaultEntity.extendedElement) defaultEntity.children.push(defaultEntity.extendedElement);
+        let storedQuads = this.rdfModel.store.getQuads(quad.object, null, null, null);
+        const entityInstance = predefinedEntityInstantiator.entityInstances[quad.object.value];
+        const findElementOnExtReference =
+          this.metaModelElementInstantiator.namespaceCacheService.findElementOnExtReference<DefaultAbstractEntity>(quad.object.value);
+
+        if (!storedQuads.length && !entityInstance) {
+          storedQuads = this.metaModelElementInstantiator
+            .getExternalElement(quad.object)
+            .externalRdfModel.store.getQuads(quad.object, null, null, null);
+        }
+
+        const isEntityOrAbstract = storedQuads.some(quad => samm.isEntity(quad.object.value) || samm.isAbstractEntity(quad.object.value));
+
+        if (isEntityOrAbstract) {
+          defaultEntity.extendedElement = findElementOnExtReference || (this.createEntity(storedQuads) as DefaultEntity);
+        } else if (entityInstance) {
+          defaultEntity.extendedElement = entityInstance();
+        } else {
+          defaultEntity.extendedElement =
+            findElementOnExtReference || new AbstractEntityInstantiator(this.metaModelElementInstantiator).createAbstractEntity(quads);
+        }
+
+        if (defaultEntity.extendedElement) {
+          defaultEntity.children.push(defaultEntity.extendedElement);
+        }
+
         return;
       }
 

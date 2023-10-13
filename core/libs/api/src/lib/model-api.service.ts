@@ -44,11 +44,11 @@ export class ModelApiService {
   private readonly LATEST_FILENAME = 'latest.ttl';
 
   getDefaultAspectModel(): Observable<string> {
-    return this.http.get('assets/aspect-models/org.eclipse.examples.movement/1.0.0/Default.ttl', {responseType: 'text'});
+    return this.http.get('assets/aspect-models/org.eclipse.examples/1.0.0/Default.ttl', {responseType: 'text'});
   }
 
   getMovementAspectModel(): Observable<string> {
-    return this.http.get('assets/aspect-models/org.eclipse.examples.movement/1.0.0/Movement.ttl', {responseType: 'text'});
+    return this.http.get('assets/aspect-models/org.eclipse.examples/1.0.0/Movement.ttl', {responseType: 'text'});
   }
 
   loadLatest(): Observable<string> {

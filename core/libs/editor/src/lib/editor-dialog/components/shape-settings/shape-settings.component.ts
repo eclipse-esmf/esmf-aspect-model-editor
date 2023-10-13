@@ -12,7 +12,7 @@
  */
 
 import {ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {BaseMetaModelElement, Characteristic, DefaultCharacteristic, DefaultConstraint, Unit} from '@ame/meta-model';
 import {EditorModelService} from '../../editor-model.service';
 import {LanguageSettingsService} from '@ame/settings-dialog';
@@ -32,7 +32,9 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   public selectedMetaModelElement: BaseMetaModelElement;
   public tmpCharacteristic: Characteristic;
   public units: Unit[] = [];
-  public formGroup: FormGroup = new FormGroup({});
+  public formGroup: FormGroup = new FormGroup({
+    changedMetaModel: new FormControl(null),
+  });
 
   private subscription = new Subscription();
 

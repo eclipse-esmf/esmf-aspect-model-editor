@@ -31,4 +31,5 @@ To use the Aspect Model Editor on Linux, you need:
 
 * 64-bit Ubuntu 20.04+, Debian 10+, openSUSE 15.2+, or Fedora Linux 32+
 * An Intel Pentium 4 processor or later that is SSE3-capable
-* The executable requires GLIBC of the specified version or a newer one.
+
+

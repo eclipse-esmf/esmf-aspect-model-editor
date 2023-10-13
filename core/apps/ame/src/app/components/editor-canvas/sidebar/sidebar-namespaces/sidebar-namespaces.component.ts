@@ -113,7 +113,8 @@ export class SidebarNamespacesComponent implements OnChanges {
   }
 
   public copyNamespace(text: string) {
-    navigator.clipboard.writeText(text);
+    // TODO: Add absolute path once the frontend has knowledge of the path in the settings.
+    navigator.clipboard.writeText(text.replace(':', '/'));
   }
 
   public isCurrentFile(namespace: string, namespaceFile: string): boolean {

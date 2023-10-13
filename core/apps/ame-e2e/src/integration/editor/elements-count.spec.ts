@@ -107,7 +107,7 @@ describe('Elements count', () => {
       cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       const namespacesConfig = {
         aspectDefault: {
-          name: 'org.eclipse.digitaltwin:1.0.0',
+          name: 'org.eclipse.examples.aspect:1.0.0',
           files: [
             {
               name: 'AspectDefault.ttl',
@@ -204,7 +204,7 @@ describe('Elements count', () => {
       cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       const namespacesConfig = {
         aspectDefault: {
-          name: 'org.eclipse.digitaltwin:1.0.0',
+          name: 'org.eclipse.examples.aspect:1.0.0',
           files: [
             {
               name: 'AspectDefault.ttl',

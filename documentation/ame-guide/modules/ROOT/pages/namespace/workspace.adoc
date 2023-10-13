@@ -59,3 +59,5 @@ as it will not be able to load this Aspect Model.
 In such a case you will need some expert who can fix it with a text editor.
 
 image::workspace-warning.png[]
+
+=== Aspect Model is marked with a red question mark

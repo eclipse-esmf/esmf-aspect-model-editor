@@ -12,7 +12,7 @@
  */
 
 import {Directive, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 import {EditorModelService} from '../../editor-model.service';
 import {tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
@@ -109,7 +109,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   public updateFields(modelElement: T) {
     this.metaModelElement.metaModelVersion = this.modelService.getLoadedAspectModel().rdfModel.getMetaModelVersion();
     this.editorModelService._updateMetaModelElement(this.metaModelElement);
-    this.parentForm.setControl('changedMetaModel', new FormControl(modelElement));
+    this.parentForm.get('changedMetaModel').setValue(modelElement);
   }
 
   ngOnDestroy(): void {

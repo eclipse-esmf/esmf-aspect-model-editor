@@ -11,68 +11,65 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="row" fxlayoutgap="5px" fxLayoutAlign="space-between center">
-  <mat-form-field [floatLabel]="getControl('elementCharacteristic')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="elementCharacteristic">elementCharacteristic</mat-label>
-    <input
-      #elementCharacteristic
-      [matAutocomplete]="auto"
-      matInput
-      name="elementCharacteristic"
-      [formControl]="getControl('elementCharacteristicDisplay')"
-      data-cy="elementCharacteristic"
-    />
-    <button
-      *ngIf="elementCharacteristicDisplayControl?.disabled && !metaModelElement?.isExternalReference()"
-      (click)="unlockElementCharacteristic()"
-      data-cy="clear-element-characteristic-button"
-      matSuffix
-      mat-icon-button
-      tabindex="-1"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
+<mat-form-field [floatLabel]="getControl('elementCharacteristic')?.disabled ? 'always' : 'auto'" appearance="fill">
+  <mat-label for="elementCharacteristic">elementCharacteristic</mat-label>
+  <input
+    #elementCharacteristic
+    [matAutocomplete]="auto"
+    matInput
+    name="elementCharacteristic"
+    [formControl]="getControl('elementCharacteristicDisplay')"
+    data-cy="elementCharacteristic"
+  />
+  <button
+    *ngIf="!frozen && elementCharacteristicDisplayControl?.disabled && !metaModelElement?.isExternalReference()"
+    (click)="unlockElementCharacteristic()"
+    data-cy="clear-element-characteristic-button"
+    matSuffix
+    mat-icon-button
+    tabindex="-1"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
 
-    <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeName">
-      Please select a different name as this one is of different type
-    </mat-error>
-    <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeNameExtRef">
-      Please select a different name as this one is of different type in the same namespace
-    </mat-error>
+  <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeName">
+    Please select a different name as this one is of different type
+  </mat-error>
+  <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeNameExtRef">
+    Please select a different name as this one is of different type in the same namespace
+  </mat-error>
 
-    <mat-autocomplete #auto="matAutocomplete" class="element-characteristic">
-      <div *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes" label="Characteristic">
-        <mat-option
-          *ngIf="
-            !isAlreadyDefined(filteredCharacteristicTypes, elementCharacteristic.value) &&
-            !getControl('elementCharacteristicDisplay')?.errors
-          "
-          [disabled]="!isUpperCase(elementCharacteristic.value)"
-          [value]="!isUpperCase(elementCharacteristic.value) ? '' : elementCharacteristic.value"
-          (click)="createNewCharacteristic(elementCharacteristic.value)"
-        >
-          <span *ngIf="isUpperCase(elementCharacteristic.value)">
-            + Create new characteristic: <strong>{{ elementCharacteristic.value }}</strong>
-          </span>
-          <span *ngIf="!isUpperCase(elementCharacteristic.value)">Please provide the name for the new Characteristic in upper case.</span>
-        </mat-option>
-        <mat-option
-          *ngFor="let elementCharacteristic of filteredCharacteristicTypes"
-          [value]="elementCharacteristic.name"
-          (onSelectionChange)="onSelectionChange('elementCharacteristicDisplay', elementCharacteristic)"
-        >
-          <div class="ellipsis">
-            <span>{{ elementCharacteristic.name }}</span>
-            <span *ngIf="elementCharacteristic.description" class="horizontal-separator"></span>
-            <span *ngIf="elementCharacteristic.description" class="option-description" [title]="elementCharacteristic.description">{{
-              elementCharacteristic.description
-            }}</span>
-          </div>
-          <p *ngIf="elementCharacteristic.namespace" class="namespace-prefix" [title]="elementCharacteristic.namespace">
-            {{ elementCharacteristic.namespace }}
-          </p>
-        </mat-option>
-      </div>
-    </mat-autocomplete>
-  </mat-form-field>
-</div>
+  <mat-autocomplete #auto="matAutocomplete" class="element-characteristic">
+    <div *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes" label="Characteristic">
+      <mat-option
+        *ngIf="
+          !isAlreadyDefined(filteredCharacteristicTypes, elementCharacteristic.value) && !getControl('elementCharacteristicDisplay')?.errors
+        "
+        [disabled]="!isUpperCase(elementCharacteristic.value)"
+        [value]="!isUpperCase(elementCharacteristic.value) ? '' : elementCharacteristic.value"
+        (click)="createNewCharacteristic(elementCharacteristic.value)"
+      >
+        <span *ngIf="isUpperCase(elementCharacteristic.value)">
+          + Create new characteristic: <strong>{{ elementCharacteristic.value }}</strong>
+        </span>
+        <span *ngIf="!isUpperCase(elementCharacteristic.value)">Please provide the name for the new Characteristic in upper case.</span>
+      </mat-option>
+      <mat-option
+        *ngFor="let elementCharacteristic of filteredCharacteristicTypes"
+        [value]="elementCharacteristic.name"
+        (onSelectionChange)="onSelectionChange('elementCharacteristicDisplay', elementCharacteristic)"
+      >
+        <div class="ellipsis">
+          <span>{{ elementCharacteristic.name }}</span>
+          <span *ngIf="elementCharacteristic.description" class="horizontal-separator"></span>
+          <span *ngIf="elementCharacteristic.description" class="option-description" [title]="elementCharacteristic.description">{{
+            elementCharacteristic.description
+          }}</span>
+        </div>
+        <p *ngIf="elementCharacteristic.namespace" class="namespace-prefix" [title]="elementCharacteristic.namespace">
+          {{ elementCharacteristic.namespace }}
+        </p>
+      </mat-option>
+    </div>
+  </mat-autocomplete>
+</mat-form-field>
