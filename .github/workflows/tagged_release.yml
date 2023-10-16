@@ -44,25 +44,25 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Set versions
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-20.04'
         run: |
           release_version=${{ github.event.inputs.release_version }}
           release_branch_name=${release_version%.*}.x
           echo "release_branch_name=$release_branch_name" >> $GITHUB_ENV
 
       - name: Get glibc version
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-20.04'
         run: |
           version=$(ldd --version | head -n 1 | awk '{print $NF}')
           echo "GLIBC_VERSION=$version" >> $GITHUB_ENV
           echo "::set-output name=glibc_version::$version"
 
       - name: Set antora version
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-20.04'
         run: yq eval -i '.version = "${{ github.event.inputs.release_version }}"' documentation/ame-guide/antora.yml
 
       - name: Commit version changes and push to upstream repository
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-20.04'
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
@@ -104,7 +104,7 @@ jobs:
           chmod 755 backend/ame-backend.sh
 
       - name: Download aspect model service into project (Linux)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-20.04'
         run: |
           mkdir backend
 
@@ -157,7 +157,7 @@ jobs:
         working-directory: core
 
       - name: Set app version (Unix)
-        if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-20.04'
         run: npm version ${{ github.event.inputs.release_version }}
         working-directory: core
 
@@ -172,7 +172,7 @@ jobs:
         working-directory: core
 
       - name: Build electron app (Linux)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-20.04'
         run: |
           npm run electron-builder-linux-prod
           mv electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
@@ -211,7 +211,7 @@ jobs:
           tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub release (Linux)
-        if: ${{ (matrix.os == 'ubuntu-latest') && (!contains( github.ref, '-rc' )) }}
+        if: ${{ (matrix.os == 'ubuntu-20.04') && (!contains( github.ref, '-rc' )) }}
         uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
@@ -221,7 +221,7 @@ jobs:
           tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub pre-release (Linux)
-        if: ${{ (matrix.os == 'ubuntu-latest') && (contains( github.ref, '-rc' )) }}
+        if: ${{ (matrix.os == 'ubuntu-20.04') && (contains( github.ref, '-rc' )) }}
         uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
