@@ -210,7 +210,7 @@
     "coverage-istanbul-loader": "^3.0.5",
     "cypress": "^12.17.2",
     "electron-builder": "^23.2.0",
-    "electron": "22.0.0",
+    "electron": "22.3.25",
     "eslint": "8.30.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-cypress": "^2.13.3",
