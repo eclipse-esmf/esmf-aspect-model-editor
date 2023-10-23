@@ -103,7 +103,7 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get('.file-name').trigger('mouseover'))
+      .then(() => cy.get('.file-name'))
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300))
@@ -144,7 +144,7 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get('.file-name').trigger('mouseover'))
+      .then(() => cy.get('.file-name'))
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 100, 300))
@@ -184,7 +184,7 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get('.file-name').trigger('mouseover'))
+      .then(() => cy.get('.file-name'))
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecConstraint, 100, 300))
@@ -230,7 +230,7 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get('.file-name').trigger('mouseover'))
+      .then(() => cy.get('.file-name'))
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecEntity, 100, 300))
@@ -270,7 +270,7 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get('.file-name').trigger('mouseover'))
+      .then(() => cy.get('.file-name'))
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300))
@@ -311,7 +311,7 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get('.file-name').trigger('mouseover'))
+      .then(() => cy.get('.file-name'))
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 100, 300))
@@ -351,7 +351,7 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get('.file-name').trigger('mouseover'))
+      .then(() => cy.get('.file-name'))
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecConstraint, 100, 300))
@@ -399,7 +399,7 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get('.file-name').trigger('mouseover'))
+      .then(() => cy.get('.file-name'))
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecEntity, 100, 300))
@@ -441,7 +441,7 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get('.file-name').trigger('mouseover'))
+      .then(() => cy.get('.file-name'))
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => dragExternalReferenceWithChildren(SELECTOR_ecProperty, 100, 300))
@@ -487,7 +487,7 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get('.file-name').trigger('mouseover'))
+      .then(() => cy.get('.file-name'))
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => dragExternalReferenceWithChildren(SELECTOR_ecProperty, 100, 300))
