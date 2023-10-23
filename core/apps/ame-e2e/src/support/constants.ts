@@ -35,6 +35,7 @@ export const SELECTOR_namespaceName = '[data-cy="namespaceName"]';
 export const SELECTOR_namespaceFile = '[data-cy="namespaceFile"]';
 export const SELECTOR_namespaceFileName = '[data-cy="namespaceFileName"]';
 export const SELECTOR_namespaceFileMenuButton = '[data-cy="namespaceFileMenuButton"]';
+export const SELECTOR_fileMenuFindElements = '[data-cy="fileMenuFindElements"]';
 export const SELECTOR_fileMenuDeleteButton = '[data-cy="fileMenuDeleteButton"]';
 export const SELECTOR_fileMenuLoadAspectModelButton = '[data-cy="fileMenuLoadAspectModelButton"]';
 export const SELECTOR_fileMenuCopyToClipboardButton = '[data-cy="fileMenuCopyToClipboardButton"]';
