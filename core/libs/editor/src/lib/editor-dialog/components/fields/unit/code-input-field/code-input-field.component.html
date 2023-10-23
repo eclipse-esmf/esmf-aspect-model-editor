@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="column" *ngIf="metaModelElement?.code || !metaModelElement?.isPredefined()">
+<div *ngIf="metaModelElement?.code || !metaModelElement?.isPredefined()">
   <mat-form-field [floatLabel]="getControl('code')?.disabled ? 'always' : 'auto'" appearance="fill">
     <mat-label for="code">code</mat-label>
     <input [formControl]="getControl('code')" matInput name="code" />

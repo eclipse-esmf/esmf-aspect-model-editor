@@ -100,7 +100,6 @@ export class ShapeSettingsService {
   }
 
   editModel(elementModel: BaseMetaModelElement) {
-    console.log('in editModel');
     this.shapeSettingsStateService.openShapeSettings();
     this.modelElement = elementModel;
   }

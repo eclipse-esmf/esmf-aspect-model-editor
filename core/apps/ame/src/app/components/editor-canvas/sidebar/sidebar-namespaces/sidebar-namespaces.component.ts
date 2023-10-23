@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {APP_CONFIG, AppConfig, NamespaceModel} from '@ame/shared';
-import {Component, EventEmitter, Inject, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {APP_CONFIG, AppConfig, ElectronTunnelService, NamespaceModel} from '@ame/shared';
+import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
 import {ExporterHelper, MigratorService} from '@ame/migrator';
@@ -23,7 +23,7 @@ import {NamespacesManagerService} from '@ame/namespace-manager';
   templateUrl: './sidebar-namespaces.component.html',
   styleUrls: ['./sidebar-namespaces.component.scss'],
 })
-export class SidebarNamespacesComponent implements OnChanges {
+export class SidebarNamespacesComponent implements OnChanges, OnInit {
   @Input()
   public namespaces: NamespaceModel[] = [];
 
@@ -55,8 +55,13 @@ export class SidebarNamespacesComponent implements OnChanges {
     private rdfService: RdfService,
     private migratorService: MigratorService,
     private namespaceManagerService: NamespacesManagerService,
+    private electronService: ElectronTunnelService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
+
+  ngOnInit() {
+    this.namespaces.sort(this.compareByName);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.namespaces) {
@@ -126,6 +131,10 @@ export class SidebarNamespacesComponent implements OnChanges {
     this.loadNamespaceFile.emit(`${namespace.name}:${namespaceFile}`);
   }
 
+  public loadInNewWindow(namespace: NamespaceModel, namespaceFile: string) {
+    this.electronService.openWindow({namespace: namespace.name, file: namespaceFile});
+  }
+
   public importNamespace(event: any) {
     const file = event?.target?.files[0];
 
@@ -137,7 +146,7 @@ export class SidebarNamespacesComponent implements OnChanges {
     event.target.value = '';
   }
 
-  private mergeRdfWithNamespaces() {
+  private mergeRdfWithNamespaces(): void {
     for (const namespace of this.namespaces) {
       for (const file of namespace.files) {
         const rdfModel = this.rdfService.externalRdfModels.find(rdf => {
@@ -156,9 +165,20 @@ export class SidebarNamespacesComponent implements OnChanges {
         }
       }
     }
+    this.namespaces.sort(this.compareByName);
   }
 
   refreshSidebar() {
     this.refresh.emit();
+  }
+
+  private compareByName(a: NamespaceModel, b: NamespaceModel): 0 | 1 | -1 {
+    if (a.name < b.name) {
+      return -1;
+    }
+    if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
   }
 }

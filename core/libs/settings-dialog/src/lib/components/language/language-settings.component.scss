@@ -23,7 +23,7 @@ form {
 }
 
 .btn-container {
-  color: #005691;
+  color: var(--ame-blue-500);
   align-items: center;
 
   span {
@@ -35,7 +35,7 @@ form {
   display: flex;
 
   p {
-    background-color: #efeff0;
+    background-color: var(--ame-gray-5);
     padding: 12px;
     width: 100%;
     margin-right: 10px;

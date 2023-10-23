@@ -19,3 +19,4 @@ export * from './search-config';
 export * from './settings';
 export * from './file-content.model';
 export * from './notification.model';
+export * from './startup-options';

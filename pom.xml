@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.bosch.bci.foundation</groupId>
+    <artifactId>foundation-parent</artifactId>
+    <version>DEV-SNAPSHOT</version>
+  </parent>
+
+  <name>ESMF Aspect Model Editor - Frontend</name>
+  <groupId>com.bosch.bci.foundation.ame</groupId>
+  <artifactId>esmf-aspect-model-editor-frontend</artifactId>
+  <version>DEV-SNAPSHOT</version>
+
+  <description>ESMF Aspect Model Editor Frontend</description>
+
+  <properties>
+    <whitesource.project-token>719a6511c6d54a4284b47b023a0249e5f4505a6bf0f14c8fbf58ab51fcb8d2ba</whitesource.project-token>
+    <skip.whitesource>true</skip.whitesource>
+    <frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
+    <node-version>16.18.0</node-version>
+
+    <scm.connection>scm:git:ssh://git@github.com:bci-oss/rbs-aspect-model-editor.git</scm.connection>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>${frontend-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>install node</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <environmentVariables>
+                <strict-ssl>false</strict-ssl>
+              </environmentVariables>
+              <nodeDownloadRoot>${frontend.nodeDownloadRoot}</nodeDownloadRoot>
+              <nodeVersion>v${node-version}</nodeVersion>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>fossid</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.bosch.bios.bot.fossid</groupId>
+            <artifactId>fossid-tools-maven-plugin</artifactId>
+            <configuration>
+              <projectCode>BCI-ECO-BAME-Frontend</projectCode>
+              <globPatterns>
+                <globPattern>core/apps/bame/src/app</globPattern>
+                <globPattern>core/libs/api/src/lib</globPattern>
+                <globPattern>core/libs/aspect-exporter/src/lib</globPattern>
+                <globPattern>core/libs/cache/src/lib</globPattern>
+                <globPattern>core/libs/connection/src/lib</globPattern>
+                <globPattern>core/libs/editor/src/lib</globPattern>
+                <globPattern>core/libs/instantiator/src/lib</globPattern>
+                <globPattern>core/libs/meta-model/src/lib</globPattern>
+                <globPattern>core/libs/mx-graph/src/lib</globPattern>
+                <globPattern>core/libs/rdf/src/lib</globPattern>
+                <globPattern>core/libs/settings-dialog/src/lib</globPattern>
+                <globPattern>core/libs/shared/src/lib</globPattern>
+                <globPattern>core/libs/vocabulary/src/lib</globPattern>
+              </globPatterns>
+              <prefix>BAME-Frontend</prefix>
+            </configuration>
+            <executions>
+              <execution>
+                <id>scan</id>
+                <phase>process-sources</phase>
+                <goals>
+                  <goal>scan</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>attach-resources</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-artifacts</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>attach-artifact</goal>
+                </goals>
+                <configuration>
+                  <artifacts>
+                    <artifact>
+                      <file>${basedir}/core/electron/aspect-model-editor-v0.0.1-win.zip</file>
+                      <type>zip</type>
+                      <classifier>electron</classifier>
+                    </artifact>
+                  </artifacts>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <scm>
+    <connection>${scm.connection}</connection>
+    <developerConnection>${scm.connection}</developerConnection>
+  </scm>
+</project>

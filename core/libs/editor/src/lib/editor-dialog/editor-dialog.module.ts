@@ -98,6 +98,7 @@ import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {CounterPipe} from '../../../../shared/src/lib/pipes/counter.pipe';
+import {SaveModelDialogComponent} from '../save-model-dialog/save-model-dialog.component';
 
 @NgModule({
   providers: [EditorModelService],
@@ -188,6 +189,7 @@ import {CounterPipe} from '../../../../shared/src/lib/pipes/counter.pipe';
     ElementListComponent,
     ModelElementParser,
     LocateElementComponent,
+    SaveModelDialogComponent,
   ],
   exports: [ShapeSettingsComponent],
 })

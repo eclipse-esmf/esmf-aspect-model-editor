@@ -42,10 +42,8 @@
 </ng-container>
 
 <ng-container *ngIf="selectedConstraint === 'RangeConstraint'">
-  <div fxLayout="column">
-    <ame-min-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-min-value-input-field>
-    <ame-max-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-max-value-input-field>
-  </div>
+  <ame-min-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-min-value-input-field>
+  <ame-max-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-max-value-input-field>
   <ame-upper-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-upper-bound-input-field>
   <ame-lower-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-lower-bound-input-field>
 </ng-container>

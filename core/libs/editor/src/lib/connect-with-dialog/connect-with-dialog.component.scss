@@ -37,7 +37,7 @@ h2[mat-dialog-title] {
   box-sizing: border-box;
 
   &.selected {
-    background-color: #72b4ff;
+    background-color: var(--ame-blue-200);
   }
 
   &:hover:not(.selected) {

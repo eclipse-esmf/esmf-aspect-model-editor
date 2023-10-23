@@ -24,9 +24,9 @@
 }
 
 .ng-invalid {
-  border-color: #bfc0c2 !important;
+  border-color: var(--ame-gray-20) !important;
 }
 
 .ng-invalid-error {
-  border-color: #ea0016 !important;
+  border-color: var(--ame-red-410) !important;
 }

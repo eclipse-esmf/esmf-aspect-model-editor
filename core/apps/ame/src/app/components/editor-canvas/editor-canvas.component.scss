@@ -21,8 +21,8 @@
 
     .as-split-gutter {
       flex-basis: 8px !important;
-      background-color: #efeff0;
-      border-left: 2px solid #efeff0 !important;
+      background-color: var(--ame-gray-5);
+      border-left: 2px solid var(--ame-gray-5) !important;
       transition: 150ms;
 
       &:hover {
@@ -60,7 +60,7 @@
 
 #graph {
   margin-top: 5px;
-  background: #efeff0;
+  background: var(--ame-gray-5);
   overflow: auto;
   transition: 0.5s;
   position: relative;
@@ -70,7 +70,7 @@
 .detail-view-container {
   padding: 0 25px 0 25px;
   overflow-y: auto;
-  border-top: 1px solid #efeff0;
+  border-top: 1px solid var(--ame-gray-5);
 }
 
 .content {
@@ -82,7 +82,7 @@
 }
 
 .canvas {
-  background: #efeff0;
+  background: var(--ame-gray-5);
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -97,5 +97,5 @@
 
 ame-editor-sidebar {
   box-shadow: 10px 0 5px -2px #888;
-  border-right: 1px solid #cfd0d1;
+  border-right: 1px solid var(--ame-gray-10);
 }

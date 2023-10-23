@@ -11,51 +11,49 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="row" fxlayoutgap="5px" fxLayoutAlign="space-between center">
-  <mat-form-field [floatLabel]="getControl('left')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="left">left</mat-label>
-    <input #left [matAutocomplete]="auto" matInput name="left" [formControl]="getControl('left')" data-cy="left" />
-    <button
-      *ngIf="leftControl?.disabled && !metaModelElement?.isExternalReference()"
-      (click)="unlockLeft()"
-      data-cy="clear-left-button"
-      matSuffix
-      mat-icon-button
-      tabindex="-1"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
+<mat-form-field [floatLabel]="getControl('left')?.disabled ? 'always' : 'auto'" appearance="fill">
+  <mat-label for="left">left</mat-label>
+  <input #left [matAutocomplete]="auto" matInput name="left" [formControl]="getControl('left')" data-cy="left" />
+  <button
+    *ngIf="leftControl?.disabled && !metaModelElement?.isExternalReference()"
+    (click)="unlockLeft()"
+    data-cy="clear-left-button"
+    matSuffix
+    mat-icon-button
+    tabindex="-1"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
 
-    <mat-autocomplete #auto="matAutocomplete" class="left">
-      <div *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes">
-        <mat-option
-          *ngIf="!isAlreadyDefined(filteredCharacteristicTypes, left.value) && !getControl('left')?.errors?.foundModel"
-          [disabled]="!isUpperCase(left.value)"
-          [value]="!isUpperCase(left.value) ? '' : left.value"
-          (click)="createNewCharacteristic(left.value)"
-        >
-          <span *ngIf="isUpperCase(left.value)">
-            + Create new characteristic: <strong>{{ left.value }}</strong>
-          </span>
-          <span *ngIf="!isUpperCase(left.value)">Characteristic should be upper case</span>
-        </mat-option>
-        <mat-option
-          *ngFor="let left of filteredCharacteristicTypes"
-          [value]="left.name"
-          (onSelectionChange)="onSelectionChange('left', left)"
-        >
-          <div class="result">
-            <div class="ellipsis">
-              {{ left.name }}
-              <span *ngIf="left.description" class="option-description" [title]="left.description">- {{ left.description }}</span>
-              <p *ngIf="left.namespace" class="namespace-prefix" [title]="left.namespace">
-                {{ left.namespace }}
-              </p>
-            </div>
+  <mat-autocomplete #auto="matAutocomplete" class="left">
+    <div *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes">
+      <mat-option
+        *ngIf="!isAlreadyDefined(filteredCharacteristicTypes, left.value) && !getControl('left')?.errors?.foundModel"
+        [disabled]="!isUpperCase(left.value)"
+        [value]="!isUpperCase(left.value) ? '' : left.value"
+        (click)="createNewCharacteristic(left.value)"
+      >
+        <span *ngIf="isUpperCase(left.value)">
+          + Create new characteristic: <strong>{{ left.value }}</strong>
+        </span>
+        <span *ngIf="!isUpperCase(left.value)">Characteristic should be upper case</span>
+      </mat-option>
+      <mat-option
+        *ngFor="let left of filteredCharacteristicTypes"
+        [value]="left.name"
+        (onSelectionChange)="onSelectionChange('left', left)"
+      >
+        <div class="result">
+          <div class="ellipsis">
+            {{ left.name }}
+            <span *ngIf="left.description" class="option-description" [title]="left.description">- {{ left.description }}</span>
+            <p *ngIf="left.namespace" class="namespace-prefix" [title]="left.namespace">
+              {{ left.namespace }}
+            </p>
           </div>
-        </mat-option>
-      </div>
-    </mat-autocomplete>
-    <mat-error *ngIf="getControl('left')?.errors?.required">Please define a left characteristic</mat-error>
-  </mat-form-field>
-</div>
+        </div>
+      </mat-option>
+    </div>
+  </mat-autocomplete>
+  <mat-error *ngIf="getControl('left')?.errors?.required">Please define a left characteristic</mat-error>
+</mat-form-field>

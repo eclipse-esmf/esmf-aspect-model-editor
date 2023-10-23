@@ -32,6 +32,7 @@ import {NamespacesCacheService} from '@ame/cache';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {MigratorService} from '@ame/migrator';
 import {BlankNode, NamedNode} from 'n3';
+import {Title} from '@angular/platform-browser';
 
 interface ModelLoaderState {
   /** Original model absolute file urn */
@@ -66,7 +67,8 @@ export class FileHandlingService {
     private loadingScreenService: LoadingScreenService,
     private namespaceCacheService: NamespacesCacheService,
     private migratorService: MigratorService,
-    private sidebarService: SidebarService
+    private sidebarService: SidebarService,
+    private titleService: Title
   ) {}
 
   openLoadNewAspectModelDialog(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
@@ -194,6 +196,10 @@ export class FileHandlingService {
             title: 'Model file was renamed',
             message: `File ${modelState.oldFileName} was renamed to ${modelState.newFileName}`,
           });
+        }
+
+        if (modelState.isNamespaceChanged && modelState.loadedFromWorkspace) {
+          this.titleService.setTitle(`[Aspect Model] ${modelState?.newModelName.replace('urn:samm:', '')}.ttl - Aspect Model Editor`);
         }
 
         this.rdfService.currentRdfModel.originalAbsoluteFileName = null;

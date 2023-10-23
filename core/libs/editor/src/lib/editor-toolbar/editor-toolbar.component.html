@@ -187,6 +187,10 @@
 
 <!-- Menus -->
 <mat-menu #loadMenu="matMenu" (click)="blurActiveButton()">
+  <button mat-menu-item (click)="openWindow()" data-cy="new-window">
+    <mat-icon class="material-icons">add_circle</mat-icon>
+    <span>New window</span>
+  </button>
   <button mat-menu-item (click)="openLoadNewAspectModelDialog()" data-cy="create-model">
     <mat-icon class="material-icons">add_circle</mat-icon>
     <span>Create/Upload Aspect Model</span>

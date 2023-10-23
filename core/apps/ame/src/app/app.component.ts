@@ -12,17 +12,17 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Title} from '@angular/platform-browser';
 import {Observable, of} from 'rxjs';
 import {catchError, first, switchMap, tap} from 'rxjs/operators';
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
-import {BrowserService, ElectronTunnelService, LogService, NotificationsService, SidebarService} from '@ame/shared';
+import {BrowserService, ElectronTunnelService, LogService, NotificationsService, SidebarService, TitleService} from '@ame/shared';
 import {EditorService} from '@ame/editor';
 import {ModelApiService} from '@ame/api';
 import {MatDialog} from '@angular/material/dialog';
 import {StartLoadModalComponent} from './components/start-load-modal/start-load-modal.component';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {ThemeService} from '@ame/mx-graph';
+import {StartupService} from './startup.service';
 import {MigratorService} from '@ame/migrator';
 import {Router} from '@angular/router';
 
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
   title = 'Aspect Model Editor';
 
   constructor(
-    private titleService: Title,
+    private titleService: TitleService,
     private editorService: EditorService,
     private modelApiService: ModelApiService,
     private loggerService: LogService,
@@ -46,6 +46,7 @@ export class AppComponent implements OnInit {
     private electronTunnelService: ElectronTunnelService,
     private configurationService: ConfigurationService,
     private themeService: ThemeService,
+    private startupService: StartupService,
     private migratorService: MigratorService,
     private sidebarService: SidebarService,
     private router: Router
@@ -59,17 +60,25 @@ export class AppComponent implements OnInit {
     this.setContextMenu();
     this.themeService.setCssVars(this.configurationService.getSettings()?.useSaturatedColors ? 'dark' : 'light');
 
+    // TODO: In case of no service opened, display a error page
+    if (!this.electronTunnelService.ipcRenderer) {
+      this.migratorService.startMigrating().subscribe(() => {
+        this.startApplication();
+        this.sidebarService.refreshSidebarNamespaces();
+        this.router.navigate([{outlets: {migrator: null, 'export-namespaces': null, 'import-namespaces': null}}]);
+      });
+    } else {
+      this.startupService.listenForLoading();
+    }
+
     if (window.location.search.includes('e2e=true')) {
       return;
     }
 
-    this.migratorService.startMigrating().subscribe(() => {
-      this.startApplication();
-      this.sidebarService.refreshSidebarNamespaces();
-      this.router.navigate([{outlets: {migrator: null, 'export-namespaces': null, 'import-namespaces': null}}]);
-    });
+    this.electronTunnelService.onWindowClose();
   }
 
+  // TODO: remove when implementing multiple windows after prototype
   private startApplication() {
     return this.modelApiService
       .loadLatest()

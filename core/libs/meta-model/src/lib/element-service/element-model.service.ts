@@ -28,14 +28,13 @@ import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultAspect, DefaultSt
 import {LanguageSettingsService} from '@ame/settings-dialog';
 import {ModelRootService} from './model-root.service';
 import {ModelService, RdfService} from '@ame/rdf/services';
-import {Title} from '@angular/platform-browser';
-import {NotificationsService} from '@ame/shared';
+import {NotificationsService, TitleService} from '@ame/shared';
 
 @Injectable({providedIn: 'root'})
 export class ElementModelService {
   constructor(
     private injector: Injector,
-    private titleService: Title,
+    private titleService: TitleService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphService: MxGraphService,
     private namespacesCacheService: NamespacesCacheService,
@@ -177,7 +176,7 @@ export class ElementModelService {
       rdfModel.absoluteAspectModelFileName = '';
       this.currentCachedFile.fileName = '';
       rdfModel.aspectModelFileName = data.name;
-      this.titleService.setTitle(`[Shared Model] ${rdfModel.absoluteAspectModelFileName} - Aspect Model Editor`);
+      this.titleService.updateTitle(rdfModel.absoluteAspectModelFileName, 'Shared');
     });
     return true;
   }

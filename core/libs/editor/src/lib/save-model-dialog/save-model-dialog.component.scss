@@ -1,0 +1,10 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}

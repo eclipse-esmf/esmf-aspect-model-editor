@@ -55,7 +55,7 @@ table {
 
     thead {
       th {
-        border-top: 1px solid #ededed;
+        border-top: 1px solid var(--ame-gray-10);
       }
     }
 
@@ -94,11 +94,11 @@ table {
 }
 
 .error_outline {
-  color: red;
+  color: var(--ame-red-410);
 }
 
 .warning_amber {
-  color: orange;
+  color: var(--ame-orange);
 }
 
 .message-title {

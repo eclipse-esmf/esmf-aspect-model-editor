@@ -1,0 +1,20 @@
+:host {
+  width: 100vw;
+  height: 100vh;
+  color: white;
+}
+
+.loading-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #454e7b;
+}
+
+h2 {
+  font-size: 1.3em;
+  font-weight: 400;
+}

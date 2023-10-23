@@ -290,8 +290,6 @@ describe('Test drag and drop', () => {
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
       .then(() => cy.getAspect())
       .then(aspect => {
-        console.log(aspect);
-
         expect(aspect.name).to.equal('AspectDefault');
         expect(aspect.properties).to.be.length(1);
         expect(aspect.properties[0].property.name).to.equal('property1');

@@ -240,7 +240,6 @@ describe('Create and Edit Abstract Entity', () => {
 
     it('should export', () => {
       cy.then(() => cy.getUpdatedRDF()).then(rdf => {
-        console.log(rdf);
         expect(rdf).to.contain(
           `:Entity1 a samm:Entity;\n    samm:properties ([ samm:extends :abstractProperty1 ] [ samm:extends :abstractProperty2 ]);\n    samm:extends :AbstractEntity1.`
         );

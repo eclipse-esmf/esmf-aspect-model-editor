@@ -16,11 +16,11 @@ import {BaseModelService} from './base-model-service';
 import {BaseMetaModelElement, DefaultAspect, OverWrittenPropertyKeys} from '@ame/meta-model';
 import {mxgraph} from 'mxgraph-factory';
 import {AspectRenderService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {Title} from '@angular/platform-browser';
+import {TitleService} from '@ame/shared';
 
 @Injectable({providedIn: 'root'})
 export class AspectModelService extends BaseModelService {
-  constructor(private aspectRenderer: AspectRenderService, private titleService: Title, private mxGraphService: MxGraphService) {
+  constructor(private aspectRenderer: AspectRenderService, private titleService: TitleService, private mxGraphService: MxGraphService) {
     super();
   }
 
@@ -46,7 +46,7 @@ export class AspectModelService extends BaseModelService {
 
     this.rdfService.currentRdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
     this.aspectRenderer.update({cell});
-    this.titleService.setTitle(`[Aspect Model] ${metaModelElement?.aspectModelUrn.replace('urn:samm:', '')}.ttl - Aspect Model Editor`);
+    this.titleService.updateTitle(metaModelElement?.aspectModelUrn.replace('urn:samm:', '') + 'ttl', 'Aspect');
   }
 
   delete(cell: mxgraph.mxCell) {

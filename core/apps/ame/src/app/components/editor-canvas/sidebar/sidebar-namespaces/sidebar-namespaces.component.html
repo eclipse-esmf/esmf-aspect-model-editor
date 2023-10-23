@@ -37,8 +37,10 @@
           [ngClass]="{selected: isSelectedNamespace(namespace.name), outdated: namespace.outdated}"
           [title]="namespace.name"
         >
-          <mat-icon>folder</mat-icon>
-          <span data-cy="namespaceName">{{ namespace.name }}</span>
+          <mat-icon class="blue-icon">folder</mat-icon>
+          <div data-cy="namespaceName">
+            {{ namespace.name }}
+          </div>
         </div>
         <ng-container *ngFor="let file of namespace.files">
           <div
@@ -52,8 +54,7 @@
             <div
               [class.outdated]="namespace.getFileStatus(file)?.outdated"
               [class.hasErrors]="namespace.getFileStatus(file)?.hasErrors"
-              [matTooltip]="getTooltip(namespace, file)"
-              (click)="onSelectNamespaceFile(namespace, file)"
+              (dblclick)="loadInNewWindow(namespace, file)"
               matTooltipPosition="right"
               class="file-name"
             >
@@ -66,12 +67,14 @@
             <mat-icon class="show-more material-icons" [matMenuTriggerFor]="menu" data-cy="namespaceFileMenuButton">more_horiz</mat-icon>
             <mat-menu #menu="matMenu">
               <button
-                [disabled]="isCurrentFile(namespace.name, file)"
-                (click)="onDeleteNamespace(namespace.name + ':' + file)"
+                [disabled]="
+                  isCurrentFile(namespace.name, file) || namespace.getFileStatus(file)?.outdated || namespace.getFileStatus(file)?.hasErrors
+                "
+                (click)="loadInNewWindow(namespace, file)"
                 mat-menu-item
-                data-cy="fileMenuDeleteButton"
+                data-cy="fileMenuLoadAspectModelButton"
               >
-                Delete
+                Open in new window
               </button>
               <button
                 [disabled]="
@@ -81,10 +84,26 @@
                 mat-menu-item
                 data-cy="fileMenuLoadAspectModelButton"
               >
-                Load Aspect Model
+                Open
+              </button>
+              <button
+                [disabled]="isCurrentFile(namespace.name, file)"
+                (click)="onSelectNamespaceFile(namespace, file)"
+                mat-menu-item
+                data-cy="fileMenuFindElements"
+              >
+                Find elements
               </button>
               <button mat-menu-item (click)="copyNamespace(namespace.name + '/' + file)" data-cy="fileMenuCopyToClipboardButton">
                 Copy file path
+              </button>
+              <button
+                [disabled]="isCurrentFile(namespace.name, file)"
+                (click)="onDeleteNamespace(namespace.name + ':' + file)"
+                mat-menu-item
+                data-cy="fileMenuDeleteButton"
+              >
+                Delete
               </button>
             </mat-menu>
           </div>

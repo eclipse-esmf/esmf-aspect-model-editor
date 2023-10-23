@@ -11,7 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-exports.default = {
+module.exports = {
   os: process.platform,
   extension: process.platform === 'win32' ? '.exe' : '.sh',
+  isWin: process.platform === 'win32',
+  isLinux: process.platform === 'linux',
+  isMac: process.platform === 'darwin',
 };

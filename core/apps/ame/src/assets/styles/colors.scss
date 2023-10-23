@@ -11,23 +11,60 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-// graph element colors
 html {
-  --ame-aspect: #7589c8;
-  --ame-property: #c5c8d4;
-  --ame-operation: #d5bfda;
-  --ame-event: #b9d8fa;
-  --ame-characteristic: #d6e2a6;
-  --ame-entity: #aeade0;
-  --ame-constraint: #74aeaf;
-  --ame-trait: #74aeaf;
-  --ame-unit: #b9ab50;
-  --ame-entity-value: #aeade0;
-  --ame-font: #000000;
-  --ame-border: #000000;
-  --ame-primary: #8da5bf;
-  --ame-accent: #995fab;
-  --ame-error: #e83f22;
+  // graph element colors
+  --ame-aspect: var(--ame-blue);
+  --ame-property: var(--ame-blue-30);
+  --ame-operation: var(--ame-purple-50);
+  --ame-event: var(--ame-blue-50);
+  --ame-characteristic: var(--ame-yellow-100);
+  --ame-entity: var(--ame-blue-75);
+  --ame-constraint: var(--ame-blue-60);
+  --ame-trait: var(--ame-blue-60);
+  --ame-unit: var(--ame-yellow-300);
+  --ame-entity-value: var(--ame-blue-75);
+  --ame-font: var(--ame-black);
+  --ame-border: var(--ame-black);
+  --ame-primary: var(--ame-blue-100);
+  --ame-accent: var(--ame-purple);
+  --ame-error: var(--ame-red-400);
+
+  // AME color palette
+  // blue
+  --ame-blue-30: #c5c8d4;
+  --ame-blue-50: #b9d8fa;
+  --ame-blue-60: #74aeaf;
+  --ame-blue-75: #aeade0;
+  --ame-blue-100: #8da5bf;
+  --ame-blue-110: #6eacc7;
+  --ame-blue: #7589c8;
+  --ame-blue-200: #72b4ff;
+  --ame-blue-400: #2196f3;
+  --ame-blue-500: #005691;
+
+  // purple
+  --ame-purple-50: #d5bfda;
+  --ame-purple: #995fab;
+
+  // red
+  --ame-red-400: #e83f22;
+  --ame-red-410: #ea0016;
+
+  // black
+  --ame-black: #000;
+
+  // yellow
+  --ame-yellow-100: #d6e2a6;
+  --ame-yellow-300: #b9ab50;
+
+  // orange
+  --ame-orange: #ffa500;
+
+  // gray
+  --ame-gray-5: #efeff0;
+  --ame-gray-10: #cfd0d1;
+  --ame-gray-20: #bfc0c2;
+  --ame-gray-600: #787878;
 }
 
 $characteristic-color: var(--ame-characteristic);
