@@ -19,7 +19,10 @@ import {
   SELECTOR_ecConstraint,
   SELECTOR_ecEntity,
   SELECTOR_ecProperty,
-  SELECTOR_ecTrait, SELECTOR_fileMenuFindElements, SELECTOR_namespaceFile, SELECTOR_namespaceFileMenuButton,
+  SELECTOR_ecTrait,
+  SELECTOR_fileMenuFindElements,
+  SELECTOR_namespaceFile,
+  SELECTOR_namespaceFileMenuButton,
   SELECTOR_openNamespacesButton,
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
