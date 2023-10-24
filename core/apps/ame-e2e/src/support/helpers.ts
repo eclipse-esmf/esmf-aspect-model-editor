@@ -201,20 +201,17 @@ export class cyHelp {
   }
 
   static clickShape(name: string, selectMultipleShapes = false) {
-    return cy
-      .getHTMLCell(name)
-      .should('exist')
-      .then(() => {
-        if (selectMultipleShapes) {
-          if (Cypress.platform !== 'darwin') {
-            return cy.get('body').type('{ctrl}', {release: false});
-          } else {
-            return cy.get('body').type('{meta}', {release: false});
-          }
-        }
-        return null;
-      })
-      .then(() => cy.getHTMLCell(name).first().click({force: true}));
+    cy.getHTMLCell(name).should('exist');
+
+    if (selectMultipleShapes) {
+      if (Cypress.platform !== 'darwin') {
+        cy.get('body').type('{ctrl}', {release: false});
+      } else {
+        cy.get('body').type('{meta}', {release: false});
+      }
+    }
+
+    return cy.getHTMLCell(name).first().click({force: true});
   }
 
   static getShapeLabels(name: string) {

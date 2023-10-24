@@ -375,7 +375,7 @@ Cypress.Commands.add('dragElement', (selector: string, x: number, y: number) =>
 
     return cy
       .get(selector)
-      .trigger('pointerdown', {which: 1, force: true})
+      .trigger('pointerdown', {button: 0, force: true})
       .trigger('pointermove', {clientX: graphX, clientY: graphY, force: true, waitForAnimations: true})
       .then(() => cy.get('#graph > svg').click(graphX, graphY, {force: true}).trigger('pointerup', {force: true}));
   })
