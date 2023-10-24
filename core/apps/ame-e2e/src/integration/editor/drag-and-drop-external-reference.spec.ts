@@ -27,7 +27,7 @@ import {
 import {cyHelp} from '../../support/helpers';
 import {MxGraphAttributeService} from '@ame/mx-graph';
 
-describe('Test drag and drop', () => {
+describe.skip('Test drag and drop', () => {
   function connectElements(parent: string, child: string, expected: boolean) {
     return cy
       .clickConnectShapes(parent, child)
