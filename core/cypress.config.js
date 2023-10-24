@@ -21,7 +21,6 @@ module.exports = defineConfig({
   viewportHeight: 1080,
   reporter: 'spec',
   video: false,
-  videoUploadOnPasses: false,
   screenshotOnRunFailure: false,
   videosFolder: 'apps/ame-e2e/cypress/videos',
   screenshotsFolder: 'apps/ame-e2e/cypress/screenshots',
