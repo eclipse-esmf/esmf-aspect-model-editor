@@ -194,7 +194,10 @@ declare global {
       /**
        * Checks whether two elements are connected or not
        */
-      isConnected(sourceShapeParams: {name: string; fields?: object[]}, targetShapeParams: {name: string; fields?: object[]}): Chainable;
+      isConnected(sourceShapeParams: { name: string; fields?: object[] }, targetShapeParams: {
+        name: string;
+        fields?: object[]
+      }): Chainable;
     }
   }
 }
@@ -219,10 +222,8 @@ Cypress.Commands.add('getHTMLCell', (name: string) =>
 );
 
 Cypress.Commands.add('dbClickShape', (name: string) => {
-  cy.clickShape(name).then(() => {
     cy.getHTMLCell(name).dblclick({force: true});
     cy.getHTMLCell(name).trigger('mousemove', {force: true});
-  });
 
   return cy
     .get(SELECTOR_editorSaveButton)
@@ -415,7 +416,8 @@ Cypress.Commands.add('startModelling', () => {
   cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
 
   // bypass format request
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {
+  });
 
   return cy
     .then(() => cy.get(SELECTOR_tbLoadButton).click({force: true}))
@@ -445,7 +447,7 @@ Cypress.Commands.add('removeSeeElements', (...elements: string[]) => {
 
 Cypress.Commands.add(
   'isConnected',
-  (sourceShapeParams: {name: string; fields?: object[]}, targetShapeParams: {name: string; fields?: object[]}) => {
+  (sourceShapeParams: { name: string; fields?: object[] }, targetShapeParams: { name: string; fields?: object[] }) => {
     return cy.window().then(win => {
       const sourceCell = cyHelp.findShapeByName(sourceShapeParams.name, win);
       if (!sourceCell) {

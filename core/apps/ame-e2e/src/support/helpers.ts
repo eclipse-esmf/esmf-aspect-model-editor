@@ -203,6 +203,8 @@ export class cyHelp {
   static clickShape(name: string, selectMultipleShapes = false) {
     cy.getHTMLCell(name).should('exist');
 
+    console.log('Shape exists');
+
     if (selectMultipleShapes) {
       if (Cypress.platform !== 'darwin') {
         cy.get('body').type('{ctrl}', {release: false});
@@ -211,6 +213,7 @@ export class cyHelp {
       }
     }
 
+    console.log('Shape clicked with ctrl');
     return cy.getHTMLCell(name).first().click({force: true});
   }
 
