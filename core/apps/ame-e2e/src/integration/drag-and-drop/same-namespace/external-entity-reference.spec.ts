@@ -13,7 +13,12 @@
 
 /// <reference types="Cypress" />
 
-import {SELECTOR_ecEntity, SELECTOR_openNamespacesButton} from '../../../support/constants';
+import {
+  SELECTOR_ecEntity,
+  SELECTOR_fileMenuFindElements,
+  SELECTOR_namespaceFileMenuButton,
+  SELECTOR_openNamespacesButton
+} from '../../../support/constants';
 import {checkAspectAndChildrenEntity, connectElements} from '../../../support/utils';
 
 describe('Test drag and drop', () => {
@@ -34,24 +39,26 @@ describe('Test drag and drop', () => {
       }
     );
 
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get('.file-name').click({force: true}))
-      .then(() => cy.dragElement(SELECTOR_ecEntity, 100, 300))
-      .then(() => cy.clickShape('ExternalEntity'))
-      .then(() => connectElements('Characteristic1', 'ExternalEntity', false))
-      .then(() => cy.getAspect())
-      .then(checkAspectAndChildrenEntity)
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('samm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a samm:Property');
-        expect(rdf).to.contain('samm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-        expect(rdf).to.contain('samm:dataType :ExternalEntity');
+    cy.visitDefault().then(() =>
+      cy
+        .startModelling()
+        .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
+        .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
+        .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
+        .then(() => cy.dragElement(SELECTOR_ecEntity, 100, 300))
+        .then(() => cy.clickShape('ExternalEntity'))
+        .then(() => connectElements('Characteristic1', 'ExternalEntity', false))
+        .then(() => cy.getAspect())
+        .then(checkAspectAndChildrenEntity)
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => {
+          expect(rdf).to.contain('samm:properties (:property1)');
+          expect(rdf).to.contain(':property1 a samm:Property');
+          expect(rdf).to.contain('samm:characteristic :Characteristic1');
+          expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+          expect(rdf).to.contain('samm:dataType :ExternalEntity');
 
-        expect(rdf).not.contain(':ExternalEntity a samm:Entity');
-      });
+          expect(rdf).not.contain(':ExternalEntity a samm:Entity');
+        }));
   });
 });
