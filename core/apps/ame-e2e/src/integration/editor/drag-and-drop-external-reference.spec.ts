@@ -99,27 +99,30 @@ describe('Test drag and drop', () => {
       }
     );
 
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
-      .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300))
-      .then(() => cy.clickShape('externalProperty'))
-      .then(() => connectElements('AspectDefault', 'externalProperty', true))
-      .then(() => cy.getAspect())
-      .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('samm:properties (:property1 :externalProperty)');
-        expect(rdf).to.contain(':property1 a samm:Property');
-        expect(rdf).to.contain('samm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-        expect(rdf).not.contain(':externalProperty a samm:Property');
-      });
+    cy.visitDefault()
+      .then(() =>
+        cy.startModelling()
+          .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
+          .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300))
+          .then(() => cy.clickShape('externalProperty'))
+          .then(() => connectElements('AspectDefault', 'externalProperty', true))
+          .then(() => cy.getAspect())
+          .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
+          .then(() => cy.getUpdatedRDF())
+          .then(rdf => {
+            expect(rdf).to.contain('samm:properties (:property1 :externalProperty)');
+            expect(rdf).to.contain(':property1 a samm:Property');
+            expect(rdf).to.contain('samm:characteristic :Characteristic1');
+            expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+            expect(rdf).not.contain(':externalProperty a samm:Property');
+          })
+      )
+    ;
   });
 
-  it.skip('can add Characteristic from external reference with same namespace', () => {
+  it('can add Characteristic from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'org.eclipse.examples:1.0.0': ['external-characteristic-reference.txt'],
@@ -139,26 +142,27 @@ describe('Test drag and drop', () => {
       }
     );
 
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
-      .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 100, 300))
-      .then(() => cy.clickShape('ExternalCharacteristic'))
-      .then(() => connectElements('property1', 'ExternalCharacteristic', false))
-      .then(() => cy.getAspect())
-      .then(checkAspect)
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('samm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a samm:Property');
-        expect(rdf).to.contain('samm:characteristic :ExternalCharacteristic');
-        expect(rdf).not.contain(':ExternalCharacteristic a samm:Characteristic');
-      });
+    cy.visitDefault()
+      .then(() =>
+        cy.startModelling()
+          .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
+          .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 100, 300))
+          .then(() => cy.clickShape('ExternalCharacteristic'))
+          .then(() => connectElements('property1', 'ExternalCharacteristic', false))
+          .then(() => cy.getAspect())
+          .then(checkAspect)
+          .then(() => cy.getUpdatedRDF())
+          .then(rdf => {
+            expect(rdf).to.contain('samm:properties (:property1)');
+            expect(rdf).to.contain(':property1 a samm:Property');
+            expect(rdf).to.contain('samm:characteristic :ExternalCharacteristic');
+            expect(rdf).not.contain(':ExternalCharacteristic a samm:Characteristic');
+          }));
   });
 
-  it.skip('can add Constraint from external reference with same namespace', () => {
+  it('can add Constraint from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'org.eclipse.examples:1.0.0': ['external-constraint-reference.txt'],
@@ -178,31 +182,32 @@ describe('Test drag and drop', () => {
       }
     );
 
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
-      .then(() => cy.dragElement(SELECTOR_ecConstraint, 100, 300))
-      .then(() => cy.clickShape('ExternalConstraint'))
-      .then(() => cy.get(SELECTOR_closeSidebarButton).click({force: true}))
-      .then(() => cy.dragElement(SELECTOR_ecTrait, 1100, 300).then(() => cy.clickShape('Trait1')))
-      .then(() => cy.clickConnectShapes('property1', 'Trait1'))
-      .then(() => cy.clickConnectShapes('Trait1', 'Characteristic1'))
-      .then(() => cy.clickConnectShapes('Trait1', 'ExternalConstraint'))
-      .then(() => cyHelp.hasAddShapeOverlay('Trait1').then(hasAddOverlay => expect(hasAddOverlay).equal(true)))
-      .then(() => cy.getAspect())
-      .then(checkASpectAndChildrenConstraint)
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('samm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a samm:Property');
-        expect(rdf).to.contain('samm:characteristic :Trait1');
-        expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-        expect(rdf).to.contain('samm-c:constraint :ExternalConstraint');
-        expect(rdf).not.contain(':ExternalConstraint a samm:Constraint');
-      });
+    cy.visitDefault()
+      .then(() =>
+        cy.startModelling()
+          .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
+          .then(() => cy.dragElement(SELECTOR_ecConstraint, 100, 300))
+          .then(() => cy.clickShape('ExternalConstraint'))
+          .then(() => cy.get(SELECTOR_closeSidebarButton).click({force: true}))
+          .then(() => cy.dragElement(SELECTOR_ecTrait, 1100, 300).then(() => cy.clickShape('Trait1')))
+          .then(() => cy.clickConnectShapes('property1', 'Trait1'))
+          .then(() => cy.clickConnectShapes('Trait1', 'Characteristic1'))
+          .then(() => cy.clickConnectShapes('Trait1', 'ExternalConstraint'))
+          .then(() => cyHelp.hasAddShapeOverlay('Trait1').then(hasAddOverlay => expect(hasAddOverlay).equal(true)))
+          .then(() => cy.getAspect())
+          .then(checkASpectAndChildrenConstraint)
+          .then(() => cy.getUpdatedRDF())
+          .then(rdf => {
+            expect(rdf).to.contain('samm:properties (:property1)');
+            expect(rdf).to.contain(':property1 a samm:Property');
+            expect(rdf).to.contain('samm:characteristic :Trait1');
+            expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic1');
+            expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+            expect(rdf).to.contain('samm-c:constraint :ExternalConstraint');
+            expect(rdf).not.contain(':ExternalConstraint a samm:Constraint');
+          }));
   });
 
   it('can add Entity from external reference with same namespace', () => {
@@ -222,25 +227,26 @@ describe('Test drag and drop', () => {
       }
     );
 
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
-      .then(() => cy.dragElement(SELECTOR_ecEntity, 100, 300))
-      .then(() => cy.clickShape('ExternalEntity'))
-      .then(() => connectElements('Characteristic1', 'ExternalEntity', false))
-      .then(() => cy.getAspect())
-      .then(checkAspectAndChildrenEntity)
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('samm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a samm:Property');
-        expect(rdf).to.contain('samm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-        expect(rdf).to.contain('samm:dataType :ExternalEntity');
-        expect(rdf).not.contain(':ExternalEntity a samm:Entity');
-      });
+    cy.visitDefault()
+      .then(() =>
+        cy.startModelling()
+          .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
+          .then(() => cy.dragElement(SELECTOR_ecEntity, 100, 300))
+          .then(() => cy.clickShape('ExternalEntity'))
+          .then(() => connectElements('Characteristic1', 'ExternalEntity', false))
+          .then(() => cy.getAspect())
+          .then(checkAspectAndChildrenEntity)
+          .then(() => cy.getUpdatedRDF())
+          .then(rdf => {
+            expect(rdf).to.contain('samm:properties (:property1)');
+            expect(rdf).to.contain(':property1 a samm:Property');
+            expect(rdf).to.contain('samm:characteristic :Characteristic1');
+            expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+            expect(rdf).to.contain('samm:dataType :ExternalEntity');
+            expect(rdf).not.contain(':ExternalEntity a samm:Entity');
+          }));
   });
 
   it('can add Property from external reference with different namespace', () => {
@@ -260,30 +266,31 @@ describe('Test drag and drop', () => {
       }
     );
 
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
-      .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300))
-      .then(() => cy.clickShape('externalProperty'))
-      .then(() => connectElements('AspectDefault', 'externalProperty', true))
-      .then(() => cy.getAspect())
-      .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
-        expect(rdf).to.contain('samm:properties (:property1 ext-different:externalProperty)');
-        expect(rdf).to.contain(':property1 a samm:Property');
-        expect(rdf).to.contain('samm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+    cy.visitDefault()
+      .then(() =>
+        cy.startModelling()
+          .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
+          .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300))
+          .then(() => cy.clickShape('externalProperty'))
+          .then(() => connectElements('AspectDefault', 'externalProperty', true))
+          .then(() => cy.getAspect())
+          .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
+          .then(() => cy.getUpdatedRDF())
+          .then(rdf => {
+            expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
+            expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
+            expect(rdf).to.contain('samm:properties (:property1 ext-different:externalProperty)');
+            expect(rdf).to.contain(':property1 a samm:Property');
+            expect(rdf).to.contain('samm:characteristic :Characteristic1');
+            expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
 
-        expect(rdf).not.contain(':externalProperty a samm:Property');
-      });
+            expect(rdf).not.contain(':externalProperty a samm:Property');
+          }));
   });
 
-  it.skip('can add Characteristic from external reference with different namespace', () => {
+  it('can add Characteristic from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'org.eclipse.different:1.0.0': ['external-characteristic-reference.txt'],
@@ -300,28 +307,29 @@ describe('Test drag and drop', () => {
       }
     );
 
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
-      .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 100, 300))
-      .then(() => cy.clickShape('ExternalCharacteristic'))
-      .then(() => connectElements('property1', 'ExternalCharacteristic', false))
-      .then(() => cy.getAspect())
-      .then(checkAspect)
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
-        expect(rdf).to.contain('samm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a samm:Property');
-        expect(rdf).to.contain('samm:characteristic ext-different:ExternalCharacteristic');
-        expect(rdf).not.contain(':ExternalCharacteristic a samm:Characteristic');
-      });
+    cy.visitDefault()
+      .then(() =>
+        cy.startModelling()
+          .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
+          .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 100, 300))
+          .then(() => cy.clickShape('ExternalCharacteristic'))
+          .then(() => connectElements('property1', 'ExternalCharacteristic', false))
+          .then(() => cy.getAspect())
+          .then(checkAspect)
+          .then(() => cy.getUpdatedRDF())
+          .then(rdf => {
+            expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
+            expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
+            expect(rdf).to.contain('samm:properties (:property1)');
+            expect(rdf).to.contain(':property1 a samm:Property');
+            expect(rdf).to.contain('samm:characteristic ext-different:ExternalCharacteristic');
+            expect(rdf).not.contain(':ExternalCharacteristic a samm:Characteristic');
+          }));
   });
 
-  it.skip('can add Constraint from external reference with different namespace', () => {
+  it('can add Constraint from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'org.eclipse.different:1.0.0': ['external-constraint-reference.txt'],
@@ -338,33 +346,34 @@ describe('Test drag and drop', () => {
       }
     );
 
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
-      .then(() => cy.dragElement(SELECTOR_ecConstraint, 100, 300))
-      .then(() => cy.clickShape('ExternalConstraint'))
-      .then(() => cy.get(SELECTOR_closeSidebarButton).click({force: true}))
-      .then(() => cy.dragElement(SELECTOR_ecTrait, 1100, 300).then(() => cy.clickShape('Trait1')))
-      .then(() => cy.clickConnectShapes('property1', 'Trait1'))
-      .then(() => cy.clickConnectShapes('Trait1', 'Characteristic1'))
-      .then(() => cy.clickConnectShapes('Trait1', 'ExternalConstraint'))
-      .then(() => cyHelp.hasAddShapeOverlay('Trait1').then(hasAddOverlay => expect(hasAddOverlay).equal(true)))
-      .then(() => cy.getAspect())
-      .then(checkASpectAndChildrenConstraint)
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
-        expect(rdf).to.contain('samm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a samm:Property');
-        expect(rdf).to.contain('samm:characteristic :Trait1');
-        expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-        expect(rdf).to.contain('samm-c:constraint ext-different:ExternalConstraint');
-        expect(rdf).not.contain(':ExternalConstraint a samm:Constraint');
-      });
+    cy.visitDefault()
+      .then(() =>
+        cy.startModelling()
+          .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
+          .then(() => cy.dragElement(SELECTOR_ecConstraint, 100, 300))
+          .then(() => cy.clickShape('ExternalConstraint'))
+          .then(() => cy.get(SELECTOR_closeSidebarButton).click({force: true}))
+          .then(() => cy.dragElement(SELECTOR_ecTrait, 1100, 300).then(() => cy.clickShape('Trait1')))
+          .then(() => cy.clickConnectShapes('property1', 'Trait1'))
+          .then(() => cy.clickConnectShapes('Trait1', 'Characteristic1'))
+          .then(() => cy.clickConnectShapes('Trait1', 'ExternalConstraint'))
+          .then(() => cyHelp.hasAddShapeOverlay('Trait1').then(hasAddOverlay => expect(hasAddOverlay).equal(true)))
+          .then(() => cy.getAspect())
+          .then(checkASpectAndChildrenConstraint)
+          .then(() => cy.getUpdatedRDF())
+          .then(rdf => {
+            expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
+            expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
+            expect(rdf).to.contain('samm:properties (:property1)');
+            expect(rdf).to.contain(':property1 a samm:Property');
+            expect(rdf).to.contain('samm:characteristic :Trait1');
+            expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic1');
+            expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+            expect(rdf).to.contain('samm-c:constraint ext-different:ExternalConstraint');
+            expect(rdf).not.contain(':ExternalConstraint a samm:Constraint');
+          }));
   });
 
   it('can add Entity from external reference with different namespace', () => {
@@ -384,27 +393,28 @@ describe('Test drag and drop', () => {
       }
     );
 
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
-      .then(() => cy.dragElement(SELECTOR_ecEntity, 100, 300))
-      .then(() => cy.clickShape('ExternalEntity'))
-      .then(() => connectElements('Characteristic1', 'ExternalEntity', false))
-      .then(() => cy.getAspect())
-      .then(checkAspectAndChildrenEntity)
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
-        expect(rdf).to.contain('samm:properties (:property1)');
-        expect(rdf).to.contain(':property1 a samm:Property');
-        expect(rdf).to.contain('samm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-        expect(rdf).to.contain('samm:dataType ext-different:ExternalEntity');
-        expect(rdf).not.contain(':ExternalEntity a samm:Entity');
-      });
+    cy.visitDefault()
+      .then(() =>
+        cy.startModelling()
+          .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
+          .then(() => cy.dragElement(SELECTOR_ecEntity, 100, 300))
+          .then(() => cy.clickShape('ExternalEntity'))
+          .then(() => connectElements('Characteristic1', 'ExternalEntity', false))
+          .then(() => cy.getAspect())
+          .then(checkAspectAndChildrenEntity)
+          .then(() => cy.getUpdatedRDF())
+          .then(rdf => {
+            expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
+            expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
+            expect(rdf).to.contain('samm:properties (:property1)');
+            expect(rdf).to.contain(':property1 a samm:Property');
+            expect(rdf).to.contain('samm:characteristic :Characteristic1');
+            expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+            expect(rdf).to.contain('samm:dataType ext-different:ExternalEntity');
+            expect(rdf).not.contain(':ExternalEntity a samm:Entity');
+          }));
   });
 
   it("can add Property with children's from external reference same namespace", () => {
@@ -424,34 +434,35 @@ describe('Test drag and drop', () => {
       }
     );
 
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
-      .then(() => dragExternalReferenceWithChildren(SELECTOR_ecProperty, 100, 300))
-      .then(() => cy.clickShape('externalPropertyWithChildren'))
-      .then(() => connectElements('AspectDefault', 'externalPropertyWithChildren', true))
-      .then(() => cy.getAspect())
-      .then(checkAspectTree)
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('samm:properties (:property1 :externalPropertyWithChildren)');
-        expect(rdf).to.contain(':property1 a samm:Property');
-        expect(rdf).to.contain('samm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-        expect(rdf).not.contain(':externalPropertyWithChildren a samm:Property');
-        expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
-        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
-        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
-        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
-        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
-      });
+    cy.visitDefault()
+      .then(() =>
+        cy.startModelling()
+          .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
+          .then(() => dragExternalReferenceWithChildren(SELECTOR_ecProperty, 100, 300))
+          .then(() => cy.clickShape('externalPropertyWithChildren'))
+          .then(() => connectElements('AspectDefault', 'externalPropertyWithChildren', true))
+          .then(() => cy.getAspect())
+          .then(checkAspectTree)
+          .then(() => cy.getUpdatedRDF())
+          .then(rdf => {
+            expect(rdf).to.contain('samm:properties (:property1 :externalPropertyWithChildren)');
+            expect(rdf).to.contain(':property1 a samm:Property');
+            expect(rdf).to.contain('samm:characteristic :Characteristic1');
+            expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+            expect(rdf).not.contain(':externalPropertyWithChildren a samm:Property');
+            expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
+            expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
+            expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+            expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+            expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+            expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+            expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
+          }));
   });
 
-  it.skip("can add Property with children's from external reference different namespace", () => {
+  it("can add Property with children's from external reference different namespace", () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
@@ -468,33 +479,34 @@ describe('Test drag and drop', () => {
       }
     );
 
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
-      .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
-      .then(() => dragExternalReferenceWithChildren(SELECTOR_ecProperty, 100, 300))
-      .then(() => cy.clickShape('externalPropertyWithChildren'))
-      .then(() => connectElements('AspectDefault', 'externalPropertyWithChildren', true))
-      .then(() => cy.getAspect())
-      .then(checkAspectTree)
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf => {
-        expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
-        expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
-        expect(rdf).to.contain('samm:properties (:property1 ext-different:externalPropertyWithChildren)');
-        expect(rdf).to.contain(':property1 a samm:Property');
-        expect(rdf).to.contain('samm:characteristic :Characteristic1');
-        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-        expect(rdf).not.contain(':externalPropertyWithChildren a samm:Property');
-        expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
-        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
-        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
-        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
-        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
-        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
-      });
+    cy.visitDefault()
+      .then(() =>
+        cy.startModelling()
+          .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
+          .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
+          .then(() => dragExternalReferenceWithChildren(SELECTOR_ecProperty, 100, 300))
+          .then(() => cy.clickShape('externalPropertyWithChildren'))
+          .then(() => connectElements('AspectDefault', 'externalPropertyWithChildren', true))
+          .then(() => cy.getAspect())
+          .then(checkAspectTree)
+          .then(() => cy.getUpdatedRDF())
+          .then(rdf => {
+            expect(rdf).to.contain('@prefix : <urn:samm:org.eclipse.examples:1.0.0#>.');
+            expect(rdf).to.contain('@prefix ext-different: <urn:samm:org.eclipse.different:1.0.0#>.');
+            expect(rdf).to.contain('samm:properties (:property1 ext-different:externalPropertyWithChildren)');
+            expect(rdf).to.contain(':property1 a samm:Property');
+            expect(rdf).to.contain('samm:characteristic :Characteristic1');
+            expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+            expect(rdf).not.contain(':externalPropertyWithChildren a samm:Property');
+            expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
+            expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
+            expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+            expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+            expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+            expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+            expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
+          }));
   });
 
   const dragExternalReferenceWithChildren = (selector: string, x: number, y: number) => {
