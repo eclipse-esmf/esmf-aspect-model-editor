@@ -12,7 +12,7 @@
  */
 
 import {MxGraphAttributeService} from '@ame/mx-graph';
-import {cyHelp} from "./helpers";
+import {cyHelp} from './helpers';
 
 export function connectElements(parent: string, child: string, expected: boolean) {
   return cy

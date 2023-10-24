@@ -17,7 +17,7 @@ import {
   SELECTOR_ecEntity,
   SELECTOR_fileMenuFindElements,
   SELECTOR_namespaceFileMenuButton,
-  SELECTOR_openNamespacesButton
+  SELECTOR_openNamespacesButton,
 } from '../../../support/constants';
 import {checkAspectAndChildrenEntity, connectElements} from '../../../support/utils';
 

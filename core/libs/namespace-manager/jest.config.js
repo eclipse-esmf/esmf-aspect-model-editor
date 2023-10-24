@@ -17,12 +17,14 @@ module.exports = {
   displayName: 'namespace-manager',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/namespace-manager',
-  transform: {
-    '^.+\\.tsx?$': ['ts-jest', {
+  globals: {
+    'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
       stringifyContentPathRegex: '\\.(html|svg)$',
-    }],
+    },
+  },
+  coverageDirectory: '../../coverage/libs/namespace-manager',
+  transform: {
     '^.+\\.(ts|js|mjs|html|svg)$': 'jest-preset-angular',
     '^.+\\.js$': 'babel-jest',
   },

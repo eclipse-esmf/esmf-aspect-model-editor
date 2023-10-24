@@ -17,7 +17,7 @@ import {
   SELECTOR_ecEntity,
   SELECTOR_fileMenuFindElements,
   SELECTOR_namespaceFileMenuButton,
-  SELECTOR_openNamespacesButton
+  SELECTOR_openNamespacesButton,
 } from '../../../support/constants';
 import {checkAspectAndChildrenEntity, connectElements} from '../../../support/utils';
 
@@ -59,6 +59,7 @@ describe('Test drag and drop', () => {
           expect(rdf).to.contain('samm:dataType :ExternalEntity');
 
           expect(rdf).not.contain(':ExternalEntity a samm:Entity');
-        }));
+        })
+    );
   });
 });
