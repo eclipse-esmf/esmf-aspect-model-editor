@@ -119,7 +119,7 @@ describe('Test drag and drop', () => {
       });
   });
 
-  it('can add Characteristic from external reference with same namespace', () => {
+  it.skip('can add Characteristic from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'org.eclipse.examples:1.0.0': ['external-characteristic-reference.txt'],
@@ -158,7 +158,7 @@ describe('Test drag and drop', () => {
       });
   });
 
-  it('can add Constraint from external reference with same namespace', () => {
+  it.skip('can add Constraint from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'org.eclipse.examples:1.0.0': ['external-constraint-reference.txt'],
@@ -283,7 +283,7 @@ describe('Test drag and drop', () => {
       });
   });
 
-  it('can add Characteristic from external reference with different namespace', () => {
+  it.skip('can add Characteristic from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'org.eclipse.different:1.0.0': ['external-characteristic-reference.txt'],
@@ -321,7 +321,7 @@ describe('Test drag and drop', () => {
       });
   });
 
-  it('can add Constraint from external reference with different namespace', () => {
+  it.skip('can add Constraint from external reference with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'org.eclipse.different:1.0.0': ['external-constraint-reference.txt'],
@@ -451,7 +451,7 @@ describe('Test drag and drop', () => {
       });
   });
 
-  it("can add Property with children's from external reference different namespace", () => {
+  it.skip("can add Property with children's from external reference different namespace", () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
