@@ -102,7 +102,7 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/ame"],
       "options": {
         "jestConfig": "apps/ame/jest.config.js",

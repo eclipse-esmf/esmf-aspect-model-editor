@@ -10,17 +10,20 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-const nxPreset = require('@nrwl/jest/preset');
+const nxPreset = require('@nx/jest/preset');
 module.exports = {
   ...nxPreset,
   displayName: 'rdf',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  globals: {
-    'ts-jest': {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
-  },
+  globals: {},
   coverageDirectory: '../../coverage/libs/rdf',
-  transform: {'^.+.(ts|mjs|js|html)$': 'jest-preset-angular'},
+  transform: {
+    '^.+.(ts|mjs|js|html)$': [
+      'jest-preset-angular',
+      {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
+    ],
+  },
   transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',

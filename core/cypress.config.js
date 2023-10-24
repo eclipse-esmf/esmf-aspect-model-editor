@@ -19,7 +19,7 @@ module.exports = defineConfig({
   modifyObstructiveCode: false,
   viewportWidth: 1920,
   viewportHeight: 1080,
-  reporter: 'node_modules/mochawesome',
+  reporter: 'spec',
   video: false,
   videoUploadOnPasses: false,
   screenshotOnRunFailure: false,
@@ -27,14 +27,6 @@ module.exports = defineConfig({
   screenshotsFolder: 'apps/ame-e2e/cypress/screenshots',
   chromeWebSecurity: false,
   defaultCommandTimeout: 60000,
-  reporterOptions: {
-    reportDir: 'apps/ame-e2e/cypress/reports',
-    overwrite: false,
-    html: true,
-    saveHtml: true,
-    reportPageTitle: 'Aspect Model Editor Tests',
-    reportTitle: 'Aspect Model Editor Tests',
-  },
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.

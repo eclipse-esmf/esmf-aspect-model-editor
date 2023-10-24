@@ -15,12 +15,13 @@ module.exports = {
   displayName: 'api',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  globals: {
-    'ts-jest': {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
-  },
+  globals: {},
   coverageDirectory: '../../coverage/libs/api',
   transform: {
-    '^.+\\.(ts|js|html)$': 'jest-preset-angular',
+    '^.+\\.(ts|js|html)$': [
+      'jest-preset-angular',
+      {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
+    ],
   },
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
