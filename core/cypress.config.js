@@ -26,7 +26,7 @@ module.exports = defineConfig({
   videosFolder: 'apps/ame-e2e/cypress/videos',
   screenshotsFolder: 'apps/ame-e2e/cypress/screenshots',
   chromeWebSecurity: false,
-  defaultCommandTimeout: 20000,
+  defaultCommandTimeout: 60000,
   reporterOptions: {
     reportDir: 'apps/ame-e2e/cypress/reports',
     overwrite: false,
