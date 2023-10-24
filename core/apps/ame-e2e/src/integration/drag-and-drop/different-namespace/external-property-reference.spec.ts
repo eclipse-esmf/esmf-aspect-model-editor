@@ -19,7 +19,7 @@ import {
   SELECTOR_namespaceFileMenuButton,
   SELECTOR_openNamespacesButton,
 } from '../../../support/constants';
-import {checkAspectTree, checkRelationParentChild, connectElements, dragExternalReferenceWithChildren} from "../utils";
+import {checkAspectTree, checkRelationParentChild, connectElements, dragExternalReferenceWithChildren} from '../utils';
 
 describe('Test drag and drop ext properties', () => {
   it('can add Property from external reference with different namespace', () => {

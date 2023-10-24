@@ -19,7 +19,7 @@ import {
   SELECTOR_namespaceFileMenuButton,
   SELECTOR_openNamespacesButton,
 } from '../../../support/constants';
-import {checkAspect, connectElements} from "../utils";
+import {checkAspect, connectElements} from '../utils';
 
 describe('Test drag and drop ext characteristic', () => {
   it('can add Characteristic from external reference with same namespace', () => {
