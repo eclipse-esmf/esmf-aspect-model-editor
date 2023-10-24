@@ -22,7 +22,7 @@ import {
   SELECTOR_openNamespacesButton,
 } from '../../../support/constants';
 import {cyHelp} from '../../../support/helpers';
-import {checkAspectAndChildrenConstraint} from '../utils';
+import {checkAspectAndChildrenConstraint} from '../../../support/utils';
 
 describe('Test drag and drop ext constraint', () => {
   it('can add Constraint from external reference with different namespace', () => {

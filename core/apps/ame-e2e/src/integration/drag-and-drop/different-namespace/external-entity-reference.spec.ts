@@ -14,7 +14,7 @@
 /// <reference types="Cypress" />
 
 import {SELECTOR_ecEntity, SELECTOR_openNamespacesButton} from '../../../support/constants';
-import {checkAspectAndChildrenEntity, connectElements} from '../utils';
+import {checkAspectAndChildrenEntity, connectElements} from '../../../support/utils';
 
 describe('Test drag and drop', () => {
   it('can add Entity from external reference with different namespace', () => {
