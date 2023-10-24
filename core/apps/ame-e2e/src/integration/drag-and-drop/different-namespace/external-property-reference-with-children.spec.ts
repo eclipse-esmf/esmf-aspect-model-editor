@@ -19,7 +19,7 @@ import {
   SELECTOR_namespaceFileMenuButton,
   SELECTOR_openNamespacesButton,
 } from '../../../support/constants';
-import {checkAspectTree, checkRelationParentChild, connectElements, dragExternalReferenceWithChildren} from '../../../support/utils';
+import {checkAspectTree, connectElements, dragExternalReferenceWithChildren} from '../../../support/utils';
 
 describe('Test drag and drop ext properties', () => {
   it("can add Property with children's from external reference different namespace", () => {
@@ -46,7 +46,6 @@ describe('Test drag and drop ext properties', () => {
         .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
         .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
         .then(() => dragExternalReferenceWithChildren(SELECTOR_ecProperty, 100, 300))
-        .then(() => cy.clickShape('externalPropertyWithChildren'))
         .then(() => connectElements('AspectDefault', 'externalPropertyWithChildren', true))
         .then(() => cy.getAspect())
         .then(checkAspectTree)

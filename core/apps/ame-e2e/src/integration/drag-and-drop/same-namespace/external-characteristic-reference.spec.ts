@@ -49,7 +49,6 @@ describe('Test drag and drop ext characteristic', () => {
         .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
         .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
         .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 100, 300))
-        .then(() => cy.clickShape('ExternalCharacteristic'))
         .then(() => connectElements('property1', 'ExternalCharacteristic', false))
         .then(() => cy.getAspect())
         .then(checkAspect)
