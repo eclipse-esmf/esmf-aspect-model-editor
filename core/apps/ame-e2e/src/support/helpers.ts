@@ -201,7 +201,9 @@ export class cyHelp {
   }
 
   static clickShape(name: string, selectMultipleShapes = false) {
-    return cy.getHTMLCell(name).should('exist')
+    return cy
+      .getHTMLCell(name)
+      .should('exist')
       .then(() => {
         if (selectMultipleShapes) {
           if (Cypress.platform !== 'darwin') {
@@ -212,7 +214,7 @@ export class cyHelp {
         }
         return null;
       })
-      .then(() => cy.getHTMLCell(name).first().click({force: true}))
+      .then(() => cy.getHTMLCell(name).first().click({force: true}));
   }
 
   static getShapeLabels(name: string) {

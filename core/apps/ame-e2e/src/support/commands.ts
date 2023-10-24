@@ -195,7 +195,7 @@ declare global {
        * Checks whether two elements are connected or not
        */
       isConnected(
-        sourceShapeParams: { name: string; fields?: object[] },
+        sourceShapeParams: {name: string; fields?: object[]},
         targetShapeParams: {
           name: string;
           fields?: object[];
@@ -218,11 +218,10 @@ Cypress.Commands.add('getMxgraphAttributeService', () => cy.window().then(win =>
 Cypress.Commands.add('getModelService', () => cy.window().then(win => win['angular.modelService']));
 
 Cypress.Commands.add('getHTMLCell', (name: string) =>
-  cy.get(`[data-cell-id="${name}"]`)
-    .then($el => {
-      $el.get(0).scrollIntoView({block: 'center'});
-      return $el;
-    })
+  cy.get(`[data-cell-id="${name}"]`).then($el => {
+    $el.get(0).scrollIntoView({block: 'center'});
+    return $el;
+  })
 );
 
 Cypress.Commands.add('dbClickShape', (name: string) => {
@@ -420,8 +419,7 @@ Cypress.Commands.add('startModelling', () => {
   cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
 
   // bypass format request
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {
-  });
+  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
 
   return cy
     .then(() => cy.get(SELECTOR_tbLoadButton).click({force: true}))
@@ -451,7 +449,7 @@ Cypress.Commands.add('removeSeeElements', (...elements: string[]) => {
 
 Cypress.Commands.add(
   'isConnected',
-  (sourceShapeParams: { name: string; fields?: object[] }, targetShapeParams: { name: string; fields?: object[] }) => {
+  (sourceShapeParams: {name: string; fields?: object[]}, targetShapeParams: {name: string; fields?: object[]}) => {
     return cy.window().then(win => {
       const sourceCell = cyHelp.findShapeByName(sourceShapeParams.name, win);
       if (!sourceCell) {
