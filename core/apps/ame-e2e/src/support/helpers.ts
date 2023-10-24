@@ -243,7 +243,7 @@ export class cyHelp {
   static renameElement(oldName: string, newName: string) {
     return cy
       .then(() => cy.dbClickShape(oldName))
-      .then(() => cy.get('#graph').click())
+      .then(() => cy.get('#graph').click({force: true}))
       .then(() => cy.get(FIELD_name).clear({force: true}).type(newName, {force: true}))
       .then(() => this.clickSaveButton());
   }

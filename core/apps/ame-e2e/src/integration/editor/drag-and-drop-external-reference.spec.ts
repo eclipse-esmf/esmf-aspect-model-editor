@@ -102,10 +102,10 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300))
+      .then(() => cy.wait(3000))
       .then(() => cy.clickShape('externalProperty'))
       .then(() => connectElements('AspectDefault', 'externalProperty', true))
       .then(() => cy.getAspect())
@@ -143,10 +143,10 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 100, 300))
+      .then(() => cy.wait(3000))
       .then(() => cy.clickShape('ExternalCharacteristic'))
       .then(() => connectElements('property1', 'ExternalCharacteristic', false))
       .then(() => cy.getAspect())
@@ -183,10 +183,10 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecConstraint, 100, 300))
+      .then(() => cy.wait(3000))
       .then(() => cy.clickShape('ExternalConstraint'))
       .then(() => cy.get(SELECTOR_closeSidebarButton).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecTrait, 1100, 300).then(() => cy.clickShape('Trait1')))
@@ -204,7 +204,6 @@ describe('Test drag and drop', () => {
         expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic1');
         expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
         expect(rdf).to.contain('samm-c:constraint :ExternalConstraint');
-
         expect(rdf).not.contain(':ExternalConstraint a samm:Constraint');
       });
   });
@@ -229,10 +228,10 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecEntity, 100, 300))
+      .then(() => cy.wait(3000))
       .then(() => cy.clickShape('ExternalEntity'))
       .then(() => connectElements('Characteristic1', 'ExternalEntity', false))
       .then(() => cy.getAspect())
@@ -244,7 +243,6 @@ describe('Test drag and drop', () => {
         expect(rdf).to.contain('samm:characteristic :Characteristic1');
         expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
         expect(rdf).to.contain('samm:dataType :ExternalEntity');
-
         expect(rdf).not.contain(':ExternalEntity a samm:Entity');
       });
   });
@@ -269,10 +267,10 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300))
+      .then(() => cy.wait(3000))
       .then(() => cy.clickShape('externalProperty'))
       .then(() => connectElements('AspectDefault', 'externalProperty', true))
       .then(() => cy.getAspect())
@@ -310,10 +308,10 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 100, 300))
+      .then(() => cy.wait(3000))
       .then(() => cy.clickShape('ExternalCharacteristic'))
       .then(() => connectElements('property1', 'ExternalCharacteristic', false))
       .then(() => cy.getAspect())
@@ -325,7 +323,6 @@ describe('Test drag and drop', () => {
         expect(rdf).to.contain('samm:properties (:property1)');
         expect(rdf).to.contain(':property1 a samm:Property');
         expect(rdf).to.contain('samm:characteristic ext-different:ExternalCharacteristic');
-
         expect(rdf).not.contain(':ExternalCharacteristic a samm:Characteristic');
       });
   });
@@ -350,10 +347,10 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecConstraint, 100, 300))
+      .then(() => cy.wait(3000))
       .then(() => cy.clickShape('ExternalConstraint'))
       .then(() => cy.get(SELECTOR_closeSidebarButton).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecTrait, 1100, 300).then(() => cy.clickShape('Trait1')))
@@ -373,7 +370,6 @@ describe('Test drag and drop', () => {
         expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic1');
         expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
         expect(rdf).to.contain('samm-c:constraint ext-different:ExternalConstraint');
-
         expect(rdf).not.contain(':ExternalConstraint a samm:Constraint');
       });
   });
@@ -398,10 +394,10 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => cy.dragElement(SELECTOR_ecEntity, 100, 300))
+      .then(() => cy.wait(3000))
       .then(() => cy.clickShape('ExternalEntity'))
       .then(() => connectElements('Characteristic1', 'ExternalEntity', false))
       .then(() => cy.getAspect())
@@ -415,7 +411,6 @@ describe('Test drag and drop', () => {
         expect(rdf).to.contain('samm:characteristic :Characteristic1');
         expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
         expect(rdf).to.contain('samm:dataType ext-different:ExternalEntity');
-
         expect(rdf).not.contain(':ExternalEntity a samm:Entity');
       });
   });
@@ -440,10 +435,10 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => dragExternalReferenceWithChildren(SELECTOR_ecProperty, 100, 300))
+      .then(() => cy.wait(3000))
       .then(() => cy.clickShape('externalPropertyWithChildren'))
       .then(() => connectElements('AspectDefault', 'externalPropertyWithChildren', true))
       .then(() => cy.getAspect())
@@ -454,7 +449,6 @@ describe('Test drag and drop', () => {
         expect(rdf).to.contain(':property1 a samm:Property');
         expect(rdf).to.contain('samm:characteristic :Characteristic1');
         expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-
         expect(rdf).not.contain(':externalPropertyWithChildren a samm:Property');
         expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
         expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
@@ -486,10 +480,10 @@ describe('Test drag and drop', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
-
       .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
       .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}))
       .then(() => dragExternalReferenceWithChildren(SELECTOR_ecProperty, 100, 300))
+      .then(() => cy.wait(3000))
       .then(() => cy.clickShape('externalPropertyWithChildren'))
       .then(() => connectElements('AspectDefault', 'externalPropertyWithChildren', true))
       .then(() => cy.getAspect())
@@ -502,7 +496,6 @@ describe('Test drag and drop', () => {
         expect(rdf).to.contain(':property1 a samm:Property');
         expect(rdf).to.contain('samm:characteristic :Characteristic1');
         expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-
         expect(rdf).not.contain(':externalPropertyWithChildren a samm:Property');
         expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
         expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
