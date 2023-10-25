@@ -47,6 +47,7 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.addSeeElements('http://test.com'))
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.clickConnectShapes('AbstractEntity1', 'Entity1'))
+        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
         .then(() => cy.getCellLabel('Entity1', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name @en'))
         .then(() => cy.getCellLabel('Entity1', 'description').should('eq', 'Inherited\ndescription = Description @en'))
         .then(() => cy.getCellLabel('Entity1', 'see').should('eq', 'Inherited\nsee = http://test.com'));
@@ -110,6 +111,7 @@ describe('Create and Edit Abstract Entity', () => {
       cyHelp
         .clickShape('Characteristic1') // To lost focus on AbstractEntity2
         .then(() => cy.clickConnectShapes('AbstractEntity2', 'AbstractEntity1'))
+        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
         .then(() => cy.get(SELECTOR_notificationsButton).click({force: true}))
         .then(() => cy.wait(500).get('.mat-mdc-cell').contains('Recursive elements').should('exist'))
         .then(() => cy.wait(500).get('[data-cy="close-notifications"]').click({force: true}));
@@ -143,6 +145,7 @@ describe('Create and Edit Abstract Entity', () => {
 
     it('should connect elements', () => {
       cy.clickConnectShapes('AbstractEntity1', 'abstractProperty1')
+        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
         .then(() => cy.dbClickShape('AbstractEntity1'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
         .then(() => cy.get('.mat-mdc-cell').should('contain', 'abstractProperty1'))
@@ -155,6 +158,7 @@ describe('Create and Edit Abstract Entity', () => {
       cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300)
         .then(() => cy.clickShape('AbstractEntity2'))
         .then(() => cy.clickConnectShapes('AbstractEntity2', 'AbstractEntity1'))
+        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
         .then(() => cy.dbClickShape('AbstractEntity2'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
         .then(() => cy.get('.mat-mdc-cell').should('contain', 'abstractProperty1'))
@@ -185,6 +189,7 @@ describe('Create and Edit Abstract Entity', () => {
       cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300)
         .then(() => cy.clickShape('AbstractEntity2'))
         .then(() => cy.clickConnectShapes('AbstractEntity2', 'AbstractEntity1'))
+        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
         .then(() => cy.dbClickShape('AbstractEntity2'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
         .then(() => cy.get('.mat-mdc-cell').should('contain', 'property1'))
@@ -225,7 +230,7 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.clickAddShapePlusIcon('AbstractEntity1'))
         .then(() => cy.clickAddShapePlusIcon('AbstractEntity1'))
         .then(() => cy.clickConnectShapes('AbstractEntity1', 'Entity1'))
-
+        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
         .then(() => cy.dbClickShape('AbstractEntity1'))
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 1', {force: true}))
         .then(() => cy.get(FIELD_descriptionen).type('Description 1', {force: true}))

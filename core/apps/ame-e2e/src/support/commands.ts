@@ -225,12 +225,11 @@ Cypress.Commands.add('getHTMLCell', (name: string) =>
 );
 
 Cypress.Commands.add('dbClickShape', (name: string) => {
-  cy.getHTMLCell(name).dblclick({force: true});
-  cy.getHTMLCell(name).trigger('mousemove', {force: true});
-
-  return cy
-    .get(SELECTOR_editorSaveButton)
-    .should('exist')
+  cy.getHTMLCell(name)
+    .should('be.visible')
+    .scrollIntoView()
+    .dblclick({force: true})
+    .then(() => cy.get(SELECTOR_editorSaveButton).should('exist'))
     .then(() => cy.getHTMLCell(name));
 });
 
