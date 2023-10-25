@@ -32,7 +32,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       return require('apps/ame-e2e/src/plugins/index.js')(on, config);
     },
-    testIsolation: true,
+    testIsolation: false,
     specPattern: [
       'apps/ame-e2e/src/integration/drag-and-drop/*.ts',
       'apps/ame-e2e/src/integration/drag-and-drop/different-namespace/*.ts',
