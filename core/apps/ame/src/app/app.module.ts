@@ -30,9 +30,10 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
 import {FormsModule} from '@angular/forms';
 import {MigratorModule} from '@ame/migrator';
+import {LoadingComponent} from './components/loading/loading.component';
 
 @NgModule({
-  declarations: [AppComponent, StartLoadModalComponent],
+  declarations: [AppComponent, StartLoadModalComponent, LoadingComponent],
   imports: [
     CommonModule,
     BrowserModule,

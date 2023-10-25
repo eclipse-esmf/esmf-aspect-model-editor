@@ -11,13 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="column">
-  <mat-form-field [floatLabel]="getControl('upperBoundDefinition')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="upperBoundDefinition">upperBoundDefinition</mat-label>
-    <mat-select [formControl]="getControl('upperBoundDefinition')" name="upperBoundDefinition">
-      <mat-option *ngFor="let upperBoundDefinition of upperBoundDefinitionList" [value]="upperBoundDefinition.value">
-        {{ upperBoundDefinition.value }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
+<mat-form-field [floatLabel]="getControl('upperBoundDefinition')?.disabled ? 'always' : 'auto'" appearance="fill">
+  <mat-label for="upperBoundDefinition">upperBoundDefinition</mat-label>
+  <mat-select [formControl]="getControl('upperBoundDefinition')" name="upperBoundDefinition">
+    <mat-option *ngFor="let upperBoundDefinition of upperBoundDefinitionList" [value]="upperBoundDefinition.value">
+      {{ upperBoundDefinition.value }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

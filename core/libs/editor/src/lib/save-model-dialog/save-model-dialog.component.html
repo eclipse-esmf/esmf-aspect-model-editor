@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<h3 matDialogTitle>Save changes before closing?</h3>
+
+<mat-dialog-content>
+  <p>You have unsaved changes.</p>
+</mat-dialog-content>
+
+<mat-dialog-actions class="actions" align="end">
+  <button [disabled]="disabledButton" mat-button (click)="close(false)">Continue editing</button>
+  <button [disabled]="disabledButton" mat-flat-button (click)="close(true)">Discard Changes</button>
+  <button [disabled]="disabledButton" mat-flat-button color="primary" (click)="saveModel()">Save</button>
+</mat-dialog-actions>

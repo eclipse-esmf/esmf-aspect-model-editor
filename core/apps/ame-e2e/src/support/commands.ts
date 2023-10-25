@@ -194,7 +194,13 @@ declare global {
       /**
        * Checks whether two elements are connected or not
        */
-      isConnected(sourceShapeParams: {name: string; fields?: object[]}, targetShapeParams: {name: string; fields?: object[]}): Chainable;
+      isConnected(
+        sourceShapeParams: {name: string; fields?: object[]},
+        targetShapeParams: {
+          name: string;
+          fields?: object[];
+        }
+      ): Chainable;
     }
   }
 }
@@ -219,14 +225,10 @@ Cypress.Commands.add('getHTMLCell', (name: string) =>
 );
 
 Cypress.Commands.add('dbClickShape', (name: string) => {
-  cy.clickShape(name).then(() => {
-    cy.getHTMLCell(name).dblclick({force: true});
-    cy.getHTMLCell(name).trigger('mousemove', {force: true});
-  });
-
-  return cy
-    .get(SELECTOR_editorSaveButton)
-    .should('exist')
+  cy.getHTMLCell(name)
+    .scrollIntoView()
+    .dblclick({force: true})
+    .then(() => cy.get(SELECTOR_editorSaveButton).should('exist'))
     .then(() => cy.getHTMLCell(name));
 });
 
@@ -371,7 +373,7 @@ Cypress.Commands.add('dragElement', (selector: string, x: number, y: number) =>
 
     return cy
       .get(selector)
-      .trigger('pointerdown', {which: 1, force: true})
+      .trigger('pointerdown', {button: 0, force: true})
       .trigger('pointermove', {clientX: graphX, clientY: graphY, force: true, waitForAnimations: true})
       .then(() => cy.get('#graph > svg').click(graphX, graphY, {force: true}).trigger('pointerup', {force: true}));
   })

@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="column" *ngIf="metaModelElement?.symbol || !metaModelElement?.isPredefined()">
+<div *ngIf="metaModelElement?.symbol || !metaModelElement?.isPredefined()">
   <mat-form-field [floatLabel]="getControl('symbol')?.disabled ? 'always' : 'auto'" appearance="fill">
     <mat-label for="symbol">symbol</mat-label>
     <input [formControl]="getControl('symbol')" matInput name="symbol" />

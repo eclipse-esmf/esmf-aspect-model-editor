@@ -14,8 +14,13 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {EditorCanvasComponent} from './components/editor-canvas/editor-canvas.component';
+import {LoadingComponent} from './components/loading/loading.component';
 
 const routes: Routes = [
+  {
+    path: '',
+    component: LoadingComponent,
+  },
   {
     path: 'editor',
     component: EditorCanvasComponent,
@@ -28,7 +33,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'editor',
+    redirectTo: '/loading',
     pathMatch: 'full',
   },
 ];

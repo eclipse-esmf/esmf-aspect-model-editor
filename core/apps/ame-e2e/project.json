@@ -8,8 +8,7 @@
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "cypress.config.js",
-        "devServerTarget": "ame:serve:development",
-        "tsConfig": "apps/ame-e2e/tsconfig.cypress.json"
+        "devServerTarget": "ame:serve:development"
       },
       "configurations": {
         "production": {

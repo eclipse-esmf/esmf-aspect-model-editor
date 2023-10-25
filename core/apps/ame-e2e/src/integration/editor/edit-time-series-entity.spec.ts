@@ -141,7 +141,6 @@ describe('Time Series Entity', () => {
   it('should export', () => {
     createTimeSeriesEntity();
     cy.then(() => cy.getUpdatedRDF()).then(rdf => {
-      console.log(rdf);
       expect(rdf).to.contain(`[ samm:extends samm-e:value ]`);
       expect(rdf).to.contain(`samm:extends samm-e:TimeSeriesEntity`);
     });

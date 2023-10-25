@@ -211,7 +211,19 @@ export class cyHelp {
       }
     }
 
-    return cy.getHTMLCell(name).first().click({force: true});
+    if (Cypress.platform !== 'darwin') {
+      return cy
+        .getHTMLCell(name)
+        .first()
+        .click({force: true})
+        .then(() => cy.get('body').type('{ctrl}'));
+    } else {
+      return cy
+        .getHTMLCell(name)
+        .first()
+        .click({force: true})
+        .then(() => cy.get('body').type('{meta}'));
+    }
   }
 
   static getShapeLabels(name: string) {
@@ -243,7 +255,7 @@ export class cyHelp {
   static renameElement(oldName: string, newName: string) {
     return cy
       .then(() => cy.dbClickShape(oldName))
-      .then(() => cy.get('#graph').click())
+      .then(() => cy.get('#graph').click({force: true}))
       .then(() => cy.get(FIELD_name).clear({force: true}).type(newName, {force: true}))
       .then(() => this.clickSaveButton());
   }

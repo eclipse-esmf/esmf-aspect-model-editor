@@ -16,9 +16,11 @@ import {
   AlertService,
   FileContentModel,
   LogService,
+  ModelSavingTrackerService,
   NotificationsService,
   SaveValidateErrorsCodes,
   SidebarService,
+  TitleService,
   ValidateStatus,
 } from '@ame/shared';
 import {environment} from 'environments/environment';
@@ -79,7 +81,6 @@ import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {ModelApiService} from '@ame/api';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
-import {Title} from '@angular/platform-browser';
 import {OpenApi, ViolationError} from './editor-toolbar';
 import {FiltersService, FILTER_ATTRIBUTES, FilterAttributesService} from '@ame/loader-filters';
 import {ShapeSettingsStateService} from './editor-dialog';
@@ -131,9 +132,10 @@ export class EditorService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private confirmDialogService: ConfirmDialogService,
     private elementModelService: ElementModelService,
-    private titleService: Title,
+    private titleService: TitleService,
     private sidebarService: SidebarService,
-    private shapeSettingsStateService: ShapeSettingsStateService
+    private shapeSettingsStateService: ShapeSettingsStateService,
+    private modelSavingTrackerService: ModelSavingTrackerService
   ) {
     if (!environment.production) {
       window['angular.editorService'] = this;
@@ -262,6 +264,7 @@ export class EditorService {
         this.loadCurrentModel(loadedRdfModel, rdfAspectModel, namespaceFileName || loadedRdfModel.absoluteAspectModelFileName)
       ),
       tap(() => {
+        this.modelSavingTrackerService.updateSavedModel();
         if (!isDefault) {
           this.notificationsService.info({title: 'Aspect Model loaded', timeout: 3000});
         }
@@ -332,9 +335,7 @@ export class EditorService {
       tap((aspect: Aspect) => {
         this.removeOldGraph();
         this.initializeNewGraph();
-        this.titleService.setTitle(
-          `${aspect ? '[Aspect' : '[Shared'} Model] ${namespaceFileName || aspect?.aspectModelUrn} - Aspect Model Editor`
-        );
+        this.titleService.updateTitle(namespaceFileName || aspect?.aspectModelUrn, aspect ? 'Aspect' : 'Shared');
       }),
       catchError(error => {
         this.logService.logError('Error on loading aspect model', error);
@@ -522,7 +523,7 @@ export class EditorService {
               geometry,
             })
           : this.openAlertBox();
-        this.titleService.setTitle(`[Aspect Model] ${rdfModel.absoluteAspectModelFileName} - Aspect Model Editor`);
+        this.titleService.updateTitle(rdfModel.absoluteAspectModelFileName, 'Aspect');
       });
   }
 

@@ -6,7 +6,7 @@
   "prefix": "ame",
   "targets": {
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/mx-graph"],
       "options": {
         "jestConfig": "libs/mx-graph/jest.config.js",

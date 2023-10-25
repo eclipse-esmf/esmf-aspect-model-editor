@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const {getJestProjects} = require('@nrwl/jest');
+const {getJestProjects} = require('@nx/jest');
 
 module.exports = {
   projects: getJestProjects(),

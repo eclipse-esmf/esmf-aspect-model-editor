@@ -29,7 +29,15 @@ import {
   DefaultTrait,
   DefaultUnit,
 } from '@ame/meta-model';
-import {ElementModel, LoadingScreenOptions, LoadingScreenService, NamespaceModel, NotificationsService, SidebarService} from '@ame/shared';
+import {
+  ElementModel,
+  LoadingScreenOptions,
+  LoadingScreenService,
+  NamespaceModel,
+  NotificationsService,
+  SidebarService,
+  ElectronTunnelService,
+} from '@ame/shared';
 import {catchError, finalize, first, Subscription, switchMap, tap, throwError} from 'rxjs';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
@@ -64,6 +72,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     private elementRef: ElementRef,
     private rdfService: RdfService,
     private shapeSettingsStateService: ShapeSettingsStateService,
+    private electronTunnelService: ElectronTunnelService,
     public sidebarService: SidebarService
   ) {}
 
@@ -197,6 +206,9 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
               if (this.shapeSettingsStateService.isShapeSettingOpened) {
                 this.shapeSettingsStateService.closeShapeSettings();
               }
+              // Update electron data
+              const [namespace, version, file] = absoluteFileName.split(':');
+              this.electronTunnelService.updateWindowInfo(`${namespace}:${version}`, file);
             })
           )
         )

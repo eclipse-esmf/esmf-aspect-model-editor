@@ -34,6 +34,7 @@ import './commands';
 import './helpers';
 import './api-mocks';
 import './api-mock-helpers';
+import './utils';
 
 before(function before() {
   // Do not truncate assertion outputs of arrays and objects

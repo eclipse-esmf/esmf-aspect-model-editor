@@ -12,41 +12,32 @@
   -->
 
 <!-- Select field -->
-<div fxLayout="column">
-  <mat-form-field appearance="fill">
-    <mat-label for="deconstructionRule">Deconstruction rule name</mat-label>
-    <mat-select [value]="selectedRule || ''" data-cy="deconstruction-rule-select">
-      <mat-option value="--custom-rule--" (click)="customRuleActive = true; setCustomRule()">Custom Rule</mat-option>
-      <mat-option
-        *ngFor="let predefinedRule of predefinedRules"
-        [value]="predefinedRule.regex"
-        (click)="customRuleActive = false; selectPredefinedRule(predefinedRule)"
-      >
-        {{ predefinedRule.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
+<mat-form-field appearance="fill">
+  <mat-label for="deconstructionRule">Deconstruction rule name</mat-label>
+  <mat-select [value]="selectedRule || ''" data-cy="deconstruction-rule-select">
+    <mat-option value="--custom-rule--" (click)="customRuleActive = true; setCustomRule()">Custom Rule</mat-option>
+    <mat-option
+      *ngFor="let predefinedRule of predefinedRules"
+      [value]="predefinedRule.regex"
+      (click)="customRuleActive = false; selectPredefinedRule(predefinedRule)"
+    >
+      {{ predefinedRule.name }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 
 <!-- Input field -->
-<div fxLayout="column">
-  <mat-form-field appearance="fill">
-    <mat-label for="deconstructionRule">deconstructionRule</mat-label>
-    <input
-      [formControl]="getControl('deconstructionRule')"
-      class="deconstruction-rule-input"
-      data-cy="deconstruction-rule-input"
-      matInput
-    />
-    <mat-error *ngIf="getControl('deconstructionRule').errors?.required">Rule definition is required</mat-error>
-    <mat-error *ngIf="getControl('deconstructionRule').errors?.regexValidator">{{
-      getControl('deconstructionRule').errors?.regexValidator.message
-    }}</mat-error>
-  </mat-form-field>
-</div>
+<mat-form-field appearance="fill">
+  <mat-label for="deconstructionRule">deconstructionRule</mat-label>
+  <input [formControl]="getControl('deconstructionRule')" class="deconstruction-rule-input" data-cy="deconstruction-rule-input" matInput />
+  <mat-error *ngIf="getControl('deconstructionRule').errors?.required">Rule definition is required</mat-error>
+  <mat-error *ngIf="getControl('deconstructionRule').errors?.regexValidator">{{
+    getControl('deconstructionRule').errors?.regexValidator.message
+  }}</mat-error>
+</mat-form-field>
 
 <!-- Elements Button to open the modal -->
-<div fxLayout="column" class="elements">
+<div class="elements">
   <div class="elements-action">
     <p>
       <mat-icon>format_list_bulleted</mat-icon>

@@ -15,7 +15,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #cfd0d1;
+  border-bottom: 1px solid var(--ame-gray-10);
   padding-right: 20px;
   height: 55px;
   overflow: hidden;
@@ -31,7 +31,7 @@
 }
 
 .editor-icon-active {
-  color: #8da5bf !important;
+  color: var(--ame-blue-100) !important;
 }
 
 button:not([mat-menu-item]) {
@@ -66,7 +66,7 @@ button:not([mat-menu-item]) {
     justify-items: center;
 
     &:not(:last-child) {
-      border-right: 1px solid #cfd0d1;
+      border-right: 1px solid var(--ame-gray-10);
     }
 
     &:not(:has(button:not(:disabled))) {

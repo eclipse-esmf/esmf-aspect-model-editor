@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="column" *ngIf="metaModelElement?.conversionFactor || !metaModelElement?.isPredefined()">
+<div *ngIf="metaModelElement?.conversionFactor || !metaModelElement?.isPredefined()">
   <mat-form-field [floatLabel]="getControl('numericConversionFactor')?.disabled ? 'always' : 'auto'" appearance="fill">
     <mat-label for="numericConversionFactor">numericConversionFactor</mat-label>
     <input [formControl]="getControl('numericConversionFactor')" matInput name="numericConversionFactor" />

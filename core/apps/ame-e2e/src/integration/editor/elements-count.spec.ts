@@ -15,7 +15,12 @@
 /// <reference types="Cypress" />
 
 import {cyHelp} from '../../support/helpers';
-import {SELECTOR_dialogStartButton, SELECTOR_openNamespacesButton} from '../../support/constants';
+import {
+  SELECTOR_dialogStartButton,
+  SELECTOR_fileMenuFindElements,
+  SELECTOR_namespaceFileMenuButton,
+  SELECTOR_openNamespacesButton,
+} from '../../support/constants';
 import {setUpDynamicModellingInterceptors, setUpStaticModellingInterceptors} from '../../support/api-mocks';
 import {awaitValidateModelRequest} from '../../support/api-mock-helpers';
 
@@ -153,7 +158,9 @@ describe('Elements count', () => {
         .then(() => cy.startModelling())
         .then(() => {
           cy.get(SELECTOR_openNamespacesButton).click({force: true});
-          cy.contains('Movement.ttl').click();
+          cy.contains('Movement.ttl');
+          cy.get(SELECTOR_namespaceFileMenuButton).eq(1).click({force: true});
+          cy.get(SELECTOR_fileMenuFindElements).click({force: true});
           cy.contains('Properties (7)').should('exist');
           cy.contains('Characteristics (5)').should('exist');
           cy.contains('Entities (1)').should('exist');
@@ -250,7 +257,9 @@ describe('Elements count', () => {
         .then(() => cy.startModelling())
         .then(() => {
           cy.get(SELECTOR_openNamespacesButton).click({force: true});
-          cy.contains('EnumerationInstances.ttl').click();
+          cy.contains('EnumerationInstances.ttl');
+          cy.get(SELECTOR_namespaceFileMenuButton).eq(0).click({force: true});
+          cy.get(SELECTOR_fileMenuFindElements).click({force: true});
           cy.contains('Properties (1)').should('exist');
           cy.contains('Characteristics (1)').should('exist');
           cy.contains('Entities (1)').should('exist');

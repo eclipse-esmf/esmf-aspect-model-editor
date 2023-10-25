@@ -11,13 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="column">
-  <mat-form-field [floatLabel]="getControl('lowerBoundDefinition')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="lowerBoundDefinition">lowerBoundDefinition</mat-label>
-    <mat-select [formControl]="getControl('lowerBoundDefinition')" name="lowerBoundDefinition">
-      <mat-option *ngFor="let lowerBoundDefinition of lowerBoundDefinitionList" [value]="lowerBoundDefinition.value">
-        {{ lowerBoundDefinition.value }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
+<mat-form-field [floatLabel]="getControl('lowerBoundDefinition')?.disabled ? 'always' : 'auto'" appearance="fill">
+  <mat-label for="lowerBoundDefinition">lowerBoundDefinition</mat-label>
+  <mat-select [formControl]="getControl('lowerBoundDefinition')" name="lowerBoundDefinition">
+    <mat-option *ngFor="let lowerBoundDefinition of lowerBoundDefinitionList" [value]="lowerBoundDefinition.value">
+      {{ lowerBoundDefinition.value }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

@@ -6,7 +6,7 @@
   "prefix": "ame",
   "targets": {
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/settings-dialog"],
       "options": {
         "jestConfig": "libs/settings-dialog/jest.config.js",

@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div fxLayout="column" [formGroup]="parentForm">
+<div [formGroup]="parentForm">
   <mat-form-field [floatLabel]="getControl('value')?.disabled ? 'always' : 'auto'" appearance="fill">
     <mat-label for="value">value</mat-label>
     <input matInput name="value" [formControl]="getControl('value')" data-cy="value" />

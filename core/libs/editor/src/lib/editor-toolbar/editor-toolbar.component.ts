@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AfterViewInit, Component, EventEmitter, inject, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, inject} from '@angular/core';
 import {finalize, first, switchMap, take} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
 import {
@@ -22,7 +22,15 @@ import {
   MxGraphShapeSelectorService,
 } from '@ame/mx-graph';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
-import {BindingsService, cellRelations, LoadingScreenOptions, LoadingScreenService, NotificationsService} from '@ame/shared';
+import {
+  BindingsService,
+  ElectronTunnelService,
+  LoadingScreenOptions,
+  LoadingScreenService,
+  ModelSavingTrackerService,
+  NotificationsService,
+  cellRelations,
+} from '@ame/shared';
 import {EditorService} from '../editor.service';
 import {ShapeConnectorService, ShapeConnectorUtil} from '@ame/connection';
 import {FileHandlingService, GenerateHandlingService, InformationHandlingService} from './services';
@@ -78,7 +86,9 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     private matDialog: MatDialog,
     private namespaceManagerService: NamespacesManagerService,
     private shapeSettingsService: ShapeSettingsService,
-    private loadingScreenService: LoadingScreenService
+    private loadingScreenService: LoadingScreenService,
+    private electronService: ElectronTunnelService,
+    private modelSaveTracker: ModelSavingTrackerService
   ) {}
 
   ngOnInit(): void {
@@ -98,6 +108,10 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   ngOnDestroy() {
     clearInterval(this.checkChangesInterval);
+  }
+
+  openWindow() {
+    this.electronService.openWindow();
   }
 
   // Deactivates the bug where the shape can not be removed
@@ -154,7 +168,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     const subscription$ = this.fileHandlingService
       .saveAspectModelToWorkspace()
       .pipe(finalize(() => subscription$.unsubscribe()))
-      .subscribe();
+      .subscribe(() => this.modelSaveTracker.updateSavedModel());
   }
 
   copyToClipboard() {
