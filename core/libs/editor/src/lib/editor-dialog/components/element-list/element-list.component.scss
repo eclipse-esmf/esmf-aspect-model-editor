@@ -38,10 +38,13 @@
   }
 }
 
+.max-height-200 {
+  max-height: 200px;
+}
+
 .elements {
   display: flex;
   flex-direction: column;
-  max-height: 200px;
   overflow-y: auto;
   padding-top: 16px;
 

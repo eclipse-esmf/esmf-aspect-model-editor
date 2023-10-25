@@ -48,10 +48,17 @@ export class EntityInstantiator {
 
     quads.forEach(quad => {
       if (samm.isExtendsProperty(quad.predicate.value)) {
+        const externalElement = this.metaModelElementInstantiator.namespaceCacheService.findElementOnExtReference<DefaultAbstractEntity>(
+          quad.object.value
+        );
+
+        if (externalElement) {
+          defaultEntity.extendedElement = externalElement;
+          return;
+        }
+
         let storedQuads = this.rdfModel.store.getQuads(quad.object, null, null, null);
         const entityInstance = predefinedEntityInstantiator.entityInstances[quad.object.value];
-        const findElementOnExtReference =
-          this.metaModelElementInstantiator.namespaceCacheService.findElementOnExtReference<DefaultAbstractEntity>(quad.object.value);
 
         if (!storedQuads.length && !entityInstance) {
           storedQuads = this.metaModelElementInstantiator
@@ -59,15 +66,16 @@ export class EntityInstantiator {
             .externalRdfModel.store.getQuads(quad.object, null, null, null);
         }
 
-        const isEntityOrAbstract = storedQuads.some(quad => samm.isEntity(quad.object.value) || samm.isAbstractEntity(quad.object.value));
+        const isEntity = storedQuads.some(quad => samm.isEntity(quad.object.value));
 
-        if (isEntityOrAbstract) {
-          defaultEntity.extendedElement = findElementOnExtReference || (this.createEntity(storedQuads) as DefaultEntity);
+        if (isEntity) {
+          defaultEntity.extendedElement = this.createEntity(storedQuads) as DefaultEntity;
         } else if (entityInstance) {
           defaultEntity.extendedElement = entityInstance();
         } else {
-          defaultEntity.extendedElement =
-            findElementOnExtReference || new AbstractEntityInstantiator(this.metaModelElementInstantiator).createAbstractEntity(quads);
+          defaultEntity.extendedElement = new AbstractEntityInstantiator(this.metaModelElementInstantiator).createAbstractEntity(
+            storedQuads
+          );
         }
 
         if (defaultEntity.extendedElement) {

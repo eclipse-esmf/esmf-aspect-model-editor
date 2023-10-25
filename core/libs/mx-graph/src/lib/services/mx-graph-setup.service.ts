@@ -339,7 +339,7 @@ export class MxGraphSetupService {
   private getPopupFactoryMethod(menu: mxgraph.mxPopupMenu, cell: mxgraph.mxCell) {
     const selectedCells: Array<mxgraph.mxCell> = this.mxGraphShapeSelectorService.getSelectedCells();
     if (cell && !cell.edge) {
-      menu.addItem('Edit', this.resolveAssetsIcon(AssetsPath.EditIcon), () => {
+      menu.addItem('Open', this.resolveAssetsIcon(AssetsPath.OpenIcon), () => {
         this.bindingsService.fireAction('editElement');
       });
 

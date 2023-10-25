@@ -10,6 +10,7 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
+
 <mat-accordion *ngIf="elements.length">
   <mat-expansion-panel [expanded]="true">
     <mat-expansion-panel-header>
@@ -18,7 +19,7 @@
         <h3>{{ label | counter: elements.length }}</h3>
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <div class="elements">
+    <div class="elements" [class.max-height-200]="!isAspect">
       <div class="model-element" *ngFor="let element of elements">
         <div *ngIf="element | modelElementParser as parsedElement" class="model-element__name">
           <div [ngClass]="parsedElement.type" class="model-element__icon">{{ parsedElement.shortcut }}</div>
@@ -28,8 +29,8 @@
           <button (click)="navigateToCell(element)" mat-icon-button matTooltip="Locate element" matTooltipPosition="below">
             <mat-icon>gps_fixed</mat-icon>
           </button>
-          <button (click)="editElementModel(element)" mat-icon-button matTooltip="Edit element" matTooltipPosition="below">
-            <mat-icon>edit</mat-icon>
+          <button (click)="openElementModel(element)" mat-icon-button matTooltip="Open element" matTooltipPosition="below">
+            <mat-icon class="material-symbols-outlined">jump_to_element</mat-icon>
           </button>
         </div>
       </div>

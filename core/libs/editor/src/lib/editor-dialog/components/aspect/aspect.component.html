@@ -12,4 +12,4 @@
   -->
 <ame-base-input [parentForm]="parentForm"></ame-base-input>
 <ame-properties-button (overwrite)="overwriteProperties($event)"></ame-properties-button>
-<ame-element-list label="Outgoing edges" [elements]="(element$ | async)?.children"></ame-element-list>
+<ame-element-list label="Outgoing edges" [elements]="(element$ | async)?.children" [isAspect]="true"></ame-element-list>
