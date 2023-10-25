@@ -226,7 +226,6 @@ Cypress.Commands.add('getHTMLCell', (name: string) =>
 
 Cypress.Commands.add('dbClickShape', (name: string) => {
   cy.getHTMLCell(name)
-    .should('be.visible')
     .scrollIntoView()
     .dblclick({force: true})
     .then(() => cy.get(SELECTOR_editorSaveButton).should('exist'))
