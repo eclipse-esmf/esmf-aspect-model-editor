@@ -14,7 +14,7 @@ export enum AssetsPath {
   // Path to icon files relative to the assets directory
   ConnectionOnIcon = 'config/editor/img/connection-on.svg',
   Copy = 'config/editor/img/copy.svg',
-  EditIcon = 'config/editor/img/edit.svg',
+  OpenIcon = 'config/editor/img/jump-to-element.svg',
   FormatIcon = 'config/editor/img/schema.svg',
   DeleteIcon = 'config/editor/img/delete.svg',
   AddConstraintIcon = 'config/editor/img/add-outline-frame.svg',

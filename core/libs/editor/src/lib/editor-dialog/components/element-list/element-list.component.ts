@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {ShapeSettingsService, ShapeSettingsStateService} from '../../services';
@@ -20,10 +20,11 @@ import {ShapeSettingsService, ShapeSettingsStateService} from '../../services';
   templateUrl: './element-list.component.html',
   styleUrls: ['element-list.component.scss'],
 })
-export class ElementListComponent {
+export class ElementListComponent implements OnInit {
   @Input() public label = '';
   @Input() public iconRotation: 'rotate0' | 'rotate90' | 'rotate270' = 'rotate90';
   @Input() public elements: BaseMetaModelElement[] = [];
+  @Input() public isAspect? = false;
 
   constructor(
     private mxGraphService: MxGraphService,
@@ -31,7 +32,13 @@ export class ElementListComponent {
     private shapeSettingsStateService: ShapeSettingsStateService
   ) {}
 
-  editElementModel(elementModel: BaseMetaModelElement) {
+  ngOnInit() {
+    if (this.elements.length > 1) {
+      this.elements.sort(this.compareByName);
+    }
+  }
+
+  openElementModel(elementModel: BaseMetaModelElement) {
     const cell = this.mxGraphService.resolveCellByModelElement(elementModel);
     this.shapeSettingsService.editModel(elementModel);
     if (cell) {
@@ -46,5 +53,15 @@ export class ElementListComponent {
 
   cellExists(elementModel: BaseMetaModelElement): boolean {
     return !!this.mxGraphService.resolveCellByModelElement(elementModel);
+  }
+
+  private compareByName(a: any, b: any): 0 | 1 | -1 {
+    if (a.name < b.name) {
+      return -1;
+    }
+    if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
   }
 }
