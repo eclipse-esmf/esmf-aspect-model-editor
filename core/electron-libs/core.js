@@ -16,7 +16,7 @@ const {spawn} = require('child_process');
 const path = require('path');
 const promises = require('./promisify');
 const portfinder = require('portfinder');
-const platformData = require('./os-checker').default;
+const platformData = require('./os-checker');
 const {windowsManager} = require('./windows-manager');
 
 /**
