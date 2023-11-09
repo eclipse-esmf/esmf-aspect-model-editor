@@ -199,6 +199,10 @@ export class RdfModel {
     this.prefixes[alias] = newPrefix as any;
   }
 
+  removePrefix(shortPrefixName: string): void {
+    delete this.prefixes[shortPrefixName];
+  }
+
   getAliasByNamespace(namespace: string) {
     return Object.keys(this.prefixes).find(alias => (this.prefixes[alias] as any) === namespace);
   }

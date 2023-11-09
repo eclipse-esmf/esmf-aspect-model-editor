@@ -39,4 +39,7 @@ module.exports = {
 
   // Notification requests
   REQUEST_SHOW_NOTIFICATION: 'REQUEST_SHOW_NOTIFICATION',
+
+  // Highlight element
+  REQUEST_EDIT_ELEMENT: 'REQUEST_EDIT_ELEMENT',
 };

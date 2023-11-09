@@ -31,6 +31,7 @@ const {
   REQUEST_CLOSE_WINDOW,
   REQUEST_SHOW_NOTIFICATION,
   REQUEST_UPDATE_DATA,
+  REQUEST_EDIT_ELEMENT,
 } = require('./events');
 
 function uuid() {
@@ -94,9 +95,14 @@ class WindowsManager {
       : null;
 
     if (createdWindow) {
-      createdWindow.window.webContents.send(REQUEST_SHOW_NOTIFICATION, 'Model already loaded');
       createdWindow.window.show();
       createdWindow.window.focus();
+
+      if (options?.editElement) {
+        createdWindow.window.webContents.send(REQUEST_EDIT_ELEMENT, options.editElement);
+      } else {
+        createdWindow.window.webContents.send(REQUEST_SHOW_NOTIFICATION, 'Model already loaded');
+      }
       return;
     }
 

@@ -14,7 +14,7 @@
 import {Injectable, inject} from '@angular/core';
 import {Observable, Observer, of, Subject, throwError} from 'rxjs';
 import {catchError, first, map, switchMap, tap} from 'rxjs/operators';
-import {Aspect, BaseMetaModelElement, DefaultAbstractProperty, DefaultProperty, LoadedAspectModel} from '@ame/meta-model';
+import {Aspect, BaseMetaModelElement, LoadedAspectModel} from '@ame/meta-model';
 import {InstantiatorService} from '@ame/instantiator';
 import {environment} from 'environments/environment';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';

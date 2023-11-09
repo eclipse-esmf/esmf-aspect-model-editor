@@ -18,6 +18,7 @@ import {BindingsService} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {EditorService} from '../../editor.service';
 import {ShapeSettingsStateService} from './shape-settings-state.service';
+import {OpenReferencedElementService} from '../../open-element-window/open-element-window.service';
 
 const PURPLE_BLUE = '#448ee4';
 const BLACK = 'black';
@@ -33,7 +34,8 @@ export class ShapeSettingsService {
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private bindingsService: BindingsService,
     private editorService: EditorService,
-    private shapeSettingsStateService: ShapeSettingsStateService
+    private shapeSettingsStateService: ShapeSettingsStateService,
+    private openReferencedElementService: OpenReferencedElementService
   ) {}
 
   setGraphListeners() {
@@ -89,14 +91,20 @@ export class ShapeSettingsService {
 
   editSelectedCell() {
     this.shapeSettingsStateService.selectedShapeForUpdate = this.mxGraphShapeSelectorService.getSelectedShape();
+    const selectedElement = this.shapeSettingsStateService.selectedShapeForUpdate;
 
-    if (!this.shapeSettingsStateService.selectedShapeForUpdate || this.shapeSettingsStateService.selectedShapeForUpdate?.isEdge()) {
+    if (!selectedElement || selectedElement?.isEdge()) {
       this.shapeSettingsStateService.selectedShapeForUpdate = null;
       return;
     }
 
+    this.modelElement = MxGraphHelper.getModelElement(selectedElement);
+    if (this.modelElement.isExternalReference()) {
+      this.openReferencedElementService.openReferencedElement(this.modelElement);
+      return;
+    }
+
     this.shapeSettingsStateService.openShapeSettings();
-    this.modelElement = MxGraphHelper.getModelElement(this.shapeSettingsStateService.selectedShapeForUpdate);
   }
 
   editModel(elementModel: BaseMetaModelElement) {

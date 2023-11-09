@@ -99,6 +99,7 @@ export const FIELD_chipIcon = '[data-cy=chipIcon]';
 export const FIELD_elementCharacteristic = '[data-cy="elementCharacteristic"]';
 export const FIELD_see = '[data-cy="see"]';
 export const FIELD_unit = '[data-cy="unit"]';
+export const BUTTON_propConfig = '.properties-button > p > span';
 export const FIELD_inputValues = '[data-cy="inputValues"]';
 export const FIELD_left = '[data-cy="left"]';
 export const FIELD_right = '[data-cy="right"]';

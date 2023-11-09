@@ -129,7 +129,8 @@ describe('Test load external reference with cross references', () => {
     cy.fixture('/external-reference/cross-references/model-with-cross-referenced-element')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(1000))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}))
+      .then(() => cy.clickShape('AspectDefault'))
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -242,7 +243,8 @@ describe('Test load external reference with cross references', () => {
     cy.fixture('/external-reference/cross-references/model-with-cross-referenced-element-with-mixing-namespaces')
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
-      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(250))
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}))
+      .then(() => cy.clickShape('AspectDefault'))
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');

@@ -26,8 +26,13 @@ import {BasePropertiesInterface, LocaleInterface} from './interfaces';
 export class RdfNodeService {
   constructor(public loggerService: LogService, public modelService: ModelService) {}
 
-  // Removes the quads corresponding to the given properties of an element
-  // If no properties are given, all the quads for the element will be deleted
+  /**
+   * Removes the quads corresponding to the given properties of an element.
+   * If no properties are given, all the quads for the element will be deleted.
+   *
+   * @param metaModelElement - element to be removed or from where properties will be removed
+   * @param properties - optional: properties to be removed from the store
+   */
   public remove(metaModelElement: BaseMetaModelElement, properties?: string[]) {
     const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
     let quadsToBeRemoved: Quad[] = [];
@@ -50,8 +55,13 @@ export class RdfNodeService {
     this.loggerService.logInfo(`Removed quads ${JSON.stringify(quadsToBeRemoved)}`);
   }
 
-  // Updates the quads of the given element with the provided properties
-  // In case no quads exist for the subject, the type quad will be added
+  /**
+   * Updates the quads of the given element with the provided properties
+   * In case no quads exist for the subject, the type quad will be added
+   *
+   * @param metaModelElement
+   * @param properties
+   */
   public update(metaModelElement: BaseMetaModelElement, properties: BasePropertiesInterface): void {
     const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
     const elementQuads: Quad[] = rdfModel.store.getQuads(DataFactory.namedNode(metaModelElement.aspectModelUrn), null, null, null);

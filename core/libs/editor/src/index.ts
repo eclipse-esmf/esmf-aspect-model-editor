@@ -22,3 +22,5 @@ export * from './lib/editor.service';
 export * from './lib/helpers/form-field.helper';
 export * from './lib/editor-toolbar/components/theme-switcher/theme-switcher.component';
 export * from './lib/save-model-dialog/save-model-dialog.service';
+export * from './lib/open-element-window/open-element-window.component';
+export * from './lib/open-element-window/open-element-window.service';

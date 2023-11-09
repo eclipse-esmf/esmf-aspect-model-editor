@@ -19,6 +19,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {LoadModelDialogModule} from '../load-model-dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
+  AASXGenerationModalComponent,
   DocumentComponent,
   GenerateOpenApiComponent,
   LanguageSelectorModalComponent,
@@ -45,6 +46,7 @@ import {GenerateDocumentationComponent} from './components/generate-documentatio
 import {ConnectWithDialogModule} from '../connect-with-dialog/connect-with-dialog.module';
 import {MatSelectModule} from '@angular/material/select';
 import {NamespaceManagerModule} from '@ame/namespace-manager';
+import {OpenElementWindowComponent} from '../open-element-window/open-element-window.component';
 
 @NgModule({
   imports: [
@@ -84,6 +86,8 @@ import {NamespaceManagerModule} from '@ame/namespace-manager';
     GenerateOpenApiComponent,
     GenerateDocumentationComponent,
     LanguageSelectorModalComponent,
+    OpenElementWindowComponent,
+    AASXGenerationModalComponent,
   ],
   exports: [EditorToolbarComponent, ThemeSwitcherComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

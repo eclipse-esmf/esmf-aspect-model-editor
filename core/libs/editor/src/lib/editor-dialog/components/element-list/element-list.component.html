@@ -25,12 +25,33 @@
           <div [ngClass]="parsedElement.type" class="model-element__icon">{{ parsedElement.shortcut }}</div>
           <span>{{ parsedElement.element.name }}</span>
         </div>
-        <div class="model-element__actions" *ngIf="cellExists(element)">
-          <button (click)="navigateToCell(element)" mat-icon-button matTooltip="Locate element" matTooltipPosition="below">
+        <div class="model-element__actions">
+          <button
+            *ngIf="cellExists(element)"
+            (click)="navigateToCell(element)"
+            mat-icon-button
+            matTooltip="Locate element"
+            matTooltipPosition="below"
+          >
             <mat-icon>gps_fixed</mat-icon>
           </button>
-          <button (click)="openElementModel(element)" mat-icon-button matTooltip="Open element" matTooltipPosition="below">
+          <button
+            *ngIf="!element.isExternalReference()"
+            (click)="openElementModel(element)"
+            mat-icon-button
+            matTooltip="Open element"
+            matTooltipPosition="below"
+          >
             <mat-icon class="material-symbols-outlined">jump_to_element</mat-icon>
+          </button>
+          <button
+            *ngIf="element.isExternalReference()"
+            (click)="openReferencedElement(element)"
+            mat-icon-button
+            matTooltip="Open element in new window"
+            matTooltipPosition="left"
+          >
+            <mat-icon>open_in_new</mat-icon>
           </button>
         </div>
       </div>

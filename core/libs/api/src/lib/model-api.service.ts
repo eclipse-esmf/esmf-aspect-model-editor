@@ -267,6 +267,20 @@ export class ModelApiService {
       .pipe(timeout(this.requestTimeout));
   }
 
+  getAASX(rdfContent: string): Observable<string> {
+    return this.http.post(`${this.serviceUrl}${this.api.generate}/aasx`, rdfContent, {
+      headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+      responseType: 'text',
+    });
+  }
+
+  getAASasXML(rdfContent: string): Observable<string> {
+    return this.http.post(`${this.serviceUrl}${this.api.generate}/aas-xml`, rdfContent, {
+      headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+      responseType: 'text',
+    });
+  }
+
   openDocumentation(rdfContent: string, language: string): Observable<void> {
     return this.downloadDocumentation(rdfContent, language).pipe(
       map((documentation: string) => {

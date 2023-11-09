@@ -17,3 +17,4 @@ export * from './search-bar/search-bar.component';
 export * from './help/document.component';
 export * from './theme-switcher/theme-switcher.component';
 export * from './language-sector-modal/language-selector-modal.component';
+export * from './aasx-generation-modal/aasx-generation-modal.component';

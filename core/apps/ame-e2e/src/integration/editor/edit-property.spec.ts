@@ -14,7 +14,6 @@
 
 /// <reference types="Cypress" />
 
-import {ExampleValueInputFieldComponent} from '@ame/editor';
 import {
   FIELD_characteristicName,
   FIELD_descriptionen,
@@ -27,7 +26,6 @@ import {
   FIELD_preferredNameen,
   FIELD_see,
   META_MODEL_description,
-  META_MODEL_exampleValue,
   META_MODEL_preferredName,
   META_MODEL_see,
   SELECTOR_addEntityValue,
@@ -506,7 +504,7 @@ describe('Test edit property', () => {
             ':AspectDefault a samm:Aspect;\n' +
               '    samm:properties ([\n' +
               '  samm:property :property1;\n' +
-              '  samm:optional "true"^^xsd:boolean\n' +
+              '  samm:optional true\n' +
               ']);\n' +
               '    samm:operations ();\n' +
               '    samm:events ().\n'
@@ -542,7 +540,7 @@ describe('Test edit property', () => {
             ':Entity1 a samm:Entity;\n' +
               '    samm:properties ([\n' +
               '  samm:property :property2;\n' +
-              '  samm:notInPayload "true"^^xsd:boolean\n' +
+              '  samm:notInPayload true\n' +
               ']).'
           );
         });

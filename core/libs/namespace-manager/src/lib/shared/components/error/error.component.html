@@ -11,10 +11,17 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-dialog-content class="dialog-content import-error">
+<mat-dialog-content *ngIf="error.type === errorTypes.UNKNOWN" class="dialog-content import-error __column-center">
   <mat-icon class="violation">sentiment_very_dissatisfied</mat-icon>
-  <p>An error has occurred while processing namespaces!</p>
+  <p>{{ error.message }}</p>
 </mat-dialog-content>
+
+<ng-container>
+  <h2 mat-dialog-title>Validation error</h2>
+  <mat-dialog-content *ngIf="error.type === errorTypes.VALIDATION" class="dialog-content import-error">
+    <p class="text-error">{{ error.message }}</p>
+  </mat-dialog-content>
+</ng-container>
 
 <mat-dialog-actions align="end">
   <button mat-flat-button mat-dialog-close>Close</button>

@@ -10,12 +10,25 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-
 <mat-form-field
+  *ngIf="metaModelElement?.characteristic?.dataType?.getUrn() === xsdBoolean.isDefinedBy; else otherTypes"
   [floatLabel]="getControl('exampleValue')?.disabled ? 'always' : 'auto'"
   appearance="fill"
-  [matTooltip]="this.hasComplexDataType ? 'exampleValue disabled for complex datatypes' : ''"
 >
-  <mat-label for="exampleValue">exampleValue</mat-label>
-  <input [formControl]="getControl('exampleValue')" matInput name="exampleValue" />
+  <mat-label>exampleValue</mat-label>
+  <mat-select [formControl]="getControl('exampleValue')">
+    <mat-option value="true"> true </mat-option>
+    <mat-option value="false"> false </mat-option>
+  </mat-select>
 </mat-form-field>
+
+<ng-template #otherTypes>
+  <mat-form-field
+    [floatLabel]="getControl('exampleValue')?.disabled ? 'always' : 'auto'"
+    [matTooltip]="this.hasComplexDataType ? 'exampleValue disabled for complex datatypes' : ''"
+    appearance="fill"
+  >
+    <mat-label for="exampleValue">exampleValue</mat-label>
+    <input [formControl]="getControl('exampleValue')" matInput name="exampleValue" />
+  </mat-form-field>
+</ng-template>

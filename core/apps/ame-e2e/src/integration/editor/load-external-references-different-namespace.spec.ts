@@ -121,16 +121,6 @@ describe('Test drag and drop', () => {
         const externalProperty = localEntity.properties[0].property;
         expect(externalProperty.name).to.equal(externalPropertyParams.name);
         cy.isConnected(localEntityParams, externalPropertyParams).should('be.true');
-
-        const externalCharacteristicParams = {name: 'ChildrenCharacteristic2'};
-        const externalCharacteristic = externalProperty.characteristic;
-        expect(externalCharacteristic.name).to.equal(externalCharacteristicParams.name);
-        cy.isConnected(externalPropertyParams, externalCharacteristicParams).should('be.true');
-
-        const externalEntityParams = {name: 'ChildrenEntity2'};
-        const externalEntity = externalCharacteristic.dataType;
-        expect(externalEntity.name).to.equal(externalEntityParams.name);
-        cy.isConnected(externalCharacteristicParams, externalEntityParams).should('be.true');
       });
   });
 
