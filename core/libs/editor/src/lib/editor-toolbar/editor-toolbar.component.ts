@@ -273,6 +273,10 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
       .subscribe();
   }
 
+  generateAASX() {
+    this.generateHandlingService.generateAASXFile().subscribe();
+  }
+
   onDelete() {
     this.editorService.deleteSelectedElements();
   }

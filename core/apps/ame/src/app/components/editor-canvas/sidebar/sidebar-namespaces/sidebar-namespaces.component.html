@@ -55,6 +55,7 @@
               [class.outdated]="namespace.getFileStatus(file)?.outdated"
               [class.hasErrors]="namespace.getFileStatus(file)?.hasErrors"
               (dblclick)="loadInNewWindow(namespace, file)"
+              (click)="onSelectNamespaceFile(namespace, file)"
               matTooltipPosition="right"
               class="file-name"
             >

@@ -13,6 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {
+  AASXGenerationModalComponent,
   EditorService,
   GenerateDocumentationComponent,
   GenerateOpenApiComponent,
@@ -174,6 +175,26 @@ export class GenerateHandlingService {
       first(),
       switchMap(() => this.modelApiService.openDocumentation(this.editorService.getSerializedModel(), language).pipe(first())),
       finalize(() => this.loadingScreenService.close())
+    );
+  }
+
+  generateAASXFile() {
+    this.loadingScreenService.open({title: 'Validating model...', content: 'Please wait until the model is validated.'});
+    return this.modelService.synchronizeModelToRdf().pipe(
+      first(),
+
+      switchMap(() => this.editorService.validate()),
+      switchMap(validationsErrors => {
+        console.log(validationsErrors);
+        if (validationsErrors.some(({errorCode}) => errorCode)) {
+          return throwError(null);
+        }
+        return of(this.matDialog.open(AASXGenerationModalComponent));
+      }),
+      finalize(() => {
+        this.loadingScreenService.close();
+        localStorage.removeItem('validating');
+      })
     );
   }
 

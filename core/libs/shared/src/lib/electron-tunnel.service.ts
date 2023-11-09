@@ -17,7 +17,10 @@ import {BehaviorSubject, Observable, catchError, of, switchMap} from 'rxjs';
 import {StartupData, StartupPayload} from './model';
 import {NotificationsService} from './notifications.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
-import {SaveModelDialogService} from '@ame/editor';
+import {SaveModelDialogService, ShapeSettingsService} from '@ame/editor';
+import {MxGraphService} from '@ame/mx-graph';
+import {NamespacesCacheService} from '@ame/cache';
+import {BaseMetaModelElement} from '@ame/meta-model';
 
 export enum ElectronEvents {
   REQUEST_CREATE_WINDOW = 'REQUEST_CREATE_WINDOW',
@@ -46,6 +49,9 @@ export enum ElectronEvents {
 
   // Notifications requests
   REQUEST_SHOW_NOTIFICATION = 'REQUEST_SHOW_NOTIFICATION',
+
+  // Highlight element
+  REQUEST_EDIT_ELEMENT = 'REQUEST_EDIT_ELEMENT',
 }
 
 @Injectable({
@@ -60,6 +66,9 @@ export class ElectronTunnelService {
     private notificationsService: NotificationsService,
     private modelSavingTracker: ModelSavingTrackerService,
     private saveModelDialogService: SaveModelDialogService,
+    private mxGraphService: MxGraphService,
+    private shapeSettingsSettings: ShapeSettingsService,
+    private namespaceCacheService: NamespacesCacheService,
     private ngZone: NgZone
   ) {}
 
@@ -70,6 +79,7 @@ export class ElectronTunnelService {
 
     this.onServiceNotStarted();
     this.onNotificationRequest();
+    this.onHighlightElement();
   }
 
   public setWindowInfo(id: string, options: StartupPayload) {
@@ -156,6 +166,22 @@ export class ElectronTunnelService {
   private onServiceNotStarted() {
     this.ipcRenderer.on(ElectronEvents.RESPONSE_BACKEND_STARTUP_ERROR, () => {
       this.notificationsService.error({title: 'Backend not started. Try to reopen the application'});
+    });
+  }
+
+  private onHighlightElement() {
+    this.ipcRenderer.on(ElectronEvents.REQUEST_EDIT_ELEMENT, (_: unknown, modelUrn: string) => {
+      if (!modelUrn) {
+        return;
+      }
+
+      const element = this.namespaceCacheService.currentCachedFile.getElement<BaseMetaModelElement>(modelUrn);
+      if (element) {
+        this.shapeSettingsSettings.editModel(element);
+        requestAnimationFrame(() => {
+          this.mxGraphService.navigateToCellByUrn(element.aspectModelUrn);
+        });
+      }
     });
   }
 }

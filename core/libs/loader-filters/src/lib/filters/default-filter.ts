@@ -91,6 +91,10 @@ export class DefaultFilter implements FilterLoader {
     };
 
     for (const child of element.children) {
+      if (child.isExternalReference() && element.isExternalReference()) {
+        continue;
+      }
+
       if (this.cache[`${element.aspectModelUrn} - ${child.aspectModelUrn}`]) {
         continue;
       }

@@ -275,7 +275,7 @@ describe('Test editing Characteristic', () => {
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getCellLabel('NewCharacteristic', META_MODEL_values).should('eq', `${META_MODEL_values} = 1, 2, a, b, 3, 4`))
       .then(() => cy.getUpdatedRDF())
-      .then(rdf =>
+      .then(rdf => {
         expect(rdf).to.contain(
           ':NewCharacteristic a samm-c:Enumeration;\n' +
             '    samm:dataType xsd:integer;\n' +
@@ -283,9 +283,9 @@ describe('Test editing Characteristic', () => {
             '    samm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
             '    samm:preferredName "new-preferredName"@en;\n' +
             '    samm-c:values' +
-            ' ("1"^^xsd:integer "2"^^xsd:integer "a"^^xsd:integer "b"^^xsd:integer "3"^^xsd:integer "4"^^xsd:integer).'
-        )
-      )
+            ' (1 2 "a"^^xsd:integer "b"^^xsd:integer 3 4).'
+        );
+      })
       .then(() => cy.getAspect())
       .then(aspect => expect(aspect.properties[0].property.characteristic.name).to.be.equal('NewCharacteristic'));
 
@@ -303,7 +303,7 @@ describe('Test editing Characteristic', () => {
             '    samm:description "New description for the new created characteristic"@en;\n' +
             '    samm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
             '    samm:preferredName "new-preferredName"@en;\n' +
-            '    samm-c:values ("2"^^xsd:integer "b"^^xsd:integer "3"^^xsd:integer).'
+            '    samm-c:values (2 "b"^^xsd:integer 3).'
         )
       );
   });

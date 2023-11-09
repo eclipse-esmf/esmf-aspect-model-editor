@@ -211,6 +211,11 @@ export class EditorService {
       })
     );
 
+    // increase performance by not passing the event to the parent(s)
+    this.mxGraphAttributeService.graph.getModel().addListener(mxEvent.CHANGE, function (sender, evt) {
+      evt.consume();
+    });
+
     this.delayedBindings.forEach(binding => this.bindAction(binding.actionname, binding.funct));
     this.delayedBindings = [];
     this.mxGraphAttributeService.graph.view.setTranslate(0, 0);
@@ -543,11 +548,48 @@ export class EditorService {
         .subscribe(confirmed => {
           if (confirmed) {
             this.deleteElements(result);
+
+            result.forEach((element: any) => {
+              this.deletePrefixForExternalNamespaceReference(element);
+            });
           }
         });
     } else {
       this.deleteElements(result);
     }
+  }
+
+  private deletePrefixForExternalNamespaceReference(element: any) {
+    const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
+
+    const aspectModelUrnToBeRemoved = MxGraphHelper.getModelElement(element).aspectModelUrn;
+    const urnToBeChecked = aspectModelUrnToBeRemoved.substring(0, aspectModelUrnToBeRemoved.indexOf('#'));
+
+    const nodeNames = rdfModel.store.getObjects(null, null, null).map((el: any) => el.id);
+    const nodesWithoutDeletedElement = nodeNames.filter(el => el !== aspectModelUrnToBeRemoved);
+
+    // it is checked if other elements from the external namespace are in the model
+    if (!nodesWithoutDeletedElement.some(el => el.includes(urnToBeChecked))) {
+      const prefixes = rdfModel.getPrefixes();
+      const prefixesArray = this.convertArraysToArray(Object.entries(prefixes));
+
+      const externalPrefixToBeDeleted = prefixesArray.filter(el => el.value === `${urnToBeChecked}#`);
+      if (externalPrefixToBeDeleted && externalPrefixToBeDeleted.length > 0) {
+        rdfModel.removePrefix(externalPrefixToBeDeleted[0].name);
+      }
+    }
+  }
+
+  private convertArraysToArray(inputArray: any) {
+    const resultArray = [];
+
+    for (const pair of inputArray) {
+      if (Array.isArray(pair) && pair.length === 2) {
+        const [name, value] = pair;
+        resultArray.push({name, value});
+      }
+    }
+    return resultArray;
   }
 
   private deleteElements(cells: mxgraph.mxCell[]): void {

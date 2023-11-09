@@ -49,6 +49,7 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
 
   private selectedNamespace: string = null;
   private selectedNamespaceFile: string = null;
+  private isSingleClick = false;
 
   constructor(
     public namespaceService: NamespacesCacheService,
@@ -98,14 +99,22 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
   }
 
   public onSelectNamespaceFile(namespace: NamespaceModel, namespaceFile: string) {
-    const fileStatus = namespace.getFileStatus(namespaceFile);
+    this.isSingleClick = true;
+    setTimeout(() => {
+      if (!this.isSingleClick) {
+        return;
+      }
 
-    if (this.isCurrentFile(namespace.name, namespaceFile) || fileStatus?.hasErrors || fileStatus?.outdated) {
-      return;
-    }
-    this.selectedNamespace = namespace.name;
-    this.selectedNamespaceFile = namespaceFile;
-    this.selectNamespace.emit(this.selectedNamespaceFile ? `${namespace.name}:${namespaceFile}` : null);
+      this.isSingleClick = false;
+      const fileStatus = namespace.getFileStatus(namespaceFile);
+
+      if (this.isCurrentFile(namespace.name, namespaceFile) || fileStatus?.hasErrors || fileStatus?.outdated) {
+        return;
+      }
+      this.selectedNamespace = namespace.name;
+      this.selectedNamespaceFile = namespaceFile;
+      this.selectNamespace.emit(this.selectedNamespaceFile ? `${namespace.name}:${namespaceFile}` : null);
+    }, 350);
   }
 
   public onDeleteNamespace(namespace: string) {
@@ -124,7 +133,7 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
 
   public isCurrentFile(namespace: string, namespaceFile: string): boolean {
     const currentRdfModel = this.rdfService.currentRdfModel;
-    return (currentRdfModel.originalAbsoluteFileName || currentRdfModel.absoluteAspectModelFileName) === `${namespace}:${namespaceFile}`;
+    return (currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName) === `${namespace}:${namespaceFile}`;
   }
 
   public onLoadAspectModel(namespace: NamespaceModel, namespaceFile: string) {
@@ -132,6 +141,7 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
   }
 
   public loadInNewWindow(namespace: NamespaceModel, namespaceFile: string) {
+    this.isSingleClick = false;
     this.electronService.openWindow({namespace: namespace.name, file: namespaceFile});
   }
 

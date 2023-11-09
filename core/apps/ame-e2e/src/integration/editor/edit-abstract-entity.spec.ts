@@ -15,10 +15,16 @@
 /// <reference types="Cypress" />
 
 import {
+  BUTTON_propConfig,
   FIELD_descriptionen,
+  FIELD_error,
   FIELD_extends,
+  FIELD_name,
   FIELD_preferredNameen,
   FIELD_see,
+  META_MODEL_description,
+  META_MODEL_preferredName,
+  META_MODEL_see,
   SELECTOR_dialogInputModel,
   SELECTOR_dialogStartButton,
   SELECTOR_ecAbstractEntity,
@@ -32,6 +38,81 @@ import {
 import {cyHelp} from '../../support/helpers';
 
 describe('Create and Edit Abstract Entity', () => {
+  describe('Edit abstract entity fields', () => {
+    it('should add new abstract entity', () => {
+      cy.visitDefault();
+      cy.startModelling().then(() => {
+        cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300).then(() => cy.clickShape('AbstractEntity1'));
+      });
+    });
+
+    it('should check all edit fields', () => {
+      cy.shapeExists('AbstractEntity1')
+        .then(() => cy.dbClickShape('AbstractEntity1'))
+        .then(() => cy.get(FIELD_name).should('be.visible'))
+        .then(() => cy.get(FIELD_preferredNameen).should('be.visible'))
+        .then(() => cy.get(FIELD_descriptionen).should('be.visible'))
+        .then(() => cy.get(FIELD_see).should('be.visible'))
+        .then(() => cy.get(FIELD_extends).should('be.visible'))
+        .then(() => cy.get(BUTTON_propConfig).should('be.visible'))
+        .then(() => cyHelp.clickSaveButton());
+    });
+
+    it('should edit name field and check error', () => {
+      cy.shapeExists('AbstractEntity1')
+        .then(() => cy.dbClickShape('AbstractEntity1'))
+        .then(() => cy.get(FIELD_name).focus().clear().type('#newAbstractEntity'))
+        .then(() => cy.get(FIELD_error).should('be.visible'))
+        .then(() => cy.get(FIELD_name).clear())
+        .then(() => cy.get(FIELD_name).clear().type('AbstractEntity1'))
+        .then(() => cyHelp.clickSaveButton());
+    });
+
+    it('should edit preferred name field', () => {
+      cy.shapeExists('AbstractEntity1')
+        .then(() => cy.dbClickShape('AbstractEntity1'))
+        .then(() => cy.get(FIELD_preferredNameen).focus().clear().type('New preferred Name'))
+        .then(() => cyHelp.clickSaveButton())
+        .then(() =>
+          cy.getCellLabel('AbstractEntity1', META_MODEL_preferredName).should('eq', `${META_MODEL_preferredName} = New preferred Name @en`)
+        )
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => expect(rdf).to.contain('samm:preferredName "New preferred Name"@en'));
+    });
+
+    it('should edit abstract entity description', () => {
+      cy.shapeExists('AbstractEntity1')
+        .then(() => cy.dbClickShape('AbstractEntity1'))
+        .then(() => cy.get(FIELD_descriptionen).focus().clear().type('New description'))
+        .then(() => cyHelp.clickSaveButton())
+        .then(() =>
+          cy.getCellLabel('AbstractEntity1', META_MODEL_description).should('eq', `${META_MODEL_description} = New description @en`)
+        )
+        .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:description "New description"@en')));
+    });
+
+    it('should edit see http attributes to urns', () => {
+      cy.shapeExists('AbstractEntity1')
+        .then(() => cy.dbClickShape('AbstractEntity1'))
+        .then(() => cy.addSeeElements('urn:irdi:eclass:0173-1#02-AAO677', 'urn:irdi:iec:0112/2///62683#ACC011#001'))
+        .then(() => cyHelp.clickSaveButton())
+        .then(() =>
+          cy
+            .getCellLabel('AbstractEntity1', META_MODEL_see)
+            .should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001`)
+        )
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>, <urn:irdi:iec:0112/2///62683#ACC011#001>'));
+
+      cy.dbClickShape('AbstractEntity1')
+        .then(() => cy.removeSeeElements().addSeeElements('urn:irdi:eclass:0173-1#02-AAO677'))
+        .then(() => cyHelp.clickSaveButton())
+        .then(() => cy.getCellLabel('AbstractEntity1', META_MODEL_see).should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677`))
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>'));
+    });
+  });
+
   describe('Entity -> Abstract Entity', () => {
     it('should create', () => {
       cy.visitDefault();
@@ -47,7 +128,6 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.addSeeElements('http://test.com'))
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.clickConnectShapes('AbstractEntity1', 'Entity1'))
-        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
         .then(() => cy.getCellLabel('Entity1', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name @en'))
         .then(() => cy.getCellLabel('Entity1', 'description').should('eq', 'Inherited\ndescription = Description @en'))
         .then(() => cy.getCellLabel('Entity1', 'see').should('eq', 'Inherited\nsee = http://test.com'));
@@ -111,7 +191,6 @@ describe('Create and Edit Abstract Entity', () => {
       cyHelp
         .clickShape('Characteristic1') // To lost focus on AbstractEntity2
         .then(() => cy.clickConnectShapes('AbstractEntity2', 'AbstractEntity1'))
-        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
         .then(() => cy.get(SELECTOR_notificationsButton).click({force: true}))
         .then(() => cy.wait(500).get('.mat-mdc-cell').contains('Recursive elements').should('exist'))
         .then(() => cy.wait(500).get('[data-cy="close-notifications"]').click({force: true}));
@@ -145,7 +224,6 @@ describe('Create and Edit Abstract Entity', () => {
 
     it('should connect elements', () => {
       cy.clickConnectShapes('AbstractEntity1', 'abstractProperty1')
-        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
         .then(() => cy.dbClickShape('AbstractEntity1'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
         .then(() => cy.get('.mat-mdc-cell').should('contain', 'abstractProperty1'))
@@ -158,7 +236,6 @@ describe('Create and Edit Abstract Entity', () => {
       cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300)
         .then(() => cy.clickShape('AbstractEntity2'))
         .then(() => cy.clickConnectShapes('AbstractEntity2', 'AbstractEntity1'))
-        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
         .then(() => cy.dbClickShape('AbstractEntity2'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
         .then(() => cy.get('.mat-mdc-cell').should('contain', 'abstractProperty1'))
@@ -189,7 +266,6 @@ describe('Create and Edit Abstract Entity', () => {
       cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300)
         .then(() => cy.clickShape('AbstractEntity2'))
         .then(() => cy.clickConnectShapes('AbstractEntity2', 'AbstractEntity1'))
-        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
         .then(() => cy.dbClickShape('AbstractEntity2'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
         .then(() => cy.get('.mat-mdc-cell').should('contain', 'property1'))
@@ -230,7 +306,7 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.clickAddShapePlusIcon('AbstractEntity1'))
         .then(() => cy.clickAddShapePlusIcon('AbstractEntity1'))
         .then(() => cy.clickConnectShapes('AbstractEntity1', 'Entity1'))
-        .then(() => cy.get('[data-cy="formatButton"]').click({force: true}).wait(200))
+
         .then(() => cy.dbClickShape('AbstractEntity1'))
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 1', {force: true}))
         .then(() => cy.get(FIELD_descriptionen).type('Description 1', {force: true}))

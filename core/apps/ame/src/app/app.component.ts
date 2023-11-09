@@ -60,6 +60,10 @@ export class AppComponent implements OnInit {
     this.setContextMenu();
     this.themeService.setCssVars(this.configurationService.getSettings()?.useSaturatedColors ? 'dark' : 'light');
 
+    if (window.location.search.includes('e2e=true')) {
+      return;
+    }
+
     // TODO: In case of no service opened, display a error page
     if (!this.electronTunnelService.ipcRenderer) {
       this.migratorService.startMigrating().subscribe(() => {
@@ -69,10 +73,6 @@ export class AppComponent implements OnInit {
       });
     } else {
       this.startupService.listenForLoading();
-    }
-
-    if (window.location.search.includes('e2e=true')) {
-      return;
     }
 
     this.electronTunnelService.onWindowClose();

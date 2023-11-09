@@ -67,7 +67,7 @@ describe('Constraint', () => {
         cy.startModelling()
           .then(() => cy.get('ame-loading-screen', {timeout: 15000}).should('not.exist'))
           .then(() => cy.shapeExists('AspectDefault'))
-          .then(() => cy.dragElement(SELECTOR_ecConstraint, 350, 300))
+          .then(() => cy.dragElement(SELECTOR_ecConstraint, 350, 300).wait(3000))
           .then(() => cy.dbClickShape('Constraint1'))
           .then(() => cy.get(field.selector).clear({force: true}).type(field.value, {force: true}));
       });
@@ -93,7 +93,7 @@ describe('Characteristic', () => {
         cy.visitDefault();
         cy.startModelling()
           .then(() => cy.shapeExists('AspectDefault'))
-          .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 350, 300))
+          .then(() => cy.dragElement(SELECTOR_ecCharacteristic, 350, 300).wait(2000))
           .then(() => cy.dbClickShape('Characteristic1'))
           .then(() => {
             cy.get(field.selector).clear({force: true}).type(field.value, {force: true});

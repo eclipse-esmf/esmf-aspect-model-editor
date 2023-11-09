@@ -24,6 +24,11 @@ import {
   SELECTOR_ecAbstractEntity,
   SELECTOR_ecProperty,
   SELECTOR_ecEntity,
+  META_MODEL_preferredName,
+  META_MODEL_description,
+  META_MODEL_see,
+  FIELD_name,
+  FIELD_see,
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
@@ -50,6 +55,70 @@ describe('Create and Edit Abstract Property', () => {
         .then(() => cy.getCellLabel('[abstractProperty1]', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name @en'))
         .then(() => cy.getCellLabel('[abstractProperty1]', 'description').should('eq', 'Inherited\ndescription = Description @en'))
         .then(() => cy.getCellLabel('[abstractProperty1]', 'see').should('eq', 'Inherited\nsee = http://test.com'));
+    });
+  });
+
+  describe('Edit abstract property fields', () => {
+    it('should edit preferred name field', () => {
+      cy.visitDefault();
+      cy.startModelling().then(() => {
+        cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300).then(() => cy.clickShape('abstractProperty1'));
+      });
+      cy.shapeExists('abstractProperty1')
+        .then(() => cy.dbClickShape('abstractProperty1'))
+        .then(() => cy.get(FIELD_preferredNameen).focus().clear().type('New preferred Name'))
+        .then(() => cyHelp.clickSaveButton())
+        .then(() =>
+          cy
+            .getCellLabel('abstractProperty1', META_MODEL_preferredName)
+            .should('eq', `${META_MODEL_preferredName} = New preferred Name @en`)
+        )
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => expect(rdf).to.contain('samm:preferredName "New preferred Name"@en'));
+    });
+
+    it('should edit abstract property description', () => {
+      cy.shapeExists('abstractProperty1')
+        .then(() => cy.dbClickShape('abstractProperty1'))
+        .then(() => cy.get(FIELD_descriptionen).focus().clear().type('New description'))
+        .then(() => cyHelp.clickSaveButton())
+        .then(() =>
+          cy.getCellLabel('abstractProperty1', META_MODEL_description).should('eq', `${META_MODEL_description} = New description @en`)
+        )
+        .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:description "New description"@en')));
+    });
+
+    it('should edit see http attributes to urns', () => {
+      cy.shapeExists('abstractProperty1')
+        .then(() => cy.dbClickShape('abstractProperty1'))
+        .then(() => cy.addSeeElements('urn:irdi:eclass:0173-1#02-AAO677', 'urn:irdi:iec:0112/2///62683#ACC011#001'))
+        .then(() => cyHelp.clickSaveButton())
+        .then(() =>
+          cy
+            .getCellLabel('abstractProperty1', META_MODEL_see)
+            .should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001`)
+        )
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>, <urn:irdi:iec:0112/2///62683#ACC011#001>'));
+
+      cy.dbClickShape('abstractProperty1')
+        .then(() => cy.removeSeeElements().addSeeElements('urn:irdi:eclass:0173-1#02-AAO677'))
+        .then(() => cyHelp.clickSaveButton())
+        .then(() =>
+          cy.getCellLabel('abstractProperty1', META_MODEL_see).should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677`)
+        )
+        .then(() => cy.getUpdatedRDF())
+        .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>'));
+    });
+
+    it('should check all edit fields', () => {
+      cy.shapeExists('abstractProperty1')
+        .then(() => cy.dbClickShape('abstractProperty1'))
+        .then(() => cy.get(FIELD_name).should('be.visible'))
+        .then(() => cy.get(FIELD_preferredNameen).should('be.visible'))
+        .then(() => cy.get(FIELD_descriptionen).should('be.visible'))
+        .then(() => cy.get(FIELD_see).should('be.visible'))
+        .then(() => cyHelp.clickSaveButton());
     });
   });
 

@@ -14,6 +14,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {ShapeSettingsService, ShapeSettingsStateService} from '../../services';
+import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
 
 @Component({
   selector: 'ame-element-list',
@@ -29,7 +30,8 @@ export class ElementListComponent implements OnInit {
   constructor(
     private mxGraphService: MxGraphService,
     private shapeSettingsService: ShapeSettingsService,
-    private shapeSettingsStateService: ShapeSettingsStateService
+    private shapeSettingsStateService: ShapeSettingsStateService,
+    private openReferencedElementService: OpenReferencedElementService
   ) {}
 
   ngOnInit() {
@@ -53,6 +55,10 @@ export class ElementListComponent implements OnInit {
 
   cellExists(elementModel: BaseMetaModelElement): boolean {
     return !!this.mxGraphService.resolveCellByModelElement(elementModel);
+  }
+
+  openReferencedElement(element: BaseMetaModelElement) {
+    this.openReferencedElementService.openReferencedElement(element);
   }
 
   private compareByName(a: any, b: any): 0 | 1 | -1 {

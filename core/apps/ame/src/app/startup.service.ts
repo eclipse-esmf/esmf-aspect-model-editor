@@ -11,8 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorService} from '@ame/editor';
+import {NamespacesCacheService} from '@ame/cache';
+import {EditorService, ShapeSettingsService} from '@ame/editor';
+import {BaseMetaModelElement} from '@ame/meta-model';
 import {MigratorService} from '@ame/migrator';
+import {MxGraphService} from '@ame/mx-graph';
 import {ElectronTunnelService, LoadingScreenService, ModelSavingTrackerService, SidebarService} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
@@ -27,7 +30,10 @@ export class StartupService {
     private editorService: EditorService,
     private modelSaveTracker: ModelSavingTrackerService,
     private electronTunnelService: ElectronTunnelService,
-    private loadingScreenService: LoadingScreenService
+    private loadingScreenService: LoadingScreenService,
+    private shapeSettingsSettings: ShapeSettingsService,
+    private namespaceCacheService: NamespacesCacheService,
+    private mxGraphService: MxGraphService
   ) {}
 
   listenForLoading() {
@@ -53,9 +59,24 @@ export class StartupService {
     this.loadingScreenService.open({title: 'Loading model', content: 'Please wait until the model is loaded!'});
     return this.editorService.loadNewAspectModel(model, options ? `${options.namespace}:${options.file}` : '').pipe(
       tap(() => {
+        this.editElement(options?.editElement);
         this.modelSaveTracker.updateSavedModel();
         this.loadingScreenService.close();
       })
     );
+  }
+
+  editElement(modelUrn: string) {
+    if (!modelUrn) {
+      return;
+    }
+
+    const element = this.namespaceCacheService.currentCachedFile.getElement<BaseMetaModelElement>(modelUrn);
+    if (element) {
+      this.shapeSettingsSettings.editModel(element);
+      requestAnimationFrame(() => {
+        this.mxGraphService.navigateToCellByUrn(element.aspectModelUrn);
+      });
+    }
   }
 }

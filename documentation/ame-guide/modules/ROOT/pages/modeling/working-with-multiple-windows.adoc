@@ -1,0 +1,23 @@
+[[new-window]]
+= Working with Multiple Windows
+
+With the multiple windows feature, you can simultaneously work on various models, enhancing your multitasking capability. All windows you open will share the same workspace, ensuring a unified working environment.
+
+To create a new window:
+
+. Locate the *+* icon in the toolbar and click on it.
+. From the dropdown, select *New window*. +
+image:multi-windows/new-window.png[width=40%]
+. A fresh window will appear, automatically loading the AspectDefault aspect model for you.
+
+To open a model from the workspace in a new window:
+
+. Access the workspace by selecting its icon on the left sidebar. image:elements/workspace.png[width=20%]
+. From here, you have two ways to open a model:
+  -- Double-click a file to instantly open it in a new window.
+  -- Click on the three-dot menu beside the file, and choose the Open in new window option. +
+  image:multi-windows/workspace-new-window.png[width=40%]
+
+NOTE: To quickly navigate to an already opened window, simply double-click its associated file in the workspace. This action will bring the respective window to the forefront.
+
+NOTE: If you need to edit a referenced element located in another window, double-click on that element. A new window will pop up, focusing on the selected element, with the appropriate editor activated for your convenience.

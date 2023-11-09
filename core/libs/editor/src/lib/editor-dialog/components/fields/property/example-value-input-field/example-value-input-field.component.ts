@@ -15,6 +15,7 @@ import {Component, OnInit} from '@angular/core';
 import {InputFieldComponent} from '../../input-field.component';
 import {DefaultProperty} from '@ame/meta-model';
 import {FormControl} from '@angular/forms';
+import {simpleDataTypes} from '@ame/shared';
 
 @Component({
   selector: 'ame-example-value-input-field',
@@ -22,6 +23,7 @@ import {FormControl} from '@angular/forms';
 })
 export class ExampleValueInputFieldComponent extends InputFieldComponent<DefaultProperty> implements OnInit {
   public hasComplexDataType = false;
+  public xsdBoolean = simpleDataTypes.boolean;
 
   ngOnInit() {
     this.subscription = this.getMetaModelData().subscribe(() => this.initForm());

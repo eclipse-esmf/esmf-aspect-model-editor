@@ -229,6 +229,10 @@
     <mat-icon class="material-icons">api</mat-icon>
     <span>Generate OpenAPI specification</span>
   </button>
+  <button mat-menu-item data-cy="tbOpenApiButton" (click)="generateAASX()">
+    <mat-icon class="material-icons-outlined">data_array</mat-icon>
+    <span>Generate AASX/XML</span>
+  </button>
 </mat-menu>
 
 <mat-menu #downloadJson="matMenu">

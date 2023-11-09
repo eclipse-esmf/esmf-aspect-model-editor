@@ -194,13 +194,7 @@ declare global {
       /**
        * Checks whether two elements are connected or not
        */
-      isConnected(
-        sourceShapeParams: {name: string; fields?: object[]},
-        targetShapeParams: {
-          name: string;
-          fields?: object[];
-        }
-      ): Chainable;
+      isConnected(sourceShapeParams: {name: string; fields?: object[]}, targetShapeParams: {name: string; fields?: object[]}): Chainable;
     }
   }
 }
@@ -436,7 +430,7 @@ Cypress.Commands.add('addSeeElements', (...elements: string[]) => {
 
 Cypress.Commands.add('removeSeeElements', (...elements: string[]) => {
   if (elements.length === 0) {
-    cy.get('[data-cy="see-remove-chip"]').each(element => cy.wrap(element).click());
+    cy.get('[data-cy="see-remove-chip"]').each(element => cy.wrap(element).click({force: true}));
     return;
   }
 

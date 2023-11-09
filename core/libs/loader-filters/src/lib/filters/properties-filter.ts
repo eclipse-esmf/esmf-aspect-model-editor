@@ -68,6 +68,10 @@ export class PropertiesFilterLoader implements FilterLoader {
     }
 
     for (const child of element.children) {
+      if (child.isExternalReference() && element.isExternalReference()) {
+        continue;
+      }
+
       const path = `${element.aspectModelUrn} - ${child.aspectModelUrn}`;
       if (this.cache[path]) continue;
       this.cache[path] = true;
