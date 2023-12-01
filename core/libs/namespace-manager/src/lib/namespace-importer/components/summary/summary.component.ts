@@ -17,6 +17,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {WorkspaceSummaryComponent, NAMESPACES_SESSION} from '../../../shared';
 import {NamespacesSessionInterface, MissingElement} from '../../../shared/models';
 import {take, tap} from 'rxjs/operators';
+import {ElectronSignals, ElectronSignalsService} from '@ame/shared';
 
 @Component({
   templateUrl: './summary.component.html',
@@ -24,6 +25,8 @@ import {take, tap} from 'rxjs/operators';
 })
 export class ImportSummaryComponent {
   private importSession: NamespacesSessionInterface = inject(NAMESPACES_SESSION);
+  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+
   public missingElements: MissingElement[] = this.importSession.missingElements;
 
   constructor(private dialogRef: MatDialogRef<WorkspaceSummaryComponent>, private fileHandlingService: FileHandlingService) {}
@@ -38,6 +41,8 @@ export class ImportSummaryComponent {
         tap(() => this.importSession.state.importing$.next(false)),
         take(1)
       )
-      .subscribe();
+      .subscribe(() => {
+        this.electronSignalsService.call('requestRefreshWorkspaces');
+      });
   }
 }

@@ -21,6 +21,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {RouterTestingModule} from '@angular/router/testing';
 import {provideMockObject} from 'jest-helpers';
 import {of} from 'rxjs';
+import {ElectronTunnelService} from '@ame/shared';
 
 import {VersionMigrationComponent} from './version-migration.component';
 
@@ -43,6 +44,10 @@ describe('VersionMigrationComponent', () => {
         {
           provide: MigratorApiService,
           useValue: provideMockObject(MigratorApiService),
+        },
+        {
+          provide: ElectronTunnelService,
+          useValue: provideMockObject(ElectronTunnelService),
         },
         {
           provide: RdfService,

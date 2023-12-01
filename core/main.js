@@ -13,7 +13,7 @@
 
 // @ts-check
 
-const {app, BrowserWindow, Menu} = require('electron');
+const {app, globalShortcut, BrowserWindow, Menu} = require('electron');
 const platformData = require('./electron-libs/os-checker');
 const core = require('./electron-libs/core');
 const {windowsManager} = require('./electron-libs/windows-manager');
@@ -30,23 +30,22 @@ Menu.setApplicationMenu(null);
 if (platformData.isWin) app.setUserTasks([]);
 
 app.on('ready', () => {
+  globalShortcut.register('Command+Q', () => {
+    app.quit();
+  });
+
   core.startService();
   windowsManager.activateCommunicationProtocol();
 });
 
 app.on('activate', () => {
-  // Re-create window on MacOS when dock icon is clicked
   if (BrowserWindow.getAllWindows().length === 0) {
     windowsManager.createWindow(null);
   }
 });
 
 app.on('window-all-closed', () => {
-  // On MacOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (!platformData.isMac) {
-    app.quit();
-  }
+  app.quit();
 });
 
 app.on('before-quit', () => {

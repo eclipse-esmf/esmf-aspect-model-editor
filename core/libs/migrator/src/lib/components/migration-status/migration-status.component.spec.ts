@@ -20,6 +20,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {provideMockObject} from 'jest-helpers';
 import {of} from 'rxjs';
 import {MigratorService} from '../../migrator.service';
+import {ElectronTunnelService} from '@ame/shared';
 
 import {MigrationStatusComponent} from './migration-status.component';
 
@@ -36,6 +37,10 @@ describe('MigrationStatusComponent', () => {
         {
           provide: MigratorService,
           useValue: provideMockObject(MigratorService),
+        },
+        {
+          provide: ElectronTunnelService,
+          useValue: provideMockObject(ElectronTunnelService),
         },
         {
           provide: EditorService,

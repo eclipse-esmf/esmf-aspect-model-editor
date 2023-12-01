@@ -12,8 +12,8 @@
  */
 
 import {ModelApiService} from '@ame/api';
-import {ElectronTunnelService, StartupData} from '@ame/shared';
-import {AfterViewInit, Component, NgZone, OnDestroy} from '@angular/core';
+import {ElectronSignals, ElectronSignalsService, ElectronTunnelService, StartupData} from '@ame/shared';
+import {AfterViewInit, Component, NgZone, OnDestroy, inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {Observable, Subscription, forkJoin, switchMap, take} from 'rxjs';
 
@@ -23,6 +23,7 @@ import {Observable, Subscription, forkJoin, switchMap, take} from 'rxjs';
 })
 export class LoadingComponent implements AfterViewInit, OnDestroy {
   private subscription = new Subscription();
+  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
 
   constructor(
     private router: Router,
@@ -40,12 +41,12 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const sub = this.electronTunnel
-      .requestStartupData()
+    const sub = this.electronSignalsService
+      .call('requestStartupData')
       .pipe(
         switchMap((data: StartupData) => {
-          this.electronTunnel.setWindowInfo(data.id, data.options);
-          return forkJoin([this.electronTunnel.isFirstWindow(), this.loadModelText()]);
+          this.electronSignalsService.call('setWindowInfo', data);
+          return forkJoin([this.electronSignalsService.call('isFirstWindow'), this.loadModelText()]);
         }),
         take(1)
       )

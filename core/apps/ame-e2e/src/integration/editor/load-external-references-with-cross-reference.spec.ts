@@ -130,7 +130,7 @@ describe('Test load external reference with cross references', () => {
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}))
-      .then(() => cy.clickShape('AspectDefault'))
+      .then(() => cyHelp.checkAspectDefaultExists())
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -244,7 +244,7 @@ describe('Test load external reference with cross references', () => {
       .as('rdfString')
       .then(rdfString => cyHelp.loadCustomModel(rdfString))
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}))
-      .then(() => cy.clickShape('AspectDefault'))
+      .then(() => cyHelp.checkAspectDefaultExists())
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');

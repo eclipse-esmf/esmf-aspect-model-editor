@@ -33,3 +33,4 @@ export * from './lib/sidebar.service';
 export * from './lib/pipes';
 export * from './lib/model-saving-tracker.service';
 export * from './lib/title.service';
+export * from './lib/electron-signals.service';

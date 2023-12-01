@@ -99,6 +99,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {CounterPipe} from '../../../../shared/src/lib/pipes/counter.pipe';
 import {SaveModelDialogComponent} from '../save-model-dialog/save-model-dialog.component';
+import {LargeFileWarningComponent} from '../large-file-warning-dialog/large-file-warning-dialog';
 
 @NgModule({
   providers: [EditorModelService],
@@ -190,6 +191,7 @@ import {SaveModelDialogComponent} from '../save-model-dialog/save-model-dialog.c
     ModelElementParser,
     LocateElementComponent,
     SaveModelDialogComponent,
+    LargeFileWarningComponent,
   ],
   exports: [ShapeSettingsComponent],
 })

@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ConfirmDialogService, DialogOptions, EditorService} from '@ame/editor';
+import {ConfirmDialogService, DialogOptions, EditorService, FileUploadOptions} from '@ame/editor';
 import {MatDialog} from '@angular/material/dialog';
 import {LoadModelDialogComponent} from '../../load-model-dialog';
 import {catchError, filter, finalize, first, map, switchMap, tap} from 'rxjs/operators';
@@ -270,12 +270,12 @@ export class FileHandlingService {
     );
   }
 
-  addFileToWorkspace(fileName: string, fileContent: string, showLoading = true): Observable<RdfModel> {
+  addFileToWorkspace(fileName: string, fileContent: string, uploadOptions: FileUploadOptions = {}): Observable<RdfModel> {
     const loadingOptions: LoadingScreenOptions = {
       title: 'Importing files into the workspace',
       hasCloseButton: false,
     };
-    if (showLoading) this.loadingScreenService.open(loadingOptions);
+    if (uploadOptions.showLoading) this.loadingScreenService.open(loadingOptions);
 
     const migratedFile = this.migratorService.bammToSamm(fileContent);
     let newModelContent: string;
@@ -284,7 +284,7 @@ export class FileHandlingService {
     return this.modelApiService.formatModel(migratedFile).pipe(
       switchMap(formattedModel => {
         newModelContent = formattedModel;
-        return this.modelApiService.validate(migratedFile);
+        return this.modelApiService.validate(migratedFile, false);
       }),
       switchMap(validations => {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
@@ -298,20 +298,27 @@ export class FileHandlingService {
       tap(({absoluteAspectModelFileName}) => (newModelAbsoluteFileName = absoluteAspectModelFileName)),
       switchMap(() => this.modelApiService.saveModel(newModelContent, newModelAbsoluteFileName)),
       tap(() => {
-        this.notificationsService.success({
-          title: 'Successfully added file to workspace',
-        });
+        if (uploadOptions.showNotifications) {
+          this.notificationsService.success({
+            title: 'Successfully Added File',
+            message: 'Your file was added to the workspace successfully.',
+          });
+        }
         this.sidebarService.refreshSidebarNamespaces();
       }),
       switchMap(() => this.editorService.handleFileVersionConflicts(newModelAbsoluteFileName, newModelContent)),
       catchError(error => {
         this.logService.logError(`'Error adding file to namespaces. ${JSON.stringify(error)}.`);
-        this.notificationsService.error({
-          title: 'Error adding file to workspace',
-        });
+        if (uploadOptions.showNotifications) {
+          this.notificationsService.error({
+            title: 'File Addition Error',
+            message:
+              'We encountered an issue while adding the file to your workspace. Please attempt to add it again. If the issue continues, reach out to our support team for assistance.',
+          });
+        }
         return throwError(() => error);
       }),
-      finalize(() => (showLoading ? this.loadingScreenService.close() : null))
+      finalize(() => (uploadOptions.showLoading ? this.loadingScreenService.close() : null))
     );
   }
 
@@ -363,7 +370,7 @@ export class FileHandlingService {
   private importFile(fileName: string): Observable<RdfModel> {
     return this.modelApiService
       .getAspectMetaModel(fileName)
-      .pipe(switchMap(formattedContent => this.addFileToWorkspace(fileName, formattedContent, false)));
+      .pipe(switchMap(formattedContent => this.addFileToWorkspace(fileName, formattedContent)));
   }
 
   private getFilesReplacement(

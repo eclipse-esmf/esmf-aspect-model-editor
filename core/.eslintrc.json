@@ -42,7 +42,11 @@
     {
       "files": ["*.js", "*.jsx"],
       "extends": ["plugin:@nx/javascript"],
-      "rules": {}
+      "rules": {
+        "no-var": "error",
+        "no-unused-vars": "error",
+        "no-undef": "error"
+      }
     }
   ]
 }

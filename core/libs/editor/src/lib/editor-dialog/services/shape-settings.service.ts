@@ -99,7 +99,7 @@ export class ShapeSettingsService {
     }
 
     this.modelElement = MxGraphHelper.getModelElement(selectedElement);
-    if (this.modelElement.isExternalReference()) {
+    if (this.modelElement.isExternalReference() && !this.modelElement.isPredefined()) {
       this.openReferencedElementService.openReferencedElement(this.modelElement);
       return;
     }

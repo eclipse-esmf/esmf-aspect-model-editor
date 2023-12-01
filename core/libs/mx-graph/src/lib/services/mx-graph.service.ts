@@ -62,6 +62,7 @@ export class MxGraphService {
   initGraph(): void {
     this.graphSetupService.setUp();
     this.graph = this.mxGraphAttributeService.graph;
+    this.graph.keepEdgesInBackground = true;
     this.themeService.setGraph(this.graph);
 
     mxCell.prototype.clone = function () {

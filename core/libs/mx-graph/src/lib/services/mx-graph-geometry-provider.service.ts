@@ -12,8 +12,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {BaseMetaModelElement, DefaultEntityValue, DefaultTrait} from '@ame/meta-model';
-import {circleShapeGeometry, basicShapeGeometry, smallBasicShapeGeometry} from '@ame/shared';
+import {BaseMetaModelElement} from '@ame/meta-model';
+import {circleShapeGeometry, smallBasicShapeGeometry} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {mxGeometry} from '../providers';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
@@ -51,41 +51,5 @@ export class MxGraphGeometryProviderService {
       geometry.width = smallBasicShapeGeometry.collapsedWidth;
       geometry.height = smallBasicShapeGeometry.collapsedHeight;
     }
-  }
-
-  private createExpandedGeometry(metaModelElement: BaseMetaModelElement, x?: number, y?: number): mxgraph.mxGeometry {
-    switch (true) {
-      case this.isEllipseShape(metaModelElement):
-        return new mxGeometry(x, y, circleShapeGeometry.expandedWith, circleShapeGeometry.expandedHeight);
-      case this.isRoundedBorderShape(metaModelElement):
-        return new mxGeometry(x, y, smallBasicShapeGeometry.expandedWith, smallBasicShapeGeometry.expandedHeight);
-      default:
-        return new mxGeometry(x, y, basicShapeGeometry.expandedWith, basicShapeGeometry.expandedHeight);
-    }
-  }
-
-  private createCollapsedGeometry(
-    metaModelElement: BaseMetaModelElement,
-    x?: number,
-    y?: number,
-    w?: number,
-    h?: number
-  ): mxgraph.mxGeometry {
-    switch (true) {
-      case this.isEllipseShape(metaModelElement):
-        return new mxGeometry(x, y, circleShapeGeometry.collapsedWidth, circleShapeGeometry.collapsedHeight);
-      case this.isRoundedBorderShape(metaModelElement):
-        return new mxGeometry(x, y, smallBasicShapeGeometry.collapsedWidth, smallBasicShapeGeometry.collapsedHeight);
-      default:
-        return new mxGeometry(x, y, w ? w : basicShapeGeometry.collapsedWidth, h ? h : basicShapeGeometry.collapsedHeight);
-    }
-  }
-
-  private isEllipseShape(metaModelElement: BaseMetaModelElement): boolean {
-    return metaModelElement instanceof DefaultTrait;
-  }
-
-  private isRoundedBorderShape(metaModelElement: BaseMetaModelElement): boolean {
-    return metaModelElement instanceof DefaultEntityValue;
   }
 }

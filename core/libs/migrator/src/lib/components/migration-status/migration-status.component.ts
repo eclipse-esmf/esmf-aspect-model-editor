@@ -11,12 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {NamespaceStatus} from '@ame/api';
 import {MigratorService} from '../../migrator.service';
 import {Router} from '@angular/router';
 import {EditorService} from '@ame/editor';
 import {RdfModel} from '@ame/rdf/utils';
+import {ElectronSignals, ElectronSignalsService} from '@ame/shared';
 
 @Component({
   selector: 'ame-migration-status',
@@ -24,6 +25,8 @@ import {RdfModel} from '@ame/rdf/utils';
   styleUrls: ['./migration-status.component.scss'],
 })
 export class MigrationStatusComponent implements OnInit {
+  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+
   public migrationStatus: NamespaceStatus[] = [];
   public filteredErrorFiles = {};
   public hasErrors = false;
@@ -38,6 +41,9 @@ export class MigrationStatusComponent implements OnInit {
       const erroredModels = rdfModels.filter(rdfModel => rdfModel?.hasErrors);
       this.hasErrors ||= erroredModels.length > 0;
       this.setFilesWithError(erroredModels);
+      if (!this.migratorService.increaseNamespaceVersion) {
+        this.electronSignalsService.call('requestRefreshWorkspaces');
+      }
     });
   }
 

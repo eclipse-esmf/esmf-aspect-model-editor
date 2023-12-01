@@ -30,6 +30,10 @@
   cursor: default !important;
 }
 
+.refresh-icon {
+  cursor: pointer;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -55,10 +59,6 @@
       font-size: 21px;
       margin: 0 10px 0 0;
       font-weight: 500;
-    }
-
-    .refresh-icon {
-      cursor: pointer;
     }
 
     .list {
@@ -150,6 +150,8 @@
   margin-top: 1rem;
 
   &__title {
+    display: flex;
+    align-items: center;
     font-size: 18px;
   }
 
