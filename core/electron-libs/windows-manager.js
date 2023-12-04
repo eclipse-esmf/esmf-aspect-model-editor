@@ -107,7 +107,7 @@ class WindowsManager {
     const createdWindow = options
       ? this.activeWindows.find(
           winInfo =>
-            options.namespace === winInfo.options?.namespace && winInfo.options?.file === options.file && windowInfo.options?.fromWorkspace
+            options.namespace === winInfo.options?.namespace && winInfo.options?.file === options.file && winInfo.options?.fromWorkspace
         )
       : null;
 
