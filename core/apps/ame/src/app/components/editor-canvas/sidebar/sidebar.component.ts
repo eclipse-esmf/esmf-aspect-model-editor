@@ -11,7 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import {ModelApiService} from '@ame/api';
 import {NamespacesCacheService} from '@ame/cache';
 import {ConfirmDialogService, EditorService, ShapeSettingsStateService} from '@ame/editor';
@@ -36,7 +47,8 @@ import {
   NamespaceModel,
   NotificationsService,
   SidebarService,
-  ElectronTunnelService,
+  ElectronSignals,
+  ElectronSignalsService,
 } from '@ame/shared';
 import {catchError, finalize, first, Subscription, switchMap, tap, throwError} from 'rxjs';
 import {RdfService} from '@ame/rdf/services';
@@ -62,6 +74,8 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
   private refreshNamespacesSubscription: Subscription;
   private refreshSideBarSubscription: Subscription;
 
+  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+
   constructor(
     private editorService: EditorService,
     private confirmDialogService: ConfirmDialogService,
@@ -72,7 +86,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     private elementRef: ElementRef,
     private rdfService: RdfService,
     private shapeSettingsStateService: ShapeSettingsStateService,
-    private electronTunnelService: ElectronTunnelService,
+    private detectorRef: ChangeDetectorRef,
     public sidebarService: SidebarService
   ) {}
 
@@ -129,6 +143,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
           this.modelApiService.deleteFile(aspectModelFileName).subscribe(() => {
             this.sidebarService.resetNamespaces();
             this.initNamespaces();
+            this.electronSignalsService.call('requestRefreshWorkspaces');
           });
           this.selectedNamespace = null;
           this.selectedNamespaceElements = null;
@@ -208,7 +223,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
               }
               // Update electron data
               const [namespace, version, file] = absoluteFileName.split(':');
-              this.electronTunnelService.updateWindowInfo(`${namespace}:${version}`, file);
+              this.electronSignalsService.call('updateWindowInfo', {namespace: `${namespace}:${version}`, file, fromWorkspace: true});
             })
           )
         )
@@ -246,9 +261,10 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
 
   public initNamespaces() {
     this.loadingNamespaces = true;
-    this.modelApiService
-      .getNamespacesAppendWithFiles()
+    this.editorService
+      .loadExternalModels()
       .pipe(
+        switchMap(() => this.modelApiService.getNamespacesAppendWithFiles()),
         tap(data => {
           this.sidebarService.resetNamespaces();
           data.forEach((namespace: string) => {
@@ -263,7 +279,10 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
             }
           });
         }),
-        finalize(() => (this.loadingNamespaces = false))
+        finalize(() => {
+          this.loadingNamespaces = false;
+          this.detectorRef.detectChanges();
+        })
       )
       .subscribe();
   }
@@ -317,6 +336,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
         )}`,
       });
     }
+
     this.selectedNamespaceElements = cachedFile
       ?.getAllElements<BaseMetaModelElement>()
       .filter(elem => this.getType(elem))

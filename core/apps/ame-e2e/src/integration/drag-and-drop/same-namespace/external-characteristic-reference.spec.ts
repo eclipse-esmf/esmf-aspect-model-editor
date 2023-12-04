@@ -13,6 +13,7 @@
 
 /// <reference types="Cypress" />
 
+import {cyHelp} from '../../../support/helpers';
 import {
   SELECTOR_ecCharacteristic,
   SELECTOR_fileMenuFindElements,
@@ -45,6 +46,7 @@ describe('Test drag and drop ext characteristic', () => {
     cy.visitDefault().then(() =>
       cy
         .startModelling()
+        .then(() => cyHelp.checkAspectDefaultExists())
         .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
         .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
         .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}).wait(3000))

@@ -220,8 +220,10 @@ export class ModelApiService {
   /*
    *This method will get all the errors and notify the user for those which are correctable.
    */
-  validate(rdfContent: string): Observable<Array<ViolationError>> {
-    return this.getViolationError(rdfContent).pipe(tap(errors => this.modelValidatorService.notifyCorrectableErrors(errors)));
+  validate(rdfContent: string, showNotifications = true): Observable<Array<ViolationError>> {
+    return this.getViolationError(rdfContent).pipe(
+      tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors))
+    );
   }
 
   getViolationError(rdfContent: string): Observable<Array<ViolationError>> {

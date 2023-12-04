@@ -12,9 +12,9 @@
  */
 import {ModelApiService} from '@ame/api';
 import {RdfService} from '@ame/rdf/services';
-import {ElectronTunnelService, NotificationsService} from '@ame/shared';
+import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
 import {DialogRef} from '@angular/cdk/dialog';
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {NamedNode} from 'n3';
 import {catchError, of, switchMap, tap} from 'rxjs';
@@ -40,11 +40,12 @@ import {catchError, of, switchMap, tap} from 'rxjs';
   ],
 })
 export class OpenElementWindowComponent implements OnInit {
+  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+
   constructor(
     private dialogRef: DialogRef<OpenElementWindowComponent>,
     private rdfService: RdfService,
     private modelApiService: ModelApiService,
-    private electronTunnelService: ElectronTunnelService,
     private notificationService: NotificationsService,
     @Inject(MAT_DIALOG_DATA) private elementInfo: {urn: string; file: string}
   ) {}
@@ -58,10 +59,11 @@ export class OpenElementWindowComponent implements OnInit {
         tap(rdfModel => {
           const quads = rdfModel.store.getQuads(new NamedNode(this.elementInfo.urn), null, null, null);
           if (quads.length) {
-            this.electronTunnelService.openWindow({
+            this.electronSignalsService.call('openWindow', {
               namespace: namespace,
               file: this.elementInfo.file,
               editElement: this.elementInfo.urn,
+              fromWorkspace: true,
             });
           } else {
             this.notificationService.error({

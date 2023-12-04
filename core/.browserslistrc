@@ -19,4 +19,3 @@ not IE 11 # Angular supports IE 11 only as an opt-in. To opt-in, remove the 'not
 
 not ios_saf 15.2-15.3
 not safari 15.2-15.3
-not op_mini all

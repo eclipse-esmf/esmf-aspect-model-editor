@@ -13,13 +13,14 @@
 
 /// <reference types="Cypress" />
 
+import {cyHelp} from '../../../support/helpers';
 import {
   SELECTOR_ecProperty,
   SELECTOR_fileMenuFindElements,
   SELECTOR_namespaceFileMenuButton,
   SELECTOR_openNamespacesButton,
 } from '../../../support/constants';
-import {checkAspectTree, checkRelationParentChild, connectElements, dragExternalReferenceWithChildren} from '../../../support/utils';
+import {checkRelationParentChild, connectElements} from '../../../support/utils';
 
 describe('Test drag and drop ext properties', () => {
   it('can add Property from external reference with different namespace', () => {
@@ -42,6 +43,7 @@ describe('Test drag and drop ext properties', () => {
     cy.visitDefault().then(() =>
       cy
         .startModelling()
+        .then(() => cyHelp.checkAspectDefaultExists())
         .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
         .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
         .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}).wait(3000))

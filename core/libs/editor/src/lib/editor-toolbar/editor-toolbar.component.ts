@@ -24,7 +24,8 @@ import {
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
 import {
   BindingsService,
-  ElectronTunnelService,
+  ElectronSignals,
+  ElectronSignalsService,
   LoadingScreenOptions,
   LoadingScreenService,
   ModelSavingTrackerService,
@@ -65,6 +66,8 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   private loadingScreen$: Subscription;
   private loadingScreenOptions: LoadingScreenOptions;
 
+  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+
   get labelExpandCollapse() {
     return this.isAllShapesExpanded ? 'Collapse all' : 'Expand all';
   }
@@ -87,7 +90,6 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     private namespaceManagerService: NamespacesManagerService,
     private shapeSettingsService: ShapeSettingsService,
     private loadingScreenService: LoadingScreenService,
-    private electronService: ElectronTunnelService,
     private modelSaveTracker: ModelSavingTrackerService
   ) {}
 
@@ -111,7 +113,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   openWindow() {
-    this.electronService.openWindow();
+    this.electronSignalsService.call('openWindow', null);
   }
 
   // Deactivates the bug where the shape can not be removed
@@ -184,13 +186,19 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   addFileToNamespace(event: any): void {
     this.validateFile(() => {
-      this.onAddFileToNamespace(event.target.files[0]).pipe(take(1)).subscribe();
+      this.onAddFileToNamespace(event.target.files[0])
+        .pipe(take(1))
+        .subscribe(() => {
+          this.electronSignalsService.call('requestRefreshWorkspaces');
+        });
       event.target.value = '';
     });
   }
 
   onAddFileToNamespace(file: File): Observable<RdfModel> {
-    return readFile(file).pipe(switchMap(fileContent => this.fileHandlingService.addFileToWorkspace(file.name, fileContent)));
+    return readFile(file).pipe(
+      switchMap(fileContent => this.fileHandlingService.addFileToWorkspace(file.name, fileContent, {showNotifications: true}))
+    );
   }
 
   uploadZip(event: any) {

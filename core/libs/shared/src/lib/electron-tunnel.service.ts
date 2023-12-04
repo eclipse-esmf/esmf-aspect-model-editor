@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {IpcRenderer} from 'electron';
 import {BehaviorSubject, Observable, catchError, of, switchMap} from 'rxjs';
 import {StartupData, StartupPayload} from './model';
@@ -21,6 +21,8 @@ import {SaveModelDialogService, ShapeSettingsService} from '@ame/editor';
 import {MxGraphService} from '@ame/mx-graph';
 import {NamespacesCacheService} from '@ame/cache';
 import {BaseMetaModelElement} from '@ame/meta-model';
+import {SidebarService} from './sidebar.service';
+import {ElectronSignals, ElectronSignalsService} from './electron-signals.service';
 
 export enum ElectronEvents {
   REQUEST_CREATE_WINDOW = 'REQUEST_CREATE_WINDOW',
@@ -52,6 +54,10 @@ export enum ElectronEvents {
 
   // Highlight element
   REQUEST_EDIT_ELEMENT = 'REQUEST_EDIT_ELEMENT',
+
+  // Refresh workspace
+  REQUEST_REFRESH_WORKSPACE = 'REQUEST_REFRESH_WORKSPACE',
+  SIGNAL_REFRESH_WORKSPACE = 'SIGNAL_REFRESH_WORKSPACE',
 }
 
 @Injectable({
@@ -61,6 +67,7 @@ export class ElectronTunnelService {
   public windowInfo: StartupData;
   public ipcRenderer: IpcRenderer = window.require?.('electron').ipcRenderer;
   public startUpData$ = new BehaviorSubject<{isFirstWindow: boolean; model: string}>(null);
+  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
 
   constructor(
     private notificationsService: NotificationsService,
@@ -69,6 +76,7 @@ export class ElectronTunnelService {
     private mxGraphService: MxGraphService,
     private shapeSettingsSettings: ShapeSettingsService,
     private namespaceCacheService: NamespacesCacheService,
+    private sidebarService: SidebarService,
     private ngZone: NgZone
   ) {}
 
@@ -80,18 +88,31 @@ export class ElectronTunnelService {
     this.onServiceNotStarted();
     this.onNotificationRequest();
     this.onHighlightElement();
+    this.onRefreshWorkspace();
+    this.onWindowClose();
+
+    this.setListeners();
   }
 
-  public setWindowInfo(id: string, options: StartupPayload) {
-    this.windowInfo = {id, options};
+  private setListeners() {
+    this.electronSignalsService.addListener('updateWindowInfo', payload => this.updateWindowInfo(payload));
+    this.electronSignalsService.addListener('setWindowInfo', payload => this.setWindowInfo(payload));
+    this.electronSignalsService.addListener('openWindow', payload => this.openWindow(payload));
+    this.electronSignalsService.addListener('isFirstWindow', () => this.isFirstWindow());
+    this.electronSignalsService.addListener('requestStartupData', () => this.requestStartupData());
+    this.electronSignalsService.addListener('requestRefreshWorkspaces', () => this.requestRefreshWorkspaces());
   }
 
-  public updateWindowInfo(namespace: string, file: string) {
-    this.windowInfo.options = {namespace, file};
+  private setWindowInfo(info: StartupData) {
+    this.windowInfo = info;
+  }
+
+  private updateWindowInfo(options: StartupPayload) {
+    this.windowInfo.options = options;
     this.ipcRenderer.send(ElectronEvents.REQUEST_UPDATE_DATA, this.windowInfo.id, this.windowInfo.options);
   }
 
-  public openWindow(config?: StartupPayload) {
+  private openWindow(config?: StartupPayload) {
     if (!this.ipcRenderer) {
       return;
     }
@@ -107,24 +128,7 @@ export class ElectronTunnelService {
     this.ipcRenderer.send(ElectronEvents.REQUEST_CREATE_WINDOW, config);
   }
 
-  public onWindowClose() {
-    if (!this.ipcRenderer) {
-      return;
-    }
-
-    this.ipcRenderer.on(ElectronEvents.REQUEST_IS_FILE_SAVED, (_: unknown, windowId: string) => {
-      this.modelSavingTracker.isSaved$
-        .pipe(
-          switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialogService.openDialog())),
-          catchError(() => of(true))
-        )
-        .subscribe((close: boolean) => {
-          close && this.ipcRenderer.send(ElectronEvents.REQUEST_CLOSE_WINDOW, windowId);
-        });
-    });
-  }
-
-  public isFirstWindow(): Observable<boolean> {
+  private isFirstWindow(): Observable<boolean> {
     if (!this.ipcRenderer) {
       return of(true);
     }
@@ -140,7 +144,7 @@ export class ElectronTunnelService {
     });
   }
 
-  public requestStartupData(): Observable<StartupData> {
+  private requestStartupData(): Observable<StartupData> {
     if (!this.ipcRenderer) {
       return of(null);
     }
@@ -152,6 +156,31 @@ export class ElectronTunnelService {
         observer.next(data);
         observer.complete();
       });
+    });
+  }
+
+  private requestRefreshWorkspaces() {
+    if (!this.ipcRenderer) {
+      return;
+    }
+
+    this.ipcRenderer.send(ElectronEvents.SIGNAL_REFRESH_WORKSPACE, this.windowInfo?.id);
+  }
+
+  private onWindowClose() {
+    if (!this.ipcRenderer) {
+      return;
+    }
+
+    this.ipcRenderer.on(ElectronEvents.REQUEST_IS_FILE_SAVED, (_: unknown, windowId: string) => {
+      this.modelSavingTracker.isSaved$
+        .pipe(
+          switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialogService.openDialog())),
+          catchError(() => of(true))
+        )
+        .subscribe((close: boolean) => {
+          close && this.ipcRenderer.send(ElectronEvents.REQUEST_CLOSE_WINDOW, windowId);
+        });
     });
   }
 
@@ -182,6 +211,16 @@ export class ElectronTunnelService {
           this.mxGraphService.navigateToCellByUrn(element.aspectModelUrn);
         });
       }
+    });
+  }
+
+  private onRefreshWorkspace() {
+    if (!this.ipcRenderer) {
+      return;
+    }
+
+    this.ipcRenderer.on(ElectronEvents.REQUEST_REFRESH_WORKSPACE, () => {
+      this.sidebarService.refreshSidebarNamespaces();
     });
   }
 }

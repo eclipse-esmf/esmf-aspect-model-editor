@@ -68,9 +68,7 @@
             <mat-icon class="show-more material-icons" [matMenuTriggerFor]="menu" data-cy="namespaceFileMenuButton">more_horiz</mat-icon>
             <mat-menu #menu="matMenu">
               <button
-                [disabled]="
-                  isCurrentFile(namespace.name, file) || namespace.getFileStatus(file)?.outdated || namespace.getFileStatus(file)?.hasErrors
-                "
+                [disabled]="isLoadDisabled(namespace, file)"
                 (click)="loadInNewWindow(namespace, file)"
                 mat-menu-item
                 data-cy="fileMenuLoadAspectModelButton"
@@ -78,9 +76,7 @@
                 Open in new window
               </button>
               <button
-                [disabled]="
-                  isCurrentFile(namespace.name, file) || namespace.getFileStatus(file)?.outdated || namespace.getFileStatus(file)?.hasErrors
-                "
+                [disabled]="isLoadDisabled(namespace, file)"
                 (click)="onLoadAspectModel(namespace, file)"
                 mat-menu-item
                 data-cy="fileMenuLoadAspectModelButton"
@@ -88,7 +84,9 @@
                 Open
               </button>
               <button
-                [disabled]="isCurrentFile(namespace.name, file)"
+                [disabled]="
+                  isCurrentFile(namespace.name, file) || namespace.getFileStatus(file)?.outdated || namespace.getFileStatus(file)?.hasErrors
+                "
                 (click)="onSelectNamespaceFile(namespace, file)"
                 mat-menu-item
                 data-cy="fileMenuFindElements"
@@ -114,7 +112,10 @@
   </div>
 
   <div *ngIf="!namespaces?.length" class="no-namespaces">
-    <p class="no-namespaces__title">No namespaces to show</p>
+    <p class="no-namespaces__title">
+      No namespaces to show
+      <mat-icon class="refresh-icon" (click)="refreshSidebar()">refresh</mat-icon>
+    </p>
     <p class="no-namespaces__description">
       The namespaces can be imported either by clicking the plus button above then import namespaces or click the button bellow
     </p>

@@ -22,7 +22,7 @@ const {windowsManager} = require('./windows-manager');
 /**
  * @type string[]
  */
-const processesIDs = [];
+const processes = [];
 
 /**
  * @type BrowserWindow
@@ -30,13 +30,18 @@ const processesIDs = [];
 let mainWindow = null;
 
 async function cleanUpProcesses() {
-  for (const pid of processesIDs) {
-    console.log(`Killing process: ${pid}...`);
-    try {
-      await promises.exec(`kill -9 ${pid}`);
-      console.log(`Killed process: ${pid}`);
-    } catch (error) {
-      console.log(error);
+  for (const process of processes) {
+    if (!process) continue;
+
+    console.log(`Killing process: ${process.pid}...`);
+    const success = process.kill();
+    if (!success) {
+      try {
+        await promises.exec(platformData.isWin ? `taskkill /F /PID ${process.pid}` : `kill -9 ${process.pid}`);
+        console.log(`Killed process: ${process.pid}`);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 }
@@ -55,28 +60,28 @@ function startService() {
     })
     .then(port => {
       const rootPath = path.join(__dirname, '..', '..', '..', 'backend');
-      if (processesIDs.length === 0) {
+      if (processes.length === 0) {
         global.backendPort = port;
-        const loader = spawn(path.join(rootPath, `ame-backend${platformData.extension}`), [`-Dserver.port=${port}`]);
+        const process = spawn(path.join(rootPath, `ame-backend${platformData.extension}`), [`-Dserver.port=${port}`]);
 
-        loader.stdout.on('data', data => {
+        process.stdout.on('data', data => {
           if (data.includes(`Tomcat started on port(s): ${port}`)) {
             console.log(`Tomcat is now started on port ${port}`);
             windowsManager.createWindow();
           }
         });
 
-        loader.on('close', code => {
+        process.on('close', code => {
           // notify frontend
           console.log(`child process exited with code ${code}`);
         });
 
-        loader.on('error', error => {
+        process.on('error', error => {
           console.log('Error on opening Tomcat');
           console.log(error);
         });
 
-        processesIDs.push(loader.pid);
+        processes.push(process);
       }
     })
     .catch(error => {

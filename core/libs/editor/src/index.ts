@@ -24,3 +24,4 @@ export * from './lib/editor-toolbar/components/theme-switcher/theme-switcher.com
 export * from './lib/save-model-dialog/save-model-dialog.service';
 export * from './lib/open-element-window/open-element-window.component';
 export * from './lib/open-element-window/open-element-window.service';
+export * from './lib/large-file-warning-dialog/large-file-warning-dialog.service';

@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {APP_CONFIG, AppConfig, ElectronTunnelService, NamespaceModel} from '@ame/shared';
-import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {APP_CONFIG, AppConfig, NamespaceModel, ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
+import {inject, Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
 import {ExporterHelper, MigratorService} from '@ame/migrator';
@@ -39,6 +39,8 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
   @Output()
   public refresh = new EventEmitter<string>();
 
+  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+
   public get hasCurrentFile(): boolean {
     return this.namespaces.some(namespace => namespace.files.some(file => this.isCurrentFile(namespace.name, file)));
   }
@@ -56,7 +58,7 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
     private rdfService: RdfService,
     private migratorService: MigratorService,
     private namespaceManagerService: NamespacesManagerService,
-    private electronService: ElectronTunnelService,
+    private notificationService: NotificationsService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
@@ -100,6 +102,13 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
 
   public onSelectNamespaceFile(namespace: NamespaceModel, namespaceFile: string) {
     this.isSingleClick = true;
+    if (!this.isCurrentFileLoaded()) {
+      this.notificationService.info({
+        title: 'Load a Model to Continue',
+        message: 'To view the file contents, please load a model first.',
+      });
+      return;
+    }
     setTimeout(() => {
       if (!this.isSingleClick) {
         return;
@@ -133,7 +142,19 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
 
   public isCurrentFile(namespace: string, namespaceFile: string): boolean {
     const currentRdfModel = this.rdfService.currentRdfModel;
-    return (currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName) === `${namespace}:${namespaceFile}`;
+    return (
+      currentRdfModel?.loadedFromWorkspace &&
+      (currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName) === `${namespace}:${namespaceFile}`
+    );
+  }
+
+  public isCurrentFileLoaded() {
+    const currentRdfModel = this.rdfService.currentRdfModel;
+    return Boolean(currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName);
+  }
+
+  public isLoadDisabled(namespace: NamespaceModel, file: string) {
+    return this.isCurrentFile(namespace.name, file) || namespace.getFileStatus(file)?.outdated || namespace.getFileStatus(file)?.hasErrors;
   }
 
   public onLoadAspectModel(namespace: NamespaceModel, namespaceFile: string) {
@@ -142,7 +163,7 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
 
   public loadInNewWindow(namespace: NamespaceModel, namespaceFile: string) {
     this.isSingleClick = false;
-    this.electronService.openWindow({namespace: namespace.name, file: namespaceFile});
+    this.electronSignalsService.call('openWindow', {namespace: namespace.name, file: namespaceFile, fromWorkspace: true});
   }
 
   public importNamespace(event: any) {
@@ -164,8 +185,8 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
           return rdf.absoluteAspectModelFileName === `${mainPrefix.replace('urn:samm:', '').replace('#', '')}:${file}`;
         });
 
-        if (!rdfModel && !this.isCurrentFile(namespace.name, file)) {
-          namespace.setFileHasErrors(file, true);
+        if (!rdfModel && this.isCurrentFileLoaded() && !this.isCurrentFile(namespace.name, file)) {
+          namespace.setFileError(file, true);
           continue;
         }
 

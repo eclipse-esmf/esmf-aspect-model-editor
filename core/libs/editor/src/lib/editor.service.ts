@@ -14,7 +14,9 @@
 import {Injectable, inject} from '@angular/core';
 import {
   AlertService,
+  ElectronSignalsService,
   FileContentModel,
+  LoadingScreenService,
   LogService,
   ModelSavingTrackerService,
   NotificationsService,
@@ -28,7 +30,9 @@ import {mxgraph} from 'mxgraph-factory';
 import {
   BehaviorSubject,
   catchError,
+  delay,
   delayWhen,
+  filter,
   first,
   forkJoin,
   map,
@@ -84,6 +88,7 @@ import {RdfModel} from '@ame/rdf/utils';
 import {OpenApi, ViolationError} from './editor-toolbar';
 import {FiltersService, FILTER_ATTRIBUTES, FilterAttributesService} from '@ame/loader-filters';
 import {ShapeSettingsStateService} from './editor-dialog';
+import {LargeFileWarningService} from './large-file-warning-dialog/large-file-warning-dialog.service';
 
 @Injectable({
   providedIn: 'root',
@@ -135,7 +140,10 @@ export class EditorService {
     private titleService: TitleService,
     private sidebarService: SidebarService,
     private shapeSettingsStateService: ShapeSettingsStateService,
-    private modelSavingTrackerService: ModelSavingTrackerService
+    private modelSavingTrackerService: ModelSavingTrackerService,
+    private electronSignalsService: ElectronSignalsService,
+    private largeFileWarningService: LargeFileWarningService,
+    private loadingScreenService: LoadingScreenService
   ) {
     if (!environment.production) {
       window['angular.editorService'] = this;
@@ -270,6 +278,8 @@ export class EditorService {
       ),
       tap(() => {
         this.modelSavingTrackerService.updateSavedModel();
+        const [namespace, version, file] = (namespaceFileName || this.rdfService.currentRdfModel.absoluteAspectModelFileName).split(':');
+        this.electronSignalsService.call('updateWindowInfo', {namespace: `${namespace}:${version}`, file});
         if (!isDefault) {
           this.notificationsService.info({title: 'Aspect Model loaded', timeout: 3000});
         }
@@ -365,23 +375,44 @@ export class EditorService {
         rdfModel
       );
 
-      this.mxGraphService
-        .updateGraph(() => {
-          this.mxGraphService.firstTimeFold = true;
-          MxGraphHelper.filterMode = this.filtersService.currentFilter.filterType;
-          const rootElements = this.namespaceCacheService.currentCachedFile.getAllElements().filter(e => !e.parents.length);
-          const filtered = this.filtersService.filter(rootElements);
+      const elements = this.namespaceCacheService.currentCachedFile.getAllElements();
+      this.largeFileWarningService
+        .openDialog(elements.length)
+        .pipe(
+          first(),
+          filter(response => response !== 'cancel'),
+          tap(() => {
+            this.loadingScreenService.close();
+            requestAnimationFrame(() => {
+              this.loadingScreenService.open({title: 'Generating model'});
+            });
+          }),
+          delay(500), // Modal animation waiting before apps is blocked by mxGraph
+          switchMap(() => {
+            return this.mxGraphService.updateGraph(() => {
+              this.mxGraphService.firstTimeFold = true;
+              MxGraphHelper.filterMode = this.filtersService.currentFilter.filterType;
+              const rootElements = elements.filter(e => !e.parents.length);
+              const filtered = this.filtersService.filter(rootElements);
 
-          for (const elementTree of filtered) {
-            mxGraphRenderer.render(elementTree, null);
-          }
+              for (const elementTree of filtered) {
+                mxGraphRenderer.render(elementTree, null);
+              }
 
-          this.mxGraphAttributeService.inCollapsedMode && this.mxGraphService.foldCells();
-        })
-        .subscribe(() => {
-          this.mxGraphService.formatShapes(true);
-          this.mxGraphSetupService.centerGraph();
-          localStorage.removeItem(ValidateStatus.validating);
+              this.mxGraphAttributeService.inCollapsedMode && this.mxGraphService.foldCells();
+            });
+          })
+        )
+        .subscribe({
+          next: () => {
+            this.mxGraphService.formatShapes(true);
+            this.mxGraphSetupService.centerGraph();
+            localStorage.removeItem(ValidateStatus.validating);
+            this.loadingScreenService.close();
+          },
+          error: () => {
+            this.loadingScreenService.close();
+          },
         });
     } catch (error) {
       console.groupCollapsed('editor.service', error);

@@ -31,6 +31,8 @@ export const {
   mxCellOverlay,
   mxImage,
   mxRectangle,
+  mxRubberband,
+  mxCodecRegistry,
 } = mxgraphFactory({
   mxImageBasePath: 'assets/mxgraph/images',
   mxBasePath: 'assets/mxgraph',

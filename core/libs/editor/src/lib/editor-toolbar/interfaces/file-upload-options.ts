@@ -11,14 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export interface StartupPayload {
-  namespace: string;
-  file: string;
-  editElement?: string;
-  fromWorkspace?: boolean;
-}
-
-export interface StartupData {
-  id: string;
-  options: StartupPayload;
-}
+export type FileUploadOptions = Partial<{
+  showLoading: boolean;
+  showNotifications: boolean;
+}>;

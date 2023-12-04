@@ -39,6 +39,10 @@ import {
 const {mxConstants} = mxgraphFactory({});
 
 export class cyHelp {
+  public static checkAspectDefaultExists() {
+    return cy.clickShape('AspectDefault');
+  }
+
   public static closeSidebar() {
     return cy
       .get('body')

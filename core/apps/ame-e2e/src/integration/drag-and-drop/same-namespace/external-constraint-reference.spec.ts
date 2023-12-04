@@ -48,6 +48,7 @@ describe('Test drag and drop ext constraint', () => {
     cy.visitDefault().then(() =>
       cy
         .startModelling()
+        .then(() => cyHelp.checkAspectDefaultExists())
         .then(() => cy.get(SELECTOR_openNamespacesButton).click({force: true}))
         .then(() => cy.get(SELECTOR_namespaceFileMenuButton).click({force: true}))
         .then(() => cy.get(SELECTOR_fileMenuFindElements).click({force: true}).wait(3000))

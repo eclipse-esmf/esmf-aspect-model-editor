@@ -1,0 +1,27 @@
+<!--
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<h2 mat-dialog-title>The given Aspect Model has {{elementsCount}} elements</h2>
+
+<mat-dialog-content>
+  <p>
+    The recommended size of Aspect Models is up to ~ 100 elements (may be larger depending on the system performance).
+    <br />
+    When proceeding, be aware that user actions like zoom and formatting may impact the application reactivity.
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button (click)="close('cancel')">Cancel</button>
+  <button mat-flat-button color="primary" (click)="close('open')">Continue</button>
+</mat-dialog-actions>

@@ -13,3 +13,4 @@
 
 export * from './violation-error';
 export * from './detail-violation-info';
+export * from './file-upload-options';

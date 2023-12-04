@@ -132,21 +132,6 @@ a| Move all elements to a free space so that you can see them again.
 [[other-known-issues]]
 == Other known issues
 
-[[launch-windows-application-twice]]
-=== Launch Windows application twice
-
-[%noheader,cols="15%,85%"]
-|===
-h| Error
-a| If the application is started twice, there may be problems with some Aspect Models already displayed in the other application.
-
-h| Explanation
-a| Electron/Windows locks these files and recognizes that they are already used by another tool.
-
-h| Workaround
-a| Launch only one instance of the Aspect Model Editor.
-|===
-
 [[aspect-model-editor-installation-cannot-write-all-files]]
 === Aspect Model Editor installation cannot write all files
 

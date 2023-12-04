@@ -13,7 +13,7 @@
 
 // @ts-check
 
-/** @typedef {{namespace: string, file: string, editElement?: string}} WindowOptions */
+/** @typedef {{namespace: string, file: string, editElement?: string, fromWorkspace?: boolean}} WindowOptions */
 /** @typedef {{id: string, window: BrowserWindow, options: WindowOptions | null}} WindowInfo */
 
 const {BrowserWindow, ipcMain} = require('electron');
@@ -32,6 +32,8 @@ const {
   REQUEST_SHOW_NOTIFICATION,
   REQUEST_UPDATE_DATA,
   REQUEST_EDIT_ELEMENT,
+  SIGNAL_REFRESH_WORKSPACE,
+  REQUEST_REFRESH_WORKSPACE,
 } = require('./events');
 
 function uuid() {
@@ -61,12 +63,15 @@ class WindowsManager {
       this.createWindow(options);
     });
 
+    // updates loaded file data with new loaded one or with new file data
     ipcMain.on(REQUEST_UPDATE_DATA, (event, windowId, options) => {
       const windowInfo = this.activeWindows.find(windowInfo => windowInfo.id === windowId);
       if (!windowInfo) return;
+      console.log(`UPDATED: \x1b[36m${windowId}\x1b[0m with \x1b[36m${options.namespace} | ${options.file}\x1b[0m`);
       windowInfo.options = options;
     });
 
+    // maximizes window if it exists
     ipcMain.on(REQUEST_MAXIMIZE_WINDOW, (event, windowId) => {
       const window = this.activeWindows.find(windowInfo => windowInfo.id === windowId)?.window;
       if (window) {
@@ -74,10 +79,12 @@ class WindowsManager {
       }
     });
 
+    // checks to see if the is only one window opened
     ipcMain.on(REQUEST_IS_FIRST_WINDOW, event => {
       event.sender.send(RESPONSE_IS_FIRST_WINDOW, this.activeWindows.length <= 1);
     });
 
+    // closes window by force
     ipcMain.on(REQUEST_CLOSE_WINDOW, (event, windowId) => {
       const win = this.activeWindows.find(windowInfo => windowId === windowInfo.id)?.window;
       if (!win) {
@@ -86,12 +93,22 @@ class WindowsManager {
 
       win.destroy();
     });
+
+    ipcMain.on(SIGNAL_REFRESH_WORKSPACE, (_, windowId) => {
+      const otherWindows = this.activeWindows.filter(({id}) => id !== windowId);
+      for (const {window} of otherWindows) {
+        window.webContents.send(REQUEST_REFRESH_WORKSPACE);
+      }
+    });
   }
 
   /** @param {WindowOptions | null} options */
   createWindow(options) {
     const createdWindow = options
-      ? this.activeWindows.find(winInfo => options.namespace === winInfo.options?.namespace && winInfo.options?.file === options.file)
+      ? this.activeWindows.find(
+          winInfo =>
+            options.namespace === winInfo.options?.namespace && winInfo.options?.file === options.file && windowInfo.options?.fromWorkspace
+        )
       : null;
 
     if (createdWindow) {
@@ -148,7 +165,7 @@ class WindowsManager {
       const windowIndex = this.activeWindows.findIndex(({id}) => windowInfo.id === id);
       if (windowIndex >= 0) {
         this.activeWindows.splice(windowIndex, 1);
-        console.log(`Window closed: ${windowInfo.id} `);
+        console.log(`Window closed: \x1b[36m${windowInfo.id}\x1b[0m`);
       }
     });
 
@@ -187,7 +204,7 @@ class WindowsManager {
     if (process.argv.includes('--dev')) {
       return window.loadURL('http://localhost:4200').then(() => {
         this.#enableDevtools(window);
-        console.log(`DEV: Window ${id} created!`);
+        console.log(`Window \x1b[36m${id}\x1b[0m created!`);
       });
     }
     return window.loadFile('./dist/apps/ame/index.html').then(() => console.log(`Window ${id} created!`));

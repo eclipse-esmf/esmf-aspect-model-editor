@@ -74,8 +74,6 @@ export class AppComponent implements OnInit {
     } else {
       this.startupService.listenForLoading();
     }
-
-    this.electronTunnelService.onWindowClose();
   }
 
   // TODO: remove when implementing multiple windows after prototype

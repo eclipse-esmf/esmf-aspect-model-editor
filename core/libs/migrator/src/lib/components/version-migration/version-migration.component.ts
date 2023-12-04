@@ -17,7 +17,7 @@ import {EditorService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {Component, OnInit, inject} from '@angular/core';
-import {APP_CONFIG, AppConfig} from '@ame/shared';
+import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService} from '@ame/shared';
 import {Router} from '@angular/router';
 
 export const defaultNamespaces = (sammVersion: string) => [
@@ -38,8 +38,10 @@ export const defaultNamespaces = (sammVersion: string) => [
 })
 export class VersionMigrationComponent implements OnInit {
   public namespaces: {[namespace: string]: {name: string; migrated: boolean}[]};
+
   private config: AppConfig = inject(APP_CONFIG);
   private defaultNamespaces = defaultNamespaces(this.config.currentSammVersion);
+  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
 
   constructor(
     private rdfService: RdfService,
@@ -63,7 +65,10 @@ export class VersionMigrationComponent implements OnInit {
         }),
         switchMap(models => this.rewriteModels(models))
       )
-      .subscribe(() => this.router.navigate([{outlets: {migrator: 'migration-success'}}]));
+      .subscribe(() => {
+        this.electronSignalsService.call('requestRefreshWorkspaces');
+        this.router.navigate([{outlets: {migrator: 'migration-success'}}]);
+      });
   }
 
   getNamespaceExplicitVersioning(namespace: string) {
