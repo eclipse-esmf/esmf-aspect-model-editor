@@ -11,7 +11,7 @@ image:create-new-model.png[width=80%]
 image::start-modeling-ui.png[width=80%]
 . You can also modify the shown TTL code manually within the text area.
 +
-image:start-modeling-edit-ui.png[width=80%]
+image:load-model.png[width=80%]
 . Click *Start modeling*.
 
 == Save the model

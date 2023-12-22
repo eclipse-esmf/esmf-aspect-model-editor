@@ -45,17 +45,3 @@ To save a model, proceed as follows:
 * Click *Save to Workspace* to save the current namespace to the Workspace.
 
 TIP: For saving a new version of a model without overriding the existing one, see xref:modeling/model-versions.adoc[Model versions].
-
-[[auto-save]]
-== Auto-save
-
-The Aspect Model Editor will auto-save your model in the background every 5 minutes, please confirm.
-After restarting The Aspect Model Editor you will be asked whether you want to load the auto-saved model or dismiss it and start from scratch.
-
-image::autosaving.png[width=100%]
-
-++++
-<style>
-  .imageblock {flex-direction: row !important;}
-</style>
-++++
