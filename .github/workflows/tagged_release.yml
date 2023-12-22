@@ -168,19 +168,19 @@ jobs:
 
       - name: Build electron app (Mac)
         if: matrix.os == 'macos-latest'
-        run: npm run electron-builder-mac-prod
+        run: npm run build:mac:prod
         working-directory: core
 
       - name: Build electron app (Linux)
         if: matrix.os == 'ubuntu-20.04'
         run: |
-          npm run electron-builder-linux-prod
+          npm run build:linux:prod
           mv electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
         working-directory: core
 
       - name: Build electron app (Windows)
         if: matrix.os == 'windows-latest'
-        run: npm run electron-builder-win-prod
+        run: npm run build:win:prod
         working-directory: core
 
       - name: Create Windows installer
