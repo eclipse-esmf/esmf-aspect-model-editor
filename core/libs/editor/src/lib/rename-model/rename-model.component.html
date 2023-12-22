@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h3 mat-dialog-title class="dialog-title">Declare name of Shared Model</h3>
+<h2 mat-dialog-title>Declare name of Shared Model</h2>
 <button class="close-button" mat-icon-button tabindex="-1" (click)="closeAndGiveResult(false)">
   <mat-icon>close</mat-icon>
 </button>
@@ -24,8 +24,8 @@
 
   <mat-form-field>
     <input [formControl]="fileNameControl" name="file-name" matInput placeholder="Name" data-cy="file-rename" />
-    <span matSuffix>.ttl</span>
-    <mat-error *ngIf="fileNameControl.getError('required')">This field is required</mat-error>
+    <span matSuffix class="input-suffix">.ttl</span>
+    <mat-error *ngIf="fileNameControl.getError('required')">* This field is required</mat-error>
     <mat-error *ngIf="fileNameControl.getError('pattern')"
       >Allowed characters: alphanumeric, space, dot(.), minus(-) and underscore(_)</mat-error
     >

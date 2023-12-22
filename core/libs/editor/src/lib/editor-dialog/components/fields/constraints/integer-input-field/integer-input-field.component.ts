@@ -18,6 +18,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-integer-input-field',
   templateUrl: './integer-input-field.component.html',
+  styleUrls: ['../../field.scss'],
 })
 export class IntegerInputFieldComponent extends InputFieldComponent<DefaultFixedPointConstraint> implements OnInit, OnDestroy {
   constructor() {

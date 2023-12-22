@@ -16,7 +16,7 @@ import {EditorService, ShapeSettingsService} from '@ame/editor';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {MigratorService} from '@ame/migrator';
 import {MxGraphService} from '@ame/mx-graph';
-import {ElectronTunnelService, LoadingScreenService, ModelSavingTrackerService, SidebarService} from '@ame/shared';
+import {ElectronSignalsService, ElectronTunnelService, LoadingScreenService, ModelSavingTrackerService, SidebarService} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {Observable, filter, of, switchMap, take, tap} from 'rxjs';
@@ -30,6 +30,7 @@ export class StartupService {
     private editorService: EditorService,
     private modelSaveTracker: ModelSavingTrackerService,
     private electronTunnelService: ElectronTunnelService,
+    private electronSignalsService: ElectronSignalsService,
     private loadingScreenService: LoadingScreenService,
     private shapeSettingsSettings: ShapeSettingsService,
     private namespaceCacheService: NamespacesCacheService,
@@ -54,10 +55,18 @@ export class StartupService {
   }
 
   loadModel(model: string): Observable<any> {
-    const options = this.electronTunnelService.windowInfo?.options;
-
+    let options;
     this.loadingScreenService.open({title: 'Loading model', content: 'Please wait until the model is loaded!'});
-    return this.editorService.loadNewAspectModel(model, options ? `${options.namespace}:${options.file}` : '').pipe(
+
+    return this.electronSignalsService.call('requestWindowData').pipe(
+      tap(data => (options = data.options)),
+      switchMap(() =>
+        this.editorService.loadNewAspectModel({
+          rdfAspectModel: model,
+          namespaceFileName: options ? `${options.namespace}:${options.file}` : '',
+          fromWorkspace: options?.fromWorkspace,
+        })
+      ),
       tap(() => {
         this.editElement(options?.editElement);
         this.modelSaveTracker.updateSavedModel();

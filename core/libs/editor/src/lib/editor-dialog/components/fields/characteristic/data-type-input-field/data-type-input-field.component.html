@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="getControl('dataType')?.disabled ? 'always' : 'auto'" appearance="fill">
+<mat-form-field [floatLabel]="getControl('dataType')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="dataType">dataType</mat-label>
   <input #dataType [matAutocomplete]="auto" [formControl]="getControl('dataType')" matInput name="dataType" data-cy="dataType" />
   <button
@@ -25,12 +25,12 @@
     <mat-icon>close</mat-icon>
   </button>
 
-  <mat-error *ngIf="getControl('dataType')?.errors?.checkShapeName">
-    Please select a different name as this one is of different type
-  </mat-error>
-  <mat-error *ngIf="getControl('dataType')?.errors?.checkShapeNameExtRef">
-    Please select a different name as this one is of different type in the same namespace
-  </mat-error>
+  <mat-error *ngIf="getControl('dataType')?.errors?.checkShapeName"
+    >Please select a different name as this one is of different type</mat-error
+  >
+  <mat-error *ngIf="getControl('dataType')?.errors?.checkShapeNameExtRef"
+    >Please select a different name as this one is of different type in the same namespace</mat-error
+  >
 
   <mat-autocomplete #auto="matAutocomplete" class="characteristic-datatype-autocomplete">
     <mat-optgroup *ngIf="!entitiesDisabled && filteredEntityTypes$ | async as filteredEntityTypes" label="Entities">

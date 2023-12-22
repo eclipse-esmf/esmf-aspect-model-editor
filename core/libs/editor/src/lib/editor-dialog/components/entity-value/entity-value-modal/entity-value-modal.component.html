@@ -29,6 +29,7 @@
         name="entityValueName"
         data-cy="entityValueName"
       />
+      <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('required')"> Name is required </mat-error>
       <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('checkShapeName')">
         Name already exists, please choose another one
       </mat-error>
@@ -36,8 +37,13 @@
         Name must not contain whitespaces
       </mat-error>
     </mat-form-field>
-    <ame-entity-value-modal-table [form]="form" [entity]="entity" [entityValue]="entityValue" [enumeration]="enumeration">
-    </ame-entity-value-modal-table>
+
+    <ame-entity-value-modal-table
+      [form]="form"
+      [entity]="entity"
+      [entityValue]="entityValue"
+      [enumeration]="enumeration"
+    ></ame-entity-value-modal-table>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

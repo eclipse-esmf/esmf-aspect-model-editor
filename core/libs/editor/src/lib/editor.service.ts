@@ -13,6 +13,7 @@
 
 import {Injectable, inject} from '@angular/core';
 import {
+  BrowserService,
   AlertService,
   ElectronSignalsService,
   FileContentModel,
@@ -89,6 +90,7 @@ import {OpenApi, ViolationError} from './editor-toolbar';
 import {FiltersService, FILTER_ATTRIBUTES, FilterAttributesService} from '@ame/loader-filters';
 import {ShapeSettingsStateService} from './editor-dialog';
 import {LargeFileWarningService} from './large-file-warning-dialog/large-file-warning-dialog.service';
+import {LoadModelPayload} from './models/load-model-payload.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -143,7 +145,8 @@ export class EditorService {
     private modelSavingTrackerService: ModelSavingTrackerService,
     private electronSignalsService: ElectronSignalsService,
     private largeFileWarningService: LargeFileWarningService,
-    private loadingScreenService: LoadingScreenService
+    private loadingScreenService: LoadingScreenService,
+    private browserService: BrowserService
   ) {
     if (!environment.production) {
       window['angular.editorService'] = this;
@@ -249,7 +252,7 @@ export class EditorService {
       switchMap(isSameModelContent =>
         !isSameModelContent ? this.openReloadConfirmationDialog(currentModel.absoluteAspectModelFileName) : of(false)
       ),
-      switchMap(isApprove => (isApprove ? this.loadNewAspectModel(fileContent) : of(null))),
+      switchMap(isApprove => (isApprove ? this.loadNewAspectModel({rdfAspectModel: fileContent}) : of(null))),
       map(() => this.rdfService.currentRdfModel)
     );
   }
@@ -266,21 +269,34 @@ export class EditorService {
     });
   }
 
-  loadNewAspectModel(rdfAspectModel: string, namespaceFileName?: string, isDefault?: boolean) {
+  loadNewAspectModel(payload: LoadModelPayload) {
     this.sidebarService.refreshSidebar();
     this.removeLastSavedRdf();
     this.notificationsService.info({title: 'Loading model', timeout: 2000});
 
-    return this.rdfService.loadModel(rdfAspectModel, namespaceFileName).pipe(
+    return this.rdfService.loadModel(payload.rdfAspectModel, payload.namespaceFileName || '').pipe(
       switchMap(loadedRdfModel => this.loadExternalModels(loadedRdfModel).pipe(map(() => loadedRdfModel))),
       switchMap(loadedRdfModel =>
-        this.loadCurrentModel(loadedRdfModel, rdfAspectModel, namespaceFileName || loadedRdfModel.absoluteAspectModelFileName)
+        this.loadCurrentModel(
+          loadedRdfModel,
+          payload.rdfAspectModel,
+          payload.namespaceFileName || loadedRdfModel.absoluteAspectModelFileName
+        )
       ),
       tap(() => {
         this.modelSavingTrackerService.updateSavedModel();
-        const [namespace, version, file] = (namespaceFileName || this.rdfService.currentRdfModel.absoluteAspectModelFileName).split(':');
-        this.electronSignalsService.call('updateWindowInfo', {namespace: `${namespace}:${version}`, file});
-        if (!isDefault) {
+        const [namespace, version, file] = (payload.namespaceFileName || this.rdfService.currentRdfModel.absoluteAspectModelFileName).split(
+          ':'
+        );
+
+        if (this.browserService.isStartedAsElectronApp() || window.require) {
+          this.electronSignalsService.call('updateWindowInfo', {
+            namespace: `${namespace}:${version}`,
+            fromWorkspace: payload.fromWorkspace,
+            file,
+          });
+        }
+        if (!payload.isDefault) {
           this.notificationsService.info({title: 'Aspect Model loaded', timeout: 3000});
         }
       })
@@ -663,7 +679,7 @@ export class EditorService {
   }
 
   formatAspect() {
-    this.mxGraphService.formatShapes(true);
+    this.mxGraphService.formatShapes(true, true);
   }
 
   refreshValidateModel() {

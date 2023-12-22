@@ -50,6 +50,7 @@ export class ModelValidatorService {
     violationErrors.forEach((error: ViolationError) => {
       this.notificationsService.validationError({
         title: error.message,
+        message: error.fix[0], //TODO should be changed, when more fixes are available
         link: error.focusNode,
         timeout: 5000,
       });

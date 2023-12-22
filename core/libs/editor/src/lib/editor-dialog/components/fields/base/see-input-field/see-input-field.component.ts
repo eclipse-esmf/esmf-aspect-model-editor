@@ -28,7 +28,7 @@ interface SeeElement {
 @Component({
   selector: 'ame-see-input-field',
   templateUrl: './see-input-field.component.html',
-  styleUrls: ['./see-input-field.component.scss'],
+  styleUrls: ['./see-input-field.component.scss', '../../field.scss'],
 })
 export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
   @ViewChild('see', {static: true}) seeInput;

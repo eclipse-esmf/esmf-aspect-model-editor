@@ -25,6 +25,11 @@ export class HttpHeaderBuilder {
     return this;
   }
 
+  withTextContentType(): HttpHeaderBuilder {
+    this.httpHeaders = this.httpHeaders.append('Content-Type', 'text');
+    return this;
+  }
+
   withUrn(urn: string): HttpHeaderBuilder {
     this.httpHeaders = this.httpHeaders.append('Ame-Model-Urn', urn);
     return this;

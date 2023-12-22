@@ -26,5 +26,6 @@ export interface AppConfig {
     models: string;
     generate: string;
     package: string;
+    fileHandling: string;
   };
 }

@@ -13,28 +13,6 @@
 
 :host {
   overflow: hidden;
-
-  ::ng-deep {
-    .as-split-area {
-      overflow-y: hidden !important;
-    }
-
-    .as-split-gutter {
-      flex-basis: 8px !important;
-      background-color: var(--ame-gray-5);
-      border-left: 2px solid var(--ame-gray-5) !important;
-      transition: 150ms;
-
-      &:hover {
-        border-left-color: #007bc7 !important;
-      }
-    }
-
-    .as-split-gutter-icon {
-      background-image: url('../../../assets/config/editor/img/drag.svg') !important;
-      background-size: 20px;
-    }
-  }
 }
 
 ::ng-deep {
@@ -96,6 +74,50 @@
 }
 
 ame-editor-sidebar {
-  box-shadow: 10px 0 5px -2px #888;
-  border-right: 1px solid var(--ame-gray-10);
+  flex: 0 0 auto;
+}
+
+.editor {
+  display: flex;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+.info-section {
+  position: relative;
+  flex: 1 0 auto;
+  transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+
+  &__gutter {
+    display: flex;
+    place-items: center;
+    position: absolute;
+    right: -1rem;
+    top: 0;
+    height: 100%;
+    width: 1rem;
+    z-index: 10;
+    overflow: hidden;
+    user-select: none;
+    cursor: ew-resize;
+
+    &:hover > .info-section__indication-line,
+    &:not(:hover) > .info-section__icon {
+      opacity: 1;
+    }
+  }
+
+  &__indication-line {
+    width: 2px;
+    height: 100%;
+    background-color: var(--ame-primary);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  &__icon {
+    margin-left: -0.375rem;
+    opacity: 0.75;
+    transition: opacity 0.35s ease;
+  }
 }

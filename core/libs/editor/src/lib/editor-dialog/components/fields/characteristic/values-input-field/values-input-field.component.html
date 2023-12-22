@@ -11,7 +11,12 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field *ngIf="!hasComplexValues" [floatLabel]="getControl('values')?.disabled ? 'always' : 'auto'" appearance="fill">
+<mat-form-field
+  *ngIf="!hasComplexValues"
+  [floatLabel]="getControl('values')?.disabled ? 'always' : 'auto'"
+  appearance="fill"
+  subscriptSizing="dynamic"
+>
   <mat-label for="values">values</mat-label>
   <mat-chip-grid #chipList [formControl]="getControl('chipList')">
     <mat-chip-row *ngFor="let value of enumValues" [removable]="removable" (removed)="remove(value); onEnumChange()">

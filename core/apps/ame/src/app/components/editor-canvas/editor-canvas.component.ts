@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {filter, takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {debounceTime, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {fromEvent, Observable, Subject} from 'rxjs';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseMetaModelElement, ElementModelService} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
@@ -22,6 +22,10 @@ import {LogService} from '@ame/shared';
 import {ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
 import {ModelService} from '@ame/rdf/services';
 import {FormGroup} from '@angular/forms';
+import {CdkDragEnd} from '@angular/cdk/drag-drop';
+
+const SIDEBAR_MIN_WIDTH = 480;
+const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
 
 @Component({
   selector: 'ame-editor-canvas',
@@ -29,17 +33,18 @@ import {FormGroup} from '@angular/forms';
   styleUrls: ['./editor-canvas.component.scss'],
 })
 export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
+  @ViewChild('graph') graph: ElementRef;
   private unsubscribe: Subject<void> = new Subject();
 
-  private get selectedShapeForUpdate(): mxgraph.mxCell | null {
+  sidebarWidth = SIDEBAR_MIN_WIDTH;
+  sidebarDragPosition = {...SIDEBAR_DEFAULT_DRAG_POSITION};
+  isShapeSettingsOpened$: Observable<boolean>;
+
+  get selectedShapeForUpdate(): mxgraph.mxCell | null {
     return this.shapeSettingsStateService.selectedShapeForUpdate;
   }
 
-  public get isShapeSettingOpened() {
-    return this.shapeSettingsStateService.isShapeSettingOpened;
-  }
-
-  public get modelElement(): BaseMetaModelElement {
+  get modelElement(): BaseMetaModelElement {
     return this.shapeSettingsService.modelElement;
   }
 
@@ -54,52 +59,69 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
     private elementModelService: ElementModelService,
     private changeDetector: ChangeDetectorRef
   ) {
-    this.shapeSettingsStateService.onSettingsOpened$.subscribe(() =>
+    this.isShapeSettingsOpened$ = this.shapeSettingsStateService.onSettingsOpened$.asObservable();
+    this.isShapeSettingsOpened$.subscribe(() =>
       requestAnimationFrame(() => {
         this.changeDetector.detectChanges();
       })
     );
   }
 
-  ngAfterViewInit(): void {
-    this.shapeSettingsService.setGraphListeners();
-    this.shapeSettingsService.setContextMenuActions();
-    this.shapeSettingsService.setHotKeysActions();
-  }
-
   ngOnInit() {
     this.activatedRoute.queryParamMap
       .pipe(
         takeUntil(this.unsubscribe),
-        filter(params => !!params?.get('urn'))
+        map(params => params?.get('urn')),
+        filter(urn => !!urn),
+        tap(urn =>
+          this.mxGraphService.navigateToCellByUrn(urn) ? this.shapeSettingsService.editSelectedCell() : this.closeShapeSettings()
+        ),
+        switchMap(() =>
+          this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: {urn: null},
+            queryParamsHandling: 'merge',
+          })
+        )
       )
-      .subscribe(params => {
-        if (this.mxGraphService.navigateToCellByUrn(params?.get('urn'))) {
-          this.shapeSettingsService.editSelectedCell();
-        } else {
-          this.closeShapeSettings();
-        }
-        this.router.navigate([], {
-          relativeTo: this.activatedRoute,
-          queryParams: {urn: null},
-          queryParamsHandling: 'merge',
-        });
-      });
+      .subscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.shapeSettingsService.setGraphListeners();
+    this.shapeSettingsService.setContextMenuActions();
+    this.shapeSettingsService.setHotKeysActions();
+
+    this.watchScrollEvents();
+  }
+
+  onDragEnded(event: CdkDragEnd): void {
+    const newWidth = this.sidebarWidth - event.distance.x;
+    this.sidebarWidth = newWidth >= SIDEBAR_MIN_WIDTH ? newWidth : SIDEBAR_MIN_WIDTH;
+
+    if (newWidth < SIDEBAR_MIN_WIDTH) {
+      this.sidebarDragPosition = {...SIDEBAR_DEFAULT_DRAG_POSITION};
+    } else {
+      this.sidebarDragPosition = {
+        x: this.sidebarDragPosition.x + event.distance.x,
+        y: this.sidebarDragPosition.y,
+      };
+    }
   }
 
   closeShapeSettings() {
-    if (this.modelService.getLoadedAspectModel().rdfModel) {
-      this.shapeSettingsStateService.closeShapeSettings();
-      this.changeDetector.detectChanges();
+    if (!this.modelService.getLoadedAspectModel().rdfModel) {
+      return;
     }
+
+    this.shapeSettingsStateService.closeShapeSettings();
+    this.changeDetector.detectChanges();
   }
 
   onSave(formData: FormGroup) {
-    if (this.selectedShapeForUpdate) {
-      this.elementModelService.updateElement(this.selectedShapeForUpdate, formData);
-    } else {
-      this.logService.logInfo('Skip shape update because nothing is selected.');
-    }
+    this.selectedShapeForUpdate
+      ? this.elementModelService.updateElement(this.selectedShapeForUpdate, formData)
+      : this.logService.logInfo('Skip shape update because nothing is selected.');
 
     this.resetSelectedShapeForUpdate();
   }
@@ -107,6 +129,16 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   resetSelectedShapeForUpdate() {
     this.shapeSettingsStateService.closeShapeSettings();
     this.shapeSettingsService.unselectShapeForUpdate();
+  }
+
+  watchScrollEvents(): void {
+    fromEvent<Event>(this.graph.nativeElement, 'scroll')
+      .pipe(
+        debounceTime(250),
+        tap(event => this.mxGraphService.setScrollPosition(event)),
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {

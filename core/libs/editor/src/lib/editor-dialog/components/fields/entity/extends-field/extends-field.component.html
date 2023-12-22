@@ -10,7 +10,7 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<mat-form-field [floatLabel]="getControl('extendsValue')?.disabled ? 'always' : 'auto'" appearance="fill">
+<mat-form-field [floatLabel]="getControl('extendsValue')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="extendsValue">extends</mat-label>
   <input #extends [matAutocomplete]="auto" [formControl]="getControl('extendsValue')" matInput name="extendsValue" data-cy="extendsValue" />
   <button

@@ -18,6 +18,7 @@ import {LoadModelDialogComponent} from '../../load-model-dialog';
 import {catchError, filter, finalize, first, map, switchMap, tap} from 'rxjs/operators';
 import {forkJoin, from, Observable, of, throwError} from 'rxjs';
 import {
+  ElectronSignalsService,
   LoadingScreenOptions,
   LoadingScreenService,
   LogService,
@@ -68,7 +69,8 @@ export class FileHandlingService {
     private namespaceCacheService: NamespacesCacheService,
     private migratorService: MigratorService,
     private sidebarService: SidebarService,
-    private titleService: Title
+    private titleService: Title,
+    private electronSignalsService: ElectronSignalsService
   ) {}
 
   openLoadNewAspectModelDialog(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
@@ -87,15 +89,15 @@ export class FileHandlingService {
             .pipe(
               switchMap(validations => {
                 const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
-                return found ? throwError(() => found.message) : this.editorService.loadNewAspectModel(migratedModel, '');
+                return found ? throwError(() => found.message) : this.editorService.loadNewAspectModel({rdfAspectModel: migratedModel});
               })
             )
             .pipe(
               first(),
               catchError(error => {
-                this.notificationsService.error({
+                this.notificationsService.info({
                   title: 'Error when loading Aspect Model. Reverting to previous Aspect Model',
-                  message: `${error}`,
+                  message: error.message,
                   timeout: 5000,
                 });
                 return of(null);
@@ -168,6 +170,7 @@ export class FileHandlingService {
     let namespaces: string[];
     let isOverwrite: boolean;
     let isChangeFileName: boolean;
+    let isChangeNamespace: boolean;
 
     return this.modelService.synchronizeModelToRdf().pipe(
       switchMap(() => this.modelApiService.getNamespacesAppendWithFiles()),
@@ -181,7 +184,7 @@ export class FileHandlingService {
       map(() => {
         this.editorService.updateLastSavedRdf(false, this.rdfService.serializeModel(this.rdfService.currentRdfModel), new Date());
         isChangeFileName = modelState.loadedFromWorkspace && modelState.isNameChanged && isOverwrite === null;
-        const isChangeNamespace = modelState.loadedFromWorkspace && modelState.isNamespaceChanged;
+        isChangeNamespace = modelState.loadedFromWorkspace && modelState.isNamespaceChanged;
         return isChangeFileName || isChangeNamespace;
       }),
       switchMap(isWorkspaceChange => (isWorkspaceChange ? this.deleteModel(modelState.originalModelName) : of(null))),
@@ -204,6 +207,12 @@ export class FileHandlingService {
 
         this.rdfService.currentRdfModel.originalAbsoluteFileName = null;
         this.rdfService.currentRdfModel.loadedFromWorkspace = true;
+
+        this.electronSignalsService.call('updateWindowInfo', {
+          namespace: RdfModelUtil.getNamespaceFromRdf(modelState.newModelName),
+          fromWorkspace: true,
+          file: modelState.newFileName,
+        });
       }),
       finalize(() => this.loadingScreenService.close())
     );

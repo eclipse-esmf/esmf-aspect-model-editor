@@ -32,8 +32,8 @@
           (click)="onDelete(complexValue, $event)"
           matTooltip="Delete complex value {{ complexValue.name }}"
           data-cy="remove-entity-value"
-          >delete</mat-icon
-        >
+          >delete
+        </mat-icon>
       </div>
     </mat-panel-title>
   </mat-expansion-panel-header>
@@ -48,17 +48,35 @@
       <ng-container matColumnDef="key">
         <mat-header-cell *matHeaderCellDef>Property</mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{ element.key.property.name }}
+          <span
+            class="property-key"
+            matTooltip="{{ element.key.property.name }}{{ element.value.language ? '(' + element.value.language + ')' : '' }}"
+          >
+            <span class="property-key__field">
+              {{ element.key.property.name }}
+              <ng-container *ngIf="element.value.language"> ({{ element.value.language }}) </ng-container>
+            </span>
+          </span>
         </mat-cell>
       </ng-container>
       <!-- Value Column -->
       <ng-container matColumnDef="value">
         <mat-header-cell *matHeaderCellDef>Value</mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <mat-icon class="material-icons complex-value-icon" *ngIf="element?.isComplex" matTooltip="Complex Data type"
-            >view_module</mat-icon
-          >
-          {{ element.isComplex ? element.value.name : element.value }}
+          <ng-container [ngSwitch]="formFieldHelper.getDataType(element.key.property)">
+            <ng-container *ngSwitchCase="dataType.DEFAULT">
+              {{ element.value }}
+            </ng-container>
+
+            <ng-container *ngSwitchCase="dataType.LANG_STRING">
+              {{ element.value.value }}
+            </ng-container>
+
+            <ng-container *ngSwitchCase="dataType.COMPLEX">
+              <mat-icon class="material-icons complex-value-icon" matTooltip="Complex Data type">view_module</mat-icon>
+              {{ element.value.name }}
+            </ng-container>
+          </ng-container>
         </mat-cell>
       </ng-container>
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

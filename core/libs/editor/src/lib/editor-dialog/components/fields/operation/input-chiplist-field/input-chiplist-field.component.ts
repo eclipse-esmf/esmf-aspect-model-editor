@@ -24,6 +24,7 @@ import {ErrorStateMatcher} from '@angular/material/core';
 @Component({
   selector: 'ame-input-chiplist-field',
   templateUrl: './input-chiplist-field.component.html',
+  styleUrls: ['../../field.scss'],
 })
 export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;

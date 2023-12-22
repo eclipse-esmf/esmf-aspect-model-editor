@@ -12,7 +12,7 @@
  */
 
 import {DataFactory, NamedNode, Quad, Quad_Object, Util} from 'n3';
-import {DefaultEntity, DefaultEntityValue, Entity, OverWrittenProperty} from '@ame/meta-model';
+import {DefaultEntity, DefaultEntityValue, Entity, LangStringProperty, OverWrittenProperty} from '@ame/meta-model';
 import {EntityInstantiator} from './entity-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {Samm} from '@ame/vocabulary';
@@ -67,9 +67,12 @@ export class EntityValueInstantiator {
     for (const property of properties) {
       if (Util.isLiteral(property.object)) {
         this.metaModelElementInstantiator.getProperty({quad: property.predicate}, (overwrittenProperty: OverWrittenProperty) => {
-          defaultEntityValue.addProperty(overwrittenProperty, property.object.value);
+          const propertyValue = this.getPropertyValue(property);
+          defaultEntityValue.addProperty(overwrittenProperty, propertyValue);
+
           syncElementWithChildren(defaultEntityValue);
         });
+
         continue;
       }
 
@@ -90,6 +93,17 @@ export class EntityValueInstantiator {
     return this.cachedFile.resolveElement(defaultEntityValue);
   }
 
+  private getPropertyValue(property: Quad): string | LangStringProperty | DefaultEntityValue {
+    if (this.rdfModel.hasLocalTag(property)) {
+      return {
+        language: this.rdfModel.getLocale(property),
+        value: property.object.value,
+      };
+    }
+
+    return property.object.value;
+  }
+
   private instantiateEntityValue(property: Quad, defaultEntityValue: DefaultEntityValue) {
     const value = new EntityValueInstantiator(this.metaModelElementInstantiator).createEntityValue(
       this.metaModelElementInstantiator.rdfModel.findAnyProperty(property.object as NamedNode),
@@ -97,6 +111,8 @@ export class EntityValueInstantiator {
     );
     this.metaModelElementInstantiator.getProperty({quad: property.predicate}, (overwrittenProperty: OverWrittenProperty) => {
       defaultEntityValue.addProperty(overwrittenProperty, value);
+      defaultEntityValue.children.push(value);
+      value.parents.push(defaultEntityValue);
     });
   }
 

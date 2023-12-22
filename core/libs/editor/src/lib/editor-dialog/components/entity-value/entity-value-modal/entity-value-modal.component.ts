@@ -16,9 +16,17 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {EditorModelService} from '../../../editor-model.service';
 import {EditorDialogValidators} from '../../../validators';
-import {DefaultEntity, DefaultEntityValue, DefaultEnumeration, OverWrittenProperty} from '@ame/meta-model';
+import {
+  DefaultAbstractProperty,
+  DefaultEntity,
+  DefaultEntityValue,
+  DefaultEnumeration,
+  DefaultProperty,
+  OverWrittenProperty,
+} from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
+import {isDataTypeLangString} from '@ame/shared';
 
 export interface NewEntityValueDialogOptions {
   metaModel: DefaultEnumeration | DefaultEntityValue;
@@ -86,12 +94,17 @@ export class EntityValueModalComponent {
       newEntityValues: new FormControl([]),
     });
 
-    this.entity.allProperties.forEach((property: OverWrittenProperty<any>) => {
+    this.entity.allProperties.forEach((element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>) => {
       const validators = [];
-      if (!property.keys.optional) {
+      if (!element.keys.optional) {
         validators.push(EditorDialogValidators.requiredObject);
       }
-      this.propertiesForm.setControl(property.property.name, new FormControl(null, validators));
+
+      this.propertiesForm.setControl(element.property.name, new FormControl(null, validators));
+
+      if (element.property instanceof DefaultProperty && isDataTypeLangString(element.property)) {
+        this.propertiesForm.setControl(`${element.property.name}-lang`, new FormControl(null, validators));
+      }
     });
   }
 
@@ -134,17 +147,28 @@ export class EntityValueModalComponent {
     entityValue.name = this.entityValueName.value;
     entityValue.aspectModelUrn = this.getAspectModelUrnFromName(this.entityValueName.value);
     entityValue.entity = this.entity;
+    entityValue.addParent(this.enumeration);
 
-    this.entity.allProperties.forEach(data => {
-      const value = this.form.get('properties').get(data.property.name).value;
-      entityValue.addProperty(data, value);
+    this.entity.allProperties.forEach(element => {
+      const propertyForm = this.form.get('properties');
+      const value = propertyForm.get(element.property.name).value;
+
+      if (this.isDefaultPropertyWithLangString(element)) {
+        const language = propertyForm.get(`${element.property.name}-lang`).value;
+        entityValue.addProperty(element, {value: value, language: language});
+      } else {
+        entityValue.addProperty(element, value);
+      }
     });
 
-    entityValue.addParent(this.enumeration);
     return entityValue;
   }
 
   isEntityValueNameAlreadyUsed(entityValueName: string): boolean {
     return this.complexValues.some(value => value.name === entityValueName);
+  }
+
+  private isDefaultPropertyWithLangString(element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): boolean {
+    return element.property instanceof DefaultProperty && isDataTypeLangString(element.property);
   }
 }

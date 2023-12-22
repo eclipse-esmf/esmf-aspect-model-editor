@@ -13,8 +13,8 @@
 
 import {Injectable, NgZone, inject} from '@angular/core';
 import {IpcRenderer} from 'electron';
-import {BehaviorSubject, Observable, catchError, of, switchMap} from 'rxjs';
-import {StartupData, StartupPayload} from './model';
+import {BehaviorSubject, Observable, catchError, map, of, switchMap, take, tap} from 'rxjs';
+import {ElectronSignals, LockUnlockPayload, StartupData, StartupPayload} from './model';
 import {NotificationsService} from './notifications.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
 import {SaveModelDialogService, ShapeSettingsService} from '@ame/editor';
@@ -22,52 +22,19 @@ import {MxGraphService} from '@ame/mx-graph';
 import {NamespacesCacheService} from '@ame/cache';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {SidebarService} from './sidebar.service';
-import {ElectronSignals, ElectronSignalsService} from './electron-signals.service';
-
-export enum ElectronEvents {
-  REQUEST_CREATE_WINDOW = 'REQUEST_CREATE_WINDOW',
-  RESPONSE_CREATE_WINDOW = 'RESPONSE_CREATE_WINDOW',
-
-  // Is first window events
-  REQUEST_IS_FIRST_WINDOW = 'REQUEST_IS_FIRST_WINDOW',
-  RESPONSE_IS_FIRST_WINDOW = 'RESPONSE_IS_FIRST_WINDOW',
-
-  // Has backend error events
-  REQUEST_BACKEND_STARTUP_ERROR = 'REQUEST_BACKEND_STARTUP_ERROR',
-  RESPONSE_BACKEND_STARTUP_ERROR = 'RESPONSE_BACKEND_STARTUP_ERROR',
-
-  // Startup data events
-  REQUEST_STARTUP_DATA = 'REQUEST_STARTUP_DATA',
-  RESPONSE_STARTUP_DATA = 'RESPONSE_STARTUP_DATA',
-  REQUEST_UPDATE_DATA = 'REQUEST_UPDATE_DATA',
-
-  // Maximize window events
-  REQUEST_MAXIMIZE_WINDOW = 'REQUEST_MAXIMIZE_WINDOW',
-  RESPONSE_MAXIMIZE_WINDOW = 'RESPONSE_MAXIMIZE_WINDOW',
-
-  // On window close events
-  REQUEST_IS_FILE_SAVED = 'REQUEST_IS_FILE_SAVED',
-  REQUEST_CLOSE_WINDOW = 'REQUEST_CLOSE_WINDOW',
-
-  // Notifications requests
-  REQUEST_SHOW_NOTIFICATION = 'REQUEST_SHOW_NOTIFICATION',
-
-  // Highlight element
-  REQUEST_EDIT_ELEMENT = 'REQUEST_EDIT_ELEMENT',
-
-  // Refresh workspace
-  REQUEST_REFRESH_WORKSPACE = 'REQUEST_REFRESH_WORKSPACE',
-  SIGNAL_REFRESH_WORKSPACE = 'SIGNAL_REFRESH_WORKSPACE',
-}
+import {ElectronSignalsService} from './electron-signals.service';
+import {ElectronEvents} from './enums/electron-events.enum';
+import {ModelApiService} from '@ame/api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ElectronTunnelService {
-  public windowInfo: StartupData;
+  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+  private lockedFiles$ = new BehaviorSubject<LockUnlockPayload[]>([]);
+
   public ipcRenderer: IpcRenderer = window.require?.('electron').ipcRenderer;
   public startUpData$ = new BehaviorSubject<{isFirstWindow: boolean; model: string}>(null);
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
 
   constructor(
     private notificationsService: NotificationsService,
@@ -77,6 +44,7 @@ export class ElectronTunnelService {
     private shapeSettingsSettings: ShapeSettingsService,
     private namespaceCacheService: NamespacesCacheService,
     private sidebarService: SidebarService,
+    private modelApiService: ModelApiService,
     private ngZone: NgZone
   ) {}
 
@@ -90,33 +58,28 @@ export class ElectronTunnelService {
     this.onHighlightElement();
     this.onRefreshWorkspace();
     this.onWindowClose();
+    this.onLockUnlockFile();
+    this.onReceiveLockedFiles();
 
     this.setListeners();
+
+    this.requestLockedFiles();
   }
 
   private setListeners() {
     this.electronSignalsService.addListener('updateWindowInfo', payload => this.updateWindowInfo(payload));
-    this.electronSignalsService.addListener('setWindowInfo', payload => this.setWindowInfo(payload));
     this.electronSignalsService.addListener('openWindow', payload => this.openWindow(payload));
     this.electronSignalsService.addListener('isFirstWindow', () => this.isFirstWindow());
-    this.electronSignalsService.addListener('requestStartupData', () => this.requestStartupData());
+    this.electronSignalsService.addListener('requestMaximizeWindow', () => this.requestMaximizeWindow());
+    this.electronSignalsService.addListener('requestWindowData', () => this.requestWindowData());
     this.electronSignalsService.addListener('requestRefreshWorkspaces', () => this.requestRefreshWorkspaces());
   }
 
-  private setWindowInfo(info: StartupData) {
-    this.windowInfo = info;
-  }
-
   private updateWindowInfo(options: StartupPayload) {
-    this.windowInfo.options = options;
-    this.ipcRenderer.send(ElectronEvents.REQUEST_UPDATE_DATA, this.windowInfo.id, this.windowInfo.options);
+    this.ipcRenderer.send(ElectronEvents.REQUEST_UPDATE_DATA, options);
   }
 
   private openWindow(config?: StartupPayload) {
-    if (!this.ipcRenderer) {
-      return;
-    }
-
     if (!this.ipcRenderer) {
       this.notificationsService.error({
         title: 'Application not opened in electron',
@@ -144,19 +107,27 @@ export class ElectronTunnelService {
     });
   }
 
-  private requestStartupData(): Observable<StartupData> {
+  private requestWindowData(): Observable<StartupData> {
     if (!this.ipcRenderer) {
       return of(null);
     }
 
-    this.ipcRenderer.send(ElectronEvents.REQUEST_STARTUP_DATA);
     return new Observable(observer => {
-      this.ipcRenderer.on(ElectronEvents.RESPONSE_STARTUP_DATA, (_: unknown, data: StartupData) => {
-        this.ipcRenderer.send(ElectronEvents.REQUEST_MAXIMIZE_WINDOW, data.id);
+      this.ipcRenderer.on(ElectronEvents.RESPONSE_WINDOW_DATA, (_: unknown, data: StartupData) => {
         observer.next(data);
         observer.complete();
       });
+
+      this.ipcRenderer.send(ElectronEvents.REQUEST_WINDOW_DATA);
     });
+  }
+
+  private requestMaximizeWindow() {
+    if (!this.ipcRenderer) {
+      return;
+    }
+
+    this.ipcRenderer.send(ElectronEvents.REQUEST_MAXIMIZE_WINDOW);
   }
 
   private requestRefreshWorkspaces() {
@@ -164,7 +135,15 @@ export class ElectronTunnelService {
       return;
     }
 
-    this.ipcRenderer.send(ElectronEvents.SIGNAL_REFRESH_WORKSPACE, this.windowInfo?.id);
+    this.ipcRenderer.send(ElectronEvents.SIGNAL_REFRESH_WORKSPACE, true);
+  }
+
+  private requestLockedFiles() {
+    if (!this.ipcRenderer) {
+      return;
+    }
+
+    this.ipcRenderer.send(ElectronEvents.REQUEST_LOCKED_FILES);
   }
 
   private onWindowClose() {
@@ -176,6 +155,19 @@ export class ElectronTunnelService {
       this.modelSavingTracker.isSaved$
         .pipe(
           switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialogService.openDialog())),
+          switchMap(close =>
+            close
+              ? this.requestWindowData().pipe(
+                  switchMap(({options}) =>
+                    this.electronSignalsService.call('unlockFile', {
+                      namespace: options?.namespace,
+                      file: options?.file,
+                    })
+                  ),
+                  map(() => close)
+                )
+              : of(close)
+          ),
           catchError(() => of(true))
         )
         .subscribe((close: boolean) => {
@@ -221,6 +213,52 @@ export class ElectronTunnelService {
 
     this.ipcRenderer.on(ElectronEvents.REQUEST_REFRESH_WORKSPACE, () => {
       this.sidebarService.refreshSidebarNamespaces();
+    });
+  }
+
+  private onReceiveLockedFiles() {
+    this.ipcRenderer.on(ElectronEvents.RESPONSE_LOCKED_FILES, (_: unknown, files: LockUnlockPayload[]) => {
+      this.lockedFiles$.next(files);
+    });
+  }
+
+  private onLockUnlockFile() {
+    if (!this.ipcRenderer) {
+      return;
+    }
+
+    this.electronSignalsService.addListener('lockFile', ({namespace, file}) => {
+      return this.modelApiService.lockFile(namespace, file).pipe(
+        take(1),
+        tap(() => this.electronSignalsService.call('addLock', {namespace, file}))
+      );
+    });
+
+    this.electronSignalsService.addListener('unlockFile', ({namespace, file}) => {
+      return this.modelApiService.unlockFile(namespace, file).pipe(
+        take(1),
+        tap(() => this.electronSignalsService.call('removeLock', {namespace, file}))
+      );
+    });
+
+    this.ipcRenderer.on(ElectronEvents.REQUEST_LOCK_FILE, (_: unknown, namespace: string, file: string) => {
+      this.electronSignalsService.call('lockFile', {namespace, file}).subscribe();
+    });
+
+    this.ipcRenderer.on(ElectronEvents.REQUEST_UNLOCK_FILE, (_: unknown, namespace: string, file: string) => {
+      this.electronSignalsService.call('unlockFile', {namespace, file}).subscribe();
+    });
+
+    this.electronSignalsService.addListener('addLock', ({namespace, file}) => {
+      this.ipcRenderer.send(ElectronEvents.REQUEST_ADD_LOCK, {namespace, file});
+    });
+
+    this.electronSignalsService.addListener('removeLock', ({namespace, file}) => {
+      this.ipcRenderer.send(ElectronEvents.REQUEST_REMOVE_LOCK, {namespace, file});
+    });
+
+    this.electronSignalsService.addListener('lockedFiles', () => {
+      return this.lockedFiles$.asObservable();
     });
   }
 }

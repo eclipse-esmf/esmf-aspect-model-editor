@@ -11,22 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {
-  BaseMetaModelElement,
-  DefaultEntity,
-  DefaultEntityValue,
-  DefaultProperty,
-  DefaultTrait,
-  EntityValueProperty,
-  OverWrittenProperty,
-  Property,
-} from '@ame/meta-model';
-import {FormFieldHelper} from '@ame/editor';
+import {ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {BaseMetaModelElement, DefaultEntityValue, DefaultProperty, EntityValueProperty, LangStringProperty} from '@ame/meta-model';
+import {DataType, EntityValueUtil, FormFieldHelper} from '@ame/editor';
 import {InputFieldComponent} from '../../fields';
 import {MatTableDataSource} from '@angular/material/table';
 import {map, Observable, startWith} from 'rxjs';
+import * as locale from 'locale-codes';
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'ame-entity-value-table',
@@ -34,15 +27,24 @@ import {map, Observable, startWith} from 'rxjs';
   styleUrls: ['./entity-value-table.component.scss'],
 })
 export class EntityValueTableComponent extends InputFieldComponent<DefaultEntityValue> implements OnInit, OnChanges, OnDestroy {
-  public propertiesFormGroup: FormGroup = new FormGroup({});
-  public dataSource: MatTableDataSource<DefaultProperty>;
+  @ViewChild('autoTrigger') autocompleteTrigger: MatAutocompleteTrigger;
 
-  public filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
+  protected readonly EntityValueUtil = EntityValueUtil;
+  protected readonly formFieldHelper = FormFieldHelper;
+  protected readonly dataType = DataType;
 
-  // only used for displaying the name of an entity value within an input as string
-  public displayFormGroup = new FormGroup({});
+  displayedColumns = ['key', 'value'];
+  dataSource: MatTableDataSource<EntityValueProperty>;
 
-  public readonly displayedColumns = ['key', 'value'];
+  filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
+  filteredLanguageValues$: {[key: string]: Observable<any[]>} = {};
+
+  displayForm = new FormGroup({});
+  propertiesForm: FormGroup = new FormGroup({});
+
+  get entityValuePropertiesForm(): FormGroup {
+    return this.parentForm.get('entityValueProperties') as FormGroup;
+  }
 
   constructor(private changeDetector: ChangeDetectorRef) {
     super();
@@ -52,142 +54,120 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
     this.subscription.add(
       this.getMetaModelData().subscribe((metaModelElement: BaseMetaModelElement) => {
         this.metaModelElement = metaModelElement as DefaultEntityValue;
-        this.parentForm.setControl('entityValueProperties', this.propertiesFormGroup);
+        this.parentForm.setControl('entityValueProperties', this.propertiesForm);
 
-        const {properties, entity}: {properties: EntityValueProperty[]; entity: DefaultEntity} = this.metaModelElement;
+        const {properties, entity} = this.metaModelElement;
+
         if (!properties.length && entity.allProperties.length) {
           for (const property of entity.allProperties) {
             this.metaModelElement.addProperty(property);
           }
         }
 
-        this.metaModelElement.properties.forEach(property => {
-          this.propertiesFormGroup.setControl(
-            property.key.property.name,
-            new FormControl(property.value, property.key.keys.optional ? null : Validators.required)
-          );
+        this.metaModelElement.properties.forEach(entityValueProperty => {
+          const property = entityValueProperty.key.property;
+          const isLangString = EntityValueUtil.isDefaultPropertyWithLangString(entityValueProperty.key);
+          const validators = this.getValidators(entityValueProperty);
+          const propertyValue = this.extractPropertyValue(entityValueProperty, isLangString);
 
-          const propertyValue = property.value instanceof DefaultEntityValue ? property.value['name'] : null;
+          this.initializeFormControl(property.name, propertyValue, validators);
+          this.initializeFilteredEntityValues(property);
 
-          this.displayFormGroup.setControl(
-            property.key.property.name,
-            new FormControl(propertyValue, property.key.keys.optional ? null : Validators.required)
-          );
-
-          this.initFilteredEntityValues(property.key.property);
-          if (propertyValue) {
-            this.displayFormGroup.get(property.key.property.name).disable();
+          if (isLangString) {
+            this.handleLangStringProperty(entityValueProperty, property, validators);
           }
         });
 
-        this.dataSource = new MatTableDataSource(this.metaModelElement.properties.map(({key}) => key.property));
+        this.dataSource = new MatTableDataSource(this.metaModelElement.properties);
       })
     );
+  }
+
+  private getValidators(entityValueProperty: EntityValueProperty): (control: AbstractControl) => ValidationErrors | null {
+    return entityValueProperty.key.keys.optional ? null : Validators.required;
+  }
+
+  private extractPropertyValue(entityValueProperty: EntityValueProperty, isLangString: boolean) {
+    if (isLangString) {
+      return (entityValueProperty.value as LangStringProperty).value;
+    }
+
+    return entityValueProperty.value;
+  }
+
+  private initializeFormControl(
+    propertyName: string,
+    propertyValue: any,
+    validators: (control: AbstractControl) => ValidationErrors | null
+  ) {
+    this.propertiesForm.setControl(propertyName, new FormControl(propertyValue, validators));
+
+    if (propertyValue instanceof DefaultEntityValue) {
+      this.displayForm.setControl(propertyName, new FormControl(propertyValue['name'], validators));
+    } else {
+      this.displayForm.setControl(propertyName, new FormControl(propertyValue, validators));
+    }
+
+    if (propertyValue) {
+      this.displayForm.get(propertyName).disable();
+    }
+  }
+
+  private initializeFilteredEntityValues(property: DefaultProperty) {
+    this.filteredEntityValues$[property.name] = EntityValueUtil.initFilteredEntityValues(property, this.displayForm).pipe(
+      startWith(''),
+      map(value => this.getPropertyValues(property).filter(entityValue => entityValue.name.startsWith(value)))
+    );
+  }
+
+  private handleLangStringProperty(
+    entityValueProperty: EntityValueProperty,
+    property: DefaultProperty,
+    validators: (control: AbstractControl) => ValidationErrors | null
+  ) {
+    if (!this.displayedColumns.includes('language')) {
+      this.displayedColumns.push('language');
+    }
+
+    const language = (entityValueProperty.value as LangStringProperty).language;
+
+    this.propertiesForm.setControl(`${property.name}-lang`, new FormControl(language, validators));
+    this.displayForm.setControl(`${property.name}-lang`, new FormControl(language, validators));
+    this.displayForm.get(`${property.name}-lang`).disable();
+
+    this.filteredLanguageValues$[property.name] = EntityValueUtil.initFilteredLanguages(property, this.displayForm).pipe(
+      startWith(''),
+      map(value => locale.all.filter(lang => lang.tag.startsWith(value)))
+    );
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.hasOwnProperty('parentForm') && this.parentForm) {
+      this.parentForm.setControl('entityValueProperties', this.propertiesForm);
+    }
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.hasOwnProperty('parentForm') && this.parentForm) {
-      this.parentForm.setControl('entityValueProperties', this.propertiesFormGroup);
+  getPropertyValues(property: DefaultProperty): DefaultEntityValue[] {
+    const existingEntityValues = EntityValueUtil.existingEntityValues(this.currentCachedFile, property);
+    const entityValues = EntityValueUtil.entityValues(this.parentForm, property);
+    return [...existingEntityValues, ...entityValues];
+  }
+
+  changeSelection(controlName: string, propertyValue: any) {
+    EntityValueUtil.changeSelection(this.displayForm, this.entityValuePropertiesForm, controlName, propertyValue);
+
+    if (this.autocompleteTrigger) {
+      this.autocompleteTrigger.closePanel();
     }
-  }
 
-  isComplexProperty(property: Property) {
-    return FormFieldHelper.isComplexProperty(property);
-  }
-
-  isEnumerationProperty(property: DefaultProperty) {
-    return FormFieldHelper.isEnumerationProperty(property);
-  }
-
-  // get the dropdown suggestions for creating a new entity value for a complex property (not enumeration)
-  getPropertyValues(property: Property): DefaultEntityValue[] {
-    const entityValueFilter = (entityValue: DefaultEntityValue) => {
-      const characteristic =
-        property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
-      return entityValue.entity.aspectModelUrn === characteristic?.dataType?.['aspectModelUrn'];
-    };
-    const existingEntityValues = this.namespacesCacheService.currentCachedFile.getCachedEntityValues().filter(entityValueFilter);
-    const newEntityValues = this.parentForm.get('newEntityValues')?.value?.filter(entityValueFilter) || [];
-    return [...existingEntityValues, ...newEntityValues];
-  }
-
-  showCreateNewEntityOption(entityValueName: string, entityValues: DefaultEntityValue[]): boolean {
-    if (
-      entityValueName &&
-      entityValueName !== this.parentForm.get('name')?.value &&
-      (entityValues.length === 0 || !entityValues.some(ev => ev.name === entityValueName)) &&
-      entityValueName.indexOf(' ') < 0
-    ) {
-      const namespace = this.metaModelElement.entity.aspectModelUrn.split('#')[0];
-      return (
-        !this.namespacesCacheService.currentCachedFile.getElement(`${namespace}#${entityValueName}`) &&
-        !this.parentForm.get('newEntityValues')?.value?.some(ev => ev.name === entityValueName)
-      );
-    }
-    return false;
-  }
-
-  changeSelection(property, propertyValue) {
-    this.displayFormGroup.get(property.name).setValue(propertyValue.name);
-    this.displayFormGroup.get(property.name).disable();
-    this.propertiesFormGroup.get(property.name).setValue(propertyValue);
     this.changeDetector.detectChanges();
   }
 
   getControl(propertyControlName: string): FormControl {
-    return this.propertiesFormGroup.get(propertyControlName) as FormControl;
-  }
-
-  getComplexDisplayControl(propertyControlName: string): FormControl {
-    return this.displayFormGroup.get(propertyControlName) as FormControl;
-  }
-
-  unlockEntityValue(property: Property) {
-    this.getComplexDisplayControl(property.name).enable();
-    this.getComplexDisplayControl(property.name).patchValue('');
-    const removedEntityValue = this.propertiesFormGroup.get(property.name).value;
-    if (this.parentForm.get('newEntityValues')?.value?.includes(removedEntityValue)) {
-      this.parentForm
-        .get('newEntityValues')
-        .setValue(this.parentForm.get('newEntityValues')?.value.filter(ev => ev !== removedEntityValue));
-    }
-    this.propertiesFormGroup.get(property.name).patchValue(null);
-  }
-
-  createNewEntityValue(property, entityValueName) {
-    const characteristic =
-      property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
-    const urn = `${property.aspectModelUrn.split('#')?.[0]}#${entityValueName}`;
-    const newEntityValue = new DefaultEntityValue(
-      property.metaModelVersion,
-      entityValueName,
-      urn,
-      characteristic?.dataType as DefaultEntity,
-      (characteristic?.dataType?.['properties'] as OverWrittenProperty[]) || []
-    );
-    this.propertiesFormGroup.get(property.name).setValue(newEntityValue);
-    if (this.parentForm.get('newEntityValues')?.value) {
-      const newEntityValues = this.parentForm.get('newEntityValues').value;
-      this.parentForm.get('newEntityValues').setValue([...newEntityValues, newEntityValue]);
-    } else {
-      this.parentForm.setControl('newEntityValues', new FormControl([newEntityValue]));
-    }
-    this.getComplexDisplayControl(property.name).disable();
-  }
-
-  // initialize the observables for the dropdown options for a specific property
-  private initFilteredEntityValues(property: Property) {
-    const entityValues = this.getPropertyValues(property);
-
-    this.filteredEntityValues$[property.name] = this.getComplexDisplayControl(property.name)?.valueChanges.pipe(
-      map(
-        (value: string) => this.getPropertyValues(property).filter(entityValue => entityValue.name.startsWith(value)),
-        startWith(entityValues)
-      )
-    );
+    return this.propertiesForm.get(propertyControlName) as FormControl;
   }
 }

@@ -27,7 +27,7 @@ import {MatOptionSelectionChange} from '@angular/material/core';
 @Component({
   selector: 'ame-data-type-input-field',
   templateUrl: './data-type-input-field.component.html',
-  styleUrls: ['./data-type-input-field.component.scss'],
+  styleUrls: ['./data-type-input-field.component.scss', '../../field.scss'],
 })
 export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultCharacteristic> implements OnInit, OnDestroy {
   public filteredDataTypes$: Observable<any[]>;

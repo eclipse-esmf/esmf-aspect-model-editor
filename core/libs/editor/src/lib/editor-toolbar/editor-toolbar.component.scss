@@ -22,10 +22,14 @@
 
   ::ng-deep {
     .mat-badge-medium .mat-badge-content {
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      font-size: 1rem;
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      line-height: 22px;
+      font-size: 13px;
+      background: var(--ame-blue-500);
+      color: white;
+      right: -13px !important;
     }
   }
 }

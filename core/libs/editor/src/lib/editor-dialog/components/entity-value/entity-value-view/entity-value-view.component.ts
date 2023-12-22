@@ -18,6 +18,7 @@ import {EntityValueModalComponent} from '..';
 import {DefaultEntityValue, DefaultEnumeration, EntityValueProperty} from '@ame/meta-model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
+import {DataType, FormFieldHelper} from '../../../../helpers/form-field.helper';
 
 @Component({
   selector: 'ame-entity-value-view',
@@ -27,6 +28,9 @@ import {MatDialog} from '@angular/material/dialog';
 export class EntityValueViewComponent implements OnInit, OnDestroy {
   private _complexValues: DefaultEntityValue[];
   private _enumeration: DefaultEnumeration;
+
+  protected readonly formFieldHelper = FormFieldHelper;
+  protected readonly dataType = DataType;
 
   public searchFilter: string;
   public selection: SelectionModel<EntityValueProperty> = new SelectionModel<EntityValueProperty>();

@@ -11,8 +11,8 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="getControl('minValue')?.disabled ? 'always' : 'auto'" appearance="fill">
+<mat-form-field [floatLabel]="getControl('minValue')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="minValue">minValue</mat-label>
   <input matInput type="number" name="minValue" [formControl]="getControl('minValue')" data-cy="minValue" pattern="^[0-9]\d*$" />
-  <mat-error *ngIf="getControl('minValue').errors?.pattern">Please provide a non-negative integer.</mat-error>
+  <mat-error *ngIf="getControl('minValue').errors?.pattern">Please provide a non-negative integer</mat-error>
 </mat-form-field>

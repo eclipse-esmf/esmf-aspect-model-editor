@@ -339,9 +339,15 @@ export class MxGraphSetupService {
   private getPopupFactoryMethod(menu: mxgraph.mxPopupMenu, cell: mxgraph.mxCell) {
     const selectedCells: Array<mxgraph.mxCell> = this.mxGraphShapeSelectorService.getSelectedCells();
     if (cell && !cell.edge) {
-      menu.addItem('Open', this.resolveAssetsIcon(AssetsPath.OpenIcon), () => {
-        this.bindingsService.fireAction('editElement');
-      });
+      const modelElement = MxGraphHelper.getModelElement(cell);
+
+      menu.addItem(
+        `Open in ${modelElement.isExternalReference() ? 'new Window' : 'detail view'}`,
+        this.resolveAssetsIcon(AssetsPath.OpenIcon),
+        () => {
+          this.bindingsService.fireAction('editElement');
+        }
+      );
 
       if (selectedCells.length === 2) {
         menu.addItem('Connect', this.resolveAssetsIcon(AssetsPath.ConnectionOnIcon), () => {

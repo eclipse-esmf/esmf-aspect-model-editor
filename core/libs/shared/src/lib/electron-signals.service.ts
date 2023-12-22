@@ -12,35 +12,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {StartupData, StartupPayload} from './model';
 import {Observable} from 'rxjs';
-
-interface ElectronPayloadEvents {
-  setWindowInfo: StartupData;
-  updateWindowInfo: StartupPayload;
-  openWindow: StartupPayload;
-}
-
-interface ElectronDataEvents {
-  isFirstWindow: Observable<boolean>;
-  requestStartupData: Observable<StartupData>;
-  requestRefreshWorkspaces: undefined;
-}
-
-type ElectronEventDataKeys = keyof ElectronPayloadEvents;
-type ElectronEventNoDataKeys = keyof ElectronDataEvents;
-type ElectronEventKeys = ElectronEventDataKeys | ElectronEventNoDataKeys;
-type RegisteredElectronEvents = Partial<Record<ElectronEventKeys, Function>>;
-
-export interface ElectronSignals {
-  call<K extends keyof ElectronPayloadEvents>(listener: K, config: ElectronPayloadEvents[K]): void;
-  call<K extends ElectronEventNoDataKeys>(listener: K): ElectronDataEvents[K];
-
-  addListener<K extends keyof ElectronPayloadEvents>(listener: K, callback: (payload: ElectronPayloadEvents[K]) => void): void;
-  addListener<K extends ElectronEventNoDataKeys>(listener: K, callback: () => void): void;
-
-  removeListener<K extends ElectronEventKeys>(listener: K, callback: Function): void;
-}
+import {ElectronEventKeys, RegisteredElectronEvents, ElectronSignals} from './model';
 
 @Injectable({providedIn: 'root'})
 export class ElectronSignalsService implements ElectronSignals {
@@ -55,7 +28,7 @@ export class ElectronSignalsService implements ElectronSignals {
     throw new Error('callback parameter should be of type Function');
   }
 
-  call<K extends ElectronEventDataKeys>(action: ElectronEventKeys, data?: ElectronPayloadEvents[K]): Observable<any> {
+  call(action: ElectronEventKeys, data?: any): Observable<any> {
     if (!this.listeners[action]) {
       console.error('No listener registered for ' + action);
       return null;

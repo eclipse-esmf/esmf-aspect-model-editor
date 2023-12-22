@@ -1,1 +1,0 @@
-{"violationErrors":[{"message":"Mandatory property samm:characteristic is missing on :property1.","focusNode":"urn:samm:org.eclipse.digitaltwin:1.0.0#property1","errorCode":"ERR_MIN_COUNT"}]}

@@ -16,26 +16,39 @@
 
   <div class="content">
     <ame-editor-sidebar></ame-editor-sidebar>
-    <as-split direction="horizontal">
-      <as-split-area [size]="70">
-        <ame-mx-editor>
-          <div class="canvas">
-            <div #graph id="graph"></div>
-            <ame-editor-canvas-menu></ame-editor-canvas-menu>
-          </div>
-        </ame-mx-editor>
-      </as-split-area>
-      <as-split-area [size]="30" [visible]="isShapeSettingOpened" [maxSize]="80" [minSize]="30">
-        <ame-shape-settings
-          *ngIf="isShapeSettingOpened"
-          [modelElement]="modelElement"
-          [isOpened]="isShapeSettingOpened"
-          (save)="onSave($event)"
-          (afterClose)="resetSelectedShapeForUpdate()"
-        >
-        </ame-shape-settings>
-      </as-split-area>
-    </as-split>
+    <ame-mx-editor class="editor">
+      <div class="canvas">
+        <div #graph id="graph"></div>
+        <ame-editor-canvas-menu></ame-editor-canvas-menu>
+      </div>
+    </ame-mx-editor>
+    <section
+      *ngIf="isShapeSettingsOpened$ | async as isOpened"
+      [style.width.px]="sidebarWidth"
+      class="info-section"
+      cdkDragLockAxis="x"
+      cdkDrag
+    >
+      <div
+        data-cy="info-section-drag"
+        class="info-section__gutter"
+        cdkDrag
+        cdkDragHandle
+        cdkDragLockAxis="x"
+        (cdkDragEnded)="onDragEnded($event)"
+        [cdkDragFreeDragPosition]="sidebarDragPosition"
+      >
+        <div class="info-section__indication-line"></div>
+        <mat-icon class="info-section__icon">more_vert</mat-icon>
+      </div>
+      <ame-shape-settings
+        [modelElement]="modelElement"
+        [isOpened]="isOpened"
+        (save)="onSave($event)"
+        (afterClose)="resetSelectedShapeForUpdate()"
+      >
+      </ame-shape-settings>
+    </section>
   </div>
   <ame-footer class="footer"></ame-footer>
 </div>

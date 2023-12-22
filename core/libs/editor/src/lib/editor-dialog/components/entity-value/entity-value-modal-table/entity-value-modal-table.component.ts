@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {
   DefaultAbstractProperty,
@@ -19,14 +19,16 @@ import {
   DefaultEntityValue,
   DefaultEnumeration,
   DefaultProperty,
-  DefaultTrait,
+  EntityValueProperty,
   OverWrittenProperty,
-  Property,
 } from '@ame/meta-model';
-import {EditorModelService, FormFieldHelper} from '@ame/editor';
-import {NamespacesCacheService} from '@ame/cache';
+import {DataType, EditorModelService, FormFieldHelper} from '@ame/editor';
+import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {MatTableDataSource} from '@angular/material/table';
+import {EntityValueUtil} from '../utils/EntityValueUtil';
 import {map, Observable, startWith} from 'rxjs';
+import * as locale from 'locale-codes';
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'ame-entity-value-modal-table',
@@ -35,137 +37,113 @@ import {map, Observable, startWith} from 'rxjs';
 })
 export class EntityValueModalTableComponent implements OnChanges {
   @Input()
-  public form: FormGroup;
+  form: FormGroup;
 
   @Input()
-  public enumeration: DefaultEnumeration;
+  entity: DefaultEntity;
 
   @Input()
-  public entityValue: DefaultEntityValue;
+  enumeration: DefaultEnumeration;
 
   @Input()
-  public entity: DefaultEntity;
+  entityValue: DefaultEntityValue;
 
-  public dataSource: MatTableDataSource<DefaultProperty | DefaultAbstractProperty>;
+  @ViewChild('autoTrigger') autocompleteTrigger: MatAutocompleteTrigger;
 
-  public filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
+  protected readonly EntityValueUtil = EntityValueUtil;
+  protected readonly formFieldHelper = FormFieldHelper;
+  protected readonly dataType = DataType;
 
   // only used for displaying the name of an entity value within an input as string
-  public displayFormGroup = new FormGroup({});
+  displayForm = new FormGroup({});
 
-  public readonly displayedColumns = ['key', 'value'];
+  displayedColumns = ['key', 'value'];
+  dataSource: MatTableDataSource<EntityValueProperty>;
 
-  constructor(public metaModelDialogService: EditorModelService, public namespacesCacheService: NamespacesCacheService) {}
+  filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
+  filteredLanguageValues$: {[key: string]: Observable<any[]>} = {};
 
-  get propertiesFormGroup(): FormGroup {
+  get propertiesForm(): FormGroup {
     return this.form.get('properties') as FormGroup;
   }
 
+  get currentCachedFile(): CachedFile {
+    return this.namespacesCacheService.currentCachedFile;
+  }
+
+  constructor(private changeDetector: ChangeDetectorRef, private namespacesCacheService: NamespacesCacheService) {}
+
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('entity') && this.entity) {
-      this.dataSource = new MatTableDataSource(this.entity.allProperties.map(property => property.property));
-      this.entity.allProperties.forEach((property: OverWrittenProperty<any>) => {
-        this.initFilteredEntityValues(property.property);
-      });
-    }
-  }
+    if (!changes.hasOwnProperty('entity') || !this.entity) return;
 
-  isComplexProperty(property: Property) {
-    return FormFieldHelper.isComplexProperty(property);
-  }
+    const entityValue = this.buildEntityValueArray();
+    this.dataSource = new MatTableDataSource(entityValue);
 
-  isEnumerationProperty(property: DefaultProperty) {
-    return FormFieldHelper.isEnumerationProperty(property);
-  }
+    this.entity.allProperties.forEach((element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>) => {
+      const property = element.property as DefaultProperty;
 
-  // get the dropdown suggestions for creating a new entity value for a complex property (not enumeration)
-  getPropertyValues(property: Property): DefaultEntityValue[] {
-    const entityValueFilter = (entityValue: DefaultEntityValue) => {
-      const characteristic =
-        property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
-      return entityValue.entity.aspectModelUrn === characteristic?.dataType?.['aspectModelUrn'];
-    };
-    const existingEntityValues = this.namespacesCacheService.currentCachedFile.getCachedEntityValues().filter(entityValueFilter);
-    const newEntityValues = this.form.get('newEntityValues')?.value?.filter(entityValueFilter) || [];
-    return [...existingEntityValues, ...newEntityValues];
-  }
-
-  showCreateNewEntityOption(entityValueName: string, entityValues: DefaultEntityValue[]): boolean {
-    if (
-      entityValueName &&
-      entityValueName !== this.form.get('name')?.value &&
-      (entityValues.length === 0 || !entityValues.some(ev => ev.name === entityValueName)) &&
-      entityValueName.indexOf(' ') < 0
-    ) {
-      const namespace = this.entity.aspectModelUrn.split('#')[0];
-      return (
-        !this.namespacesCacheService.currentCachedFile.getElement(`${namespace}#${entityValueName}`) &&
-        !this.form.get('newEntityValues')?.value?.some(ev => ev.name === entityValueName)
+      this.filteredEntityValues$[property.name] = EntityValueUtil.initFilteredEntityValues(property, this.displayForm).pipe(
+        startWith(''),
+        map(value => this.getPropertyValues(property).filter(entityValue => entityValue.name.startsWith(value)))
       );
+
+      if (EntityValueUtil.isDefaultPropertyWithLangString(element)) {
+        this.filteredLanguageValues$[property.name] = EntityValueUtil.initFilteredLanguages(property, this.displayForm).pipe(
+          startWith(''),
+          map(value => locale.all.filter(lang => lang.tag.startsWith(value)))
+        );
+      }
+    });
+  }
+
+  getControl(controlName: string): FormControl {
+    return this.propertiesForm.get(controlName) as FormControl;
+  }
+
+  changeSelection(controlName: string, propertyValue: any) {
+    EntityValueUtil.changeSelection(this.displayForm, this.propertiesForm, controlName, propertyValue);
+
+    if (this.autocompleteTrigger) {
+      this.autocompleteTrigger.closePanel();
     }
-    return false;
+
+    this.changeDetector.detectChanges();
   }
 
-  changeSelection(property, propertyValue) {
-    this.displayFormGroup.get(property.name).setValue(propertyValue.name);
-    this.displayFormGroup.get(property.name).disable();
-    this.propertiesFormGroup.get(property.name).setValue(propertyValue);
+  createNewEntityValue(property: DefaultProperty, entityValue: string) {
+    EntityValueUtil.createNewEntityValue(this.displayForm, this.form, property, entityValue);
+    this.changeDetector.detectChanges();
   }
 
-  getControl(propertyControlName: string): FormControl {
-    return this.propertiesFormGroup.get(propertyControlName) as FormControl;
-  }
+  private buildEntityValueArray(): EntityValueProperty[] {
+    const entityValues: EntityValueProperty[] = [];
 
-  getComplexDisplayControl(propertyControlName: string): FormControl {
-    const formControl = this.displayFormGroup.get(propertyControlName);
-    if (formControl) {
-      return formControl as FormControl;
-    } else {
-      this.displayFormGroup.setControl(propertyControlName, new FormControl(null));
-      return this.displayFormGroup.get(propertyControlName) as FormControl;
+    for (const element of this.entity.allProperties) {
+      if (EntityValueUtil.isDefaultPropertyWithLangString(element)) {
+        if (!this.displayedColumns.includes('language')) {
+          this.displayedColumns.push('language');
+        }
+
+        entityValues.push(this.getLangStringEntityValues(element as OverWrittenProperty));
+        continue;
+      }
+
+      entityValues.push({key: element as OverWrittenProperty, value: ''});
     }
+
+    return entityValues;
   }
 
-  unlockEntityValue(property: Property) {
-    this.getComplexDisplayControl(property.name).enable();
-    this.getComplexDisplayControl(property.name).patchValue('');
-    const removedEntityValue = this.propertiesFormGroup.get(property.name).value;
-    if (this.form.get('newEntityValues')?.value?.includes(removedEntityValue)) {
-      this.form.get('newEntityValues').setValue(this.form.get('newEntityValues').value.filter(ev => ev !== removedEntityValue));
-    }
-    this.propertiesFormGroup.get(property.name).patchValue(null);
+  private getLangStringEntityValues(element: OverWrittenProperty): EntityValueProperty {
+    return {
+      key: element,
+      value: {value: '', language: ''},
+    };
   }
 
-  createNewEntityValue(property, entityValueName) {
-    const characteristic =
-      property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
-    const urn = `${property.aspectModelUrn.split('#')?.[0]}#${entityValueName}`;
-    const newEntityValue = new DefaultEntityValue(
-      property.metaModelVersion,
-      entityValueName,
-      urn,
-      characteristic?.dataType as DefaultEntity,
-      (characteristic?.dataType?.['properties'] as OverWrittenProperty[]) || []
-    );
-    this.propertiesFormGroup.get(property.name).setValue(newEntityValue);
-    if (this.form.get('newEntityValues')?.value) {
-      const newEntityValues = this.form.get('newEntityValues').value;
-      this.form.get('newEntityValues').setValue([...newEntityValues, newEntityValue]);
-    } else {
-      this.form.setControl('newEntityValues', new FormControl([newEntityValue]));
-    }
-    this.getComplexDisplayControl(property.name).disable();
-  }
-
-  // initialize the observables for the dropdown options for a specific property
-  private initFilteredEntityValues(property: Property) {
-    const entityValues = this.getPropertyValues(property);
-
-    this.filteredEntityValues$[property.name] = this.getComplexDisplayControl(property.name)?.valueChanges.pipe(
-      map(
-        (value: string) => this.getPropertyValues(property).filter(entityValue => entityValue.name.startsWith(value)),
-        startWith(entityValues)
-      )
-    );
+  private getPropertyValues(property: DefaultProperty): DefaultEntityValue[] {
+    const existingEntityValues = EntityValueUtil.existingEntityValues(this.currentCachedFile, property);
+    const entityValues = EntityValueUtil.entityValues(this.form, property);
+    return [...existingEntityValues, ...entityValues];
   }
 }

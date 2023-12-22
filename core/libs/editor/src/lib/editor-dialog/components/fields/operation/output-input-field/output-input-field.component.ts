@@ -22,6 +22,7 @@ import {RdfService} from '@ame/rdf/services';
 @Component({
   selector: 'ame-output-input-field',
   templateUrl: './output-input-field.component.html',
+  styleUrls: ['../../field.scss'],
 })
 export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {
   filteredPropertyTypes$: Observable<any[]>;

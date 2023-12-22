@@ -18,6 +18,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-max-length-input-field',
   templateUrl: './max-length-input-field.component.html',
+  styleUrls: ['../../field.scss'],
 })
 export class MaxLengthInputFieldComponent extends InputFieldComponent<DefaultLengthConstraint> implements OnInit, OnDestroy {
   constructor() {

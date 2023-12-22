@@ -13,13 +13,28 @@
 
 /// <reference types="Cypress" />
 
-import {SELECTOR_notificationsButton, SELECTOR_notificationsDialogCloseButton, SELECTOR_tbValidateButton} from '../../support/constants';
+import {
+  SELECTOR_dialogInputModel,
+  SELECTOR_dialogStartButton,
+  SELECTOR_notificationsButton,
+  SELECTOR_notificationsDialogCloseButton,
+  SELECTOR_tbLoadButton,
+  SELECTOR_tbValidateButton,
+} from '../../support/constants';
 
 describe('Test validate Aspect', () => {
   it('can validate default model', () => {
     cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'response-default-model-validation'}))
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'response-default-model-validation.json'});
+    cy.fixture('invalid-file')
+      .as('rdfString')
+      .then(rdfString => {
+        cy.get(SELECTOR_tbLoadButton).click({force: true});
+        cy.get('[data-cy="create-model"]').click({force: true});
+        cy.get(SELECTOR_dialogInputModel).invoke('val', rdfString).trigger('input');
+      })
+      .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}))
+      .wait(2000)
       .then(() => cy.get(SELECTOR_tbValidateButton).click({force: true}))
       .then(() => cy.get('.cdk-overlay-container').should('not.be.visible', 8000))
       .then(() => cy.get(SELECTOR_notificationsButton).click({force: true}))

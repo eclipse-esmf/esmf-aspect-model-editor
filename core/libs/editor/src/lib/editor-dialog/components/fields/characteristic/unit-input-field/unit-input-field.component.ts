@@ -26,6 +26,7 @@ declare const sammUDefinition: any;
 @Component({
   selector: 'ame-unit-input-field',
   templateUrl: './unit-input-field.component.html',
+  styleUrls: ['../../field.scss'],
 })
 export class UnitInputFieldComponent
   extends InputFieldComponent<DefaultQuantifiable | DefaultDuration | DefaultMeasurement>

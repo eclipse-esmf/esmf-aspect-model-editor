@@ -19,17 +19,10 @@
 
 <mat-dialog-content class="info-content">
   <section class="left">
-    <p>The Aspect Model Editor is the visual editor for SAMM specific Aspect Models as part of the Digital Twin System.</p>
+    <p>The Aspect Model Editor is the visual editor for Aspect Models based on SAMM as part of the Eclipse Semantic Modeling Framework.</p>
     <p>
       Please refer to the
-      <a href="{{ AMEDocumentationLink }}" target="_blank" rel="noopener">Documentation</a>
-      for help regarding the usage of the Aspect Model Editor.
-    </p>
-
-    <p>
-      Please refer to the
-      <a href="{{ SAMMDocumentationLink }}" target="_blank" rel="noopener">Specification</a>
-      for general help about the Digital Twin System and the Semantic Aspect Meta Model as part of the Digital Twin System.
+      <a [href]="AMEDocumentationLink" (click)="openLink($event)" target="_blank" rel="noopener">{{ AMEDocumentationLink }}</a>
     </p>
   </section>
 

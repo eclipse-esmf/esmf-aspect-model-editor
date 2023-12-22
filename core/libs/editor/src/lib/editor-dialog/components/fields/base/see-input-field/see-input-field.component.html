@@ -13,6 +13,7 @@
 
 <mat-form-field
   appearance="fill"
+  subscriptSizing="dynamic"
   [floatLabel]="searchControl?.disabled ? 'always' : 'auto'"
   [matTooltip]="isInherited ? 'This was extended from ' + elementExtends.extendedElement.name : ''"
   [matTooltipPosition]="'left'"
@@ -64,5 +65,5 @@
     </mat-option>
   </mat-autocomplete>
 
-  <mat-error *ngIf="searchControl.hasError('uri')"> Invalid URI '{{ searchControl?.errors.uri.invalidUris[0] }}' </mat-error>
+  <mat-error *ngIf="searchControl.hasError('uri')">Invalid URI '{{ searchControl?.errors.uri.invalidUris[0] }}'</mat-error>
 </mat-form-field>

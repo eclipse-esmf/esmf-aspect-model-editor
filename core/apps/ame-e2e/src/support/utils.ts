@@ -77,17 +77,19 @@ export const dragExternalReferenceWithChildren = (selector: string, x: number, y
     const graphY = scrollTop + y;
 
     if (Cypress.platform === 'darwin') {
-      return cy
-        .get(':nth-child(1) > ' + selector)
-        .trigger('mousedown', {which: 1, force: true})
-        .trigger('mousemove', {clientX: graphX, clientY: graphY, force: true, waitForAnimations: true})
-        .then(() => cy.get('#graph > svg').click(graphX, graphY, {force: true}).trigger('mouseup', {force: true}));
+      cy.get(':nth-child(1) > ' + selector).trigger('mousedown', {which: 1});
+      cy.get(':nth-child(1) > ' + selector).trigger('mousemove', {clientX: graphX, clientY: graphY, waitForAnimations: true});
+      cy.get('#graph > svg').click(graphX, graphY, {force: true});
+      cy.get('#graph > svg').trigger('mouseup', {force: true});
+    } else {
+      cy.get(':nth-child(1) > ' + selector).trigger('pointerdown', {which: 1});
+      cy.get(':nth-child(1) > ' + selector).trigger('pointermove', {
+        clientX: graphX,
+        clientY: graphY,
+        waitForAnimations: true,
+      });
+      cy.get('#graph > svg').click(graphX, graphY, {force: true});
+      cy.get('#graph > svg').trigger('pointerup', {force: true});
     }
-
-    return cy
-      .get(':nth-child(1) > ' + selector)
-      .trigger('pointerdown', {which: 1, force: true})
-      .trigger('pointermove', {clientX: graphX, clientY: graphY, force: true, waitForAnimations: true})
-      .then(() => cy.get('#graph > svg').click(graphX, graphY, {force: true}).trigger('pointerup', {force: true}));
   });
 };

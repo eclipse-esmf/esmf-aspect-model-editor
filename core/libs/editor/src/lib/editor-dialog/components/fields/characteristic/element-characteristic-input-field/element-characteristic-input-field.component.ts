@@ -23,6 +23,7 @@ import {RdfService} from '@ame/rdf/services';
 @Component({
   selector: 'ame-element-characteristic-input-field',
   templateUrl: './element-characteristic-input-field.component.html',
+  styleUrls: ['../../field.scss'],
 })
 export class ElementCharacteristicInputFieldComponent extends InputFieldComponent<DefaultCollection> implements OnInit, OnDestroy {
   filteredCharacteristicTypes$: Observable<any[]>;

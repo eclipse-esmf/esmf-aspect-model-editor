@@ -32,6 +32,7 @@ import {Subscription} from 'rxjs';
 @Component({
   selector: 'ame-name-input-field',
   templateUrl: './name-input-field.component.html',
+  styleUrls: ['../../field.scss'],
 })
 export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit, OnDestroy {
   public fieldName = 'name';

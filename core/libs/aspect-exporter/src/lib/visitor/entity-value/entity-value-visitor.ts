@@ -12,10 +12,11 @@
  */
 
 import {Injectable} from '@angular/core';
-import {DefaultEntityValue} from '@ame/meta-model';
+import {DefaultEntityValue, EntityValueProperty, LangStringProperty} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {DataFactory} from 'n3';
 import {BaseVisitor} from '../base-visitor';
+import {isDataTypeLangString} from '@ame/shared';
 
 @Injectable()
 export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
@@ -27,32 +28,48 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
     return this.visitModel(entityValue);
   }
 
-  visitModel(entityValue: DefaultEntityValue) {
+  visitModel(entityValue: DefaultEntityValue): DefaultEntityValue {
     this.setPrefix(entityValue.aspectModelUrn);
     this.updateProperties(entityValue);
     this.updateBaseProperties(entityValue);
     return entityValue;
   }
 
-  private updateProperties(entityValue: DefaultEntityValue) {
+  private updateProperties(entityValue: DefaultEntityValue): void {
+    const {aspectModelUrn} = entityValue;
     const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
-    for (const {key, value} of entityValue.properties) {
-      const dataType = key.property?.getDeepLookUpDataType();
-      rdfModel.store.addQuad(
-        DataFactory.namedNode(entityValue.aspectModelUrn),
-        DataFactory.namedNode(key.property.aspectModelUrn),
-        value instanceof DefaultEntityValue
-          ? DataFactory.namedNode(value.aspectModelUrn)
-          : DataFactory.literal(value?.toString(), dataType ? DataFactory.namedNode(dataType.getUrn()) : undefined)
-      );
 
-      if (value instanceof DefaultEntityValue && value.isExternalReference()) {
-        this.setPrefix(value.aspectModelUrn);
-      }
+    entityValue.properties.forEach(property => {
+      const object = this.createObjectForRDF(property);
+      const {key, value} = property;
+
+      rdfModel.store.addQuad(DataFactory.namedNode(aspectModelUrn), DataFactory.namedNode(key.property.aspectModelUrn), object);
+
+      this.handleExternalReference(value, aspectModelUrn);
+    });
+  }
+
+  private createObjectForRDF({key, value}: EntityValueProperty): any {
+    if (value instanceof DefaultEntityValue) {
+      return DataFactory.namedNode(value.aspectModelUrn);
+    }
+
+    if (isDataTypeLangString(key.property)) {
+      const langString = value as LangStringProperty;
+      return DataFactory.literal(langString?.value?.toString(), langString?.language?.toString());
+    }
+
+    const dataType = key.property?.getDeepLookUpDataType();
+    return DataFactory.literal(value?.toString(), dataType ? DataFactory.namedNode(dataType.getUrn()) : undefined);
+  }
+
+  private handleExternalReference(value: any, aspectModelUrn: string): void {
+    if (value instanceof DefaultEntityValue && value.isExternalReference()) {
+      this.setPrefix(aspectModelUrn);
     }
   }
 
-  private updateBaseProperties(entityValue: DefaultEntityValue) {
+  private updateBaseProperties(entityValue: DefaultEntityValue): void {
     const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
     rdfModel.store.addQuad(
       DataFactory.namedNode(entityValue.aspectModelUrn),

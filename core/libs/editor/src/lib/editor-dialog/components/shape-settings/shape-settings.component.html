@@ -13,8 +13,13 @@
 
 <div class="shape-settings__header">
   <div class="column-container">
-    <h3 class="shape-settings__header__title">{{ getTitle() }}</h3>
-    <p class="shape-settings__header__description" *ngIf="metaModelElement?.isExternalReference()">
+    <h3 class="shape-settings__header-title">
+      <ame-shared-settings-title
+        [metaModelElementInput]="metaModelElement"
+        [metaModelClassNameInput]="metaModelClassName"
+      ></ame-shared-settings-title>
+    </h3>
+    <p class="shape-settings__header-description" *ngIf="metaModelElement?.isExternalReference()">
       {{ metaModelElement?.aspectModelUrn?.split('#')[0] }}
     </p>
   </div>

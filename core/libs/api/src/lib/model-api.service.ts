@@ -18,6 +18,7 @@ import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, LogService} from '@ame/shared';
 import {ModelValidatorService} from './model-validator.service';
 import {OpenApi, ViolationError} from '@ame/editor';
+import {removeCommentsFromTTL} from '@ame/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -44,11 +45,39 @@ export class ModelApiService {
   private readonly LATEST_FILENAME = 'latest.ttl';
 
   getDefaultAspectModel(): Observable<string> {
-    return this.http.get('assets/aspect-models/org.eclipse.examples/1.0.0/Default.ttl', {responseType: 'text'});
+    return this.http
+      .get('assets/aspect-models/org.eclipse.examples/1.0.0/Default.ttl', {responseType: 'text'})
+      .pipe(map((response: string) => removeCommentsFromTTL(response)));
   }
 
   getMovementAspectModel(): Observable<string> {
-    return this.http.get('assets/aspect-models/org.eclipse.examples/1.0.0/Movement.ttl', {responseType: 'text'});
+    return this.http
+      .get('assets/aspect-models/org.eclipse.examples/1.0.0/Movement.ttl', {responseType: 'text'})
+      .pipe(map((response: string) => removeCommentsFromTTL(response)));
+  }
+
+  lockFile(namespace: string, file: string): Observable<string> {
+    return this.http
+      .get<string>(`${this.serviceUrl}${this.api.fileHandling}/lock`, {
+        headers: new HttpHeaderBuilder().withTextContentType().withFileName(file).withNamespace(namespace).build(),
+        responseType: 'text' as 'json',
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => throwError(() => res))
+      );
+  }
+
+  unlockFile(namespace: string, file: string): Observable<string> {
+    return this.http
+      .get<string>(`${this.serviceUrl}${this.api.fileHandling}/unlock`, {
+        headers: new HttpHeaderBuilder().withTextContentType().withFileName(file).withNamespace(namespace).build(),
+        responseType: 'text' as 'json',
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => throwError(() => res))
+      );
   }
 
   loadLatest(): Observable<string> {
@@ -77,13 +106,18 @@ export class ModelApiService {
 
   formatModel(rdfContent: string): Observable<string> {
     const headers = new HttpHeaderBuilder().withContentTypeRdfTurtle().build();
-    return this.http.post(`${this.serviceUrl}${this.api.models}/format`, rdfContent, {headers, responseType: 'text'}).pipe(
-      timeout(this.requestTimeout),
-      catchError(res => {
-        res.error = JSON.parse(res.error)?.error;
-        return throwError(() => res);
+    return this.http
+      .post(`${this.serviceUrl}${this.api.models}/format`, rdfContent, {
+        headers,
+        responseType: 'text',
       })
-    );
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => {
+          res.error = JSON.parse(res.error)?.error;
+          return throwError(() => res);
+        })
+      );
   }
 
   uploadZip(file: File): Observable<any> {

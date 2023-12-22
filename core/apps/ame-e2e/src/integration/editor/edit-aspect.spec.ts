@@ -25,7 +25,7 @@ import {
   SELECTOR_tbDeleteButton,
   SELECTOR_configureProp,
   FIELD_error,
-  SELECTOR_resizeWindow,
+  SELECTOR_resizeGutter,
   META_MODEL_preferredName,
   META_MODEL_description,
   META_MODEL_see,
@@ -58,7 +58,10 @@ describe('Test editing Aspect', () => {
       .then(() => cy.get(FIELD_see).clear().should('be.visible'))
       .then(() => cy.get(PROP_configuration).should('have.text', 'Properties Configuration'))
       .then(() => cy.get(SELECTOR_configureProp).should('be.visible').should('have.text', 'Configure'))
-      .then(() => cy.get(SELECTOR_resizeWindow).should('be.visible'))
+      .then(() => {
+        cy.get(SELECTOR_resizeGutter).realHover();
+        cy.get(SELECTOR_resizeGutter).should('be.visible');
+      })
       .then(() => cyHelp.clickSaveButton());
   });
 
