@@ -3,10 +3,11 @@
 To generate an OpenAPI specification from the Aspect Model, proceed as follows:
 
 * Click the *Generate Document* icon. +
-A menu offers two options:
+A menu offers three options:
 
 ** Generate HTML documentation
 ** *Generate OpenAPI specification* -- continue with this one
+** Generate AASX/XML
 +
 image::generate-api-spec.png[Generate document, width=100%]
 * In case your model supports multiple languages, select the specific language for the documentation.
@@ -22,4 +23,3 @@ image::generate-api-spec.png[Generate document, width=100%]
 
 TIP: If you run into errors, please make sure that the graph is valid. +
 If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.
-

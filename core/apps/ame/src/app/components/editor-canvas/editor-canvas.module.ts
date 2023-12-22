@@ -30,13 +30,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {EditorDialogModule, EditorToolbarModule} from '@ame/editor';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {AngularSplitModule} from 'angular-split';
 import {FormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MxEditorComponent} from './mx-editor/mx-editor.component';
 import {SidebarElementFilter} from './sidebar/sidebar-new-element/elements-filter.pipe';
 import {CounterPipe} from '@ame/shared';
+import {CdkDrag, CdkDragHandle} from '@angular/cdk/drag-drop';
 
 @NgModule({
   imports: [
@@ -50,11 +50,12 @@ import {CounterPipe} from '@ame/shared';
     MatInputModule,
     MatButtonModule,
     MatTooltipModule,
-    AngularSplitModule,
     FormsModule,
     MatDialogModule,
     MatProgressSpinnerModule,
     CounterPipe,
+    CdkDrag,
+    CdkDragHandle,
   ],
   declarations: [
     EditorCanvasComponent,

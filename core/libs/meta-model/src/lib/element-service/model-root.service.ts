@@ -28,27 +28,28 @@ import {TraitModelService} from './trait-model.service';
 import {UnitModelService} from './unit-model.service';
 import {FileResourceRemoveService, Point3dRemoveService, PredefinedRemove, TimeSeriesEntityRemoveService} from './predefined-elements';
 
-const predefinedModels: {[key: string]: ProviderToken<PredefinedRemove>} = {
-  [PredefinedEntities.TimeSeriesEntity]: TimeSeriesEntityRemoveService,
-  [PredefinedProperties.value]: TimeSeriesEntityRemoveService,
-  [PredefinedProperties.timestamp]: TimeSeriesEntityRemoveService,
-  ['Timestamp']: TimeSeriesEntityRemoveService,
-  [PredefinedProperties.x]: Point3dRemoveService,
-  [PredefinedProperties.y]: Point3dRemoveService,
-  [PredefinedProperties.z]: Point3dRemoveService,
-  [PredefinedEntities.Point3d]: Point3dRemoveService,
-  [PredefinedProperties.resource]: FileResourceRemoveService,
-  [PredefinedProperties.mimeType]: FileResourceRemoveService,
-  [PredefinedEntities.FileResource]: FileResourceRemoveService,
-  ['ResourcePath']: FileResourceRemoveService,
-  ['MimeType']: FileResourceRemoveService,
-};
-
 @Injectable({
   providedIn: 'root',
 })
 export class ModelRootService {
-  constructor(private injector: Injector) {}
+  private predefinedModels: {[key: string]: ProviderToken<PredefinedRemove>} = {};
+  constructor(private injector: Injector) {
+    this.predefinedModels = {
+      [PredefinedEntities.TimeSeriesEntity]: TimeSeriesEntityRemoveService,
+      [PredefinedProperties.value]: TimeSeriesEntityRemoveService,
+      [PredefinedProperties.timestamp]: TimeSeriesEntityRemoveService,
+      ['Timestamp']: TimeSeriesEntityRemoveService,
+      [PredefinedProperties.x]: Point3dRemoveService,
+      [PredefinedProperties.y]: Point3dRemoveService,
+      [PredefinedProperties.z]: Point3dRemoveService,
+      [PredefinedEntities.Point3d]: Point3dRemoveService,
+      [PredefinedProperties.resource]: FileResourceRemoveService,
+      [PredefinedProperties.mimeType]: FileResourceRemoveService,
+      [PredefinedEntities.FileResource]: FileResourceRemoveService,
+      ['ResourcePath']: FileResourceRemoveService,
+      ['MimeType']: FileResourceRemoveService,
+    };
+  }
 
   public getElementModelService(modelElement: BaseMetaModelElement): BaseModelService {
     // Order is important
@@ -78,7 +79,7 @@ export class ModelRootService {
   }
 
   public isPredefined(modelElement: BaseMetaModelElement) {
-    return (modelElement as any)?.isPredefined?.() && predefinedModels[modelElement.name];
+    return (modelElement as any)?.isPredefined?.() && this.predefinedModels[modelElement.name];
   }
 
   public getPredefinedService(modelElement: BaseMetaModelElement) {
@@ -86,6 +87,6 @@ export class ModelRootService {
       return null;
     }
 
-    return this.injector.get(predefinedModels[modelElement.name]);
+    return this.injector.get(this.predefinedModels[modelElement.name]);
   }
 }

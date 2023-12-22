@@ -16,6 +16,7 @@ export interface FileStatus {
     outdated: boolean;
     version: string;
     hasErrors?: boolean;
+    locked?: boolean;
   };
 }
 
@@ -29,15 +30,19 @@ export class NamespaceModel {
   constructor(public name: string, public files: string[]) {}
 
   setFileStatus(file: string, version: string, outdated: boolean) {
-    this.fileStatus[file] = {version, outdated};
+    this.fileStatus[file] = this.fileStatus[file] ? {...this.fileStatus[file], version, outdated} : {version, outdated};
   }
 
   setFileError(file: string, hasErrors: boolean) {
     if (this.fileStatus[file]) {
       this.fileStatus[file].hasErrors = hasErrors;
     } else {
-      this.fileStatus[file] = {version: null, outdated: false, hasErrors};
+      this.fileStatus[file] = {...this.fileStatus[file], version: null, outdated: false, hasErrors};
     }
+  }
+
+  lockFile(file: string, locked: boolean) {
+    this.fileStatus[file] = this.fileStatus[file] ? {...this.fileStatus[file], locked} : {locked, version: null, outdated: false};
   }
 
   getFileStatus(file: string) {

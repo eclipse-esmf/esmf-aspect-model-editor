@@ -12,14 +12,14 @@ To add external references, proceed as follows:
 
 1. xref:namespace/import-namespaces.adoc#import-namespaces[Import the namespace] you want to use.
 2. Open the Workspace sidebar.
-3. Double-click the TTL file from which you want to use elements from.
+3. Click the TTL file from which you want to use elements from.
 4. Drag the specific element and drop it to the graph area canvas.
 +
 image::external-reference-drag-and-drop.png[width=100%]
 +
 [NOTE]
 ====
-External references can only be dragged once into the current Aspect Model. These elements are marked with a lock sign signifying that they cannot be edited. You can only edit an external reference by editing the file it is defined in.
+External references can only be dragged once into the current Aspect Model. These elements are marked with a special icon signifying that they are from a different location. You can only edit an external reference by editing the file it is defined in. By double clicking an external reference the file where that element exists will be opened in a different window
 
 image::external-reference.png[width=100%]
 ====

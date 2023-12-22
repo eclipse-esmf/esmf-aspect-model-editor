@@ -16,6 +16,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {BaseMetaModelElement, DefaultEntityValue, EntityValueProperty} from '@ame/meta-model';
 import {BaseModelService} from './base-model-service';
 import {EntityValueRenderService, MxGraphHelper} from '@ame/mx-graph';
+import {isDataTypeLangString} from '@ame/shared';
 
 @Injectable({providedIn: 'root'})
 export class EntityValueModelService extends BaseModelService {
@@ -27,7 +28,7 @@ export class EntityValueModelService extends BaseModelService {
     return metaModelElement instanceof DefaultEntityValue;
   }
 
-  update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
+  update(cell: mxgraph.mxCell, form: {[key: string]: any}): void {
     const modelElement = MxGraphHelper.getModelElement<DefaultEntityValue>(cell);
     // update name
     const aspectModelUrn = this.modelService.getLoadedAspectModel().rdfModel.getAspectModelUrn();
@@ -48,19 +49,24 @@ export class EntityValueModelService extends BaseModelService {
     this.entityValueRenderService.update({cell, form});
   }
 
-  delete(cell: mxgraph.mxCell) {
+  delete(cell: mxgraph.mxCell): void {
     super.delete(cell);
     this.entityValueRenderService.delete(cell);
   }
 
-  private updatePropertiesEntityValues(metaModelElement: DefaultEntityValue, form: {[key: string]: any}) {
-    const newPropertyValues = form.entityValueProperties;
-    metaModelElement.properties.forEach((property: EntityValueProperty) => {
-      property.value = newPropertyValues[property.key.property.name];
+  private updatePropertiesEntityValues(metaModelElement: DefaultEntityValue, form: {[key: string]: any}): void {
+    const {entityValueProperties} = form;
+
+    metaModelElement.properties.forEach(element => {
+      const propertyKey = element.key.property.name;
+
+      element.value = isDataTypeLangString(element.key.property)
+        ? {value: entityValueProperties[propertyKey], language: entityValueProperties[`${propertyKey}-lang`]}
+        : entityValueProperties[propertyKey];
     });
   }
 
-  private removeObsoleteEntityValues(metaModelElement: DefaultEntityValue) {
+  private removeObsoleteEntityValues(metaModelElement: DefaultEntityValue): void {
     metaModelElement.properties.forEach((property: EntityValueProperty) => {
       if (property.value instanceof DefaultEntityValue && !property.value.parents?.length) {
         this.deleteEntityValue(property.value, metaModelElement);

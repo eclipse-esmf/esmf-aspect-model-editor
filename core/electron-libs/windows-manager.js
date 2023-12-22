@@ -14,7 +14,7 @@
 // @ts-check
 
 /** @typedef {{namespace: string, file: string, editElement?: string, fromWorkspace?: boolean}} WindowOptions */
-/** @typedef {{id: string, window: BrowserWindow, options: WindowOptions | null}} WindowInfo */
+/** @typedef {{id: number, window: BrowserWindow, options: WindowOptions | null}} WindowInfo */
 
 const {BrowserWindow, ipcMain} = require('electron');
 const electronRemote = require('@electron/remote/main');
@@ -25,8 +25,8 @@ const {
   REQUEST_CREATE_WINDOW,
   REQUEST_IS_FIRST_WINDOW,
   RESPONSE_IS_FIRST_WINDOW,
-  REQUEST_STARTUP_DATA,
-  RESPONSE_STARTUP_DATA,
+  REQUEST_WINDOW_DATA,
+  RESPONSE_WINDOW_DATA,
   REQUEST_IS_FILE_SAVED,
   REQUEST_CLOSE_WINDOW,
   REQUEST_SHOW_NOTIFICATION,
@@ -34,15 +34,13 @@ const {
   REQUEST_EDIT_ELEMENT,
   SIGNAL_REFRESH_WORKSPACE,
   REQUEST_REFRESH_WORKSPACE,
+  REQUEST_UNLOCK_FILE,
+  REQUEST_LOCK_FILE,
+  RESPONSE_LOCKED_FILES,
+  REQUEST_ADD_LOCK,
+  REQUEST_REMOVE_LOCK,
+  REQUEST_LOCKED_FILES,
 } = require('./events');
-
-function uuid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    const r = (Math.random() * 16) | 0,
-      v = c == 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
 
 class WindowsManager {
   #windowConfig = {
@@ -58,21 +56,39 @@ class WindowsManager {
   /** @type {WindowInfo[]} */
   activeWindows = [];
 
+  /** @type {{namespace: string; file: string}[]} */
+  lockedFiles = [];
+
   activateCommunicationProtocol() {
-    ipcMain.on(REQUEST_CREATE_WINDOW, (e, options) => {
-      this.createWindow(options);
-    });
+    ipcMain.on(REQUEST_CREATE_WINDOW, (_, options) => this.createWindow(options));
 
     // updates loaded file data with new loaded one or with new file data
-    ipcMain.on(REQUEST_UPDATE_DATA, (event, windowId, options) => {
+    ipcMain.on(REQUEST_UPDATE_DATA, (event, options) => {
+      const windowId = event.sender.id;
       const windowInfo = this.activeWindows.find(windowInfo => windowInfo.id === windowId);
+
       if (!windowInfo) return;
-      console.log(`UPDATED: \x1b[36m${windowId}\x1b[0m with \x1b[36m${options.namespace} | ${options.file}\x1b[0m`);
+      if (windowInfo.options?.fromWorkspace) {
+        // Request unlock old file if is from workspace
+        console.log(`Unlocking ${windowInfo.options?.namespace} - ${windowInfo.options?.namespace}`);
+        windowInfo.window.webContents.send(REQUEST_UNLOCK_FILE, windowInfo.options?.namespace, windowInfo.options?.file);
+      }
+
       windowInfo.options = options;
+      console.log(`UPDATED: \x1b[36m${windowId}\x1b[0m with \x1b[36m${options.namespace} | ${options.file}\x1b[0m`);
+
+      if (windowInfo.options?.fromWorkspace) {
+        console.log(`locking ${windowInfo.options?.namespace} - ${windowInfo.options?.namespace}`);
+        // Request lock file if it is from workspace
+        windowInfo.window.webContents.send(REQUEST_LOCK_FILE, windowInfo.options?.namespace, windowInfo.options?.file);
+      }
+
+      ipcMain.emit(SIGNAL_REFRESH_WORKSPACE);
     });
 
     // maximizes window if it exists
-    ipcMain.on(REQUEST_MAXIMIZE_WINDOW, (event, windowId) => {
+    ipcMain.on(REQUEST_MAXIMIZE_WINDOW, event => {
+      const windowId = event.sender.id;
       const window = this.activeWindows.find(windowInfo => windowInfo.id === windowId)?.window;
       if (window) {
         window.maximize();
@@ -85,8 +101,13 @@ class WindowsManager {
     });
 
     // closes window by force
-    ipcMain.on(REQUEST_CLOSE_WINDOW, (event, windowId) => {
-      const win = this.activeWindows.find(windowInfo => windowId === windowInfo.id)?.window;
+    ipcMain.on(REQUEST_CLOSE_WINDOW, event => {
+      const windowId = event.sender.id;
+      const index = this.activeWindows.findIndex(windowInfo => windowId === windowInfo.id);
+      const win = index >= 0 ? this.activeWindows[index]?.window : null;
+
+      this.activeWindows.splice(index, 1);
+
       if (!win) {
         return;
       }
@@ -94,11 +115,35 @@ class WindowsManager {
       win.destroy();
     });
 
-    ipcMain.on(SIGNAL_REFRESH_WORKSPACE, (_, windowId) => {
-      const otherWindows = this.activeWindows.filter(({id}) => id !== windowId);
-      for (const {window} of otherWindows) {
+    ipcMain.on(SIGNAL_REFRESH_WORKSPACE, (event, ignoreSenderWindow = false) => {
+      const windowId = event?.sender?.id;
+      this.activeWindows.forEach(({id, window}) => {
+        if (ignoreSenderWindow && windowId && id === windowId) return;
         window.webContents.send(REQUEST_REFRESH_WORKSPACE);
+      });
+    });
+
+    ipcMain.on(REQUEST_ADD_LOCK, (_, {namespace, file}) => {
+      const found = this.lockedFiles.find(lockedFile => lockedFile.namespace === namespace && lockedFile.file === file);
+      if (!found) {
+        console.log('REQUEST_ADD_LOCK', namespace, file);
+        this.lockedFiles.push({namespace, file});
+        this.activeWindows.forEach(({window}) => window.webContents.send(RESPONSE_LOCKED_FILES, this.lockedFiles));
       }
+    });
+
+    ipcMain.on(REQUEST_REMOVE_LOCK, (_, {namespace, file}) => {
+      const foundIndex = this.lockedFiles.findIndex(lockedFile => lockedFile.namespace === namespace && lockedFile.file === file);
+      if (foundIndex > -1) {
+        console.log('REQUEST_REMOVE_LOCK', namespace, file);
+        this.lockedFiles.splice(foundIndex, 1);
+        this.activeWindows.forEach(({window}) => window.webContents.send(RESPONSE_LOCKED_FILES, this.lockedFiles));
+      }
+    });
+
+    ipcMain.on(REQUEST_LOCKED_FILES, event => {
+      console.log('REQUEST_LOCKED_FILES', this.lockedFiles);
+      event.sender.send(RESPONSE_LOCKED_FILES, this.lockedFiles);
     });
   }
 
@@ -127,7 +172,7 @@ class WindowsManager {
 
     /** @type {WindowInfo} */
     const windowInfo = {
-      id: uuid(),
+      id: newWindow.webContents.id,
       window: newWindow,
       options,
     };
@@ -141,7 +186,7 @@ class WindowsManager {
 
     this.activeWindows.push(windowInfo);
     electronRemote.enable(newWindow.webContents);
-    this.#listenForWindowInfoRequest(windowInfo);
+    this.#listenForWindowDataRequest();
     this.#loadApplication(windowInfo);
 
     return newWindow;
@@ -180,15 +225,15 @@ class WindowsManager {
     return path.join(__dirname, ...iconPathArray);
   }
 
-  /** @param {{id: string, options: WindowOptions | null}} _ */
-  #listenForWindowInfoRequest({id, options}) {
+  #listenForWindowDataRequest() {
     const executeFn = event => {
-      console.log('RECEIVED REQUEST STARTUP DATA');
-      event.sender.send(RESPONSE_STARTUP_DATA, {id, options});
-      ipcMain.removeListener(REQUEST_STARTUP_DATA, executeFn);
+      console.log('RECEIVED REQUEST WINDOW DATA');
+      const windowId = event.sender.id;
+      const {id, options} = this.activeWindows.find(window => window.id === windowId);
+      event.sender.send(RESPONSE_WINDOW_DATA, {id, options});
     };
 
-    ipcMain.on(REQUEST_STARTUP_DATA, executeFn);
+    ipcMain.on(REQUEST_WINDOW_DATA, executeFn);
   }
 
   /** @param {BrowserWindow} window */

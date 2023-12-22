@@ -24,7 +24,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-entity-extends-field',
   templateUrl: './extends-field.component.html',
-  styleUrls: ['./extends-field.component.scss'],
+  styleUrls: ['./extends-field.component.scss', '../../field.scss'],
 })
 export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEntity> implements OnInit, OnDestroy {
   public filteredAbstractEntities$: Observable<any[]>;

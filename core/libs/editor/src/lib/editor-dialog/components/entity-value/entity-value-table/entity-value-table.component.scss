@@ -38,3 +38,20 @@
 .small-form-field {
   padding-top: 5px;
 }
+
+.property-key {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+
+  &__field {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  &__required {
+    display: inline-block;
+  }
+}

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {APP_CONFIG, AppConfig} from '@ame/shared';
+import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
 import {Component, Inject} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 
@@ -24,7 +24,21 @@ export class DocumentComponent {
   AMEDocumentationLink = 'https://eclipse-esmf.github.io/ame-guide/introduction.html';
   SAMMDocumentationLink = 'https://eclipse-esmf.github.io/samm-specification/2.1.0/index.html';
 
-  constructor(private dialogRef: MatDialogRef<DocumentComponent>, @Inject(APP_CONFIG) public config: AppConfig) {}
+  constructor(
+    private dialogRef: MatDialogRef<DocumentComponent>,
+    @Inject(APP_CONFIG) public config: AppConfig,
+    private browserService: BrowserService
+  ) {}
+
+  openLink(event: MouseEvent) {
+    if (!this.browserService.isStartedAsElectronApp() || !window.require) {
+      return;
+    }
+
+    const {shell} = window.require('electron');
+    event.preventDefault();
+    shell.openExternal((event.target as HTMLAnchorElement).href);
+  }
 
   onClose(): void {
     this.dialogRef.close();

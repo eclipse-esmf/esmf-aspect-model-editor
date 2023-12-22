@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="getControl('languageCode')?.disabled ? 'always' : 'auto'" appearance="fill">
+<mat-form-field [floatLabel]="getControl('languageCode')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="languageCode">languageCode</mat-label>
   <input matInput [formControl]="getControl('languageCode')" [matAutocomplete]="auto" name="languageCode" data-cy="languageCode" />
   <mat-autocomplete #auto="matAutocomplete">

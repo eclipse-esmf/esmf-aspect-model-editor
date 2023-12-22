@@ -59,8 +59,14 @@
               matTooltipPosition="right"
               class="file-name"
             >
-              <mat-icon *ngIf="!namespace.getFileStatus(file)?.hasErrors">description</mat-icon>
+              <mat-icon *ngIf="!namespace.getFileStatus(file)?.hasErrors && !isLocked(namespace.name, file)">description</mat-icon>
+              <mat-icon
+                *ngIf="!namespace.getFileStatus(file)?.hasErrors && isLocked(namespace.name, file)"
+                matTooltip="File opened in another window"
+                >lock</mat-icon
+              >
               <mat-icon class="error-icon" *ngIf="namespace.getFileStatus(file)?.hasErrors">error_outline</mat-icon>
+
               <span [matTooltip]="file.length > 25 ? file : ''" matTooltipPosition="right" data-cy="namespaceFileName">
                 {{ file }}
               </span>
@@ -68,7 +74,7 @@
             <mat-icon class="show-more material-icons" [matMenuTriggerFor]="menu" data-cy="namespaceFileMenuButton">more_horiz</mat-icon>
             <mat-menu #menu="matMenu">
               <button
-                [disabled]="isLoadDisabled(namespace, file)"
+                [disabled]="isLoadInNewWindowDisabled(namespace, file)"
                 (click)="loadInNewWindow(namespace, file)"
                 mat-menu-item
                 data-cy="fileMenuLoadAspectModelButton"
@@ -81,12 +87,10 @@
                 mat-menu-item
                 data-cy="fileMenuLoadAspectModelButton"
               >
-                Open
+                Open in current
               </button>
               <button
-                [disabled]="
-                  isCurrentFile(namespace.name, file) || namespace.getFileStatus(file)?.outdated || namespace.getFileStatus(file)?.hasErrors
-                "
+                [disabled]="isSelectNamespaceFileDisabled(namespace, file)"
                 (click)="onSelectNamespaceFile(namespace, file)"
                 mat-menu-item
                 data-cy="fileMenuFindElements"
@@ -97,7 +101,7 @@
                 Copy file path
               </button>
               <button
-                [disabled]="isCurrentFile(namespace.name, file)"
+                [disabled]="isDeleteDisabled(namespace, file)"
                 (click)="onDeleteNamespace(namespace.name + ':' + file)"
                 mat-menu-item
                 data-cy="fileMenuDeleteButton"

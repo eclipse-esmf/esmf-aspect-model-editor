@@ -30,6 +30,7 @@ import {RdfModelUtil} from '@ame/rdf/utils';
       }
     `,
   ],
+  styleUrls: ['../../field.scss'],
 })
 export class LocaleCodeInputFieldComponent extends InputFieldComponent<DefaultLocaleConstraint> implements OnInit, OnDestroy {
   public filteredLanguages: Observable<Array<locale.ILocale>>;

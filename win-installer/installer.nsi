@@ -17,7 +17,7 @@
 
   ;Default installation folder
   InstallDir "$LOCALAPPDATA\ASPECT-MODEL-EDITOR"
-
+  !define MUI_CUSTOMFUNCTION_GUIINIT GuiInit
   ;Get installation folder from registry if available
   InstallDirRegKey HKCU "Software\ASPECT-MODEL-EDITOR" ""
 
@@ -96,6 +96,10 @@ Section "Uninstall"
 SectionEnd
 
 ;--------------------------------
+Section "" SpaceRequired
+SectionEnd
+
+;--------------------------------
 ;Function
 
 Function install_AME
@@ -127,4 +131,22 @@ Function uninstall_Previous_Version
             ExecWait '"$R0" /S'
             Sleep 10000
     ${EndIf}
+FunctionEnd
+
+Function GuiInit
+  Push "$INSTDIR\Aspect-Model-Editor.exe"
+  Call FileSizeNew
+  Pop $0
+  IntOp $0 $0 / 1024
+SectionSetSize ${SpaceRequired} "$0"
+FunctionEnd
+
+Function FileSizeNew
+  Exch $0
+  Push $1
+  FileOpen $1 $0 "r"
+  FileSeek $1 0 END $0
+  FileClose $1
+  Pop $1
+  Exch $0
 FunctionEnd

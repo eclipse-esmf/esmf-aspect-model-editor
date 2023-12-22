@@ -18,6 +18,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-scale-input-field',
   templateUrl: './scale-input-field.component.html',
+  styleUrls: ['../../field.scss'],
 })
 export class ScaleInputFieldComponent extends InputFieldComponent<DefaultFixedPointConstraint> implements OnInit, OnDestroy {
   constructor() {

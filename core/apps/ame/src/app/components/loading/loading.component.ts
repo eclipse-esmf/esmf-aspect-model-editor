@@ -41,15 +41,10 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const sub = this.electronSignalsService
-      .call('requestStartupData')
-      .pipe(
-        switchMap((data: StartupData) => {
-          this.electronSignalsService.call('setWindowInfo', data);
-          return forkJoin([this.electronSignalsService.call('isFirstWindow'), this.loadModelText()]);
-        }),
-        take(1)
-      )
+    this.electronSignalsService.call('requestMaximizeWindow');
+
+    const sub = forkJoin([this.electronSignalsService.call('isFirstWindow'), this.loadModelText()])
+      .pipe(take(1))
       .subscribe({
         next: ([isFirstWindow, model]) => {
           this.electronTunnel.startUpData$.next({isFirstWindow, model});
@@ -59,9 +54,7 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
           // Because complete is called in electron callback,
           // router.navigate is called outside ngZone
           // and needs to be called in ngZone to function
-          this.ngZone.run(() => {
-            this.router.navigate(['/editor']);
-          });
+          this.ngZone.run(() => this.router.navigate(['/editor']));
         },
       });
 
@@ -73,11 +66,15 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
   }
 
   loadModelText(): Observable<string> {
-    if (!this.electronTunnel.windowInfo.options) {
-      return this.modelApiService.getDefaultAspectModel();
-    }
+    return this.electronSignalsService.call('requestWindowData').pipe(
+      switchMap(data => {
+        if (!data?.options) {
+          return this.modelApiService.getDefaultAspectModel();
+        }
 
-    const {namespace, file} = this.electronTunnel.windowInfo.options;
-    return this.modelApiService.getAspectMetaModel(`${namespace}:${file}`);
+        const {namespace, file} = data.options;
+        return this.modelApiService.getAspectMetaModel(`${namespace}:${file}`);
+      })
+    );
   }
 }

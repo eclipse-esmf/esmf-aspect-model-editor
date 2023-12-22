@@ -77,3 +77,16 @@
 .text--center {
   text-align: center;
 }
+
+.property-key {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+
+  &__field {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 100%;
+  }
+}

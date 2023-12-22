@@ -203,29 +203,28 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
           this.loadingScreenService.open(loadingScreenOptions);
         }),
         switchMap(aspectModel =>
-          this.editorService.loadNewAspectModel(aspectModel, absoluteFileName).pipe(
-            first(),
-            catchError(error => {
-              console.groupCollapsed('sidebar.component -> loadNamespaceFile', error);
-              console.groupEnd();
+          this.editorService
+            .loadNewAspectModel({rdfAspectModel: aspectModel, namespaceFileName: absoluteFileName, fromWorkspace: true})
+            .pipe(
+              first(),
+              catchError(error => {
+                console.groupCollapsed('sidebar.component -> loadNamespaceFile', error);
+                console.groupEnd();
 
-              this.notificationsService.error({
-                title: 'Error when loading Aspect Model. Reverting to previous Aspect Model',
-                message: `${error}`,
-                timeout: 5000,
-              });
-              return throwError(() => error);
-            }),
-            finalize(() => {
-              this.loadingScreenService.close();
-              if (this.shapeSettingsStateService.isShapeSettingOpened) {
-                this.shapeSettingsStateService.closeShapeSettings();
-              }
-              // Update electron data
-              const [namespace, version, file] = absoluteFileName.split(':');
-              this.electronSignalsService.call('updateWindowInfo', {namespace: `${namespace}:${version}`, file, fromWorkspace: true});
-            })
-          )
+                this.notificationsService.error({
+                  title: 'Error when loading Aspect Model. Reverting to previous Aspect Model',
+                  message: `${error}`,
+                  timeout: 5000,
+                });
+                return throwError(() => error);
+              }),
+              finalize(() => {
+                this.loadingScreenService.close();
+                if (this.shapeSettingsStateService.isShapeSettingOpened) {
+                  this.shapeSettingsStateService.closeShapeSettings();
+                }
+              })
+            )
         )
       )
       .subscribe();
@@ -253,6 +252,8 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
   public goToNamespaces() {
     this.view = 'namespaces';
     this.expand(true);
+    // TODO: Replace this quickfix with proper architecture and change detection
+    setTimeout(() => this.detectorRef.markForCheck());
   }
 
   public goToDefault() {

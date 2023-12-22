@@ -20,23 +20,24 @@ This project includes the Aspect model editor and their documentation.
 
 Are you having trouble with Aspect Model Editor? We want to help!
 
-* Check the [developer documentation](https://eclipse-esmf.github.io)
-* Check the
+- Check the [developer documentation](https://eclipse-esmf.github.io)
+- Check the
   SAMM [specification](https://eclipse-esmf.github.io/samm-specification/2.1.0/index.html)
-* Having issues with the Aspect Model Editor? Open
+- Having issues with the Aspect Model Editor? Open
   a [GitHub issue](https://github.com/eclipse-esmf/esmf-aspect-model-editor/issues).
 
 ### Getting started
 
 #### Artifacts to use
+
 You can either use the releases provided in this repository, or you can clone the repositories to run the aspect model editor. Feel free to contribute.
 
 If you want to run the aspect model editor from repositories, please ensure to clone and start the [backend](https://github.com/eclipse-esmf/esmf-aspect-model-editor-backend) first.
 
 #### Setup
 
-* Download & Install [Node.js](https://nodejs.org/en/download/)
-* To generate Aspect Model documentation, the installation [GraphViz](https://graphviz.org/download) is required.
+- Download & Install [Node.js](https://nodejs.org/en/download/)
+- To generate Aspect Model documentation, the installation [GraphViz](https://graphviz.org/download) is required.
 
 #### Install & Run
 
@@ -53,22 +54,22 @@ npm run start
 Windows:
 
 ```bash
-npm run electron-start-win-dev
-npm run electron-start-win-prod
+npm run start:win # DEV
+npm run start:win:prod # PROD
 ```
 
 Mac:
 
 ```bash
-npm run electron-start-mac-dev
-npm run electron-start-mac-prod
+npm run start:mac # DEV
+npm run start:mac:prod # PROD
 ```
 
 Unix:
 
 ```bash
-npm run electron-start-linux-dev
-npm run electron-start-linux-prod
+npm run start:linux # DEV
+npm run start:linux:prod # PROD
 ```
 
 #### Running E2E (Cypress) Test

@@ -23,6 +23,7 @@ import {RdfService} from '@ame/rdf/services';
 @Component({
   selector: 'ame-right-input-field',
   templateUrl: './right-input-field.component.html',
+  styleUrls: ['../../field.scss'],
 })
 export class RightInputFieldComponent extends InputFieldComponent<DefaultEither> implements OnInit, OnDestroy {
   filteredCharacteristicTypes$: Observable<any[]>;

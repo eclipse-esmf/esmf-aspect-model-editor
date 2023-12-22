@@ -24,7 +24,7 @@ import {NamespacesCacheService} from '@ame/cache';
 @Component({
   selector: 'ame-values-input-field',
   templateUrl: './values-input-field.component.html',
-  styleUrls: ['./values-input-field.component.scss'],
+  styleUrls: ['./values-input-field.component.scss', '../../field.scss'],
 })
 export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumeration> implements OnInit, OnDestroy {
   @ViewChild('chipList') chipList: MatChipGrid;

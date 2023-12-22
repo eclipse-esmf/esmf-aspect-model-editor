@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, Injector} from '@angular/core';
+import {Injectable, Injector, NgZone} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphCharacteristicHelper, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService, MxGraphVisitorHelper} from '@ame/mx-graph';
@@ -44,7 +44,8 @@ export class ElementModelService {
     private modelService: ModelService,
     private rdfService: RdfService,
     private renameModelService: RenameModelDialogService,
-    private notificationService: NotificationsService
+    private notificationService: NotificationsService,
+    private zone: NgZone
   ) {}
 
   get currentCachedFile() {
@@ -161,23 +162,25 @@ export class ElementModelService {
     if (!(modelElement instanceof DefaultAspect)) {
       return false;
     }
+    this.zone.run(() => {
+      this.renameModelService.open().subscribe(data => {
+        if (!data?.name) {
+          return;
+        }
 
-    this.renameModelService.open().subscribe(data => {
-      if (!data?.name) {
-        return;
-      }
-
-      const rdfModel = this.rdfService.currentRdfModel;
-      this.modelService.removeAspect();
-      this.removeElementData(cell);
-      if (!rdfModel.originalAbsoluteFileName) {
-        rdfModel.originalAbsoluteFileName = rdfModel.absoluteAspectModelFileName;
-      }
-      rdfModel.absoluteAspectModelFileName = '';
-      this.currentCachedFile.fileName = '';
-      rdfModel.aspectModelFileName = data.name;
-      this.titleService.updateTitle(rdfModel.absoluteAspectModelFileName, 'Shared');
+        const rdfModel = this.rdfService.currentRdfModel;
+        this.modelService.removeAspect();
+        this.removeElementData(cell);
+        if (!rdfModel.originalAbsoluteFileName) {
+          rdfModel.originalAbsoluteFileName = rdfModel.absoluteAspectModelFileName;
+        }
+        rdfModel.absoluteAspectModelFileName = '';
+        this.currentCachedFile.fileName = '';
+        rdfModel.aspectModelFileName = data.name;
+        this.titleService.updateTitle(rdfModel.absoluteAspectModelFileName, 'Shared');
+      });
     });
+
     return true;
   }
 

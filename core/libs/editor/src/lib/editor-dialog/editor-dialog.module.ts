@@ -100,6 +100,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {CounterPipe} from '../../../../shared/src/lib/pipes/counter.pipe';
 import {SaveModelDialogComponent} from '../save-model-dialog/save-model-dialog.component';
 import {LargeFileWarningComponent} from '../large-file-warning-dialog/large-file-warning-dialog';
+import {SharedSettingsTitleComponent} from './components/shape-settings/shared-settings-title/shared-settings-title.component';
 
 @NgModule({
   providers: [EditorModelService],
@@ -192,6 +193,7 @@ import {LargeFileWarningComponent} from '../large-file-warning-dialog/large-file
     LocateElementComponent,
     SaveModelDialogComponent,
     LargeFileWarningComponent,
+    SharedSettingsTitleComponent,
   ],
   exports: [ShapeSettingsComponent],
 })

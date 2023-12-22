@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -22,7 +21,6 @@ import {
   FIELD_see,
   META_MODEL_description,
   META_MODEL_preferredName,
-  META_MODEL_see,
   SELECTOR_configureProp,
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
@@ -133,9 +131,8 @@ describe('Test editing Entity', () => {
     cy.shapeExists('NewEntity')
       .then(() => cy.dbClickShape('NewEntity'))
       .then(() => {
-        cy.get(FIELD_name).clear().type('entity23$%$');
-        cy.get(FIELD_preferredNameen).click();
         cy.get(FIELD_name).should('be.visible').click();
+        cy.get(FIELD_name).clear().type('entity23$%$');
         cy.get('ame-name-input-field mat-error').should(
           'contain',
           'Please start with an upper case character followed by letters/numerals.'
@@ -213,9 +210,7 @@ describe('Test editing Entity', () => {
   it('should edit entity and property name', () => {
     cy.shapeExists('NewEntity')
       .then(() => cyHelp.renameElement('NewEntity', 'NewEntity1'))
-      .then(() => cy.wait(1000))
       .then(() => cyHelp.renameElement('property3', 'newProperty3'))
-      .then(() => cy.wait(1000))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(':NewEntity1');

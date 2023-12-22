@@ -1,0 +1,30 @@
+<!--
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div>
+  <span *ngIf="!metaModelElement?.isExternalReference()"
+    ><span class="element-icon" *ngIf="metaModelElement | modelElementParser as parsedElement" [ngClass]="parsedElement.type">{{
+      parsedElement.shortcut
+    }}</span></span
+  >
+  <div
+    class="element-name"
+    [ngClass]="{
+      'margin-left-5': !metaModelElement?.isExternalReference(),
+      'element-name-external': metaModelElement?.isExternalReference()
+    }"
+  >
+    {{ elementName }}
+  </div>
+  <span *ngIf="!metaModelElement?.isExternalReference()">({{ metaModelClassName }})</span>
+</div>

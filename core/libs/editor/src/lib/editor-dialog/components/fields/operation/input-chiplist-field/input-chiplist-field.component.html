@@ -10,7 +10,7 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<mat-form-field [floatLabel]="chipControl?.disabled ? 'always' : 'auto'" appearance="fill">
+<mat-form-field [floatLabel]="chipControl?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="input">input</mat-label>
   <mat-chip-grid #chipList [formControl]="chipControl" [errorStateMatcher]="hasErrors()">
     <mat-chip-row *ngFor="let input of inputValues" [removable]="removable" (removed)="remove(input)">
@@ -64,8 +64,8 @@
     </mat-optgroup>
   </mat-autocomplete>
 
-  <mat-error *ngIf="searchControl?.errors?.checkShapeName"> Please select a different name as this one is of different type </mat-error>
-  <mat-error *ngIf="searchControl?.errors?.checkShapeNameExtRef">
-    Please select a different name as this one is of different type in the same namespace
-  </mat-error>
+  <mat-error *ngIf="searchControl?.errors?.checkShapeName">Please select a different name as this one is of different type</mat-error>
+  <mat-error *ngIf="searchControl?.errors?.checkShapeNameExtRef"
+    >Please select a different name as this one is of different type in the same namespace</mat-error
+  >
 </mat-form-field>

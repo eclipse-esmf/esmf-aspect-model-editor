@@ -52,6 +52,7 @@ export const SELECTOR_namespaceTabSaveButton = '[data-cy="namespaceTabSaveButton
 
 export const SELECTOR_addEntityValue = '[data-cy="addNewEntityValueButton"]';
 export const SELECTOR_clearEntityValueButton = '[data-cy="clear-entityValue-button"]';
+export const SELECTOR_clearLanguageButton = '[data-cy="clear-language-button"]';
 export const SELECTOR_clearElementCharacteristicButton = '[data-cy="clear-element-characteristic-button"]';
 export const SELECTOR_clearLeftCharacteristicButton = '[data-cy="clear-left-button"]';
 export const SELECTOR_clearRightCharacteristicButton = '[data-cy="clear-right-button"]';
@@ -117,6 +118,8 @@ export const FIELD_optional = 'optional';
 export const FIELD_notInPayload = 'notInPayload';
 export const FIELD_propertyValueNotComplex = '[data-cy="propertyValueNotComplex"]';
 export const FIELD_propertyValueComplex = '[data-cy="propertyValueComplex"]';
+export const FIELD_propertyLanguageValue = '[data-cy="propertyLanguageValue"]';
+
 export const FIELD_deconstructionRuleInput = '[data-cy="deconstruction-rule-input"]';
 export const FIELD_deconstructionRuleSelect = '[data-cy="deconstruction-rule-select"]';
 export const FIELD_elementsModalButton = '[data-cy="elements-modal-button"]';
@@ -125,7 +128,7 @@ export const PROP_configuration = '.properties-button > p > span';
 export const SELECTOR_configureProp = '[data-cy="properties-modal-button"]';
 export const SELECTOR_outgoingEdges = '.mat-expansion-panel-header-title > h3';
 export const FIELD_error = '.mat-mdc-form-field-error-wrapper';
-export const SELECTOR_resizeWindow = '.as-split-gutter-icon';
+export const SELECTOR_resizeGutter = '[data-cy="properties-modal-button"]';
 export const SELECTOR_saveProperties = '[data-cy="propertiesSaveButton"]';
 export const SELECTOR_locateElement = '[data-cy="locateElement"]';
 export const SELECTOR_configuredProperty = ':nth-child(2) > .cdk-column-name > span';

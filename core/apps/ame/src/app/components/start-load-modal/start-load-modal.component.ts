@@ -58,7 +58,12 @@ export class StartLoadModalComponent {
   private loadNewAspectModel(aspectModel: Observable<string>, callback: Function, isDefault?: boolean) {
     aspectModel
       .pipe(
-        switchMap(model => this.editorService.loadNewAspectModel(this.migratorService.detectBammAndReplaceWithSamm(model), '', isDefault)),
+        switchMap(model =>
+          this.editorService.loadNewAspectModel({
+            rdfAspectModel: this.migratorService.detectBammAndReplaceWithSamm(model),
+            isDefault,
+          })
+        ),
         first()
       )
       .subscribe(() => {

@@ -11,19 +11,28 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {APP_CONFIG, AppConfig, NamespaceModel, ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
-import {inject, Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
+import {
+  APP_CONFIG,
+  AppConfig,
+  NamespaceModel,
+  ElectronSignals,
+  ElectronSignalsService,
+  NotificationsService,
+  LockUnlockPayload,
+  BrowserService,
+} from '@ame/shared';
+import {inject, Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges, OnDestroy} from '@angular/core';
 import {RdfService} from '@ame/rdf/services';
 import {ExporterHelper, MigratorService} from '@ame/migrator';
 import {NamespacesManagerService} from '@ame/namespace-manager';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'ame-sidebar-namespaces',
   templateUrl: './sidebar-namespaces.component.html',
   styleUrls: ['./sidebar-namespaces.component.scss'],
 })
-export class SidebarNamespacesComponent implements OnChanges, OnInit {
+export class SidebarNamespacesComponent implements OnChanges, OnInit, OnDestroy {
   @Input()
   public namespaces: NamespaceModel[] = [];
 
@@ -52,18 +61,23 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
   private selectedNamespace: string = null;
   private selectedNamespaceFile: string = null;
   private isSingleClick = false;
+  private subscription = new Subscription();
+  private lockedFiles: LockUnlockPayload[] = [];
 
   constructor(
-    public namespaceService: NamespacesCacheService,
     private rdfService: RdfService,
     private migratorService: MigratorService,
     private namespaceManagerService: NamespacesManagerService,
     private notificationService: NotificationsService,
+    private browserService: BrowserService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
   ngOnInit() {
     this.namespaces.sort(this.compareByName);
+    if (this.browserService.isStartedAsElectronApp() || window.require) {
+      this.subscription.add(this.electronSignalsService.call('lockedFiles').subscribe(files => (this.lockedFiles = files)));
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -72,24 +86,12 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
     }
   }
 
-  public migrateWorkspace() {
-    this.migratorService.startMigrating().subscribe(() => this.refresh.emit());
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
-  public getTooltip(namespace: NamespaceModel, file: string) {
-    if (this.isCurrentFile(namespace.name, file)) {
-      return 'Currently loaded file';
-    }
-
-    if (namespace.getFileStatus(file)?.outdated) {
-      return `Outdated file. Migrate to SAMM ${this.config.currentSammVersion}`;
-    }
-
-    if (namespace.getFileStatus(file)?.hasErrors) {
-      return `This file loaded with errors`;
-    }
-
-    return null;
+  public migrateWorkspace() {
+    this.subscription.add(this.migratorService.startMigrating().subscribe(() => this.refresh.emit()));
   }
 
   public isSelectedNamespace(name: string): boolean {
@@ -140,6 +142,13 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
     navigator.clipboard.writeText(text.replace(':', '/'));
   }
 
+  public isLocked(namespace: string, file: string): boolean {
+    return (
+      Boolean(this.lockedFiles.find(lockedFile => lockedFile.namespace === namespace && lockedFile.file === file)) &&
+      !this.isCurrentFile(namespace, file)
+    );
+  }
+
   public isCurrentFile(namespace: string, namespaceFile: string): boolean {
     const currentRdfModel = this.rdfService.currentRdfModel;
     return (
@@ -153,8 +162,25 @@ export class SidebarNamespacesComponent implements OnChanges, OnInit {
     return Boolean(currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName);
   }
 
-  public isLoadDisabled(namespace: NamespaceModel, file: string) {
+  public isLoadInNewWindowDisabled(namespace: NamespaceModel, file: string) {
     return this.isCurrentFile(namespace.name, file) || namespace.getFileStatus(file)?.outdated || namespace.getFileStatus(file)?.hasErrors;
+  }
+
+  public isLoadDisabled(namespace: NamespaceModel, file: string) {
+    return (
+      this.isLocked(namespace.name, file) ||
+      this.isCurrentFile(namespace.name, file) ||
+      namespace.getFileStatus(file)?.outdated ||
+      namespace.getFileStatus(file)?.hasErrors
+    );
+  }
+
+  public isSelectNamespaceFileDisabled(namespace: NamespaceModel, file: string) {
+    return this.isCurrentFile(namespace.name, file) || namespace.getFileStatus(file)?.outdated || namespace.getFileStatus(file)?.hasErrors;
+  }
+
+  public isDeleteDisabled(namespace: NamespaceModel, file: string) {
+    return this.isLocked(namespace.name, file) || this.isCurrentFile(namespace.name, file);
   }
 
   public onLoadAspectModel(namespace: NamespaceModel, namespaceFile: string) {

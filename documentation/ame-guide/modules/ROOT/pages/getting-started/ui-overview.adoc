@@ -38,7 +38,7 @@ The numbers in the image above indicate the following UI elements of the Aspect 
 | Assign the file automatically to the corresponding namespace.
 
 | image:toolbar-icons/edit.png[,15%,15%]
-| Edit highlighted element
+| Open highlighted element
 | Open the Edit dialog of the selected element (alternative: double-click an element inside the model).
 
 | image:toolbar-icons/delete.png[,15%,15%]
@@ -62,7 +62,7 @@ The numbers in the image above indicate the following UI elements of the Aspect 
 | Validate the Aspect Model.
 
 | image:toolbar-icons/print.png[]
-| Generate HTML or OpenAPI specification.
+| Generate HTML, OpenAPI specification or AASX/XML.
 | For more information, see xref:generate/generate-other-files.adoc[].
 
 | image:toolbar-icons/json.png[,15%,15%]
@@ -157,6 +157,6 @@ For more information, see xref:getting-started/edit-models.adoc[Edit models].
 
 Edit the attributes of a selected element of your Aspect Model with the Edit dialog.
 
-To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Edit icon image:toolbar-icons/edit.png[Edit icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Open element icon image:toolbar-icons/edit.png[Edit icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 
 For more information, see xref:modeling/edit-elements.adoc[Edit elements].

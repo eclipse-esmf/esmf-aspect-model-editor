@@ -11,6 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DefaultProperty} from '@ame/meta-model';
+import {Samm} from '@ame/vocabulary';
+
+export function isDataTypeLangString(property: DefaultProperty): boolean {
+  return property.characteristic?.dataType?.getUrn() === `${Samm.RDF_URI}#langString`;
+}
+
 export const simpleDataTypes = {
   anyURI: {isDefinedBy: 'http://www.w3.org/2001/XMLSchema#anyURI', description: 'Absolute or relative URIs and IRIs'},
   base64Binary: {

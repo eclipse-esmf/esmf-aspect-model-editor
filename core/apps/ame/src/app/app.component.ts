@@ -155,8 +155,10 @@ export class AppComponent implements OnInit {
           : []),
       ];
 
-      const menu = Menu.buildFromTemplate(template);
-      menu.popup();
+      if (template?.length) {
+        const menu = Menu.buildFromTemplate(template);
+        menu.popup();
+      }
     });
   }
 
@@ -167,7 +169,7 @@ export class AppComponent implements OnInit {
   private loadNewAspectModel(aspectModel: Observable<string>, callback: () => any, isDefault?: boolean) {
     aspectModel
       .pipe(
-        switchMap(model => this.editorService.loadNewAspectModel(model, '', isDefault)),
+        switchMap(model => this.editorService.loadNewAspectModel({rdfAspectModel: model, isDefault})),
         first()
       )
       .subscribe(callback);

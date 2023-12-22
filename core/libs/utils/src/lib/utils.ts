@@ -71,3 +71,24 @@ export const setUniqueElementName = (
   modelElement.aspectModelUrn = tmpAspectModelUrnName;
   modelElement.name = tmpName;
 };
+
+/**
+ * Extracts the namespace part from a given URN.
+ *
+ * @param {string} urn - The Uniform Resource Name (URN) from which to extract the namespace.
+ * @returns {string} The extracted namespace from the URN. If the URN doesn't contain a '#', the entire URN is returned.
+ */
+export const extractNamespace = (urn: string) => urn.split('#')[0];
+
+/**
+ * Remove comments from an Aspect Model
+ *
+ * @param {string} aspectModel - The Aspect Model as a string.
+ * @returns {string} - Aspect Model without comments.
+ */
+export const removeCommentsFromTTL = (aspectModel: string): string => {
+  return aspectModel
+    .split('\n')
+    .filter(line => !line.trim().startsWith('#'))
+    .join('\n');
+};

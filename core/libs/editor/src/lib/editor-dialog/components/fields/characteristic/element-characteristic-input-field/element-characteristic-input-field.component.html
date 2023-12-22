@@ -11,7 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="getControl('elementCharacteristic')?.disabled ? 'always' : 'auto'" appearance="fill">
+<mat-form-field
+  [floatLabel]="getControl('elementCharacteristic')?.disabled ? 'always' : 'auto'"
+  appearance="fill"
+  subscriptSizing="dynamic"
+>
   <mat-label for="elementCharacteristic">elementCharacteristic</mat-label>
   <input
     #elementCharacteristic
@@ -32,12 +36,12 @@
     <mat-icon>close</mat-icon>
   </button>
 
-  <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeName">
-    Please select a different name as this one is of different type
-  </mat-error>
-  <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeNameExtRef">
-    Please select a different name as this one is of different type in the same namespace
-  </mat-error>
+  <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeName"
+    >Please select a different name as this one is of different type</mat-error
+  >
+  <mat-error *ngIf="getControl('elementCharacteristicDisplay')?.errors?.checkShapeNameExtRef"
+    >Please select a different name as this one is of different type in the same namespace</mat-error
+  >
 
   <mat-autocomplete #auto="matAutocomplete" class="element-characteristic">
     <div *ngIf="filteredCharacteristicTypes$ | async as filteredCharacteristicTypes" label="Characteristic">

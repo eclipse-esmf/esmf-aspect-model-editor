@@ -203,15 +203,19 @@ export class RdfModel {
     delete this.prefixes[shortPrefixName];
   }
 
-  getAliasByNamespace(namespace: string) {
+  getAliasByNamespace(namespace: string): string {
     return Object.keys(this.prefixes).find(alias => (this.prefixes[alias] as any) === namespace);
   }
 
-  hasNamespace(namespace: string) {
+  hasNamespace(namespace: string): boolean {
     return Object.values(this.prefixes).some(localNamespace => (localNamespace as any) === namespace);
   }
 
-  getLocale(quad: Quad) {
+  hasLocalTag(quad: Quad): boolean {
+    return quad?.object.termType === 'Literal' && Boolean(quad?.object['language']);
+  }
+
+  getLocale(quad: Quad): string {
     return quad ? locale.getByTag(quad.object['language']).tag : null;
   }
 

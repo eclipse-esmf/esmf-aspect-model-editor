@@ -3,10 +3,11 @@
 To generate HTML from the Aspect Model, proceed as follows:
 
 * Click the *Generate Document* icon. +
-A menu offers two options:
+A menu offers three options:
 
 ** *Generate HTML documentation* -- continue with this one
-**  Generate OpenAPI specification
+** Generate OpenAPI specification
+** Generate AASX/XML
 +
 image::generate-html.png[Generate document, width=100%]
 
@@ -15,4 +16,3 @@ image::generate-html.png[Generate document, width=100%]
 
 TIP: If you run into errors, please make sure that your Aspect Model is valid. +
 If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.
-

@@ -10,13 +10,7 @@ To generate JSON from the Aspect Model, proceed as follows:
 A menu offers two options:
 
 ** Generate sample JSON payload
-**  Generate JSON schema
-
-* A preview is displayed.
-* You can now:
-** Edit the source in the preview.
-** Use the Copy to Clipboard function and continue editing with another tool.
-** Download the file locally.
+** Generate JSON schema
 
 TIP: If you run into errors, please make sure that your Aspect Model is valid. +
 If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.
@@ -29,12 +23,24 @@ After selecting *Generate sample JSON payload*, an example payload will be gener
 
 image::json-payload.png[Generate sample JSON payload, width=100%]
 
+* A preview is displayed.
+* You can now:
+** Edit the source in the preview.
+** Use the Copy to Clipboard function and continue editing with another tool.
+** Download the file locally.
+
 [[generate-json-schema]]
 == Generate JSON schema
 
 After selecting *Generate JSON schema*, a JSON schema will be generated for current model, and it will be displayed in the following dialog:
 
 image::json-schema.png[Generate JSON schema, width=100%]
+
+* A preview is displayed.
+* You can now:
+** Edit the source in the preview.
+** Use the Copy to Clipboard function and continue editing with another tool.
+** Download the file locally.
 
 ++++
 <style>

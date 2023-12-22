@@ -35,7 +35,6 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   public formGroup: FormGroup = new FormGroup({
     changedMetaModel: new FormControl(null),
   });
-
   private subscription = new Subscription();
 
   @Input() isOpened = false;
@@ -119,15 +118,6 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       this.loggerService.logWarn('Selected element is null. The dialog will not shown.');
     }
-  }
-
-  getTitle(): string {
-    if (this.metaModelElement === undefined || this.metaModelElement === null) {
-      return 'Edit';
-    }
-    let name = `${this.metaModelElement.getPreferredName('en') || this.metaModelElement.name}`;
-    name = name.length > 150 ? `${name.substring(0, 100)}...` : name;
-    return this.metaModelElement.isExternalReference() ? name : `Edit ${this.metaModelClassName} ${name}`;
   }
 
   addLanguageSettings(metaModelElement: BaseMetaModelElement) {

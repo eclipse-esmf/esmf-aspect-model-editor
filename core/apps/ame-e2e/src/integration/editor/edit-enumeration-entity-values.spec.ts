@@ -15,13 +15,16 @@
 import {
   FIELD_characteristicName,
   FIELD_dataType,
+  FIELD_dataTypeOption,
   FIELD_entityValueName,
   FIELD_name,
   FIELD_optional,
+  FIELD_propertyLanguageValue,
   FIELD_propertyValueComplex,
   FIELD_propertyValueNotComplex,
   SELECTOR_addEntityValue,
   SELECTOR_clearEntityValueButton,
+  SELECTOR_clearLanguageButton,
   SELECTOR_dialogInputModel,
   SELECTOR_dialogStartButton,
   SELECTOR_editorCancelButton,
@@ -36,7 +39,7 @@ import {cyHelp} from '../../support/helpers';
 
 describe('Test enumeration entity value', () => {
   it('should create nested entity values', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'response-default-model-validation'});
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.dbClickShape('Characteristic1'))
@@ -247,7 +250,7 @@ describe('Test enumeration entity value', () => {
 
   it('import new model with entity values', () => {
     cy.visitDefault();
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'response-default-model-validation'});
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.fixture('entity-values-enumeration')
       .as('rdfString')
       .then(rdfString => {
@@ -256,6 +259,7 @@ describe('Test enumeration entity value', () => {
         cy.get(SELECTOR_dialogInputModel).invoke('val', rdfString).trigger('input');
       })
       .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}))
+      .wait(2000)
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => {
         checkMatPanelTitleValues([0], ['test1']);
@@ -425,7 +429,7 @@ describe('Test enumeration entity value', () => {
 
   it('delete all entity value one by one', () => {
     cy.visitDefault();
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'response-default-model-validation'});
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.fixture('entity-values-enumeration')
       .as('rdfString')
       .then(rdfString => {
@@ -551,7 +555,7 @@ describe('Test enumeration entity value', () => {
   it('should create NewEntity', () => {
     cy.visitDefault();
     cy.startModelling()
-      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'response-default-model-validation'}))
+      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
       .then(() =>
@@ -570,7 +574,7 @@ describe('Test enumeration entity value', () => {
   it('should create NewEntity and new entity values', () => {
     cy.visitDefault();
     cy.startModelling()
-      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'response-default-model-validation'}))
+      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
       .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
@@ -591,10 +595,117 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.shapeExists('NewEntity'));
   });
 
+  it('should create enumeration with lang string values', () => {
+    cy.visitDefault();
+    cy.startModelling()
+      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
+      .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .then(() => cy.clickAddShapePlusIcon('property2'))
+      .then(() => cy.clickAddShapePlusIcon('property3'))
+      .then(() => cy.dbClickShape('Characteristic2'))
+      .then(() =>
+        cy.get(FIELD_dataType).clear({force: true}).type('langString', {force: true}).get(FIELD_dataTypeOption).eq(0).click({force: true})
+      )
+      .then(() => cyHelp.clickSaveButton())
+      .then(() => cy.dbClickShape('Characteristic3'))
+      .then(() =>
+        cy.get(FIELD_dataType).clear({force: true}).type('langString', {force: true}).get(FIELD_dataTypeOption).eq(0).click({force: true})
+      )
+      .then(() => cyHelp.clickSaveButton())
+      .then(() => cy.dbClickShape('Characteristic1'))
+      .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
+      .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}))
+      .then(() => cy.get(FIELD_entityValueName).should('exist').type('ev1', {force: true}))
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(0).should('exist').type('TestPropertyValue1', {force: true}))
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(1).should('exist').type('TestPropertyValue2', {force: true}))
+      .then(() =>
+        cy
+          .get(FIELD_propertyLanguageValue)
+          .eq(0)
+          .should('exist')
+          .clear({force: true})
+          .type('de', {force: true})
+          .get('.mat-mdc-option')
+          .contains('de')
+          .click({force: true})
+      )
+      .then(() =>
+        cy
+          .get(FIELD_propertyLanguageValue)
+          .eq(1)
+          .should('exist')
+          .clear({force: true})
+          .type('aa', {force: true})
+          .get('.mat-mdc-option')
+          .contains('aa')
+          .click({force: true})
+      )
+      .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
+      .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}).wait(200))
+      .then(() => cy.get(FIELD_entityValueName).should('exist').type('ev2', {force: true}))
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(0).should('exist').type('TestPropertyValue3', {force: true}))
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(1).should('exist').type('TestPropertyValue4', {force: true}))
+      .then(() =>
+        cy
+          .get(FIELD_propertyLanguageValue)
+          .eq(0)
+          .should('exist')
+          .clear({force: true})
+          .type('aa', {force: true})
+          .get('.mat-mdc-option')
+          .contains('aa')
+          .click({force: true})
+      )
+      .then(() =>
+        cy
+          .get(FIELD_propertyLanguageValue)
+          .eq(1)
+          .should('exist')
+          .clear({force: true})
+          .type('de', {force: true})
+          .get('.mat-mdc-option')
+          .contains('de')
+          .click({force: true})
+      )
+      .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
+      .then(() => cyHelp.clickSaveButton())
+      .then(() => cy.dbClickShape('ev1'))
+      .then(() => cy.get(FIELD_propertyLanguageValue).eq(0).should('exist').should('have.value', 'de'))
+      .then(() => cy.get(SELECTOR_clearLanguageButton).eq(0).focus().click({force: true}))
+      .then(() =>
+        cy
+          .get(FIELD_propertyLanguageValue)
+          .eq(0)
+          .should('exist')
+          .clear({force: true})
+          .type('en', {force: true})
+          .get('.mat-mdc-option')
+          .contains('en')
+          .click({force: true})
+      )
+      .then(() => cyHelp.clickSaveButton().wait(200))
+      .then(() => cy.dbClickShape('Characteristic1'))
+      .then(() => cy.contains('property2 (en)'))
+      .then(() => cy.contains('property3 (de)'))
+      .then(() => cy.contains('property2 (aa) '))
+      .then(() => cy.contains('property3 (de) '))
+      .then(() => cyHelp.clickSaveButton())
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => {
+        expect(rdf).to.contain(':ev1 a :Entity1;');
+        expect(rdf).to.contain(':property2 "TestPropertyValue1"@en');
+        expect(rdf).to.contain(':property3 "TestPropertyValue2"@aa');
+        expect(rdf).to.contain(':property2 "TestPropertyValue3"@aa');
+        expect(rdf).to.contain(':property3 "TestPropertyValue4"@de');
+      });
+  });
+
   it.skip('should create nested enumerations', () => {
     cy.visitDefault();
     cy.startModelling()
-      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'response-default-model-validation'}))
+      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
       .then(() => cy.clickAddShapePlusIcon('property2'))

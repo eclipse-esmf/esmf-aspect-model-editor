@@ -19,8 +19,13 @@ import {OverWrittenProperty} from './overwritten-property';
 
 export interface EntityValueProperty {
   key: OverWrittenProperty;
-  value: string | number | boolean | DefaultEntityValue;
+  value: string | number | boolean | DefaultEntityValue | LangStringProperty;
   isComplex?: boolean;
+}
+
+export interface LangStringProperty {
+  value: string;
+  language: string;
 }
 
 export interface EntityValueProperties {
@@ -32,7 +37,7 @@ export interface EntityValue extends BaseMetaModelElement, EntityValueProperties
 // Draft class, to be updated if needed
 export class DefaultEntityValue extends Base implements EntityValue {
   public properties: EntityValueProperty[] = [];
-  public parents: DefaultEnumeration[] = new ModelRelationArray();
+  public parents: any = new ModelRelationArray<DefaultEnumeration | DefaultEntityValue>();
 
   static createInstance() {
     return new DefaultEntityValue(null, 'EntityValue', null, null, []);
@@ -53,7 +58,7 @@ export class DefaultEntityValue extends Base implements EntityValue {
     this.properties = properties?.map(key => ({key, value: ''})) || [];
   }
 
-  public addProperty(overWrittenProperty: OverWrittenProperty<any>, value: string | DefaultEntityValue = '') {
+  public addProperty(overWrittenProperty: OverWrittenProperty<any>, value: string | LangStringProperty | DefaultEntityValue = '') {
     this.properties.push({key: overWrittenProperty, value});
   }
 
@@ -61,11 +66,11 @@ export class DefaultEntityValue extends Base implements EntityValue {
     this.properties = this.properties.filter(({key}) => key.property.aspectModelUrn !== property.aspectModelUrn);
   }
 
-  public addParent(characteristic: DefaultEnumeration) {
-    this.parents.push(characteristic);
+  public addParent(element: DefaultEnumeration | DefaultEntityValue) {
+    this.parents.push(element);
   }
 
-  public removeParent(characteristic: DefaultEnumeration) {
-    this.parents = this.parents.filter(parent => parent.aspectModelUrn !== characteristic.aspectModelUrn);
+  public removeParent(element: DefaultEnumeration | DefaultEntityValue) {
+    this.parents = this.parents.filter(parent => parent.aspectModelUrn !== element.aspectModelUrn);
   }
 }

@@ -29,6 +29,11 @@ import {ThemeService} from '../themes/theme.service';
 import {ShapeConfiguration} from '../models';
 import {FILTER_ATTRIBUTES, FilterAttributesService, ModelTree} from '@ame/loader-filters';
 
+export interface Coordinates {
+  x: number;
+  y: number;
+}
+
 @Injectable()
 export class MxGraphService {
   private document: Document;
@@ -36,6 +41,10 @@ export class MxGraphService {
 
   public firstTimeFold = true;
   public graph: mxgraph.mxGraph;
+  public scrollPosition: Coordinates = {
+    x: 0,
+    y: 0,
+  };
 
   get currentCachedFile() {
     return this.namespacesCacheService.currentCachedFile;
@@ -72,6 +81,19 @@ export class MxGraphService {
 
   setCoordinatesForNextCellRender(x: number, y: number) {
     this.nextCellCoordinates = {x, y};
+  }
+
+  /**
+   * Sets the scroll position
+   *
+   * @param event scroll event object
+   */
+  setScrollPosition(event: Event): void {
+    const {scrollLeft, scrollTop} = event.target as HTMLElement;
+    this.scrollPosition = {
+      x: scrollLeft,
+      y: scrollTop,
+    };
   }
 
   /**
@@ -351,16 +373,33 @@ export class MxGraphService {
     this.graph.refresh();
   }
 
-  /** Re-formats entire schematic. */
-  formatShapes(force = false): void {
-    if (!this.configurationService.getSettings().autoFormatEnabled && !force) {
-      return;
-    }
+  /**
+   * Re-formats the entire graph
+   *
+   * @param force controls whether to ignore "autoFormatEnabled" settings or not
+   * @param restoreScrollPosition allows to restore a scroll position to keep the same elements visible after formatting
+   */
+  formatShapes(force = false, restoreScrollPosition = false): void {
+    if (!this.configurationService.getSettings().autoFormatEnabled && !force) return;
+    if (this.graph.getDefaultParent().children === undefined) return;
 
-    if (this.graph.getDefaultParent().children !== undefined) {
-      this.configurationService.getSettings().enableHierarchicalLayout
-        ? MxGraphHelper.setHierarchicalLayout(this.graph, this.mxGraphAttributeService.inCollapsedMode)
-        : MxGraphHelper.setCompactTreeLayout(this.graph, this.mxGraphAttributeService.inCollapsedMode);
+    const selectedShape = restoreScrollPosition ? this.mxGraphShapeSelectorService.getSelectedShape() : undefined;
+    const visibleCell = restoreScrollPosition ? this.getVisibleCells()[0] : undefined;
+    const visibleCellCoordinates = restoreScrollPosition ? this.getCellCoordinates(visibleCell, this.graph) : undefined;
+
+    this.configurationService.getSettings().enableHierarchicalLayout
+      ? MxGraphHelper.setHierarchicalLayout(this.graph, this.mxGraphAttributeService.inCollapsedMode)
+      : MxGraphHelper.setCompactTreeLayout(this.graph, this.mxGraphAttributeService.inCollapsedMode);
+
+    if (!restoreScrollPosition) return;
+
+    if (selectedShape) {
+      this.navigateToCell(selectedShape, true);
+    } else if (visibleCell) {
+      const newCellCoordinates = this.getCellCoordinates(visibleCell, this.graph);
+      if (visibleCellCoordinates.x === newCellCoordinates.x && visibleCellCoordinates.y === newCellCoordinates.y) return;
+
+      this.graph.scrollCellToVisible(visibleCell, true);
     }
   }
 
@@ -526,5 +565,67 @@ export class MxGraphService {
       this.applyDelta(edge.target, deltaX, deltaY, formattedCells);
       this.graph.resetEdge(edge);
     }
+  }
+
+  /**
+   * Get an array of cells which are currently visible to a user
+   */
+  public getVisibleCells(): mxgraph.mxCell[] {
+    const graph = this.mxGraphAttributeService.graph;
+    const cells: Record<any, mxgraph.mxCell> = graph.getModel().cells;
+    const visibleCells: mxgraph.mxCell[] = [];
+
+    Object.values(cells).forEach(cell => {
+      const isCellVisible = this.isCellVisible(cell, graph, this.scrollPosition);
+
+      if (isCellVisible) {
+        visibleCells.push(cell);
+      }
+    });
+
+    return visibleCells;
+  }
+
+  /**
+   * Determines whether a cell is currently visible to a user or not.
+   *
+   * @param cell a cell to examine
+   * @param graph a graph the cell belongs to
+   * @param scrollPosition current position of the scroll, relative to the graph container
+   */
+  public isCellVisible(cell: mxgraph.mxCell, graph: mxgraph.mxGraph, scrollPosition: Coordinates): boolean {
+    if (cell.edge) return false;
+
+    const viewportWidth = graph.container.clientWidth;
+    const viewportHeight = graph.container.clientHeight;
+
+    const xRangeStart = scrollPosition.x;
+    const xRangeEnd = viewportWidth + xRangeStart;
+    const yRangeStart = scrollPosition.y;
+    const yRangeEnd = viewportHeight + yRangeStart;
+    const coordinates = this.getCellCoordinates(cell, graph);
+
+    if (!coordinates) return false;
+
+    return coordinates.x >= xRangeStart && coordinates.x <= xRangeEnd && coordinates.y >= yRangeStart && coordinates.y <= yRangeEnd;
+  }
+
+  /**
+   * Get cell coordinates from DOM element directly
+   *
+   * @param cell target cell
+   * @param graph a graph the cell belongs to
+   */
+  public getCellCoordinates(cell: mxgraph.mxCell, graph: mxgraph.mxGraph): Coordinates {
+    const cellState = graph.view.getState(cell);
+    const cellNode = cellState?.shape?.node;
+
+    if (!cellNode) return undefined;
+
+    const childNode = cellNode.firstChild as HTMLElement;
+    const x = +childNode.getAttribute('x');
+    const y = +childNode.getAttribute('y');
+
+    return {x, y};
   }
 }

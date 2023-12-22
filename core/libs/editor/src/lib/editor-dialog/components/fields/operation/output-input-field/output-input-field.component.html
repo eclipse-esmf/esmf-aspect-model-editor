@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="getControl('output')?.disabled ? 'always' : 'auto'" appearance="fill">
+<mat-form-field [floatLabel]="getControl('output')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="output">output</mat-label>
   <input #output [matAutocomplete]="auto" spellcheck="false" matInput name="output" [formControl]="getControl('output')" data-cy="output" />
   <button
@@ -28,9 +28,9 @@
   <mat-error *ngIf="getControl('output')?.errors?.checkShapeName"
     >Please select a different name as this one is of different type
   </mat-error>
-  <mat-error *ngIf="getControl('output')?.errors?.checkShapeNameExtRef">
-    Please select a different name as this one is of different type in the same namespace
-  </mat-error>
+  <mat-error *ngIf="getControl('output')?.errors?.checkShapeNameExtRef"
+    >Please select a different name as this one is of different type in the same namespace</mat-error
+  >
 
   <mat-autocomplete #auto="matAutocomplete" class="characteristic-output-autocomplete">
     <mat-optgroup *ngIf="filteredPropertyTypes$ | async as filteredPropertyTypes" label="Property">
