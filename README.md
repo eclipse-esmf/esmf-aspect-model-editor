@@ -14,7 +14,8 @@
 
 ## Introduction
 
-This project includes the Aspect model editor and their documentation.
+This project includes the Aspect Model Editor and its documentation.
+As a user, download the Installer from https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases .
 
 ## Getting help
 
@@ -26,12 +27,11 @@ Are you having trouble with Aspect Model Editor? We want to help!
 - Having issues with the Aspect Model Editor? Open
   a [GitHub issue](https://github.com/eclipse-esmf/esmf-aspect-model-editor/issues).
 
-### Getting started
+### Getting started (for developers)
 
-#### Artifacts to use
+#### Artifacts to use 
 
-You can either use the releases provided in this repository, or you can clone the repositories to run the aspect model editor. Feel free to contribute.
-
+You can clone the repositories to run the aspect model editor. Feel free to contribute.
 If you want to run the aspect model editor from repositories, please ensure to clone and start the [backend](https://github.com/eclipse-esmf/esmf-aspect-model-editor-backend) first.
 
 #### Setup
