@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {MigratorApiService, ModelApiService} from '@ame/api';
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {catchError, forkJoin, map, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
@@ -45,8 +45,10 @@ export class MigratorService {
     private router: Router,
     private migratorApi: MigratorApiService,
     private modelApiService: ModelApiService,
-    private notificationsService: NotificationsService
-  ) {}
+    private notificationsService: NotificationsService,
+    private ngZone: NgZone
+  ) {
+  }
 
   public startMigrating() {
     return this.migrateWorkspaceToSAMM().pipe(
@@ -129,7 +131,7 @@ export class MigratorService {
   }
 
   private openDialog() {
-    this._dialog = this.dialog.open(MigratorComponent, {disableClose: true});
+    this._dialog = this.ngZone.run(() => this.dialog.open(MigratorComponent, {disableClose: true}));
     return this.dialogRef.afterClosed().pipe(
       tap(() => {
         this._dialog = null;

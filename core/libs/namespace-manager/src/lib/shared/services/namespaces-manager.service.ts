@@ -13,7 +13,7 @@
 
 import {ModelApiService} from '@ame/api';
 import {EditorService} from '@ame/editor';
-import {Injectable, InjectionToken} from '@angular/core';
+import {Injectable, InjectionToken, NgZone} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {catchError, first, of, switchMap, tap} from 'rxjs';
@@ -34,13 +34,14 @@ export class NamespacesManagerService {
     private matDialog: MatDialog,
     private router: Router,
     private editorService: EditorService,
-    private sidebarService: SidebarService
+    private sidebarService: SidebarService,
+    private ngZone: NgZone
   ) {}
 
   importNamespaces(zip: File) {
     this.setInjectionTokens();
     this.session.state.validating$.next(true);
-    this.session.modalRef = this.matDialog.open(RootNamespacesImporterComponent, {disableClose: true});
+    this.session.modalRef = this.ngZone.run(() => this.matDialog.open(RootNamespacesImporterComponent, {disableClose: true}));
 
     return this.session.modalRef.afterOpened().pipe(
       tap(() =>
@@ -60,7 +61,7 @@ export class NamespacesManagerService {
 
   exportNamespaces() {
     this.setInjectionTokens();
-    this.session.modalRef = this.matDialog.open(RootExportNamespacesComponent, {disableClose: true});
+    this.session.modalRef = this.ngZone.run(() => this.matDialog.open(RootExportNamespacesComponent, {disableClose: true}));
     this.session.modalRef.afterOpened().subscribe(() => {
       this.setOnClose(() => {
         this.router.navigate([{outlets: {'export-namespaces': null}}]);

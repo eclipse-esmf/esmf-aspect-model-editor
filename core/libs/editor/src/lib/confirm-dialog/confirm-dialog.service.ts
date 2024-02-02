@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {first} from 'rxjs/operators';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
@@ -26,10 +26,11 @@ export interface DialogOptions {
 
 @Injectable({providedIn: 'root'})
 export class ConfirmDialogService {
-  constructor(private matDialog: MatDialog) {}
+  constructor(private matDialog: MatDialog, private ngZone: NgZone) {
+  }
 
   open({phrases, title, closeButtonText, okButtonText}: DialogOptions): Observable<boolean> {
-    return this.matDialog
+    return this.ngZone.run(() => this.matDialog
       .open(ConfirmDialogComponent, {
         data: {
           phrases,
@@ -41,6 +42,7 @@ export class ConfirmDialogService {
         minWidth: 550,
       })
       .afterClosed()
-      .pipe(first());
+      .pipe(first())
+    );
   }
 }

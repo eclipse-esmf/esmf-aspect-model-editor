@@ -194,7 +194,7 @@ export class EditorService {
             }
             mxEvent.consume(evt);
           }
-        })
+        });
       }),
       null
     );
@@ -224,7 +224,7 @@ export class EditorService {
             if (sourceElement && !sourceElement?.isExternalReference()) {
               sourceElement.delete(MxGraphHelper.getModelElement(cell));
             }
-          })
+          });
         });
       })
     );
@@ -517,9 +517,9 @@ export class EditorService {
       const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(newInstance);
       metaModelElement
         ? this.mxGraphService.renderModelElement(this.filtersService.createNode(metaModelElement), {
-          shapeAttributes: [],
-          geometry: {x, y},
-        })
+            shapeAttributes: [],
+            geometry: {x, y},
+          })
         : this.openAlertBox();
 
       if (metaModelElement instanceof Base) {
@@ -578,9 +578,9 @@ export class EditorService {
         rdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
         metaModelElement
           ? this.mxGraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
-            shapeAttributes: [],
-            geometry,
-          })
+              shapeAttributes: [],
+              geometry,
+            })
           : this.openAlertBox();
         this.titleService.updateTitle(rdfModel.absoluteAspectModelFileName, 'Aspect');
       });
@@ -851,7 +851,7 @@ export class EditorService {
     this.logService.logError(`Error occurred while saving the current model (${JSON.stringify(error)})`);
     this.notificationsService.error({
       title: 'Saving completed with errors',
-      message: error?.error?.error?.message || ''
+      message: error?.error?.error?.message || '',
     });
   }
 }

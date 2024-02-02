@@ -13,14 +13,7 @@
 
 import {Injectable, NgZone} from '@angular/core';
 import {BaseMetaModelElement} from '@ame/meta-model';
-import {
-  mxEvent,
-  MxGraphAttributeService,
-  MxGraphHelper,
-  MxGraphService,
-  MxGraphShapeSelectorService,
-  mxUtils
-} from '@ame/mx-graph';
+import {mxEvent, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxUtils} from '@ame/mx-graph';
 import {BindingsService} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {EditorService} from '../../editor.service';
@@ -44,8 +37,7 @@ export class ShapeSettingsService {
     private shapeSettingsStateService: ShapeSettingsStateService,
     private openReferencedElementService: OpenReferencedElementService,
     private ngZone: NgZone
-  ) {
-  }
+  ) {}
 
   setGraphListeners() {
     this.setMoveCellsListener();
@@ -81,7 +73,7 @@ export class ShapeSettingsService {
     this.mxGraphAttributeService.graph.addListener(
       mxEvent.MOVE_CELLS,
       mxUtils.bind(this, () => {
-        this.ngZone.run(() => this.mxGraphAttributeService.graph.resetEdgesOnMove = true);
+        this.ngZone.run(() => (this.mxGraphAttributeService.graph.resetEdgesOnMove = true));
       })
     );
   }

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, inject} from '@angular/core';
+import {inject, Injectable, NgZone} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {SaveModelDialogComponent} from './save-model-dialog.component';
 
@@ -19,7 +19,11 @@ import {SaveModelDialogComponent} from './save-model-dialog.component';
 export class SaveModelDialogService {
   private matDialog = inject(MatDialog);
 
+  constructor(private ngZone: NgZone) {
+  }
+
+
   openDialog() {
-    return this.matDialog.open(SaveModelDialogComponent).afterClosed();
+    return this.ngZone.run(() => this.matDialog.open(SaveModelDialogComponent).afterClosed());
   }
 }

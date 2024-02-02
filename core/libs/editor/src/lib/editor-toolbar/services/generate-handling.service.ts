@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {
   AASXGenerationModalComponent,
   EditorService,
@@ -37,6 +37,7 @@ import {LanguageTranslationService} from '@ame/translation';
 })
 export class GenerateHandlingService {
   private readonly noRdfModelAvailable = 'No Rdf model available.';
+
   private get currentCachedFile() {
     return this.namespaceCacheService.currentCachedFile;
   }
@@ -50,8 +51,10 @@ export class GenerateHandlingService {
     private notificationsService: NotificationsService,
     private loadingScreenService: LoadingScreenService,
     private namespaceCacheService: NamespacesCacheService,
-    private translate: LanguageTranslationService
-  ) {}
+    private translate: LanguageTranslationService,
+    private ngZone: NgZone
+  ) {
+  }
 
   openGenerationOpenApiSpec(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
@@ -119,7 +122,7 @@ export class GenerateHandlingService {
       .afterClosed()
       .pipe(
         first(),
-        map((result: {language: string; action: string}) => {
+        map((result: { language: string; action: string }) => {
           if (result.action === 'download') {
             return this.downloadDocumentation(result.language, loadingScreenOptions).subscribe({
               error: error => this.notificationsService.error({title: error}),
@@ -194,7 +197,7 @@ export class GenerateHandlingService {
         if (validationsErrors.some(({errorCode}) => errorCode)) {
           return throwError(null);
         }
-        return of(this.matDialog.open(AASXGenerationModalComponent));
+        return of(this.ngZone.run(() => this.matDialog.open(AASXGenerationModalComponent)));
       }),
       finalize(() => {
         this.loadingScreenService.close();
@@ -282,10 +285,10 @@ export class GenerateHandlingService {
         fileName: fileName,
       },
     };
-    return this.matDialog.open(PreviewDialogComponent, config).afterClosed();
+    return this.ngZone.run(() => this.matDialog.open(PreviewDialogComponent, config).afterClosed());
   }
 
   private openLanguageSelector() {
-    return this.matDialog.open(LanguageSelectorModalComponent).afterClosed();
+    return this.ngZone.run(() => this.matDialog.open(LanguageSelectorModalComponent).afterClosed());
   }
 }

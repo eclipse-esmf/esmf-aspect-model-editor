@@ -52,8 +52,7 @@ export class MxGraphShapeOverlayService {
     private sammLangService: SammLanguageSettingsService,
     private injector: Injector,
     private ngZone: NgZone
-  ) {
-  }
+  ) {}
 
   removeOverlay(cell: mxgraph.mxCell, overlay?: mxgraph.mxCellOverlay): void {
     overlay
@@ -93,8 +92,8 @@ export class MxGraphShapeOverlayService {
     baseMetaModelElement instanceof DefaultProperty && baseMetaModelElement.characteristic
       ? this.removeOverlay(cell, MxGraphHelper.getNewShapeOverlayButton(cell))
       : baseMetaModelElement instanceof DefaultCharacteristic && !(baseMetaModelElement instanceof DefaultEither)
-        ? this.removeCharacteristicOverlays(cell)
-        : undefined;
+      ? this.removeCharacteristicOverlays(cell)
+      : undefined;
   }
 
   createIconShapeOverlay(svgFileName: string, tooltip: string): mxgraph.mxCellOverlay {

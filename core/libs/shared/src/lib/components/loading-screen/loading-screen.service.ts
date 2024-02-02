@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {LoadingScreenComponent} from './loading-screen.component';
 
@@ -26,13 +26,14 @@ export type LoadingScreenOptions = Omit<MatDialogConfig, 'data'> & {
 export class LoadingScreenService {
   public dialog: MatDialogRef<LoadingScreenComponent>;
 
-  constructor(private matDialog: MatDialog) {}
+  constructor(private matDialog: MatDialog, private ngZone: NgZone) {
+  }
 
   open(options: LoadingScreenOptions): MatDialogRef<LoadingScreenComponent> {
-    this.dialog = this.matDialog.open(LoadingScreenComponent, {
+    this.dialog = this.ngZone.run(() => this.matDialog.open(LoadingScreenComponent, {
       data: options,
       disableClose: true,
-    });
+    }));
     return this.dialog;
   }
 

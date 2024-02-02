@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AlertComponent} from './components';
 
@@ -28,19 +28,21 @@ export interface AlertOptions {
 
 @Injectable({providedIn: 'root'})
 export class AlertService {
-  constructor(private matDialog: MatDialog) {}
+  constructor(private matDialog: MatDialog, private ngZone: NgZone) {
+  }
 
   public open(options: MatDialogConfig<Partial<AlertOptions>>) {
-    return this.matDialog.open(AlertComponent, {
-      minWidth: '500px',
-      maxWidth: '800px',
-      disableClose: true,
-      ...options,
-      data: {
-        ...options.data,
-        leftButtonText: options.data.leftButtonText || 'Close',
-        rightButtonText: options.data.rightButtonText || 'Ok',
-      },
-    });
+    return this.ngZone.run(() => this.matDialog.open(AlertComponent, {
+        minWidth: '500px',
+        maxWidth: '800px',
+        disableClose: true,
+        ...options,
+        data: {
+          ...options.data,
+          leftButtonText: options.data.leftButtonText || 'Close',
+          rightButtonText: options.data.rightButtonText || 'Ok',
+        },
+      })
+    );
   }
 }
