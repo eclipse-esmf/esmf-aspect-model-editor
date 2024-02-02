@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, inject, NgZone} from '@angular/core';
+import {inject, Injectable, NgZone} from '@angular/core';
 import {
-  BrowserService,
   AlertService,
+  BrowserService,
   ElectronSignalsService,
   FileContentModel,
   LoadingScreenService,
@@ -53,9 +53,9 @@ import {
   mxEvent,
   MxGraphAttributeService,
   MxGraphHelper,
+  MxGraphRenderer,
   MxGraphService,
   MxGraphSetupService,
-  MxGraphRenderer,
   MxGraphShapeOverlayService,
   MxGraphShapeSelectorService,
   mxUtils,
@@ -87,7 +87,7 @@ import {ModelApiService} from '@ame/api';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {OpenApi, ViolationError} from './editor-toolbar';
-import {FiltersService, FILTER_ATTRIBUTES, FilterAttributesService} from '@ame/loader-filters';
+import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
 import {ShapeSettingsStateService} from './editor-dialog';
 import {LargeFileWarningService} from './large-file-warning-dialog/large-file-warning-dialog.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
@@ -185,14 +185,16 @@ export class EditorService {
 
     mxEvent.addMouseWheelListener(
       mxUtils.bind(this, (evt, up) => {
-        if (!mxEvent.isConsumed(evt) && evt.altKey) {
-          if (up) {
-            this.zoomIn();
-          } else {
-            this.zoomOut();
+        this.zone.run(() => {
+          if (!mxEvent.isConsumed(evt) && evt.altKey) {
+            if (up) {
+              this.zoomIn();
+            } else {
+              this.zoomOut();
+            }
+            mxEvent.consume(evt);
           }
-          mxEvent.consume(evt);
-        }
+        })
       }),
       null
     );
@@ -202,25 +204,27 @@ export class EditorService {
     this.mxGraphAttributeService.graph.addListener(
       mxEvent.CELLS_REMOVED,
       mxUtils.bind(this, (_source: mxgraph.mxGraph, event: mxgraph.mxEventObject) => {
-        if (this.filterAttributes.isFiltering) {
-          return;
-        }
-
-        const changedCells: Array<mxgraph.mxCell> = event.getProperty('cells');
-        changedCells.forEach(cell => {
-          if (!MxGraphHelper.getModelElement(cell)) {
+        this.zone.run(() => {
+          if (this.filterAttributes.isFiltering) {
             return;
           }
 
-          const edgeParent = changedCells.find(edge => edge.isEdge() && edge.target && edge.target.id === cell.id);
-          if (!edgeParent) {
-            return;
-          }
+          const changedCells: Array<mxgraph.mxCell> = event.getProperty('cells');
+          changedCells.forEach(cell => {
+            if (!MxGraphHelper.getModelElement(cell)) {
+              return;
+            }
 
-          const sourceElement = MxGraphHelper.getModelElement<Base>(edgeParent.source);
-          if (sourceElement && !sourceElement?.isExternalReference()) {
-            sourceElement.delete(MxGraphHelper.getModelElement(cell));
-          }
+            const edgeParent = changedCells.find(edge => edge.isEdge() && edge.target && edge.target.id === cell.id);
+            if (!edgeParent) {
+              return;
+            }
+
+            const sourceElement = MxGraphHelper.getModelElement<Base>(edgeParent.source);
+            if (sourceElement && !sourceElement?.isExternalReference()) {
+              sourceElement.delete(MxGraphHelper.getModelElement(cell));
+            }
+          })
         });
       })
     );
@@ -513,9 +517,9 @@ export class EditorService {
       const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(newInstance);
       metaModelElement
         ? this.mxGraphService.renderModelElement(this.filtersService.createNode(metaModelElement), {
-            shapeAttributes: [],
-            geometry: {x, y},
-          })
+          shapeAttributes: [],
+          geometry: {x, y},
+        })
         : this.openAlertBox();
 
       if (metaModelElement instanceof Base) {
@@ -574,9 +578,9 @@ export class EditorService {
         rdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
         metaModelElement
           ? this.mxGraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
-              shapeAttributes: [],
-              geometry,
-            })
+            shapeAttributes: [],
+            geometry,
+          })
           : this.openAlertBox();
         this.titleService.updateTitle(rdfModel.absoluteAspectModelFileName, 'Aspect');
       });
@@ -845,6 +849,9 @@ export class EditorService {
   private saveCompleteError(error) {
     console.log(error);
     this.logService.logError(`Error occurred while saving the current model (${JSON.stringify(error)})`);
-    this.notificationsService.error({title: 'Saving completed with errors', message: error?.error?.error?.message || ''});
+    this.notificationsService.error({
+      title: 'Saving completed with errors',
+      message: error?.error?.error?.message || ''
+    });
   }
 }

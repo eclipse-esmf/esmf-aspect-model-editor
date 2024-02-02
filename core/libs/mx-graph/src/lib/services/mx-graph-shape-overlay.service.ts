@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, Injector} from '@angular/core';
+import {Injectable, Injector, NgZone} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphAttributeService, MxGraphShapeSelectorService} from '.';
 import {MxGraphHelper, MxGraphVisitorHelper, ShapeAttribute} from '../helpers';
@@ -50,8 +50,10 @@ export class MxGraphShapeOverlayService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private filtersService: FiltersService,
     private sammLangService: SammLanguageSettingsService,
-    private injector: Injector
-  ) {}
+    private injector: Injector,
+    private ngZone: NgZone
+  ) {
+  }
 
   removeOverlay(cell: mxgraph.mxCell, overlay?: mxgraph.mxCellOverlay): void {
     overlay
@@ -91,8 +93,8 @@ export class MxGraphShapeOverlayService {
     baseMetaModelElement instanceof DefaultProperty && baseMetaModelElement.characteristic
       ? this.removeOverlay(cell, MxGraphHelper.getNewShapeOverlayButton(cell))
       : baseMetaModelElement instanceof DefaultCharacteristic && !(baseMetaModelElement instanceof DefaultEither)
-      ? this.removeCharacteristicOverlays(cell)
-      : undefined;
+        ? this.removeCharacteristicOverlays(cell)
+        : undefined;
   }
 
   createIconShapeOverlay(svgFileName: string, tooltip: string): mxgraph.mxCellOverlay {
@@ -265,7 +267,7 @@ export class MxGraphShapeOverlayService {
   }
 
   private addShapeOverlayListener(overlay: mxgraph.mxCellOverlay, cell: mxgraph.mxCell, modelInfo: ModelInfo): void {
-    overlay.addListener(mxEvent.CLICK, () => this.addShapeAction(cell, modelInfo));
+    overlay.addListener(mxEvent.CLICK, () => this.ngZone.run(() => this.addShapeAction(cell, modelInfo)));
     this.mxGraphAttributeService.graph.addCellOverlay(cell, overlay);
   }
 
