@@ -18,6 +18,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MigratorService} from '../../migrator.service';
 
 import {MigrationSuccessComponent} from './migration-success.component';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {HttpClient} from '@angular/common/http';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 describe('MigrationSuccessComponent', () => {
   let component: MigrationSuccessComponent;
@@ -25,7 +28,16 @@ describe('MigrationSuccessComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, MatButtonModule, MatIconModule],
+      imports: [
+        MatDialogModule,
+        MatButtonModule,
+        MatIconModule,
+        TranslateModule.forRoot({
+          provide: TranslateLoader,
+          useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+          deps: [HttpClient],
+        }),
+      ],
       declarations: [MigrationSuccessComponent],
       providers: [
         {
