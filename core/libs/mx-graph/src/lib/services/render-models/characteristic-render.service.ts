@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -27,7 +27,7 @@ import {
   DefaultUnit,
   Type,
 } from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphCharacteristicHelper, MxGraphHelper, MxGraphVisitorHelper} from '../../helpers';
 import {ModelInfo, RendererUpdatePayload} from '../../models';
@@ -48,14 +48,14 @@ export class CharacteristicRenderService extends BaseRenderService {
 
   constructor(
     mxGraphService: MxGraphService,
-    languageSettingsService: LanguageSettingsService,
+    sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
     private shapeConnectorService: ShapeConnectorService,
     private unitRendererService: UnitRenderService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private namespacesCacheService: NamespacesCacheService
   ) {
-    super(mxGraphService, languageSettingsService, rdfService);
+    super(mxGraphService, sammLangService, rdfService);
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {
@@ -117,7 +117,7 @@ export class CharacteristicRenderService extends BaseRenderService {
       );
 
       propertyCell = this.mxGraphService.resolveCellByModelElement(element.property);
-      propertyCell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(element.property, this.languageSettingsService);
+      propertyCell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(element.property, this.sammLangService);
       this.graph.labelChanged(propertyCell, MxGraphHelper.createPropertiesLabel(propertyCell));
 
       if (!element.property?.characteristic) {
@@ -138,7 +138,7 @@ export class CharacteristicRenderService extends BaseRenderService {
       childCharacteristicCell = this.mxGraphService.resolveCellByModelElement(element.property.characteristic);
       childCharacteristicCell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
         element.property.characteristic,
-        this.languageSettingsService
+        this.sammLangService
       );
       this.graph.labelChanged(childCharacteristicCell, MxGraphHelper.createPropertiesLabel(childCharacteristicCell));
 

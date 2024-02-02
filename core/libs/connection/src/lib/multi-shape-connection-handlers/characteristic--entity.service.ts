@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -22,7 +22,7 @@ import {
   DefaultStructuredValue,
 } from '@ame/meta-model';
 import {MxGraphService, MxGraphAttributeService, MxGraphShapeOverlayService, MxGraphHelper} from '@ame/mx-graph';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Injectable} from '@angular/core';
 import {MultiShapeConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
@@ -40,7 +40,7 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
     private mxGraphService: MxGraphService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private languageSettingsService: LanguageSettingsService,
+    private sammLangService: SammLanguageSettingsService,
     private namespacesCacheService: NamespacesCacheService,
     private notificationsService: NotificationsService
   ) {}
@@ -70,7 +70,7 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
     }
 
     if (parentMetaModel.dataType) {
-      MxGraphHelper.updateLabel(parent, this.mxGraphAttributeService.graph, this.languageSettingsService);
+      MxGraphHelper.updateLabel(parent, this.mxGraphAttributeService.graph, this.sammLangService);
     }
 
     if (parentMetaModel.dataType?.isComplex()) {
@@ -88,7 +88,7 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
       if (edgeSourceMetaModelElement instanceof DefaultProperty) {
         // Remove example value for complex datatypes
         edgeSourceMetaModelElement.exampleValue = null;
-        MxGraphHelper.updateLabel(edge.source, this.mxGraphAttributeService.graph, this.languageSettingsService);
+        MxGraphHelper.updateLabel(edge.source, this.mxGraphAttributeService.graph, this.sammLangService);
       }
     });
   }

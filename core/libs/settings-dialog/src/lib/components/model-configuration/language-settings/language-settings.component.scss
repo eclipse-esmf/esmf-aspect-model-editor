@@ -1,0 +1,68 @@
+/*!
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-container {
+  color: var(--ame-blue-500);
+  align-items: center;
+
+  span {
+    cursor: pointer;
+  }
+}
+
+.selected-languages {
+  display: flex;
+
+  p {
+    background-color: var(--ame-gray-5);
+    padding: 12px;
+    width: 100%;
+    margin-right: 10px;
+  }
+}
+
+.language-scroll {
+  overflow: auto;
+  max-height: 360px;
+}
+
+.add-language-box {
+  display: flex;
+  justify-content: flex-end;
+  margin: 15px 0 5px 0;
+
+  &__button {
+    align-items: center;
+    align-self: flex-start;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.dialog-actions {
+  justify-content: space-between;
+}

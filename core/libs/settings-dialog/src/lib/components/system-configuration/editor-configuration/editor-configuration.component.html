@@ -1,0 +1,54 @@
+<!--
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div>
+  <h3>{{ 'SETTINGS_DIALOG.SUB_NODE.EDITOR' | translate }}</h3>
+  <form [formGroup]="form">
+    <div class="setting-item">
+      <mat-slide-toggle matTooltip="may be more suitable for some models, e.g. with recursion" formControlName="enableHierarchicalLayout">
+        {{ 'SETTINGS_DIALOG.CONFIGURATION.USING_HIERARCHICAL_LAYOUT' | translate }}
+      </mat-slide-toggle>
+    </div>
+
+    <div class="setting-item">
+      <mat-slide-toggle formControlName="showEntityValueEntityEdge">
+        {{ 'SETTINGS_DIALOG.CONFIGURATION.DISPLAY_ENTITY_VALUE_ENTITY' | translate }}
+      </mat-slide-toggle>
+    </div>
+
+    <div class="setting-item">
+      <mat-slide-toggle formControlName="showAbstractPropertyConnection">
+        {{ 'SETTINGS_DIALOG.CONFIGURATION.DISPLAY_PROPERTY_ABSTRACT_PROPERTY' | translate }}
+      </mat-slide-toggle>
+    </div>
+
+    <div class="setting-item">
+      <mat-slide-toggle formControlName="showConnectionLabels">
+        {{ 'SETTINGS_DIALOG.CONFIGURATION.DISPLAY_DISAMBIGUATION_LABEL' | translate }}
+        <mat-icon
+          [matTooltipShowDelay]="0"
+          [matTooltipHideDelay]="100"
+          [matTooltip]="'SETTINGS_DIALOG.CONFIGURATION.DISPLAY_DISAMBIGUATION_LABEL_TOOLTIP' | translate"
+        >
+          info
+        </mat-icon>
+      </mat-slide-toggle>
+    </div>
+  </form>
+</div>
+
+<!--<div class="item">-->
+<!--  <mat-slide-toggle [(ngModel)]="settings.useSaturatedColors" (change)="onChange(); themeChange($event)">-->
+<!--    <span class="setting-item__toggle__content"> Display highly saturated colors </span>-->
+<!--  </mat-slide-toggle>-->
+<!--</div>-->

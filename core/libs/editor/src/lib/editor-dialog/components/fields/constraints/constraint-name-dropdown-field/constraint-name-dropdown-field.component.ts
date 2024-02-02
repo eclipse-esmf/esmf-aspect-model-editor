@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -26,7 +26,7 @@ import {
   DefaultRegularExpressionConstraint,
 } from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {EditorModelService} from '../../../../editor-model.service';
 import {DropdownFieldComponent} from '../../dropdown-field.component';
 
@@ -44,7 +44,7 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
     public editorModelService: EditorModelService,
     public modelService: ModelService,
     public namespacesCacheService: NamespacesCacheService,
-    public languageSettings: LanguageSettingsService
+    public languageSettings: SammLanguageSettingsService
   ) {
     super(editorModelService, modelService, languageSettings);
   }

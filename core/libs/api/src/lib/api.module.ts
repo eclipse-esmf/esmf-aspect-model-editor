@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,10 +13,9 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NgxElectronModule} from 'ngx-electron';
 
 @NgModule({
-  providers: [NgxElectronModule],
+  providers: [],
   exports: [],
   imports: [CommonModule],
 })

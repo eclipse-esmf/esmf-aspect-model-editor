@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,14 +13,15 @@
 
 import {FiltersService} from '@ame/loader-filters';
 import {DefaultEntity} from '@ame/meta-model';
-import {MxGraphService, MxGraphAttributeService, MxGraphHelper} from '@ame/mx-graph';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {EntityInheritanceConnector, MultiShapeConnector} from '../models';
 import {EntityPropertyConnectionHandler} from './entity--property.service';
 import {PropertyAbstractPropertyConnectionHandler} from './property--abstract-property.service';
 import {mxgraph} from 'mxgraph-factory';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
   providedIn: 'root',
@@ -29,18 +30,20 @@ export class EntityEntityConnectionHandler extends EntityInheritanceConnector im
   constructor(
     protected mxGraphService: MxGraphService,
     protected mxGraphAttributeService: MxGraphAttributeService,
-    protected languageSettingsService: LanguageSettingsService,
+    protected sammLangService: SammLanguageSettingsService,
     protected propertyAbstractPropertyConnector: PropertyAbstractPropertyConnectionHandler,
     protected entityPropertyConnector: EntityPropertyConnectionHandler,
     protected filtersService: FiltersService,
+    protected translate: LanguageTranslationService,
     private notificationService: NotificationsService
   ) {
     super(
       mxGraphService,
       mxGraphAttributeService,
-      languageSettingsService,
+      sammLangService,
       notificationService,
       filtersService,
+      translate,
       propertyAbstractPropertyConnector,
       entityPropertyConnector
     );
@@ -49,8 +52,8 @@ export class EntityEntityConnectionHandler extends EntityInheritanceConnector im
   public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultEntity, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({
-        title: 'Recursive elements',
-        message: 'Can not connect elements due to circular connection',
+        title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
+        message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
         timeout: 5000,
       });
       return;

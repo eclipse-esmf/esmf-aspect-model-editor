@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {BaseMetaModelElement} from '@ame/meta-model';
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxEvent, mxUtils} from '@ame/mx-graph';
+import {mxEvent, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxUtils} from '@ame/mx-graph';
 import {BindingsService} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {EditorService} from '../../editor.service';
@@ -35,7 +35,8 @@ export class ShapeSettingsService {
     private bindingsService: BindingsService,
     private editorService: EditorService,
     private shapeSettingsStateService: ShapeSettingsStateService,
-    private openReferencedElementService: OpenReferencedElementService
+    private openReferencedElementService: OpenReferencedElementService,
+    private ngZone: NgZone
   ) {}
 
   setGraphListeners() {
@@ -45,14 +46,14 @@ export class ShapeSettingsService {
   }
 
   setContextMenuActions() {
-    this.bindingsService.registerAction('editElement', () => this.editSelectedCell());
-    this.bindingsService.registerAction('deleteElement', () => this.editorService.deleteSelectedElements());
+    this.bindingsService.registerAction('editElement', () => this.ngZone.run(() => this.editSelectedCell()));
+    this.bindingsService.registerAction('deleteElement', () => this.ngZone.run(() => this.editorService.deleteSelectedElements()));
   }
 
   setHotKeysActions() {
     this.editorService.bindAction(
       'deleteElement',
-      mxUtils.bind(this, () => this.editorService.deleteSelectedElements())
+      mxUtils.bind(this, () => this.ngZone.run(() => this.editorService.deleteSelectedElements()))
     );
 
     this.mxGraphService.graph.container.addEventListener('wheel', evt => {
@@ -65,24 +66,24 @@ export class ShapeSettingsService {
   setSelectCellListener() {
     this.mxGraphAttributeService.graph
       .getSelectionModel()
-      .addListener(mxEvent.CHANGE, selectionModel => this.selectCells(selectionModel.cells));
+      .addListener(mxEvent.CHANGE, selectionModel => this.ngZone.run(() => this.selectCells(selectionModel.cells)));
   }
 
   setMoveCellsListener() {
     this.mxGraphAttributeService.graph.addListener(
       mxEvent.MOVE_CELLS,
       mxUtils.bind(this, () => {
-        this.mxGraphAttributeService.graph.resetEdgesOnMove = true;
+        this.ngZone.run(() => (this.mxGraphAttributeService.graph.resetEdgesOnMove = true));
       })
     );
   }
 
   setFoldListener() {
-    this.mxGraphAttributeService.graph.addListener(mxEvent.FOLD_CELLS, () => this.mxGraphService.formatShapes());
+    this.mxGraphAttributeService.graph.addListener(mxEvent.FOLD_CELLS, () => this.ngZone.run(() => this.mxGraphService.formatShapes()));
   }
 
   setDblClickListener() {
-    this.mxGraphAttributeService.graph.addListener(mxEvent.DOUBLE_CLICK, () => this.editSelectedCell());
+    this.mxGraphAttributeService.graph.addListener(mxEvent.DOUBLE_CLICK, () => this.ngZone.run(() => this.editSelectedCell()));
   }
 
   unselectShapeForUpdate() {

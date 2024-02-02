@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,7 +12,7 @@
  */
 
 import {Base, DefaultAspect, DefaultEntity, DefaultProperty, OverWrittenPropertyKeys} from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper, MxGraphVisitorHelper} from '../../helpers';
 import {MxGraphService} from '../mx-graph.service';
@@ -26,7 +26,7 @@ export abstract class BaseRenderService {
 
   constructor(
     protected mxGraphService: MxGraphService,
-    protected languageSettingsService: LanguageSettingsService,
+    protected sammLangService: SammLanguageSettingsService,
     protected rdfService: RdfService
   ) {}
   public abstract isApplicable(cell: mxgraph.mxCell): boolean;
@@ -37,7 +37,7 @@ export abstract class BaseRenderService {
     cell.setId(modelElement.name);
     cell.setAttribute('name', modelElement.name);
 
-    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.languageSettingsService);
+    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.sammLangService);
     cell['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(modelElement, this.rdfService.currentRdfModel);
     this.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
 
@@ -84,7 +84,7 @@ export abstract class BaseRenderService {
 
     for (const parent of parents) {
       const parentElementModel = MxGraphHelper.getModelElement(parent);
-      parent['configuration'].fields = MxGraphVisitorHelper.getElementProperties(parentElementModel, this.languageSettingsService);
+      parent['configuration'].fields = MxGraphVisitorHelper.getElementProperties(parentElementModel, this.sammLangService);
       parent['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(parentElementModel, this.rdfService.currentRdfModel);
       this.graph.labelChanged(parent, MxGraphHelper.createPropertiesLabel(parent));
     }

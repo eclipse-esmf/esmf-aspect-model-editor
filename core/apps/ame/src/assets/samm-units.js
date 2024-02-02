@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -5768,8 +5768,8 @@ var sammUDefinition = {
     failuresInTime: {
       name: 'failuresInTime',
       label: 'failures in time',
-      symbol: 'FIT',
-      code: 'FIT',
+      symbol: 'FITTING_PROGRESS',
+      code: 'FITTING_PROGRESS',
       referenceUnit: function () {
         return sammUDefinition.units['reciprocalSecond'];
       },

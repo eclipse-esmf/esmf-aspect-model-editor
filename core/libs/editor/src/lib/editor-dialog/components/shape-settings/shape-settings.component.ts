@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,11 +15,12 @@ import {ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChang
 import {FormControl, FormGroup} from '@angular/forms';
 import {BaseMetaModelElement, Characteristic, DefaultCharacteristic, DefaultConstraint, Unit} from '@ame/meta-model';
 import {EditorModelService} from '../../editor-model.service';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {LogService} from '@ame/shared';
 import {ModelService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {Subscription} from 'rxjs';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
   selector: 'ame-shape-settings',
@@ -35,6 +36,7 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   public formGroup: FormGroup = new FormGroup({
     changedMetaModel: new FormControl(null),
   });
+
   private subscription = new Subscription();
 
   @Input() isOpened = false;
@@ -54,8 +56,9 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
     public metaModelDialogService: EditorModelService,
     private modelService: ModelService,
     private loggerService: LogService,
-    private languageSettings: LanguageSettingsService,
-    private changeDetector: ChangeDetectorRef
+    private languageSettings: SammLanguageSettingsService,
+    private changeDetector: ChangeDetectorRef,
+    private translate: LanguageTranslationService
   ) {}
 
   ngOnChanges(): void {
@@ -121,8 +124,8 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   addLanguageSettings(metaModelElement: BaseMetaModelElement) {
-    if (this.languageSettings.getLanguageCodes()) {
-      this.languageSettings.getLanguageCodes().forEach(languageCode => {
+    if (this.languageSettings.getSammLanguageCodes()) {
+      this.languageSettings.getSammLanguageCodes().forEach(languageCode => {
         if (!metaModelElement.getPreferredName(languageCode) && !metaModelElement.getDescription(languageCode)) {
           metaModelElement.addPreferredName(languageCode, '');
           metaModelElement.addDescription(languageCode, '');

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -25,10 +25,11 @@ import {
 } from '@ame/meta-model';
 import {EntityValueService, RenameModelDialogService} from '@ame/editor';
 import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultAspect, DefaultStructuredValue} from '../aspect-meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {ModelRootService} from './model-root.service';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {NotificationsService, TitleService} from '@ame/shared';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({providedIn: 'root'})
 export class ElementModelService {
@@ -39,12 +40,13 @@ export class ElementModelService {
     private mxGraphService: MxGraphService,
     private namespacesCacheService: NamespacesCacheService,
     private entityValueService: EntityValueService,
-    private languageSettingsService: LanguageSettingsService,
+    private sammLangService: SammLanguageSettingsService,
     private modelRootService: ModelRootService,
     private modelService: ModelService,
     private rdfService: RdfService,
     private renameModelService: RenameModelDialogService,
     private notificationService: NotificationsService,
+    private translate: LanguageTranslationService,
     private zone: NgZone
   ) {}
 
@@ -76,8 +78,8 @@ export class ElementModelService {
 
     if (this.mxGraphService.getAllCells().length === 1) {
       this.notificationService.warning({
-        title: 'Model cannot be empty',
-        message: 'For a valid model, at least one element needs to exist',
+        title: this.translate.language.NOTIFICATION_SERVICE.MODEL_EMPTY_MESSAGE,
+        message: this.translate.language.NOTIFICATION_SERVICE.MODEL_MINIMUM_ELEMENT_REQUIREMENT,
         timeout: 5000,
       });
       return;
@@ -150,7 +152,7 @@ export class ElementModelService {
 
     if (sourceModelElement instanceof DefaultStructuredValue && targetModelElement instanceof DefaultProperty) {
       sourceModelElement.delete(targetModelElement);
-      MxGraphHelper.updateLabel(edge.source, this.mxGraphService.graph, this.languageSettingsService);
+      MxGraphHelper.updateLabel(edge.source, this.mxGraphService.graph, this.sammLangService);
     }
 
     this.removeConnectionBetweenElements(edge, sourceModelElement, targetModelElement);
@@ -208,7 +210,7 @@ export class ElementModelService {
     this.mxGraphService.removeCells(toRemove);
     const source = MxGraphHelper.getModelElement<DefaultEntity>(edge.source);
     source.extendedElement = null;
-    MxGraphHelper.updateLabel(edge.source, this.mxGraphService.graph, this.languageSettingsService);
+    MxGraphHelper.updateLabel(edge.source, this.mxGraphService.graph, this.sammLangService);
     return true;
   }
 
@@ -237,7 +239,7 @@ export class ElementModelService {
       source.extendedElement = null;
       edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
         MxGraphHelper.getModelElement(edge.source),
-        this.languageSettingsService
+        this.sammLangService
       );
       this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));
       this.removeConnectionBetweenElements(edge, source, target);

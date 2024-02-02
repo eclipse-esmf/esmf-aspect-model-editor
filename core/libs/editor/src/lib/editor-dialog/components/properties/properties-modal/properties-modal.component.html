@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -15,12 +15,12 @@
   <mat-icon>close</mat-icon>
 </button>
 
-<h2 mat-dialog-title>{{ data.name }} Properties Configuration</h2>
+<h2 mat-dialog-title>{{ data.name }} {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_CONFIGURATION' | translate }}</h2>
 
 <mat-dialog-content class="dialog-content">
   <mat-table *ngIf="form" [dataSource]="dataSource" [formGroup]="form">
     <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.NAME' | translate }}</mat-header-cell>
       <mat-cell [ngClass]="{inherited: overwritten.inherited, disabled: overwritten.disabled}" *matCellDef="let overwritten">
         <span>{{ overwritten.property.name }}</span>
         <span *ngIf="overwritten.inherited">Inherited</span>
@@ -28,7 +28,7 @@
     </ng-container>
 
     <ng-container matColumnDef="payloadName">
-      <mat-header-cell *matHeaderCellDef>payloadName</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.PAYLOAD_NAME' | translate }}</mat-header-cell>
       <mat-cell *matCellDef="let overwritten">
         <mat-form-field *ngIf="!(overwritten.disabled || overwritten.inherited)">
           <mat-label for="refines">Payload Name</mat-label>
@@ -42,7 +42,7 @@
     </ng-container>
 
     <ng-container matColumnDef="optional">
-      <mat-header-cell *matHeaderCellDef>Optional</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.OPTIONAL' | translate }}</mat-header-cell>
       <mat-cell [class.hidden]="overwritten.abstract" *matCellDef="let overwritten">
         <mat-checkbox
           [formControl]="getControl([overwritten.property.aspectModelUrn, 'optional'])"
@@ -53,7 +53,7 @@
     </ng-container>
 
     <ng-container matColumnDef="notInPayload">
-      <mat-header-cell *matHeaderCellDef>Not In Payload</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.NOT_IN_PAYLOAD' | translate }}</mat-header-cell>
       <mat-cell *matCellDef="let overwritten">
         <mat-checkbox
           [formControl]="getControl([overwritten.property.aspectModelUrn, 'notInPayload'])"
@@ -70,7 +70,9 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button type="button" mat-flat-button data-cy="propertiesCancelButton" (click)="closeModal()">Cancel</button>
+  <button type="button" mat-flat-button data-cy="propertiesCancelButton" (click)="closeModal()">
+    {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.CANCEL' | translate }}
+  </button>
   <button
     [disabled]="form.invalid || form.disabled"
     mat-flat-button
@@ -79,6 +81,6 @@
     data-cy="propertiesSaveButton"
     (click)="saveChanges()"
   >
-    Save
+    {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.SAVE' | translate }}
   </button>
 </mat-dialog-actions>

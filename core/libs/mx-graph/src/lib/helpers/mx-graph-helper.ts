@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -26,7 +26,7 @@ import {
   DefaultTrait,
 } from '@ame/meta-model';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {basicShapeGeometry, ModelCompactTreeLayout, ModelHierarchicalLayout} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {ModelBaseProperties} from '../models';
@@ -464,8 +464,8 @@ export class MxGraphHelper {
     return span;
   }
 
-  static updateLabel(cell: mxgraph.mxCell, graph: mxgraph.mxGraph, languageSettingsService: LanguageSettingsService) {
-    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(MxGraphHelper.getModelElement(cell), languageSettingsService);
+  static updateLabel(cell: mxgraph.mxCell, graph: mxgraph.mxGraph, sammLangService: SammLanguageSettingsService) {
+    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(MxGraphHelper.getModelElement(cell), sammLangService);
     graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
   }
 

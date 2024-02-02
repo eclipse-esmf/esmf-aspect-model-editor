@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -34,6 +34,9 @@ import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {MigratorService} from '@ame/migrator';
 import {BlankNode, NamedNode} from 'n3';
 import {Title} from '@angular/platform-browser';
+import {LanguageTranslationService} from '@ame/translation';
+import {ConfigurationService} from '@ame/settings-dialog';
+import {environment} from '../../../../../../environments/environment';
 
 interface ModelLoaderState {
   /** Original model absolute file urn */
@@ -70,8 +73,14 @@ export class FileHandlingService {
     private migratorService: MigratorService,
     private sidebarService: SidebarService,
     private titleService: Title,
-    private electronSignalsService: ElectronSignalsService
-  ) {}
+    private translate: LanguageTranslationService,
+    private electronSignalsService: ElectronSignalsService,
+    private configurationService: ConfigurationService
+  ) {
+    if (!environment.production) {
+      window['angular.fileHandlingService'] = this;
+    }
+  }
 
   openLoadNewAspectModelDialog(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
     return this.matDialog
@@ -119,7 +128,10 @@ export class FileHandlingService {
     return this.modelService.synchronizeModelToRdf().pipe(
       map(() => this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel)),
       switchMap(serializedModel => this.modelApiService.formatModel(serializedModel)),
-      switchMap(formattedModel => from(navigator.clipboard.writeText(formattedModel))),
+      switchMap(formattedModel => {
+        const header = this.configurationService.getSettings().copyrightHeader.join('\n');
+        return from(navigator.clipboard.writeText(header + '\n\n' + formattedModel));
+      }),
       tap(() => {
         this.notificationsService.success({
           title: 'Copied to Clipboard',
@@ -148,7 +160,8 @@ export class FileHandlingService {
         const rdfModelTtl = this.rdfService.serializeModel(this.modelService.getLoadedAspectModel().rdfModel);
         return this.modelApiService.formatModel(rdfModelTtl).pipe(
           tap(formattedModel => {
-            saveAs(new Blob([formattedModel], {type: 'text/turtle;charset=utf-8'}), fileName);
+            const header = this.configurationService.getSettings().copyrightHeader.join('\n');
+            saveAs(new Blob([header + '\n\n' + formattedModel], {type: 'text/turtle;charset=utf-8'}), fileName);
           })
         );
       }),
@@ -258,7 +271,7 @@ export class FileHandlingService {
     showLoading = true
   ): Observable<RdfModel[]> {
     const loadingOptions: LoadingScreenOptions = {
-      title: 'Importing files into the workspace',
+      title: this.translate.language.LOADING_SCREEN_DIALOG.WORKSPACE_IMPORT,
       hasCloseButton: false,
     };
     if (showLoading) this.loadingScreenService.open(loadingOptions);
@@ -281,7 +294,7 @@ export class FileHandlingService {
 
   addFileToWorkspace(fileName: string, fileContent: string, uploadOptions: FileUploadOptions = {}): Observable<RdfModel> {
     const loadingOptions: LoadingScreenOptions = {
-      title: 'Importing files into the workspace',
+      title: this.translate.language.LOADING_SCREEN_DIALOG.WORKSPACE_IMPORT,
       hasCloseButton: false,
     };
     if (uploadOptions.showLoading) this.loadingScreenService.open(loadingOptions);
@@ -459,6 +472,6 @@ export class FileHandlingService {
   }
 
   private deleteModel(modelName: string): Observable<any> {
-    return this.modelApiService.deleteFile(modelName).pipe(tap(() => this.rdfService.removeExternalModel(modelName)));
+    return this.modelApiService.deleteFile(modelName).pipe(tap(() => this.rdfService.removeExternalRdfModel(modelName)));
   }
 }

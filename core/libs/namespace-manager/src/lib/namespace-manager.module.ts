@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -42,6 +42,7 @@ import {MatTreeModule} from '@angular/material/tree';
 import {FormsModule} from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @NgModule({
   imports: [
@@ -60,6 +61,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     FormsModule,
     MatRadioModule,
     MatCheckboxModule,
+    LanguageTranslateModule,
   ],
   declarations: [
     ImportSummaryComponent,

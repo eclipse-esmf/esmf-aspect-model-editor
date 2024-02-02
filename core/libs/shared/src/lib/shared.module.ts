@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -17,9 +17,10 @@ import {AlertComponent, LoadingScreenComponent} from './components';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @NgModule({
   declarations: [LoadingScreenComponent, AlertComponent],
-  imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule],
+  imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule, LanguageTranslateModule],
 })
 export class SharedModule {}

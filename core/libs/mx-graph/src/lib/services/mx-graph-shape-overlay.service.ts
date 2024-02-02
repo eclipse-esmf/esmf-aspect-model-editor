@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, Injector} from '@angular/core';
+import {Injectable, Injector, NgZone} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphAttributeService, MxGraphShapeSelectorService} from '.';
 import {MxGraphHelper, MxGraphVisitorHelper, ShapeAttribute} from '../helpers';
@@ -38,7 +38,7 @@ import {
 import {BrowserService} from '@ame/shared';
 import {ShapeConnectorService} from '@ame/connection';
 import {ModelInfo} from '../models';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {RdfService} from '@ame/rdf/services';
 import {FiltersService, ModelTree} from '@ame/loader-filters';
 
@@ -49,8 +49,9 @@ export class MxGraphShapeOverlayService {
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private filtersService: FiltersService,
-    private languageSettingsService: LanguageSettingsService,
-    private injector: Injector
+    private sammLangService: SammLanguageSettingsService,
+    private injector: Injector,
+    private ngZone: NgZone
   ) {}
 
   removeOverlay(cell: mxgraph.mxCell, overlay?: mxgraph.mxCellOverlay): void {
@@ -109,7 +110,7 @@ export class MxGraphShapeOverlayService {
     const modelElement = MxGraphHelper.getModelElement(this.mxGraphShapeSelectorService.getSelectedShape());
     mxGraphConnectorService.createAndConnectShape(modelElement, cell, modelInfo);
 
-    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.languageSettingsService);
+    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.sammLangService);
     this.mxGraphAttributeService.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
 
     this.removeOverlaysByConnection(modelElement, cell);
@@ -265,7 +266,7 @@ export class MxGraphShapeOverlayService {
   }
 
   private addShapeOverlayListener(overlay: mxgraph.mxCellOverlay, cell: mxgraph.mxCell, modelInfo: ModelInfo): void {
-    overlay.addListener(mxEvent.CLICK, () => this.addShapeAction(cell, modelInfo));
+    overlay.addListener(mxEvent.CLICK, () => this.ngZone.run(() => this.addShapeAction(cell, modelInfo)));
     this.mxGraphAttributeService.graph.addCellOverlay(cell, overlay);
   }
 

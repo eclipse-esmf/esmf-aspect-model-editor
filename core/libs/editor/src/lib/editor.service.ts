@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, inject} from '@angular/core';
+import {inject, Injectable, NgZone} from '@angular/core';
 import {
-  BrowserService,
   AlertService,
+  BrowserService,
   ElectronSignalsService,
   FileContentModel,
   LoadingScreenService,
@@ -53,9 +53,9 @@ import {
   mxEvent,
   MxGraphAttributeService,
   MxGraphHelper,
+  MxGraphRenderer,
   MxGraphService,
   MxGraphSetupService,
-  MxGraphRenderer,
   MxGraphShapeOverlayService,
   MxGraphShapeSelectorService,
   mxUtils,
@@ -80,17 +80,18 @@ import {
   ModelElementNamingService,
 } from '@ame/meta-model';
 import {InstantiatorService} from '@ame/instantiator';
-import {ConfigurationService, LanguageSettingsService} from '@ame/settings-dialog';
+import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings-dialog';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {ModelApiService} from '@ame/api';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {OpenApi, ViolationError} from './editor-toolbar';
-import {FiltersService, FILTER_ATTRIBUTES, FilterAttributesService} from '@ame/loader-filters';
+import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
 import {ShapeSettingsStateService} from './editor-dialog';
 import {LargeFileWarningService} from './large-file-warning-dialog/large-file-warning-dialog.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
   providedIn: 'root',
@@ -132,7 +133,7 @@ export class EditorService {
     private rdfService: RdfService,
     private instantiatorService: InstantiatorService,
     private namespaceCacheService: NamespacesCacheService,
-    private languageSettingsService: LanguageSettingsService,
+    private sammLangService: SammLanguageSettingsService,
     private modelElementNamingService: ModelElementNamingService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
@@ -146,7 +147,9 @@ export class EditorService {
     private electronSignalsService: ElectronSignalsService,
     private largeFileWarningService: LargeFileWarningService,
     private loadingScreenService: LoadingScreenService,
-    private browserService: BrowserService
+    private translate: LanguageTranslationService,
+    private browserService: BrowserService,
+    private zone: NgZone
   ) {
     if (!environment.production) {
       window['angular.editorService'] = this;
@@ -182,14 +185,16 @@ export class EditorService {
 
     mxEvent.addMouseWheelListener(
       mxUtils.bind(this, (evt, up) => {
-        if (!mxEvent.isConsumed(evt) && evt.altKey) {
-          if (up) {
-            this.zoomIn();
-          } else {
-            this.zoomOut();
+        this.zone.run(() => {
+          if (!mxEvent.isConsumed(evt) && evt.altKey) {
+            if (up) {
+              this.zoomIn();
+            } else {
+              this.zoomOut();
+            }
+            mxEvent.consume(evt);
           }
-          mxEvent.consume(evt);
-        }
+        });
       }),
       null
     );
@@ -199,25 +204,27 @@ export class EditorService {
     this.mxGraphAttributeService.graph.addListener(
       mxEvent.CELLS_REMOVED,
       mxUtils.bind(this, (_source: mxgraph.mxGraph, event: mxgraph.mxEventObject) => {
-        if (this.filterAttributes.isFiltering) {
-          return;
-        }
-
-        const changedCells: Array<mxgraph.mxCell> = event.getProperty('cells');
-        changedCells.forEach(cell => {
-          if (!MxGraphHelper.getModelElement(cell)) {
+        this.zone.run(() => {
+          if (this.filterAttributes.isFiltering) {
             return;
           }
 
-          const edgeParent = changedCells.find(edge => edge.isEdge() && edge.target && edge.target.id === cell.id);
-          if (!edgeParent) {
-            return;
-          }
+          const changedCells: Array<mxgraph.mxCell> = event.getProperty('cells');
+          changedCells.forEach(cell => {
+            if (!MxGraphHelper.getModelElement(cell)) {
+              return;
+            }
 
-          const sourceElement = MxGraphHelper.getModelElement<Base>(edgeParent.source);
-          if (sourceElement && !sourceElement?.isExternalReference()) {
-            sourceElement.delete(MxGraphHelper.getModelElement(cell));
-          }
+            const edgeParent = changedCells.find(edge => edge.isEdge() && edge.target && edge.target.id === cell.id);
+            if (!edgeParent) {
+              return;
+            }
+
+            const sourceElement = MxGraphHelper.getModelElement<Base>(edgeParent.source);
+            if (sourceElement && !sourceElement?.isExternalReference()) {
+              sourceElement.delete(MxGraphHelper.getModelElement(cell));
+            }
+          });
         });
       })
     );
@@ -260,12 +267,12 @@ export class EditorService {
   openReloadConfirmationDialog(fileName: string): Observable<boolean> {
     return this.confirmDialogService.open({
       phrases: [
-        `A different version of ${fileName} has been loaded to a workspace.`,
-        'Reloading will replace current Aspect Model with the version from a workspace, all unsaved changes will be lost. Reload?',
+        `${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.VERSION_CHANGE_NOTICE} ${fileName} ${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.WORKSPACE_LOAD_NOTICE}`,
+        this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.RELOAD_WARNING,
       ],
-      title: 'Current Aspect Model changed',
-      closeButtonText: 'Keep current',
-      okButtonText: 'Reload',
+      title: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.TITLE,
+      closeButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.CLOSE_BUTTON,
+      okButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.OK_BUTTON,
     });
   }
 
@@ -387,7 +394,7 @@ export class EditorService {
         this.mxGraphService,
         this.mxGraphShapeOverlayService,
         this.namespaceCacheService,
-        this.languageSettingsService,
+        this.sammLangService,
         rdfModel
       );
 
@@ -400,7 +407,7 @@ export class EditorService {
           tap(() => {
             this.loadingScreenService.close();
             requestAnimationFrame(() => {
-              this.loadingScreenService.open({title: 'Generating model'});
+              this.loadingScreenService.open({title: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_GENERATION});
             });
           }),
           delay(500), // Modal animation waiting before apps is blocked by mxGraph
@@ -525,7 +532,7 @@ export class EditorService {
           this.mxGraphService,
           this.mxGraphShapeOverlayService,
           this.namespaceCacheService,
-          this.languageSettingsService,
+          this.sammLangService,
           null
         );
 
@@ -550,12 +557,12 @@ export class EditorService {
     this.confirmDialogService
       .open({
         phrases: [
-          'You are about to create an Aspect which will transform this Shared Model into an Aspect Model.',
-          'The current name of the Model will be replaced by the name of the Aspect.',
+          this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.ASPECT_CREATION_WARNING,
+          this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.NAME_REPLACEMENT_NOTICE,
         ],
-        title: 'Create new Aspect',
-        closeButtonText: 'Cancel',
-        okButtonText: 'Create Aspect',
+        title: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.TITLE,
+        closeButtonText: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.CLOSE_BUTTON,
+        okButtonText: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.OK_BUTTON,
       })
       .subscribe(confirmed => {
         if (!confirmed) {
@@ -587,20 +594,21 @@ export class EditorService {
 
     // if the target is an ext. references it will show a display a confirmation dialog
     if (result.some((cell: mxgraph.mxCell) => MxGraphHelper.getModelElement(cell)?.isExternalReference())) {
-      this.confirmDialogService
-        .open({
-          title: 'Delete external references',
-          phrases: ['Deleting an external reference will also delete other external references that depend on it'],
-        })
-        .subscribe(confirmed => {
-          if (confirmed) {
-            this.deleteElements(result);
-
-            result.forEach((element: any) => {
-              this.deletePrefixForExternalNamespaceReference(element);
-            });
-          }
-        });
+      this.zone.run(() => {
+        this.confirmDialogService
+          .open({
+            title: this.translate.language.CONFIRM_DIALOG.DELETE_SELECTED_ELEMENTS.TITLE,
+            phrases: [this.translate.language.CONFIRM_DIALOG.DELETE_SELECTED_ELEMENTS.DELETE_DEPENDENT_REFERENCES_WARNING],
+          })
+          .subscribe(confirmed => {
+            if (confirmed) {
+              this.deleteElements(result);
+              result.forEach((element: any) => {
+                this.deletePrefixForExternalNamespaceReference(element);
+              });
+            }
+          });
+      });
     } else {
       this.deleteElements(result);
     }
@@ -841,6 +849,9 @@ export class EditorService {
   private saveCompleteError(error) {
     console.log(error);
     this.logService.logError(`Error occurred while saving the current model (${JSON.stringify(error)})`);
-    this.notificationsService.error({title: 'Saving completed with errors', message: error?.error?.error?.message || ''});
+    this.notificationsService.error({
+      title: 'Saving completed with errors',
+      message: error?.error?.error?.message || '',
+    });
   }
 }

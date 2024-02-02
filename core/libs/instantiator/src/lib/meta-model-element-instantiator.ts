@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -64,12 +64,13 @@ import {
   UnitInstantiator,
 } from './instantiators';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
-import {InstantiatorListElement, RdfModel, RdfModelUtil} from '@ame/rdf/utils';
+import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {GeneralConfig, NotificationsService} from '@ame/shared';
-import {PredefinedEntityInstantiator} from './instantiators/samm-e-predefined-entity-instantiator';
+import {PredefinedEntityInstantiator} from './instantiators';
 import {syncElementWithChildren} from './helpers';
 import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
 import {setUniqueElementName} from '@ame/utils';
+import {InstantiatorListElement} from '@ame/rdf/models';
 
 export class MetaModelElementInstantiator {
   private characteristicInstantiator: CharacteristicInstantiator;

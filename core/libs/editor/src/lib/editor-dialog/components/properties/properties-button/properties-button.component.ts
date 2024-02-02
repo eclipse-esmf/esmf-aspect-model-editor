@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -82,6 +82,9 @@ export class PropertiesButtonComponent implements OnInit {
           property: {aspectModelUrn},
           keys,
         } of this.propertiesClone) {
+          if (!data[aspectModelUrn]) {
+            continue;
+          }
           keys.notInPayload = data[aspectModelUrn].notInPayload;
           keys.optional = data[aspectModelUrn].optional;
           keys.payloadName = data[aspectModelUrn].payloadName;

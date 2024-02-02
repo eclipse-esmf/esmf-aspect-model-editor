@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,7 +15,7 @@ import {Injectable, inject} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {ShapeConnectorService} from '@ame/connection';
 import {RdfService} from '@ame/rdf/services';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {DefaultAbstractEntity, DefaultEntity, DefaultProperty} from '@ame/meta-model';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
@@ -33,7 +33,7 @@ export class BaseEntityRendererService {
 
   constructor(
     private mxGraphService: MxGraphService,
-    private languageSettingsService: LanguageSettingsService,
+    private sammLangService: SammLanguageSettingsService,
     private namespacesCacheService: NamespacesCacheService,
     private shapeConnectorService: ShapeConnectorService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
@@ -65,7 +65,7 @@ export class BaseEntityRendererService {
       this.mxGraphService,
       this.mxGraphShapeOverlayService,
       this.namespacesCacheService,
-      this.languageSettingsService,
+      this.sammLangService,
       this.rdfService.currentRdfModel
     );
 
@@ -161,10 +161,7 @@ export class BaseEntityRendererService {
   }
 
   private updateCell(cell: mxgraph.mxCell) {
-    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
-      MxGraphHelper.getModelElement(cell),
-      this.languageSettingsService
-    );
+    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(MxGraphHelper.getModelElement(cell), this.sammLangService);
     this.mxGraphService.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
   }
 }

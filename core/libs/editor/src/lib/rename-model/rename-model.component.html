@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -11,30 +11,27 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>Declare name of Shared Model</h2>
+<h2 mat-dialog-title>{{ 'TOOLBAR.DECLARE_NAME_DIALOG.TITLE' | translate }}</h2>
 <button class="close-button" mat-icon-button tabindex="-1" (click)="closeAndGiveResult(false)">
   <mat-icon>close</mat-icon>
 </button>
 
 <mat-dialog-content *ngIf="fileNameControl">
   <p>
-    You are about to remove the Aspect which will transform this Aspect Model into a Shared Model. Please choose a name for this Shared
-    Model.
+    {{ 'TOOLBAR.DECLARE_NAME_DIALOG.INFO_CONTENT' | translate }}
   </p>
 
   <mat-form-field>
     <input [formControl]="fileNameControl" name="file-name" matInput placeholder="Name" data-cy="file-rename" />
     <span matSuffix class="input-suffix">.ttl</span>
-    <mat-error *ngIf="fileNameControl.getError('required')">* This field is required</mat-error>
-    <mat-error *ngIf="fileNameControl.getError('pattern')"
-      >Allowed characters: alphanumeric, space, dot(.), minus(-) and underscore(_)</mat-error
-    >
-    <mat-error *ngIf="fileNameControl.getError('sameFile')">This file already exists in your namespace</mat-error>
+    <mat-error *ngIf="fileNameControl.getError('required')">* {{ 'TOOLBAR.DECLARE_NAME_DIALOG.REQUIRED_ERROR' | translate }}</mat-error>
+    <mat-error *ngIf="fileNameControl.getError('pattern')">{{ 'TOOLBAR.DECLARE_NAME_DIALOG.CHARACTERS_ERROR' | translate }}</mat-error>
+    <mat-error *ngIf="fileNameControl.getError('sameFile')">{{ 'TOOLBAR.DECLARE_NAME_DIALOG.EXIST_ERROR' | translate }}</mat-error>
   </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-flat-button (click)="closeAndGiveResult(false)">Cancel</button>
+  <button mat-flat-button (click)="closeAndGiveResult(false)">{{ 'TOOLBAR.DECLARE_NAME_DIALOG.CANCEL' | translate }}</button>
   <button
     mat-flat-button
     color="primary"
@@ -42,6 +39,6 @@
     [disabled]="!fileNameControl?.valid"
     (click)="closeAndGiveResult(true)"
   >
-    Remove Aspect
+    {{ 'TOOLBAR.DECLARE_NAME_DIALOG.REMOVE_ASPECT' | translate }}
   </button>
 </mat-dialog-actions>

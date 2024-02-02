@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -20,7 +20,7 @@
       [formControl]="searchControl"
       type="search"
       color="primary"
-      placeholder="Search element"
+      [placeholder]="'TOOLBAR.SEARCH' | translate"
       spellcheck="false"
       data-cy="searchInputField"
     />
@@ -28,7 +28,7 @@
       *ngIf="filterAttributes.activeFilter !== DEFAULT"
       class="search-bar-container__prefix"
       matPrefix
-      matTooltip="Remove filter mode to find all elements"
+      [matTooltip]="'TOOLBAR.REMOVE_FILTER_MODE' | translate"
     >
       info_outline
     </mat-icon>

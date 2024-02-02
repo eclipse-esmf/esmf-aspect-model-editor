@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,10 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {Settings} from '../model/settings';
+import {Settings} from '../model';
 
 const DEFAULT_SETTINGS: Settings = {
+  namespace: '',
+  version: '',
   showEditorNav: true,
   showEditorMap: true,
   autoSaveEnabled: true,
@@ -27,6 +28,8 @@ const DEFAULT_SETTINGS: Settings = {
   showConnectionLabels: true,
   useSaturatedColors: false,
   showAbstractPropertyConnection: true,
+  copyrightHeader: [],
+  aspectModelLanguages: [],
 };
 
 @Injectable({
@@ -35,29 +38,27 @@ const DEFAULT_SETTINGS: Settings = {
 export class ConfigurationService {
   private readonly SETTINGS_ITEM_KEY: string = 'settings';
   private settings: Settings;
-  private _settings$: BehaviorSubject<Settings>;
-
-  public settings$: Observable<Settings>;
 
   constructor() {
     try {
       this.settings = JSON.parse(localStorage.getItem(this.SETTINGS_ITEM_KEY)) || DEFAULT_SETTINGS;
+
+      // Default to english if no languages are set
+      this.settings.aspectModelLanguages = ['en'];
     } catch {
       this.settings = DEFAULT_SETTINGS;
     }
-
-    this._settings$ = new BehaviorSubject({...this.settings});
-    this.settings$ = this._settings$.asObservable();
   }
 
-  dispatchSettings$() {
-    this._settings$.next({...this.settings});
-  }
-
-  setSettings(settings: Settings) {
+  setSettings(settings: Settings): void {
     this.settings = settings;
-    this._settings$.next({...settings});
+    this.setLocalStorageItem();
     localStorage.setItem(this.SETTINGS_ITEM_KEY, JSON.stringify(this.settings));
+  }
+
+  setLocalStorageItem(settings?: Settings): void {
+    const settingsToSave = settings || this.settings;
+    localStorage.setItem(this.SETTINGS_ITEM_KEY, JSON.stringify(settingsToSave));
   }
 
   getSettings(): Settings {

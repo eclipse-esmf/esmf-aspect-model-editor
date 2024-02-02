@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -16,6 +16,7 @@ import {NotificationsService} from '@ame/shared';
 import {ShapeConnectorService} from '@ame/connection';
 import {Injectable} from '@angular/core';
 import {CanExtend, DefaultAbstractEntity, DefaultEntity} from '../aspect-meta-model';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,8 @@ export class BaseEntityModelService {
   constructor(
     private mxGraphService: MxGraphService,
     private notificationService: NotificationsService,
-    private shapeConnectorService: ShapeConnectorService
+    private shapeConnectorService: ShapeConnectorService,
+    private translate: LanguageTranslationService
   ) {}
 
   checkExtendedElement(metaModelElement: CanExtend, extendedElement: CanExtend) {
@@ -36,8 +38,8 @@ export class BaseEntityModelService {
 
     if (resolvedCell && MxGraphHelper.isEntityCycleInheritance(resolvedCell, metaModelElement, this.mxGraphService.graph)) {
       this.notificationService.warning({
-        title: 'Recursive elements',
-        message: 'Can not connect elements due to circular connection',
+        title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
+        message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
         timeout: 5000,
       });
       return;

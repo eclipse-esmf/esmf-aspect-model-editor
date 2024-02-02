@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -34,7 +34,7 @@ import {
   MxGraphVisitorHelper,
 } from '@ame/mx-graph';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {SingleShapeConnector} from '../models';
@@ -53,7 +53,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     private namespacesCacheService: NamespacesCacheService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private languageSettingsService: LanguageSettingsService,
+    private sammLangService: SammLanguageSettingsService,
     private filtersService: FiltersService
   ) {}
 
@@ -156,10 +156,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
       if (edgeSourceMetaModelElement instanceof DefaultProperty) {
         // remove example value for complex datatypes
         edgeSourceMetaModelElement.exampleValue = null;
-        edgeSource['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
-          edgeSourceMetaModelElement,
-          this.languageSettingsService
-        );
+        edgeSource['configuration'].fields = MxGraphVisitorHelper.getElementProperties(edgeSourceMetaModelElement, this.sammLangService);
         this.mxGraphAttributeService.graph.labelChanged(edgeSource, MxGraphHelper.createPropertiesLabel(edgeSource));
       }
     });

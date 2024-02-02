@@ -1,0 +1,71 @@
+<!--
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<form [formGroup]="form">
+  <h3>
+    Aspect Namespace
+    <mat-icon
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="100"
+      [matTooltip]="'SETTINGS_DIALOG.NAMESPACES.ASPECT_NAMESPACE_TOOLTIP' | translate"
+      >info
+    </mat-icon>
+  </h3>
+
+  <div class="namespace-fields">
+    <mat-form-field class="namespace-setting-field">
+      <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.VALUE' | translate }}</mat-label>
+      <input matInput spellcheck="false" class="form-control" formControlName="aspectUri" data-cy="namespaceTabValueInput" />
+      <mat-error *ngIf="form.get('aspectUri').errors?.required">Namespace is required</mat-error>
+      <mat-error *ngIf="form.get('aspectUri').errors?.invalidPattern">Not a valid namespace</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="namespace-setting-field">
+      <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.VERSION' | translate }}</mat-label>
+      <input matInput spellcheck="false" class="form-control" formControlName="aspectVersion" data-cy="namespaceTabVersionInput" />
+      <mat-error *ngIf="form.get('aspectVersion').errors?.required">Version is required</mat-error>
+      <mat-error *ngIf="form.get('aspectVersion').errors?.invalidVersionFormat">Not a valid version</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="namespace-setting-field">
+      <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.NAME' | translate }}</mat-label>
+      <input matInput spellcheck="false" class="form-control" formControlName="aspectName" data-cy="namespaceTabFileNameInput" />
+    </mat-form-field>
+
+    <mat-form-field class="namespace-setting-field">
+      <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.SAMM_VERSION' | translate }}</mat-label>
+      <input matInput spellcheck="false" class="form-control" formControlName="sammVersion" data-cy="namespaceTabSammVersionInput" />
+    </mat-form-field>
+  </div>
+</form>
+
+<h3>{{ 'SETTINGS_DIALOG.NAMESPACES.PREDEFINED_NAMESPACES' | translate }}</h3>
+<table [dataSource]="predefinedNamespaces" mat-table>
+  <caption></caption>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef id="name">{{ 'SETTINGS_DIALOG.NAMESPACES.NAME' | translate }}</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="value">
+    <th mat-header-cell *matHeaderCellDef id="value">{{ 'SETTINGS_DIALOG.NAMESPACES.VALUE' | translate }}</th>
+    <td mat-cell *matCellDef="let element">{{ element.value }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="version">
+    <th mat-header-cell *matHeaderCellDef id="version">{{ 'SETTINGS_DIALOG.NAMESPACES.VERSION' | translate }}</th>
+    <td mat-cell *matCellDef="let element">{{ element.version }}</td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns"></tr>
+</table>

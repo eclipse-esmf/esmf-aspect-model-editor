@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,10 +13,17 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {SettingDialogComponent} from './components/settings-dialog/setting-dialog.component';
+import {
+  AutomatedWorkflowComponent,
+  EditorConfigurationComponent,
+  HeaderCopyrightComponent,
+  LanguageSettingsComponent,
+  NamespaceConfirmationModalComponent,
+  NamespaceSettingsComponent,
+  SettingDialogComponent,
+} from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
-import {MatTabsModule} from '@angular/material/tabs';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
@@ -27,19 +34,24 @@ import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {ConfigurationComponent, LanguageSettingsComponent, NamespaceComponent, NamespaceConfirmationModalComponent} from './components';
+import {MatTreeModule} from '@angular/material/tree';
+import {LanguageTranslateModule} from '@ame/translation';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [
     SettingDialogComponent,
     LanguageSettingsComponent,
-    NamespaceComponent,
-    ConfigurationComponent,
+    NamespaceSettingsComponent,
+    AutomatedWorkflowComponent,
+    EditorConfigurationComponent,
+    HeaderCopyrightComponent,
     NamespaceConfirmationModalComponent,
   ],
   imports: [
     CommonModule,
-    MatTabsModule,
+    MatTableModule,
     FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
@@ -49,10 +61,13 @@ import {ConfigurationComponent, LanguageSettingsComponent, NamespaceComponent, N
     MatFormFieldModule,
     MatSlideToggleModule,
     MatCardModule,
-    MatTableModule,
     MatButtonModule,
     MatDialogModule,
     MatTooltipModule,
+    MatTreeModule,
+    MatDividerModule,
+    LanguageTranslateModule,
+    MatMenuModule,
   ],
   exports: [SettingDialogComponent],
 })

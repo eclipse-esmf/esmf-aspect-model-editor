@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -12,7 +12,7 @@
   -->
 
 <div mat-dialog-title class="header">
-  <h2>Start modeling</h2>
+  <h2>{{ 'TOOLBAR.LOAD_MODEL_DIALOG.TITLE' | translate }}</h2>
   <button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
     <mat-icon>close</mat-icon>
   </button>
@@ -20,22 +20,22 @@
 <mat-dialog-content>
   <div class="info">
     <mat-icon>info</mat-icon>
-    <p>An existing Aspect Model will be replaced with the new one. Any unsaved changes will be lost.</p>
+    <p>{{ 'TOOLBAR.LOAD_MODEL_DIALOG.INFO_CONTENT' | translate }}</p>
   </div>
-  <p class="modeling-options-message">To start modeling you have three options:</p>
+  <p class="modeling-options-message">{{ 'TOOLBAR.LOAD_MODEL_DIALOG.OPTIONS_MESSAGE' | translate }}</p>
   <ul class="modeling-options">
-    <li>start from a new model (see initial Aspect model code in the text area below)</li>
-    <li>paste existing Aspect Model file (*.ttl) into the text area below</li>
-    <li>load Aspect Model file (*.ttl) by choosing "Load from File" below.</li>
+    <li>{{ 'TOOLBAR.LOAD_MODEL_DIALOG.FIRST_OPTION' | translate }}</li>
+    <li>{{ 'TOOLBAR.LOAD_MODEL_DIALOG.SECOND_OPTION' | translate }}</li>
+    <li>{{ 'TOOLBAR.LOAD_MODEL_DIALOG.THIRD_OPTION' | translate }}</li>
   </ul>
-  <p>As an expert you may also modify the Aspect Model file manually.</p>
+  <p>{{ 'TOOLBAR.LOAD_MODEL_DIALOG.MODIFY_MANUALLY_CONTENT' | translate }}</p>
   <mat-form-field appearance="outline">
     <textarea
       [(ngModel)]="rdfAspectModel"
       data-cy="dialogInputModel"
       spellcheck="false"
       matInput
-      placeholder="Paste your Aspect Model here or load it from file."
+      [placeholder]="'TOOLBAR.LOAD_MODEL_DIALOG.TEXT_FIELD_PLACEHOLDER' | translate"
     ></textarea>
   </mat-form-field>
   <input style="display: none" type="file" (change)="onLoadFromFile($event)" #fileInput />
@@ -43,14 +43,18 @@
 
 <mat-dialog-actions align="end">
   <button [matMenuTriggerFor]="menu" mat-raised-button class="menu" data-cy="models-drop-down">
-    Models <mat-icon>keyboard_arrow_up</mat-icon>
+    {{ 'TOOLBAR.LOAD_MODEL_DIALOG.BUTTON.MODELS' | translate }} <mat-icon>keyboard_arrow_up</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="onLoadDefault()" data-cy="dialogDefaultAspectButton">Default Aspect Model</button>
-    <button mat-menu-item (click)="onLoadMovementExample()" data-cy="dialogMovementExampleAspectButton">Movement Example</button>
+    <button mat-menu-item (click)="onLoadDefault()" data-cy="dialogDefaultAspectButton">
+      {{ 'TOOLBAR.LOAD_MODEL_DIALOG.BUTTON.DEFAULT_ASPECT_MODEL' | translate }}
+    </button>
+    <button mat-menu-item (click)="onLoadMovementExample()" data-cy="dialogMovementExampleAspectButton">
+      {{ 'TOOLBAR.LOAD_MODEL_DIALOG.BUTTON.MOVEMENT_EXAMPLE' | translate }}
+    </button>
   </mat-menu>
-  <button mat-raised-button (click)="fileInput.click()">Load from File</button>
+  <button mat-raised-button (click)="fileInput.click()">{{ 'TOOLBAR.LOAD_MODEL_DIALOG.BUTTON.LOAD_FROM_FILE' | translate }}</button>
   <button mat-raised-button color="primary" (click)="onOk()" [disabled]="!rdfAspectModel" data-cy="dialogStartButton">
-    Start modeling
+    {{ 'TOOLBAR.LOAD_MODEL_DIALOG.BUTTON.START_MODELING' | translate }}
   </button>
 </mat-dialog-actions>

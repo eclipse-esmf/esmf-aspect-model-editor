@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {
   AASXGenerationModalComponent,
   EditorService,
@@ -30,12 +30,14 @@ import {saveAs} from 'file-saver';
 import {ModelApiService} from '@ame/api';
 import {NamespacesCacheService} from '@ame/cache';
 import {HttpErrorResponse} from '@angular/common/http';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GenerateHandlingService {
   private readonly noRdfModelAvailable = 'No Rdf model available.';
+
   private get currentCachedFile() {
     return this.namespaceCacheService.currentCachedFile;
   }
@@ -48,7 +50,9 @@ export class GenerateHandlingService {
     private modelApiService: ModelApiService,
     private notificationsService: NotificationsService,
     private loadingScreenService: LoadingScreenService,
-    private namespaceCacheService: NamespacesCacheService
+    private namespaceCacheService: NamespacesCacheService,
+    private translate: LanguageTranslationService,
+    private ngZone: NgZone
   ) {}
 
   openGenerationOpenApiSpec(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
@@ -75,11 +79,11 @@ export class GenerateHandlingService {
       switchMap(() => this.editorService.generateOpenApiSpec(this.modelService.getLoadedAspectModel().rdfModel, openApi).pipe(first())),
       catchError(() => {
         this.notificationsService.error({
-          title: 'Failed to generate Open Api specification',
-          message: 'Invalid Aspect Model',
+          title: this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_OPENAPI_SPEC,
+          message: this.translate.language.TOOLBAR.GENERATE_HANDLING.INVALID_MODEL,
           timeout: 5000,
         });
-        return throwError(() => 'Failed to generate Open Api specification');
+        return throwError(() => this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_OPENAPI_SPEC);
       }),
       map(data => {
         if (openApi.output === 'yaml') {
@@ -179,7 +183,10 @@ export class GenerateHandlingService {
   }
 
   generateAASXFile() {
-    this.loadingScreenService.open({title: 'Validating model...', content: 'Please wait until the model is validated.'});
+    this.loadingScreenService.open({
+      title: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_VALIDATION,
+      content: this.translate.language.LOADING_SCREEN_DIALOG.VALIDATION_WAIT,
+    });
     return this.modelService.synchronizeModelToRdf().pipe(
       first(),
 
@@ -189,7 +196,7 @@ export class GenerateHandlingService {
         if (validationsErrors.some(({errorCode}) => errorCode)) {
           return throwError(null);
         }
-        return of(this.matDialog.open(AASXGenerationModalComponent));
+        return of(this.ngZone.run(() => this.matDialog.open(AASXGenerationModalComponent)));
       }),
       finalize(() => {
         this.loadingScreenService.close();
@@ -211,15 +218,15 @@ export class GenerateHandlingService {
       switchMap(() => this.editorService.generateJsonSample(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
       catchError(() => {
         this.notificationsService.error({
-          title: 'Failed to generate JSON Sample',
-          message: 'Invalid Aspect Model',
+          title: this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_JSON_SAMPLE,
+          message: this.translate.language.TOOLBAR.GENERATE_HANDLING.INVALID_MODEL,
           timeout: 5000,
         });
-        return throwError(() => 'Failed to generate JSON Sample');
+        return throwError(() => this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_JSON_SAMPLE);
       }),
       map(data => {
         this.openPreview(
-          'Sample JSON Payload preview',
+          this.translate.language.TOOLBAR.GENERATE_HANDLING.JSON_PAYLOAD_PREVIEW,
           this.formatStringToJson(data),
           !this.modelService.getLoadedAspectModel().aspect
             ? this.currentCachedFile.fileName
@@ -246,16 +253,16 @@ export class GenerateHandlingService {
       }),
       catchError(() => {
         this.notificationsService.error({
-          title: 'Failed to generate JSON Schema',
-          message: 'Invalid Aspect Model',
+          title: this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_JSON_SCHEMA,
+          message: this.translate.language.TOOLBAR.GENERATE_HANDLING.INVALID_MODEL,
           timeout: 5000,
         });
-        return throwError(() => 'Failed to generate JSON Schema');
+        return throwError(() => this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_JSON_SCHEMA);
       }),
       map(data => {
         this.loadingScreenService.close();
         this.openPreview(
-          'JSON Schema preview',
+          this.translate.language.TOOLBAR.GENERATE_HANDLING.JSON_SCHEMA_PREVIEW,
           this.formatStringToJson(data),
           !this.modelService.getLoadedAspectModel().aspect
             ? this.currentCachedFile.fileName
@@ -277,10 +284,10 @@ export class GenerateHandlingService {
         fileName: fileName,
       },
     };
-    return this.matDialog.open(PreviewDialogComponent, config).afterClosed();
+    return this.ngZone.run(() => this.matDialog.open(PreviewDialogComponent, config).afterClosed());
   }
 
   private openLanguageSelector() {
-    return this.matDialog.open(LanguageSelectorModalComponent).afterClosed();
+    return this.ngZone.run(() => this.matDialog.open(LanguageSelectorModalComponent).afterClosed());
   }
 }

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -30,7 +30,7 @@
             *ngIf="cellExists(element)"
             (click)="navigateToCell(element)"
             mat-icon-button
-            matTooltip="Locate element"
+            [matTooltip]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_BUTTON.LOCATE_ELEMENT' | translate"
             matTooltipPosition="below"
           >
             <mat-icon>gps_fixed</mat-icon>
@@ -39,7 +39,7 @@
             *ngIf="!element.isExternalReference()"
             (click)="openElementModel(element)"
             mat-icon-button
-            matTooltip="Open element"
+            [matTooltip]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_BUTTON.OPEN_ELEMENT' | translate"
             matTooltipPosition="below"
           >
             <mat-icon class="material-symbols-outlined">jump_to_element</mat-icon>
@@ -48,7 +48,7 @@
             *ngIf="element.isExternalReference()"
             (click)="openReferencedElement(element)"
             mat-icon-button
-            matTooltip="Open element in new window"
+            [matTooltip]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_BUTTON.OPEN_ELEMENT_IN_NEW_WINDOW' | translate"
             matTooltipPosition="left"
           >
             <mat-icon>open_in_new</mat-icon>

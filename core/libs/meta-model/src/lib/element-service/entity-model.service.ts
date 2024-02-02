@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -24,7 +24,7 @@ import {
   MxGraphVisitorHelper,
 } from '@ame/mx-graph';
 import {Base, BaseMetaModelElement, DefaultEntity, DefaultEntityValue, DefaultEnumeration, OverWrittenPropertyKeys} from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {BaseEntityModelService} from './base-entity-model.service';
 
 @Injectable({providedIn: 'root'})
@@ -35,7 +35,7 @@ export class EntityModelService extends BaseModelService {
     private mxGraphService: MxGraphService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private entityRenderer: EntityRenderService,
-    private languageService: LanguageSettingsService,
+    private languageService: SammLanguageSettingsService,
     private baseEntityModel: BaseEntityModelService
   ) {
     super();
@@ -51,6 +51,9 @@ export class EntityModelService extends BaseModelService {
     if (form.editedProperties) {
       for (const {property, keys} of modelElement.properties) {
         const newKeys: OverWrittenPropertyKeys = form.editedProperties[property.aspectModelUrn];
+        if (!newKeys) {
+          continue;
+        }
         keys.notInPayload = newKeys.notInPayload;
         keys.optional = newKeys.optional;
         keys.payloadName = newKeys.payloadName;

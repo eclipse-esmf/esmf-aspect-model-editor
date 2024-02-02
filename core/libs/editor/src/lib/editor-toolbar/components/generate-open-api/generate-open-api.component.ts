@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,7 +15,7 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormControl, FormGroup} from '@angular/forms';
 import * as locale from 'locale-codes';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {EditorDialogValidators} from '../../../editor-dialog';
 
 export interface OpenApi {
@@ -36,10 +36,10 @@ export class GenerateOpenApiComponent implements OnInit {
   public form: FormGroup;
   public languages: locale.ILocale[];
 
-  constructor(private dialogRef: MatDialogRef<GenerateOpenApiComponent>, private languageService: LanguageSettingsService) {}
+  constructor(private dialogRef: MatDialogRef<GenerateOpenApiComponent>, private languageService: SammLanguageSettingsService) {}
 
   ngOnInit() {
-    this.languages = this.languageService.getLanguageCodes().map(tag => locale.getByTag(tag));
+    this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
     this.form = new FormGroup({
       baseUrl: new FormControl('https://example.com', {
         validators: [EditorDialogValidators.baseUrl],

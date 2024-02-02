@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -20,9 +20,19 @@ import {MatIconModule} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @NgModule({
-  imports: [CommonModule, MatDialogModule, MatInputModule, MatIconModule, FormsModule, MatButtonModule, MatMenuModule],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatInputModule,
+    MatIconModule,
+    FormsModule,
+    MatButtonModule,
+    MatMenuModule,
+    LanguageTranslateModule,
+  ],
   declarations: [PreviewDialogComponent],
   exports: [PreviewDialogComponent],
 })

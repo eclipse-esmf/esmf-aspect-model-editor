@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -10,7 +10,10 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+
 export interface Settings {
+  namespace: string;
+  version: string;
   showEditorMap: boolean;
   showEditorNav: boolean;
   autoSaveEnabled: boolean;
@@ -23,4 +26,6 @@ export interface Settings {
   showConnectionLabels: boolean;
   useSaturatedColors: boolean;
   showAbstractPropertyConnection: boolean;
+  copyrightHeader: Array<string>;
+  aspectModelLanguages: Array<string>;
 }

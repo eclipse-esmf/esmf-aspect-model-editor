@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,7 +14,7 @@
 import {Injectable, inject} from '@angular/core';
 import {NamespacesCacheService} from '@ame/cache';
 import {DefaultUnit} from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {MxGraphRenderer} from '../../renderers';
@@ -32,12 +32,12 @@ export class UnitRenderService extends BaseRenderService {
 
   constructor(
     mxGraphService: MxGraphService,
-    languageSettingsService: LanguageSettingsService,
+    sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private namespacesCacheService: NamespacesCacheService
   ) {
-    super(mxGraphService, languageSettingsService, rdfService);
+    super(mxGraphService, sammLangService, rdfService);
   }
 
   create(parentCell: mxgraph.mxCell, unit: DefaultUnit) {
@@ -48,7 +48,7 @@ export class UnitRenderService extends BaseRenderService {
       this.mxGraphService,
       this.mxGraphShapeOverlayService,
       this.namespacesCacheService,
-      this.languageSettingsService,
+      this.sammLangService,
       null
     ).renderUnit(this.filterService.createNode(unit, {parent: MxGraphHelper.getModelElement(parentCell)}), parentCell);
   }

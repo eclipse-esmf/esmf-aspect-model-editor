@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,12 +13,13 @@
 
 import {FiltersService} from '@ame/loader-filters';
 import {DefaultAbstractEntity} from '@ame/meta-model';
-import {MxGraphService, MxGraphAttributeService, MxGraphHelper} from '@ame/mx-graph';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {EntityInheritanceConnector, MultiShapeConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
   providedIn: 'root',
@@ -30,11 +31,12 @@ export class AbstractEntityAbstractEntityConnectionHandler
   constructor(
     protected mxGraphService: MxGraphService,
     protected mxGraphAttributeService: MxGraphAttributeService,
-    protected languageSettingsService: LanguageSettingsService,
+    protected sammLangService: SammLanguageSettingsService,
     protected filtersService: FiltersService,
+    protected translate: LanguageTranslationService,
     private notificationService: NotificationsService
   ) {
-    super(mxGraphService, mxGraphAttributeService, languageSettingsService, notificationService, filtersService);
+    super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, filtersService, translate);
   }
 
   public connect(
@@ -45,8 +47,8 @@ export class AbstractEntityAbstractEntityConnectionHandler
   ) {
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({
-        title: 'Recursive elements',
-        message: 'Can not connect elements due to circular connection',
+        title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
+        message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
         timeout: 5000,
       });
     } else {

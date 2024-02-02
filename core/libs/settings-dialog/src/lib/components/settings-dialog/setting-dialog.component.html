@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -11,26 +11,90 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>Settings</h2>
-<button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()" data-cy="settingsModalCloseButton">
-  <mat-icon>close</mat-icon>
-</button>
+<div class="settings__header">
+  <h2 mat-dialog-title>{{ 'SETTINGS_DIALOG.TITLE' | translate }}</h2>
+  <button
+    mat-icon-button
+    class="settings__close-button"
+    [mat-dialog-close]="true"
+    tabindex="-1"
+    (click)="onClose()"
+    data-cy="settingsModalCloseButton"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
 
-<mat-dialog-content>
-  <mat-tab-group>
-    <mat-tab *ngFor="let tab of tabs">
-      <ng-template mat-tab-label>{{ tab.label }}</ng-template>
-      <div class="tab-content">
-        <div *ngIf="tab.configuration">
-          <ame-configuration></ame-configuration>
-        </div>
-        <div *ngIf="tab.languages" class="settings-scroll">
-          <ame-language-settings></ame-language-settings>
-        </div>
-        <div *ngIf="tab.namespaces">
-          <ame-namespace></ame-namespace>
-        </div>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
+<mat-dialog-content class="settings__dialog-content">
+  <div class="settings__split-layout">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="settings__tree">
+      <mat-tree-node
+        class="settings__tree-node"
+        *matTreeNodeDef="let node"
+        matTreeNodePadding
+        matTreeNodePaddingIndent="15"
+        (click)="onNodeSelected(node.type)"
+        [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type, 'settings__node-name--error': isNodeInvalid(node)}"
+      >
+        <li class="settings__node settings__node-without-icon">
+          <span class="settings__node-name settings__node-name--aligned">{{ node.name | translate }}</span>
+        </li>
+      </mat-tree-node>
+
+      <mat-tree-node
+        class="settings__tree-node"
+        *matTreeNodeDef="let node; when: hasChild"
+        matTreeNodePadding
+        (click)="onNodeSelected(node.type)"
+        [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type}"
+      >
+        <li class="settings__node">
+          <button mat-icon-button matTreeNodeToggle class="settings__toggle-button">
+            <mat-icon class="settings__icon">
+              {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+            </mat-icon>
+          </button>
+          <span class="settings__node-name">{{ node.name | translate }}</span>
+        </li>
+      </mat-tree-node>
+    </mat-tree>
+
+    <div class="settings__divider"></div>
+
+    <div class="settings__content">
+      <ng-container *ngIf="selectedNodeType === NodeNames.AUTOMATED_WORKFLOW || selectedNodeType === NodeNames.CONFIGURATION">
+        <ame-automated-workflow-config></ame-automated-workflow-config>
+      </ng-container>
+      <ng-container *ngIf="selectedNodeType === NodeNames.EDITOR">
+        <ame-editor-configuration></ame-editor-configuration>
+      </ng-container>
+      <ng-container *ngIf="selectedNodeType === NodeNames.LANGUAGES">
+        <ame-language-settings></ame-language-settings>
+      </ng-container>
+      <ng-container *ngIf="selectedNodeType === NodeNames.NAMESPACES">
+        <ame-namespace></ame-namespace>
+      </ng-container>
+      <ng-container *ngIf="selectedNodeType === NodeNames.COPYRIGHT">
+        <ame-copyright></ame-copyright>
+      </ng-container>
+    </div>
+  </div>
 </mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions" align="end">
+  <div>
+    <button mat-raised-button (click)="onCancel()" data-cy="settingsDialogCancelButton">
+      {{ 'SETTINGS_DIALOG.CANCEL' | translate }}
+    </button>
+  </div>
+  <div matTooltip="{{ settingsForm.invalid ? ('SETTINGS_DIALOG.ERROR_MESSAGE' | translate) : '' }}">
+    <button mat-raised-button (click)="applySettings()" [disabled]="settingsForm.invalid" data-cy="settingsDialogApplyButton">
+      {{ 'SETTINGS_DIALOG.APPLY' | translate }}
+    </button>
+  </div>
+  <div matTooltip="{{ settingsForm.invalid ? ('SETTINGS_DIALOG.ERROR_MESSAGE' | translate) : '' }}">
+    <button mat-raised-button color="primary" (click)="onOk()" [disabled]="settingsForm.invalid" data-cy="settingsDialogOkButton">
+      {{ 'SETTINGS_DIALOG.OK' | translate }}
+    </button>
+  </div>
+</mat-dialog-actions>

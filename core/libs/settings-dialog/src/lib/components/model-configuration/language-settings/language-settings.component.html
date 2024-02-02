@@ -1,0 +1,75 @@
+<!--
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+<div>
+  <h3>{{ 'SETTINGS_DIALOG.SUB_NODE.LANGUAGES' | translate }}</h3>
+  <form [formGroup]="form">
+    <!-- User Interface Language Selection -->
+    <section class="language-selection">
+      <h3>{{ 'SETTINGS_DIALOG.LANGUAGES.USER_INTERFACE' | translate }}</h3>
+      <mat-form-field>
+        <mat-label>{{ 'SETTINGS_DIALOG.LANGUAGES.CHOOSE_LANGUAGE' | translate }}</mat-label>
+        <mat-select formControlName="userInterface">
+          <mat-option *ngFor="let appLang of supportedLanguages" [value]="appLang.code">
+            {{ 'SETTINGS_DIALOG.LANGUAGES.' + appLang.language | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- Aspect Model Language Selection -->
+    <section class="aspect-model-selection">
+      <h3>Aspect Model</h3>
+      <div formArrayName="aspectModel" class="language-scroll">
+        <div *ngFor="let aspectModelFormGroup of aspectModelFormArray.controls; let i = index" class="row" [formGroupName]="i">
+          <mat-form-field>
+            <input
+              matInput
+              [matAutocomplete]="auto"
+              formControlName="language"
+              placeholder="{{ 'SETTINGS_DIALOG.LANGUAGES.SELECT_LANGUAGE' | translate }}"
+              data-cy="langCode"
+            />
+            <button
+              *ngIf="aspectModelFormArray.controls.length > 1"
+              (click)="removeLanguage(i)"
+              matSuffix
+              mat-icon-button
+              class="delete-icon"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayLanguageWithTag">
+              <mat-option *ngFor="let option of filteredOptions[i] | async" [value]="option">
+                {{ option.name }} ({{ option.tag }})
+              </mat-option>
+            </mat-autocomplete>
+
+            <mat-error *ngIf="getLanguageFormGroup(i).controls['language']?.touched">
+              {{ 'SETTINGS_DIALOG.LANGUAGES.START_TYPE' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </section>
+
+    <!-- Add Language Button -->
+    <div class="add-language-box">
+      <button mat-flat-button (click)="addLanguage()" class="add-language-box__button" data-cy="addLang">
+        <mat-icon>add</mat-icon>
+        {{ 'SETTINGS_DIALOG.LANGUAGES.ADD_LANGUAGE' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

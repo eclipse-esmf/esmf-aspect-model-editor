@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -16,18 +16,21 @@ import {ElementModel} from '@ame/shared';
 import {FiltersService} from '@ame/loader-filters';
 import {ModelService} from '@ame/rdf/services';
 import {
-  DefaultAspect,
-  DefaultAbstractProperty,
-  DefaultProperty,
-  DefaultCharacteristic,
   DefaultAbstractEntity,
-  DefaultEntity,
-  DefaultUnit,
+  DefaultAbstractProperty,
+  DefaultAspect,
+  DefaultCharacteristic,
   DefaultConstraint,
-  DefaultTrait,
-  DefaultOperation,
+  DefaultEntity,
   DefaultEvent,
+  DefaultOperation,
+  DefaultProperty,
+  DefaultTrait,
+  DefaultUnit,
 } from '@ame/meta-model';
+import {LanguageTranslationService} from '@ame/translation';
+import {finalize} from 'rxjs';
+import {LangChangeEvent} from '@ngx-translate/core';
 
 const elementMap = {
   aspect: DefaultAspect,
@@ -51,23 +54,34 @@ const elementMap = {
 export class SidebarNewElementComponent implements OnInit {
   @Output()
   public openWorkspaces: EventEmitter<void> = new EventEmitter();
+
   public elements: ElementModel[];
 
-  constructor(private filtersService: FiltersService, private modelService: ModelService) {}
+  constructor(private filtersService: FiltersService, private modelService: ModelService, private translate: LanguageTranslationService) {}
 
   public ngOnInit() {
+    this.updateElements(); // Initial population
+
+    const onLangChange$ = this.translate.translateService.onLangChange
+      .pipe(finalize(() => onLangChange$.unsubscribe()))
+      .subscribe((event: LangChangeEvent) => {
+        this.translate.translateService.getTranslation(event.lang).subscribe(() => this.updateElements());
+      });
+  }
+
+  private updateElements() {
     this.elements = [
-      new ElementModel(null, 'Aspect', 'aspect', 'The root element of each Aspect Model'),
-      new ElementModel(null, 'AbstractProperty', 'abstractProperty', 'Abstract named value'),
-      new ElementModel(null, 'Property', 'property', 'Named Value'),
-      new ElementModel(null, 'Characteristic', 'characteristic', 'The meaning of a Property in the context of the Aspect'),
-      new ElementModel(null, 'AbstractEntity', 'abstractEntity', 'The abstraction of a logical encapsulation of multiple values'),
-      new ElementModel(null, 'Entity', 'entity', 'The logical encapsulation of multiple values'),
-      new ElementModel(null, 'Unit', 'unit', 'A definition of a physical unit'),
-      new ElementModel(null, 'Constraint', 'constraint', 'A limitation applied to a Characteristic'),
-      new ElementModel(null, 'Trait', 'trait', 'Encapsulates multiple limitations to Characteristics'),
-      new ElementModel(null, 'Operation', 'operation', 'An Operation represents an action that can be triggered on the Aspect'),
-      new ElementModel(null, 'Event', 'event', 'A definition of an Event supported by the Aspect'),
+      new ElementModel(null, 'Aspect', 'aspect', this.translate.language.ELEMENT_MODEL_DESCRIPTION.ASPECT),
+      new ElementModel(null, 'AbstractProperty', 'abstractProperty', this.translate.language.ELEMENT_MODEL_DESCRIPTION.ABSTRACT_PROPERTY),
+      new ElementModel(null, 'Property', 'property', this.translate.language.ELEMENT_MODEL_DESCRIPTION.PROPERTY),
+      new ElementModel(null, 'Characteristic', 'characteristic', this.translate.language.ELEMENT_MODEL_DESCRIPTION.CHARACTERISTIC),
+      new ElementModel(null, 'AbstractEntity', 'abstractEntity', this.translate.language.ELEMENT_MODEL_DESCRIPTION.ABSTRACT_ENTITY),
+      new ElementModel(null, 'Entity', 'entity', this.translate.language.ELEMENT_MODEL_DESCRIPTION.ENTITY),
+      new ElementModel(null, 'Unit', 'unit', this.translate.language.ELEMENT_MODEL_DESCRIPTION.UNIT),
+      new ElementModel(null, 'Constraint', 'constraint', this.translate.language.ELEMENT_MODEL_DESCRIPTION.CONSTRAINT),
+      new ElementModel(null, 'Trait', 'trait', this.translate.language.ELEMENT_MODEL_DESCRIPTION.TRAIT),
+      new ElementModel(null, 'Operation', 'operation', this.translate.language.ELEMENT_MODEL_DESCRIPTION.OPERATION),
+      new ElementModel(null, 'Event', 'event', this.translate.language.ELEMENT_MODEL_DESCRIPTION.EVENT),
     ];
   }
 

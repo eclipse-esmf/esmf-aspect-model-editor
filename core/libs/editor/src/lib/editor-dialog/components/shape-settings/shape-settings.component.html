@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -58,7 +58,7 @@
     mat-flat-button
     data-cy="editorCancelButton"
   >
-    Cancel
+    {{ 'EDITOR_CANVAS.SHAPE_SETTING.CANCEL' | translate }}
   </button>
   <button
     *ngIf="metaModelDialogService.isSaveButtonEnabled()"
@@ -69,6 +69,6 @@
     type="button"
     data-cy="editorSaveButton"
   >
-    Save
+    {{ 'EDITOR_CANVAS.SHAPE_SETTING.SAVE' | translate }}
   </button>
 </div>

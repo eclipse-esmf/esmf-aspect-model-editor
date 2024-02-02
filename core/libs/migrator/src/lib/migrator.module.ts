@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -28,6 +28,7 @@ import {
   VersionMigrationComponent,
 } from './components';
 import {SammMigrationComponent} from './components/samm-migration/samm-migration.component';
+import {LanguageTranslateModule} from '@ame/translation';
 
 const routes: Routes = [
   {path: 'start-migration', component: StartMigratingComponent, outlet: 'migrator'},
@@ -47,6 +48,7 @@ const routes: Routes = [
     MatButtonModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    LanguageTranslateModule,
     RouterModule.forChild(routes),
   ],
   declarations: [

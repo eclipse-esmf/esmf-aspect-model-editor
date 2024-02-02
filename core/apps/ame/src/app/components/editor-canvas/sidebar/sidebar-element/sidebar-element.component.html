@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -17,7 +17,11 @@
   [ngClass]="{'element-imported': elementImported(), locked: element.locked}"
   [attr.data-cy]="dataCy"
   [attr.locked]="element.locked ? 'locked' : null"
-  [title]="elementImported() ? 'Element already imported' : element.name + ' - Drag to the right to add'"
+  [title]="
+    elementImported()
+      ? ('SIDEBAR.ELEMENT_ALREADY_IMPORTED' | translate)
+      : ('SIDEBAR.DRAG_TO_RIGHT_TO_ADD' | translate: {value: element.name})
+  "
   class="container"
 >
   <div class="icon" [ngClass]="getIconClass">

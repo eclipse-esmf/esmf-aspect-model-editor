@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,7 +15,7 @@ import {syncElementWithChildren} from '../helpers';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {PredefinedCharacteristicInstantiator} from './predefined-characteristic-instantiator';
 import {BaseMetaModelElement, Characteristic, DefaultProperty, OverWrittenProperty, OverWrittenPropertyKeys} from '@ame/meta-model';
-import {InstantiatorListElement} from '@ame/rdf/utils';
+import {InstantiatorListElement} from '@ame/rdf/models';
 
 export class PropertyInstantiator {
   private readonly predefinedCharacteristics;

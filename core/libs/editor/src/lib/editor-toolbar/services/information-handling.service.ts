@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {SettingDialogComponent} from '@ame/settings-dialog';
 import {DocumentComponent} from '@ame/editor';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -21,18 +21,20 @@ import {NotificationsComponent} from '../components/notifications/notifications.
   providedIn: 'root',
 })
 export class InformationHandlingService {
-  constructor(private matDialog: MatDialog) {}
+  constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
 
   openSettingsDialog() {
-    this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container'}).afterClosed();
+    this.ngZone.run(() =>
+      this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container', width: '60%', autoFocus: false}).afterClosed()
+    );
   }
 
   openHelpDialog() {
-    this.matDialog.open(DocumentComponent);
+    this.ngZone.run(() => this.matDialog.open(DocumentComponent));
   }
 
   openNotificationDialog() {
-    const notificationModal = this.matDialog.open(NotificationsComponent, {width: '60%', autoFocus: false});
+    const notificationModal = this.ngZone.run(() => this.matDialog.open(NotificationsComponent, {width: '60%', autoFocus: false}));
     this.keyDownEvents(notificationModal);
   }
 

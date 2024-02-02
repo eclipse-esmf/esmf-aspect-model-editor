@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -23,6 +23,9 @@ import {of} from 'rxjs';
 import {MigratorService} from '../../migrator.service';
 
 import {StartMigratingComponent} from './start-migrating.component';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {HttpClient} from '@angular/common/http';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 describe('StartMigratingComponent', () => {
   let component: StartMigratingComponent;
@@ -31,7 +34,18 @@ describe('StartMigratingComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatDialogModule, MatCheckboxModule, MatButtonModule, MatProgressSpinnerModule],
+      imports: [
+        RouterTestingModule,
+        MatDialogModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        TranslateModule.forRoot({
+          provide: TranslateLoader,
+          useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+          deps: [HttpClient],
+        }),
+      ],
       declarations: [StartMigratingComponent],
       providers: [
         {

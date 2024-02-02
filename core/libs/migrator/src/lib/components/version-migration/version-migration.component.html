@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>Increasing Namespaces Versions</h2>
+<h2 mat-dialog-title>{{ 'SAMM_MIGRATION.INCREASE_VERSION_DIALOG.TITLE' | translate }}</h2>
 
 <mat-dialog-content *ngIf="namespaces">
   <div *ngFor="let namespace of namespaces | keyvalue" class="namespace">
@@ -29,5 +29,5 @@
 
 <mat-dialog-content class="loading-namespaces" *ngIf="!namespaces">
   <mat-spinner diameter="100"></mat-spinner>
-  <p>Loading Namespaces</p>
+  <p>{{ 'SAMM_MIGRATION.INCREASE_VERSION_DIALOG.LOADING_NAMESPACES' | translate }}</p>
 </mat-dialog-content>

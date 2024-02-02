@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -20,6 +20,7 @@ import {
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
+  DefaultUnit,
 } from '@ame/meta-model';
 import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
 import {ShapeGeometry, basicShapeGeometry, circleShapeGeometry} from '@ame/shared';
@@ -170,6 +171,9 @@ export class PropertiesFilterLoader implements FilterLoader {
   private getAllowedDescendants(element: BaseMetaModelElement): BaseMetaModelElement[] {
     const eligibleElements = [];
     for (const child of element.children) {
+      if (child instanceof DefaultUnit) {
+        continue;
+      }
       if (this.isAllowed(child, {parent: element})) {
         eligibleElements.push(child);
         continue;

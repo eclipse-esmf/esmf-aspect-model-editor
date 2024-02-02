@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,31 +12,32 @@
  */
 
 import {BaseMetaModelElement} from '@ame/meta-model';
-import {MxGraphService, MxGraphAttributeService, MxGraphVisitorHelper, MxGraphHelper} from '@ame/mx-graph';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper} from '@ame/mx-graph';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
-
+import {LanguageTranslationService} from '@ame/translation';
 import mxCell = mxgraph.mxCell;
 
 export abstract class InheritanceConnector {
   constructor(
     protected mxGraphService: MxGraphService,
     protected mxGraphAttributeService: MxGraphAttributeService,
-    protected languageSettingsService: LanguageSettingsService,
-    protected notificationsService: NotificationsService
+    protected sammLangService: SammLanguageSettingsService,
+    protected notificationsService: NotificationsService,
+    protected translate: LanguageTranslationService
   ) {}
 
   public connect(parentMetaModel: BaseMetaModelElement, childMetaModel: BaseMetaModelElement, parentCell: mxCell, childCell: mxCell) {
     if (parentMetaModel?.isPredefined()) {
-      this.notificationsService.warning({title: "A predefined element can't have a child"});
+      this.notificationsService.warning({title: this.translate.language.NOTIFICATION_SERVICE.CHILD_FOR_PREDEFINED_ELEMENT_ERROR});
       return;
     }
 
     (parentMetaModel as any).extendedElement = childMetaModel;
     this.checkAndRemoveExtendElement(parentCell);
     this.mxGraphService.assignToParent(childCell, parentCell);
-    parentCell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(parentMetaModel, this.languageSettingsService);
+    parentCell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(parentMetaModel, this.sammLangService);
     this.mxGraphAttributeService.graph.labelChanged(parentCell, MxGraphHelper.createPropertiesLabel(parentCell));
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,8 +15,9 @@ import {ModelApiService} from '@ame/api';
 import {NotificationsService} from '@ame/shared';
 import {Component, inject} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {WorkspaceSummaryComponent, NAMESPACES_SESSION} from '../../../shared';
-import {NamespacesSessionInterface, MissingElement} from '../../../shared/models';
+import {NAMESPACES_SESSION, WorkspaceSummaryComponent} from '../../../shared';
+import {MissingElement, NamespacesSessionInterface} from '../../../shared/models';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
   templateUrl: './summary.component.html',
@@ -32,7 +33,8 @@ export class ExportSummaryComponent {
   constructor(
     private modelApiService: ModelApiService,
     private dialogRef: MatDialogRef<WorkspaceSummaryComponent>,
-    private notificationService: NotificationsService
+    private notificationService: NotificationsService,
+    private translate: LanguageTranslationService
   ) {}
 
   export() {
@@ -48,7 +50,10 @@ export class ExportSummaryComponent {
         this.dialogRef.close();
       },
       error: () => {
-        this.notificationService.error({title: 'Namespace export error', message: 'Could not export package due to an internal error'});
+        this.notificationService.error({
+          title: this.translate.language.NOTIFICATION_SERVICE.NAMESPACE_EXPORT_FAILURE,
+          message: this.translate.language.NOTIFICATION_SERVICE.INTERNAL_EXPORT_ERROR,
+        });
       },
     });
   }

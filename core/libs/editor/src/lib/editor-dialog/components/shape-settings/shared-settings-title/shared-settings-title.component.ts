@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,7 +12,10 @@
  */
 
 import {BaseMetaModelElement} from '@ame/meta-model';
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {LanguageTranslationService} from '@ame/translation';
+import {finalize} from 'rxjs';
+import {LangChangeEvent} from '@ngx-translate/core';
 
 @Component({
   selector: 'ame-shared-settings-title',
@@ -23,6 +26,7 @@ import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 export class SharedSettingsTitleComponent implements OnInit {
   public metaModelElement: BaseMetaModelElement;
   public metaModelClassName: string;
+
   @Input() set metaModelElementInput(value: BaseMetaModelElement) {
     this.metaModelElement = value;
     this.elementName = this.getTitle();
@@ -35,17 +39,30 @@ export class SharedSettingsTitleComponent implements OnInit {
 
   elementName: string;
 
+  constructor(private cd: ChangeDetectorRef, private translate: LanguageTranslationService) {}
+
   ngOnInit(): void {
     this.elementName = this.getTitle();
+
+    const onLangChange$ = this.translate.translateService.onLangChange
+      .pipe(finalize(() => onLangChange$.unsubscribe()))
+      .subscribe((event: LangChangeEvent) => {
+        this.translate.translateService.getTranslation(event.lang).subscribe(() => {
+          this.elementName = this.getTitle();
+          this.cd.detectChanges();
+        });
+      });
   }
 
   getTitle(): string {
     if (this.metaModelElement === undefined || this.metaModelElement === null) {
-      return 'Edit';
+      return this.translate.language.EDITOR_CANVAS.SHAPE_SETTING.EDIT;
     } else {
       let name = `${this.metaModelElement.getPreferredName('en') || this.metaModelElement.name}`;
       name = name.length > 150 ? `${name.substring(0, 100)}...` : name;
-      return this.metaModelElement.isExternalReference() ? name : 'Edit element';
+      return this.metaModelElement.isExternalReference()
+        ? name
+        : this.translate.translateService.instant('EDITOR_CANVAS.SHAPE_SETTING.EDIT', {value: 'element'});
     }
   }
 }

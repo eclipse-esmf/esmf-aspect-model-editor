@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -11,9 +11,9 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>Migrating Workspace...</h2>
+<h2 mat-dialog-title>{{ 'SAMM_MIGRATION.MIGRATE_WORKSPACE_DIALOG.MIGRATE_WORKSPACE' | translate }}</h2>
 
 <mat-dialog-content class="loader-content">
   <mat-spinner></mat-spinner>
-  <p>Please wait until all files are migrated</p>
+  <p>{{ 'SAMM_MIGRATION.MIGRATE_WORKSPACE_DIALOG.AWAITING_STATUS' | translate }}</p>
 </mat-dialog-content>

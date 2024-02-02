@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -20,6 +20,7 @@ import {ElectronSignalsService, ElectronTunnelService, LoadingScreenService, Mod
 import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {Observable, filter, of, switchMap, take, tap} from 'rxjs';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({providedIn: 'root'})
 export class StartupService {
@@ -34,7 +35,8 @@ export class StartupService {
     private loadingScreenService: LoadingScreenService,
     private shapeSettingsSettings: ShapeSettingsService,
     private namespaceCacheService: NamespacesCacheService,
-    private mxGraphService: MxGraphService
+    private mxGraphService: MxGraphService,
+    private translate: LanguageTranslationService
   ) {}
 
   listenForLoading() {
@@ -56,7 +58,10 @@ export class StartupService {
 
   loadModel(model: string): Observable<any> {
     let options;
-    this.loadingScreenService.open({title: 'Loading model', content: 'Please wait until the model is loaded!'});
+    this.loadingScreenService.open({
+      title: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_LOADING,
+      content: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_LOADING_WAIT,
+    });
 
     return this.electronSignalsService.call('requestWindowData').pipe(
       tap(data => (options = data.options)),

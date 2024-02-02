@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,7 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {DefaultAbstractProperty, DefaultProperty} from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {RendererUpdatePayload} from '../../models';
@@ -29,12 +29,12 @@ import {RdfService} from '@ame/rdf/services';
 export class PropertyRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
-    languageSettingsService: LanguageSettingsService,
+    sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
     private namespacesCacheService: NamespacesCacheService,
     private shapeConnectorService: ShapeConnectorService
   ) {
-    super(mxGraphService, languageSettingsService, rdfService);
+    super(mxGraphService, sammLangService, rdfService);
   }
 
   update({cell, callback}: RendererUpdatePayload) {

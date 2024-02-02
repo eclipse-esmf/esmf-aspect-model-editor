@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -285,5 +285,22 @@ export class RdfModelUtil {
 
   static buildAbsoluteFileName(namespace: string, namespaceVersion: string, fileName: string): string {
     return `${namespace}:${namespaceVersion}:${fileName}`;
+  }
+
+  static extractCommentsFromRdfContent(content: string): Array<string> {
+    const comments: Array<string> = [];
+    const lines = content.split('\n');
+
+    for (const line of lines) {
+      if (line.startsWith('@prefix')) {
+        break;
+      }
+
+      if (line.startsWith('#')) {
+        comments.push(line);
+      }
+    }
+
+    return comments;
   }
 }

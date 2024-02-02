@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -17,7 +17,7 @@ import {Injectable} from '@angular/core';
 import {MultiShapeConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
 import {NamespacesCacheService} from '@ame/cache';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 
 @Injectable({
@@ -30,7 +30,7 @@ export class StructuredValueCharacteristicPropertyConnectionHandler
     private mxGraphService: MxGraphService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private namespacesCacheService: NamespacesCacheService,
-    private languageSettingsService: LanguageSettingsService,
+    private sammLangService: SammLanguageSettingsService,
     private notificationsService: NotificationsService
   ) {}
 
@@ -52,7 +52,7 @@ export class StructuredValueCharacteristicPropertyConnectionHandler
       this.addPropertyElement(childMetaModel, parentMetaModel);
     }
 
-    MxGraphHelper.updateLabel(parentCell, this.mxGraphAttributeService.graph, this.languageSettingsService);
+    MxGraphHelper.updateLabel(parentCell, this.mxGraphAttributeService.graph, this.sammLangService);
     this.mxGraphService.assignToParent(childCell, parentCell);
     this.mxGraphService.formatCell(parentCell);
     this.mxGraphService.formatShapes();

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -12,4 +12,8 @@
   -->
 <ame-base-input [parentForm]="parentForm"></ame-base-input>
 <ame-properties-button (overwrite)="overwriteProperties($event)"></ame-properties-button>
-<ame-element-list label="Outgoing edges" [elements]="(element$ | async)?.children" [isAspect]="true"></ame-element-list>
+<ame-element-list
+  [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.OUTGOING_EDGES' | translate"
+  [elements]="(element$ | async)?.children"
+  [isAspect]="true"
+></ame-element-list>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {first} from 'rxjs/operators';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
@@ -26,21 +26,23 @@ export interface DialogOptions {
 
 @Injectable({providedIn: 'root'})
 export class ConfirmDialogService {
-  constructor(private matDialog: MatDialog) {}
+  constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
 
   open({phrases, title, closeButtonText, okButtonText}: DialogOptions): Observable<boolean> {
-    return this.matDialog
-      .open(ConfirmDialogComponent, {
-        data: {
-          phrases,
-          title,
-          closeButtonText: closeButtonText || 'Close',
-          okButtonText: okButtonText || 'Continue',
-        },
-        maxWidth: 650,
-        minWidth: 550,
-      })
-      .afterClosed()
-      .pipe(first());
+    return this.ngZone.run(() =>
+      this.matDialog
+        .open(ConfirmDialogComponent, {
+          data: {
+            phrases,
+            title,
+            closeButtonText: closeButtonText || 'Close',
+            okButtonText: okButtonText || 'Continue',
+          },
+          maxWidth: 650,
+          minWidth: 550,
+        })
+        .afterClosed()
+        .pipe(first())
+    );
   }
 }

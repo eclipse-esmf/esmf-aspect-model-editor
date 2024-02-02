@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -23,6 +23,9 @@ import {MigratorService} from '../../migrator.service';
 import {ElectronTunnelService} from '@ame/shared';
 
 import {MigrationStatusComponent} from './migration-status.component';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {HttpClient} from '@angular/common/http';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 describe('MigrationStatusComponent', () => {
   let component: MigrationStatusComponent;
@@ -31,7 +34,17 @@ describe('MigrationStatusComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatDialogModule, MatIconModule, MatButtonModule],
+      imports: [
+        RouterTestingModule,
+        MatDialogModule,
+        MatIconModule,
+        MatButtonModule,
+        TranslateModule.forRoot({
+          provide: TranslateLoader,
+          useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+          deps: [HttpClient],
+        }),
+      ],
       declarations: [MigrationStatusComponent],
       providers: [
         {

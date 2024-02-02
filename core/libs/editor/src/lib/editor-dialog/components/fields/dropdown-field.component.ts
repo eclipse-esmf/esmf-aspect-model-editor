@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -17,7 +17,7 @@ import {EditorModelService} from '../../editor-model.service';
 import {tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {BaseMetaModelElement, DefaultCharacteristic, DefaultConstraint} from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {ModelService} from '@ame/rdf/services';
 import {PreviousFormDataSnapshot} from '../../interfaces';
@@ -42,7 +42,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   protected constructor(
     public editorModelService: EditorModelService,
     public modelService: ModelService,
-    public languageSettings: LanguageSettingsService
+    public languageSettings: SammLanguageSettingsService
   ) {}
 
   protected setPreviousData() {
@@ -96,8 +96,8 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   }
 
   public addLanguageSettings(metaModelElement: T) {
-    if (this.languageSettings.getLanguageCodes()) {
-      this.languageSettings.getLanguageCodes().forEach(languageCode => {
+    if (this.languageSettings.getSammLanguageCodes()) {
+      this.languageSettings.getSammLanguageCodes().forEach(languageCode => {
         if (!metaModelElement.getPreferredName(languageCode) && !metaModelElement.getDescription(languageCode)) {
           metaModelElement.addPreferredName(languageCode, '');
           metaModelElement.addDescription(languageCode, '');

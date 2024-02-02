@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -16,8 +16,94 @@
   flex-direction: column;
   min-width: 1000px;
   max-width: 1280px;
-  width: 80%;
+  width: 100%;
   height: 100%;
   min-height: 600px;
   max-height: 600px;
+}
+
+.settings {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__close-button {
+  }
+
+  &__dialog-content {
+    height: 100vh;
+  }
+
+  &__split-layout {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+  }
+
+  &__tree {
+    overflow: auto;
+    width: 220px;
+    margin-top: 6px;
+  }
+
+  &__divider {
+    width: 1px;
+    background-color: #000;
+  }
+
+  &__content {
+    flex: 3;
+    overflow: auto;
+  }
+
+  &__tree-node {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--ame-gray-20);
+    }
+
+    &--selected {
+      background-color: var(--ame-gray-20);
+    }
+  }
+
+  &__node {
+    display: flex;
+    align-items: center;
+  }
+
+  &__node-without-icon {
+    padding-left: 26px;
+  }
+
+  &__node-name {
+    &--aligned {
+      margin-left: 26px;
+    }
+
+    &--error {
+      text-decoration: underline;
+      color: red;
+    }
+  }
+
+  &__toggle-button {
+    .mat-mdc-icon-button.mat-mdc-button-base {
+      --mdc-icon-button-state-layer-size: 25px;
+      width: var(--mdc-icon-button-state-layer-size);
+      height: var(--mdc-icon-button-state-layer-size);
+      padding: 0;
+    }
+  }
+
+  &__icon {
+    transform: scale(0.9);
+  }
+}
+
+.dialog-actions {
+  border-top: 1px solid #e0e0e0;
 }

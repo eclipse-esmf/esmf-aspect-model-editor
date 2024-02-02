@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,23 +14,25 @@
 import {FiltersService} from '@ame/loader-filters';
 import {DefaultEntity, DefaultAbstractEntity, DefaultAbstractProperty, DefaultProperty, BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphService, MxGraphAttributeService} from '@ame/mx-graph';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {InheritanceConnector} from './inheritance-connector';
 import {EntityPropertyConnectionHandler, PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers';
+import {LanguageTranslationService} from '@ame/translation';
 
 export class EntityInheritanceConnector extends InheritanceConnector {
   constructor(
     protected mxGraphService: MxGraphService,
     protected mxGraphAttributeService: MxGraphAttributeService,
-    protected languageSettingsService: LanguageSettingsService,
+    protected sammLangService: SammLanguageSettingsService,
     protected notificationsService: NotificationsService,
     protected filtersService: FiltersService,
+    protected translate: LanguageTranslationService,
     protected propertyAbstractPropertyConnector?: PropertyAbstractPropertyConnectionHandler,
     protected entityPropertyConnector?: EntityPropertyConnectionHandler
   ) {
-    super(mxGraphService, mxGraphAttributeService, languageSettingsService, notificationsService);
+    super(mxGraphService, mxGraphAttributeService, sammLangService, notificationsService, translate);
   }
 
   connectWithAbstract(

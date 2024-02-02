@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -47,6 +47,7 @@ import {ConnectWithDialogModule} from '../connect-with-dialog/connect-with-dialo
 import {MatSelectModule} from '@angular/material/select';
 import {NamespaceManagerModule} from '@ame/namespace-manager';
 import {OpenElementWindowComponent} from '../open-element-window/open-element-window.component';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @NgModule({
   imports: [
@@ -76,6 +77,7 @@ import {OpenElementWindowComponent} from '../open-element-window/open-element-wi
     ReactiveFormsModule,
     MatSelectModule,
     NamespaceManagerModule,
+    LanguageTranslateModule,
   ],
   declarations: [
     EditorToolbarComponent,

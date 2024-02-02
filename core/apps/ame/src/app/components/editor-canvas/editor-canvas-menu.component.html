@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
   ~ additional information regarding authorship.
@@ -15,16 +15,16 @@
   <div id="outline" class="map-graph"></div>
 </div>
 <div class="menu-container" *ngIf="settings.showEditorNav">
-  <button mat-icon-button (click)="fit()" title="Fit the complete model on the current view">
+  <button mat-icon-button (click)="fit()" title="{{ 'EDITOR_CANVAS.FITTING_PROGRESS' | translate }}">
     <mat-icon>fit_screen</mat-icon>
   </button>
-  <button mat-icon-button (click)="actualSize()" title="Reset zoom level to 100%">
+  <button mat-icon-button (click)="actualSize()" title="{{ 'EDITOR_CANVAS.RESET' | translate }}">
     <mat-icon>close_fullscreen</mat-icon>
   </button>
-  <button mat-icon-button (click)="zoomIn()" title="Zoom in">
+  <button mat-icon-button (click)="zoomIn()" title="{{ 'EDITOR_CANVAS.ZOOM_IN_PROGRESS' | translate }}">
     <mat-icon>add</mat-icon>
   </button>
-  <button mat-icon-button (click)="zoomOut()" title="Zoom out">
+  <button mat-icon-button (click)="zoomOut()" title="{{ 'EDITOR_CANVAS.ZOOM_OUT_PROGRESS' | translate }}">
     <mat-icon>remove</mat-icon>
   </button>
 </div>

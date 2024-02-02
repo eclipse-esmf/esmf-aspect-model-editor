@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -22,7 +22,7 @@ import {
   EntityValueProperty,
   OverWrittenProperty,
 } from '@ame/meta-model';
-import {DataType, EditorModelService, FormFieldHelper} from '@ame/editor';
+import {DataType, FormFieldHelper} from '@ame/editor';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {MatTableDataSource} from '@angular/material/table';
 import {EntityValueUtil} from '../utils/EntityValueUtil';

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -170,10 +170,13 @@ export const META_MODEL_exampleValue = 'exampleValue';
 
 // Settings Dialog
 export enum SettingsDialogSelectors {
-  autoSaveInput = '[name="autosaveTime"]',
+  autoSaveInput = '[data-cy="autoSaveTime"]',
   autoSaveToggle = '[data-cy="autoSaveToggle"]',
-  autoValidateInput = '[name="autoValidateTime"]',
+  autoValidateInput = '[data-cy="autoValidateTime"]',
   autoValidateToggle = '[data-cy="autoValidateToggle"]',
+  settingsDialogApplyButton = '[data-cy="settingsDialogApplyButton"]',
+  settingsDialogOkButton = '[data-cy="settingsDialogOkButton"]',
+  settingsDialogCancelButton = '[data-cy="settingsDialogCancelButton"]',
 }
 
 // Snack bar

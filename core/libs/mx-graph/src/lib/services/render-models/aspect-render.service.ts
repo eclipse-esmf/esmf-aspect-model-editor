@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -14,7 +14,7 @@
 import {Injectable} from '@angular/core';
 import {DefaultAspect} from '@ame/meta-model';
 import {MxGraphHelper} from '@ame/mx-graph';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {RendererUpdatePayload} from '../../models';
 import {MxGraphService} from '../mx-graph.service';
@@ -26,8 +26,8 @@ import {NamedNode} from 'n3';
   providedIn: 'root',
 })
 export class AspectRenderService extends BaseRenderService {
-  constructor(mxGraphService: MxGraphService, languageSettingsService: LanguageSettingsService, rdfService: RdfService) {
-    super(mxGraphService, languageSettingsService, rdfService);
+  constructor(mxGraphService: MxGraphService, sammLangService: SammLanguageSettingsService, rdfService: RdfService) {
+    super(mxGraphService, sammLangService, rdfService);
   }
 
   update({cell}: RendererUpdatePayload) {

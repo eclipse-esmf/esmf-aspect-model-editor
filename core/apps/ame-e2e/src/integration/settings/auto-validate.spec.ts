@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SELECTOR_settingsButton, SettingsDialogSelectors, SNACK_BAR} from '../../support/constants';
+import {SELECTOR_settingsButton, SettingsDialogSelectors} from '../../support/constants';
 
 describe('Auto Validate', () => {
   it('should open settings dialog', () => {
@@ -23,23 +23,12 @@ describe('Auto Validate', () => {
       });
   });
 
-  it('should set timer to 2 seconds', () => {
+  it('should set timer to 60 seconds', () => {
     cy.get(SettingsDialogSelectors.autoValidateInput)
       .clear({force: true})
-      .type('2', {force: true})
-      .focused()
-      .blur()
-      .then(() => cy.get(SNACK_BAR).should('exist'));
-  });
-
-  it.skip('should stop timer for validation', () => {
-    cy.get(SettingsDialogSelectors.autoValidateInput)
-      .clear({force: true})
-      .type('10')
-      .focused()
-      .blur()
-      .then(() => cy.get(SettingsDialogSelectors.autoValidateToggle).click({force: true}))
-      .wait(6000)
-      .then(() => cy.get(SNACK_BAR).should('not.exist'));
+      .type('60', {force: true})
+      .then(() => cy.get(SettingsDialogSelectors.settingsDialogOkButton).click())
+      .then(() => cy.get(SELECTOR_settingsButton).click({force: true}))
+      .then(() => cy.get(SettingsDialogSelectors.autoValidateInput).should('have.value', '60'));
   });
 });
