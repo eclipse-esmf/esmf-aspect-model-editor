@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Injectable} from '@angular/core';
-import {Langcode, Settings} from '../model';
+import {Settings} from '../model';
 
 const DEFAULT_SETTINGS: Settings = {
   namespace: '',

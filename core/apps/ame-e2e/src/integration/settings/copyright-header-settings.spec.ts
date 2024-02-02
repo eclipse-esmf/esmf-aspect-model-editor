@@ -15,7 +15,6 @@
 /// <reference types="Cypress" />
 
 import {SELECTOR_settingsButton, SettingsDialogSelectors} from '../../support/constants';
-import {FileHandlingService} from '@ame/editor';
 
 describe('Test language settings', () => {
   const copyrightField = '[data-cy=copyright]';
@@ -52,9 +51,10 @@ describe('Test language settings', () => {
         body: req.body,
       });
     });
+
     cy.window()
       .then(win => {
-        return new Cypress.Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
           const fileHandlingService = win['angular.fileHandlingService'];
           fileHandlingService.copyToClipboard().subscribe({
             next: () => {
