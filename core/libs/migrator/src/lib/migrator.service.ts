@@ -47,8 +47,7 @@ export class MigratorService {
     private modelApiService: ModelApiService,
     private notificationsService: NotificationsService,
     private ngZone: NgZone
-  ) {
-  }
+  ) {}
 
   public startMigrating() {
     return this.migrateWorkspaceToSAMM().pipe(

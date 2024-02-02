@@ -26,14 +26,15 @@ export type LoadingScreenOptions = Omit<MatDialogConfig, 'data'> & {
 export class LoadingScreenService {
   public dialog: MatDialogRef<LoadingScreenComponent>;
 
-  constructor(private matDialog: MatDialog, private ngZone: NgZone) {
-  }
+  constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
 
   open(options: LoadingScreenOptions): MatDialogRef<LoadingScreenComponent> {
-    this.dialog = this.ngZone.run(() => this.matDialog.open(LoadingScreenComponent, {
-      data: options,
-      disableClose: true,
-    }));
+    this.dialog = this.ngZone.run(() =>
+      this.matDialog.open(LoadingScreenComponent, {
+        data: options,
+        disableClose: true,
+      })
+    );
     return this.dialog;
   }
 

@@ -24,11 +24,13 @@ export class InformationHandlingService {
   constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
 
   openSettingsDialog() {
-    this.ngZone.run(() => this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container', width: '60%', autoFocus: false}).afterClosed());
+    this.ngZone.run(() =>
+      this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container', width: '60%', autoFocus: false}).afterClosed()
+    );
   }
 
   openHelpDialog() {
-    this.ngZone.run(() =>this.matDialog.open(DocumentComponent));
+    this.ngZone.run(() => this.matDialog.open(DocumentComponent));
   }
 
   openNotificationDialog() {

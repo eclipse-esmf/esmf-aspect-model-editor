@@ -18,8 +18,7 @@ import {RenameModelComponent} from './rename-model.component';
 
 @Injectable({providedIn: 'root'})
 export class RenameModelDialogService {
-  constructor(private matDialog: MatDialog, private ngZone: NgZone) {
-  }
+  constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
 
   open() {
     return this.ngZone.run(() => this.matDialog.open(RenameModelComponent, {width: '550px'}).afterClosed().pipe(first()));

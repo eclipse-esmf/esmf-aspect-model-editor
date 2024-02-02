@@ -26,23 +26,23 @@ export interface DialogOptions {
 
 @Injectable({providedIn: 'root'})
 export class ConfirmDialogService {
-  constructor(private matDialog: MatDialog, private ngZone: NgZone) {
-  }
+  constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
 
   open({phrases, title, closeButtonText, okButtonText}: DialogOptions): Observable<boolean> {
-    return this.ngZone.run(() => this.matDialog
-      .open(ConfirmDialogComponent, {
-        data: {
-          phrases,
-          title,
-          closeButtonText: closeButtonText || 'Close',
-          okButtonText: okButtonText || 'Continue',
-        },
-        maxWidth: 650,
-        minWidth: 550,
-      })
-      .afterClosed()
-      .pipe(first())
+    return this.ngZone.run(() =>
+      this.matDialog
+        .open(ConfirmDialogComponent, {
+          data: {
+            phrases,
+            title,
+            closeButtonText: closeButtonText || 'Close',
+            okButtonText: okButtonText || 'Continue',
+          },
+          maxWidth: 650,
+          minWidth: 550,
+        })
+        .afterClosed()
+        .pipe(first())
     );
   }
 }

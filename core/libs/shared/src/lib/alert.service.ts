@@ -28,11 +28,11 @@ export interface AlertOptions {
 
 @Injectable({providedIn: 'root'})
 export class AlertService {
-  constructor(private matDialog: MatDialog, private ngZone: NgZone) {
-  }
+  constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
 
   public open(options: MatDialogConfig<Partial<AlertOptions>>) {
-    return this.ngZone.run(() => this.matDialog.open(AlertComponent, {
+    return this.ngZone.run(() =>
+      this.matDialog.open(AlertComponent, {
         minWidth: '500px',
         maxWidth: '800px',
         disableClose: true,

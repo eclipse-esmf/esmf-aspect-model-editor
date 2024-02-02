@@ -19,9 +19,7 @@ import {SaveModelDialogComponent} from './save-model-dialog.component';
 export class SaveModelDialogService {
   private matDialog = inject(MatDialog);
 
-  constructor(private ngZone: NgZone) {
-  }
-
+  constructor(private ngZone: NgZone) {}
 
   openDialog() {
     return this.ngZone.run(() => this.matDialog.open(SaveModelDialogComponent).afterClosed());

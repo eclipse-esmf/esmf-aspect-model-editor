@@ -18,10 +18,11 @@ import {Observable, of} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class LargeFileWarningService {
-  constructor(private matDialog: MatDialog, private ngZone: NgZone) {
-  }
+  constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
 
   openDialog(elementsCount: number): Observable<'open' | 'cancel' | 'ignore'> {
-    return elementsCount > 99 ? this.ngZone.run(() => this.matDialog.open(LargeFileWarningComponent, {data: {elementsCount}}).afterClosed()) : of('ignore');
+    return elementsCount > 99
+      ? this.ngZone.run(() => this.matDialog.open(LargeFileWarningComponent, {data: {elementsCount}}).afterClosed())
+      : of('ignore');
   }
 }

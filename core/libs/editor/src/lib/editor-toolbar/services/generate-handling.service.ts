@@ -53,8 +53,7 @@ export class GenerateHandlingService {
     private namespaceCacheService: NamespacesCacheService,
     private translate: LanguageTranslationService,
     private ngZone: NgZone
-  ) {
-  }
+  ) {}
 
   openGenerationOpenApiSpec(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
@@ -122,7 +121,7 @@ export class GenerateHandlingService {
       .afterClosed()
       .pipe(
         first(),
-        map((result: { language: string; action: string }) => {
+        map((result: {language: string; action: string}) => {
           if (result.action === 'download') {
             return this.downloadDocumentation(result.language, loadingScreenOptions).subscribe({
               error: error => this.notificationsService.error({title: error}),
