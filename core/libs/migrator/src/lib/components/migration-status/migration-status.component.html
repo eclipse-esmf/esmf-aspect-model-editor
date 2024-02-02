@@ -11,31 +11,41 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>Migration Status</h2>
+<h2 mat-dialog-title>{{ 'SAMM_MIGRATION.MIGRATION_STATUS_DIALOG.TITLE' | translate }}</h2>
 
 <mat-dialog-content *ngIf="hasErrors">
   <p>
-    Migration finished with errors. Bellow you can see the files with errors. Please open them in a previous version of AME editor and fix
-    the errors
+    {{ 'SAMM_MIGRATION.MIGRATION_STATUS_DIALOG.MIGRATION_ERROR' | translate: translationParams }}
   </p>
   <div class="status" *ngFor="let namespace of filteredErrorFiles | keyvalue">
     <span class="namespace">{{ namespace.key }}</span>
-    <p class="file" *ngFor="let file of namespace.value">
-      <mat-icon>error_outline</mat-icon>
-      {{ file }}
-    </p>
+    <div class="file" *ngFor="let file of namespace.value">
+      <div class="error-file-container">
+        <mat-icon>error_outline</mat-icon><span class="error-file"> {{ file.name }}</span>
+        <span class="error-message"> ({{ file.message }})</span>
+      </div>
+      <div class="editor-version" *ngIf="file.ameSammCompatibleVersions.sammVersion !== config.currentSammVersion">
+        SAMM:{{ file.ameSammCompatibleVersions.sammVersion }}, recommended Aspect Model Editor version for fixing:
+        {{ file.ameSammCompatibleVersions.ameVersion }}
+      </div>
+      <div class="editor-version" *ngIf="file.ameSammCompatibleVersions.sammVersion === config.currentSammVersion">
+        SAMM:{{ file.ameSammCompatibleVersions.sammVersion }}, the file can be fixed in the currently installed Aspect Model Editor.
+      </div>
+    </div>
   </div>
 </mat-dialog-content>
 
 <mat-dialog-content class="migration-success" *ngIf="!hasErrors">
   <mat-icon class="migration-success-icon">done</mat-icon>
-  <p>Migration finished with success</p>
+  <p>{{ 'SAMM_MIGRATION.MIGRATION_STATUS_DIALOG.SUCCESS' | translate }}</p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button *ngIf="!migratorService.increaseNamespaceVersion || hasErrors" (click)="closeDialog()" mat-flat-button>Close</button>
+  <button *ngIf="!migratorService.increaseNamespaceVersion || hasErrors" (click)="closeDialog()" mat-flat-button>
+    {{ 'SAMM_MIGRATION.MIGRATION_STATUS_DIALOG.CLOSE' | translate }}
+  </button>
   <button *ngIf="!hasErrors && migratorService.increaseNamespaceVersion" (click)="increaseVersion()" mat-flat-button color="primary">
-    <span>Migrate Version</span>
+    <span>{{ 'SAMM_MIGRATION.MIGRATION_STATUS_DIALOG.VERSION' | translate }}</span>
     <!-- <mat-spinner diameter="20" class="spinner"></mat-spinner> -->
   </button>
 </mat-dialog-actions>

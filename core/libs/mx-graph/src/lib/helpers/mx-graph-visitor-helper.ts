@@ -45,7 +45,7 @@ import {
   Unit,
 } from '@ame/meta-model';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import * as locale from 'locale-codes';
 import {ModelBaseProperties} from '../models';
 import {MxGraphHelper} from './mx-graph-helper';
@@ -99,7 +99,7 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addLocalizedDescriptions(metaModelElement: CanExtend | Base, languageSettingsService: LanguageSettingsService): ShapeAttribute[] {
+  static addLocalizedDescriptions(metaModelElement: CanExtend | Base, sammLangService: SammLanguageSettingsService): ShapeAttribute[] {
     const languages: string[] =
       metaModelElement.getAllLocalesDescriptions().length >= ((metaModelElement as CanExtend)?.extendedDescription?.size || 0)
         ? metaModelElement.getAllLocalesDescriptions()
@@ -108,7 +108,7 @@ export class MxGraphVisitorHelper {
     return languages
       .map(languageCode => {
         const langTag = locale.getByTag(languageCode).tag;
-        languageSettingsService.addLanguageCode(langTag);
+        sammLangService.addSammLanguageCode(langTag);
         const description = metaModelElement.getDescription(langTag);
         const extendedDescription = (metaModelElement as CanExtend)?.extendedDescription?.get(langTag);
 
@@ -125,10 +125,7 @@ export class MxGraphVisitorHelper {
       .filter(e => !!e);
   }
 
-  static addLocalizedPreferredNames(
-    metaModelElement: CanExtend | Base,
-    languageSettingsService: LanguageSettingsService
-  ): ShapeAttribute[] {
+  static addLocalizedPreferredNames(metaModelElement: CanExtend | Base, sammLangService: SammLanguageSettingsService): ShapeAttribute[] {
     const languages: string[] =
       metaModelElement.getAllLocalesPreferredNames().length >= ((metaModelElement as CanExtend)?.extendedPreferredName?.size || 0)
         ? metaModelElement.getAllLocalesPreferredNames()
@@ -137,7 +134,7 @@ export class MxGraphVisitorHelper {
     return languages
       .map(languageCode => {
         const langTag = locale.getByTag(languageCode).tag;
-        languageSettingsService.addLanguageCode(langTag);
+        sammLangService.addSammLanguageCode(langTag);
         const preferredName = metaModelElement.getPreferredName(langTag);
         const extendedPreferredName = (metaModelElement as CanExtend)?.extendedPreferredName?.get(langTag);
         if (preferredName || extendedPreferredName) {
@@ -338,30 +335,30 @@ export class MxGraphVisitorHelper {
     return characteristic.elements.map(element => (typeof element === 'string' ? element : element.property.name));
   }
 
-  static getOperationProperties(operation: DefaultOperation, languageSettingsService: LanguageSettingsService) {
+  static getOperationProperties(operation: DefaultOperation, sammLangService: SammLanguageSettingsService) {
     return [
-      ...this.addLocalizedPreferredNames(operation, languageSettingsService),
-      ...this.addLocalizedDescriptions(operation, languageSettingsService),
+      ...this.addLocalizedPreferredNames(operation, sammLangService),
+      ...this.addLocalizedDescriptions(operation, sammLangService),
       this.addSee(operation),
     ].filter(e => !!e);
   }
 
-  static getEntityProperties(entity: DefaultEntity, languageSettingsService: LanguageSettingsService) {
+  static getEntityProperties(entity: DefaultEntity, sammLangService: SammLanguageSettingsService) {
     return [
       this.addExtends(entity),
-      ...this.addLocalizedPreferredNames(entity, languageSettingsService),
-      ...this.addLocalizedDescriptions(entity, languageSettingsService),
+      ...this.addLocalizedPreferredNames(entity, sammLangService),
+      ...this.addLocalizedDescriptions(entity, sammLangService),
       this.addSee(entity),
     ].filter(e => !!e);
   }
 
-  static getAbstractEntityProperties(entity: any, languageSettingsService: LanguageSettingsService) {
-    return this.getEntityProperties(entity, languageSettingsService);
+  static getAbstractEntityProperties(entity: any, sammLangService: SammLanguageSettingsService) {
+    return this.getEntityProperties(entity, sammLangService);
   }
 
-  static getUnitProperties(unit: DefaultUnit, languageSettingsService: LanguageSettingsService) {
+  static getUnitProperties(unit: DefaultUnit, sammLangService: SammLanguageSettingsService) {
     return [
-      ...this.addLocalizedPreferredNames(unit, languageSettingsService),
+      ...this.addLocalizedPreferredNames(unit, sammLangService),
       this.addCode(unit),
       this.addSymbol(unit),
       this.addConversionFactor(unit),
@@ -371,24 +368,24 @@ export class MxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getPropertyProperties(property: DefaultProperty, languageSettingsService: LanguageSettingsService) {
+  static getPropertyProperties(property: DefaultProperty, sammLangService: SammLanguageSettingsService) {
     return [
       this.addExtends(property),
-      ...this.addLocalizedPreferredNames(property, languageSettingsService),
-      ...this.addLocalizedDescriptions(property, languageSettingsService),
+      ...this.addLocalizedPreferredNames(property, sammLangService),
+      ...this.addLocalizedDescriptions(property, sammLangService),
       this.addSee(property),
       this.addExampleValue(property),
     ].filter(e => !!e);
   }
 
-  static getAbstractPropertyProperties(abstractProperty: any, languageSettingsService: LanguageSettingsService) {
-    return this.getPropertyProperties(abstractProperty, languageSettingsService);
+  static getAbstractPropertyProperties(abstractProperty: any, sammLangService: SammLanguageSettingsService) {
+    return this.getPropertyProperties(abstractProperty, sammLangService);
   }
 
-  static getCharacteristicProperties(characteristic: DefaultCharacteristic, languageSettingsService: LanguageSettingsService) {
+  static getCharacteristicProperties(characteristic: DefaultCharacteristic, sammLangService: SammLanguageSettingsService) {
     return [
-      ...this.addLocalizedPreferredNames(characteristic, languageSettingsService),
-      ...this.addLocalizedDescriptions(characteristic, languageSettingsService),
+      ...this.addLocalizedPreferredNames(characteristic, sammLangService),
+      ...this.addLocalizedDescriptions(characteristic, sammLangService),
       this.addSee(characteristic),
       this.addDataType(characteristic),
       this.addValues(characteristic),
@@ -398,19 +395,19 @@ export class MxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getAspectProperties(aspect: DefaultAspect, languageSettingsService: LanguageSettingsService) {
+  static getAspectProperties(aspect: DefaultAspect, sammLangService: SammLanguageSettingsService) {
     return [
-      ...this.addLocalizedPreferredNames(aspect, languageSettingsService),
-      ...this.addLocalizedDescriptions(aspect, languageSettingsService),
+      ...this.addLocalizedPreferredNames(aspect, sammLangService),
+      ...this.addLocalizedDescriptions(aspect, sammLangService),
       this.addSee(aspect),
       this.addIsCollectionAspect(aspect),
     ].filter(e => !!e);
   }
 
-  static getConstraintProperties(constraint: DefaultConstraint, languageSettingsService: LanguageSettingsService) {
+  static getConstraintProperties(constraint: DefaultConstraint, sammLangService: SammLanguageSettingsService) {
     return [
-      ...this.addLocalizedPreferredNames(constraint, languageSettingsService),
-      ...this.addLocalizedDescriptions(constraint, languageSettingsService),
+      ...this.addLocalizedPreferredNames(constraint, sammLangService),
+      ...this.addLocalizedDescriptions(constraint, sammLangService),
       this.addSee(constraint),
       this.addValue(constraint),
       this.addMinValue(constraint),
@@ -423,53 +420,53 @@ export class MxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getEventProperties(event: DefaultEvent, languageSettingsService: LanguageSettingsService) {
+  static getEventProperties(event: DefaultEvent, sammLangService: SammLanguageSettingsService) {
     return [
-      ...this.addLocalizedPreferredNames(event, languageSettingsService),
-      ...this.addLocalizedDescriptions(event, languageSettingsService),
+      ...this.addLocalizedPreferredNames(event, sammLangService),
+      ...this.addLocalizedDescriptions(event, sammLangService),
       this.addSee(event),
     ].filter(e => !!e);
   }
 
-  static getElementProperties(element: BaseMetaModelElement, languageSettingsService: LanguageSettingsService) {
+  static getElementProperties(element: BaseMetaModelElement, sammLangService: SammLanguageSettingsService) {
     if (element instanceof DefaultOperation) {
-      return this.getOperationProperties(element, languageSettingsService);
+      return this.getOperationProperties(element, sammLangService);
     }
 
     if (element instanceof DefaultEntity) {
-      return this.getEntityProperties(element, languageSettingsService);
+      return this.getEntityProperties(element, sammLangService);
     }
 
     if (element instanceof DefaultUnit) {
-      return this.getUnitProperties(element, languageSettingsService);
+      return this.getUnitProperties(element, sammLangService);
     }
 
     if (element instanceof DefaultProperty) {
-      return this.getPropertyProperties(element, languageSettingsService);
+      return this.getPropertyProperties(element, sammLangService);
     }
 
     if (element instanceof DefaultCharacteristic) {
-      return this.getCharacteristicProperties(element, languageSettingsService);
+      return this.getCharacteristicProperties(element, sammLangService);
     }
 
     if (element instanceof DefaultAspect) {
-      return this.getAspectProperties(element, languageSettingsService);
+      return this.getAspectProperties(element, sammLangService);
     }
 
     if (element instanceof DefaultConstraint) {
-      return this.getConstraintProperties(element, languageSettingsService);
+      return this.getConstraintProperties(element, sammLangService);
     }
 
     if (element instanceof DefaultEvent) {
-      return this.getEventProperties(element, languageSettingsService);
+      return this.getEventProperties(element, sammLangService);
     }
 
     if (element instanceof DefaultAbstractEntity) {
-      return this.getAbstractEntityProperties(element, languageSettingsService);
+      return this.getAbstractEntityProperties(element, sammLangService);
     }
 
     if (element instanceof DefaultAbstractProperty) {
-      return this.getAbstractPropertyProperties(element, languageSettingsService);
+      return this.getAbstractPropertyProperties(element, sammLangService);
     }
 
     return null;

@@ -14,8 +14,9 @@
 import {DefaultEvent, Event, OverWrittenProperty} from '@ame/meta-model';
 import {DataFactory} from 'n3';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
-import {InstantiatorListElement, RdfModel} from '@ame/rdf/utils';
+import {RdfModel} from '@ame/rdf/utils';
 import {syncElementWithChildren} from '../helpers';
+import {InstantiatorListElement} from '@ame/rdf/models';
 
 export class EventInstantiator {
   private get rdfModel() {

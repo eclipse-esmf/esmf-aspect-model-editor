@@ -13,7 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {DefaultEvent} from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {MxGraphService} from '../mx-graph.service';
@@ -24,8 +24,8 @@ import {RdfService} from '@ame/rdf/services';
   providedIn: 'root',
 })
 export class EventRenderService extends BaseRenderService {
-  constructor(mxGraphService: MxGraphService, languageSettingsService: LanguageSettingsService, rdfService: RdfService) {
-    super(mxGraphService, languageSettingsService, rdfService);
+  constructor(mxGraphService: MxGraphService, sammLangService: SammLanguageSettingsService, rdfService: RdfService) {
+    super(mxGraphService, sammLangService, rdfService);
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {

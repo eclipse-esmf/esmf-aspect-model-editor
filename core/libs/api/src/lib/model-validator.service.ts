@@ -13,7 +13,6 @@
 
 import {Injectable} from '@angular/core';
 import {MxGraphService} from '@ame/mx-graph';
-import {ConfigurationService, Settings} from '@ame/settings-dialog';
 import {LogService, NotificationsService} from '@ame/shared';
 import {ViolationError} from '@ame/editor';
 
@@ -21,15 +20,7 @@ import {ViolationError} from '@ame/editor';
   providedIn: 'root',
 })
 export class ModelValidatorService {
-  private settings: Settings;
-
-  constructor(
-    private mxGraphService: MxGraphService,
-    private configurationService: ConfigurationService,
-    private notificationsService: NotificationsService,
-    private logService: LogService
-  ) {
-    this.settings = this.configurationService.getSettings();
+  constructor(private mxGraphService: MxGraphService, private notificationsService: NotificationsService, private logService: LogService) {
     this.notificationsService.clearNotifications();
   }
 

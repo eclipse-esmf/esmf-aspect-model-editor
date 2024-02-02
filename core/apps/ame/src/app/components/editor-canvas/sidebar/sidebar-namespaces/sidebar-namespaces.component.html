@@ -17,7 +17,7 @@
       <div class="title">Workspace</div>
       <mat-icon class="refresh-icon" (click)="refreshSidebar()">refresh</mat-icon>
     </div>
-    <p *ngIf="!hasCurrentFile" class="description">To see your current Model in the below list, save it to workspace.</p>
+    <p *ngIf="!hasCurrentFile" class="description">{{ 'SIDEBAR.WORKSPACE_TIP' | translate }}</p>
     <button
       *ngIf="isWorkspaceOutdated"
       (click)="migrateWorkspace()"

@@ -11,25 +11,29 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>Migrate Workspace to SAMM {{ config.currentSammVersion }}</h2>
+<h2 mat-dialog-title>{{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.TITLE' | translate }} {{ config.currentSammVersion }}</h2>
 
 <mat-dialog-content>
   <p>
-    Your workspace has at least one file under SAMM version <strong>{{ config.currentSammVersion }}</strong> and needs to be migrated.
+    {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.FILE_VERSION_WARNING' | translate }}
+    <strong>{{ config.currentSammVersion }}</strong> {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.MIGRATION_NEEDED' | translate }}
     <br />
-    Click the Migrate button to proceed with the migration.
+    {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.MIGRATE_INSTRUCTION' | translate }}
   </p>
-  <mat-checkbox [checked]="increaseVersion" (change)="changeVersionCheck($event)"> Auto-increase namespace versions. </mat-checkbox>
+  <mat-checkbox [checked]="increaseVersion" (change)="changeVersionCheck($event)">
+    {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.VERSION_AUTO_UPGRADE' | translate }}
+  </mat-checkbox>
   <p class="version-description">
-    If selected, a new major version of all migrated namespaces will be created to indicate the SAMM version upgrade. Otherwise the existing
-    namespaces will be overwritten (previous content will remain in a backup).
+    {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.UPGRADE_EFFECT' | translate }}
   </p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button *ngIf="!migrateLoading" (click)="closeDialog()" mat-flat-button>Cancel</button>
+  <button *ngIf="!migrateLoading" (click)="closeDialog()" mat-flat-button>
+    {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.CANCEL' | translate }}
+  </button>
   <button [disabled]="migrateLoading" (click)="migrate()" mat-flat-button color="primary">
-    <span *ngIf="!migrateLoading">Migrate</span>
+    <span *ngIf="!migrateLoading">{{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.MIGRATE' | translate }}</span>
     <mat-spinner *ngIf="migrateLoading" diameter="20" class="spinner"></mat-spinner>
   </button>
 </mat-dialog-actions>

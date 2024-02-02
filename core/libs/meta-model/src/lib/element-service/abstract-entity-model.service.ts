@@ -33,7 +33,7 @@ import {
   DefaultProperty,
   OverWrittenPropertyKeys,
 } from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {BaseEntityModelService} from './base-entity-model.service';
 
 @Injectable({providedIn: 'root'})
@@ -45,7 +45,7 @@ export class AbstractEntityModelService extends BaseModelService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private abstractEntityRenderer: AbstractEntityRenderService,
     private baseEntityModel: BaseEntityModelService,
-    private languageService: LanguageSettingsService
+    private languageService: SammLanguageSettingsService
   ) {
     super();
   }

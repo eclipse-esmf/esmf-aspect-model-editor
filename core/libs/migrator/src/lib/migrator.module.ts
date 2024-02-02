@@ -28,6 +28,7 @@ import {
   VersionMigrationComponent,
 } from './components';
 import {SammMigrationComponent} from './components/samm-migration/samm-migration.component';
+import {LanguageTranslateModule} from '@ame/translation';
 
 const routes: Routes = [
   {path: 'start-migration', component: StartMigratingComponent, outlet: 'migrator'},
@@ -47,6 +48,7 @@ const routes: Routes = [
     MatButtonModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    LanguageTranslateModule,
     RouterModule.forChild(routes),
   ],
   declarations: [

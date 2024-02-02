@@ -11,19 +11,19 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>Load auto-saved model?</h2>
+<h2 mat-dialog-title>{{ 'START_LOAD_MODAL.TITLE' | translate }}</h2>
 
 <mat-dialog-content>
-  <p>You can either continue with the auto-saved model or dismiss it to start with the default Aspect Model.</p>
+  <p>{{ 'START_LOAD_MODAL.CONTENT' | translate }}</p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button [disabled]="!!loadingButton" (click)="loadAutoSavedModel()">
-    <span *ngIf="loadingButton !== 'autoSaved'">Load auto-saved model</span>
+    <span *ngIf="loadingButton !== 'autoSaved'">{{ 'START_LOAD_MODAL.LOAD_BUTTON' | translate }}</span>
     <mat-spinner diameter="20" *ngIf="loadingButton === 'autoSaved'" class="spinner"></mat-spinner>
   </button>
   <button mat-button [disabled]="!!loadingButton" (click)="loadDefault()">
-    <span *ngIf="loadingButton !== 'default'">Dismiss</span>
+    <span *ngIf="loadingButton !== 'default'">{{ 'START_LOAD_MODAL.DISMISS_BUTTON' | translate }}</span>
     <mat-spinner *ngIf="loadingButton === 'default'" diameter="20" class="spinner"></mat-spinner>
   </button>
 </mat-dialog-actions>

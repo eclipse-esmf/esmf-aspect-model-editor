@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InstantiatorListElement} from '@ame/rdf/utils';
 import {DefaultAbstractProperty, OverWrittenProperty, OverWrittenPropertyKeys} from '@ame/meta-model';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {syncElementWithChildren} from '../helpers';
+import {InstantiatorListElement} from '@ame/rdf/models';
 
 export class AbstractPropertyInstantiator {
   private get rdfModel() {
@@ -29,7 +29,12 @@ export class AbstractPropertyInstantiator {
 
   public createAbstractProperty(listElement: InstantiatorListElement): OverWrittenProperty<DefaultAbstractProperty> {
     const property = this.currentCachedFile.getElement<DefaultAbstractProperty>(listElement.quad.value);
-    return property ? {property, keys: this.resolveOverwrittenKeys(listElement)} : this.constructAbstractProperty(listElement);
+    return property
+      ? {
+          property,
+          keys: this.resolveOverwrittenKeys(listElement),
+        }
+      : this.constructAbstractProperty(listElement);
   }
 
   public resolveOverwrittenKeys(element: InstantiatorListElement): OverWrittenPropertyKeys {

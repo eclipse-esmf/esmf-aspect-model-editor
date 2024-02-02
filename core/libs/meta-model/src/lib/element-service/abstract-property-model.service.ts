@@ -17,7 +17,7 @@ import {BaseModelService} from './base-model-service';
 import {AbstractPropertyRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper} from '@ame/mx-graph';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {CanExtend, DefaultAbstractProperty, DefaultProperty} from '../aspect-meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 
 @Injectable({providedIn: 'root'})
 export class AbstractPropertyModelService extends BaseModelService {
@@ -25,7 +25,7 @@ export class AbstractPropertyModelService extends BaseModelService {
     private mxGraphService: MxGraphService,
     private abstractPropertyRenderer: AbstractPropertyRenderService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private languageService: LanguageSettingsService
+    private languageService: SammLanguageSettingsService
   ) {
     super();
   }

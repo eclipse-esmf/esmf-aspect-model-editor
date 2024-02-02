@@ -16,7 +16,8 @@ import {NotificationsService} from '@ame/shared';
 import {VisibleStep} from 'libs/editor/src/lib/editor-toolbar/enum';
 import {ViolationError} from '@ame/editor';
 import {NAMESPACES_SESSION} from '../../services';
-import {NamespacesSessionInterface, MissingElement, Violation} from '../../models';
+import {MissingElement, NamespacesSessionInterface, Violation} from '../../models';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
   selector: 'ame-workspace-summary',
@@ -39,7 +40,7 @@ export class WorkspaceSummaryComponent {
   public violations: Violation[] = this.importSession.violations;
   public errors: ViolationError[];
 
-  constructor(private notificationService: NotificationsService) {}
+  constructor(private notificationService: NotificationsService, private translate: LanguageTranslationService) {}
 
   async copySummaryToClipboard() {
     const textToClipboard = JSON.stringify(
@@ -54,9 +55,9 @@ export class WorkspaceSummaryComponent {
 
     try {
       await navigator.clipboard.writeText(textToClipboard);
-      this.notificationService.success({title: 'Summary copied to clipboard'});
+      this.notificationService.success({title: this.translate.language.NOTIFICATION_SERVICE.SUMMARY_CLIPBOARD_SUCCESS});
     } catch {
-      this.notificationService.success({title: 'Error on copying summary to clipboard'});
+      this.notificationService.success({title: this.translate.language.NOTIFICATION_SERVICE.SUMMARY_CLIPBOARD_FAILURE});
     }
   }
 }

@@ -12,7 +12,8 @@
   -->
 
 <p class="changes" *ngIf="savedModel$ | async as savedModel">
-  <span>{{ savedModel.changed ? 'There are currently unsaved changes' : 'All changes have been saved' }}</span>
+  <span *ngIf="savedModel.changed">{{ 'FOOTER.UNSAVED_CHANGES' | translate }}</span>
+  <span *ngIf="!savedModel.changed">{{ 'FOOTER.CHANGES_SAVED' | translate }}</span>
   <span *ngIf="savedModel.date">|</span>
-  <span *ngIf="savedModel.date">Last auto-save: {{ savedModel.date | date: 'dd/MM/yyyy HH:mm' }}</span>
+  <span *ngIf="savedModel.date">{{ 'FOOTER.LAST_AUTOSAVE_INFO' | translate }}: {{ savedModel.date | date: 'dd/MM/yyyy HH:mm' }}</span>
 </p>

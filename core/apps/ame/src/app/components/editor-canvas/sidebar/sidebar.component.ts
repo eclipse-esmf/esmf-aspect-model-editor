@@ -53,6 +53,7 @@ import {
 import {catchError, finalize, first, Subscription, switchMap, tap, throwError} from 'rxjs';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
   selector: 'ame-editor-sidebar',
@@ -87,7 +88,8 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
     private rdfService: RdfService,
     private shapeSettingsStateService: ShapeSettingsStateService,
     private detectorRef: ChangeDetectorRef,
-    public sidebarService: SidebarService
+    public sidebarService: SidebarService,
+    private translate: LanguageTranslationService
   ) {}
 
   public ngAfterViewInit(): void {
@@ -194,7 +196,7 @@ export class EditorCanvasSidebarComponent implements AfterViewInit, OnInit, OnDe
         first(),
         tap(() => {
           const loadingScreenOptions: LoadingScreenOptions = {
-            title: 'Loading Aspect Model',
+            title: this.translate.language.LOADING_SCREEN_DIALOG.ASPECT_MODEL_LOADING,
             hasCloseButton: true,
             closeButtonAction: () => {
               subscription.unsubscribe();

@@ -20,9 +20,19 @@ import {MatIconModule} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @NgModule({
-  imports: [CommonModule, MatDialogModule, MatInputModule, MatIconModule, FormsModule, MatButtonModule, MatMenuModule],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatInputModule,
+    MatIconModule,
+    FormsModule,
+    MatButtonModule,
+    MatMenuModule,
+    LanguageTranslateModule,
+  ],
   declarations: [LoadModelDialogComponent],
   exports: [LoadModelDialogComponent],
 })

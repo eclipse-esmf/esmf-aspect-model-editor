@@ -10,23 +10,27 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {DataFactory, Parser, Quad, Store, Util, Writer} from 'n3';
+
+import {Parser, Store} from 'n3';
 import {forkJoin, map, Observable, of, Subject, switchMap, throwError} from 'rxjs';
 import {Inject, Injectable} from '@angular/core';
 import {environment} from 'environments/environment';
 import {ModelApiService} from '@ame/api';
 import {APP_CONFIG, AppConfig, DataTypeService, FileContentModel, LogService, SaveValidateErrorsCodes} from '@ame/shared';
 import {Samm} from '@ame/vocabulary';
-import {RdfModel} from '../utils';
+import {RdfModel, RdfModelUtil} from '../utils';
+import {RdfSerializerService} from './rdf-serializer.service';
+import {ConfigurationService, Settings} from '@ame/settings-dialog';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RdfService {
-  private namedNode = DataFactory.namedNode;
   private _latestSavedRDF: string;
   private _externalRdfModels: Array<RdfModel> = [];
   private _currentRdfModel: RdfModel;
+  private _rdfSerializer: RdfSerializerService;
+  private _settings: Settings;
 
   public get externalRdfModels(): Array<RdfModel> {
     return this._externalRdfModels;
@@ -45,96 +49,60 @@ export class RdfService {
   }
 
   constructor(
+    private logService: LogService,
     private modelApiService: ModelApiService,
     private dataTypeService: DataTypeService,
-    private logService: LogService,
+    private configurationService: ConfigurationService,
     @Inject(APP_CONFIG) public config: AppConfig
   ) {
     if (!environment.production) {
       window['angular.rdfService'] = this;
     }
+
+    this._rdfSerializer = new RdfSerializerService();
+    this._settings = this.configurationService.getSettings();
   }
 
   serializeModel(rdfModel: RdfModel): string {
-    let rdfContent = '';
-    let writer: Writer;
-    const processedQuads = [];
-    const metaModelNames = rdfModel.SAMMC().getMetaModelNames(false);
-
-    try {
-      writer = new Writer({
-        contentType: 'text/turtle',
-        prefixes: Object.assign({}, rdfModel.getPrefixes()),
-        end: false,
-      });
-    } catch {
-      return rdfContent;
-    }
-
-    rdfModel.store.forEach(
-      quad => {
-        if (processedQuads.find(processedQuad => processedQuad.equals(quad)) !== undefined) {
-          return;
-        } else if (Util.isBlankNode(quad.object) && Util.isBlankNode(quad.subject)) {
-          return;
-        } else if (Util.isBlankNode(quad.object)) {
-          this.writeBlankNodes(quad, rdfModel, writer, metaModelNames);
-        } else if (Util.isBlankNode(quad.subject)) {
-          writer.blank(
-            rdfModel.resolveBlankNodes(quad.subject.value).map(resolvedQuad => {
-              processedQuads.push(resolvedQuad);
-              return {
-                predicate: resolvedQuad.predicate,
-                object: resolvedQuad.object,
-              };
-            })
-          );
-        } else if (quad.object.value.startsWith(Samm.XSD_URI)) {
-          writer.addQuad(
-            DataFactory.quad(quad.subject, quad.predicate, DataFactory.namedNode(quad.object.value.replace(`${Samm.XSD_URI}#`, 'xsd:')))
-          );
-        } else if (quad.object.value === `${Samm.RDF_URI}#langString`) {
-          // TODO: Need to change in the future
-          writer.addQuad(
-            DataFactory.quad(quad.subject, quad.predicate, DataFactory.namedNode(quad.object.value.replace(`${Samm.RDF_URI}#`, 'rdf:')))
-          );
-        } else if (quad.object.value.startsWith(rdfModel.SAMM().getNamespace())) {
-          writer.addQuad(
-            DataFactory.quad(
-              quad.subject,
-              quad.predicate,
-              DataFactory.namedNode(quad.object.value.replace(`${rdfModel.SAMM().getNamespace()}`, `${rdfModel.SAMM().getAlias()}:`))
-            )
-          );
-        } else if (quad.object.value === rdfModel.SAMM().RdfNil().value) {
-          writer.addQuad(this.namedNode(quad.subject.value), this.namedNode(quad.predicate.value), writer.list([]));
-        } else {
-          writer.addQuad(quad);
-        }
-
-        processedQuads.push(quad);
-      },
-      null,
-      null,
-      null,
-      null
-    );
-
-    writer.end((error, rdf) => (rdfContent = rdf));
-
-    return rdfContent;
+    return this._rdfSerializer.serializeModel(rdfModel);
   }
 
-  saveLatestModel(rdfModel: RdfModel): Observable<any> {
+  saveModel(rdfModel: RdfModel): Observable<RdfModel> {
+    const rdfContent = this.serializeModel(rdfModel);
+
+    if (!rdfContent) {
+      this.logService.logInfo('Model is empty. Skipping saving.');
+      return this.handleError(SaveValidateErrorsCodes.emptyModel);
+    }
+
+    return this.modelApiService.formatModel(rdfContent).pipe(
+      switchMap(content => {
+        if (!content) {
+          return this.handleError(SaveValidateErrorsCodes.emptyModel);
+        }
+
+        return this.modelApiService.saveModel(content, rdfModel.absoluteAspectModelFileName);
+      }),
+      switchMap(() => {
+        if (!rdfModel.aspectModelFileName) {
+          return this.handleError(SaveValidateErrorsCodes.emptyModel);
+        }
+
+        return this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.aspectModelFileName, rdfContent));
+      })
+    );
+  }
+
+  saveLatestModel(rdfModel: RdfModel): Observable<{serializedModel: string; savedDate: Date}> {
     if (!rdfModel) {
       this.logService.logInfo('Model is null. Skipping saving.');
-      return throwError(() => ({type: SaveValidateErrorsCodes.emptyModel}));
+      return this.handleError(SaveValidateErrorsCodes.emptyModel);
     }
 
     const serializedModel = this.serializeModel(rdfModel);
-    if (this._latestSavedRDF && this._latestSavedRDF === serializedModel) {
+    if (this._latestSavedRDF === serializedModel) {
       this.logService.logInfo('Model not changed. Skipping saving');
-      return throwError(() => ({type: SaveValidateErrorsCodes.notChangedModel}));
+      return this.handleError(SaveValidateErrorsCodes.notChangedModel);
     }
 
     return this.modelApiService.saveLatest(serializedModel).pipe(
@@ -145,19 +113,18 @@ export class RdfService {
     );
   }
 
-  saveModel(rdfModel: RdfModel): Observable<RdfModel> {
-    const rdfContent = this.serializeModel(rdfModel);
-    return this.modelApiService.formatModel(rdfContent).pipe(
-      switchMap(formattedModel => this.modelApiService.saveModel(formattedModel, rdfModel.absoluteAspectModelFileName)),
-      switchMap(() => this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.aspectModelFileName, rdfContent)))
-    );
+  private handleError(errorCode: SaveValidateErrorsCodes): Observable<never> {
+    return throwError(() => ({type: errorCode}));
   }
 
   loadModel(rdf: string, namespaceFileName?: string): Observable<RdfModel> {
-    const subject = new Subject<RdfModel>();
-    const store: Store = new Store();
-
+    const rdfModel = new RdfModel();
     const parser = new Parser();
+    const store: Store = new Store();
+    const subject = new Subject<RdfModel>();
+
+    this._settings.copyrightHeader = RdfModelUtil.extractCommentsFromRdfContent(rdf);
+
     parser.parse(rdf, (error, quad, prefixes) => {
       if (quad) {
         store.addQuad(quad);
@@ -168,7 +135,7 @@ export class RdfService {
           subject.error(incorrectPrefixes);
           subject.complete();
         }
-        this.currentRdfModel = new RdfModel(store, this.dataTypeService, prefixes);
+        this.currentRdfModel = rdfModel.initRdfModel(store, this.dataTypeService, prefixes);
         this.currentRdfModel.absoluteAspectModelFileName =
           this.currentRdfModel.absoluteAspectModelFileName ||
           namespaceFileName ||
@@ -197,30 +164,31 @@ export class RdfService {
   }
 
   loadExternalReferenceModelIntoStore(fileContent: FileContentModel): Observable<RdfModel> {
-    const subject = new Subject<RdfModel>();
-    const store: Store = new Store();
+    const rdfModel = new RdfModel();
     const parser = new Parser();
+    const store: Store = new Store();
+    const subject = new Subject<RdfModel>();
 
     parser.parse(fileContent.aspectMetaModel, (error, quad, prefixes) => {
       if (quad) {
         store.addQuad(quad);
       } else if (prefixes) {
-        const rdfModel = new RdfModel(store, this.dataTypeService, prefixes);
-        rdfModel.isExternalRef = true;
-        rdfModel.aspectModelFileName = fileContent.fileName;
-        this.externalRdfModels.push(rdfModel);
-        subject.next(rdfModel);
+        const externalRdfModel = rdfModel.initRdfModel(store, this.dataTypeService, prefixes);
+        externalRdfModel.isExternalRef = true;
+        externalRdfModel.aspectModelFileName = fileContent.fileName;
+        this.externalRdfModels.push(externalRdfModel);
+        subject.next(externalRdfModel);
         subject.complete();
       }
 
       if (error) {
         this.logService.logInfo(`Error when parsing RDF ${error}`);
-        const rdfModel = new RdfModel(store, this.dataTypeService, {});
-        rdfModel.isExternalRef = true;
-        rdfModel.aspectModelFileName = fileContent.fileName;
-        rdfModel.hasErrors = true;
-        this.externalRdfModels.push(rdfModel);
-        subject.next(rdfModel);
+        const externalRdfModel = rdfModel.initRdfModel(store, this.dataTypeService, {});
+        externalRdfModel.isExternalRef = true;
+        externalRdfModel.aspectModelFileName = fileContent.fileName;
+        externalRdfModel.hasErrors = true;
+        this.externalRdfModels.push(externalRdfModel);
+        subject.next(externalRdfModel);
         subject.complete();
       }
     });
@@ -233,28 +201,29 @@ export class RdfService {
   }
 
   parseModel(fileContent: FileContentModel): Observable<RdfModel> {
-    const subject = new Subject<RdfModel>();
-    const store: Store = new Store();
+    const rdfModel = new RdfModel();
     const parser = new Parser();
+    const store: Store = new Store();
+    const subject = new Subject<RdfModel>();
 
     parser.parse(fileContent.aspectMetaModel, (error, quad, prefixes) => {
-      let rdfModel: RdfModel;
+      let parsedRdfModel: RdfModel;
 
       if (quad) {
         store.addQuad(quad);
       } else if (prefixes) {
-        rdfModel = new RdfModel(store, this.dataTypeService, prefixes);
+        parsedRdfModel = rdfModel.initRdfModel(store, this.dataTypeService, prefixes);
       }
 
       if (error) {
-        rdfModel = new RdfModel(store, this.dataTypeService, {});
-        rdfModel.hasErrors = true;
+        parsedRdfModel = rdfModel.initRdfModel(store, this.dataTypeService, {});
+        parsedRdfModel.hasErrors = true;
         this.logService.logInfo(`Error when parsing RDF ${error}`);
       }
 
       if (prefixes || error) {
-        rdfModel.aspectModelFileName = fileContent.fileName;
-        subject.next(rdfModel);
+        parsedRdfModel.aspectModelFileName = fileContent.fileName;
+        subject.next(parsedRdfModel);
         subject.complete();
       }
     });
@@ -269,23 +238,7 @@ export class RdfService {
     return this.modelApiService.formatModel(serializedModel).pipe(map(formattedModel => formattedModel === fileContent));
   }
 
-  writeBlankNodes(quad: Quad, rdfModel: RdfModel, writer: Writer, metaModelNames: string[]) {
-    const blankNodes = rdfModel.resolveRecursiveBlankNodes(quad.object.value, writer);
-    const isBlankNode = blankNodes.some(({object}) => metaModelNames.includes(object.value));
-
-    if (isBlankNode) {
-      writer.addQuad(this.namedNode(quad.subject.value), this.namedNode(quad.predicate.value), writer.blank(blankNodes));
-      return;
-    }
-
-    writer.addQuad(
-      this.namedNode(quad.subject.value),
-      this.namedNode(quad.predicate.value),
-      writer.list(blankNodes.map(({object}) => object))
-    );
-  }
-
-  removeExternalModel(modelName: string): void {
+  removeExternalRdfModel(modelName: string): void {
     this.externalRdfModels = this.externalRdfModels.reduce<RdfModel[]>(
       (models, model) => (model.absoluteAspectModelFileName !== modelName ? [...models, model] : models),
       []

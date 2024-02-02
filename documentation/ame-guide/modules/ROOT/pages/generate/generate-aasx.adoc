@@ -1,6 +1,6 @@
 = Generate AASX/XML
 
-To generate an AASX/XML file from the Aspect Model, proceed as follows:
+To generate an AASX/XML files from the Aspect Model, proceed as follows:
 
 * Click the *Generate Document* icon. +
 A menu offers three options:

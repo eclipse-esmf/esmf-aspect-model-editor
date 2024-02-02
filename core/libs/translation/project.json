@@ -1,0 +1,23 @@
+{
+  "name": "translation",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/translation/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/translation"],
+      "options": {
+        "jestConfig": "libs/translation/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/translation/**/*.ts", "libs/translation/**/*.html"]
+      }
+    }
+  }
+}

@@ -286,4 +286,21 @@ export class RdfModelUtil {
   static buildAbsoluteFileName(namespace: string, namespaceVersion: string, fileName: string): string {
     return `${namespace}:${namespaceVersion}:${fileName}`;
   }
+
+  static extractCommentsFromRdfContent(content: string): Array<string> {
+    const comments: Array<string> = [];
+    const lines = content.split('\n');
+
+    for (const line of lines) {
+      if (line.startsWith('@prefix')) {
+        break;
+      }
+
+      if (line.startsWith('#')) {
+        comments.push(line);
+      }
+    }
+
+    return comments;
+  }
 }

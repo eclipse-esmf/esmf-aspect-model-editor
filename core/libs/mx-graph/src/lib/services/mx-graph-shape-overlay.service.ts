@@ -38,7 +38,7 @@ import {
 import {BrowserService} from '@ame/shared';
 import {ShapeConnectorService} from '@ame/connection';
 import {ModelInfo} from '../models';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {RdfService} from '@ame/rdf/services';
 import {FiltersService, ModelTree} from '@ame/loader-filters';
 
@@ -49,7 +49,7 @@ export class MxGraphShapeOverlayService {
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private filtersService: FiltersService,
-    private languageSettingsService: LanguageSettingsService,
+    private sammLangService: SammLanguageSettingsService,
     private injector: Injector
   ) {}
 
@@ -109,7 +109,7 @@ export class MxGraphShapeOverlayService {
     const modelElement = MxGraphHelper.getModelElement(this.mxGraphShapeSelectorService.getSelectedShape());
     mxGraphConnectorService.createAndConnectShape(modelElement, cell, modelInfo);
 
-    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.languageSettingsService);
+    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.sammLangService);
     this.mxGraphAttributeService.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
 
     this.removeOverlaysByConnection(modelElement, cell);

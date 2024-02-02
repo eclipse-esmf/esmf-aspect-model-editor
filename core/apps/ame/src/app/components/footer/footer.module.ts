@@ -14,9 +14,10 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FooterComponent} from './footer.component';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, LanguageTranslateModule],
   exports: [FooterComponent],
   declarations: [FooterComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

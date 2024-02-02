@@ -24,7 +24,7 @@ export class InformationHandlingService {
   constructor(private matDialog: MatDialog) {}
 
   openSettingsDialog() {
-    this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container'}).afterClosed();
+    this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container', width: '60%', autoFocus: false}).afterClosed();
   }
 
   openHelpDialog() {

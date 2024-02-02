@@ -11,9 +11,14 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>{{ (status$ | async) === 'checking' ? 'Checking Workspace...' : 'Migrating to SAMM...' }}</h2>
+<h2 mat-dialog-title>
+  {{ (status$ | async) === 'checking' ? ('SAMM_MIGRATION.CHECK_WORKSPACE' | translate) : ('SAMM_MIGRATION.MIGRATE_TO_SAMM' | translate) }}
+</h2>
 
 <mat-dialog-content class="loader-content">
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  <p>Please wait until all files are {{ (status$ | async) === 'checking' ? 'checked' : 'migrated' }}.</p>
+  <p>
+    {{ 'SAMM_MIGRATION.AWAITING_STATUS' | translate }}
+    {{ (status$ | async) === 'checking' ? ('SAMM_MIGRATION.CHECKED' | translate) : ('SAMM_MIGRATION.MIGRATED' | translate) }}.
+  </p>
 </mat-dialog-content>

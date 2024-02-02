@@ -15,7 +15,7 @@
 
 <mat-dialog-content>
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  <p>{{ data.content || 'Please wait...' }}</p>
+  <p>{{ data.content || ('LOADING_SCREEN_DIALOG.GENERAL_WAIT_MESSAGE' | translate) }}</p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end" *ngIf="data.hasCloseButton">

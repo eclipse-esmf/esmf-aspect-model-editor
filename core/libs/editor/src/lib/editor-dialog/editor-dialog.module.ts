@@ -101,6 +101,7 @@ import {CounterPipe} from '../../../../shared/src/lib/pipes/counter.pipe';
 import {SaveModelDialogComponent} from '../save-model-dialog/save-model-dialog.component';
 import {LargeFileWarningComponent} from '../large-file-warning-dialog/large-file-warning-dialog';
 import {SharedSettingsTitleComponent} from './components/shape-settings/shared-settings-title/shared-settings-title.component';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @NgModule({
   providers: [EditorModelService],
@@ -122,6 +123,7 @@ import {SharedSettingsTitleComponent} from './components/shape-settings/shared-s
     MatButtonModule,
     MatDialogModule,
     CounterPipe,
+    LanguageTranslateModule,
   ],
   declarations: [
     AspectComponent,

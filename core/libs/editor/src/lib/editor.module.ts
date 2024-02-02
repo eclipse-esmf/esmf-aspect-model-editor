@@ -13,8 +13,9 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, LanguageTranslateModule],
 })
 export class EditorModule {}

@@ -36,7 +36,7 @@ import {
   Unit,
 } from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {DataFactory} from 'n3';
 import {EditorModelService} from '../../../../editor-model.service';
 import {DropdownFieldComponent} from '../../dropdown-field.component';
@@ -58,7 +58,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
   constructor(
     public editorModelService: EditorModelService,
     public modelService: ModelService,
-    public languageSettings: LanguageSettingsService,
+    public languageSettings: SammLanguageSettingsService,
     private namespacesCacheService: NamespacesCacheService,
     private modelElementNamingService: ModelElementNamingService
   ) {

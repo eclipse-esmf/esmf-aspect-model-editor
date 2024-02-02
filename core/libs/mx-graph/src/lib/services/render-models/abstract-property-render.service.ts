@@ -13,7 +13,7 @@
 
 import {Injectable, inject} from '@angular/core';
 import {DefaultAbstractProperty} from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {RendererUpdatePayload} from '../../models';
@@ -32,12 +32,12 @@ export class AbstractPropertyRenderService extends BaseRenderService {
 
   constructor(
     mxGraphService: MxGraphService,
-    languageSettingsService: LanguageSettingsService,
+    sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
     private namespacesCacheService: NamespacesCacheService,
     private shapeConnectorService: ShapeConnectorService
   ) {
-    super(mxGraphService, languageSettingsService, rdfService);
+    super(mxGraphService, sammLangService, rdfService);
   }
 
   update({cell, callback}: RendererUpdatePayload) {

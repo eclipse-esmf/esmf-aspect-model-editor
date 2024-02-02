@@ -11,13 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultProperty, DefaultAbstractProperty} from '@ame/meta-model';
-import {MxGraphService, MxGraphAttributeService, MxGraphHelper} from '@ame/mx-graph';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {DefaultAbstractProperty, DefaultProperty} from '@ame/meta-model';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 import {Injectable} from '@angular/core';
-import {PropertyInheritanceConnector, MultiShapeConnector} from '../models';
+import {MultiShapeConnector, PropertyInheritanceConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
   providedIn: 'root',
@@ -29,10 +30,11 @@ export class PropertyAbstractPropertyConnectionHandler
   constructor(
     protected mxGraphService: MxGraphService,
     protected mxGraphAttributeService: MxGraphAttributeService,
-    protected languageSettingsService: LanguageSettingsService,
+    protected sammLangService: SammLanguageSettingsService,
+    protected translate: LanguageTranslationService,
     private notificationService: NotificationsService
   ) {
-    super(mxGraphService, mxGraphAttributeService, languageSettingsService, notificationService);
+    super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, translate);
   }
 
   public connect(
@@ -43,7 +45,7 @@ export class PropertyAbstractPropertyConnectionHandler
   ) {
     if (this.hasEntityParent(parentCell)) {
       this.notificationsService.warning({
-        title: 'No entity as parent present',
+        title: this.translate.language.NOTIFICATION_SERVICE.MISSING_PARENT_ENTITY,
         message: 'The Property need to have as parent an Entity/Abstract Entity',
       });
       return;
@@ -51,8 +53,8 @@ export class PropertyAbstractPropertyConnectionHandler
 
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({
-        title: 'Recursive elements',
-        message: 'Can not connect elements due to circular connection',
+        title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
+        message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
         timeout: 5000,
       });
     } else {

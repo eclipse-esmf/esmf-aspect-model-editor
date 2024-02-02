@@ -58,7 +58,7 @@
     mat-flat-button
     data-cy="editorCancelButton"
   >
-    Cancel
+    {{ 'EDITOR_CANVAS.SHAPE_SETTING.CANCEL' | translate }}
   </button>
   <button
     *ngIf="metaModelDialogService.isSaveButtonEnabled()"
@@ -69,6 +69,6 @@
     type="button"
     data-cy="editorSaveButton"
   >
-    Save
+    {{ 'EDITOR_CANVAS.SHAPE_SETTING.SAVE' | translate }}
   </button>
 </div>

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -24,8 +24,8 @@ export class LanguageSelectorModalComponent {
   public languages: locale.ILocale[] = [];
   public languageControl: FormControl;
 
-  constructor(private dialogRef: MatDialogRef<LanguageSelectorModalComponent>, private languageService: LanguageSettingsService) {
-    this.languages = this.languageService.getLanguageCodes().map(tag => locale.getByTag(tag));
+  constructor(private dialogRef: MatDialogRef<LanguageSelectorModalComponent>, private languageService: SammLanguageSettingsService) {
+    this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
     this.languageControl = new FormControl(this.languages[0].tag);
 
     if (this.languages.length === 1) {

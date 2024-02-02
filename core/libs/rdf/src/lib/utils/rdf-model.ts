@@ -13,7 +13,7 @@
 
 import {DataFactory, NamedNode, Prefixes, Quad, Quad_Graph, Quad_Object, Quad_Predicate, Quad_Subject, Store, Util, Writer} from 'n3';
 import * as locale from 'locale-codes';
-import {InstantiatorListElement} from './rdf-model.types';
+import {InstantiatorListElement} from '../models/rdf-model.types';
 import {DataTypeService} from '@ame/shared';
 import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
 import {RdfModelUtil} from '@ame/rdf/utils/rdf-model-util';
@@ -26,22 +26,38 @@ interface QuadComponents {
 }
 
 export class RdfModel {
+  private _store: Store;
+  private _dataTypeService: DataTypeService;
+  private _prefixes: Prefixes;
   private _isExternalRef = false;
   private _aspectModelFileName: string;
   private _hasErrors = false;
   private _absoluteAspectModelFileName: string = null;
-  private metaModelVersion: string;
-  private metaModelIdentifier: string;
-  private defaultAspectModelAlias = '';
+  private _metaModelVersion: string;
+  private _metaModelIdentifier: string;
+  private _defaultAspectModelAlias = '';
+  private _header = '';
 
-  public readonly samm: Samm;
-  public readonly sammC: SammC;
-  public readonly sammE: SammE;
-  public readonly sammU: SammU;
+  public samm: Samm;
+  public sammC: SammC;
+  public sammE: SammE;
+  public sammU: SammU;
 
   public originalAbsoluteFileName = null;
   public loadedFromWorkspace = false;
   public aspect: Quad_Subject;
+
+  get store(): Store {
+    return this._store;
+  }
+
+  get prefixes(): Prefixes {
+    return this._prefixes;
+  }
+
+  get dataTypeService(): DataTypeService {
+    return this._dataTypeService;
+  }
 
   get isExternalRef(): boolean {
     return this._isExternalRef;
@@ -114,19 +130,32 @@ export class RdfModel {
     );
   }
 
+  get header(): string {
+    return this._header;
+  }
+
+  set header(header: string) {
+    this._header = header;
+  }
+
   private get nameBasedOnASpect() {
     return this.aspect ? this.aspect.value.replace('urn:samm:', '').replace('#', ':') + '.ttl' : null;
   }
 
-  constructor(public store: Store, public dataTypeService: DataTypeService, private prefixes: Prefixes) {
+  public initRdfModel(store: Store, dataTypeService: DataTypeService, prefixes: Prefixes): RdfModel {
+    this._store = store;
+    this._dataTypeService = dataTypeService;
+    this._prefixes = prefixes;
     this.resolveMetaModelVersion();
-    this.samm = new Samm(this.metaModelVersion, this.metaModelIdentifier);
+    this.samm = new Samm(this._metaModelVersion, this._metaModelIdentifier);
     this.sammC = new SammC(this.samm);
     this.sammE = new SammE(this.samm);
     this.sammU = new SammU(this.samm);
     this.setDefaultAspectModelAlias();
-    const aspect = this.store.getSubjects(this.samm.RdfType(), this.samm.Aspect(), null)[0];
+    const aspect = store.getSubjects(this.samm.RdfType(), this.samm.Aspect(), null)[0];
     this.setAspect(aspect?.value);
+
+    return this;
   }
 
   setAspect(aspectUrn: string): void {
@@ -144,7 +173,7 @@ export class RdfModel {
   }
 
   getMetaModelVersion(): string {
-    return this.metaModelVersion;
+    return this._metaModelVersion;
   }
 
   getNamespaces(): Prefixes<any> {
@@ -156,7 +185,7 @@ export class RdfModel {
   }
 
   getAspectModelUrn(): string {
-    return this.getNamespaces()[this.defaultAspectModelAlias];
+    return this.getNamespaces()[this._defaultAspectModelAlias];
   }
 
   addPrefix(alias: string, namespace: any): void {
@@ -360,24 +389,24 @@ export class RdfModel {
 
     if (metaModelPrefix) {
       const prefixPart = metaModelPrefix.split(':');
-      this.metaModelVersion = prefixPart[prefixPart.length - 1].split('#')[0];
+      this._metaModelVersion = prefixPart[prefixPart.length - 1].split('#')[0];
       return;
     }
 
-    this.metaModelVersion = 'unknown';
-    this.metaModelIdentifier = 'unknown';
+    this._metaModelVersion = 'unknown';
+    this._metaModelIdentifier = 'unknown';
   }
 
   private setDefaultAspectModelAlias() {
     const subject = this.store.getSubjects(this.samm.RdfType(), null, null);
     const namespace = `${subject[0]?.value.split('#')[0]}#`;
 
-    this.defaultAspectModelAlias = this.getAliasByNamespace(namespace);
+    this._defaultAspectModelAlias = this.getAliasByNamespace(namespace);
 
     // Special case when aspect models are defined manually without prefix.
-    if (this.defaultAspectModelAlias === undefined) {
+    if (this._defaultAspectModelAlias === undefined) {
       this.addPrefix('default', namespace);
-      this.defaultAspectModelAlias = this.getAliasByNamespace(namespace);
+      this._defaultAspectModelAlias = this.getAliasByNamespace(namespace);
     }
   }
 

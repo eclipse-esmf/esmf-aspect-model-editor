@@ -12,12 +12,13 @@
  */
 
 import {DefaultProperty} from '@ame/meta-model';
-import {MxGraphService, MxGraphAttributeService, MxGraphHelper} from '@ame/mx-graph';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 import {Injectable} from '@angular/core';
-import {PropertyInheritanceConnector, MultiShapeConnector} from '../models';
+import {MultiShapeConnector, PropertyInheritanceConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
   providedIn: 'root',
@@ -29,30 +30,31 @@ export class PropertyPropertyConnectionHandler
   constructor(
     protected mxGraphService: MxGraphService,
     protected mxGraphAttributeService: MxGraphAttributeService,
-    protected languageSettingsService: LanguageSettingsService,
+    protected sammLangService: SammLanguageSettingsService,
+    protected translate: LanguageTranslationService,
     private notificationService: NotificationsService
   ) {
-    super(mxGraphService, mxGraphAttributeService, languageSettingsService, notificationService);
+    super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, translate);
   }
 
   public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
     if (parentMetaModel.isPredefined()) {
-      this.notificationsService.warning({title: "A predefined element can't have a child"});
+      this.notificationsService.warning({title: this.translate.language.NOTIFICATION_SERVICE.CHILD_FOR_PREDEFINED_ELEMENT_ERROR});
       return;
     }
 
     if (this.hasEntityParent(parentCell)) {
       this.notificationsService.warning({
-        title: 'No entity as parent present',
-        message: 'One of the Properties/Abstract Properties need to have as parent an Entity/Abstract Entity',
+        title: this.translate.language.NOTIFICATION_SERVICE.MISSING_PARENT_ENTITY,
+        message: this.translate.language.NOTIFICATION_SERVICE.ABSTRACT_PROPERTY_PARENT_REQUIREMENT,
       });
       return;
     }
 
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({
-        title: 'Recursive elements',
-        message: 'Can not connect elements due to circular connection',
+        title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
+        message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
         timeout: 5000,
       });
       return;
@@ -60,8 +62,8 @@ export class PropertyPropertyConnectionHandler
 
     if (childMetaModel.extendedElement) {
       this.notificationService.warning({
-        title: 'Illegal operation',
-        message: 'Can not extend a Property which already extends another element',
+        title: this.translate.language.NOTIFICATION_SERVICE.ILLEGAL_OPERATION_MESSAGE,
+        message: this.translate.language.NOTIFICATION_SERVICE.PROPERTY_EXTENSION_CONFLICT,
         timeout: 5000,
       });
       return;

@@ -18,14 +18,14 @@ import {EntityValueService} from '@ame/editor';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper, PropertyRenderService} from '@ame/mx-graph';
 import {BaseMetaModelElement, DefaultProperty} from '@ame/meta-model';
 import {CanExtend, DefaultAbstractProperty, DefaultStructuredValue} from '../aspect-meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 
 @Injectable({providedIn: 'root'})
 export class PropertyModelService extends BaseModelService {
   constructor(
     private entityValueService: EntityValueService,
     private mxGraphService: MxGraphService,
-    private languageSettingsService: LanguageSettingsService,
+    private sammLangService: SammLanguageSettingsService,
     private propertyRenderer: PropertyRenderService,
     private mxGraphAttributeService: MxGraphAttributeService
   ) {
@@ -58,7 +58,7 @@ export class PropertyModelService extends BaseModelService {
       const parentModel = MxGraphHelper.getModelElement(parent);
       if (parentModel instanceof DefaultStructuredValue) {
         parentModel.delete(node);
-        MxGraphHelper.updateLabel(parent, this.mxGraphService.graph, this.languageSettingsService);
+        MxGraphHelper.updateLabel(parent, this.mxGraphService.graph, this.sammLangService);
       }
     }
 
@@ -84,10 +84,7 @@ export class PropertyModelService extends BaseModelService {
   }
 
   private updateCell(cell: mxgraph.mxCell) {
-    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
-      MxGraphHelper.getModelElement(cell),
-      this.languageSettingsService
-    );
+    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(MxGraphHelper.getModelElement(cell), this.sammLangService);
     this.mxGraphService.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
   }
 

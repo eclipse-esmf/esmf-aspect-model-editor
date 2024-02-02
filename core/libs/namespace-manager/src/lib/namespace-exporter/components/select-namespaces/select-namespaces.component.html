@@ -11,10 +11,10 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>Export workspace</h2>
+<h2 mat-dialog-title>{{ 'TOOLBAR.EXPORT_NAMESPACE_DIALOG.TITLE' | translate }}</h2>
 
 <mat-dialog-content class="namespaces">
-  <p>Please select the namespace that you would like to export as an Aspect Model Package.</p>
+  <p>{{ 'TOOLBAR.EXPORT_NAMESPACE_DIALOG.INFO_CONTENT' | translate }}</p>
   <section class="namespace-list">
     <h4 class="column-title">Namespaces</h4>
 
@@ -44,6 +44,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-flat-button mat-dialog-close>Cancel</button>
-  <button [disabled]="!selectedNamespaces.length" (click)="validate()" mat-flat-button color="primary">Next</button>
+  <button mat-flat-button mat-dialog-close>{{ 'TOOLBAR.EXPORT_NAMESPACE_DIALOG.CANCEL' | translate }}</button>
+  <button [disabled]="!selectedNamespaces.length" (click)="validate()" mat-flat-button color="primary">
+    {{ 'TOOLBAR.EXPORT_NAMESPACE_DIALOG.NEXT' | translate }}
+  </button>
 </mat-dialog-actions>

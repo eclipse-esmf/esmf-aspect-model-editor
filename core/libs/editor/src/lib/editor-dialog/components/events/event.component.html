@@ -11,5 +11,12 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 <ame-base-input [parentForm]="parentForm"></ame-base-input>
-<ame-element-list label="Incoming edges" iconRotation="rotate270" [elements]="(element$ | async)?.parents"></ame-element-list>
-<ame-element-list label="Outgoing edges" [elements]="(element$ | async)?.children"></ame-element-list>
+<ame-element-list
+  [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.INCOMING_EDGES' | translate"
+  iconRotation="rotate270"
+  [elements]="(element$ | async)?.parents"
+></ame-element-list>
+<ame-element-list
+  [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.OUTGOING_EDGES' | translate"
+  [elements]="(element$ | async)?.children"
+></ame-element-list>

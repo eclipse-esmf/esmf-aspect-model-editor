@@ -11,14 +11,16 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h3 matDialogTitle>Save changes before closing?</h3>
+<h3 matDialogTitle>{{ 'SAVE_MODAL_DIALOG.TITLE' | translate }}</h3>
 
 <mat-dialog-content>
-  <p>You have unsaved changes.</p>
+  <p>{{ 'SAVE_MODAL_DIALOG.CONTENT' | translate }}</p>
 </mat-dialog-content>
 
 <mat-dialog-actions class="actions" align="end">
-  <button [disabled]="disabledButton" mat-button (click)="close(false)">Continue editing</button>
-  <button [disabled]="disabledButton" mat-flat-button (click)="close(true)">Discard Changes</button>
-  <button [disabled]="disabledButton" mat-flat-button color="primary" (click)="saveModel()">Save</button>
+  <button [disabled]="disabledButton" mat-button (click)="close(false)">{{ 'SAVE_MODAL_DIALOG.CONTINUE_BUTTON' | translate }}</button>
+  <button [disabled]="disabledButton" mat-flat-button (click)="close(true)">{{ 'SAVE_MODAL_DIALOG.DISCARD_BUTTON' | translate }}</button>
+  <button [disabled]="disabledButton" mat-flat-button color="primary" (click)="saveModel()">
+    {{ 'SAVE_MODAL_DIALOG.SAVE_BUTTON' | translate }}
+  </button>
 </mat-dialog-actions>

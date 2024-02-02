@@ -37,17 +37,22 @@ h2[mat-dialog-title] {
   .namespace {
     font-weight: 500;
     font-size: 1rem;
+    margin-bottom: 10px;
   }
 
   .file {
-    margin-left: 1rem;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
+    margin-left: 0.75rem;
+    padding-bottom: 10px;
+    padding-top: 3px;
+    padding-left: 3px;
 
     mat-icon {
       margin-right: 0.25rem;
-      color: red;
+      color: var(--ame-error);
+    }
+
+    &:nth-child(odd) {
+      background-color: var(--ame-gray-5);
     }
   }
 }
@@ -67,4 +72,27 @@ h2[mat-dialog-title] {
     line-height: 100px;
     color: green;
   }
+}
+
+.editor-version {
+  font-size: 12px;
+  line-height: 16px;
+  padding-left: 28px;
+}
+
+.error-message {
+  font-size: 12px;
+  display: inline-block;
+  padding-left: 5px;
+  padding-top: 2px;
+}
+
+.error-file {
+  color: var(--ame-gray-600);
+  padding-top: 2px;
+}
+
+.error-file-container {
+  display: flex;
+  align-items: center;
 }

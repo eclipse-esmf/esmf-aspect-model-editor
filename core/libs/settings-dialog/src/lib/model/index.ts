@@ -13,3 +13,4 @@
 
 export * from './namespace';
 export * from './settings';
+export * from './langcode';

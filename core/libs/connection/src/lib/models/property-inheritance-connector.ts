@@ -11,23 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement, DefaultProperty, DefaultAbstractProperty, DefaultAbstractEntity, DefaultEntity} from '@ame/meta-model';
-import {MxGraphService, MxGraphAttributeService, MxGraphHelper} from '@ame/mx-graph';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {BaseMetaModelElement, DefaultAbstractEntity, DefaultAbstractProperty, DefaultEntity, DefaultProperty} from '@ame/meta-model';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 import {mxgraph} from 'mxgraph-factory';
 import {InheritanceConnector} from './inheritance-connector';
-
+import {LanguageTranslationService} from '@ame/translation';
 import mxCell = mxgraph.mxCell;
 
 export class PropertyInheritanceConnector extends InheritanceConnector {
   constructor(
     protected mxGraphService: MxGraphService,
     protected mxGraphAttributeService: MxGraphAttributeService,
-    protected languageSettingsService: LanguageSettingsService,
-    protected notificationsService: NotificationsService
+    protected sammLangService: SammLanguageSettingsService,
+    protected notificationsService: NotificationsService,
+    protected translate: LanguageTranslationService
   ) {
-    super(mxGraphService, mxGraphAttributeService, languageSettingsService, notificationsService);
+    super(mxGraphService, mxGraphAttributeService, sammLangService, notificationsService, translate);
   }
 
   public connect(parentMetaModel: BaseMetaModelElement, childMetaModel: BaseMetaModelElement, parentCell: mxCell, childCell: mxCell) {

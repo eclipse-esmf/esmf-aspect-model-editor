@@ -37,6 +37,7 @@ import {MxEditorComponent} from './mx-editor/mx-editor.component';
 import {SidebarElementFilter} from './sidebar/sidebar-new-element/elements-filter.pipe';
 import {CounterPipe} from '@ame/shared';
 import {CdkDrag, CdkDragHandle} from '@angular/cdk/drag-drop';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @NgModule({
   imports: [
@@ -56,6 +57,7 @@ import {CdkDrag, CdkDragHandle} from '@angular/cdk/drag-drop';
     CounterPipe,
     CdkDrag,
     CdkDragHandle,
+    LanguageTranslateModule,
   ],
   declarations: [
     EditorCanvasComponent,

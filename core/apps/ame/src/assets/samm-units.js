@@ -5768,8 +5768,8 @@ var sammUDefinition = {
     failuresInTime: {
       name: 'failuresInTime',
       label: 'failures in time',
-      symbol: 'FIT',
-      code: 'FIT',
+      symbol: 'FITTING_PROGRESS',
+      code: 'FITTING_PROGRESS',
       referenceUnit: function () {
         return sammUDefinition.units['reciprocalSecond'];
       },

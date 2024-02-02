@@ -32,6 +32,7 @@ export interface NamespaceStatus {
 export interface FileStatus {
   name: string;
   success: boolean;
+  message?: string;
 }
 
 @Injectable({

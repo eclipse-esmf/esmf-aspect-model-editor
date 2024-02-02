@@ -11,11 +11,19 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title class="properties-title">Validation result</h2>
+<h2 mat-dialog-title class="properties-title">{{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.TITLE' | translate }}</h2>
 
 <mat-dialog-content>
-  <p *ngIf="!missingElements.length">Namespaces have been validated and <b>can be exported</b>.</p>
-  <p *ngIf="missingElements.length">Namespaces can not be exported due to <b>missing files</b>.</p>
+  <p *ngIf="!missingElements.length">
+    {{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.HAVE_VALIDATED' | translate
+    }}<b>{{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.CAN_BE_EXPORTED' | translate }}</b
+    >.
+  </p>
+  <p *ngIf="missingElements.length">
+    {{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.CAN_NOT_EXPORTED' | translate
+    }}<b>{{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.MISSING_FILES' | translate }}</b
+    >.
+  </p>
 </mat-dialog-content>
 
 <ame-workspace-summary></ame-workspace-summary>
@@ -25,7 +33,9 @@
     <ame-clipboard-copy-button></ame-clipboard-copy-button>
   </div>
   <div class="actions-right">
-    <button mat-flat-button mat-dialog-close>Dismiss</button>
-    <button *ngIf="!missingElements.length" mat-flat-button color="primary" (click)="export()">Export</button>
+    <button mat-flat-button mat-dialog-close>{{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.DISMISS_BUTTON' | translate }}</button>
+    <button *ngIf="!missingElements.length" mat-flat-button color="primary" (click)="export()">
+      {{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.EXPORT' | translate }}
+    </button>
   </div>
 </mat-dialog-actions>

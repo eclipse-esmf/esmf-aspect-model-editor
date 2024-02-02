@@ -15,6 +15,7 @@ import {Component, inject} from '@angular/core';
 import {NamespacesSessionInterface} from '../../models';
 import {NAMESPACES_SESSION} from '../../services';
 import {NotificationsService} from '@ame/shared';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
   selector: 'ame-clipboard-copy-button',
@@ -24,6 +25,8 @@ import {NotificationsService} from '@ame/shared';
 export class ClipboardCopyButtonComponent {
   private namespaceSession: NamespacesSessionInterface = inject(NAMESPACES_SESSION);
   private notificationService: NotificationsService = inject(NotificationsService);
+
+  constructor(private translate: LanguageTranslationService) {}
 
   async copySummaryToClipboard() {
     const textToClipboard = JSON.stringify(
@@ -38,9 +41,9 @@ export class ClipboardCopyButtonComponent {
 
     try {
       await navigator.clipboard.writeText(textToClipboard);
-      this.notificationService.success({title: 'Summary copied to clipboard'});
+      this.notificationService.success({title: this.translate.language.NOTIFICATION_SERVICE.SUMMARY_CLIPBOARD_SUCCESS});
     } catch {
-      this.notificationService.success({title: 'Error on copying summary to clipboard'});
+      this.notificationService.success({title: this.translate.language.NOTIFICATION_SERVICE.SUMMARY_CLIPBOARD_FAILURE});
     }
   }
 }

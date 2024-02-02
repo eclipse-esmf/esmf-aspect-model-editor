@@ -40,7 +40,7 @@ To save a model, proceed as follows:
 . Click *Save* in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 . Choose one of the following options:
 +
-* Click *Export Aspect Model* to export the model.
+* Click *Export Model* to export the model.
 * Click *Export Namespace* to export one of the existing namespaces.
 * Click *Save to Workspace* to save the current namespace to the Workspace.
 

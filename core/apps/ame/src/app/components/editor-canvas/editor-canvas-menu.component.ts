@@ -15,6 +15,7 @@ import {Component} from '@angular/core';
 import {EditorService} from '@ame/editor';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
 import {LoadingScreenService} from '@ame/shared';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
   selector: 'ame-editor-canvas-menu',
@@ -27,7 +28,8 @@ export class EditorCanvasMenuComponent {
   constructor(
     private editorService: EditorService,
     public configurationService: ConfigurationService,
-    private loadingScreenService: LoadingScreenService
+    private loadingScreenService: LoadingScreenService,
+    private translate: LanguageTranslationService
   ) {
     this.settings = configurationService.getSettings();
   }
@@ -35,8 +37,8 @@ export class EditorCanvasMenuComponent {
   zoomIn() {
     this.loadingScreenService
       .open({
-        title: 'Zooming in...',
-        content: 'Please wait until zoom finishes',
+        title: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_IN_PROGRESS,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_IN_WAIT,
       })
       .afterOpened()
       .subscribe(() => {
@@ -48,8 +50,8 @@ export class EditorCanvasMenuComponent {
   zoomOut() {
     this.loadingScreenService
       .open({
-        title: 'Zooming out...',
-        content: 'Please wait until zoom finishes',
+        title: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_OUT_PROGRESS,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_IN_WAIT,
       })
       .afterOpened()
       .subscribe(() => {
@@ -61,8 +63,8 @@ export class EditorCanvasMenuComponent {
   fit() {
     this.loadingScreenService
       .open({
-        title: 'Fitting...',
-        content: 'Please wait until fitting finishes',
+        title: this.translate.language.LOADING_SCREEN_DIALOG.FITTING_PROGRESS,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.FITTING_WAIT,
       })
       .afterOpened()
       .subscribe(() => {
@@ -74,8 +76,8 @@ export class EditorCanvasMenuComponent {
   actualSize() {
     this.loadingScreenService
       .open({
-        title: 'Fit to view...',
-        content: 'Please wait until fitting finishes',
+        title: this.translate.language.LOADING_SCREEN_DIALOG.FIT_TO_VIEW_PROGRESS,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.FITTING_WAIT,
       })
       .afterOpened()
       .subscribe(() => {

@@ -14,7 +14,9 @@
 <div class="properties-button">
   <p [class.predefined]="isPredefined">
     <mat-icon>tune</mat-icon>
-    <span>Properties Configuration</span>
+    <span>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_CONFIGURATION' | translate }}</span>
   </p>
-  <button (click)="openPropertiesTable()" color="primary" mat-button data-cy="properties-modal-button">Configure</button>
+  <button (click)="openPropertiesTable()" color="primary" mat-button data-cy="properties-modal-button">
+    <span>{{ 'EDITOR_CANVAS.SHAPE_SETTING.CONFIGURE' | translate }}</span>
+  </button>
 </div>

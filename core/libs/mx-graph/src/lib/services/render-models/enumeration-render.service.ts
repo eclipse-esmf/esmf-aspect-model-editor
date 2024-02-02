@@ -23,7 +23,7 @@ import {
   DefaultProperty,
 } from '@ame/meta-model';
 import {MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {MxGraphService} from '../mx-graph.service';
@@ -48,7 +48,7 @@ export class EnumerationRenderService extends BaseRenderService {
 
   constructor(
     mxGraphService: MxGraphService,
-    languageSettingsService: LanguageSettingsService,
+    sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
     private shapeConnectorService: ShapeConnectorService,
     private entityValueRenderer: EntityValueRenderService,
@@ -56,7 +56,7 @@ export class EnumerationRenderService extends BaseRenderService {
     private unitRendererService: UnitRenderService,
     private namespaceCacheService: NamespacesCacheService
   ) {
-    super(mxGraphService, languageSettingsService, rdfService);
+    super(mxGraphService, sammLangService, rdfService);
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {

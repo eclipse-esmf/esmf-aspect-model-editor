@@ -11,13 +11,13 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>Version increasing was successful</h2>
+<h2 mat-dialog-title>{{ 'SAMM_MIGRATION.MIGRATION_SUCCESS_DIALOG.TITLE' | translate }}</h2>
 
 <mat-dialog-content class="migration-success">
   <mat-icon class="migration-success-icon">done</mat-icon>
-  <p>Version increasing finished with success</p>
+  <p>{{ 'SAMM_MIGRATION.MIGRATION_SUCCESS_DIALOG.CONTENT' | translate }}</p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button (click)="closeModal()" mat-flat-button>Close</button>
+  <button (click)="closeModal()" mat-flat-button>{{ 'SAMM_MIGRATION.MIGRATION_SUCCESS_DIALOG.CLOSE' | translate }}</button>
 </mat-dialog-actions>

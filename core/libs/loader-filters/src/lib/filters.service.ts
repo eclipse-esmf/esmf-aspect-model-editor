@@ -19,11 +19,12 @@ import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphRenderer, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {NamespacesCacheService} from '@ame/cache';
 import {ModelService} from '@ame/rdf/services';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {LoadingScreenService} from '@ame/shared';
 import {FILTER_ATTRIBUTES, FilterAttributesService} from './active-filter.session';
 import {switchMap} from 'rxjs';
 import {EditorService} from '@ame/editor';
+import {LanguageTranslationService} from '@ame/translation';
 
 export type Filters = {
   default: FilterLoader;
@@ -48,6 +49,7 @@ export class FiltersService {
   constructor(
     private injector: Injector,
     private loadingScreen: LoadingScreenService,
+    private translate: LanguageTranslationService,
     @Inject(FILTER_ATTRIBUTES) private filterAttributesService: FilterAttributesService
   ) {
     window['_filter'] = this;
@@ -93,7 +95,10 @@ export class FiltersService {
     const selectedModelElement = selectedCell && MxGraphHelper.getModelElement(selectedCell);
 
     this.loadingScreen
-      .open({title: 'Changing filter...', content: 'Please wait until the filtering is done'})
+      .open({
+        title: this.translate.language.LOADING_SCREEN_DIALOG.FILTER_CHANGE,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.FILTER_WAIT,
+      })
       .afterOpened()
       .pipe(
         switchMap(() => {
@@ -105,7 +110,7 @@ export class FiltersService {
             mxGraphService,
             this.injector.get(MxGraphShapeOverlayService),
             namespaceCacheService,
-            this.injector.get(LanguageSettingsService),
+            this.injector.get(SammLanguageSettingsService),
             this.injector.get(ModelService).getLoadedAspectModel().rdfModel
           );
 

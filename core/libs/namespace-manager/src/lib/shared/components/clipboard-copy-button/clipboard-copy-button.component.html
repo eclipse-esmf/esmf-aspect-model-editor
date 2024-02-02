@@ -14,10 +14,10 @@
 <button
   (click)="copySummaryToClipboard()"
   class="copy-summary"
-  matTooltip="Copy the validation result to clipboard"
+  [matTooltip]="'TOOLBAR.VALIDATION_RESULT_DIALOG.CLIP_BUTTON.TOOLTIP' | translate"
   matTooltipPosition="right"
   mat-button
 >
   <mat-icon>content_copy</mat-icon>
-  <span>Copy to clipboard</span>
+  <span>{{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.CLIP_BUTTON.COPY_CLIP' | translate }}</span>
 </button>

@@ -12,4 +12,5 @@
  */
 
 export * from './configuration.service';
-export * from './language-settings.service';
+export * from './samm-language-settings.service';
+export * from './settings-form.service';

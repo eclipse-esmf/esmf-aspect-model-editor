@@ -31,7 +31,7 @@ import {
   DefaultQuantityKind,
   DefaultUnit,
 } from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NamespacesCacheService} from '@ame/cache';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {ModelTree} from '@ame/loader-filters';
@@ -50,7 +50,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     private mxGraphService: MxGraphService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private namespacesCacheService: NamespacesCacheService,
-    private languageSettingsService: LanguageSettingsService,
+    private sammLangService: SammLanguageSettingsService,
     private rdfModel: RdfModel
   ) {
     this.shapes = new Map<string, mxCell>();
@@ -80,7 +80,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
   // ==========================================================================================
 
   renderOperation(node: ModelTree<DefaultOperation>, parent: mxCell): mxCell {
-    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getOperationProperties(node.element, this.languageSettingsService));
+    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getOperationProperties(node.element, this.sammLangService));
     this.connectIsolatedElement(parent, cell);
 
     if (node.element.parents.length > 0) {
@@ -97,7 +97,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
       return;
     }
 
-    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getEntityProperties(entity, this.languageSettingsService));
+    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getEntityProperties(entity, this.sammLangService));
     this.connectIsolatedElement(parent, cell);
 
     if (entity.parents.length > 0) {
@@ -123,7 +123,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
       return null;
     }
 
-    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getUnitProperties(unit, this.languageSettingsService));
+    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getUnitProperties(unit, this.sammLangService));
     this.connectIsolatedElement(parent, cell);
 
     if (unit.parents.length > 0) {
@@ -138,7 +138,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
 
   renderProperty(node: ModelTree<DefaultProperty>, parent: mxgraph.mxCell): mxgraph.mxCell {
     const property = node.element;
-    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getPropertyProperties(property, this.languageSettingsService));
+    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getPropertyProperties(property, this.sammLangService));
     this.connectIsolatedElement(parent, cell);
 
     if (property.parents.length > 0) {
@@ -149,10 +149,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
 
   renderAbstractProperty(node: ModelTree<DefaultAbstractProperty>, parent: mxgraph.mxCell): mxgraph.mxCell {
     const abstractProperty = node.element;
-    const cell = this.getOrCreateMxCell(
-      node,
-      MxGraphVisitorHelper.getAbstractPropertyProperties(abstractProperty, this.languageSettingsService)
-    );
+    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getAbstractPropertyProperties(abstractProperty, this.sammLangService));
     this.connectIsolatedElement(parent, cell);
 
     if (abstractProperty.parents.length > 0) {
@@ -165,7 +162,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     const characteristic = node.element;
     const cell =
       this.shapes.get(characteristic.aspectModelUrn) ||
-      this.getOrCreateMxCell(node, MxGraphVisitorHelper.getCharacteristicProperties(characteristic, this.languageSettingsService));
+      this.getOrCreateMxCell(node, MxGraphVisitorHelper.getCharacteristicProperties(characteristic, this.sammLangService));
     this.connectIsolatedElement(parent, cell);
 
     const parentCell = MxGraphHelper.getModelElement(parent);
@@ -190,10 +187,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
       return;
     }
 
-    const cell = this.getOrCreateMxCell(
-      node,
-      MxGraphVisitorHelper.getAbstractEntityProperties(abstractEntity, this.languageSettingsService)
-    );
+    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getAbstractEntityProperties(abstractEntity, this.sammLangService));
 
     this.connectIsolatedElement(parent, cell);
 
@@ -206,12 +200,12 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
   renderAspect(node: ModelTree<DefaultAspect>, _parent: mxCell): mxCell {
     // English is our default at the moment.
     const aspect = node.element;
-    this.languageSettingsService.setLanguageCodes(['en']);
-    return this.createMxCell(node, MxGraphVisitorHelper.getAspectProperties(aspect, this.languageSettingsService));
+    this.sammLangService.setSammLanguageCodes(['en']);
+    return this.createMxCell(node, MxGraphVisitorHelper.getAspectProperties(aspect, this.sammLangService));
   }
 
   renderConstraint(node: ModelTree<DefaultConstraint>, context: mxCell): mxCell {
-    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getConstraintProperties(node.element, this.languageSettingsService));
+    const cell = this.getOrCreateMxCell(node, MxGraphVisitorHelper.getConstraintProperties(node.element, this.sammLangService));
     MxGraphHelper.setElementNode(cell, node);
     this.connectIsolatedElement(context, cell);
 
@@ -223,7 +217,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
 
   renderEvent(node: ModelTree<DefaultEvent>, parent: mxCell): mxCell {
     const event = node.element;
-    const cell = this.createMxCell(node, MxGraphVisitorHelper.getEventProperties(event, this.languageSettingsService));
+    const cell = this.createMxCell(node, MxGraphVisitorHelper.getEventProperties(event, this.sammLangService));
     this.connectIsolatedElement(parent, cell);
 
     if (event.parents.length > 0) {

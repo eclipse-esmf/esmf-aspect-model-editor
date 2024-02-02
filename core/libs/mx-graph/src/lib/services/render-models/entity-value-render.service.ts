@@ -14,7 +14,7 @@
 import {Injectable, inject} from '@angular/core';
 import {ShapeConnectorService} from '@ame/connection';
 import {DefaultEntity, DefaultEntityValue, DefaultEnumeration, DefaultState, EntityValueProperty} from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {EdgeStyles, RendererUpdatePayload} from '../../models';
@@ -33,13 +33,13 @@ export class EntityValueRenderService extends BaseRenderService {
 
   constructor(
     mxGraphService: MxGraphService,
-    languageSettingsService: LanguageSettingsService,
+    sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
     private mxGraphShapeOverlay: MxGraphShapeOverlayService,
     private shapeConnectorService: ShapeConnectorService,
     private mxGraphAttributeService: MxGraphAttributeService
   ) {
-    super(mxGraphService, languageSettingsService, rdfService);
+    super(mxGraphService, sammLangService, rdfService);
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {

@@ -170,10 +170,13 @@ export const META_MODEL_exampleValue = 'exampleValue';
 
 // Settings Dialog
 export enum SettingsDialogSelectors {
-  autoSaveInput = '[name="autosaveTime"]',
+  autoSaveInput = '[data-cy="autoSaveTime"]',
   autoSaveToggle = '[data-cy="autoSaveToggle"]',
-  autoValidateInput = '[name="autoValidateTime"]',
+  autoValidateInput = '[data-cy="autoValidateTime"]',
   autoValidateToggle = '[data-cy="autoValidateToggle"]',
+  settingsDialogApplyButton = '[data-cy="settingsDialogApplyButton"]',
+  settingsDialogOkButton = '[data-cy="settingsDialogOkButton"]',
+  settingsDialogCancelButton = '[data-cy="settingsDialogCancelButton"]',
 }
 
 // Snack bar

@@ -13,7 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {DefaultAbstractEntity} from '@ame/meta-model';
-import {LanguageSettingsService} from '@ame/settings-dialog';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {MxGraphService} from '../mx-graph.service';
@@ -27,11 +27,11 @@ import {RdfService} from '@ame/rdf/services';
 export class AbstractEntityRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
-    languageSettingsService: LanguageSettingsService,
+    sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
     private baseEntityRenderer: BaseEntityRendererService
   ) {
-    super(mxGraphService, languageSettingsService, rdfService);
+    super(mxGraphService, sammLangService, rdfService);
   }
 
   update({cell}) {

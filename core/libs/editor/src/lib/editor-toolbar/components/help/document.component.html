@@ -19,24 +19,24 @@
 
 <mat-dialog-content class="info-content">
   <section class="left">
-    <p>The Aspect Model Editor is the visual editor for Aspect Models based on SAMM as part of the Eclipse Semantic Modeling Framework.</p>
+    <p>{{ 'TOOLBAR.HELP_DIALOG.INFO_CONTENT' | translate }}</p>
     <p>
-      Please refer to the
+      {{ 'TOOLBAR.HELP_DIALOG.PLEASE_REFER' | translate }}
       <a [href]="AMEDocumentationLink" (click)="openLink($event)" target="_blank" rel="noopener">{{ AMEDocumentationLink }}</a>
     </p>
   </section>
 
   <section class="right">
     <p>
-      <span>AME version:</span>
+      <span>AME {{ 'TOOLBAR.HELP_DIALOG.VERSION' | translate }}:</span>
       <span>{{ config.ameVersion }}</span>
     </p>
     <p>
-      <span>SAMM version:</span>
+      <span>SAMM {{ 'TOOLBAR.HELP_DIALOG.VERSION' | translate }}:</span>
       <span>{{ config.currentSammVersion }}</span>
     </p>
     <p>
-      <span>ESMF SDK version:</span>
+      <span>ESMF SDK {{ 'TOOLBAR.HELP_DIALOG.VERSION' | translate }}:</span>
       <span>{{ config.sdkVersion }}</span>
     </p>
   </section>

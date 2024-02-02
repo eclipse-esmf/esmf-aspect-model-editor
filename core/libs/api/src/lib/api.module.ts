@@ -13,10 +13,9 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NgxElectronModule} from 'ngx-electron';
 
 @NgModule({
-  providers: [NgxElectronModule],
+  providers: [],
   exports: [],
   imports: [CommonModule],
 })

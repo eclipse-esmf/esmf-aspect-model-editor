@@ -25,6 +25,7 @@ import {mxConstants, mxEditor, mxLayoutManager, mxOutline, mxPoint, mxRectangle,
 import {DefaultAbstractProperty, DefaultEntity, DefaultEntityValue, DefaultProperty, DefaultTrait} from '@ame/meta-model';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {APP_CONFIG, AppConfig, AssetsPath, BindingsService, BrowserService} from '@ame/shared';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable()
 export class MxGraphSetupService {
@@ -45,6 +46,7 @@ export class MxGraphSetupService {
     private browserService: BrowserService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private mxGraphAttributeService: MxGraphAttributeService,
+    private translate: LanguageTranslationService,
     private ngZone: NgZone
   ) {}
 
@@ -342,7 +344,7 @@ export class MxGraphSetupService {
       const modelElement = MxGraphHelper.getModelElement(cell);
 
       menu.addItem(
-        `Open in ${modelElement.isExternalReference() ? 'new Window' : 'detail view'}`,
+        `${this.translate.language.EDITOR_CANVAS.GRAPH_SETUP.OPEN_IN} ${modelElement.isExternalReference() ? 'new Window' : 'detail view'}`,
         this.resolveAssetsIcon(AssetsPath.OpenIcon),
         () => {
           this.bindingsService.fireAction('editElement');
@@ -350,31 +352,35 @@ export class MxGraphSetupService {
       );
 
       if (selectedCells.length === 2) {
-        menu.addItem('Connect', this.resolveAssetsIcon(AssetsPath.ConnectionOnIcon), () => {
+        menu.addItem(this.translate.language.EDITOR_CANVAS.GRAPH_SETUP.CONNECT, this.resolveAssetsIcon(AssetsPath.ConnectionOnIcon), () => {
           this.bindingsService.fireAction('connectElements');
         });
       } else if (selectedCells.length === 1) {
-        menu.addItem('Connect with...', this.resolveAssetsIcon(AssetsPath.ConnectionOnIcon), () => {
-          this.bindingsService.fireAction('connect-with');
-        });
+        menu.addItem(
+          this.translate.language.EDITOR_CANVAS.GRAPH_SETUP.CONNECT_WITH,
+          this.resolveAssetsIcon(AssetsPath.ConnectionOnIcon),
+          () => {
+            this.bindingsService.fireAction('connect-with');
+          }
+        );
       }
 
-      menu.addItem('Select all references', this.resolveAssetsIcon(AssetsPath.Tree), () => {
+      menu.addItem(this.translate.language.EDITOR_CANVAS.GRAPH_SETUP.SELECT_ALL_REFERENCES, this.resolveAssetsIcon(AssetsPath.Tree), () => {
         this.bindingsService.fireAction('select-tree');
       });
     }
 
-    menu.addItem('Format', this.resolveAssetsIcon(AssetsPath.FormatIcon), () => {
+    menu.addItem(this.translate.language.EDITOR_CANVAS.GRAPH_SETUP.FORMAT, this.resolveAssetsIcon(AssetsPath.FormatIcon), () => {
       this.bindingsService.fireAction('format');
     });
 
     if (cell) {
       menu.addSeparator();
-      menu.addItem('Delete', this.resolveAssetsIcon(AssetsPath.DeleteIcon), () => {
+      menu.addItem(this.translate.language.EDITOR_CANVAS.GRAPH_SETUP.DELETE, this.resolveAssetsIcon(AssetsPath.DeleteIcon), () => {
         this.bindingsService.fireAction('deleteElement');
       });
     } else {
-      menu.addItem('Copy to Clipboard', this.resolveAssetsIcon(AssetsPath.Copy), () => {
+      menu.addItem(this.translate.language.EDITOR_CANVAS.GRAPH_SETUP.COPY_TO_CLIPBOARD, this.resolveAssetsIcon(AssetsPath.Copy), () => {
         this.bindingsService.fireAction('copy-to-clipboard');
       });
     }

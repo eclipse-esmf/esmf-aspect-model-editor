@@ -19,7 +19,13 @@ import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'ame-locate-element',
-  template: `<button mat-icon-button matTooltip="Locate element" matTooltipPosition="above" *ngIf="element" (click)="locate()">
+  template: `<button
+    mat-icon-button
+    [matTooltip]="'EDITOR_CANVAS.SHAPE_SETTING.LOCATE_ELEMENT' | translate"
+    matTooltipPosition="above"
+    *ngIf="element"
+    (click)="locate()"
+  >
     <mat-icon>gps_fixed</mat-icon>
   </button>`,
   styles: [

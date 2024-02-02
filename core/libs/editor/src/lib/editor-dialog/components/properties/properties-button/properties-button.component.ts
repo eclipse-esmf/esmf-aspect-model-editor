@@ -82,6 +82,9 @@ export class PropertiesButtonComponent implements OnInit {
           property: {aspectModelUrn},
           keys,
         } of this.propertiesClone) {
+          if (!data[aspectModelUrn]) {
+            continue;
+          }
           keys.notInPayload = data[aspectModelUrn].notInPayload;
           keys.optional = data[aspectModelUrn].optional;
           keys.payloadName = data[aspectModelUrn].payloadName;

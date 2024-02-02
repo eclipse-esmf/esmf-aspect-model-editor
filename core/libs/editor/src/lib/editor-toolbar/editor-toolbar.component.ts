@@ -45,6 +45,7 @@ import {readFile} from '@ame/utils';
 import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService, ModelFilter} from '@ame/loader-filters';
 import {ShapeSettingsService} from '../editor-dialog';
 import {BaseMetaModelElement} from '@ame/meta-model';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
   selector: 'ame-editor-toolbar',
@@ -58,7 +59,6 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   public filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
   public isAllShapesExpanded = true;
   public settings: Settings;
-  public serializedModel: string;
   public filterTypes = ModelFilter;
 
   private checkChangesInterval: NodeJS.Timeout;
@@ -69,7 +69,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
 
   get labelExpandCollapse() {
-    return this.isAllShapesExpanded ? 'Collapse all' : 'Expand all';
+    return this.isAllShapesExpanded ? 'TOOLBAR.COLLAPSE_ALL' : 'TOOLBAR.EXPAND_ALL';
   }
 
   constructor(
@@ -90,13 +90,14 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     private namespaceManagerService: NamespacesManagerService,
     private shapeSettingsService: ShapeSettingsService,
     private loadingScreenService: LoadingScreenService,
-    private modelSaveTracker: ModelSavingTrackerService
+    private modelSaveTracker: ModelSavingTrackerService,
+    private translate: LanguageTranslationService
   ) {}
 
   ngOnInit(): void {
     this.settings = this.configurationService.getSettings();
     this.loadingScreenOptions = {
-      content: 'Please wait. Be aware that after 60 seconds a timeout will automatically cancel this operation',
+      content: this.translate.language.TOOLBAR.NOTIFICATION_DIALOG.CONTENT,
     };
   }
 
@@ -144,7 +145,6 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   openLoadNewAspectModelDialog() {
     this.loadingScreenOptions.title = 'Loading Aspect Model';
     this.loadingScreenOptions.hasCloseButton = true;
-
     this.loadingScreen$ = this.fileHandlingService
       .openLoadNewAspectModelDialog(this.loadingScreenOptions)
       .pipe(
@@ -157,7 +157,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   exportAsAspectModelFile() {
-    this.loadingScreenOptions.title = 'Saving Aspect Model';
+    this.loadingScreenOptions.title = this.translate.language.TOOLBAR.NOTIFICATION_DIALOG.SAVING;
     this.loadingScreenOptions.hasCloseButton = false;
 
     const subscription$ = this.fileHandlingService
@@ -216,7 +216,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   validateFile(callback?: Function) {
-    this.loadingScreenOptions.title = 'Validating';
+    this.loadingScreenOptions.title = this.translate.language.TOOLBAR.NOTIFICATION_DIALOG.VALIDATING;
     this.loadingScreenOptions.hasCloseButton = true;
 
     this.loadingScreen$ = this.fileHandlingService
@@ -230,7 +230,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   onGenerateDocumentation() {
-    this.loadingScreenOptions.title = 'Generate HTML Documentation';
+    this.loadingScreenOptions.title = this.translate.language.TOOLBAR.NOTIFICATION_DIALOG.GENERATE_HTML;
     this.loadingScreenOptions.hasCloseButton = true;
 
     const subscription$ = this.generateHandlingService
@@ -244,7 +244,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   onGenerateJsonSample() {
-    this.loadingScreenOptions.title = 'Generate JSON payload';
+    this.loadingScreenOptions.title = this.translate.language.TOOLBAR.NOTIFICATION_DIALOG.GENERATE_JSON_PAYLOAD;
     this.loadingScreenOptions.hasCloseButton = true;
 
     const subscription$ = this.generateHandlingService
@@ -258,7 +258,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   onGenerateJsonSchema() {
-    this.loadingScreenOptions.title = 'Generate JSON Schema';
+    this.loadingScreenOptions.title = this.translate.language.TOOLBAR.NOTIFICATION_DIALOG.GENERATE_JSON_SCHEMA;
     this.loadingScreenOptions.hasCloseButton = true;
 
     const subscription$ = this.generateHandlingService
@@ -272,7 +272,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   onGenerateOpenApiSpec() {
-    this.loadingScreenOptions.title = 'Generate Open API specification';
+    this.loadingScreenOptions.title = this.translate.language.TOOLBAR.NOTIFICATION_DIALOG.GENERATE_API_SPEC;
     this.loadingScreenOptions.hasCloseButton = true;
 
     const subscription$ = this.generateHandlingService
@@ -293,7 +293,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.loadingScreenService
       .open({
         title: this.isAllShapesExpanded ? 'Folding...' : 'Expanding...',
-        content: 'Please wait until the action is finished!',
+        content: this.translate.language.TOOLBAR.NOTIFICATION_DIALOG.WAIT_ACTION,
       })
       .afterOpened()
       .pipe(switchMap(() => (this.isAllShapesExpanded ? this.mxGraphService.foldCells() : this.mxGraphService.expandCells())))
@@ -327,8 +327,8 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   onFormat() {
     this.loadingScreenService
       .open({
-        title: 'Formatting...',
-        content: 'Please wait until formatting finishes',
+        title: this.translate.language.TOOLBAR.NOTIFICATION_DIALOG.FORMAT,
+        content: this.translate.language.TOOLBAR.NOTIFICATION_DIALOG.WAIT_FORMAT,
       })
       .afterOpened()
       .subscribe(() => {
@@ -380,17 +380,9 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.configurationService.setSettings(this.settings);
   }
 
-  getTitleEditorNavigation() {
-    return this.settings.showEditorNav ? 'Hide navigation' : 'Show navigation';
-  }
-
   onToggleEditorMap() {
     this.settings.showEditorMap = !this.settings.showEditorMap;
     this.configurationService.setSettings(this.settings);
-  }
-
-  getTitleEditorMap() {
-    return this.settings.showEditorMap ? 'Hide map' : 'Show map';
   }
 
   hasAspectElement(): boolean {

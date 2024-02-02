@@ -1,0 +1,428 @@
+{
+  "START_LOAD_MODAL": {
+    "TITLE": "Load auto-saved model?",
+    "CONTENT": "You can either continue with the auto-saved model or dismiss it to start with the default Aspect Model.",
+    "LOAD_BUTTON": "Load auto-saved model",
+    "DISMISS_BUTTON": "Dismiss"
+  },
+  "SAVE_MODAL_DIALOG": {
+    "TITLE": "Save changes before closing?",
+    "CONTENT": "You have unsaved changes.",
+    "CONTINUE_BUTTON": "Continue editing",
+    "DISCARD_BUTTON": "Discard Changes",
+    "SAVE_BUTTON": "Save"
+  },
+  "SAMM_MIGRATION": {
+    "CHECK_WORKSPACE": "Checking Workspace...",
+    "MIGRATE_TO_SAMM": "'Migrating to SAMM...'",
+    "AWAITING_STATUS": "Please wait until all files are ",
+    "CHECKED": "checked",
+    "MIGRATED": "migrated",
+    "MIGRATE_WORKSPACE_DIALOG": {
+      "MIGRATE_WORKSPACE": "Migrating Workspace...",
+      "AWAITING_STATUS": "Please wait until all files are migrated"
+    },
+    "MIGRATION_STATUS_DIALOG": {
+      "TITLE": "Migration Status",
+      "ERROR": "SAMM Version upgrade to {{version}} finished, but {{fileCount}} had to be skipped. Please fix {{fileCountMessage}} first (in a text editor, contacting us, or in a previous version of the editor that supports the original SAMM version that has to be temporarily installed). See below:",
+      "SUCCESS": "Migration finished with success",
+      "CLOSE": "Close",
+      "VERSION": "Migrate Version"
+    },
+    "WORKSPACE_MIGRATION_DIALOG": {
+      "TITLE": "Migrate Workspace to SAMM",
+      "FILE_VERSION_WARNING": "Your workspace has at least one file based on a SAMM version below",
+      "MIGRATION_NEEDED": "and needs to be migrated.",
+      "MIGRATE_INSTRUCTION": "Click the Migrate button to proceed with the migration.",
+      "VERSION_AUTO_UPGRADE": "Auto-increase namespace versions.",
+      "UPGRADE_EFFECT": "If selected, a new major version of all migrated namespaces will be created to indicate the SAMM version upgrade. Otherwise the existing namespaces will be overwritten (previous content will remain in a backup).",
+      "CANCEL": "Cancel",
+      "MIGRATE": "Migrate"
+    },
+    "MIGRATION_SUCCESS_DIALOG": {
+      "TITLE": "Version increasing was successful",
+      "CONTENT": "Version increasing finished with success",
+      "CLOSE": "Close"
+    },
+    "INCREASE_VERSION_DIALOG": {
+      "TITLE": "Increasing Namespaces Versions",
+      "LOADING_NAMESPACES": "Loading Namespaces"
+    }
+  },
+  "NOTIFICATION_SERVICE": {
+    "RECURSIVE_ELEMENTS": "Recursive elements",
+    "CIRCULAR_CONNECTION_MESSAGE": "Can not connect elements due to circular connection",
+    "MISSING_PARENT_ENTITY": "No entity as parent present",
+    "ABSTRACT_PROPERTY_PARENT_REQUIREMENT": "One of the Properties/Abstract Properties need to have as parent an Entity/Abstract Entity",
+    "ILLEGAL_OPERATION_MESSAGE": "Illegal operation",
+    "PROPERTY_EXTENSION_CONFLICT": "Can not extend a Property which already extends another element",
+    "MODEL_EMPTY_MESSAGE": "Model cannot be empty",
+    "MODEL_MINIMUM_ELEMENT_REQUIREMENT": "For a valid model, at least one element needs to exist",
+    "NAMESPACE_EXPORT_FAILURE": "Namespace export error",
+    "INTERNAL_EXPORT_ERROR": "Could not export package due to an internal error",
+    "SUMMARY_CLIPBOARD_SUCCESS": "Summary copied to clipboard",
+    "SUMMARY_CLIPBOARD_FAILURE": "Error on copying summary to clipboard",
+    "CHILD_FOR_PREDEFINED_ELEMENT_ERROR": "A predefined element can't have a child"
+  },
+  "TOOLBAR": {
+    "NEW_LOAD": "New/Load",
+    "SAVE": "Save",
+    "ADD_FILE_TO_NAMESPACE": "Add file to namespace",
+    "EDIT_HIGHLIGHTED_CELL": "Edit highlighted cell",
+    "DELETE": "Delete",
+    "COLLAPSE_ALL": "Collapse all",
+    "EXPAND_ALL": "Expand all",
+    "SEARCH": "Search",
+    "REMOVE_FILTER_MODE": "Remove filter mode to find all elements",
+    "FILTER_WAIT": "Please wait until the filtering is done",
+    "FORMAT": "Format",
+    "CONNECT": "Connect",
+    "VALIDATE": "Validate",
+    "GENERATING_POSSIBLE": "Generation is only possible for Aspect Models, not for files without Aspect.",
+    "GENERATE_DOCUMENT": "Generate document",
+    "GENERATE_SCHEMA": "Generate JSON/JSON Schema",
+    "HIDE_MAP": "Hide map!!!",
+    "SHOW_MAP": "Show map!!!",
+    "HIDE_NAVIGATION": "Hide navigation!!!",
+    "SHOW_NAVIGATION": "Show navigation!!!",
+    "MODEL_UNFILTERED": "Model unfiltered",
+    "MODEL_FILTERED_BY_PROPERTIES": "Model filtered by Properties",
+    "SETTINGS": "Settings",
+    "NOTIFICATIONS": "Notifications",
+    "HELP": "Help",
+    "LOAD_MENU": {
+      "NEW_WINDOW": "New window",
+      "CREATE_UPLOAD_ASPECT_MODEL": "Create/Upload Aspect Model",
+      "IMPORT_PACKAGE": "Import Package"
+    },
+    "SAVE_MENU": {
+      "EXPORT_ASPECT_MODEL": "Export Model",
+      "EXPORT_NAMESPACE": "Export Namespace",
+      "COPY_TO_CLIPBOARD": "Copy to Clipboard",
+      "SAVE_TO_WORKSPACE": "Save to Workspace"
+    },
+    "GENERATE_DOCUMENT_MENU": {
+      "GENERATE_HTML_DOCUMENT": "Generate HTML documentation",
+      "GENERATE_OPENAPI_SPECIFICATION": "Generate OpenAPI specification",
+      "GENERATE_AASX_XML": "Generate AASX/XML"
+    },
+    "DOWNLOAD_JSON_MENU": {
+      "GENERATE_SAMPLE_JSON_PAYLOAD": "Generate sample JSON payload",
+      "GENERATE_JSON_SCHEMA": "Generate JSON schema"
+    },
+    "FILTER_MENU": {
+      "DISPLAY_ENTIRE_MODEL": "Displays the entire model",
+      "NONE": "None",
+      "FILTERS_BY_PROPERTIES": "Filters by properties",
+      "BY_PROPERTIES": "By properties"
+    },
+    "DECLARE_NAME_DIALOG": {
+      "TITLE": "Declare name of Shared Model",
+      "INFO_CONTENT": "You are about to remove the Aspect which will transform this Aspect Model into a Shared Model. Please choose a name for this Shared Model.",
+      "REQUIRED_ERROR": "This field is required",
+      "CHARACTERS_ERROR": "Allowed characters: alphanumeric, space, dot(.), minus(-) and underscore(_)",
+      "EXIST_ERROR": "This file already exists in your namespace",
+      "REMOVE_ASPECT": "Remove Aspect",
+      "CANCEL": "Cancel"
+    },
+    "SELECT_LANGUAGE_TO_JSON_SCHEMA_DIALOG": {
+      "TITLE": "Select a language to generate JSON Schema",
+      "LANGUAGE": "Language",
+      "SELECT_BUTTON": "Select"
+    },
+    "GENERATE_AASX_DIALOG": {
+      "TITLE": "Generate AASX",
+      "OUTPUT_FILE_FORMAT": "Output file format",
+      "GENERATING": "Generating...",
+      "CANCEL": "Cancel",
+      "GENERATE": "Generate"
+    },
+    "LOAD_MODEL_DIALOG": {
+      "TITLE": "Start modeling",
+      "INFO_CONTENT": "An existing Aspect Model will be replaced with the new one. Any unsaved changes will be lost.",
+      "OPTIONS_MESSAGE": "To start modeling you have three options:",
+      "FIRST_OPTION": "start from a new model (see initial Aspect model code in the text area below)<",
+      "SECOND_OPTION": "paste existing Aspect Model file (*.ttl) into the text area below",
+      "THIRD_OPTION": "load Aspect Model file (*.ttl) by choosing 'Load from File' below.",
+      "MODIFY_MANUALLY_CONTENT": "As an expert you may also modify the Aspect Model file manually.",
+      "TEXT_FIELD_PLACEHOLDER": "Paste your Aspect Model here or load it from file.",
+      "BUTTON": {
+        "MODELS": "Models",
+        "DEFAULT_ASPECT_MODEL": "Default Aspect Model",
+        "MOVEMENT_EXAMPLE": "Movement Example",
+        "LOAD_FROM_FILE": "Load from File",
+        "START_MODELING": "Start modeling"
+      }
+    },
+    "EXPORT_NAMESPACE_DIALOG": {
+      "TITLE": "Export workspace",
+      "INFO_CONTENT": "Please select the namespace that you would like to export as an Aspect Model Package.",
+      "CANCEL": "Cancel",
+      "NEXT": "Next"
+    },
+    "VALIDATION_RESULT_DIALOG": {
+      "TITLE": "Validation result",
+      "HAVE_VALIDATED": "Namespaces have been validated and ",
+      "CAN_BE_EXPORTED": "can be exported",
+      "CAN_NOT_EXPORTED": "Namespaces can not be exported due to ",
+      "MISSING_FILES": "missing files",
+      "DISMISS_BUTTON": "Dismiss",
+      "EXPORT": "Export",
+      "CLIP_BUTTON": {
+        "COPY_CLIP": "Copy to clipboard",
+        "TOOLTIP": "Copy the validation result to clipboard"
+      }
+    },
+    "NOTIFICATION_DIALOG": {
+      "LOADING": "Loading Aspect Model",
+      "CONTENT": "Please wait. Be aware that after 60 seconds a timeout will automatically cancel this operation",
+      "VALIDATING": "Validating",
+      "SAVING": "Saving Aspect Model",
+      "GENERATE_HTML": "Generate HTML Documentation",
+      "GENERATE_JSON_PAYLOAD": "Generate JSON payload",
+      "GENERATE_JSON_SCHEMA": "Generate JSON Schema",
+      "GENERATE_API_SPEC": "Generate Open API specification",
+      "WAIT_ACTION": "Please wait until the action is finished!",
+      "FORMAT": "Formatting...",
+      "WAIT_FORMAT": "Please wait until formatting finishes"
+    },
+    "HELP_DIALOG": {
+      "INFO_CONTENT": "The Aspect Model Editor is the visual editor for Aspect Models based on SAMM as part of the Eclipse Semantic Modeling Framework.",
+      "PLEASE_REFER": "Please refer to the",
+      "REGARD_USAGE_EDITOR": "for help regarding the usage of the Aspect Model Editor.",
+      "REGARD_DIGITAL_TWIN_SYSTEM": "for general help about the Digital Twin System and the Semantic Aspect Meta Model as part of the Digital Twin System.",
+      "VERSION": "version"
+    },
+    "NOTIFICATIONS_TABLE_DIALOG": {
+      "NOTIFICATIONS": "Notifications",
+      "CLEAR_TABLE": "Clear table",
+      "DATE": "Date",
+      "TYPE": "Type",
+      "MESSAGE": "Message",
+      "OPTIONS": "Options",
+      "NO_NOTIFICATIONS": "No notifications available.",
+      "GO": "Go to",
+      "CLEAR": "Clear"
+    },
+    "WORKSPACE_SUMMARY": {
+      "SELECT_TO_VALIDATE": "Select an Aspect Model to see the validation result.",
+      "VALIDATED_SUCCESSFULLY": "This file was validated successfully",
+      "FILES_NOT_IMPORTED": "These files were not imported:"
+    },
+    "GENERATE_HTML_DOC_DIALOG": {
+      "TITLE": "Generate HTML Documentation",
+      "LANGUAGE": "Language",
+      "BUTTON": {
+        "CANCEL": "Cancel",
+        "OPEN_DOC": "Open Documentation",
+        "DOWNLOAD_DOC": "Download Documentation"
+      }
+    },
+    "GENERATE_OPENAPI_SPEC_DIALOG": {
+      "TITLE": "Generate OpenAPI specification",
+      "CONFIGURATION": "Configuration",
+      "LANGUAGE": "Language",
+      "OUTPUT_FILE_FORMAT": "Output File format",
+      "BASEURL": "BaseUrl - the base URL for the Aspect API",
+      "PLEASE_ADD_VALID_URL": "Please add a valid url",
+      "INCLUDE_QUERY_API_TOOLTIP": "if set to true, a path section for the Query API Endpoint of the Aspect API will be included in the specification.",
+      "INCLUDE_QUERY_API": "IncludeQueryApi",
+      "USE_SEMANTIC_VERSION": "UseSemanticVersion",
+      "USE_SEMANTIC_VERSION_TOOLTIP": "if set to true, the complete semantic version of the Aspect Model will be used as the version of the API. Otherwise only the major part of the Aspect Version is used as the version of the API.",
+      "PAGING_TYPE_OPTION": "Paging type/option",
+      "NO_PAGING": "No paging",
+      "CURSOR_BASED_PAGING": "Cursor based paging",
+      "OFFSET_BASED_PAGING": "Offset based paging",
+      "TIME_BASED_PAGING": "Time based paging",
+      "BUTTON": {
+        "CANCEL": "Cancel",
+        "GENERATE": "Generate"
+      }
+    },
+    "GENERATE_HANDLING": {
+      "FAIL_GENERATE_OPENAPI_SPEC": "Failed to generate Open Api specification",
+      "INVALID_MODEL": "Invalid Aspect Model",
+      "FAIL_GENERATE_JSON_SAMPLE": "Failed to generate JSON Sample",
+      "JSON_PAYLOAD_PREVIEW": "Sample JSON Payload preview",
+      "FAIL_GENERATE_JSON_SCHEMA": "Failed to generate JSON Schema",
+      "JSON_SCHEMA_PREVIEW": "JSON Schema preview"
+    },
+    "PREVIEW_DIALOG": {
+      "RESET_CONTENT": "Reset content",
+      "COPY_TO_CLIPBOARD": "Copy to Clipboard",
+      "DOWNLOAD_FILE": "Download file"
+    }
+  },
+  "SIDEBAR": {
+    "ELEMENT_ALREADY_IMPORTED": "Element already imported",
+    "DRAG_TO_RIGHT_TO_ADD": "{{value}} - Drag to the right to add",
+    "OPEN_WORKSPACE": "Open Workspace",
+    "THE_ROOT_OF_AVAILABLE_NAMESPACES": "The root of all locally available namespaces",
+    "WORKSPACE_TIP": "To see your current Model in the below list, save it to workspace."
+  },
+  "SETTINGS_DIALOG": {
+    "TITLE": "Settings",
+    "CANCEL": "Cancel",
+    "APPLY": "Apply",
+    "ERROR_MESSAGE": "Please fix the errors before save the settings",
+    "OK": "OK",
+    "NODE": {
+      "SYSTEM_CONFIGURATION": "System Configuration",
+      "MODEL_CONFIGURATION": "Model Configuration"
+    },
+    "SUB_NODE": {
+      "AUTOMATED_WORKFLOW": "Automated Workflow",
+      "EDITOR": "Editor",
+      "COPYRIGHT": "Header/Copyright",
+      "LANGUAGES": "Languages",
+      "NAMESPACES": "Namespaces"
+    },
+    "CONFIGURATION": {
+      "AUTO_SAVE": "Auto-save",
+      "WAITING_PERIOD": "Waiting period in seconds",
+      "AUTO_VALIDATION": "Auto-validation",
+      "AUTO_FORMATTING": "Auto-Formatting",
+      "USING_HIERARCHICAL_LAYOUT": "Use 'hierarchical' layout",
+      "DISPLAY_ENTITY_VALUE_ENTITY": "Display 'Entity Value - Entity' relationship",
+      "DISPLAY_PROPERTY_ABSTRACT_PROPERTY": "Display 'Property - Abstract Property' relationship",
+      "DISPLAY_DISAMBIGUATION_LABEL": "Display disambiguation labels",
+      "AUTO_VALIDATION_TOOLTIP": "After completing a validation, after passing the waiting period the next auto-validation will be triggered.",
+      "AUTO_FORMATTING_TOOLTIP": "Auto format elements on the graph.",
+      "DISPLAY_DISAMBIGUATION_LABEL_TOOLTIP": "Displays labels on relationships that require disambiguation, e.g. Operation input/output, Characteristic Either left/right and Properties with notInPayload set."
+    },
+    "LANGUAGES": {
+      "USER_INTERFACE": "User Interface",
+      "CHOOSE_LANGUAGE": "Choose language",
+      "ENGLISH": "English",
+      "CHINESE": "Chinese",
+      "ADD_LANGUAGE": "Add Language",
+      "SELECT_LANGUAGE": "Select language",
+      "START_TYPE": "Start typing to select language"
+    },
+    "NAMESPACES": {
+      "VALUE": "Value",
+      "VERSION": "Version",
+      "NAME": "Name",
+      "SAMM_VERSION": "SAMM Version",
+      "PREDEFINED_NAMESPACES": "Predefined Namespaces",
+      "ASPECT_NAMESPACE_TOOLTIP": "Please note that only the current Aspect Model in its current version will be moved to another namespace. References to other Aspect Models and/or versions will keep the original namespace."
+    }
+  },
+  "ELEMENT_MODEL_DESCRIPTION": {
+    "ASPECT": "The root element of each Aspect Model",
+    "ABSTRACT_PROPERTY": "Abstract named value",
+    "PROPERTY": "Named Value",
+    "CHARACTERISTIC": "The meaning of a Property in the context of the Aspect",
+    "ABSTRACT_ENTITY": "The abstraction of a logical encapsulation of multiple values",
+    "ENTITY": "The logical encapsulation of multiple values",
+    "UNIT": "A definition of a physical unit",
+    "CONSTRAINT": "A limitation applied to a Characteristic",
+    "TRAIT": "Encapsulates multiple limitations to Characteristics",
+    "OPERATION": "An Operation represents an action that can be triggered on the Aspect",
+    "EVENT": "A definition of an Event supported by the Aspect"
+  },
+  "EDITOR_CANVAS": {
+    "FITTING_PROGRESS": "Fit the complete model on the current view",
+    "RESET": "Reset zoom level to 100%",
+    "ZOOM_IN_PROGRESS": "Zoom in",
+    "ZOOM_OUT_PROGRESS": "Zoom out",
+    "GRAPH_SETUP": {
+      "OPEN_IN": "Open in",
+      "CONNECT": "Connect",
+      "CONNECT_WITH": "Connect with...",
+      "SELECT_ALL_REFERENCES": "Select all references",
+      "FORMAT": "Format",
+      "DELETE": "Delete",
+      "COPY_TO_CLIPBOARD": "Copy to Clipboard"
+    },
+    "SHAPE_SETTING": {
+      "SAVE": "Save",
+      "CANCEL": "Cancel",
+      "EDIT": "Edit {{value}}",
+      "LOCATE_ELEMENT": "Locate element",
+      "PROPERTIES_CONFIGURATION": "Properties Configuration",
+      "CONFIGURE": "Configure",
+      "PROPERTIES_MODAL": {
+        "NAME": "Name",
+        "OPTIONAL": "Optional",
+        "PAYLOAD_NAME": "payloadName",
+        "NOT_IN_PAYLOAD": "Not In Payload",
+        "SAVE": "Save",
+        "CANCEL": "Cancel"
+      },
+      "FIELD": {
+        "NAME": {
+          "PLEASE_DEFINE": "Please define a name",
+          "PLEASE_START_WITH_UPPER_CASE": "Please start with an upper case character followed by letters/numerals.",
+          "PLEASE_START_WITH_A_LOWER_CASE": "Please start with a lower case character followed by letters/numerals.",
+          "PLEASE_SELECT_DIFFERENT_NAME": "Please select a different name as this one is already in use in the same namespace",
+          "PLEASE_SELECT_DIFFERENT_NAME_NAMESPACE": "Please select a different name as this one is already in use in the same namespace",
+          "NO_CONTAIN_WHITESPACES": "Name must not contain whitespaces",
+          "ALREADY_DEFINED_IN_SAME_NAMESPACE": "Please select a different name as this one is already in use in the same namespace"
+        },
+        "UNIT": {
+          "SELECT_DIFFERENT_NAME_TYPE": "Please select a different name as this one is of different type",
+          "SELECT_DIFFERENT_NAME_NAMESPACE": "Please select a different name as this one is of different type in the same namespace",
+          "CREATE": "Create new Unit",
+          "FIELD_REQUIRED": "This field is required"
+        },
+        "SEE_INPUT": {
+          "TYPE_TO_SEARCH": "Type to search or write an URN or URL"
+        }
+      },
+      "AME_ELEMENT_LIST_LABEL": {
+        "INCOMING_EDGES": "Incoming edges",
+        "OUTGOING_EDGES": "Outgoing edges"
+      },
+      "AME_ELEMENT_LIST_BUTTON": {
+        "LOCATE_ELEMENT": "Locate element",
+        "OPEN_ELEMENT": "Open element",
+        "OPEN_ELEMENT_IN_NEW_WINDOW": "Open element in new window"
+      }
+    }
+  },
+  "FOOTER": {
+    "UNSAVED_CHANGES": "There are currently unsaved changes",
+    "CHANGES_SAVED": "All changes have been saved",
+    "LAST_AUTOSAVE_INFO": "Last auto-save"
+  },
+  "CONFIRM_DIALOG": {
+    "CREATE_ASPECT": {
+      "TITLE": "Create new Aspect",
+      "ASPECT_CREATION_WARNING": "You are about to create an Aspect which will transform this Shared Model into an Aspect Model.",
+      "NAME_REPLACEMENT_NOTICE": "The current name of the Model will be replaced by the name of the Aspect.",
+      "CLOSE_BUTTON": "Cancel",
+      "OK_BUTTON": "Create Aspect"
+    },
+    "DELETE_SELECTED_ELEMENTS": {
+      "TITLE": "Delete external references",
+      "DELETE_DEPENDENT_REFERENCES_WARNING": "Deleting an external reference will also delete other external references that depend on it"
+    },
+    "RELOAD_CONFIRMATION": {
+      "TITLE": "Current Aspect Model changed",
+      "VERSION_CHANGE_NOTICE": "A different version of",
+      "WORKSPACE_LOAD_NOTICE": "has been loaded to a workspace.",
+      "RELOAD_WARNING": "Reloading will replace current Aspect Model with the version from a workspace, all unsaved changes will be lost. Reload?",
+      "CLOSE_BUTTON": "Keep current",
+      "OK_BUTTON": "Reload"
+    }
+  },
+  "LOADING_SCREEN_DIALOG": {
+    "MODEL_GENERATION": "Generating model",
+    "GENERAL_WAIT_MESSAGE": "Please wait...",
+    "ZOOM_IN_PROGRESS": "Zooming in...",
+    "ZOOM_IN_WAIT": "Please wait until zoom finishes",
+    "ZOOM_OUT_PROGRESS": "Zooming out...",
+    "FITTING_PROGRESS": "Fitting...",
+    "FITTING_WAIT": "Please wait until fitting finishes",
+    "FIT_TO_VIEW_PROGRESS": "Fit to view...",
+    "MODEL_LOADING": "Loading model",
+    "MODEL_LOADING_WAIT": "Please wait until the model is loaded!",
+    "ASPECT_MODEL_LOADING": "Loading Aspect Model",
+    "WORKSPACE_IMPORT": "Importing files into the workspace",
+    "MODEL_VALIDATION": "Validating model...",
+    "VALIDATION_WAIT": "Please wait until the model is validated.",
+    "FILTER_CHANGE": "Changing filter...",
+    "FILTER_WAIT": "Please wait until the filtering is done"
+  }
+}
