@@ -20,9 +20,9 @@ import {LoadingMigratingComponent} from './loading-migrating.component';
 import {provideMockObject} from '../../../../../../jest-helpers';
 import {of} from 'rxjs';
 import {Router} from '@angular/router';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {HttpClient} from '@angular/common/http';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
+import {HttpClient} from "@angular/common/http";
+import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 
 describe('LoadingMigratingComponent', () => {
   let fixture: ComponentFixture<LoadingMigratingComponent>;
@@ -31,15 +31,12 @@ describe('LoadingMigratingComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        LoadingMigratingComponent,
-        TranslateModule.forRoot({
-          provide: TranslateLoader,
-          useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
-          deps: [HttpClient],
-        }),
-      ],
-      imports: [MatDialogModule, RouterTestingModule, MatProgressSpinnerModule],
+      declarations: [LoadingMigratingComponent],
+      imports: [MatDialogModule, RouterTestingModule, MatProgressSpinnerModule, TranslateModule.forRoot({
+        provide: TranslateLoader,
+        useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+        deps: [HttpClient],
+      })],
       providers: [{provide: MigratorApiService, useValue: provideMockObject(MigratorApiService)}],
     });
 
