@@ -158,11 +158,6 @@ jobs:
 
             # Remove the zip file
             Remove-Item -Path backend/ame-backend.zip
-
-            # Rename the extracted .exe file
-            $oldName = "backend\ame-backend-${{ github.event.inputs.release_version }}-win.exe"
-            $newName = "ame-backend.exe"
-            Rename-Item -Path $oldName -NewName $newName
           } else {
             Write-Error "No zip file found."
           }
