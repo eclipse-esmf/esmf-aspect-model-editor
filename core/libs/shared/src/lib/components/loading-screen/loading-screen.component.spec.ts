@@ -31,11 +31,17 @@ describe('LoadingScreenComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoadingScreenComponent],
-      imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule, TranslateModule.forRoot({
-        provide: TranslateLoader,
-        useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
-        deps: [HttpClient],
-      })],
+      imports: [
+        CommonModule,
+        MatDialogModule,
+        MatProgressBarModule,
+        MatButtonModule,
+        TranslateModule.forRoot({
+          provide: TranslateLoader,
+          useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+          deps: [HttpClient],
+        }),
+      ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         {provide: MAT_DIALOG_DATA, useValue: {}},
