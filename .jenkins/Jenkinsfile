@@ -33,7 +33,7 @@ pipeline {
           def buildDir = "${WORKSPACE}"
           def dmg = "signed-mac.dmg"
 
-          def jsonOptions = "options={\"primaryBundleId\": \"app-bundle\", \"staple\": true};type=application/json"
+          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf\", \"staple\": true};type=application/json"
 
           def response = sh(script: "curl -s -X POST -F file=@${dmg} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
 
