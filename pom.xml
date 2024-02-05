@@ -71,6 +71,11 @@
         <artifactId>eclipse-macsigner-plugin</artifactId>
         <version>1.4.3</version>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+      </plugin>
     </plugins>
   </build>
 
@@ -82,7 +87,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
-            <version>3.1.0</version>
             <executions>
               <execution>
                 <phase>generate-resources</phase>
@@ -110,8 +114,7 @@
                 <phase>package</phase>
                 <configuration>
                   <signFiles>
-                    <signFile>${project.basedir}/electron/Aspect-Model-Editor.app
-                    </signFile>
+                    <signFile>${project.basedir}/electron/Aspect-Model-Editor.app</signFile>
                   </signFiles>
                   <timeoutMillis>300000</timeoutMillis>
                   <continueOnFail>${macSigner.forceContinue}</continueOnFail>
@@ -123,7 +126,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
-            <version>3.1.0</version>
             <executions>
               <execution>
                 <phase>compile</phase>
