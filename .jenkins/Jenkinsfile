@@ -1,0 +1,103 @@
+pipeline {
+  agent any
+
+  // This file is required to sign the binaries for Windows and MacOs, see https://wiki.eclipse.org/IT_Infrastructure_Doc#Sign_my_Jar.2Fplugins.2FWindows_exe.2FmacOS_App_files.3F
+
+  environment {
+    GITHUB_TOKEN = credentials('github-bot-token')
+  }
+
+  stages {
+    stage('Download') {
+      steps {
+        script {
+          sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.1/aspect-model-editor-v5.1.1-win.exe -o aspect-model-editor-v5.1.1-win.exe'
+          sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.1/aspect-model-editor-v5.1.1-mac.dmg -o aspect-model-editor-v5.1.1-mac.dmg'
+        }
+      }
+    }
+
+    stage('Sign Applications') {
+      steps {
+        script {
+          sh 'curl -o signed-win.exe -F file=@aspect-model-editor-v5.1.1-win.exe https://cbi.eclipse.org/authenticode/sign'
+          sh 'curl -o signed-mac.zip -F file=@aspect-model-editor-v5.1.1-mac.dmg https://cbi.eclipse.org/macos/codesign/sign'
+        }
+      }
+    }
+
+    stage('Upload WINDOWS File to GitHub Release') {
+      steps {
+        script {
+          def repo = "eclipse-esmf/esmf-aspect-model-editor"
+          def tagName = "v5.1.2"
+          def fileName = "signed-win.exe"
+
+          def releaseId = sh(script: """
+                        curl -s -L \\
+                             -H "Accept: application/vnd.github+json" \\
+                             -H "Authorization: Bearer \$GITHUB_TOKEN" \\
+                             https://api.github.com/repos/${repo}/releases/tags/${tagName} | jq -r '.id'
+                    """, returnStdout: true).trim()
+
+          def assetId = sh(script: """
+                        curl -s -H "Authorization: Bearer \$GITHUB_TOKEN" \\
+                        "https://api.github.com/repos/${repo}/releases/${releaseId}/assets" | \\
+                        jq '.[] | select(.name == "${fileName}").id'
+                    """, returnStdout: true).trim()
+
+          if (assetId) {
+            sh "curl -s -X DELETE -H \"Authorization: Bearer \$GITHUB_TOKEN\" \"https://api.github.com/repos/${repo}/releases/assets/${assetId}\""
+          }
+
+          sh """
+                    curl -L \
+                         -X POST \
+                         -H "Accept: application/vnd.github+json" \\
+                         -H "Authorization: Bearer \$GITHUB_TOKEN" \
+                         -H "Content-Type: application/octet-stream" \
+                         --data-binary @${fileName} \
+                         "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=${fileName}"
+                    """
+        }
+      }
+    }
+
+    stage('Upload MAC File to GitHub Release') {
+      steps {
+        script {
+          def repo = "eclipse-esmf/esmf-aspect-model-editor"
+          def tagName = "v5.1.2"
+          def fileName = "signed-mac.exe"
+
+          def releaseId = sh(script: """
+                              curl -s -L \\
+                                   -H "Accept: application/vnd.github+json" \\
+                                   -H "Authorization: Bearer \$GITHUB_TOKEN" \\
+                                   https://api.github.com/repos/${repo}/releases/tags/${tagName} | jq -r '.id'
+                          """, returnStdout: true).trim()
+
+          def assetId = sh(script: """
+                              curl -s -H "Authorization: Bearer \$GITHUB_TOKEN" \\
+                              "https://api.github.com/repos/${repo}/releases/${releaseId}/assets" | \\
+                              jq '.[] | select(.name == "${fileName}").id'
+                          """, returnStdout: true).trim()
+
+          if (assetId) {
+            sh "curl -s -X DELETE -H \"Authorization: Bearer \$GITHUB_TOKEN\" \"https://api.github.com/repos/${repo}/releases/assets/${assetId}\""
+          }
+
+          sh """
+                  curl -L \
+                       -X POST \
+                       -H "Accept: application/vnd.github+json" \\
+                       -H "Authorization: Bearer \$GITHUB_TOKEN" \
+                       -H "Content-Type: application/octet-stream" \
+                       --data-binary @${fileName} \
+                       "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=${fileName}"
+                          """
+        }
+      }
+    }
+  }
+}
