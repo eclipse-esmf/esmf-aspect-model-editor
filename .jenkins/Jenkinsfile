@@ -7,6 +7,10 @@ pipeline {
     GITHUB_TOKEN = credentials('github-bot-token')
   }
 
+  tools {
+    maven 'apache-maven-latest'
+  }
+
   stages {
     stage('Download') {
       steps {
