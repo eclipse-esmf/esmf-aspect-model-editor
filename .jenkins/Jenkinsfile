@@ -68,7 +68,7 @@ pipeline {
         script {
           def repo = "eclipse-esmf/esmf-aspect-model-editor"
           def tagName = "v5.1.2"
-          def fileName = "signed-mac.exe"
+          def fileName = "signed-mac.zip"
 
           def releaseId = sh(script: """
                               curl -s -L \\
