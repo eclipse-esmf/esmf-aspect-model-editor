@@ -37,11 +37,13 @@ pipeline {
 
           def response = sh(script: "curl -s -X POST -F file=@${dmg} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
 
-          def uuid = response.find(/"uuid"\s*:\s*"([^"]+)/)[1]
-          def status = response.find(/"status"\s*:\s*"([^"]+)/)[1]
+          def jsonSlurper = new groovy.json.JsonSlurper()
+          def object = jsonSlurper.parseText(response)
+          def uuid = object.uuid
+          def status = object.notarizationStatus.status
 
           while (status == 'IN_PROGRESS') {
-            sleep(time: 1, unit: 'MINUTES') // Warten für 1 Minute
+            sleep(time: 1, unit: 'MINUTES')
             response = sh(script: "curl -s https://cbi.eclipse.org/macos/xcrun/${uuid}/status", returnStdout: true).trim()
             status = response.find(/"status"\s*:\s*"([^"]+)/)[1]
           }
