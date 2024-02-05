@@ -37,8 +37,9 @@ pipeline {
           pushd $BUILD_DIR
 
           PRIMARY_BUNDLE_ID="app-bundle"
+          JSON_OPTIONS=$(printf 'options={"primaryBundleId": "%s", "staple": true};type=application/json' "${PRIMARY_BUNDLE_ID}")
 
-          RESPONSE=$(curl -s -X POST -F file=@${DMG} -F 'options={"primaryBundleId": "'${PRIMARY_BUNDLE_ID}'", "staple": true};type=application/json' https://cbi.eclipse.org/macos/xcrun/notarize)
+          RESPONSE=$(curl -s -X POST -F file=@${DMG} -F "$JSON_OPTIONS" https://cbi.eclipse.org/macos/xcrun/notarize)
 
           UUID=$(echo $RESPONSE | grep -Po '"uuid"\s*:\s*"\K[^"]+')
           STATUS=$(echo $RESPONSE | grep -Po '"status"\s*:\s*"\K[^"]+')
