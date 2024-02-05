@@ -1,11 +1,10 @@
 name: "Sign Executable"
 
 on:
-  workflow_dispatch:
-    inputs:
-      release_version:
-        description: 'Version number of the release'
-        required: true
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ '**' ]
 
 jobs:
   gh_tagged_release:
