@@ -21,7 +21,7 @@ pipeline {
       steps {
         script {
           sh 'curl -o signed-win.exe -F file=@aspect-model-editor-v5.1.1-win.exe https://cbi.eclipse.org/authenticode/sign'
-          sh 'curl -o signed-mac.zip -F file=@aspect-model-editor-v5.1.1-mac.zip -F entitlements=@.jenkins/signing/platform.entitlement https://cbi.eclipse.org/macos/codesign/sign'
+          sh 'curl -o signed-mac.zip -F file=@aspect-model-editor-v5.1.1-mac.zip -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign'
         }
       }
     }
