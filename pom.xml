@@ -76,7 +76,7 @@
 
   <profiles>
     <profile>
-      <id>MAC-SIGNING</id>
+      <id>mac-signing</id>
       <build>
         <plugins>
           <plugin>
