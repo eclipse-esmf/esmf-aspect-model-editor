@@ -12,7 +12,7 @@ pipeline {
       steps {
         script {
           sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.1/aspect-model-editor-v5.1.1-win.exe -o aspect-model-editor-v5.1.1-win.exe'
-          sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.2/aspect-model-editor-v1.0.0-mac.zip -o aspect-model-editor-v5.1.1-mac.dmg'
+          sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.2/aspect-model-editor-v1.0.0-mac.zip -o aspect-model-editor-v5.1.1-mac.zip'
         }
       }
     }
@@ -21,7 +21,7 @@ pipeline {
       steps {
         script {
           sh 'curl -o signed-win.exe -F file=@aspect-model-editor-v5.1.1-win.exe https://cbi.eclipse.org/authenticode/sign'
-          sh 'curl -o signed-mac.zip -F file=@aspect-model-editor-v5.1.1-mac.dmg https://cbi.eclipse.org/macos/codesign/sign'
+          sh 'curl -o signed-mac.zip -F file=@aspect-model-editor-v5.1.1-mac.zip https://cbi.eclipse.org/macos/codesign/sign'
         }
       }
     }
