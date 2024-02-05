@@ -22,7 +22,7 @@ pipeline {
       steps {
         script {
           sh 'curl -o signed-win.exe -F file=@aspect-model-editor-v5.1.1-win.exe https://cbi.eclipse.org/authenticode/sign'
-          sh 'curl -o signed-mac.zip -F file=@aspect-model-editor-v5.1.1-mac.zip -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign'
+          sh 'curl -o signed-mac.dmg -F file=@aspect-model-editor-v5.1.1-mac-test.dmg -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign'
         }
       }
     }
@@ -31,7 +31,7 @@ pipeline {
       steps {
         script {
           def buildDir = "${WORKSPACE}"
-          def dmg = "aspect-model-editor-v5.1.1-mac-test.dmg"
+          def dmg = "signed-mac.dmg"
 
           def jsonOptions = "options={\"primaryBundleId\": \"app-bundle\", \"staple\": true};type=application/json"
 
@@ -100,7 +100,7 @@ pipeline {
         script {
           def repo = "eclipse-esmf/esmf-aspect-model-editor"
           def tagName = "v5.1.2"
-          def fileName = "signed-mac.zip"
+          def fileName = "signed-mac.dmg"
 
           def releaseId = sh(script: """
                               curl -s -L \\
