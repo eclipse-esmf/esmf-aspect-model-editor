@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.eclipse.esmf</groupId>
+  <artifactId>aspect-model-editor</artifactId>
+  <name>ESMF Aspect Model Editor</name>
+  <version>DEV-SNAPSHOT</version>
+
+  <packaging>pom</packaging>
+
+  <description>ESMF Aspect Model Editor</description>
+  <licenses>
+    <license>
+      <name>MPL-2.0</name>
+      <url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Eclipse Semantic Modeling Framework Team</name>
+      <email>esmf-dev@eclipse.org</email>
+      <organization>Eclipse Semantic Modeling Framework</organization>
+      <organizationUrl>https://projects.eclipse.org/projects/dt.esmf</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <url>https://github.com/eclipse-esmf/esmf-aspect-model-editor</url>
+    <connection>scm:git:git://github.com:eclipse-esmf/esmf-aspect-model-editor.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:eclipse-esmf/esmf-aspect-model-editor.git
+    </developerConnection>
+  </scm>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.cbi.maven.plugins</groupId>
+          <artifactId>eclipse-dmg-packager</artifactId>
+          <version>1.4.3</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.cbi.maven.plugins</groupId>
+          <artifactId>eclipse-macsigner-plugin</artifactId>
+          <version>1.4.3</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.cbi.maven.plugins</groupId>
+        <artifactId>eclipse-dmg-packager</artifactId>
+        <version>1.4.3</version>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.cbi.maven.plugins</groupId>
+        <artifactId>eclipse-macsigner-plugin</artifactId>
+        <version>1.4.3</version>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>MAC-SIGNING</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <target>
+                    <echo message="Unzipping MAC Electron file" />
+                    <unzip src="${project.basedir}/aspect-model-editor-v5.1.1-mac.zip" dest="${project.basedir}/electron" />
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.eclipse.cbi.maven.plugins</groupId>
+            <artifactId>eclipse-macsigner-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign</id>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <signFiles>
+                    <signFile>${project.basedir}/electron/Aspect-Model-Editor.app
+                    </signFile>
+                  </signFiles>
+                  <timeoutMillis>300000</timeoutMillis>
+                  <continueOnFail>${macSigner.forceContinue}</continueOnFail>
+                  <entitlements>${project.basedir}/entitlements.plist</entitlements>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <phase>compile</phase>
+                <configuration>
+                  <target>
+                    <echo message="Creating TAR.GZ for MAC Electron file" />
+                    <tar destfile="${project.basedir}/aspect-model-editor-mac.tar" basedir="${project.basedir}/electron" />
+                    <gzip src="${project.basedir}/aspect-model-editor-mac.tar" destfile="${project.build.directory}/aspect-model-editor-mac.tar.gz" />
+                    <delete file="${project.basedir}/aspect-model-editor-mac.tar" />
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.eclipse.cbi.maven.plugins</groupId>
+            <artifactId>eclipse-dmg-packager</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>package-dmg</goal>
+                </goals>
+                <phase>integration-test</phase>
+                <configuration>
+                  <source>${project.build.directory}/aspect-model-editor-mac.tar.gz</source>
+                  <continueOnFail>true</continueOnFail>
+                  <timeoutMillis>600000</timeoutMillis>
+                  <continueOnFail>${macSigner.forceContinue}</continueOnFail>
+                  <sign>true</sign>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
