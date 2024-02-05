@@ -13,6 +13,7 @@ pipeline {
         script {
           sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.1/aspect-model-editor-v5.1.1-win.exe -o aspect-model-editor-v5.1.1-win.exe'
           sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.2/aspect-model-editor-v1.0.0-mac.zip -o aspect-model-editor-v5.1.1-mac.zip'
+          sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.1/aspect-model-editor-v5.1.1-mac.dmg -o aspect-model-editor-v5.1.1-mac-test.dmg'
         }
       }
     }
@@ -22,6 +23,41 @@ pipeline {
         script {
           sh 'curl -o signed-win.exe -F file=@aspect-model-editor-v5.1.1-win.exe https://cbi.eclipse.org/authenticode/sign'
           sh 'curl -o signed-mac.zip -F file=@aspect-model-editor-v5.1.1-mac.zip -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign'
+        }
+      }
+    }
+
+    stage('MacOS Notarization') {
+      steps {
+        script {
+          PRODUCT_ID="aspect-model-editor-v5.1.1"
+          BUILD_DIR="${WORKSPACE}"
+          DMG=${PRODUCT_ID}-mac-test.dmg
+
+          pushd $BUILD_DIR
+
+          PRIMARY_BUNDLE_ID="app-bundle"
+
+          RESPONSE=$(curl -s -X POST -F file=@${DMG} -F 'options={"primaryBundleId": "'${PRIMARY_BUNDLE_ID}'", "staple": true};type=application/json' https://cbi.eclipse.org/macos/xcrun/notarize)
+
+          UUID=$(echo $RESPONSE | grep -Po '"uuid"\s*:\s*"\K[^"]+')
+          STATUS=$(echo $RESPONSE | grep -Po '"status"\s*:\s*"\K[^"]+')
+
+          while [[ ${STATUS} == 'IN_PROGRESS' ]]; do
+            sleep 1m
+            RESPONSE=$(curl -s https://cbi.eclipse.org/macos/xcrun/${UUID}/status)
+            STATUS=$(echo $RESPONSE | grep -Po '"status"\s*:\s*"\K[^"]+')
+          done
+
+          if [[ ${STATUS} != 'COMPLETE' ]]; then
+            echo "Notarization failed: ${RESPONSE}"
+            exit 1
+          fi
+
+          rm "${DMG}"
+
+          curl -JO https://cbi.eclipse.org/macos/xcrun/${UUID}/download
+          popd
         }
       }
     }
