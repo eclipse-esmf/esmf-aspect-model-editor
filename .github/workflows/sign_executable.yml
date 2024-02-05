@@ -200,7 +200,6 @@ jobs:
 #          echo "$zipFileName erstellt."
 
       - name: Trigger Jenkins Job, for singing executable
-        if: matrix.os == 'macos-latest'
         run: |
           DATA='{"repository": {"url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor-editor", "html_url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor-editor", "owner": { "name": "ESMF"}}, "pusher": { "name": "GitHub Action", "email": "esmf-dev@eclipse.org"}}'
           SHA1="$(echo -n "${DATA}" | openssl dgst -sha1 -hmac "${WEBHOOK_SECRET}" | sed 's/SHA1(stdin)= //')"
