@@ -45,7 +45,9 @@ pipeline {
           while (status == 'IN_PROGRESS') {
             sleep(time: 1, unit: 'MINUTES')
             response = sh(script: "curl -s https://cbi.eclipse.org/macos/xcrun/${uuid}/status", returnStdout: true).trim()
-            status = response.find(/"status"\s*:\s*"([^"]+)/)[1]
+            def inProgressResponse = jsonSlurper.parseText(response)
+            uuid = inProgressResponse.uuid
+            status = inProgressResponse.notarizationStatus.status
           }
 
           if (status != 'COMPLETE') {
