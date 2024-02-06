@@ -79,7 +79,7 @@
                 </goals>
                 <phase>package</phase>
                 <configuration>
-                  <source>${project.basedir}/aspect-model-editor-v5.1.1-mac.zip</source>
+                  <source>${project.basedir}/signed-mac.zip</source>
                   <target>${project.basedir}/aspect-model-editor-v5.1.1-mac.dmg</target>
                   <continueOnFail>true</continueOnFail>
                   <timeoutMillis>600000</timeoutMillis>
