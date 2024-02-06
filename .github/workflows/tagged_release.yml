@@ -161,7 +161,7 @@ jobs:
 
             # Rename the extracted .exe file
             $oldName = "backend\aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe"
-            $newName = "backend\ame-backend.exe"
+            $newName = "ame-backend.exe"
             Rename-Item -Path $oldName -NewName $newName
           } else {
             Write-Error "No zip file found."
