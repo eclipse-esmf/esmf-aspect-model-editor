@@ -20,8 +20,10 @@ pipeline {
           def response = sh(script: "curl -s https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/tags", returnStdout: true).trim()
           def jsonSlurper = new groovy.json.JsonSlurper()
           def jsonArray = jsonSlurper.parseText(response)
-          env.latestTag = jsonArray[0].name.replaceFirst("^v", "")
+          def latestTagName = jsonArray[0].name.replaceFirst("^v", "")
 
+          env.latestTag = latestTagName.toString()
+          
           echo "Latest tag without 'v' is: ${env.latestTag}"
         }
       }
