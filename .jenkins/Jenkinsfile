@@ -17,11 +17,8 @@ pipeline {
     stage('Get Latest Tag') {
       steps {
         script {
-          env.latestTag = sh(script: """
-                      curl -s https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/tags | \
-                      jq -r '.[0].name' | \
-                      sed 's/^v//'
-                    """, returnStdout: true).trim()
+          def tagsJson = sh(script: "curl -s https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/tags", returnStdout: true).trim()
+          env.latestTag = sh(script: "echo '${tagsJson}' | jq -r '.[0].name' | sed 's/^v//'", returnStdout: true).trim()
 
           echo "Latest tag is: ${env.latestTag}"
         }
