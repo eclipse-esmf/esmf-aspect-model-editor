@@ -90,7 +90,7 @@
             <executions>
               <execution>
                 <id>unzip</id>
-                <phase>generate-resources</phase>
+                <phase>process-sources</phase>
                 <configuration>
                   <target>
                     <echo message="Unzipping MAC Electron file" />
@@ -103,7 +103,7 @@
               </execution>
               <execution>
                 <id>zip</id>
-                <phase>compile</phase>
+                <phase>package</phase>
                 <configuration>
                   <target>
                     <!-- Step to delete existing ZIP file if it exists -->
@@ -130,7 +130,7 @@
                 <goals>
                   <goal>sign</goal>
                 </goals>
-                <phase>package</phase>
+                <phase>prepare-package</phase>
                 <configuration>
                   <signFiles>
                     <signFile>${project.basedir}/electron/Aspect-Model-Editor.app</signFile>
@@ -150,9 +150,10 @@
                 <goals>
                   <goal>package-dmg</goal>
                 </goals>
-                <phase>integration-test</phase>
+                <phase>install</phase>
                 <configuration>
                   <source>${project.basedir}/aspect-model-editor-v5.1.1-mac.zip</source>
+                  <target>${project.basedir}</target>
                   <continueOnFail>true</continueOnFail>
                   <timeoutMillis>600000</timeoutMillis>
                   <continueOnFail>${macSigner.forceContinue}</continueOnFail>
