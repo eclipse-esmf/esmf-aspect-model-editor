@@ -23,7 +23,7 @@ pipeline {
                       sed 's/^v//'
                     """, returnStdout: true).trim()
 
-          echo "Latest tag is: ${envlatestTag}"
+          echo "Latest tag is: ${env.latestTag}"
         }
       }
     }
