@@ -18,6 +18,7 @@ const promises = require('./promisify');
 const portfinder = require('portfinder');
 const platformData = require('./os-checker');
 const {windowsManager} = require('./windows-manager');
+const projectVersion = require('../package.json').version;
 
 /**
  * @type string[]
@@ -62,7 +63,7 @@ function startService() {
       const rootPath = path.join(__dirname, '..', '..', '..', 'backend');
       if (processes.length === 0) {
         global.backendPort = port;
-        const process = spawn(path.join(rootPath, `ame-backend${platformData.extension}`), [`-Dserver.port=${port}`]);
+        const process = spawn(path.join(rootPath, `ame-backend-${projectVersion}-${platformData.extension}`), [`-Dserver.port=${port}`]);
 
         process.stdout.on('data', data => {
           if (data.includes(`Tomcat started on port(s): ${port}`)) {
