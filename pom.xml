@@ -152,7 +152,7 @@
                 </goals>
                 <phase>integration-test</phase>
                 <configuration>
-                  <source>${project.basedir}/aspect-model-editor-mac.zip</source>
+                  <source>${project.basedir}/aspect-model-editor-v5.1.1-mac.zip</source>
                   <continueOnFail>true</continueOnFail>
                   <timeoutMillis>600000</timeoutMillis>
                   <continueOnFail>${macSigner.forceContinue}</continueOnFail>
