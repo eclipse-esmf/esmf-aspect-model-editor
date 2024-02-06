@@ -13,16 +13,16 @@ pipeline {
     jdk 'openjdk-jdk17-latest'
   }
 
-  stage('Get Latest Tag') {
-    steps {
-      script {
-        def latestTag = sh(script: "curl -s https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/tags | jq -r '.[0].name'", returnStdout: true).trim()
-        echo "Latest tag is: ${latestTag}"
+  stages {
+    stage('Get Latest Tag') {
+      steps {
+        script {
+          latestTag = sh(script: "curl -s https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/tags | jq -r '.[0].name'", returnStdout: true).trim()
+          echo "Latest tag is: ${latestTag}"
+        }
       }
     }
-  }
-
-  stages {
+    
     stage('Download') {
       steps {
         script {
