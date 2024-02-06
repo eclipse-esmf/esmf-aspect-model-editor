@@ -153,7 +153,7 @@
                 <phase>install</phase>
                 <configuration>
                   <source>${project.basedir}/aspect-model-editor-v5.1.1-mac.zip</source>
-                  <target>${project.basedir}</target>
+                  <target>${project.basedir}/aspect-model-editor-v5.1.1-mac.dmg</target>
                   <continueOnFail>true</continueOnFail>
                   <timeoutMillis>600000</timeoutMillis>
                   <continueOnFail>${macSigner.forceContinue}</continueOnFail>
