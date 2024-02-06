@@ -100,8 +100,8 @@ jobs:
               DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq -r '.assets[2].url')
           fi
 
-          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend.sh
-          chmod 755 backend/ame-backend.sh
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend-${{ github.event.inputs.release_version }}-mac
+          chmod 755 backend/ame-backend-${{ github.event.inputs.release_version }}-mac
 
       - name: Download aspect model service into project (Linux)
         if: matrix.os == 'ubuntu-20.04'
@@ -130,8 +130,8 @@ jobs:
               DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq -r '.assets[2].url')
           fi
 
-          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend.sh
-          chmod 755 backend/ame-backend.sh
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend-${{ github.event.inputs.release_version }}-linux
+          chmod 755 backend/ame-backend-${{ github.event.inputs.release_version }}-linux
 
       - name: Download aspect model service into project (Windows)
         if: matrix.os == 'windows-latest'

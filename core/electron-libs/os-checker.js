@@ -13,7 +13,7 @@
 
 module.exports = {
   os: process.platform,
-  extension: process.platform === 'win32' ? '.exe' : '.sh',
+  extension: process.platform === 'win32' ? 'win.exe' : process.platform === 'darwin' ? 'mac' : 'linux',
   isWin: process.platform === 'win32',
   isLinux: process.platform === 'linux',
   isMac: process.platform === 'darwin',
