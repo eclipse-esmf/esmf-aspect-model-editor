@@ -17,12 +17,17 @@ pipeline {
     stage('Get Latest Tag') {
       steps {
         script {
-          latestTag = sh(script: "curl -s https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/tags | jq -r '.[0].name'", returnStdout: true).trim()
-          echo "Latest tag is: ${latestTag}"
+          env.latestTag = sh(script: """
+                      curl -s https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/tags | \
+                      jq -r '.[0].name' | \
+                      sed 's/^v//'
+                    """, returnStdout: true).trim()
+
+          echo "Latest tag is: ${envlatestTag}"
         }
       }
     }
-    
+
     stage('Download') {
       steps {
         script {

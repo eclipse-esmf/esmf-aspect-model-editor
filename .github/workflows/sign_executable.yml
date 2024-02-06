@@ -8,7 +8,7 @@ on:
   pull_request:
     branches: [ '**' ]
   workflow_run:
-    workflows: [ "Create Tagged Release" ]
+    workflows: ["Create Tagged Release"]
     types:
       - completed
 
@@ -18,22 +18,9 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Get latest tag
-        run: |
-          git fetch --tags
-          LATEST_TAG=5.1.2
-          echo "Latest tag is $LATEST_TAG"
-          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
-
       - name: Trigger Jenkins Job, for signing executable
         run: |
-          echo "Latest tag is: ${{ env.LATEST_TAG }}"
-          DATA="{\"repository\": {\"url\": \"https://github.com/eclipse-esmf/esmf-aspect-model-editor\", \"html_url\": \"https://github.com/eclipse-esmf/esmf-aspect-model-editor\", \"owner\": { \"name\": \"ESMF\"}}, \"pusher\": { \"name\": \"GitHub Action\", \"email\": \"esmf-dev@eclipse.org\", \"version\": \"${{ env.LATEST_TAG }}\"}}"
+          DATA='{"repository": {"url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor", "html_url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor", "owner": { "name": "ESMF"}}, "pusher": { "name": "GitHub Action", "email": "esmf-dev@eclipse.org"}}'
           SHA1="$(echo -n "${DATA}" | openssl dgst -sha1 -hmac "${WEBHOOK_SECRET}" | sed 's/SHA1(stdin)= //')"
 
           curl -X POST https://ci.eclipse.org/esmf/github-webhook/ -H "Content-Type: application/json" -H "X-GitHub-Event: push" -H "X-Hub-Signature: sha1=${SHA1}" -d "${DATA}"
