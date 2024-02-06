@@ -102,14 +102,17 @@
                 </goals>
               </execution>
               <execution>
-                <id>tar-gz</id>
+                <id>zip</id>
                 <phase>compile</phase>
                 <configuration>
                   <target>
-                    <echo message="Creating TAR.GZ for MAC Electron file" />
-                    <tar destfile="${project.basedir}/aspect-model-editor-mac.tar" basedir="${project.basedir}/electron" />
-                    <gzip src="${project.basedir}/aspect-model-editor-mac.tar" destfile="${project.build.directory}/aspect-model-editor-mac.tar.gz" />
-                    <delete file="${project.basedir}/aspect-model-editor-mac.tar" />
+                    <!-- Step to delete existing ZIP file if it exists -->
+                    <echo message="Checking if ZIP archive exists and deleting if present..."/>
+                    <delete file="${project.basedir}/aspect-model-editor-v5.1.1-mac.zip" failonerror="false"/>
+
+                    <!-- Step to create ZIP archive -->
+                    <echo message="Creating ZIP archive of electron directory..."/>
+                    <zip destfile="${project.basedir}/aspect-model-editor-v5.1.1-mac.zip" basedir="${project.basedir}/electron" />
                   </target>
                 </configuration>
                 <goals>
@@ -149,7 +152,7 @@
                 </goals>
                 <phase>integration-test</phase>
                 <configuration>
-                  <source>${project.build.directory}/aspect-model-editor-mac.tar.gz</source>
+                  <source>${project.basedir}/aspect-model-editor-mac.zip</source>
                   <continueOnFail>true</continueOnFail>
                   <timeoutMillis>600000</timeoutMillis>
                   <continueOnFail>${macSigner.forceContinue}</continueOnFail>
