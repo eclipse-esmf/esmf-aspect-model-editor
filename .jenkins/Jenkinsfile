@@ -37,7 +37,7 @@ pipeline {
       steps {
         script {
           def buildDir = "${WORKSPACE}"
-          def dmg = "aspect-model-editor-mac.dmg"
+          def dmg = "aspect-model-editor-v5.1.1-mac.dmg"
 
           def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf\", \"staple\": true};type=application/json"
 
