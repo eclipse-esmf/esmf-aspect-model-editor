@@ -5,6 +5,7 @@ pipeline {
 
   environment {
     GITHUB_TOKEN = credentials('github-bot-token')
+    VERSION = '1.0.0'
   }
 
   tools {
@@ -17,7 +18,7 @@ pipeline {
       steps {
         script {
           sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.1/aspect-model-editor-v5.1.1-win.exe -o aspect-model-editor-v5.1.1-win.exe'
-          sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.2/aspect-model-editor-v1.0.0-mac.zip -o aspect-model-editor-v5.1.1-mac.zip'
+          // sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.2/aspect-model-editor-v1.0.0-mac.zip -o aspect-model-editor-v5.1.1-mac.zip'
           // sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.1/aspect-model-editor-v5.1.1-mac.dmg -o aspect-model-editor-v5.1.1-mac-test.dmg'
         }
       }
@@ -27,53 +28,53 @@ pipeline {
       steps {
         script {
           sh 'curl -o signed-win.exe -F file=@aspect-model-editor-v5.1.1-win.exe https://cbi.eclipse.org/authenticode/sign'
-          sh 'curl -o signed-mac.zip -F file=@aspect-model-editor-v5.1.1-mac.zip -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign'
+          //sh 'curl -o signed-mac.zip -F file=@aspect-model-editor-v5.1.1-mac.zip -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign'
         }
       }
     }
 
-    stage('Create DMG for MacOs') {
-      steps {
-        script {
-          sh "mvn clean package -P mac-convert-to-dmg"
-        }
-      }
-    }
+//    stage('Create DMG for MacOs') {
+//      steps {
+//        script {
+//          sh "mvn clean package -P mac-convert-to-dmg"
+//        }
+//      }
+//    }
 
-    stage('MacOS Notarization') {
-      steps {
-        script {
-          def buildDir = "${WORKSPACE}"
-          def dmg = "aspect-model-editor-v5.1.1-mac.dmg"
-
-          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf\", \"staple\": true};type=application/json"
-
-          def response = sh(script: "curl -s -X POST -F file=@${dmg} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
-
-          def jsonSlurper = new groovy.json.JsonSlurper()
-          def object = jsonSlurper.parseText(response)
-          def uuid = object.uuid
-          def status = object.notarizationStatus.status
-
-          while (status == 'IN_PROGRESS') {
-            sleep(time: 1, unit: 'MINUTES')
-            response = sh(script: "curl -s https://cbi.eclipse.org/macos/xcrun/${uuid}/status", returnStdout: true).trim()
-            def inProgressResponse = jsonSlurper.parseText(response)
-            uuid = inProgressResponse.uuid
-            status = inProgressResponse.notarizationStatus.status
-          }
-
-          if (status != 'COMPLETE') {
-            echo "Notarization failed: ${response}"
-            error("Notarization failed.")
-          }
-
-          sh "rm '${dmg}'"
-
-          sh "curl -JO https://cbi.eclipse.org/macos/xcrun/${uuid}/download"
-        }
-      }
-    }
+//    stage('MacOS Notarization') {
+//      steps {
+//        script {
+//          def buildDir = "${WORKSPACE}"
+//          def dmg = "aspect-model-editor-v5.1.1-mac.dmg"
+//
+//          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf\", \"staple\": true};type=application/json"
+//
+//          def response = sh(script: "curl -s -X POST -F file=@${dmg} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
+//
+//          def jsonSlurper = new groovy.json.JsonSlurper()
+//          def object = jsonSlurper.parseText(response)
+//          def uuid = object.uuid
+//          def status = object.notarizationStatus.status
+//
+//          while (status == 'IN_PROGRESS') {
+//            sleep(time: 1, unit: 'MINUTES')
+//            response = sh(script: "curl -s https://cbi.eclipse.org/macos/xcrun/${uuid}/status", returnStdout: true).trim()
+//            def inProgressResponse = jsonSlurper.parseText(response)
+//            uuid = inProgressResponse.uuid
+//            status = inProgressResponse.notarizationStatus.status
+//          }
+//
+//          if (status != 'COMPLETE') {
+//            echo "Notarization failed: ${response}"
+//            error("Notarization failed.")
+//          }
+//
+//          sh "rm '${dmg}'"
+//
+//          sh "curl -JO https://cbi.eclipse.org/macos/xcrun/${uuid}/download"
+//        }
+//      }
+//    }
 
     stage('Upload WINDOWS File to GitHub Release') {
       steps {
@@ -112,41 +113,41 @@ pipeline {
       }
     }
 
-    stage('Upload MAC File to GitHub Release') {
-      steps {
-        script {
-          def repo = "eclipse-esmf/esmf-aspect-model-editor"
-          def tagName = "v5.1.2"
-          def fileName = "aspect-model-editor-mac.dmg"
-
-          def releaseId = sh(script: """
-                              curl -s -L \\
-                                   -H "Accept: application/vnd.github+json" \\
-                                   -H "Authorization: Bearer \$GITHUB_TOKEN" \\
-                                   https://api.github.com/repos/${repo}/releases/tags/${tagName} | jq -r '.id'
-                          """, returnStdout: true).trim()
-
-          def assetId = sh(script: """
-                              curl -s -H "Authorization: Bearer \$GITHUB_TOKEN" \\
-                              "https://api.github.com/repos/${repo}/releases/${releaseId}/assets" | \\
-                              jq '.[] | select(.name == "${fileName}").id'
-                          """, returnStdout: true).trim()
-
-          if (assetId) {
-            sh "curl -s -X DELETE -H \"Authorization: Bearer \$GITHUB_TOKEN\" \"https://api.github.com/repos/${repo}/releases/assets/${assetId}\""
-          }
-
-          sh """
-                  curl -L \
-                       -X POST \
-                       -H "Accept: application/vnd.github+json" \\
-                       -H "Authorization: Bearer \$GITHUB_TOKEN" \
-                       -H "Content-Type: application/octet-stream" \
-                       --data-binary @${fileName} \
-                       "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=${fileName}"
-                          """
-        }
-      }
-    }
+//    stage('Upload MAC File to GitHub Release') {
+//      steps {
+//        script {
+//          def repo = "eclipse-esmf/esmf-aspect-model-editor"
+//          def tagName = "v5.1.2"
+//          def fileName = "aspect-model-editor-mac.dmg"
+//
+//          def releaseId = sh(script: """
+//                              curl -s -L \\
+//                                   -H "Accept: application/vnd.github+json" \\
+//                                   -H "Authorization: Bearer \$GITHUB_TOKEN" \\
+//                                   https://api.github.com/repos/${repo}/releases/tags/${tagName} | jq -r '.id'
+//                          """, returnStdout: true).trim()
+//
+//          def assetId = sh(script: """
+//                              curl -s -H "Authorization: Bearer \$GITHUB_TOKEN" \\
+//                              "https://api.github.com/repos/${repo}/releases/${releaseId}/assets" | \\
+//                              jq '.[] | select(.name == "${fileName}").id'
+//                          """, returnStdout: true).trim()
+//
+//          if (assetId) {
+//            sh "curl -s -X DELETE -H \"Authorization: Bearer \$GITHUB_TOKEN\" \"https://api.github.com/repos/${repo}/releases/assets/${assetId}\""
+//          }
+//
+//          sh """
+//                  curl -L \
+//                       -X POST \
+//                       -H "Accept: application/vnd.github+json" \\
+//                       -H "Authorization: Bearer \$GITHUB_TOKEN" \
+//                       -H "Content-Type: application/octet-stream" \
+//                       --data-binary @${fileName} \
+//                       "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=${fileName}"
+//                          """
+//        }
+//      }
+//    }
   }
 }
