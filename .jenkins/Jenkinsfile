@@ -18,8 +18,7 @@ pipeline {
       steps {
         script {
           def response = sh(script: "curl -s -H 'Authorization: Bearer \$GITHUB_TOKEN' 'https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/tags'", returnStdout: true).trim()
-          def jsonSlurper = new groovy.json.JsonSlurper()
-          def jsonArray = jsonSlurper.parseText(response)
+          def jsonArray = new groovy.json.JsonSlurper().parseText(response)
           def latestTagName = jsonArray[0].name.replaceFirst("^v", "")
 
           env.latestTag = latestTagName.toString()
@@ -32,7 +31,7 @@ pipeline {
     stage('Download') {
       steps {
         script {
-          sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.1/aspect-model-editor-v5.1.1-win.exe -o aspect-model-editor-v5.1.1-win.exe'
+          sh "curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v${env.latestTag}/aspect-model-editor-v${env.latestTag}-win.exe -o aspect-model-editor-v${env.latestTag}-win.exe"
           // sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.2/aspect-model-editor-v1.0.0-mac.zip -o aspect-model-editor-v5.1.1-mac.zip'
           // sh 'curl -L https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases/download/v5.1.1/aspect-model-editor-v5.1.1-mac.dmg -o aspect-model-editor-v5.1.1-mac-test.dmg'
         }
@@ -42,7 +41,7 @@ pipeline {
     stage('Sign Applications') {
       steps {
         script {
-          sh 'curl -o signed-win.exe -F file=@aspect-model-editor-v5.1.1-win.exe https://cbi.eclipse.org/authenticode/sign'
+          sh "curl -o signed-win.exe -F file=@aspect-model-editor-v${env.latestTag}-win.exe https://cbi.eclipse.org/authenticode/sign"
           //sh 'curl -o signed-mac.zip -F file=@aspect-model-editor-v5.1.1-mac.zip -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign'
         }
       }
