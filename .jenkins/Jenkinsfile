@@ -17,7 +17,11 @@ pipeline {
     stage('Get Latest Tag') {
       steps {
         script {
-          def response = sh(script: "curl -s -H 'Authorization: Bearer \$GITHUB_TOKEN' 'https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/tags'", returnStdout: true).trim()
+          def response = sh(script: """
+                        curl -s -H "Authorization: Bearer \$GITHUB_TOKEN" \\
+                        "https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/tags"
+                    """, returnStdout: true).trim()
+
           def jsonSlurper = new groovy.json.JsonSlurper()
           def jsonArray = jsonSlurper.parseText(response)
           def latestTagName = jsonArray[0].name.replaceFirst("^v", "")
