@@ -57,6 +57,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.electronTunnelService.subscribeMessages();
     this.titleService.setTitle(this.title);
+    console.log('smth');
     this.setContextMenu();
     this.themeService.setCssVars(this.configurationService.getSettings()?.useSaturatedColors ? 'dark' : 'light');
 
