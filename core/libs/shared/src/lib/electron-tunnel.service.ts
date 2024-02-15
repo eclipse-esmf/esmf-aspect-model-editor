@@ -34,7 +34,7 @@ export class ElectronTunnelService {
   private lockedFiles$ = new BehaviorSubject<LockUnlockPayload[]>([]);
 
   public ipcRenderer: IpcRenderer = window.require?.('electron').ipcRenderer;
-  public startUpData$ = new BehaviorSubject<{ isFirstWindow: boolean; model: string }>(null);
+  public startUpData$ = new BehaviorSubject<{isFirstWindow: boolean; model: string}>(null);
 
   constructor(
     private notificationsService: NotificationsService,
@@ -46,8 +46,7 @@ export class ElectronTunnelService {
     private sidebarService: SidebarService,
     private modelApiService: ModelApiService,
     private ngZone: NgZone
-  ) {
-  }
+  ) {}
 
   public subscribeMessages() {
     if (!this.ipcRenderer) {
@@ -159,14 +158,14 @@ export class ElectronTunnelService {
           switchMap(close =>
             close
               ? this.requestWindowData().pipe(
-                switchMap(({options}) =>
-                  this.electronSignalsService.call('unlockFile', {
-                    namespace: options?.namespace,
-                    file: options?.file,
-                  })
-                ),
-                map(() => close)
-              )
+                  switchMap(({options}) =>
+                    this.electronSignalsService.call('unlockFile', {
+                      namespace: options?.namespace,
+                      file: options?.file,
+                    })
+                  ),
+                  map(() => close)
+                )
               : of(close)
           ),
           catchError(() => of(true))

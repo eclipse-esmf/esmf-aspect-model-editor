@@ -230,7 +230,7 @@ class WindowsManager {
       console.log('RECEIVED REQUEST WINDOW DATA');
       const windowId = event.sender.id;
       const {id, options} = this.activeWindows.find(window => window.id === windowId);
-      const data = {'options': options};
+      const data = {options: options};
       event.sender.send(RESPONSE_WINDOW_DATA, {id, data});
     };
 
