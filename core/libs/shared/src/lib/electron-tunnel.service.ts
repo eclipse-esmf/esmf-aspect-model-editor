@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, NgZone, inject} from '@angular/core';
+import {inject, Injectable, NgZone} from '@angular/core';
 import {IpcRenderer} from 'electron';
-import {BehaviorSubject, Observable, catchError, map, of, switchMap, take, tap} from 'rxjs';
+import {BehaviorSubject, catchError, map, Observable, of, switchMap, take, tap} from 'rxjs';
 import {ElectronSignals, LockUnlockPayload, StartupData, StartupPayload} from './model';
 import {NotificationsService} from './notifications.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
@@ -34,7 +34,7 @@ export class ElectronTunnelService {
   private lockedFiles$ = new BehaviorSubject<LockUnlockPayload[]>([]);
 
   public ipcRenderer: IpcRenderer = window.require?.('electron').ipcRenderer;
-  public startUpData$ = new BehaviorSubject<{isFirstWindow: boolean; model: string}>(null);
+  public startUpData$ = new BehaviorSubject<{ isFirstWindow: boolean; model: string }>(null);
 
   constructor(
     private notificationsService: NotificationsService,
@@ -46,7 +46,8 @@ export class ElectronTunnelService {
     private sidebarService: SidebarService,
     private modelApiService: ModelApiService,
     private ngZone: NgZone
-  ) {}
+  ) {
+  }
 
   public subscribeMessages() {
     if (!this.ipcRenderer) {
@@ -158,14 +159,14 @@ export class ElectronTunnelService {
           switchMap(close =>
             close
               ? this.requestWindowData().pipe(
-                  switchMap(({options}) =>
-                    this.electronSignalsService.call('unlockFile', {
-                      namespace: options?.namespace,
-                      file: options?.file,
-                    })
-                  ),
-                  map(() => close)
-                )
+                switchMap(({options}) =>
+                  this.electronSignalsService.call('unlockFile', {
+                    namespace: options?.namespace,
+                    file: options?.file,
+                  })
+                ),
+                map(() => close)
+              )
               : of(close)
           ),
           catchError(() => of(true))

@@ -230,7 +230,8 @@ class WindowsManager {
       console.log('RECEIVED REQUEST WINDOW DATA');
       const windowId = event.sender.id;
       const {id, options} = this.activeWindows.find(window => window.id === windowId);
-      event.sender.send(RESPONSE_WINDOW_DATA, {id, options});
+      const data = {'options': options};
+      event.sender.send(RESPONSE_WINDOW_DATA, {id, data});
     };
 
     ipcMain.on(REQUEST_WINDOW_DATA, executeFn);
