@@ -108,10 +108,13 @@ describe('Export namespace', () => {
       .then(() => cy.startModelling())
       .then(() => {
         cy.get(SELECTOR_tbSaveButton).click();
-        cy.get(SELECTOR_tbSaveMenuExportNamespaceButton).click();
-        cy.get(SELECTOR_enNamespaceList).should('have.length', 2);
-        cy.get(SELECTOR_enNamespaceList).contains(namespacesConfig.aspectDefault.name);
-        cy.get(SELECTOR_enNamespaceList).contains(namespacesConfig.movement.name);
+        cy.get(SELECTOR_tbSaveMenuExportNamespaceButton)
+          .click()
+          .then(() => {
+            cy.get(SELECTOR_enNamespaceList).should('have.length', 2);
+            cy.get(SELECTOR_enNamespaceList).contains(namespacesConfig.aspectDefault.name);
+            cy.get(SELECTOR_enNamespaceList).contains(namespacesConfig.movement.name);
+          });
       });
   });
 });
