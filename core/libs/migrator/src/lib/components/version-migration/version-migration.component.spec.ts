@@ -13,7 +13,7 @@
 import {MigratorApiService, ModelApiService} from '@ame/api';
 import {EditorService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
-import {APP_CONFIG, ElectronTunnelService} from '@ame/shared';
+import {APP_CONFIG} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
@@ -21,10 +21,9 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {RouterTestingModule} from '@angular/router/testing';
 import {provideMockObject} from 'jest-helpers';
 import {of} from 'rxjs';
+import {ElectronTunnelService} from '@ame/shared';
+
 import {VersionMigrationComponent} from './version-migration.component';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {HttpClient} from '@angular/common/http';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 describe('VersionMigrationComponent', () => {
   let component: VersionMigrationComponent;
@@ -33,17 +32,7 @@ describe('VersionMigrationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatDialogModule,
-        MatProgressSpinnerModule,
-        MatIconModule,
-        TranslateModule.forRoot({
-          provide: TranslateLoader,
-          useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
-          deps: [HttpClient],
-        }),
-      ],
+      imports: [RouterTestingModule, MatDialogModule, MatProgressSpinnerModule, MatIconModule],
       declarations: [VersionMigrationComponent],
       providers: [
         {

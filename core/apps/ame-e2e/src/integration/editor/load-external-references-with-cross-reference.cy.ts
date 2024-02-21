@@ -43,7 +43,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/same-namespace/external-entity-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -54,7 +54,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/same-namespace/external-characteristic-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -65,7 +65,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/same-namespace/external-property-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -76,7 +76,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/same-namespace/external-operation-reference.txt',
-      }
+      },
     );
 
     // Different Namespace
@@ -88,7 +88,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/different-namespace/external-entity-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -99,7 +99,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/different-namespace/external-characteristic-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -110,7 +110,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/different-namespace/external-property-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -121,7 +121,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/different-namespace/external-operation-reference.txt',
-      }
+      },
     );
 
     cy.visitDefault();
@@ -200,7 +200,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/mixing-namespace/external-entity-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -211,7 +211,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/mixing-namespace/external-property-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -222,7 +222,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/mixing-namespace/external-operation-reference.txt',
-      }
+      },
     );
 
     // Different Namespace
@@ -234,7 +234,7 @@ describe('Test load external reference with cross references', () => {
       },
       {
         fixture: '/external-reference/cross-references/mixing-namespace/external-characteristic-reference.txt',
-      }
+      },
     );
 
     cy.visitDefault();

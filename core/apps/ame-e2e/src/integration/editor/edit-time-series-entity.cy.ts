@@ -38,8 +38,8 @@ describe('Time Series Entity', () => {
           .getCellLabel('Entity1', 'description')
           .should(
             'eq',
-            'Inherited\ndescription = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en'
-          )
+            'Inherited\ndescription = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en',
+          ),
       )
       .then(() => cy.clickShape('TimeSeriesEntity'))
       .then(() => cy.getCellLabel('TimeSeriesEntity', 'preferredName').should('eq', 'preferredName = Time Series Entity @en'))
@@ -48,8 +48,8 @@ describe('Time Series Entity', () => {
           .getCellLabel('TimeSeriesEntity', 'description')
           .should(
             'eq',
-            'description = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en'
-          )
+            'description = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en',
+          ),
       )
       .then(() => cy.clickShape('[value]'))
       .then(() => cy.getCellLabel('[value]', 'extends').should('eq', 'extends = value'))
@@ -57,19 +57,19 @@ describe('Time Series Entity', () => {
       .then(() =>
         cy
           .getCellLabel('[value]', 'description')
-          .should('eq', 'Inherited\ndescription = The value that was recorded and is part of a time series. @en')
+          .should('eq', 'Inherited\ndescription = The value that was recorded and is part of a time series. @en'),
       )
       .then(() => cy.clickShape('value'))
       .then(() => cy.getCellLabel('value', 'preferredName').should('eq', 'preferredName = Value @en'))
       .then(() =>
-        cy.getCellLabel('value', 'description').should('eq', 'description = The value that was recorded and is part of a time series. @en')
+        cy.getCellLabel('value', 'description').should('eq', 'description = The value that was recorded and is part of a time series. @en'),
       )
       .then(() => cy.clickShape('timestamp'))
       .then(() => cy.getCellLabel('timestamp', 'preferredName').should('eq', 'preferredName = Timestamp @en'))
       .then(() =>
         cy
           .getCellLabel('timestamp', 'description')
-          .should('eq', 'description = The specific point in time when the corresponding value was recorded. @en')
+          .should('eq', 'description = The specific point in time when the corresponding value was recorded. @en'),
       )
       .then(() => cy.clickShape('Timestamp'))
       .then(() => cy.getCellLabel('Timestamp', 'preferredName').should('eq', 'preferredName = Timestamp @en'))
@@ -77,7 +77,7 @@ describe('Time Series Entity', () => {
       .then(() =>
         cy
           .getCellLabel('Timestamp', 'description')
-          .should('eq', 'description = Describes a Property which contains the date and time with an optional timezone. @en')
+          .should('eq', 'description = Describes a Property which contains the date and time with an optional timezone. @en'),
       );
   });
 
@@ -148,8 +148,8 @@ describe('Time Series Entity', () => {
           .getCellLabel('Entity1', 'description')
           .should(
             'eq',
-            'Inherited\ndescription = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en'
-          )
+            'Inherited\ndescription = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en',
+          ),
       )
 
       .then(() => cy.clickShape('TimeSeriesEntity'))
@@ -159,8 +159,8 @@ describe('Time Series Entity', () => {
           .getCellLabel('TimeSeriesEntity', 'description')
           .should(
             'eq',
-            'description = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en'
-          )
+            'description = An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded. @en',
+          ),
       )
 
       .then(() => cy.clickShape('[value]'))
@@ -169,13 +169,13 @@ describe('Time Series Entity', () => {
       .then(() =>
         cy
           .getCellLabel('[value]', 'description')
-          .should('eq', 'Inherited\ndescription = The value that was recorded and is part of a time series. @en')
+          .should('eq', 'Inherited\ndescription = The value that was recorded and is part of a time series. @en'),
       )
 
       .then(() => cy.clickShape('value'))
       .then(() => cy.getCellLabel('value', 'preferredName').should('eq', 'preferredName = Value @en'))
       .then(() =>
-        cy.getCellLabel('value', 'description').should('eq', 'description = The value that was recorded and is part of a time series. @en')
+        cy.getCellLabel('value', 'description').should('eq', 'description = The value that was recorded and is part of a time series. @en'),
       )
 
       .then(() => cy.clickShape('timestamp'))
@@ -183,7 +183,7 @@ describe('Time Series Entity', () => {
       .then(() =>
         cy
           .getCellLabel('timestamp', 'description')
-          .should('eq', 'description = The specific point in time when the corresponding value was recorded. @en')
+          .should('eq', 'description = The specific point in time when the corresponding value was recorded. @en'),
       )
 
       .then(() => cy.clickShape('Timestamp'))
@@ -192,7 +192,7 @@ describe('Time Series Entity', () => {
       .then(() =>
         cy
           .getCellLabel('Timestamp', 'description')
-          .should('eq', 'description = Describes a Property which contains the date and time with an optional timezone. @en')
+          .should('eq', 'description = Describes a Property which contains the date and time with an optional timezone. @en'),
       );
   });
 });

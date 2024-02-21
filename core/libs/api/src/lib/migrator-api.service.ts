@@ -48,7 +48,7 @@ export class MigratorApiService {
     private http: HttpClient,
     private browserService: BrowserService,
     private modelApiService: ModelApiService,
-    private editorService: EditorService
+    private editorService: EditorService,
   ) {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('e2e=true')) {
       const remote = window.require('@electron/remote');
@@ -61,8 +61,8 @@ export class MigratorApiService {
       .loadExternalModels()
       .pipe(
         map((rdfModels: RdfModel[]) =>
-          rdfModels.some(rdfModel => ExporterHelper.isVersionOutdated(rdfModel?.samm.version, this.config.currentSammVersion))
-        )
+          rdfModels.some(rdfModel => ExporterHelper.isVersionOutdated(rdfModel?.samm.version, this.config.currentSammVersion)),
+        ),
       );
   }
 
@@ -77,7 +77,7 @@ export class MigratorApiService {
   public rewriteFile(payload: any) {
     return this.modelApiService.formatModel(payload.serializedUpdatedModel).pipe(
       switchMap(formattedModel => this.modelApiService.saveModel(formattedModel, payload.rdfModel.absoluteAspectModelFileName)),
-      switchMap(() => this.modelApiService.deleteFile(payload.oldNamespaceFile))
+      switchMap(() => this.modelApiService.deleteFile(payload.oldNamespaceFile)),
     );
   }
 }

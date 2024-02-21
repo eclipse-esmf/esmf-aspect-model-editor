@@ -45,7 +45,11 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
     return this.metaModelElement instanceof DefaultAbstractEntity;
   }
 
-  constructor(private notificationsService: NotificationsService, public rdfService: RdfService) {
+  constructor(
+    private notificationsService: NotificationsService,
+    public rdfService: RdfService,
+    private validators: EditorDialogValidators,
+  ) {
     super();
     this.fieldName = 'extends';
   }
@@ -93,21 +97,11 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
         },
         {
           validators: [
-            EditorDialogValidators.duplicateNameWithDifferentType(
-              this.namespacesCacheService,
-              this.metaModelElement,
-              this.rdfService,
-              DefaultAbstractEntity
-            ),
-            EditorDialogValidators.duplicateNameWithDifferentType(
-              this.namespacesCacheService,
-              this.metaModelElement,
-              this.rdfService,
-              DefaultEntity
-            ),
+            this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultAbstractEntity),
+            this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity),
           ],
-        }
-      )
+        },
+      ),
     );
 
     this.parentForm.setControl(
@@ -115,7 +109,7 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
       new FormControl({
         value: extendsElement,
         disabled: this.metaModelElement?.isExternalReference(),
-      })
+      }),
     );
 
     this.extendsValueControl = this.parentForm.get('extendsValue') as FormControl;

@@ -20,7 +20,10 @@ import {DialogOptions} from './confirm-dialog.service';
   styles: ['.dialog-title { font-size: 24px !important; }'],
 })
 export class ConfirmDialogComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogOptions, private dialogRef: MatDialogRef<ConfirmDialogComponent>) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: DialogOptions,
+    private dialogRef: MatDialogRef<ConfirmDialogComponent>,
+  ) {}
 
   closeAndGiveResult(result: boolean) {
     this.dialogRef.close(result);

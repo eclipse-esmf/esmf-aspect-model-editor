@@ -26,7 +26,7 @@ export class PropertyInheritanceConnector extends InheritanceConnector {
     protected mxGraphAttributeService: MxGraphAttributeService,
     protected sammLangService: SammLanguageSettingsService,
     protected notificationsService: NotificationsService,
-    protected translate: LanguageTranslationService
+    protected translate: LanguageTranslationService,
   ) {
     super(mxGraphService, mxGraphAttributeService, sammLangService, notificationsService, translate);
   }

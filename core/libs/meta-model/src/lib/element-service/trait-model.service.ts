@@ -38,7 +38,7 @@ export class TraitModelService extends BaseModelService {
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphService: MxGraphService,
     private shapeConnectorService: ShapeConnectorService,
-    private traitRendererService: TraitRenderService
+    private traitRendererService: TraitRenderService,
   ) {
     super();
   }

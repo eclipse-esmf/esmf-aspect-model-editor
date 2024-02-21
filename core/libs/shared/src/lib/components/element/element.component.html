@@ -1,0 +1,31 @@
+<!--
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+<span class="element-icon" [class.rounded]="type === 'trait'" [ngClass]="className">{{ elements[type]?.symbol }}</span>
+<div *ngIf="size !== 'small' && name" class="element-info">
+  <span
+    *ngIf="name"
+    [matTooltip]="name"
+    [matTooltipDisabled]="name.length < disabledTooltipNameLength"
+    matTooltipPosition="right"
+    class="element-name"
+    >{{ name }}</span
+  >
+  <span
+    *ngIf="description"
+    [matTooltip]="description"
+    [matTooltipDisabled]="description.length < disabledTooltipDescriptionLength"
+    matTooltipPosition="right"
+    class="element-description"
+    >{{ description }}</span
+  >
+</div>

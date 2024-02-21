@@ -36,7 +36,10 @@ export class GenerateOpenApiComponent implements OnInit {
   public form: FormGroup;
   public languages: locale.ILocale[];
 
-  constructor(private dialogRef: MatDialogRef<GenerateOpenApiComponent>, private languageService: SammLanguageSettingsService) {}
+  constructor(
+    private dialogRef: MatDialogRef<GenerateOpenApiComponent>,
+    private languageService: SammLanguageSettingsService,
+  ) {}
 
   ngOnInit() {
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));

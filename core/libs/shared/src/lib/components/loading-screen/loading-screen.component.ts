@@ -21,7 +21,10 @@ import {LoadingScreenOptions} from './loading-screen.service';
   styleUrls: ['./loading-screen.component.scss'],
 })
 export class LoadingScreenComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: LoadingScreenOptions, private dialog: MatDialogRef<LoadingScreenComponent>) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: LoadingScreenOptions,
+    private dialog: MatDialogRef<LoadingScreenComponent>,
+  ) {}
 
   close() {
     if (typeof this.data.closeButtonAction === 'function') {

@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
     private fileHandlingService: FileHandlingService,
     private translate: LanguageTranslationService,
     private searchesStateService: SearchesStateService,
-    private router: Router
+    private router: Router,
   ) {
     this.domainModelToRdf.listenForStoreUpdates();
   }

@@ -16,7 +16,7 @@ import {forkJoin, map, Observable, of, Subject, switchMap, throwError} from 'rxj
 import {Inject, Injectable} from '@angular/core';
 import {environment} from 'environments/environment';
 import {ModelApiService} from '@ame/api';
-import {APP_CONFIG, AppConfig, DataTypeService, FileContentModel, LogService, SaveValidateErrorsCodes} from '@ame/shared';
+import {APP_CONFIG, AppConfig, FileContentModel, LogService, SaveValidateErrorsCodes} from '@ame/shared';
 import {Samm} from '@ame/vocabulary';
 import {RdfModel, RdfModelUtil} from '../utils';
 import {RdfSerializerService} from './rdf-serializer.service';
@@ -27,33 +27,17 @@ import {ConfigurationService, Settings} from '@ame/settings-dialog';
 })
 export class RdfService {
   private _latestSavedRDF: string;
-  private _externalRdfModels: Array<RdfModel> = [];
-  private _currentRdfModel: RdfModel;
   private _rdfSerializer: RdfSerializerService;
   private _settings: Settings;
 
-  public get externalRdfModels(): Array<RdfModel> {
-    return this._externalRdfModels;
-  }
-
-  public set externalRdfModels(rdfModelsR: Array<RdfModel>) {
-    this._externalRdfModels = rdfModelsR;
-  }
-
-  public get currentRdfModel(): RdfModel {
-    return this._currentRdfModel;
-  }
-
-  public set currentRdfModel(rdfModel: RdfModel) {
-    this._currentRdfModel = rdfModel;
-  }
+  public externalRdfModels: Array<RdfModel> = [];
+  public currentRdfModel: RdfModel;
 
   constructor(
     private logService: LogService,
     private modelApiService: ModelApiService,
-    private dataTypeService: DataTypeService,
     private configurationService: ConfigurationService,
-    @Inject(APP_CONFIG) public config: AppConfig
+    @Inject(APP_CONFIG) public config: AppConfig,
   ) {
     if (!environment.production) {
       window['angular.rdfService'] = this;
@@ -89,7 +73,7 @@ export class RdfService {
         }
 
         return this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.aspectModelFileName, rdfContent));
-      })
+      }),
     );
   }
 
@@ -109,7 +93,7 @@ export class RdfService {
       map(() => {
         this._latestSavedRDF = serializedModel;
         return {serializedModel, savedDate: new Date()};
-      })
+      }),
     );
   }
 
@@ -135,7 +119,7 @@ export class RdfService {
           subject.error(incorrectPrefixes);
           subject.complete();
         }
-        this.currentRdfModel = rdfModel.initRdfModel(store, this.dataTypeService, prefixes);
+        this.currentRdfModel = rdfModel.initRdfModel(store, prefixes);
         this.currentRdfModel.absoluteAspectModelFileName =
           this.currentRdfModel.absoluteAspectModelFileName ||
           namespaceFileName ||
@@ -173,7 +157,7 @@ export class RdfService {
       if (quad) {
         store.addQuad(quad);
       } else if (prefixes) {
-        const externalRdfModel = rdfModel.initRdfModel(store, this.dataTypeService, prefixes);
+        const externalRdfModel = rdfModel.initRdfModel(store, prefixes);
         externalRdfModel.isExternalRef = true;
         externalRdfModel.aspectModelFileName = fileContent.fileName;
         this.externalRdfModels.push(externalRdfModel);
@@ -183,7 +167,7 @@ export class RdfService {
 
       if (error) {
         this.logService.logInfo(`Error when parsing RDF ${error}`);
-        const externalRdfModel = rdfModel.initRdfModel(store, this.dataTypeService, {});
+        const externalRdfModel = rdfModel.initRdfModel(store, {});
         externalRdfModel.isExternalRef = true;
         externalRdfModel.aspectModelFileName = fileContent.fileName;
         externalRdfModel.hasErrors = true;
@@ -212,11 +196,11 @@ export class RdfService {
       if (quad) {
         store.addQuad(quad);
       } else if (prefixes) {
-        parsedRdfModel = rdfModel.initRdfModel(store, this.dataTypeService, prefixes);
+        parsedRdfModel = rdfModel.initRdfModel(store, prefixes);
       }
 
       if (error) {
-        parsedRdfModel = rdfModel.initRdfModel(store, this.dataTypeService, {});
+        parsedRdfModel = rdfModel.initRdfModel(store, {});
         parsedRdfModel.hasErrors = true;
         this.logService.logInfo(`Error when parsing RDF ${error}`);
       }
@@ -241,7 +225,7 @@ export class RdfService {
   removeExternalRdfModel(modelName: string): void {
     this.externalRdfModels = this.externalRdfModels.reduce<RdfModel[]>(
       (models, model) => (model.absoluteAspectModelFileName !== modelName ? [...models, model] : models),
-      []
+      [],
     );
   }
 }

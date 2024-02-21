@@ -28,7 +28,7 @@ export class DefaultList extends DefaultCollection {
     aspectModelUrn: string,
     name: string,
     public elementCharacteristic?: Characteristic,
-    dataType?: Type
+    dataType?: Type,
   ) {
     super(metaModelVersion, aspectModelUrn, name, elementCharacteristic, dataType);
   }

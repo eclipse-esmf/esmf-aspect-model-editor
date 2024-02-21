@@ -28,7 +28,7 @@ class MockRDFModel {
   rdfModel = {
     store: new Store(),
     SAMM: jest.fn(() => new Samm('')),
-    SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+    SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'}) as any),
     hasNamespace: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
   } as any;
@@ -70,7 +70,11 @@ describe('Entity value visitor', () => {
         EntityValueVisitor,
         {
           provide: ModelService,
-          useValue: {getLoadedAspectModel: jest.fn().mockReturnValue({rdfModel: mockedRdfModel})},
+          useValue: {
+            get currentRdfModel() {
+              return mockedRdfModel;
+            },
+          },
         },
         {
           provide: RdfService,

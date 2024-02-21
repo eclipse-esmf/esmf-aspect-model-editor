@@ -31,7 +31,7 @@ export class ElementListComponent implements OnInit {
     private mxGraphService: MxGraphService,
     private shapeSettingsService: ShapeSettingsService,
     private shapeSettingsStateService: ShapeSettingsStateService,
-    private openReferencedElementService: OpenReferencedElementService
+    private openReferencedElementService: OpenReferencedElementService,
   ) {}
 
   ngOnInit() {

@@ -1,0 +1,23 @@
+{
+  "name": "sidebar",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/sidebar/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/sidebar"],
+      "options": {
+        "jestConfig": "libs/sidebar/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/sidebar/src/**/*.ts", "libs/sidebar/src/**/*.html"]
+      }
+    }
+  }
+}

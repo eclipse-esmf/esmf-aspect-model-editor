@@ -13,14 +13,17 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {AlertComponent, LoadingScreenComponent} from './components';
+import {AlertComponent, LoadingScreenComponent, ElementIconComponent} from './components';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
 import {LanguageTranslateModule} from '@ame/translation';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {BarItemComponent} from './components/bar-item/bar-item.component';
 
 @NgModule({
-  declarations: [LoadingScreenComponent, AlertComponent],
-  imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule, LanguageTranslateModule],
+  declarations: [LoadingScreenComponent, AlertComponent, ElementIconComponent, BarItemComponent],
+  imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule, MatTooltipModule, LanguageTranslateModule],
+  exports: [ElementIconComponent, BarItemComponent],
 })
 export class SharedModule {}

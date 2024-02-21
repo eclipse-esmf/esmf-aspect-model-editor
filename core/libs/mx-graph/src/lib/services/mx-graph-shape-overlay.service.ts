@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, Injector, NgZone} from '@angular/core';
+import {Injectable, Injector} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphAttributeService, MxGraphShapeSelectorService} from '.';
 import {MxGraphHelper, MxGraphVisitorHelper, ShapeAttribute} from '../helpers';
@@ -51,7 +51,6 @@ export class MxGraphShapeOverlayService {
     private filtersService: FiltersService,
     private sammLangService: SammLanguageSettingsService,
     private injector: Injector,
-    private ngZone: NgZone
   ) {}
 
   removeOverlay(cell: mxgraph.mxCell, overlay?: mxgraph.mxCellOverlay): void {
@@ -92,8 +91,8 @@ export class MxGraphShapeOverlayService {
     baseMetaModelElement instanceof DefaultProperty && baseMetaModelElement.characteristic
       ? this.removeOverlay(cell, MxGraphHelper.getNewShapeOverlayButton(cell))
       : baseMetaModelElement instanceof DefaultCharacteristic && !(baseMetaModelElement instanceof DefaultEither)
-      ? this.removeCharacteristicOverlays(cell)
-      : undefined;
+        ? this.removeCharacteristicOverlays(cell)
+        : undefined;
   }
 
   createIconShapeOverlay(svgFileName: string, tooltip: string): mxgraph.mxCellOverlay {
@@ -177,7 +176,7 @@ export class MxGraphShapeOverlayService {
         ModelInfo.IS_EITHER_LEFT,
         -elementOffset,
         'arrow-left-frame',
-        mxConstants.ALIGN_LEFT
+        mxConstants.ALIGN_LEFT,
       );
 
       this.createConnectorElement(
@@ -186,7 +185,7 @@ export class MxGraphShapeOverlayService {
         ModelInfo.IS_EITHER_RIGHT,
         elementOffset,
         'arrow-right-frame',
-        mxConstants.ALIGN_RIGHT
+        mxConstants.ALIGN_RIGHT,
       );
 
       return;
@@ -199,7 +198,7 @@ export class MxGraphShapeOverlayService {
         ModelInfo.IS_OPERATION_INPUT,
         -elementOffset,
         'arrow-up-frame',
-        mxConstants.ALIGN_LEFT
+        mxConstants.ALIGN_LEFT,
       );
 
       this.createConnectorElement(
@@ -208,7 +207,7 @@ export class MxGraphShapeOverlayService {
         ModelInfo.IS_OPERATION_OUTPUT,
         elementOffset,
         'arrow-down-frame',
-        mxConstants.ALIGN_RIGHT
+        mxConstants.ALIGN_RIGHT,
       );
 
       return;
@@ -249,7 +248,7 @@ export class MxGraphShapeOverlayService {
     modelInfo: ModelInfo,
     offset = 0,
     svgFileName = 'add-frame',
-    align = mxConstants.ALIGN_CENTER
+    align = mxConstants.ALIGN_CENTER,
   ): void {
     const modelElement = MxGraphHelper.getModelElement(cell);
     if (!this.filtersService.currentFilter.hasOverlay(modelElement)) return;
@@ -266,7 +265,7 @@ export class MxGraphShapeOverlayService {
   }
 
   private addShapeOverlayListener(overlay: mxgraph.mxCellOverlay, cell: mxgraph.mxCell, modelInfo: ModelInfo): void {
-    overlay.addListener(mxEvent.CLICK, () => this.ngZone.run(() => this.addShapeAction(cell, modelInfo)));
+    overlay.addListener(mxEvent.CLICK, () => this.addShapeAction(cell, modelInfo));
     this.mxGraphAttributeService.graph.addCellOverlay(cell, overlay);
   }
 
@@ -414,7 +413,7 @@ export class MxGraphShapeOverlayService {
       geometry.y,
       geometry.width,
       geometry.height,
-      node.shape.mxGraphStyle
+      node.shape.mxGraphStyle,
     );
 
     const rdfService = this.injector.get(RdfService);

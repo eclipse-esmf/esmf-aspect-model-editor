@@ -42,7 +42,16 @@ describe('RdfNodeService', () => {
   beforeEach(() => {
     rdfModel = new MockRDFModel();
     TestBed.configureTestingModule({
-      providers: [{provide: ModelService, useValue: {getLoadedAspectModel: jest.fn().mockReturnValue({rdfModel: rdfModel})}}],
+      providers: [
+        {
+          provide: ModelService,
+          useValue: {
+            get currentRdfModel() {
+              return rdfModel;
+            },
+          },
+        },
+      ],
     });
     service = TestBed.inject(RdfNodeService);
   });

@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SidebarService} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {CachedFile} from './cached-file';
 import {Base, BaseMetaModelElement} from '@ame/meta-model';
@@ -30,7 +29,12 @@ export class NamespacesCacheService {
     return this.#currentCachedFile;
   }
 
-  constructor(public sidebarService: SidebarService) {}
+  /**
+   * Sets the file the user is working on
+   */
+  set currentCachedFile(file: CachedFile) {
+    this.#currentCachedFile = file;
+  }
 
   /**
    * Return an array with all file from all namespaces when `namespace` is not provided
@@ -85,13 +89,6 @@ export class NamespacesCacheService {
    */
   getFile(filePath: [string, string]): CachedFile {
     return Array.isArray(filePath) && filePath.length === 2 ? this.#namespaces?.get(filePath[0])?.get(filePath[1]) : null;
-  }
-
-  /**
-   * Sets the file the user is working on
-   */
-  setCurrentCachedFile(file: CachedFile) {
-    this.#currentCachedFile = file;
   }
 
   /**

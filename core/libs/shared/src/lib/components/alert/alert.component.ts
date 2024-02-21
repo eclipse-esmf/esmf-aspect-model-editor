@@ -21,7 +21,10 @@ import {AlertOptions} from '../../alert.service';
   styleUrls: ['./alert.component.scss'],
 })
 export class AlertComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: AlertOptions, private dialogRef: MatDialogRef<AlertComponent>) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: AlertOptions,
+    private dialogRef: MatDialogRef<AlertComponent>,
+  ) {}
 
   close(event: MouseEvent) {
     if (this.data.leftButtonAction && typeof this.data.leftButtonAction === 'function') {

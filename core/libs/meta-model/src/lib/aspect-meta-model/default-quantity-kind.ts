@@ -22,7 +22,12 @@ export class DefaultQuantityKind extends Base implements QuantityKind {
     return 'DefaultQuantityKind';
   }
 
-  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public label: string) {
+  constructor(
+    metaModelVersion: string,
+    aspectModelUrn: string,
+    name: string,
+    public label: string,
+  ) {
     super(metaModelVersion, aspectModelUrn, name);
   }
 }

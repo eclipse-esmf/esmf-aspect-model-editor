@@ -80,7 +80,7 @@ import {
   ScaleInputFieldComponent,
   SeeInputFieldComponent,
   ShapeSettingsComponent,
-  ModelElementParser,
+  ModelElementParserPipe,
   StateCharacteristicComponent,
   StructuredValueComponent,
   StructuredValuePropertiesComponent,
@@ -102,6 +102,7 @@ import {SaveModelDialogComponent} from '../save-model-dialog/save-model-dialog.c
 import {LargeFileWarningComponent} from '../large-file-warning-dialog/large-file-warning-dialog';
 import {SharedSettingsTitleComponent} from './components/shape-settings/shared-settings-title/shared-settings-title.component';
 import {LanguageTranslateModule} from '@ame/translation';
+import {SharedModule} from '@ame/shared';
 
 @NgModule({
   providers: [EditorModelService],
@@ -122,6 +123,7 @@ import {LanguageTranslateModule} from '@ame/translation';
     MatExpansionModule,
     MatButtonModule,
     MatDialogModule,
+    SharedModule,
     CounterPipe,
     LanguageTranslateModule,
   ],
@@ -191,12 +193,12 @@ import {LanguageTranslateModule} from '@ame/translation';
     StructuredValuePropertiesComponent,
     EntityExtendsFieldComponent,
     ElementListComponent,
-    ModelElementParser,
+    ModelElementParserPipe,
     LocateElementComponent,
     SaveModelDialogComponent,
     LargeFileWarningComponent,
     SharedSettingsTitleComponent,
   ],
-  exports: [ShapeSettingsComponent],
+  exports: [ShapeSettingsComponent, ModelElementParserPipe],
 })
 export class EditorDialogModule {}

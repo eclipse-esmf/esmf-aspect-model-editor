@@ -20,6 +20,11 @@ import {ModelValidatorService} from './model-validator.service';
 import {OpenApi, ViolationError} from '@ame/editor';
 import {removeCommentsFromTTL} from '@ame/utils';
 
+export enum PREDEFINED_MODELS {
+  SIMPLE_ASPECT = 'assets/aspect-models/org.eclipse.examples/1.0.0/SimpleAspect.ttl',
+  MOVEMENT = 'assets/aspect-models/org.eclipse.examples/1.0.0/Movement.ttl',
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -29,12 +34,13 @@ export class ModelApiService {
   private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
   private requestTimeout = 60000;
+  private readonly LATEST_FILENAME = 'latest.ttl';
 
   constructor(
     private http: HttpClient,
     private loggerService: LogService,
     private browserService: BrowserService,
-    private modelValidatorService: ModelValidatorService
+    private modelValidatorService: ModelValidatorService,
   ) {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('e2e=true')) {
       const remote = window.require('@electron/remote');
@@ -42,18 +48,8 @@ export class ModelApiService {
     }
   }
 
-  private readonly LATEST_FILENAME = 'latest.ttl';
-
-  getDefaultAspectModel(): Observable<string> {
-    return this.http
-      .get('assets/aspect-models/org.eclipse.examples/1.0.0/Default.ttl', {responseType: 'text'})
-      .pipe(map((response: string) => removeCommentsFromTTL(response)));
-  }
-
-  getMovementAspectModel(): Observable<string> {
-    return this.http
-      .get('assets/aspect-models/org.eclipse.examples/1.0.0/Movement.ttl', {responseType: 'text'})
-      .pipe(map((response: string) => removeCommentsFromTTL(response)));
+  getPredefinedModel(modelPath: PREDEFINED_MODELS): Observable<string> {
+    return this.http.get(modelPath, {responseType: 'text'}).pipe(map((response: string) => removeCommentsFromTTL(response)));
   }
 
   lockFile(namespace: string, file: string): Observable<string> {
@@ -64,7 +60,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -76,7 +72,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -88,7 +84,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -100,7 +96,7 @@ export class ModelApiService {
     }
     return this.http.post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent, {headers}).pipe(
       timeout(this.requestTimeout),
-      catchError(res => throwError(() => res))
+      catchError(res => throwError(() => res)),
     );
   }
 
@@ -116,7 +112,7 @@ export class ModelApiService {
         catchError(res => {
           res.error = JSON.parse(res.error)?.error;
           return throwError(() => res);
-        })
+        }),
       );
   }
 
@@ -138,7 +134,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -150,7 +146,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -169,9 +165,9 @@ export class ModelApiService {
       map(data => {
         return Object.keys(data).reduce<string[]>(
           (fileNames, namespace) => [...fileNames, ...data[namespace].map((fileName: string) => `${namespace}:${fileName}`)],
-          []
+          [],
         );
-      })
+      }),
     );
   }
 
@@ -184,15 +180,15 @@ export class ModelApiService {
               ? [
                   ...files,
                   this.getAspectMetaModel(absoluteFileName).pipe(
-                    map(aspectMetaModel => new FileContentModel(absoluteFileName, aspectMetaModel))
+                    map(aspectMetaModel => new FileContentModel(absoluteFileName, aspectMetaModel)),
                   ),
                 ]
               : files,
-          []
-        )
+          [],
+        ),
       ),
       mergeMap((files$: Observable<string>[]) => (files$.length ? forkJoin(files$) : of([]))),
-      catchError(() => of([]))
+      catchError(() => of([])),
     );
   }
 
@@ -215,7 +211,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -226,7 +222,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -238,7 +234,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -256,7 +252,7 @@ export class ModelApiService {
    */
   validate(rdfContent: string, showNotifications = true): Observable<Array<ViolationError>> {
     return this.getViolationError(rdfContent).pipe(
-      tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors))
+      tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors)),
     );
   }
 
@@ -268,7 +264,7 @@ export class ModelApiService {
       .pipe(
         timeout(this.requestTimeout),
         map((data: any) => data.violationErrors),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -287,7 +283,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -363,7 +359,7 @@ export class ModelApiService {
           }
         }
         return throwError(() => 'Server error');
-      })
+      }),
     );
   }
 }

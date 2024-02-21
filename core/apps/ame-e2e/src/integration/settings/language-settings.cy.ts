@@ -38,7 +38,7 @@ describe('Test language settings', () => {
       .then(() => cy.get('[data-cy=langCode]').should('exist').should('have.value', 'English (en)'))
       .then(() => cy.get('[data-cy="addLang"]').click({force: true}))
       .then(() =>
-        cy.get('[data-cy="langCode"]').get('input:last').type('German').wait(1500).get('.mat-mdc-option:first').click({force: true})
+        cy.get('[data-cy="langCode"]').get('input:last').type('German').wait(1500).get('.mat-mdc-option:first').click({force: true}),
       );
     cy.wait(1000)
       .then(() => cy.get('[data-cy="settingsDialogApplyButton"]').click({force: true}))

@@ -33,7 +33,7 @@ export class DefaultState extends DefaultEnumeration implements State {
     name: string,
     values: Array<DefaultEntityValue | string | number | boolean>,
     public defaultValue: DefaultEntityValue | string | number,
-    dataType?: Type
+    dataType?: Type,
   ) {
     super(metaModelVersion, aspectModelUrn, name, values, dataType);
   }

@@ -38,14 +38,14 @@ export class AbstractEntityConnectionHandler implements SingleShapeConnector<Ent
     private entityValueService: EntityValueService,
     private propertyAbstractPropertyConnector: PropertyAbstractPropertyConnectionHandler,
     private entityPropertyConnector: EntityPropertyConnectionHandler,
-    private filtersService: FiltersService
+    private filtersService: FiltersService,
   ) {}
 
   public connect(abstractEntity: DefaultAbstractEntity, source: mxgraph.mxCell) {
     const abstractProperty = DefaultAbstractProperty.createInstance();
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(abstractProperty);
     const abstractPropertyCell = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)})
+      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
     );
     const overWrittenProperty: OverWrittenProperty<DefaultAbstractProperty> = {property: abstractProperty, keys: {}};
     abstractEntity.properties.push(overWrittenProperty as any);

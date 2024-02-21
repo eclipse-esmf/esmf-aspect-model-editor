@@ -31,7 +31,7 @@ export class AASXGenerationModalComponent {
     private modelApiService: ModelApiService,
     private modelService: ModelService,
     private rdfService: RdfService,
-    private dialogRef: MatDialogRef<AssignedNodesOptions>
+    private dialogRef: MatDialogRef<AssignedNodesOptions>,
   ) {}
 
   generate() {
@@ -43,7 +43,7 @@ export class AASXGenerationModalComponent {
         first(),
         map(() => this.rdfService.serializeModel(loadedAspectModel.rdfModel)),
         switchMap(rdfModel =>
-          this.control.value === 'aasx' ? this.modelApiService.getAASX(rdfModel) : this.modelApiService.getAASasXML(rdfModel)
+          this.control.value === 'aasx' ? this.modelApiService.getAASX(rdfModel) : this.modelApiService.getAASasXML(rdfModel),
         ),
         tap(content => {
           const file = new Blob([content], {type: this.control.value === 'aasx' ? 'text/aasx' : 'text/xml'});
@@ -55,7 +55,7 @@ export class AASXGenerationModalComponent {
         finalize(() => {
           this.isGenerating = false;
           this.dialogRef.close();
-        })
+        }),
       )
       .subscribe();
   }

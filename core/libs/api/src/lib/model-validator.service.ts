@@ -20,7 +20,11 @@ import {ViolationError} from '@ame/editor';
   providedIn: 'root',
 })
 export class ModelValidatorService {
-  constructor(private mxGraphService: MxGraphService, private notificationsService: NotificationsService, private logService: LogService) {
+  constructor(
+    private mxGraphService: MxGraphService,
+    private notificationsService: NotificationsService,
+    private logService: LogService,
+  ) {
     this.notificationsService.clearNotifications();
   }
 

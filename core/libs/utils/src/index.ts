@@ -11,4 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+export * from './lib/components';
 export * from './lib/utils';
+export * from './lib/search-state.service';

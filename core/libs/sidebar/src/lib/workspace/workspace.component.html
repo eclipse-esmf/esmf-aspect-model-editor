@@ -1,0 +1,40 @@
+<!--
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="header">
+  <div class="title">
+    <h2>{{ 'SIDEBAR.WORKSPACE.TITLE' | translate }}</h2>
+
+    <button
+      [class.loading]="loading"
+      [class.disabled]="loading"
+      [matTooltip]="loading ? ('SIDEBAR.WORKSPACE.REFRESHING' | translate) : ('SIDEBAR.WORKSPACE.REFRESH' | translate)"
+      [disabled]="loading"
+      (click)="sidebarService.workspace.refresh()"
+      mat-mini-fab
+      class="refresh"
+    >
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+
+  <button (click)="sidebarService.workspace.close()" mat-mini-fab>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<ame-workspace-empty *ngIf="namespacesKeys.length === 0; else list" [loading]="loading"></ame-workspace-empty>
+<ng-template #list>
+  <ame-workspace-file-list class="list"></ame-workspace-file-list>
+  <ame-workspace-file-elements *ngIf="sidebarService.fileElements.isOpened$ | async" class="column-two"></ame-workspace-file-elements>
+</ng-template>

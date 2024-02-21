@@ -24,14 +24,14 @@ declare const sammUDefinition: any;
 @Injectable({providedIn: 'root'})
 export class UnitModelService extends BaseModelService {
   private get sammU(): SammU {
-    return this.modelService.getLoadedAspectModel().rdfModel.SAMMU();
+    return this.modelService.currentRdfModel.SAMMU();
   }
 
   constructor(
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphService: MxGraphService,
-    private unitRenderer: UnitRenderService
+    private unitRenderer: UnitRenderService,
   ) {
     super();
   }

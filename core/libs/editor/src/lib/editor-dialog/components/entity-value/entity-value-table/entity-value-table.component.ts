@@ -79,7 +79,7 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
         });
 
         this.dataSource = new MatTableDataSource(this.metaModelElement.properties);
-      })
+      }),
     );
   }
 
@@ -98,7 +98,7 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
   private initializeFormControl(
     propertyName: string,
     propertyValue: any,
-    validators: (control: AbstractControl) => ValidationErrors | null
+    validators: (control: AbstractControl) => ValidationErrors | null,
   ) {
     this.propertiesForm.setControl(propertyName, new FormControl(propertyValue, validators));
 
@@ -116,14 +116,14 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
   private initializeFilteredEntityValues(property: DefaultProperty) {
     this.filteredEntityValues$[property.name] = EntityValueUtil.initFilteredEntityValues(property, this.displayForm).pipe(
       startWith(''),
-      map(value => this.getPropertyValues(property).filter(entityValue => entityValue.name.startsWith(value)))
+      map(value => this.getPropertyValues(property).filter(entityValue => entityValue.name.startsWith(value))),
     );
   }
 
   private handleLangStringProperty(
     entityValueProperty: EntityValueProperty,
     property: DefaultProperty,
-    validators: (control: AbstractControl) => ValidationErrors | null
+    validators: (control: AbstractControl) => ValidationErrors | null,
   ) {
     if (!this.displayedColumns.includes('language')) {
       this.displayedColumns.push('language');
@@ -137,7 +137,7 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
 
     this.filteredLanguageValues$[property.name] = EntityValueUtil.initFilteredLanguages(property, this.displayForm).pipe(
       startWith(''),
-      map(value => locale.all.filter(lang => lang.tag.startsWith(value)))
+      map(value => locale.all.filter(lang => lang.tag.startsWith(value))),
     );
   }
 

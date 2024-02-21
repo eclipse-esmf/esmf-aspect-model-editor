@@ -29,7 +29,7 @@ describe('Entity Visitor', () => {
   const rdfModel = {
     store: new Store(),
     SAMM: jest.fn(() => new Samm('')),
-    SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
+    SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'}) as any),
     hasNamespace: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
   };

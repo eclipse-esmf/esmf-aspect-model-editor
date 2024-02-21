@@ -74,7 +74,7 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.get(FIELD_preferredNameen).focus().clear().type('New preferred Name'))
         .then(() => cyHelp.clickSaveButton())
         .then(() =>
-          cy.getCellLabel('AbstractEntity1', META_MODEL_preferredName).should('eq', `${META_MODEL_preferredName} = New preferred Name @en`)
+          cy.getCellLabel('AbstractEntity1', META_MODEL_preferredName).should('eq', `${META_MODEL_preferredName} = New preferred Name @en`),
         )
         .then(() => cy.getUpdatedRDF())
         .then(rdf => expect(rdf).to.contain('samm:preferredName "New preferred Name"@en'));
@@ -86,7 +86,7 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.get(FIELD_descriptionen).focus().clear().type('New description'))
         .then(() => cyHelp.clickSaveButton())
         .then(() =>
-          cy.getCellLabel('AbstractEntity1', META_MODEL_description).should('eq', `${META_MODEL_description} = New description @en`)
+          cy.getCellLabel('AbstractEntity1', META_MODEL_description).should('eq', `${META_MODEL_description} = New description @en`),
         )
         .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:description "New description"@en')));
     });
@@ -99,7 +99,7 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() =>
           cy
             .getCellLabel('AbstractEntity1', META_MODEL_see)
-            .should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001`)
+            .should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001`),
         )
         .then(() => cy.getUpdatedRDF())
         .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>, <urn:irdi:iec:0112/2///62683#ACC011#001>'));
@@ -156,7 +156,7 @@ describe('Create and Edit Abstract Entity', () => {
 
     it('should reconnect to AbstractEntity1', () => {
       cy.then(() => cy.clickConnectShapes('Entity1', 'AbstractEntity1')).then(() =>
-        cy.getCellLabel('Entity1', 'extends').should('eq', 'extends = AbstractEntity1')
+        cy.getCellLabel('Entity1', 'extends').should('eq', 'extends = AbstractEntity1'),
       );
     });
   });

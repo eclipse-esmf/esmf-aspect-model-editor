@@ -21,7 +21,10 @@ import {mxgraph} from 'mxgraph-factory';
   providedIn: 'root',
 })
 export class OperationPropertyOutputConnectionHandler implements MultiShapeConnectorWithProperty<DefaultOperation, DefaultProperty> {
-  constructor(private mxGraphService: MxGraphService, private mxGraphAttributeService: MxGraphAttributeService) {}
+  constructor(
+    private mxGraphService: MxGraphService,
+    private mxGraphAttributeService: MxGraphAttributeService,
+  ) {}
 
   public connect(parentMetaModel: DefaultOperation, childMetaModel: DefaultProperty, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
     parentMetaModel.output = {property: childMetaModel, keys: {}};

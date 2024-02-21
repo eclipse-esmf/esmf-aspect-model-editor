@@ -20,9 +20,6 @@ import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {HttpClient} from '@angular/common/http';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 describe('LoadingScreenComponent', () => {
   let component: LoadingScreenComponent;
@@ -31,17 +28,7 @@ describe('LoadingScreenComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoadingScreenComponent],
-      imports: [
-        CommonModule,
-        MatDialogModule,
-        MatProgressBarModule,
-        MatButtonModule,
-        TranslateModule.forRoot({
-          provide: TranslateLoader,
-          useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
-          deps: [HttpClient],
-        }),
-      ],
+      imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         {provide: MAT_DIALOG_DATA, useValue: {}},

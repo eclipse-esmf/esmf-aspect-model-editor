@@ -28,4 +28,5 @@ export interface Settings {
   showAbstractPropertyConnection: boolean;
   copyrightHeader: Array<string>;
   aspectModelLanguages: Array<string>;
+  toolbarVisibility: boolean;
 }

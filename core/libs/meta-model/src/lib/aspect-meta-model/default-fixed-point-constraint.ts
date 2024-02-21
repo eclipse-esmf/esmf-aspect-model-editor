@@ -26,7 +26,13 @@ export class DefaultFixedPointConstraint extends DefaultConstraint implements Fi
     return 'DefaultFixedPointConstraint';
   }
 
-  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public scale: number, public integer: number) {
+  constructor(
+    metaModelVersion: string,
+    aspectModelUrn: string,
+    name: string,
+    public scale: number,
+    public integer: number,
+  ) {
     super(metaModelVersion, aspectModelUrn, name);
   }
 }

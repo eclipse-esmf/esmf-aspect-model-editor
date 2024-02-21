@@ -16,14 +16,13 @@ import {CommonModule} from '@angular/common';
 import {EditorToolbarComponent} from './editor-toolbar.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
-import {LoadModelDialogModule} from '../load-model-dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
   AASXGenerationModalComponent,
   DocumentComponent,
   GenerateOpenApiComponent,
   LanguageSelectorModalComponent,
-  SearchBarComponent,
+  TextModelLoaderModalComponent,
   ThemeSwitcherComponent,
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -48,6 +47,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {NamespaceManagerModule} from '@ame/namespace-manager';
 import {OpenElementWindowComponent} from '../open-element-window/open-element-window.component';
 import {LanguageTranslateModule} from '@ame/translation';
+import {SharedModule} from '@ame/shared';
 
 @NgModule({
   imports: [
@@ -55,7 +55,6 @@ import {LanguageTranslateModule} from '@ame/translation';
     FormsModule,
     MatAutocompleteModule,
     MatIconModule,
-    LoadModelDialogModule,
     ConnectWithDialogModule,
     MatMenuModule,
     MatCheckboxModule,
@@ -78,10 +77,10 @@ import {LanguageTranslateModule} from '@ame/translation';
     MatSelectModule,
     NamespaceManagerModule,
     LanguageTranslateModule,
+    SharedModule,
   ],
   declarations: [
     EditorToolbarComponent,
-    SearchBarComponent,
     DocumentComponent,
     NotificationsComponent,
     ThemeSwitcherComponent,
@@ -90,8 +89,9 @@ import {LanguageTranslateModule} from '@ame/translation';
     LanguageSelectorModalComponent,
     OpenElementWindowComponent,
     AASXGenerationModalComponent,
+    TextModelLoaderModalComponent,
   ],
-  exports: [EditorToolbarComponent, ThemeSwitcherComponent],
+  exports: [EditorToolbarComponent, ThemeSwitcherComponent, TextModelLoaderModalComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class EditorToolbarModule {}

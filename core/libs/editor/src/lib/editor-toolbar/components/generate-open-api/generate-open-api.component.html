@@ -12,19 +12,19 @@
   -->
 
 <form [formGroup]="form">
-  <h2 mat-dialog-title>{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.TITLE' | translate }}</h2>
+  <h2 mat-dialog-title>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.TITLE' | translate }}</h2>
 
   <mat-dialog-content>
-    <p>{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.CONFIGURATION' | translate }}</p>
+    <p>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.CONFIGURATION' | translate }}</p>
     <mat-form-field appearance="fill">
-      <mat-label>{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.LANGUAGE' | translate }}</mat-label>
+      <mat-label>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.LANGUAGE' | translate }}</mat-label>
       <mat-select [formControl]="getControl('language')" data-cy="tbLanguageButton">
         <mat-option *ngFor="let language of languages" [value]="language.tag">{{ language.name }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.OUTPUT_FILE_FORMAT' | translate }}</mat-label>
+      <mat-label>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.OUTPUT_FILE_FORMAT' | translate }}</mat-label>
       <mat-select [formControl]="getControl('output')" data-cy="tbOutputButton">
         <mat-option data-cy="tbOutputButton-json" value="json">JSON</mat-option>
         <mat-option data-cy="tbOutputButton-yaml" value="yaml">YAML</mat-option>
@@ -32,10 +32,10 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.BASEURL' | translate }}</mat-label>
+      <mat-label>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.BASEURL' | translate }}</mat-label>
       <input matInput [formControl]="getControl('baseUrl')" placeholder="https://example.com" />
       <mat-error *ngIf="getControl('baseUrl')?.errors?.invalidUrl">{{
-        'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.PLEASE_ADD_VALID_URL' | translate
+        'GENERATE_OPENAPI_SPEC_DIALOG.PLEASE_ADD_VALID_URL' | translate
       }}</mat-error>
     </mat-form-field>
 
@@ -43,33 +43,33 @@
       <mat-checkbox
         [formControl]="getControl('includeQueryApi')"
         class="checkbox-margin"
-        [matTooltip]="'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.INCLUDE_QUERY_API_TOOLTIP' | translate"
+        [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.INCLUDE_QUERY_API_TOOLTIP' | translate"
       >
-        {{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.INCLUDE_QUERY_API' | translate }}
+        {{ 'GENERATE_OPENAPI_SPEC_DIALOG.INCLUDE_QUERY_API' | translate }}
       </mat-checkbox>
 
       <mat-checkbox
         [formControl]="getControl('useSemanticVersion')"
         class="checkbox-margin"
-        [matTooltip]="'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION_TOOLTIP' | translate"
+        [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION_TOOLTIP' | translate"
       >
-        {{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION' | translate }}
+        {{ 'GENERATE_OPENAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION' | translate }}
       </mat-checkbox>
     </section>
 
     <mat-form-field appearance="fill">
-      <mat-label>{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.PAGING_TYPE_OPTION' | translate }}</mat-label>
+      <mat-label>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.PAGING_TYPE_OPTION' | translate }}</mat-label>
       <mat-select [formControl]="getControl('paging')">
-        <mat-option value="NO_PAGING">{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.NO_PAGING' | translate }}</mat-option>
-        <mat-option value="CURSOR_BASED_PAGING">{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.CURSOR_BASED_PAGING' | translate }}</mat-option>
-        <mat-option value="OFFSET_BASED_PAGING">{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.OFFSET_BASED_PAGING' | translate }}</mat-option>
-        <mat-option value="TIME_BASED_PAGING">{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.TIME_BASED_PAGING' | translate }}</mat-option>
+        <mat-option value="NO_PAGING">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.NO_PAGING' | translate }}</mat-option>
+        <mat-option value="CURSOR_BASED_PAGING">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.CURSOR_BASED_PAGING' | translate }}</mat-option>
+        <mat-option value="OFFSET_BASED_PAGING">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.OFFSET_BASED_PAGING' | translate }}</mat-option>
+        <mat-option value="TIME_BASED_PAGING">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.TIME_BASED_PAGING' | translate }}</mat-option>
       </mat-select>
     </mat-form-field>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-flat-button (click)="close()">{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.BUTTON.CANCEL' | translate }}</button>
+    <button mat-flat-button (click)="close()">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.BUTTON.CANCEL' | translate }}</button>
     <button
       (click)="generateOpenApiSpec()"
       type="button"
@@ -78,7 +78,7 @@
       [disabled]="!form.valid"
       data-cy="tbGenerateOpenApiButton"
     >
-      <span>{{ 'TOOLBAR.GENERATE_OPENAPI_SPEC_DIALOG.BUTTON.GENERATE' | translate }}</span>
+      <span>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.BUTTON.GENERATE' | translate }}</span>
     </button>
   </mat-dialog-actions>
 </form>

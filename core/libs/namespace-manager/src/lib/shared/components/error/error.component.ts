@@ -33,7 +33,10 @@ export class ErrorComponent {
     type: ERROR_TYPES.UNKNOWN,
   };
 
-  constructor(@Inject(NAMESPACES_SESSION) private session: NamespacesSessionInterface, private notificationService: NotificationsService) {
+  constructor(
+    @Inject(NAMESPACES_SESSION) private session: NamespacesSessionInterface,
+    private notificationService: NotificationsService,
+  ) {
     this.session.state.validating$.pipe(first()).subscribe({
       error: (error: any) => {
         this.error.message = error?.error?.error?.message || this.error.message;

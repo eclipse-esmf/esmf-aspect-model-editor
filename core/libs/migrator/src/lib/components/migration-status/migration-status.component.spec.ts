@@ -23,9 +23,6 @@ import {MigratorService} from '../../migrator.service';
 import {ElectronTunnelService} from '@ame/shared';
 
 import {MigrationStatusComponent} from './migration-status.component';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {HttpClient} from '@angular/common/http';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 describe('MigrationStatusComponent', () => {
   let component: MigrationStatusComponent;
@@ -34,17 +31,7 @@ describe('MigrationStatusComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        MatDialogModule,
-        MatIconModule,
-        MatButtonModule,
-        TranslateModule.forRoot({
-          provide: TranslateLoader,
-          useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
-          deps: [HttpClient],
-        }),
-      ],
+      imports: [RouterTestingModule, MatDialogModule, MatIconModule, MatButtonModule],
       declarations: [MigrationStatusComponent],
       providers: [
         {

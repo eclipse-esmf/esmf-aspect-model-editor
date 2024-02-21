@@ -11,11 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>{{ 'TOOLBAR.GENERATE_HTML_DOC_DIALOG.TITLE' | translate }}</h2>
+<h2 mat-dialog-title>{{ 'GENERATE_HTML_DOC_DIALOG.TITLE' | translate }}</h2>
 
 <mat-dialog-content>
   <mat-form-field appearance="fill">
-    <mat-label>{{ 'TOOLBAR.GENERATE_HTML_DOC_DIALOG.LANGUAGE' | translate }}</mat-label>
+    <mat-label>{{ 'GENERATE_HTML_DOC_DIALOG.LANGUAGE' | translate }}</mat-label>
     <mat-select [formControl]="languageControl" data-cy="htmlGenerationLanguage">
       <mat-option *ngFor="let language of languages" [value]="language.tag">{{ language.name }}</mat-option>
     </mat-select>
@@ -23,11 +23,11 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-flat-button (click)="close()">{{ 'TOOLBAR.GENERATE_HTML_DOC_DIALOG.BUTTON.CANCEL' | translate }}</button>
+  <button mat-flat-button (click)="close()">{{ 'GENERATE_HTML_DOC_DIALOG.BUTTON.CANCEL' | translate }}</button>
   <button (click)="openDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbOpenDoc">
-    {{ 'TOOLBAR.GENERATE_HTML_DOC_DIALOG.BUTTON.OPEN_DOC' | translate }}
+    {{ 'GENERATE_HTML_DOC_DIALOG.BUTTON.OPEN_DOC' | translate }}
   </button>
   <button (click)="downloadDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbDownloadDoc">
-    {{ 'TOOLBAR.GENERATE_HTML_DOC_DIALOG.BUTTON.DOWNLOAD_DOC' | translate }}
+    {{ 'GENERATE_HTML_DOC_DIALOG.BUTTON.DOWNLOAD_DOC' | translate }}
   </button>
 </mat-dialog-actions>

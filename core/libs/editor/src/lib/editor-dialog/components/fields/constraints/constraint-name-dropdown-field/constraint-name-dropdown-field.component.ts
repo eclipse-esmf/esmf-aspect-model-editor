@@ -44,7 +44,7 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
     public editorModelService: EditorModelService,
     public modelService: ModelService,
     public namespacesCacheService: NamespacesCacheService,
-    public languageSettings: SammLanguageSettingsService
+    public languageSettings: SammLanguageSettingsService,
   ) {
     super(editorModelService, modelService, languageSettings);
   }
@@ -56,7 +56,7 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
         this.selectedMetaModelElement = this.metaModelElement;
         this.setMetaModelClassName();
         this.selectedConstraint.emit(this.metaModelClassName);
-      })
+      }),
     );
   }
 
@@ -90,7 +90,7 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
   }
 
   private setMetaModelElementAspectUrn(modelElement: Constraint) {
-    this.metaModelElement.aspectModelUrn = `${this.modelService.getLoadedAspectModel().rdfModel.getAspectModelUrn()}${modelElement.name}`;
+    this.metaModelElement.aspectModelUrn = `${this.modelService.currentRdfModel.getAspectModelUrn()}${modelElement.name}`;
   }
 
   private initConstraintList(): void {

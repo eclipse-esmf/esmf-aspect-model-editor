@@ -14,6 +14,7 @@
 :host {
   display: flex;
   flex-direction: column;
+  border-top: 1px solid var(--ame-top-border);
   height: 100%;
   max-height: 100%;
 }

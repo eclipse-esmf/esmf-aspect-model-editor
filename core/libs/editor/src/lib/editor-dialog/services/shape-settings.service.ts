@@ -13,20 +13,19 @@
 
 import {Injectable, NgZone} from '@angular/core';
 import {BaseMetaModelElement} from '@ame/meta-model';
-import {mxEvent, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxUtils} from '@ame/mx-graph';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxEvent, mxUtils} from '@ame/mx-graph';
 import {BindingsService} from '@ame/shared';
-import {mxgraph} from 'mxgraph-factory';
 import {EditorService} from '../../editor.service';
 import {ShapeSettingsStateService} from './shape-settings-state.service';
 import {OpenReferencedElementService} from '../../open-element-window/open-element-window.service';
-
-const PURPLE_BLUE = '#448ee4';
-const BLACK = 'black';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ShapeSettingsService {
   public modelElement: BaseMetaModelElement = null;
-  private shapesToHighlight: Array<mxgraph.mxCell> | null;
+
+  private selectedCellsSubject = new BehaviorSubject([]);
+  public selectedCells$ = this.selectedCellsSubject.asObservable();
 
   constructor(
     private mxGraphAttributeService: MxGraphAttributeService,
@@ -36,24 +35,25 @@ export class ShapeSettingsService {
     private editorService: EditorService,
     private shapeSettingsStateService: ShapeSettingsStateService,
     private openReferencedElementService: OpenReferencedElementService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   setGraphListeners() {
     this.setMoveCellsListener();
     this.setFoldListener();
     this.setDblClickListener();
+    this.setSelectCellListener();
   }
 
   setContextMenuActions() {
-    this.bindingsService.registerAction('editElement', () => this.ngZone.run(() => this.editSelectedCell()));
-    this.bindingsService.registerAction('deleteElement', () => this.ngZone.run(() => this.editorService.deleteSelectedElements()));
+    this.bindingsService.registerAction('editElement', () => this.editSelectedCell());
+    this.bindingsService.registerAction('deleteElement', () => this.editorService.deleteSelectedElements());
   }
 
   setHotKeysActions() {
     this.editorService.bindAction(
       'deleteElement',
-      mxUtils.bind(this, () => this.ngZone.run(() => this.editorService.deleteSelectedElements()))
+      mxUtils.bind(this, () => this.ngZone.run(() => this.editorService.deleteSelectedElements())),
     );
 
     this.mxGraphService.graph.container.addEventListener('wheel', evt => {
@@ -66,20 +66,20 @@ export class ShapeSettingsService {
   setSelectCellListener() {
     this.mxGraphAttributeService.graph
       .getSelectionModel()
-      .addListener(mxEvent.CHANGE, selectionModel => this.ngZone.run(() => this.selectCells(selectionModel.cells)));
+      .addListener(mxEvent.CHANGE, selectionModel => this.ngZone.run(() => this.selectedCellsSubject.next(selectionModel.cells)));
   }
 
   setMoveCellsListener() {
     this.mxGraphAttributeService.graph.addListener(
       mxEvent.MOVE_CELLS,
       mxUtils.bind(this, () => {
-        this.ngZone.run(() => (this.mxGraphAttributeService.graph.resetEdgesOnMove = true));
-      })
+        this.mxGraphAttributeService.graph.resetEdgesOnMove = true;
+      }),
     );
   }
 
   setFoldListener() {
-    this.mxGraphAttributeService.graph.addListener(mxEvent.FOLD_CELLS, () => this.ngZone.run(() => this.mxGraphService.formatShapes()));
+    this.mxGraphAttributeService.graph.addListener(mxEvent.FOLD_CELLS, () => this.mxGraphService.formatShapes());
   }
 
   setDblClickListener() {
@@ -111,27 +111,5 @@ export class ShapeSettingsService {
   editModel(elementModel: BaseMetaModelElement) {
     this.shapeSettingsStateService.openShapeSettings();
     this.modelElement = elementModel;
-  }
-
-  selectCells(cells: Array<mxgraph.mxCell>) {
-    if (this.shapesToHighlight) {
-      this.mxGraphService.setStrokeColor(BLACK, this.shapesToHighlight);
-    }
-
-    if (!cells.length || cells.length >= 2) {
-      return;
-    }
-
-    this.shapesToHighlight = [];
-    const selectedCell = cells[0];
-
-    if (!selectedCell.isEdge()) {
-      this.shapesToHighlight.push(...this.mxGraphAttributeService.graph.getOutgoingEdges(selectedCell));
-      const elementShapes = this.shapesToHighlight.filter(edge => MxGraphHelper.getModelElement(edge.target)).map(edge => edge.target);
-      this.shapesToHighlight.push(...elementShapes);
-      this.mxGraphService.setStrokeColor(PURPLE_BLUE, this.shapesToHighlight);
-    }
-
-    // this.changeDetector.detectChanges();
   }
 }

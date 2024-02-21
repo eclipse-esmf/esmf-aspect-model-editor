@@ -10,8 +10,10 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+
 import {Injectable} from '@angular/core';
 import {Settings} from '../model';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 const DEFAULT_SETTINGS: Settings = {
   namespace: '',
@@ -30,6 +32,7 @@ const DEFAULT_SETTINGS: Settings = {
   showAbstractPropertyConnection: true,
   copyrightHeader: [],
   aspectModelLanguages: [],
+  toolbarVisibility: true,
 };
 
 @Injectable({
@@ -38,6 +41,8 @@ const DEFAULT_SETTINGS: Settings = {
 export class ConfigurationService {
   private readonly SETTINGS_ITEM_KEY: string = 'settings';
   private settings: Settings;
+  private _settings$: BehaviorSubject<Settings>;
+  public settings$: Observable<Settings>;
 
   constructor() {
     try {
@@ -48,10 +53,17 @@ export class ConfigurationService {
     } catch {
       this.settings = DEFAULT_SETTINGS;
     }
+    this._settings$ = new BehaviorSubject({...this.settings});
+    this.settings$ = this._settings$.asObservable();
+  }
+
+  dispatchSettings$() {
+    this._settings$.next({...this.settings});
   }
 
   setSettings(settings: Settings): void {
     this.settings = settings;
+    this._settings$.next({...settings});
     this.setLocalStorageItem();
     localStorage.setItem(this.SETTINGS_ITEM_KEY, JSON.stringify(this.settings));
   }
@@ -59,6 +71,7 @@ export class ConfigurationService {
   setLocalStorageItem(settings?: Settings): void {
     const settingsToSave = settings || this.settings;
     localStorage.setItem(this.SETTINGS_ITEM_KEY, JSON.stringify(settingsToSave));
+    this.dispatchSettings$();
   }
 
   getSettings(): Settings {
@@ -79,5 +92,22 @@ export class ConfigurationService {
     }
 
     return this.settings || DEFAULT_SETTINGS;
+  }
+
+  toggleEditorNavigation() {
+    // Mutates the original object. Can be removed once all components start relying on Observable stream.
+    this.settings.showEditorNav = !this.settings.showEditorNav;
+    this.setSettings(this.settings);
+  }
+
+  toggleEditorMap() {
+    // Mutates the original object. Can be removed once all components start relying on Observable stream.
+    this.settings.showEditorMap = !this.settings.showEditorMap;
+    this.setSettings(this.settings);
+  }
+
+  toggleToolbar() {
+    this.settings.toolbarVisibility = !this.settings.toolbarVisibility;
+    this.setSettings(this.settings);
   }
 }

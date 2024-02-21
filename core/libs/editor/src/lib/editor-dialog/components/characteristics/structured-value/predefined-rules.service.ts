@@ -116,7 +116,7 @@ export class PredefinedRulesService {
         version,
         namespace + property.label,
         property.label,
-        this.createCharacteristic(property.characteristic)
+        this.createCharacteristic(property.characteristic),
       ),
       keys: {},
     };
@@ -133,7 +133,7 @@ export class PredefinedRulesService {
       version,
       namespace + characteristic.name,
       characteristic.name,
-      new DefaultScalar(characteristic.type.isDefinedBy)
+      new DefaultScalar(characteristic.type.isDefinedBy),
     );
   }
 }

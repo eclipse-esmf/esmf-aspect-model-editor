@@ -1,0 +1,35 @@
+<!--
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="background" (click)="closeSearch()"></div>
+<mat-form-field class="search">
+  <mat-label>{{ 'SEARCHES.ELEMENTS_LABEL' | translate }}</mat-label>
+  <input [matAutocomplete]="auto" [formControl]="searchControl" type="text" matInput data-cy="searchInputField" />
+  <mat-icon matSuffix>view_comfy_alt</mat-icon>
+
+  <mat-autocomplete class="search-autocomplete" #auto="matAutocomplete">
+    <ng-container *ngFor="let element of elements">
+      <mat-option class="list-option" *ngIf="element | modelElementParser as parsedElement" (click)="openElement(element)">
+        <ame-element
+          [type]="parsedElement.type"
+          [name]="parsedElement.element.name"
+          [description]="parsedElement.element.aspectModelUrn"
+          [disabledTooltipDescriptionLength]="100"
+          [disabledTooltipNameLength]="60"
+          size="medium"
+        ></ame-element>
+        <mat-icon *ngIf="element.isExternalReference() && !element.isPredefined()">open_in_new</mat-icon>
+      </mat-option>
+    </ng-container>
+  </mat-autocomplete>
+</mat-form-field>

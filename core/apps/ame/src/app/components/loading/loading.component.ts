@@ -29,7 +29,7 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     private electronTunnel: ElectronTunnelService,
     private modelApiService: ModelApiService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   ngAfterViewInit(): void {
@@ -74,7 +74,7 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
 
         const {namespace, file} = data.options;
         return this.modelApiService.getAspectMetaModel(`${namespace}:${file}`);
-      })
+      }),
     );
   }
 }

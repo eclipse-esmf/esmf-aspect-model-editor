@@ -11,10 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
   AASXGenerationModalComponent,
   EditorService,
+  FileHandlingService,
   GenerateDocumentationComponent,
   GenerateOpenApiComponent,
   LanguageSelectorModalComponent,
@@ -31,13 +32,13 @@ import {ModelApiService} from '@ame/api';
 import {NamespacesCacheService} from '@ame/cache';
 import {HttpErrorResponse} from '@angular/common/http';
 import {LanguageTranslationService} from '@ame/translation';
+import {environment} from '../../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GenerateHandlingService {
   private readonly noRdfModelAvailable = 'No Rdf model available.';
-
   private get currentCachedFile() {
     return this.namespaceCacheService.currentCachedFile;
   }
@@ -52,10 +53,19 @@ export class GenerateHandlingService {
     private loadingScreenService: LoadingScreenService,
     private namespaceCacheService: NamespacesCacheService,
     private translate: LanguageTranslationService,
-    private ngZone: NgZone
-  ) {}
+    private fileHandlingService: FileHandlingService,
+  ) {
+    if (!environment.production) {
+      window['angular.generateHandlingService'] = this;
+    }
+  }
 
-  openGenerationOpenApiSpec(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
+  onGenerateOpenApiSpec() {
+    const cb = () => this.openGenerationOpenApiSpec().pipe(first()).subscribe();
+    this.validateFile(cb);
+  }
+
+  openGenerationOpenApiSpec(): Observable<any> {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
       return throwError(() => {
         this.logService.logError(this.noRdfModelAvailable);
@@ -63,12 +73,18 @@ export class GenerateHandlingService {
       });
     }
 
+    const loadingScreenOptions: LoadingScreenOptions = {
+      title: this.translate.language.NOTIFICATION_DIALOG.GENERATE_API_SPEC,
+      content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
+      hasCloseButton: true,
+    };
+
     return this.matDialog
       .open(GenerateOpenApiComponent, {disableClose: true})
       .afterClosed()
       .pipe(
         first(),
-        map(openApi => (openApi ? this.generateOpenApiSpec(loadingScreenOptions, openApi).subscribe() : of({})))
+        map(openApi => (openApi ? this.generateOpenApiSpec(loadingScreenOptions, openApi).subscribe() : of({}))),
       );
   }
 
@@ -76,14 +92,14 @@ export class GenerateHandlingService {
     this.loadingScreenService.open(loadingScreenOptions);
 
     return this.modelService.synchronizeModelToRdf().pipe(
-      switchMap(() => this.editorService.generateOpenApiSpec(this.modelService.getLoadedAspectModel().rdfModel, openApi).pipe(first())),
+      switchMap(() => this.editorService.generateOpenApiSpec(this.modelService.currentRdfModel, openApi).pipe(first())),
       catchError(() => {
         this.notificationsService.error({
-          title: this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_OPENAPI_SPEC,
-          message: this.translate.language.TOOLBAR.GENERATE_HANDLING.INVALID_MODEL,
+          title: this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_OPENAPI_SPEC,
+          message: this.translate.language.GENERATE_HANDLING.INVALID_MODEL,
           timeout: 5000,
         });
-        return throwError(() => this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_OPENAPI_SPEC);
+        return throwError(() => this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_OPENAPI_SPEC);
       }),
       map(data => {
         if (openApi.output === 'yaml') {
@@ -91,30 +107,39 @@ export class GenerateHandlingService {
             new Blob([data], {
               type: 'text/yaml',
             }),
-            `${this.modelService.getLoadedAspectModel().aspect.name}-open-api.yaml`
+            `${this.modelService.loadedAspect.name}-open-api.yaml`,
           );
         } else {
           saveAs(
             new Blob([this.formatStringToJson(data)], {
               type: 'application/json;charset=utf-8',
             }),
-            !this.modelService.getLoadedAspectModel().aspect
-              ? this.currentCachedFile.fileName
-              : `${this.modelService.getLoadedAspectModel().aspect.name}-open-api.json`
+            !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-open-api.json`,
           );
         }
       }),
-      finalize(() => this.loadingScreenService.close())
+      finalize(() => this.loadingScreenService.close()),
     );
   }
 
-  openGenerationDocumentation(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
+  onGenerateDocumentation() {
+    const cb = () => this.openGenerationDocumentation().pipe(first()).subscribe();
+    this.validateFile(cb);
+  }
+
+  openGenerationDocumentation(): Observable<any> {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
       return throwError(() => {
         this.logService.logError(this.noRdfModelAvailable);
         return this.noRdfModelAvailable;
       });
     }
+
+    const loadingScreenOptions: LoadingScreenOptions = {
+      title: this.translate.language.NOTIFICATION_DIALOG.GENERATE_HTML,
+      content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
+      hasCloseButton: true,
+    };
 
     return this.matDialog
       .open(GenerateDocumentationComponent, {disableClose: true})
@@ -135,7 +160,7 @@ export class GenerateHandlingService {
           }
 
           return of({});
-        })
+        }),
       );
   }
 
@@ -151,10 +176,10 @@ export class GenerateHandlingService {
               new Blob([data], {
                 type: 'text/html',
               }),
-              !this.modelService.getLoadedAspectModel().aspect
+              !this.modelService.loadedAspect
                 ? this.currentCachedFile.fileName
-                : `${this.modelService.getLoadedAspectModel().aspect.name}-documentation.html`
-            )
+                : `${this.modelService.loadedAspect.name}-documentation.html`,
+            ),
           ),
           catchError(response => {
             if (response instanceof HttpErrorResponse) {
@@ -166,10 +191,10 @@ export class GenerateHandlingService {
               }
             }
             return throwError(() => 'Server error');
-          })
-        )
+          }),
+        ),
       ),
-      finalize(() => this.loadingScreenService.close())
+      finalize(() => this.loadingScreenService.close()),
     );
   }
 
@@ -178,8 +203,12 @@ export class GenerateHandlingService {
     return this.modelService.synchronizeModelToRdf().pipe(
       first(),
       switchMap(() => this.modelApiService.openDocumentation(this.editorService.getSerializedModel(), language).pipe(first())),
-      finalize(() => this.loadingScreenService.close())
+      finalize(() => this.loadingScreenService.close()),
     );
+  }
+
+  onGenerateAASXFile() {
+    this.generateAASXFile().subscribe();
   }
 
   generateAASXFile() {
@@ -189,87 +218,108 @@ export class GenerateHandlingService {
     });
     return this.modelService.synchronizeModelToRdf().pipe(
       first(),
-
       switchMap(() => this.editorService.validate()),
       switchMap(validationsErrors => {
         console.log(validationsErrors);
         if (validationsErrors.some(({errorCode}) => errorCode)) {
           return throwError(null);
         }
-        return of(this.ngZone.run(() => this.matDialog.open(AASXGenerationModalComponent)));
+        return of(this.matDialog.open(AASXGenerationModalComponent));
       }),
       finalize(() => {
         this.loadingScreenService.close();
         localStorage.removeItem('validating');
-      })
+      }),
     );
   }
 
-  generateJsonSample(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
+  onGenerateJsonSample() {
+    const cb = () => this.generateJsonSample().pipe(first()).subscribe();
+    this.validateFile(cb);
+  }
+
+  generateJsonSample(): Observable<any> {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
       return throwError(() => {
         this.logService.logError(this.noRdfModelAvailable);
         return this.noRdfModelAvailable;
       });
     }
+
+    const loadingScreenOptions: LoadingScreenOptions = {
+      title: this.translate.language.NOTIFICATION_DIALOG.GENERATE_JSON_PAYLOAD,
+      content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
+      hasCloseButton: true,
+    };
 
     this.loadingScreenService.open(loadingScreenOptions);
     return this.modelService.synchronizeModelToRdf().pipe(
-      switchMap(() => this.editorService.generateJsonSample(this.modelService.getLoadedAspectModel().rdfModel).pipe(first())),
+      switchMap(() => this.editorService.generateJsonSample(this.modelService.currentRdfModel).pipe(first())),
       catchError(() => {
         this.notificationsService.error({
-          title: this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_JSON_SAMPLE,
-          message: this.translate.language.TOOLBAR.GENERATE_HANDLING.INVALID_MODEL,
+          title: this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SAMPLE,
+          message: this.translate.language.GENERATE_HANDLING.INVALID_MODEL,
           timeout: 5000,
         });
-        return throwError(() => this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_JSON_SAMPLE);
+        return throwError(() => this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SAMPLE);
       }),
       map(data => {
         this.openPreview(
-          this.translate.language.TOOLBAR.GENERATE_HANDLING.JSON_PAYLOAD_PREVIEW,
+          this.translate.language.GENERATE_HANDLING.JSON_PAYLOAD_PREVIEW,
           this.formatStringToJson(data),
-          !this.modelService.getLoadedAspectModel().aspect
-            ? this.currentCachedFile.fileName
-            : `${this.modelService.getLoadedAspectModel().aspect.name}-sample.json`
+          !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-sample.json`,
         );
       }),
-      finalize(() => this.loadingScreenService.close())
+      finalize(() => this.loadingScreenService.close()),
     );
   }
 
-  generateJsonSchema(loadingScreenOptions: LoadingScreenOptions): Observable<any> {
+  onGenerateJsonSchema() {
+    const cb = () => this.generateJsonSchema().pipe(first()).subscribe();
+    this.validateFile(cb);
+  }
+
+  generateJsonSchema(): Observable<any> {
     if (!this.modelService.getLoadedAspectModel().rdfModel) {
       return throwError(() => {
         this.logService.logError(this.noRdfModelAvailable);
         return this.noRdfModelAvailable;
       });
     }
+
+    const loadingScreenOptions: LoadingScreenOptions = {
+      title: this.translate.language.NOTIFICATION_DIALOG.GENERATE_JSON_SCHEMA,
+      content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
+      hasCloseButton: true,
+    };
 
     return this.modelService.synchronizeModelToRdf().pipe(
       switchMap(() => this.openLanguageSelector()),
       switchMap((language: string) => {
         this.loadingScreenService.open(loadingScreenOptions);
-        return this.editorService.generateJsonSchema(this.modelService.getLoadedAspectModel().rdfModel, language).pipe(first());
+        return this.editorService.generateJsonSchema(this.modelService.currentRdfModel, language).pipe(first());
       }),
       catchError(() => {
         this.notificationsService.error({
-          title: this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_JSON_SCHEMA,
-          message: this.translate.language.TOOLBAR.GENERATE_HANDLING.INVALID_MODEL,
+          title: this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SCHEMA,
+          message: this.translate.language.GENERATE_HANDLING.INVALID_MODEL,
           timeout: 5000,
         });
-        return throwError(() => this.translate.language.TOOLBAR.GENERATE_HANDLING.FAIL_GENERATE_JSON_SCHEMA);
+        return throwError(() => this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SCHEMA);
       }),
       map(data => {
         this.loadingScreenService.close();
         this.openPreview(
-          this.translate.language.TOOLBAR.GENERATE_HANDLING.JSON_SCHEMA_PREVIEW,
+          this.translate.language.GENERATE_HANDLING.JSON_SCHEMA_PREVIEW,
           this.formatStringToJson(data),
-          !this.modelService.getLoadedAspectModel().aspect
-            ? this.currentCachedFile.fileName
-            : `${this.modelService.getLoadedAspectModel().aspect.name}-schema.json`
+          !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-schema.json`,
         );
-      })
+      }),
     );
+  }
+
+  validateFile(callback?: Function) {
+    this.fileHandlingService.validateFile(callback).pipe(first()).subscribe();
   }
 
   private formatStringToJson(data: string): string {
@@ -284,10 +334,10 @@ export class GenerateHandlingService {
         fileName: fileName,
       },
     };
-    return this.ngZone.run(() => this.matDialog.open(PreviewDialogComponent, config).afterClosed());
+    return this.matDialog.open(PreviewDialogComponent, config).afterClosed();
   }
 
   private openLanguageSelector() {
-    return this.ngZone.run(() => this.matDialog.open(LanguageSelectorModalComponent).afterClosed());
+    return this.matDialog.open(LanguageSelectorModalComponent).afterClosed();
   }
 }

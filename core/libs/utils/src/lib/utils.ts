@@ -40,6 +40,31 @@ export const readFile = (file: File): Observable<string> => {
 };
 
 /**
+ * Creates a new File instance with the given file content
+ *
+ * @param content a content to be used in the file
+ * @param fileName a name of the file
+ * @param mimeType MIME type to be used (default is 'text/plain')
+ * @returns new File instance
+ */
+export const createFile = (content: string | BufferSource, fileName: string, mimeType = 'text/plain'): File => {
+  const blob = new Blob([content], {type: mimeType});
+  return new File([blob], fileName, {type: mimeType});
+};
+
+/**
+ * Decodes Buffer-like content back to its string representation
+ *
+ * @param content data to decode
+ * @param encoding is an encoding type to be used while decoding (default is 'utf-8')
+ * @returns decoded string
+ */
+export const decodeText = (content: BufferSource, encoding = 'utf-8'): string => {
+  const decoder = new TextDecoder(encoding);
+  return decoder.decode(content);
+};
+
+/**
  * Sets a unique name for a given model element, ensuring no naming collisions in the provided RDF model.
  *
  * @param {BaseMetaModelElement} modelElement - The model element whose name should be set.
@@ -51,7 +76,7 @@ export const setUniqueElementName = (
   modelElement: BaseMetaModelElement,
   rdfModel: RdfModel,
   namespaceCacheService: NamespacesCacheService,
-  name?: string
+  name?: string,
 ) => {
   name = name || `${modelElement.className}`.replace('Default', '');
 
