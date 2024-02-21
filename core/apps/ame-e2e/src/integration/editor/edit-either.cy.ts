@@ -49,7 +49,7 @@ describe('Test editing Either', () => {
           .type('LeftCharacteristic', {force: true})
           .get('mat-option')
           .contains('LeftCharacteristic')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() =>
         cy
@@ -58,7 +58,7 @@ describe('Test editing Either', () => {
           .type('RightCharacteristic', {force: true})
           .get('mat-option')
           .contains('RightCharacteristic')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cyHelp.hasAddLeftAndRightShapeOverlay('Either1'))
@@ -94,11 +94,11 @@ describe('Test editing Either', () => {
         cy.getCellLabel('Either1', META_MODEL_preferredName).should('eq', `${META_MODEL_preferredName} = new-preferredName @en`);
         cy.getCellLabel('Either1', META_MODEL_description).should(
           'eq',
-          `${META_MODEL_description} = New description for the new created characteristic @en`,
+          `${META_MODEL_description} = New description for the new created characteristic @en`
         );
         cy.getCellLabel('Either1', META_MODEL_see).should(
           'eq',
-          `${META_MODEL_see} = http://www.see1.de,http://www.see2.de,http://www.see3.de`,
+          `${META_MODEL_see} = http://www.see1.de,http://www.see2.de,http://www.see3.de`
         );
       })
       .then(() => cy.getUpdatedRDF())
@@ -111,7 +111,7 @@ describe('Test editing Either', () => {
       .then(aspect => {
         expect(aspect.properties[0].property.characteristic.getPreferredName('en')).to.equal('new-preferredName');
         expect(aspect.properties[0].property.characteristic.getDescription('en')).to.equal(
-          'New description for the new created characteristic',
+          'New description for the new created characteristic'
         );
         expect(aspect.properties[0].property.characteristic.getSeeReferences()).to.have.length(3);
         expect(aspect.properties[0].property.characteristic.getSeeReferences()[2]).to.equal('http://www.see3.de');
@@ -130,7 +130,7 @@ describe('Test editing Either', () => {
           .type('NewLeftCharacteristic', {force: true})
           .get('mat-option')
           .contains('LeftCharacteristic')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).should('be.disabled'))
       .then(() =>
@@ -140,7 +140,7 @@ describe('Test editing Either', () => {
           .type('NewRightCharacteristic', {force: true})
           .get('mat-option')
           .contains('RightCharacteristic')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getAspect())
@@ -206,7 +206,7 @@ describe('Test editing Either', () => {
           .type('LeftCharacteristic', {force: true})
           .get('mat-option')
           .contains('LeftCharacteristic')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() =>
         cy
@@ -215,7 +215,7 @@ describe('Test editing Either', () => {
           .type('RightCharacteristic', {force: true})
           .get('mat-option')
           .contains('RightCharacteristic')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('Either1'))
@@ -253,7 +253,7 @@ describe('Test editing Either', () => {
             .type('LeftCharacteristic', {force: true})
             .get('mat-option')
             .contains('LeftCharacteristic')
-            .click({force: true}),
+            .click({force: true})
         )
         .then(() =>
           cy
@@ -262,7 +262,7 @@ describe('Test editing Either', () => {
             .type('RightCharacteristic', {force: true})
             .get('mat-option')
             .contains('RightCharacteristic')
-            .click({force: true}),
+            .click({force: true})
         )
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.shapeExists('LeftCharacteristic'))
@@ -317,7 +317,7 @@ describe('Test editing Either', () => {
           .type('NewCharacteristic', {force: true})
           .get('mat-option')
           .contains('NewCharacteristic')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() =>
         cy
@@ -326,7 +326,7 @@ describe('Test editing Either', () => {
           .type('NewCharacteristic', {force: true})
           .get('mat-option')
           .contains('NewCharacteristic')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_notificationsBtn).click({force: true}))
       .then(() => {
@@ -342,7 +342,7 @@ describe('Test editing Either', () => {
           .type('Characteristic1', {force: true})
           .get('mat-option')
           .contains('Characteristic1')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() =>
         cy
@@ -351,7 +351,7 @@ describe('Test editing Either', () => {
           .type('Characteristic1', {force: true})
           .get('mat-option')
           .contains('Characteristic1')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_notificationsBtn).click({force: true}))
       .then(() => {

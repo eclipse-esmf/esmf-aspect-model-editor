@@ -36,13 +36,13 @@ describe('Time Series Entity', () => {
       .then(() =>
         cy
           .getCellLabel('Entity1', 'description')
-          .should('eq', 'Inherited\ndescription = Defines a position in a three dimensional space. @en'),
+          .should('eq', 'Inherited\ndescription = Defines a position in a three dimensional space. @en')
       )
 
       .then(() => cy.clickShape('Point3d'))
       .then(() => cy.getCellLabel('Point3d', 'preferredName').should('eq', 'preferredName = Point 3D @en'))
       .then(() =>
-        cy.getCellLabel('Point3d', 'description').should('eq', 'description = Defines a position in a three dimensional space. @en'),
+        cy.getCellLabel('Point3d', 'description').should('eq', 'description = Defines a position in a three dimensional space. @en')
       )
 
       .then(() => cy.clickShape('[x]'))

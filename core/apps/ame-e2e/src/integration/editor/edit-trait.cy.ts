@@ -41,7 +41,7 @@ describe('Test editing Trait', () => {
             // expect(rdf).to.contain('samm:description "New description for the new created trait"@en');
             cy.getAspect().then(aspect => {
               expect(aspect.properties[0].property.characteristic.getDescription('en')).to.equal(
-                'New description for the new created trait',
+                'New description for the new created trait'
               );
             });
           });
