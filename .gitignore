@@ -60,3 +60,6 @@ lsp
 #jest
 jest-coverage
 junit.xml
+
+# nx
+core/.nx

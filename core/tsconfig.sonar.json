@@ -32,6 +32,7 @@
     "libs/rdf/src/**/*.ts",
     "libs/settings-dialog/src/**/*.ts",
     "libs/shared/src/**/*.ts",
-    "libs/vocabulary/src/**/*.ts"
+    "libs/vocabulary/src/**/*.ts",
+    "libs/sidebar/src/**/*.ts"
   ]
 }

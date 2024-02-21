@@ -39,6 +39,7 @@
       "@ame/settings-dialog": ["libs/settings-dialog/src/index.ts"],
       "@ame/shared": ["libs/shared/src/index.ts"],
       "@ame/translation": ["libs/translation/src/index.ts"],
+      "@ame/sidebar": ["libs/sidebar/src/index.ts"],
       "@ame/utils": ["libs/utils/src/index.ts"],
       "@ame/vocabulary": ["libs/vocabulary/src/index.ts"]
     },

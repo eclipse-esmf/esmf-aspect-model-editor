@@ -10,7 +10,6 @@
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
-    "noStrictGenericChecks": true,
     "strictNullChecks": false
   },
   "angularCompilerOptions": {

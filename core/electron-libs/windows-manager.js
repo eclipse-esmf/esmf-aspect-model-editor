@@ -14,9 +14,11 @@
 // @ts-check
 
 /** @typedef {{namespace: string, file: string, editElement?: string, fromWorkspace?: boolean}} WindowOptions */
-/** @typedef {{id: number, window: BrowserWindow, options: WindowOptions | null}} WindowInfo */
+/** @typedef {{id: number, window: BrowserWindow, options: WindowOptions | null, menu: Menu}} WindowInfo */
+/** @typedef {{namespace: string; file: string}} LockedFile */
 
-const {BrowserWindow, ipcMain} = require('electron');
+const {BrowserWindow, ipcMain, Menu} = require('electron');
+const {APP_MENU_TEMPLATE, getIcon} = require('./app-menu');
 const electronRemote = require('@electron/remote/main');
 const path = require('path');
 const electronLocalShortcut = require('electron-localshortcut');
@@ -40,7 +42,10 @@ const {
   REQUEST_ADD_LOCK,
   REQUEST_REMOVE_LOCK,
   REQUEST_LOCKED_FILES,
+  SIGNAL_WINDOW_FOCUS,
+  SIGNAL_UPDATE_MENU_ITEM,
 } = require('./events');
+const {inDevMode, icons} = require('./consts');
 
 class WindowsManager {
   #windowConfig = {
@@ -53,11 +58,13 @@ class WindowsManager {
     },
   };
 
-  /** @type {WindowInfo[]} */
-  activeWindows = [];
-
-  /** @type {{namespace: string; file: string}[]} */
-  lockedFiles = [];
+  // State is mutable at the moment
+  /** @type {{focusedWindowId?: number, activeWindows: WindowInfo[], lockedFiles: LockedFile[]}} */
+  state = {
+    focusedWindowId: undefined,
+    activeWindows: [],
+    lockedFiles: [],
+  };
 
   activateCommunicationProtocol() {
     ipcMain.on(REQUEST_CREATE_WINDOW, (_, options) => this.createWindow(options));
@@ -65,7 +72,7 @@ class WindowsManager {
     // updates loaded file data with new loaded one or with new file data
     ipcMain.on(REQUEST_UPDATE_DATA, (event, options) => {
       const windowId = event.sender.id;
-      const windowInfo = this.activeWindows.find(windowInfo => windowInfo.id === windowId);
+      const windowInfo = this.state.activeWindows.find(windowInfo => windowInfo.id === windowId);
 
       if (!windowInfo) return;
       if (windowInfo.options?.fromWorkspace) {
@@ -89,7 +96,7 @@ class WindowsManager {
     // maximizes window if it exists
     ipcMain.on(REQUEST_MAXIMIZE_WINDOW, event => {
       const windowId = event.sender.id;
-      const window = this.activeWindows.find(windowInfo => windowInfo.id === windowId)?.window;
+      const window = this.state.activeWindows.find(windowInfo => windowInfo.id === windowId)?.window;
       if (window) {
         window.maximize();
       }
@@ -97,16 +104,16 @@ class WindowsManager {
 
     // checks to see if the is only one window opened
     ipcMain.on(REQUEST_IS_FIRST_WINDOW, event => {
-      event.sender.send(RESPONSE_IS_FIRST_WINDOW, this.activeWindows.length <= 1);
+      event.sender.send(RESPONSE_IS_FIRST_WINDOW, this.state.activeWindows.length <= 1);
     });
 
     // closes window by force
     ipcMain.on(REQUEST_CLOSE_WINDOW, event => {
       const windowId = event.sender.id;
-      const index = this.activeWindows.findIndex(windowInfo => windowId === windowInfo.id);
-      const win = index >= 0 ? this.activeWindows[index]?.window : null;
+      const index = this.state.activeWindows.findIndex(windowInfo => windowId === windowInfo.id);
+      const win = index >= 0 ? this.state.activeWindows[index]?.window : null;
 
-      this.activeWindows.splice(index, 1);
+      this.state.activeWindows.splice(index, 1);
 
       if (!win) {
         return;
@@ -117,40 +124,102 @@ class WindowsManager {
 
     ipcMain.on(SIGNAL_REFRESH_WORKSPACE, (event, ignoreSenderWindow = false) => {
       const windowId = event?.sender?.id;
-      this.activeWindows.forEach(({id, window}) => {
+      this.state.activeWindows.forEach(({id, window}) => {
         if (ignoreSenderWindow && windowId && id === windowId) return;
         window.webContents.send(REQUEST_REFRESH_WORKSPACE);
       });
     });
 
     ipcMain.on(REQUEST_ADD_LOCK, (_, {namespace, file}) => {
-      const found = this.lockedFiles.find(lockedFile => lockedFile.namespace === namespace && lockedFile.file === file);
+      const found = this.state.lockedFiles.find(lockedFile => lockedFile.namespace === namespace && lockedFile.file === file);
       if (!found) {
         console.log('REQUEST_ADD_LOCK', namespace, file);
-        this.lockedFiles.push({namespace, file});
-        this.activeWindows.forEach(({window}) => window.webContents.send(RESPONSE_LOCKED_FILES, this.lockedFiles));
+        this.state.lockedFiles.push({namespace, file});
+        this.state.activeWindows.forEach(({window}) => window.webContents.send(RESPONSE_LOCKED_FILES, this.state.lockedFiles));
       }
     });
 
     ipcMain.on(REQUEST_REMOVE_LOCK, (_, {namespace, file}) => {
-      const foundIndex = this.lockedFiles.findIndex(lockedFile => lockedFile.namespace === namespace && lockedFile.file === file);
+      const foundIndex = this.state.lockedFiles.findIndex(lockedFile => lockedFile.namespace === namespace && lockedFile.file === file);
       if (foundIndex > -1) {
         console.log('REQUEST_REMOVE_LOCK', namespace, file);
-        this.lockedFiles.splice(foundIndex, 1);
-        this.activeWindows.forEach(({window}) => window.webContents.send(RESPONSE_LOCKED_FILES, this.lockedFiles));
+        this.state.lockedFiles.splice(foundIndex, 1);
+        this.state.activeWindows.forEach(({window}) => window.webContents.send(RESPONSE_LOCKED_FILES, this.state.lockedFiles));
       }
     });
 
     ipcMain.on(REQUEST_LOCKED_FILES, event => {
-      console.log('REQUEST_LOCKED_FILES', this.lockedFiles);
-      event.sender.send(RESPONSE_LOCKED_FILES, this.lockedFiles);
+      console.log('REQUEST_LOCKED_FILES', this.state.lockedFiles);
+      event.sender.send(RESPONSE_LOCKED_FILES, this.state.lockedFiles);
+    });
+
+    ipcMain.on(SIGNAL_WINDOW_FOCUS, event => {
+      console.log('SIGNAL_WINDOW_FOCUS', event.sender.id);
+      this.state.focusedWindowId = event.sender.id;
+      this.setActiveMenu();
+    });
+
+    ipcMain.on(SIGNAL_UPDATE_MENU_ITEM, (event, {id, payload}) => {
+      console.log('SIGNAL_UPDATE_MENU_ITEM', event.sender.id);
+      this.state.focusedWindowId = event.sender.id;
+      this.updateMenuItemById(id, payload);
     });
   }
+
+  //#region Selectors
+
+  selectActiveWindow() {
+    if (!this.state.focusedWindowId) {
+      return;
+    }
+
+    return this.state.activeWindows.find(window => window.id === this.state.focusedWindowId);
+  }
+
+  selectActiveWindowMenu() {
+    const activeWindow = this.selectActiveWindow();
+    return activeWindow?.menu;
+  }
+
+  selectMenuItemById(id) {
+    const menu = this.selectActiveWindowMenu();
+    return menu?.getMenuItemById(id);
+  }
+
+  //#endregion
+  //#region Actions
+
+  #updates = [];
+  #timeout;
+
+  // Mutates the menu item object
+  updateMenuItemById(id, update) {
+    if (this.#timeout) {
+      clearTimeout(this.#timeout);
+      this.#updates.push({id, update});
+    }
+
+    this.#timeout = setTimeout(() => {
+      while (this.#updates.length) {
+        const currentUpdate = this.#updates[0];
+        this.#updateMenuIcon(currentUpdate.id, currentUpdate.update);
+        this.#updates.shift();
+      }
+      Menu.setApplicationMenu(Menu.buildFromTemplate([...APP_MENU_TEMPLATE]));
+    }, 150);
+  }
+
+  setActiveMenu() {
+    const menu = this.selectActiveWindowMenu();
+    menu && Menu.setApplicationMenu(menu);
+  }
+
+  //#endregion
 
   /** @param {WindowOptions | null} options */
   createWindow(options) {
     const createdWindow = options
-      ? this.activeWindows.find(
+      ? this.state.activeWindows.find(
           winInfo =>
             options.namespace === winInfo.options?.namespace && winInfo.options?.file === options.file && winInfo.options?.fromWorkspace
         )
@@ -175,21 +244,64 @@ class WindowsManager {
       id: newWindow.webContents.id,
       window: newWindow,
       options,
+      menu: Menu.buildFromTemplate(APP_MENU_TEMPLATE),
     };
 
     this.#configureWindow(windowInfo);
     this.#setWindowListeners(windowInfo);
 
-    if (!this.activeWindows.length) {
+    if (!this.state.activeWindows.length) {
       electronRemote.initialize();
     }
 
-    this.activeWindows.push(windowInfo);
+    this.state.activeWindows.push(windowInfo);
+    this.state.focusedWindowId = windowInfo.id;
+
     electronRemote.enable(newWindow.webContents);
     this.#listenForWindowDataRequest();
     this.#loadApplication(windowInfo);
 
     return newWindow;
+  }
+
+  /**
+   * @param {string} id
+   * @param {Record<string, any>} updates
+   */
+  #updateMenuIcon(id, updates) {
+    const activeMenu = this.selectActiveWindowMenu();
+    if (!activeMenu) return;
+
+    /** @type {any[]}  */
+    const stack = [APP_MENU_TEMPLATE];
+
+    while (stack.length) {
+      const menuList = stack.pop();
+      if (!menuList) continue;
+
+      for (const menuItem of menuList) {
+        /** @type {any} */
+        const menu = activeMenu.getMenuItemById(menuItem.id);
+
+        if (!menu) continue;
+        if (menuItem.submenu?.length) stack.push(menuItem.submenu);
+
+        if (!this.#updates.find(({id: updateId}) => id === updateId)) {
+          menuItem.label = menu.label;
+          menuItem.icon = menu.icon;
+        }
+
+        if (id === menuItem.id) {
+          for (const key in updates) {
+            menuItem[key] = updates[key];
+          }
+
+          if (typeof updates.enabled === 'boolean') {
+            menuItem.icon = getIcon(updates.enabled ? icons[id].enabled : icons[id].disabled);
+          }
+        }
+      }
+    }
   }
 
   /** @param {WindowInfo} windowInfo */
@@ -198,6 +310,7 @@ class WindowsManager {
 
     win.show();
     win.removeMenu();
+    Menu.setApplicationMenu(windowInfo.menu);
 
     win.webContents.setWindowOpenHandler(() => {
       return {action: 'allow', overrideBrowserWindowOptions: {width: 1280, height: 720}};
@@ -207,9 +320,9 @@ class WindowsManager {
   /** @param {WindowInfo} windowInfo */
   #setWindowListeners(windowInfo) {
     windowInfo.window.on('closed', () => {
-      const windowIndex = this.activeWindows.findIndex(({id}) => windowInfo.id === id);
+      const windowIndex = this.state.activeWindows.findIndex(({id}) => windowInfo.id === id);
       if (windowIndex >= 0) {
-        this.activeWindows.splice(windowIndex, 1);
+        this.state.activeWindows.splice(windowIndex, 1);
         console.log(`Window closed: \x1b[36m${windowInfo.id}\x1b[0m`);
       }
     });
@@ -229,7 +342,10 @@ class WindowsManager {
     const executeFn = event => {
       console.log('RECEIVED REQUEST WINDOW DATA');
       const windowId = event.sender.id;
-      const {id, options} = this.activeWindows.find(window => window.id === windowId);
+      const {id, options} = this.state.activeWindows.find(window => window.id === windowId) || {};
+      if (!id) {
+        return;
+      }
       event.sender.send(RESPONSE_WINDOW_DATA, {id, options});
     };
 
@@ -244,9 +360,9 @@ class WindowsManager {
     });
   }
 
-  /** @param {{window: BrowserWindow, id: string}} _ */
+  /** @param {WindowInfo} _ */
   #loadApplication({window, id}) {
-    if (process.argv.includes('--dev')) {
+    if (inDevMode()) {
       return window.loadURL('http://localhost:4200').then(() => {
         this.#enableDevtools(window);
         console.log(`Window \x1b[36m${id}\x1b[0m created!`);

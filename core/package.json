@@ -122,7 +122,8 @@
     "cypress:open": "npm run cypress:clean && npx cypress open",
     "cypress:ci": "start-server-and-test start http://localhost:4200 cypress:headless",
     "license-report": "license-report --only=prod --output=html --department.value=ESMF --relatedTo.value=esmf-aspect-model-editor",
-    "prepare": "cd .. && husky install core/.husky"
+    "prepare": "cd .. && husky install core/.husky",
+    "generate-translate-interfaces": "node ./utils/create_interface.js ..\\apps\\ame\\src\\assets\\i18n\\en.json ..\\libs\\translation\\src\\lib\\models\\language.interface.ts"
   },
   "nyc": {
     "extends": "@istanbuljs/nyc-config-typescript",
@@ -235,7 +236,7 @@
     "nx": "16.10",
     "nx-cloud": "16.0.5",
     "nyc": "^15.1.0",
-    "prettier": "2.6.2",
+    "prettier": "^3.2.5",
     "replace-in-files-cli": "^2.0.0",
     "rimraf": "^3.0.2",
     "source-map-support": "^0.5.19",

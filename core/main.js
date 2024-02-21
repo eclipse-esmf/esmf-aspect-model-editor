@@ -13,19 +13,18 @@
 
 // @ts-check
 
-const {app, globalShortcut, BrowserWindow, Menu} = require('electron');
+const {app, globalShortcut, BrowserWindow, Menu, nativeTheme} = require('electron');
 const platformData = require('./electron-libs/os-checker');
 const core = require('./electron-libs/core');
 const {windowsManager} = require('./electron-libs/windows-manager');
+const {inProdMode} = require('./electron-libs/consts');
 
 if (require('electron-squirrel-startup')) process.exit();
 
-if (!process.argv.includes('--dev')) {
+if (inProdMode()) {
   // Disable test logging on production
   console.log = () => {};
 }
-
-Menu.setApplicationMenu(null);
 
 if (platformData.isWin) app.setUserTasks([]);
 
@@ -51,3 +50,5 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => {
   core.cleanUpProcesses();
 });
+
+nativeTheme.themeSource = 'light';
