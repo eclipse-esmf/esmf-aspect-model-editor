@@ -11,44 +11,50 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div class="editor-canvas-layout">
-  <ame-editor-toolbar (closeEditDialog)="closeShapeSettings()"></ame-editor-toolbar>
+<ame-editor-toolbar *ngIf="isToolbarVisible$ | async" class="toolbar" (closeEditDialog)="closeShapeSettings()"></ame-editor-toolbar>
+<ame-sidebar class="sidebar"></ame-sidebar>
 
-  <div class="content">
-    <ame-editor-sidebar></ame-editor-sidebar>
-    <ame-mx-editor class="editor">
-      <div class="canvas">
-        <div #graph id="graph"></div>
-        <ame-editor-canvas-menu></ame-editor-canvas-menu>
-      </div>
-    </ame-mx-editor>
-    <section
-      *ngIf="isShapeSettingsOpened$ | async as isOpened"
-      [style.width.px]="sidebarWidth"
-      class="info-section"
-      cdkDragLockAxis="x"
-      cdkDrag
-    >
-      <div
-        data-cy="info-section-drag"
-        class="info-section__gutter"
-        cdkDrag
-        cdkDragHandle
-        cdkDragLockAxis="x"
-        (cdkDragEnded)="onDragEnded($event)"
-        [cdkDragFreeDragPosition]="sidebarDragPosition"
-      >
-        <div class="info-section__indication-line"></div>
-        <mat-icon class="info-section__icon">more_vert</mat-icon>
-      </div>
-      <ame-shape-settings
-        [modelElement]="modelElement"
-        [isOpened]="isOpened"
-        (save)="onSave($event)"
-        (afterClose)="resetSelectedShapeForUpdate()"
-      >
-      </ame-shape-settings>
-    </section>
-  </div>
-  <ame-footer class="footer"></ame-footer>
+<div *ngIf="isModelEmpty" class="empty-model">
+  <span>
+    Drag an element <br />
+    to start creating a model
+  </span>
 </div>
+<div #graph id="graph"></div>
+
+<section
+  *ngIf="isShapeSettingsOpened$ | async as isOpened"
+  [style.width.px]="sidebarWidth"
+  class="info-section"
+  cdkDragLockAxis="x"
+  cdkDrag
+>
+  <div
+    [cdkDragFreeDragPosition]="sidebarDragPosition"
+    (cdkDragEnded)="onDragEnded($event)"
+    data-cy="info-section-drag"
+    class="info-section__gutter"
+    cdkDrag
+    cdkDragHandle
+    cdkDragLockAxis="x"
+  >
+    <div class="info-section__indication-line"></div>
+    <mat-icon class="info-section__icon">more_vert</mat-icon>
+  </div>
+  <ame-shape-settings
+    [modelElement]="modelElement"
+    [isOpened]="isOpened"
+    (save)="onSave($event)"
+    (afterClose)="resetSelectedShapeForUpdate()"
+  >
+  </ame-shape-settings>
+</section>
+
+<div [class.hidden]="(isMapVisible$ | async) === false" id="outline" class="map-graph">
+  <div class="map" (click)="toggleMap()">
+    <mat-icon>map</mat-icon>
+  </div>
+</div>
+
+<ame-elements-search *ngIf="searchesStateService.elementsSearch.opened$ | async"></ame-elements-search>
+<ame-files-search *ngIf="searchesStateService.filesSearch.opened$ | async"></ame-files-search>

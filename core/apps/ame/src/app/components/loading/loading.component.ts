@@ -10,99 +10,66 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-
-import {ModelApiService} from '@ame/api';
+import {ModelApiService, PREDEFINED_MODELS} from '@ame/api';
 import {ElectronSignals, ElectronSignalsService, ElectronTunnelService} from '@ame/shared';
-import {AfterViewInit, Component, NgZone, OnDestroy, inject, OnInit} from '@angular/core';
+import {AfterViewInit, Component, inject, NgZone, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
-import {Observable, Subscription, forkJoin, switchMap, take} from 'rxjs';
-import {LanguageTranslationService} from '@ame/translation';
+import {forkJoin, Observable, of, Subscription, switchMap, take} from 'rxjs';
 
 @Component({
   templateUrl: 'loading.component.html',
   styleUrls: ['loading.component.scss'],
 })
-export class LoadingComponent implements OnInit, AfterViewInit, OnDestroy {
+export class LoadingComponent implements AfterViewInit, OnDestroy {
   private subscription = new Subscription();
-  private language = 'en';
+
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
 
   constructor(
     private router: Router,
     private electronTunnel: ElectronTunnelService,
     private modelApiService: ModelApiService,
-    private translate: LanguageTranslationService,
     private ngZone: NgZone
   ) {}
 
-  ngOnInit(): void {
-    this.language = this.getApplicationLanguage();
-    this.translate.initTranslationService(this.language);
-  }
-
   ngAfterViewInit(): void {
-    this.initializeLanguage();
+    if (!this.electronTunnel.ipcRenderer) {
+      this.modelApiService.getPredefinedModel(PREDEFINED_MODELS.SIMPLE_ASPECT).subscribe(model => {
+        this.electronTunnel.startUpData$.next({isFirstWindow: true, model});
+        this.router.navigate(['/editor']);
+      });
+      return;
+    }
+
+    this.electronSignalsService.call('requestMaximizeWindow');
+
+    const sub = forkJoin([this.electronSignalsService.call('isFirstWindow'), this.loadModelText()])
+      .pipe(take(1))
+      .subscribe({
+        next: ([isFirstWindow, model]) => {
+          this.electronTunnel.startUpData$.next({isFirstWindow, model});
+        },
+        error: error => console.log(error),
+        complete: () => {
+          // Because complete is called in electron callback,
+          // router.navigate is called outside ngZone
+          // and needs to be called in ngZone to function
+          this.ngZone.run(() => this.router.navigate(['/editor']));
+        },
+      });
+
+    this.subscription.add(sub);
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  private initializeLanguage(): void {
-    this.translate.getTranslation(this.language).subscribe({
-      next: () => this.handleLanguageInitialization(),
-      error: error => console.error('Error during translation initialization:', error),
-    });
-  }
-
-  private getApplicationLanguage(): string {
-    return localStorage.getItem('applicationLanguage') || this.translate.translateService.defaultLang;
-  }
-
-  private handleLanguageInitialization(): void {
-    if (!this.electronTunnel.ipcRenderer) {
-      this.loadDefaultModel();
-      return;
-    }
-
-    this.requestWindowMaximization();
-    this.handleElectronEnvironment();
-  }
-
-  private loadDefaultModel(): void {
-    const modelSub = this.modelApiService.getDefaultAspectModel().subscribe(model => {
-      this.electronTunnel.startUpData$.next({isFirstWindow: true, model});
-      this.navigateToEditor();
-    });
-
-    this.subscription.add(modelSub);
-  }
-
-  private requestWindowMaximization(): void {
-    this.electronSignalsService.call('requestMaximizeWindow');
-  }
-
-  private handleElectronEnvironment(): void {
-    const electronEnvSub = forkJoin([this.electronSignalsService.call('isFirstWindow'), this.loadModelText()])
-      .pipe(take(1))
-      .subscribe({
-        next: ([isFirstWindow, model]) => this.electronTunnel.startUpData$.next({isFirstWindow, model}),
-        error: error => console.error('Error in electron environment:', error),
-        complete: () => this.ngZone.run(() => this.navigateToEditor()),
-      });
-
-    this.subscription.add(electronEnvSub);
-  }
-
-  private navigateToEditor(): void {
-    this.router.navigate(['/editor']);
-  }
-
   loadModelText(): Observable<string> {
     return this.electronSignalsService.call('requestWindowData').pipe(
       switchMap(data => {
         if (!data?.options) {
-          return this.modelApiService.getDefaultAspectModel();
+          return of(null);
         }
 
         const {namespace, file} = data.options;

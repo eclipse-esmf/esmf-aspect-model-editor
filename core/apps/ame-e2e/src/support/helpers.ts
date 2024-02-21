@@ -17,33 +17,36 @@ import {MxGraphAttributeService} from '@ame/mx-graph';
 import {mxgraph, mxgraphFactory} from 'mxgraph-factory';
 import {
   FIELD_name,
-  SELECTOR_dialogInputModel,
   SELECTOR_editorSaveButton,
-  SELECTOR_fileMenuLoadAspectModelButton,
-  SELECTOR_namespace,
-  SELECTOR_namespaceFile,
-  SELECTOR_namespaceFileMenuButton,
-  SELECTOR_namespaceFileName,
-  SELECTOR_namespaceName,
-  SELECTOR_namespaceTabSaveButton,
   SELECTOR_namespaceTabValueInput,
   SELECTOR_namespaceTabVersionInput,
-  SELECTOR_openNamespacesButton,
+  SELECTOR_overrideNamespace,
   SELECTOR_settingsButton,
-  SELECTOR_tbLoadButton,
-  SELECTOR_tbSaveButton,
-  SELECTOR_tbSaveMenuSaveToWorkspaceButton,
+  SettingsDialogSelectors,
   SIDEBAR_CLOSE_BUTTON,
 } from './constants';
+import {FileHandlingService} from '@ame/editor';
+import {finalize} from 'rxjs/operators';
 
 const {mxConstants} = mxgraphFactory({});
 
+/**
+ * Provides helper functions for performing various actions and checks in Cypress tests related to a graphical interface.
+ */
 export class cyHelp {
-  public static checkAspectDefaultExists() {
+  /**
+   * Clicks on a shape with the given name.
+   * @returns {Cypress.Chainable} Cypress chainable object.
+   */
+  public static checkAspectDefaultExists(): Cypress.Chainable {
     return cy.clickShape('AspectDefault');
   }
 
-  public static closeSidebar() {
+  /**
+   * Closes the sidebar if it is open by clicking the close button.
+   * @returns {Cypress.Chainable} Cypress chainable object.
+   */
+  public static closeSidebar(): Cypress.Chainable {
     return cy
       .get('body')
       .find(SIDEBAR_CLOSE_BUTTON)
@@ -55,7 +58,11 @@ export class cyHelp {
       });
   }
 
-  public static forceChangeDetection() {
+  /**
+   * Forces Angular's change detection to run, updating the view with any data model changes.
+   * @returns {Cypress.Chainable} Cypress chainable object.
+   */
+  public static forceChangeDetection(): Cypress.Chainable {
     let angular;
     let $document;
     return cy
@@ -68,11 +75,20 @@ export class cyHelp {
       });
   }
 
-  public static clickSaveButton() {
+  /**
+   * Clicks the save button after forcing change detection.
+   * @returns {Cypress.Chainable} Cypress chainable object.
+   */
+  public static clickSaveButton(): Cypress.Chainable {
     return this.forceChangeDetection().then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}));
   }
 
-  // TODO: after we replace the add buttons with those from label, change this
+  /**
+   * Finds a shape by its name.
+   * @param {string} name The name of the shape.
+   * @param {Window} win The window object where the shape is located.
+   * @returns {mxgraph.mxCell} The found mxCell if any.
+   */
   public static findShapeByName(name: string, win: Window): mxgraph.mxCell {
     const mxGraphAttributeService: MxGraphAttributeService = win['angular.mxGraphAttributeService'];
 
@@ -82,11 +98,11 @@ export class cyHelp {
   }
 
   /**
-   * Finds the first shape which meets the condition
-   *
-   * @param shapeName The name of the target shape
-   * @param shapeFieldsPartialMatch An array of fields to compare with (partial matching is supported)
-   * @param win Window type for "Application Under Test(AUT)", can be accessed via "cy.window()"
+   * Finds the first shape that matches given fields.
+   * @param {string} shapeName The name of the target shape.
+   * @param {object[]} shapeFieldsPartialMatch Fields for partial matching.
+   * @param {Cypress.AUTWindow} win The window object from the application under test.
+   * @returns {mxgraph.mxCell} The found mxCell if any.
    */
   static findShapeByFields(shapeName: string, shapeFieldsPartialMatch: object[], win: Cypress.AUTWindow): mxgraph.mxCell {
     const mxGraphAttributeService: MxGraphAttributeService = win['angular.mxGraphAttributeService'];
@@ -110,7 +126,12 @@ export class cyHelp {
     });
   }
 
-  static hasAddShapeOverlay(cellName: string) {
+  /**
+   * Checks if a shape has an add shape overlay.
+   * @param {string} cellName The name of the cell to check.
+   * @returns {Cypress.Chainable} Cypress chainable object indicating the presence of the overlay.
+   */
+  static hasAddShapeOverlay(cellName: string): Cypress.Chainable {
     return cy.window().then(win => {
       const foundShape = cyHelp.findShapeByName(cellName, win);
       if (!foundShape) {
@@ -120,7 +141,12 @@ export class cyHelp {
     });
   }
 
-  static hasAddInputAndOutputShapeOverlay(cellName: string) {
+  /**
+   * Checks if a shape has both add input and output shape overlays.
+   * @param {string} cellName The name of the cell to check.
+   * @returns {Cypress.Chainable} Cypress chainable object indicating the presence of both input and output overlays.
+   */
+  static hasAddInputAndOutputShapeOverlay(cellName: string): Cypress.Chainable {
     return cy.window().then(win => {
       const foundShape = cyHelp.findShapeByName(cellName, win);
       if (!foundShape) {
@@ -130,7 +156,12 @@ export class cyHelp {
     });
   }
 
-  static hasAddLeftAndRightShapeOverlay(cellName: string) {
+  /**
+   * Checks if a shape has both left and right shape overlays.
+   * @param {string} cellName The name of the cell to check.
+   * @returns {Cypress.Chainable} Cypress chainable object indicating the presence of left and right overlays.
+   */
+  static hasAddLeftAndRightShapeOverlay(cellName: string): Cypress.Chainable {
     return cy.window().then(win => {
       const foundShape = cyHelp.findShapeByName(cellName, win);
       if (!foundShape) {
@@ -143,7 +174,12 @@ export class cyHelp {
     });
   }
 
-  static hasAddConstrainOverlay(cellName: string) {
+  /**
+   * Checks if a shape has an add constraint overlay.
+   * @param {string} cellName The name of the cell to check.
+   * @returns {Cypress.Chainable} Cypress chainable object indicating the presence of the constraint overlay.
+   */
+  static hasAddConstrainOverlay(cellName: string): Cypress.Chainable {
     return cy.window().then(win => {
       const foundShape = cyHelp.findShapeByName(cellName, win);
       if (!foundShape) {
@@ -153,38 +189,83 @@ export class cyHelp {
     });
   }
 
-  static getAddShapeOverlay(cell: mxgraph.mxCell) {
+  /**
+   * Retrieves the add shape overlay for a given cell.
+   * @param {mxgraph.mxCell} cell The cell to check for the overlay.
+   * @returns {mxgraph.mxCellOverlay} The add shape overlay, if present.
+   */
+  static getAddShapeOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
     return cell?.overlays?.find(({verticalAlign, offset: {x}}) => verticalAlign === mxConstants.ALIGN_BOTTOM && !x);
   }
 
-  static getAddInputShapeOverlay(cell: mxgraph.mxCell) {
+  /**
+   * Retrieves the add input shape overlay for a given cell.
+   * @param {mxgraph.mxCell} cell The cell to check for the input overlay.
+   * @returns {mxgraph.mxCellOverlay} The add input shape overlay, if present.
+   */
+  static getAddInputShapeOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
     return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Input Property');
   }
 
-  static getAddOutputShapeOverlay(cell: mxgraph.mxCell) {
+  /**
+   * Retrieves the add output shape overlay for a given cell.
+   * @param {mxgraph.mxCell} cell The cell to check for the output overlay.
+   * @returns {mxgraph.mxCellOverlay} The add output shape overlay, if present.
+   */
+  static getAddOutputShapeOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
     return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Output Property');
   }
 
-  static getAddLeftShapeOverlay(cell: mxgraph.mxCell) {
+  /**
+   * Retrieves the add left shape overlay for a given cell.
+   * @param {mxgraph.mxCell} cell The cell to check for the left overlay.
+   * @returns {mxgraph.mxCellOverlay} The add left shape overlay, if present.
+   */
+  static getAddLeftShapeOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
     return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Right Characteristic');
   }
 
-  static getAddRightShapeOverlay(cell: mxgraph.mxCell) {
+  /**
+   * Retrieves the add right shape overlay for a given cell.
+   * @param {mxgraph.mxCell} cell The cell to check for the right overlay.
+   * @returns {mxgraph.mxCellOverlay} The add right shape overlay, if present.
+   */
+  static getAddRightShapeOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
     return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Left Characteristic');
   }
 
-  static getAddConstraintOverlay(cell: mxgraph.mxCell) {
+  /**
+   * Retrieves the add constraint overlay for a given cell.
+   * @param {mxgraph.mxCell} cell The cell to check for the constraint overlay.
+   * @returns {mxgraph.mxCellOverlay} The add constraint overlay, if present.
+   */
+  static getAddConstraintOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
     return cell?.overlays?.find(({verticalAlign, offset: {x}}) => verticalAlign === mxConstants.ALIGN_TOP && x > 0);
   }
 
-  static testShapeInCollapsedMode(name: string) {
+  /**
+   * Tests if a shape is in collapsed mode.
+   * @param {string} name The name of the shape to test.
+   * @returns {Cypress.Chainable} Cypress chainable object for assertion.
+   */
+  static testShapeInCollapsedMode(name: string): Cypress.Chainable {
     return cy.getHTMLCell(name).invoke('attr', 'data-collapsed').should('equal', 'yes');
   }
 
-  static testShapeInExpandMode(name: string) {
+  /**
+   * Tests if a shape is in expand mode.
+   * @param {string} name The name of the shape to test.
+   * @returns {Cypress.Chainable} Cypress chainable object for assertion.
+   */
+  static testShapeInExpandMode(name: string): Cypress.Chainable {
     return cy.getHTMLCell(name).invoke('attr', 'data-collapsed').should('equal', 'no');
   }
 
+  /**
+   * Adds a new property to a shape.
+   * @param {number} number The identifier for the new property to be added.
+   * @returns {any} The result of the property addition operation.
+   */
   static addNewProperty(number: number): any {
     return cy.clickAddShapePlusIcon('AspectDefault').then(() => {
       cy.shapeExists(`property${number}`).then(() => {
@@ -204,7 +285,13 @@ export class cyHelp {
     });
   }
 
-  static clickShape(name: string, selectMultipleShapes = false) {
+  /**
+   * Clicks on a shape by name. Supports selecting multiple shapes if needed.
+   * @param {string} name The name of the shape to click.
+   * @param {boolean} [selectMultipleShapes=false] Whether to select multiple shapes.
+   * @returns {Cypress.Chainable} Cypress chainable object.
+   */
+  static clickShape(name: string, selectMultipleShapes = false): Cypress.Chainable {
     cy.getHTMLCell(name).should('exist');
 
     if (selectMultipleShapes) {
@@ -230,15 +317,22 @@ export class cyHelp {
     }
   }
 
-  static getShapeLabels(name: string) {
-    return cy.getHTMLCell(name).get('.element-info');
-  }
-
+  /**
+   * Gets a shape's label by key.
+   * @param {string} name The name of the shape.
+   * @param {string} key The key of the label to retrieve.
+   * @returns {Cypress.Chainable} Cypress chainable object containing the label.
+   */
   static getShapeLabelByKey(name: string, key: string) {
     return cy.getHTMLCell(name).get(`.element-info[data-key="${key}"]`);
   }
 
-  static getAddShapePlusIcon(name: string) {
+  /**
+   * Checks if the add shape plus icon is present for a given shape name.
+   * @param {string} name The name of the shape to check.
+   * @returns {Cypress.Chainable} Cypress chainable object indicating the presence of the plus icon.
+   */
+  static getAddShapePlusIcon(name: string): Cypress.Chainable {
     return cy.window().then(win => {
       const foundShape = cyHelp.findShapeByName(name, win);
       if (!foundShape) {
@@ -249,14 +343,13 @@ export class cyHelp {
   }
 
   /**
-   * Renames a graph element from an old name to a new name.
-   *
-   * @static
-   * @param {string} oldName - The current name of the element.
-   * @param {string} newName - The new name for the element.
-   * @returns {Cypress.Chainable} Returns a chainable Cypress command.
+   * Renames a graph element from its current name to a new specified name.
+   * @param {string} oldName - The current name of the element to be renamed.
+   * @param {string} newName - The new name to assign to the element.
+   * @returns {Cypress.Chainable} - Returns a chainable Cypress command that performs the rename operation.
    */
-  static renameElement(oldName: string, newName: string) {
+
+  static renameElement(oldName: string, newName: string): Cypress.Chainable {
     return cy
       .then(() => cy.dbClickShape(oldName))
       .then(() => cy.get('#graph').click({force: true}))
@@ -264,58 +357,58 @@ export class cyHelp {
       .then(() => this.clickSaveButton());
   }
 
-  static assertNullMultiLanguageValues(modelElement: BaseMetaModelElement, langTag: string) {
+  /**
+   * Asserts that multilanguage values for a given model element and language tag are null.
+   * @param {BaseMetaModelElement} modelElement - The model element to check.
+   * @param {string} langTag - The language tag for which to check the values.
+   */
+  static assertNullMultiLanguageValues(modelElement: BaseMetaModelElement, langTag: string): void {
     assert.isNull(modelElement.getDescription(langTag) || null);
     assert.isNull(modelElement.getDescription(langTag.toLowerCase()) || null);
     assert.isNull(modelElement.getPreferredName(langTag) || null);
     assert.isNull(modelElement.getPreferredName(langTag.toLowerCase()) || null);
   }
 
+  /**
+   * Asserts that multilanguage values for a given model element and language tag are not null.
+   * @param {BaseMetaModelElement} modelElement - The model element to check.
+   * @param {string} langTag - The language tag for which to check the values.
+   */
   static assertNotNullMultiLanguageValues(modelElement: BaseMetaModelElement, langTag: string) {
     assert.isNotNull(modelElement.getDescription(langTag));
     assert.isNotNull(modelElement.getPreferredName(langTag));
   }
 
-  static loadCustomModel(rdfModel: string) {
-    cy.get(SELECTOR_tbLoadButton).click({force: true});
-    cy.get('[data-cy="create-model"]').click({force: true});
-    cy.get(SELECTOR_dialogInputModel).invoke('val', rdfModel).trigger('input');
-  }
-
-  static loadModelFromWorkspace(namespaceName: string, fileNamePartial: string) {
-    cy.get(SELECTOR_openNamespacesButton).click({force: true}).wait(1000);
-    cy.get(SELECTOR_namespace)
-      .find(SELECTOR_namespaceName)
-      .contains(namespaceName)
-      .parents(SELECTOR_namespace)
-      .find(SELECTOR_namespaceFileName)
-      .filter((index, element) => {
-        const text = Cypress.$(element).text();
-        return text.includes(fileNamePartial);
-      })
-      .parents(SELECTOR_namespaceFile)
-      .find(SELECTOR_namespaceFileMenuButton)
-      .click({force: true});
-    cy.get(SELECTOR_fileMenuLoadAspectModelButton).click();
-    cy.get('button').contains("Don't save").click();
-    cy.wait(1000);
-  }
-
-  static saveCurrentModelToWorkspace() {
-    cy.get(SELECTOR_tbSaveButton).click();
-    cy.get(SELECTOR_tbSaveMenuSaveToWorkspaceButton).click();
-  }
-
-  static updateNamespace(name: string, version: string) {
-    this.openSettingsTab(2);
+  /**
+   * Updates the namespace and version of the current model.
+   * @param {string} name - The new namespace to set.
+   * @param {string} version - The new version to set.
+   */
+  static updateNamespace(name: string, version: string): void {
+    cy.get(SELECTOR_settingsButton).click().wait(500);
+    cy.get(':nth-child(6) > .settings__node').click();
     cy.get(SELECTOR_namespaceTabValueInput).clear().type(name);
     cy.get(SELECTOR_namespaceTabVersionInput).clear().type(version);
-    cy.get(SELECTOR_namespaceTabSaveButton).click();
-    cy.get('button').contains('Save').click();
+    cy.get(SettingsDialogSelectors.settingsDialogOkButton).click();
+    cy.get(SELECTOR_overrideNamespace).click();
   }
 
-  static openSettingsTab(tabIndex: number) {
-    cy.get(SELECTOR_settingsButton).click().wait(1000);
-    return cy.get(`.mat-mdc-tab-labels .mdc-tab`).eq(tabIndex).click({force: true});
+  /**
+   * Loads a model from a given RDF string.
+   * @param {string} rdfString - The RDF string representing the model to load.
+   * @returns {Cypress.Chainable} - Returns a chainable Cypress command that performs the model load operation.
+   */
+  static loadModel(rdfString: string): Cypress.Chainable {
+    return cy
+      .window()
+      .then(win => {
+        const fileHandlingService: FileHandlingService = win['angular.fileHandlingService'];
+        const sub = fileHandlingService
+          .loadModel(rdfString)
+          .pipe(finalize(() => sub.unsubscribe()))
+          .subscribe();
+        return sub;
+      })
+      .then(() => cy.get('ame-loading-screen', {timeout: 15000}).should('not.exist'));
   }
 }

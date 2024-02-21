@@ -19,10 +19,12 @@ import {mxgraph} from 'mxgraph-factory';
 import {BaseMetaModelElement, ElementModelService} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {LogService} from '@ame/shared';
-import {ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
+import {EditorService, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
 import {ModelService} from '@ame/rdf/services';
 import {FormGroup} from '@angular/forms';
 import {CdkDragEnd} from '@angular/cdk/drag-drop';
+import {ConfigurationService} from '@ame/settings-dialog';
+import {SearchesStateService} from '@ame/utils';
 
 const SIDEBAR_MIN_WIDTH = 480;
 const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
@@ -33,12 +35,20 @@ const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
   styleUrls: ['./editor-canvas.component.scss'],
 })
 export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
-  @ViewChild('graph') graph: ElementRef;
+  @ViewChild('graph') public graph: ElementRef;
   private unsubscribe: Subject<void> = new Subject();
 
-  sidebarWidth = SIDEBAR_MIN_WIDTH;
-  sidebarDragPosition = {...SIDEBAR_DEFAULT_DRAG_POSITION};
-  isShapeSettingsOpened$: Observable<boolean>;
+  public sidebarWidth = SIDEBAR_MIN_WIDTH;
+  public sidebarDragPosition = {...SIDEBAR_DEFAULT_DRAG_POSITION};
+  public isShapeSettingsOpened$: Observable<boolean>;
+
+  get isMapVisible$() {
+    return this.configurationService.settings$.pipe(map(settings => settings.showEditorMap));
+  }
+
+  get isToolbarVisible$() {
+    return this.configurationService.settings$.pipe(map(settings => settings.toolbarVisibility));
+  }
 
   get selectedShapeForUpdate(): mxgraph.mxCell | null {
     return this.shapeSettingsStateService.selectedShapeForUpdate;
@@ -46,6 +56,10 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
 
   get modelElement(): BaseMetaModelElement {
     return this.shapeSettingsService.modelElement;
+  }
+
+  get isModelEmpty(): boolean {
+    return !this.mxGraphService.getAllCells()?.length;
   }
 
   constructor(
@@ -57,7 +71,10 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
     private modelService: ModelService,
     private logService: LogService,
     private elementModelService: ElementModelService,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private editorService: EditorService,
+    private configurationService: ConfigurationService,
+    public searchesStateService: SearchesStateService
   ) {
     this.isShapeSettingsOpened$ = this.shapeSettingsStateService.onSettingsOpened$.asObservable();
     this.isShapeSettingsOpened$.subscribe(() =>
@@ -88,11 +105,20 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.editorService.initCanvas();
     this.shapeSettingsService.setGraphListeners();
     this.shapeSettingsService.setContextMenuActions();
     this.shapeSettingsService.setHotKeysActions();
 
     this.watchScrollEvents();
+  }
+
+  toggleMap() {
+    this.configurationService.toggleEditorMap();
+  }
+
+  toggleToolbar() {
+    this.configurationService.toggleToolbar();
   }
 
   onDragEnded(event: CdkDragEnd): void {
@@ -110,7 +136,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   closeShapeSettings() {
-    if (!this.modelService.getLoadedAspectModel().rdfModel) {
+    if (!this.modelService.currentRdfModel) {
       return;
     }
 
