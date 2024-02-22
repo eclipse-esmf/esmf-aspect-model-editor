@@ -13,3 +13,4 @@
 
 export * from './elements-search/elements-search.component';
 export * from './files-search/files-search.component';
+export * from './open-file-dialog/open-file-dialog.component';
