@@ -18,6 +18,7 @@ const platformData = require('./electron-libs/os-checker');
 const core = require('./electron-libs/core');
 const {windowsManager} = require('./electron-libs/windows-manager');
 const {inProdMode} = require('./electron-libs/consts');
+const {registerMacSpecificShortcuts, unregisterMacSpecificShortcuts} = require('./electron-libs/mac/shortcuts');
 
 if (require('electron-squirrel-startup')) process.exit();
 
@@ -29,9 +30,10 @@ if (inProdMode()) {
 if (platformData.isWin) app.setUserTasks([]);
 
 app.on('ready', () => {
-  globalShortcut.register('Command+Q', () => {
-    app.quit();
-  });
+  if (platformData.isMac) {
+    app.on('browser-window-blur', unregisterMacSpecificShortcuts);
+    app.on('browser-window-focus', registerMacSpecificShortcuts);
+  }
 
   core.startService();
   windowsManager.activateCommunicationProtocol();

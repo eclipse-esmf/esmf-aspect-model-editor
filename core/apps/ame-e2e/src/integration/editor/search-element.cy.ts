@@ -45,7 +45,8 @@ describe('Test search for element', () => {
       .focus()
       .clear()
       .click({force: true})
-      .type('*5', {force: true})
+      .type('*{enter}', {force: true})
+      .type('5{enter}', {force: true})
       .get('.mat-mdc-autocomplete-panel')
       .children('mat-option')
       .then(listing => {

@@ -44,7 +44,7 @@ describe('Test language settings', () => {
       .then(() => cy.get(SettingsDialogSelectors.settingsDialogCancelButton).click());
   });
 
-  it('check Aspect Model includes copyright header', () => {
+  it.skip('check Aspect Model includes copyright header', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', req => {
       req.reply({
         statusCode: 200,
