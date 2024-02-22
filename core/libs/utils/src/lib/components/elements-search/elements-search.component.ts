@@ -22,8 +22,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {startWith, throttleTime} from 'rxjs';
-import {ElectronSignals, ElectronSignalsService, SearchService, SharedModule, mxCellSearchOption, sammElements} from '@ame/shared';
-import {ElementIconComponent} from '@ame/shared';
+import {ElectronSignals, ElectronSignalsService, SearchService, mxCellSearchOption, sammElements} from '@ame/shared';
+import {ElementIconComponent} from '../../../../../shared/src/lib/components/element/element.component';
 import {ConfirmDialogService, EditorDialogModule, ShapeSettingsService} from '@ame/editor';
 import {SearchesStateService} from '../../search-state.service';
 import {mxgraph} from 'mxgraph-factory';
@@ -42,7 +42,6 @@ import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translat
     MatAutocompleteModule,
     MatFormFieldModule,
     MatIconModule,
-    SharedModule,
     EditorDialogModule,
     LanguageTranslateModule,
     ElementIconComponent,

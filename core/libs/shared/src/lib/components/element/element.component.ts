@@ -33,6 +33,6 @@ export class ElementIconComponent implements OnChanges {
   public className = '';
 
   ngOnChanges() {
-    this.className = `${this.type} ame-${this.size}`;
+    this.className = `${this.type.name.toLowerCase()} ame-${this.size}`;
   }
 }

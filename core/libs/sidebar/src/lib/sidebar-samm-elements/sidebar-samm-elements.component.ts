@@ -12,7 +12,7 @@
  */
 import {ElementType, sammElements} from '@ame/shared';
 import {Component, inject} from '@angular/core';
-import {SidebarStateService} from '../sidebar-state.service';
+import {SidebarStateService} from '@ame/sidebar';
 import {ModelService} from '@ame/rdf/services';
 import {MxGraphService} from '@ame/mx-graph';
 

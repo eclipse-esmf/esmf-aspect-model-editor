@@ -21,8 +21,8 @@
     <ng-container *ngFor="let element of elements">
       <mat-option class="list-option" *ngIf="element | modelElementParser as parsedElement" (click)="openElement(element)">
         <ame-element
-          [type]="parsedElement.type"
-          [name]="sammElements[parsedElement.element.name]"
+          [type]="sammElements[parsedElement.type]"
+          [name]="parsedElement.element.name"
           [description]="parsedElement.element.aspectModelUrn"
           [disabledTooltipDescriptionLength]="100"
           [disabledTooltipNameLength]="60"

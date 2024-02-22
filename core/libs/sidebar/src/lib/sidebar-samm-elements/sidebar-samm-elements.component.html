@@ -22,8 +22,8 @@
   <ng-container *ngFor="let element of elementsOrder">
     <ame-draggable-element [type]="element" *ngIf="!(element === 'aspect' && isAspectAvailable())">
       <ame-element
-        [type]="element"
-        [name]="sammElements[sammElements[element].name]"
+        [type]="sammElements[element]"
+        [name]="sammElements[element].name"
         [description]="sammElements[element].description | translate"
       ></ame-element>
     </ame-draggable-element>

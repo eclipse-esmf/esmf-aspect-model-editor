@@ -14,7 +14,7 @@
 import {Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultProperty, DefaultScalar, OverWrittenProperty} from '@ame/meta-model';
 import {RdfService} from '@ame/rdf/services';
-import {simpleDataTypes} from '@ame/shared';
+import {simpleDataTypes} from '../../../../../../../shared/src/lib/constants/xsd-datatypes';
 
 export const predefinedRules = {
   '([\\w\\.-]+)@([\\w\\.-]+\\.\\w{2,4})': {

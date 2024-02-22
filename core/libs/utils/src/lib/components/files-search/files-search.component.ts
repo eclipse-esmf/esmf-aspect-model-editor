@@ -24,7 +24,6 @@ import {
   ModelSavingTrackerService,
   NotificationsService,
   SearchService,
-  SharedModule,
   filesSearchOption,
 } from '@ame/shared';
 import {EditorDialogModule, FileHandlingService, SaveModelDialogService} from '@ame/editor';
@@ -48,7 +47,6 @@ import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translat
     MatAutocompleteModule,
     MatFormFieldModule,
     MatIconModule,
-    SharedModule,
     EditorDialogModule,
     OpenFileDialogComponent,
     MatDialogModule,
