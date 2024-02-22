@@ -17,6 +17,12 @@ import {FormControl, FormGroup} from '@angular/forms';
 import * as locale from 'locale-codes';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {EditorDialogValidators} from '../../../editor-dialog';
+import {finalize, first} from 'rxjs/operators';
+import {map} from 'rxjs';
+import {saveAs} from 'file-saver';
+import {EditorService} from '../../../editor.service';
+import {ModelService} from '@ame/rdf/services';
+import {NamespacesCacheService} from '@ame/cache';
 
 export interface OpenApi {
   language: string;
@@ -33,15 +39,23 @@ export interface OpenApi {
   styleUrls: ['./generate-open-api.component.scss'],
 })
 export class GenerateOpenApiComponent implements OnInit {
-  public form: FormGroup;
-  public languages: locale.ILocale[];
+  form: FormGroup;
+  languages: locale.ILocale[];
+  isGenerating = false;
+
+  private get currentCachedFile() {
+    return this.namespaceCacheService.currentCachedFile;
+  }
 
   constructor(
     private dialogRef: MatDialogRef<GenerateOpenApiComponent>,
     private languageService: SammLanguageSettingsService,
+    private namespaceCacheService: NamespacesCacheService,
+    private modelService: ModelService,
+    private editorService: EditorService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
     this.form = new FormGroup({
       baseUrl: new FormControl('https://example.com', {
@@ -56,18 +70,48 @@ export class GenerateOpenApiComponent implements OnInit {
     });
   }
 
-  generateOpenApiSpec() {
-    this.dialogRef.close({
-      output: this.getControlValue('output'),
+  generateOpenApiSpec(): void {
+    const openApi: OpenApi = {
+      output: this.getControlValue('output') as string,
       baseUrl: this.getControlValue('baseUrl') as string,
       includeQueryApi: this.getControlValue('includeQueryApi') as boolean,
       useSemanticVersion: this.getControlValue('useSemanticVersion') as boolean,
       paging: this.getControlValue('paging') as string,
       language: this.getControlValue('language') as string,
-    });
+    };
+
+    this.isGenerating = true;
+
+    this.editorService
+      .generateOpenApiSpec(this.modelService.currentRdfModel, openApi)
+      .pipe(
+        first(),
+        map(data => {
+          if (openApi.output === 'yaml') {
+            saveAs(
+              new Blob([data], {
+                type: 'text/yaml',
+              }),
+              `${this.modelService.loadedAspect.name}-open-api.yaml`,
+            );
+          } else {
+            saveAs(
+              new Blob([JSON.stringify(data, null, 2)], {
+                type: 'application/json;charset=utf-8',
+              }),
+              !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-open-api.json`,
+            );
+          }
+        }),
+        finalize(() => {
+          this.isGenerating = false;
+          this.dialogRef.close();
+        }),
+      )
+      .subscribe();
   }
 
-  close() {
+  close(): void {
     this.dialogRef.close();
   }
 

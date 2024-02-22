@@ -14,12 +14,19 @@
 <h2 mat-dialog-title>{{ 'GENERATE_HTML_DOC_DIALOG.TITLE' | translate }}</h2>
 
 <mat-dialog-content>
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" *ngIf="!isGenerating; else loader">
     <mat-label>{{ 'GENERATE_HTML_DOC_DIALOG.LANGUAGE' | translate }}</mat-label>
     <mat-select [formControl]="languageControl" data-cy="htmlGenerationLanguage">
       <mat-option *ngFor="let language of languages" [value]="language.tag">{{ language.name }}</mat-option>
     </mat-select>
   </mat-form-field>
+
+  <ng-template #loader>
+    <div class="loading">
+      <h3>{{ 'GENERATE_HTML_DOC_DIALOG.GENERATING' | translate }}</h3>
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

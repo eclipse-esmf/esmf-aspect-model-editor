@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<ame-editor-toolbar *ngIf="isToolbarVisible$ | async" class="toolbar" (closeEditDialog)="closeShapeSettings()"></ame-editor-toolbar>
+<ame-editor-toolbar *ngIf="isToolbarVisible$ | async" class="toolbar"></ame-editor-toolbar>
 <ame-sidebar class="sidebar"></ame-sidebar>
 
 <div *ngIf="isModelEmpty" class="empty-model">

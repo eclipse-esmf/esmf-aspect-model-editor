@@ -204,6 +204,8 @@ export class FileHandlingService {
     if (this.mxGraphService.graph?.model) {
       this.mxGraphService.deleteAllShapes();
     }
+
+    this.modelService.addAspect(null);
   }
 
   onCopyToClipboard() {

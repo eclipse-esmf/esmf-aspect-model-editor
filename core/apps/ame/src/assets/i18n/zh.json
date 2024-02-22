@@ -410,8 +410,6 @@
     "MODEL_LOADING_WAIT": "请等到model加载完毕",
     "ASPECT_MODEL_LOADING": "加载Aspect Model",
     "WORKSPACE_IMPORT": "将文件导入到workspace",
-    "MODEL_VALIDATION": "校验model...",
-    "VALIDATION_WAIT": "请等待知道校验完成。",
     "FILTER_CHANGE": "更换过滤器...",
     "FILTER_WAIT": "请等待过滤完成"
   }

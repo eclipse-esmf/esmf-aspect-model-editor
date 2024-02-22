@@ -204,10 +204,8 @@
     "CONTENT": "Please wait. Be aware that after 60 seconds a timeout will automatically cancel this operation",
     "VALIDATING": "Validating",
     "SAVING": "Saving Aspect Model",
-    "GENERATE_HTML": "Generate HTML Documentation",
     "GENERATE_JSON_PAYLOAD": "Generate JSON payload",
     "GENERATE_JSON_SCHEMA": "Generate JSON Schema",
-    "GENERATE_API_SPEC": "Generate Open API specification",
     "WAIT_ACTION": "Please wait until the action is finished!"
   },
   "HELP_DIALOG": {
@@ -236,6 +234,7 @@
   },
   "GENERATE_HTML_DOC_DIALOG": {
     "TITLE": "Generate HTML Documentation",
+    "GENERATING": "Generate",
     "LANGUAGE": "Language",
     "BUTTON": {
       "CANCEL": "Cancel",
@@ -245,6 +244,7 @@
   },
   "GENERATE_OPENAPI_SPEC_DIALOG": {
     "TITLE": "Generate OpenAPI specification",
+    "GENERATING": "Generate",
     "CONFIGURATION": "Configuration",
     "LANGUAGE": "Language",
     "OUTPUT_FILE_FORMAT": "Output File format",
@@ -270,7 +270,9 @@
     "FAIL_GENERATE_JSON_SAMPLE": "Failed to generate JSON Sample",
     "JSON_PAYLOAD_PREVIEW": "Sample JSON Payload preview",
     "FAIL_GENERATE_JSON_SCHEMA": "Failed to generate JSON Schema",
-    "JSON_SCHEMA_PREVIEW": "JSON Schema preview"
+    "JSON_SCHEMA_PREVIEW": "JSON Schema preview",
+    "NO_ASPECT_LOADED": "Oops! No Aspect Model Detected",
+    "NO_ASPECT_LOADED_MESSAGE": "Let's get started by loading or creating an Aspect Model."
   },
   "PREVIEW_DIALOG": {
     "RESET_CONTENT": "Reset content",
@@ -501,8 +503,6 @@
     "MODEL_LOADING_WAIT": "Please wait until the model is loaded!",
     "ASPECT_MODEL_LOADING": "Loading Aspect Model",
     "WORKSPACE_IMPORT": "Importing files into the workspace",
-    "MODEL_VALIDATION": "Validating model...",
-    "VALIDATION_WAIT": "Please wait until the model is validated.",
     "FILTER_CHANGE": "Changing filter...",
     "FILTER_WAIT": "Please wait until the filtering is done",
     "SAVING_TO_WORKSPACE_TITLE": "Saving Aspect Model to workspace",

@@ -93,8 +93,6 @@ export interface LoadingScreenDialog {
   MODEL_LOADING_WAIT: string;
   ASPECT_MODEL_LOADING: string;
   WORKSPACE_IMPORT: string;
-  MODEL_VALIDATION: string;
-  VALIDATION_WAIT: string;
   FILTER_CHANGE: string;
   FILTER_WAIT: string;
   SAVING_TO_WORKSPACE_TITLE: string;
@@ -343,10 +341,13 @@ export interface GenerateHandling {
   JSON_PAYLOAD_PREVIEW: string;
   FAIL_GENERATE_JSON_SCHEMA: string;
   JSON_SCHEMA_PREVIEW: string;
+  NO_ASPECT_LOADED: string;
+  NO_ASPECT_LOADED_MESSAGE: string;
 }
 export interface GenerateOpenapiSpecDialog {
   TITLE: string;
   CONFIGURATION: string;
+  GENERATING: string;
   LANGUAGE: string;
   OUTPUT_FILE_FORMAT: string;
   BASEURL: string;
@@ -368,6 +369,7 @@ export interface Button {
 }
 export interface GenerateHtmlDocDialog {
   TITLE: string;
+  GENERATING: string;
   LANGUAGE: string;
   BUTTON: Button;
 }
@@ -404,10 +406,8 @@ export interface NotificationDialog {
   CONTENT: string;
   VALIDATING: string;
   SAVING: string;
-  GENERATE_HTML: string;
   GENERATE_JSON_PAYLOAD: string;
   GENERATE_JSON_SCHEMA: string;
-  GENERATE_API_SPEC: string;
   WAIT_ACTION: string;
 }
 export interface ValidationResultDialog {
