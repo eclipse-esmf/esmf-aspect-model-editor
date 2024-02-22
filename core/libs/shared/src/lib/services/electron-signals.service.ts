@@ -13,7 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {ElectronEventKeys, RegisteredElectronEvents, ElectronSignals} from './model';
+import {ElectronEventKeys, ElectronSignals, RegisteredElectronEvents} from '../model';
 
 @Injectable({providedIn: 'root'})
 export class ElectronSignalsService implements ElectronSignals {
