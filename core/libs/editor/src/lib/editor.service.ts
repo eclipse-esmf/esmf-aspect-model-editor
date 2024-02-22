@@ -11,20 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, NgZone, inject} from '@angular/core';
+import {inject, Injectable, NgZone} from '@angular/core';
 import {
-  BrowserService,
   AlertService,
+  BrowserService,
   ElectronSignalsService,
   FileContentModel,
   LoadingScreenService,
   LogService,
   ModelSavingTrackerService,
   NotificationsService,
+  sammElements,
   SaveValidateErrorsCodes,
   TitleService,
   ValidateStatus,
-  sammElements,
 } from '@ame/shared';
 import {environment} from 'environments/environment';
 import {mxgraph} from 'mxgraph-factory';
@@ -53,9 +53,9 @@ import {
   mxEvent,
   MxGraphAttributeService,
   MxGraphHelper,
+  MxGraphRenderer,
   MxGraphService,
   MxGraphSetupService,
-  MxGraphRenderer,
   MxGraphShapeOverlayService,
   MxGraphShapeSelectorService,
   mxUtils,
@@ -70,7 +70,7 @@ import {ModelApiService} from '@ame/api';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {OpenApi, ViolationError} from './editor-toolbar';
-import {FiltersService, FILTER_ATTRIBUTES, FilterAttributesService} from '@ame/loader-filters';
+import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
 import {ShapeSettingsStateService} from './editor-dialog';
 import {LargeFileWarningService} from './large-file-warning-dialog/large-file-warning-dialog.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
@@ -133,7 +133,7 @@ export class EditorService {
     private loadingScreenService: LoadingScreenService,
     private translate: LanguageTranslationService,
     private browserService: BrowserService,
-    private zone: NgZone,
+    private ngZone: NgZone,
   ) {
     if (!environment.production) {
       window['angular.editorService'] = this;
@@ -159,14 +159,16 @@ export class EditorService {
 
     mxEvent.addMouseWheelListener(
       mxUtils.bind(this, (evt, up) => {
-        if (!mxEvent.isConsumed(evt) && evt.altKey) {
-          if (up) {
-            this.mxGraphAttributeService.graph.zoomIn();
-          } else {
-            this.mxGraphAttributeService.graph.zoomOut();
+        this.ngZone.run(() => {
+          if (!mxEvent.isConsumed(evt) && evt.altKey) {
+            if (up) {
+              this.mxGraphAttributeService.graph.zoomIn();
+            } else {
+              this.mxGraphAttributeService.graph.zoomOut();
+            }
+            mxEvent.consume(evt);
           }
-          mxEvent.consume(evt);
-        }
+        });
       }),
       null,
     );
@@ -176,25 +178,27 @@ export class EditorService {
     this.mxGraphAttributeService.graph.addListener(
       mxEvent.CELLS_REMOVED,
       mxUtils.bind(this, (_source: mxgraph.mxGraph, event: mxgraph.mxEventObject) => {
-        if (this.filterAttributes.isFiltering) {
-          return;
-        }
-
-        const changedCells: Array<mxgraph.mxCell> = event.getProperty('cells');
-        changedCells.forEach(cell => {
-          if (!MxGraphHelper.getModelElement(cell)) {
+        this.ngZone.run(() => {
+          if (this.filterAttributes.isFiltering) {
             return;
           }
 
-          const edgeParent = changedCells.find(edge => edge.isEdge() && edge.target && edge.target.id === cell.id);
-          if (!edgeParent) {
-            return;
-          }
+          const changedCells: Array<mxgraph.mxCell> = event.getProperty('cells');
+          changedCells.forEach(cell => {
+            if (!MxGraphHelper.getModelElement(cell)) {
+              return;
+            }
 
-          const sourceElement = MxGraphHelper.getModelElement<Base>(edgeParent.source);
-          if (sourceElement && !sourceElement?.isExternalReference()) {
-            sourceElement.delete(MxGraphHelper.getModelElement(cell));
-          }
+            const edgeParent = changedCells.find(edge => edge.isEdge() && edge.target && edge.target.id === cell.id);
+            if (!edgeParent) {
+              return;
+            }
+
+            const sourceElement = MxGraphHelper.getModelElement<Base>(edgeParent.source);
+            if (sourceElement && !sourceElement?.isExternalReference()) {
+              sourceElement.delete(MxGraphHelper.getModelElement(cell));
+            }
+          });
         });
       }),
     );
@@ -425,7 +429,7 @@ export class EditorService {
       (_graph, _evt, _cell, x, y) => {
         const elementType: string = element.dataset.type;
         const urn: string = element.dataset.urn;
-        this.zone.run(() => this.createElement(x, y, elementType, urn));
+        this.ngZone.run(() => this.createElement(x, y, elementType, urn));
       },
       dragElement,
     );
@@ -532,7 +536,7 @@ export class EditorService {
 
     // if the target is an ext. references it will show a display a confirmation dialog
     if (result.some((cell: mxgraph.mxCell) => MxGraphHelper.getModelElement(cell)?.isExternalReference())) {
-      this.zone.run(() => {
+      this.ngZone.run(() => {
         this.confirmDialogService
           .open({
             title: this.translate.language.CONFIRM_DIALOG.DELETE_SELECTED_ELEMENTS.TITLE,

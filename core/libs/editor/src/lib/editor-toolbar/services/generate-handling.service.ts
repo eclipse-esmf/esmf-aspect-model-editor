@@ -20,7 +20,7 @@ import {
   GenerateOpenApiComponent,
   LanguageSelectorModalComponent,
 } from '@ame/editor';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {finalize, first} from 'rxjs/operators';
 import {LoadingScreenOptions, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {ModelService} from '@ame/rdf/services';
@@ -54,13 +54,21 @@ export class GenerateHandlingService {
   }
 
   onGenerateOpenApiSpec() {
-    const cb = () => this.matDialog.open(GenerateOpenApiComponent, {disableClose: true});
+    const cb = () => this.openGenerationOpenApiSpec();
     this.validateFile(cb);
   }
 
+  openGenerationOpenApiSpec(): MatDialogRef<GenerateOpenApiComponent> {
+    return this.matDialog.open(GenerateOpenApiComponent, {disableClose: true});
+  }
+
   onGenerateDocumentation() {
-    const cb = () => this.matDialog.open(GenerateDocumentationComponent, {disableClose: true});
+    const cb = () => this.openGenerationDocumentation();
     this.validateFile(cb);
+  }
+
+  openGenerationDocumentation(): MatDialogRef<GenerateDocumentationComponent> {
+    return this.matDialog.open(GenerateDocumentationComponent, {disableClose: true});
   }
 
   onGenerateAASXFile() {

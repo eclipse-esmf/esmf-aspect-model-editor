@@ -539,7 +539,7 @@ Cypress.Commands.add('openGenerationOpenApiSpec', () => {
 
   return cy.window().then(win => {
     const generateHandlingService: GenerateHandlingService = win['angular.generateHandlingService'];
-    return generateHandlingService.openGenerationOpenApiSpec().subscribe();
+    return generateHandlingService.openGenerationOpenApiSpec().afterClosed().subscribe();
   });
 });
 
@@ -548,7 +548,7 @@ Cypress.Commands.add('openGenerationDocumentation', () => {
 
   return cy.window().then(win => {
     const generateHandlingService: GenerateHandlingService = win['angular.generateHandlingService'];
-    return generateHandlingService.openGenerationDocumentation().subscribe();
+    return generateHandlingService.openGenerationDocumentation().afterClosed().subscribe();
   });
 });
 
