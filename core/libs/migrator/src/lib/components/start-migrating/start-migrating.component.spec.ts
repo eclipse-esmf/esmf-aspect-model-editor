@@ -23,6 +23,8 @@ import {of} from 'rxjs';
 import {MigratorService} from '../../migrator.service';
 
 import {StartMigratingComponent} from './start-migrating.component';
+import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('StartMigratingComponent', () => {
   let component: StartMigratingComponent;
@@ -31,7 +33,15 @@ describe('StartMigratingComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatDialogModule, MatCheckboxModule, MatButtonModule, MatProgressSpinnerModule],
+      imports: [
+        RouterTestingModule,
+        MatDialogModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        TranslateModule.forRoot(),
+        LanguageTranslateModule,
+      ],
       declarations: [StartMigratingComponent],
       providers: [
         {
@@ -47,6 +57,10 @@ describe('StartMigratingComponent', () => {
         {
           provide: MigratorService,
           useValue: provideMockObject(MigratorService),
+        },
+        {
+          provide: LanguageTranslationService,
+          useValue: provideMockObject(LanguageTranslationService),
         },
       ],
     });

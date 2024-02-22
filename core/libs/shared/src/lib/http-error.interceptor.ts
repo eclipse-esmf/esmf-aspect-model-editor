@@ -15,10 +15,9 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {Injectable} from '@angular/core';
 import {iif, Observable, of, throwError} from 'rxjs';
 import {catchError, concatMap, delay, retryWhen} from 'rxjs/operators';
-import {LogService} from './log.service';
-import {NotificationsService} from './notifications.service';
+import {LogService, NotificationsService} from './services';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class HttpErrorInterceptor implements HttpInterceptor {
   constructor(
     private loggerService: LogService,

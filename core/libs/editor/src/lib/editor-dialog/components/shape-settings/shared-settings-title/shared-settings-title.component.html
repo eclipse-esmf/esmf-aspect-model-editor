@@ -13,7 +13,7 @@
 
 <ame-element
   *ngIf="metaModelElement | modelElementParser as parsedElement"
-  [type]="parsedElement.type"
+  [type]="sammElements[parsedElement.type]"
   [name]="elementName + ' (' + metaModelClassName + ')'"
   class="inline"
   size="medium"

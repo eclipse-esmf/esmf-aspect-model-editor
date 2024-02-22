@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, NgZone, inject} from '@angular/core';
+import {inject, Injectable, NgZone} from '@angular/core';
 import {IpcRenderer} from 'electron';
-import {BehaviorSubject, Observable, catchError, map, of, switchMap, take, tap, distinctUntilChanged} from 'rxjs';
-import {ElectronSignals, LockUnlockPayload, StartupData, StartupPayload} from './model';
+import {BehaviorSubject, catchError, distinctUntilChanged, map, Observable, of, switchMap, take, tap} from 'rxjs';
+import {ElectronSignals, LockUnlockPayload, StartupData, StartupPayload} from '../model';
 import {NotificationsService} from './notifications.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
 import {
@@ -30,7 +30,7 @@ import {MxGraphService} from '@ame/mx-graph';
 import {NamespacesCacheService} from '@ame/cache';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {ElectronSignalsService} from './electron-signals.service';
-import {ElectronEvents} from './enums/electron-events.enum';
+import {ElectronEvents} from '../enums';
 import {ModelApiService} from '@ame/api';
 import {NamespacesManagerService} from '@ame/namespace-manager';
 import {ConfigurationService} from '@ame/settings-dialog';
@@ -40,9 +40,7 @@ import {SidebarStateService} from '@ame/sidebar';
 import {MatDialog} from '@angular/material/dialog';
 import {SearchesStateService} from '@ame/utils';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ElectronTunnelService {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private lockedFiles$ = new BehaviorSubject<LockUnlockPayload[]>([]);

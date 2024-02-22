@@ -64,8 +64,10 @@ import {
 } from '@ame/meta-model';
 import {provideMockObject} from 'jest-helpers/utils';
 import {LogService, NotificationsService} from '@ame/shared';
-import {MxGraphAttributeService, MxGraphService} from '@ame/mx-graph';
+import {MxGraphAttributeService, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {EntityValueService} from '@ame/editor';
+import {TranslateModule} from '@ngx-translate/core';
+import {LanguageTranslateModule} from '@ame/translation';
 
 describe('Test Shape connector service', () => {
   let service: ShapeConnectorService;
@@ -86,11 +88,16 @@ describe('Test Shape connector service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot(), LanguageTranslateModule],
       providers: [
         ShapeConnectorService,
         {
           provide: LogService,
           useValue: provideMockObject(LogService),
+        },
+        {
+          provide: MxGraphShapeOverlayService,
+          useValue: provideMockObject(MxGraphShapeOverlayService),
         },
         {
           provide: NotificationsService,

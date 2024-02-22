@@ -13,11 +13,11 @@
 
 import {Component, inject} from '@angular/core';
 import {NotificationsService} from '@ame/shared';
-import {VisibleStep} from 'libs/editor/src/lib/editor-toolbar/enum';
 import {ViolationError} from '@ame/editor';
 import {NAMESPACES_SESSION} from '../../services';
 import {MissingElement, NamespacesSessionInterface, Violation} from '../../models';
 import {LanguageTranslationService} from '@ame/translation';
+import {VisibleStep} from '@ame/editor';
 
 @Component({
   selector: 'ame-workspace-summary',

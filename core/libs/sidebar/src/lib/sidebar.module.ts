@@ -26,7 +26,6 @@ import {MatRippleModule} from '@angular/material/core';
 import {MatBadgeModule} from '@angular/material/badge';
 import {SidebarComponent} from './sidebar/sidebar.component';
 import {SidebarSAMMElementsComponent} from './sidebar-samm-elements/sidebar-samm-elements.component';
-import {SharedModule} from '@ame/shared';
 import {DraggableElementComponent} from './draggable-element/draggable-element.component';
 import {WorkspaceEmptyComponent} from './workspace/workspace-empty/workspace-empty.component';
 import {WorkspaceFileListComponent} from './workspace/workspace-file-list/workspace-file-list.component';
@@ -36,11 +35,12 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {WorkspaceFileElementsComponent} from './workspace/workspace-file-elements/workspace-file-elements.component';
 import {WorkspaceMigrateComponent} from './workspace/workspace-migrate/workspace-migrate.component';
 import {LanguageTranslateModule} from '@ame/translation';
+import {BarItemComponent} from '../../../shared/src/lib/components/bar-item/bar-item.component';
+import {ElementIconComponent} from '../../../shared/src/lib/components/element/element.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatMenuModule,
@@ -56,6 +56,8 @@ import {LanguageTranslateModule} from '@ame/translation';
     MatProgressBarModule,
     MatCheckboxModule,
     LanguageTranslateModule,
+    ElementIconComponent,
+    BarItemComponent,
   ],
   declarations: [
     SidebarMenuComponent,

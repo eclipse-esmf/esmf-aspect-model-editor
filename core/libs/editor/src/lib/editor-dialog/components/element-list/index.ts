@@ -11,7 +11,5 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './loading-screen/loading-screen.component';
-export * from './alert/alert.component';
-export * from './element/element.component';
-export * from './bar-item/bar-item.component';
+export * from './element-list.pipe';
+export * from './element-list.component';

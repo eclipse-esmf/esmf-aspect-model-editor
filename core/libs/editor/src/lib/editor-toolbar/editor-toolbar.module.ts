@@ -20,6 +20,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
   AASXGenerationModalComponent,
   DocumentComponent,
+  GenerateDocumentationComponent,
   GenerateOpenApiComponent,
   LanguageSelectorModalComponent,
   TextModelLoaderModalComponent,
@@ -41,13 +42,12 @@ import {MatInputModule} from '@angular/material/input';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {GenerateDocumentationComponent} from './components/generate-documentation/generate-documentation.component';
 import {ConnectWithDialogModule} from '../connect-with-dialog/connect-with-dialog.module';
 import {MatSelectModule} from '@angular/material/select';
 import {NamespaceManagerModule} from '@ame/namespace-manager';
 import {OpenElementWindowComponent} from '../open-element-window/open-element-window.component';
 import {LanguageTranslateModule} from '@ame/translation';
-import {SharedModule} from '@ame/shared';
+import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/bar-item.component';
 
 @NgModule({
   imports: [
@@ -77,7 +77,7 @@ import {SharedModule} from '@ame/shared';
     MatSelectModule,
     NamespaceManagerModule,
     LanguageTranslateModule,
-    SharedModule,
+    BarItemComponent,
   ],
   declarations: [
     EditorToolbarComponent,

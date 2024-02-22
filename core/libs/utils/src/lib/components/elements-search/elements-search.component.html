@@ -22,7 +22,7 @@
       <mat-option class="list-option" *ngIf="element | modelElementParser as parsedElement" (click)="openElement(element)">
         <ame-element
           [type]="parsedElement.type"
-          [name]="parsedElement.element.name"
+          [name]="sammElements[parsedElement.element.name]"
           [description]="parsedElement.element.aspectModelUrn"
           [disabledTooltipDescriptionLength]="100"
           [disabledTooltipNameLength]="60"

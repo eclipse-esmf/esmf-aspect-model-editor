@@ -10,5 +10,5 @@
     "lib": ["dom", "es2018"]
   },
   "exclude": ["src/test-setup.ts", "**/*.spec.ts"],
-  "include": ["**/*.ts", "../api/src/lib/model-validator.service.ts", "../api/src/lib/model-api.service.ts"]
+  "include": ["**/*.ts"]
 }

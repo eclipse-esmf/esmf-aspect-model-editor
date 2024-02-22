@@ -19,10 +19,12 @@ import {MatIconModule} from '@angular/material/icon';
 import {RouterTestingModule} from '@angular/router/testing';
 import {provideMockObject} from 'jest-helpers';
 import {of} from 'rxjs';
-import {MigratorService} from '../../migrator.service';
+import {MigratorService} from '@ame/migrator';
 import {ElectronTunnelService} from '@ame/shared';
 
 import {MigrationStatusComponent} from './migration-status.component';
+import {TranslateModule} from '@ngx-translate/core';
+import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
 
 describe('MigrationStatusComponent', () => {
   let component: MigrationStatusComponent;
@@ -31,7 +33,7 @@ describe('MigrationStatusComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatDialogModule, MatIconModule, MatButtonModule],
+      imports: [RouterTestingModule, MatDialogModule, MatIconModule, MatButtonModule, TranslateModule.forRoot(), LanguageTranslateModule],
       declarations: [MigrationStatusComponent],
       providers: [
         {
@@ -47,6 +49,10 @@ describe('MigrationStatusComponent', () => {
           useValue: {
             settings: {},
           },
+        },
+        {
+          provide: LanguageTranslationService,
+          useValue: provideMockObject(LanguageTranslationService),
         },
       ],
     });

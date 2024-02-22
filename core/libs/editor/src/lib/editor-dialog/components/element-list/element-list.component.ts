@@ -15,6 +15,7 @@ import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {ShapeSettingsService, ShapeSettingsStateService} from '../../services';
 import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
+import {sammElements} from '@ame/shared';
 
 @Component({
   selector: 'ame-element-list',
@@ -70,4 +71,6 @@ export class ElementListComponent implements OnInit {
     }
     return 0;
   }
+
+  protected readonly sammElements = sammElements;
 }

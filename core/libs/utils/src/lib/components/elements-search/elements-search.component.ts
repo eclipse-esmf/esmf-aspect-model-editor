@@ -22,15 +22,16 @@ import {MatIconModule} from '@angular/material/icon';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {startWith, throttleTime} from 'rxjs';
-import {ElectronSignals, ElectronSignalsService, SearchService, SharedModule, mxCellSearchOption} from '@ame/shared';
+import {ElectronSignals, ElectronSignalsService, SearchService, SharedModule, mxCellSearchOption, sammElements} from '@ame/shared';
+import {ElementIconComponent} from '@ame/shared';
 import {ConfirmDialogService, EditorDialogModule, ShapeSettingsService} from '@ame/editor';
 import {SearchesStateService} from '../../search-state.service';
 import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
 
 @Component({
-  selector: 'ame-elements-search',
   standalone: true,
+  selector: 'ame-elements-search',
   templateUrl: './elements-search.component.html',
   styleUrls: ['./elements-search.component.scss'],
   imports: [
@@ -44,6 +45,7 @@ import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translat
     SharedModule,
     EditorDialogModule,
     LanguageTranslateModule,
+    ElementIconComponent,
   ],
 })
 export class ElementsSearchComponent {
@@ -99,4 +101,6 @@ export class ElementsSearchComponent {
   closeSearch() {
     this.searchesStateService.elementsSearch.close();
   }
+
+  protected readonly sammElements = sammElements;
 }

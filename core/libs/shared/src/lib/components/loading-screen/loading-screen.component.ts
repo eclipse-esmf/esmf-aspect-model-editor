@@ -13,7 +13,7 @@
 
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {LoadingScreenOptions} from './loading-screen.service';
+import {LoadingScreenOptions} from '@ame/shared';
 
 @Component({
   selector: 'ame-loading-screen',

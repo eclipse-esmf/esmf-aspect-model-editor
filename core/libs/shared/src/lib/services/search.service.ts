@@ -14,9 +14,7 @@
 import Fuse from 'fuse.js';
 import {Injectable} from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class SearchService {
   /**
    * This method uses Fuse.js to search for the needed value into a list of elements.

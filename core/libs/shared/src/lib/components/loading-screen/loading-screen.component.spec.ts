@@ -13,13 +13,16 @@
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {LoadingScreenComponent} from './loading-screen.component';
+import {LoadingScreenComponent} from '@ame/shared';
 import {beforeEach, describe, expect, it} from '@jest/globals';
 import {CommonModule} from '@angular/common';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {provideMockObject} from '../../../../../../jest-helpers';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('LoadingScreenComponent', () => {
   let component: LoadingScreenComponent;
@@ -28,11 +31,15 @@ describe('LoadingScreenComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoadingScreenComponent],
-      imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule],
+      imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule, TranslateModule.forRoot(), LanguageTranslateModule],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         {provide: MAT_DIALOG_DATA, useValue: {}},
         {provide: MatDialogRef, useValue: {}},
+        {
+          provide: LanguageTranslationService,
+          useValue: provideMockObject(LanguageTranslationService),
+        },
       ],
     }).compileComponents();
   });

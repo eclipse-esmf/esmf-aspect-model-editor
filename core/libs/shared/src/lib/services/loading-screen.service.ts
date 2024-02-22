@@ -13,7 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
-import {LoadingScreenComponent} from './loading-screen.component';
+import {LoadingScreenComponent} from '../components';
 
 export type LoadingScreenOptions = Omit<MatDialogConfig, 'data'> & {
   title?: string;

@@ -12,15 +12,18 @@
  */
 
 import {Component, Input, OnChanges} from '@angular/core';
-import {ElementType, ElementInfo, sammElements} from '../../model';
+import {NgClass, NgIf} from '@angular/common';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
+  standalone: true,
   selector: 'ame-element',
   templateUrl: './element.component.html',
   styleUrls: ['./element.component.scss'],
+  imports: [NgClass, NgIf, MatTooltipModule],
 })
 export class ElementIconComponent implements OnChanges {
-  @Input() type: ElementType = 'aspect';
+  @Input() type!: any;
   @Input() size: 'small' | 'medium' | 'large' = 'large';
   @Input() name = '';
   @Input() description = '';
@@ -32,6 +35,4 @@ export class ElementIconComponent implements OnChanges {
   ngOnChanges() {
     this.className = `${this.type} ame-${this.size}`;
   }
-
-  public elements: ElementInfo = sammElements;
 }

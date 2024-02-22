@@ -22,7 +22,7 @@
     <div class="elements" [class.max-height-200]="!isAspect">
       <div class="model-element" *ngFor="let element of elements">
         <div *ngIf="element | modelElementParser as parsedElement" class="model-element__name">
-          <ame-element [type]="parsedElement.type" [name]="parsedElement.element.name" size="medium"></ame-element>
+          <ame-element [type]="parsedElement.type" [name]="sammElements[parsedElement.element.name]" size="medium"></ame-element>
         </div>
         <div class="model-element__actions">
           <button

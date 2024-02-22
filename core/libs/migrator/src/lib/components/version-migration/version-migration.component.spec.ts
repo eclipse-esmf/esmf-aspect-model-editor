@@ -24,6 +24,8 @@ import {of} from 'rxjs';
 import {ElectronTunnelService} from '@ame/shared';
 
 import {VersionMigrationComponent} from './version-migration.component';
+import {TranslateModule} from '@ngx-translate/core';
+import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
 
 describe('VersionMigrationComponent', () => {
   let component: VersionMigrationComponent;
@@ -32,7 +34,14 @@ describe('VersionMigrationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatDialogModule, MatProgressSpinnerModule, MatIconModule],
+      imports: [
+        RouterTestingModule,
+        MatDialogModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        TranslateModule.forRoot(),
+        LanguageTranslateModule,
+      ],
       declarations: [VersionMigrationComponent],
       providers: [
         {
@@ -63,6 +72,10 @@ describe('VersionMigrationComponent', () => {
             settings: {},
             loadExternalModels: jest.fn(() => of()),
           },
+        },
+        {
+          provide: LanguageTranslationService,
+          useValue: provideMockObject(LanguageTranslationService),
         },
       ],
     });

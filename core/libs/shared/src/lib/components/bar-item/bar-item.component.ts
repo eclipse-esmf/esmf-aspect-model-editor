@@ -15,6 +15,7 @@ import {Component, HostListener, Input, HostBinding} from '@angular/core';
 import {MatRipple} from '@angular/material/core';
 
 @Component({
+  standalone: true,
   selector: 'ame-bar-item',
   templateUrl: './bar-item.component.html',
   styleUrls: ['./bar-item.component.scss'],

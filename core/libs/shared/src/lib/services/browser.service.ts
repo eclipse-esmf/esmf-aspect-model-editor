@@ -13,9 +13,7 @@
 
 import {Injectable} from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class BrowserService {
   isStartedAsElectronApp() {
     if (typeof window !== 'undefined' && typeof window.process === 'object' && (<any>window.process).type === 'renderer') {

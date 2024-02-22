@@ -109,4 +109,6 @@ export class WorkspaceFileElementsComponent implements OnInit {
       this.changeDetector.detectChanges();
     }, 100);
   }
+
+  protected readonly sammElements = sammElements;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -13,12 +13,10 @@
 
 import {EventEmitter, Injectable} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
-import {NotificationType} from './enums';
-import {NotificationModel} from './model';
+import {NotificationModel} from '../model';
+import {NotificationType} from '../enums';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class NotificationsService {
   private notifications: NotificationModel[] = [];
   private lastErrorDate: Date = null;

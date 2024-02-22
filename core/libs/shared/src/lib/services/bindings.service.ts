@@ -12,22 +12,19 @@
  */
 
 import {Injectable} from '@angular/core';
-import {simpleDataTypes} from './constants/xsd-datatypes';
-import {GeneralConfig} from './general-config';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class DataTypeService {
-  constructor() {
-    simpleDataTypes['curie'].isDefinedBy = simpleDataTypes['curie'].isDefinedBy.replace('SAMM_VERSION', GeneralConfig.sammVersion);
+/**
+ * This class is used to register actions within the application, like context menu actions
+ */
+@Injectable({providedIn: 'root'})
+export class BindingsService {
+  private bindings: {[key: string]: (...args: any[]) => void} = {};
+
+  registerAction(actionName: string, callback: (...args: any[]) => void) {
+    this.bindings[actionName] = callback;
   }
 
-  getDataTypes(): any {
-    return simpleDataTypes;
-  }
-
-  getDataType(key: string): any {
-    return simpleDataTypes[key];
+  fireAction(actionName: string, ...args: any[]) {
+    this.bindings[actionName](...args);
   }
 }

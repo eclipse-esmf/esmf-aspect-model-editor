@@ -23,7 +23,7 @@
     <ame-draggable-element [type]="element" *ngIf="!(element === 'aspect' && isAspectAvailable())">
       <ame-element
         [type]="element"
-        [name]="sammElements[element].name"
+        [name]="sammElements[sammElements[element].name]"
         [description]="sammElements[element].description | translate"
       ></ame-element>
     </ame-draggable-element>

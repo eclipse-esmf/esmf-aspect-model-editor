@@ -18,6 +18,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MigratorService} from '../../migrator.service';
 
 import {MigrationSuccessComponent} from './migration-success.component';
+import {TranslateModule} from '@ngx-translate/core';
+import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {provideMockObject} from '../../../../../../jest-helpers';
 
 describe('MigrationSuccessComponent', () => {
   let component: MigrationSuccessComponent;
@@ -25,7 +28,7 @@ describe('MigrationSuccessComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, MatButtonModule, MatIconModule],
+      imports: [MatDialogModule, MatButtonModule, MatIconModule, TranslateModule.forRoot(), LanguageTranslateModule],
       declarations: [MigrationSuccessComponent],
       providers: [
         {
@@ -33,6 +36,10 @@ describe('MigrationSuccessComponent', () => {
           useValue: {
             dialogRef: {},
           },
+        },
+        {
+          provide: LanguageTranslationService,
+          useValue: provideMockObject(LanguageTranslationService),
         },
       ],
     });

@@ -60,11 +60,13 @@ import {
   LanguageCodeInputFieldComponent,
   LeftInputFieldComponent,
   LocaleCodeInputFieldComponent,
+  LocateElementComponent,
   LowerBoundInputFieldComponent,
   MaxLengthInputFieldComponent,
   MaxValueInputFieldComponent,
   MinLengthInputFieldComponent,
   MinValueInputFieldComponent,
+  ModelElementParserPipe,
   NameInputFieldComponent,
   NumericConversionFactorInputFieldComponent,
   OperationComponent,
@@ -80,7 +82,6 @@ import {
   ScaleInputFieldComponent,
   SeeInputFieldComponent,
   ShapeSettingsComponent,
-  ModelElementParserPipe,
   StateCharacteristicComponent,
   StructuredValueComponent,
   StructuredValuePropertiesComponent,
@@ -91,7 +92,6 @@ import {
   UnitInputFieldComponent,
   UpperBoundInputFieldComponent,
   ValuesInputFieldComponent,
-  LocateElementComponent,
 } from './components';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {CommonModule} from '@angular/common';
@@ -102,7 +102,7 @@ import {SaveModelDialogComponent} from '../save-model-dialog/save-model-dialog.c
 import {LargeFileWarningComponent} from '../large-file-warning-dialog/large-file-warning-dialog';
 import {SharedSettingsTitleComponent} from './components/shape-settings/shared-settings-title/shared-settings-title.component';
 import {LanguageTranslateModule} from '@ame/translation';
-import {SharedModule} from '@ame/shared';
+import {ElementIconComponent} from '../../../../shared/src/lib/components/element/element.component';
 
 @NgModule({
   providers: [EditorModelService],
@@ -123,9 +123,9 @@ import {SharedModule} from '@ame/shared';
     MatExpansionModule,
     MatButtonModule,
     MatDialogModule,
-    SharedModule,
     CounterPipe,
     LanguageTranslateModule,
+    ElementIconComponent,
   ],
   declarations: [
     AspectComponent,

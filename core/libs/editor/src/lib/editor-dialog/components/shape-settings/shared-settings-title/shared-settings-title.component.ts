@@ -16,6 +16,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} fr
 import {LanguageTranslationService} from '@ame/translation';
 import {finalize} from 'rxjs';
 import {LangChangeEvent} from '@ngx-translate/core';
+import {sammElements} from '@ame/shared';
 
 @Component({
   selector: 'ame-shared-settings-title',
@@ -68,4 +69,6 @@ export class SharedSettingsTitleComponent implements OnInit {
         : this.translate.translateService.instant('EDITOR_CANVAS.SHAPE_SETTING.EDIT', {value: 'element'});
     }
   }
+
+  protected readonly sammElements = sammElements;
 }

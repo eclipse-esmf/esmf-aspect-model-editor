@@ -10,7 +10,7 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<span class="element-icon" [class.rounded]="type === 'trait'" [ngClass]="className">{{ elements[type]?.symbol }}</span>
+<span class="element-icon" [class.rounded]="type === 'trait'" [ngClass]="className">{{ type.symbol }}</span>
 <div *ngIf="size !== 'small' && name" class="element-info">
   <span
     *ngIf="name"
