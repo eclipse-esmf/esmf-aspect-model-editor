@@ -342,14 +342,12 @@ class WindowsManager {
     const executeFn = event => {
       console.log('RECEIVED REQUEST WINDOW DATA');
       const windowId = event.sender.id;
-      const {id, options} = this.activeWindows.find(window => window.id === windowId);
-
+      const {id, options} = this.state.activeWindows.find(window => window.id === windowId) || {};
       if (!id) {
         return;
       }
 
-      const data = {options: options};
-      event.sender.send(RESPONSE_WINDOW_DATA, {id, data});
+      event.sender.send(RESPONSE_WINDOW_DATA, {id, options});
     };
 
     ipcMain.on(REQUEST_WINDOW_DATA, executeFn);

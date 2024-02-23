@@ -24,9 +24,9 @@ import {
   ModelSavingTrackerService,
   StartupPayload,
 } from '@ame/shared';
-import {Injectable, NgZone, inject} from '@angular/core';
+import {inject, Injectable, NgZone} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {Observable, filter, of, sample, switchMap, take, tap} from 'rxjs';
+import {filter, Observable, of, sample, switchMap, take, tap} from 'rxjs';
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 
@@ -112,7 +112,9 @@ export class StartupService {
     if (element) {
       this.shapeSettingsSettings.editModel(element);
       requestAnimationFrame(() => {
-        this.mxGraphService.navigateToCellByUrn(element.aspectModelUrn);
+        setTimeout(() => {
+          this.mxGraphService.navigateToCellByUrn(element.aspectModelUrn);
+        }, 3000);
       });
     }
   }
