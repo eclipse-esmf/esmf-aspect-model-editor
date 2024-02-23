@@ -24,7 +24,6 @@ import {DomainModelToRdfModule} from '@ame/aspect-exporter';
 import {SettingDialogModule} from '@ame/settings-dialog';
 import {APP_CONFIG, config, LogService} from '@ame/shared';
 import {ToastrModule} from 'ngx-toastr';
-import {StartLoadModalComponent} from './components/start-load-modal/start-load-modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
@@ -35,7 +34,7 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 @NgModule({
-  declarations: [AppComponent, StartLoadModalComponent, LoadingComponent],
+  declarations: [AppComponent, LoadingComponent],
   imports: [
     CommonModule,
     BrowserModule,

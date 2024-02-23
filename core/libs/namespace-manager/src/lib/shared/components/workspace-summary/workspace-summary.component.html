@@ -33,7 +33,7 @@
         </mat-icon>
         <mat-icon
           *ngIf="!value.violationError?.length"
-          [matTooltip]="'TOOLBAR.WORKSPACE_SUMMARY.VALIDATED_SUCCESSFULLY' | translate"
+          [matTooltip]="'WORKSPACE_SUMMARY.VALIDATED_SUCCESSFULLY' | translate"
           matTooltipPosition="right"
           class="success"
         >
@@ -81,15 +81,15 @@
     </ng-container>
 
     <div *ngIf="visibleStep === step.selection" class="no-notifications">
-      <p>{{ 'TOOLBAR.WORKSPACE_SUMMARY.SELECT_TO_VALIDATE' | translate }}</p>
+      <p>{{ 'WORKSPACE_SUMMARY.SELECT_TO_VALIDATE' | translate }}</p>
     </div>
 
     <div *ngIf="visibleStep === step.noError" class="no-notifications">
-      <p>{{ 'TOOLBAR.WORKSPACE_SUMMARY.VALIDATED_SUCCESSFULLY' | translate }}</p>
+      <p>{{ 'WORKSPACE_SUMMARY.VALIDATED_SUCCESSFULLY' | translate }}</p>
     </div>
 
     <div *ngIf="visibleStep === step.incorrectFile" class="incorrect-files">
-      <p class="error-notifier">{{ 'TOOLBAR.WORKSPACE_SUMMARY.FILES_NOT_IMPORTED' | translate }}</p>
+      <p class="error-notifier">{{ 'WORKSPACE_SUMMARY.FILES_NOT_IMPORTED' | translate }}</p>
       <div class="incorrect-file" *ngFor="let file of invalidFiles">
         <p class="file-name">{{ file }}</p>
       </div>

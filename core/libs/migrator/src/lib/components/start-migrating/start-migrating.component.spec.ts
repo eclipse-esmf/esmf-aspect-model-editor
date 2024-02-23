@@ -23,9 +23,8 @@ import {of} from 'rxjs';
 import {MigratorService} from '../../migrator.service';
 
 import {StartMigratingComponent} from './start-migrating.component';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {HttpClient} from '@angular/common/http';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {TranslateModule} from '@ngx-translate/core';
 
 describe('StartMigratingComponent', () => {
   let component: StartMigratingComponent;
@@ -40,11 +39,8 @@ describe('StartMigratingComponent', () => {
         MatCheckboxModule,
         MatButtonModule,
         MatProgressSpinnerModule,
-        TranslateModule.forRoot({
-          provide: TranslateLoader,
-          useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
-          deps: [HttpClient],
-        }),
+        TranslateModule.forRoot(),
+        LanguageTranslateModule,
       ],
       declarations: [StartMigratingComponent],
       providers: [
@@ -61,6 +57,10 @@ describe('StartMigratingComponent', () => {
         {
           provide: MigratorService,
           useValue: provideMockObject(MigratorService),
+        },
+        {
+          provide: LanguageTranslationService,
+          useValue: provideMockObject(LanguageTranslationService),
         },
       ],
     });

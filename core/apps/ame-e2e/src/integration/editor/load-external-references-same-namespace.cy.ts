@@ -1,0 +1,453 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
+/*
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+/// <reference types="Cypress" />
+
+describe('Test load external reference with same namespace', () => {
+  it('Loading property element with there children from external file with same namespace', () => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'org.eclipse.examples:1.0.0': ['external-property-reference-with-children.txt'],
+    });
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {
+          namespace: 'org.eclipse.examples:1.0.0',
+          'file-name': 'external-property-reference-with-children.txt',
+        },
+      },
+      {
+        fixture: '/external-reference/same-namespace/with-childrens/external-property-reference.txt',
+      },
+    );
+
+    cy.visitDefault();
+    cy.fixture('/external-reference/same-namespace/model-with-external-property-reference-with-children')
+      .as('rdfString')
+      .then(rdfString => cy.loadModel(rdfString))
+      .then(() => cy.getAspect())
+      .then(aspect => {
+        expect(aspect.name).to.equal('AspectDefault');
+        expect(aspect.properties).to.be.length(1);
+        expect(aspect.properties[0].property.name).to.equal('externalPropertyWithChildren');
+
+        expect(aspect.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic1');
+
+        const entity = aspect.properties[0].property.characteristic.dataType;
+        expect(entity.name).to.equal('ChildrenEntity1');
+
+        expect(entity.properties[0].property.name).to.equal('childrenProperty1');
+        expect(entity.properties[1].property.name).to.equal('childrenProperty2');
+
+        expect(entity.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic2');
+        expect(entity.properties[1].property.characteristic.name).to.equal('Boolean');
+
+        expect(entity.properties[0].property.characteristic.dataType.name).to.equal('ChildrenEntity2');
+      })
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => {
+        expect(rdf).to.contain('samm:properties (:externalPropertyWithChildren)');
+
+        expect(rdf).not.contain(':externalPropertyWithChildren a samm:Property');
+        expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
+      });
+  });
+
+  it('Loading operation element with there children from external file with same namespace', () => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'org.eclipse.examples:1.0.0': ['external-operation-reference-with-children.txt'],
+    });
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {
+          namespace: 'org.eclipse.examples:1.0.0',
+          'file-name': 'external-operation-reference-with-children.txt',
+        },
+      },
+      {
+        fixture: '/external-reference/same-namespace/with-childrens/external-operation-reference.txt',
+      },
+    );
+
+    cy.visitDefault();
+    cy.fixture('/external-reference/same-namespace/model-with-external-operation-reference-with-children')
+      .as('rdfString')
+      .then(rdfString => cy.loadModel(rdfString))
+      .then(() => cy.getAspect())
+      .then(aspect => {
+        expect(aspect.name).to.equal('AspectDefault');
+        expect(aspect.operations).to.be.length(1);
+        expect(aspect.operations[0].name).to.equal('externalOperationWithChildren');
+        expect(aspect.operations[0].input).to.be.length(2);
+
+        expect(aspect.operations[0].input[0].property.name).to.equal('childProperty1');
+        expect(aspect.operations[0].input[0].property.characteristic.name).to.equal('ChildrenCharacteristic1');
+
+        const entity1 = aspect.operations[0].input[0].property.characteristic.dataType;
+        expect(entity1.name).to.equal('ChildrenEntity1');
+        expect(entity1.properties[0].property.name).to.equal('childrenProperty1');
+        expect(entity1.properties[1].property.name).to.equal('childrenProperty2');
+        expect(entity1.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic2');
+        expect(entity1.properties[1].property.characteristic.name).to.equal('Boolean');
+
+        expect(aspect.operations[0].input[1].property.name).to.equal('childProperty2');
+        expect(aspect.operations[0].input[1].property.characteristic.name).to.equal('ChildrenCharacteristic1');
+        const entity2 = aspect.operations[0].input[1].property.characteristic.dataType;
+        expect(entity2.name).to.equal('ChildrenEntity1');
+        expect(entity2.properties[0].property.name).to.equal('childrenProperty1');
+        expect(entity2.properties[1].property.name).to.equal('childrenProperty2');
+        expect(entity2.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic2');
+        expect(entity2.properties[1].property.characteristic.name).to.equal('Boolean');
+
+        expect(aspect.operations[0].output.property.name).to.equal('childProperty3');
+        expect(aspect.operations[0].output.property.characteristic.name).to.equal('ChildrenCharacteristic1');
+        const entity3 = aspect.operations[0].output.property.characteristic.dataType;
+        expect(entity3.name).to.equal('ChildrenEntity1');
+        expect(entity3.properties[0].property.name).to.equal('childrenProperty1');
+        expect(entity3.properties[1].property.name).to.equal('childrenProperty2');
+        expect(entity3.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic2');
+        expect(entity3.properties[1].property.characteristic.name).to.equal('Boolean');
+      })
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => {
+        expect(rdf).to.contain('samm:operations (:externalOperationWithChildren)');
+
+        expect(rdf).not.contain(':externalOperationWithChildren a samm:Operation');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty3 a samm:Property');
+        expect(rdf).not.contain(':ChildrenCharacteristic1 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
+      });
+  });
+
+  it('Loading characteristic element with there children from external file with same namespace', () => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'org.eclipse.examples:1.0.0': ['external-characteristic-reference-with-children.txt'],
+    });
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {
+          namespace: 'org.eclipse.examples:1.0.0',
+          'file-name': 'external-characteristic-reference-with-children.txt',
+        },
+      },
+      {
+        fixture: '/external-reference/same-namespace/with-childrens/external-characteristic-reference.txt',
+      },
+    );
+
+    cy.visitDefault();
+    cy.fixture('/external-reference/same-namespace/model-with-external-characteristic-reference-with-children')
+      .as('rdfString')
+      .then(rdfString => cy.loadModel(rdfString))
+      .then(() => cy.getAspect())
+      .then(aspect => {
+        expect(aspect.name).to.equal('AspectDefault');
+        expect(aspect.properties).to.be.length(1);
+        expect(aspect.properties[0].property.name).to.equal('property1');
+
+        expect(aspect.properties[0].property.characteristic.name).to.equal('ExternalCharacteristicWithChildren');
+
+        const entity = aspect.properties[0].property.characteristic.dataType;
+        expect(entity.name).to.equal('ChildrenEntity1');
+
+        expect(entity.properties[0].property.name).to.equal('childrenProperty1');
+        expect(entity.properties[1].property.name).to.equal('childrenProperty2');
+
+        expect(entity.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic2');
+        expect(entity.properties[1].property.characteristic.name).to.equal('Boolean');
+
+        expect(entity.properties[0].property.characteristic.dataType.name).to.equal('ChildrenEntity2');
+      })
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => {
+        expect(rdf).to.contain('samm:properties (:property1)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :ExternalCharacteristicWithChildren');
+
+        expect(rdf).not.contain(':ExternalCharacteristicWithChildren a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity1 a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
+      });
+  });
+
+  it('Loading custom unit element from external file with same namespace', () => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'org.eclipse.examples:1.0.0': ['external-unit-reference.txt'],
+    });
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-unit-reference.txt'},
+      },
+      {
+        fixture: '/external-reference/same-namespace/without-childrens/external-unit-reference.txt',
+      },
+    );
+
+    cy.visitDefault();
+    cy.fixture('/external-reference/same-namespace/model-with-external-unit-reference')
+      .as('rdfString')
+      .then(rdfString => cy.loadModel(rdfString))
+      .then(() => cy.getAspect())
+      .then(aspect => {
+        expect(aspect.name).to.equal('AspectDefault');
+        expect(aspect.properties).to.be.length(1);
+        expect(aspect.properties[0].property.name).to.equal('property1');
+
+        expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
+
+        const unit = aspect.properties[0].property.characteristic.unit;
+        expect(unit.name).to.equal('ExternalUnit');
+      })
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => {
+        expect(rdf).to.contain('samm:properties (:property1)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:dataType xsd:string');
+        expect(rdf).to.contain('samm:characteristic :Quantifiable1');
+        expect(rdf).to.contain(':Quantifiable1 a samm-c:Quantifiable');
+        expect(rdf).to.contain('samm-c:unit :ExternalUnit');
+
+        expect(rdf).not.contain(':ExternalUnit a unit:Unit');
+      });
+  });
+
+  it('Loading entity element with there children from external file with same namespace', () => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'org.eclipse.examples:1.0.0': ['external-entity-reference-with-children.txt'],
+    });
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {
+          namespace: 'org.eclipse.examples:1.0.0',
+          'file-name': 'external-entity-reference-with-children.txt',
+        },
+      },
+      {
+        fixture: '/external-reference/same-namespace/with-childrens/external-entity-reference.txt',
+      },
+    );
+
+    cy.visitDefault();
+    cy.fixture('/external-reference/same-namespace/model-with-external-entity-reference-with-children')
+      .as('rdfString')
+      .then(rdfString => cy.loadModel(rdfString))
+      .then(() => cy.getAspect())
+      .then(aspect => {
+        expect(aspect.name).to.equal('AspectDefault');
+        expect(aspect.properties).to.be.length(1);
+        expect(aspect.properties[0].property.name).to.equal('property1');
+
+        expect(aspect.properties[0].property.characteristic.name).to.equal('Characteristic1');
+
+        const entity = aspect.properties[0].property.characteristic.dataType;
+        expect(entity.name).to.equal('ExternalEntityWithChildren');
+
+        expect(entity.properties[0].property.name).to.equal('childrenProperty1');
+        expect(entity.properties[1].property.name).to.equal('childrenProperty2');
+
+        expect(entity.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic2');
+        expect(entity.properties[1].property.characteristic.name).to.equal('Boolean');
+
+        expect(entity.properties[0].property.characteristic.dataType.name).to.equal('ChildrenEntity2');
+      })
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => {
+        expect(rdf).to.contain('samm:characteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+        expect(rdf).to.contain('samm:dataType :ExternalEntityWithChildren');
+
+        expect(rdf).not.contain(':ExternalEntityWithChildren a samm:Entity');
+        expect(rdf).not.contain(':childrenProperty1 a samm:Property');
+        expect(rdf).not.contain(':childrenProperty2 a samm:Property');
+        expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
+        expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
+        expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
+      });
+  });
+
+  it('Loading different elements from several external files with same namespace', () => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      'org.eclipse.examples:1.0.0': [
+        'external-entity-reference.txt',
+        'external-characteristic-reference.txt',
+        'external-property-reference.txt',
+        'external-operation-reference.txt',
+        'external-trait-reference.txt',
+        'external-constraint-reference.txt',
+      ],
+    });
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-entity-reference.txt'},
+      },
+      {
+        fixture: '/external-reference/same-namespace/without-childrens/external-entity-reference.txt',
+      },
+    );
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
+      },
+      {
+        fixture: '/external-reference/same-namespace/without-childrens/external-characteristic-reference.txt',
+      },
+    );
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-property-reference.txt'},
+      },
+      {
+        fixture: '/external-reference/same-namespace/without-childrens/external-property-reference.txt',
+      },
+    );
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-operation-reference.txt'},
+      },
+      {
+        fixture: '/external-reference/same-namespace/without-childrens/external-operation-reference.txt',
+      },
+    );
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-trait-reference.txt'},
+      },
+      {
+        fixture: '/external-reference/same-namespace/with-childrens/external-trait-reference.txt',
+      },
+    );
+
+    cy.intercept(
+      {
+        method: 'GET',
+        url: 'http://localhost:9091/ame/api/models',
+        headers: {namespace: 'org.eclipse.examples:1.0.0', 'file-name': 'external-constraint-reference.txt'},
+      },
+      {
+        fixture: '/external-reference/same-namespace/without-childrens/external-constraint-reference.txt',
+      },
+    );
+
+    cy.visitDefault();
+    cy.fixture('/external-reference/same-namespace/model-with-several-external-reference')
+      .as('rdfString')
+      .then(rdfString => cy.loadModel(rdfString))
+      .then(() => cy.getAspect())
+      .then(aspect => {
+        expect(aspect.name).to.equal('AspectDefault');
+        expect(aspect.operations).to.be.length(2);
+        expect(aspect.operations[0].name).to.equal('operation1');
+        expect(aspect.operations[1].name).to.equal('externalOperation');
+
+        expect(aspect.properties).to.be.length(5);
+        expect(aspect.properties[0].property.name).to.equal('property1');
+        expect(aspect.properties[1].property.name).to.equal('property2');
+        expect(aspect.properties[2].property.name).to.equal('property3');
+        expect(aspect.properties[3].property.name).to.equal('property4');
+        expect(aspect.properties[4].property.name).to.equal('externalProperty');
+
+        expect(aspect.properties[0].property.characteristic.name).to.equal('Characteristic1');
+        expect(aspect.properties[1].property.characteristic.name).to.equal('ExternalCharacteristic');
+        expect(aspect.properties[2].property.characteristic.name).to.equal('ExternalTrait');
+        expect(aspect.properties[3].property.characteristic.name).to.equal('Property4Trait');
+
+        expect(aspect.properties[2].property.characteristic.constraints[0].name).to.equal('ConstraintInTrait');
+        expect(aspect.properties[2].property.characteristic.baseCharacteristic.name).to.equal('CharacteristicInTrait');
+        expect(aspect.properties[3].property.characteristic.constraints[0].name).to.equal('Constraint1');
+        expect(aspect.properties[3].property.characteristic.baseCharacteristic.name).to.equal('Characteristic1');
+
+        expect(aspect.properties[0].property.characteristic.dataType.name).to.equal('ExternalEntity');
+      })
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => {
+        expect(rdf).to.contain('samm:operations (:operation1 :externalOperation)');
+        expect(rdf).to.contain('samm:input (:property1)');
+        expect(rdf).to.contain('samm:output :property2');
+        expect(rdf).not.contain('samm:input ()');
+
+        expect(rdf).to.contain('samm:properties (:property1 :property2 :property3 :property4 :externalProperty)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+        expect(rdf).to.contain('samm:dataType :ExternalEntity');
+        expect(rdf).to.contain(':property2 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :ExternalCharacteristic');
+        expect(rdf).to.contain(':property3 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :ExternalTrait');
+        expect(rdf).to.contain(':property4 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Property4Trait');
+        expect(rdf).to.contain(':Property4Trait a samm-c:Trait');
+        expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic1');
+        expect(rdf).to.contain('samm-c:constraint :Constraint1');
+        expect(rdf).to.contain(':Constraint1 a samm:Constraint');
+
+        expect(rdf).not.contain(':externalProperty a samm:Property');
+        expect(rdf).not.contain(':ExternalEntity a samm:Entity');
+        expect(rdf).not.contain(':ExternalCharacteristic a samm:Characteristic');
+        expect(rdf).not.contain(':ExternalTraita samm-c:Trait');
+      });
+  });
+});

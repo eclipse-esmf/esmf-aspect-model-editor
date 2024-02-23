@@ -22,7 +22,10 @@ import {PredefinedEntities, PredefinedProperties} from '@ame/vocabulary';
   providedIn: 'root',
 })
 export class FileResourceRemoveService implements PredefinedRemove {
-  constructor(private modelRootService: ModelRootService, private mxGraphService: MxGraphService) {}
+  constructor(
+    private modelRootService: ModelRootService,
+    private mxGraphService: MxGraphService,
+  ) {}
 
   delete(cell: mxgraph.mxCell): boolean {
     if (!cell) {

@@ -20,7 +20,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 export class LargeFileWarningComponent {
   public elementsCount: number;
 
-  constructor(private dialogRef: MatDialogRef<LargeFileWarningComponent>, @Inject(MAT_DIALOG_DATA) private data: {elementsCount: number}) {
+  constructor(
+    private dialogRef: MatDialogRef<LargeFileWarningComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: {elementsCount: number},
+  ) {
     this.elementsCount = data?.elementsCount || 0;
   }
 

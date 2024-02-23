@@ -14,9 +14,9 @@
 import {DataFactory, NamedNode, Prefixes, Quad, Quad_Graph, Quad_Object, Quad_Predicate, Quad_Subject, Store, Util, Writer} from 'n3';
 import * as locale from 'locale-codes';
 import {InstantiatorListElement} from '../models/rdf-model.types';
-import {DataTypeService} from '@ame/shared';
 import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
 import {RdfModelUtil} from '@ame/rdf/utils/rdf-model-util';
+import {config} from '@ame/shared';
 
 interface QuadComponents {
   subject?: Quad_Subject;
@@ -27,14 +27,11 @@ interface QuadComponents {
 
 export class RdfModel {
   private _store: Store;
-  private _dataTypeService: DataTypeService;
   private _prefixes: Prefixes;
   private _isExternalRef = false;
   private _aspectModelFileName: string;
-  private _hasErrors = false;
   private _absoluteAspectModelFileName: string = null;
   private _metaModelVersion: string;
-  private _metaModelIdentifier: string;
   private _defaultAspectModelAlias = '';
   private _header = '';
 
@@ -43,6 +40,7 @@ export class RdfModel {
   public sammE: SammE;
   public sammU: SammU;
 
+  public hasErrors = false;
   public originalAbsoluteFileName = null;
   public loadedFromWorkspace = false;
   public aspect: Quad_Subject;
@@ -53,10 +51,6 @@ export class RdfModel {
 
   get prefixes(): Prefixes {
     return this._prefixes;
-  }
-
-  get dataTypeService(): DataTypeService {
-    return this._dataTypeService;
   }
 
   get isExternalRef(): boolean {
@@ -79,12 +73,8 @@ export class RdfModel {
     return this.aspect?.value || this.getAspectModelUrn();
   }
 
-  set hasErrors(hasErrors: boolean) {
-    this._hasErrors = hasErrors;
-  }
-
-  get hasErrors(): boolean {
-    return this._hasErrors;
+  private get nameBasedOnAspect() {
+    return this.aspect ? this.aspect.value.replace('urn:samm:', '').replace('#', ':') + '.ttl' : null;
   }
 
   set absoluteAspectModelFileName(absoluteFileName: string) {
@@ -94,13 +84,13 @@ export class RdfModel {
   get absoluteAspectModelFileName(): string {
     if (this._absoluteAspectModelFileName) {
       if (this.aspect) {
-        return this.nameBasedOnASpect;
+        return this.nameBasedOnAspect;
       }
       return this._absoluteAspectModelFileName;
     }
 
     if (this.aspect) {
-      return this.nameBasedOnASpect;
+      return this.nameBasedOnAspect;
     }
 
     if (this.aspectModelFileName) {
@@ -138,24 +128,49 @@ export class RdfModel {
     this._header = header;
   }
 
-  private get nameBasedOnASpect() {
-    return this.aspect ? this.aspect.value.replace('urn:samm:', '').replace('#', ':') + '.ttl' : null;
+  public initRdfModel(store: Store, prefixes: Prefixes, mode: 'empty' | 'loaded' = 'loaded'): RdfModel {
+    this._store = store;
+    this._prefixes = prefixes;
+
+    if (mode === 'loaded') {
+      this.generateFromFile();
+    } else {
+      // create environment for empty file
+      this.generateEmptyModel();
+    }
+
+    return this;
   }
 
-  public initRdfModel(store: Store, dataTypeService: DataTypeService, prefixes: Prefixes): RdfModel {
-    this._store = store;
-    this._dataTypeService = dataTypeService;
-    this._prefixes = prefixes;
+  private generateFromFile() {
     this.resolveMetaModelVersion();
-    this.samm = new Samm(this._metaModelVersion, this._metaModelIdentifier);
-    this.sammC = new SammC(this.samm);
-    this.sammE = new SammE(this.samm);
-    this.sammU = new SammU(this.samm);
+    this.setSamm();
     this.setDefaultAspectModelAlias();
-    const aspect = store.getSubjects(this.samm.RdfType(), this.samm.Aspect(), null)[0];
+    const aspect = this._store.getSubjects(this.samm.RdfType(), this.samm.Aspect(), null)[0];
     this.setAspect(aspect?.value);
 
     return this;
+  }
+
+  private generateEmptyModel() {
+    this._metaModelVersion = config.currentSammVersion;
+    this.setSamm();
+    this.addPrefix('samm', this.samm.getUri() + '#');
+    this.addPrefix('samm-c', this.sammC.getUri() + '#');
+    this.addPrefix('samm-e', this.sammE.getUri() + '#');
+    this.addPrefix('samm-u', this.sammU.getUri() + '#');
+    this.addPrefix('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+    this.addPrefix('rdfs', 'http://www.w3.org/2000/01/rdf-schema#');
+    this.addPrefix('xsd', 'http://www.w3.org/2001/XMLSchema#');
+    this._defaultAspectModelAlias = '';
+    this.setAspect(null);
+  }
+
+  private setSamm() {
+    this.samm = new Samm(this._metaModelVersion);
+    this.sammC = new SammC(this.samm);
+    this.sammE = new SammE(this.samm);
+    this.sammU = new SammU(this.samm);
   }
 
   setAspect(aspectUrn: string): void {
@@ -394,7 +409,6 @@ export class RdfModel {
     }
 
     this._metaModelVersion = 'unknown';
-    this._metaModelIdentifier = 'unknown';
   }
 
   private setDefaultAspectModelAlias() {

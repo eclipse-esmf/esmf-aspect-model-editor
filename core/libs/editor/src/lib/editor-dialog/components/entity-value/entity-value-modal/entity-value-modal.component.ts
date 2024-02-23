@@ -25,7 +25,6 @@ import {
   OverWrittenProperty,
 } from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
-import {RdfService} from '@ame/rdf/services';
 import {isDataTypeLangString} from '@ame/shared';
 
 export interface NewEntityValueDialogOptions {
@@ -62,7 +61,7 @@ export class EntityValueModalComponent {
     private dialogRef: MatDialogRef<EntityValueModalComponent>,
     private editorModelService: EditorModelService,
     private namespacesCacheService: NamespacesCacheService,
-    private rdfService: RdfService
+    private validators: EditorDialogValidators,
   ) {
     this.complexValues = data.complexValues;
     if (data.metaModel instanceof DefaultEnumeration) {
@@ -81,7 +80,7 @@ export class EntityValueModalComponent {
       this.entityValueName = new FormControl('', [
         Validators.required,
         EditorDialogValidators.noWhiteSpace,
-        EditorDialogValidators.duplicateName(this.namespacesCacheService, this.entityValue, this.rdfService),
+        this.validators.duplicateName(this.entityValue),
       ]);
     }
     this.buildForm();

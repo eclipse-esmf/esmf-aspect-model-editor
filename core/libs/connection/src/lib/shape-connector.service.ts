@@ -28,8 +28,8 @@ import {
   DefaultTrait,
 } from '@ame/meta-model';
 import {environment} from 'environments/environment';
-import {LogService, NotificationsService} from '@ame/shared';
-import {ModelInfo} from '@ame/mx-graph';
+import {cellRelations, LogService, NotificationsService} from '@ame/shared';
+import {ModelInfo, MxGraphAttributeService, MxGraphHelper, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {
   AbstractEntityConnectionHandler,
   AspectConnectionHandler,
@@ -71,6 +71,7 @@ import {
   PropertyStructuredValueConnectionHandler,
 } from './multi-shape-connection-handlers';
 import mxCell = mxgraph.mxCell;
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
   providedIn: 'root',
@@ -79,6 +80,8 @@ export class ShapeConnectorService {
   constructor(
     private logService: LogService,
     private notificationsService: NotificationsService,
+    private mxGraphAttributeService: MxGraphAttributeService,
+    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private aspectConnectionHandler: AspectConnectionHandler,
     private propertyConnectionHandler: PropertyConnectionHandler,
     private operationConnectionHandler: OperationConnectionHandler,
@@ -113,10 +116,43 @@ export class ShapeConnectorService {
     private entityValueConnectionHandler: EntityValueConnectionHandler,
     private enumerationEntityValueConnectionHandler: EnumerationEntityValueConnectionHandler,
     private characteristicUnitConnectionHandler: CharacteristicUnitConnectionHandler,
-    private structuredValuePropertyConnectionHandler: StructuredValueCharacteristicPropertyConnectionHandler
+    private structuredValuePropertyConnectionHandler: StructuredValueCharacteristicPropertyConnectionHandler,
+    private translate: LanguageTranslationService,
   ) {
     if (!environment.production) {
       window['angular.shapeConnectorService'] = this;
+    }
+  }
+
+  connectSelectedElements(cells?: mxgraph.mxCell[]) {
+    const selectedCells = cells || [...this.mxGraphAttributeService.graph.selectionModel.cells];
+
+    if (selectedCells.length !== 2) {
+      return this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.ONLY_TWO_ELEMENTS_CONNECTION});
+    }
+
+    const firstElement = selectedCells[0].style.split(';')[0];
+    const secondElement = selectedCells[1].style.split(';')[0];
+    const modelElements = selectedCells.map(e => MxGraphHelper.getModelElement(e));
+
+    if (
+      secondElement !== firstElement &&
+      cellRelations[secondElement].includes(firstElement) &&
+      !this.isConnectionException(modelElements[0], modelElements[1])
+    ) {
+      modelElements.reverse();
+      selectedCells.reverse();
+    }
+
+    if (modelElements[0]?.isExternalReference()) {
+      return this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.REFERNECE_CONNECTION_ERROR});
+    }
+
+    const newConnection = this.connectShapes(modelElements[0], modelElements[1], selectedCells[0], selectedCells[1]);
+
+    if (newConnection) {
+      this.mxGraphShapeOverlayService.removeOverlaysByConnection(modelElements[0], selectedCells[0]);
+      this.mxGraphAttributeService.graph.clearSelection();
     }
   }
 
@@ -174,7 +210,7 @@ export class ShapeConnectorService {
     childModel: BaseMetaModelElement,
     parentSource: mxCell,
     childSource: mxCell,
-    modelInfo?: ModelInfo
+    modelInfo?: ModelInfo,
   ): boolean {
     let connectionHandler: MultiShapeConnector<BaseMetaModelElement, BaseMetaModelElement>;
 
@@ -278,5 +314,9 @@ export class ShapeConnectorService {
     connectionHandler?.connect(parentModel, childModel, parentSource, childSource);
 
     return !!connectionHandler;
+  }
+
+  private isConnectionException(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+    return ShapeConnectorUtil.isStructuredValuePropertyConnection(parentModel, childModel);
   }
 }

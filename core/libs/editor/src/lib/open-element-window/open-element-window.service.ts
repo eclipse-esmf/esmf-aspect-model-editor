@@ -12,13 +12,13 @@
  */
 
 import {BaseMetaModelElement} from '@ame/meta-model';
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {OpenElementWindowComponent} from './open-element-window.component';
 
 @Injectable({providedIn: 'root'})
 export class OpenReferencedElementService {
-  constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
+  constructor(private matDialog: MatDialog) {}
 
   openReferencedElement(element: BaseMetaModelElement) {
     if (!element) {
@@ -26,6 +26,6 @@ export class OpenReferencedElementService {
       return;
     }
 
-    this.ngZone.run(() => this.matDialog.open(OpenElementWindowComponent, {data: {file: element.fileName, urn: element.aspectModelUrn}}));
+    this.matDialog.open(OpenElementWindowComponent, {data: {file: element.fileName, urn: element.aspectModelUrn}});
   }
 }

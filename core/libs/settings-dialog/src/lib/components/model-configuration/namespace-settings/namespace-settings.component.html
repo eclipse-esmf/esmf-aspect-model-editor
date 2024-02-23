@@ -13,7 +13,7 @@
 
 <form [formGroup]="form">
   <h3>
-    Aspect Namespace
+    Model Namespace
     <mat-icon
       [matTooltipShowDelay]="0"
       [matTooltipHideDelay]="100"
@@ -49,23 +49,37 @@
   </div>
 </form>
 
-<h3>{{ 'SETTINGS_DIALOG.NAMESPACES.PREDEFINED_NAMESPACES' | translate }}</h3>
-<table [dataSource]="predefinedNamespaces" mat-table>
-  <caption></caption>
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef id="name">{{ 'SETTINGS_DIALOG.NAMESPACES.NAME' | translate }}</th>
-    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-  </ng-container>
+<mat-accordion>
+  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ 'SETTINGS_DIALOG.NAMESPACES.PREDEFINED_NAMESPACES' | translate }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <table [dataSource]="predefinedNamespaces" mat-table>
+      <caption></caption>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef id="name">{{ 'SETTINGS_DIALOG.NAMESPACES.NAME' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
 
-  <ng-container matColumnDef="value">
-    <th mat-header-cell *matHeaderCellDef id="value">{{ 'SETTINGS_DIALOG.NAMESPACES.VALUE' | translate }}</th>
-    <td mat-cell *matCellDef="let element">{{ element.value }}</td>
-  </ng-container>
+      <ng-container matColumnDef="value">
+        <th mat-header-cell *matHeaderCellDef id="value">{{ 'SETTINGS_DIALOG.NAMESPACES.VALUE' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ element.value }}</td>
+      </ng-container>
 
-  <ng-container matColumnDef="version">
-    <th mat-header-cell *matHeaderCellDef id="version">{{ 'SETTINGS_DIALOG.NAMESPACES.VERSION' | translate }}</th>
-    <td mat-cell *matCellDef="let element">{{ element.version }}</td>
-  </ng-container>
-  <tr mat-header-row *matHeaderRowDef="columns"></tr>
-  <tr mat-row *matRowDef="let row; columns: columns"></tr>
-</table>
+      <ng-container matColumnDef="version">
+        <th mat-header-cell *matHeaderCellDef id="version">{{ 'SETTINGS_DIALOG.NAMESPACES.VERSION' | translate }}</th>
+        <td mat-cell *matCellDef="let element">{{ element.version }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+    </table>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<br />
+
+<a href="https://eclipse-esmf.github.io/samm-specification/snapshot/namespaces.html#prefixes" target="_blank" rel="noopener"
+  >Link: Predefined namespace prefixes</a
+>

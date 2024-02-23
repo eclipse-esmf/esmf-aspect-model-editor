@@ -49,8 +49,8 @@ export abstract class BaseModelService {
     // Add common operations
 
     // update name
-    const aspect = Object.assign({}, this.modelService.getLoadedAspectModel()?.aspect);
-    const aspectModelUrn = this.modelService.getLoadedAspectModel().rdfModel.getAspectModelUrn();
+    const aspect = Object.assign({}, this.modelService?.loadedAspect);
+    const aspectModelUrn = this.modelService.currentRdfModel.getAspectModelUrn();
 
     this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
     modelElement.name = form.name;

@@ -21,7 +21,10 @@ export class Samm {
 
   private alias = 'samm';
 
-  constructor(public version: string, public identifier: string = 'urn:samm:org.eclipse.esmf.samm:') {}
+  constructor(
+    public version: string,
+    public identifier: string = 'urn:samm:org.eclipse.esmf.samm:',
+  ) {}
 
   static isDefaultNamespaceUri(value: string) {
     return (

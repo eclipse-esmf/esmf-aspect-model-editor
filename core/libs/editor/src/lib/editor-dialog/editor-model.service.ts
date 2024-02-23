@@ -46,7 +46,7 @@ export class EditorModelService {
   }
 
   getAspectModelUrn(): string {
-    return this.modelService.getLoadedAspectModel().rdfModel.getAspectModelUrn();
+    return this.modelService.currentRdfModel.getAspectModelUrn();
   }
 
   isSaveButtonEnabled() {
@@ -69,7 +69,7 @@ export class EditorModelService {
 
     if (!this.characteristicInstantiator) {
       this.characteristicInstantiator = new CharacteristicInstantiator(
-        new MetaModelElementInstantiator(this.modelService.getLoadedAspectModel().rdfModel, null)
+        new MetaModelElementInstantiator(this.modelService.currentRdfModel, null),
       );
     }
 

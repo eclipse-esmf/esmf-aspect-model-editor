@@ -16,6 +16,13 @@ import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
 import * as locale from 'locale-codes';
+import {finalize, first} from 'rxjs/operators';
+import {ModelApiService} from '@ame/api';
+import {EditorService} from '../../../editor.service';
+import {map} from 'rxjs';
+import {saveAs} from 'file-saver';
+import {ModelService} from '@ame/rdf/services';
+import {NamespacesCacheService} from '@ame/cache';
 
 @Component({
   selector: 'ame-generate-documentation',
@@ -23,23 +30,65 @@ import * as locale from 'locale-codes';
   styleUrls: ['./generate-documentation.component.scss'],
 })
 export class GenerateDocumentationComponent {
-  public languages: locale.ILocale[] = [];
-  public languageControl: FormControl;
+  languages: locale.ILocale[] = [];
+  languageControl: FormControl;
+  isGenerating = false;
 
-  constructor(private dialogRef: MatDialogRef<GenerateDocumentationComponent>, private languageService: SammLanguageSettingsService) {
+  private get currentCachedFile() {
+    return this.namespaceCacheService.currentCachedFile;
+  }
+
+  constructor(
+    private dialogRef: MatDialogRef<GenerateDocumentationComponent>,
+    private languageService: SammLanguageSettingsService,
+    private namespaceCacheService: NamespacesCacheService,
+    private modelService: ModelService,
+    private modelApiService: ModelApiService,
+    private editorService: EditorService,
+  ) {
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
     this.languageControl = new FormControl(this.languages[0].tag);
   }
 
-  openDocumentation() {
-    this.dialogRef.close({language: this.languageControl.value, action: 'open'});
+  openDocumentation(): void {
+    this.isGenerating = true;
+
+    this.modelApiService
+      .openDocumentation(this.editorService.getSerializedModel(), this.languageControl.value)
+      .pipe(
+        first(),
+        finalize(() => {
+          this.isGenerating = false;
+          this.dialogRef.close();
+        }),
+      )
+      .subscribe();
   }
 
-  downloadDocumentation() {
-    this.dialogRef.close({language: this.languageControl.value, action: 'download'});
+  downloadDocumentation(): void {
+    this.isGenerating = true;
+
+    this.modelApiService
+      .downloadDocumentation(this.editorService.getSerializedModel(), this.languageControl.value)
+      .pipe(
+        first(),
+        map(data =>
+          saveAs(
+            new Blob([data], {
+              type: 'text/html',
+            }),
+            !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-documentation.html`,
+          ),
+        ),
+        finalize(() => {
+          this.isGenerating = false;
+          this.dialogRef.close();
+        }),
+      )
+      .subscribe();
   }
 
-  close() {
+  close(): void {
     this.dialogRef.close();
   }
 }

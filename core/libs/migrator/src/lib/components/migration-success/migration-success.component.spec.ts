@@ -18,9 +18,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MigratorService} from '../../migrator.service';
 
 import {MigrationSuccessComponent} from './migration-success.component';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {HttpClient} from '@angular/common/http';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {TranslateModule} from '@ngx-translate/core';
+import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {provideMockObject} from '../../../../../../jest-helpers';
 
 describe('MigrationSuccessComponent', () => {
   let component: MigrationSuccessComponent;
@@ -28,16 +28,7 @@ describe('MigrationSuccessComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatDialogModule,
-        MatButtonModule,
-        MatIconModule,
-        TranslateModule.forRoot({
-          provide: TranslateLoader,
-          useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
-          deps: [HttpClient],
-        }),
-      ],
+      imports: [MatDialogModule, MatButtonModule, MatIconModule, TranslateModule.forRoot(), LanguageTranslateModule],
       declarations: [MigrationSuccessComponent],
       providers: [
         {
@@ -45,6 +36,10 @@ describe('MigrationSuccessComponent', () => {
           useValue: {
             dialogRef: {},
           },
+        },
+        {
+          provide: LanguageTranslationService,
+          useValue: provideMockObject(LanguageTranslationService),
         },
       ],
     });

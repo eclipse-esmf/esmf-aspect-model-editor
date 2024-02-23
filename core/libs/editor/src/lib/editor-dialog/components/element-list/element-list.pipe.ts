@@ -11,18 +11,22 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {BaseMetaModelElement} from '@ame/meta-model';
-import {elementShortcuts, getElementType} from '@ame/shared';
+import {ElementInfo, ElementType, sammElements} from '@ame/shared';
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'modelElementParser',
 })
-export class ModelElementParser implements PipeTransform {
+export class ModelElementParserPipe implements PipeTransform {
+  getElementType(element: BaseMetaModelElement): [ElementType, ElementInfo[ElementType]] {
+    return Object.entries(sammElements).find(([, value]) => element instanceof value.class) || (['', null] as any);
+  }
+
   transform(element: BaseMetaModelElement) {
-    const type = getElementType(element);
+    const [type, elementData] = this.getElementType(element);
     return {
-      shortcut: elementShortcuts[type],
       element,
+      symbol: elementData?.symbol,
       type,
     };
   }

@@ -1,0 +1,31 @@
+<!--
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div class="background" (click)="closeSearch()"></div>
+<mat-form-field class="search">
+  <mat-label>{{ 'SEARCHES.FILES.LABEL' | translate }}</mat-label>
+  <input [matAutocomplete]="auto" [formControl]="searchControl" type="text" matInput />
+  <mat-icon [class.rotate]="loading" matSuffix>{{ loading ? 'refresh' : 'description' }}</mat-icon>
+
+  <mat-autocomplete class="search-autocomplete" #auto="matAutocomplete">
+    <ng-container *ngFor="let entry of searchableFiles">
+      <mat-option (click)="openFile(entry)" class="list-option">
+        <mat-icon>description</mat-icon>
+        <div class="file-element">
+          <span>{{ entry.file }}</span>
+          <span>{{ entry.namespace }}</span>
+        </div>
+      </mat-option>
+    </ng-container>
+  </mat-autocomplete>
+</mat-form-field>

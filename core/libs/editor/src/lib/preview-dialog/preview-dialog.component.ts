@@ -34,7 +34,10 @@ export class PreviewDialogComponent {
   public title: string;
   public fileName: string;
 
-  constructor(@Inject(MAT_DIALOG_DATA) private data: PreviewDialogOptions, private dialogRef: MatDialogRef<PreviewDialogComponent>) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: PreviewDialogOptions,
+    private dialogRef: MatDialogRef<PreviewDialogComponent>,
+  ) {
     this.title = data.title;
     this.content = data.content;
     this.initialContent = data.content;
@@ -50,7 +53,7 @@ export class PreviewDialogComponent {
       new Blob([this.content], {
         type: 'application/json;charset=utf-8',
       }),
-      this.fileName
+      this.fileName,
     );
   }
 

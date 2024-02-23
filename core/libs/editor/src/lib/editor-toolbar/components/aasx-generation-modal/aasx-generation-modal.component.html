@@ -10,11 +10,11 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<h2 mat-dialog-title>{{ 'TOOLBAR.GENERATE_AASX_DIALOG.TITLE' | translate }}</h2>
+<h2 mat-dialog-title>{{ 'GENERATE_AASX_DIALOG.TITLE' | translate }}</h2>
 
 <mat-dialog-content>
   <mat-form-field appearance="fill" *ngIf="!isGenerating; else loader">
-    <mat-label>{{ 'TOOLBAR.GENERATE_AASX_DIALOG.OUTPUT_FILE_FORMAT' | translate }}</mat-label>
+    <mat-label>{{ 'GENERATE_AASX_DIALOG.OUTPUT_FILE_FORMAT' | translate }}</mat-label>
     <mat-select [formControl]="control" data-cy="tbOutputButton">
       <mat-option data-cy="tbOutputButton-aasx" value="aasx">AASX</mat-option>
       <mat-option data-cy="tbOutputButton-xml" value="xml">XML</mat-option>
@@ -23,13 +23,13 @@
 
   <ng-template #loader>
     <div class="loading">
-      <h3>{{ 'TOOLBAR.GENERATE_AASX_DIALOG.GENERATING' | translate }}</h3>
+      <h3>{{ 'GENERATE_AASX_DIALOG.GENERATING' | translate }}</h3>
       <mat-spinner></mat-spinner>
     </div>
   </ng-template>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-flat-button mat-dialog-close [disabled]="isGenerating">{{ 'TOOLBAR.GENERATE_AASX_DIALOG.CANCEL' | translate }}</button>
-  <button mat-flat-button [disabled]="isGenerating" (click)="generate()">{{ 'TOOLBAR.GENERATE_AASX_DIALOG.GENERATE' | translate }}</button>
+  <button mat-flat-button mat-dialog-close [disabled]="isGenerating">{{ 'GENERATE_AASX_DIALOG.CANCEL' | translate }}</button>
+  <button mat-flat-button [disabled]="isGenerating" (click)="generate()">{{ 'GENERATE_AASX_DIALOG.GENERATE' | translate }}</button>
 </mat-dialog-actions>

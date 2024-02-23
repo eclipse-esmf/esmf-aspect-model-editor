@@ -37,7 +37,7 @@ export class DefaultEntity extends CanExtendsWithProperties implements Entity {
     aspectModelUrn: string,
     name: string,
     public properties: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>[] = [],
-    predefined = false
+    predefined = false,
   ) {
     super(metaModelVersion, aspectModelUrn, name);
     this.predefined = predefined;

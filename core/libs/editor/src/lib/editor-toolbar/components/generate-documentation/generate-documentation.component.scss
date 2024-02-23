@@ -10,3 +10,19 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+mat-dialog-content {
+  padding-bottom: 0;
+}

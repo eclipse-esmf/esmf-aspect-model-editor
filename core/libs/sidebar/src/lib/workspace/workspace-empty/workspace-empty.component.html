@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<div *ngIf="loading; else empty" class="loading">
+  <mat-spinner></mat-spinner>
+  <p>{{ 'SIDEBAR.EMPTY.LOADING_NAMESPACES' | translate }}</p>
+</div>
+
+<ng-template #empty>
+  <p>{{ 'SIDEBAR.EMPTY.SAVE_MESSAGE' | translate }}</p>
+  <p>{{ 'SIDEBAR.EMPTY.CALL_TO_ACTION' | translate }}</p>
+  <button mat-flat-button color="primary">{{ 'SIDEBAR.EMPTY.IMPORT_BUTTON' | translate }}</button>
+</ng-template>

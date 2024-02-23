@@ -48,7 +48,7 @@ export class CharacteristicModelService extends BaseModelService {
     private mxGraphService: MxGraphService,
     private characteristicRenderer: CharacteristicRenderService,
     private enumerationRenderer: EnumerationRenderService,
-    private filtersService: FiltersService
+    private filtersService: FiltersService,
   ) {
     super();
   }
@@ -125,12 +125,7 @@ export class CharacteristicModelService extends BaseModelService {
         this.removeUnusedEntityValues(metaModelElement);
       }
 
-      if (
-        RdfModelUtil.isCharacteristicInstance(
-          form.changedMetaModel.aspectModelUrn,
-          this.modelService.getLoadedAspectModel().rdfModel.SAMMC()
-        )
-      ) {
+      if (RdfModelUtil.isCharacteristicInstance(form.changedMetaModel.aspectModelUrn, this.modelService.currentRdfModel.SAMMC())) {
         // in case this is a predefined characteristic, no need to update anything
         const children = [...(originalModelElement.children || [])];
         for (const child of children) {
@@ -233,7 +228,7 @@ export class CharacteristicModelService extends BaseModelService {
   private handleQuantifiableUnit(
     metaModelElement: DefaultQuantifiable,
     form: {[key: string]: any},
-    originalModelElement?: DefaultQuantifiable
+    originalModelElement?: DefaultQuantifiable,
   ) {
     if (metaModelElement.unit) {
       if (

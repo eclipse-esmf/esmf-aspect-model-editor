@@ -32,7 +32,7 @@ export class PropertyAbstractPropertyConnectionHandler
     protected mxGraphAttributeService: MxGraphAttributeService,
     protected sammLangService: SammLanguageSettingsService,
     protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService
+    private notificationService: NotificationsService,
   ) {
     super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, translate);
   }
@@ -41,7 +41,7 @@ export class PropertyAbstractPropertyConnectionHandler
     parentMetaModel: DefaultProperty,
     childMetaModel: DefaultAbstractProperty,
     parentCell: mxgraph.mxCell,
-    childCell: mxgraph.mxCell
+    childCell: mxgraph.mxCell,
   ) {
     if (this.hasEntityParent(parentCell)) {
       this.notificationsService.warning({

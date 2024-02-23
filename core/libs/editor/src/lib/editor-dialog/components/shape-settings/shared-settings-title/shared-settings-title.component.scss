@@ -11,6 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+:host {
+  display: flex;
+  align-items: center;
+}
+
 .element-icon {
   height: 25px;
   width: 25px;

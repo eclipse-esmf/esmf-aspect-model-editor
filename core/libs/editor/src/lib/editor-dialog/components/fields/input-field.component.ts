@@ -112,7 +112,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
     return this.metaModelDialogService.getMetaModelElement().pipe(
       tap(metaModelElement => {
         this.metaModelElement = <T>metaModelElement;
-      })
+      }),
     );
   }
 
@@ -138,7 +138,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
 
             return [...entities, ...this.searchExtEntity(value)]?.filter(type => this.inSearchList(type, value));
           }),
-          startWith([])
+          startWith([]),
         );
   }
 
@@ -159,7 +159,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
 
             return [...entities, ...this.searchExtAbstractEntity(value)]?.filter(type => this.inSearchList(type, value));
           }),
-          startWith([])
+          startWith([]),
         );
   }
 
@@ -175,7 +175,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
         }));
         return [...properties, ...this.searchExtProperty(value)]?.filter(type => this.inSearchList(type, value));
       }),
-      startWith([])
+      startWith([]),
     );
   }
 
@@ -191,7 +191,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
         }));
         return [...properties, ...this.searchExtProperty(value)]?.filter(type => this.inSearchList(type, value));
       }),
-      startWith([])
+      startWith([]),
     );
   }
 
@@ -211,7 +211,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
 
         return [...characteristics, ...this.searchExtCharacteristic(value)]?.filter(type => this.inSearchList(type, value));
       }),
-      startWith([])
+      startWith([]),
     );
   }
 
@@ -226,7 +226,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
         }
         return searchService.search<DefaultUnit>(value, units, unitSearchOption);
       }),
-      startWith(units)
+      startWith(units),
     );
   }
 
@@ -239,7 +239,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
         }
         return searchService.search<Unit>(value, units, unitSearchOption);
       }),
-      startWith(units)
+      startWith(units),
     );
   }
 

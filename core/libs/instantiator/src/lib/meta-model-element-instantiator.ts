@@ -90,7 +90,7 @@ export class MetaModelElementInstantiator {
     public instantiatorService?: InstantiatorService,
     public namespaceCacheService?: NamespacesCacheService,
     public recursiveModelElements?: Map<string, Array<BaseMetaModelElement>>,
-    public notificationsService?: NotificationsService
+    public notificationsService?: NotificationsService,
   ) {
     this.samm = this.rdfModel.samm;
     this.sammC = this.rdfModel.sammC;
@@ -484,7 +484,7 @@ export class MetaModelElementInstantiator {
 
   getRdfModelByElement(quad: NamedNode | Quad_Object): RdfModel {
     return this.instantiatorService.rdfService.externalRdfModels.find(
-      (extRdfModel: RdfModel) => extRdfModel.store.getQuads(quad, null, null, null).length
+      (extRdfModel: RdfModel) => extRdfModel.store.getQuads(quad, null, null, null).length,
     );
   }
 

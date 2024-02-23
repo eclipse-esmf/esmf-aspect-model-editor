@@ -34,11 +34,11 @@ import {BaseVisitor} from '../base-visitor';
 @Injectable()
 export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
   private get store(): Store {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.store;
+    return this.rdfNodeService.modelService.currentRdfModel.store;
   }
 
   private get sammC(): SammC {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.SAMMC();
+    return this.rdfNodeService.modelService.currentRdfModel.SAMMC();
   }
 
   private readonly constraintCallbacks = {
@@ -52,7 +52,11 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
     DefaultLocaleConstraint: (constraint: DefaultLocaleConstraint) => this.updateLocale(constraint),
   };
 
-  constructor(public rdfNodeService: RdfNodeService, public mxGraphService: MxGraphService, rdfService: RdfService) {
+  constructor(
+    public rdfNodeService: RdfNodeService,
+    public mxGraphService: MxGraphService,
+    rdfService: RdfService,
+  ) {
     super(rdfService);
   }
 
@@ -135,7 +139,7 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
         DataFactory.namedNode(parent.aspectModelUrn),
         this.sammC.ConstraintProperty(),
         DataFactory.namedNode(constraint.aspectModelUrn),
-        DataFactory.namedNode(constraint.aspectModelUrn)
+        DataFactory.namedNode(constraint.aspectModelUrn),
       );
     });
   }

@@ -35,7 +35,8 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
   constructor(
     public namespacesCacheService: NamespacesCacheService,
     private notificationsService: NotificationsService,
-    public rdfService: RdfService
+    private validators: EditorDialogValidators,
+    public rdfService: RdfService,
   ) {
     super();
     this.fieldName = 'leftCharacteristic';
@@ -70,15 +71,10 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
           validators: [
             Validators.required,
             EditorDialogValidators.disabled,
-            EditorDialogValidators.duplicateNameWithDifferentType(
-              this.namespacesCacheService,
-              this.metaModelElement,
-              this.rdfService,
-              DefaultCharacteristic
-            ),
+            this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic),
           ],
-        }
-      )
+        },
+      ),
     );
 
     this.parentForm.setControl(
@@ -86,14 +82,14 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
       new FormControl({
         value: eitherLeft,
         disabled: this.metaModelElement?.isExternalReference(),
-      })
+      }),
     );
 
     this.leftControl = this.parentForm.get('left') as FormControl;
     this.leftCharacteristicControl = this.parentForm.get('leftCharacteristic') as FormControl;
 
     this.filteredCharacteristicTypes$ = this.initFilteredCharacteristicTypes(this.leftControl, this.metaModelElement.aspectModelUrn).pipe(
-      map(charList => charList.filter(char => char.urn !== this.parentForm.get('rightCharacteristic')?.value?.aspectModelUrn))
+      map(charList => charList.filter(char => char.urn !== this.parentForm.get('rightCharacteristic')?.value?.aspectModelUrn)),
     );
   }
 

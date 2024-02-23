@@ -11,27 +11,27 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>{{ 'TOOLBAR.DECLARE_NAME_DIALOG.TITLE' | translate }}</h2>
+<h2 mat-dialog-title>{{ 'DECLARE_NAME_DIALOG.TITLE' | translate }}</h2>
 <button class="close-button" mat-icon-button tabindex="-1" (click)="closeAndGiveResult(false)">
   <mat-icon>close</mat-icon>
 </button>
 
 <mat-dialog-content *ngIf="fileNameControl">
   <p>
-    {{ 'TOOLBAR.DECLARE_NAME_DIALOG.INFO_CONTENT' | translate }}
+    {{ 'DECLARE_NAME_DIALOG.INFO_CONTENT' | translate }}
   </p>
 
   <mat-form-field>
     <input [formControl]="fileNameControl" name="file-name" matInput placeholder="Name" data-cy="file-rename" />
     <span matSuffix class="input-suffix">.ttl</span>
-    <mat-error *ngIf="fileNameControl.getError('required')">* {{ 'TOOLBAR.DECLARE_NAME_DIALOG.REQUIRED_ERROR' | translate }}</mat-error>
-    <mat-error *ngIf="fileNameControl.getError('pattern')">{{ 'TOOLBAR.DECLARE_NAME_DIALOG.CHARACTERS_ERROR' | translate }}</mat-error>
-    <mat-error *ngIf="fileNameControl.getError('sameFile')">{{ 'TOOLBAR.DECLARE_NAME_DIALOG.EXIST_ERROR' | translate }}</mat-error>
+    <mat-error *ngIf="fileNameControl.getError('required')">* {{ 'DECLARE_NAME_DIALOG.REQUIRED_ERROR' | translate }}</mat-error>
+    <mat-error *ngIf="fileNameControl.getError('pattern')">{{ 'DECLARE_NAME_DIALOG.CHARACTERS_ERROR' | translate }}</mat-error>
+    <mat-error *ngIf="fileNameControl.getError('sameFile')">{{ 'DECLARE_NAME_DIALOG.EXIST_ERROR' | translate }}</mat-error>
   </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-flat-button (click)="closeAndGiveResult(false)">{{ 'TOOLBAR.DECLARE_NAME_DIALOG.CANCEL' | translate }}</button>
+  <button mat-flat-button (click)="closeAndGiveResult(false)">{{ 'DECLARE_NAME_DIALOG.CANCEL' | translate }}</button>
   <button
     mat-flat-button
     color="primary"
@@ -39,6 +39,6 @@
     [disabled]="!fileNameControl?.valid"
     (click)="closeAndGiveResult(true)"
   >
-    {{ 'TOOLBAR.DECLARE_NAME_DIALOG.REMOVE_ASPECT' | translate }}
+    {{ 'DECLARE_NAME_DIALOG.REMOVE_ASPECT' | translate }}
   </button>
 </mat-dialog-actions>

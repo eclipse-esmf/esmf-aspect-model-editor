@@ -20,7 +20,10 @@ import {isDataTypeLangString} from '@ame/shared';
 
 @Injectable()
 export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
-  constructor(public modelService: ModelService, rdfService: RdfService) {
+  constructor(
+    public modelService: ModelService,
+    rdfService: RdfService,
+  ) {
     super(rdfService);
   }
 
@@ -37,7 +40,7 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
 
   private updateProperties(entityValue: DefaultEntityValue): void {
     const {aspectModelUrn} = entityValue;
-    const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
+    const rdfModel = this.modelService.currentRdfModel;
 
     entityValue.properties.forEach(property => {
       const object = this.createObjectForRDF(property);
@@ -70,11 +73,11 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
   }
 
   private updateBaseProperties(entityValue: DefaultEntityValue): void {
-    const rdfModel = this.modelService.getLoadedAspectModel().rdfModel;
+    const rdfModel = this.modelService.currentRdfModel;
     rdfModel.store.addQuad(
       DataFactory.namedNode(entityValue.aspectModelUrn),
       rdfModel.SAMM().RdfType(),
-      DataFactory.namedNode(entityValue.entity.aspectModelUrn)
+      DataFactory.namedNode(entityValue.entity.aspectModelUrn),
     );
   }
 }

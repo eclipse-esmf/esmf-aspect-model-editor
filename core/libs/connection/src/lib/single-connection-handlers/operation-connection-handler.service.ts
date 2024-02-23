@@ -27,7 +27,7 @@ export class OperationConnectionHandler implements SingleShapeConnector<Operatio
     private mxGraphService: MxGraphService,
     private modelElementNamingService: ModelElementNamingService,
     private notificationsService: NotificationsService,
-    private filtersService: FiltersService
+    private filtersService: FiltersService,
   ) {}
 
   public connect(operation: Operation, source: mxgraph.mxCell, modelInfo: ModelInfo) {
@@ -46,7 +46,7 @@ export class OperationConnectionHandler implements SingleShapeConnector<Operatio
 
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultProperty);
     const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)})
+      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
     );
     this.mxGraphService.assignToParent(child, source);
     this.mxGraphService.formatCell(source);

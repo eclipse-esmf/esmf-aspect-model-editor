@@ -106,7 +106,7 @@ export class EntityValueUtil {
     entityValues: DefaultEntityValue[],
     currentCachedFile: CachedFile,
     form: FormGroup,
-    entity: Entity
+    entity: Entity,
   ): boolean {
     if (!this.isEntityNameValid(entityValueName, form, entityValues)) {
       return false;
@@ -130,7 +130,7 @@ export class EntityValueUtil {
     entityValueName: string,
     namespace: string,
     currentCachedFile: CachedFile,
-    form: FormGroup
+    form: FormGroup,
   ): boolean {
     return (
       !currentCachedFile.getElement(`${namespace}#${entityValueName}`) &&
@@ -191,7 +191,7 @@ export class EntityValueUtil {
       entityValueName,
       urn,
       characteristic?.dataType as DefaultEntity,
-      (characteristic?.dataType?.['properties'] as OverWrittenProperty[]) || []
+      (characteristic?.dataType?.['properties'] as OverWrittenProperty[]) || [],
     );
 
     const newEntityValues = form.get('newEntityValues');

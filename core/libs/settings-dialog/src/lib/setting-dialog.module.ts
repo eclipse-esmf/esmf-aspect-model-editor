@@ -38,6 +38,7 @@ import {MatTreeModule} from '@angular/material/tree';
 import {LanguageTranslateModule} from '@ame/translation';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import {MatMenuModule} from '@angular/material/menu';
     MatDividerModule,
     LanguageTranslateModule,
     MatMenuModule,
+    MatExpansionModule,
   ],
   exports: [SettingDialogComponent],
 })
