@@ -12,31 +12,42 @@
  */
 
 import {NamespacesCacheService} from '@ame/cache';
-import {EditorService, ShapeSettingsService} from '@ame/editor';
+import {EditorService, FileHandlingService, ShapeSettingsService} from '@ame/editor';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {MigratorService} from '@ame/migrator';
 import {MxGraphService} from '@ame/mx-graph';
-import {ElectronSignalsService, ElectronTunnelService, LoadingScreenService, ModelSavingTrackerService, SidebarService} from '@ame/shared';
-import {Injectable} from '@angular/core';
+import {
+  ElectronSignals,
+  ElectronSignalsService,
+  ElectronTunnelService,
+  LoadingScreenService,
+  ModelSavingTrackerService,
+  StartupPayload,
+} from '@ame/shared';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {Observable, filter, of, switchMap, take, tap} from 'rxjs';
+import {Observable, filter, of, sample, switchMap, take, tap} from 'rxjs';
+import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({providedIn: 'root'})
 export class StartupService {
+  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+
   constructor(
     private migratorService: MigratorService,
-    private sidebarService: SidebarService,
+    private sidebarService: SidebarStateService,
     private router: Router,
     private editorService: EditorService,
     private modelSaveTracker: ModelSavingTrackerService,
     private electronTunnelService: ElectronTunnelService,
-    private electronSignalsService: ElectronSignalsService,
     private loadingScreenService: LoadingScreenService,
     private shapeSettingsSettings: ShapeSettingsService,
     private namespaceCacheService: NamespacesCacheService,
+    private fileHandlingService: FileHandlingService,
     private mxGraphService: MxGraphService,
-    private translate: LanguageTranslationService
+    private translate: LanguageTranslationService,
+    private ngZone: NgZone,
   ) {}
 
   listenForLoading() {
@@ -44,20 +55,28 @@ export class StartupService {
       .pipe(
         filter(ev => ev instanceof NavigationEnd && ev.url.includes('/editor')),
         switchMap(() => this.electronTunnelService.startUpData$.asObservable()),
-        filter(Boolean),
+        sample(this.mxGraphService.graphInitialized$.pipe(filter(Boolean))),
+        filter(data => {
+          if (data) {
+            return true;
+          } else {
+            this.fileHandlingService.createEmptyModel();
+            return false;
+          }
+        }),
         take(1),
         switchMap(({isFirstWindow, model}) =>
-          (isFirstWindow ? this.migratorService.startMigrating() : of(null)).pipe(switchMap(() => this.loadModel(model)))
-        )
+          (isFirstWindow ? this.migratorService.startMigrating() : of(null)).pipe(switchMap(() => this.loadModel(model))),
+        ),
       )
       .subscribe(() => {
-        this.sidebarService.refreshSidebarNamespaces();
+        this.sidebarService.workspace.refresh();
         this.router.navigate([{outlets: {migrator: null, 'export-namespaces': null, 'import-namespaces': null}}]);
       });
   }
 
   loadModel(model: string): Observable<any> {
-    let options;
+    let options: StartupPayload;
     this.loadingScreenService.open({
       title: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_LOADING,
       content: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_LOADING_WAIT,
@@ -66,17 +85,21 @@ export class StartupService {
     return this.electronSignalsService.call('requestWindowData').pipe(
       tap(data => (options = data.options)),
       switchMap(() =>
-        this.editorService.loadNewAspectModel({
-          rdfAspectModel: model,
-          namespaceFileName: options ? `${options.namespace}:${options.file}` : '',
-          fromWorkspace: options?.fromWorkspace,
-        })
+        this.ngZone.run(() =>
+          model
+            ? this.editorService.loadNewAspectModel({
+                rdfAspectModel: model,
+                namespaceFileName: options ? `${options.namespace}:${options.file}` : '',
+                fromWorkspace: options?.fromWorkspace,
+              })
+            : of(this.fileHandlingService.createEmptyModel()),
+        ),
       ),
       tap(() => {
         this.editElement(options?.editElement);
         this.modelSaveTracker.updateSavedModel();
         this.loadingScreenService.close();
-      })
+      }),
     );
   }
 

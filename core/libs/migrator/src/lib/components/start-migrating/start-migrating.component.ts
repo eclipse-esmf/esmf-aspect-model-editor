@@ -27,7 +27,11 @@ export class StartMigratingComponent {
   private migratorService = inject(MigratorService);
   public increaseVersion = this.migratorService.increaseNamespaceVersion;
 
-  constructor(@Inject(APP_CONFIG) public config: AppConfig, private migratorApiService: MigratorApiService, private router: Router) {}
+  constructor(
+    @Inject(APP_CONFIG) public config: AppConfig,
+    private migratorApiService: MigratorApiService,
+    private router: Router,
+  ) {}
 
   migrate() {
     this.migrateLoading = true;

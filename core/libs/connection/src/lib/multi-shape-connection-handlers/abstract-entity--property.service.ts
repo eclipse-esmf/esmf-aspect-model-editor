@@ -22,13 +22,16 @@ import {mxgraph} from 'mxgraph-factory';
   providedIn: 'root',
 })
 export class AbstractEntityPropertyConnectionHandler implements MultiShapeConnector<DefaultAbstractEntity, DefaultProperty> {
-  constructor(private mxGraphService: MxGraphService, private entityValueService: EntityValueService) {}
+  constructor(
+    private mxGraphService: MxGraphService,
+    private entityValueService: EntityValueService,
+  ) {}
 
   public connect(
     parentMetaModel: DefaultAbstractEntity,
     childMetaModel: DefaultProperty,
     parentCell: mxgraph.mxCell,
-    childCell: mxgraph.mxCell
+    childCell: mxgraph.mxCell,
   ) {
     if (!parentMetaModel.properties.find(({property}) => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
       const overWrittenProperty = {property: childMetaModel, keys: {}};

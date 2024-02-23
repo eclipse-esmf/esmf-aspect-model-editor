@@ -12,9 +12,11 @@
   -->
 
 <h2 mat-dialog-title>{{ data.title }}</h2>
+
 <mat-dialog-content>
   <p>{{ data.content }}</p>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
   <button *ngIf="data.hasLeftButton" (click)="close($event)" mat-button data-cy="alert-left-btn">{{ data.leftButtonText }}</button>
   <button *ngIf="data.hasRightButton" (click)="ok($event)" mat-raised-button color="primary" data-cy="alert-right-btn">

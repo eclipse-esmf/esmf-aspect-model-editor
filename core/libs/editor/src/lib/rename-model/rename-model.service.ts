@@ -11,16 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {first} from 'rxjs/operators';
 import {RenameModelComponent} from './rename-model.component';
 
 @Injectable({providedIn: 'root'})
 export class RenameModelDialogService {
-  constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
+  constructor(private matDialog: MatDialog) {}
 
   open() {
-    return this.ngZone.run(() => this.matDialog.open(RenameModelComponent, {width: '550px'}).afterClosed().pipe(first()));
+    return this.matDialog.open(RenameModelComponent, {width: '550px'}).afterClosed().pipe(first());
   }
 }

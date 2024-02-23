@@ -11,24 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {Router} from '@angular/router';
 import {NamespacesManagerService} from '../../../shared';
-import {RdfService} from '@ame/rdf/services';
 import {Prefixes} from 'n3';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {EditorService} from '@ame/editor';
 import {tap} from 'rxjs/operators';
 import {first} from 'rxjs';
+import {APP_CONFIG, AppConfig} from '@ame/shared';
 
-const nonDependentNamespaces = [
+const nonDependentNamespaces = (sammVersion: string) => [
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
   'http://www.w3.org/2000/01/rdf-schema#',
-  'urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#',
-  'urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#',
-  'urn:samm:org.eclipse.esmf.samm:entity:2.1.0#',
-  'urn:samm:org.eclipse.esmf.samm:unit:2.1.0#',
+  `urn:samm:org.eclipse.esmf.samm:meta-model:${sammVersion}#`,
+  `urn:samm:org.eclipse.esmf.samm:characteristic:${sammVersion}#`,
+  `urn:samm:org.eclipse.esmf.samm:entity:${sammVersion}#`,
+  `urn:samm:org.eclipse.esmf.samm:unit:${sammVersion}#`,
   'http://www.w3.org/2001/XMLSchema#',
 ];
 
@@ -53,9 +53,9 @@ export class SelectNamespacesComponent implements OnInit {
 
   constructor(
     private namespacesManager: NamespacesManagerService,
-    private rdfService: RdfService,
     private editorService: EditorService,
-    private router: Router
+    private router: Router,
+    @Inject(APP_CONFIG) public config: AppConfig,
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +63,7 @@ export class SelectNamespacesComponent implements OnInit {
       .loadModels()
       .pipe(
         first(),
-        tap(models => (this.namespacesDependencies = this.getNamespacesDependencies(models)))
+        tap(models => (this.namespacesDependencies = this.getNamespacesDependencies(models))),
       )
       .subscribe();
   }
@@ -75,7 +75,10 @@ export class SelectNamespacesComponent implements OnInit {
 
   validate(): void {
     const namespaces = Array.from(new Set(this.selectedNamespaces));
-    const validatePayload = namespaces.map(namespace => ({namespace, files: this.namespacesDependencies[namespace].files}));
+    const validatePayload = namespaces.map(namespace => ({
+      namespace,
+      files: this.namespacesDependencies[namespace].files,
+    }));
     this.namespacesManager.validateExport(validatePayload).subscribe();
     this.router.navigate([{outlets: {'export-namespaces': 'validate'}}]);
   }
@@ -97,7 +100,7 @@ export class SelectNamespacesComponent implements OnInit {
       }
 
       nDependency.dependencies = Array.from(
-        new Set([...nDependency.dependencies, ...this.getDependentNamespaces(rdfModel.getNamespaces())])
+        new Set([...nDependency.dependencies, ...this.getDependentNamespaces(rdfModel.getNamespaces())]),
       );
       nDependency.files = Array.from(new Set([...nDependency.files, fileName]));
       return acc;
@@ -106,7 +109,7 @@ export class SelectNamespacesComponent implements OnInit {
 
   private getDependentNamespaces(prefixes: Prefixes<string>): string[] {
     return Object.entries(prefixes).reduce((acc, [key, value]) => {
-      if (!nonDependentNamespaces.includes(value) && key !== '') {
+      if (!nonDependentNamespaces(this.config.currentSammVersion).includes(value) && key !== '') {
         acc.push(value.replace('urn:samm:', '').replace('#', ''));
       }
 

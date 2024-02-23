@@ -32,6 +32,13 @@ describe('Property Visitor', () => {
   let abstractProperty: DefaultAbstractProperty;
 
   beforeEach(() => {
+    rdfModel = {
+      store: new Store(),
+      SAMM: jest.fn(() => new Samm('')),
+      hasNamespace: jest.fn(() => false),
+      addPrefix: jest.fn(() => {}),
+    } as any;
+
     TestBed.configureTestingModule({
       providers: [
         AbstractPropertyVisitor,
@@ -43,18 +50,18 @@ describe('Property Visitor', () => {
           provide: RdfService,
           useValue: provideMockObject(RdfService),
         },
+        {
+          provide: ModelService,
+          useValue: {
+            get currentRdfModel() {
+              return rdfModel;
+            },
+          },
+        },
       ],
     });
 
-    modelService = provideMockObject(ModelService);
-    rdfModel = {
-      store: new Store(),
-      SAMM: jest.fn(() => new Samm('')),
-      hasNamespace: jest.fn(() => false),
-      addPrefix: jest.fn(() => {}),
-    } as any;
-
-    modelService.getLoadedAspectModel.mockImplementation(() => ({rdfModel} as any));
+    modelService = TestBed.inject(ModelService) as jest.Mocked<ModelService>;
     abstractProperty = new DefaultAbstractProperty('1', 'samm#abstractProperty1', 'abstractProperty1', null);
 
     rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;

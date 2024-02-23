@@ -47,13 +47,13 @@ export class MxGraphSetupService {
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private translate: LanguageTranslationService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   setUp() {
     this.ngZone.runOutsideAngular(() => {
       const editor = (this.mxGraphAttributeService.editor = new mxEditor(
-        mxUtils.load(this.appConfig.editorConfiguration).getDocumentElement()
+        mxUtils.load(this.appConfig.editorConfiguration).getDocumentElement(),
       ));
       this.graph = this.mxGraphAttributeService.graph = (editor as any).graph;
 
@@ -202,7 +202,7 @@ export class MxGraphSetupService {
   private getPagePadding() {
     return new mxPoint(
       Math.max(0, Math.round(this.graph.container.offsetWidth - 34)),
-      Math.max(0, Math.round(this.graph.container.offsetHeight - 34))
+      Math.max(0, Math.round(this.graph.container.offsetHeight - 34)),
     );
   }
 
@@ -254,7 +254,7 @@ export class MxGraphSetupService {
       this.graph.view.scale * (this.graph.view.translate.x + layout.x * page.width),
       this.graph.view.scale * (this.graph.view.translate.y + layout.y * page.height),
       this.graph.view.scale * layout.width * page.width,
-      this.graph.view.scale * layout.height * page.height
+      this.graph.view.scale * layout.height * page.height,
     );
   }
 
@@ -348,7 +348,7 @@ export class MxGraphSetupService {
         this.resolveAssetsIcon(AssetsPath.OpenIcon),
         () => {
           this.bindingsService.fireAction('editElement');
-        }
+        },
       );
 
       if (selectedCells.length === 2) {
@@ -361,7 +361,7 @@ export class MxGraphSetupService {
           this.resolveAssetsIcon(AssetsPath.ConnectionOnIcon),
           () => {
             this.bindingsService.fireAction('connect-with');
-          }
+          },
         );
       }
 

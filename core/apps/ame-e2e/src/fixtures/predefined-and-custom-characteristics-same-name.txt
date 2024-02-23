@@ -36,6 +36,8 @@
         :withPredefinedText
         :withCustomTimestamp
         :withPredefinedTimestamp
+        :withCustomUnitReference
+        :withPredefinedUnitReference
     );
     samm:operations ();
     samm:events ().
@@ -88,6 +90,12 @@
 :withPredefinedTimestamp a samm:Property ;
     samm:characteristic samm-c:Timestamp .
 
+:withCustomUnitReference a samm:Property ;
+    samm:characteristic :WithCustomUnitReference .
+
+:withPredefinedUnitReference a samm:Property ;
+    samm:characteristic :WithPredefinedUnitReference .
+
 :Boolean a samm:Characteristic;
     samm:description "Custom 'Boolean' characteristic."@en ;
     samm:dataType xsd:boolean .
@@ -119,3 +127,15 @@
 :Timestamp a samm:Characteristic;
     samm:description "Custom 'Timestamp' characteristic."@en ;
     samm:dataType xsd:dateTime .
+
+:WithCustomUnitReference a samm-c:Quantifiable ;
+    samm:preferredName "Test Quantifiable"@en ;
+    samm:description "This is a test Quantifiable"@en ;
+    samm:see <https://www.eclipse.org> ;
+    samm-c:unit unit:curie .
+
+:WithPredefinedUnitReference a samm-c:Quantifiable ;
+    samm:preferredName "Test Quantifiable"@en ;
+    samm:description "This is a test Quantifiable"@en ;
+    samm:see <https://www.eclipse.org> ;
+    samm-c:unit unit:baud .

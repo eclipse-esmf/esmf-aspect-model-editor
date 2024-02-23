@@ -35,7 +35,7 @@ export class DefaultRangeConstraint extends DefaultConstraint implements RangeCo
     public upperBoundDefinition: BoundDefinition,
     public lowerBoundDefinition: BoundDefinition,
     public minValue?: any,
-    public maxValue?: any
+    public maxValue?: any,
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

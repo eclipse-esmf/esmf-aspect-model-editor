@@ -32,7 +32,7 @@ export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrate
     localStorage.setItem('applicationLanguage', userInterfaceLang);
 
     settings.aspectModelLanguages = (languageConfiguration.get('aspectModel') as FormArray).controls.map(
-      control => control.get('language')?.value.tag
+      control => control.get('language')?.value.tag,
     );
   }
 }

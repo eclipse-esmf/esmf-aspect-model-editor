@@ -11,20 +11,10 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div>
-  <span *ngIf="!metaModelElement?.isExternalReference()"
-    ><span class="element-icon" *ngIf="metaModelElement | modelElementParser as parsedElement" [ngClass]="parsedElement.type">{{
-      parsedElement.shortcut
-    }}</span></span
-  >
-  <div
-    class="element-name"
-    [ngClass]="{
-      'margin-left-5': !metaModelElement?.isExternalReference(),
-      'element-name-external': metaModelElement?.isExternalReference()
-    }"
-  >
-    {{ elementName }}
-  </div>
-  <span *ngIf="!metaModelElement?.isExternalReference()">({{ metaModelClassName }})</span>
-</div>
+<ame-element
+  *ngIf="metaModelElement | modelElementParser as parsedElement"
+  [type]="sammElements[parsedElement.type]"
+  [name]="elementName + ' (' + metaModelClassName + ')'"
+  class="inline"
+  size="medium"
+></ame-element>

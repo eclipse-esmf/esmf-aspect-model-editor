@@ -13,26 +13,27 @@
 
 // @ts-check
 
-const {app, globalShortcut, BrowserWindow, Menu} = require('electron');
+const {app, globalShortcut, BrowserWindow, Menu, nativeTheme} = require('electron');
 const platformData = require('./electron-libs/os-checker');
 const core = require('./electron-libs/core');
 const {windowsManager} = require('./electron-libs/windows-manager');
+const {inProdMode} = require('./electron-libs/consts');
+const {registerMacSpecificShortcuts, unregisterMacSpecificShortcuts} = require('./electron-libs/mac/shortcuts');
 
 if (require('electron-squirrel-startup')) process.exit();
 
-if (!process.argv.includes('--dev')) {
+if (inProdMode()) {
   // Disable test logging on production
   console.log = () => {};
 }
 
-Menu.setApplicationMenu(null);
-
 if (platformData.isWin) app.setUserTasks([]);
 
 app.on('ready', () => {
-  globalShortcut.register('Command+Q', () => {
-    app.quit();
-  });
+  if (platformData.isMac) {
+    app.on('browser-window-blur', unregisterMacSpecificShortcuts);
+    app.on('browser-window-focus', registerMacSpecificShortcuts);
+  }
 
   core.startService();
   windowsManager.activateCommunicationProtocol();
@@ -51,3 +52,5 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => {
   core.cleanUpProcesses();
 });
+
+nativeTheme.themeSource = 'light';

@@ -13,7 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
-import {finalize, Observable, tap} from 'rxjs';
+import {finalize, Observable, switchMap, tap} from 'rxjs';
 import {Translation} from '../models/language.interface';
 
 @Injectable({
@@ -42,16 +42,17 @@ export class LanguageTranslationService {
     this.translate.use(language);
 
     const onLangChangeSubscription$ = this.translate.onLangChange
-      .pipe(finalize(() => onLangChangeSubscription$.unsubscribe()))
-      .subscribe((event: LangChangeEvent) => {
-        this.getTranslation(event.lang).subscribe();
-      });
+      .pipe(
+        switchMap((event: LangChangeEvent) => this.getTranslation(event.lang)),
+        finalize(() => onLangChangeSubscription$.unsubscribe()),
+      )
+      .subscribe();
   }
 
   getTranslation(language: string): Observable<Translation> {
     const getTranslateSubscription$ = this.translate.getTranslation(language).pipe(
       tap((translation: Translation) => (this.language = translation)),
-      finalize(() => getTranslateSubscription$.unsubscribe())
+      finalize(() => getTranslateSubscription$.unsubscribe()),
     );
 
     return getTranslateSubscription$;

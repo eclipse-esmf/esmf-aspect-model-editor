@@ -13,3 +13,5 @@
 
 export * from './assets-path.enum';
 export * from './notification-type.enum';
+export * from './electron-events.enum';
+export * from './save-validate.types';

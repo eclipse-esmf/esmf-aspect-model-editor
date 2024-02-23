@@ -71,7 +71,10 @@ export class EntityValueModalTableComponent implements OnChanges {
     return this.namespacesCacheService.currentCachedFile;
   }
 
-  constructor(private changeDetector: ChangeDetectorRef, private namespacesCacheService: NamespacesCacheService) {}
+  constructor(
+    private changeDetector: ChangeDetectorRef,
+    private namespacesCacheService: NamespacesCacheService,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.hasOwnProperty('entity') || !this.entity) return;
@@ -84,13 +87,13 @@ export class EntityValueModalTableComponent implements OnChanges {
 
       this.filteredEntityValues$[property.name] = EntityValueUtil.initFilteredEntityValues(property, this.displayForm).pipe(
         startWith(''),
-        map(value => this.getPropertyValues(property).filter(entityValue => entityValue.name.startsWith(value)))
+        map(value => this.getPropertyValues(property).filter(entityValue => entityValue.name.startsWith(value))),
       );
 
       if (EntityValueUtil.isDefaultPropertyWithLangString(element)) {
         this.filteredLanguageValues$[property.name] = EntityValueUtil.initFilteredLanguages(property, this.displayForm).pipe(
           startWith(''),
-          map(value => locale.all.filter(lang => lang.tag.startsWith(value)))
+          map(value => locale.all.filter(lang => lang.tag.startsWith(value))),
         );
       }
     });

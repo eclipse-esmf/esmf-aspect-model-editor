@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {Injectable} from '@angular/core';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
 import {NamespacesCacheService} from '@ame/cache';
 import {BaseMetaModelElement} from '@ame/meta-model';
@@ -18,7 +19,13 @@ import {RFC2141} from 'urn-lib';
 import {DataFactory} from 'n3';
 import {RdfService} from '@ame/rdf/services';
 
+@Injectable({providedIn: 'root'})
 export class EditorDialogValidators {
+  constructor(
+    private namespaceCacheService: NamespacesCacheService,
+    private rdfService: RdfService,
+  ) {}
+
   static namingLowerCase(control: AbstractControl) {
     if (!control?.value) {
       return null;
@@ -64,12 +71,7 @@ export class EditorDialogValidators {
       : null;
   }
 
-  static duplicateName(
-    namespaceCacheService: NamespacesCacheService,
-    metaModelElement: BaseMetaModelElement,
-    rdfService: RdfService,
-    haveTheSameName = true
-  ): ValidatorFn {
+  duplicateName(metaModelElement: BaseMetaModelElement, haveTheSameName = true): ValidatorFn {
     return (control: AbstractControl) => {
       if (!control?.value) {
         return null;
@@ -83,9 +85,9 @@ export class EditorDialogValidators {
       const aspectModelUrn = `${primaryNamespace}#${control.value}`;
 
       let foundExternalElement: BaseMetaModelElement;
-      for (const rdfModel of rdfService.externalRdfModels) {
+      for (const rdfModel of this.rdfService.externalRdfModels) {
         if (
-          (rdfService.currentRdfModel.originalAbsoluteFileName || rdfService.currentRdfModel.absoluteAspectModelFileName) ===
+          (this.rdfService.currentRdfModel.originalAbsoluteFileName || this.rdfService.currentRdfModel.absoluteAspectModelFileName) ===
           rdfModel.absoluteAspectModelFileName
         ) {
           continue;
@@ -93,10 +95,11 @@ export class EditorDialogValidators {
 
         const element = rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null)?.[0]?.subject;
 
+        // @TODO: load elements efficiently
         if (element) {
           const [namespace] = element.value.split('#');
-          namespaceCacheService.sidebarService.loadNamespaceFiles(namespace, namespaceCacheService.currentCachedFile);
-          const files = namespaceCacheService.getFiles(namespace);
+          // @TODO: Solve this // namespaceCacheService.sidebarService.loadNamespaceFiles(namespace, namespaceCacheService.currentCachedFile);
+          const files = this.namespaceCacheService.getFiles(namespace);
           foundExternalElement = files.reduce<BaseMetaModelElement>((acc, file) => acc || file.getEitherElement(element.value), null);
           if (foundExternalElement) {
             break;
@@ -112,7 +115,7 @@ export class EditorDialogValidators {
       }
 
       const modelElementDefinedInCurrentCachedFile =
-        namespaceCacheService.currentCachedFile.getEitherElement<BaseMetaModelElement>(aspectModelUrn);
+        this.namespaceCacheService.currentCachedFile.getEitherElement<BaseMetaModelElement>(aspectModelUrn);
 
       return modelElementDefinedInCurrentCachedFile &&
         (!haveTheSameName || modelElementDefinedInCurrentCachedFile.name !== metaModelElement.name)
@@ -124,19 +127,9 @@ export class EditorDialogValidators {
     };
   }
 
-  static duplicateNameWithDifferentType(
-    namespaceCacheService: NamespacesCacheService,
-    metaModelElement: BaseMetaModelElement,
-    rdfService: RdfService,
-    modelType: Function
-  ): ValidatorFn {
+  duplicateNameWithDifferentType(metaModelElement: BaseMetaModelElement, modelType: Function): ValidatorFn {
     return (control: AbstractControl) => {
-      const duplicateNameValidation = EditorDialogValidators.duplicateName(
-        namespaceCacheService,
-        metaModelElement,
-        rdfService,
-        false
-      )(control);
+      const duplicateNameValidation = this.duplicateName(metaModelElement, false)(control);
 
       if (
         duplicateNameValidation &&

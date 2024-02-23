@@ -58,7 +58,7 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
     private loggerService: LogService,
     private languageSettings: SammLanguageSettingsService,
     private changeDetector: ChangeDetectorRef,
-    private translate: LanguageTranslationService
+    private translate: LanguageTranslationService,
   ) {}
 
   ngOnChanges(): void {
@@ -108,12 +108,7 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
       if (this.metaModelElement instanceof DefaultCharacteristic || this.metaModelElement instanceof DefaultConstraint) {
         this.tmpCharacteristic = this.metaModelElement;
       }
-      if (
-        RdfModelUtil.isCharacteristicInstance(
-          selectedModelElement.aspectModelUrn,
-          this.modelService.getLoadedAspectModel().rdfModel.SAMMC()
-        )
-      ) {
+      if (RdfModelUtil.isCharacteristicInstance(selectedModelElement.aspectModelUrn, this.modelService.currentRdfModel.SAMMC())) {
         this.metaModelClassName = selectedModelElement.aspectModelUrn.split('#')[1].replace('Default', '');
       } else {
         this.metaModelClassName = selectedModelElement.className.replace('Default', '');

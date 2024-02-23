@@ -132,7 +132,7 @@ export class EntityValueViewComponent implements OnInit, OnDestroy {
     newValue.forEach(value =>
       value?.properties.forEach(innerVal => {
         innerVal.isComplex = innerVal.value instanceof DefaultEntityValue;
-      })
+      }),
     );
     return newValue.filter(value => value instanceof DefaultEntityValue);
   }

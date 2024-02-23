@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {MigratorApiService, ModelApiService} from '@ame/api';
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {catchError, forkJoin, map, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
@@ -46,7 +46,6 @@ export class MigratorService {
     private migratorApi: MigratorApiService,
     private modelApiService: ModelApiService,
     private notificationsService: NotificationsService,
-    private ngZone: NgZone
   ) {}
 
   public startMigrating() {
@@ -61,9 +60,9 @@ export class MigratorService {
               this.router.navigate([{outlets: {migrator: null}}]);
             }
             return dialog$;
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
   }
 
@@ -92,7 +91,7 @@ export class MigratorService {
         }
         return of(dialog$);
       }),
-      catchError(() => of(dialog$))
+      catchError(() => of(dialog$)),
     );
   }
 
@@ -130,12 +129,12 @@ export class MigratorService {
   }
 
   private openDialog() {
-    this._dialog = this.ngZone.run(() => this.dialog.open(MigratorComponent, {disableClose: true}));
+    this._dialog = this.dialog.open(MigratorComponent, {disableClose: true});
     return this.dialogRef.afterClosed().pipe(
       tap(() => {
         this._dialog = null;
         this.router.navigate([{outlets: {migrator: null}}]);
-      })
+      }),
     );
   }
 }

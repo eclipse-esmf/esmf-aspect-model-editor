@@ -33,7 +33,7 @@ export class DefaultCollection extends DefaultCharacteristic implements Collecti
     aspectModelUrn: string,
     name: string,
     public elementCharacteristic?: Characteristic,
-    dataType?: Type
+    dataType?: Type,
   ) {
     super(metaModelVersion, aspectModelUrn, name, dataType);
   }

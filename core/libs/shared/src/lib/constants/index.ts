@@ -14,4 +14,3 @@
 export * from './shape-geometry';
 export * from './elements-relations';
 export * from './xsd-datatypes';
-export * from './elements-shortcut';

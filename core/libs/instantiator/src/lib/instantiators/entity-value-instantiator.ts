@@ -85,7 +85,7 @@ export class EntityValueInstantiator {
         });
       } else {
         this.metaModelElementInstantiator.addInstantiatorFunctionToQueue(
-          this.instantiateEntityValue.bind(this, property, defaultEntityValue)
+          this.instantiateEntityValue.bind(this, property, defaultEntityValue),
         );
       }
     }
@@ -107,7 +107,7 @@ export class EntityValueInstantiator {
   private instantiateEntityValue(property: Quad, defaultEntityValue: DefaultEntityValue) {
     const value = new EntityValueInstantiator(this.metaModelElementInstantiator).createEntityValue(
       this.metaModelElementInstantiator.rdfModel.findAnyProperty(property.object as NamedNode),
-      property.object
+      property.object,
     );
     this.metaModelElementInstantiator.getProperty({quad: property.predicate}, (overwrittenProperty: OverWrittenProperty) => {
       defaultEntityValue.addProperty(overwrittenProperty, value);
@@ -129,7 +129,7 @@ export class EntityValueInstantiator {
     return (
       this.cachedFile.getElement(quad.object.value) ||
       new EntityInstantiator(this.metaModelElementInstantiator).createEntity(
-        this.metaModelElementInstantiator.rdfModel.findAnyProperty(DataFactory.namedNode(quad.object.value))
+        this.metaModelElementInstantiator.rdfModel.findAnyProperty(DataFactory.namedNode(quad.object.value)),
       )
     );
   }

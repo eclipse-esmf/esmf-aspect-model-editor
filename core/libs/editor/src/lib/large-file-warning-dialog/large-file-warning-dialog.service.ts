@@ -11,18 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {LargeFileWarningComponent} from './large-file-warning-dialog';
 import {Observable, of} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class LargeFileWarningService {
-  constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
+  constructor(private matDialog: MatDialog) {}
 
   openDialog(elementsCount: number): Observable<'open' | 'cancel' | 'ignore'> {
-    return elementsCount > 99
-      ? this.ngZone.run(() => this.matDialog.open(LargeFileWarningComponent, {data: {elementsCount}}).afterClosed())
-      : of('ignore');
+    return elementsCount > 99 ? this.matDialog.open(LargeFileWarningComponent, {data: {elementsCount}}).afterClosed() : of('ignore');
   }
 }

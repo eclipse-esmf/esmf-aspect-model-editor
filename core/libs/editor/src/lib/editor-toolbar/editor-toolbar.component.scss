@@ -15,46 +15,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--ame-gray-10);
   padding-right: 20px;
-  height: 55px;
-  overflow: hidden;
+  height: 50px;
+  z-index: 1;
+  box-shadow: 0 4px 8px 0 var(--ame-shadow--black-25);
+}
 
-  ::ng-deep {
-    .mat-badge-medium .mat-badge-content {
-      position: absolute;
-      width: 22px;
-      height: 22px;
-      line-height: 22px;
-      font-size: 13px;
-      background: var(--ame-blue-500);
-      color: white;
-      right: -13px !important;
-    }
+mat-icon {
+  margin-right: 0;
+  height: 24px;
+  width: 24px;
+  font-size: 24px;
+
+  &.rotate-45 {
+    transform: rotate(45deg);
   }
-}
 
-.editor-icon-active {
-  color: var(--ame-blue-100) !important;
-}
-
-button:not([mat-menu-item]) {
-  line-height: 1;
-  height: 100%;
-
-  mat-icon {
-    margin-right: 0;
-    height: 24px;
-    width: 24px;
-    font-size: 24px;
-
-    &.rotate-45 {
-      transform: rotate(45deg);
-    }
-
-    &.rotate-90 {
-      transform: rotate(-90deg);
-    }
+  &.rotate-90 {
+    transform: rotate(-90deg);
   }
 }
 
@@ -69,31 +47,8 @@ button:not([mat-menu-item]) {
     display: flex;
     justify-items: center;
 
-    &:not(:last-child) {
+    &.separator {
       border-right: 1px solid var(--ame-gray-10);
     }
-
-    &:not(:has(button:not(:disabled))) {
-      background-color: lightgrey;
-    }
   }
-}
-
-button[disabled] {
-  cursor: not-allowed;
-}
-
-.search {
-  height: 100%;
-}
-
-.actions {
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.toggle-sidebar {
-  padding-left: 10px;
-  padding-right: 10px;
 }

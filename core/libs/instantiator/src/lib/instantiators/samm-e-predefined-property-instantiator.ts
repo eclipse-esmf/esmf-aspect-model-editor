@@ -42,11 +42,8 @@ export class PredefinedPropertyInstantiator {
       this.metaModelElementInstantiator.samm.version,
       this.metaModelElementInstantiator.sammE.getNamespace() + PredefinedProperties.timestamp,
       PredefinedProperties.timestamp,
-      defaultCharacteristicInstantiator.createTimestampCharacteristic(
-        this.metaModelElementInstantiator,
-        this.metaModelElementInstantiator.rdfModel.dataTypeService
-      ),
-      true
+      defaultCharacteristicInstantiator.createTimestampCharacteristic(this.metaModelElementInstantiator),
+      true,
     );
 
     timestampProperty.addPreferredName('en', 'Timestamp');
@@ -64,7 +61,7 @@ export class PredefinedPropertyInstantiator {
       this.metaModelElementInstantiator.sammE.getNamespace() + PredefinedProperties.value,
       PredefinedProperties.value,
       '',
-      true
+      true,
     );
 
     valueProperty.addPreferredName('en', 'Value');
@@ -79,7 +76,7 @@ export class PredefinedPropertyInstantiator {
       this.metaModelElementInstantiator.sammE.getNamespace() + coordinate,
       coordinate,
       '',
-      true
+      true,
     );
 
     valueProperty.addPreferredName('en', coordinates[coordinate].preferredName);
@@ -95,11 +92,8 @@ export class PredefinedPropertyInstantiator {
       this.metaModelElementInstantiator.samm.version,
       this.metaModelElementInstantiator.sammE.getNamespace() + PredefinedProperties.resource,
       PredefinedProperties.resource,
-      defaultCharacteristicInstantiator.createResourcePathCharacteristic(
-        this.metaModelElementInstantiator,
-        this.metaModelElementInstantiator.rdfModel.dataTypeService
-      ),
-      true
+      defaultCharacteristicInstantiator.createResourcePathCharacteristic(this.metaModelElementInstantiator),
+      true,
     );
 
     resourceProperty.addPreferredName('en', 'Resource');
@@ -118,12 +112,9 @@ export class PredefinedPropertyInstantiator {
       this.metaModelElementInstantiator.samm.version,
       this.metaModelElementInstantiator.sammE.getNamespace() + PredefinedProperties.mimeType,
       PredefinedProperties.mimeType,
-      defaultCharacteristicInstantiator.createMimeTypeCharacteristic(
-        this.metaModelElementInstantiator,
-        this.metaModelElementInstantiator.rdfModel.dataTypeService
-      ),
+      defaultCharacteristicInstantiator.createMimeTypeCharacteristic(this.metaModelElementInstantiator),
       true,
-      'application/json'
+      'application/json',
     );
 
     mimeTypeProperty.addPreferredName('en', 'MIME Type');

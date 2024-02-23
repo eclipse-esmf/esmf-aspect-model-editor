@@ -13,308 +13,93 @@
 
 <!-- Toolbar -->
 <div class="menu-items" (click)="blurActiveButton()">
-  <div class="menu-items__group">
-    <button
-      mat-button
+  <div class="menu-items__group separator">
+    <ame-bar-item
       [matTooltipShowDelay]="0"
       [matTooltipHideDelay]="0"
-      [matMenuTriggerFor]="loadMenu"
-      [matTooltip]="'TOOLBAR.NEW_LOAD' | translate"
-      data-cy="tbLoadButton"
-    >
-      <mat-icon class="material-icons">add_box</mat-icon>
-    </button>
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [matTooltip]="'TOOLBAR.SAVE' | translate"
-      [matMenuTriggerFor]="saveMenu"
-      data-cy="tbSaveButton"
-    >
-      <mat-icon class="material-icons">save</mat-icon>
-    </button>
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [matTooltip]="'TOOLBAR.ADD_FILE_TO_NAMESPACE' | translate"
-      (click)="fileInput.click()"
-    >
-      <mat-icon class="material-icons">snippet_folder</mat-icon>
-    </button>
-  </div>
-
-  <div class="menu-items__group">
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      (click)="editSelectedCell()"
+      [disabled]="isModelEmpty || selectedCells?.length !== 1"
       [matTooltip]="'TOOLBAR.EDIT_HIGHLIGHTED_CELL' | translate"
+      (click)="editSelectedCell()"
     >
       <mat-icon class="material-symbols-outlined">jump_to_element</mat-icon>
-    </button>
-    <button
-      mat-button
+    </ame-bar-item>
+
+    <ame-bar-item
       [matTooltipShowDelay]="0"
       [matTooltipHideDelay]="0"
-      (click)="onDelete()"
+      [disabled]="isModelEmpty || selectedCells?.length === 0"
       [matTooltip]="'TOOLBAR.DELETE' | translate"
+      (click)="onDelete()"
       data-cy="tbDeleteButton"
     >
       <mat-icon class="material-icons">delete</mat-icon>
-    </button>
-    <button
-      mat-button
+    </ame-bar-item>
+
+    <ame-bar-item
       [matTooltipShowDelay]="0"
       [matTooltipHideDelay]="0"
+      [disabled]="isModelEmpty || selectedCells?.length !== 2"
+      [matTooltip]="'TOOLBAR.CONNECT' | translate"
+      (click)="onConnect()"
+      data-cy="tbConnectButton"
+    >
+      <mat-icon class="material-icons">commit</mat-icon>
+    </ame-bar-item>
+
+    <ame-bar-item
+      *ngIf="isAllShapesExpanded$ | async; else collapsed"
+      [matTooltipShowDelay]="0"
+      [matTooltipHideDelay]="0"
+      [disabled]="isModelEmpty"
       (click)="onToggleExpand()"
-      matTooltip="{{ labelExpandCollapse | translate }}"
+      [matTooltip]="'TOOLBAR.COLLAPSE_ALL' | translate"
       data-cy="collapseExpandToggle"
     >
-      <mat-icon [class.editor-icon-active]="!isAllShapesExpanded" class="material-icons rotate-45">{{
-        isAllShapesExpanded ? 'unfold_less' : 'unfold_more'
-      }}</mat-icon>
-    </button>
-    <button
-      mat-button
+      <mat-icon class="material-icons rotate-45">unfold_less</mat-icon>
+    </ame-bar-item>
+
+    <ng-template #collapsed>
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
+        [disabled]="isModelEmpty"
+        [matTooltip]="'TOOLBAR.EXPAND_ALL' | translate"
+        (click)="onToggleExpand()"
+        data-cy="collapseExpandToggle"
+      >
+        <mat-icon class="material-icons rotate-45 editor-icon-active">unfold_more</mat-icon>
+      </ame-bar-item>
+    </ng-template>
+
+    <ame-bar-item
       [matTooltipShowDelay]="0"
       [matTooltipHideDelay]="0"
+      [disabled]="isModelEmpty"
       [matTooltip]="'TOOLBAR.FORMAT' | translate"
       (click)="onFormat()"
       data-cy="formatButton"
     >
       <mat-icon class="material-icons rotate-90">schema</mat-icon>
-    </button>
-    <button
-      mat-button
+    </ame-bar-item>
+
+    <ame-bar-item
       [matTooltipShowDelay]="0"
       [matTooltipHideDelay]="0"
-      (click)="onConnect()"
-      [matTooltip]="'TOOLBAR.CONNECT' | translate"
-      data-cy="tbConnectButton"
-    >
-      <mat-icon class="material-icons">commit</mat-icon>
-    </button>
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
+      [disabled]="isModelEmpty"
       (click)="validateFile()"
       [matTooltip]="'TOOLBAR.VALIDATE' | translate"
       data-cy="tbValidateButton"
     >
       <mat-icon class="material-icons">task</mat-icon>
-    </button>
-  </div>
-
-  <div class="menu-items__group" [matTooltipDisabled]="hasAspectElement()" [matTooltip]="'TOOLBAR.GENERATING_POSSIBLE' | translate">
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [matMenuTriggerFor]="generateDocument"
-      [disabled]="!hasAspectElement()"
-      [matTooltip]="'TOOLBAR.GENERATE_DOCUMENT' | translate"
-      data-cy="tbGenerateDocumentButton"
-    >
-      <mat-icon class="material-icons">play_for_work</mat-icon>
-    </button>
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [matMenuTriggerFor]="downloadJson"
-      [disabled]="!hasAspectElement()"
-      [matTooltip]="'TOOLBAR.GENERATE_SCHEMA' | translate"
-      data-cy="tbDownloadJsonButton"
-    >
-      <mat-icon class="material-icons">data_object</mat-icon>
-    </button>
+    </ame-bar-item>
   </div>
 
   <div class="menu-items__group">
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [matTooltip]="this.settings.showEditorMap ? ('TOOLBAR.HIDE_MAP' | translate) : ('TOOLBAR.SHOW_MAP' | translate)"
-      (click)="onToggleEditorMap()"
-    >
-      <mat-icon [class.editor-icon-active]="settings.showEditorMap" class="material-icons">map</mat-icon>
-    </button>
-    <button
-      mat-button
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [matTooltip]="settings.showEditorNav ? ('TOOLBAR.HIDE_NAVIGATION' | translate) : ('TOOLBAR.SHOW_NAVIGATION' | translate)"
-      (click)="onToggleEditorNavigation()"
-    >
-      <mat-icon [class.editor-icon-active]="settings.showEditorNav" class="material-icons">view_agenda</mat-icon>
-    </button>
-  </div>
-
-  <div class="menu-items__group">
-    <button
-      mat-button
-      [matMenuTriggerFor]="filters"
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [matTooltip]="
-        filterAttributes.activeFilter === filterTypes.DEFAULT
-          ? ('TOOLBAR.MODEL_UNFILTERED' | translate)
-          : ('TOOLBAR.MODEL_FILTERED_BY_PROPERTIES' | translate)
-      "
-      data-cy="tbFilters"
-    >
-      <mat-icon *ngIf="filterAttributes.activeFilter === filterTypes.DEFAULT" class="material-icons">filter_alt_off</mat-icon>
-      <mat-icon *ngIf="filterAttributes.activeFilter === filterTypes.PROPERTIES" class="material-icons">filter_alt</mat-icon>
-    </button>
-  </div>
-
-  <div class="menu-items-group search">
-    <ame-search-bar></ame-search-bar>
+    <ame-bar-item [disabled]="isModelEmpty" (click)="zoomIn()" [matTooltip]="'EDITOR_CANVAS.ZOOM_IN_PROGRESS' | translate">
+      <mat-icon>zoom_in</mat-icon>
+    </ame-bar-item>
+    <ame-bar-item [disabled]="isModelEmpty" (click)="zoomOut()" [matTooltip]="'EDITOR_CANVAS.ZOOM_OUT_PROGRESS' | translate">
+      <mat-icon>zoom_out</mat-icon>
+    </ame-bar-item>
   </div>
 </div>
-
-<!-- Actions -->
-<div class="actions" (click)="blurActiveButton()">
-  <!--
-    Here was theme switcher.
-    Now is moved to settings until full scheme is implemented
-  -->
-
-  <button
-    [matTooltipShowDelay]="0"
-    [matTooltipHideDelay]="0"
-    (click)="openSettingsDialog()"
-    [matTooltip]="'TOOLBAR.SETTINGS' | translate"
-    mat-button
-    data-cy="settings-button"
-  >
-    <mat-icon>settings</mat-icon>
-  </button>
-  <button
-    [matTooltipShowDelay]="0"
-    [matTooltipHideDelay]="0"
-    (click)="openNotificationDialog()"
-    [matTooltip]="'TOOLBAR.NOTIFICATIONS' | translate"
-    mat-button
-    data-cy="notifications-button"
-  >
-    <mat-icon [matBadge]="notificationsService.badgeText | async">notifications</mat-icon>
-  </button>
-  <button
-    [matTooltipShowDelay]="0"
-    [matTooltipHideDelay]="0"
-    (click)="openHelpDialog()"
-    [matTooltip]="'TOOLBAR.HELP' | translate"
-    mat-button
-    data-cy="help-button"
-  >
-    <mat-icon>help</mat-icon>
-  </button>
-</div>
-
-<!-- Menus -->
-<mat-menu #loadMenu="matMenu" (click)="blurActiveButton()">
-  <button mat-menu-item (click)="openWindow()" data-cy="new-window">
-    <mat-icon class="material-icons">add_circle</mat-icon>
-    <span>{{ 'TOOLBAR.LOAD_MENU.NEW_WINDOW' | translate }}</span>
-  </button>
-  <button mat-menu-item (click)="openLoadNewAspectModelDialog()" data-cy="create-model">
-    <mat-icon class="material-icons">add_circle</mat-icon>
-    <span>{{ 'TOOLBAR.LOAD_MENU.CREATE_UPLOAD_ASPECT_MODEL' | translate }}</span>
-  </button>
-  <button mat-menu-item (click)="zipInput.click()" data-cy="import-package">
-    <mat-icon class="material-icons">folder_zip</mat-icon>
-    <span>{{ 'TOOLBAR.LOAD_MENU.IMPORT_PACKAGE' | translate }}</span>
-  </button>
-</mat-menu>
-
-<mat-menu #saveMenu="matMenu">
-  <button mat-menu-item (click)="exportAsAspectModelFile()" data-cy="tbSaveMenuExportAspectModelButton">
-    <mat-icon class="material-icons">file_download</mat-icon>
-    <span>{{ 'TOOLBAR.SAVE_MENU.EXPORT_ASPECT_MODEL' | translate }}</span>
-  </button>
-  <button mat-menu-item (click)="openExportDialog()" data-cy="tbSaveMenuExportNamespaceButton">
-    <mat-icon class="material-icons">file_download</mat-icon>
-    <span>{{ 'TOOLBAR.SAVE_MENU.EXPORT_NAMESPACE' | translate }}</span>
-  </button>
-  <button mat-menu-item (click)="copyToClipboard()" data-cy="tbSaveMenuCopyToClipboardButton">
-    <mat-icon class="material-icons">content_copy</mat-icon>
-    <span>{{ 'TOOLBAR.SAVE_MENU.COPY_TO_CLIPBOARD' | translate }}</span>
-  </button>
-  <button mat-menu-item (click)="saveAspectModelToWorkspace()" data-cy="tbSaveMenuSaveToWorkspaceButton">
-    <mat-icon class="material-icons">save</mat-icon>
-    <span>{{ 'TOOLBAR.SAVE_MENU.SAVE_TO_WORKSPACE' | translate }}</span>
-  </button>
-</mat-menu>
-
-<mat-menu #generateDocument="matMenu">
-  <button mat-menu-item data-cy="tbPrintButton" (click)="generateDocumentation()">
-    <mat-icon class="material-icons">html</mat-icon>
-    <span>{{ 'TOOLBAR.GENERATE_DOCUMENT_MENU.GENERATE_HTML_DOCUMENT' | translate }}</span>
-  </button>
-  <button mat-menu-item data-cy="tbOpenApiButton" (click)="openGenerationOpenApiSpec()">
-    <mat-icon class="material-icons">api</mat-icon>
-    <span>{{ 'TOOLBAR.GENERATE_DOCUMENT_MENU.GENERATE_OPENAPI_SPECIFICATION' | translate }}</span>
-  </button>
-  <button mat-menu-item data-cy="tbOpenApiButton" (click)="generateAASX()">
-    <mat-icon class="material-icons-outlined">data_array</mat-icon>
-    <span>{{ 'TOOLBAR.GENERATE_DOCUMENT_MENU.GENERATE_AASX_XML' | translate }}</span>
-  </button>
-</mat-menu>
-
-<mat-menu #downloadJson="matMenu">
-  <button
-    mat-menu-item
-    (click)="generateJsonSample()"
-    matTooltipPosition="right"
-    [matTooltip]="'TOOLBAR.DOWNLOAD_JSON_MENU.GENERATE_SAMPLE_JSON_PAYLOAD' | translate"
-    data-cy="tbOpenJsonPayloadButton"
-  >
-    <mat-icon class="material-icons">file_download</mat-icon>
-    <span>{{ 'TOOLBAR.DOWNLOAD_JSON_MENU.GENERATE_SAMPLE_JSON_PAYLOAD' | translate }}</span>
-  </button>
-  <button
-    mat-menu-item
-    (click)="generateJsonSchema()"
-    matTooltipPosition="right"
-    [matTooltip]="'TOOLBAR.DOWNLOAD_JSON_MENU.GENERATE_JSON_SCHEMA' | translate"
-    data-cy="tbOpenJsonSchemaButton"
-  >
-    <mat-icon class="material-icons">file_download</mat-icon>
-    <span>{{ 'TOOLBAR.DOWNLOAD_JSON_MENU.GENERATE_JSON_SCHEMA' | translate }}</span>
-  </button>
-</mat-menu>
-
-<mat-menu #filters="matMenu">
-  <button
-    [disabled]="filterAttributes.activeFilter === filterTypes.DEFAULT"
-    (click)="filtersService.renderByFilter(filterTypes.DEFAULT)"
-    mat-menu-item
-    matTooltipPosition="right"
-    [matTooltip]="'TOOLBAR.FILTER_MENU.DISPLAY_ENTIRE_MODEL' | translate"
-    data-cy="tbFilterByOriginal"
-  >
-    <mat-icon class="material-icons">filter_alt_off</mat-icon>
-    <span>{{ 'TOOLBAR.FILTER_MENU.NONE' | translate }}</span>
-  </button>
-  <button
-    [disabled]="filterAttributes.activeFilter === filterTypes.PROPERTIES"
-    (click)="filtersService.renderByFilter(filterTypes.PROPERTIES)"
-    mat-menu-item
-    matTooltipPosition="right"
-    [matTooltip]="'TOOLBAR.FILTER_MENU.FILTERS_BY_PROPERTIES' | translate"
-    data-cy="tbFilterByProperties"
-  >
-    <mat-icon class="material-icons">filter_alt</mat-icon>
-    <span>{{ 'TOOLBAR.FILTER_MENU.BY_PROPERTIES' | translate }}</span>
-  </button>
-</mat-menu>
-
-<!-- Uploader -->
-<input style="display: none" type="file" (change)="addFileToNamespace($event)" #fileInput accept=".ttl" />
-<input style="display: none" type="file" (change)="uploadZip($event)" #zipInput accept=".zip" />

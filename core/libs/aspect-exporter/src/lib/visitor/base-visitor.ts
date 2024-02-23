@@ -27,7 +27,7 @@ export abstract class BaseVisitor<T> {
     }
 
     const externalRdfModel = this.rdfService.externalRdfModels.find(
-      rdfModel => rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null).length > 0
+      rdfModel => rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null).length > 0,
     );
     const alias = externalRdfModel?.getAliasByNamespace(namespace);
     this.rdfService.currentRdfModel.addPrefix(alias, namespace);

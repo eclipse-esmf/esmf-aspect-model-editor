@@ -10,6 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+const esModules = ['@angular', '@ngrx', '@agm', 'ngx-bootstrap'].join('|');
 
 module.exports = {
   displayName: 'migrator',
@@ -18,15 +19,16 @@ module.exports = {
   globals: {},
   coverageDirectory: '../../coverage/libs/migrator',
   transform: {
-    '^.+\\.(ts|mjs|js|html)$': [
+    '^.+\\.(ts|js|mjs|html|svg)$': [
       'jest-preset-angular',
       {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
     ],
+    '^.+\\.js$': 'babel-jest',
   },
-  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
+  transformIgnorePatterns: [`<rootDir>/node_modules/(?!.*\\.mjs$|${esModules})`],
 };

@@ -47,8 +47,8 @@ export class LanguageCodeInputFieldComponent extends InputFieldComponent<Default
           locale.all.filter(
             lang =>
               lang.location == null &&
-              (lang.tag.toLowerCase().includes(enteredLang.toLowerCase()) || lang.name.toLowerCase().includes(enteredLang.toLowerCase()))
-          )
+              (lang.tag.toLowerCase().includes(enteredLang.toLowerCase()) || lang.name.toLowerCase().includes(enteredLang.toLowerCase())),
+          ),
         )
       : null;
   }
@@ -72,15 +72,15 @@ export class LanguageCodeInputFieldComponent extends InputFieldComponent<Default
           value: RdfModelUtil.getValueWithoutUrnDefinition(this.getCurrentValue(this.fieldName)),
           disabled: this.metaModelElement.isExternalReference(),
         },
-        Validators.required
-      )
+        Validators.required,
+      ),
     );
 
     const languageCode = this.parentForm.get(this.fieldName);
     this.formSubscription.add(
       languageCode.valueChanges.subscribe(value => {
         this.doFilterLanguages(value);
-      })
+      }),
     );
   }
 }

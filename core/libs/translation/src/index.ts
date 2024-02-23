@@ -11,6 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './lib/language-translate.module';
-export * from './lib/services/language-translation.service';
-export * from './lib/models/language.interface';
+export * from './lib';

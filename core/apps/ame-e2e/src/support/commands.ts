@@ -17,16 +17,11 @@
 import {MxGraphAttributeService} from '@ame/mx-graph';
 import {ModelService} from '@ame/rdf/services';
 import {mxgraphFactory} from 'mxgraph-factory';
-import {
-  FIELD_see,
-  SELECTOR_dialogDefaultAspectButton,
-  SELECTOR_dialogStartButton,
-  SELECTOR_editorSaveButton,
-  SELECTOR_modalsDropdown,
-  SELECTOR_tbConnectButton,
-  SELECTOR_tbLoadButton,
-} from './constants';
+import {FIELD_see, SELECTOR_editorSaveButton, SELECTOR_tbConnectButton} from './constants';
 import {cyHelp} from './helpers';
+import {FileHandlingService, GenerateHandlingService} from '@ame/editor';
+import {SearchesStateService} from '@ame/utils';
+import {NamespacesManagerService} from '@ame/namespace-manager';
 
 const {mxEventObject, mxEvent} = mxgraphFactory({});
 
@@ -35,176 +30,262 @@ declare global {
   namespace Cypress {
     interface Chainable {
       /**
-       * Start modelling by creating a default model
+       * Custom command to start modelling by creating a default model.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       startModelling(): Chainable;
 
       /**
-       * Get the current aspect model
+       * Custom command to start modelling by creating a default invalid model.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
+      startModellingInvalidModel(): Chainable;
+
+      /**
+       * Custom command to load a model from a given RDF string.
+       * @param rdfString The RDF string to load the model from.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
+      loadModel(rdfString: string): Chainable;
+
+      /**
+       * Custom command to save the current aspect model to the workspace.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
+      saveAspectModelToWorkspace(): Chainable;
+
+      /**
+       * Custom command to open the generation of OpenAPI specification.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
+      openGenerationOpenApiSpec(): Chainable;
+
+      /**
+       * Custom command to open the generation of documentation.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
+      openGenerationDocumentation(): Chainable;
+
+      /**
+       * Custom command to open the generation of JSON sample.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
+      openGenerationJsonSample(): Chainable;
+
+      /**
+       * Custom command to open the generation of JSON schema.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
+      openGenerationJsonSchema(): Chainable;
+
+      /**
+       * Custom command to access the state service used for searches.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
+      searchesStateService(): Chainable;
+
+      /**
+       * Custom command to access the namespaces manager service.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
+      namespacesManagerService(): Chainable;
+
+      /**
+       * Custom command to retrieve the current aspect model.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       getAspect(): Chainable;
 
+      /**
+       * Custom command to access the editor service.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
       getEditorService(): Chainable;
 
+      /**
+       * Custom command to access the model service.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
       getModelService(): Chainable;
 
+      /**
+       * Custom command to access the mxGraph service.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
       getMxgraphService(): Chainable;
 
+      /**
+       * Custom command to access the mxGraph attribute service.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
       getMxgraphAttributeService(): Chainable;
 
       /**
-       * Gets the html label containing all information about cell
-       *
-       * @param name cell name
+       * Custom command to get the HTML cell containing all information about a specific cell by name.
+       * @param name The name of the cell.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       getHTMLCell(name: string): Chainable;
 
       /**
-       *
-       * Double clicks cell to open editor.
-       *
-       * @param name  internal name of the element
-       * @param labelName  label name present in the DOM
+       * Custom command to double-click a shape to open its editor, using the shape's internal name or its label name in the DOM.
+       * @param name The internal name of the element.
+       * @param labelName (Optional) The label name present in the DOM.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       dbClickShape(name: string, labelName?: string): Chainable;
 
       /**
-       * Drag and drop element
-       *
-       * @param selector element selector
-       * @param x target drop position
-       * @param y target drop position
+       * Custom command to drag and drop an element by its selector to a new position specified by x and y coordinates.
+       * @param selector The element's selector.
+       * @param x The target drop position's x-coordinate.
+       * @param y The target drop position's y-coordinate.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       dragElement(selector: string, x: number, y: number): Chainable;
 
       /**
-       * Click cell to select it
-       *
-       * @param name name of the shape
+       * Custom command to select a shape by clicking on it.
+       * @param name The name of the shape to click.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       clickShape(name: string): Chainable;
 
       /**
-       * Create a new shape by clicking the plus icon
-       *
-       * @param name name of the shape to click the icon
+       * Custom command to create a new shape by clicking the plus icon associated with a specific shape.
+       * @param name The name of the shape where the plus icon will be clicked.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       clickAddShapePlusIcon(name: string): Chainable;
 
       /**
-       * Create a new input property by clicking the left icon
-       *
-       * @param name name of the shape to click the icon
+       * Custom command to create a new input property by clicking the left icon on a specific shape.
+       * @param name The name of the shape where the input icon will be clicked.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       clickAddInputShapeIcon(name: string): Chainable;
 
       /**
-       * Create a new output property by clicking the right icon
-       *
-       * @param name name of the shape to click the icon
+       * Custom command to create a new output property by clicking the right icon on a specific shape.
+       * @param name The name of the shape where the output icon will be clicked.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       clickAddOutputShapeIcon(name: string): Chainable;
 
       /**
-       * Create a new left characteristic by clicking the left icon
-       *
-       * @param name name of the shape to click the icon
+       * Custom command to create a new left characteristic by clicking the left icon on a specific shape.
+       * @param name The name of the shape where the left icon will be clicked.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       clickAddLeftShapeIcon(name: string): Chainable;
 
       /**
-       * Create a new right characteristic by clicking the right icon
-       *
-       * @param name name of the shape to click the icon
+       * Custom command to create a new right characteristic by clicking the right icon on a specific shape.
+       * @param name The name of the shape where the right icon will be clicked.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       clickAddRightShapeIcon(name: string): Chainable;
 
       /**
-       * Create a new constraint by clicking the plus icon
-       *
-       * @param characteristicName name of the characteristic which connects to a new constraint via trait
+       * Custom command to create a new constraint by clicking the plus icon on a trait connected to a characteristic.
+       * @param characteristicName The name of the characteristic which connects to a new constraint via a trait.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       clickAddTraitPlusIcon(characteristicName: string): Chainable;
 
       /**
-       * Connect two shapes
-       *
-       * @param sourceName name of the source shape
-       * @param targetName name of the target shape
+       * Custom command to connect two shapes within the model.
+       * @param sourceName The name of the source shape to start the connection.
+       * @param targetName The name of the target shape to end the connection.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
-      clickConnectShapes(sourceName, targetName): Chainable;
+      clickConnectShapes(sourceName: string, targetName: string): Chainable;
 
       /**
-       * Get the label of a child cell
-       *
-       * @param shape name of the shape
-       * @param metaModelElementName element name e.g. description
+       * Custom command to get the label of a child cell within a model shape.
+       * @param shape The name of the parent shape.
+       * @param metaModelElementName The element name (e.g., description) whose label is to be retrieved.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       getCellLabel(shape: string, metaModelElementName: string): Chainable;
 
       /**
-       * Get the form filed by name
-       *
-       * @param name name of the field
+       * Custom command to get a form field by its name within the model editor or other UI component.
+       * @param name The name of the form field to retrieve.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       getFormField(name: string): Chainable;
 
       /**
-       * Trigger to update RDF and giv the RDF as string
+       * Custom command to trigger an update of the RDF representation of the model and retrieve the RDF string.
+       * @returns {Cypress.Chainable<unknown>} A chainable Cypress object containing the updated RDF string.
        */
-      getUpdatedRDF(): Chainable;
+      getUpdatedRDF(): Chainable<unknown>;
 
       /**
-       * Check if the element exists and is visible
-       *
-       * @param name name of the shape
+       * Custom command to verify the existence and visibility of a shape within the model.
+       * @param name The name of the shape to check.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       shapeExists(name: string): Chainable;
 
       /**
-       * Check if the elements are connected
-       *
-       * @param sourceShapeName name of the source shape
-       * @param targetShapeName name of the target shape
+       * Custom command to check if two shapes are connected within the model.
+       * @param sourceShapeName The name of the source shape.
+       * @param targetShapeName The name of the target shape.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       shapesConnected(sourceShapeName: string, targetShapeName: string): Chainable;
 
       /**
-       * Gets element containing the exact text
-       *
-       * @param name name of the shape
+       * Custom command to retrieve an element containing exact text.
+       * @param text The exact text to match in the element.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       getByText(text: string): Chainable;
 
       /**
-       * Open AME
+       * Custom command to navigate to the default application environment for modeling.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       visitDefault(): Chainable;
 
       /**
-       * Adds new elements to see field
+       * Custom command to add new elements to the 'see' field in a form or UI component.
+       * @param elements A list of element names to add.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
-      addSeeElements(...element: string[]): Chainable;
+      addSeeElements(...elements: string[]): Chainable;
 
       /**
-       * Removes elements from see field. If none passed, will remove all elements
+       * Custom command to remove elements from the 'see' field. If no elements are passed, all elements will be removed.
+       * @param elements (Optional) A list of element names to remove.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       removeSeeElements(...elements: string[]): Chainable;
 
       /**
-       * Checks whether two elements are connected or not
+       * Custom command to check whether two elements are connected.
+       * @param sourceShapeParams Object containing the name and optional fields of the source shape.
+       * @param targetShapeParams Object containing the name and optional fields of the target shape.
+       * @returns {Cypress.Chainable} A chainable Cypress object indicating whether the two elements are connected.
        */
-      isConnected(sourceShapeParams: {name: string; fields?: object[]}, targetShapeParams: {name: string; fields?: object[]}): Chainable;
+      isConnected(
+        sourceShapeParams: {name: string; fields?: object[]},
+        targetShapeParams: {
+          name: string;
+          fields?: object[];
+        },
+      ): Chainable;
     }
   }
 }
 
 Cypress.Commands.add('visitDefault', () => cy.visit('?e2e=true'));
 
-Cypress.Commands.add('getAspect', () => cy.window().then(win => win['angular.modelService'].getLoadedAspectModel().aspect));
+Cypress.Commands.add('getAspect', () => cy.window().then(win => win['angular.modelService'].loadedAspect));
 
 Cypress.Commands.add('getEditorService', () => cy.window().then(win => win['angular.editorService']));
-
 Cypress.Commands.add('getMxgraphService', () => cy.window().then(win => win['angular.mxGraphService']));
 
 Cypress.Commands.add('getMxgraphAttributeService', () => cy.window().then(win => win['angular.mxGraphAttributeService']));
@@ -215,7 +296,7 @@ Cypress.Commands.add('getHTMLCell', (name: string) =>
   cy.get(`[data-cell-id="${name}"]`).then($el => {
     $el.get(0).scrollIntoView({block: 'center'});
     return $el;
-  })
+  }),
 );
 
 Cypress.Commands.add('dbClickShape', (name: string) => {
@@ -247,7 +328,7 @@ Cypress.Commands.add('clickAddShapePlusIcon', (name: string) =>
       plusIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250)
+    .wait(250),
 );
 
 Cypress.Commands.add('clickAddInputShapeIcon', (name: string) =>
@@ -265,7 +346,7 @@ Cypress.Commands.add('clickAddInputShapeIcon', (name: string) =>
       inputIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250)
+    .wait(250),
 );
 
 Cypress.Commands.add('clickAddOutputShapeIcon', (name: string) =>
@@ -283,7 +364,7 @@ Cypress.Commands.add('clickAddOutputShapeIcon', (name: string) =>
       outputIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250)
+    .wait(250),
 );
 
 Cypress.Commands.add('clickAddLeftShapeIcon', (name: string) =>
@@ -301,7 +382,7 @@ Cypress.Commands.add('clickAddLeftShapeIcon', (name: string) =>
       leftIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250)
+    .wait(250),
 );
 
 Cypress.Commands.add('clickAddRightShapeIcon', (name: string) =>
@@ -319,7 +400,7 @@ Cypress.Commands.add('clickAddRightShapeIcon', (name: string) =>
       rightIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250)
+    .wait(250),
 );
 
 Cypress.Commands.add('clickAddTraitPlusIcon', (characteristicName: string) =>
@@ -337,14 +418,14 @@ Cypress.Commands.add('clickAddTraitPlusIcon', (characteristicName: string) =>
       constraintIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250)
+    .wait(250),
 );
 
 Cypress.Commands.add('clickConnectShapes', (nameSource, nameTarget) =>
   cy
     .then(() => cyHelp.clickShape(nameSource))
     .then(() => cyHelp.clickShape(nameTarget, true))
-    .then(() => cy.get(SELECTOR_tbConnectButton).click({force: true}))
+    .then(() => cy.get(SELECTOR_tbConnectButton).click({force: true})),
 );
 
 Cypress.Commands.add('getFormField', (name: string) => cy.get(`[ng-reflect-model="${name}"]`));
@@ -370,7 +451,7 @@ Cypress.Commands.add('dragElement', (selector: string, x: number, y: number) =>
       .trigger('pointerdown', {button: 0, force: true})
       .trigger('pointermove', {clientX: graphX, clientY: graphY, force: true, waitForAnimations: true})
       .then(() => cy.get('#graph > svg').click(graphX, graphY, {force: true}).trigger('pointerup', {force: true}));
-  })
+  }),
 );
 
 Cypress.Commands.add('getUpdatedRDF', () =>
@@ -378,11 +459,11 @@ Cypress.Commands.add('getUpdatedRDF', () =>
     const modelService: ModelService = win['angular.modelService'];
     return new Promise(resolve => {
       modelService.synchronizeModelToRdf().subscribe(() => {
-        const modelContent = modelService.getLoadedAspectModel().rdfModel;
+        const modelContent = modelService.currentRdfModel;
         resolve(win['angular.rdfService'].serializeModel(modelContent));
       });
     });
-  })
+  }),
 );
 
 Cypress.Commands.add('getByText', name => cy.contains(new RegExp('^' + name + '$', 'g')));
@@ -404,22 +485,103 @@ Cypress.Commands.add('shapesConnected', (sourceShapeName: string, targetShapeNam
     if (!shapesConnected) {
       throw new Error(`Shape ${sourceShapeName} is not connected to ${targetShapeName}`);
     }
-  })
+  }),
 );
+
+Cypress.Commands.add('startModellingInvalidModel', () => {
+  cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+
+  return cy.fixture('/invalid-file.txt', 'utf-8').then(model => {
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-with-error.json'});
+    cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+
+    return cyHelp.loadModel(model);
+  });
+});
 
 Cypress.Commands.add('startModelling', () => {
   cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-
-  // bypass format request
   cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
 
-  return cy
-    .then(() => cy.get(SELECTOR_tbLoadButton).click({force: true}))
-    .then(() => cy.get('[data-cy="create-model"]').click({force: true}))
-    .then(() => cy.get(SELECTOR_modalsDropdown).click({force: true}))
-    .then(() => cy.get(SELECTOR_dialogDefaultAspectButton).click({force: true}).wait(200))
-    .then(() => cy.get(SELECTOR_dialogStartButton).click({force: true}).wait(200))
-    .then(() => cy.get('ame-loading-screen', {timeout: 15000}).should('not.exist'));
+  return cy.fixture('/default-models/aspect-default.txt', 'utf-8').then(model => cyHelp.loadModel(model));
+});
+
+Cypress.Commands.add('loadModel', (rdfString: string) => {
+  cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+
+  return cyHelp.loadModel(rdfString);
+});
+
+Cypress.Commands.add('saveAspectModelToWorkspace', () => {
+  cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+
+  return cy.window().then(win => {
+    const fileHandlingService: FileHandlingService = win['angular.fileHandlingService'];
+    return fileHandlingService.saveAspectModelToWorkspace().subscribe();
+  });
+});
+
+Cypress.Commands.add('openGenerationOpenApiSpec', () => {
+  cy.intercept(
+    'POST',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING',
+    {fixture: 'valid-open-api.json'},
+  );
+
+  cy.intercept(
+    'POST',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING',
+    {fixture: 'valid-open-api.yaml'},
+  );
+
+  return cy.window().then(win => {
+    const generateHandlingService: GenerateHandlingService = win['angular.generateHandlingService'];
+    return generateHandlingService.openGenerationOpenApiSpec().afterClosed().subscribe();
+  });
+});
+
+Cypress.Commands.add('openGenerationDocumentation', () => {
+  cy.intercept('POST', 'http://localhost:9091/ame/api/generate/documentation?language=en', {fixture: 'valid-documentation.html'});
+
+  return cy.window().then(win => {
+    const generateHandlingService: GenerateHandlingService = win['angular.generateHandlingService'];
+    return generateHandlingService.openGenerationDocumentation().afterClosed().subscribe();
+  });
+});
+
+Cypress.Commands.add('openGenerationJsonSample', () => {
+  cy.intercept('POST', 'http://localhost:9091/ame/api/generate/json-sample', {fixture: 'valid-json.json'});
+
+  return cy.window().then(win => {
+    const generateHandlingService: GenerateHandlingService = win['angular.generateHandlingService'];
+    return generateHandlingService.generateJsonSample().subscribe();
+  });
+});
+
+Cypress.Commands.add('openGenerationJsonSchema', () => {
+  cy.intercept('POST', 'http://localhost:9091/ame/api/generate/json-schema?language=en', {fixture: 'valid-json.json'});
+
+  return cy.window().then(win => {
+    const generateHandlingService: GenerateHandlingService = win['angular.generateHandlingService'];
+    return generateHandlingService.generateJsonSchema().subscribe();
+  });
+});
+
+Cypress.Commands.add('searchesStateService', () => {
+  return cy.window().then(win => {
+    const searchesStateService: SearchesStateService = win['angular.searchesStateService'];
+    return searchesStateService.elementsSearch.toggle();
+  });
+});
+
+Cypress.Commands.add('namespacesManagerService', () => {
+  return cy.window().then(win => {
+    const namespacesManagerService: NamespacesManagerService = win['angular.namespacesManagerService'];
+    return namespacesManagerService.exportNamespaces().subscribe();
+  });
 });
 
 Cypress.Commands.add('addSeeElements', (...elements: string[]) => {
@@ -441,7 +603,13 @@ Cypress.Commands.add('removeSeeElements', (...elements: string[]) => {
 
 Cypress.Commands.add(
   'isConnected',
-  (sourceShapeParams: {name: string; fields?: object[]}, targetShapeParams: {name: string; fields?: object[]}) => {
+  (
+    sourceShapeParams: {name: string; fields?: object[]},
+    targetShapeParams: {
+      name: string;
+      fields?: object[];
+    },
+  ) => {
     return cy.window().then(win => {
       const sourceCell = cyHelp.findShapeByName(sourceShapeParams.name, win);
       if (!sourceCell) {
@@ -454,5 +622,5 @@ Cypress.Commands.add(
       const mxGraphAttributeService: MxGraphAttributeService = win['angular.mxGraphAttributeService'];
       return mxGraphAttributeService.graph.getOutgoingEdges(sourceCell).some(edge => edge.target === targetCell);
     });
-  }
+  },
 );

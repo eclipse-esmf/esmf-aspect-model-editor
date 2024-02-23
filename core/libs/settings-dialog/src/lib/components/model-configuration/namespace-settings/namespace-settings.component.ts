@@ -24,6 +24,7 @@ import {SettingsFormService} from '../../../services';
 export class NamespaceSettingsComponent implements OnInit {
   form: FormGroup;
   columns: string[] = ['name', 'value', 'version'];
+  panelOpenState = false;
   predefinedNamespaces: Array<{name?: string; value?: string; version?: string}> = [];
 
   constructor(private formService: SettingsFormService) {}

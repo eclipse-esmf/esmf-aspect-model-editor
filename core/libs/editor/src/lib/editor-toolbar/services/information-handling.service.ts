@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {SettingDialogComponent} from '@ame/settings-dialog';
 import {DocumentComponent} from '@ame/editor';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -21,20 +21,18 @@ import {NotificationsComponent} from '../components/notifications/notifications.
   providedIn: 'root',
 })
 export class InformationHandlingService {
-  constructor(private matDialog: MatDialog, private ngZone: NgZone) {}
+  constructor(private matDialog: MatDialog) {}
 
   openSettingsDialog() {
-    this.ngZone.run(() =>
-      this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container', width: '60%', autoFocus: false}).afterClosed()
-    );
+    this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container', width: '60%', autoFocus: false}).afterClosed();
   }
 
   openHelpDialog() {
-    this.ngZone.run(() => this.matDialog.open(DocumentComponent));
+    this.matDialog.open(DocumentComponent);
   }
 
   openNotificationDialog() {
-    const notificationModal = this.ngZone.run(() => this.matDialog.open(NotificationsComponent, {width: '60%', autoFocus: false}));
+    const notificationModal = this.matDialog.open(NotificationsComponent, {width: '60%', autoFocus: false});
     this.keyDownEvents(notificationModal);
   }
 

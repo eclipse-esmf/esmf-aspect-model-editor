@@ -32,7 +32,11 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
   elementCharacteristicControl: FormControl;
   isDisabled = false;
 
-  constructor(private notificationsService: NotificationsService, public rdfService: RdfService) {
+  constructor(
+    private notificationsService: NotificationsService,
+    public rdfService: RdfService,
+    private validators: EditorDialogValidators,
+  ) {
     super();
     this.fieldName = 'elementCharacteristic';
   }
@@ -66,15 +70,8 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
           value,
           disabled: !!value || this.metaModelElement.isExternalReference() || this.isDisabled,
         },
-        [
-          EditorDialogValidators.duplicateNameWithDifferentType(
-            this.namespacesCacheService,
-            this.metaModelElement,
-            this.rdfService,
-            DefaultCharacteristic
-          ),
-        ]
-      )
+        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic)],
+      ),
     );
     this.getControl('elementCharacteristicDisplay').markAsTouched();
     this.parentForm.setControl(
@@ -82,7 +79,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
       new FormControl({
         value: elementCharacteristic,
         disabled: this.metaModelElement?.isExternalReference() || this.isDisabled,
-      })
+      }),
     );
 
     this.elementCharacteristicDisplayControl = this.parentForm.get('elementCharacteristicDisplay') as FormControl;
@@ -90,7 +87,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
 
     this.filteredCharacteristicTypes$ = this.initFilteredCharacteristicTypes(
       this.elementCharacteristicDisplayControl,
-      this.metaModelElement.aspectModelUrn
+      this.metaModelElement.aspectModelUrn,
     );
   }
 

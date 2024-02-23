@@ -42,7 +42,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   protected constructor(
     public editorModelService: EditorModelService,
     public modelService: ModelService,
-    public languageSettings: SammLanguageSettingsService
+    public languageSettings: SammLanguageSettingsService,
   ) {}
 
   protected setPreviousData() {
@@ -78,17 +78,12 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
     return this.editorModelService.getMetaModelElement().pipe(
       tap(metaModelElement => {
         this.metaModelElement = <T>metaModelElement;
-      })
+      }),
     );
   }
 
   public setMetaModelClassName(): void {
-    if (
-      RdfModelUtil.isCharacteristicInstance(
-        this.selectedMetaModelElement.aspectModelUrn,
-        this.modelService.getLoadedAspectModel().rdfModel.SAMMC()
-      )
-    ) {
+    if (RdfModelUtil.isCharacteristicInstance(this.selectedMetaModelElement.aspectModelUrn, this.modelService.currentRdfModel.SAMMC())) {
       this.metaModelClassName = this.selectedMetaModelElement.aspectModelUrn.split('#')[1].replace('Default', '');
     } else {
       this.metaModelClassName = this.selectedMetaModelElement.className.replace('Default', '');
@@ -107,7 +102,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   }
 
   public updateFields(modelElement: T) {
-    this.metaModelElement.metaModelVersion = this.modelService.getLoadedAspectModel().rdfModel.getMetaModelVersion();
+    this.metaModelElement.metaModelVersion = this.modelService.currentRdfModel.getMetaModelVersion();
     this.editorModelService._updateMetaModelElement(this.metaModelElement);
     this.parentForm.get('changedMetaModel').setValue(modelElement);
   }

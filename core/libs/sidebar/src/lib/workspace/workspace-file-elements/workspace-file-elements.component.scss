@@ -1,0 +1,143 @@
+/*!
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+@use '../../styles/mixins' as mixins;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  height: 100%;
+  background-color: #e1e1e1;
+  padding: 16px;
+  padding-bottom: 0;
+  box-shadow: 8px 4px 8px 0 rgba(0, 0, 0, 0.25);
+
+  [mat-mini-fab] {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  ::ng-deep {
+    mat-form-field .mdc-text-field {
+      background-color: white;
+    }
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 1;
+
+  h2 {
+    width: calc(100% - 40px);
+    margin: 0;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 40px;
+
+    @include mixins.ellipsis();
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+
+  input {
+    margin-top: 2px;
+  }
+
+  .filter {
+    margin-top: -24px;
+    margin-left: 10px;
+  }
+}
+
+.elements {
+  height: calc(100% - 126px);
+  overflow-y: auto;
+  margin-bottom: -16px;
+  margin-left: -16px;
+  margin-right: -16px;
+  padding-left: 16px;
+  padding-right: 16px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .show-elements {
+    color: #007bc0;
+    font-size: 12px;
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__section {
+    max-height: 275px;
+    margin: 1rem 0;
+    overflow-y: hidden;
+
+    &.expanded {
+      max-height: none;
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .element {
+    margin: 10px 0;
+
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+}
+
+.mat-menu-item {
+  display: block;
+
+  ::ng-deep {
+    .mdc-form-field {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px;
+
+      .mdc-label {
+        margin-left: 0;
+        flex: 1;
+      }
+
+      .mdc-checkbox__checkmark {
+        color: white !important;
+      }
+    }
+  }
+}

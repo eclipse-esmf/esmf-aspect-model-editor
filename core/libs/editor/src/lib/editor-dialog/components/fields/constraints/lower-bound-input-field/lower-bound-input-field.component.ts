@@ -25,7 +25,10 @@ import {InputFieldComponent} from '../../input-field.component';
 export class LowerBoundInputFieldComponent extends InputFieldComponent<DefaultConstraint> implements OnInit, OnDestroy {
   public lowerBoundDefinitionList = [];
 
-  constructor(public dataTypeService: DataTypeService, public mxGraphService: MxGraphService) {
+  constructor(
+    public dataTypeService: DataTypeService,
+    public mxGraphService: MxGraphService,
+  ) {
     super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'lowerBoundDefinition';
@@ -54,7 +57,7 @@ export class LowerBoundInputFieldComponent extends InputFieldComponent<DefaultCo
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
         disabled: this.metaModelElement.isExternalReference(),
-      })
+      }),
     );
   }
 }

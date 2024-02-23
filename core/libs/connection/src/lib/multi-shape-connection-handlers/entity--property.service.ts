@@ -22,7 +22,10 @@ import {mxgraph} from 'mxgraph-factory';
   providedIn: 'root',
 })
 export class EntityPropertyConnectionHandler implements MultiShapeConnector<DefaultEntity, DefaultProperty> {
-  constructor(private mxGraphService: MxGraphService, private entityValueService: EntityValueService) {}
+  constructor(
+    private mxGraphService: MxGraphService,
+    private entityValueService: EntityValueService,
+  ) {}
 
   public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
     if (!parentMetaModel.properties.find(({property}) => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {

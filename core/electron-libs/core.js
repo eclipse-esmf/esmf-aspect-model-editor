@@ -18,7 +18,7 @@ const promises = require('./promisify');
 const portfinder = require('portfinder');
 const platformData = require('./os-checker');
 const {windowsManager} = require('./windows-manager');
-const projectVersion = require('../package.json').version;
+const {inDevMode} = require('./consts');
 
 /**
  * @type string[]
@@ -48,7 +48,7 @@ async function cleanUpProcesses() {
 }
 
 function startService() {
-  if (process.argv.includes('--dev')) {
+  if (inDevMode()) {
     global.backendPort = 9091;
     windowsManager.createWindow();
     return;

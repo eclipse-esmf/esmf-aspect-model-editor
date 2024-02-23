@@ -1,0 +1,28 @@
+<!--
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+<h2 mat-dialog-title>{{ 'LOAD_MODAL.TITLE' | translate }}</h2>
+
+<mat-dialog-content>
+  <p>{{ 'LOAD_MODAL.CONTENT' | translate }}</p>
+  <mat-form-field>
+    <mat-label>{{ 'LOAD_MODAL.FIELD_LABEL' | translate }}</mat-label>
+    <textarea #model matInput></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button mat-dialog-close>{{ 'LOAD_MODAL.CANCEL' | translate }}</button>
+  <button [disabled]="!model.value.length" (click)="loadModel(model.value)" mat-flat-button color="primary">
+    {{ 'LOAD_MODAL.LOAD_MODEL_BUTTON' | translate }}
+  </button>
+</mat-dialog-actions>

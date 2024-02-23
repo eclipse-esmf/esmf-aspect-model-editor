@@ -70,7 +70,9 @@ describe('RDF Helper', () => {
         {
           provide: ModelService,
           useValue: {
-            getLoadedAspectModel: () => ({rdfModel}),
+            get currentRdfModel() {
+              return rdfModel;
+            },
           },
         },
       ],
@@ -199,7 +201,7 @@ describe('RDF Helper', () => {
           new DefaultProperty('1', 'property1', 'property1', null),
           new DefaultProperty('1', 'property2', 'property2', null),
           new DefaultProperty('1', 'property3', 'property3', null),
-          new DefaultProperty('1', 'property4', 'property4', null)
+          new DefaultProperty('1', 'property4', 'property4', null),
         );
         shouldBeListAndHave({first: 4, rest: 4, list: getList()});
       });
@@ -213,7 +215,7 @@ describe('RDF Helper', () => {
         service.push(
           aspect,
           new DefaultProperty('1', 'property2', 'property2', null),
-          new DefaultProperty('1', 'property1', 'property1', null)
+          new DefaultProperty('1', 'property1', 'property1', null),
         );
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
       });
@@ -297,7 +299,7 @@ describe('RDF Helper', () => {
           new DefaultOperation('1', 'operation1', 'operation1', null),
           new DefaultOperation('1', 'operation2', 'operation2', null),
           new DefaultOperation('1', 'operation3', 'operation3', null),
-          new DefaultOperation('1', 'operation4', 'operation4', null)
+          new DefaultOperation('1', 'operation4', 'operation4', null),
         );
         shouldBeListAndHave({first: 4, rest: 4, list: getList()});
       });
@@ -311,7 +313,7 @@ describe('RDF Helper', () => {
         service.push(
           aspect,
           new DefaultOperation('1', 'operation2', 'operation2', null),
-          new DefaultOperation('1', 'operation1', 'operation1', null)
+          new DefaultOperation('1', 'operation1', 'operation1', null),
         );
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
       });
@@ -382,7 +384,7 @@ describe('RDF Helper', () => {
           new DefaultProperty('1', 'property1', 'property1', null),
           new DefaultProperty('1', 'property2', 'property2', null),
           new DefaultProperty('1', 'property3', 'property3', null),
-          new DefaultProperty('1', 'property4', 'property4', null)
+          new DefaultProperty('1', 'property4', 'property4', null),
         );
         shouldBeListAndHave({first: 4, rest: 4, list: getList()});
       });
@@ -396,7 +398,7 @@ describe('RDF Helper', () => {
         service.push(
           entity,
           new DefaultProperty('1', 'property2', 'property2', null),
-          new DefaultProperty('1', 'property1', 'property1', null)
+          new DefaultProperty('1', 'property1', 'property1', null),
         );
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
       });

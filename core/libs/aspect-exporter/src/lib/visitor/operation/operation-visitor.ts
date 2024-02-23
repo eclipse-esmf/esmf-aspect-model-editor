@@ -21,10 +21,14 @@ import {RdfService} from '@ame/rdf/services';
 @Injectable()
 export class OperationVisitor extends BaseVisitor<DefaultOperation> {
   private get store(): Store {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.store;
+    return this.rdfNodeService.modelService.currentRdfModel.store;
   }
 
-  constructor(private rdfNodeService: RdfNodeService, rdfService: RdfService, public rdfListService: RdfListService) {
+  constructor(
+    private rdfNodeService: RdfNodeService,
+    rdfService: RdfService,
+    public rdfListService: RdfListService,
+  ) {
     super(rdfService);
   }
 
@@ -67,7 +71,7 @@ export class OperationVisitor extends BaseVisitor<DefaultOperation> {
       this.store.addQuad(
         DataFactory.namedNode(operation.aspectModelUrn),
         this.rdfService.currentRdfModel.samm.OutputProperty(),
-        DataFactory.namedNode(property.aspectModelUrn)
+        DataFactory.namedNode(property.aspectModelUrn),
       );
     }
   }

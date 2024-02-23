@@ -11,20 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {catchError, first, switchMap, tap} from 'rxjs/operators';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
-import {BrowserService, ElectronTunnelService, LogService, NotificationsService, SidebarService, TitleService} from '@ame/shared';
-import {EditorService} from '@ame/editor';
-import {ModelApiService} from '@ame/api';
-import {MatDialog} from '@angular/material/dialog';
-import {StartLoadModalComponent} from './components/start-load-modal/start-load-modal.component';
+import {BrowserService, ElectronTunnelService, TitleService} from '@ame/shared';
+import {FileHandlingService} from '@ame/editor';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {ThemeService} from '@ame/mx-graph';
 import {StartupService} from './startup.service';
 import {MigratorService} from '@ame/migrator';
 import {Router} from '@angular/router';
+import {LanguageTranslationService} from '@ame/translation';
+import {SidebarStateService} from '@ame/sidebar';
+import {SearchesStateService} from '@ame/utils';
 
 @Component({
   selector: 'ame-root',
@@ -32,29 +30,31 @@ import {Router} from '@angular/router';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = 'Aspect Model Editor';
+  private language = 'en';
+  public title = 'Aspect Model Editor';
 
   constructor(
     private titleService: TitleService,
-    private editorService: EditorService,
-    private modelApiService: ModelApiService,
-    private loggerService: LogService,
-    private notificationsService: NotificationsService,
     private domainModelToRdf: DomainModelToRdfService,
-    private dialogService: MatDialog,
     private browserService: BrowserService,
     private electronTunnelService: ElectronTunnelService,
     private configurationService: ConfigurationService,
     private themeService: ThemeService,
     private startupService: StartupService,
     private migratorService: MigratorService,
-    private sidebarService: SidebarService,
-    private router: Router
+    private sidebarService: SidebarStateService,
+    private fileHandlingService: FileHandlingService,
+    private translate: LanguageTranslationService,
+    private searchesStateService: SearchesStateService,
+    private router: Router,
   ) {
     this.domainModelToRdf.listenForStoreUpdates();
   }
 
   ngOnInit() {
+    this.language = this.getApplicationLanguage();
+    this.translate.initTranslationService(this.language);
+
     this.electronTunnelService.subscribeMessages();
     this.titleService.setTitle(this.title);
     this.setContextMenu();
@@ -67,8 +67,8 @@ export class AppComponent implements OnInit {
     // TODO: In case of no service opened, display a error page
     if (!this.electronTunnelService.ipcRenderer) {
       this.migratorService.startMigrating().subscribe(() => {
-        this.startApplication();
-        this.sidebarService.refreshSidebarNamespaces();
+        this.fileHandlingService.createEmptyModel();
+        this.sidebarService.workspace.refresh();
         this.router.navigate([{outlets: {migrator: null, 'export-namespaces': null, 'import-namespaces': null}}]);
       });
     } else {
@@ -76,34 +76,24 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // TODO: remove when implementing multiple windows after prototype
-  private startApplication() {
-    return this.modelApiService
-      .loadLatest()
-      .pipe(
-        first(),
-        tap(aspectModel => {
-          if (aspectModel.length > 0) {
-            this.onLoadAutoSavedModel(aspectModel);
-          }
-        }),
-        catchError(error => {
-          if (error.status === 400) {
-            this.loggerService.logError(`Error during load auto saved model (${JSON.stringify(error)})`);
-          } else if (error.status === 404) {
-            this.loggerService.logInfo('Default aspect was loaded');
-            this.loadNewAspectModel(
-              this.modelApiService.getDefaultAspectModel(),
-              () => {
-                this.notificationsService.info({title: 'Default model was loaded', timeout: 5000});
-              },
-              true
-            );
-          }
-          return of(null);
-        })
-      )
-      .subscribe();
+  @HostListener('window:keydown.control.f')
+  openSearchElements() {
+    this.searchesStateService.elementsSearch.toggle();
+  }
+
+  @HostListener('window:keydown.control.p')
+  openFilesElements() {
+    this.searchesStateService.filesSearch.toggle();
+  }
+
+  @HostListener('window:keydown.esc')
+  closeSearchModals() {
+    this.searchesStateService.filesSearch.close();
+    this.searchesStateService.elementsSearch.close();
+  }
+
+  private getApplicationLanguage(): string {
+    return localStorage.getItem('applicationLanguage') || this.translate.translateService.defaultLang;
   }
 
   private isGraphElement(target: HTMLElement) {
@@ -160,18 +150,5 @@ export class AppComponent implements OnInit {
         menu.popup();
       }
     });
-  }
-
-  onLoadAutoSavedModel(aspectModel: string) {
-    this.dialogService.open(StartLoadModalComponent, {disableClose: true, data: {aspectModel}});
-  }
-
-  private loadNewAspectModel(aspectModel: Observable<string>, callback: () => any, isDefault?: boolean) {
-    aspectModel
-      .pipe(
-        switchMap(model => this.editorService.loadNewAspectModel({rdfAspectModel: model, isDefault})),
-        first()
-      )
-      .subscribe(callback);
   }
 }

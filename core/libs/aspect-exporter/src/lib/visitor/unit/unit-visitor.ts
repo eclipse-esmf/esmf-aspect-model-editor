@@ -22,14 +22,17 @@ import {Samm} from '@ame/vocabulary';
 @Injectable()
 export class UnitVisitor extends BaseVisitor<DefaultUnit> {
   private get store(): Store {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.store;
+    return this.rdfNodeService.modelService.currentRdfModel.store;
   }
 
   private get samm(): Samm {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.SAMM();
+    return this.rdfNodeService.modelService.currentRdfModel.SAMM();
   }
 
-  constructor(private rdfNodeService: RdfNodeService, rdfService: RdfService) {
+  constructor(
+    private rdfNodeService: RdfNodeService,
+    rdfService: RdfService,
+  ) {
     super(rdfService);
   }
 
@@ -64,7 +67,7 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
       this.store.addQuad(
         DataFactory.namedNode(unit.aspectModelUrn),
         this.samm.ReferenceUnitProperty(),
-        DataFactory.namedNode(unit.referenceUnit.aspectModelUrn)
+        DataFactory.namedNode(unit.referenceUnit.aspectModelUrn),
       );
       this.setPrefix(unit.referenceUnit.aspectModelUrn);
     }
@@ -81,8 +84,8 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
         DataFactory.triple(
           DataFactory.namedNode(unit.aspectModelUrn),
           this.samm.QuantityKindProperty(),
-          DataFactory.namedNode(quantityKind.aspectModelUrn)
-        )
+          DataFactory.namedNode(quantityKind.aspectModelUrn),
+        ),
       );
 
       this.setPrefix(quantityKind.aspectModelUrn);

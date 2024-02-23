@@ -11,17 +11,15 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title class="properties-title">{{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.TITLE' | translate }}</h2>
+<h2 mat-dialog-title class="properties-title">{{ 'VALIDATION_RESULT_DIALOG.TITLE' | translate }}</h2>
 
 <mat-dialog-content>
   <p *ngIf="!missingElements.length">
-    {{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.HAVE_VALIDATED' | translate
-    }}<b>{{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.CAN_BE_EXPORTED' | translate }}</b
+    {{ 'VALIDATION_RESULT_DIALOG.HAVE_VALIDATED' | translate }}<b>{{ 'VALIDATION_RESULT_DIALOG.CAN_BE_EXPORTED' | translate }}</b
     >.
   </p>
   <p *ngIf="missingElements.length">
-    {{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.CAN_NOT_EXPORTED' | translate
-    }}<b>{{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.MISSING_FILES' | translate }}</b
+    {{ 'VALIDATION_RESULT_DIALOG.CAN_NOT_EXPORTED' | translate }}<b>{{ 'VALIDATION_RESULT_DIALOG.MISSING_FILES' | translate }}</b
     >.
   </p>
 </mat-dialog-content>
@@ -33,9 +31,9 @@
     <ame-clipboard-copy-button></ame-clipboard-copy-button>
   </div>
   <div class="actions-right">
-    <button mat-flat-button mat-dialog-close>{{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.DISMISS_BUTTON' | translate }}</button>
+    <button mat-flat-button mat-dialog-close>{{ 'VALIDATION_RESULT_DIALOG.DISMISS_BUTTON' | translate }}</button>
     <button *ngIf="!missingElements.length" mat-flat-button color="primary" (click)="export()">
-      {{ 'TOOLBAR.VALIDATION_RESULT_DIALOG.EXPORT' | translate }}
+      {{ 'VALIDATION_RESULT_DIALOG.EXPORT' | translate }}
     </button>
   </div>
 </mat-dialog-actions>

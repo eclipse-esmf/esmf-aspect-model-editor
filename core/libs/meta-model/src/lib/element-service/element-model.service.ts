@@ -47,7 +47,7 @@ export class ElementModelService {
     private renameModelService: RenameModelDialogService,
     private notificationService: NotificationsService,
     private translate: LanguageTranslationService,
-    private zone: NgZone
+    private zone: NgZone,
   ) {}
 
   get currentCachedFile() {
@@ -239,7 +239,7 @@ export class ElementModelService {
       source.extendedElement = null;
       edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
         MxGraphHelper.getModelElement(edge.source),
-        this.sammLangService
+        this.sammLangService,
       );
       this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));
       this.removeConnectionBetweenElements(edge, source, target);
@@ -301,7 +301,7 @@ export class ElementModelService {
   private decoupleEnumerationFromEntityValue(
     sourceModelElement: BaseMetaModelElement,
     targetModelElement: BaseMetaModelElement,
-    edge: mxgraph.mxCell
+    edge: mxgraph.mxCell,
   ): void {
     if (sourceModelElement instanceof DefaultEnumeration && targetModelElement instanceof DefaultEntityValue) {
       const entityValueIndex = sourceModelElement.values.indexOf(targetModelElement);
