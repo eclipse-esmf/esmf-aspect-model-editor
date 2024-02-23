@@ -193,9 +193,18 @@ export class FileHandlingService {
   }
 
   createEmptyModel() {
-    const namespace = 'urn:samm:org.eclipse.esmf:1.0.0#';
+    const currentRdfModel = this.rdfService.currentRdfModel;
+
+    if (currentRdfModel) {
+      const [namespace, version, file] = this.rdfService.currentRdfModel.absoluteAspectModelFileName.split(':');
+
+      const fileStatus = this.sidebarService.namespacesState.getFile(namespace + ':' + version, file);
+      if (fileStatus) fileStatus.locked = false;
+    }
+
+    const emptyNamespace = 'urn:samm:org.eclipse.esmf:1.0.0#';
     const fileName = 'empty.ttl';
-    const newRdfModel = new RdfModel().initRdfModel(new Store(), {'': namespace as any}, 'empty');
+    const newRdfModel = new RdfModel().initRdfModel(new Store(), {'': emptyNamespace as any}, 'empty');
     const oldFile = this.namespaceCacheService.currentCachedFile;
 
     this.sidebarService.sammElements.open();
@@ -206,7 +215,7 @@ export class FileHandlingService {
       this.namespaceCacheService.removeFile(oldFile.namespace, oldFile.fileName);
     }
 
-    this.namespaceCacheService.currentCachedFile = new CachedFile(fileName, namespace);
+    this.namespaceCacheService.currentCachedFile = new CachedFile(fileName, emptyNamespace);
 
     if (this.mxGraphService.graph?.model) {
       this.mxGraphService.deleteAllShapes();

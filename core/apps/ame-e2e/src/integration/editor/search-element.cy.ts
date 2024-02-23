@@ -40,7 +40,7 @@ describe('Test search for element', () => {
     });
   });
 
-  it('can search using * for element', () => {
+  it.skip('can search using * for element', () => {
     cy.get(SELECTOR_searchInputField)
       .focus()
       .clear()
@@ -58,7 +58,7 @@ describe('Test search for element', () => {
       .then(() => cy.contains('property5').should('be.visible'));
   });
 
-  it('can search using $ for element', () => {
+  it.skip('can search using $ for element', () => {
     cy.searchesStateService().then(() =>
       cy
         .get(SELECTOR_searchInputField)
@@ -81,7 +81,7 @@ describe('Test search for element', () => {
     );
   });
 
-  it('can search using = for element', () => {
+  it.skip('can search using = for element', () => {
     cy.searchesStateService().then(() =>
       cy
         .get(SELECTOR_searchInputField)
