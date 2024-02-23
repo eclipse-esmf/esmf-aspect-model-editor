@@ -41,7 +41,7 @@ export class SearchService {
   }
 
   /**
-   * Fuse.js uses ' to search for items that includes the value but we want to do this using *.
+   * Fuse.js uses ' to search for items that includes the value, but we want to do this using *.
    */
   private adaptForSpecialSearch(value: string) {
     const fuseInlineSearchToken = "'"; // prettier-ignore
@@ -51,7 +51,7 @@ export class SearchService {
     }
 
     if (value?.startsWith('*')) {
-      return value.replace('*', fuseInlineSearchToken);
+      return value.replace(/\*/g, fuseInlineSearchToken);
     }
 
     return value;
