@@ -2,7 +2,6 @@ import {Component, inject} from '@angular/core';
 import {InformationHandlingService} from '@ame/editor';
 import {NotificationsService} from '@ame/shared';
 import {SidebarStateService} from '../sidebar-state.service';
-import {MxGraphService} from '@ame/mx-graph';
 
 /*
  * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
@@ -25,14 +24,7 @@ export class SidebarMenuComponent {
   public notificationService = inject(NotificationsService);
   public sidebarService = inject(SidebarStateService);
 
-  constructor(
-    private informationService: InformationHandlingService,
-    private mxGraphService: MxGraphService,
-  ) {}
-
-  get isModelEmpty(): boolean {
-    return !this.mxGraphService.getAllCells()?.length;
-  }
+  constructor(private informationService: InformationHandlingService) {}
 
   openSettingsDialog() {
     this.informationService.openSettingsDialog();

@@ -15,7 +15,6 @@
   [matTooltipShowDelay]="0"
   [matTooltipHideDelay]="0"
   [class.selected]="sidebarService.workspace.isOpened$ | async"
-  [class.disabled]="isModelEmpty"
   [matTooltip]="'TOOLTIPS.WORKSPACE' | translate"
   (click)="sidebarService.workspace.toggle()"
   class="sidebar__workspace"

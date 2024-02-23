@@ -31,7 +31,9 @@
 <div class="namespaces">
   <ng-container *ngFor="let namespace of sortNamespaces(namespaces | keyvalue)">
     <div *ngIf="searched[namespace.key]?.length" (click)="folded[namespace.key] = !folded[namespace.key]" class="namespace">
-      <mat-icon>{{ folded[namespace.key] ? 'folder' : 'folder_open' }}</mat-icon>
+      <mat-icon [matTooltip]="folded[namespace.key] ? ('TOOLTIPS.UNFOLD' | translate) : ('TOOLTIPS.FOLD' | translate)">
+        {{ folded[namespace.key] ? 'folder' : 'folder_open' }}
+      </mat-icon>
       <span>{{ namespace.key }}</span>
     </div>
     <ng-container *ngIf="!folded[namespace.key] || searchString">
@@ -41,34 +43,26 @@
           [class.outdated]="file.outdated"
           [class.locked]="file.locked"
           [class.errored]="file.errored"
-          [matTooltip]="
-            file.outdated
-              ? ('TOOLTIPS.OUTDATED_FILE' | translate: {sammVersion: file.sammVersion})
-              : file.errored
-                ? ('TOOLTIPS.ERRORED_FILE' | translate)
-                : sidebarService.isCurrentFile(namespace.key, file.name)
-                  ? ('TOOLTIPS.CURRENT_FILE' | translate)
-                  : file.locked
-                    ? ('TOOLTIPS.LOCKED_FILE' | translate)
-                    : ''
-          "
+          [matTooltip]="isCurrentFile(namespace.key, file)"
           (click)="selectFile(namespace.key, file)"
           (dblclick)="prepare(namespace.key, file); loadInNewWindow()"
           matTooltipPosition="right"
           class="file"
         >
           <div class="content">
-            <mat-icon>{{
-              sidebarService.isCurrentFile(namespace.key, file.name)
-                ? 'arrow_right_alt'
-                : file.locked
-                  ? 'lock'
-                  : file.outdated
-                    ? 'update'
-                    : file.errored
-                      ? 'error'
-                      : 'description'
-            }}</mat-icon>
+            <mat-icon
+              >{{
+                sidebarService.isCurrentFile(namespace.key, file.name)
+                  ? 'arrow_right_alt'
+                  : file.locked
+                    ? 'lock'
+                    : file.outdated
+                      ? 'update'
+                      : file.errored
+                        ? 'error'
+                        : 'description'
+              }}
+            </mat-icon>
             <span>{{ file.name }}</span>
           </div>
           <button

@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ChangeDetectorRef, Component, OnDestroy, OnInit, inject} from '@angular/core';
-import {FileStatus, SidebarStateService} from '../../sidebar-state.service';
+import {ChangeDetectorRef, Component, inject, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
 import {ConfirmDialogService, EditorService, FileHandlingService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
@@ -55,6 +55,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
     private fileHandlingService: FileHandlingService,
     private changeDetector: ChangeDetectorRef,
     private translate: LanguageTranslationService,
+    private ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
@@ -217,5 +218,19 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
 
   private loadNamespaceFile(absoluteFileName: string) {
     this.fileHandlingService.loadNamespaceFile(absoluteFileName);
+  }
+
+  public isCurrentFile(key: string, file: FileStatus): string {
+    return this.ngZone.run(() =>
+      file.outdated
+        ? this.translate.translateService.instant('TOOLTIPS.OUTDATED_FILE', {sammVersion: file.sammVersion})
+        : file.errored
+          ? this.translate.language.TOOLTIPS.ERRORED_FILE
+          : this.sidebarService.isCurrentFile(key, file.name)
+            ? this.translate.language.TOOLTIPS.CURRENT_FILE
+            : file.locked
+              ? this.translate.language.TOOLTIPS.LOCKED_FILE
+              : '',
+    );
   }
 }

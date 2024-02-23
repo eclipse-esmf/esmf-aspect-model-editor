@@ -10,11 +10,13 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+
 import {ElementType, sammElements} from '@ame/shared';
 import {Component, inject} from '@angular/core';
 import {SidebarStateService} from '@ame/sidebar';
 import {ModelService} from '@ame/rdf/services';
 import {MxGraphService} from '@ame/mx-graph';
+import {Aspect} from '@ame/meta-model';
 
 @Component({
   selector: 'ame-sidebar-samm-elements',
@@ -47,7 +49,7 @@ export class SidebarSAMMElementsComponent {
     private mxGraphService: MxGraphService,
   ) {}
 
-  public isAspectAvailable() {
+  public isAspectAvailable(): Aspect {
     return this.modelService.loadedAspect;
   }
 }

@@ -145,7 +145,7 @@ export class ShapeConnectorService {
     }
 
     if (modelElements[0]?.isExternalReference()) {
-      return this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.EXTERNAL_CONNECTION_ERROR});
+      return this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.REFERNECE_CONNECTION_ERROR});
     }
 
     const newConnection = this.connectShapes(modelElements[0], modelElements[1], selectedCells[0], selectedCells[1]);

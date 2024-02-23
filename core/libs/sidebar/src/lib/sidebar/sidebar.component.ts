@@ -12,7 +12,7 @@
  */
 
 import {Subscription} from 'rxjs';
-import {SidebarStateService} from '../sidebar-state.service';
+import {SidebarStateService} from '@ame/sidebar';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit, inject} from '@angular/core';
 
 @Component({

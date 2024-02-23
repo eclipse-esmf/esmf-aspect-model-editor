@@ -161,26 +161,32 @@ export class FileHandlingService {
           this.loadingScreenService.open(loadingScreenOptions);
         }),
         switchMap(rdfAspectModel =>
-          this.editorService.loadNewAspectModel({rdfAspectModel, namespaceFileName: absoluteFileName, fromWorkspace: true}).pipe(
-            first(),
-            catchError(error => {
-              console.groupCollapsed('sidebar.component -> loadNamespaceFile', error);
-              console.groupEnd();
+          this.editorService
+            .loadNewAspectModel({
+              rdfAspectModel,
+              namespaceFileName: absoluteFileName,
+              fromWorkspace: true,
+            })
+            .pipe(
+              first(),
+              catchError(error => {
+                console.groupCollapsed('sidebar.component -> loadNamespaceFile', error);
+                console.groupEnd();
 
-              this.notificationsService.error({
-                title: this.translate.language.NOTIFICATION_SERVICE.LOADING_ERROR,
-                message: `${error}`,
-                timeout: 5000,
-              });
-              return throwError(() => error);
-            }),
-            finalize(() => {
-              this.loadingScreenService.close();
-              if (this.shapeSettingsStateService.isShapeSettingOpened) {
-                this.shapeSettingsStateService.closeShapeSettings();
-              }
-            }),
-          ),
+                this.notificationsService.error({
+                  title: this.translate.language.NOTIFICATION_SERVICE.LOADING_ERROR,
+                  message: `${error}`,
+                  timeout: 5000,
+                });
+                return throwError(() => error);
+              }),
+              finalize(() => {
+                this.loadingScreenService.close();
+                if (this.shapeSettingsStateService.isShapeSettingOpened) {
+                  this.shapeSettingsStateService.closeShapeSettings();
+                }
+              }),
+            ),
         ),
       )
       .subscribe();
@@ -199,6 +205,7 @@ export class FileHandlingService {
     if (oldFile) {
       this.namespaceCacheService.removeFile(oldFile.namespace, oldFile.fileName);
     }
+
     this.namespaceCacheService.currentCachedFile = new CachedFile(fileName, namespace);
 
     if (this.mxGraphService.graph?.model) {
@@ -494,7 +501,19 @@ export class FileHandlingService {
   }
 
   onValidateFile() {
-    this.validateFile().pipe(first()).subscribe();
+    const subscription$ = this.modelService
+      .synchronizeModelToRdf()
+      .pipe(finalize(() => subscription$.unsubscribe()))
+      .subscribe((): void => {
+        if (!this.modelService.getLoadedAspectModel().aspect) {
+          this.notificationsService.info({
+            title: this.translate.language.NOTIFICATION_DIALOG.NO_ASPECT_TITLE,
+            timeout: 5000,
+          });
+          return;
+        }
+        this.validateFile().pipe(first()).subscribe();
+      });
   }
 
   validateFile(callback?: Function) {

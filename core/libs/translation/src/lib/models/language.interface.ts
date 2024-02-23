@@ -74,7 +74,9 @@ export interface Tooltips {
   NOTIFICATIONS: string;
   HELP: string;
   UNFOLD_NAMESPACES: string;
+  UNFOLD: string;
   FOLD_NAMESPACES: string;
+  FOLD: string;
   OUTDATED_FILE: string;
   ERRORED_FILE: string;
   CURRENT_FILE: string;
@@ -105,7 +107,6 @@ export interface LoadingScreenDialog {
 }
 export interface ConfirmDialog {
   CREATE_ASPECT: CreateAspect;
-  DELETE_SELECTED_ELEMENTS: DeleteSelectedElements;
   RELOAD_CONFIRMATION: ReloadConfirmation;
   UPDATE_ASPECT_MODEL: UpdateAspectModel;
   NAMESPACE_CHANGE: NamespaceChange;
@@ -152,10 +153,6 @@ export interface ReloadConfirmation {
   RELOAD_WARNING: string;
   CLOSE_BUTTON: string;
   OK_BUTTON: string;
-}
-export interface DeleteSelectedElements {
-  TITLE: string;
-  DELETE_DEPENDENT_REFERENCES_WARNING: string;
 }
 export interface CreateAspect {
   TITLE: string;
@@ -300,6 +297,7 @@ export interface Sidebar {
   THE_ROOT_OF_AVAILABLE_NAMESPACES: string;
   WORKSPACE_TIP: string;
   SAMM_ELEMENTS: string;
+  DRAG_INTO_VIEW: string;
   EMPTY: Empty;
   ACTIONS: Actions;
   WORKSPACE: Workspace;
@@ -341,8 +339,7 @@ export interface GenerateHandling {
   JSON_PAYLOAD_PREVIEW: string;
   FAIL_GENERATE_JSON_SCHEMA: string;
   JSON_SCHEMA_PREVIEW: string;
-  NO_ASPECT_LOADED: string;
-  NO_ASPECT_LOADED_MESSAGE: string;
+  NO_ASPECT_TITLE: string;
 }
 export interface GenerateOpenapiSpecDialog {
   TITLE: string;
@@ -409,6 +406,7 @@ export interface NotificationDialog {
   GENERATE_JSON_PAYLOAD: string;
   GENERATE_JSON_SCHEMA: string;
   WAIT_ACTION: string;
+  NO_ASPECT_TITLE: string;
 }
 export interface ValidationResultDialog {
   TITLE: string;
@@ -522,7 +520,7 @@ export interface Toolbar {
 }
 export interface NotificationService {
   ONLY_TWO_ELEMENTS_CONNECTION: string;
-  EXTERNAL_CONNECTION_ERROR: string;
+  REFERNECE_CONNECTION_ERROR: string;
   RECURSIVE_ELEMENTS: string;
   CIRCULAR_CONNECTION_MESSAGE: string;
   MISSING_PARENT_ENTITY: string;

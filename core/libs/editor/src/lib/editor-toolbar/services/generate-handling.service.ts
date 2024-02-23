@@ -160,8 +160,7 @@ export class GenerateHandlingService {
       .subscribe((): void => {
         if (!this.modelService.getLoadedAspectModel().aspect) {
           this.notificationsService.info({
-            title: this.translate.language.GENERATE_HANDLING.NO_ASPECT_LOADED,
-            message: this.translate.language.GENERATE_HANDLING.NO_ASPECT_LOADED_MESSAGE,
+            title: this.translate.language.GENERATE_HANDLING.NO_ASPECT_TITLE,
             timeout: 5000,
           });
           return;

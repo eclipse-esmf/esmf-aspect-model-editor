@@ -12,18 +12,18 @@
  */
 
 import {RdfService} from '@ame/rdf/services';
-import {Injectable, inject} from '@angular/core';
-import {BehaviorSubject, catchError, forkJoin, map, mergeMap, of, switchMap, throwError, Subscription} from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {BehaviorSubject, catchError, forkJoin, map, mergeMap, of, Subscription, switchMap, throwError} from 'rxjs';
 import {MxGraphService} from '@ame/mx-graph';
 import {ModelApiService} from '@ame/api';
 import {
   APP_CONFIG,
   AppConfig,
+  BrowserService,
+  ElectronSignals,
+  ElectronSignalsService,
   FileContentModel,
   NotificationsService,
-  ElectronSignalsService,
-  ElectronSignals,
-  BrowserService,
 } from '@ame/shared';
 import {ExporterHelper} from '@ame/migrator';
 
@@ -137,10 +137,6 @@ export class SidebarStateService {
   public selection = new Selection();
   public namespacesState = new NamespacesManager();
 
-  get isEmptyModel(): boolean {
-    return !this.mxGraphService.getAllCells()?.length;
-  }
-
   constructor(
     private rdfService: RdfService,
     private mxGraphService: MxGraphService,
@@ -148,7 +144,6 @@ export class SidebarStateService {
     private notificationService: NotificationsService,
     private browserService: BrowserService,
   ) {
-    this.overwriteSAMMElementsSidebar();
     this.manageSidebars();
     requestAnimationFrame(() => {
       this.getLockedFiles();
@@ -261,24 +256,5 @@ export class SidebarStateService {
     this.selection.selection$.subscribe(selection => {
       if (selection) this.fileElements.open();
     });
-  }
-
-  private overwriteSAMMElementsSidebar() {
-    this.overrideSidebarFunctionOnEmptyModel(this.sammElements, 'close');
-    this.overrideSidebarFunctionOnEmptyModel(this.sammElements, 'toggle');
-
-    this.overrideSidebarFunctionOnEmptyModel(this.workspace, 'close');
-    this.overrideSidebarFunctionOnEmptyModel(this.workspace, 'toggle');
-  }
-
-  private overrideSidebarFunctionOnEmptyModel(sidebar: SidebarState, fn: string) {
-    const oldFunction: Function = sidebar[fn];
-    sidebar[fn] = (() => {
-      if (this.isEmptyModel) {
-        return;
-      }
-
-      oldFunction.call(sidebar);
-    }).bind(sidebar);
   }
 }

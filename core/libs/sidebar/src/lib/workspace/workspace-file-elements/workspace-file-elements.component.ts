@@ -12,7 +12,7 @@
  */
 
 import {ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
-import {SidebarStateService} from '../../sidebar-state.service';
+import {SidebarStateService} from '@ame/sidebar';
 import {ElementType, sammElements} from '@ame/shared';
 import {EditorService} from '@ame/editor';
 import {filter} from 'rxjs';

@@ -64,11 +64,11 @@ module.exports.icons = {
     disabled: `${disabledIconsPath}${path.sep}note_add_FILL0_wght400_GRAD0_opsz24.png`,
     enabled: `${enabledIconsPath}${path.sep}note_add_FILL0_wght400_GRAD0_opsz24.png`,
   },
-  IMPORT_TO_WORKSPACE: {
+  IMPORT_MODEL: {
     disabled: `${disabledIconsPath}${path.sep}open_in_new_FILL0_wght400_GRAD0_opsz24.png`,
     enabled: `${enabledIconsPath}${path.sep}open_in_new_FILL0_wght400_GRAD0_opsz24.png`,
   },
-  IMPORT_NAMESPACES: {
+  IMPORT_PACKAGE: {
     disabled: `${disabledIconsPath}${path.sep}folder_zip_FILL0_wght400_GRAD0_opsz24.png`,
     enabled: `${enabledIconsPath}${path.sep}folder_zip_FILL0_wght400_GRAD0_opsz24.png`,
   },
@@ -84,7 +84,7 @@ module.exports.icons = {
     disabled: `${disabledIconsPath}${path.sep}download_FILL0_wght400_GRAD0_opsz24.png`,
     enabled: `${enabledIconsPath}${path.sep}download_FILL0_wght400_GRAD0_opsz24.png`,
   },
-  EXPORT_NAMESPACES: {
+  EXPORT_PACKAGE: {
     disabled: `${disabledIconsPath}${path.sep}download_2_FILL0_wght400_GRAD0_opsz24.png`,
     enabled: `${enabledIconsPath}${path.sep}download_2_FILL0_wght400_GRAD0_opsz24.png`,
   },

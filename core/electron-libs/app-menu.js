@@ -138,18 +138,18 @@ const fileSubmenu = [
     click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_NEW_WINDOW),
   },
   {
-    id: 'IMPORT_TO_WORKSPACE',
-    label: 'Import to Workspace',
-    icon: getIcon(icons.IMPORT_TO_WORKSPACE.enabled),
+    id: 'IMPORT_MODEL',
+    label: 'Import Model',
+    icon: getIcon(icons.IMPORT_MODEL.enabled),
     click: (menuItem, browserWindow, _) =>
       openFile(FILE_TYPE_FILTERS.TTL)
         .then(fileInfo => browserWindow.webContents.send(SIGNAL_IMPORT_TO_WORKSPACE, fileInfo))
         .catch(error => console.error(error)),
   },
   {
-    id: 'IMPORT_NAMESPACES',
-    label: 'Import Namespaces',
-    icon: getIcon(icons.IMPORT_NAMESPACES.enabled),
+    id: 'IMPORT_PACKAGE',
+    label: 'Import Package',
+    icon: getIcon(icons.IMPORT_PACKAGE.enabled),
     click: (menuItem, browserWindow, _) =>
       openFile(FILE_TYPE_FILTERS.ZIP)
         .then(fileInfo => browserWindow.webContents.send(SIGNAL_IMPORT_NAMESPACES, fileInfo))
@@ -177,9 +177,9 @@ const fileSubmenu = [
     click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_EXPORT_MODEL),
   },
   {
-    id: 'EXPORT_NAMESPACES',
-    label: 'Export Namespaces',
-    icon: getIcon(icons.EXPORT_NAMESPACES.enabled),
+    id: 'EXPORT_PACKAGE',
+    label: 'Export Package',
+    icon: getIcon(icons.EXPORT_PACKAGE.enabled),
     click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_EXPORT_NAMESPACES),
   },
 ];

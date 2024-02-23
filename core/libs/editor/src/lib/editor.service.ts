@@ -534,25 +534,12 @@ export class EditorService {
 
     result.push(...selectedCells);
 
-    // if the target is an ext. references it will show a display a confirmation dialog
+    this.deleteElements(result);
+
     if (result.some((cell: mxgraph.mxCell) => MxGraphHelper.getModelElement(cell)?.isExternalReference())) {
-      this.ngZone.run(() => {
-        this.confirmDialogService
-          .open({
-            title: this.translate.language.CONFIRM_DIALOG.DELETE_SELECTED_ELEMENTS.TITLE,
-            phrases: [this.translate.language.CONFIRM_DIALOG.DELETE_SELECTED_ELEMENTS.DELETE_DEPENDENT_REFERENCES_WARNING],
-          })
-          .subscribe(confirmed => {
-            if (confirmed) {
-              this.deleteElements(result);
-              result.forEach((element: any) => {
-                this.deletePrefixForExternalNamespaceReference(element);
-              });
-            }
-          });
+      result.forEach((element: any) => {
+        this.deletePrefixForExternalNamespaceReference(element);
       });
-    } else {
-      this.deleteElements(result);
     }
   }
 
