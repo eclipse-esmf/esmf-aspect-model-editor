@@ -194,4 +194,8 @@ export class CachedFile {
   clearAnonymousElements() {
     this.anonymousElements = [];
   }
+
+  clearCache() {
+    this.cachedElements.clear();
+  }
 }

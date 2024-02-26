@@ -13,6 +13,7 @@
 
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {NamespacesCacheService} from '@ame/cache';
 
 @Component({
   templateUrl: './large-file-warning-dialog.html',
@@ -21,6 +22,7 @@ export class LargeFileWarningComponent {
   public elementsCount: number;
 
   constructor(
+    private namespacesCacheService: NamespacesCacheService,
     private dialogRef: MatDialogRef<LargeFileWarningComponent>,
     @Inject(MAT_DIALOG_DATA) private data: {elementsCount: number},
   ) {
@@ -28,6 +30,7 @@ export class LargeFileWarningComponent {
   }
 
   close(response: 'open' | 'cancel') {
+    if (response === 'cancel') this.namespacesCacheService.currentCachedFile.clearCache();
     this.dialogRef.close(response);
   }
 }

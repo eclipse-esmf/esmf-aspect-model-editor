@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Inject, inject, Injectable, Injector, NgZone} from '@angular/core';
+import {inject, Injectable, Injector, NgZone} from '@angular/core';
 import {
   AlertService,
   BrowserService,
@@ -366,7 +366,7 @@ export class EditorService {
     this.mxGraphService.deleteAllShapes();
   }
 
-  private initializeNewGraph(editElementUrn?: string) {
+  private initializeNewGraph(editElementUrn?: string): void {
     try {
       const rdfModel = this.modelService.currentRdfModel;
       const mxGraphRenderer = new MxGraphRenderer(
@@ -378,54 +378,67 @@ export class EditorService {
       );
 
       const elements = this.namespaceCacheService.currentCachedFile.getAllElements();
-      this.largeFileWarningService
-        .openDialog(elements.length)
-        .pipe(
-          first(),
-          filter(response => response !== 'cancel'),
-          tap(() => {
-            this.loadingScreenService.close();
-            requestAnimationFrame(() => {
-              this.loadingScreenService.open({title: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_GENERATION});
-            });
-          }),
-          delay(500), // Modal animation waiting before apps is blocked by mxGraph
-          switchMap(() => {
-            return this.mxGraphService.updateGraph(() => {
-              this.mxGraphService.firstTimeFold = true;
-              MxGraphHelper.filterMode = this.filtersService.currentFilter.filterType;
-              const rootElements = elements.filter(e => !e.parents.length);
-              const filtered = this.filtersService.filter(rootElements);
-
-              for (const elementTree of filtered) {
-                mxGraphRenderer.render(elementTree, null);
-              }
-
-              this.mxGraphAttributeService.inCollapsedMode && this.mxGraphService.foldCells();
-            });
-          }),
-        )
-        .subscribe({
-          next: () => {
-            this.mxGraphService.formatShapes(true);
-            if (editElementUrn) {
-              this.shapeSettingsService.editModelByUrn(editElementUrn);
-              this.mxGraphService.navigateToCellByUrn(editElementUrn);
-            } else {
-              this.mxGraphSetupService.centerGraph();
-            }
-            localStorage.removeItem(ValidateStatus.validating);
-            this.loadingScreenService.close();
-          },
-          error: () => {
-            this.loadingScreenService.close();
-          },
-        });
+      this.prepareGraphUpdate(mxGraphRenderer, elements, editElementUrn);
     } catch (error) {
       console.groupCollapsed('editor.service', error);
       console.groupEnd();
-
       throwError(() => error);
+    }
+  }
+
+  private prepareGraphUpdate(mxGraphRenderer: MxGraphRenderer, elements: BaseMetaModelElement[], editElementUrn?: string): void {
+    this.largeFileWarningService
+      .openDialog(elements.length)
+      .pipe(
+        first(),
+        filter(response => response !== 'cancel'),
+        tap(() => this.toggleLoadingScreen()),
+        delay(500), // Wait for modal animation
+        switchMap(() => this.graphUpdateWorkflow(mxGraphRenderer, elements)),
+      )
+      .subscribe({
+        next: () => this.finalizeGraphUpdate(editElementUrn),
+        error: () => this.loadingScreenService.close(),
+      });
+  }
+
+  private toggleLoadingScreen(): void {
+    this.loadingScreenService.close();
+    requestAnimationFrame(() => {
+      this.loadingScreenService.open({title: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_GENERATION});
+    });
+  }
+
+  private graphUpdateWorkflow(mxGraphRenderer: MxGraphRenderer, elements: BaseMetaModelElement[]): Observable<boolean> {
+    return this.mxGraphService.updateGraph(() => {
+      this.mxGraphService.firstTimeFold = true;
+      MxGraphHelper.filterMode = this.filtersService.currentFilter.filterType;
+      const rootElements = elements.filter(e => !e.parents.length);
+      const filtered = this.filtersService.filter(rootElements);
+
+      for (const elementTree of filtered) {
+        mxGraphRenderer.render(elementTree, null);
+      }
+
+      if (this.mxGraphAttributeService.inCollapsedMode) {
+        this.mxGraphService.foldCells();
+      }
+    });
+  }
+
+  private finalizeGraphUpdate(editElementUrn?: string): void {
+    this.mxGraphService.formatShapes(true);
+    this.handleEditOrCenterView(editElementUrn);
+    localStorage.removeItem(ValidateStatus.validating);
+    this.loadingScreenService.close();
+  }
+
+  private handleEditOrCenterView(editElementUrn: string | null): void {
+    if (editElementUrn) {
+      this.shapeSettingsService.editModelByUrn(editElementUrn);
+      this.mxGraphService.navigateToCellByUrn(editElementUrn);
+    } else {
+      this.mxGraphSetupService.centerGraph();
     }
   }
 
