@@ -14,34 +14,29 @@ Currently, the Aspect Model Editor is based on https://eclipse-esmf.github.io/sa
 
 To start modeling, proceed as follows:
 
-WARNING: Already opened Aspect Models will be lost when loading a new one.
-Always make sure to save the previous Aspect Model first.
-
-. Click the *New/Load* icon in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
-. Click *Create/Upload Aspect Model*.
+. Click on the menu on *FILE* -> *New...* xref:getting-started/ui-overview.adoc#menu-file[FILE MENU].
 . Choose one of the following options:
-+
-* Click *Models/Default Aspect Model* to start from the Default Aspect Model.
-* Click *Models/Movement Example* to start from the Movement Example.
+* Click *Empty model* to start from scratch with an empty editor canvas.
 * Click *Load from File* to open a file containing TTL code.
+* Click *Models/SimpleAspect or Movement Example* to start from an Simple Aspect or Movement Example.
 * Copy and paste TTL code of an existing model into the text area.
-+
-image::start-modeling-ui.png[width=80%]
+
+=== Copy and Paste
+
+image::copy-paste-file.png[width=80%]
 . As an expert you are able to modify the shown TTL code manually within the text area.
-+
-image::start-modeling-edit-ui.png[width=80%]
-. Click *Start modeling*.
+. Click *Load Model*.
 
 [[save-models]]
 == Save models
 
 To save a model, proceed as follows:
 
-. Click *Save* in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+. Click in the menu *FILE* xref:getting-started/ui-overview.adoc#menu-file[FILE MENU].
 . Choose one of the following options:
 +
 * Click *Export Model* to export the model.
-* Click *Export Namespace* to export one of the existing namespaces.
+* Click *Export Package* to export one of the existing namespaces.
 * Click *Save to Workspace* to save the current namespace to the Workspace.
 
 TIP: For saving a new version of a model without overriding the existing one, see xref:modeling/model-versions.adoc[Model versions].
