@@ -14,11 +14,13 @@
 import {Injectable, NgZone} from '@angular/core';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {mxEvent, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxUtils} from '@ame/mx-graph';
-import {BindingsService} from '@ame/shared';
+import {BindingsService, NotificationsService} from '@ame/shared';
 import {EditorService} from '../../editor.service';
 import {ShapeSettingsStateService} from './shape-settings-state.service';
 import {OpenReferencedElementService} from '../../open-element-window/open-element-window.service';
 import {BehaviorSubject} from 'rxjs';
+import {NamespacesCacheService} from '@ame/cache';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({providedIn: 'root'})
 export class ShapeSettingsService {
@@ -31,10 +33,13 @@ export class ShapeSettingsService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphService: MxGraphService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
+    private notificationsService: NotificationsService,
     private bindingsService: BindingsService,
     private editorService: EditorService,
     private shapeSettingsStateService: ShapeSettingsStateService,
     private openReferencedElementService: OpenReferencedElementService,
+    private namespaceCacheService: NamespacesCacheService,
+    private translate: LanguageTranslationService,
     private ngZone: NgZone,
   ) {}
 
@@ -111,5 +116,19 @@ export class ShapeSettingsService {
   editModel(elementModel: BaseMetaModelElement) {
     this.shapeSettingsStateService.openShapeSettings();
     this.modelElement = elementModel;
+  }
+
+  editModelByUrn(elementUrn: string) {
+    const element = this.namespaceCacheService.currentCachedFile.getElement<BaseMetaModelElement>(elementUrn);
+    if (!element) {
+      this.notificationsService.error({
+        title: this.translate.language.EDITOR_CANVAS.SHAPE_SETTING.NOTIFICATION.EDIT_VIEW_UNAVAILABLE,
+        message: this.translate.language.EDITOR_CANVAS.SHAPE_SETTING.NOTIFICATION.EDIT_VIEW_UNAVAILABLE_MESSAGE,
+      });
+
+      return;
+    }
+
+    this.editModel(element);
   }
 }

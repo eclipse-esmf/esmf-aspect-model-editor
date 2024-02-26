@@ -185,6 +185,12 @@ export interface ShapeSetting {
   FIELD: Field;
   AME_ELEMENT_LIST_LABEL: AmeElementListLabel;
   AME_ELEMENT_LIST_BUTTON: AmeElementListButton;
+  NOTIFICATION: ShapeSettingNotification;
+}
+
+export interface ShapeSettingNotification {
+  EDIT_VIEW_UNAVAILABLE: string;
+  EDIT_VIEW_UNAVAILABLE_MESSAGE: string;
 }
 export interface AmeElementListButton {
   LOCATE_ELEMENT: string;

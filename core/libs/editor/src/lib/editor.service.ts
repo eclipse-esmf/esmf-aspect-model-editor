@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {inject, Injectable, NgZone} from '@angular/core';
+import {Inject, inject, Injectable, Injector, NgZone} from '@angular/core';
 import {
   AlertService,
   BrowserService,
@@ -71,7 +71,7 @@ import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {OpenApi, ViolationError} from './editor-toolbar';
 import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
-import {ShapeSettingsStateService} from './editor-dialog';
+import {ShapeSettingsService, ShapeSettingsStateService} from './editor-dialog';
 import {LargeFileWarningService} from './large-file-warning-dialog/large-file-warning-dialog.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
 import {LanguageTranslationService} from '@ame/translation';
@@ -91,19 +91,14 @@ export class EditorService {
   private isAllShapesExpandedSubject = new BehaviorSubject<boolean>(true);
 
   public isAllShapesExpanded$ = this.isAllShapesExpandedSubject.asObservable();
-  public loadModel$ = new BehaviorSubject<any>(null);
   public delayedBindings: Array<any> = [];
-
-  public get savedRdf$() {
-    return this.lastSavedRDF$.asObservable();
-  }
-
-  public get currentCachedFile(): CachedFile {
-    return this.namespaceCacheService.currentCachedFile;
-  }
 
   private get settings() {
     return this.configurationService.getSettings();
+  }
+
+  get shapeSettingsService(): ShapeSettingsService {
+    return this.injector.get(ShapeSettingsService);
   }
 
   constructor(
@@ -133,6 +128,7 @@ export class EditorService {
     private loadingScreenService: LoadingScreenService,
     private translate: LanguageTranslationService,
     private browserService: BrowserService,
+    private injector: Injector,
     private ngZone: NgZone,
   ) {
     if (!environment.production) {
@@ -262,6 +258,7 @@ export class EditorService {
           loadedRdfModel,
           payload.rdfAspectModel,
           payload.namespaceFileName || loadedRdfModel.absoluteAspectModelFileName,
+          payload.editElementUrn,
         ),
       ),
       tap(() => {
@@ -343,12 +340,17 @@ export class EditorService {
     return this.modelApiService.generateOpenApiSpec(serializedModel, openApi);
   }
 
-  private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string, namespaceFileName: string): Observable<Aspect> {
+  private loadCurrentModel(
+    loadedRdfModel: RdfModel,
+    rdfAspectModel: string,
+    namespaceFileName: string,
+    editElementUrn?: string,
+  ): Observable<Aspect> {
     return this.modelService.loadRdfModel(loadedRdfModel, rdfAspectModel, namespaceFileName).pipe(
       first(),
       tap((aspect: Aspect) => {
         this.removeOldGraph();
-        this.initializeNewGraph();
+        this.initializeNewGraph(editElementUrn);
         this.titleService.updateTitle(namespaceFileName || aspect?.aspectModelUrn, aspect ? 'Aspect' : 'Shared');
       }),
       catchError(error => {
@@ -364,7 +366,7 @@ export class EditorService {
     this.mxGraphService.deleteAllShapes();
   }
 
-  private initializeNewGraph() {
+  private initializeNewGraph(editElementUrn?: string) {
     try {
       const rdfModel = this.modelService.currentRdfModel;
       const mxGraphRenderer = new MxGraphRenderer(
@@ -406,7 +408,12 @@ export class EditorService {
         .subscribe({
           next: () => {
             this.mxGraphService.formatShapes(true);
-            this.mxGraphSetupService.centerGraph();
+            if (editElementUrn) {
+              this.shapeSettingsService.editModelByUrn(editElementUrn);
+              this.mxGraphService.navigateToCellByUrn(editElementUrn);
+            } else {
+              this.mxGraphSetupService.centerGraph();
+            }
             localStorage.removeItem(ValidateStatus.validating);
             this.loadingScreenService.close();
           },

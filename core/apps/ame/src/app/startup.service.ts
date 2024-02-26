@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamespacesCacheService} from '@ame/cache';
-import {EditorService, FileHandlingService, ShapeSettingsService} from '@ame/editor';
-import {BaseMetaModelElement} from '@ame/meta-model';
+import {EditorService, FileHandlingService} from '@ame/editor';
 import {MigratorService} from '@ame/migrator';
 import {MxGraphService} from '@ame/mx-graph';
 import {
@@ -42,8 +40,6 @@ export class StartupService {
     private modelSaveTracker: ModelSavingTrackerService,
     private electronTunnelService: ElectronTunnelService,
     private loadingScreenService: LoadingScreenService,
-    private shapeSettingsSettings: ShapeSettingsService,
-    private namespaceCacheService: NamespacesCacheService,
     private fileHandlingService: FileHandlingService,
     private mxGraphService: MxGraphService,
     private translate: LanguageTranslationService,
@@ -91,31 +87,15 @@ export class StartupService {
                 rdfAspectModel: model,
                 namespaceFileName: options ? `${options.namespace}:${options.file}` : '',
                 fromWorkspace: options?.fromWorkspace,
+                editElementUrn: options?.editElement,
               })
             : of(this.fileHandlingService.createEmptyModel()),
         ),
       ),
       tap(() => {
-        this.editElement(options?.editElement);
         this.modelSaveTracker.updateSavedModel();
         this.loadingScreenService.close();
       }),
     );
-  }
-
-  editElement(modelUrn: string) {
-    if (!modelUrn) {
-      return;
-    }
-
-    const element = this.namespaceCacheService.currentCachedFile.getElement<BaseMetaModelElement>(modelUrn);
-    if (element) {
-      this.shapeSettingsSettings.editModel(element);
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          this.mxGraphService.navigateToCellByUrn(element.aspectModelUrn);
-        }, 3000);
-      });
-    }
   }
 }
