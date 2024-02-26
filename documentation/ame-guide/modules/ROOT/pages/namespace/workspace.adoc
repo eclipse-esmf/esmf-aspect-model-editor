@@ -16,7 +16,7 @@ Structure is visible in the xref:getting-started/ui-overview.adoc#workspace-side
 
 image::namespace-file-structure.png[width=100%]
 
-Namespaces that do not follow this file structure might not work and might break the external references feature.
+Namespaces that do not follow this file structure might not work and might break the references feature.
 
 == Action dialog in workspace
 

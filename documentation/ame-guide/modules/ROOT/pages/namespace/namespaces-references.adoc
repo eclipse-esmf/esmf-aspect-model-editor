@@ -1,9 +1,9 @@
 :page-partial:
 
-[[namespaces-external-references]]
-= Namespaces and external references
+[[namespaces-references]]
+= Namespaces and references
 
-The Aspect Model Editor supports external references and custom namespaces. The namespaces from which the external elements can be referenced are defined by the folder structure of the Aspect Model Editor file directory.
+The Aspect Model Editor supports references and custom namespaces. The namespaces from which the external elements can be referenced are defined by the folder structure of the Aspect Model Editor file directory.
 
 
 

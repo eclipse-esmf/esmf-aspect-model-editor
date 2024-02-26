@@ -39,6 +39,7 @@ image::settings-editor.png[Editor menu in Settings dialog,width=100%]
 [[model-configuration]]
 == Model Configuration
 
+[#_language_settings]
 === Language settings
 
 In the Settings dialog, select the menu *Languages*.

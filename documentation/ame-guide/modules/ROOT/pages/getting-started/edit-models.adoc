@@ -27,7 +27,7 @@ by dragging an element from the sidebar to the diagram area.
 
 2. To open a list of all the namespaces and files that are currently available, click the Workspace icon image:elements/workspace.png[Workspace icon, width=32px].
 +
-For more information, see xref:namespace/namespaces-references.adoc#namespaces-external-references[Namespaces and external references].
+For more information, see xref:namespace/namespaces-references.adoc#namespaces-references[Namespaces and references].
 
 [[adding-elements]]
 == Add elements

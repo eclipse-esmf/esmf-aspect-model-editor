@@ -3,16 +3,20 @@
 
 To start modeling, proceed as follows:
 
-. Click the *+* icon in the toolbar.
-. Click *Create/Upload Aspect Model*. +
 image:create-new-model.png[width=80%]
-. Click *Models/Default Aspect Model* to start from the default Aspect Model.
-+
-image::start-modeling-ui.png[width=80%]
-. You can also modify the shown TTL code manually within the text area.
-+
-image:load-model.png[width=80%]
-. Click *Start modeling*.
+
+. Click on the menu on *FILE* -> *New...* xref:getting-started/ui-overview.adoc#menu-file[FILE MENU].
+. Choose one of the following options:
+* Click *Empty model* to start from scratch with an empty editor canvas.
+* Click *Load from File* to open a file containing TTL code.
+* Click *Models/SimpleAspect or Movement Example* to start from an Simple Aspect or Movement Example.
+* Copy and paste TTL code of an existing model into the text area.
+
+== Copy and Paste
+
+image::copy-paste-file.png[width=80%]
+. As an expert you are able to modify the shown TTL code manually within the text area.
+. Click *Load Model*.
 
 == Save the model
 
@@ -20,12 +24,9 @@ The model will be saved in your local workspace directory with the name of the A
 
 image:save-to-workspace.png[width=80%]
 
-WARNING: If you have already opened an Aspect Model in the Editor and have not saved it before creating or loading a new one, it will be lost.
-Always make sure to save the previous Aspect Model first.
-
 In the Workspace you can find all models stored so far.
 
 image:see-model-in-workspace.png[width=80%]
 
-As you can see in the screenshot, the models are separated by namespace. +
+The models are separated by namespace. +
 To learn more about namespaces see xref:namespace/namespaces-references.adoc[].

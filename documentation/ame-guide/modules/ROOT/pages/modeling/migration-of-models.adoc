@@ -21,6 +21,4 @@ In case you have old models based on BAMM 2.0.0 and need to migrate to SAMM 2.0.
 A migration of an Aspect Model in an old version can also be loaded as usual.
 The tool automatically recognises the older version and migrates it to the latest SAMM version.
 
-image::load-model.png[]
-
 image:migrate-notification.png[]
