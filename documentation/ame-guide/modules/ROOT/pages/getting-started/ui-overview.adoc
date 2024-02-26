@@ -7,105 +7,235 @@ image::ame-ui-overview-numbers.png[Numbered UI overview, width=100%]
 
 The numbers in the image above indicate the following UI elements of the Aspect Model Editor:
 
-1. xref:getting-started/ui-overview.adoc#toolbar[Toolbar]
-2. xref:getting-started/ui-overview.adoc#map[Map]
-3. xref:getting-started/ui-overview.adoc#navigation[Navigation]
-4. xref:getting-started/ui-overview.adoc#search[Search]
-5. xref:getting-started/ui-overview.adoc#settings[Settings]
-6. xref:getting-started/ui-overview.adoc#notifications[Notifications]
+1. xref:getting-started/ui-overview.adoc#menu[Menu]
+- 1.1 xref:getting-started/ui-overview.adoc#menu-file[File]
+- 1.2 xref:getting-started/ui-overview.adoc#menu-view[View]
+- 1.3 xref:getting-started/ui-overview.adoc#menu-edit[Edit]
+- 1.4 xref:getting-started/ui-overview.adoc#menu-valiadate[Validate]
+- 1.5 xref:getting-started/ui-overview.adoc#menu-generate[Generate]
+- 1.6 xref:getting-started/ui-overview.adoc#menu-search[Search]
+2. xref:getting-started/ui-overview.adoc#toolbar[Toolbar]
+3. xref:getting-started/ui-overview.adoc#map[Map]
+4. xref:getting-started/ui-overview.adoc#settings[Settings]
+5. xref:getting-started/ui-overview.adoc#notifications[Notifications]
+6. xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar]
 7. xref:getting-started/ui-overview.adoc#help[Help]
-8. xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar]
-9. xref:getting-started/ui-overview.adoc#edit-dialog[Edit dialog]
+8. xref:getting-started/ui-overview.adoc#edit-dialog[Edit dialog]
 
+[[menu]]
+== Menu
 
-[[toolbar]]
-== Toolbar
+[[menu-file]]
+=== File
+
+image:menu-bar/menu-file.png[,50%,50%]
 
 [cols="20%,20%,60%"]
 |===
 | Icon | Name | Action
 
-| image:toolbar-icons/new-model.png[,15%,15%]
-| Load/Create
-| Start with a new Aspect Model or import an existing model or namespace.
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/add_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| New...
+| Access a submenu to either create a new, empty Aspect Model, import an existing Aspect Model, duplicate an Aspect Model using the copy and paste feature, or start with a predefined Example.
 
-| image:toolbar-icons/save.png[,15%,15%]
-| Save
-| Download the model as a TTL file or save it in the local namespaces file structure.
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/note_add_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| New Windows
+| Open an additional window to work on another Aspect Model.
 
-| image:toolbar-icons/add-file.png[,15%,15%]
-| Add file to Namespace.
-| Assign the file automatically to the corresponding namespace.
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/open_in_new_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| Import Model
+| Import an existing Model.
 
-| image:toolbar-icons/edit.png[,15%,15%]
-| Open highlighted element
-| Open the Edit dialog of the selected element (alternative: double-click an element inside the model).
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/folder_zip_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| Import Package
+| Import an existing Package as ZIP.
 
-| image:toolbar-icons/delete.png[,15%,15%]
-| Delete
-| Delete selected element(s).
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/content_copy_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| Copy to Clipboard
+| Copy the Aspect Model to the clipboard.
 
-| image:toolbar-icons/expand.png[,15%,15%]
-| Collapse all/Expand all
-| Expands/Collapses elements.
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/save_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| Save to Workspace
+| Save the Aspect Model to the Workspace.
 
-| image:toolbar-icons/format.png[,15%,15%]
-| Format
-| Automatically format the Aspect Model.
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/download_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| Export Model
+| Export the Model as a TTL file.
 
-| image:toolbar-icons/connect.png[,15%,15%]
-| Connect
-| Connect two selected elements.
-
-| image:toolbar-icons/validate.png[,15%,15%]
-| Validate
-| Validate the Aspect Model.
-
-| image:toolbar-icons/print.png[]
-| Generate HTML, OpenAPI specification or AASX/XML.
-| For more information, see xref:generate/generate-other-files.adoc[].
-
-| image:toolbar-icons/json.png[,15%,15%]
-| Generate JSON/JSON schema
-| Download a JSON schema or a JSON sample generated based on your model. A dropdown menu will open to offer both of these options.
-
-| image:toolbar-icons/minimap.png[,15%,15%]
-| Show map/Hide map
-| Show or hide the map.
-
-| image:toolbar-icons/navigation.png[,15%,15%]
-| Show navigation/Hide navigation
-| Show or hide the navigation.
-
-| image:toolbar-icons/search.png[]
-| Search [[search]]
-| Use the search field to search for an element by name.
-
-| image:toolbar-icons/settings.png[,15%,15%]
-| Settings [[settings]]
-| Open settings.
-Allows for defining the general configuration of the Aspect Model Editor, language settings, and namespace settings.
-
-To access the Settings dialog, click the Settings icon image:toolbar-icons/settings.png[Settings icon].
-
-For more information, see xref:getting-started/settings.adoc[Settings].
-
-| image:toolbar-icons/notifications.png[,15%,15%]
-| Notifications [[notifications]]
-| Open notifications.
-Shows the validation results for your Aspect Model. Further, you can find there info messages (e.g., Aspect Model was loaded) and warning messages (e.g., if elements cannot be connected to each other).
-
-To access the Notifications dialog, click the Notifications icon image:toolbar-icons/notifications.png[Notifications icon].
-
-For more information, see xref:getting-started/validation-and-notifications.adoc[Validation and notifications].
-
-| image:toolbar-icons/info.png[,15%,15%]
-| Help
-| Open documentation.
-
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/download_2_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| Export Package
+| Export the Models namespaces as a ZIP file.
 
 |===
 
+[[menu-view]]
+=== View
+
+image:menu-bar/menu-view.png[,50%,50%]
+
+[cols="10%,30%,60%"]
+|===
+| Icon | Name | Action
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/build_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Toggle Toolbar
+| Toggle the visibility of the Toolbar.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/map_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Toggle Minimap
+| Toggle the visibility of the Minimap.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/filter_list_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Filter Model by...
+| Filter the model by none or Properties.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/zoom_in_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Zoom in
+| Zoom in the model.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/zoom_out_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Zoom out
+| Zoom out the model.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/fit_screen_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Zoom to Fit
+| Zoom to fit the model.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/pageless_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Zoom to 100%
+| Zoom to 100% of the model.
+
+|===
+
+[[menu-edit]]
+=== Edit
+
+image:menu-bar/menu-edit.png[,50%,50%]
+
+[cols="10%,30%,60%"]
+|===
+| Icon | Name | Action
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/jump_to_element_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Open Selected Element
+| Open the Edit dialog of the selected element.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/delete_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Remove Selected Element
+| Remove the selected element.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/collapse_content_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Collapse/Expand Model
+| Collapse or expand the model.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/schema_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Format Model
+| Format the model.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/commit_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Connect Selected Elements
+| Connect two selected elements.
+
+|===
+
+[[menu-valiadate]]
+=== Validate
+
+image:menu-bar/menu-validate.png[,50%,50%]
+
+[cols="10%,30%,60%"]
+|===
+| Icon | Name | Action
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/fact_check_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Current Model
+| Validate the current model.
+
+|===
+
+[[menu-generate]]
+=== Generate
+
+image:menu-bar/menu-generate.png[,50%,50%]
+
+[cols="10%,30%,60%"]
+|===
+| Icon | Name | Action
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/html_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| HTML Documentation
+| Generate HTML documentation.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/api_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| OpenApi Specification
+| Generate OpenAPI specification.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/data_array_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| AASX/XML
+| Generate AASX/XML.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/description_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Sample JSON Payload
+| Generate sample JSON payload.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/data_object_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| JSON Schema
+| Generate json schema.
+
+|===
+
+[[menu-search]]
+=== Search
+
+image:menu-bar/menu-search.png[,50%,50%]
+
+[cols="10%,30%,60%"]
+|===
+| Icon | Name | Action
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/view_comfy_alt_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Elements
+| Search for elements.
+
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/topic_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| Files
+| Search for files.
+
+|===
+
+
+[[toolbar]]
+== Toolbar
+
+[cols="10%,30%,60%"]
+|===
+| Icon | Name | Action
+
+| image:toolbar-icons/edit.png[,50%,50%]
+| Open highlighted element
+| Open the Edit dialog of the selected element (alternative: double-click an element inside the model).
+
+| image:toolbar-icons/delete.png[,50%,50%]
+| Delete
+| Delete selected element(s).
+
+| image:toolbar-icons/expand.png[,50%,50%]
+| Collapse all/Expand all
+| Expands/Collapses elements.
+
+| image:toolbar-icons/format.png[,50%,50%]
+| Format
+| Automatically format the Aspect Model.
+
+| image:toolbar-icons/connect.png[,50%,50%]
+| Connect
+| Connect two selected elements.
+
+| image:toolbar-icons/validate.png[,50%,50%]
+| Validate
+| Validate the Aspect Model.
+
+|===
 
 [[map]]
 == Map
@@ -116,19 +246,49 @@ To toggle its visibility, click the Show/Hide map icon image:toolbar-icons/minim
 
 For more information, see xref:getting-started/navigate-models.adoc[Navigate models].
 
-[[navigation]]
-== Navigation
+[[workspace-sidebar]]
+== Workspace sidebar
 
-Optimize your current view of the model with the navigation:
+The Workspace sidebar &ndash; see screenshot below &ndash; allows you to access namespaces (2) and to drag and drop elements to the graph area canvas (1).
 
-* Fit the complete model on the current view
-* Reset zoom level to 100%
-* Zoom in
-* Zoom out
+image::ame-ui-overview-workspace-numbers.png[width=100%]
 
-image:zoom-fit.png[]
+Expand the Workspace sidebar to view the description of each element.
 
-For more information, see xref:getting-started/navigate-models.adoc[Navigate models].
+To add an element to your model drag and drop it on the graph area canvas, edit its details, and connect it with the rest of the graph.
+
+For more information, see xref:getting-started/edit-models.adoc[Edit models].
+
+=== Bottom workspace sidebar
+
+[cols="10%,30%,60%"]
+|===
+
+| Icon | Name | Action
+
+| image:toolbar-icons/settings.png[,50%,50%]
+| Settings [[settings]]
+| Open settings.
+Allows for defining the general configuration of the Aspect Model Editor, language settings, and namespace settings.
+
+To access the Settings dialog, click the Settings icon image:toolbar-icons/settings.png[Settings icon].
+
+For more information, see xref:getting-started/settings.adoc[Settings].
+
+| image:toolbar-icons/notifications.png[,50%,50%]
+| Notifications [[notifications]]
+| Open notifications.
+Shows the validation results for your Aspect Model. Further, you can find there info messages (e.g., Aspect Model was loaded) and warning messages (e.g., if elements cannot be connected to each other).
+
+To access the Notifications dialog, click the Notifications icon image:toolbar-icons/notifications.png[Notifications icon].
+
+For more information, see xref:getting-started/validation-and-notifications.adoc[Validation and notifications].
+
+| image:toolbar-icons/info.png[,50%,50%]
+| Help
+| Open documentation.
+
+|===
 
 [[help]]
 == Help
@@ -138,19 +298,6 @@ a link to the documentation.
 
 Example:
 image:help-docs.png[]
-
-[[workspace-sidebar]]
-== Workspace sidebar
-
-The Workspace sidebar &ndash; see screenshot below &ndash; allows you to access namespaces (1) and to drag and drop elements to the graph area canvas (2).
-
-image::ame-ui-overview-workspace-numbers.png[width=100%]
-
-Expand the Workspace sidebar to view the description of each element.
-
-To add an element to your model drag and drop it on the graph area canvas, edit its details, and connect it with the rest of the graph.
-
-For more information, see xref:getting-started/edit-models.adoc[Edit models].
 
 [[edit-dialog]]
 == Edit dialog
