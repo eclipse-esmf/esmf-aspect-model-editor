@@ -14,27 +14,25 @@ To view particular parts of an Aspect Model, you have several options:
 
 With the map, you can choose how to view the Aspect Model on the graph area canvas.
 
-To toggle the map's visibility, click the Show/Hide map icon image:toolbar-icons/minimap.png[Map toggle icon] in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+To toggle the map's visibility, click the *Toggle minimap* icon image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/map_FILL0_wght400_GRAD0_opsz24.png[Map toggle icon] in the xref:getting-started/ui-overview.adoc#menu-view[menu view].
 
-To see a particular section of your Aspect Model, click and hold the blue selector on the map and drag it around on the map. 
+To see a particular section of your Aspect Model, click and hold the blue selector on the map and drag it around on the map.
 
 TIP: To zoom in and out, click and hold the lower right corner of the blue selector and change its size.
 
 [[zoom]]
 == Zoom in and out with the navigation
 
-With the navigation, you can zoom in and out of the Aspect Model. Also, you can scale the Aspect Model so that the whole model fits on your screen size. 
+With the navigation, you can zoom in and out of the Aspect Model. Also, you can scale the Aspect Model so that the whole model fits on your screen size.
 
-To toggle the navigation's visibility, click the Show/Hide navigation icon image:toolbar-icons/navigation.png[Navigation toggle icon] in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+To toggle the navigation's visibility which are in the toolbar, click the *Toggle Toolbar* icon image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/build_FILL0_wght400_GRAD0_opsz24.png[Navigation toggle icon] in the xref:getting-started/ui-overview.adoc#menu-view[menu view].
 
 The navigation provides the following options:
 
-* Fit the complete model on the current view
-* Reset zoom level to 100%
-* Zoom in
-* Zoom out
+* Zoom in image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/zoom_in_FILL0_wght400_GRAD0_opsz24.png[Zoom in icons]
+* Zoom out image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/zoom_out_FILL0_wght400_GRAD0_opsz24.png[Zoom out icons]
 
-image::zoom-fit.png[Zoom icons]
+For more functionality look also at the xref:getting-started/ui-overview.adoc#menu-view[menu view].
 
 [[collapse-expand-models]]
 == Collapse and expand all elements of a model
