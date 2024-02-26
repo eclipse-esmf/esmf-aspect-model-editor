@@ -1,0 +1,151 @@
+/*!
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+@use '../../styles/mixins' as mixins;
+
+:host {
+  display: flex;
+  flex-direction: column;
+
+  [mat-mini-fab] {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  [hidden] {
+    visibility: hidden;
+  }
+
+  ::ng-deep {
+    mat-form-field .mdc-text-field {
+      background-color: white;
+    }
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+
+  input {
+    margin-top: 2px;
+  }
+
+  .sort {
+    margin-top: -24px;
+    margin-left: 10px;
+    outline: none;
+    transition: none;
+  }
+}
+
+.namespaces {
+  overflow-y: auto;
+  overflow-x: clip;
+  margin: -16px;
+  flex: 1;
+
+  &::-webkit-scrollbar {
+    display: none;
+    opacity: 0;
+  }
+
+  &:hover {
+    &::-webkit-scrollbar {
+      display: block;
+      opacity: 1;
+    }
+  }
+
+  .namespace {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    gap: 5px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    span {
+      word-break: break-all;
+    }
+  }
+
+  mat-icon {
+    min-width: 24px;
+  }
+
+  .file {
+    display: flex;
+    height: 40px;
+    padding-left: 35px;
+    align-items: center;
+    justify-content: space-between;
+
+    &:hover {
+      background-color: #e1e1e1;
+      cursor: pointer;
+
+      button {
+        display: inline-flex;
+      }
+    }
+
+    &.selected {
+      background-color: #e1e1e1;
+      cursor: default;
+    }
+
+    &.outdated {
+      opacity: 0.75;
+      &:hover {
+        background-color: transparent;
+        cursor: default;
+      }
+    }
+
+    &.errored {
+      color: var(--ame-error);
+
+      &:hover {
+        background-color: transparent;
+        cursor: default;
+      }
+
+      .content mat-icon {
+        color: var(--ame-error);
+      }
+    }
+
+    button {
+      display: none;
+    }
+
+    .content {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      width: 270px;
+
+      span {
+        font-size: 14px;
+        letter-spacing: 0.5px;
+
+        @include mixins.ellipsis();
+      }
+    }
+  }
+}

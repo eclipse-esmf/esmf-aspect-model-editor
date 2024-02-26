@@ -34,7 +34,7 @@ export class ConstraintModelService extends BaseModelService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphService: MxGraphService,
     private constraintRenderer: ConstraintRenderService,
-    private filtersService: FiltersService
+    private filtersService: FiltersService,
   ) {
     super();
   }

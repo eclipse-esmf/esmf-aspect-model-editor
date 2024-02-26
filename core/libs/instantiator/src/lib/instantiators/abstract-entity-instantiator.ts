@@ -72,7 +72,7 @@ export class AbstractEntityInstantiator {
       if (samm.isPropertiesProperty(quad.predicate.value)) {
         defaultAbstractEntity.properties = this.metaModelElementInstantiator.getProperties(
           DataFactory.namedNode(quad.subject.value),
-          samm.PropertiesProperty()
+          samm.PropertiesProperty(),
         );
 
         defaultAbstractEntity.children.push(...defaultAbstractEntity.properties.map(e => e.property));

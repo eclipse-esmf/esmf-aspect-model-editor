@@ -18,9 +18,11 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
 import {LanguageTranslateModule} from '@ame/translation';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
+  imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule, MatTooltipModule, LanguageTranslateModule],
   declarations: [LoadingScreenComponent, AlertComponent],
-  imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule, LanguageTranslateModule],
+  exports: [],
 })
 export class SharedModule {}

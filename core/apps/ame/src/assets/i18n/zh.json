@@ -384,10 +384,6 @@
       "CLOSE_BUTTON": "取消",
       "OK_BUTTON": "创建Aspect"
     },
-    "DELETE_SELECTED_ELEMENTS": {
-      "TITLE": "删除外部引用",
-      "DELETE_DEPENDENT_REFERENCES_WARNING": "删除外部引用也会删除依赖于它的其他外部引用"
-    },
     "RELOAD_CONFIRMATION": {
       "VERSION_CHANGE_NOTICE": "不同版本的",
       "WORKSPACE_LOAD_NOTICE": "已加载到workspace。",
@@ -410,8 +406,6 @@
     "MODEL_LOADING_WAIT": "请等到model加载完毕",
     "ASPECT_MODEL_LOADING": "加载Aspect Model",
     "WORKSPACE_IMPORT": "将文件导入到workspace",
-    "MODEL_VALIDATION": "校验model...",
-    "VALIDATION_WAIT": "请等待知道校验完成。",
     "FILTER_CHANGE": "更换过滤器...",
     "FILTER_WAIT": "请等待过滤完成"
   }

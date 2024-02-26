@@ -25,6 +25,13 @@ export const mxCellSearchOption = {
   threshold: 0.1,
 };
 
+export const filesSearchOption = {
+  useExtendedSearch: true,
+  includeScore: true,
+  keys: ['file', 'namespace'],
+  findAllMatches: true,
+};
+
 export const entityValueSearchOption = {
   useExtendedSearch: true,
   includeScore: true,

@@ -14,3 +14,4 @@
 export * from './information-handling.service';
 export * from './file-handling.service';
 export * from './generate-handling.service';
+export * from './file-upload.service';

@@ -27,7 +27,13 @@ export class DefaultLengthConstraint extends DefaultConstraint implements Length
     return 'DefaultLengthConstraint';
   }
 
-  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public minValue?: number, public maxValue?: number) {
+  constructor(
+    metaModelVersion: string,
+    aspectModelUrn: string,
+    name: string,
+    public minValue?: number,
+    public maxValue?: number,
+  ) {
     super(metaModelVersion, aspectModelUrn, name);
   }
 }

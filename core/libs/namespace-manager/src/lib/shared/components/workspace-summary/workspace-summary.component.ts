@@ -13,11 +13,11 @@
 
 import {Component, inject} from '@angular/core';
 import {NotificationsService} from '@ame/shared';
-import {VisibleStep} from 'libs/editor/src/lib/editor-toolbar/enum';
 import {ViolationError} from '@ame/editor';
 import {NAMESPACES_SESSION} from '../../services';
 import {MissingElement, NamespacesSessionInterface, Violation} from '../../models';
 import {LanguageTranslationService} from '@ame/translation';
+import {VisibleStep} from '@ame/editor';
 
 @Component({
   selector: 'ame-workspace-summary',
@@ -40,7 +40,10 @@ export class WorkspaceSummaryComponent {
   public violations: Violation[] = this.importSession.violations;
   public errors: ViolationError[];
 
-  constructor(private notificationService: NotificationsService, private translate: LanguageTranslationService) {}
+  constructor(
+    private notificationService: NotificationsService,
+    private translate: LanguageTranslationService,
+  ) {}
 
   async copySummaryToClipboard() {
     const textToClipboard = JSON.stringify(
@@ -50,7 +53,7 @@ export class WorkspaceSummaryComponent {
         missingElements: this.missingElements,
       },
       null,
-      2
+      2,
     );
 
     try {

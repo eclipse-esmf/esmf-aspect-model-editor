@@ -23,7 +23,7 @@ export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty
   private rdfNodeService = inject(RdfNodeService);
 
   private get store(): Store {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.store;
+    return this.rdfNodeService.modelService.currentRdfModel.store;
   }
 
   constructor(rdfService: RdfService) {
@@ -69,7 +69,7 @@ export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty
     this.store.addQuad(
       DataFactory.namedNode(abstractProperty.aspectModelUrn),
       this.rdfService.currentRdfModel.samm.ExtendsProperty(),
-      DataFactory.namedNode(abstractProperty.extendedElement.aspectModelUrn)
+      DataFactory.namedNode(abstractProperty.extendedElement.aspectModelUrn),
     );
   }
 

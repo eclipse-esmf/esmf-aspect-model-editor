@@ -48,7 +48,7 @@ export class VersionMigrationComponent implements OnInit {
     private modelApiService: ModelApiService,
     private migratorApiService: MigratorApiService,
     private editorService: EditorService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +63,7 @@ export class VersionMigrationComponent implements OnInit {
           this.namespaces = namespaces;
           return this.rewriteStores();
         }),
-        switchMap(models => this.rewriteModels(models))
+        switchMap(models => this.rewriteModels(models)),
       )
       .subscribe(() => {
         this.electronSignalsService.call('requestRefreshWorkspaces');
@@ -90,7 +90,8 @@ export class VersionMigrationComponent implements OnInit {
     for (const namespace in this.namespaces) {
       for (let i = 0; i < this.namespaces[namespace].length; i++) {
         const rdfModel = this.rdfService.externalRdfModels.find(
-          rdf => rdf.getPrefixes()[''].startsWith(`urn:samm:${namespace}`) && rdf.aspectModelFileName === this.namespaces[namespace][i].name
+          rdf =>
+            rdf.getPrefixes()[''].startsWith(`urn:samm:${namespace}`) && rdf.aspectModelFileName === this.namespaces[namespace][i].name,
         );
         const serializedUpdatedModel = this.rewriteStore(rdfModel, this.namespaces[namespace][i]);
         if (serializedUpdatedModel) {
@@ -139,7 +140,7 @@ export class VersionMigrationComponent implements OnInit {
         rdfModel.store.addQuad(
           oldSubjectValue !== newSubjectValue ? DataFactory.namedNode(newSubjectValue) : subject,
           oldPredicateValue !== newPredicateValue ? DataFactory.namedNode(newPredicateValue) : predicate,
-          oldObjectValue !== newObjectValue ? DataFactory.namedNode(newObjectValue) : object
+          oldObjectValue !== newObjectValue ? DataFactory.namedNode(newObjectValue) : object,
         );
 
         rdfModel.store.removeQuad(subject, predicate, object);
@@ -161,7 +162,7 @@ export class VersionMigrationComponent implements OnInit {
   private rewriteModels(models: any[]) {
     return models.reduce(
       (obs, model) => obs.pipe(switchMap(() => this.migratorApiService.rewriteFile(model).pipe(tap(() => (model.file.migrated = true))))),
-      of(0)
+      of(0),
     );
   }
 }

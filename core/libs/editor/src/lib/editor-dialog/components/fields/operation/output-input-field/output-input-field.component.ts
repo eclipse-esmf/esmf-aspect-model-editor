@@ -30,7 +30,10 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
   outputControl: FormControl;
   newPropertyControl: FormControl;
 
-  constructor(public rdfService: RdfService) {
+  constructor(
+    public rdfService: RdfService,
+    private validators: EditorDialogValidators,
+  ) {
     super();
   }
 
@@ -54,15 +57,8 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
           value,
           disabled: !!value || this.metaModelElement.isExternalReference(),
         },
-        [
-          EditorDialogValidators.duplicateNameWithDifferentType(
-            this.namespacesCacheService,
-            this.metaModelElement,
-            this.rdfService,
-            DefaultProperty
-          ),
-        ]
-      )
+        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
+      ),
     );
     this.getControl('output').markAsTouched();
 
@@ -71,7 +67,7 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
       new FormControl({
         value: property,
         disabled: this.metaModelElement?.isExternalReference(),
-      })
+      }),
     );
 
     this.outputControl = this.parentForm.get('output') as FormControl;

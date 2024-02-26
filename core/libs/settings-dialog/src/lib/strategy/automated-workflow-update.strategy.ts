@@ -33,7 +33,6 @@ export class AutomatedWorkflowUpdateStrategy implements SettingsUpdateStrategy {
     settings.validationTimerSeconds = automatedWorkflow.get('validationTimerSeconds')?.value;
     settings.autoFormatEnabled = automatedWorkflow.get('autoFormatEnabled')?.value;
 
-    if (settings.autoSaveEnabled) this.editorService.refreshSaveModel();
     if (settings.autoValidationEnabled) this.editorService.refreshValidateModel();
   }
 }

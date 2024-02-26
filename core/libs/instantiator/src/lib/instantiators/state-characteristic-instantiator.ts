@@ -38,7 +38,7 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
       defaultEnumeration.name,
       defaultEnumeration.values,
       null,
-      defaultEnumeration.dataType
+      defaultEnumeration.dataType,
     );
 
     defaultState.fileName = this.metaModelElementInstantiator.fileName;

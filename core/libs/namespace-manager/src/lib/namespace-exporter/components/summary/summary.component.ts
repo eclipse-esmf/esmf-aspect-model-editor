@@ -34,7 +34,7 @@ export class ExportSummaryComponent {
     private modelApiService: ModelApiService,
     private dialogRef: MatDialogRef<WorkspaceSummaryComponent>,
     private notificationService: NotificationsService,
-    private translate: LanguageTranslationService
+    private translate: LanguageTranslationService,
   ) {}
 
   export() {

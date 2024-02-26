@@ -55,7 +55,7 @@ export class DefaultStructuredValue extends DefaultCharacteristic implements Str
     name: string,
     public deconstructionRule: string,
     public elements: Array<string | OverWrittenProperty>,
-    dataType?: Type
+    dataType?: Type,
   ) {
     super(metaModelVersion, aspectModelUrn, name, dataType);
   }

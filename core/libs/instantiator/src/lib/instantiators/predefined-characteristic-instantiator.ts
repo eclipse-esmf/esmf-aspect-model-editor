@@ -13,11 +13,10 @@
 import {NamedNode} from 'n3';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {Characteristic, DefaultCharacteristic, DefaultScalar} from '@ame/meta-model';
-import {DataTypeService} from '@ame/shared';
+import {DataTypeService, simpleDataTypes} from '@ame/shared';
 
 export class PredefinedCharacteristicInstantiator {
   private characteristicInstanceList: {[key: string]: Function} = {};
-
   private readonly dataTypeService: DataTypeService;
 
   get predefinedCharacteristics() {
@@ -25,7 +24,6 @@ export class PredefinedCharacteristicInstantiator {
   }
 
   constructor(private metaModelElementInstantiator: MetaModelElementInstantiator) {
-    this.dataTypeService = metaModelElementInstantiator.rdfModel.dataTypeService;
     const sammC = metaModelElementInstantiator.sammC;
     this.characteristicInstanceList[`${sammC.getNamespace()}Timestamp`] = this.createTimestampCharacteristic;
     this.characteristicInstanceList[`${sammC.getNamespace()}Text`] = this.createTextCharacteristic;
@@ -38,33 +36,30 @@ export class PredefinedCharacteristicInstantiator {
     this.characteristicInstanceList[`${sammC.getNamespace()}MimeType`] = this.createMimeTypeCharacteristic;
   }
 
-  createTextCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator, dataTypeService: DataTypeService): Characteristic {
+  createTextCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator): Characteristic {
     const characteristic = new DefaultCharacteristic(
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('Text'),
       'Text',
-      new DefaultScalar(`${dataTypeService.getDataType('string').isDefinedBy}`)
+      new DefaultScalar(simpleDataTypes['string'].isDefinedBy),
     );
 
     characteristic.addPreferredName('en', 'Text');
     characteristic.addDescription(
       'en',
       'Describes a Property which contains plain text. ' +
-        'This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.'
+        'This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.',
     );
 
     return characteristic;
   }
 
-  createTimestampCharacteristic(
-    metaModelElementInstantiator: MetaModelElementInstantiator,
-    dataTypeService?: DataTypeService
-  ): Characteristic {
+  createTimestampCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator): Characteristic {
     const characteristic = new DefaultCharacteristic(
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('Timestamp'),
       'Timestamp',
-      new DefaultScalar(`${dataTypeService.getDataType('dateTime').isDefinedBy}`)
+      new DefaultScalar(simpleDataTypes['dateTime'].isDefinedBy),
     );
 
     characteristic.addPreferredName('en', 'Timestamp');
@@ -73,36 +68,30 @@ export class PredefinedCharacteristicInstantiator {
     return characteristic;
   }
 
-  createMultiLanguageTextCharacteristic(
-    metaModelElementInstantiator: MetaModelElementInstantiator,
-    dataTypeService: DataTypeService
-  ): Characteristic {
+  createMultiLanguageTextCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator): Characteristic {
     const characteristic = new DefaultCharacteristic(
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('MultiLanguageText'),
       'MultiLanguageText',
-      new DefaultScalar(`${dataTypeService.getDataType('langString').isDefinedBy}`)
+      new DefaultScalar(simpleDataTypes['langString'].isDefinedBy),
     );
 
     characteristic.addPreferredName('en', 'Multi-Language Text');
     characteristic.addDescription(
       'en',
       'Describes a Property which contains plain text in multiple languages.' +
-        ' This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.'
+        ' This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.',
     );
 
     return characteristic;
   }
 
-  createBooleanCharacteristic(
-    metaModelElementInstantiator: MetaModelElementInstantiator,
-    dataTypeService: DataTypeService
-  ): Characteristic {
+  createBooleanCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator): Characteristic {
     const characteristic = new DefaultCharacteristic(
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('Boolean'),
       'Boolean',
-      new DefaultScalar(`${dataTypeService.getDataType('boolean').isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['boolean'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'Boolean');
@@ -111,12 +100,12 @@ export class PredefinedCharacteristicInstantiator {
     return characteristic;
   }
 
-  createLocaleCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator, dataTypeService: DataTypeService): Characteristic {
+  createLocaleCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator): Characteristic {
     const characteristic = new DefaultCharacteristic(
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('Locale'),
       'Locale',
-      new DefaultScalar(`${dataTypeService.getDataType('string').isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['string'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'Locale');
@@ -125,15 +114,12 @@ export class PredefinedCharacteristicInstantiator {
     return characteristic;
   }
 
-  createLanguageCharacteristic(
-    metaModelElementInstantiator: MetaModelElementInstantiator,
-    dataTypeService: DataTypeService
-  ): Characteristic {
+  createLanguageCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator): Characteristic {
     const characteristic = new DefaultCharacteristic(
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('Language'),
       'Language',
-      new DefaultScalar(`${dataTypeService.getDataType('string').isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['string'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'Language');
@@ -142,15 +128,12 @@ export class PredefinedCharacteristicInstantiator {
     return characteristic;
   }
 
-  createUnitReferenceCharacteristic(
-    metaModelElementInstantiator: MetaModelElementInstantiator,
-    dataTypeService: DataTypeService
-  ): Characteristic {
+  createUnitReferenceCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator): Characteristic {
     const characteristic = new DefaultCharacteristic(
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('UnitReference'),
       'UnitReference',
-      new DefaultScalar(`${dataTypeService.getDataType('curie').isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['curie'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'Unit Reference');
@@ -159,15 +142,12 @@ export class PredefinedCharacteristicInstantiator {
     return characteristic;
   }
 
-  createResourcePathCharacteristic(
-    metaModelElementInstantiator: MetaModelElementInstantiator,
-    dataTypeService: DataTypeService
-  ): Characteristic {
+  createResourcePathCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator): Characteristic {
     const characteristic = new DefaultCharacteristic(
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('ResourcePath'),
       'ResourcePath',
-      new DefaultScalar(`${dataTypeService.getDataType('anyURI').isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['anyURI'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'Resource Path');
@@ -176,15 +156,12 @@ export class PredefinedCharacteristicInstantiator {
     return characteristic;
   }
 
-  createMimeTypeCharacteristic(
-    metaModelElementInstantiator: MetaModelElementInstantiator,
-    dataTypeService: DataTypeService
-  ): Characteristic {
+  createMimeTypeCharacteristic(metaModelElementInstantiator: MetaModelElementInstantiator): Characteristic {
     const characteristic = new DefaultCharacteristic(
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('MimeType'),
       'MimeType',
-      new DefaultScalar(`${dataTypeService.getDataType('string').isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['string'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'MIME Type');

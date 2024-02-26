@@ -65,6 +65,16 @@ html {
   --ame-gray-10: #cfd0d1;
   --ame-gray-20: #bfc0c2;
   --ame-gray-600: #787878;
+
+  // shadows
+  --ame-shadow--black-25: rgba(0, 0, 0, 0.25);
+  --ame-shadow--black-45: rgba(0, 0, 0, 0.45);
+
+  // icons
+  --ame-icons--gray: #343434;
+
+  // borders
+  --ame-top-border: #f3f3f3;
 }
 
 $characteristic-color: var(--ame-characteristic);

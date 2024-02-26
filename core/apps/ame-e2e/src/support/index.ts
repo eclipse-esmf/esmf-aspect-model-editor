@@ -29,12 +29,9 @@
 import './constants';
 import 'cypress-real-events';
 
-// When a command from ./commands is ready to use, import with `import * as commands from './commands'` syntax
-// import * as commands from './commands';
 import './commands';
 import './helpers';
 import './api-mocks';
-import './api-mock-helpers';
 import './utils';
 
 before(function before() {

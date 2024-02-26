@@ -170,12 +170,12 @@ export class MxGraphVisitorHelper {
     if (metaModelElement.getSeeReferences()?.length > 0 || (metaModelElement as CanExtend)?.extendedSee?.length) {
       let extended = false;
       let elements = (metaModelElement.getSeeReferences() || []).map(e =>
-        e.startsWith('urn:samm') && e.includes('#') ? e.split('#')[1] : e
+        e.startsWith('urn:samm') && e.includes('#') ? e.split('#')[1] : e,
       );
 
       if (!elements.length) {
         elements = (metaModelElement as CanExtend)?.extendedSee.map(e =>
-          e.startsWith('urn:samm') && e.includes('#') ? e.split('#')[1] : e
+          e.startsWith('urn:samm') && e.includes('#') ? e.split('#')[1] : e,
         );
         extended = true;
       }

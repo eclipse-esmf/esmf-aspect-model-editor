@@ -16,13 +16,9 @@ import {ExporterHelper} from '@ame/migrator';
 import {RdfModel} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
 import {HttpClient} from '@angular/common/http';
-import {Injectable, inject} from '@angular/core';
-import {map, switchMap} from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {map, Observable, switchMap} from 'rxjs';
 import {ModelApiService} from './model-api.service';
-
-export interface MigrationResponse {
-  namespaces: NamespaceStatus[];
-}
 
 export interface NamespaceStatus {
   namespace: string;
@@ -48,7 +44,7 @@ export class MigratorApiService {
     private http: HttpClient,
     private browserService: BrowserService,
     private modelApiService: ModelApiService,
-    private editorService: EditorService
+    private editorService: EditorService,
   ) {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('e2e=true')) {
       const remote = window.require('@electron/remote');
@@ -56,28 +52,28 @@ export class MigratorApiService {
     }
   }
 
-  public hasFilesToMigrate() {
+  public hasFilesToMigrate(): Observable<boolean> {
     return this.editorService
       .loadExternalModels()
       .pipe(
         map((rdfModels: RdfModel[]) =>
-          rdfModels.some(rdfModel => ExporterHelper.isVersionOutdated(rdfModel?.samm.version, this.config.currentSammVersion))
-        )
+          rdfModels.some(rdfModel => ExporterHelper.isVersionOutdated(rdfModel?.samm.version, this.config.currentSammVersion)),
+        ),
       );
   }
 
-  public createBackup() {
-    return this.http.get(`${this.serviceUrl}${this.api.package}/backup-workspace`);
+  public createBackup(): Observable<NamespaceStatus[]> {
+    return this.http.get<Array<NamespaceStatus>>(`${this.serviceUrl}${this.api.package}/backup-workspace`);
   }
 
-  public migrateWorkspace() {
-    return this.http.get(`${this.serviceUrl}${this.api.models}/migrate-workspace`);
+  public migrateWorkspace(): Observable<NamespaceStatus[]> {
+    return this.http.get<Array<NamespaceStatus>>(`${this.serviceUrl}${this.api.models}/migrate-workspace`);
   }
 
-  public rewriteFile(payload: any) {
+  public rewriteFile(payload: any): Observable<string> {
     return this.modelApiService.formatModel(payload.serializedUpdatedModel).pipe(
       switchMap(formattedModel => this.modelApiService.saveModel(formattedModel, payload.rdfModel.absoluteAspectModelFileName)),
-      switchMap(() => this.modelApiService.deleteFile(payload.oldNamespaceFile))
+      switchMap(() => this.modelApiService.deleteFile(payload.oldNamespaceFile)),
     );
   }
 }

@@ -37,7 +37,10 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
   public chipControl = new FormControl();
   public searchControl: FormControl<string>;
 
-  constructor(public rdfService: RdfService) {
+  constructor(
+    public rdfService: RdfService,
+    private validators: EditorDialogValidators,
+  ) {
     super();
   }
 
@@ -70,14 +73,7 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
         value: '',
         disabled: this.metaModelElement.isExternalReference(),
       },
-      [
-        EditorDialogValidators.duplicateNameWithDifferentType(
-          this.namespacesCacheService,
-          this.metaModelElement,
-          this.rdfService,
-          DefaultProperty
-        ),
-      ]
+      [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
     );
 
     this.parentForm.setControl(
@@ -85,7 +81,7 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
       new FormControl({
         value: this.inputValues,
         disabled: this.metaModelElement?.isExternalReference(),
-      })
+      }),
     );
 
     if (this.metaModelElement?.isExternalReference()) this.chipControl.disable();

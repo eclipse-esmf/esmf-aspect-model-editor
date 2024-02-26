@@ -13,7 +13,7 @@
 
 import {Inject, Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {MxGraphShapeOverlayService} from './mx-graph-shape-overlay.service';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
 import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
@@ -46,6 +46,8 @@ export class MxGraphService {
     y: 0,
   };
 
+  public graphInitialized$ = new BehaviorSubject(false);
+
   get currentCachedFile() {
     return this.namespacesCacheService.currentCachedFile;
   }
@@ -60,7 +62,7 @@ export class MxGraphService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private notificationsService: NotificationsService,
     private themeService: ThemeService,
-    public mxGraphShapeSelectorService: MxGraphShapeSelectorService
+    public mxGraphShapeSelectorService: MxGraphShapeSelectorService,
   ) {
     this.document = mxUtils.createXmlDocument();
     if (!environment.production) {
@@ -73,6 +75,7 @@ export class MxGraphService {
     this.graph = this.mxGraphAttributeService.graph;
     this.graph.keepEdgesInBackground = true;
     this.themeService.setGraph(this.graph);
+    this.graphInitialized$.next(true);
 
     mxCell.prototype.clone = function () {
       return this;
@@ -159,7 +162,7 @@ export class MxGraphService {
     const geometry = this.mxGraphGeometryProviderService.createGeometry(
       node,
       (configuration && configuration.geometry.x) || this.nextCellCoordinates?.x || 0,
-      (configuration && configuration.geometry.y) || this.nextCellCoordinates?.y || 0
+      (configuration && configuration.geometry.y) || this.nextCellCoordinates?.y || 0,
     );
 
     this.nextCellCoordinates = null;
@@ -278,7 +281,7 @@ export class MxGraphService {
       for (const cell of cells) {
         this.graph.resizeCell(
           cell,
-          this.mxGraphGeometryProviderService.createGeometry(MxGraphHelper.getElementNode(cell), cell?.geometry?.x, cell?.geometry?.y)
+          this.mxGraphGeometryProviderService.createGeometry(MxGraphHelper.getElementNode(cell), cell?.geometry?.x, cell?.geometry?.y),
         );
         const modelElement = MxGraphHelper.getModelElement(cell);
         if (MxGraphHelper.isComplexEnumeration(modelElement)) {
@@ -536,7 +539,7 @@ export class MxGraphService {
           entityValueToUpdate.value.aspectModelUrn === deletedEntityValue.aspectModelUrn
         )
           entityValueToUpdate.value = '';
-      })
+      }),
     );
   }
 

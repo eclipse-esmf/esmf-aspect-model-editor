@@ -110,14 +110,14 @@ export class SettingDialogComponent {
 
   treeControl = new FlatTreeControl<ConfigurationFlatNode>(
     node => node.level,
-    node => node.expandable
+    node => node.expandable,
   );
 
   treeFlattener = new MatTreeFlattener(
     this._transformer,
     node => node.level,
     node => node.expandable,
-    node => node.children
+    node => node.children,
   );
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -139,7 +139,7 @@ export class SettingDialogComponent {
     private sammLangService: SammLanguageSettingsService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private loadingScreen: LoadingScreenService
+    private loadingScreen: LoadingScreenService,
   ) {
     this.initializeComponent();
   }
@@ -200,7 +200,7 @@ export class SettingDialogComponent {
         finalize(() => {
           this.formService.setNamespace(namespaceConfig.data.newNamespace);
           this.formService.setVersion(namespaceConfig.data.newVersion);
-        })
+        }),
       )
       .subscribe();
   }
@@ -247,7 +247,7 @@ export class SettingDialogComponent {
             this.mxGraphService,
             this.mxGraphShapeSelectorService,
             this.logService,
-            this.mxGraphAttributeService
+            this.mxGraphAttributeService,
           ).removeUnnecessaryLanguages();
         });
       } finally {

@@ -22,11 +22,14 @@ import {mxgraph} from 'mxgraph-factory';
   providedIn: 'root',
 })
 export class EntityValueConnectionHandler implements SingleShapeConnector<DefaultEntityValue> {
-  constructor(private mxGraphService: MxGraphService, private filtersService: FiltersService) {}
+  constructor(
+    private mxGraphService: MxGraphService,
+    private filtersService: FiltersService,
+  ) {}
 
   public connect(entityValue: DefaultEntityValue, source: mxgraph.mxCell) {
     const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(entityValue, {parent: MxGraphHelper.getModelElement(source)})
+      this.filtersService.createNode(entityValue, {parent: MxGraphHelper.getModelElement(source)}),
     );
 
     // connect: EntityValue - Enumeration

@@ -22,6 +22,7 @@ module.exports = defineConfig({
   reporter: 'spec',
   video: false,
   screenshotOnRunFailure: false,
+  downloadsFolder: 'apps/ame-e2e/src/fixtures/cypress/downloads',
   videosFolder: 'apps/ame-e2e/cypress/videos',
   screenshotsFolder: 'apps/ame-e2e/cypress/screenshots',
   chromeWebSecurity: false,

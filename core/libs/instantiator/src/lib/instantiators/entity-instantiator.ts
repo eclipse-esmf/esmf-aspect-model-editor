@@ -49,7 +49,7 @@ export class EntityInstantiator {
     quads.forEach(quad => {
       if (samm.isExtendsProperty(quad.predicate.value)) {
         const externalElement = this.metaModelElementInstantiator.namespaceCacheService.findElementOnExtReference<DefaultAbstractEntity>(
-          quad.object.value
+          quad.object.value,
         );
 
         if (externalElement) {
@@ -74,7 +74,7 @@ export class EntityInstantiator {
           defaultEntity.extendedElement = entityInstance();
         } else {
           defaultEntity.extendedElement = new AbstractEntityInstantiator(this.metaModelElementInstantiator).createAbstractEntity(
-            storedQuads
+            storedQuads,
           );
         }
 
@@ -89,7 +89,7 @@ export class EntityInstantiator {
         this.metaModelElementInstantiator.getProperties(
           DataFactory.namedNode(quad.subject.value),
           samm.PropertiesProperty(),
-          defaultEntity
+          defaultEntity,
         );
       }
     });

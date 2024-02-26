@@ -25,7 +25,10 @@ export class ConstraintInstantiator extends BaseConstraintCharacteristicInstanti
     return this.metaModelElementInstantiator.rdfModel;
   }
 
-  constructor(protected metaModelElementInstantiator: MetaModelElementInstantiator, public nextProcessor?: ConstraintInstantiator) {
+  constructor(
+    protected metaModelElementInstantiator: MetaModelElementInstantiator,
+    public nextProcessor?: ConstraintInstantiator,
+  ) {
     super(metaModelElementInstantiator, nextProcessor);
   }
 

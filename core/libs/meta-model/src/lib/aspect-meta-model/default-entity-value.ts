@@ -52,7 +52,7 @@ export class DefaultEntityValue extends Base implements EntityValue {
     public name: string,
     public aspectModelUrn: string,
     public entity: DefaultEntity,
-    properties?: OverWrittenProperty[]
+    properties?: OverWrittenProperty[],
   ) {
     super(metaModelVersion, aspectModelUrn, name);
     this.properties = properties?.map(key => ({key, value: ''})) || [];

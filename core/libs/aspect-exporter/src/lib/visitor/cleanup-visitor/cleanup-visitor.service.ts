@@ -18,7 +18,7 @@ import {RdfNodeService} from '../../rdf-node';
 @Injectable()
 export class CleanupVisitor {
   private get store(): Store {
-    return this.rdfNodeService.modelService.getLoadedAspectModel().rdfModel.store;
+    return this.rdfNodeService.modelService.currentRdfModel.store;
   }
 
   constructor(private rdfNodeService: RdfNodeService) {}

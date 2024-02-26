@@ -60,11 +60,13 @@ import {
   LanguageCodeInputFieldComponent,
   LeftInputFieldComponent,
   LocaleCodeInputFieldComponent,
+  LocateElementComponent,
   LowerBoundInputFieldComponent,
   MaxLengthInputFieldComponent,
   MaxValueInputFieldComponent,
   MinLengthInputFieldComponent,
   MinValueInputFieldComponent,
+  ModelElementParserPipe,
   NameInputFieldComponent,
   NumericConversionFactorInputFieldComponent,
   OperationComponent,
@@ -80,7 +82,6 @@ import {
   ScaleInputFieldComponent,
   SeeInputFieldComponent,
   ShapeSettingsComponent,
-  ModelElementParser,
   StateCharacteristicComponent,
   StructuredValueComponent,
   StructuredValuePropertiesComponent,
@@ -91,7 +92,6 @@ import {
   UnitInputFieldComponent,
   UpperBoundInputFieldComponent,
   ValuesInputFieldComponent,
-  LocateElementComponent,
 } from './components';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {CommonModule} from '@angular/common';
@@ -102,6 +102,7 @@ import {SaveModelDialogComponent} from '../save-model-dialog/save-model-dialog.c
 import {LargeFileWarningComponent} from '../large-file-warning-dialog/large-file-warning-dialog';
 import {SharedSettingsTitleComponent} from './components/shape-settings/shared-settings-title/shared-settings-title.component';
 import {LanguageTranslateModule} from '@ame/translation';
+import {ElementIconComponent} from '../../../../shared/src/lib/components/element/element.component';
 
 @NgModule({
   providers: [EditorModelService],
@@ -124,6 +125,7 @@ import {LanguageTranslateModule} from '@ame/translation';
     MatDialogModule,
     CounterPipe,
     LanguageTranslateModule,
+    ElementIconComponent,
   ],
   declarations: [
     AspectComponent,
@@ -191,12 +193,12 @@ import {LanguageTranslateModule} from '@ame/translation';
     StructuredValuePropertiesComponent,
     EntityExtendsFieldComponent,
     ElementListComponent,
-    ModelElementParser,
+    ModelElementParserPipe,
     LocateElementComponent,
     SaveModelDialogComponent,
     LargeFileWarningComponent,
     SharedSettingsTitleComponent,
   ],
-  exports: [ShapeSettingsComponent],
+  exports: [ShapeSettingsComponent, ModelElementParserPipe],
 })
 export class EditorDialogModule {}

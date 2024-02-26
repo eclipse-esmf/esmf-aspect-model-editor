@@ -38,7 +38,7 @@ export class NamespaceConfirmationModalComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) data: NewNamespaceDialogOptions,
     private namespaceCacheService: NamespacesCacheService,
-    private namespaceConfirmationDialogRef: MatDialogRef<NamespaceConfirmationModalComponent>
+    private namespaceConfirmationDialogRef: MatDialogRef<NamespaceConfirmationModalComponent>,
   ) {
     this.rdfModel = data.rdfModel;
     this.oldNamespace = data.oldNamespace;

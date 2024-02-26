@@ -39,6 +39,10 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
   private rdfService = inject(RdfService);
   private nameSubscription = new Subscription();
 
+  constructor(private validators: EditorDialogValidators) {
+    super();
+  }
+
   ngOnInit(): void {
     this.subscription = this.getMetaModelData().subscribe(() => this.setNameControl());
   }
@@ -67,25 +71,21 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
         },
         {
           validators: this.getNameValidators(),
-        }
-      )
+        },
+      ),
     );
     nameControl = this.parentForm.get('name');
 
     this.nameSubscription.add(
       nameControl.valueChanges.subscribe(() => {
-        const validation = EditorDialogValidators.duplicateName(
-          this.namespacesCacheService,
-          this.metaModelElement,
-          this.rdfService
-        )(nameControl);
+        const validation = this.validators.duplicateName(this.metaModelElement)(nameControl);
         if (validation) {
           nameControl.setErrors({
             ...(nameControl.errors || {}),
             ...(validation || {}),
           });
         }
-      })
+      }),
     );
     nameControl.markAsTouched();
   }

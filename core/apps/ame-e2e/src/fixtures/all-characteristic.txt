@@ -38,13 +38,13 @@
 :TestCode a samm-c:Code ;
    samm:preferredName "Test Code"@en ;
    samm:description "This is a test code."@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:dataType xsd:int .
 
 :testCollectiontProperty a samm:Property ;
    samm:preferredName "Test Property"@en ;
    samm:description "This is a test property."@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:see <http://bosch.com/me> ;
    samm:exampleValue "Example Value" ;
    samm:characteristic :TestCollection .
@@ -52,7 +52,7 @@
 :TestCollection a samm-c:Collection ;
    samm:preferredName "Test Collection"@en ;
    samm:description "This is a test collection."@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:dataType xsd:string .
 
 :testDurationProperty a samm:Property ;
@@ -61,14 +61,14 @@
 :TestDuration a samm-c:Duration ;
    samm:preferredName "Test Duration"@en ;
    samm:description "This is a test Duration"@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:dataType xsd:int ;
    samm-c:unit unit:kilosecond .
 
 :testEnumerationProperty a samm:Property ;
    samm:preferredName "Test Property"@en ;
    samm:description "This is a test property."@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:see <http://bosch.com/me> ;
    samm:exampleValue "Example Value" ;
    samm:characteristic :TestEnumeration .
@@ -76,14 +76,14 @@
 :TestEnumeration a samm-c:Enumeration ;
    samm:preferredName "Test Enumeration"@en ;
    samm:description "This is a test for enumeration."@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:dataType xsd:int ;
    samm-c:values ( 1 2 3 ) .
 
 :testListProperty a samm:Property ;
    samm:preferredName "Test Property"@en ;
    samm:description "This is a test property."@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:see <http://bosch.com/me> ;
    samm:exampleValue "Example Value" ;
    samm:characteristic :TestList .
@@ -91,7 +91,7 @@
 :TestList a samm-c:List ;
    samm:preferredName "Test List"@en ;
    samm:description "This is a test list."@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:dataType xsd:string .
 
 :testMeasurementProperty a samm:Property ;
@@ -100,7 +100,7 @@
 :TestMeasurement a samm-c:Measurement ;
    samm:preferredName "Test Measurement"@en ;
    samm:description "This is a test Measurement"@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:dataType xsd:float ;
    samm-c:unit unit:kelvin .
 
@@ -110,14 +110,14 @@
 :TestQuantifiable a samm-c:Quantifiable ;
    samm:preferredName "Test Quantifiable"@en ;
    samm:description "This is a test Quantifiable"@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:dataType xsd:float ;
    samm-c:unit unit:hertz .
 
 :testSetProperty a samm:Property ;
    samm:preferredName "Test Property"@en ;
    samm:description "This is a test property."@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:see <http://bosch.com/me> ;
    samm:exampleValue "Example Value" ;
    samm:characteristic :TestSet .
@@ -125,13 +125,13 @@
 :TestSet a samm-c:Set ;
    samm:preferredName "Test Set"@en ;
    samm:description "This is a test set."@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:dataType xsd:string .
 
 :testSortedSetProperty a samm:Property ;
    samm:preferredName "Test Property"@en ;
    samm:description "This is a test property."@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:see <http://bosch.com/me> ;
    samm:exampleValue "Example Value" ;
    samm:characteristic :TestSortedSet .
@@ -139,5 +139,5 @@
 :TestSortedSet a samm-c:SortedSet ;
    samm:preferredName "Test Sorted Set"@en ;
    samm:description "This is a test sorted set."@en ;
-   samm:see <http://bosch.com/opcon> ;
+   samm:see <https://www.eclipse.org> ;
    samm:dataType xsd:string .

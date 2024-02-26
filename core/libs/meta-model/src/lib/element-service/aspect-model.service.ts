@@ -20,7 +20,11 @@ import {TitleService} from '@ame/shared';
 
 @Injectable({providedIn: 'root'})
 export class AspectModelService extends BaseModelService {
-  constructor(private aspectRenderer: AspectRenderService, private titleService: TitleService, private mxGraphService: MxGraphService) {
+  constructor(
+    private aspectRenderer: AspectRenderService,
+    private titleService: TitleService,
+    private mxGraphService: MxGraphService,
+  ) {
     super();
   }
 
