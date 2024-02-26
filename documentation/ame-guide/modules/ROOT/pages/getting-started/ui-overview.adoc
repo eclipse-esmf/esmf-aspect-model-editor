@@ -15,12 +15,12 @@ The numbers in the image above indicate the following UI elements of the Aspect 
 - 1.5 xref:getting-started/ui-overview.adoc#menu-generate[Generate]
 - 1.6 xref:getting-started/ui-overview.adoc#menu-search[Search]
 2. xref:getting-started/ui-overview.adoc#toolbar[Toolbar]
-3. xref:getting-started/ui-overview.adoc#map[Map]
+3. xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar]
 4. xref:getting-started/ui-overview.adoc#settings[Settings]
 5. xref:getting-started/ui-overview.adoc#notifications[Notifications]
-6. xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar]
-7. xref:getting-started/ui-overview.adoc#help[Help]
-8. xref:getting-started/ui-overview.adoc#edit-dialog[Edit dialog]
+6. xref:getting-started/ui-overview.adoc#help[Help]
+7. xref:getting-started/ui-overview.adoc#edit-dialog[Edit dialog]
+8. xref:getting-started/ui-overview.adoc#map[Map]
 
 [[menu]]
 == Menu
@@ -237,15 +237,6 @@ image:menu-bar/menu-search.png[,50%,50%]
 
 |===
 
-[[map]]
-== Map
-
-With the map, you can easily navigate your Aspect Model in the graph area canvas.
-
-To toggle its visibility, click the Show/Hide map icon image:toolbar-icons/minimap.png[Map toggle icon] in the toolbar.
-
-For more information, see xref:getting-started/navigate-models.adoc[Navigate models].
-
 [[workspace-sidebar]]
 == Workspace sidebar
 
@@ -307,3 +298,12 @@ Edit the attributes of a selected element of your Aspect Model with the Edit dia
 To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Open element icon image:toolbar-icons/edit.png[Edit icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 
 For more information, see xref:modeling/edit-elements.adoc[Edit elements].
+
+[[map]]
+== Map
+
+With the map, you can easily navigate your Aspect Model in the graph area canvas.
+
+To toggle its visibility, click the Show/Hide map icon image:mini-map.png[Map toggle icon] in the toolbar.
+
+For more information, see xref:getting-started/navigate-models.adoc[Navigate models].
