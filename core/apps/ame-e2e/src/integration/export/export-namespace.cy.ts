@@ -81,14 +81,10 @@ describe('Export namespace', () => {
       .then(rdfString => cy.loadModel(rdfString))
       .then(() => cy.startModelling())
       .then(() => {
-        cy.get(SELECTOR_tbSaveButton).click();
-        cy.get(SELECTOR_tbSaveMenuExportNamespaceButton)
-          .click()
-          .then(() => {
-            cy.get(SELECTOR_enNamespaceList).should('have.length', 2);
-            cy.get(SELECTOR_enNamespaceList).contains(namespacesConfig.aspectDefault.name);
-            cy.get(SELECTOR_enNamespaceList).contains(namespacesConfig.movement.name);
-          });
+        cy.namespacesManagerService();
+        cy.get(SELECTOR_enNamespaceList).should('have.length', 2);
+        cy.get(SELECTOR_enNamespaceList).contains(namespacesConfig.aspectDefault.name);
+        cy.get(SELECTOR_enNamespaceList).contains(namespacesConfig.movement.name);
       });
   });
 });
