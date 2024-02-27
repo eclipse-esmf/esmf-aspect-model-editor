@@ -12,9 +12,8 @@
  */
 
 import {RdfService} from '@ame/rdf/services';
-import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, catchError, forkJoin, map, mergeMap, of, Subscription, switchMap, throwError} from 'rxjs';
-import {MxGraphService} from '@ame/mx-graph';
+import {ChangeDetectorRef, inject, Injectable} from '@angular/core';
+import {BehaviorSubject, catchError, forkJoin, map, mergeMap, of, Subscription, switchMap, tap, throwError} from 'rxjs';
 import {ModelApiService} from '@ame/api';
 import {
   APP_CONFIG,
@@ -139,7 +138,6 @@ export class SidebarStateService {
 
   constructor(
     private rdfService: RdfService,
-    private mxGraphService: MxGraphService,
     private modelApiService: ModelApiService,
     private notificationService: NotificationsService,
     private browserService: BrowserService,

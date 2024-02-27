@@ -17,7 +17,7 @@ import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@am
 import {ConfirmDialogService, EditorService, FileHandlingService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
 import {ModelApiService} from '@ame/api';
-import {Subscription} from 'rxjs';
+import {first, Subscription, switchMap, tap} from 'rxjs';
 import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
@@ -59,12 +59,14 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const sub = this.sidebarService.workspace.refreshSignal$.subscribe(() => {
-      for (const namespace in this.namespaces) {
-        this.searched[namespace] = this.namespaces[namespace];
-        this.folded[namespace] = this.foldedStatus;
-      }
-    });
+    const sub = this.sidebarService.workspace.refreshSignal$
+      .pipe(switchMap(() => this.sidebarService.requestGetNamespaces()))
+      .subscribe(() => {
+        for (const namespace in this.namespaces) {
+          this.searched[namespace] = this.namespaces[namespace];
+          this.folded[namespace] = this.foldedStatus;
+        }
+      });
 
     this.subscription.add(sub);
   }
