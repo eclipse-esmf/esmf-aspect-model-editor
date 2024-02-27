@@ -34,35 +34,35 @@ image:menu-bar/menu-file.png[,50%,50%]
 |===
 | Icon | Name | Action
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/add_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| image:toolbar-icons/add.png[,20%,20%]
 | New...
 | Access a submenu to either create a new, empty Aspect Model, import an existing Aspect Model, duplicate an Aspect Model using the copy and paste feature, or start with a predefined Example.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/note_add_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| image:toolbar-icons/note_add.png[,20%,20%]
 | New Windows
 | Open an additional window to work on another Aspect Model.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/open_in_new_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| image:toolbar-icons/open_in_new.png[,20%,20%]
 | Import Model
 | Import an existing Model.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/folder_zip_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| image:toolbar-icons/folder_zip.png[,20%,20%]
 | Import Package
 | Import an existing Package as ZIP.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/content_copy_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| image:toolbar-icons/conntent.png[,20%,20%]
 | Copy to Clipboard
 | Copy the Aspect Model to the clipboard.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/save_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| image:toolbar-icons/save.png[,20%,20%]
 | Save to Workspace
 | Save the Aspect Model to the Workspace.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/download_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| image:toolbar-icons/download.png[,20%,20%]
 | Export Model
 | Export the Model as a TTL file.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/download_2_FILL0_wght400_GRAD0_opsz24.png[,20%,20%]
+| image:toolbar-icons/download_fill.png[,20%,20%]
 | Export Package
 | Export the Models namespaces as a ZIP file.
 
@@ -77,31 +77,31 @@ image:menu-bar/menu-view.png[,50%,50%]
 |===
 | Icon | Name | Action
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/build_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/build.png[,50%,50%]
 | Toggle Toolbar
 | Toggle the visibility of the Toolbar.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/map_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/map.png[,50%,50%]
 | Toggle Minimap
 | Toggle the visibility of the Minimap.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/filter_list_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/filter_list.png[,50%,50%]
 | Filter Model by...
 | Filter the model by none or Properties.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/zoom_in_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/zoom_in.png[,50%,50%]
 | Zoom in
 | Zoom in the model.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/zoom_out_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/zoom_out.png[,50%,50%]
 | Zoom out
 | Zoom out the model.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/fit_screen_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/fit_screen.png[,50%,50%]
 | Zoom to Fit
 | Zoom to fit the model.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/pageless_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/pageless.png[,50%,50%]
 | Zoom to 100%
 | Zoom to 100% of the model.
 
@@ -116,23 +116,23 @@ image:menu-bar/menu-edit.png[,50%,50%]
 |===
 | Icon | Name | Action
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/jump_to_element_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/jump.png[,50%,50%]
 | Open Selected Element
 | Open the Edit dialog of the selected element.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/delete_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/delete.png[,50%,50%]
 | Remove Selected Element
 | Remove the selected element.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/collapse_content_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/collapse.png[,50%,50%]
 | Collapse/Expand Model
 | Collapse or expand the model.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/schema_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/schema.png[,50%,50%]
 | Format Model
 | Format the model.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/commit_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/commit.png[,50%,50%]
 | Connect Selected Elements
 | Connect two selected elements.
 
@@ -147,7 +147,7 @@ image:menu-bar/menu-validate.png[,50%,50%]
 |===
 | Icon | Name | Action
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/fact_check_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/fact_check.png[,50%,50%]
 | Current Model
 | Validate the current model.
 
@@ -162,23 +162,23 @@ image:menu-bar/menu-generate.png[,50%,50%]
 |===
 | Icon | Name | Action
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/html_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/html.png[,50%,50%]
 | HTML Documentation
 | Generate HTML documentation.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/api_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/api.png[,50%,50%]
 | OpenApi Specification
 | Generate OpenAPI specification.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/data_array_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/data_array.png[,50%,50%]
 | AASX/XML
 | Generate AASX/XML.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/description_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/description.png[,50%,50%]
 | Sample JSON Payload
 | Generate sample JSON payload.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/data_object_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/data_object.png[,50%,50%]
 | JSON Schema
 | Generate json schema.
 
@@ -193,11 +193,11 @@ image:menu-bar/menu-search.png[,50%,50%]
 |===
 | Icon | Name | Action
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/view_comfy_alt_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/view_comfy_alt.png[,50%,50%]
 | Elements
 | Search for elements.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/topic_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/topic.png[,50%,50%]
 | Files
 | Search for files.
 
@@ -211,23 +211,23 @@ image:menu-bar/menu-search.png[,50%,50%]
 |===
 | Icon | Name | Action
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/jump_to_element_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/jump.png[,50%,50%]
 | Open highlighted element
 | Open the Edit dialog of the selected element (alternative: double-click an element inside the model).
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/delete_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/delete.png[,50%,50%]
 | Delete
 | Delete selected element(s).
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/collapse_content_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/collapse.png[,50%,50%]
 | Collapse all/Expand all
 | Expands/Collapses elements.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/schema_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
+| image:toolbar-icons/schema.png[,50%,50%]
 | Format
 | Automatically format the Aspect Model.
 
-| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/commit_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]| Connect
+| image:toolbar-icons/commit.png[,50%,50%]| Connect
 | Connect two selected elements.
 
 | image:toolbar-icons/validate.png[,50%,50%]

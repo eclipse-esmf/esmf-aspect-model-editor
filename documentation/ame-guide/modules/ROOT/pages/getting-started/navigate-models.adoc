@@ -14,7 +14,7 @@ To view particular parts of an Aspect Model, you have several options:
 
 With the map, you can choose how to view the Aspect Model on the graph area canvas.
 
-To toggle the map's visibility, click the *Toggle minimap* icon image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/map_FILL0_wght400_GRAD0_opsz24.png[Map toggle icon] in the xref:getting-started/ui-overview.adoc#menu-view[menu view].
+To toggle the map's visibility, click the *Toggle minimap* icon image:toolbar-icons/map.png[Map toggle icon] in the xref:getting-started/ui-overview.adoc#menu-view[menu view].
 
 To see a particular section of your Aspect Model, click and hold the blue selector on the map and drag it around on the map.
 
@@ -25,12 +25,12 @@ TIP: To zoom in and out, click and hold the lower right corner of the blue selec
 
 With the navigation, you can zoom in and out of the Aspect Model. Also, you can scale the Aspect Model so that the whole model fits on your screen size.
 
-To toggle the navigation's visibility which are in the toolbar, click the *Toggle Toolbar* icon image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/build_FILL0_wght400_GRAD0_opsz24.png[Navigation toggle icon] in the xref:getting-started/ui-overview.adoc#menu-view[menu view].
+To toggle the navigation's visibility which are in the toolbar, click the *Toggle Toolbar* icon image:toolbar-icons/build.png[Navigation toggle icon] in the xref:getting-started/ui-overview.adoc#menu-view[menu view].
 
 The navigation provides the following options:
 
-* Zoom in image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/zoom_in_FILL0_wght400_GRAD0_opsz24.png[Zoom in icons]
-* Zoom out image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/zoom_out_FILL0_wght400_GRAD0_opsz24.png[Zoom out icons]
+* Zoom in image:toolbar-icons/zoom_in.png[Zoom in icons]
+* Zoom out image:toolbar-icons/zoom_out.png[Zoom out icons]
 
 For more functionality look also at the xref:getting-started/ui-overview.adoc#menu-view[menu view].
 
