@@ -14,7 +14,7 @@ Currently, the Aspect Model Editor is based on https://eclipse-esmf.github.io/sa
 
 To start modeling, proceed as follows:
 
-. Click on the menu on *FILE* -> *New...* xref:getting-started/ui-overview.adoc#menu-file[FILE MENU].
+. Click on the menu on *FILE* -> *New...* xref:getting-started/ui-overview.adoc#menu-file[menu].
 . Choose one of the following options:
 * Click *Empty model* to start from scratch with an empty editor canvas.
 * Click *Load from File* to open a file containing TTL code.
@@ -32,7 +32,7 @@ image::copy-paste-file.png[width=80%]
 
 To save a model, proceed as follows:
 
-. Click in the menu *FILE* xref:getting-started/ui-overview.adoc#menu-file[FILE MENU].
+. Click in the menu *File* xref:getting-started/ui-overview.adoc#menu-file[menu].
 . Choose one of the following options:
 +
 * Click *Export Model* to export the model.
