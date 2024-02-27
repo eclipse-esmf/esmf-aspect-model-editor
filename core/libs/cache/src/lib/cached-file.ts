@@ -86,6 +86,10 @@ export class CachedFile {
     return [...this.cachedElements.values()];
   }
 
+  hasCachedElements(): boolean {
+    return this.cachedElements.size > 0;
+  }
+
   updateCachedElementKey(oldKey: string, newKey: string) {
     const resolvedEntry = this.cachedElements.get(oldKey);
     if (resolvedEntry) {
@@ -189,5 +193,9 @@ export class CachedFile {
 
   clearAnonymousElements() {
     this.anonymousElements = [];
+  }
+
+  clearCache() {
+    this.cachedElements.clear();
   }
 }

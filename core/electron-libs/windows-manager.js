@@ -346,6 +346,7 @@ class WindowsManager {
       if (!id) {
         return;
       }
+
       event.sender.send(RESPONSE_WINDOW_DATA, {id, options});
     };
 

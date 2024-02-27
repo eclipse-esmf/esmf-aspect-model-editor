@@ -16,4 +16,5 @@ export interface LoadModelPayload {
   namespaceFileName?: string;
   isDefault?: boolean;
   fromWorkspace?: boolean;
+  editElementUrn?: string;
 }
