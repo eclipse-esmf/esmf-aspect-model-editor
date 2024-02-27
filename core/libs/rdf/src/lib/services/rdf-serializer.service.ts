@@ -13,9 +13,12 @@
 import {RdfModel} from '@ame/rdf/utils';
 import {DataFactory, Quad, Util, Writer} from 'n3';
 import {Samm} from '@ame/vocabulary';
+import {LanguageTranslationService} from '@ame/translation';
 
 export class RdfSerializerService {
   private _namedNode = DataFactory.namedNode;
+
+  constructor(private translation: LanguageTranslationService) {}
 
   serializeModel(rdfModel: RdfModel): string {
     const writer = this.initializeWriter(rdfModel);
@@ -73,8 +76,8 @@ export class RdfSerializerService {
   private handleNonBlankNodes(quad: Quad, rdfModel: RdfModel, writer: Writer): void {
     if (quad.object.value.startsWith(Samm.XSD_URI)) {
       writer.addQuad(this.createQuadWithReplacedNamespace(quad, `${Samm.XSD_URI}#`, 'xsd:'));
-    } else if (quad.object.value === `${Samm.RDF_URI}#langString`) {
-      writer.addQuad(this.createQuadWithReplacedNamespace(quad, `${Samm.RDF_URI}#`, 'rdf:'));
+    } else if (quad.object.id.includes(`${Samm.RDF_URI}#langString`) && rdfModel.SAMM().isExampleValueProperty(quad.predicate.value)) {
+      writer.addQuad(this.createLangStringQuad(quad));
     } else if (quad.object.value.startsWith(rdfModel.SAMM().getNamespace())) {
       writer.addQuad(this.createQuadWithReplacedNamespace(quad, rdfModel.SAMM().getNamespace(), `${rdfModel.SAMM().getAlias()}:`));
     } else if (quad.object.value === rdfModel.SAMM().RdfNil().value) {
@@ -82,6 +85,11 @@ export class RdfSerializerService {
     } else {
       writer.addQuad(quad);
     }
+  }
+
+  private createLangStringQuad(quad: Quad): Quad {
+    const currentLang = this.translation.translateService.currentLang;
+    return DataFactory.quad(quad.subject, quad.predicate, DataFactory.literal(quad.object.value, currentLang));
   }
 
   private createQuadWithReplacedNamespace(quad: Quad, originalNamespace: string, newNamespace: string): Quad {

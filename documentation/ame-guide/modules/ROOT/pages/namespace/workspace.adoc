@@ -24,9 +24,11 @@ The currently loaded Aspect Model is highlighted gray.
 
 The ... icon next to a model opens the options to
 
-* Delete
-* Load Aspect Model
-* Copy to clipboard
+* *Open in new windows* - opens the Aspect Model in a new window
+* *Open in current* - opens the Aspect Model in the current window
+* *Find elements* - opens the Find elements section
+* *Copy file path* - copies the file path to the clipboard
+* *Delete* - deletes the Aspect Model from the workspace
 
 image::workspace-action.png[]
 
@@ -34,9 +36,9 @@ If you just select another Aspect Model, it will not be loaded but its elements 
 
 == Create a namespace
 
-TIP: The namespace structure is created automatically if you start with the *+* icon.
+TIP: The namespace structure is created automatically if you start with the *File* -> *New...* menu item.
 
-* If you select "Create/upload Aspect model", model and later click "Save to Workspace" the folder
+* If you select one of the *File* -> *New...* menu item and later click "Save to Workspace" the folder
 *org.eclipse.digitaltwin* will be created on your file system and the Workspace will show it respectively.
 * If you import a zip with models into your workspace, and it contains valid models with namespaces which
 did not exist in your workplace yet, these will be created additionally.
@@ -59,5 +61,3 @@ as it will not be able to load this Aspect Model.
 In such a case you will need some expert who can fix it with a text editor.
 
 image::workspace-warning.png[]
-
-=== Aspect Model is marked with a red question mark

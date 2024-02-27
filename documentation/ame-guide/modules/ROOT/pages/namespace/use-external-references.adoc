@@ -10,7 +10,7 @@ For general information on references, see xref:namespace/namespaces-references.
 
 To add references, proceed as follows:
 
-1. xref:namespace/import-namespaces.adoc#import-namespaces[Import the namespace] you want to use.
+1. xref:namespace/import-package.adoc#import-package[Import the namespace] you want to use.
 2. Open the Workspace sidebar.
 3. Click the TTL file from which you want to use elements from.
 4. Drag the specific element and drop it to the graph area canvas.
