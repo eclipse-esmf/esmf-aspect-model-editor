@@ -52,12 +52,12 @@ export const simpleDataTypes = {
   },
   double: {
     isDefinedBy: 'http://www.w3.org/2001/XMLSchema#double',
-    description: '64-bit floating point numbers incl. ±Inf, ±0, NaN',
+    description: '64-bit floating point numbers incl. ±INF, ±0, NaN',
   },
   duration: {isDefinedBy: 'http://www.w3.org/2001/XMLSchema#duration', description: 'Duration of time'},
   float: {
     isDefinedBy: 'http://www.w3.org/2001/XMLSchema#float',
-    description: '32-bit floating point numbers incl. ±Inf, ±0, NaN',
+    description: '32-bit floating point numbers incl. ±INF, ±0, NaN',
   },
   gDay: {isDefinedBy: 'http://www.w3.org/2001/XMLSchema#gDay', description: 'Gregorian calendar day of the month'},
   gMonth: {isDefinedBy: 'http://www.w3.org/2001/XMLSchema#gMonth', description: 'Gregorian calendar month'},
