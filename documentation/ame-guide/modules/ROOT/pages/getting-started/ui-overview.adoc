@@ -211,24 +211,23 @@ image:menu-bar/menu-search.png[,50%,50%]
 |===
 | Icon | Name | Action
 
-| image:toolbar-icons/edit.png[,50%,50%]
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/jump_to_element_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
 | Open highlighted element
 | Open the Edit dialog of the selected element (alternative: double-click an element inside the model).
 
-| image:toolbar-icons/delete.png[,50%,50%]
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/delete_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
 | Delete
 | Delete selected element(s).
 
-| image:toolbar-icons/expand.png[,50%,50%]
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/collapse_content_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
 | Collapse all/Expand all
 | Expands/Collapses elements.
 
-| image:toolbar-icons/format.png[,50%,50%]
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/schema_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]
 | Format
 | Automatically format the Aspect Model.
 
-| image:toolbar-icons/connect.png[,50%,50%]
-| Connect
+| image:../../../../../core/apps/ame/src/assets/img/png/app-menu/enabled/commit_FILL0_wght400_GRAD0_opsz24.png[,50%,50%]| Connect
 | Connect two selected elements.
 
 | image:toolbar-icons/validate.png[,50%,50%]
