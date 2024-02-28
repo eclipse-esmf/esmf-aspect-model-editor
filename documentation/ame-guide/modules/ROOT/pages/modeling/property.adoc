@@ -20,7 +20,7 @@ To add and configure Properties, open the *Properties Configuration* by clicking
 |Overrides the Property's name in the runtime payload.
 |===
 
-image::edit-properties-informations-dialog.png[width=100%]
+image::edit-properties-informations-dialog.png[width=65%]
 
 [[edit-properties]]
 == Property attributes

@@ -1,11 +1,11 @@
 :page-partial:
 
-[[use-external-references]]
+[[use-references]]
 = Use references
 
 For general information on references, see xref:namespace/namespaces-references.adoc#namespaces-references[Namespaces and references].
 
-[[add-external-references]]
+[[add-references]]
 == Add references
 
 To add references, proceed as follows:
@@ -15,18 +15,18 @@ To add references, proceed as follows:
 3. Click the TTL file from which you want to use elements from.
 4. Drag the specific element and drop it to the graph area canvas.
 +
-image::external-reference-drag-and-drop.png[width=100%]
+image::external-reference-drag-and-drop.png[width=65%]
 +
 [NOTE]
 ====
-External references can only be dragged once into the current Aspect Model. These elements are marked with a special icon signifying that they are from a different location. You can only edit an reference by editing the file it is defined in. By double clicking an external reference the file where that element exists will be opened in a different window
+References can only be dragged once into the current Aspect Model. These elements are marked with a special icon signifying that they are from a different location. You can only edit an reference by editing the file it is defined in. By double clicking an reference the file where that element exists will be opened in a different window
 
-image::external-reference.png[width=100%, align="center"]
+image::external-reference.png[width=80%]
 ====
 +
 [NOTE]
 ====
-When you drag and drop an external reference, it will not include all the lower connections (dependencies) of the element.
+When you drag and drop an reference, it will not include all the lower connections (dependencies) of the element.
 
 Referenced elements displayed in Aspect Model Editor should never have outgoing references.
 Reason: models can have many referenced elements from many files. these referenced elements can have multiple references, and to check every pair of referenced elements for whether they refer to each other or not is not feasible.

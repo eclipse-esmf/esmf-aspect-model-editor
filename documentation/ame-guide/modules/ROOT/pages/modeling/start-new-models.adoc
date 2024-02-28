@@ -3,9 +3,9 @@
 
 To start modeling, proceed as follows:
 
-image:create-new-model.png[width=80%]
+image:create-new-model.png[width=30%]
 
-. Click on the menu on *FILE* -> *New...* xref:getting-started/ui-overview.adoc#menu-file[FILE MENU].
+. Click on the menu on *FILE* -> *New...* xref:getting-started/ui-overview.adoc#menu-file[File menu].
 . Choose one of the following options:
 * Click *Empty model* to start from scratch with an empty editor canvas.
 * Click *Load from File* to open a file containing TTL code.
@@ -14,7 +14,7 @@ image:create-new-model.png[width=80%]
 
 == Copy and Paste
 
-image::copy-paste-file.png[width=80%]
+image::copy-paste-file.png[width=50%]
 . As an expert you are able to modify the shown TTL code manually within the text area.
 . Click *Load Model*.
 
@@ -22,11 +22,11 @@ image::copy-paste-file.png[width=80%]
 
 The model will be saved in your local workspace directory with the name of the Aspect element.
 
-image:save-to-workspace.png[width=80%]
+image:save-to-workspace.png[width=65%]
 
 In the Workspace you can find all models stored so far.
 
-image:see-model-in-workspace.png[width=80%]
+image:see-model-in-workspace.png[width=30%]
 
 The models are separated by namespace. +
 To learn more about namespaces see xref:namespace/namespaces-references.adoc[].

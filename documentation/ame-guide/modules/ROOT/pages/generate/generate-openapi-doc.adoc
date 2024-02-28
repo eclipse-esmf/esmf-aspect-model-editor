@@ -7,7 +7,7 @@ A menu offers one option to generate the OpenAPI specification. +:
 
 ** *OpenAPI specification* -- continue with this one
 +
-image::generate-api-spec.png[Generate document, width=100%]
+image::generate-api-spec.png[Generate document, width=100%, align="left"]
 * In case your model supports multiple languages, select the specific language for the documentation.
 * Select *JSON* or *YAML* as the desired file format.
 * Set the *Base URL* were the Aspect API will be served from.

@@ -16,7 +16,7 @@ To edit the attributes for an element, proceed as follows:
 
 . Double-click an element to open it in the Edit dialog.
 +
-Alternatively, select the element and click the Open element icon image:toolbar-icons/edit.png[Open element icon] in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+Alternatively, select the element and click the Open element icon image:toolbar-icons/edit.png[Open element icon, 3%] in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 
 . In the Edit dialog, change the attributes of the element.
 +
@@ -28,7 +28,7 @@ TIP: Jump from one attribute field to the next by pressing the *Tab* key on your
 +
 TIP: Save and close the Edit dialog by pressing *Control + Enter* on your keyboard.
 +
-image::edit-elements-02.png[Save changes in Edit dialog,width=70%]
+image::edit-elements-02.png[Save changes in Edit dialog,width=50%]
 
 → As a result, the attributes for the element of your Aspect Model have been changed and saved.
 

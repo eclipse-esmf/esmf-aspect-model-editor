@@ -18,7 +18,7 @@ To add an abstract entity, proceed as follows:
 . Open the Workspace sidebar
 . Drag the Abstract Entity element and drop it to the graph area canvas
 
-image::drag-and-drop-abstract-entity.png[Drag and drop Abstract Entity]
+image::drag-and-drop-abstract-entity.png[Drag and drop Abstract Entity, 60%]
 
 == Adjust an Entity in the extends field
 
@@ -27,23 +27,23 @@ To select or create an abstract entity in the Edit field of an Entity, proceed a
 . Double-click the entity or abstract entity that should derive from another entity.
 . Abstract entity can be created or selected in the "extends" field.
 
-image::extends-field-abstract-entity.png[Extends fiels Abstract Entity]
+image::extends-field-abstract-entity.png[Extends fiels Abstract Entity, 50%]
 
 [[abstract-entity-example]]
 == Abstract Entities Example
 
 For a new model that only has an Aspect so far:
 
-. Create one Property by clicking twice on the Aspect's Add icon image:add.png[Add icon].
-. Create one Characteristic by clicking the Add icon image:add.png[Add icon].
-. Create one Entity by clicking the bottom Add icon image:add.png[Add icon].
+. Create one Property by clicking twice on the Aspect's Add icon image:add.png[Add icon, 2%].
+. Create one Characteristic by clicking the Add icon image:add.png[Add icon, 2%].
+. Create one Entity by clicking the bottom Add icon image:add.png[Add icon, 2%].
 . Drag and Drop an Abstract Entity from the sidebar.
 . Connect the Abstract Entity with the Entity:
 .. Click the Entity,
 .. Then CTRL+click the Abstract Entity,
-.. Then click the Connect icon image:toolbar-icons/connect.png[Connect icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
-. Click the Format icon image:toolbar-icons/format.png[Format icon].
+.. Then click the Connect icon image:toolbar-icons/connect.png[Connect icon, 3%] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+. Click the Format icon image:toolbar-icons/format.png[Format icon, 3%].
 
 → As a result you have connected the Abstract Entity with the Entity.
 
-image::connect-abstract-entiy-with-entity.png[Connect Abstract Entity with Entity]
+image::connect-abstract-entiy-with-entity.png[Connect Abstract Entity with Entity, 50%]

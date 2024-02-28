@@ -21,7 +21,7 @@ If the invalid element is not highlighted with a red border, click the Validate 
 
 After selecting *Generate* -> *Sample JSON payload*, an example payload will be generated for the current model, and it will be displayed in the following dialog:
 
-image::json-payload.png[Generate sample JSON payload, width=100%]
+image::json-payload.png[Generate sample JSON payload, width=70%]
 
 * A preview is displayed.
 * You can now:
@@ -34,7 +34,7 @@ image::json-payload.png[Generate sample JSON payload, width=100%]
 
 After selecting *Generate* -> *JSON Schema*, a JSON schema will be generated for current model, and it will be displayed in the following dialog:
 
-image::json-schema.png[Generate JSON schema, width=100%]
+image::json-schema.png[Generate JSON schema, width=70%]
 
 * A preview is displayed.
 * You can now:

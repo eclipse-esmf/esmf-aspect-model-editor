@@ -21,9 +21,11 @@ To start modeling, proceed as follows:
 * Click *Models/SimpleAspect or Movement Example* to start from an Simple Aspect or Movement Example.
 * Copy and paste TTL code of an existing model into the text area.
 
+{nbsp}
+[[copy-and-paste]]
 === Copy and Paste
 
-image::copy-paste-file.png[width=80%]
+image::copy-paste-file.png[width=50%]
 . As an expert you are able to modify the shown TTL code manually within the text area.
 . Click *Load Model*.
 

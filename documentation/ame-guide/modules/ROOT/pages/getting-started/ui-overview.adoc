@@ -3,234 +3,217 @@
 
 This section gives a brief overview of the UI and its features.
 
-image::ame-ui-overview-numbers.png[Numbered UI overview, width=100%]
-
-The numbers in the image above indicate the following UI elements of the Aspect Model Editor:
-
-1. xref:getting-started/ui-overview.adoc#menu[Menu]
-- 1.1 xref:getting-started/ui-overview.adoc#menu-file[File]
-- 1.2 xref:getting-started/ui-overview.adoc#menu-view[View]
-- 1.3 xref:getting-started/ui-overview.adoc#menu-edit[Edit]
-- 1.4 xref:getting-started/ui-overview.adoc#menu-valiadate[Validate]
-- 1.5 xref:getting-started/ui-overview.adoc#menu-generate[Generate]
-- 1.6 xref:getting-started/ui-overview.adoc#menu-search[Search]
-2. xref:getting-started/ui-overview.adoc#toolbar[Toolbar]
-3. xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar]
-4. xref:getting-started/ui-overview.adoc#settings[Settings]
-5. xref:getting-started/ui-overview.adoc#notifications[Notifications]
-6. xref:getting-started/ui-overview.adoc#help[Help]
-7. xref:getting-started/ui-overview.adoc#edit-dialog[Edit dialog]
-8. xref:getting-started/ui-overview.adoc#map[Map]
+image::ame-ui-overview-numbers.png[Numbered UI overview, width=80%]
 
 [[menu]]
 == Menu
 
 [[menu-file]]
-=== File
+=== File Menu
+{nbsp}
+image:menu-bar/menu-file.png[, width=30%, align="center"]
 
-image:menu-bar/menu-file.png[,50%,50%]
-
-[cols="20%,20%,60%"]
+[cols="15%,25%,60%"]
 |===
 | Icon | Name | Action
 
-| image:toolbar-icons/add.png[,20%,20%]
-| New...
-| Access a submenu to either create a new, empty Aspect Model, import an existing Aspect Model, duplicate an Aspect Model using the copy and paste feature, or start with a predefined Example.
+| image:toolbar-icons/add.png[,15%,20%]
+| *New...*
+| Create, import, duplicate Aspect Models, or use a template.
 
-| image:toolbar-icons/note_add.png[,20%,20%]
-| New Windows
-| Open an additional window to work on another Aspect Model.
+| image:toolbar-icons/note_add.png[,15%,20%]
+| *New Window*
+| Work on a different Aspect Model in a new window.
 
-| image:toolbar-icons/open_in_new.png[,20%,20%]
-| Import Model
-| Import an existing Model.
+| image:toolbar-icons/open_in_new.png[,15%,20%]
+| *Import Model*
+| Bring an existing Model into the current workspace.
 
-| image:toolbar-icons/folder_zip.png[,20%,20%]
-| Import Package
-| Import an existing Package as ZIP.
+| image:toolbar-icons/folder_zip.png[,15%,20%]
+| *Import Package*
+| Add a packaged Model (ZIP) to the workspace.
 
-| image:toolbar-icons/conntent.png[,20%,20%]
-| Copy to Clipboard
-| Copy the Aspect Model to the clipboard.
+| image:toolbar-icons/conntent.png[,15%,20%]
+| *Copy to Clipboard*
+| Copy the current Model's information for use elsewhere.
 
-| image:toolbar-icons/save.png[,20%,20%]
-| Save to Workspace
-| Save the Aspect Model to the Workspace.
+| image:toolbar-icons/save.png[,15%,20%]
+| *Save to Workspace*
+| Store the current Model in the workspace for future use.
 
 | image:toolbar-icons/download.png[,20%,20%]
-| Export Model
-| Export the Model as a TTL file.
+| *Export Model*
+| Download the current Model as a TTL file.
 
 | image:toolbar-icons/download_fill.png[,20%,20%]
-| Export Package
-| Export the Models namespaces as a ZIP file.
-
+| *Export Package*
+| Download Model namespaces in a ZIP format.
 |===
 
+{nbsp}
 [[menu-view]]
-=== View
+=== View Menu
+{nbsp}
+image:menu-bar/menu-view.png[, width=30%, align="center"]
 
-image:menu-bar/menu-view.png[,50%,50%]
-
-[cols="10%,30%,60%"]
+[cols="15%,25%,60%"]
 |===
 | Icon | Name | Action
 
-| image:toolbar-icons/build.png[,50%,50%]
-| Toggle Toolbar
-| Toggle the visibility of the Toolbar.
+| image:toolbar-icons/build.png[,20%,20%]
+| *Toggle Toolbar*
+| Switch the Toolbar on or off to better tailor your workspace environment, allowing you to focus on the aspects of the model that matter most to you.
 
-| image:toolbar-icons/map.png[,50%,50%]
-| Toggle Minimap
-| Toggle the visibility of the Minimap.
+| image:toolbar-icons/map.png[,20%,50%]
+| *Toggle Minimap*
+| Show or hide the Minimap to enhance or simplify navigation within your model, enabling you to quickly move to different sections of your work.
 
-| image:toolbar-icons/filter_list.png[,50%,50%]
-| Filter Model by...
-| Filter the model by none or Properties.
+| image:toolbar-icons/filter_list.png[,20%,20%]
+| *Filter Model by...*
+| Apply filters to the model based on none, Properties, or other criteria, simplifying your view to concentrate on specific elements or relationships.
 
-| image:toolbar-icons/zoom_in.png[,50%,50%]
-| Zoom in
-| Zoom in the model.
+| image:toolbar-icons/zoom_in.png[,20%,20%]
+| *Zoom in*
+| Increase the level of detail you see in the model, allowing for closer examination of intricate parts or to fine-tune specific areas.
 
-| image:toolbar-icons/zoom_out.png[,50%,50%]
-| Zoom out
-| Zoom out the model.
+| image:toolbar-icons/zoom_out.png[,20%,20%]
+| *Zoom out*
+| Broaden your view of the model to gain a better understanding of the overall structure and how individual components fit together.
 
-| image:toolbar-icons/fit_screen.png[,50%,50%]
-| Zoom to Fit
-| Zoom to fit the model.
+| image:toolbar-icons/fit_screen.png[,20%,20%]
+| *Zoom to Fit*
+| Adjust your perspective to encompass the entire model within your screen, ensuring you have a comprehensive overview of all elements at once.
 
-| image:toolbar-icons/pageless.png[,50%,50%]
-| Zoom to 100%
-| Zoom to 100% of the model.
-
+| image:toolbar-icons/pageless.png[,20%,20%]
+| *Zoom to 100%*
+| Reset your viewpoint to the model's actual size, offering a standard scale for assessing dimensions and spatial relationships accurately.
+|
 |===
 
+{nbsp}
 [[menu-edit]]
-=== Edit
+=== Edit Menu
+{nbsp}
+image:menu-bar/menu-edit.png[, width=30%, align="center"]
 
-image:menu-bar/menu-edit.png[,50%,50%]
-
-[cols="10%,30%,60%"]
+[cols="15%,25%,60%"]
 |===
 | Icon | Name | Action
 
-| image:toolbar-icons/jump.png[,50%,50%]
-| Open Selected Element
-| Open the Edit dialog of the selected element.
+| image:toolbar-icons/jump.png[,20%,20%]
+| *Open Selected Element*
+| Launch the Edit dialog for the selected element, providing a direct path to modify its attributes or review its details.
 
-| image:toolbar-icons/delete.png[,50%,50%]
-| Remove Selected Element
-| Remove the selected element.
+| image:toolbar-icons/delete.png[,20%,20%]
+| *Remove Selected Element*
+| Delete the currently selected element from your model, streamlining your workspace by removing unnecessary or redundant components.
 
-| image:toolbar-icons/collapse.png[,50%,50%]
-| Collapse/Expand Model
-| Collapse or expand the model.
+| image:toolbar-icons/collapse.png[,20%,20%]
+| *Collapse/Expand Model*
+| Toggle the view of your model between collapsed and expanded states, aiding in focusing on specific sections or understanding the model's overall structure.
 
-| image:toolbar-icons/schema.png[,50%,50%]
-| Format Model
-| Format the model.
+| image:toolbar-icons/schema.png[,20%,20%]
+| *Format Model*
+| Automatically adjust the layout and appearance of your model, enhancing readability and maintaining consistent styling throughout.
 
-| image:toolbar-icons/commit.png[,50%,50%]
-| Connect Selected Elements
-| Connect two selected elements.
-
+| image:toolbar-icons/commit.png[,20%,20%]
+| *Connect Selected Elements*
+| Create a linkage between two selected elements, establishing a relationship or flow that reflects their interaction within the model.
 |===
 
+{nbsp}
 [[menu-valiadate]]
-=== Validate
+=== Validate Menu
+{nbsp}
+image:menu-bar/menu-validate.png[, width=30%, align="center"]
 
-image:menu-bar/menu-validate.png[,50%,50%]
-
-[cols="10%,30%,60%"]
+[cols="15%,25%,60%"]
 |===
 | Icon | Name | Action
 
-| image:toolbar-icons/fact_check.png[,50%,50%]
+| image:toolbar-icons/fact_check.png[,20%,20%]
 | Current Model
 | Validate the current model.
-
 |===
 
+{nbsp}
 [[menu-generate]]
-=== Generate
+=== Generate Menu
+{nbsp}
+image:menu-bar/menu-generate.png[,20%,20%]
 
-image:menu-bar/menu-generate.png[,50%,50%]
-
-[cols="10%,30%,60%"]
+[cols="15%,25%,60%"]
 |===
 | Icon | Name | Action
 
-| image:toolbar-icons/html.png[,50%,50%]
+| image:toolbar-icons/html.png[,20%,20%]
 | HTML Documentation
 | Generate HTML documentation.
 
-| image:toolbar-icons/api.png[,50%,50%]
+| image:toolbar-icons/api.png[,20%,20%]
 | OpenApi Specification
 | Generate OpenAPI specification.
 
-| image:toolbar-icons/data_array.png[,50%,50%]
+| image:toolbar-icons/data_array.png[,20%,20%]
 | AASX/XML
 | Generate AASX/XML.
 
-| image:toolbar-icons/description.png[,50%,50%]
+| image:toolbar-icons/description.png[,20%,20%]
 | Sample JSON Payload
 | Generate sample JSON payload.
 
-| image:toolbar-icons/data_object.png[,50%,50%]
+| image:toolbar-icons/data_object.png[,20%,20%]
 | JSON Schema
 | Generate json schema.
-
 |===
 
+{nbsp}
 [[menu-search]]
-=== Search
+=== Search Menu
+{nbsp}
+image:menu-bar/menu-search.png[, width=30%, align="center"]
 
-image:menu-bar/menu-search.png[,50%,50%]
-
-[cols="10%,30%,60%"]
+[cols="15%,25%,60%"]
 |===
 | Icon | Name | Action
 
-| image:toolbar-icons/view_comfy_alt.png[,50%,50%]
+| image:toolbar-icons/view_comfy_alt.png[,20%,20%]
 | Elements
 | Search for elements.
 
-| image:toolbar-icons/topic.png[,50%,50%]
+| image:toolbar-icons/topic.png[,20%,20%]
 | Files
 | Search for files.
-
 |===
 
 
 [[toolbar]]
 == Toolbar
 
-[cols="10%,30%,60%"]
+[cols="15%,25%,60%"]
 |===
 | Icon | Name | Action
 
-| image:toolbar-icons/jump.png[,50%,50%]
+| image:toolbar-icons/jump.png[, width=30%, align="center"]
 | Open highlighted element
 | Open the Edit dialog of the selected element (alternative: double-click an element inside the model).
 
-| image:toolbar-icons/delete.png[,50%,50%]
+| image:toolbar-icons/delete.png[,20%,20%]
 | Delete
 | Delete selected element(s).
 
-| image:toolbar-icons/collapse.png[,50%,50%]
+| image:toolbar-icons/collapse.png[,20%,20%]
 | Collapse all/Expand all
 | Expands/Collapses elements.
 
-| image:toolbar-icons/schema.png[,50%,50%]
+| image:toolbar-icons/schema.png[,20%,20%]
 | Format
 | Automatically format the Aspect Model.
 
-| image:toolbar-icons/commit.png[,50%,50%]| Connect
+| image:toolbar-icons/commit.png[,20%,20%]| Connect
 | Connect two selected elements.
 
-| image:toolbar-icons/validate.png[,50%,50%]
+| image:toolbar-icons/validate.png[,20%,20%]
 | Validate
 | Validate the Aspect Model.
 
@@ -249,52 +232,54 @@ To add an element to your model drag and drop it on the graph area canvas, edit 
 
 For more information, see xref:getting-started/edit-models.adoc[Edit models].
 
+{nbsp}
+[[bottom-workspace-sidebar]]
 === Bottom workspace sidebar
 
-[cols="10%,30%,60%"]
+[cols="15%,25%,60%"]
 |===
-
 | Icon | Name | Action
 
-| image:toolbar-icons/settings.png[,50%,50%]
+| image:toolbar-icons/settings.png[,20%,20%]
 | Settings [[settings]]
 | Open settings.
 Allows for defining the general configuration of the Aspect Model Editor, language settings, and namespace settings.
 
-To access the Settings dialog, click the Settings icon image:toolbar-icons/settings.png[Settings icon].
+To access the Settings dialog, click the Settings icon image:toolbar-icons/settings.png[Settings icon, width="5%"].
 
 For more information, see xref:getting-started/settings.adoc[Settings].
 
-| image:toolbar-icons/notifications.png[,50%,50%]
+| image:toolbar-icons/notifications.png[,20%,20%]
 | Notifications [[notifications]]
 | Open notifications.
 Shows the validation results for your Aspect Model. Further, you can find there info messages (e.g., Aspect Model was loaded) and warning messages (e.g., if elements cannot be connected to each other).
 
-To access the Notifications dialog, click the Notifications icon image:toolbar-icons/notifications.png[Notifications icon].
+To access the Notifications dialog, click the Notifications icon image:toolbar-icons/notifications.png[Notifications icon, width="5%"].
 
 For more information, see xref:getting-started/validation-and-notifications.adoc[Validation and notifications].
 
-| image:toolbar-icons/info.png[,50%,50%]
+| image:toolbar-icons/info.png[,20%,20%]
 | Help
 | Open documentation.
-
 |===
 
+{nbsp}
 [[help]]
 == Help
 
-The help icon image:toolbar-icons/info.png[] opens a page which lists details about the application and provides
+The help icon image:toolbar-icons/info.png[Info, width="5%"] opens a page which lists details about the application and provides
 a link to the documentation.
 
 Example:
-image:help-docs.png[]
+image:help-docs.png[,50%]
 
+{nbsp}
 [[edit-dialog]]
 == Edit dialog
 
 Edit the attributes of a selected element of your Aspect Model with the Edit dialog.
 
-To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Open element icon image:toolbar-icons/edit.png[Edit icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Open element icon image:toolbar-icons/edit.png[Edit icon, width="5%"] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 
 For more information, see xref:modeling/edit-elements.adoc[Edit elements].
 
@@ -303,6 +288,8 @@ For more information, see xref:modeling/edit-elements.adoc[Edit elements].
 
 With the map, you can easily navigate your Aspect Model in the graph area canvas.
 
-To toggle its visibility, click the Show/Hide map icon image:mini-map.png[Map toggle icon] in the toolbar.
+To toggle its visibility, click the Show/Hide map icon in the toolbar.
+
+image:mini-map.png[Map toggle icon,50%]
 
 For more information, see xref:getting-started/navigate-models.adoc[Navigate models].

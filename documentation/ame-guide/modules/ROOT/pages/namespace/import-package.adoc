@@ -11,11 +11,11 @@ To import a package with namespaces, proceed as follows:
 +
 → After confirmation, the files inside the ZIP file will be validated.
 +
-image::import-validating.png[width=80%]
+image::import-validating.png[width=65%]
 . Click on files in the summary dialog to view the status of it. +
 TIP: In case the zip contains multiple namespaces, the dialog will show them all respectively.
 +
-image::validation-result.png[width=80%]
+image::validation-result.png[width=65%]
 . Click *Copy to clipboard* to copy the summary in a JSON-format file for further improvements.
 . Click on one of the options to choose what happens with already existing namespaces.
 +
@@ -23,12 +23,7 @@ image::validation-result.png[width=80%]
 * Click *Replace* to replace the namespace in the Workspace. +
 NOTE: Be aware that this option will literally overwrite your namespace with this content.
 +
-image::replace-import.png[width=80%]
+image::replace-import.png[width=65%]
 . Click *Import* to move your files into the Workspace.
 
 Now your namespaces are added to the recent model.
-
-
-
-
-

@@ -18,14 +18,14 @@ The Aspect Model Editor guides you to follow all these SAMM naming conventions f
 [[work-with-workspace-sidebar]]
 == Work with the Workspace sidebar
 
-image::ame-ui-overview-workspace-numbers.png[width=100%]
+image::ame-ui-overview-workspace-numbers.png[width=50%]
 
 1. The Workspace sidebar offers all types of elements to drag and drop into your Aspect Model.
 From here you can add new Properties, Characteristics, Entities,
 Units, Constraints, Traits, Operations, and Events
 by dragging an element from the sidebar to the diagram area.
 
-2. To open a list of all the namespaces and files that are currently available, click the Workspace icon image:elements/workspace.png[Workspace icon, width=32px].
+2. To open a list of all the namespaces and files that are currently available, click the Workspace icon image:elements/workspace.png[Workspace icon, width="3%"].
 +
 For more information, see xref:namespace/namespaces-references.adoc#namespaces-references[Namespaces and references].
 
@@ -38,6 +38,7 @@ There are three different ways to add an element:
 * Use drag-and-drop from the Workspace sidebar
 * Use drag-and-drop from the Panel
 
+{nbsp}
 [[adding-simple-way]]
 === Use the Add icon
 
@@ -48,18 +49,19 @@ To add and connect the next logical element, click the Add icon at the bottom ed
 * After a Characteristic a default Entity will be added.
 * After an Entity a default Property will be added.
 +
-image::adding-elements-all.png[width=80%]
+image::adding-elements-all.png[width=50%]
 
 NOTE: For Characteristics, you will also find an Add icon on the top to insert a Constraint between the Property and the Characteristic.
 This also creates a Trait that is connected to the property and constraint.
 
-image::adding-elements.png[width=100%]
+image::adding-elements.png[width=50%]
 
+{nbsp}
 [[adding-dedicated-way]]
 === Use drag-and-drop from the Workspace sidebar
 
 Drag and drop one of the available elements from the xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar].
-You have the option to create new elements or to use already xref:namespace/use-external-references.adoc#add-external-references[existing elements] from other namespaces.
+You have the option to create new elements or to use already xref:namespace/use-references.adoc#add-references[existing elements] from other namespaces.
 
 NOTE: In order to prevent formatting issues, it is a best practice to always connect a new element with another element directly after adding it.
 See also xref:support/known-issues.adoc[known issues].
@@ -71,7 +73,7 @@ See also xref:support/known-issues.adoc[known issues].
 Use the search dialog in the xref:getting-started/ui-overview.adoc#menu-search[search] to find elements.
 By selecting an element it will be highlighted and centered in the diagram area.
 
-image::element-search.png[width=100%]
+image::element-search.png[width=50%]
 
 Use the following advanced search possibilities for more specific search results:
 [cols="30%,70%"]
@@ -105,7 +107,7 @@ To delete the *selected* element you have three options:
 == Format the graph
 
 To format the graph use the respective icon from the toolbar
-image:toolbar-icons/format.png[,15%,15%].
+image:toolbar-icons/format.png[,3%].
 
 ++++
 <style>

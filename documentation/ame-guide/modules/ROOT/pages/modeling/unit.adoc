@@ -7,8 +7,8 @@ The Semantic Aspect Meta Model (SAMM) includes a comprehensive catalog of physic
 
 To cater to specific requirements, the Aspect Model Editor empowers users to create their own custom units. With this, users can define and utilize unique units within the system, expanding the capabilities of representation and analysis.
 
-image::edit-custom-unit.png[width=100%]
+image::edit-custom-unit.png[width=65%]
 
-image::custom-unit-shape.png[width=100%]
+image::custom-unit-shape.png[width=50%]
 
 For more information on adding custom Units, see https://eclipse-esmf.github.io/samm-specification/2.1.0/units.html[Units^ (SAMM 2.1.0)^,opts=nofollow]

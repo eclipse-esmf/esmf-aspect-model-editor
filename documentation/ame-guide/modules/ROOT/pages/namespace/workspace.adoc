@@ -14,7 +14,7 @@ Of course creating and deleting namespaces is also possible with this editor**.*
 
 Structure is visible in the xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar].
 
-image::namespace-file-structure.png[width=100%]
+image::namespace-file-structure.png[width=80%]
 
 Namespaces that do not follow this file structure might not work and might break the references feature.
 
@@ -30,7 +30,7 @@ The ... icon next to a model opens the options to
 * *Copy file path* - copies the file path to the clipboard
 * *Delete* - deletes the Aspect Model from the workspace
 
-image::workspace-action.png[]
+image::workspace-action.png[,65%]
 
 If you just select another Aspect Model, it will not be loaded but its elements will be listed in the left sidebar.
 
@@ -60,4 +60,4 @@ as it will not be able to load this Aspect Model.
 
 In such a case you will need some expert who can fix it with a text editor.
 
-image::workspace-warning.png[]
+image::workspace-warning.png[, 70%]
