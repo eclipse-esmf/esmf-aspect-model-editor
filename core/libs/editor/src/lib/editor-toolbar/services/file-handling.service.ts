@@ -518,7 +518,7 @@ export class FileHandlingService {
       .synchronizeModelToRdf()
       .pipe(finalize(() => subscription$.unsubscribe()))
       .subscribe((): void => {
-        if (!this.modelService.getLoadedAspectModel().aspect) {
+        if (!this.namespaceCacheService.currentCachedFile.hasCachedElements()) {
           this.notificationsService.info({
             title: this.translate.language.NOTIFICATION_DIALOG.NO_ASPECT_TITLE,
             timeout: 5000,

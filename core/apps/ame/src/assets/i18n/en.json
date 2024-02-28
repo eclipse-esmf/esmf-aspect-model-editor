@@ -430,6 +430,10 @@
         "LOCATE_ELEMENT": "Locate element",
         "OPEN_ELEMENT": "Open element",
         "OPEN_ELEMENT_IN_NEW_WINDOW": "Open element in new window"
+      },
+      "NOTIFICATION": {
+        "EDIT_VIEW_UNAVAILABLE": "Edit View Unavailable",
+        "EDIT_VIEW_UNAVAILABLE_MESSAGE": "The element you`re trying to edit doesn`t exist. Please check if the element ID is correct or if it has been removed."
       }
     }
   },
