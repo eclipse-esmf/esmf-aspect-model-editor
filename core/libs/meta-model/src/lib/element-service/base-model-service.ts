@@ -39,6 +39,10 @@ export abstract class BaseModelService {
     return this.namespacesCacheService.currentCachedFile;
   }
 
+  get currentRdfModel() {
+    return this.rdfService.currentRdfModel;
+  }
+
   abstract isApplicable(metaModelElement: BaseMetaModelElement): boolean;
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
@@ -57,7 +61,7 @@ export abstract class BaseModelService {
     modelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 
     if (aspect && modelElement instanceof DefaultAspect) {
-      this.rdfService.currentRdfModel.setAspect(modelElement.aspectModelUrn);
+      this.currentRdfModel.setAspect(modelElement.aspectModelUrn);
     }
 
     // update descriptions (multiple locales)

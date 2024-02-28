@@ -23,7 +23,6 @@ export class EditorModelService {
   protected metaModelElement: BaseMetaModelElement;
   protected dataChangedEventQueue = [];
   private metaModelElementSubject = new BehaviorSubject<BaseMetaModelElement>(null);
-  private readOnly = false;
   private saveButtonEnabled = true;
   private characteristicInstantiator: CharacteristicInstantiator;
   public originalMetaModel: BaseMetaModelElement;
@@ -39,10 +38,6 @@ export class EditorModelService {
       }
       this.metaModelElement = newMetaModelElement;
     });
-  }
-
-  setMetaModelElement(metaModelElement: BaseMetaModelElement) {
-    this.metaModelElement = metaModelElement;
   }
 
   getAspectModelUrn(): string {
@@ -74,7 +69,6 @@ export class EditorModelService {
     }
 
     this.dataChangedEventQueue = [];
-    this.readOnly = metaModelElement?.isPredefined() || metaModelElement.isExternalReference();
     this.saveButtonEnabled = true;
     this.metaModelElementSubject.next(metaModelElement);
   }

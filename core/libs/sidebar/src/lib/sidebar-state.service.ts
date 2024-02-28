@@ -155,10 +155,9 @@ export class SidebarStateService {
 
   public isCurrentFile(namespace: string, namespaceFile: string): boolean {
     const currentRdfModel = this.rdfService.currentRdfModel;
-    return (
-      currentRdfModel?.loadedFromWorkspace &&
-      (currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName) === `${namespace}:${namespaceFile}`
-    );
+
+    const fileName = currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName;
+    return fileName === `${namespace}:${namespaceFile}`;
   }
 
   public requestGetNamespaces() {
@@ -218,7 +217,7 @@ export class SidebarStateService {
 
     const rdfModel = this.rdfService.externalRdfModels.find(rdf => rdf.absoluteAspectModelFileName === `${namespace}:${file.name}`);
 
-    file.errored = !rdfModel && !this.isCurrentFile(namespace, file.name);
+    file.loaded = this.isCurrentFile(namespace, file.name);
 
     if (rdfModel?.samm) {
       file.sammVersion = rdfModel?.samm.version;

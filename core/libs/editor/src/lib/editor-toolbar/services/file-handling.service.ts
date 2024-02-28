@@ -194,12 +194,16 @@ export class FileHandlingService {
 
   createEmptyModel() {
     const currentRdfModel = this.rdfService.currentRdfModel;
-
+    let fileStatus;
     if (currentRdfModel) {
       const [namespace, version, file] = this.rdfService.currentRdfModel.absoluteAspectModelFileName.split(':');
+      const namespaceVersion = `${namespace}:${version}`;
+      fileStatus = this.sidebarService.namespacesState.getFile(namespaceVersion, file);
 
-      const fileStatus = this.sidebarService.namespacesState.getFile(namespace + ':' + version, file);
-      if (fileStatus) fileStatus.locked = false;
+      if (fileStatus) {
+        fileStatus.locked = false;
+        this.electronSignalsService.call('removeLock', {namespace: namespaceVersion, file: file});
+      }
     }
 
     const emptyNamespace = 'urn:samm:org.eclipse.esmf:1.0.0#';

@@ -17,7 +17,7 @@ import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@am
 import {ConfirmDialogService, EditorService, FileHandlingService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
 import {ModelApiService} from '@ame/api';
-import {first, Subscription, switchMap, tap} from 'rxjs';
+import {Subscription, switchMap} from 'rxjs';
 import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
@@ -223,16 +223,24 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
   }
 
   public isCurrentFile(key: string, file: FileStatus): string {
-    return this.ngZone.run(() =>
-      file.outdated
-        ? this.translate.translateService.instant('TOOLTIPS.OUTDATED_FILE', {sammVersion: file.sammVersion})
-        : file.errored
-          ? this.translate.language.TOOLTIPS.ERRORED_FILE
-          : this.sidebarService.isCurrentFile(key, file.name)
-            ? this.translate.language.TOOLTIPS.CURRENT_FILE
-            : file.locked
-              ? this.translate.language.TOOLTIPS.LOCKED_FILE
-              : '',
-    );
+    return this.ngZone.run(() => {
+      if (file.outdated) {
+        return this.translate.translateService.instant('TOOLTIPS.OUTDATED_FILE', {sammVersion: file.sammVersion});
+      }
+
+      if (file.errored) {
+        return this.translate.language.TOOLTIPS.ERRORED_FILE;
+      }
+
+      if (file.loaded) {
+        return this.translate.language.TOOLTIPS.CURRENT_FILE;
+      }
+
+      if (file.locked) {
+        return this.translate.language.TOOLTIPS.LOCKED_FILE;
+      }
+
+      return '';
+    });
   }
 }

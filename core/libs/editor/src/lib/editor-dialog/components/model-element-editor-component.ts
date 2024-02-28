@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Directive, OnDestroy, inject} from '@angular/core';
+import {Directive, inject, OnDestroy} from '@angular/core';
 import {tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {EditorModelService} from '../editor-model.service';
@@ -47,19 +47,6 @@ export abstract class ModelElementEditorComponent<T extends BaseMetaModelElement
   cleanSubscriptions() {
     this.formSubscription.unsubscribe();
     this.formSubscription = new Subscription();
-  }
-
-  removeAllControls(formGroup: FormGroup) {
-    if (!formGroup) {
-      return;
-    }
-    Object.keys(formGroup.controls).forEach((key: string) => {
-      formGroup.removeControl(key);
-    });
-  }
-
-  setFormGroup(formGroup: FormGroup) {
-    this.formGroup = formGroup;
   }
 
   private resetForm() {

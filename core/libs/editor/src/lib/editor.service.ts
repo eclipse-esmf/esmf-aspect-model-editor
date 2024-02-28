@@ -511,13 +511,18 @@ export class EditorService {
           return;
         }
         const rdfModel = this.rdfService.currentRdfModel;
-        if (!rdfModel.originalAbsoluteFileName) {
-          rdfModel.originalAbsoluteFileName = rdfModel.absoluteAspectModelFileName;
-        }
         this.modelService.addAspect(aspectInstance);
         rdfModel.setAspect(aspectInstance.aspectModelUrn);
         const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(aspectInstance);
         rdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
+
+        if (!rdfModel.originalAbsoluteFileName) {
+          rdfModel.originalAbsoluteFileName = `${rdfModel
+            .getAspectModelUrn()
+            .replace('urn:samm:', '')
+            .replace('#', ':')}${rdfModel.aspectModelFileName}`;
+        }
+
         metaModelElement
           ? this.mxGraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
               shapeAttributes: [],
