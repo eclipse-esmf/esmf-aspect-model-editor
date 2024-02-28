@@ -504,7 +504,7 @@ export class FileHandlingService {
         if (uploadOptions.showNotifications) {
           this.notificationsService.error({
             title: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_TITLE,
-            message: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_MESSAGE,
+            message: error || this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_MESSAGE,
           });
         }
         return throwError(() => error);
