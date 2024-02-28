@@ -80,6 +80,8 @@ In the Settings dialog, select the menu *Header/Copyright*.
 
 Edit or add a header to be used with the Aspect Model.
 
+image::settings-copyright-header.png[Copyright/Header menu in Settings dialog,width=50%]
+
 ++++
 <style>
   .imageblock {flex-direction: row !important;}

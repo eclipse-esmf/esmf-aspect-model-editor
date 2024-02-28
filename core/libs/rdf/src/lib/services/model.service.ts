@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, inject} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {Observable, Observer, of, Subject, throwError} from 'rxjs';
 import {catchError, first, map, switchMap, tap} from 'rxjs/operators';
 import {Aspect, BaseMetaModelElement, LoadedAspectModel} from '@ame/meta-model';
@@ -52,6 +52,7 @@ export class ModelService {
   }
 
   private config: AppConfig = inject(APP_CONFIG);
+
   constructor(
     private rdfService: RdfService,
     private namespaceCacheService: NamespacesCacheService,
@@ -100,6 +101,7 @@ export class ModelService {
         sammVersion < this.config.currentSammVersion ? this.migrateAspectModel(sammVersion, rdfAspectModel) : of(loadedRdfModel);
 
       return rdfModel$.pipe(
+        first(),
         tap(rdfModel => (this.rdfService.currentRdfModel = rdfModel)),
         tap(() => this.setCurrentCacheFile(namespaceFileName)),
         map(() => this.instantiateFile(namespaceFileName)),
@@ -162,13 +164,6 @@ export class ModelService {
       console.groupEnd();
       throw new Error('Instantiator cannot load model!');
     }
-  }
-
-  saveLatestModel() {
-    const synchronizedModel = this.synchronizeModelToRdf();
-    return (synchronizedModel || throwError(() => ({type: SaveValidateErrorsCodes.desynchronized}))).pipe(
-      switchMap(() => this.rdfService.saveLatestModel(this.rdfModel)),
-    );
   }
 
   saveModel() {

@@ -16,7 +16,7 @@ import {FlatTreeControl} from '@angular/cdk/tree';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {SammLanguageSettingsService, SettingsFormService} from '../../services';
 import * as locale from 'locale-codes';
-import {AlertService, LoadingScreenService, LogService} from '@ame/shared';
+import {AlertService, LoadingScreenService, LogService, TitleService} from '@ame/shared';
 import {MxGraphAttributeService, MxGraphService, MxGraphShapeSelectorService, ShapeLanguageRemover} from '@ame/mx-graph';
 import {ModelService} from '@ame/rdf/services';
 import {NamespaceConfirmationModalComponent} from '../model-configuration/namespace-confirmation-modal/namespace-confirmation-modal.component';
@@ -140,6 +140,7 @@ export class SettingDialogComponent {
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private loadingScreen: LoadingScreenService,
+    private titleService: TitleService,
   ) {
     this.initializeComponent();
   }
@@ -200,6 +201,11 @@ export class SettingDialogComponent {
         finalize(() => {
           this.formService.setNamespace(namespaceConfig.data.newNamespace);
           this.formService.setVersion(namespaceConfig.data.newVersion);
+
+          const title = this.titleService.getTitle().split(' | ');
+          const type = title[1].includes('Aspect') ? 'Aspect' : 'Shared';
+
+          this.titleService.updateTitle(this.modelService.getLoadedAspectModel().rdfModel.absoluteAspectModelFileName, type);
         }),
       )
       .subscribe();

@@ -109,7 +109,7 @@ export class FileHandlingService {
     this.loadModel(decodeText(fileInfo.content)).pipe(first()).subscribe();
   }
 
-  loadModel(modelContent: string): Observable<Aspect> {
+  loadModel(modelContent: string): Observable<Array<RdfModel>> {
     if (!modelContent) return of(null);
 
     const loadingScreenOptions: LoadingScreenOptions = {

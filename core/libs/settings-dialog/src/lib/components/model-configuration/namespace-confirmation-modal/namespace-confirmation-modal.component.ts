@@ -70,7 +70,7 @@ export class NamespaceConfirmationModalComponent {
     const newUrn = 'urn:samm:' + this.newNamespace + ':' + this.newVersion + '#';
     const oldUrn = 'urn:samm:' + this.oldNamespace + ':' + this.oldVersion + '#';
 
-    this.namespaceCacheService.updateNamespaceKey(oldUrn, newUrn);
+    this.namespaceCacheService.updateNamespaceKey(oldUrn, newUrn, this.rdfModel.aspectModelFileName);
     if (this.rdfModel.aspect) {
       const [, aspectName] = this.rdfModel.aspect.value.split('#');
       this.rdfModel.setAspect(`${newUrn}${aspectName}`);

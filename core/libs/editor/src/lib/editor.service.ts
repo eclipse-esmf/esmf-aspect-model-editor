@@ -256,14 +256,14 @@ export class EditorService {
     this.notificationsService.info({title: 'Loading model', timeout: 2000});
 
     return this.rdfService.loadModel(payload.rdfAspectModel, payload.namespaceFileName || '').pipe(
-      switchMap(loadedRdfModel => this.loadExternalModels(loadedRdfModel).pipe(map(() => loadedRdfModel))),
-      switchMap(loadedRdfModel =>
+      tap(loadedRdfModel =>
         this.loadCurrentModel(
           loadedRdfModel,
           payload.rdfAspectModel,
           payload.namespaceFileName || loadedRdfModel.absoluteAspectModelFileName,
         ),
       ),
+      switchMap(loadedRdfModel => this.loadExternalModels(loadedRdfModel)),
       tap(() => {
         this.modelSavingTrackerService.updateSavedModel();
         const [namespace, version, file] = (payload.namespaceFileName || this.rdfService.currentRdfModel.absoluteAspectModelFileName).split(
@@ -298,17 +298,23 @@ export class EditorService {
     return foundCachedFile;
   }
 
-  loadExternalModels(loadedRdfModel?: RdfModel): Observable<RdfModel[]> {
+  loadExternalModels(loadedRdfModel?: RdfModel): Observable<Array<RdfModel>> {
     this.rdfService.externalRdfModels = [];
-    return this.modelApiService
-      .getAllNamespacesFilesContent(loadedRdfModel?.absoluteAspectModelFileName)
-      .pipe(
-        mergeMap((fileContentModels: Array<FileContentModel>) =>
-          fileContentModels.length
-            ? forkJoin(fileContentModels.map(fileContent => this.rdfService.loadExternalReferenceModelIntoStore(fileContent)))
-            : of([]),
-        ),
-      );
+    return this.modelApiService.getAllNamespacesFilesContent(loadedRdfModel?.absoluteAspectModelFileName).pipe(
+      first(),
+      mergeMap((fileContentModels: Array<FileContentModel>) =>
+        fileContentModels.length
+          ? forkJoin(fileContentModels.map(fileContent => this.rdfService.loadExternalReferenceModelIntoStore(fileContent)))
+          : of([] as Array<RdfModel>),
+      ),
+      tap(extRdfModel => {
+        extRdfModel.forEach(extRdfModel => {
+          if (extRdfModel.absoluteAspectModelFileName !== loadedRdfModel.absoluteAspectModelFileName) {
+            this.loadExternalAspectModel(extRdfModel.absoluteAspectModelFileName);
+          }
+        });
+      }),
+    );
   }
 
   loadModels(): Observable<RdfModel[]> {
@@ -343,21 +349,24 @@ export class EditorService {
     return this.modelApiService.generateOpenApiSpec(serializedModel, openApi);
   }
 
-  private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string, namespaceFileName: string): Observable<Aspect> {
-    return this.modelService.loadRdfModel(loadedRdfModel, rdfAspectModel, namespaceFileName).pipe(
-      first(),
-      tap((aspect: Aspect) => {
-        this.removeOldGraph();
-        this.initializeNewGraph();
-        this.titleService.updateTitle(namespaceFileName || aspect?.aspectModelUrn, aspect ? 'Aspect' : 'Shared');
-      }),
-      catchError(error => {
-        this.logService.logError('Error on loading aspect model', error);
-        this.notificationsService.error({title: 'Error on loading the aspect model', message: error});
-        // TODO: Use 'null' instead of empty object (requires thorough testing)
-        return of({} as null);
-      }),
-    );
+  private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string, namespaceFileName: string): void {
+    this.modelService
+      .loadRdfModel(loadedRdfModel, rdfAspectModel, namespaceFileName)
+      .pipe(
+        first(),
+        tap((aspect: Aspect) => {
+          this.removeOldGraph();
+          this.initializeNewGraph();
+          this.titleService.updateTitle(namespaceFileName || aspect?.aspectModelUrn, aspect ? 'Aspect' : 'Shared');
+        }),
+        catchError(error => {
+          this.logService.logError('Error on loading aspect model', error);
+          this.notificationsService.error({title: 'Error on loading the aspect model', message: error});
+          // TODO: Use 'null' instead of empty object (requires thorough testing)
+          return of({} as null);
+        }),
+      )
+      .subscribe();
   }
 
   private removeOldGraph() {
