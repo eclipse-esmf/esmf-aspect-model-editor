@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {NamespacesManagerService} from '@ame/namespace-manager';
 import {Component, Input} from '@angular/core';
 
 @Component({
@@ -20,4 +21,15 @@ import {Component, Input} from '@angular/core';
 })
 export class WorkspaceEmptyComponent {
   @Input() loading = false;
+
+  constructor(private namespacesManagerService: NamespacesManagerService) {}
+
+  file: File | null = null;
+
+  onFileInput(files: FileList | null): void {
+    if (files) {
+      this.file = files.item(0);
+      this.namespacesManagerService.importNamespaces(this.file).subscribe();
+    }
+  }
 }
