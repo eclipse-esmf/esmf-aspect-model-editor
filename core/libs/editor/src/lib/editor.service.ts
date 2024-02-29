@@ -251,16 +251,19 @@ export class EditorService {
     this.removeLastSavedRdf();
     this.notificationsService.info({title: 'Loading model', timeout: 2000});
 
+    let rdfModel: RdfModel = null;
     return this.rdfService.loadModel(payload.rdfAspectModel, payload.namespaceFileName || '').pipe(
-      tap(loadedRdfModel =>
+      tap(() => this.namespaceCacheService.removeAll()),
+      tap(loadedRdfModel => (rdfModel = loadedRdfModel)),
+      switchMap(loadedRdfModel => this.loadExternalModels(loadedRdfModel)),
+      tap(() =>
         this.loadCurrentModel(
-          loadedRdfModel,
+          rdfModel,
           payload.rdfAspectModel,
-          payload.namespaceFileName || loadedRdfModel.absoluteAspectModelFileName,
+          payload.namespaceFileName || rdfModel.absoluteAspectModelFileName,
           payload.editElementUrn,
         ),
       ),
-      switchMap(loadedRdfModel => this.loadExternalModels(loadedRdfModel)),
       tap(() => {
         this.modelSavingTrackerService.updateSavedModel();
         const [namespace, version, file] = (payload.namespaceFileName || this.rdfService.currentRdfModel.absoluteAspectModelFileName).split(
@@ -306,7 +309,7 @@ export class EditorService {
       ),
       tap(extRdfModel => {
         extRdfModel.forEach(extRdfModel => {
-          if (extRdfModel.absoluteAspectModelFileName !== loadedRdfModel.absoluteAspectModelFileName) {
+          if (extRdfModel?.absoluteAspectModelFileName !== loadedRdfModel?.absoluteAspectModelFileName) {
             this.loadExternalAspectModel(extRdfModel.absoluteAspectModelFileName);
           }
         });

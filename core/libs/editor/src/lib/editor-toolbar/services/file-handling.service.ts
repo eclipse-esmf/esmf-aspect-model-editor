@@ -343,10 +343,6 @@ export class FileHandlingService {
           });
         }
 
-        if (modelState.isNamespaceChanged && modelState.loadedFromWorkspace) {
-          this.titleService.setTitle(`[Aspect Model] ${modelState?.newModelName.replace('urn:samm:', '')}.ttl - Aspect Model Editor`);
-        }
-
         this.rdfService.currentRdfModel.originalAbsoluteFileName = null;
         this.rdfService.currentRdfModel.loadedFromWorkspace = true;
 

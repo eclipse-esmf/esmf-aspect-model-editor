@@ -305,9 +305,9 @@ describe('Create and Edit Abstract Entity', () => {
     it('should create model', () => {
       cy.visitDefault();
       cy.startModelling()
+        .wait(500)
         .then(() => cy.get(SELECTOR_elementBtn).click())
         .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
-        .wait(500)
         .then(() => cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300).then(() => cy.clickShape('AbstractEntity1')))
         .then(() => cy.clickAddShapePlusIcon('AbstractEntity1'))
         .then(() => cy.clickAddShapePlusIcon('AbstractEntity1'))

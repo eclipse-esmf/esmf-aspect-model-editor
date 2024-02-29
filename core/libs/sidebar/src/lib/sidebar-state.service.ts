@@ -12,8 +12,8 @@
  */
 
 import {RdfService} from '@ame/rdf/services';
-import {ChangeDetectorRef, inject, Injectable} from '@angular/core';
-import {BehaviorSubject, catchError, forkJoin, map, mergeMap, of, Subscription, switchMap, tap, throwError} from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {BehaviorSubject, catchError, forkJoin, map, mergeMap, of, Subscription, switchMap, throwError} from 'rxjs';
 import {ModelApiService} from '@ame/api';
 import {
   APP_CONFIG,
@@ -25,6 +25,8 @@ import {
   NotificationsService,
 } from '@ame/shared';
 import {ExporterHelper} from '@ame/migrator';
+import {environment} from '../../../../environments/environment';
+import {ActivatedRoute} from '@angular/router';
 
 class SidebarState {
   private opened$ = new BehaviorSubject(false);
@@ -141,6 +143,7 @@ export class SidebarStateService {
     private modelApiService: ModelApiService,
     private notificationService: NotificationsService,
     private browserService: BrowserService,
+    private router: ActivatedRoute,
   ) {
     this.manageSidebars();
     requestAnimationFrame(() => {
@@ -195,7 +198,11 @@ export class SidebarStateService {
     );
   }
 
-  private getLockedFiles(takeOne?: boolean) {
+  private getLockedFiles(takeOne?: boolean): Subscription {
+    if (!environment.production && window.location.search.includes('?e2e=true')) {
+      return of({}).subscribe();
+    }
+
     let subscription: Subscription = new Subscription();
     if (this.browserService.isStartedAsElectronApp() || window.require) {
       subscription = this.electronSignalsService.call('lockedFiles').subscribe(files => {

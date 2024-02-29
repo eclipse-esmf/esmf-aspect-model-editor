@@ -144,15 +144,12 @@ export class ModelService {
   }
 
   private setCurrentCacheFile(namespaceFileName: string) {
-    this.namespaceCacheService.removeAll();
-
     let fileName: string;
     if (namespaceFileName) {
       [, , fileName] = namespaceFileName.split(':');
     }
 
-    const currentCachedFile = this.namespaceCacheService.addFile(this.rdfModel.getAspectModelUrn(), fileName);
-    this.namespaceCacheService.currentCachedFile = currentCachedFile;
+    this.namespaceCacheService.currentCachedFile = this.namespaceCacheService.addFile(this.rdfModel.getAspectModelUrn(), fileName);
   }
 
   private instantiateFile(namespaceFileName: string) {

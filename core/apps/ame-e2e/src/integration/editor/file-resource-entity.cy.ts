@@ -28,6 +28,7 @@ describe('Time Series Entity', () => {
   it('should create FileResource with its properties', () => {
     cy.visitDefault();
     cy.startModelling()
+      .wait(500)
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => createFileResourceEntity())
 

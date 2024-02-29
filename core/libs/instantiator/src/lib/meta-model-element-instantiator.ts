@@ -19,6 +19,7 @@ import {
   DefaultAspect,
   DefaultEntity,
   DefaultEntityValue,
+  DefaultOperation,
   DefaultScalar,
   Entity,
   Event,
@@ -113,14 +114,18 @@ export class MetaModelElementInstantiator {
     }
   }
 
-  getProperties(subject: Quad_Subject, predicate: NamedNode, parent?: DefaultAspect | DefaultEntity): Array<OverWrittenProperty> {
+  getProperties(
+    subject: Quad_Subject,
+    predicate: NamedNode,
+    parent?: DefaultAspect | DefaultEntity | DefaultOperation,
+  ): Array<OverWrittenProperty> {
     const properties: Array<OverWrittenProperty> = [];
     this.rdfModel.store.getQuads(subject, predicate, null, null).forEach(propertyQuad => {
       const elements = this.rdfModel.getListElements(propertyQuad.object);
 
       for (const element of elements) {
         this.getProperty(element, (property: OverWrittenProperty) => {
-          if (parent) {
+          if (parent && (parent instanceof DefaultAspect || parent instanceof DefaultEntity)) {
             parent.properties.push(property);
             parent.children.push(property.property);
             syncElementWithChildren(parent);
@@ -202,7 +207,7 @@ export class MetaModelElementInstantiator {
     const extReference = this.namespaceCacheService.findElementOnExtReference<Operation>(element.quad.value);
     if (extReference) {
       extReference.setExternalReference(true);
-      return callback(element);
+      return callback(extReference);
     }
 
     this.addInstantiatorFunctionToQueue(() => {

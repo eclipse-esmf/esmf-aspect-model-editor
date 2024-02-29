@@ -48,7 +48,11 @@ export class OperationInstantiator {
 
     quads.forEach(quad => {
       if (samm.isInputProperty(quad.predicate.value)) {
-        operation.input = this.metaModelElementInstantiator.getProperties(DataFactory.namedNode(quad.subject.value), samm.InputProperty());
+        operation.input = this.metaModelElementInstantiator.getProperties(
+          DataFactory.namedNode(quad.subject.value),
+          samm.InputProperty(),
+          operation,
+        );
         operation.input && operation.children.push(...operation.input.map(i => i.property));
       } else if (samm.isOutputProperty(quad.predicate.value)) {
         this.metaModelElementInstantiator.loadOutputProperty(quad, false, (property: DefaultProperty) => {
