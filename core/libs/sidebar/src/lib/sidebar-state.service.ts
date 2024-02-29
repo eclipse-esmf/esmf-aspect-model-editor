@@ -26,7 +26,6 @@ import {
 } from '@ame/shared';
 import {ExporterHelper} from '@ame/migrator';
 import {environment} from '../../../../environments/environment';
-import {ActivatedRoute} from '@angular/router';
 
 class SidebarState {
   private opened$ = new BehaviorSubject(false);
@@ -143,7 +142,6 @@ export class SidebarStateService {
     private modelApiService: ModelApiService,
     private notificationService: NotificationsService,
     private browserService: BrowserService,
-    private router: ActivatedRoute,
   ) {
     this.manageSidebars();
     requestAnimationFrame(() => {
