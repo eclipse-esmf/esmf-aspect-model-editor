@@ -79,7 +79,7 @@ export class InstantiatorService {
       this.instantiateUnusedElement(subject, rdfModel, cachedFile, metaModelElementInstantiator);
     }
 
-    metaModelElementInstantiator.executeQueueInstantiators();
+    metaModelElementInstantiator.executeQueueInstantiators(rdfModel.isExternalRef);
 
     return cachedFile;
   }

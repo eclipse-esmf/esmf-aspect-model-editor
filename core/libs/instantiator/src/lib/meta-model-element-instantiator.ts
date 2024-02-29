@@ -105,11 +105,11 @@ export class MetaModelElementInstantiator {
     this.queueInstantiators.unshift(event);
   }
 
-  executeQueueInstantiators() {
+  executeQueueInstantiators(isExternalRef = false): void {
     while (this.queueInstantiators.length) {
       const event = this.queueInstantiators.pop();
       if (typeof event === 'function') {
-        event();
+        event(isExternalRef);
       }
     }
   }
@@ -125,12 +125,14 @@ export class MetaModelElementInstantiator {
 
       for (const element of elements) {
         this.getProperty(element, (property: OverWrittenProperty) => {
-          if (parent && (parent instanceof DefaultAspect || parent instanceof DefaultEntity)) {
-            parent.properties.push(property);
-            parent.children.push(property.property);
-            syncElementWithChildren(parent);
+          if (property) {
+            if (parent && (parent instanceof DefaultAspect || parent instanceof DefaultEntity)) {
+              parent.properties.push(property);
+              parent.children.push(property.property);
+              syncElementWithChildren(parent);
+            }
+            properties.push(property);
           }
-          properties.push(property);
         });
       }
     });
@@ -172,7 +174,7 @@ export class MetaModelElementInstantiator {
     }
 
     this.addInstantiatorFunctionToQueue(() => {
-      const {externalReference} = this.getExternalElement<Property>(element.quad);
+      const {externalReference} = this.getExternalElement<Property>(element.quad, this.rdfModel.isExternalRef);
       callback({property: externalReference, keys: propertyInstantiator.resolveOverwrittenKeys(element)});
     });
   }
@@ -184,12 +186,14 @@ export class MetaModelElementInstantiator {
 
       for (const element of elements) {
         this.getOperation(element, (operation: Operation) => {
-          if (parent) {
-            parent.operations.push(operation);
-            parent.children.push(operation);
-            syncElementWithChildren(parent);
+          if (operation) {
+            if (parent) {
+              parent.operations.push(operation);
+              parent.children.push(operation);
+              syncElementWithChildren(parent);
+            }
+            operations.push(operation);
           }
-          operations.push(operation);
         });
       }
     });
@@ -211,7 +215,7 @@ export class MetaModelElementInstantiator {
     }
 
     this.addInstantiatorFunctionToQueue(() => {
-      const {externalReference} = this.getExternalElement<Operation>(element.quad);
+      const {externalReference} = this.getExternalElement<Operation>(element.quad, this.rdfModel.isExternalRef);
       callback(externalReference);
     });
   }
@@ -223,12 +227,14 @@ export class MetaModelElementInstantiator {
 
       for (const element of elements) {
         this.getEvent(element, (event: Event) => {
-          if (parent) {
-            parent.events.push(event);
-            parent.children.push(event);
-            syncElementWithChildren(parent);
+          if (event) {
+            if (parent) {
+              parent.events.push(event);
+              parent.children.push(event);
+              syncElementWithChildren(parent);
+            }
+            events.push(event);
           }
-          events.push(event);
         });
       }
     });
@@ -246,11 +252,11 @@ export class MetaModelElementInstantiator {
     const extReference = this.namespaceCacheService.findElementOnExtReference<Event>(element.quad.value);
     if (extReference) {
       extReference.setExternalReference(true);
-      return callback(element);
+      return callback(extReference);
     }
 
     this.addInstantiatorFunctionToQueue(() => {
-      const {externalReference} = this.getExternalElement<Event>(element.quad);
+      const {externalReference} = this.getExternalElement<Event>(element.quad, this.rdfModel.isExternalRef);
       callback(externalReference);
     });
   }
@@ -325,8 +331,8 @@ export class MetaModelElementInstantiator {
   }
 
   private addCallbackToQueue<T>(quad: Quad, callback: Function) {
-    this.addInstantiatorFunctionToQueue(() => {
-      const {externalReference} = this.getExternalElement<T>(quad.object);
+    this.addInstantiatorFunctionToQueue((isExternalRef: boolean) => {
+      const {externalReference} = this.getExternalElement<T>(quad.object, isExternalRef);
       if (typeof callback === 'function') {
         callback(externalReference);
       }
@@ -373,7 +379,7 @@ export class MetaModelElementInstantiator {
       !typeQuad.object.value.startsWith(`urn:samm:org.eclipse.esmf.samm:meta-model:${GeneralConfig.sammVersion}#curie`)
     ) {
       this.addInstantiatorFunctionToQueue(() => {
-        const {externalReference} = this.getExternalElement(typeQuad.object);
+        const {externalReference} = this.getExternalElement(typeQuad.object, this.rdfModel.isExternalRef);
         return callback(externalReference);
       });
     }
@@ -445,6 +451,7 @@ export class MetaModelElementInstantiator {
    * along with its rdfModel
    *
    * @param quad - NameNode, Quad_Object, Quad_Subject
+   * @param skipSetExternal - skip the external reference
    * @returns the external rdfModel and the instantiated model
    */
   getExternalElement<T>(quad: NamedNode | Quad_Object, skipSetExternal = false): {externalRdfModel: RdfModel; externalReference: T} {

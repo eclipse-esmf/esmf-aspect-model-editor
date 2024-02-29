@@ -62,7 +62,7 @@ export class EntityInstantiator {
 
         if (!storedQuads.length && !entityInstance) {
           storedQuads = this.metaModelElementInstantiator
-            .getExternalElement(quad.object)
+            .getExternalElement(quad.object, this.rdfModel.isExternalRef)
             .externalRdfModel.store.getQuads(quad.object, null, null, null);
         }
 

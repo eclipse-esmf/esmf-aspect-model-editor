@@ -13,17 +13,9 @@
 
 import {RdfService} from '@ame/rdf/services';
 import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, catchError, forkJoin, map, mergeMap, of, Subscription, switchMap, throwError} from 'rxjs';
+import {BehaviorSubject, catchError, map, of, Subscription, throwError} from 'rxjs';
 import {ModelApiService} from '@ame/api';
-import {
-  APP_CONFIG,
-  AppConfig,
-  BrowserService,
-  ElectronSignals,
-  ElectronSignalsService,
-  FileContentModel,
-  NotificationsService,
-} from '@ame/shared';
+import {APP_CONFIG, AppConfig, BrowserService, ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
 import {ExporterHelper} from '@ame/migrator';
 import {environment} from '../../../../environments/environment';
 
@@ -162,14 +154,7 @@ export class SidebarStateService {
   }
 
   public requestGetNamespaces() {
-    this.rdfService.externalRdfModels = [];
-    return this.modelApiService.getAllNamespacesFilesContent(this.rdfService.currentRdfModel?.absoluteAspectModelFileName).pipe(
-      mergeMap((fileContentModels: Array<FileContentModel>) =>
-        fileContentModels.length
-          ? forkJoin(fileContentModels.map(fileContent => this.rdfService.loadExternalReferenceModelIntoStore(fileContent)))
-          : of([]),
-      ),
-      switchMap(() => this.modelApiService.getNamespacesAppendWithFiles()),
+    return this.modelApiService.getNamespacesAppendWithFiles().pipe(
       map((namespaces: string[]) => {
         this.namespacesState.clear();
         let hasOutdatedFiles = false;

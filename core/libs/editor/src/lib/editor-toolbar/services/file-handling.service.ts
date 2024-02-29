@@ -192,6 +192,7 @@ export class FileHandlingService {
   }
 
   createEmptyModel() {
+    this.namespaceCacheService.removeAll();
     const currentRdfModel = this.rdfService.currentRdfModel;
     let fileStatus;
     if (currentRdfModel) {

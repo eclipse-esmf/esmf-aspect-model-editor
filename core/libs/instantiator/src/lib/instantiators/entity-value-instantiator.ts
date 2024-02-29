@@ -39,7 +39,10 @@ export class EntityValueInstantiator {
 
   createEntityValue(quads: Quad[], object: Quad_Object) {
     if (!quads.length) {
-      const {externalReference} = this.metaModelElementInstantiator.getExternalElement<DefaultEntityValue>(object);
+      const {externalReference} = this.metaModelElementInstantiator.getExternalElement<DefaultEntityValue>(
+        object,
+        this.rdfModel.isExternalRef,
+      );
       if (externalReference) {
         return externalReference;
       }
