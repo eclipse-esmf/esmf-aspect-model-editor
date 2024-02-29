@@ -19,5 +19,8 @@
 <ng-template #empty>
   <p>{{ 'SIDEBAR.EMPTY.SAVE_MESSAGE' | translate }}</p>
   <p>{{ 'SIDEBAR.EMPTY.CALL_TO_ACTION' | translate }}</p>
-  <button mat-flat-button color="primary">{{ 'SIDEBAR.EMPTY.IMPORT_BUTTON' | translate }}</button>
+  <button mat-flat-button color="primary" (click)="fileInput.click()">
+    {{ 'SIDEBAR.EMPTY.IMPORT_BUTTON' | translate }}
+  </button>
+  <input hidden type="file" #fileInput (change)="onFileInput(fileInput.files)" />
 </ng-template>
