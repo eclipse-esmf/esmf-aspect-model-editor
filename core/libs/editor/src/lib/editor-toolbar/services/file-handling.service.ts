@@ -45,7 +45,6 @@ import {ConfigurationService} from '@ame/settings-dialog';
 import {environment} from '../../../../../../environments/environment';
 import {SidebarStateService} from '@ame/sidebar';
 import {decodeText, readFile} from '@ame/utils';
-import {Aspect} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 
 export interface FileInfo {
@@ -226,6 +225,11 @@ export class FileHandlingService {
     }
 
     this.modelService.addAspect(null);
+
+    const loadExternalModels$ = this.editorService
+      .loadExternalModels(newRdfModel)
+      .pipe(finalize(() => loadExternalModels$.unsubscribe()))
+      .subscribe();
   }
 
   onCopyToClipboard() {
