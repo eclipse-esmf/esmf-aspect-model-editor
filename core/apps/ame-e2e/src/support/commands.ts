@@ -22,6 +22,7 @@ import {cyHelp} from './helpers';
 import {FileHandlingService, GenerateHandlingService} from '@ame/editor';
 import {SearchesStateService} from '@ame/utils';
 import {NamespacesManagerService} from '@ame/namespace-manager';
+import {Aspect} from '@ame/meta-model';
 
 const {mxEventObject, mxEvent} = mxgraphFactory({});
 
@@ -283,7 +284,7 @@ declare global {
 
 Cypress.Commands.add('visitDefault', () => cy.visit('?e2e=true'));
 
-Cypress.Commands.add('getAspect', () => cy.window().then(win => win['angular.modelService'].loadedAspect));
+Cypress.Commands.add('getAspect', () => cy.window().then(win => win['angular.modelService'].loadedAspect as Aspect));
 
 Cypress.Commands.add('getEditorService', () => cy.window().then(win => win['angular.editorService']));
 Cypress.Commands.add('getMxgraphService', () => cy.window().then(win => win['angular.mxGraphService']));

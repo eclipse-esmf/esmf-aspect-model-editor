@@ -58,7 +58,7 @@ Use one of the following alternatives:
 
 * On Windows, press the *Windows key*, type `Aspect` to filter for the Aspect Model Editor, and click *Open*.
 
-image::search-app.png[width=50% !important]
+image::search-app.png[width=45% !important]
 
 
 [[check-installation]]
@@ -87,7 +87,7 @@ To uninstall the Aspect Model Editor, proceed as follows:
 image::uninstall-01.png[width=50% !important]
 . Click *Uninstall* to start the process.
 +
-image::uninstall-02.png[width=100% !important]
+image::uninstall-02.png[width=50% !important]
 . Click *Finish* to close the Uninstaller.
 +
 image::uninstall-03.png[width=50% !important]

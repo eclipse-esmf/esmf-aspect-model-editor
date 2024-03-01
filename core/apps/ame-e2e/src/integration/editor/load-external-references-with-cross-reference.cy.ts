@@ -128,6 +128,7 @@ describe('Test load external reference with cross references', () => {
     cy.fixture('/external-reference/cross-references/model-with-cross-referenced-element')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
+      .wait(500)
       .then(() => cyHelp.checkAspectDefaultExists())
       .then(() => cy.getAspect())
       .then(aspect => {
@@ -241,6 +242,7 @@ describe('Test load external reference with cross references', () => {
     cy.fixture('/external-reference/cross-references/model-with-cross-referenced-element-with-mixing-namespaces')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
+      .wait(500)
       .then(() => cyHelp.checkAspectDefaultExists())
       .then(() => cy.getAspect())
       .then(aspect => {

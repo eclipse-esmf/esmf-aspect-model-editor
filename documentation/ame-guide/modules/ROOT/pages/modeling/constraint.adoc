@@ -10,7 +10,7 @@ Except for Length Constraint, Range Constraint, and Fixed Point Constraint, all 
 
 For example, the Range Constraint uses minimum and maximum value.
 
-image::change-constraint-type.png[width=100%]
+image::change-constraint-type.png[width=65%]
 
 NOTE: Before you can add a Constraint to your Aspect Model, you have to add a Trait.
 

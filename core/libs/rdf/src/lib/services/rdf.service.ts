@@ -21,6 +21,7 @@ import {Samm} from '@ame/vocabulary';
 import {RdfModel, RdfModelUtil} from '../utils';
 import {RdfSerializerService} from './rdf-serializer.service';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
   providedIn: 'root',
@@ -37,13 +38,14 @@ export class RdfService {
     private logService: LogService,
     private modelApiService: ModelApiService,
     private configurationService: ConfigurationService,
+    private translation: LanguageTranslationService,
     @Inject(APP_CONFIG) public config: AppConfig,
   ) {
     if (!environment.production) {
       window['angular.rdfService'] = this;
     }
 
-    this._rdfSerializer = new RdfSerializerService();
+    this._rdfSerializer = new RdfSerializerService(translation);
     this._settings = this.configurationService.getSettings();
   }
 

@@ -8,18 +8,17 @@ To create a new version of an Aspect Model without deleting the previous one, pr
 1. Click *Settings*.
 +
 → The Settings dialog opens.
-2. Navigate to the tab *Namespaces*.
+2. Navigate to the menu *Namespaces*.
 3. Enter the new version of the namespace in the field *Version*.
 +
-image::load-and-save-models-settings-namespaces-version.png[width=100%]
-4. Click *Save*.
-5. Click *Save* to confirm your changes.
-6. Click *Save* in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
-7. Click *Save to Workspace* in the dropdown.
+image::settings-namespaces.png[width=50%]
+4. Click *Apply* to apply the changes or click on *Ok* to apply and close the dialog.
+- 4.1 You may want to ask again whether you are really sure that there will also be some implicit changes.
+5. Click *Save to Workspace* in the *File* xref:getting-started/ui-overview.adoc#menu-file[menu].
 
 → Now a new version of your currently opened model is saved and added to your Workspace.
 
-For more information on namespaces, see xref:namespace/namespaces-references.adoc#namespaces-external-references[Namespaces and external references].
+For more information on namespaces, see xref:namespace/namespaces-references.adoc#namespaces-references[Namespaces and references].
 
 ++++
 <style>

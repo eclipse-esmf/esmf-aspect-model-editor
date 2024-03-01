@@ -8,7 +8,7 @@ To connect two elements manually, proceed as follows:
 . Click both elements while holding the CTRL key on your keyboard.
 . Click the *Connect* icon in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 +
-image::connecting-elements.png[width=100%]
+image::connecting-elements.png[width=50%]
 
 → Both elements are now connected.
 

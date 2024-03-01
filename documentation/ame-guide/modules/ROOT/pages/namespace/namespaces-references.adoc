@@ -1,30 +1,30 @@
 :page-partial:
 
-[[namespaces-external-references]]
-= Namespaces and external references
+[[namespaces-references]]
+= Namespaces and references
 
-The Aspect Model Editor supports external references and custom namespaces. The namespaces from which the external elements can be referenced are defined by the folder structure of the Aspect Model Editor file directory.
+The Aspect Model Editor supports references and custom namespaces. The namespaces from which the external elements can be referenced are defined by the folder structure of the Aspect Model Editor file directory.
 
 
 
 [[namespace-view]]
 == Namespaces view in the Aspect Model Editor
 
-In the Aspect Model Editor, to view a list of namespaces and files associated to the namespaces, click the Workspace icon image:elements/workspace.png[Workspace icon].
+In the Aspect Model Editor, to view a list of namespaces and files associated to the namespaces, click the Workspace icon image:elements/workspace.png[Workspace icon, 3%].
 
 The short menu of actions is available via the ... icon.
 
-image::workspace-context-menu.png[width=100%]
+image::workspace-context-menu.png[width=65%]
 
 To see the elements of a file without loading it, click on the file name instead.
 
-image::file-elements.png[width=100%]
+image::file-elements.png[width=65%]
 
 For more information, see also:
 
-* xref:namespace/import-namespaces.adoc[]
-* xref:namespace/export-namespaces.adoc[]
-* xref:namespace/use-external-references.adoc[]
+* xref:namespace/import-package.adoc[]
+* xref:namespace/export-package.adoc[]
+* xref:namespace/use-references.adoc[]
 
 ++++
 <style>

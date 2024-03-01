@@ -13,19 +13,11 @@
 
 import {RdfService} from '@ame/rdf/services';
 import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, catchError, forkJoin, map, mergeMap, of, Subscription, switchMap, throwError} from 'rxjs';
-import {MxGraphService} from '@ame/mx-graph';
+import {BehaviorSubject, catchError, map, of, Subscription, throwError} from 'rxjs';
 import {ModelApiService} from '@ame/api';
-import {
-  APP_CONFIG,
-  AppConfig,
-  BrowserService,
-  ElectronSignals,
-  ElectronSignalsService,
-  FileContentModel,
-  NotificationsService,
-} from '@ame/shared';
+import {APP_CONFIG, AppConfig, BrowserService, ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
 import {ExporterHelper} from '@ame/migrator';
+import {environment} from '../../../../environments/environment';
 
 class SidebarState {
   private opened$ = new BehaviorSubject(false);
@@ -139,7 +131,6 @@ export class SidebarStateService {
 
   constructor(
     private rdfService: RdfService,
-    private mxGraphService: MxGraphService,
     private modelApiService: ModelApiService,
     private notificationService: NotificationsService,
     private browserService: BrowserService,
@@ -157,21 +148,13 @@ export class SidebarStateService {
 
   public isCurrentFile(namespace: string, namespaceFile: string): boolean {
     const currentRdfModel = this.rdfService.currentRdfModel;
-    return (
-      currentRdfModel?.loadedFromWorkspace &&
-      (currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName) === `${namespace}:${namespaceFile}`
-    );
+
+    const fileName = currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName;
+    return fileName === `${namespace}:${namespaceFile}`;
   }
 
   public requestGetNamespaces() {
-    this.rdfService.externalRdfModels = [];
-    return this.modelApiService.getAllNamespacesFilesContent(this.rdfService.currentRdfModel?.absoluteAspectModelFileName).pipe(
-      mergeMap((fileContentModels: Array<FileContentModel>) =>
-        fileContentModels.length
-          ? forkJoin(fileContentModels.map(fileContent => this.rdfService.loadExternalReferenceModelIntoStore(fileContent)))
-          : of([]),
-      ),
-      switchMap(() => this.modelApiService.getNamespacesAppendWithFiles()),
+    return this.modelApiService.getNamespacesAppendWithFiles().pipe(
       map((namespaces: string[]) => {
         this.namespacesState.clear();
         let hasOutdatedFiles = false;
@@ -198,7 +181,11 @@ export class SidebarStateService {
     );
   }
 
-  private getLockedFiles(takeOne?: boolean) {
+  private getLockedFiles(takeOne?: boolean): Subscription {
+    if (!environment.production && window.location.search.includes('?e2e=true')) {
+      return of({}).subscribe();
+    }
+
     let subscription: Subscription = new Subscription();
     if (this.browserService.isStartedAsElectronApp() || window.require) {
       subscription = this.electronSignalsService.call('lockedFiles').subscribe(files => {
@@ -220,7 +207,7 @@ export class SidebarStateService {
 
     const rdfModel = this.rdfService.externalRdfModels.find(rdf => rdf.absoluteAspectModelFileName === `${namespace}:${file.name}`);
 
-    file.errored = !rdfModel && !this.isCurrentFile(namespace, file.name);
+    file.loaded = this.isCurrentFile(namespace, file.name);
 
     if (rdfModel?.samm) {
       file.sammVersion = rdfModel?.samm.version;

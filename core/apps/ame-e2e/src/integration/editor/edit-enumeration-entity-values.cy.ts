@@ -44,6 +44,7 @@ describe('Test enumeration entity value', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
     cy.startModelling()
+      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_clearDataTypeBtn).click({force: true}))
@@ -152,6 +153,7 @@ describe('Test enumeration entity value', () => {
   it('add entity values with one property', () => {
     cy.visitDefault();
     cy.startModelling()
+      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
@@ -210,6 +212,7 @@ describe('Test enumeration entity value', () => {
   it('add entity value without property', () => {
     cy.visitDefault();
     cy.startModelling()
+      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
@@ -236,6 +239,7 @@ describe('Test enumeration entity value', () => {
   it('show searchbar when complex values enumeration is selected', () => {
     cy.visitDefault();
     cy.startModelling()
+      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.dbClickShape('Characteristic1'))
@@ -474,6 +478,7 @@ describe('Test enumeration entity value', () => {
   it('it should add manually new entity value shape', () => {
     cy.visitDefault();
     cy.startModelling()
+      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
@@ -550,6 +555,7 @@ describe('Test enumeration entity value', () => {
   it('should create NewEntity', () => {
     cy.visitDefault();
     cy.startModelling()
+      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
       .then(() => cy.dbClickShape('Characteristic1'))
@@ -570,6 +576,7 @@ describe('Test enumeration entity value', () => {
   it('should create NewEntity and new entity values', () => {
     cy.visitDefault();
     cy.startModelling()
+      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
       .then(() => cy.dbClickShape('Characteristic1'))
@@ -595,6 +602,7 @@ describe('Test enumeration entity value', () => {
   it('should create enumeration with lang string values', () => {
     cy.visitDefault();
     cy.startModelling()
+      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
@@ -703,7 +711,7 @@ describe('Test enumeration entity value', () => {
   it('should create nested enumerations', () => {
     cy.visitDefault();
     cy.startModelling()
-      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
+      .wait(500)
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
       .then(() => cy.clickAddShapePlusIcon('property2'))

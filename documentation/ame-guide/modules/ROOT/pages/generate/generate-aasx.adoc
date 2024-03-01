@@ -2,14 +2,12 @@
 
 To generate an AASX/XML files from the Aspect Model, proceed as follows:
 
-* Click the *Generate Document* icon. +
-A menu offers three options:
+* Click the *Generate* on xref:getting-started/ui-overview.adoc#menu-generate[menu]. +
+A menu offers one option:
 
-** Generate HTML documentation
-** Generate OpenAPI specification
-** *Generate AASX/XML* -- continue with this one
+** *AASX/XML* -- continue with this one
 +
-image::generate-aasx.png[Generate AASX/XML, width=100%]
+image::generate-aasx.png[Generate AASX/XML,width=100%,align="left"]
 * Select *AASX* or *XML* as the desired file format.
 * Click *Generate* and store the file locally.
 

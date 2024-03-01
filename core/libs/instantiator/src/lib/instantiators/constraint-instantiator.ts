@@ -40,7 +40,10 @@ export class ConstraintInstantiator extends BaseConstraintCharacteristicInstanti
     }
 
     if (!this.rdfModel.store.getQuads(quad.object, null, null, null).length) {
-      const {externalReference} = this.metaModelElementInstantiator.getExternalElement<Characteristic>(quad.object);
+      const {externalReference} = this.metaModelElementInstantiator.getExternalElement<Characteristic>(
+        quad.object,
+        this.rdfModel.isExternalRef,
+      );
       return externalReference;
     }
 

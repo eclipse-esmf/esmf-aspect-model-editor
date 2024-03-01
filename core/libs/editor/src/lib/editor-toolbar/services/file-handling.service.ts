@@ -45,7 +45,6 @@ import {ConfigurationService} from '@ame/settings-dialog';
 import {environment} from '../../../../../../environments/environment';
 import {SidebarStateService} from '@ame/sidebar';
 import {decodeText, readFile} from '@ame/utils';
-import {Aspect} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 
 export interface FileInfo {
@@ -109,7 +108,7 @@ export class FileHandlingService {
     this.loadModel(decodeText(fileInfo.content)).pipe(first()).subscribe();
   }
 
-  loadModel(modelContent: string): Observable<Aspect> {
+  loadModel(modelContent: string): Observable<Array<RdfModel>> {
     if (!modelContent) return of(null);
 
     const loadingScreenOptions: LoadingScreenOptions = {
@@ -193,13 +192,18 @@ export class FileHandlingService {
   }
 
   createEmptyModel() {
+    this.namespaceCacheService.removeAll();
     const currentRdfModel = this.rdfService.currentRdfModel;
-
+    let fileStatus;
     if (currentRdfModel) {
       const [namespace, version, file] = this.rdfService.currentRdfModel.absoluteAspectModelFileName.split(':');
+      const namespaceVersion = `${namespace}:${version}`;
+      fileStatus = this.sidebarService.namespacesState.getFile(namespaceVersion, file);
 
-      const fileStatus = this.sidebarService.namespacesState.getFile(namespace + ':' + version, file);
-      if (fileStatus) fileStatus.locked = false;
+      if (fileStatus) {
+        fileStatus.locked = false;
+        this.electronSignalsService.call('removeLock', {namespace: namespaceVersion, file: file});
+      }
     }
 
     const emptyNamespace = 'urn:samm:org.eclipse.esmf:1.0.0#';
@@ -222,6 +226,11 @@ export class FileHandlingService {
     }
 
     this.modelService.addAspect(null);
+
+    const loadExternalModels$ = this.editorService
+      .loadExternalModels(newRdfModel)
+      .pipe(finalize(() => loadExternalModels$.unsubscribe()))
+      .subscribe();
   }
 
   onCopyToClipboard() {
@@ -337,10 +346,6 @@ export class FileHandlingService {
               newFile: modelState.newFileName,
             }),
           });
-        }
-
-        if (modelState.isNamespaceChanged && modelState.loadedFromWorkspace) {
-          this.titleService.setTitle(`[Aspect Model] ${modelState?.newModelName.replace('urn:samm:', '')}.ttl - Aspect Model Editor`);
         }
 
         this.rdfService.currentRdfModel.originalAbsoluteFileName = null;
@@ -500,7 +505,7 @@ export class FileHandlingService {
         if (uploadOptions.showNotifications) {
           this.notificationsService.error({
             title: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_TITLE,
-            message: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_MESSAGE,
+            message: error || this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_MESSAGE,
           });
         }
         return throwError(() => error);

@@ -33,7 +33,6 @@ export class RdfModel {
   private _absoluteAspectModelFileName: string = null;
   private _metaModelVersion: string;
   private _defaultAspectModelAlias = '';
-  private _header = '';
 
   public samm: Samm;
   public sammC: SammC;
@@ -118,14 +117,6 @@ export class RdfModel {
       RdfModelUtil.getNamespaceVersionFromRdf(this.originalAbsoluteFileName) !==
       RdfModelUtil.getNamespaceVersionFromRdf(this.absoluteAspectModelFileName)
     );
-  }
-
-  get header(): string {
-    return this._header;
-  }
-
-  set header(header: string) {
-    this._header = header;
   }
 
   public initRdfModel(store: Store, prefixes: Prefixes, mode: 'empty' | 'loaded' = 'loaded'): RdfModel {
@@ -385,6 +376,8 @@ export class RdfModel {
 
   updateAbsoluteFileName(newNamespace: string, newVersion: string): void {
     if (!this.originalAbsoluteFileName) this.originalAbsoluteFileName = this.absoluteAspectModelFileName;
+    if (this.originalAbsoluteFileName !== this.absoluteAspectModelFileName)
+      this.originalAbsoluteFileName = this.absoluteAspectModelFileName;
 
     const fileName = RdfModelUtil.getFileNameFromRdf(this.absoluteAspectModelFileName);
     this.absoluteAspectModelFileName = RdfModelUtil.buildAbsoluteFileName(newNamespace, newVersion, fileName);

@@ -16,7 +16,7 @@ To edit the attributes for an element, proceed as follows:
 
 . Double-click an element to open it in the Edit dialog.
 +
-Alternatively, select the element and click the Open element icon image:toolbar-icons/edit.png[Open element icon] in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+Alternatively, select the element and click the Open element icon image:toolbar-icons/edit.png[Open element icon, 3%] in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 
 . In the Edit dialog, change the attributes of the element.
 +
@@ -28,7 +28,7 @@ TIP: Jump from one attribute field to the next by pressing the *Tab* key on your
 +
 TIP: Save and close the Edit dialog by pressing *Control + Enter* on your keyboard.
 +
-image::edit-elements-02.png[Save changes in Edit dialog,width=70%]
+image::edit-elements.png[Save changes in Edit dialog,width=50%]
 
 → As a result, the attributes for the element of your Aspect Model have been changed and saved.
 
@@ -43,7 +43,7 @@ However, if the aspect name is removed, it is possible to assign a customized na
 
 NOTE: The attributes `preferredName` and `description` are non-unique to allow for supporting multiple languages.
 That means, these attributes can be defined multiple times for different languages but only once for a specific language.
-For adding or removing languages, see xref:getting-started/settings.adoc#language-settings[language settings].
+For adding or removing languages, see xref:getting-started/settings.adoc#_language_settings[language settings].
 
 The Aspect Model Editor takes care of valid names.
 For more information, see https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidelines.html#naming-rules[Naming rules (SAMM 2.1.0)^,opts=nofollow].
@@ -57,12 +57,7 @@ Use the `samm:see` attribute to add references to related elements in an externa
 * To set multiple values for the `samm:see` attribute, separate them by commas.
 
 The meaning of the reference is informative only and implies no semantics such as equality or subsumption in either direction.
-For more information, see https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidelines.html#adding-external-references[Adding external references (SAMM 2.1.0)^,opts=nofollow].
-
-
-
-
-
+For more information, see https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidelines.html#adding-references[Adding references (SAMM 2.1.0)^,opts=nofollow].
 
 ++++
 <style>

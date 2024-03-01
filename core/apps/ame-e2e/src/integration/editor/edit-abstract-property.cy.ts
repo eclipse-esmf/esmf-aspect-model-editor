@@ -131,6 +131,7 @@ describe('Create and Edit Abstract Property', () => {
       cy.fixture('abstract-property')
         .as('rdfString')
         .then(rdfString => cy.loadModel(rdfString))
+        .wait(500)
         .then(() => cy.clickShape('abstractProperty1'));
     });
 
@@ -155,6 +156,7 @@ describe('Create and Edit Abstract Property', () => {
     it('should create model', () => {
       cy.visitDefault();
       cy.startModelling()
+        .wait(500)
         .then(() => cy.get(SELECTOR_elementBtn).click())
         .then(() => cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300))
         .then(() => cy.clickShape('AbstractEntity1'));

@@ -17,6 +17,7 @@ import {BaseMetaModelElement, DefaultAspect, OverWrittenPropertyKeys} from '@ame
 import {mxgraph} from 'mxgraph-factory';
 import {AspectRenderService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {TitleService} from '@ame/shared';
+import {SidebarStateService} from '@ame/sidebar';
 
 @Injectable({providedIn: 'root'})
 export class AspectModelService extends BaseModelService {
@@ -24,6 +25,7 @@ export class AspectModelService extends BaseModelService {
     private aspectRenderer: AspectRenderService,
     private titleService: TitleService,
     private mxGraphService: MxGraphService,
+    private sidebarStateService: SidebarStateService,
   ) {
     super();
   }
@@ -39,6 +41,9 @@ export class AspectModelService extends BaseModelService {
     }
     super.update(cell, form);
 
+    const namespaceVersion = this.currentRdfModel.getAspectModelUrn().replace('urn:samm:', '').replace('#', '').split(':');
+    this.currentRdfModel.updateAbsoluteFileName(namespaceVersion[0], namespaceVersion[1]);
+
     if (form.editedProperties) {
       for (const {property, keys} of metaModelElement.properties) {
         const newKeys: OverWrittenPropertyKeys = form.editedProperties[property.aspectModelUrn];
@@ -51,6 +56,7 @@ export class AspectModelService extends BaseModelService {
     this.rdfService.currentRdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
     this.aspectRenderer.update({cell});
     this.titleService.updateTitle(metaModelElement?.aspectModelUrn.replace('urn:samm:', '') + 'ttl', 'Aspect');
+    this.sidebarStateService.workspace.refresh();
   }
 
   delete(cell: mxgraph.mxCell) {

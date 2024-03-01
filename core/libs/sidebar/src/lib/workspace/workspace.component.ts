@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ChangeDetectorRef, Component, OnDestroy, OnInit, inject} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {SidebarStateService} from '../sidebar-state.service';
+import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {finalize, Subscription, tap} from 'rxjs';
+import {SidebarStateService} from '@ame/sidebar';
 
 @Component({
   selector: 'ame-workspace',
@@ -35,24 +35,25 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   constructor(private changeDetector: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    let refreshing$: Subscription = null;
     const namespaces$ = this.sidebarService.workspace.refreshSignal$.subscribe(() => {
-      refreshing$?.unsubscribe();
-      refreshing$ = this.refreshWorkspace();
+      this.loading = true;
+      this.changeDetector.detectChanges();
+      const refreshing$ = this.sidebarService
+        .requestGetNamespaces()
+        .pipe(
+          finalize(() => {
+            this.loading = false;
+            this.changeDetector.detectChanges();
+          }),
+        )
+        .subscribe();
+      this.subscription.add(refreshing$);
     });
+
     this.subscription.add(namespaces$);
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  public refreshWorkspace() {
-    this.loading = true;
-    this.changeDetector.detectChanges();
-    return this.sidebarService.requestGetNamespaces().subscribe(() => {
-      this.loading = false;
-      this.changeDetector.detectChanges();
-    });
   }
 }

@@ -39,6 +39,7 @@ describe('Test load external reference with same namespace', () => {
     cy.fixture('/external-reference/same-namespace/model-with-external-property-reference-with-children')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
+      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -97,6 +98,7 @@ describe('Test load external reference with same namespace', () => {
     cy.fixture('/external-reference/same-namespace/model-with-external-operation-reference-with-children')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
+      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -174,6 +176,7 @@ describe('Test load external reference with same namespace', () => {
     cy.fixture('/external-reference/same-namespace/model-with-external-characteristic-reference-with-children')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
+      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -230,6 +233,7 @@ describe('Test load external reference with same namespace', () => {
     cy.fixture('/external-reference/same-namespace/model-with-external-unit-reference')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
+      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -278,6 +282,7 @@ describe('Test load external reference with same namespace', () => {
     cy.fixture('/external-reference/same-namespace/model-with-external-entity-reference-with-children')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
+      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -395,6 +400,7 @@ describe('Test load external reference with same namespace', () => {
     cy.fixture('/external-reference/same-namespace/model-with-several-external-reference')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
+      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');

@@ -52,15 +52,7 @@
           <div class="content">
             <mat-icon
               >{{
-                sidebarService.isCurrentFile(namespace.key, file.name)
-                  ? 'arrow_right_alt'
-                  : file.locked
-                    ? 'lock'
-                    : file.outdated
-                      ? 'update'
-                      : file.errored
-                        ? 'error'
-                        : 'description'
+                file.loaded ? 'arrow_right_alt' : file.locked ? 'lock' : file.outdated ? 'update' : file.errored ? 'error' : 'description'
               }}
             </mat-icon>
             <span>{{ file.name }}</span>

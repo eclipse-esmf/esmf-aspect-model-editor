@@ -131,16 +131,20 @@ export class NamespacesCacheService {
   }
 
   /**
-   * This method will update the given namspace key with the new one.
+   * Updates the association of a file from an old namespace key to a new one.
+   * It handles the removal of the file from the old namespace and adds it under the new namespace,
+   * managing multiple file associations gracefully.
    *
-   * @param oldUrn - old namespace key
-   * @param newUrn - new namespace key
+   * @param {string} oldUrn - The current namespace key of the file.
+   * @param {string} newUrn - The new namespace key to associate the file with.
+   * @param {string} fileName - The name of the file to update the namespace for.
    */
-  updateNamespaceKey(oldUrn: string, newUrn: string) {
-    const values = this.#namespaces.get(oldUrn);
+  updateNamespaceKey(oldUrn, newUrn, fileName) {
+    const oldUrnValues = this.#namespaces.get(oldUrn);
+    oldUrnValues?.size > 1 ? oldUrnValues.delete(fileName) : this.#namespaces.delete(oldUrn);
 
-    this.#namespaces.delete(oldUrn);
-    this.#namespaces.set(newUrn, values);
+    const newUrnValues = this.#namespaces.get(newUrn);
+    newUrnValues ? newUrnValues.set(fileName, this.#currentCachedFile) : this.addFile(newUrn, fileName);
   }
 
   /**

@@ -32,7 +32,7 @@ import {FileResourceRemoveService, Point3dRemoveService, PredefinedRemove, TimeS
   providedIn: 'root',
 })
 export class ModelRootService {
-  private predefinedModels: {[key: string]: ProviderToken<PredefinedRemove>} = {};
+  private readonly predefinedModels: {[key: string]: ProviderToken<PredefinedRemove>} = {};
   constructor(private injector: Injector) {
     this.predefinedModels = {
       [PredefinedEntities.TimeSeriesEntity]: TimeSeriesEntityRemoveService,

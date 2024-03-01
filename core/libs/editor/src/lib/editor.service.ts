@@ -34,6 +34,7 @@ import {
   delay,
   delayWhen,
   filter,
+  finalize,
   first,
   forkJoin,
   map,
@@ -251,13 +252,16 @@ export class EditorService {
     this.removeLastSavedRdf();
     this.notificationsService.info({title: 'Loading model', timeout: 2000});
 
+    let rdfModel: RdfModel = null;
     return this.rdfService.loadModel(payload.rdfAspectModel, payload.namespaceFileName || '').pipe(
-      switchMap(loadedRdfModel => this.loadExternalModels(loadedRdfModel).pipe(map(() => loadedRdfModel))),
-      switchMap(loadedRdfModel =>
+      tap(() => this.namespaceCacheService.removeAll()),
+      tap(loadedRdfModel => (rdfModel = loadedRdfModel)),
+      switchMap(loadedRdfModel => this.loadExternalModels(loadedRdfModel)),
+      tap(() =>
         this.loadCurrentModel(
-          loadedRdfModel,
+          rdfModel,
           payload.rdfAspectModel,
-          payload.namespaceFileName || loadedRdfModel.absoluteAspectModelFileName,
+          payload.namespaceFileName || rdfModel.absoluteAspectModelFileName,
           payload.editElementUrn,
         ),
       ),
@@ -295,17 +299,23 @@ export class EditorService {
     return foundCachedFile;
   }
 
-  loadExternalModels(loadedRdfModel?: RdfModel): Observable<RdfModel[]> {
+  loadExternalModels(loadedRdfModel?: RdfModel): Observable<Array<RdfModel>> {
     this.rdfService.externalRdfModels = [];
-    return this.modelApiService
-      .getAllNamespacesFilesContent(loadedRdfModel?.absoluteAspectModelFileName)
-      .pipe(
-        mergeMap((fileContentModels: Array<FileContentModel>) =>
-          fileContentModels.length
-            ? forkJoin(fileContentModels.map(fileContent => this.rdfService.loadExternalReferenceModelIntoStore(fileContent)))
-            : of([]),
-        ),
-      );
+    return this.modelApiService.getAllNamespacesFilesContent(loadedRdfModel?.absoluteAspectModelFileName).pipe(
+      first(),
+      mergeMap((fileContentModels: Array<FileContentModel>) =>
+        fileContentModels.length
+          ? forkJoin(fileContentModels.map(fileContent => this.rdfService.loadExternalReferenceModelIntoStore(fileContent)))
+          : of([] as Array<RdfModel>),
+      ),
+      tap(extRdfModel => {
+        extRdfModel.forEach(extRdfModel => {
+          if (extRdfModel?.absoluteAspectModelFileName !== loadedRdfModel?.absoluteAspectModelFileName) {
+            this.loadExternalAspectModel(extRdfModel.absoluteAspectModelFileName);
+          }
+        });
+      }),
+    );
   }
 
   loadModels(): Observable<RdfModel[]> {
@@ -340,26 +350,24 @@ export class EditorService {
     return this.modelApiService.generateOpenApiSpec(serializedModel, openApi);
   }
 
-  private loadCurrentModel(
-    loadedRdfModel: RdfModel,
-    rdfAspectModel: string,
-    namespaceFileName: string,
-    editElementUrn?: string,
-  ): Observable<Aspect> {
-    return this.modelService.loadRdfModel(loadedRdfModel, rdfAspectModel, namespaceFileName).pipe(
-      first(),
-      tap((aspect: Aspect) => {
-        this.removeOldGraph();
-        this.initializeNewGraph(editElementUrn);
-        this.titleService.updateTitle(namespaceFileName || aspect?.aspectModelUrn, aspect ? 'Aspect' : 'Shared');
-      }),
-      catchError(error => {
-        this.logService.logError('Error on loading aspect model', error);
-        this.notificationsService.error({title: 'Error on loading the aspect model', message: error});
-        // TODO: Use 'null' instead of empty object (requires thorough testing)
-        return of({} as null);
-      }),
-    );
+  private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string, namespaceFileName: string, editElementUrn?: string): void {
+    this.modelService
+      .loadRdfModel(loadedRdfModel, rdfAspectModel, namespaceFileName)
+      .pipe(
+        first(),
+        tap((aspect: Aspect) => {
+          this.removeOldGraph();
+          this.initializeNewGraph(editElementUrn);
+          this.titleService.updateTitle(namespaceFileName || aspect?.aspectModelUrn, aspect ? 'Aspect' : 'Shared');
+        }),
+        catchError(error => {
+          this.logService.logError('Error on loading aspect model', error);
+          this.notificationsService.error({title: 'Error on loading the aspect model', message: error});
+          // TODO: Use 'null' instead of empty object (requires thorough testing)
+          return of({} as null);
+        }),
+      )
+      .subscribe();
   }
 
   private removeOldGraph() {
@@ -531,13 +539,18 @@ export class EditorService {
           return;
         }
         const rdfModel = this.rdfService.currentRdfModel;
-        if (!rdfModel.originalAbsoluteFileName) {
-          rdfModel.originalAbsoluteFileName = rdfModel.absoluteAspectModelFileName;
-        }
         this.modelService.addAspect(aspectInstance);
         rdfModel.setAspect(aspectInstance.aspectModelUrn);
         const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(aspectInstance);
         rdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
+
+        if (!rdfModel.originalAbsoluteFileName) {
+          rdfModel.originalAbsoluteFileName = `${rdfModel
+            .getAspectModelUrn()
+            .replace('urn:samm:', '')
+            .replace('#', ':')}${rdfModel.aspectModelFileName}`;
+        }
+
         metaModelElement
           ? this.mxGraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
               shapeAttributes: [],

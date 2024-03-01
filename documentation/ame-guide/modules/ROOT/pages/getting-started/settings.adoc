@@ -6,11 +6,15 @@
 To access the Settings dialog, click the Settings icon image:toolbar-icons/settings.png[Settings icon].
 
 [[configuration]]
-== General configuration
+== System Configuration
 
-In the Settings dialog, select the *Configuration* tab.
+=== Automated Workflow
 
-image::settings-configuration.png[Configuration tab in Settings dialog,width=100%]
+In the Settings dialog, select the menu *Automated Workflow*.
+
+image::settings-automated-workflow.png[Automated Workflow menu in Settings dialog,width=50%]
+
+* *Auto-Formatting*: automatically format the current model if you change something.
 
 * *Auto-save*: automatically saves the current model in a predefined period.
 The latest auto-saved version is restored after the restart of the application.
@@ -18,7 +22,13 @@ The latest auto-saved version is restored after the restart of the application.
 * *Auto-validation*: automatically validates the current model in a predefined period.
 The validation information is displayed in the xref:getting-started/validation-and-notifications.adoc[Notifications dialog].
 
-* *Auto-Formatting*: automatically format the current model if you change something.
+{nbsp}
+[[editor]]
+=== Editor
+
+In the Settings dialog, select the menu *Editor*.
+
+image::settings-editor.png[Editor menu in Settings dialog,width=50%]
 
 * *Use "hierarchical" layout*: aligns all elements below the root Aspect.
 
@@ -28,12 +38,15 @@ The validation information is displayed in the xref:getting-started/validation-a
 
 * *Display disambiguation labels*: displays labels on the relationship connections between the elements for easier identification of the relationship (e.g., for Operations: Properties are labeled with input or output).
 
-[[language-settings]]
-== Language settings
+[[model-configuration]]
+== Model Configuration
 
-In the Settings dialog, select the *Languages* tab.
+[#_language_settings]
+=== Language settings
 
-image::settings-languages.png[Languages tab in Settings dialog,width=100%]
+In the Settings dialog, select the menu *Languages*.
+
+image::settings-languages.png[Languages menu in Settings dialog,width=50%]
 
 Define for which languages the `description` and the `preferredName` attributes for elements should be displayed.
 
@@ -41,22 +54,33 @@ Element attributes can only be added for the languages defined in your settings.
 
 For each language defined in the settings you will later get an entry field, as shown in the example property.
 
-image::lang-example.png[Languages tab in Settings dialog,width=100%]
+image::lang-example.png[Languages tab in Settings dialog,width=50%]
 
 NOTE: Importing a model automatically imports all languages existing in the respective model but never deletes a language.
 
 WARNING: All attributes of each element in a specific language will be deleted without a way to restore them, when deleting this language from your settings.
 Make sure to save your model before deleting languages in your settings.
 
+{nbsp}
 [[namespace-settings]]
-== Namespace settings
+=== Namespaces setting
 
-In the Settings dialog, select the *Namespaces* tab.
-
-image::settings-namespaces.png[Namespaces tab in Settings dialog,,width=100%]
+In the Settings dialog, select the menu *Namespaces*.
 
 Edit the current namespace and check the supported version of the underlying SAMM Aspect Meta Model, the current Aspect's namespace as well as the predefined namespaces.
 For more information, see https://eclipse-esmf.github.io/samm-specification/2.1.0/namespaces.html[Namespaces (SAMM 2.1.0)^,opts=nofollow].
+
+image::settings-namespaces.png[Languages menu in Settings dialog,width=50%]
+
+{nbsp}
+[[header-copyright-settings]]
+=== Header/Copyright setting
+
+In the Settings dialog, select the menu *Header/Copyright*.
+
+Edit or add a header to be used with the Aspect Model.
+
+image::settings-copyright-header.png[Copyright/Header menu in Settings dialog,width=50%]
 
 ++++
 <style>
