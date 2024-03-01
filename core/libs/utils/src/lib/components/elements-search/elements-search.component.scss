@@ -58,10 +58,6 @@ $top: 100px;
   }
 }
 
-.list-option {
-  flex-direction: row-reverse;
-}
-
 .background {
   background-color: rgba(0, 0, 0, 0.2);
   position: fixed;
@@ -69,4 +65,8 @@ $top: 100px;
   left: 0;
   width: 100vw;
   height: 100vh;
+}
+
+.list-option {
+  display: block !important;
 }
