@@ -88,7 +88,6 @@ export class EditorService {
   private validateModelSubscription$: Subscription;
   private saveModelSubscription$: Subscription;
 
-  private lastSavedRDF$ = new BehaviorSubject<Partial<ILastSavedModel>>({});
   private isAllShapesExpandedSubject = new BehaviorSubject<boolean>(true);
 
   public isAllShapesExpanded$ = this.isAllShapesExpandedSubject.asObservable();
@@ -123,7 +122,7 @@ export class EditorService {
     private titleService: TitleService,
     private sidebarService: SidebarStateService,
     private shapeSettingsStateService: ShapeSettingsStateService,
-    private modelSavingTrackerService: ModelSavingTrackerService,
+    private modelSavingTracker: ModelSavingTrackerService,
     private electronSignalsService: ElectronSignalsService,
     private largeFileWarningService: LargeFileWarningService,
     private loadingScreenService: LoadingScreenService,
@@ -135,18 +134,6 @@ export class EditorService {
     if (!environment.production) {
       window['angular.editorService'] = this;
     }
-  }
-
-  removeLastSavedRdf() {
-    this.lastSavedRDF$.next({rdf: null, changed: true, date: null});
-  }
-
-  updateLastSavedRdf(changed: boolean, model: string, saveDate: Date) {
-    this.lastSavedRDF$.next({
-      changed: changed,
-      rdf: model,
-      date: saveDate,
-    });
   }
 
   initCanvas(): void {
@@ -250,7 +237,6 @@ export class EditorService {
 
   loadNewAspectModel(payload: LoadModelPayload) {
     this.sidebarService.workspace.refresh();
-    this.removeLastSavedRdf();
     this.notificationsService.info({title: 'Loading model', timeout: 2000});
 
     let rdfModel: RdfModel = null;
@@ -267,7 +253,7 @@ export class EditorService {
         ),
       ),
       tap(() => {
-        this.modelSavingTrackerService.updateSavedModel();
+        this.modelSavingTracker.updateSavedModel();
         const [namespace, version, file] = (payload.namespaceFileName || this.rdfService.currentRdfModel.absoluteAspectModelFileName).split(
           ':',
         );
@@ -784,7 +770,12 @@ export class EditorService {
   autoSaveModel(): Observable<RdfModel | object> {
     return of({}).pipe(
       delayWhen(() => timer(this.settings.saveTimerSeconds * 1000)),
-      switchMap(() => (this.namespaceCacheService.currentCachedFile.hasCachedElements() ? this.saveModel().pipe(first()) : of([]))),
+      switchMap(() =>
+        this.namespaceCacheService.currentCachedFile.hasCachedElements() &&
+        !this.rdfService.currentRdfModel.aspectModelFileName.includes('empty.ttl')
+          ? this.saveModel().pipe(first())
+          : of([]),
+      ),
       tap(() => this.enableAutoSave()),
       retry({
         delay: () => timer(this.settings.saveTimerSeconds * 1000),
@@ -795,6 +786,7 @@ export class EditorService {
   saveModel(): Observable<RdfModel | object> {
     return this.modelService.saveModel().pipe(
       tap(() => {
+        this.modelSavingTracker.updateSavedModel();
         this.notificationsService.info({title: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_SUCCESS});
         this.logService.logInfo('Aspect model was saved to the local folder');
         this.sidebarService.workspace.refresh();

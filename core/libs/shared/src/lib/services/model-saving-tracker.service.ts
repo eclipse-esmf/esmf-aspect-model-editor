@@ -14,7 +14,7 @@
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {MxGraphService} from '@ame/mx-graph';
 import {Injectable, inject} from '@angular/core';
-import {map, take} from 'rxjs';
+import {map, take, Timestamp} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ModelSavingTrackerService {
@@ -22,6 +22,7 @@ export class ModelSavingTrackerService {
   private rdfService = inject(RdfService);
   private mxGraphService = inject(MxGraphService);
   private savedModel: string;
+  private firstLoad: boolean;
 
   private get currentModel$() {
     return this.modelService.synchronizeModelToRdf().pipe(
@@ -31,10 +32,15 @@ export class ModelSavingTrackerService {
   }
 
   public get isSaved$() {
-    return this.currentModel$.pipe(map(currentModel => this.savedModel === currentModel || !this.mxGraphService.getAllCells()?.length));
+    return this.currentModel$.pipe(
+      map(currentModel => (!this.firstLoad && this.savedModel === currentModel) || !this.mxGraphService.getAllCells()?.length),
+    );
   }
 
-  public updateSavedModel() {
-    this.currentModel$.subscribe(currentModel => (this.savedModel = currentModel));
+  public updateSavedModel(firstLoad = false) {
+    this.currentModel$.subscribe(currentModel => {
+      this.firstLoad = firstLoad;
+      this.savedModel = currentModel;
+    });
   }
 }

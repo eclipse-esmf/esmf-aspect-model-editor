@@ -175,7 +175,6 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
       .subscribe(confirmed => {
         if (confirmed) {
           const serializeModel = this.rdfService.serializeModel(this.rdfService.currentRdfModel);
-          this.editorService.updateLastSavedRdf(false, serializeModel, new Date());
           this.editorService.saveModel().subscribe();
         }
         // TODO improve this functionality
