@@ -291,7 +291,7 @@
       "LOADING_NAMESPACES": "Loading Namespaces...",
       "SAVE_MESSAGE": "To see your current Model in the below list, save it to workspace.",
       "CALL_TO_ACTION": "Currently the workspace doesn't have any files. Click the button bellow to import namespaces!",
-      "IMPORT_BUTTON": "Import Namespaces"
+      "IMPORT_BUTTON": "Import Package"
     },
     "ACTIONS": {
       "SEARCH_ELEMENTS": "Search elements...",
