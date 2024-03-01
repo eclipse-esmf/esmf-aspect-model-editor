@@ -108,7 +108,7 @@ export class RdfNodeService {
         case PropertyEnum.See:
           this.updateArrayField(metaModelElement, properties, key, samm.getAspectModelUrn(key));
           break;
-        case metaModelElement instanceof DefaultEncodingConstraint && PropertyEnum.Value:
+        case metaModelElement instanceof DefaultEncodingConstraint && PropertyEnum.Value: {
           const propKey = properties[key].substring(properties[key].indexOf('#') + 1);
           const encodingsList = samm.getEncodingList();
           this.addDatatype(
@@ -117,6 +117,7 @@ export class RdfNodeService {
             encodingsList.find((el: any) => el.value === propKey).isDefinedBy
           );
           break;
+        }
         case PropertyEnum.NumericConversionFactor:
           this.addQuad(metaModelElement, properties[key], samm.getAspectModelUrn(key));
           break;
