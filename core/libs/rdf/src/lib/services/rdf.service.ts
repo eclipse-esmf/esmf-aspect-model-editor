@@ -27,12 +27,19 @@ import {LanguageTranslationService} from '@ame/translation';
   providedIn: 'root',
 })
 export class RdfService {
-  private _latestSavedRDF: string;
   private _rdfSerializer: RdfSerializerService;
   private _settings: Settings;
+  private _currentModel: RdfModel;
 
   public externalRdfModels: Array<RdfModel> = [];
-  public currentRdfModel: RdfModel;
+
+  get currentRdfModel(): RdfModel {
+    return this._currentModel;
+  }
+
+  set currentRdfModel(value: RdfModel) {
+    this._currentModel = value;
+  }
 
   constructor(
     private logService: LogService,
@@ -75,26 +82,6 @@ export class RdfService {
         }
 
         return this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.aspectModelFileName, rdfContent));
-      }),
-    );
-  }
-
-  saveLatestModel(rdfModel: RdfModel): Observable<{serializedModel: string; savedDate: Date}> {
-    if (!rdfModel) {
-      this.logService.logInfo('Model is null. Skipping saving.');
-      return this.handleError(SaveValidateErrorsCodes.emptyModel);
-    }
-
-    const serializedModel = this.serializeModel(rdfModel);
-    if (this._latestSavedRDF === serializedModel) {
-      this.logService.logInfo('Model not changed. Skipping saving');
-      return this.handleError(SaveValidateErrorsCodes.notChangedModel);
-    }
-
-    return this.modelApiService.saveLatest(serializedModel).pipe(
-      map(() => {
-        this._latestSavedRDF = serializedModel;
-        return {serializedModel, savedDate: new Date()};
       }),
     );
   }

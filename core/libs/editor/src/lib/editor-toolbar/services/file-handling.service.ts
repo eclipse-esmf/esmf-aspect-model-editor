@@ -133,12 +133,11 @@ export class FileHandlingService {
         return of(null);
       }),
       finalize(() => {
+        this.modelSaveTracker.updateSavedModel(true);
         this.loadingScreenService.close();
-
         if (this.modelService.getLoadedAspectModel().rdfModel) {
           this.shapeSettingsStateService.closeShapeSettings();
         }
-
         this.sidebarService.workspace.close();
       }),
     );
@@ -226,6 +225,7 @@ export class FileHandlingService {
     }
 
     this.modelService.addAspect(null);
+    this.modelSaveTracker.updateSavedModel(true);
 
     const loadExternalModels$ = this.editorService
       .loadExternalModels(newRdfModel)
@@ -326,7 +326,6 @@ export class FileHandlingService {
       filter(overwrite => overwrite !== false),
       switchMap(() => (modelState.isNamespaceChanged ? this.handleNamespaceChange(modelState) : of(null))),
       map(() => {
-        this.editorService.updateLastSavedRdf(false, this.rdfService.serializeModel(this.rdfService.currentRdfModel), new Date());
         isChangeFileName = modelState.loadedFromWorkspace && modelState.isNameChanged && isOverwrite === null;
         isChangeNamespace = modelState.loadedFromWorkspace && modelState.isNamespaceChanged;
         return isChangeFileName || isChangeNamespace;

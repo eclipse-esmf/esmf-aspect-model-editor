@@ -34,14 +34,13 @@ import {
   delay,
   delayWhen,
   filter,
-  finalize,
   first,
   forkJoin,
   map,
   mergeMap,
   Observable,
   of,
-  retryWhen,
+  retry,
   Subscription,
   switchMap,
   tap,
@@ -86,9 +85,9 @@ export class EditorService {
   private filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
   private configurationService: ConfigurationService = inject(ConfigurationService);
 
-  private validateModel$ = new BehaviorSubject<boolean>(this.settings.autoValidationEnabled);
   private validateModelSubscription$: Subscription;
-  private lastSavedRDF$ = new BehaviorSubject<Partial<ILastSavedModel>>({});
+  private saveModelSubscription$: Subscription;
+
   private isAllShapesExpandedSubject = new BehaviorSubject<boolean>(true);
 
   public isAllShapesExpanded$ = this.isAllShapesExpandedSubject.asObservable();
@@ -123,7 +122,7 @@ export class EditorService {
     private titleService: TitleService,
     private sidebarService: SidebarStateService,
     private shapeSettingsStateService: ShapeSettingsStateService,
-    private modelSavingTrackerService: ModelSavingTrackerService,
+    private modelSavingTracker: ModelSavingTrackerService,
     private electronSignalsService: ElectronSignalsService,
     private largeFileWarningService: LargeFileWarningService,
     private loadingScreenService: LoadingScreenService,
@@ -137,22 +136,11 @@ export class EditorService {
     }
   }
 
-  removeLastSavedRdf() {
-    this.lastSavedRDF$.next({rdf: null, changed: true, date: null});
-  }
-
-  updateLastSavedRdf(changed: boolean, model: string, saveDate: Date) {
-    this.lastSavedRDF$.next({
-      changed: changed,
-      rdf: model,
-      date: saveDate,
-    });
-  }
-
   initCanvas(): void {
     this.mxGraphService.initGraph();
 
-    this.startValidateModel();
+    this.enableAutoValidation();
+    this.enableAutoSave();
 
     mxEvent.addMouseWheelListener(
       mxUtils.bind(this, (evt, up) => {
@@ -249,7 +237,6 @@ export class EditorService {
 
   loadNewAspectModel(payload: LoadModelPayload) {
     this.sidebarService.workspace.refresh();
-    this.removeLastSavedRdf();
     this.notificationsService.info({title: 'Loading model', timeout: 2000});
 
     let rdfModel: RdfModel = null;
@@ -266,7 +253,7 @@ export class EditorService {
         ),
       ),
       tap(() => {
-        this.modelSavingTrackerService.updateSavedModel();
+        this.modelSavingTracker.updateSavedModel();
         const [namespace, version, file] = (payload.namespaceFileName || this.rdfService.currentRdfModel.absoluteAspectModelFileName).split(
           ':',
         );
@@ -705,16 +692,14 @@ export class EditorService {
       });
   }
 
-  refreshValidateModel() {
-    this.validateModel$.next(this.settings.autoValidationEnabled);
+  enableAutoValidation() {
+    this.settings.autoValidationEnabled ? this.startValidateModel() : this.stopValidateModel();
   }
 
   startValidateModel() {
     this.stopValidateModel();
     localStorage.removeItem(ValidateStatus.validating);
-    if (this.settings.autoValidationEnabled) {
-      this.validateModelSubscription$ = this.validateModel().subscribe();
-    }
+    this.validateModelSubscription$ = this.autoValidateModel().subscribe();
   }
 
   stopValidateModel() {
@@ -724,30 +709,27 @@ export class EditorService {
     }
   }
 
-  validateModel(): Observable<ViolationError[]> {
-    return this.validateModel$.asObservable().pipe(
+  autoValidateModel(): Observable<ViolationError[]> {
+    return of({}).pipe(
       delayWhen(() => timer(this.settings.validationTimerSeconds * 1000)),
-      switchMap(() => this.validate().pipe(first())),
-      tap(() => {
-        localStorage.removeItem(ValidateStatus.validating);
-        this.refreshValidateModel();
+      switchMap(() => (this.namespaceCacheService.currentCachedFile.hasCachedElements() ? this.validate().pipe(first()) : of([]))),
+      tap(() => localStorage.removeItem(ValidateStatus.validating)),
+      tap(() => this.enableAutoValidation()),
+      retry({
+        delay: error => {
+          if (!Object.values(SaveValidateErrorsCodes).includes(error?.type)) {
+            this.logService.logError(`Error occurred while validating the current model (${error})`);
+            this.notificationsService.error({
+              title: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_TITLE,
+              message: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_MESSAGE,
+              timeout: 5000,
+            });
+          }
+          localStorage.removeItem(ValidateStatus.validating);
+
+          return timer(this.settings.validationTimerSeconds * 1000);
+        },
       }),
-      retryWhen(errors =>
-        errors.pipe(
-          tap(error => {
-            if (!Object.values(SaveValidateErrorsCodes).includes(error?.type)) {
-              this.logService.logError(`Error occurred while validating the current model (${error})`);
-              this.notificationsService.error({
-                title: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_TITLE,
-                message: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_MESSAGE,
-                timeout: 5000,
-              });
-            }
-            localStorage.removeItem(ValidateStatus.validating);
-          }),
-          delayWhen(() => timer(this.settings.validationTimerSeconds * 1000)),
-        ),
-      ),
     );
   }
 
@@ -770,9 +752,41 @@ export class EditorService {
     );
   }
 
-  saveModel() {
+  enableAutoSave(): void {
+    this.settings.autoSaveEnabled ? this.startSaveModel() : this.stopSaveModel();
+  }
+
+  startSaveModel(): void {
+    this.stopSaveModel();
+    this.saveModelSubscription$ = this.autoSaveModel().subscribe();
+  }
+
+  stopSaveModel() {
+    if (this.saveModelSubscription$) {
+      this.saveModelSubscription$.unsubscribe();
+    }
+  }
+
+  autoSaveModel(): Observable<RdfModel | object> {
+    return of({}).pipe(
+      delayWhen(() => timer(this.settings.saveTimerSeconds * 1000)),
+      switchMap(() =>
+        this.namespaceCacheService.currentCachedFile.hasCachedElements() &&
+        !this.rdfService.currentRdfModel.aspectModelFileName.includes('empty.ttl')
+          ? this.saveModel().pipe(first())
+          : of([]),
+      ),
+      tap(() => this.enableAutoSave()),
+      retry({
+        delay: () => timer(this.settings.saveTimerSeconds * 1000),
+      }),
+    );
+  }
+
+  saveModel(): Observable<RdfModel | object> {
     return this.modelService.saveModel().pipe(
       tap(() => {
+        this.modelSavingTracker.updateSavedModel();
         this.notificationsService.info({title: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_SUCCESS});
         this.logService.logInfo('Aspect model was saved to the local folder');
         this.sidebarService.workspace.refresh();

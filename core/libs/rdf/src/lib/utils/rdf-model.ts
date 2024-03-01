@@ -13,7 +13,7 @@
 
 import {DataFactory, NamedNode, Prefixes, Quad, Quad_Graph, Quad_Object, Quad_Predicate, Quad_Subject, Store, Util, Writer} from 'n3';
 import * as locale from 'locale-codes';
-import {InstantiatorListElement} from '../models/rdf-model.types';
+import {InstantiatorListElement} from '@ame/rdf/models';
 import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
 import {RdfModelUtil} from '@ame/rdf/utils/rdf-model-util';
 import {config} from '@ame/shared';
