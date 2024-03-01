@@ -13,7 +13,7 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {ErrorComponent} from '../shared/components';
+import {ErrorComponent} from '../shared';
 import {SelectNamespacesComponent, ExportSummaryComponent, ExportValidateComponent} from './components';
 
 const routes: Routes = [

@@ -94,12 +94,6 @@ export class ConfigurationService {
     return this.settings || DEFAULT_SETTINGS;
   }
 
-  toggleEditorNavigation() {
-    // Mutates the original object. Can be removed once all components start relying on Observable stream.
-    this.settings.showEditorNav = !this.settings.showEditorNav;
-    this.setSettings(this.settings);
-  }
-
   toggleEditorMap() {
     // Mutates the original object. Can be removed once all components start relying on Observable stream.
     this.settings.showEditorMap = !this.settings.showEditorMap;
