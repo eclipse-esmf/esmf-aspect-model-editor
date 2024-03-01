@@ -50,22 +50,12 @@
 }
 
 .namespaces {
-  overflow-y: auto;
-  overflow-x: clip;
   margin: -16px;
   flex: 1;
-
-  &::-webkit-scrollbar {
-    display: none;
-    opacity: 0;
-  }
-
-  &:hover {
-    &::-webkit-scrollbar {
-      display: block;
-      opacity: 1;
-    }
-  }
+  width: 100%;
+  overflow-y: scroll;
+  height: calc(100% - 95px);
+  overflow-x: hidden;
 
   .namespace {
     display: flex;
