@@ -12,7 +12,7 @@
  */
 
 import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {finalize, Subscription, tap} from 'rxjs';
+import {finalize, Subscription} from 'rxjs';
 import {SidebarStateService} from '@ame/sidebar';
 
 @Component({
@@ -44,7 +44,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
           finalize(() => {
             this.loading = false;
             this.changeDetector.detectChanges();
-          }),
+          })
         )
         .subscribe();
       this.subscription.add(refreshing$);
