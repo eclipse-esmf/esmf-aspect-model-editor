@@ -84,7 +84,7 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
     }
 
     // check if it is an entity value
-    let entityQuads = rdfModel.store.getQuads(entityValueQuads[0]?.object, null, null, null);
+    let entityQuads = rdfModel.store.getQuads(null, null, entityValueQuads[0]?.object, null);
     if (!entityQuads.length) {
       const entityRdfModel = this.metaModelElementInstantiator.getRdfModelByElement(entityValueQuads[0]?.object);
       entityQuads = entityRdfModel.store.getQuads(entityValueQuads[0]?.object, null, null, null);
