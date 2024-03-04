@@ -66,7 +66,6 @@ describe('Constraint', () => {
         cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {});
         cy.visitDefault();
         cy.startModelling()
-          .then(() => cy.get('ame-loading-screen', {timeout: 15000}).should('not.exist'))
           .then(() => cy.shapeExists('AspectDefault'))
           .then(() => cy.get(SELECTOR_elementBtn).click())
           .then(() => cy.dragElement(SELECTOR_ecConstraint, 350, 300))
