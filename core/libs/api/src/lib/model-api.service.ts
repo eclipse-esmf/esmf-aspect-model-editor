@@ -171,7 +171,7 @@ export class ModelApiService {
     );
   }
 
-  getAllNamespacesFilesContent(exceptionFileName?: string | undefined): Observable<FileContentModel[]> {
+  getAllNamespacesFilesContent(): Observable<FileContentModel[]> {
     return this.getNamespacesAppendWithFiles().pipe(
       map(aspectModelFileNames =>
         aspectModelFileNames.reduce<any[]>(

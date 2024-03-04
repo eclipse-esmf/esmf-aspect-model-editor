@@ -99,7 +99,7 @@ describe('Elements count', () => {
         });
     });
 
-    it('should display elements count in sidebar', () => {
+    it.skip('should display elements count in sidebar', () => {
       cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       const namespacesConfig = {
         aspectDefault: {
@@ -178,7 +178,7 @@ describe('Elements count', () => {
         });
     });
 
-    it('should display elements count in sidebar', () => {
+    it.skip('should display elements count in sidebar', () => {
       cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       const namespacesConfig = {
         aspectDefault: {

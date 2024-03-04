@@ -242,7 +242,7 @@ export class EditorService {
     return this.rdfService.loadModel(payload.rdfAspectModel, payload.namespaceFileName || '').pipe(
       tap(() => this.namespaceCacheService.removeAll()),
       tap(loadedRdfModel => (rdfModel = loadedRdfModel)),
-      switchMap(loadedRdfModel => this.loadExternalModels(loadedRdfModel)),
+      switchMap(() => this.loadExternalModels()),
       tap(() =>
         this.loadCurrentModel(
           rdfModel,
@@ -285,9 +285,9 @@ export class EditorService {
     return foundCachedFile;
   }
 
-  loadExternalModels(loadedRdfModel?: RdfModel): Observable<Array<RdfModel>> {
+  loadExternalModels(): Observable<Array<RdfModel>> {
     this.rdfService.externalRdfModels = [];
-    return this.modelApiService.getAllNamespacesFilesContent(loadedRdfModel?.absoluteAspectModelFileName).pipe(
+    return this.modelApiService.getAllNamespacesFilesContent().pipe(
       first(),
       mergeMap((fileContentModels: Array<FileContentModel>) =>
         fileContentModels.length
