@@ -15,12 +15,13 @@ import {FormGroup} from '@angular/forms';
 import {Settings} from '@ame/settings-dialog';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 import {Injectable} from '@angular/core';
+import {MxGraphService} from '@ame/mx-graph';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EditorConfigurationUpdateStrategy implements SettingsUpdateStrategy {
-  constructor() {}
+  constructor(private mxGraphService: MxGraphService) {}
 
   updateSettings(form: FormGroup, settings: Settings): void {
     const editorConfiguration = form.get('editorConfiguration');
@@ -30,5 +31,7 @@ export class EditorConfigurationUpdateStrategy implements SettingsUpdateStrategy
     settings.showEntityValueEntityEdge = editorConfiguration.get('showEntityValueEntityEdge')?.value;
     settings.showConnectionLabels = editorConfiguration.get('showConnectionLabels')?.value;
     settings.showAbstractPropertyConnection = editorConfiguration.get('showAbstractPropertyConnection')?.value;
+
+    this.mxGraphService.formatShapes(true);
   }
 }

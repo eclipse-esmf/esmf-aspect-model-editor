@@ -14,7 +14,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {catchError, map, mergeMap, tap, timeout} from 'rxjs/operators';
-import {forkJoin, Observable, of, throwError} from 'rxjs';
+import {forkJoin, Observable, of, switchMap, throwError} from 'rxjs';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, LogService} from '@ame/shared';
 import {ModelValidatorService} from './model-validator.service';
 import {OpenApi, ViolationError} from '@ame/editor';
@@ -171,19 +171,14 @@ export class ModelApiService {
     );
   }
 
-  getAllNamespacesFilesContent(exceptionFileName?: string | undefined): Observable<FileContentModel[]> {
+  getAllNamespacesFilesContent(): Observable<FileContentModel[]> {
     return this.getNamespacesAppendWithFiles().pipe(
       map(aspectModelFileNames =>
         aspectModelFileNames.reduce<any[]>(
-          (files, absoluteFileName) =>
-            absoluteFileName !== exceptionFileName
-              ? [
-                  ...files,
-                  this.getAspectMetaModel(absoluteFileName).pipe(
-                    map(aspectMetaModel => new FileContentModel(absoluteFileName, aspectMetaModel)),
-                  ),
-                ]
-              : files,
+          (files, absoluteFileName) => [
+            ...files,
+            this.getAspectMetaModel(absoluteFileName).pipe(map(aspectMetaModel => new FileContentModel(absoluteFileName, aspectMetaModel))),
+          ],
           [],
         ),
       ),

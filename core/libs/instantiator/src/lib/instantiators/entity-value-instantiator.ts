@@ -108,6 +108,10 @@ export class EntityValueInstantiator {
   }
 
   private instantiateEntityValue(property: Quad, defaultEntityValue: DefaultEntityValue) {
+    if (property.object.equals(this.samm.RdfNil())) {
+      return;
+    }
+
     const value = new EntityValueInstantiator(this.metaModelElementInstantiator).createEntityValue(
       this.metaModelElementInstantiator.rdfModel.findAnyProperty(property.object as NamedNode),
       property.object,

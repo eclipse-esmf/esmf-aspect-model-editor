@@ -228,7 +228,7 @@ export class FileHandlingService {
     this.modelSaveTracker.updateSavedModel(true);
 
     const loadExternalModels$ = this.editorService
-      .loadExternalModels(newRdfModel)
+      .loadExternalModels()
       .pipe(finalize(() => loadExternalModels$.unsubscribe()))
       .subscribe();
   }

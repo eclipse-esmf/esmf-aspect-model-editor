@@ -83,8 +83,9 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
       return false;
     }
 
-    // check if it is an entity value
-    let entityQuads = rdfModel.store.getQuads(entityValueQuads[0]?.object, null, null, null);
+    const entityValueQuad = entityValueQuads.find(quad => quad.predicate.equals(samm.RdfType()));
+
+    let entityQuads = rdfModel.store.getQuads(entityValueQuad?.object, null, null, null);
     if (!entityQuads.length) {
       const entityRdfModel = this.metaModelElementInstantiator.getRdfModelByElement(entityValueQuads[0]?.object);
       entityQuads = entityRdfModel.store.getQuads(entityValueQuads[0]?.object, null, null, null);

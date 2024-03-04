@@ -47,7 +47,6 @@ import {
   throwError,
   timer,
 } from 'rxjs';
-import {ILastSavedModel} from './editor.types';
 import {
   mxConstants,
   mxEvent,
@@ -235,7 +234,7 @@ export class EditorService {
     });
   }
 
-  loadNewAspectModel(payload: LoadModelPayload) {
+  loadNewAspectModel(payload: LoadModelPayload): Observable<Array<RdfModel>> {
     this.sidebarService.workspace.refresh();
     this.notificationsService.info({title: 'Loading model', timeout: 2000});
 
@@ -243,7 +242,7 @@ export class EditorService {
     return this.rdfService.loadModel(payload.rdfAspectModel, payload.namespaceFileName || '').pipe(
       tap(() => this.namespaceCacheService.removeAll()),
       tap(loadedRdfModel => (rdfModel = loadedRdfModel)),
-      switchMap(loadedRdfModel => this.loadExternalModels(loadedRdfModel)),
+      switchMap(() => this.loadExternalModels()),
       tap(() =>
         this.loadCurrentModel(
           rdfModel,
@@ -286,9 +285,9 @@ export class EditorService {
     return foundCachedFile;
   }
 
-  loadExternalModels(loadedRdfModel?: RdfModel): Observable<Array<RdfModel>> {
+  loadExternalModels(): Observable<Array<RdfModel>> {
     this.rdfService.externalRdfModels = [];
-    return this.modelApiService.getAllNamespacesFilesContent(loadedRdfModel?.absoluteAspectModelFileName).pipe(
+    return this.modelApiService.getAllNamespacesFilesContent().pipe(
       first(),
       mergeMap((fileContentModels: Array<FileContentModel>) =>
         fileContentModels.length
@@ -296,11 +295,7 @@ export class EditorService {
           : of([] as Array<RdfModel>),
       ),
       tap(extRdfModel => {
-        extRdfModel.forEach(extRdfModel => {
-          if (extRdfModel?.absoluteAspectModelFileName !== loadedRdfModel?.absoluteAspectModelFileName) {
-            this.loadExternalAspectModel(extRdfModel.absoluteAspectModelFileName);
-          }
-        });
+        extRdfModel.forEach(extRdfModel => this.loadExternalAspectModel(extRdfModel.absoluteAspectModelFileName));
       }),
     );
   }
@@ -338,6 +333,9 @@ export class EditorService {
   }
 
   private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string, namespaceFileName: string, editElementUrn?: string): void {
+    const [namespace, version, fileName] = namespaceFileName.split(':');
+    this.namespaceCacheService.removeFile(`urn:samm:${namespace}:${version}#`, fileName);
+
     this.modelService
       .loadRdfModel(loadedRdfModel, rdfAspectModel, namespaceFileName)
       .pipe(

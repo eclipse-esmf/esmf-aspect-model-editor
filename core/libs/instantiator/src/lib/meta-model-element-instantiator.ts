@@ -125,7 +125,7 @@ export class MetaModelElementInstantiator {
 
       for (const element of elements) {
         this.getProperty(element, (property: OverWrittenProperty) => {
-          if (property) {
+          if (property && property.property) {
             if (parent && (parent instanceof DefaultAspect || parent instanceof DefaultEntity)) {
               parent.properties.push(property);
               parent.children.push(property.property);

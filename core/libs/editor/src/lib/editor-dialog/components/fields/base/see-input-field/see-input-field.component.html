@@ -63,7 +63,6 @@
       <span class="shape-name">{{ shape.name }}</span>
       <span class="shape-urn">{{ shape.aspectModelUrn }}</span>
     </mat-option>
+    <mat-error class="error" *ngIf="searchControl.hasError('uri')">Invalid URI '{{ searchControl?.errors.uri.invalidUris[0] }}'</mat-error>
   </mat-autocomplete>
-
-  <mat-error *ngIf="searchControl.hasError('uri')">Invalid URI '{{ searchControl?.errors.uri.invalidUris[0] }}'</mat-error>
 </mat-form-field>
