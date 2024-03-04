@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {
   BaseMetaModelElement,
@@ -26,7 +26,6 @@ import {
 } from '@ame/meta-model';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
-import {RdfService} from '@ame/rdf/services';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -36,7 +35,6 @@ import {Subscription} from 'rxjs';
 })
 export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit, OnDestroy {
   public fieldName = 'name';
-  private rdfService = inject(RdfService);
   private nameSubscription = new Subscription();
 
   constructor(private validators: EditorDialogValidators) {
