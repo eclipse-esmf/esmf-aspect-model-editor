@@ -23,6 +23,20 @@
           "filter": [
             "**/*"
           ]
+        },
+        {
+          "from": "./apps/ame/src/assets/aspect-models/org.eclipse.examples/1.0.0/",
+          "to": "default-models/",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "./apps/ame/src/assets/img/png/app-menu/",
+          "to": "app-menu/",
+          "filter": [
+            "**/*"
+          ]
         }
       ]
     },
@@ -41,6 +55,20 @@
           "filter": [
             "**/*"
           ]
+        },
+        {
+          "from": "./apps/ame/src/assets/aspect-models/org.eclipse.examples/1.0.0/",
+          "to": "default-models/",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "./apps/ame/src/assets/img/png/app-menu/",
+          "to": "app-menu/",
+          "filter": [
+            "**/*"
+          ]
         }
       ]
     },
@@ -56,6 +84,20 @@
         {
           "from": "../backend/",
           "to": "backend/",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "./apps/ame/src/assets/aspect-models/org.eclipse.examples/1.0.0/",
+          "to": "default-models/",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "./apps/ame/src/assets/img/png/app-menu/",
+          "to": "app-menu/",
           "filter": [
             "**/*"
           ]
