@@ -18,6 +18,7 @@ const promises = require('./promisify');
 const portfinder = require('portfinder');
 const platformData = require('./os-checker');
 const {windowsManager} = require('./windows-manager');
+const projectVersion = require('../package.json').version;
 const {inDevMode} = require('./consts');
 
 /**
@@ -60,7 +61,7 @@ function startService() {
       stopPort: 31000,
     })
     .then(port => {
-      const rootPath = path.join(__dirname, '..', '..', '..', 'backend');
+      const rootPath = path.join(__dirname, '..', '..', 'backend');
       if (processes.length === 0) {
         global.backendPort = port;
         const process = spawn(path.join(rootPath, `ame-backend-${projectVersion}-${platformData.extension}`), [`-Dserver.port=${port}`]);
@@ -86,7 +87,6 @@ function startService() {
       }
     })
     .catch(error => {
-      alert();
       console.log(error);
       alert('Port between 30000 and 31000 are already in use.');
     });
