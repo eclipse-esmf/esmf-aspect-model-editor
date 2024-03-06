@@ -20,15 +20,19 @@
   <mat-autocomplete class="search-autocomplete" #auto="matAutocomplete">
     <ng-container *ngFor="let element of elements">
       <mat-option class="list-option" *ngIf="element | modelElementParser as parsedElement" (click)="openElement(element)">
-        <ame-element
-          [type]="sammElements[parsedElement.type]"
-          [name]="parsedElement.element.name"
-          [description]="parsedElement.element.aspectModelUrn"
-          [disabledTooltipDescriptionLength]="100"
-          [disabledTooltipNameLength]="60"
-          size="medium"
-        ></ame-element>
-        <mat-icon *ngIf="element.isExternalReference() && !element.isPredefined()">open_in_new</mat-icon>
+        <div [class.has-external-element]="element.isExternalReference() && !element.isPredefined()">
+          <ame-element
+            [type]="sammElements[parsedElement.type]"
+            [name]="parsedElement.element.name"
+            [description]="parsedElement.element.aspectModelUrn"
+            [disabledTooltipDescriptionLength]="100"
+            [disabledTooltipNameLength]="60"
+            size="medium"
+          ></ame-element>
+          <div class="align-self-center">
+            <mat-icon *ngIf="element.isExternalReference() && !element.isPredefined()" class="open-icon">open_in_new</mat-icon>
+          </div>
+        </div>
       </mat-option>
     </ng-container>
   </mat-autocomplete>
