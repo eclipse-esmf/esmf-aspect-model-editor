@@ -27,7 +27,7 @@ The Aspect Model Editor focuses on practitioners, such as domain experts or data
 
 Especially for expert teams who model Aspects together, the visual representation of Aspect Models provides a low entry barrier and easy understanding, and facilitates collaboration.
 
-In addition to that, constant background validation ensures that your Aspect Models correspond to the SAMM Aspect Meta Model, enabling re-usability of your Aspect Models and automation of the downstream process steps for your Aspect Models.
+In addition to that, constant background validation ensures that your Aspect Models correspond to the SAMM Aspect Meta Model, enabling the reusability of your Aspect Models and automation of the downstream process steps for your Aspect Models.
 
 == Capabilities
 
