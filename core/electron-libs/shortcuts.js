@@ -15,39 +15,39 @@ const {app, globalShortcut, BrowserWindow, Menu, nativeTheme} = require('electro
 const platformData = require('./os-checker');
 
 function registerGlobalShortcuts() {
-  // These shortcuts are already cross-platform
-  const shortcuts = [
-    {key: 'CommandOrControl+Q', action: () => (BrowserWindow.getFocusedWindow() ? app.quit() : null)},
+  const shortcutsGlobal = [
     {key: 'CommandOrControl+W', action: () => BrowserWindow.getFocusedWindow()?.close()},
     {key: 'CommandOrControl+M', action: () => BrowserWindow.getFocusedWindow()?.minimize()},
-    {key: 'CommandOrControl+R', action: () => BrowserWindow.getFocusedWindow()?.reload()},
-    {
-      key: 'CommandOrControl+Shift+R',
-      action: () => BrowserWindow.getFocusedWindow()?.webContents.reloadIgnoringCache(),
-    },
     {key: 'CommandOrControl+Shift+M', action: () => BrowserWindow.getFocusedWindow()?.maximize()},
     {key: 'CommandOrControl+Shift+F', action: () => BrowserWindow.getFocusedWindow()?.setFullScreen(true)},
     {key: 'CommandOrControl+Shift+G', action: () => BrowserWindow.getFocusedWindow()?.setFullScreen(false)},
   ];
 
-  shortcuts.forEach(({key, action}) => {
+  const shortcutsMac = [
+    {key: 'CommandOrControl+Q', action: () => (BrowserWindow.getFocusedWindow() ? app.quit() : null)},
+    {key: 'Command+Option+I', action: () => BrowserWindow.getFocusedWindow().webContents.openDevTools()},
+    {key: 'CommandOrControl+R', action: () => BrowserWindow.getFocusedWindow()?.reload()},
+    {
+      key: 'CommandOrControl+Shift+R',
+      action: () => BrowserWindow.getFocusedWindow()?.webContents.reloadIgnoringCache(),
+    },
+  ];
+
+  const shortcutsWin = [{key: 'Control+Shift+I', action: () => BrowserWindow.getFocusedWindow().webContents.openDevTools()}];
+
+  shortcutsGlobal.forEach(({key, action}) => {
     globalShortcut.register(key, action);
   });
 
-  if (platformData.isWin || platformData.isLinux) {
-    globalShortcut.register('Control+Shift+I', () => {
-      const focusedWindow = BrowserWindow.getFocusedWindow();
-      if (focusedWindow) {
-        focusedWindow.webContents.openDevTools();
-      }
+  if (platformData.isMac) {
+    shortcutsMac.forEach(({key, action}) => {
+      globalShortcut.register(key, action);
     });
   }
 
-  if (platformData.isMac) {
-    globalShortcut.register('Command+Option+I', () => {
-      if (BrowserWindow.getFocusedWindow()) {
-        BrowserWindow.getFocusedWindow().webContents.openDevTools();
-      }
+  if (platformData.isWin) {
+    shortcutsWin.forEach(({key, action}) => {
+      globalShortcut.register(key, action);
     });
   }
 }
