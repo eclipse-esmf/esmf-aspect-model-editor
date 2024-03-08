@@ -30,6 +30,7 @@ import {RdfService} from '@ame/rdf/services';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {NotificationsService} from '@ame/shared';
 import {AbstractEntityInstantiator} from './instantiators/abstract-entity-instantiator';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +40,7 @@ export class InstantiatorService {
     private namespaceCacheService: NamespacesCacheService,
     public rdfService: RdfService,
     public notificationsService: NotificationsService,
+    public translate: LanguageTranslationService,
   ) {}
 
   public instantiateFile(rdfModel: RdfModel, cachedFile: CachedFile, fileName: string): CachedFile {
@@ -56,6 +58,7 @@ export class InstantiatorService {
       this.namespaceCacheService,
       new Map<string, Array<BaseMetaModelElement>>(),
       this.notificationsService,
+      this.translate,
     );
 
     if (aspect) {

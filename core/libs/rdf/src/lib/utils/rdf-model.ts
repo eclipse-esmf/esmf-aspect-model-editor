@@ -251,7 +251,7 @@ export class RdfModel {
   }
 
   getLocale(quad: Quad): string {
-    return quad ? locale.getByTag(quad.object['language']).tag : null;
+    return quad?.object?.['language'] ? locale.getByTag(quad.object['language']).tag : null;
   }
 
   public resolveRecursiveBlankNodes(uri: string, writer: Writer): Quad[] {
