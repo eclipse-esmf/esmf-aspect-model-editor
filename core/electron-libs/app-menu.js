@@ -48,7 +48,7 @@ const {
   SIGNAL_ZOOM_OUT,
   SIGNAL_LOAD_FROM_TEXT,
 } = require('./events');
-const {icons, models, inDevMode} = require('./consts');
+const {icons, paths, inDevMode} = require('./consts');
 const {isMac} = require('./os-checker');
 const path = require('path');
 
@@ -117,7 +117,7 @@ const fileSubmenu = [
         label: 'SimpleAspect.ttl',
         icon: getIcon(icons.LOAD_DEFAULT_EXAMPLE.enabled),
         click: (menuItem, browserWindow, _) => {
-          return getFileInfo(path.join(models, 'SimpleAspect.ttl'))
+          return getFileInfo(path.join(paths.models, 'SimpleAspect.ttl'))
             .then(fileInfo => browserWindow.webContents.send(SIGNAL_LOAD_SPECIFIC_FILE, fileInfo))
             .catch(error => console.error(error));
         },
@@ -127,7 +127,7 @@ const fileSubmenu = [
         label: 'Movement.ttl',
         icon: getIcon(icons.LOAD_MOVEMENT_EXAMPLE.enabled),
         click: (menuItem, browserWindow, _) => {
-          return getFileInfo(path.join(models, 'Movement.ttl'))
+          return getFileInfo(path.join(paths.models, 'Movement.ttl'))
             .then(fileInfo => browserWindow.webContents.send(SIGNAL_LOAD_SPECIFIC_FILE, fileInfo))
             .catch(error => console.error(error));
         },

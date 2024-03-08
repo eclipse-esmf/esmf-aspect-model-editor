@@ -18,7 +18,7 @@ const platformData = require('./electron-libs/os-checker');
 const core = require('./electron-libs/core');
 const {windowsManager} = require('./electron-libs/windows-manager');
 const {inProdMode} = require('./electron-libs/consts');
-const {registerMacSpecificShortcuts, unregisterMacSpecificShortcuts} = require('./electron-libs/mac/shortcuts');
+const {registerGlobalShortcuts, unregisterGlobalShortcuts} = require('./electron-libs/shortcuts');
 
 if (require('electron-squirrel-startup')) process.exit();
 
@@ -30,10 +30,8 @@ if (inProdMode()) {
 if (platformData.isWin) app.setUserTasks([]);
 
 app.on('ready', () => {
-  if (platformData.isMac) {
-    app.on('browser-window-blur', unregisterMacSpecificShortcuts);
-    app.on('browser-window-focus', registerMacSpecificShortcuts);
-  }
+  app.on('browser-window-blur', unregisterGlobalShortcuts);
+  app.on('browser-window-focus', registerGlobalShortcuts);
 
   core.startService();
   windowsManager.activateCommunicationProtocol();

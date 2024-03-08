@@ -80,10 +80,6 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     clearInterval(this.checkChangesInterval);
   }
 
-  openWindow() {
-    this.electronSignalsService.call('openWindow', null);
-  }
-
   // Deactivates the bug where the shape can not be removed
   blurActiveButton() {
     requestAnimationFrame(() => {

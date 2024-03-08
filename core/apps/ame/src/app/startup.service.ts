@@ -53,7 +53,7 @@ export class StartupService {
         switchMap(() => this.electronTunnelService.startUpData$.asObservable()),
         sample(this.mxGraphService.graphInitialized$.pipe(filter(Boolean))),
         filter(data => {
-          if (data) {
+          if (data?.model) {
             return true;
           } else {
             this.fileHandlingService.createEmptyModel();

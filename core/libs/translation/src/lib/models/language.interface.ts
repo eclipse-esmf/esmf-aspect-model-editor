@@ -560,6 +560,9 @@ export interface NotificationService {
   ASPECT_MISSING_CONTENT: string;
   LOAD_MODEL_INFO_TITLE: string;
   LOAD_MODEL_INFO_MESSAGE: string;
+  FALLBACK_TO_DEFAULT_LANGUAGE_TITLE: string;
+  FALLBACK_TO_DEFAULT_LANGUAGE_DESC_MESSAGE: string;
+  FALLBACK_TO_DEFAULT_LANGUAGE_PREF_MESSAGE: string;
 }
 export interface SammMigration {
   CHECK_WORKSPACE: string;
