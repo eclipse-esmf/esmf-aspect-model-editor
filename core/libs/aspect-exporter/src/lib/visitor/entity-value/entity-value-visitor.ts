@@ -14,13 +14,15 @@
 import {Injectable} from '@angular/core';
 import {DefaultEntityValue, EntityValueProperty, LangStringProperty} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
-import {DataFactory} from 'n3';
+import {DataFactory, Literal, NamedNode} from 'n3';
 import {BaseVisitor} from '../base-visitor';
 import {isDataTypeLangString} from '@ame/shared';
+import {RdfListService} from '../../rdf-list';
 
 @Injectable()
 export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
   constructor(
+    private rdfListService: RdfListService,
     public modelService: ModelService,
     rdfService: RdfService,
   ) {
@@ -42,24 +44,42 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
     const {aspectModelUrn} = entityValue;
     const rdfModel = this.modelService.currentRdfModel;
 
-    entityValue.properties.forEach(property => {
-      const object = this.createObjectForRDF(property);
-      const {key, value} = property;
+    const {propertyWithLangString, property} = entityValue.properties.reduce(
+      (acc, property) => (
+        isDataTypeLangString(property.key.property) ? acc.propertyWithLangString.push(property) : acc.property.push(property), acc
+      ),
+      {
+        propertyWithLangString: [],
+        property: [],
+      },
+    );
 
-      rdfModel.store.addQuad(DataFactory.namedNode(aspectModelUrn), DataFactory.namedNode(key.property.aspectModelUrn), object);
+    if (propertyWithLangString.length) {
+      const langStringRdfObject = propertyWithLangString.map(this.createObjectForLangStringRDF.bind(this));
+      this.rdfListService.pushEntityValueLangString(entityValue, ...langStringRdfObject);
+    }
+
+    property.forEach(property => {
+      const rdfObject = this.createObjectForRDF(property);
+      const {key, value} = property;
+      rdfModel.store.addQuad(DataFactory.namedNode(aspectModelUrn), DataFactory.namedNode(key.property.aspectModelUrn), rdfObject);
 
       this.handleExternalReference(value, aspectModelUrn);
     });
   }
 
-  private createObjectForRDF({key, value}: EntityValueProperty): any {
+  private createObjectForLangStringRDF(ev: EntityValueProperty): {predicate: NamedNode; literal: Literal} {
+    const langString = ev.value as LangStringProperty;
+    const predicate = DataFactory.namedNode(ev.key.property.aspectModelUrn);
+    return {
+      predicate: predicate,
+      literal: DataFactory.literal(langString?.value?.toString(), langString?.language?.toString()),
+    };
+  }
+
+  private createObjectForRDF({key, value}: EntityValueProperty): NamedNode | Literal {
     if (value instanceof DefaultEntityValue) {
       return DataFactory.namedNode(value.aspectModelUrn);
-    }
-
-    if (isDataTypeLangString(key.property)) {
-      const langString = value as LangStringProperty;
-      return DataFactory.literal(langString?.value?.toString(), langString?.language?.toString());
     }
 
     const dataType = key.property?.getDeepLookUpDataType();
