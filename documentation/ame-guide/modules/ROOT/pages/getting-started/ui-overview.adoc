@@ -217,6 +217,14 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 | Validate
 | Validate the Aspect Model.
 
+| image:toolbar-icons/zoom_in.png[,20%,20%]
+| Zoom in
+| Zoom in the Aspect Model.
+
+| image:toolbar-icons/zoom_out.png[,20%,20%]
+| Zoom out
+| Zoom out the Aspect Model. 
+
 |===
 
 [[workspace-sidebar]]
