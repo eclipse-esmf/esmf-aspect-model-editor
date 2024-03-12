@@ -5,9 +5,15 @@
 
 The Aspect Model Editor is a visual editor for Aspect Models, which automatically validates the models against the open-source 
 https://eclipse-esmf.github.io/samm-specification/2.1.0/index.html[SAMM Aspect Meta Model version 2.1.0]. All concepts, possibilities, and restrictions defined by the SAMM Aspect Meta Model are 
-incorporated in the Aspect Model Editor in a convenient way with a smart user flow. This documentation is available for recent 
-versions (and we do recommend frequent updates). Older documentation source see 
-https://eclipse-esmf/esmf-aspect-model-editor/tree/main/documentation[eclipse-esmf/esmf-aspect-model-editor/tree/main/documentation].
+incorporated in the Aspect Model Editor in a convenient way with a smart user flow. 
+
+TIP: Beside this latest version, the documentation of the most recent older versions is also available here (and we do recommend frequent updates). You can access the older versions from the dropdown top right on this page. 
+[Screenshot TBA]  
+
+
+NOTE: Beside this latest version, the documentation of the most recent older versions is also available here (and we do recommend frequent updates). You can access the older versions from the dropdown top right on this page. 
+[Screenshot TBA] 
+
 
 Typically, Aspect Models are edited as code, that is, text-based.
 With the Aspect Model Editor, such code gets visualized so that relationships and dependencies within the model can be understood quickly and easily.
