@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {DefaultEntityValue, EntityValueProperty, LangStringProperty} from '@ame/meta-model';
+import {DefaultCharacteristic, DefaultCollection, DefaultEntityValue, EntityValueProperty, LangStringProperty} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {DataFactory, Literal, NamedNode} from 'n3';
 import {BaseVisitor} from '../base-visitor';
@@ -21,11 +21,7 @@ import {RdfListService} from '../../rdf-list';
 
 @Injectable()
 export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
-  constructor(
-    private rdfListService: RdfListService,
-    public modelService: ModelService,
-    rdfService: RdfService,
-  ) {
+  constructor(private rdfListService: RdfListService, public modelService: ModelService, rdfService: RdfService) {
     super(rdfService);
   }
 
@@ -44,31 +40,46 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
     const {aspectModelUrn} = entityValue;
     const rdfModel = this.modelService.currentRdfModel;
 
-    const {propertyWithLangString, property} = entityValue.properties.reduce(
+    const {propertyCollectionWithLangString, property} = entityValue.properties.reduce(
       (acc, property) => (
-        isDataTypeLangString(property.key.property) ? acc.propertyWithLangString.push(property) : acc.property.push(property), acc
+        isDataTypeLangString(property.key.property) && property.key.property.characteristic instanceof DefaultCollection
+          ? acc.propertyCollectionWithLangString.push(property)
+          : acc.property.push(property),
+        acc
       ),
       {
-        propertyWithLangString: [],
+        propertyCollectionWithLangString: [],
         property: [],
-      },
+      }
     );
 
-    if (propertyWithLangString.length) {
-      const langStringRdfObject = propertyWithLangString.map(this.createObjectForLangStringRDF.bind(this));
+    if (propertyCollectionWithLangString.length > 0) {
+      const withoutEmptyLangString = propertyCollectionWithLangString.filter(prop => {
+        return prop.value.value !== null && prop.value.value !== undefined;
+      });
+
+      const langStringRdfObject = withoutEmptyLangString.map(this.createObjectForCollectionLangStringRDF.bind(this));
       this.rdfListService.pushEntityValueLangString(entityValue, ...langStringRdfObject);
     }
 
-    property.forEach(property => {
-      const rdfObject = this.createObjectForRDF(property);
-      const {key, value} = property;
-      rdfModel.store.addQuad(DataFactory.namedNode(aspectModelUrn), DataFactory.namedNode(key.property.aspectModelUrn), rdfObject);
+    if (property.length > 0) {
+      const propertiesWithoutEmptyLangString = property.filter(prop => {
+        const urn = prop.key.property.characteristic.dataType?.getUrn();
+        return !(this.getDataTypeFromUrn(urn) === 'langString' && prop.value === '');
+      });
 
-      this.handleExternalReference(value, aspectModelUrn);
-    });
+      propertiesWithoutEmptyLangString.forEach(property => {
+        const rdfObject = this.createObjectForRDF(property);
+        const {key, value} = property;
+
+        rdfModel.store.addQuad(DataFactory.namedNode(aspectModelUrn), DataFactory.namedNode(key.property.aspectModelUrn), rdfObject);
+
+        this.handleExternalReference(value, aspectModelUrn);
+      });
+    }
   }
 
-  private createObjectForLangStringRDF(ev: EntityValueProperty): {predicate: NamedNode; literal: Literal} {
+  private createObjectForCollectionLangStringRDF(ev: EntityValueProperty): {predicate: NamedNode; literal: Literal} {
     const langString = ev.value as LangStringProperty;
     const predicate = DataFactory.namedNode(ev.key.property.aspectModelUrn);
     return {
@@ -82,6 +93,11 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
       return DataFactory.namedNode(value.aspectModelUrn);
     }
 
+    if (isDataTypeLangString(key.property) && key.property.characteristic instanceof DefaultCharacteristic) {
+      const langString = value as LangStringProperty;
+      return DataFactory.literal(langString?.value?.toString(), langString?.language?.toString());
+    }
+
     const dataType = key.property?.getDeepLookUpDataType();
     return DataFactory.literal(value?.toString(), dataType ? DataFactory.namedNode(dataType.getUrn()) : undefined);
   }
@@ -91,13 +107,16 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
       this.setPrefix(aspectModelUrn);
     }
   }
-
+  private getDataTypeFromUrn(urn: string): string {
+    const parts = urn.split('#');
+    return parts.length > 1 ? parts[1] : null;
+  }
   private updateBaseProperties(entityValue: DefaultEntityValue): void {
     const rdfModel = this.modelService.currentRdfModel;
     rdfModel.store.addQuad(
       DataFactory.namedNode(entityValue.aspectModelUrn),
       rdfModel.SAMM().RdfType(),
-      DataFactory.namedNode(entityValue.entity.aspectModelUrn),
+      DataFactory.namedNode(entityValue.entity.aspectModelUrn)
     );
   }
 }
