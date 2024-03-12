@@ -202,6 +202,10 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 | Delete
 | Delete selected element(s).
 
+| image:toolbar-icons/commit.png[,20%,20%]
+| Connect
+| Connect two selected elements.
+
 | image:toolbar-icons/collapse.png[,20%,20%]
 | Collapse all/Expand all
 | Expands/Collapses elements.
@@ -209,9 +213,6 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 | image:toolbar-icons/schema.png[,20%,20%]
 | Format
 | Automatically format the Aspect Model.
-
-| image:toolbar-icons/commit.png[,20%,20%]| Connect
-| Connect two selected elements.
 
 | image:toolbar-icons/validate.png[,20%,20%]
 | Validate
