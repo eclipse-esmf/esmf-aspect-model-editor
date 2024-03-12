@@ -260,18 +260,9 @@ For more information, see xref:getting-started/validation-and-notifications.adoc
 
 | image:toolbar-icons/info.png[,20%,20%]
 | Help
-| Open documentation.
+| Open help dialog. It displays details about the application and provides a link to the documentation.
 |===
 
-{nbsp}
-[[help]]
-== Help
-
-The help icon image:toolbar-icons/info.png[Info, width="5%"] opens a page which lists details about the application and provides
-a link to the documentation.
-
-Example:
-image:help-docs.png[,50%]
 
 {nbsp}
 [[edit-dialog]]
