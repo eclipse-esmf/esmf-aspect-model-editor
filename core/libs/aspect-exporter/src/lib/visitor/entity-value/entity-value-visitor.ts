@@ -64,7 +64,7 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
 
     if (property.length > 0) {
       const propertiesWithoutEmptyLangString = property.filter(prop => {
-        const urn = prop.key.property.characteristic.dataType?.getUrn();
+        const urn = prop.key.property.characteristic.dataType.urn;
         return !(this.getDataTypeFromUrn(urn) === 'langString' && prop.value === '');
       });
 
