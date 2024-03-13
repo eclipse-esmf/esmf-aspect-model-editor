@@ -1,0 +1,52 @@
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.1.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.1.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.1.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:com.boschsemanticstack.digitalcv.quality:0.2.0#> .
+
+:DefaultAspect a samm:Aspect ;
+   samm:properties ( :property ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:property a samm:Property ;
+   samm:characteristic :Enumeration .
+
+:Enumeration a samm-c:Enumeration ;
+   samm:dataType :Mode ;
+   samm-c:values ( :Complaint10 :Complaint20 ) .
+
+:Mode a samm:Entity ;
+   samm:properties ( :modeCode [ samm:property :modeDescription; samm:notInPayload true ] :modeValue ) .
+
+:Complaint10 a :Mode ;
+   :modeCode "10"^^xsd:positiveInteger ;
+   :modeDescription ( "Test"@de "Test"@en ) ;
+   :modeValue "Test"@de .
+
+:Complaint20 a :Mode ;
+   :modeCode "20"^^xsd:positiveInteger ;
+   :modeDescription ( "Test"@de "Test"@en ) ;
+   :modeValue "Test"@de .
+
+:modeCode a samm:Property ;
+   samm:characteristic :ModeCode .
+
+:modeDescription a samm:Property ;
+   samm:characteristic :ModeDescription .
+
+:modeValue a samm:Property ;
+   samm:characteristic :ModeValue .
+
+:ModeCode a samm-c:Enumeration ;
+   samm:dataType xsd:positiveInteger ;
+   samm-c:values ( "10"^^xsd:positiveInteger "20"^^xsd:positiveInteger ) .
+
+:ModeDescription a samm-c:Collection ;
+   samm:dataType rdf:langString .
+
+:ModeValue a samm:Characteristic ;
+   samm:dataType rdf:langString .
