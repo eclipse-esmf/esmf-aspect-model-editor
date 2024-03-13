@@ -7,16 +7,17 @@ To create a new window:
 
 . Locate the *+* icon in the toolbar and click on it.
 . From the dropdown, select *New window*.
-. A fresh window will appear, automatically loading the AspectDefault aspect model for you.
-
-image:multi-windows/new-window.png[link=self]
++
+image:multi-windows/new-window.png[width=10%, link=self]
++
+A fresh window will appear, automatically loading the AspectDefault aspect model for you.
 
 To open a model from the workspace in a new window:
 
 . Access the workspace by selecting its icon on the left sidebar. image:elements/workspace.png[width=3%]
 . From here, you have two ways to open a model:
-  -- Double-click a file to instantly open it in a new window.
-  -- Click on the three-dot menu beside the file, and choose the Open in new window option.
+* Double-click a file to instantly open it in a new window.
+* Click on the three-dot menu beside the file, and choose the Open in new window option.
 
 image:multi-windows/workspace-new-window.png[link=self]
 
