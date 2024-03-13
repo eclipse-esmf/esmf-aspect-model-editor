@@ -522,7 +522,7 @@ describe('Test edit property', () => {
         .then(rdf => {
           expect(rdf).to.contain(':property1 a samm:Property;');
           expect(rdf).to.contain('samm:characteristic :Characteristic1.');
-          expect(rdf).to.contain('samm:optional "true"');
+          expect(rdf).to.contain('samm:optional true');
         });
     });
 
@@ -554,7 +554,7 @@ describe('Test edit property', () => {
         .then(rdf => {
           expect(rdf).to.contain(':Entity1 a samm:Entity;\n');
           expect(rdf).to.contain('samm:property :property2');
-          expect(rdf).to.contain('samm:notInPayload "true"');
+          expect(rdf).to.contain('samm:notInPayload true');
         });
     });
 
