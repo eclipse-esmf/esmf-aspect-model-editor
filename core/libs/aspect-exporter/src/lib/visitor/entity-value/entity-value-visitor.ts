@@ -12,18 +12,17 @@
  */
 
 import {Injectable} from '@angular/core';
-import {DefaultEntityValue, EntityValueProperty, LangStringProperty} from '@ame/meta-model';
+import {DefaultCollection, DefaultEntityValue, EntityValueProperty, LangStringProperty} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
-import {DataFactory} from 'n3';
+import {DataFactory, Literal, NamedNode} from 'n3';
 import {BaseVisitor} from '../base-visitor';
 import {isDataTypeLangString} from '@ame/shared';
+import {RdfListService} from '../../rdf-list';
+import {Samm} from '@ame/vocabulary';
 
 @Injectable()
 export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
-  constructor(
-    public modelService: ModelService,
-    rdfService: RdfService,
-  ) {
+  constructor(private rdfListService: RdfListService, public modelService: ModelService, rdfService: RdfService) {
     super(rdfService);
   }
 
@@ -42,22 +41,60 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
     const {aspectModelUrn} = entityValue;
     const rdfModel = this.modelService.currentRdfModel;
 
-    entityValue.properties.forEach(property => {
-      const object = this.createObjectForRDF(property);
-      const {key, value} = property;
+    const {propertyCollectionWithLangString, property} = entityValue.properties.reduce(
+      (acc, property) => (
+        isDataTypeLangString(property.key.property) && property.key.property.characteristic instanceof DefaultCollection
+          ? acc.propertyCollectionWithLangString.push(property)
+          : acc.property.push(property),
+        acc
+      ),
+      {
+        propertyCollectionWithLangString: [],
+        property: [],
+      }
+    );
 
-      rdfModel.store.addQuad(DataFactory.namedNode(aspectModelUrn), DataFactory.namedNode(key.property.aspectModelUrn), object);
+    if (propertyCollectionWithLangString.length) {
+      const withoutEmptyLangString = propertyCollectionWithLangString.filter(prop => {
+        return prop.value.value !== null && prop.value.value !== undefined;
+      });
 
-      this.handleExternalReference(value, aspectModelUrn);
-    });
+      const langStringRdfObject = withoutEmptyLangString.map(this.createObjectForCollectionLangStringRDF.bind(this));
+      this.rdfListService.pushEntityValueLangString(entityValue, ...langStringRdfObject);
+    }
+
+    if (property.length) {
+      const propertiesWithoutEmptyLangString = property.filter(prop => {
+        const urn = prop.key.property?.characteristic?.dataType?.getUrn();
+        return !(urn === `${Samm.RDF_URI}#langString` && prop.value === '');
+      });
+
+      propertiesWithoutEmptyLangString.forEach(property => {
+        const rdfObject = this.createObjectForRDF(property);
+        const {key, value} = property;
+
+        rdfModel.store.addQuad(DataFactory.namedNode(aspectModelUrn), DataFactory.namedNode(key.property.aspectModelUrn), rdfObject);
+
+        this.handleExternalReference(value, aspectModelUrn);
+      });
+    }
   }
 
-  private createObjectForRDF({key, value}: EntityValueProperty): any {
+  private createObjectForCollectionLangStringRDF(ev: EntityValueProperty): {predicate: NamedNode; literal: Literal} {
+    const langString = ev.value as LangStringProperty;
+    const predicate = DataFactory.namedNode(ev.key.property.aspectModelUrn);
+    return {
+      predicate: predicate,
+      literal: DataFactory.literal(langString?.value?.toString(), langString?.language?.toString()),
+    };
+  }
+
+  private createObjectForRDF({key, value}: EntityValueProperty): NamedNode | Literal {
     if (value instanceof DefaultEntityValue) {
       return DataFactory.namedNode(value.aspectModelUrn);
     }
 
-    if (isDataTypeLangString(key.property)) {
+    if (isDataTypeLangString(key.property) && !(key.property.characteristic instanceof DefaultCollection)) {
       const langString = value as LangStringProperty;
       return DataFactory.literal(langString?.value?.toString(), langString?.language?.toString());
     }
@@ -77,7 +114,7 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
     rdfModel.store.addQuad(
       DataFactory.namedNode(entityValue.aspectModelUrn),
       rdfModel.SAMM().RdfType(),
-      DataFactory.namedNode(entityValue.entity.aspectModelUrn),
+      DataFactory.namedNode(entityValue.entity.aspectModelUrn)
     );
   }
 }

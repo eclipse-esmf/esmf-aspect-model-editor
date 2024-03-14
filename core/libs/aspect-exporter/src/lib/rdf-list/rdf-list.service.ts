@@ -48,10 +48,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     return this.rdfModel.SAMM();
   }
 
-  constructor(
-    private nodeService: RdfNodeService,
-    private modelService: ModelService,
-  ) {
+  constructor(private nodeService: RdfNodeService, private modelService: ModelService) {
     if (!environment.production) {
       window['angular.rdfListService'] = this;
     }
@@ -67,7 +64,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     const listElements = this.getListElements(list);
     const elementsToBeAdded = RdfListHelper.resolveNewElements(
       source,
-      filterDuplicates ? RdfListHelper.filterDuplicates(filteredList, listElements) : filteredList,
+      filterDuplicates ? RdfListHelper.filterDuplicates(filteredList, listElements) : filteredList
     );
 
     if (!elementsToBeAdded.listElements.length) {
@@ -77,6 +74,37 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     this.remove(source, ...elements);
     this.recreateList(list, [...listElements.map(({node}) => node), ...elementsToBeAdded.listElements]);
     this.createOverWrittenElements(elementsToBeAdded.overWrittenListElements);
+    return this;
+  }
+
+  pushEntityValueLangString(
+    source: SourceElementType,
+    ...elements: Array<{
+      predicate: NamedNode;
+      literal: Quad_Object;
+    }>
+  ) {
+    const subject = DataFactory.namedNode(source.aspectModelUrn);
+    const preparedList = elements.map(({predicate}) => {
+      const {list, created} = this.getListOrCreateNew(subject, predicate);
+      return {list, created, predicate};
+    });
+
+    if (!preparedList.length) {
+      return this;
+    }
+
+    preparedList
+      .filter(list => list.created)
+      .forEach(({list, predicate}) => {
+        const listElements = this.getListElements(list);
+        const elementsToBeAdded = elements.filter(element => element.predicate.id === predicate.id).map(({literal}) => literal);
+
+        if (elementsToBeAdded.length) {
+          this.recreateList(list, [...listElements.map(({node}) => node), ...elementsToBeAdded]);
+        }
+      });
+
     return this;
   }
 
@@ -103,7 +131,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
       {
         elementsToKeep: [],
         blankNodesToRemove: [],
-      },
+      }
     );
 
     this.store.removeQuads([...this.getQuads(list), ...blankNodesToRemove]);
@@ -115,7 +143,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     this.emptyList(source, property);
     this.createNewList(
       DataFactory.namedNode(source.aspectModelUrn),
-      RdfListConstants.getPredicateByKey(property, this.samm, this.rdfModel.SAMMC()),
+      RdfListConstants.getPredicateByKey(property, this.samm, this.rdfModel.SAMMC())
     );
   }
 
@@ -156,14 +184,14 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
       this.store.addQuad(
         element.blankNode,
         this.samm.PropertyProperty(),
-        DataFactory.namedNode(element.metaModelElement.property.aspectModelUrn),
+        DataFactory.namedNode(element.metaModelElement.property.aspectModelUrn)
       );
 
       if (element.metaModelElement.keys.optional) {
         this.store.addQuad(
           element.blankNode,
           this.samm.OptionalProperty(),
-          DataFactory.literal(`${element.metaModelElement.keys.optional}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy)),
+          DataFactory.literal(`${element.metaModelElement.keys.optional}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy))
         );
       }
 
@@ -171,7 +199,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
         this.store.addQuad(
           element.blankNode,
           this.samm.NotInPayloadProperty(),
-          DataFactory.literal(`${element.metaModelElement.keys.notInPayload}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy)),
+          DataFactory.literal(`${element.metaModelElement.keys.notInPayload}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy))
         );
       }
 
@@ -179,7 +207,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
         this.store.addQuad(
           element.blankNode,
           this.samm.payloadNameProperty(),
-          DataFactory.literal(`${element.metaModelElement.keys.payloadName}`, DataFactory.namedNode(simpleDataTypes.string.isDefinedBy)),
+          DataFactory.literal(`${element.metaModelElement.keys.payloadName}`, DataFactory.namedNode(simpleDataTypes.string.isDefinedBy))
         );
       }
     }
@@ -282,7 +310,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
       const nextParent = index === nodes.length - 1 ? this.samm.RdfNil() : DataFactory.blankNode();
       quads.push(
         DataFactory.triple(previousParent, this.samm.RdfFirst(), node),
-        DataFactory.triple(previousParent, this.samm.RdfRest(), nextParent),
+        DataFactory.triple(previousParent, this.samm.RdfRest(), nextParent)
       );
       previousParent = nextParent;
     });
