@@ -46,6 +46,7 @@ describe('Export entity value', () => {
           expect(rdf).to.contain(':modeDescription ("Test"@de "Test"@en);');
           expect(rdf).to.contain(':ModeDescription a samm-c:Collection;');
           expect(rdf).to.contain(':ModeValue a samm-c:Collection');
+          expect(rdf).to.contain(':modeValue ("Test"@de "Test"@en)');
         });
     });
   });
