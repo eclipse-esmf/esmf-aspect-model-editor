@@ -33,6 +33,7 @@ export class RdfModel {
   private _absoluteAspectModelFileName: string = null;
   private _metaModelVersion: string;
   private _defaultAspectModelAlias = '';
+  private _loadedRdfModel: boolean;
 
   public samm: Samm;
   public sammC: SammC;
@@ -43,6 +44,10 @@ export class RdfModel {
   public originalAbsoluteFileName = null;
   public loadedFromWorkspace = false;
   public aspect: Quad_Subject;
+
+  get loadedRdfModel(): boolean {
+    return this._loadedRdfModel;
+  }
 
   get store(): Store {
     return this._store;
@@ -117,6 +122,10 @@ export class RdfModel {
       RdfModelUtil.getNamespaceVersionFromRdf(this.originalAbsoluteFileName) !==
       RdfModelUtil.getNamespaceVersionFromRdf(this.absoluteAspectModelFileName)
     );
+  }
+
+  constructor(loadedRdfModel = false) {
+    this._loadedRdfModel = loadedRdfModel;
   }
 
   public initRdfModel(store: Store, prefixes: Prefixes, mode: 'empty' | 'loaded' = 'loaded'): RdfModel {

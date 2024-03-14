@@ -91,7 +91,7 @@ export class RdfService {
   }
 
   loadModel(rdf: string, namespaceFileName?: string): Observable<RdfModel> {
-    const rdfModel = new RdfModel();
+    const rdfModel = new RdfModel(true);
     const parser = new Parser();
     const store: Store = new Store();
     const subject = new Subject<RdfModel>();
