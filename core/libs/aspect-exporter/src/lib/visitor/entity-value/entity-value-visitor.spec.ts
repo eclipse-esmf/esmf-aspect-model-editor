@@ -45,14 +45,27 @@ describe('Entity value visitor', () => {
     property: {
       aspectModelUrn: 'propertyUrn1',
       getDeepLookUpDataType: jest.fn().mockReturnValue({getUrn: () => 'dataTypeUrn1'}),
+      characteristic: {
+        dataType: {
+          urn: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
+          getUrn: jest.fn().mockReturnValue({getUrn: () => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString'}),
+        },
+      },
     },
   };
   const mockProperty2: any = {
     property: {
       aspectModelUrn: 'propertyUrn2',
       getDeepLookUpDataType: jest.fn().mockReturnValue({getUrn: () => 'dataTypeUrn2'}),
+      characteristic: {
+        dataType: {
+          urn: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
+          getUrn: jest.fn().mockReturnValue({getUrn: () => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString'}),
+        },
+      },
     },
   };
+
   const mockEntityValue1: any = {
     aspectModelUrn: 'entityValueUrn1',
     metaModelVersion: '1.2.3',

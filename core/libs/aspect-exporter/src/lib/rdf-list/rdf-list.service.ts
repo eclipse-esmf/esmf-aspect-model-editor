@@ -80,6 +80,37 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     return this;
   }
 
+  pushEntityValueLangString(
+    source: SourceElementType,
+    ...elements: Array<{
+      predicate: NamedNode;
+      literal: Quad_Object;
+    }>
+  ) {
+    const subject = DataFactory.namedNode(source.aspectModelUrn);
+    const preparedList = elements.map(({predicate}) => {
+      const {list, created} = this.getListOrCreateNew(subject, predicate);
+      return {list, created, predicate};
+    });
+
+    if (!preparedList.length) {
+      return this;
+    }
+
+    preparedList
+      .filter(list => list.created)
+      .forEach(({list, predicate}) => {
+        const listElements = this.getListElements(list);
+        const elementsToBeAdded = elements.filter(element => element.predicate.id === predicate.id).map(({literal}) => literal);
+
+        if (elementsToBeAdded.length) {
+          this.recreateList(list, [...listElements.map(({node}) => node), ...elementsToBeAdded]);
+        }
+      });
+
+    return this;
+  }
+
   remove(source: SourceElementType, ...elements: ListElementType[]) {
     const preparedList = this.getFilteredElements(source, elements);
     if (preparedList === null || preparedList.created) {
