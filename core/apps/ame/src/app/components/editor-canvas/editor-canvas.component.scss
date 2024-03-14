@@ -130,7 +130,7 @@
   transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   box-shadow: -4px 8px 8px 0 var(--ame-shadow--black-25);
   z-index: 1;
-  background: white;
+  background: #fff;
 
   &__gutter {
     display: flex;
