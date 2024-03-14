@@ -22,7 +22,11 @@ import {Samm} from '@ame/vocabulary';
 
 @Injectable()
 export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
-  constructor(private rdfListService: RdfListService, public modelService: ModelService, rdfService: RdfService) {
+  constructor(
+    private rdfListService: RdfListService,
+    public modelService: ModelService,
+    rdfService: RdfService,
+  ) {
     super(rdfService);
   }
 
@@ -51,7 +55,7 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
       {
         propertyCollectionWithLangString: [],
         property: [],
-      }
+      },
     );
 
     if (propertyCollectionWithLangString.length) {
@@ -114,7 +118,7 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
     rdfModel.store.addQuad(
       DataFactory.namedNode(entityValue.aspectModelUrn),
       rdfModel.SAMM().RdfType(),
-      DataFactory.namedNode(entityValue.entity.aspectModelUrn)
+      DataFactory.namedNode(entityValue.entity.aspectModelUrn),
     );
   }
 }
