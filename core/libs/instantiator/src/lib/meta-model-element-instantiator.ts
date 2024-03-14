@@ -512,14 +512,16 @@ export class MetaModelElementInstantiator {
     if (this.rdfModel.getLocale(quad)) {
       metaModelElement.addDescription(this.rdfModel.getLocale(quad), quad.object.value);
     } else {
-      this.notificationsService.error({
-        title: this.translate.language.NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_TITLE,
-        message: this.translate.translateService.instant('NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_DESC_MESSAGE', {
-          subject: quad.subject.value,
-          fileName: metaModelElement?.fileName,
-        }),
-        timeout: 5000,
-      });
+      if (this.rdfModel.loadedRdfModel) {
+        this.notificationsService.error({
+          title: this.translate.language.NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_TITLE,
+          message: this.translate.translateService.instant('NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_DESC_MESSAGE', {
+            subject: quad.subject.value,
+            fileName: metaModelElement?.fileName,
+          }),
+          timeout: 5000,
+        });
+      }
       metaModelElement.addDescription('en', quad.object.value);
     }
   }
@@ -528,14 +530,17 @@ export class MetaModelElementInstantiator {
     if (this.rdfModel.getLocale(quad)) {
       metaModelElement.addPreferredName(this.rdfModel.getLocale(quad), quad.object.value);
     } else {
-      this.notificationsService.error({
-        title: this.translate.language.NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_TITLE,
-        message: this.translate.translateService.instant('NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_PREF_MESSAGE', {
-          subject: quad.subject.value,
-          fileName: metaModelElement?.fileName,
-        }),
-        timeout: 5000,
-      });
+      if (this.rdfModel.loadedRdfModel) {
+        this.notificationsService.error({
+          title: this.translate.language.NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_TITLE,
+          message: this.translate.translateService.instant('NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_PREF_MESSAGE', {
+            subject: quad.subject.value,
+            fileName: metaModelElement?.fileName,
+          }),
+          timeout: 5000,
+        });
+      }
+
       metaModelElement.addPreferredName('en', quad.object.value);
     }
   }
