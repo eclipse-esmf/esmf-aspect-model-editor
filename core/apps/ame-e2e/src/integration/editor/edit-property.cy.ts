@@ -555,7 +555,7 @@ describe('Test edit property', () => {
         .then(rdf => {
           expect(rdf).to.contain(':Entity1 a samm:Entity;\n');
           expect(rdf).to.contain('samm:property :property2');
-          expect(rdf).to.contain('samm:notInPayload "true"');
+          expect(rdf).to.contain('samm:notInPayload true');
         });
     });
 
