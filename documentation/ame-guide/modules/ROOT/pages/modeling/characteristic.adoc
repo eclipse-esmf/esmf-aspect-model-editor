@@ -83,7 +83,7 @@ For Structured Value Characteristics, the following attributes have to be define
 image:structured-value-deconstruction-rule.png[Structured Value deconstruction rule, 60%]
 
 |_Elements_
-| Opens up a dialog containing a table with two columns. One column shows all the capture groups from the `Deconstruction rule` attribute and the second column allows to choose or create a Property for the corresponding capture group. image:structured-value-elements.png[Structured Value elements, 60%] image:structured-value-elements-dialog.png[Structured Value elements dialog, 60%]
+| Opens up a dialog containing a table with two columns. One column shows all the capture groups from the `Deconstruction rule` attribute and the second column allows to choose or create a Property for the corresponding capture group. image:structured-value-elements.png[Structured Value elements, 80%, link=self] image:structured-value-elements-dialog.png[Structured Value elements dialog, 80%, link=self]
 
 |===
 
