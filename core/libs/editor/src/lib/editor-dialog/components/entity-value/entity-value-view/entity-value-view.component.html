@@ -22,6 +22,7 @@
   class="complex-value-items"
   expanded="true"
   *ngFor="let complexValue of complexValues | entityValue: searchFilter; trackBy: trackValue"
+  [attr.data-cy]="complexValue.name"
 >
   <mat-expansion-panel-header class="complex-value-header">
     <mat-panel-title class="complex-value-bar">

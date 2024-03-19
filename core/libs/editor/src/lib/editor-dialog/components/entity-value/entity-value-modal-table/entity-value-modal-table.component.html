@@ -37,7 +37,13 @@
           <ng-container *ngIf="!formFieldHelper.isComplexProperty(source.key.property)">
             <mat-form-field appearance="fill" class="source__input">
               <mat-label>Value</mat-label>
-              <input matInput type="text" formControlName="value" data-cy="propertyValueNotComplex" />
+              <input
+                matInput
+                type="text"
+                formControlName="value"
+                data-cy="propertyValueNotComplex"
+                [attr.data-cy]="source.key.property.name + 'Value'"
+              />
               <mat-error *ngIf="control.get('value').errors?.required">Value is required</mat-error>
             </mat-form-field>
           </ng-container>
@@ -138,10 +144,24 @@
           </div>
 
           <div *ngIf="isCharacteristicCollectionType(source.key.property?.characteristic)" class="source__column source__column--icon">
-            <button *ngIf="!i" mat-mini-fab color="primary" aria-label="Add new language" (click)="addLanguage(source)">
+            <button
+              *ngIf="!i"
+              mat-mini-fab
+              color="primary"
+              aria-label="Add new language"
+              (click)="addLanguage(source)"
+              [attr.data-cy]="source.key.property.name + 'Add'"
+            >
               <mat-icon>add</mat-icon>
             </button>
-            <button *ngIf="i" mat-mini-fab color="primary" aria-label="Delete added language" (click)="removeLanguage(source, i)">
+            <button
+              *ngIf="i"
+              mat-mini-fab
+              color="primary"
+              aria-label="Delete added language"
+              (click)="removeLanguage(source, i)"
+              [attr.data-cy]="source.key.property.name + 'Remove'"
+            >
               <mat-icon>delete</mat-icon>
             </button>
           </div>
