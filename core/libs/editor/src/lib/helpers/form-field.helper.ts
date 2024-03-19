@@ -12,12 +12,9 @@
  */
 
 import {DefaultEntity, DefaultEnumeration, DefaultProperty, DefaultTrait, Property} from '@ame/meta-model';
-import {isDataTypeLangString} from '@ame/shared';
-import {FormGroup} from '@angular/forms';
 
 export enum DataType {
   COMPLEX = 'COMPLEX',
-  LANG_STRING = 'LANG_STRING',
   DEFAULT = 'DEFAULT',
 }
 
@@ -36,16 +33,9 @@ export class FormFieldHelper {
     return property?.characteristic instanceof DefaultEnumeration;
   }
 
-  public static hasPropertyValidator(property: DefaultProperty, form: FormGroup, key?: string): boolean {
-    const languageCode = key ? '-' + key : '';
-    return Boolean(form.controls[property.name + languageCode]?.validator);
-  }
-
   public static getDataType(property: DefaultProperty): DataType {
     if (FormFieldHelper.isComplexProperty(property)) {
       return DataType.COMPLEX;
-    } else if (isDataTypeLangString(property)) {
-      return DataType.LANG_STRING;
     }
 
     return DataType.DEFAULT;

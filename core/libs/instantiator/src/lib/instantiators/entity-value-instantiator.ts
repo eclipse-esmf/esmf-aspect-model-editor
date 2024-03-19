@@ -12,12 +12,11 @@
  */
 
 import {DataFactory, NamedNode, Quad, Quad_Object, Util} from 'n3';
-import {DefaultEntity, DefaultEntityValue, Entity, LangStringProperty, OverWrittenProperty} from '@ame/meta-model';
+import {DefaultEntity, DefaultEntityValue, Entity, OverWrittenProperty} from '@ame/meta-model';
 import {EntityInstantiator} from './entity-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {Samm} from '@ame/vocabulary';
 import {syncElementWithChildren} from '../helpers';
-import {InstantiatorListElement} from '@ame/rdf/models';
 
 export class EntityValueInstantiator {
   private get samm(): Samm {
@@ -113,8 +112,8 @@ export class EntityValueInstantiator {
 
   private processLiteralValue(quad: Quad, defaultEntityValue: DefaultEntityValue, predicateOverride?: any): void {
     this.resolveProperty(predicateOverride || quad.predicate, (overwrittenProperty: OverWrittenProperty) => {
-      const propertyValue = this.getPropertyValue(quad);
-      defaultEntityValue.addProperty(overwrittenProperty, propertyValue);
+      const language = this.rdfModel.hasLocalTag(quad) ? this.rdfModel.getLocale(quad) : undefined;
+      defaultEntityValue.addProperty(overwrittenProperty, quad.object.value, language);
       syncElementWithChildren(defaultEntityValue);
     });
   }
@@ -133,17 +132,6 @@ export class EntityValueInstantiator {
 
   private resolveProperty(predicate: any, callback: (property: OverWrittenProperty) => void): void {
     this.metaModelElementInstantiator.getProperty({quad: predicate}, callback);
-  }
-
-  private getPropertyValue(property: Quad): string | LangStringProperty | DefaultEntityValue {
-    if (this.rdfModel.hasLocalTag(property)) {
-      return {
-        language: this.rdfModel.getLocale(property),
-        value: property.object.value,
-      };
-    }
-
-    return property.object.value;
   }
 
   private queueEntityValueInstantiation(quad: Quad, defaultEntityValue: DefaultEntityValue): void {

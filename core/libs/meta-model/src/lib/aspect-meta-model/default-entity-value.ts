@@ -19,13 +19,10 @@ import {OverWrittenProperty} from './overwritten-property';
 
 export interface EntityValueProperty {
   key: OverWrittenProperty;
-  value: string | number | boolean | DefaultEntityValue | LangStringProperty;
+  value: string | number | boolean | DefaultEntityValue;
+  optional?: boolean;
+  language?: string;
   isComplex?: boolean;
-}
-
-export interface LangStringProperty {
-  value: string;
-  language: string;
 }
 
 export interface EntityValueProperties {
@@ -34,7 +31,6 @@ export interface EntityValueProperties {
 
 export interface EntityValue extends BaseMetaModelElement, EntityValueProperties {}
 
-// Draft class, to be updated if needed
 export class DefaultEntityValue extends Base implements EntityValue {
   public properties: EntityValueProperty[] = [];
   public parents: any = new ModelRelationArray<DefaultEnumeration | DefaultEntityValue>();
@@ -58,8 +54,8 @@ export class DefaultEntityValue extends Base implements EntityValue {
     this.properties = properties?.map(key => ({key, value: ''})) || [];
   }
 
-  public addProperty(overWrittenProperty: OverWrittenProperty<any>, value: string | LangStringProperty | DefaultEntityValue = '') {
-    this.properties.push({key: overWrittenProperty, value});
+  public addProperty(overWrittenProperty: OverWrittenProperty<any>, value: string | DefaultEntityValue = '', language?: string) {
+    this.properties.push({key: overWrittenProperty, value, language});
   }
 
   public removeProperty(property: DefaultProperty) {
@@ -72,5 +68,9 @@ export class DefaultEntityValue extends Base implements EntityValue {
 
   public removeParent(element: DefaultEnumeration | DefaultEntityValue) {
     this.parents = this.parents.filter(parent => parent.aspectModelUrn !== element.aspectModelUrn);
+  }
+
+  toString(): string {
+    return this.name ? this.name : '';
   }
 }

@@ -54,11 +54,12 @@
           >
             <span class="property-key__field">
               {{ element.key.property.name }}
-              <ng-container *ngIf="element.value.language"> ({{ element.value.language }}) </ng-container>
+              <ng-container *ngIf="element.language"> ({{ element.language }}) </ng-container>
             </span>
           </span>
         </mat-cell>
       </ng-container>
+
       <!-- Value Column -->
       <ng-container matColumnDef="value">
         <mat-header-cell *matHeaderCellDef>Value</mat-header-cell>
@@ -68,10 +69,6 @@
               {{ element.value }}
             </ng-container>
 
-            <ng-container *ngSwitchCase="dataType.LANG_STRING">
-              {{ element.value.value }}
-            </ng-container>
-
             <ng-container *ngSwitchCase="dataType.COMPLEX">
               <mat-icon class="material-icons complex-value-icon" matTooltip="Complex Data type">view_module</mat-icon>
               {{ element.value.name }}
@@ -79,6 +76,7 @@
           </ng-container>
         </mat-cell>
       </ng-container>
+
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row
         *matRowDef="let row; columns: displayedColumns"

@@ -11,13 +11,30 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {BaseMetaModelElement, DefaultEntityValue, DefaultProperty, EntityValueProperty, LangStringProperty} from '@ame/meta-model';
-import {DataType, EntityValueUtil, FormFieldHelper} from '@ame/editor';
+import {ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  UntypedFormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import {
+  BaseMetaModelElement,
+  Characteristic,
+  DefaultAbstractProperty,
+  DefaultCollection,
+  DefaultEntityValue,
+  DefaultProperty,
+  EntityValueProperty,
+  OverWrittenProperty,
+} from '@ame/meta-model';
+import {DataType, EditorDialogValidators, EntityValueUtil, FormFieldHelper} from '@ame/editor';
 import {InputFieldComponent} from '../../fields';
-import {MatTableDataSource} from '@angular/material/table';
-import {map, Observable, startWith} from 'rxjs';
+import {map, Observable, of, startWith, Subscription} from 'rxjs';
 import * as locale from 'locale-codes';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
@@ -27,32 +44,38 @@ import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
   styleUrls: ['./entity-value-table.component.scss'],
 })
 export class EntityValueTableComponent extends InputFieldComponent<DefaultEntityValue> implements OnInit, OnChanges, OnDestroy {
-  @ViewChild('autoTrigger') autocompleteTrigger: MatAutocompleteTrigger;
+  @ViewChildren(MatAutocompleteTrigger) autocompleteTriggers: QueryList<MatAutocompleteTrigger>;
 
   protected readonly EntityValueUtil = EntityValueUtil;
   protected readonly formFieldHelper = FormFieldHelper;
   protected readonly dataType = DataType;
 
-  displayedColumns = ['key', 'value'];
-  dataSource: MatTableDataSource<EntityValueProperty>;
+  propertiesForm: FormGroup;
+  sources: EntityValueProperty[] = [];
+  subscriptions = new Subscription();
 
   filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
   filteredLanguageValues$: {[key: string]: Observable<any[]>} = {};
-
-  displayForm = new FormGroup({});
-  propertiesForm: FormGroup = new FormGroup({});
 
   get entityValuePropertiesForm(): FormGroup {
     return this.parentForm.get('entityValueProperties') as FormGroup;
   }
 
-  constructor(private changeDetector: ChangeDetectorRef) {
+  getFormArray(value: string): FormArray {
+    return this.entityValuePropertiesForm.get(value) as FormArray;
+  }
+
+  constructor(
+    private changeDetector: ChangeDetectorRef,
+    private fb: FormBuilder,
+  ) {
     super();
   }
 
   ngOnInit(): void {
     this.subscription.add(
       this.getMetaModelData().subscribe((metaModelElement: BaseMetaModelElement) => {
+        this.propertiesForm = new FormGroup({});
         this.metaModelElement = metaModelElement as DefaultEntityValue;
         this.parentForm.setControl('entityValueProperties', this.propertiesForm);
 
@@ -66,108 +89,180 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
 
         this.metaModelElement.properties.forEach(entityValueProperty => {
           const property = entityValueProperty.key.property;
-          const isLangString = EntityValueUtil.isDefaultPropertyWithLangString(entityValueProperty.key);
           const validators = this.getValidators(entityValueProperty);
-          const propertyValue = this.extractPropertyValue(entityValueProperty, isLangString);
+          const {value, language} = entityValueProperty;
 
-          this.initializeFormControl(property.name, propertyValue, validators);
-          this.initializeFilteredEntityValues(property);
-
-          if (isLangString) {
-            this.handleLangStringProperty(entityValueProperty, property, validators);
-          }
+          this.initializeFormControl(property, validators, value, language);
         });
 
-        this.dataSource = new MatTableDataSource(this.metaModelElement.properties);
+        this.sources = this.metaModelElement?.entity?.allProperties.map(prop => this.createEntityValueProp(prop));
       }),
     );
+  }
+
+  private createEntityValueProp(prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): EntityValueProperty {
+    const property = prop.property as DefaultProperty;
+    const propertyControl = this.propertiesForm.get(property.name);
+
+    if (!propertyControl) {
+      const propertiesFormArray = EntityValueUtil.getDisplayControl(this.propertiesForm, property.name);
+      const valueControl = this.createFormControl(prop);
+      this.subscribeToEntityValueChanges(valueControl, prop.property as DefaultProperty);
+
+      const group = new UntypedFormGroup({value: valueControl});
+      propertiesFormArray.push(group);
+
+      if (EntityValueUtil.isDefaultPropertyWithLangString(prop)) {
+        const languageControl = this.createFormControl(prop);
+        this.subscribeToLangValueChanges(languageControl, property);
+        group.addControl('language', languageControl);
+      }
+    }
+
+    return {
+      key: prop as OverWrittenProperty,
+      value: '',
+      language: EntityValueUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined,
+      optional: prop.keys.optional,
+    };
+  }
+
+  private createFormControl(prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): FormControl {
+    return new FormControl('', prop.keys.optional ? null : EditorDialogValidators.requiredObject);
   }
 
   private getValidators(entityValueProperty: EntityValueProperty): (control: AbstractControl) => ValidationErrors | null {
     return entityValueProperty.key.keys.optional ? null : Validators.required;
   }
 
-  private extractPropertyValue(entityValueProperty: EntityValueProperty, isLangString: boolean) {
-    if (isLangString) {
-      return (entityValueProperty.value as LangStringProperty).value;
-    }
-
-    return entityValueProperty.value;
-  }
-
   private initializeFormControl(
-    propertyName: string,
-    propertyValue: any,
+    property: DefaultProperty,
     validators: (control: AbstractControl) => ValidationErrors | null,
-  ) {
-    this.propertiesForm.setControl(propertyName, new FormControl(propertyValue, validators));
+    propertyValue: string | number | boolean | DefaultEntityValue,
+    propertyLanguage: string,
+  ): void {
+    // Ensure the properties FormArray exists and is correctly initialized
+    const propertiesFormArray = this.ensurePropertiesFormArray(property.name);
 
-    if (propertyValue instanceof DefaultEntityValue) {
-      this.displayForm.setControl(propertyName, new FormControl(propertyValue['name'], validators));
-    } else {
-      this.displayForm.setControl(propertyName, new FormControl(propertyValue, validators));
+    // Create and configure the value control, including disabling if necessary
+    const valueControl = this.createValueControl(propertyValue, validators);
+    this.subscribeToEntityValueChanges(valueControl, property);
+
+    // Create the form group, potentially including a language control
+    const group = new UntypedFormGroup({value: valueControl});
+    this.addLanguageControl(group, propertyLanguage, validators, property);
+
+    propertiesFormArray.push(group);
+  }
+
+  private ensurePropertiesFormArray(propertyName: string): FormArray {
+    let propertiesFormArray = this.propertiesForm.get(propertyName) as FormArray;
+    if (!propertiesFormArray) {
+      propertiesFormArray = new FormArray([]);
+      this.propertiesForm.setControl(propertyName, propertiesFormArray);
     }
+    return propertiesFormArray;
+  }
 
-    if (propertyValue) {
-      this.displayForm.get(propertyName).disable();
+  private createValueControl(propertyValue: string | number | boolean | DefaultEntityValue, validators): FormControl {
+    const isEntityValue = propertyValue instanceof DefaultEntityValue;
+    return new FormControl({value: propertyValue, disabled: isEntityValue}, validators);
+  }
+
+  private addLanguageControl(group: UntypedFormGroup, propertyLanguage: string, validators, property): void {
+    if (propertyLanguage) {
+      const languageControl = new FormControl({value: propertyLanguage, disabled: true}, validators);
+      this.subscribeToLangValueChanges(languageControl, property);
+      group.addControl('language', languageControl);
     }
   }
 
-  private initializeFilteredEntityValues(property: DefaultProperty) {
-    this.filteredEntityValues$[property.name] = EntityValueUtil.initFilteredEntityValues(property, this.displayForm).pipe(
-      startWith(''),
-      map(value => this.getPropertyValues(property).filter(entityValue => entityValue.name.startsWith(value))),
+  private subscribeToEntityValueChanges(control: FormControl, property: DefaultProperty): void {
+    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeEntityValueInput(property, value)));
+  }
+
+  private changeEntityValueInput(property: DefaultProperty, value: string): void {
+    this.filteredEntityValues$[property.name] = of(this.getPropertyValues(property)).pipe(
+      map(ev => ev.filter(entityValue => entityValue.name.startsWith(value))),
     );
   }
 
-  private handleLangStringProperty(
-    entityValueProperty: EntityValueProperty,
-    property: DefaultProperty,
-    validators: (control: AbstractControl) => ValidationErrors | null,
-  ) {
-    if (!this.displayedColumns.includes('language')) {
-      this.displayedColumns.push('language');
-    }
+  private subscribeToLangValueChanges(control: FormControl, property: DefaultProperty): void {
+    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeLanguageInput(property.name, value)));
+  }
 
-    const language = (entityValueProperty.value as LangStringProperty).language;
-
-    this.propertiesForm.setControl(`${property.name}-lang`, new FormControl(language, validators));
-    this.displayForm.setControl(`${property.name}-lang`, new FormControl(language, validators));
-    this.displayForm.get(`${property.name}-lang`).disable();
-
-    this.filteredLanguageValues$[property.name] = EntityValueUtil.initFilteredLanguages(property, this.displayForm).pipe(
-      startWith(''),
-      map(value => locale.all.filter(lang => lang.tag.startsWith(value))),
+  private changeLanguageInput(name: string, value: string): void {
+    this.filteredLanguageValues$[name] = of(locale.all.filter(lang => lang.tag)).pipe(
+      startWith(locale.all),
+      map(local => local.filter(lang => lang.tag.startsWith(value))),
     );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.hasOwnProperty('parentForm') && this.parentForm) {
+    if ('parentForm' in changes && this.parentForm) {
       this.parentForm.setControl('entityValueProperties', this.propertiesForm);
     }
   }
 
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
-  }
-
-  getPropertyValues(property: DefaultProperty): DefaultEntityValue[] {
+  private getPropertyValues(property: DefaultProperty): DefaultEntityValue[] {
     const existingEntityValues = EntityValueUtil.existingEntityValues(this.currentCachedFile, property);
     const entityValues = EntityValueUtil.entityValues(this.parentForm, property);
     return [...existingEntityValues, ...entityValues];
   }
 
-  changeSelection(controlName: string, propertyValue: any) {
-    EntityValueUtil.changeSelection(this.displayForm, this.entityValuePropertiesForm, controlName, propertyValue);
-
-    if (this.autocompleteTrigger) {
-      this.autocompleteTrigger.closePanel();
-    }
-
+  changeSelection(controlName: string, propertyValue: any): void {
+    EntityValueUtil.changeSelection(this.entityValuePropertiesForm, controlName, propertyValue);
+    this.closeAllAutocompletePanels();
     this.changeDetector.detectChanges();
   }
 
-  getControl(propertyControlName: string): FormControl {
-    return this.propertiesForm.get(propertyControlName) as FormControl;
+  changeLanguageSelection(ev: EntityValueProperty, propertyValue: string, index: number): void {
+    EntityValueUtil.changeLanguageSelection(this.propertiesForm, ev, propertyValue, index);
+    this.closeAllAutocompletePanels();
+    this.changeDetector.detectChanges();
+  }
+
+  private closeAllAutocompletePanels() {
+    this.autocompleteTriggers.forEach(trigger => {
+      trigger.closePanel();
+    });
+  }
+
+  createNewEntityValue(property: DefaultProperty, entityValue: string) {
+    EntityValueUtil.createNewEntityValue(this.parentForm, property, entityValue);
+    this.changeDetector.detectChanges();
+  }
+
+  addLanguage(entityValueProp: EntityValueProperty): void {
+    const fieldValidators = entityValueProp.optional ? null : EditorDialogValidators.requiredObject;
+    const languagesFormArray = this.propertiesForm.get(entityValueProp.key.property.name) as FormArray;
+
+    const languageInputControl = new FormControl('', fieldValidators);
+
+    this.subscriptions.add(
+      languageInputControl.valueChanges.subscribe(value => {
+        this.changeLanguageInput(entityValueProp.key.property.name, value);
+      }),
+    );
+
+    const languageFormGroup = this.fb.group({
+      value: ['', fieldValidators],
+      language: languageInputControl,
+    });
+
+    languagesFormArray.push(languageFormGroup);
+  }
+
+  removeLanguage(entityValueProp: EntityValueProperty, index: number): void {
+    const languagesFormArray = this.propertiesForm.get(entityValueProp.key.property.name) as FormArray;
+    languagesFormArray.removeAt(index);
+  }
+
+  isCharacteristicCollectionType(characteristic: Characteristic | undefined): boolean {
+    return characteristic instanceof DefaultCollection;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

@@ -11,142 +11,142 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-table *ngIf="form" class="example-container" [dataSource]="dataSource">
-  <!-- Property Name Column -->
-  <ng-container matColumnDef="key">
-    <mat-header-cell *matHeaderCellDef>Property</mat-header-cell>
-    <mat-cell *matCellDef="let source">
-      <!-- has non complex dataType -->
-      <ng-container *ngIf="!formFieldHelper.isComplexProperty(source.key.property)">
-        {{ source.key.property.name }}
-        <span>{{ formFieldHelper.hasPropertyValidator(source.key.property, propertiesForm) ? ' *' : '' }}</span>
-      </ng-container>
+<div class="source" *ngIf="form" [formGroup]="propertiesForm">
+  <ng-container *ngFor="let source of sources">
+    <ng-container [formArrayName]="source.key.property.name">
+      <mat-divider class="source__divider"></mat-divider>
+      <div class="source__title">
+        <!-- FormArray property column -->
+        <!-- has non complex dataType -->
+        <ng-container *ngIf="!formFieldHelper.isComplexProperty(source.key.property)">
+          {{ source.key.property.name }}
+          <span *ngIf="!source.optional" class="source__required-indicator">*</span>
+        </ng-container>
+        <!-- Has Complex dataType -->
+        <ng-container *ngIf="formFieldHelper.isComplexProperty(source.key.property)">
+          {{ source.key.property.name }}
+          <mat-icon class="material-icons complex-value-icon">view_module</mat-icon>
+          <span *ngIf="!source.optional" class="source__required-indicator">*</span>
+        </ng-container>
+      </div>
 
-      <!-- Has Complex dataType -->
-      <ng-container *ngIf="formFieldHelper.isComplexProperty(source.key.property)">
-        {{ source.key.property.name }}
-        <mat-icon class="material-icons complex-value-icon">view_module</mat-icon>
-        <span>{{ formFieldHelper.hasPropertyValidator(source.key.property, propertiesForm) ? ' *' : '' }}</span>
-      </ng-container>
-    </mat-cell>
-  </ng-container>
+      <div class="source__row" [formGroupName]="i" *ngFor="let control of getFormArray(source.key.property.name).controls; let i = index">
+        <!-- FormArray value column -->
+        <div class="source__column source__column--value">
+          <!-- non complex property type -->
+          <ng-container *ngIf="!formFieldHelper.isComplexProperty(source.key.property)">
+            <mat-form-field appearance="fill" class="source__input">
+              <mat-label>Value</mat-label>
+              <input matInput type="text" formControlName="value" data-cy="propertyValueNotComplex" />
+              <mat-error *ngIf="control.get('value').errors?.required">Value is required</mat-error>
+            </mat-form-field>
+          </ng-container>
 
-  <!-- Value Column -->
-  <ng-container matColumnDef="value">
-    <mat-header-cell *matHeaderCellDef>Value</mat-header-cell>
-    <mat-cell *matCellDef="let source">
-      <ng-container *ngIf="!formFieldHelper.isComplexProperty(source.key.property)">
-        <mat-form-field class="small-form-field">
-          <input
-            [formControl]="getControl(source.key.property.name)"
-            type="text"
-            [name]="source.key.property.name"
-            matInput
-            data-cy="propertyValueNotComplex"
-          />
-          <mat-error *ngIf="getControl(source.key.property.name)?.errors?.required">Value is required</mat-error>
-        </mat-form-field>
-      </ng-container>
+          <!-- complex property type -->
+          <ng-container *ngIf="formFieldHelper.isComplexProperty(source.key.property)">
+            <mat-form-field appearance="fill" class="source__input">
+              <mat-label>Entity Value</mat-label>
+              <input
+                #entityValueInput
+                matInput
+                formControlName="value"
+                [value]="'test'"
+                [matAutocomplete]="auto"
+                data-cy="propertyValueComplex"
+              />
+              <button
+                *ngIf="EntityValueUtil.getDisplayControl(propertiesForm, source.key.property.name).disabled"
+                (click)="EntityValueUtil.unlockValue(propertiesForm, source.key.property.name, 0, 'value')"
+                data-cy="clear-entityValue-button"
+                matSuffix
+                mat-icon-button
+                tabindex="-1"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
 
-      <ng-container *ngIf="formFieldHelper.isComplexProperty(source.key.property)">
-        <mat-form-field>
-          <mat-label for="entityValue">Entity Value</mat-label>
-          <input
-            #entityValueInput
-            matInput
-            name="entityValue-{{ source.key.property.name }}"
-            [matAutocomplete]="auto"
-            [formControl]="EntityValueUtil.getDisplayControl(displayForm, source.key.property.name)"
-            data-cy="propertyValueComplex"
-          />
-          <button
-            *ngIf="EntityValueUtil.getDisplayControl(displayForm, source.key.property.name)?.disabled"
-            (click)="EntityValueUtil.unlockEntityValue(displayForm, form, source.key.property.name)"
-            data-cy="clear-entityValue-button"
-            matSuffix
-            mat-icon-button
-            tabindex="-1"
+              <mat-autocomplete #auto="matAutocomplete" class="characteristic-entity-value-autocomplete">
+                <mat-optgroup
+                  *ngIf="filteredEntityValues$[source.key.property?.name] | async as filteredEntityValues"
+                  label="Entity Values"
+                >
+                  <mat-option
+                    *ngIf="
+                      EntityValueUtil.showCreateNewEntityOption(
+                        entityValueInput.value,
+                        filteredEntityValues,
+                        currentCachedFile,
+                        form,
+                        entity
+                      )
+                    "
+                    [value]="entityValueInput.value"
+                    (click)="createNewEntityValue(source.key.property, entityValueInput.value)"
+                  >
+                    <span>
+                      + Create: <strong>{{ entityValueInput.value }}</strong>
+                    </span>
+                  </mat-option>
+                  <mat-option
+                    *ngFor="let entityValue of filteredEntityValues"
+                    [value]="entityValue.name"
+                    (onSelectionChange)="changeSelection(source.key.property.name, entityValue)"
+                  >
+                    {{ entityValue.name }}
+                  </mat-option>
+                </mat-optgroup>
+              </mat-autocomplete>
+            </mat-form-field>
+          </ng-container>
+        </div>
+
+        <!-- FormArray for languages column -->
+        <ng-container *ngIf="source.language !== undefined">
+          <div
+            class="source__column source__column--language"
+            [ngClass]="isCharacteristicCollectionType(source.key.property?.characteristic) ? 'source__column--language-with-icon' : ''"
           >
-            <mat-icon>close</mat-icon>
-          </button>
+            <ng-container>
+              <mat-form-field appearance="fill" class="source__input">
+                <mat-label>Language</mat-label>
+                <input matInput formControlName="language" [matAutocomplete]="auto" data-cy="propertyLanguageValue" />
+                <button
+                  *ngIf="EntityValueUtil.getDisplayControl(propertiesForm, source.key.property.name).at(i)?.get('language')?.disabled"
+                  (click)="EntityValueUtil.unlockValue(propertiesForm, source.key.property.name, i, 'language')"
+                  data-cy="clear-language-button"
+                  matSuffix
+                  mat-icon-button
+                  tabindex="-1"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
 
-          <mat-autocomplete #auto="matAutocomplete" class="characteristic-entity-value-autocomplete">
-            <mat-optgroup *ngIf="filteredEntityValues$[source.key.property?.name] | async as filteredEntityValues" label="Entity Values">
-              <mat-option
-                *ngIf="
-                  EntityValueUtil.showCreateNewEntityOption(entityValueInput.value, filteredEntityValues, currentCachedFile, form, entity)
-                "
-                [value]="entityValueInput.value"
-                (click)="createNewEntityValue(source.key.property, entityValueInput.value)"
-              >
-                <span>
-                  + Create: <strong>{{ entityValueInput.value }}</strong>
-                </span>
-              </mat-option>
-              <mat-option
-                *ngFor="let entityValue of filteredEntityValues"
-                [value]="entityValue.name"
-                (onSelectionChange)="changeSelection(source.key.property.name, entityValue)"
-              >
-                {{ entityValue.name }}
-              </mat-option>
-            </mat-optgroup>
-          </mat-autocomplete>
-        </mat-form-field>
-      </ng-container>
-    </mat-cell>
-  </ng-container>
-
-  <!-- Language Column -->
-  <ng-container matColumnDef="language" *ngIf="displayedColumns.includes('language')">
-    <mat-header-cell *matHeaderCellDef>Language</mat-header-cell>
-    <mat-cell *matCellDef="let source">
-      <ng-container *ngIf="EntityValueUtil.isDefaultPropertyWithLangString(source.key)">
-        <mat-form-field>
-          <input
-            matInput
-            name="{{ source.key.property.name }}-lang"
-            [matAutocomplete]="auto"
-            #autoTrigger="matAutocompleteTrigger"
-            [formControl]="EntityValueUtil.getDisplayControl(displayForm, source.key.property.name + '-lang')"
-            data-cy="propertyLanguageValue"
-          />
-          <button
-            *ngIf="EntityValueUtil.getDisplayControl(displayForm, source.key.property.name + '-lang')?.disabled"
-            (click)="EntityValueUtil.unlockEntityValue(displayForm, form, source.key.property.name + '-lang')"
-            data-cy="clear-language-button"
-            matSuffix
-            mat-icon-button
-            tabindex="-1"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
-
-          <mat-autocomplete #auto="matAutocomplete" class="characteristic-entity-value-autocomplete">
-            <ng-container *ngIf="filteredLanguageValues$[source.key.property?.name] | async as filteredLanguageValues$">
-              <mat-option
-                *ngFor="let language of filteredLanguageValues$"
-                [value]="language.tag"
-                (onSelectionChange)="changeSelection(source.key.property.name + '-lang', language.tag)"
-              >
-                {{ language.tag }}
-              </mat-option>
+                <mat-autocomplete #auto="matAutocomplete" class="characteristic-entity-value-autocomplete">
+                  <ng-container *ngIf="filteredLanguageValues$[source.key.property?.name] | async as filteredLanguageValues$">
+                    <mat-option
+                      *ngFor="let language of filteredLanguageValues$"
+                      [value]="language.tag"
+                      (onSelectionChange)="changeLanguageSelection(source, language.tag, i)"
+                    >
+                      {{ language.tag }}
+                    </mat-option>
+                  </ng-container>
+                </mat-autocomplete>
+                <mat-error *ngIf="control.get('language').errors?.required">Language is required</mat-error>
+              </mat-form-field>
             </ng-container>
-          </mat-autocomplete>
-        </mat-form-field>
-      </ng-container>
-      <ng-container *ngIf="!EntityValueUtil.isDefaultPropertyWithLangString(source.key)"> 'No language needed' </ng-container>
-    </mat-cell>
+          </div>
+
+          <div *ngIf="isCharacteristicCollectionType(source.key.property?.characteristic)" class="source__column source__column--icon">
+            <button *ngIf="!i" mat-mini-fab color="primary" aria-label="Add new language" (click)="addLanguage(source)">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button *ngIf="i" mat-mini-fab color="primary" aria-label="Delete added language" (click)="removeLanguage(source, i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
   </ng-container>
-
-  <ng-container matColumnDef="noRecord">
-    <mat-footer-cell *matFooterCellDef>No properties defined for this entity value</mat-footer-cell>
-  </ng-container>
-
-  <ng-template [ngIf]="entity?.properties.length === 0">
-    <mat-footer-row *matFooterRowDef="['noRecord']"></mat-footer-row>
-  </ng-template>
-
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-</mat-table>
+</div>

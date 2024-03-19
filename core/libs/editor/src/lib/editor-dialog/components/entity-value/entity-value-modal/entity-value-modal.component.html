@@ -46,7 +46,7 @@
     ></ame-entity-value-modal-table>
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
+  <mat-dialog-actions align="end" class="sticky-dialog-actions">
     <button type="button" mat-raised-button (click)="onClose()" data-cy="entityCancelButton">Cancel</button>
     <button [disabled]="form.invalid" mat-raised-button color="primary" type="submit" data-cy="entitySaveButton">Save</button>
   </mat-dialog-actions>

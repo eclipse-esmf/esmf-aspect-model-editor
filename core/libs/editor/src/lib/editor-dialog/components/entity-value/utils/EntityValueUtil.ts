@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {
   DefaultAbstractProperty,
   DefaultEntity,
@@ -19,6 +19,7 @@ import {
   DefaultProperty,
   DefaultTrait,
   Entity,
+  EntityValueProperty,
   OverWrittenProperty,
   Property,
 } from '@ame/meta-model';
@@ -29,40 +30,21 @@ import {isDataTypeLangString} from '@ame/shared';
 
 export class EntityValueUtil {
   /**
-   * Initializes filtered entity values as an observable from a given form control.
-   * @param {Property} property - The property to initialize values for.
-   * @param {FormGroup} form - The form group containing the control.
-   * @returns {Observable<string>} An observable of the form control's value changes.
+   * Ensures a FormArray exists for a given control name within a FormGroup. If the control does not exist or is not a FormArray,
+   * a new FormArray is created and assigned to the control name. This method is useful for dynamically adding controls to a form.
+   *
+   * @param {FormGroup} form - The FormGroup to search within or modify.
+   * @param {string} controlName - The name of the FormArray control to retrieve or initialize.
+   * @returns {FormArray} The existing or newly created FormArray for the specified control name.
    */
-  static initFilteredEntityValues(property: Property, form: FormGroup): Observable<string> {
-    return EntityValueUtil.getDisplayControl(form, property.name).valueChanges;
-  }
-
-  /**
-   * Initializes filtered languages as an observable from a given form control.
-   * @param {Property} property - The property related to language control.
-   * @param {FormGroup} form - The form group containing the language control.
-   * @returns {Observable<string>} An observable of the language control's value changes.
-   */
-  static initFilteredLanguages(property: Property, form: FormGroup): Observable<string> {
-    return EntityValueUtil.getDisplayControl(form, `${property.name}-lang`)?.valueChanges;
-  }
-
-  /**
-   * Retrieves a FormControl from a FormGroup, or creates a new one if it doesn't exist.
-   * @param {FormGroup} form - The form group to search within.
-   * @param {string} controlName - The name of the form control to retrieve.
-   * @returns {FormControl} The retrieved or newly created form control.
-   */
-  static getDisplayControl(form: FormGroup, controlName: string): FormControl {
-    let formControl = form.get(controlName) as FormControl;
-
-    if (!formControl) {
-      formControl = new FormControl(null);
-      form.setControl(controlName, formControl);
+  static getDisplayControl(form: FormGroup, controlName: string): FormArray {
+    let control = form.get(controlName);
+    if (!(control instanceof FormArray)) {
+      control = new FormArray([]);
+      form.setControl(controlName, control);
     }
 
-    return formControl;
+    return control as FormArray;
   }
 
   /**
@@ -98,7 +80,7 @@ export class EntityValueUtil {
    * @param {DefaultEntityValue[]} entityValues - Array of existing entity values.
    * @param {CachedFile} currentCachedFile - The file containing cached entity values.
    * @param {FormGroup} form - The form group associated with the entity.
-   * @param {Entity} entity - The entity being evaluated.
+   * @param {Entity | DefaultEntityValue} entity - The entity | entity value being evaluated.
    * @returns {boolean} True if the option to create a new entity should be shown, false otherwise.
    */
   static showCreateNewEntityOption(
@@ -106,7 +88,7 @@ export class EntityValueUtil {
     entityValues: DefaultEntityValue[],
     currentCachedFile: CachedFile,
     form: FormGroup,
-    entity: Entity,
+    entity: Entity | DefaultEntityValue,
   ): boolean {
     if (!this.isEntityNameValid(entityValueName, form, entityValues)) {
       return false;
@@ -139,50 +121,61 @@ export class EntityValueUtil {
   }
 
   /**
-   * Updates form control values based on a property value change.
-   * @param {FormGroup} displayedForm - The form displaying the property values.
-   * @param {FormGroup} propertiesForm - The form containing the property values.
-   * @param {string} controlName - The name of the control to update.
-   * @param {any} propertyValue - The new value for the property.
+   * Updates form control values based on a property value change and then disables the entire form group.
+   * This is particularly used for setting the value of a specific control within a FormArray and then
+   * disabling further modifications to it, typically after a selection has been made.
+   *
+   * @param {FormGroup} propertiesForm - The form containing the property values. This form includes
+   *  the control identified by `controlName`.
+   * @param {string} controlName - The name of the control within `propertiesForm` to be updated.
+   *  This control is expected to be part of a FormArray.
+   * @param {DefaultEntityValue} ev - The new value to be set for the specified control. This parameter
+   *  represents the updated entity value that should be reflected in the UI.
    */
-  static changeSelection(displayedForm: FormGroup, propertiesForm: FormGroup, controlName: string, propertyValue: any): void {
-    displayedForm.get(controlName).setValue(propertyValue.name ? propertyValue.name : propertyValue);
-    displayedForm.get(controlName).disable();
-    propertiesForm.get(controlName).setValue(propertyValue);
+  static changeSelection(propertiesForm: FormGroup, controlName: string, ev: DefaultEntityValue): void {
+    (propertiesForm.get(controlName) as FormArray).at(0).get('value').setValue(ev);
+    propertiesForm.get(controlName).disable();
   }
 
   /**
-   * Unlocks the entity value for editing and updates relevant form controls.
-   * @param {FormGroup} displayedFormGroup - The displayed form group where the control is unlocked.
-   * @param {FormGroup} form - The main form group containing entity value properties.
-   * @param {string} controlName - The name of the control to unlock.
+   * Updates the language selection for a specific property in a form array. It sets the value of the
+   * language control based on the provided property value and then disables it to prevent further changes.
+   * This is typically used to finalize the language selection after a user makes a choice.
+   *
+   * @param {FormGroup} propertiesForm - The FormGroup that contains the FormArray of properties.
+   * @param {EntityValueProperty} ev - An object representing the entity value property, used to identify
+   *  the specific FormArray and control within the form.
+   * @param {string} propertyValue - The value to set for the language control.
+   * @param {number} index - The index of the control within the FormArray that should be updated.
    */
-  static unlockEntityValue(displayedFormGroup: FormGroup, form: FormGroup, controlName: string) {
-    const displayControl = this.getDisplayControl(displayedFormGroup, controlName);
+  static changeLanguageSelection(propertiesForm: FormGroup, ev: EntityValueProperty, propertyValue: string, index: number): void {
+    const propertiesFormArray = propertiesForm.get(ev.key.property.name) as FormArray;
+    const languageControl = propertiesFormArray.at(index).get('language');
+    languageControl.setValue(propertyValue);
+    languageControl.disable();
+  }
 
-    const propertyForm = form.get('properties') || form.get('entityValueProperties');
-    const removedEntityValue = propertyForm.get(controlName).value;
-
+  /**
+   * Unlocks the entity value for editing and updates the specified control within a form group.
+   * This involves enabling the control and resetting its value.
+   * @param {FormGroup} displayedFormGroup - The form group displayed on the UI.
+   * @param {string} controlName - The name of the control group within the displayed form group.
+   * @param {number} index - The index of the control within the form array to be unlocked.
+   * @param {string} valueControlName - The name of the specific control to unlock for editing.
+   */
+  static unlockValue(displayedFormGroup: FormGroup, controlName: string, index: number, valueControlName: string) {
+    const displayControl = this.getDisplayControl(displayedFormGroup, controlName).at(index).get(valueControlName);
     displayControl.enable();
     displayControl.patchValue('');
-
-    propertyForm.get(controlName).patchValue(null);
-
-    const newEntityValues = form.get('newEntityValues');
-
-    if (newEntityValues?.value?.includes(removedEntityValue)) {
-      newEntityValues.setValue(newEntityValues.value.filter(ev => ev !== removedEntityValue));
-    }
   }
 
   /**
    * Creates a new entity value and updates the form controls accordingly.
-   * @param {FormGroup} displayedForm - The form displaying the entity values.
    * @param {FormGroup} form - The form containing the entity value properties.
    * @param {any} property - The property for which to create a new entity value.
    * @param {any} entityValueName - The name of the new entity value.
    */
-  static createNewEntityValue(displayedForm: FormGroup, form: FormGroup, property: any, entityValueName: any) {
+  static createNewEntityValue(form: FormGroup, property: any, entityValueName: any) {
     const characteristic =
       property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
     const urn = `${property.aspectModelUrn.split('#')?.[0]}#${entityValueName}`;
@@ -201,9 +194,19 @@ export class EntityValueUtil {
       form.setControl('newEntityValues', new FormControl([newEntityValue]));
     }
 
-    (form.get('properties') || form.get('entityValueProperties')).get(property.name).patchValue(newEntityValue);
+    const propertiesForm = form.get('properties');
+    const entityValuePropertiesForm = form.get('entityValueProperties');
+    const formGroup = propertiesForm ? propertiesForm : entityValuePropertiesForm;
 
-    EntityValueUtil.getDisplayControl(displayedForm, property.name).disable();
+    if (formGroup) {
+      const propertyForm = formGroup.get(property.name);
+      if (propertyForm instanceof FormArray) {
+        propertyForm.at(0).get('value').patchValue(newEntityValue);
+      } else {
+        propertyForm.patchValue(newEntityValue);
+      }
+      EntityValueUtil.getDisplayControl(formGroup as FormGroup, property.name).disable();
+    }
   }
 
   /**
