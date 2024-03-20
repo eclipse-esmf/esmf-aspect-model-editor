@@ -93,3 +93,32 @@ export const dragExternalReferenceWithChildren = (selector: string, x: number, y
     }
   });
 };
+
+export const loadModel = (fixturePath: string) => {
+  cy.fixture(fixturePath).then(rdfString => cy.loadModel(rdfString));
+};
+
+export const openElementAndAssertValues = (shape: string, testCases: Array<any>) => {
+  cy.dbClickShape(shape).then(() => {
+    testCases.forEach(testCase => {
+      verifyColumnValues(testCase.dataCy, testCase.expectedKeyValues);
+    });
+  });
+};
+
+export const assertRdf = (testCases: Array<any>) => {
+  cy.getUpdatedRDF().then(rdf => {
+    testCases.forEach(testCase => {
+      testCase.rdfAssertions.forEach((assertion: string) => {
+        expect(rdf).to.contain(assertion);
+      });
+    });
+  });
+};
+
+export const verifyColumnValues = (dataCy: string, expectedKeyValues: Array<any>) => {
+  expectedKeyValues.forEach((keyValue, index) => {
+    cy.get(`[data-cy="${dataCy}"] .cdk-column-key`).eq(index).should('contain', keyValue.key);
+    cy.get(`[data-cy="${dataCy}"] .cdk-column-value`).eq(index).should('contain', keyValue.value);
+  });
+};

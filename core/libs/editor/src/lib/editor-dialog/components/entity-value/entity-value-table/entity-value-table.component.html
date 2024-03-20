@@ -136,10 +136,24 @@
           </div>
 
           <div *ngIf="isCharacteristicCollectionType(source.key.property?.characteristic)" class="source__column source__column--icon">
-            <button *ngIf="!i" mat-mini-fab color="primary" aria-label="Add new language" (click)="addLanguage(source)">
+            <button
+              *ngIf="!i"
+              mat-mini-fab
+              color="primary"
+              aria-label="Add new language"
+              (click)="addLanguage(source)"
+              [attr.data-cy]="source.key.property.name + 'Add'"
+            >
               <mat-icon>add</mat-icon>
             </button>
-            <button *ngIf="i" mat-mini-fab color="primary" aria-label="Delete added language" (click)="removeLanguage(source, i)">
+            <button
+              *ngIf="i"
+              mat-mini-fab
+              color="primary"
+              aria-label="Delete added language"
+              (click)="removeLanguage(source, i)"
+              [attr.data-cy]="source.key.property.name + 'Remove'"
+            >
               <mat-icon>delete</mat-icon>
             </button>
           </div>
