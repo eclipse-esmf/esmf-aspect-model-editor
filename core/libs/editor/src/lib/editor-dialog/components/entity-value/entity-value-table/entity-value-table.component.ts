@@ -37,6 +37,7 @@ import {InputFieldComponent} from '../../fields';
 import {map, Observable, of, startWith, Subscription} from 'rxjs';
 import * as locale from 'locale-codes';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
   selector: 'ame-entity-value-table',

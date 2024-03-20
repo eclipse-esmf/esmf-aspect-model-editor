@@ -20,7 +20,7 @@
 <form (submit)="onSave()">
   <mat-dialog-content>
     <mat-form-field class="entity-form-field" appearance="fill">
-      <mat-label for="entityValueName">Name</mat-label>
+      <mat-label for="entityValueName">{{ 'ENTITY_VALUE.NAME' | translate }}</mat-label>
       <input
         [formControl]="entityValueName"
         [ngClass]="entityValueName.hasError('checkShapeName') || entityValueName.hasError('whitespace') ? 'ng-invalid-error' : ''"
@@ -29,12 +29,14 @@
         name="entityValueName"
         data-cy="entityValueName"
       />
-      <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('required')"> Name is required </mat-error>
+      <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('required')">{{
+        'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_DEFINE' | translate
+      }}</mat-error>
       <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('checkShapeName')">
-        Name already exists, please choose another one
+        {{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_SELECT_DIFFERENT_NAME_NAMESPACE' | translate }}
       </mat-error>
       <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('whitespace')">
-        Name must not contain whitespaces
+        {{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.NO_CONTAIN_WHITESPACES' | translate }}
       </mat-error>
     </mat-form-field>
 
@@ -47,7 +49,11 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end" class="sticky-dialog-actions">
-    <button type="button" mat-raised-button (click)="onClose()" data-cy="entityCancelButton">Cancel</button>
-    <button [disabled]="form.invalid" mat-raised-button color="primary" type="submit" data-cy="entitySaveButton">Save</button>
+    <button type="button" mat-raised-button (click)="onClose()" data-cy="entityCancelButton">
+      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.CANCEL' | translate }}
+    </button>
+    <button [disabled]="form.invalid" mat-raised-button color="primary" type="submit" data-cy="entitySaveButton">
+      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.SAVE' | translate }}
+    </button>
   </mat-dialog-actions>
 </form>

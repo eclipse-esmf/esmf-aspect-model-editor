@@ -36,7 +36,7 @@
           <!-- non complex property type -->
           <ng-container *ngIf="!formFieldHelper.isComplexProperty(source.key.property)">
             <mat-form-field appearance="fill" class="source__input">
-              <mat-label>Value</mat-label>
+              <mat-label>{{ 'ENTITY_VALUE.VALUE' | translate }}</mat-label>
               <input
                 matInput
                 type="text"
@@ -44,14 +44,16 @@
                 data-cy="propertyValueNotComplex"
                 [attr.data-cy]="source.key.property.name + 'Value'"
               />
-              <mat-error *ngIf="control.get('value').errors?.required">Value is required</mat-error>
+              <mat-error *ngIf="control.get('value').errors?.required">{{
+                'EDITOR_CANVAS.SHAPE_SETTING.FIELD.VALUE.PLEASE_DEFINE' | translate
+              }}</mat-error>
             </mat-form-field>
           </ng-container>
 
           <!-- complex property type -->
           <ng-container *ngIf="formFieldHelper.isComplexProperty(source.key.property)">
             <mat-form-field appearance="fill" class="source__input">
-              <mat-label>Entity Value</mat-label>
+              <mat-label>{{ 'ENTITY_VALUE.ENTITY_VALUE' | translate }}</mat-label>
               <input
                 #entityValueInput
                 matInput
@@ -114,7 +116,7 @@
           >
             <ng-container>
               <mat-form-field appearance="fill" class="source__input">
-                <mat-label>Language</mat-label>
+                <mat-label>{{ 'ENTITY_VALUE.LANGUAGE' | translate }}</mat-label>
                 <input matInput formControlName="language" [matAutocomplete]="auto" data-cy="propertyLanguageValue" />
                 <button
                   *ngIf="EntityValueUtil.getDisplayControl(propertiesForm, source.key.property.name).at(i)?.get('language')?.disabled"
@@ -138,7 +140,9 @@
                     </mat-option>
                   </ng-container>
                 </mat-autocomplete>
-                <mat-error *ngIf="control.get('language').errors?.required">Language is required</mat-error>
+                <mat-error *ngIf="control.get('language').errors?.required">{{
+                  'EDITOR_CANVAS.SHAPE_SETTING.FIELD.LANGUAGE.PLEASE_DEFINE' | translate
+                }}</mat-error>
               </mat-form-field>
             </ng-container>
           </div>

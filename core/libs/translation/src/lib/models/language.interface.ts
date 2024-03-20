@@ -45,6 +45,7 @@ export interface Translation {
   LOADING_SCREEN_DIALOG: LoadingScreenDialog;
   TOOLTIPS: Tooltips;
   SEARCHES: Searches;
+  ENTITY_VALUE: EntityValue;
 }
 export interface Searches {
   ELEMENTS_LABEL: string;
@@ -205,9 +206,17 @@ export interface Field {
   NAME: Name;
   UNIT: Unit;
   SEE_INPUT: SeeInput;
+  VALUE: ValueInput;
+  LANGUAGE: LanguageInput;
 }
 export interface SeeInput {
   TYPE_TO_SEARCH: string;
+}
+export interface ValueInput {
+  PLEASE_DEFINE: string;
+}
+export interface LanguageInput {
+  PLEASE_DEFINE: string;
 }
 export interface Unit {
   SELECT_DIFFERENT_NAME_TYPE: string;
@@ -626,4 +635,15 @@ export interface LoadModal {
   FIELD_LABEL: string;
   LOAD_MODEL_BUTTON: string;
   CANCEL: string;
+}
+export interface EntityValue {
+  NAME: string;
+  VALUE: string;
+  ENTITY_VALUE: string;
+  LANGUAGE: string;
+  PROPERTY: string;
+  EDIT: SearchBar;
+}
+export interface SearchBar {
+  SEARCH_BAR: string;
 }

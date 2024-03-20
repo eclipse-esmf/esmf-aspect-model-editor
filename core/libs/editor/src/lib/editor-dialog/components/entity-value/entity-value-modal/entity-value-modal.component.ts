@@ -49,9 +49,7 @@ export class EntityValueModalComponent {
   public enumeration: DefaultEnumeration;
   public complexValues: DefaultEntity[] = []; // already existing complex values
 
-  readonly displayedColumns = ['key', 'value'];
   readonly addTitle = 'Add new entity value';
-  readonly editTitle = 'Edit entity value';
 
   get propertiesForm(): FormGroup {
     return this.form?.get('properties') as FormGroup;

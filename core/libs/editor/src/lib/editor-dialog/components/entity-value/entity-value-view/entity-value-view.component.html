@@ -47,7 +47,7 @@
     >
       <!-- Property Name Column -->
       <ng-container matColumnDef="key">
-        <mat-header-cell *matHeaderCellDef>Property</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>{{ 'ENTITY_VALUE.PROPERTY' | translate }}</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <span
             class="property-key"
@@ -63,7 +63,7 @@
 
       <!-- Value Column -->
       <ng-container matColumnDef="value">
-        <mat-header-cell *matHeaderCellDef>Value</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>{{ 'ENTITY_VALUE.VALUE' | translate }}</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <ng-container [ngSwitch]="formFieldHelper.getDataType(element.key.property)">
             <ng-container *ngSwitchCase="dataType.DEFAULT">
