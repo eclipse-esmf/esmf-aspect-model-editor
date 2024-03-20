@@ -18,7 +18,7 @@ To enable the community to give you the best possible advice, please include the
 
 {nbsp}
 
-*Accessing the Developer Tools in the Aspect Model Editor*
+*Accessing the chromium developers tools (for troubleshooting/debugging)*
 
 To facilitate your troubleshooting efforts or when you need to compile detailed information for a GitHub issue, the Aspect Model editor includes access to Developer Tools.
 This feature enables you to inspect logs, errors, and other crucial debugging information seamlessly within the editor.
