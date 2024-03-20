@@ -423,6 +423,12 @@
         },
         "SEE_INPUT": {
           "TYPE_TO_SEARCH": "Type to search or write an URN or URL"
+        },
+        "VALUE": {
+          "PLEASE_DEFINE": "Please define a value"
+        },
+        "LANGUAGE": {
+          "PLEASE_DEFINE": "Please define a language"
         }
       },
       "AME_ELEMENT_LIST_LABEL": {
@@ -549,6 +555,16 @@
         "OPEN_IN_THIS_WINDOW": "Open in this window",
         "OPEN_IN_NEW_WINDOW": "Open in new window"
       }
+    }
+  },
+  "ENTITY_VALUE": {
+    "NAME": "Name",
+    "VALUE": "Value",
+    "ENTITY_VALUE": "Entity Value",
+    "LANGUAGE": "Language",
+    "PROPERTY": "Property",
+    "EDIT": {
+      "SEARCH_BAR": "Find complex value"
     }
   }
 }

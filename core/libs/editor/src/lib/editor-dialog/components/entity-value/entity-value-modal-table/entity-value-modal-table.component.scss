@@ -11,41 +11,77 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-.complex-value-icon {
-  margin-top: 0;
-}
+.source {
+  &__divider {
+    margin-bottom: 1rem;
+  }
 
-.complex-value-field {
-  padding: 0;
-}
+  &__title {
+    margin-bottom: 1rem;
+  }
 
-.add-button {
-  height: 49px;
-  width: 49px;
-  padding: 0;
-  min-width: auto;
-}
+  &__row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
 
-::ng-deep {
-  .characteristic-entity-value-autocomplete {
-    .mat-optgroup-label {
-      padding-bottom: 0 !important;
-      padding-top: 0 !important;
+  &__column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-basis: 0;
+    flex-grow: 1;
+
+    &--property {
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: 130px;
+      width: 130px;
+      margin-right: 1rem;
     }
 
-    .mat-optgroup .mat-option:not(.mat-option-multiple) {
-      display: flex;
-      height: auto;
-      min-height: 50px;
-      padding: 0;
+    &--value {
+      margin-right: 1rem;
+    }
+
+    &--value-last {
+      margin-right: 0;
+    }
+
+    &--language {
+      margin-right: 1rem;
+    }
+
+    &--language-with-icon {
+      width: 35%;
+      margin-right: 1rem;
+    }
+
+    &--icon {
+      margin-bottom: 1rem;
+      flex-grow: 0;
     }
   }
-}
 
-.small-input-field {
-  padding-top: 5px;
-}
+  &__property-name {
+    font-weight: bold;
+  }
 
-.complex-property-icon {
-  margin-top: 0;
+  &__required-indicator {
+    color: red;
+    align-self: center;
+  }
+
+  &__icon--complex {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__input {
+    width: 100%;
+    .mat-form-field {
+      width: 100%;
+    }
+  }
 }

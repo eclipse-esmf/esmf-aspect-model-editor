@@ -103,6 +103,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
       nameValidators.push(this.isUpperCaseName() ? EditorDialogValidators.namingUpperCase : EditorDialogValidators.namingLowerCase);
     } else {
       nameValidators.push(EditorDialogValidators.noWhiteSpace);
+      EditorDialogValidators.duplicateNameString(this.namespacesCacheService, this.metaModelElement.aspectModelUrn.split('#')[0]);
     }
 
     return nameValidators;

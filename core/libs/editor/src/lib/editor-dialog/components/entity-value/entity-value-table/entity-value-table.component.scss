@@ -11,47 +11,83 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-.complex-value-icon {
-  margin-top: 0;
-}
-
-.complex-value-field {
-  padding: 0;
-}
-
-::ng-deep {
-  .characteristic-entity-value-autocomplete {
-    .mat-optgroup-label {
-      padding-bottom: 0 !important;
-      padding-top: 0 !important;
-    }
-
-    .mat-optgroup .mat-option:not(.mat-option-multiple) {
-      display: flex;
-      height: auto;
-      min-height: 50px;
-      padding: 0;
-    }
-  }
-}
-
-.small-form-field {
-  padding-top: 5px;
-}
-
-.property-key {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-
-  &__field {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    display: inline-block;
-    max-width: 100%;
+.source {
+  &__divider {
+    margin-bottom: 1rem;
   }
 
-  &__required {
-    display: inline-block;
+  &__title {
+    margin-bottom: 1rem;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  &__column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-basis: 0;
+    flex-grow: 1;
+
+    &--property {
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: 130px;
+      width: 130px;
+      margin-right: 1rem;
+    }
+
+    &--value {
+      margin-right: 1rem;
+    }
+
+    &--value-last {
+      margin-right: 0;
+    }
+
+    &--language {
+      margin-right: 1rem;
+    }
+
+    &--language last {
+      width: 35%;
+      margin-right: 1rem;
+    }
+
+    &--language-with-icon {
+      width: 35%;
+      margin-right: 1rem;
+    }
+
+    &--icon {
+      margin-bottom: 1rem;
+      flex-grow: 0;
+    }
+  }
+
+  &__property-name {
+    font-weight: bold;
+  }
+
+  &__required-indicator {
+    color: red;
+    align-self: center;
+  }
+
+  &__icon--complex {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__input {
+    width: 100%;
+  }
+
+  &__input-with-icon {
+    width: calc(100% - 1rem);
   }
 }

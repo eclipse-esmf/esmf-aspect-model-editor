@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {DefaultCollection, DefaultEntityValue, EntityValueProperty, LangStringProperty} from '@ame/meta-model';
+import {DefaultCollection, DefaultEntityValue, EntityValueProperty} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {DataFactory, Literal, NamedNode} from 'n3';
 import {BaseVisitor} from '../base-visitor';
@@ -59,9 +59,7 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
     );
 
     if (propertyCollectionWithLangString.length) {
-      const withoutEmptyLangString = propertyCollectionWithLangString.filter(prop => {
-        return prop.value.value !== null && prop.value.value !== undefined;
-      });
+      const withoutEmptyLangString = propertyCollectionWithLangString.filter(prop => prop.value !== null && prop.language !== undefined);
 
       const langStringRdfObject = withoutEmptyLangString.map(this.createObjectForCollectionLangStringRDF.bind(this));
       this.rdfListService.pushEntityValueLangString(entityValue, ...langStringRdfObject);
@@ -85,22 +83,19 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
   }
 
   private createObjectForCollectionLangStringRDF(ev: EntityValueProperty): {predicate: NamedNode; literal: Literal} {
-    const langString = ev.value as LangStringProperty;
-    const predicate = DataFactory.namedNode(ev.key.property.aspectModelUrn);
     return {
-      predicate: predicate,
-      literal: DataFactory.literal(langString?.value?.toString(), langString?.language?.toString()),
+      predicate: DataFactory.namedNode(ev.key.property.aspectModelUrn),
+      literal: DataFactory.literal(ev?.value?.toString(), ev?.language?.toString()),
     };
   }
 
-  private createObjectForRDF({key, value}: EntityValueProperty): NamedNode | Literal {
+  private createObjectForRDF({key, value, language}: EntityValueProperty): NamedNode | Literal {
     if (value instanceof DefaultEntityValue) {
       return DataFactory.namedNode(value.aspectModelUrn);
     }
 
-    if (isDataTypeLangString(key.property) && !(key.property.characteristic instanceof DefaultCollection)) {
-      const langString = value as LangStringProperty;
-      return DataFactory.literal(langString?.value?.toString(), langString?.language?.toString());
+    if (isDataTypeLangString(key.property) && language) {
+      return DataFactory.literal(value?.toString(), language?.toString());
     }
 
     const dataType = key.property?.getDeepLookUpDataType();
