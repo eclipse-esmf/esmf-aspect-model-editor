@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Inject, OnInit, inject} from '@angular/core';
+import {Component, Inject, NgZone, OnInit, inject} from '@angular/core';
 import {NamespaceStatus} from '@ame/api';
 import {MigratorService} from '../../migrator.service';
 import {Router} from '@angular/router';
@@ -56,6 +56,7 @@ export class MigrationStatusComponent implements OnInit {
     public migratorService: MigratorService,
     private editorService: EditorService,
     private router: Router,
+    private ngZone: NgZone,
     @Inject(APP_CONFIG) public config: AppConfig,
   ) {}
 
@@ -76,7 +77,7 @@ export class MigrationStatusComponent implements OnInit {
 
   increaseVersion() {
     if (this.migratorService.increaseNamespaceVersion) {
-      this.router.navigate([{outlets: {migrator: 'increase-version'}}]);
+      this.ngZone.run(()=> this.router.navigate([{outlets: {migrator: 'increase-version'}}]))
     }
   }
 

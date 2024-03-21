@@ -12,7 +12,7 @@
  */
 import {MigratorApiService} from '@ame/api';
 import {APP_CONFIG, AppConfig} from '@ame/shared';
-import {Component, Inject, inject} from '@angular/core';
+import {Component, Inject, NgZone, inject} from '@angular/core';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {Router} from '@angular/router';
 import {MigratorService} from '../../migrator.service';
@@ -31,13 +31,14 @@ export class StartMigratingComponent {
     @Inject(APP_CONFIG) public config: AppConfig,
     private migratorApiService: MigratorApiService,
     private router: Router,
+    private ngZone: NgZone
   ) {}
 
   migrate() {
     this.migrateLoading = true;
     this.migratorApiService.createBackup().subscribe(() => {
       this.migrateLoading = false;
-      this.router.navigate([{outlets: {migrator: ['migrating']}}]);
+      this.ngZone.run(()=>this.router.navigate([{outlets: {migrator: ['migrating']}}]));
     });
   }
 

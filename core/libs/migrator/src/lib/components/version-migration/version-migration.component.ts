@@ -16,7 +16,7 @@ import {map, of, switchMap, tap} from 'rxjs';
 import {EditorService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, NgZone, OnInit, inject} from '@angular/core';
 import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService} from '@ame/shared';
 import {Router} from '@angular/router';
 
@@ -49,6 +49,7 @@ export class VersionMigrationComponent implements OnInit {
     private migratorApiService: MigratorApiService,
     private editorService: EditorService,
     private router: Router,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -71,7 +72,7 @@ export class VersionMigrationComponent implements OnInit {
       .subscribe(() => {
         this.deleteModels(modelsTobeDeleted).subscribe(()=> {
           this.electronSignalsService.call('requestRefreshWorkspaces');
-          this.router.navigate([{outlets: {migrator: 'migration-success'}}]);
+          this.ngZone.run(()=> this.router.navigate([{outlets: {migrator: 'migration-success'}}]));
         })
       });
   }
