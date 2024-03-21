@@ -286,6 +286,7 @@ export class EditorService {
   }
 
   loadExternalModels(): Observable<Array<RdfModel>> {
+    console.log('in loadExternalModels');
     this.rdfService.externalRdfModels = [];
     return this.modelApiService.getAllNamespacesFilesContent().pipe(
       first(),

@@ -52,6 +52,7 @@ export class VersionMigrationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    let modelsTobeDeleted = [];
     this.editorService
       .loadExternalModels()
       .pipe(
@@ -63,11 +64,15 @@ export class VersionMigrationComponent implements OnInit {
           this.namespaces = namespaces;
           return this.rewriteStores();
         }),
-        switchMap(models => this.rewriteModels(models)),
+        tap(models => modelsTobeDeleted = models
+          ),
+        switchMap(models => this.rewriteModels(models))
       )
       .subscribe(() => {
-        this.electronSignalsService.call('requestRefreshWorkspaces');
-        this.router.navigate([{outlets: {migrator: 'migration-success'}}]);
+        this.deleteModels(modelsTobeDeleted).subscribe(()=> {
+          this.electronSignalsService.call('requestRefreshWorkspaces');
+          this.router.navigate([{outlets: {migrator: 'migration-success'}}]);
+        })
       });
   }
 
@@ -159,9 +164,18 @@ export class VersionMigrationComponent implements OnInit {
     return returnObject;
   }
 
-  private rewriteModels(models: any[]) {
+  private rewriteModels(models: any[]){
     return models.reduce(
-      (obs, model) => obs.pipe(switchMap(() => this.migratorApiService.rewriteFile(model).pipe(tap(() => (model.file.migrated = true))))),
+      (obs, model) => obs.pipe(switchMap(() => this.migratorApiService.rewriteFile(model)
+      .pipe(tap(() => (model.file.migrated = true))))),
+      of(0),
+    );
+  }
+
+  private deleteModels(models: any[]){
+    return models.reduce(
+      (obs, model) => obs.pipe(switchMap(() => this.modelApiService.deleteFile(model.oldNamespaceFile)
+      )),
       of(0),
     );
   }

@@ -72,8 +72,7 @@ export class MigratorApiService {
 
   public rewriteFile(payload: any): Observable<string> {
     return this.modelApiService.formatModel(payload.serializedUpdatedModel).pipe(
-      switchMap(formattedModel => this.modelApiService.saveModel(formattedModel, payload.rdfModel.absoluteAspectModelFileName)),
-      switchMap(() => this.modelApiService.deleteFile(payload.oldNamespaceFile)),
+      switchMap(formattedModel => this.modelApiService.saveModel(formattedModel, payload.rdfModel.absoluteAspectModelFileName))
     );
   }
 }
