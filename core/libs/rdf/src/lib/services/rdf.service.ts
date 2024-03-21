@@ -141,23 +141,17 @@ export class RdfService {
     const parser = new Parser();
     const store: Store = new Store();
     const subject = new Subject<RdfModel>();
-
-    console.log('fileContent --->',fileContent);
-
+    
     parser.parse(fileContent.aspectMetaModel, (error, quad, prefixes) => {
       if (quad) {
         store.addQuad(quad);
       } else if (prefixes) {
-        try{
         const externalRdfModel = rdfModel.initRdfModel(store, prefixes);
         externalRdfModel.isExternalRef = true;
         externalRdfModel.aspectModelFileName = fileContent.fileName;
         this.externalRdfModels.push(externalRdfModel);
         subject.next(externalRdfModel);
         subject.complete();
-      } catch (e) {
-        console.log('e --->',e);
-      }
       }
 
       if (error) {
