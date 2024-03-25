@@ -13,7 +13,7 @@
 
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {catchError, map, mergeMap, tap, timeout,retry} from 'rxjs/operators';
+import {catchError, map, mergeMap, tap, timeout, retry} from 'rxjs/operators';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, LogService} from '@ame/shared';
 import {ModelValidatorService} from './model-validator.service';
@@ -147,7 +147,7 @@ export class ModelApiService {
       .pipe(
         timeout(this.requestTimeout),
         catchError(res => throwError(() => res)),
-        retry(3)
+        retry(3),
       );
   }
 

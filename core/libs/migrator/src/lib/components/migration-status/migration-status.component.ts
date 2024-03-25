@@ -77,7 +77,7 @@ export class MigrationStatusComponent implements OnInit {
 
   increaseVersion() {
     if (this.migratorService.increaseNamespaceVersion) {
-      this.ngZone.run(()=> this.router.navigate([{outlets: {migrator: 'increase-version'}}]))
+      this.ngZone.run(() => this.router.navigate([{outlets: {migrator: 'increase-version'}}]));
     }
   }
 

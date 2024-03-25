@@ -12,12 +12,12 @@
  */
 import {MigratorApiService, ModelApiService} from '@ame/api';
 import {DataFactory} from 'n3';
-import {map, of, switchMap, tap} from 'rxjs';
+import {concatMap, from, map, Observable, of, switchMap, tap} from 'rxjs';
 import {EditorService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {Component, NgZone, OnInit, inject} from '@angular/core';
-import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService} from '@ame/shared';
+import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService, LogService} from '@ame/shared';
 import {Router} from '@angular/router';
 
 export const defaultNamespaces = (sammVersion: string) => [
@@ -48,33 +48,47 @@ export class VersionMigrationComponent implements OnInit {
     private modelApiService: ModelApiService,
     private migratorApiService: MigratorApiService,
     private editorService: EditorService,
+    private logService: LogService,
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
-    let modelsTobeDeleted = [];
     this.editorService
       .loadExternalModels()
       .pipe(
         switchMap(() => this.modelApiService.getNamespacesStructure()),
-        map(namespaces => {
-          for (const namespace in namespaces || {}) {
-            namespaces[namespace] = namespaces[namespace].map((name: string) => ({name, migrated: false}));
-          }
-          this.namespaces = namespaces;
-          return this.rewriteStores();
-        }),
-        tap(models => modelsTobeDeleted = models
-          ),
-        switchMap(models => this.rewriteModels(models))
+        map(namespaces => this.prepareNamespaces(namespaces)),
+        tap(namespaces => (this.namespaces = namespaces)),
+        switchMap(() => this.rewriteStores()),
+        switchMap(modelsTobeDeleted => this.rewriteAndDeleteModels(modelsTobeDeleted)),
       )
-      .subscribe(() => {
-        this.deleteModels(modelsTobeDeleted).subscribe(()=> {
-          this.electronSignalsService.call('requestRefreshWorkspaces');
-          this.ngZone.run(()=> this.router.navigate([{outlets: {migrator: 'migration-success'}}]));
-        })
+      .subscribe({
+        complete: () => this.navigateToMigrationSuccess(),
+        error: err => this.logService.logError('Error when migration to new version', err),
       });
+  }
+
+  prepareNamespaces(namespaces: any): any {
+    for (const namespace in namespaces || {}) {
+      namespaces[namespace] = namespaces[namespace].map((name: string) => ({name, migrated: false}));
+    }
+    return namespaces;
+  }
+
+  rewriteAndDeleteModels(modelsTobeDeleted: any[]): Observable<any> {
+    return this.rewriteModels(modelsTobeDeleted).pipe(
+      tap(() =>
+        this.deleteModels(modelsTobeDeleted).subscribe({
+          complete: () => this.electronSignalsService.call('requestRefreshWorkspaces'),
+          error: err => this.logService.logError('Error when deleting old Aspect Model to new version', err),
+        }),
+      ),
+    );
+  }
+
+  navigateToMigrationSuccess(): void {
+    this.ngZone.run(() => this.router.navigate([{outlets: {migrator: 'migration-success'}}]));
   }
 
   getNamespaceExplicitVersioning(namespace: string) {
@@ -106,7 +120,7 @@ export class VersionMigrationComponent implements OnInit {
       }
     }
 
-    return models;
+    return of(models);
   }
 
   private rewriteStore(rdfModel: RdfModel, file: {name: string; migrated: boolean}) {
@@ -165,19 +179,11 @@ export class VersionMigrationComponent implements OnInit {
     return returnObject;
   }
 
-  private rewriteModels(models: any[]){
-    return models.reduce(
-      (obs, model) => obs.pipe(switchMap(() => this.migratorApiService.rewriteFile(model)
-      .pipe(tap(() => (model.file.migrated = true))))),
-      of(0),
-    );
+  private rewriteModels(models: any[]): Observable<any> {
+    return from(models).pipe(concatMap(model => this.migratorApiService.rewriteFile(model).pipe(tap(() => (model.file.migrated = true)))));
   }
 
-  private deleteModels(models: any[]){
-    return models.reduce(
-      (obs, model) => obs.pipe(switchMap(() => this.modelApiService.deleteFile(model.oldNamespaceFile)
-      )),
-      of(0),
-    );
+  private deleteModels(models: any[]): Observable<any> {
+    return from(models).pipe(concatMap(model => this.modelApiService.deleteFile(model.oldNamespaceFile)));
   }
 }

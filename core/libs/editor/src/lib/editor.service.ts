@@ -276,7 +276,7 @@ export class EditorService {
       extRef => extRef.absoluteAspectModelFileName === extRefAbsoluteAspectModelFileName,
     );
     const fileName = extRdfModel.aspectModelFileName;
-    let foundCachedFile = this.namespaceCacheService.getFile([extRdfModel.getAspectModelUrn(), extRdfModel.aspectModelFileName]);
+    let foundCachedFile = this.namespaceCacheService.getFile([extRdfModel.getAspectModelUrn(), fileName]);
     if (!foundCachedFile) {
       foundCachedFile = this.namespaceCacheService.addFile(extRdfModel.getAspectModelUrn(), fileName);
       foundCachedFile = this.instantiatorService.instantiateFile(extRdfModel, foundCachedFile, fileName);
@@ -527,13 +527,13 @@ export class EditorService {
         this.modelService.addAspect(aspectInstance);
         rdfModel.setAspect(aspectInstance.aspectModelUrn);
         const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(aspectInstance);
-        rdfModel.aspectModelFileName = metaModelElement.name + '.ttl';
+        rdfModel.absoluteAspectModelFileName = `${rdfModel.getAspectModelUrn()}${metaModelElement.name}.ttl`;
 
         if (!rdfModel.originalAbsoluteFileName) {
           rdfModel.originalAbsoluteFileName = `${rdfModel
             .getAspectModelUrn()
             .replace('urn:samm:', '')
-            .replace('#', ':')}${rdfModel.aspectModelFileName}`;
+            .replace('#', ':')}${metaModelElement.name}.ttl`;
         }
 
         metaModelElement

@@ -25,15 +25,13 @@ export class LoadingMigratingComponent implements OnInit {
   constructor(
     private migratorApiService: MigratorApiService,
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
     this.migratorApiService
       .migrateWorkspace()
       .pipe(catchError(() => of(null)))
-      .subscribe(data =>
-       this.ngZone.run(()=> this.router.navigate([{outlets: {migrator: 'status'}}], {state: {data}})) 
-      );
+      .subscribe(data => this.ngZone.run(() => this.router.navigate([{outlets: {migrator: 'status'}}], {state: {data}})));
   }
 }

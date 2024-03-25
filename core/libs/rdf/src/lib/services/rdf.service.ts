@@ -76,13 +76,7 @@ export class RdfService {
 
         return this.modelApiService.saveModel(content, rdfModel.absoluteAspectModelFileName);
       }),
-      switchMap(() => {
-        if (!rdfModel.aspectModelFileName) {
-          return this.handleError(SaveValidateErrorsCodes.emptyModel);
-        }
-
-        return this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.aspectModelFileName, rdfContent));
-      }),
+      switchMap(() => this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.absoluteAspectModelFileName, rdfContent))),
     );
   }
 
@@ -109,13 +103,14 @@ export class RdfService {
           subject.complete();
         }
         this.currentRdfModel = rdfModel.initRdfModel(store, prefixes);
+
         this.currentRdfModel.absoluteAspectModelFileName =
-          this.currentRdfModel.absoluteAspectModelFileName ||
           namespaceFileName ||
+          this.currentRdfModel.absoluteAspectModelFileName ||
           `${this.currentRdfModel.getAspectModelUrn().replace('#', ':')}NewModel.ttl`;
+
         this.currentRdfModel.loadedFromWorkspace = !!namespaceFileName;
 
-        this.currentRdfModel.aspectModelFileName = this.currentRdfModel.absoluteAspectModelFileName;
         subject.next(this.currentRdfModel);
         subject.complete();
       }
@@ -141,14 +136,14 @@ export class RdfService {
     const parser = new Parser();
     const store: Store = new Store();
     const subject = new Subject<RdfModel>();
-    
+
     parser.parse(fileContent.aspectMetaModel, (error, quad, prefixes) => {
       if (quad) {
         store.addQuad(quad);
       } else if (prefixes) {
         const externalRdfModel = rdfModel.initRdfModel(store, prefixes);
         externalRdfModel.isExternalRef = true;
-        externalRdfModel.aspectModelFileName = fileContent.fileName;
+        externalRdfModel.absoluteAspectModelFileName = fileContent.fileName;
         this.externalRdfModels.push(externalRdfModel);
         subject.next(externalRdfModel);
         subject.complete();
@@ -158,7 +153,7 @@ export class RdfService {
         this.logService.logInfo(`Error when parsing RDF ${error}`);
         const externalRdfModel = rdfModel.initRdfModel(store, {});
         externalRdfModel.isExternalRef = true;
-        externalRdfModel.aspectModelFileName = fileContent.fileName;
+        externalRdfModel.absoluteAspectModelFileName = fileContent.fileName;
         externalRdfModel.hasErrors = true;
         this.externalRdfModels.push(externalRdfModel);
         subject.next(externalRdfModel);
@@ -195,7 +190,7 @@ export class RdfService {
       }
 
       if (prefixes || error) {
-        parsedRdfModel.aspectModelFileName = fileContent.fileName;
+        parsedRdfModel.absoluteAspectModelFileName = fileContent.fileName;
         subject.next(parsedRdfModel);
         subject.complete();
       }
