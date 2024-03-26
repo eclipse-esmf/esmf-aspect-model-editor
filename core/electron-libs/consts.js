@@ -32,7 +32,7 @@ const modelsPath = inDevMode()
   ? path.join('.', 'apps', 'ame', 'src', 'assets', 'aspect-models', 'org.eclipse.examples', '1.0.0')
   : path.join(__dirname, '..', '..', '..', 'default-models');
 
-module.exports.paths = {
+paths = {
   icons: {
     disabled: disabledIconsPath,
     enabled: enabledIconsPath,
@@ -40,7 +40,7 @@ module.exports.paths = {
   models: modelsPath,
 };
 
-module.exports.icons = {
+icons = {
   MENU_NEW: {
     disabled: `${disabledIconsPath}${path.sep}add_FILL0_wght400_GRAD0_opsz24.png`,
     enabled: `${enabledIconsPath}${path.sep}add_FILL0_wght400_GRAD0_opsz24.png`,
@@ -183,5 +183,4 @@ module.exports.icons = {
   },
 };
 
-module.exports.inDevMode = inDevMode;
-module.exports.inProdMode = inProdMode;
+module.exports = {inDevMode, inProdMode, icons, paths};
