@@ -16,7 +16,7 @@ import {forkJoin, map, Observable, of, Subject, switchMap, throwError} from 'rxj
 import {Inject, Injectable} from '@angular/core';
 import {environment} from 'environments/environment';
 import {ModelApiService} from '@ame/api';
-import {APP_CONFIG, AppConfig, FileContentModel, LogService, SaveValidateErrorsCodes} from '@ame/shared';
+import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, LogService, SaveValidateErrorsCodes} from '@ame/shared';
 import {Samm} from '@ame/vocabulary';
 import {RdfModel, RdfModelUtil} from '../utils';
 import {RdfSerializerService} from './rdf-serializer.service';
@@ -46,6 +46,7 @@ export class RdfService {
     private modelApiService: ModelApiService,
     private configurationService: ConfigurationService,
     private translation: LanguageTranslationService,
+    private browserService: BrowserService,
     @Inject(APP_CONFIG) public config: AppConfig,
   ) {
     if (!environment.production) {
@@ -143,7 +144,7 @@ export class RdfService {
       } else if (prefixes) {
         const externalRdfModel = rdfModel.initRdfModel(store, prefixes);
         externalRdfModel.isExternalRef = true;
-        externalRdfModel.absoluteAspectModelFileName = fileContent.fileName;
+        externalRdfModel.absoluteAspectModelFileName = this.parseFileName(fileContent.fileName, externalRdfModel.getAspectModelUrn());
         this.externalRdfModels.push(externalRdfModel);
         subject.next(externalRdfModel);
         subject.complete();
@@ -153,7 +154,7 @@ export class RdfService {
         this.logService.logInfo(`Error when parsing RDF ${error}`);
         const externalRdfModel = rdfModel.initRdfModel(store, {});
         externalRdfModel.isExternalRef = true;
-        externalRdfModel.absoluteAspectModelFileName = fileContent.fileName;
+        externalRdfModel.absoluteAspectModelFileName = this.parseFileName(fileContent.fileName, externalRdfModel.getAspectModelUrn());
         externalRdfModel.hasErrors = true;
         this.externalRdfModels.push(externalRdfModel);
         subject.next(externalRdfModel);
@@ -162,6 +163,14 @@ export class RdfService {
     });
 
     return subject;
+  }
+
+  parseFileName(fileName: string, urn: string): string {
+    if (this.browserService.isStartedAsElectronApp()) {
+      const path = window.require('path');
+      fileName = fileName.includes(path.sep) ? `${urn.replace('#', ':')}${path.basename(fileName)}` : fileName;
+    }
+    return fileName;
   }
 
   parseModels(fileContentModels: FileContentModel[]): Observable<RdfModel[]> {
