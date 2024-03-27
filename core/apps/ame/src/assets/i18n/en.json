@@ -28,7 +28,7 @@
       "ERROR": "SAMM Version upgrade to {{version}} finished, but {{fileCount}} had to be skipped. Please fix {{fileCountMessage}} first (in a text editor, contacting us, or in a previous version of the editor that supports the original SAMM version that has to be temporarily installed). See below:",
       "SUCCESS": "Migration finished with success",
       "CLOSE": "Close",
-      "VERSION": "Migrate Version"
+      "VERSION": "Increase Version"
     },
     "WORKSPACE_MIGRATION_DIALOG": {
       "TITLE": "Migrate Workspace to SAMM",
