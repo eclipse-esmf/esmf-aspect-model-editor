@@ -53,7 +53,7 @@ export class RdfService {
       window['angular.rdfService'] = this;
     }
 
-    this._rdfSerializer = new RdfSerializerService(translation);
+    this._rdfSerializer = new RdfSerializerService(this.translation);
     this._settings = this.configurationService.getSettings();
   }
 
