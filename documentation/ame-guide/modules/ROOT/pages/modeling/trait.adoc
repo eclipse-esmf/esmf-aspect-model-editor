@@ -25,7 +25,7 @@ Try out the following example to learn how to connect two Properties to the same
 For a new model that only has an Aspect so far:
 
 . Create two Properties by clicking twice on the Aspect's Add icon image:add.png[Add icon].
-. For each Property create a Characteristic by clicking the top "Add" icon image:add.png[Add icon] of each Property.
+. For each Property create a Characteristic by clicking the "Add" icon image:add.png[Add icon] of each Property.
 . Click the top Add icon image:add.png[Add icon] of each Characteristic to create a Trait and a Constraint for each Property.
 . Remove the second Characteristic.
 . Connect the second Trait with the first Characteristic:
