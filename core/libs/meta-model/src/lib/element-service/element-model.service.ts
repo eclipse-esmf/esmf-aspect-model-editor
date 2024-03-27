@@ -178,7 +178,7 @@ export class ElementModelService {
         }
         rdfModel.absoluteAspectModelFileName = '';
         this.currentCachedFile.fileName = '';
-        rdfModel.aspectModelFileName = data.name;
+        rdfModel.absoluteAspectModelFileName = `${rdfModel.getAspectModelUrn()}${data.name}`;
         this.titleService.updateTitle(rdfModel.absoluteAspectModelFileName, 'Shared');
       });
     });

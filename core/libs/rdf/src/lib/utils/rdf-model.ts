@@ -29,7 +29,6 @@ export class RdfModel {
   private _store: Store;
   private _prefixes: Prefixes;
   private _isExternalRef = false;
-  private _aspectModelFileName: string;
   private _absoluteAspectModelFileName: string = null;
   private _metaModelVersion: string;
   private _defaultAspectModelAlias = '';
@@ -65,14 +64,6 @@ export class RdfModel {
     this._isExternalRef = value;
   }
 
-  get aspectModelFileName(): string {
-    return this._aspectModelFileName;
-  }
-
-  set aspectModelFileName(value: string) {
-    this._aspectModelFileName = value.split(':')[2] || value;
-  }
-
   get aspectUrn(): string {
     return this.aspect?.value || this.getAspectModelUrn();
   }
@@ -82,14 +73,11 @@ export class RdfModel {
   }
 
   set absoluteAspectModelFileName(absoluteFileName: string) {
-    this._absoluteAspectModelFileName = absoluteFileName.replace('urn:samm:', '');
+    this._absoluteAspectModelFileName = absoluteFileName.replace('urn:samm:', '').replace('#', ':');
   }
 
   get absoluteAspectModelFileName(): string {
     if (this._absoluteAspectModelFileName) {
-      if (this.aspect) {
-        return this.nameBasedOnAspect;
-      }
       return this._absoluteAspectModelFileName;
     }
 
@@ -97,11 +85,11 @@ export class RdfModel {
       return this.nameBasedOnAspect;
     }
 
-    if (this.aspectModelFileName) {
-      return `${this.getAspectModelUrn().replace('urn:samm:', '').replace('#', ':')}${this.aspectModelFileName}`;
-    }
-
     return null;
+  }
+
+  get aspectModelFileName(): string {
+    return this._absoluteAspectModelFileName.split(':')[2];
   }
 
   get isNamespaceChanged(): boolean {

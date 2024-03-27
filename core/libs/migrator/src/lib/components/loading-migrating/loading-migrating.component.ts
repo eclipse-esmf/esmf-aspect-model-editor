@@ -12,7 +12,7 @@
  */
 
 import {MigratorApiService} from '@ame/api';
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {catchError, of} from 'rxjs';
 
@@ -25,14 +25,13 @@ export class LoadingMigratingComponent implements OnInit {
   constructor(
     private migratorApiService: MigratorApiService,
     private router: Router,
+    private ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
     this.migratorApiService
       .migrateWorkspace()
       .pipe(catchError(() => of(null)))
-      .subscribe(data => {
-        this.router.navigate([{outlets: {migrator: 'status'}}], {state: {data}});
-      });
+      .subscribe(data => this.ngZone.run(() => this.router.navigate([{outlets: {migrator: 'status'}}], {state: {data}})));
   }
 }
