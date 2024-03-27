@@ -5,7 +5,7 @@ With the multiple windows feature, you can simultaneously work on various models
 
 To create a new window:
 
-. Locate the *+* icon in the toolbar and click on it.
+. Open the File Menu.
 . From the dropdown, select *New window*.
 +
 image:multi-windows/new-window.png[width=10%, link=self]
