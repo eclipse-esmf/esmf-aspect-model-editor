@@ -1,7 +1,8 @@
 {
-  "START_LOAD_MODAL": {
+  "LOAD_MODAL": {
     "TITLE": "是否加载自动保存的Model?",
     "CONTENT": "您可以继续使用自动保存的Model, 也可以关闭它以开始使用默认的Aspect Model。",
+    "FIELD_LABEL": "粘贴在这里",
     "LOAD_BUTTON": "加载自动保存Model",
     "DISMISS_BUTTON": "拒绝"
   },
@@ -47,9 +48,15 @@
     "INCREASE_VERSION_DIALOG": {
       "TITLE": "增加Namespaces版本",
       "LOADING_NAMESPACES": "加载Namespaces"
+    },
+    "SIDEBAR": {
+      "MESSAGE": "找到了具有较低SAMM版本的文件。",
+      "BUTTON": "迁移"
     }
   },
   "NOTIFICATION_SERVICE": {
+    "ONLY_TWO_ELEMENTS_CONNECTION": "请只选择两个元素来连接它们",
+    "REFERNECE_CONNECTION_ERROR": "无法连接引用",
     "RECURSIVE_ELEMENTS": "递归的elements",
     "CIRCULAR_CONNECTION_MESSAGE": "不可以连接elements由于循环连接",
     "MISSING_PARENT_ENTITY": "没有entity作为parent展现",
@@ -62,7 +69,30 @@
     "INTERNAL_EXPORT_ERROR": "由于内部错误，无法导出错误",
     "SUMMARY_CLIPBOARD_SUCCESS": "Summary已被粘贴到剪切板",
     "SUMMARY_CLIPBOARD_FAILURE": "summary粘贴到剪切板发生了错误",
-    "CHILD_FOR_PREDEFINED_ELEMENT_ERROR": "一个预定义的element不能有child"
+    "CHILD_FOR_PREDEFINED_ELEMENT_ERROR": "一个预定义的element不能有child",
+    "LOADING_ERROR": "加载Aspect Model时出错, 恢复到以前的Aspect Model",
+    "COPIED_TO_CLIPBOARD_MESSAGE": "Aspect Model 已经被复制到剪贴板(作为 ttl code)",
+    "EXPORTING_TITLE_ERROR": "导出Aspect Model时出现错误",
+    "RENAMED_FILE_TITLE": "模型文件被重命名",
+    "RENAMED_FILE_MESSAGE": "文件 {{oldFile}} 被重命名为 {{newFile}}",
+    "PACKAGE_IMPORTED_SUCCESS": "包已导入",
+    "PACKAGE_IMPORTED_ERROR": "出现问题. 请重新上传namespaces",
+    "FILE_ADDED_SUCCESS_TITLE": "成功添加文件",
+    "FILE_ADDED_SUCCESS_MESSAGE": "您的文件已成功添加到工作区。",
+    "FILE_ADDED_ERROR_TITLE": "文件添加错误",
+    "FILE_ADDED_ERROR_MESSAGE": "我们在将文件添加到工作区时遇到了一个问题，请重新添加，如果问题仍然存在，请联系我们的支持团队寻求帮助。",
+    "VALIDATION_IN_PROGRESS": "正在进行的验证",
+    "VALIDATION_ERROR_TITLE": "错误完成验证",
+    "VALIDATION_ERROR_MESSAGE": "验证无法完成，请重试或联系技术支持",
+    "ASPECT_SAVED_SUCCESS": "Aspect model 被保存到本地文件夹",
+    "ASPECT_SAVED_ERROR": "保存aspect model时出现错误",
+    "ASPECT_MISSING_TITLE": "Aspect Model缺少",
+    "ASPECT_MISSING_CONTENT": "在开始建模，请先创建一个新的或加载一个现有的模型，之后可以添加新的节点类型",
+    "LOAD_MODEL_INFO_TITLE": "继续加载模型",
+    "LOAD_MODEL_INFO_MESSAGE": "查看文件内容，请先加载一个模型。",
+    "FALLBACK_TO_DEFAULT_LANGUAGE_TITLE": "回退到默认语言。",
+    "FALLBACK_TO_DEFAULT_LANGUAGE_DESC_MESSAGE": "在{{fileName}}中找不到在{{subject}}描述的指定语言，继续使用默认语言设置。",
+    "FALLBACK_TO_DEFAULT_LANGUAGE_PREF_MESSAGE": "在{{fileName}}中找不到在{{subject}}首选名称的指定语言，继续使用默认语言设置。"
   },
   "TOOLBAR": {
     "NEW_LOAD": "创建/加载",
@@ -86,187 +116,221 @@
     "HIDE_NAVIGATION": "隐藏导航",
     "SHOW_NAVIGATION": "显示导航",
     "MODEL_UNFILTERED": "不过滤Model",
-    "MODEL_FILTERED_BY_PROPERTIES": "根据properties过滤Model",
-    "SETTINGS": "设置",
+    "MODEL_FILTERED_BY_PROPERTIES": "根据properties过滤Model"
+  },
+  "LOAD_MENU": {
+    "NEW_WINDOW": "新窗口",
+    "CREATE_UPLOAD_ASPECT_MODEL": "创建/上传Aspect Model",
+    "IMPORT_PACKAGE": "导入 Package"
+  },
+  "SAVE_MENU": {
+    "EXPORT_ASPECT_MODEL": "导出 Model",
+    "EXPORT_NAMESPACE": "导出Namespace",
+    "COPY_TO_CLIPBOARD": "复制到剪切板",
+    "COPIED_TO_CLIPBOARD": "Copied to Clipboard",
+    "SAVE_TO_WORKSPACE": "保存到Workspace"
+  },
+  "GENERATE_DOCUMENT_MENU": {
+    "GENERATE_HTML_DOCUMENT": "生成HTML文档",
+    "GENERATE_OPENAPI_SPECIFICATION": "生成OpenAPI规格",
+    "GENERATE_AASX_XML": "生成AASX/XML"
+  },
+  "DOWNLOAD_JSON_MENU": {
+    "GENERATE_SAMPLE_JSON_PAYLOAD": "生成JSON payload样例",
+    "GENERATE_JSON_SCHEMA": "生成JSON schema"
+  },
+  "FILTER_MENU": {
+    "DISPLAY_ENTIRE_MODEL": "展示所有Model",
+    "NONE": "无",
+    "FILTERS_BY_PROPERTIES": "通过properties过滤",
+    "BY_PROPERTIES": "通过properties"
+  },
+  "DECLARE_NAME_DIALOG": {
+    "TITLE": "声明共享Model的名称",
+    "INFO_CONTENT": "您将要删除该Aspect, 这会将该Aspect Model转换为共享Model。请为此共享Model选择一个名称",
+    "REQUIRED_ERROR": "必填",
+    "CHARACTERS_ERROR": "允许的字符：字母数字、空格、点 (.)、减号 (-) 和下划线 (_)",
+    "EXIST_ERROR": "该文件已存在于您的namespace",
+    "REMOVE_ASPECT": "移除Aspect",
+    "CANCEL": "取消"
+  },
+  "SELECT_LANGUAGE_TO_JSON_SCHEMA_DIALOG": {
+    "TITLE": "选择一种语言来生成JSON Schema",
+    "LANGUAGE": "语言",
+    "SELECT_BUTTON": "选择"
+  },
+  "GENERATE_AASX_DIALOG": {
+    "TITLE": "生成AASX",
+    "OUTPUT_FILE_FORMAT": "产出文件格式",
+    "GENERATING": "生成中...",
+    "CANCEL": "取消",
+    "GENERATE": "生成"
+  },
+  "LOAD_MODEL_DIALOG": {
+    "TITLE": "开始建模型",
+    "INFO_CONTENT": "现有的方面模型将替换为新的方面模型。任何未保存的更改都将丢失。",
+    "OPTIONS_MESSAGE": "要开始建模，您有三个选择：",
+    "FIRST_OPTION": "从一个新模型开始（请参阅下面文本区域中的初始 Aspect 模型代码）<",
+    "SECOND_OPTION": "将现有的方面模型文件 (*.ttl) 粘贴到下面的文本区域",
+    "THIRD_OPTION": "通过选择下面的“从文件加载”来加载方面模型文件 (*.ttl)。",
+    "MODIFY_MANUALLY_CONTENT": "作为专家，您还可以手动修改方面模型文件。",
+    "TEXT_FIELD_PLACEHOLDER": "将您的方面模型粘贴到此处或从文件加载。",
+    "BUTTON": {
+      "MODELS": "Models",
+      "DEFAULT_ASPECT_MODEL": "默认Aspect Model",
+      "MOVEMENT_EXAMPLE": "动作示例",
+      "LOAD_FROM_FILE": "从文件加载",
+      "START_MODELING": "开始建模型"
+    }
+  },
+  "EXPORT_NAMESPACE_DIALOG": {
+    "TITLE": "导出namespace(s) 到包",
+    "INFO_CONTENT": "请选择你想要作为Aspect Model Package导出的namespace.",
+    "CANCEL": "取消",
+    "NEXT": "下一步"
+  },
+  "VALIDATION_RESULT_DIALOG": {
+    "TITLE": "校验结果",
+    "HAVE_VALIDATED": "Namespaces可以被校验并且",
+    "CAN_BE_EXPORTED": "可以被导出",
+    "CAN_NOT_EXPORTED": "Namespaces不可以导出因为 ",
+    "MISSING_FILES": "丢失的文件",
+    "DISMISS_BUTTON": "取消",
+    "EXPORT": "导出",
+    "CLIP_BUTTON": {
+      "COPY_CLIP": "复制到剪贴板",
+      "TOOLTIP": "把校验结果复制到剪贴板"
+    }
+  },
+  "NOTIFICATION_DIALOG": {
+    "LOADING": "加载Aspect Model",
+    "CONTENT": "请稍等。注意60秒后超时会自动取消本次操作",
+    "VALIDATING": "校验中",
+    "SAVING": "保存Aspect Model",
+    "GENERATE_JSON_PAYLOAD": "生成JSON payload",
+    "GENERATE_JSON_SCHEMA": "生成JSON Schema",
+    "WAIT_ACTION": "请等待操作完成！",
+    "NO_ASPECT_TITLE": "Load or create an Aspect Model before validating"
+  },
+  "HELP_DIALOG": {
+    "INFO_CONTENT": "Aspect Model Editor是基于 SAMM 的方面模型的可视化编辑器，作为 Eclipse 语义建模框架的一部分。",
+    "PLEASE_REFER": "请参考",
+    "REGARD_USAGE_EDITOR": "来获得有关方面模型编辑器的使用的帮助。",
+    "REGARD_DIGITAL_TWIN_SYSTEM": "来获得有关数字孪生系统和作为数字孪生系统一部分的语义方面元模型的帮助",
+    "VERSION": "版本"
+  },
+  "NOTIFICATIONS_TABLE_DIALOG": {
     "NOTIFICATIONS": "提示",
     "HELP": "帮助",
-    "LOAD_MENU": {
-      "NEW_WINDOW": "新窗口",
-      "CREATE_UPLOAD_ASPECT_MODEL": "创建/上传Aspect Model",
-      "IMPORT_PACKAGE": "导入 Package"
-    },
-    "SAVE_MENU": {
-      "EXPORT_ASPECT_MODEL": "导出 Model",
-      "EXPORT_NAMESPACE": "导出Namespace",
-      "COPY_TO_CLIPBOARD": "复制到剪切板",
-      "SAVE_TO_WORKSPACE": "保存到Workspace"
-    },
-    "GENERATE_DOCUMENT_MENU": {
-      "GENERATE_HTML_DOCUMENT": "生成HTML文档",
-      "GENERATE_OPENAPI_SPECIFICATION": "生成OpenAPI规格",
-      "GENERATE_AASX_XML": "生成AASX/XML"
-    },
-    "DOWNLOAD_JSON_MENU": {
-      "GENERATE_SAMPLE_JSON_PAYLOAD": "生成JSON payload样例",
-      "GENERATE_JSON_SCHEMA": "生成JSON schema"
-    },
-    "FILTER_MENU": {
-      "DISPLAY_ENTIRE_MODEL": "展示所有Model",
-      "NONE": "无",
-      "FILTERS_BY_PROPERTIES": "通过properties过滤",
-      "BY_PROPERTIES": "通过properties"
-    },
-    "DECLARE_NAME_DIALOG": {
-      "TITLE": "声明共享Model的名称",
-      "INFO_CONTENT": "您将要删除该Aspect, 这会将该Aspect Model转换为共享Model。请为此共享Model选择一个名称",
-      "REQUIRED_ERROR": "必填",
-      "CHARACTERS_ERROR": "允许的字符：字母数字、空格、点 (.)、减号 (-) 和下划线 (_)",
-      "EXIST_ERROR": "该文件已存在于您的namespace",
-      "REMOVE_ASPECT": "移除Aspect",
-      "CANCEL": "取消"
-    },
-    "SELECT_LANGUAGE_TO_JSON_SCHEMA_DIALOG": {
-      "TITLE": "选择一种语言来生成JSON Schema",
-      "LANGUAGE": "语言",
-      "SELECT_BUTTON": "选择"
-    },
-    "GENERATE_AASX_DIALOG": {
-      "TITLE": "生成AASX",
-      "OUTPUT_FILE_FORMAT": "产出文件格式",
-      "GENERATING": "生成中...",
+    "CLEAR_TABLE": "清空表格",
+    "DATE": "日期",
+    "TYPE": "种类",
+    "MESSAGE": "消息",
+    "OPTIONS": "选项",
+    "NO_NOTIFICATIONS": "暂无提示。",
+    "GO": "前往",
+    "CLEAR": "清理"
+  },
+  "WORKSPACE_SUMMARY": {
+    "SELECT_TO_VALIDATE": "选择一个Aspect Model来查看校验结果。",
+    "VALIDATED_SUCCESSFULLY": "这个文件的校验结果是成功",
+    "FILES_NOT_IMPORTED": "以下文件没有被导入："
+  },
+  "GENERATE_HTML_DOC_DIALOG": {
+    "TITLE": "生成HTML文件",
+    "GENERATING": "生成",
+    "LANGUAGE": "语言",
+    "BUTTON": {
+      "CANCEL": "取消",
+      "OPEN_DOC": "打开文件",
+      "DOWNLOAD_DOC": "下载文件"
+    }
+  },
+  "GENERATE_OPENAPI_SPEC_DIALOG": {
+    "TITLE": "生成OpenAPI规格",
+    "GENERATING": "生成",
+    "CONFIGURATION": "配置",
+    "LANGUAGE": "语言",
+    "OUTPUT_FILE_FORMAT": "输出文件格式",
+    "BASEURL": "BaseUrl - Aspect API的base URL",
+    "PLEASE_ADD_VALID_URL": "请添加有效url",
+    "INCLUDE_QUERY_API_TOOLTIP": "如果设置为 true, 则 Aspect API 的查询 API 端点的路径部分将包含在规范中。",
+    "INCLUDE_QUERY_API": "包括QueryApi",
+    "USE_SEMANTIC_VERSION": "使用Semantic版本",
+    "USE_SEMANTIC_VERSION_TOOLTIP": "如果设置为 true, 则方面模型的完整语义版本将用作 API 的版本。否则，只有方面版本的主要部分用作 API 的版本。",
+    "PAGING_TYPE_OPTION": "Paging类型/选项",
+    "NO_PAGING": "无需paging",
+    "CURSOR_BASED_PAGING": "基于光标的paging",
+    "OFFSET_BASED_PAGING": "基于抵消的paging",
+    "TIME_BASED_PAGING": "基于时间的paging",
+    "BUTTON": {
       "CANCEL": "取消",
       "GENERATE": "生成"
-    },
-    "LOAD_MODEL_DIALOG": {
-      "TITLE": "开始建模型",
-      "INFO_CONTENT": "现有的方面模型将替换为新的方面模型。任何未保存的更改都将丢失。",
-      "OPTIONS_MESSAGE": "要开始建模，您有三个选择：",
-      "FIRST_OPTION": "从一个新模型开始（请参阅下面文本区域中的初始 Aspect 模型代码）<",
-      "SECOND_OPTION": "将现有的方面模型文件 (*.ttl) 粘贴到下面的文本区域",
-      "THIRD_OPTION": "通过选择下面的“从文件加载”来加载方面模型文件 (*.ttl)。",
-      "MODIFY_MANUALLY_CONTENT": "作为专家，您还可以手动修改方面模型文件。",
-      "TEXT_FIELD_PLACEHOLDER": "将您的方面模型粘贴到此处或从文件加载。",
-      "BUTTON": {
-        "MODELS": "Models",
-        "DEFAULT_ASPECT_MODEL": "默认Aspect Model",
-        "MOVEMENT_EXAMPLE": "动作示例",
-        "LOAD_FROM_FILE": "从文件加载",
-        "START_MODELING": "开始建模型"
-      }
-    },
-    "EXPORT_NAMESPACE_DIALOG": {
-      "TITLE": "导出workspace",
-      "INFO_CONTENT": "请选择你想要作为Aspect Model Package导出的namespace.",
-      "CANCEL": "取消",
-      "NEXT": "下一步"
-    },
-    "VALIDATION_RESULT_DIALOG": {
-      "TITLE": "校验结果",
-      "HAVE_VALIDATED": "Namespaces可以被校验并且",
-      "CAN_BE_EXPORTED": "可以被导出",
-      "CAN_NOT_EXPORTED": "Namespaces不可以导出因为 ",
-      "MISSING_FILES": "丢失的文件",
-      "DISMISS_BUTTON": "取消",
-      "EXPORT": "导出",
-      "CLIP_BUTTON": {
-        "COPY_CLIP": "复制到剪贴板",
-        "TOOLTIP": "把校验结果复制到剪贴板"
-      }
-    },
-    "NOTIFICATION_DIALOG": {
-      "LOADING_TITLE": "加载Aspect Model",
-      "CONTENT": "请稍等。注意60秒后超时会自动取消本次操作",
-      "VALIDATING": "校验中",
-      "SAVING": "保存Aspect Model",
-      "GENERATE_HTML": "生成HTML文件",
-      "GENERATE_JSON_PAYLOAD": "生成JSON payload",
-      "GENERATE_JSON_SCHEMA": "生成JSON Schema",
-      "GENERATE_API_SPEC": "生成Open API规格",
-      "WAIT_ACTION": "请等待操作完成！",
-      "FORMAT": "格式化...",
-      "WAIT_FORMAT": "请等待格式化完成"
-    },
-    "HELP_DIALOG": {
-      "INFO_CONTENT": "Aspect Model Editor是基于 SAMM 的方面模型的可视化编辑器，作为 Eclipse 语义建模框架的一部分。",
-      "PLEASE_REFER": "请参考",
-      "REGARD_USAGE_EDITOR": "来获得有关方面模型编辑器的使用的帮助。",
-      "REGARD_DIGITAL_TWIN_SYSTEM": "来获得有关数字孪生系统和作为数字孪生系统一部分的语义方面元模型的帮助",
-      "VERSION": "版本"
-    },
-    "NOTIFICATIONS_TABLE_DIALOG": {
-      "NOTIFICATIONS": "提示",
-      "CLEAR_TABLE": "清空表格",
-      "DATE": "日期",
-      "TYPE": "种类",
-      "MESSAGE": "消息",
-      "OPTIONS": "选项",
-      "NO_NOTIFICATIONS": "暂无提示。",
-      "GO": "前往",
-      "CLEAR": "清理"
-    },
-    "WORKSPACE_SUMMARY": {
-      "SELECT_TO_VALIDATE": "选择一个Aspect Model来查看校验结果。",
-      "VALIDATED_SUCCESSFULLY": "这个文件的校验结果是成功",
-      "FILES_NOT_IMPORTED": "以下文件没有被导入："
-    },
-    "GENERATE_HTML_DOC_DIALOG": {
-      "TITLE": "生成HTML文件",
-      "LANGUAGE": "语言",
-      "BUTTON": {
-        "CANCEL": "取消",
-        "OPEN_DOC": "打开文件",
-        "DOWNLOAD_DOC": "下载文件"
-      }
-    },
-    "GENERATE_OPENAPI_SPEC_DIALOG": {
-      "TITLE": "生成OpenAPI规格",
-      "CONFIGURATION": "配置",
-      "LANGUAGE": "语言",
-      "OUTPUT_FILE_FORMAT": "输出文件格式",
-      "BASEURL": "BaseUrl - Aspect API的base URL",
-      "PLEASE_ADD_VALID_URL": "请添加有效url",
-      "INCLUDE_QUERY_API_TOOLTIP": "如果设置为 true, 则 Aspect API 的查询 API 端点的路径部分将包含在规范中。",
-      "INCLUDE_QUERY_API": "包括QueryApi",
-      "USE_SEMANTIC_VERSION": "使用Semantic版本",
-      "USE_SEMANTIC_VERSION_TOOLTIP": "如果设置为 true, 则方面模型的完整语义版本将用作 API 的版本。否则，只有方面版本的主要部分用作 API 的版本。",
-      "PAGING_TYPE_OPTION": "Paging类型/选项",
-      "NO_PAGING": "无需paging",
-      "CURSOR_BASED_PAGING": "基于光标的paging",
-      "OFFSET_BASED_PAGING": "基于抵消的paging",
-      "TIME_BASED_PAGING": "基于时间的paging",
-      "BUTTON": {
-        "CANCEL": "取消",
-        "GENERATE": "生成"
-      }
-    },
-    "GENERATE_HANDLING": {
-      "FAIL_GENERATE_OPENAPI_SPEC": "生成Open Api规格失败",
-      "INVALID_MODEL": "无效的Aspect Model",
-      "FAIL_GENERATE_JSON_SAMPLE": "生成JSON Sample失败",
-      "JSON_PAYLOAD_PREVIEW": "Sample JSON Payload预览",
-      "FAIL_GENERATE_JSON_SCHEMA": "生成JSON Schema失败",
-      "JSON_SCHEMA_PREVIEW": "JSON Schema预览"
-    },
-    "PREVIEW_DIALOG": {
-      "RESET_CONTENT": "重置内容",
-      "COPY_TO_CLIPBOARD": "复制到剪切板",
-      "DOWNLOAD_FILE": "下载文件"
     }
+  },
+  "GENERATE_HANDLING": {
+    "FAIL_GENERATE_OPENAPI_SPEC": "生成Open Api规格失败",
+    "INVALID_MODEL": "无效的Aspect Model",
+    "FAIL_GENERATE_JSON_SAMPLE": "生成JSON Sample失败",
+    "JSON_PAYLOAD_PREVIEW": "Sample JSON Payload预览",
+    "FAIL_GENERATE_JSON_SCHEMA": "生成JSON Schema失败",
+    "JSON_SCHEMA_PREVIEW": "JSON Schema预览",
+    "NO_ASPECT_TITLE": "在生成工件之前加载或创建一个Aspect Model"
+  },
+  "PREVIEW_DIALOG": {
+    "RESET_CONTENT": "重置内容",
+    "COPY_TO_CLIPBOARD": "复制到剪切板",
+    "DOWNLOAD_FILE": "下载文件"
   },
   "SIDEBAR": {
     "ELEMENT_ALREADY_IMPORTED": "元素已导入",
     "DRAG_TO_RIGHT_TO_ADD": "{{value}} - 向右拖动即可添加",
     "OPEN_WORKSPACE": "打开Workspace",
     "THE_ROOT_OF_AVAILABLE_NAMESPACES": "所有本地可获取namespaces的根",
-    "WORKSPACE_TIP": "要在下面的列表中查看您当前的Model, 请将其保存到Workspace"
+    "WORKSPACE_TIP": "要在下面的列表中查看您当前的Model, 请将其保存到Workspace",
+    "SAMM_ELEMENTS": "SAMM 元素",
+    "DRAG_INTO_VIEW": "拖到视图中",
+    "EMPTY": {
+      "LOADING_NAMESPACES": "加载Namespaces...",
+      "SAVE_MESSAGE": "要在下面的列表中查看当前模型，请将其保存到工作区。",
+      "CALL_TO_ACTION": "当前工作区没有任何文件。单击下面的按钮导入Namespaces!",
+      "IMPORT_BUTTON": "导入包"
+    },
+    "ACTIONS": {
+      "SEARCH_ELEMENTS": "寻找元素...",
+      "SEARCH_FILE": "寻找文件...",
+      "SHOW_ALL": "展示所有",
+      "SHOW_LESS": "展示部分"
+    },
+    "WORKSPACE": {
+      "TITLE": "Workspace",
+      "REFRESHING": "刷新workspace...",
+      "REFRESH": "刷新workspace"
+    },
+    "FILE_MENU": {
+      "NEW_WINDOW": "在新窗口中打开",
+      "OPEN_CURRENT": "在当前打开",
+      "FIND_ELEMENTS": "寻找元素",
+      "COPY_FILE_PATH": "复制文件路径",
+      "DELETE": "删除"
+    }
   },
   "SETTINGS_DIALOG": {
     "TITLE": "设置",
     "CANCEL": "取消",
     "APPLY": "应用",
+    "ERROR_MESSAGE": "请修复错误后再保存设置",
+    "OK": "OK",
+    "NODE": {
+      "SYSTEM_CONFIGURATION": "系统配置",
+      "MODEL_CONFIGURATION": "模型配置"
+    },
     "SUB_NODE": {
+      "AUTOMATED_WORKFLOW": "自动化工作流",
+      "EDITOR": "编辑器",
+      "COPYRIGHT": "Header/Copyright",
       "LANGUAGES": "语言",
-      "NAMESPACES": "命名空间"
+      "NAMESPACES": "Namespaces"
     },
     "CONFIGURATION": {
       "AUTO_SAVE": "自动保存",
@@ -327,9 +391,9 @@
       "COPY_TO_CLIPBOARD": "复制到剪切板"
     },
     "SHAPE_SETTING": {
-      "EDIT": "编辑 {{value}}",
       "SAVE": "保存",
       "CANCEL": "取消",
+      "EDIT": "编辑 {{value}}",
       "LOCATE_ELEMENT": "定位元素",
       "PROPERTIES_CONFIGURATION": "属性Configuration",
       "CONFIGURE": "配置",
@@ -348,7 +412,8 @@
           "PLEASE_START_WITH_A_LOWER_CASE": "请以小写字符开头，后跟字母/数字。",
           "PLEASE_SELECT_DIFFERENT_NAME": "请选择其他名称，因为该名称已在同一命名空间中使用",
           "PLEASE_SELECT_DIFFERENT_NAME_NAMESPACE": "请选择一个不同的名称，因为该名称已在同一命名空间中使用",
-          "NO_CONTAIN_WHITESPACES": "名称不得包含空格"
+          "NO_CONTAIN_WHITESPACES": "名称不得包含空格",
+          "ALREADY_DEFINED_IN_SAME_NAMESPACE": "Please select a different name as this one is already in use in the same namespace"
         },
         "UNIT": {
           "SELECT_DIFFERENT_NAME_TYPE": "请选择不同的名称，因为该名称属于不同类型",
@@ -368,6 +433,10 @@
         "LOCATE_ELEMENT": "定位元素",
         "OPEN_ELEMENT": "打开元素",
         "OPEN_ELEMENT_IN_NEW_WINDOW": "在新窗口打开元素"
+      },
+      "NOTIFICATION": {
+        "EDIT_VIEW_UNAVAILABLE": "Edit View Unavailable",
+        "EDIT_VIEW_UNAVAILABLE_MESSAGE": "The element you`re trying to edit doesn`t exist. Please check if the element ID is correct or if it has been removed."
       }
     }
   },
@@ -378,19 +447,51 @@
   },
   "CONFIRM_DIALOG": {
     "CREATE_ASPECT": {
+      "TITLE": "创建新的Aspect",
       "ASPECT_CREATION_WARNING": "您将创建一个Aspect, 它将将此共享模型转换为Aspect Model。",
       "NAME_REPLACEMENT_NOTICE": "Model的当前名称将替换为Aspect的名称",
-      "TITLE": "创建新的Aspect",
       "CLOSE_BUTTON": "取消",
       "OK_BUTTON": "创建Aspect"
     },
     "RELOAD_CONFIRMATION": {
+      "TITLE": "当前Aspect Model被改变了",
       "VERSION_CHANGE_NOTICE": "不同版本的",
       "WORKSPACE_LOAD_NOTICE": "已加载到workspace。",
       "RELOAD_WARNING": "重新加载将用工作区中的版本替换当前的Aspect Model, 所有未保存的更改都将丢失。重新加载?",
-      "TITLE": "当前Aspect Model被改变了",
       "CLOSE_BUTTON": "保持当前的修改",
       "OK_BUTTON": "重新加载"
+    },
+    "UPDATE_ASPECT_MODEL": {
+      "PHRASE1": "Aspect model \"{{fileName}}\" 已经在文件结构中定义",
+      "PHRASE2": "您确定要重写它吗?",
+      "TITLE": "更新Aspect Model",
+      "OK_BUTTON": "重写"
+    },
+    "NAMESPACE_CHANGE": {
+      "PHRASE1": "\"{{originalModelName}}\" 模型的namespace已被更改. 该流程将进行以下更改:",
+      "PHRASE2": "• 将\"{{originalModelName}}\" 从 \"{{originalModelNamespace}}\" 移动到 \"{{newNamespace}}\" namespace",
+      "PHRASE3": "• 更新依赖于 \"{{originalModelName}}\" 模型的Aspect Model",
+      "PHRASE4": "你确定要继续吗?",
+      "TITLE": "模型的namespace已被更改",
+      "OK_BUTTON": "继续"
+    },
+    "SAVE_BEFORE_LOAD": {
+      "PHRASE1": "你即将加载 {{fileName}}.",
+      "PHRASE2": "您想要先在工作区中保存当前的Aspect Model吗?",
+      "TITLE": "保存当前的Aspect Model",
+      "OK_BUTTON": "保存",
+      "CANCEL_BUTTON": "不保存"
+    },
+    "DELETE_FILE": {
+      "PHRASE1": "您确定要从其命名空间中删除Aspect Model的 \"{{fileName}}\" 吗?",
+      "PHRASE2": "此操作不能撤消。",
+      "TITLE": "删除Aspect Model"
+    },
+    "NEW_WINDOW_ELEMENT": {
+      "PHRASE1": "您即将打开一个带有{{elementName}} 突出显示的新窗口。",
+      "TITLE": "打开其他窗口中的元素?",
+      "CANCEL_BUTTON": "取消",
+      "OK_BUTTON": "保存"
     }
   },
   "LOADING_SCREEN_DIALOG": {
@@ -407,6 +508,119 @@
     "ASPECT_MODEL_LOADING": "加载Aspect Model",
     "WORKSPACE_IMPORT": "将文件导入到workspace",
     "FILTER_CHANGE": "更换过滤器...",
-    "FILTER_WAIT": "请等待过滤完成"
+    "FILTER_WAIT": "请等待过滤完成",
+    "SAVING_TO_WORKSPACE_TITLE": "保存Aspect Model到workspace",
+    "SAVING_TO_WORKSPACE_CONTENT": "请稍等。依赖模型的迁移过程可能需要一段时间。",
+    "FOLDING": "折叠...",
+    "EXPANDING": "展开...",
+    "ACTION_WAIT": "请等待filtering完成",
+    "FORMATTING": "格式化...",
+    "WAIT_FORMAT": "请等待格式化完成"
+  },
+  "TOOLTIPS": {
+    "WORKSPACE": "工作空间",
+    "ELEMENTS": "元素",
+    "SETTINGS": "设置",
+    "NOTIFICATIONS": "通知",
+    "HELP": "帮助",
+    "UNFOLD": "打开",
+    "UNFOLD_NAMESPACES": "打开namespaces",
+    "FOLD": "折叠",
+    "FOLD_NAMESPACES": "折叠namespaces",
+    "OUTDATED_FILE": "此文件基于较旧的SAMM版本({{sammVersion}})",
+    "ERRORED_FILE": "这个文件加载出错",
+    "CURRENT_FILE": "该文件在当前窗口中打开",
+    "LOCKED_FILE": "该文件当前在另一个窗口中打开"
+  },
+  "SEARCHES": {
+    "ELEMENTS_LABEL": "寻找元素...",
+    "FILES": {
+      "LABEL": "寻找文件...",
+      "NOTIFICATIONS": {
+        "TITLE": "不能找到文件",
+        "ERROR_MESSAGE": "这个文件有错误",
+        "ALREADY_LOADED_FILE_MESSAGE": "这个文件已被加载",
+        "LOCKED_FILE_MESSAGE": "该文件在其他窗口中加载"
+      },
+      "OPEN_DIALOG": {
+        "TITLE": "打开文件{{fileName}}",
+        "CONTENT": "您即将从命名空间<b>{{namespace}}</b>打开文件<b>{{fileName}}</b>。<br />请选择打开的位置",
+        "CANCEL": "取消",
+        "OPEN_IN_THIS_WINDOW": "在当前窗口打开",
+        "OPEN_IN_NEW_WINDOW": "在新窗口打开"
+      }
+    }
+  },
+  "ENTITY_VALUE": {
+    "NAME": "",
+    "VALUE": "",
+    "ENTITY_VALUE": "",
+    "LANGUAGE": "",
+    "PROPERTY": "",
+    "EDIT": {
+      "SEARCH_BAR": ""
+    }
+  },
+  "MENU": {
+    "FILE": {
+      "LABEL": "",
+      "NEW": {
+        "LABEL": "",
+        "SUBMENU": {
+          "EMPTY_MODEL": "",
+          "LOAD_FILE": "",
+          "COPY_PASTE": "",
+          "EXAMPLES": ""
+        }
+      },
+      "NEW_WINDOW": "",
+      "IMPORT_MODEL": "",
+      "IMPORT_PACKAGE": "",
+      "COPY_TO_CLIPBOARD": "",
+      "SAVE_TO_WORKSPACE": "",
+      "EXPORT_MODEL": "",
+      "EXPORT_PACKAGE": ""
+    },
+    "VIEW": {
+      "LABEL": "",
+      "TOGGLE_TOOLBAR": "",
+      "TOGGLE_MINIMAP": "",
+      "FILTER": {
+        "LABEL": "",
+        "SUBMENU": {
+          "NONE": "",
+          "PROPERTIES": ""
+        }
+      },
+      "ZOOM_IN": "",
+      "ZOOM_OUT": "",
+      "ZOOM_TO_FIT": "",
+      "ZOOM_TO_100": ""
+    },
+    "EDIT": {
+      "LABEL": "\u200B",
+      "OPEN_SELECTED_ELEMENT": "",
+      "REMOVE_SELECTED_ELEMENT": "",
+      "COLLAPSE_EXPAND_MODEL": "",
+      "FORMAT_MODEL": "",
+      "CONNECT_SELECTED_ELEMENTS": ""
+    },
+    "VALIDATE": {
+      "LABEL": "",
+      "CURRENT_MODEL": ""
+    },
+    "GENERATE": {
+      "LABEL": "",
+      "HTML_DOCUMENTATION": "",
+      "OPEN_API_SPECIFICATION": "",
+      "AASX_XML": "",
+      "SAMPLE_JSON_PAYLOAD": "",
+      "JSON_SCHEMA": ""
+    },
+    "SEARCH": {
+      "LABEL": "",
+      "ELEMENTS": "",
+      "FILES": ""
+    }
   }
 }

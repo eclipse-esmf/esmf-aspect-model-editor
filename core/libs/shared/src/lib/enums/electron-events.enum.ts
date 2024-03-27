@@ -93,4 +93,5 @@ export enum ElectronEvents {
 
   // App menu updates
   SIGNAL_UPDATE_MENU_ITEM = 'SIGNAL_UPDATE_MENU_ITEM',
+  SIGNAL_TRANSLATE_MENU_ITEMS = 'SIGNAL_TRANSLATE_MENU_ITEMS',
 }

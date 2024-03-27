@@ -16,12 +16,16 @@ import {Settings} from '@ame/settings-dialog';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 import {LanguageTranslationService} from '@ame/translation';
 import {Injectable} from '@angular/core';
+import {ElectronTunnelService} from '@ame/shared';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrategy {
-  constructor(private translate: LanguageTranslationService) {}
+  constructor(
+    private translate: LanguageTranslationService,
+    private electronTunnelService: ElectronTunnelService,
+  ) {}
 
   updateSettings(form: FormGroup, settings: Settings): void {
     const languageConfiguration = form.get('languageConfiguration');
@@ -29,6 +33,7 @@ export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrate
 
     const userInterfaceLang = languageConfiguration.get('userInterface')?.value;
     this.translate.translateService.use(userInterfaceLang);
+    this.electronTunnelService.sendTranslationsToElectron(userInterfaceLang);
     localStorage.setItem('applicationLanguage', userInterfaceLang);
 
     settings.aspectModelLanguages = (languageConfiguration.get('aspectModel') as FormArray).controls.map(
