@@ -291,6 +291,7 @@ export class EditorService {
     }
     return value;
   }
+  
   loadExternalModels(): Observable<Array<RdfModel>> {
     this.rdfService.externalRdfModels = [];
     return this.modelApiService.getAllNamespacesFilesContent().pipe(
