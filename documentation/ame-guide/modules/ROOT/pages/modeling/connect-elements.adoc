@@ -29,7 +29,3 @@ The new pop-up displays all the elements of the model. You can use the search fi
 Upon success the arrow is visible.
 
 In case you try to connect elements which cannot be connected, a validation notification will inform you respectively.
-
-== Connect via focus
-
-* Single click the first element - this sets focus on element
