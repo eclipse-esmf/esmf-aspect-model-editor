@@ -11,6 +11,8 @@ The menu offers two options for JSON generation:
 
 ** Sample JSON payload
 ** JSON schema
++
+image::generate-json.png[Generate JSON, width=80%]
 
 TIP: If you run into errors, please make sure that your Aspect Model is valid. If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.
 
