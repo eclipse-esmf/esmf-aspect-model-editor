@@ -7,7 +7,7 @@ A menu offers one option for generating HTML documentation:
 
 ** *HTML documentation* -- continue with this one
 +
-image::generate-html.png[Generate document, width=100%, align="left"]
+image:generate-html.png[Generate document, width=15%]
 
 * In case your model supports multiple languages, select the specific language for the documentation.
 * Click *Download Documentation* and store the HTML file locally.

@@ -7,7 +7,8 @@ A menu offers one option:
 
 ** *AASX/XML* -- continue with this one
 +
-image::generate-aasx.png[Generate AASX/XML,width=100%,align="left"]
+image:generate-aasx.png[Generate AASX/XML, width=15%]
+
 * Select *AASX* or *XML* as the desired file format.
 * Click *Generate* and store the file locally.
 
