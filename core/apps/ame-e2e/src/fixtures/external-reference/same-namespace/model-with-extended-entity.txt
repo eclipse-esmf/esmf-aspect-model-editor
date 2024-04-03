@@ -7,18 +7,18 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix : <urn:samm:org.eclipse.examples:1.0.0#> .
 
-:SimpleAspect a samm:Aspect ;
+:AspectWithExtendedEntity a samm:Aspect ;
    samm:properties ( :simpleProperty1 ) ;
    samm:operations ( ) ;
    samm:events ( ) .
 
-:simpleProperty1 a samm:Property ;
-   samm:characteristic :SimpleCharacteristic1 .
+:property2 a samm:Property ;
+   samm:characteristic :characteristic2 .
 
-:SimpleCharacteristic1 a samm:Characteristic ;
-   samm:dataType :SimpleEntity1 .
+:characteristic1 a samm:Characteristic ;
+   samm:dataType :Entity2 .
 
-:SimpleEntity1 a samm:Entity ;
+:Entity2 a samm:Entity ;
    samm:extends :Entity1 ;
    samm:properties ( ) .
 

@@ -64,15 +64,15 @@ describe('Test loading aspect with extended external Entity', () => {
       .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.name).to.equal('SimpleAspect');
-        cy.shapeExists('SimpleAspect').then(() => {
-          cy.shapeExists('SimpleEntity1');
+        expect(aspect.name).to.equal('AspectWithExtendedEntity');
+        cy.shapeExists('AspectWithExtendedEntity').then(() => {
+          cy.shapeExists('Entity2');
           cy.shapeExists('Entity1');
         });
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('SimpleEntity1 a samm:Entity');
+        expect(rdf).to.contain('Entity2 a samm:Entity');
         expect(rdf).to.contain('samm:extends :Entity1');
       });
   });
