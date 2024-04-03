@@ -131,23 +131,6 @@ export class NamespacesCacheService {
   }
 
   /**
-   * Updates the association of a file from an old namespace key to a new one.
-   * It handles the removal of the file from the old namespace and adds it under the new namespace,
-   * managing multiple file associations gracefully.
-   *
-   * @param {string} oldUrn - The current namespace key of the file.
-   * @param {string} newUrn - The new namespace key to associate the file with.
-   * @param {string} fileName - The name of the file to update the namespace for.
-   */
-  updateNamespaceKey(oldUrn, newUrn, fileName) {
-    const oldUrnValues = this.#namespaces.get(oldUrn);
-    oldUrnValues?.size > 1 ? oldUrnValues.delete(fileName) : this.#namespaces.delete(oldUrn);
-
-    const newUrnValues = this.#namespaces.get(newUrn);
-    newUrnValues ? newUrnValues.set(fileName, this.#currentCachedFile) : this.addFile(newUrn, fileName);
-  }
-
-  /**
    * This method will resolve the element when it´s not defined external.
    *
    * @param element - MetaModelElement to resolve

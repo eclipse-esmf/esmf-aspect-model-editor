@@ -75,6 +75,7 @@ import {LargeFileWarningService} from './large-file-warning-dialog/large-file-wa
 import {LoadModelPayload} from './models/load-model-payload.interface';
 import {LanguageTranslationService} from '@ame/translation';
 import {SidebarStateService} from '@ame/sidebar';
+import {ConfirmDialogEnum} from './models/confirm-dialog.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -223,15 +224,17 @@ export class EditorService {
   }
 
   openReloadConfirmationDialog(fileName: string): Observable<boolean> {
-    return this.confirmDialogService.open({
-      phrases: [
-        `${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.VERSION_CHANGE_NOTICE} ${fileName} ${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.WORKSPACE_LOAD_NOTICE}`,
-        this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.RELOAD_WARNING,
-      ],
-      title: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.TITLE,
-      closeButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.CLOSE_BUTTON,
-      okButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.OK_BUTTON,
-    });
+    return this.confirmDialogService
+      .open({
+        phrases: [
+          `${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.VERSION_CHANGE_NOTICE} ${fileName} ${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.WORKSPACE_LOAD_NOTICE}`,
+          this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.RELOAD_WARNING,
+        ],
+        title: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.TITLE,
+        closeButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.CLOSE_BUTTON,
+        okButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.OK_BUTTON,
+      })
+      .pipe(map(confirm => confirm === ConfirmDialogEnum.ok));
   }
 
   loadNewAspectModel(payload: LoadModelPayload): Observable<Array<RdfModel>> {
@@ -519,8 +522,8 @@ export class EditorService {
         closeButtonText: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.CLOSE_BUTTON,
         okButtonText: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.OK_BUTTON,
       })
-      .subscribe(confirmed => {
-        if (!confirmed) {
+      .subscribe(confirm => {
+        if (confirm === ConfirmDialogEnum.cancel) {
           return;
         }
         const rdfModel = this.rdfService.currentRdfModel;

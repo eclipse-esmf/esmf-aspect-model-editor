@@ -109,7 +109,6 @@ export interface LoadingScreenDialog {
 export interface ConfirmDialog {
   CREATE_ASPECT: CreateAspect;
   RELOAD_CONFIRMATION: ReloadConfirmation;
-  UPDATE_ASPECT_MODEL: UpdateAspectModel;
   NAMESPACE_CHANGE: NamespaceChange;
   SAVE_BEFORE_LOAD: SaveBeforeLoad;
   DELETE_FILE: DeleteFile;
@@ -138,14 +137,13 @@ export interface NamespaceChange {
   PHRASE2: string;
   PHRASE3: string;
   PHRASE4: string;
+  PHRASE5: string;
+  PHRASE6: string;
+  PHRASE7: string;
   TITLE: string;
   OK_BUTTON: string;
-}
-export interface UpdateAspectModel {
-  PHRASE1: string;
-  PHRASE2: string;
-  TITLE: string;
-  OK_BUTTON: string;
+  ACTION_BUTTON: string;
+  CANCEL_BUTTON: string;
 }
 export interface ReloadConfirmation {
   TITLE: string;

@@ -28,6 +28,7 @@ import {ConfirmDialogService, EditorDialogModule, ShapeSettingsService} from '@a
 import {SearchesStateService} from '../../search-state.service';
 import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-dialog.enum';
 
 @Component({
   standalone: true,
@@ -76,8 +77,8 @@ export class ElementsSearchComponent {
           closeButtonText: this.translate.language.CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.CANCEL_BUTTON,
           okButtonText: this.translate.language.CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.OK_BUTTON,
         })
-        .subscribe(result => {
-          result
+        .subscribe(confirm => {
+          confirm !== ConfirmDialogEnum.cancel
             ? this.electronSignalsService.call('openWindow', {
                 file: element.fileName,
                 namespace: element.aspectModelUrn.replace('urn:samm:', '').split('#')[0],

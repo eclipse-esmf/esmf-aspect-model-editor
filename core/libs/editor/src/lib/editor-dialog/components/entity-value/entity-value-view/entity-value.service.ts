@@ -17,6 +17,7 @@ import {ConfirmDialogService} from '@ame/editor';
 import {NamespacesCacheService} from '@ame/cache';
 import {NotificationsService} from '@ame/shared';
 import {MxGraphHelper} from '@ame/mx-graph';
+import {ConfirmDialogEnum} from '../../../../models/confirm-dialog.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -49,8 +50,8 @@ export class EntityValueService {
       'Do you want to continue?',
     ];
 
-    this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(result => {
-      if (result) {
+    this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(confirm => {
+      if (confirm !== ConfirmDialogEnum.cancel) {
         for (const entityValue of entityValues) {
           entityValue.removeProperty(property);
         }
@@ -90,8 +91,8 @@ export class EntityValueService {
       'Do you want to continue?',
     ];
 
-    this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(result => {
-      if (result) {
+    this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(confirm => {
+      if (confirm !== ConfirmDialogEnum.cancel) {
         for (const entityValue of entityValues) {
           this.currentCachedFile.removeElement(entityValue.aspectModelUrn);
         }
@@ -118,8 +119,8 @@ export class EntityValueService {
       'Do you want to continue?',
     ];
 
-    this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(result => {
-      if (!result) {
+    this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(confirm => {
+      if (confirm === ConfirmDialogEnum.cancel) {
         return;
       }
 

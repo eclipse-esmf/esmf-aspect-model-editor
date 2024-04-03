@@ -33,6 +33,7 @@ export class CachedFile {
   private anonymousElements: {element: BaseMetaModelElement; name: string}[] = [];
   private cachedElements: Map<string, any> = new Map<string, BaseMetaModelElement>();
   private _aspect: Aspect;
+  private _originalAspectName: string;
 
   get aspect(): Aspect {
     return this._aspect;
@@ -42,6 +43,14 @@ export class CachedFile {
     if (value instanceof DefaultAspect) {
       this._aspect = value;
     }
+  }
+
+  get originalAspectName(): string {
+    return this._originalAspectName;
+  }
+
+  set originalAspectName(value: string) {
+    this._originalAspectName = value;
   }
 
   constructor(

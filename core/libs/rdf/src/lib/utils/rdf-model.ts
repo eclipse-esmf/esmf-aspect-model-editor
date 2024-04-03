@@ -30,6 +30,7 @@ export class RdfModel {
   private _prefixes: Prefixes;
   private _isExternalRef = false;
   private _absoluteAspectModelFileName: string = null;
+  private _namespaceHasChanged = false;
   private _metaModelVersion: string;
   private _defaultAspectModelAlias = '';
   private _loadedRdfModel: boolean;
@@ -73,6 +74,10 @@ export class RdfModel {
   }
 
   set absoluteAspectModelFileName(absoluteFileName: string) {
+    if (!this.originalAbsoluteFileName || this.originalAbsoluteFileName !== this.absoluteAspectModelFileName) {
+      this.originalAbsoluteFileName = this.absoluteAspectModelFileName;
+    }
+
     this._absoluteAspectModelFileName = absoluteFileName.replace('urn:samm:', '').replace('#', ':');
   }
 
@@ -88,28 +93,16 @@ export class RdfModel {
     return null;
   }
 
+  set namespaceHasChanged(namespaceHasChanged: boolean) {
+    this._namespaceHasChanged = namespaceHasChanged;
+  }
+
+  get namespaceHasChanged(): boolean {
+    return this._namespaceHasChanged;
+  }
+
   get aspectModelFileName(): string {
     return this._absoluteAspectModelFileName.split(':')[2];
-  }
-
-  get isNamespaceChanged(): boolean {
-    return this.isNamespaceNameChanged || this.isNamespaceVersionChanged;
-  }
-
-  get isNamespaceNameChanged(): boolean {
-    if (!this.originalAbsoluteFileName || !this.absoluteAspectModelFileName) return false;
-    return (
-      RdfModelUtil.getNamespaceNameFromRdf(this.originalAbsoluteFileName) !==
-      RdfModelUtil.getNamespaceNameFromRdf(this.absoluteAspectModelFileName)
-    );
-  }
-
-  get isNamespaceVersionChanged(): boolean {
-    if (!this.originalAbsoluteFileName || !this.absoluteAspectModelFileName) return false;
-    return (
-      RdfModelUtil.getNamespaceVersionFromRdf(this.originalAbsoluteFileName) !==
-      RdfModelUtil.getNamespaceVersionFromRdf(this.absoluteAspectModelFileName)
-    );
   }
 
   constructor(loadedRdfModel = false) {
@@ -372,9 +365,9 @@ export class RdfModel {
   }
 
   updateAbsoluteFileName(newNamespace: string, newVersion: string): void {
-    if (!this.originalAbsoluteFileName) this.originalAbsoluteFileName = this.absoluteAspectModelFileName;
-    if (this.originalAbsoluteFileName !== this.absoluteAspectModelFileName)
+    if (!this.originalAbsoluteFileName || this.originalAbsoluteFileName !== this.absoluteAspectModelFileName) {
       this.originalAbsoluteFileName = this.absoluteAspectModelFileName;
+    }
 
     const fileName = RdfModelUtil.getFileNameFromRdf(this.absoluteAspectModelFileName);
     this.absoluteAspectModelFileName = RdfModelUtil.buildAbsoluteFileName(newNamespace, newVersion, fileName);

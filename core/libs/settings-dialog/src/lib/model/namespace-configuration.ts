@@ -11,8 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export interface Namespace {
-  name: string;
-  value: string;
-  version: string;
+import {RdfModel} from '@ame/rdf/utils';
+
+export interface NamespaceConfiguration {
+  oldNamespace: string;
+  oldVersion: string;
+  rdfModel: RdfModel;
+  newNamespace: string;
+  newVersion: string;
 }

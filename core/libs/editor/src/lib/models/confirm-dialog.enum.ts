@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
@@ -11,6 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-.bold-text {
-  font-weight: bold;
+export enum ConfirmDialogEnum {
+  ok = 'ok',
+  action = 'action',
+  cancel = 'cancel',
 }
