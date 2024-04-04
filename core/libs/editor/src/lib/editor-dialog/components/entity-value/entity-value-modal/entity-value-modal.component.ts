@@ -25,7 +25,6 @@ import {
   OverWrittenProperty,
 } from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
-import {isDataTypeLangString} from '@ame/shared';
 import {EntityValueUtil} from '../utils/EntityValueUtil';
 
 export interface NewEntityValueDialogOptions {

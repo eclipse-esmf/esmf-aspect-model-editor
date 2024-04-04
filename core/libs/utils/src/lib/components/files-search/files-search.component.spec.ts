@@ -3,7 +3,7 @@ import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {MockProviders} from 'ng-mocks';
+import {MockProvider} from 'ng-mocks';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FilesSearchComponent} from './files-search.component';
@@ -32,7 +32,10 @@ describe('Files search', () => {
         HttpClientModule,
       ],
       providers: [
-        MockProviders(MatDialogRef, MxGraphService!, NotificationsService, FileHandlingService),
+        MockProvider(MatDialogRef),
+        MockProvider(MxGraphService),
+        MockProvider(NotificationsService),
+        MockProvider(FileHandlingService),
         TranslateService,
         SearchesStateService,
         SidebarStateService,
