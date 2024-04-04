@@ -146,12 +146,15 @@ export class NamespacesCacheService {
   /**
    * Retrieves a BaseMetaModelElement from a specified namespace using the provided aspectModelUrn.
    *
-   * @param {string} namespace - The namespace from which the element should be retrieved.
+   * @param {string} namespaceKey - The namespaceKey from which the element should be retrieved.
    * @param {string} aspectModelUrn - The URN of the aspect model element to find.
-   * @returns {BaseMetaModelElement | null} The found BaseMetaModelElement or null if not found.
+   * @returns {BaseMetaModelElement} The found BaseMetaModelElement or null if not found.
    */
-  getElementFromNamespace(namespace: string, aspectModelUrn: string): BaseMetaModelElement {
-    for (const value of this.getNamespace(namespace).values()) {
+  getElementFromNamespace(namespaceKey: string, aspectModelUrn: string): BaseMetaModelElement {
+    const namespace = this.getNamespace(namespaceKey);
+    const source = namespace ? Array.from(namespace.values()) : [this.currentCachedFile];
+
+    for (const value of source) {
       const element = value.getElement<BaseMetaModelElement>(aspectModelUrn);
       if (element) {
         return element;
