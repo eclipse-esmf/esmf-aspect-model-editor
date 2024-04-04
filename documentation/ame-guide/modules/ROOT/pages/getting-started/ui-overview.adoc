@@ -272,19 +272,9 @@ For more information, see xref:getting-started/validation-and-notifications.adoc
 | Open help dialog. It displays details about the application and provides a link to the documentation.
 |===
 
-
-{nbsp}
-[[edit-dialog]]
-== 5. Edit dialog
-
-Edit the attributes of a selected element of your Aspect Model with the Edit dialog.
-
-To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Open element icon image:toolbar-icons/edit.png[Edit icon, width="5%"] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
-
-For more information, see xref:modeling/edit-elements.adoc[Edit elements].
-
-[[map]]
-== Map
+[[graph-area]]
+== 5. Graph area canvas
+This is the space where your Aspect Models are visualized... 
 
 With the map, you can easily navigate your Aspect Model in the graph area canvas.
 
@@ -293,3 +283,16 @@ To toggle its visibility, click the Show/Hide map icon in the toolbar.
 image:mini-map.png[Map toggle icon,50%]
 
 For more information, see xref:getting-started/navigate-models.adoc[Navigate models].
+
+
+
+{nbsp}
+[[edit-dialog]]
+== 6. Edit dialog
+
+Edit the attributes of a selected element of your Aspect Model with the Edit dialog.
+
+To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Open element icon image:toolbar-icons/edit.png[Edit icon, width="5%"] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+
+For more information, see xref:modeling/edit-elements.adoc[Edit elements].
+
