@@ -6,7 +6,7 @@ This section gives a brief overview of the UI and its features.
 image::ame-ui-overview-numbers.png[Numbered UI overview, width=80%]
 
 [[menu]]
-== Menu
+== 1. Menu
 
 [[menu-file]]
 === File Menu
@@ -188,7 +188,7 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 
 
 [[toolbar]]
-== Toolbar
+== 2. Toolbar
 
 [cols="15%,25%,60%"]
 |===
@@ -202,6 +202,10 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 | Delete
 | Delete selected element(s).
 
+| image:toolbar-icons/commit.png[,20%,20%]
+| Connect
+| Connect two selected elements.
+
 | image:toolbar-icons/collapse.png[,20%,20%]
 | Collapse all/Expand all
 | Expands/Collapses elements.
@@ -210,17 +214,22 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 | Format
 | Automatically format the Aspect Model.
 
-| image:toolbar-icons/commit.png[,20%,20%]| Connect
-| Connect two selected elements.
-
 | image:toolbar-icons/validate.png[,20%,20%]
 | Validate
 | Validate the Aspect Model.
 
+| image:toolbar-icons/zoom_in.png[,20%,20%]
+| Zoom in
+| Zoom in the Aspect Model.
+
+| image:toolbar-icons/zoom_out.png[,20%,20%]
+| Zoom out
+| Zoom out the Aspect Model. 
+
 |===
 
 [[workspace-sidebar]]
-== Workspace sidebar
+== 3. Workspace sidebar
 
 The Workspace sidebar &ndash; see screenshot below &ndash; allows you to access namespaces (2) and to drag and drop elements to the graph area canvas (1).
 
@@ -234,7 +243,7 @@ For more information, see xref:getting-started/edit-models.adoc[Edit models].
 
 {nbsp}
 [[bottom-workspace-sidebar]]
-=== Bottom workspace sidebar
+== 4. Bottom workspace sidebar
 
 [cols="15%,25%,60%"]
 |===
@@ -260,31 +269,12 @@ For more information, see xref:getting-started/validation-and-notifications.adoc
 
 | image:toolbar-icons/info.png[,20%,20%]
 | Help
-| Open documentation.
+| Open help dialog. It displays details about the application and provides a link to the documentation.
 |===
 
-{nbsp}
-[[help]]
-== Help
-
-The help icon image:toolbar-icons/info.png[Info, width="5%"] opens a page which lists details about the application and provides
-a link to the documentation.
-
-Example:
-image:help-docs.png[,50%]
-
-{nbsp}
-[[edit-dialog]]
-== Edit dialog
-
-Edit the attributes of a selected element of your Aspect Model with the Edit dialog.
-
-To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Open element icon image:toolbar-icons/edit.png[Edit icon, width="5%"] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
-
-For more information, see xref:modeling/edit-elements.adoc[Edit elements].
-
-[[map]]
-== Map
+[[graph-area]]
+== 5. Graph area canvas
+This is the space where your Aspect Models are visualized... 
 
 With the map, you can easily navigate your Aspect Model in the graph area canvas.
 
@@ -293,3 +283,16 @@ To toggle its visibility, click the Show/Hide map icon in the toolbar.
 image:mini-map.png[Map toggle icon,50%]
 
 For more information, see xref:getting-started/navigate-models.adoc[Navigate models].
+
+
+
+{nbsp}
+[[edit-dialog]]
+== 6. Edit dialog
+
+Edit the attributes of a selected element of your Aspect Model with the Edit dialog.
+
+To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Open element icon image:toolbar-icons/edit.png[Edit icon, width="5%"] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+
+For more information, see xref:modeling/edit-elements.adoc[Edit elements].
+

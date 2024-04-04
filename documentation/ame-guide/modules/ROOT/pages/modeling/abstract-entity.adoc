@@ -3,20 +3,20 @@
 
 SAMM supports defining abstract elements (entities and properties) and the concept of inheritance in order to make semantic information reusable.
 The editor allows to create abstract entities and properties and to declare relationships to inheritance via "extends".
-See https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidelines.html#declaring-entities[Abstract Entities]
+See https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidelines.html#declaring-entities[Declaring Entities]
 for more information about abstract entities and properties.
 
 There are two different ways to create an abstract entity:
 
-* Use drag-and-drop from the Workspace sidebar
-* Adjust an Entity in the extends field
+* Use drag-and-drop from the Workspace sidebar.
+* Adjust an Entity in the extends field.
 
 == Use drag-and-drop from the Workspace sidebar
 
 To add an abstract entity, proceed as follows:
 
-. Open the Workspace sidebar
-. Drag the Abstract Entity element and drop it to the graph area canvas
+. Open the Workspace sidebar.
+. Drag the Abstract Entity element and drop it to the graph area canvas.
 
 image::drag-and-drop-abstract-entity.png[Drag and drop Abstract Entity, 60%]
 
@@ -34,9 +34,9 @@ image::extends-field-abstract-entity.png[Extends fiels Abstract Entity, 50%]
 
 For a new model that only has an Aspect so far:
 
-. Create one Property by clicking twice on the Aspect's Add icon image:add.png[Add icon, 2%].
-. Create one Characteristic by clicking the Add icon image:add.png[Add icon, 2%].
-. Create one Entity by clicking the bottom Add icon image:add.png[Add icon, 2%].
+. Create one Property by clicking twice on the Aspect's Add icon image:add.png[Add icon, 1.5%].
+. Create one Characteristic by clicking the Add icon image:add.png[Add icon, 1.5%].
+. Create one Entity by clicking the bottom Add icon image:add.png[Add icon, 1.5%].
 . Drag and Drop an Abstract Entity from the sidebar.
 . Connect the Abstract Entity with the Entity:
 .. Click the Entity,

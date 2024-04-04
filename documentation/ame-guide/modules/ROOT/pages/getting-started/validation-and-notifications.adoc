@@ -5,17 +5,17 @@
 
 The Aspect Model Editor periodically validates your current Aspect Model against the https://eclipse-esmf.github.io/samm-specification/2.1.0/index.html[SAMM Aspect Meta Model version 2.1.0^,opts=nofollow].
 
-To view the validation results in the Notifications dialog, click the Notifications icon image:toolbar-icons/notifications.png[Notifications icon, 3%].
+To view the validation results in the Notifications dialog, click the Notifications icon image:toolbar-icons/notifications.png[Notifications icon, 2%].
 
 image::notification_screenshot.png[Notification,width=100%]
 
 → In the Notifications dialog, all the validation results for your Aspect Model are listed.
 
-To see more details for a notification, expand it by clicking the Expand arrow icon image:expand.png[Expand icon, 3%].
+To see more details for a notification, expand it by clicking the Expand arrow icon image:expand.png[Expand icon, 1.5%].
 
 == Locate validation errors in your Aspect Model
 
-To locate a validation error in your model, click the Options icon image:options.png[Options icon, 3%] for a particular validation error and select *Go to*.
+To locate a validation error in your model, click the Options icon image:options.png[Options icon, 1.5%] for a particular validation error and select *Go to*.
 
 image:notification-02.png[Go to,width=50%]
 
