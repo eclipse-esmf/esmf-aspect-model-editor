@@ -8,7 +8,7 @@
 @prefix : <urn:samm:org.eclipse.examples:1.0.0#> .
 
 :AspectWithExtendedEntity a samm:Aspect ;
-   samm:properties ( :simpleProperty1 ) ;
+   samm:properties ( :property2 ) ;
    samm:operations ( ) ;
    samm:events ( ) .
 

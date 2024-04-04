@@ -37,7 +37,7 @@ describe('Test loading aspect with extended external Entity', () => {
       });
   });
 
-  it('should load a model with an entity that extends an external entity', () => {
+  it('should load a model with an entity that extends an external entity in same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
       'org.eclipse.examples:1.0.0': ['example.txt'],
@@ -75,5 +75,9 @@ describe('Test loading aspect with extended external Entity', () => {
         expect(rdf).to.contain('Entity2 a samm:Entity');
         expect(rdf).to.contain('samm:extends :Entity1');
       });
+  });
+
+  it('should load a model with an entity that extends an external entity in different namespace', () => {
+
   });
 });
