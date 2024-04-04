@@ -54,6 +54,7 @@ export class EntityInstantiator {
 
         if (externalElement) {
           defaultEntity.extendedElement = externalElement;
+          defaultEntity.children.push(externalElement);
           return;
         }
 
