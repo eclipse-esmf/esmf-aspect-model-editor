@@ -8,23 +8,21 @@ By default, the Aspect Model Editor file directory is located at following path:
 * `+C:\Users\<YOUR-USER-NAME>\aspect-model-editor+` (on Windows)
 * `+/Users/<YOUR-USER-NAME>/aspect-model-editor+` (on Mac or Linux)
 
-There you can add the folder structure for all your Aspect Models.
-On your local file directory you can manually create such folders for the different namespaces and the version.
-Of course creating and deleting namespaces is also possible with this editor**.**
+On your local file directory, you can manually add, edit, and delete the folder structure for all your Aspect Models.  
 
-Structure is visible in the xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar].
+Of course, this is also possible with the Aspect Model Editor. The same folder structure is displayed in the xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar].
 
 image::namespace-file-structure.png[width=80%]
 
-Namespaces that do not follow this file structure might not work and might break the references feature.
+NOTE: Namespaces that do not follow this file structure might not work and might break the xref:namespace/use-references.adoc[references] feature.
 
 == Action dialog in workspace
 
 The currently loaded Aspect Model is highlighted gray.
 
-The ... icon next to a model opens the options to
+The *...* icon next to a model opens the options to
 
-* *Open in new windows* - opens the Aspect Model in a new window
+* *Open in new window* - opens the Aspect Model in a new window
 * *Open in current* - opens the Aspect Model in the current window
 * *Find elements* - opens the Find elements section
 * *Copy file path* - copies the file path to the clipboard
@@ -36,12 +34,15 @@ If you just select another Aspect Model, it will not be loaded but its elements 
 
 == Create a namespace
 
-TIP: The namespace structure is created automatically if you start with the *File* -> *New...* menu item.
+You can create a namespace manually on your local machine, or automatically by using the Aspect Model Editor.
 
+* The easiest way to  do it is by using the *File* -> *New...* menu option when creating your new Aspect Model, and then s
 * If you select one of the *File* -> *New...* menu item and later click "Save to Workspace" the folder
 *org.eclipse.digitaltwin* will be created on your file system and the Workspace will show it respectively.
 * If you import a zip with models into your workspace, and it contains valid models with namespaces which
-did not exist in your workplace yet, these will be created additionally.
+did not exist in your workspace yet, these will be created additionally.
+
+TIP: The namespace structure is created automatically if you start with the *File* -> *New...* menu item.
 
 TIP: In case you have manually added or deleted a file on your local Aspect Model Editor file directory it might happen
 that the change is not instantly visible on the Workspace. In such a case click the *refresh* icon to update the Workspace view.
