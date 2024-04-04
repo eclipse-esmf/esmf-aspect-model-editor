@@ -48,8 +48,9 @@ const {
   SIGNAL_ZOOM_OUT,
   SIGNAL_LOAD_FROM_TEXT,
 } = require('./events');
-const {icons} = require('./consts');
+const {icons, paths, inDevMode} = require('./consts');
 const {isMac} = require('./os-checker');
+const path = require('path');
 
 const readFile = promisify(fs.readFile);
 
@@ -115,19 +116,21 @@ const fileSubmenu = [
         id: 'LOAD_DEFAULT_EXAMPLE',
         label: 'SimpleAspect.ttl',
         icon: getIcon(icons.LOAD_DEFAULT_EXAMPLE.enabled),
-        click: (menuItem, browserWindow, _) =>
-          getFileInfo('./apps/ame/src/assets/aspect-models/org.eclipse.examples/1.0.0/SimpleAspect.ttl')
+        click: (menuItem, browserWindow, _) => {
+          return getFileInfo(path.join(paths.models, 'SimpleAspect.ttl'))
             .then(fileInfo => browserWindow.webContents.send(SIGNAL_LOAD_SPECIFIC_FILE, fileInfo))
-            .catch(error => console.error(error)),
+            .catch(error => console.error(error));
+        },
       },
       {
         id: 'LOAD_MOVEMENT_EXAMPLE',
         label: 'Movement.ttl',
         icon: getIcon(icons.LOAD_MOVEMENT_EXAMPLE.enabled),
-        click: (menuItem, browserWindow, _) =>
-          getFileInfo('./apps/ame/src/assets/aspect-models/org.eclipse.examples/1.0.0/Movement.ttl')
+        click: (menuItem, browserWindow, _) => {
+          return getFileInfo(path.join(paths.models, 'Movement.ttl'))
             .then(fileInfo => browserWindow.webContents.send(SIGNAL_LOAD_SPECIFIC_FILE, fileInfo))
-            .catch(error => console.error(error)),
+            .catch(error => console.error(error));
+        },
       },
     ],
   },

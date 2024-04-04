@@ -50,6 +50,7 @@ import {
   LocaleConstraintInstantiator,
   MeasurementCharacteristicInstantiator,
   OperationInstantiator,
+  PredefinedEntityInstantiator,
   PredefinedPropertyInstantiator,
   PropertyInstantiator,
   QuantifiableCharacteristicInstantiator,
@@ -67,11 +68,11 @@ import {
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {GeneralConfig, NotificationsService} from '@ame/shared';
-import {PredefinedEntityInstantiator} from './instantiators';
 import {syncElementWithChildren} from './helpers';
 import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
 import {setUniqueElementName} from '@ame/utils';
 import {InstantiatorListElement} from '@ame/rdf/models';
+import {LanguageTranslationService} from '@ame/translation';
 
 export class MetaModelElementInstantiator {
   private characteristicInstantiator: CharacteristicInstantiator;
@@ -92,6 +93,7 @@ export class MetaModelElementInstantiator {
     public namespaceCacheService?: NamespacesCacheService,
     public recursiveModelElements?: Map<string, Array<BaseMetaModelElement>>,
     public notificationsService?: NotificationsService,
+    public translate?: LanguageTranslationService,
   ) {
     this.samm = this.rdfModel.samm;
     this.sammC = this.rdfModel.sammC;
@@ -454,7 +456,13 @@ export class MetaModelElementInstantiator {
    * @param skipSetExternal - skip the external reference
    * @returns the external rdfModel and the instantiated model
    */
-  getExternalElement<T>(quad: NamedNode | Quad_Object, skipSetExternal = false): {externalRdfModel: RdfModel; externalReference: T} {
+  getExternalElement<T>(
+    quad: NamedNode | Quad_Object,
+    skipSetExternal = false,
+  ): {
+    externalRdfModel: RdfModel;
+    externalReference: T;
+  } {
     let externalReference = this.namespaceCacheService.findElementOnExtReference<T>(quad.value);
     const externalRdfModel = this.getRdfModelByElement(quad);
 
@@ -504,6 +512,16 @@ export class MetaModelElementInstantiator {
     if (this.rdfModel.getLocale(quad)) {
       metaModelElement.addDescription(this.rdfModel.getLocale(quad), quad.object.value);
     } else {
+      if (this.rdfModel.loadedRdfModel) {
+        this.notificationsService.error({
+          title: this.translate.language.NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_TITLE,
+          message: this.translate.translateService.instant('NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_DESC_MESSAGE', {
+            subject: quad.subject.value,
+            fileName: metaModelElement?.fileName,
+          }),
+          timeout: 5000,
+        });
+      }
       metaModelElement.addDescription('en', quad.object.value);
     }
   }
@@ -512,6 +530,17 @@ export class MetaModelElementInstantiator {
     if (this.rdfModel.getLocale(quad)) {
       metaModelElement.addPreferredName(this.rdfModel.getLocale(quad), quad.object.value);
     } else {
+      if (this.rdfModel.loadedRdfModel) {
+        this.notificationsService.error({
+          title: this.translate.language.NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_TITLE,
+          message: this.translate.translateService.instant('NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_PREF_MESSAGE', {
+            subject: quad.subject.value,
+            fileName: metaModelElement?.fileName,
+          }),
+          timeout: 5000,
+        });
+      }
+
       metaModelElement.addPreferredName('en', quad.object.value);
     }
   }

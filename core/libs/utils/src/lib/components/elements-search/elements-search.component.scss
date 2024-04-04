@@ -70,3 +70,17 @@ $top: 100px;
 .list-option {
   display: block !important;
 }
+.open-icon {
+  margin-top: 10px;
+  color: #686868;
+}
+
+.has-external-element {
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: 535px 65px;
+}
+
+.align-self-center {
+  align-self: center;
+}

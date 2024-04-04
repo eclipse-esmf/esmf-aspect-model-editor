@@ -16,7 +16,7 @@ import {forkJoin, map, Observable, of, Subject, switchMap, throwError} from 'rxj
 import {Inject, Injectable} from '@angular/core';
 import {environment} from 'environments/environment';
 import {ModelApiService} from '@ame/api';
-import {APP_CONFIG, AppConfig, FileContentModel, LogService, SaveValidateErrorsCodes} from '@ame/shared';
+import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, LogService, SaveValidateErrorsCodes} from '@ame/shared';
 import {Samm} from '@ame/vocabulary';
 import {RdfModel, RdfModelUtil} from '../utils';
 import {RdfSerializerService} from './rdf-serializer.service';
@@ -46,6 +46,7 @@ export class RdfService {
     private modelApiService: ModelApiService,
     private configurationService: ConfigurationService,
     private translation: LanguageTranslationService,
+    private browserService: BrowserService,
     @Inject(APP_CONFIG) public config: AppConfig,
   ) {
     if (!environment.production) {
@@ -76,13 +77,7 @@ export class RdfService {
 
         return this.modelApiService.saveModel(content, rdfModel.absoluteAspectModelFileName);
       }),
-      switchMap(() => {
-        if (!rdfModel.aspectModelFileName) {
-          return this.handleError(SaveValidateErrorsCodes.emptyModel);
-        }
-
-        return this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.aspectModelFileName, rdfContent));
-      }),
+      switchMap(() => this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.absoluteAspectModelFileName, rdfContent))),
     );
   }
 
@@ -91,7 +86,7 @@ export class RdfService {
   }
 
   loadModel(rdf: string, namespaceFileName?: string): Observable<RdfModel> {
-    const rdfModel = new RdfModel();
+    const rdfModel = new RdfModel(true);
     const parser = new Parser();
     const store: Store = new Store();
     const subject = new Subject<RdfModel>();
@@ -109,13 +104,14 @@ export class RdfService {
           subject.complete();
         }
         this.currentRdfModel = rdfModel.initRdfModel(store, prefixes);
+
         this.currentRdfModel.absoluteAspectModelFileName =
-          this.currentRdfModel.absoluteAspectModelFileName ||
           namespaceFileName ||
+          this.currentRdfModel.absoluteAspectModelFileName ||
           `${this.currentRdfModel.getAspectModelUrn().replace('#', ':')}NewModel.ttl`;
+
         this.currentRdfModel.loadedFromWorkspace = !!namespaceFileName;
 
-        this.currentRdfModel.aspectModelFileName = this.currentRdfModel.absoluteAspectModelFileName;
         subject.next(this.currentRdfModel);
         subject.complete();
       }
@@ -148,7 +144,7 @@ export class RdfService {
       } else if (prefixes) {
         const externalRdfModel = rdfModel.initRdfModel(store, prefixes);
         externalRdfModel.isExternalRef = true;
-        externalRdfModel.aspectModelFileName = fileContent.fileName;
+        externalRdfModel.absoluteAspectModelFileName = this.parseFileName(fileContent.fileName, externalRdfModel.getAspectModelUrn());
         this.externalRdfModels.push(externalRdfModel);
         subject.next(externalRdfModel);
         subject.complete();
@@ -158,7 +154,7 @@ export class RdfService {
         this.logService.logInfo(`Error when parsing RDF ${error}`);
         const externalRdfModel = rdfModel.initRdfModel(store, {});
         externalRdfModel.isExternalRef = true;
-        externalRdfModel.aspectModelFileName = fileContent.fileName;
+        externalRdfModel.absoluteAspectModelFileName = this.parseFileName(fileContent.fileName, externalRdfModel.getAspectModelUrn());
         externalRdfModel.hasErrors = true;
         this.externalRdfModels.push(externalRdfModel);
         subject.next(externalRdfModel);
@@ -167,6 +163,14 @@ export class RdfService {
     });
 
     return subject;
+  }
+
+  parseFileName(fileName: string, urn: string): string {
+    if (this.browserService.isStartedAsElectronApp()) {
+      const path = window.require('path');
+      fileName = fileName.includes(path.sep) ? `${urn.replace('#', ':')}${path.basename(fileName)}` : fileName;
+    }
+    return fileName;
   }
 
   parseModels(fileContentModels: FileContentModel[]): Observable<RdfModel[]> {
@@ -195,7 +199,7 @@ export class RdfService {
       }
 
       if (prefixes || error) {
-        parsedRdfModel.aspectModelFileName = fileContent.fileName;
+        parsedRdfModel.absoluteAspectModelFileName = fileContent.fileName;
         subject.next(parsedRdfModel);
         subject.complete();
       }

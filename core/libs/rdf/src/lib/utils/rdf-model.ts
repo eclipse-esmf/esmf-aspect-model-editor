@@ -29,10 +29,10 @@ export class RdfModel {
   private _store: Store;
   private _prefixes: Prefixes;
   private _isExternalRef = false;
-  private _aspectModelFileName: string;
   private _absoluteAspectModelFileName: string = null;
   private _metaModelVersion: string;
   private _defaultAspectModelAlias = '';
+  private _loadedRdfModel: boolean;
 
   public samm: Samm;
   public sammC: SammC;
@@ -43,6 +43,10 @@ export class RdfModel {
   public originalAbsoluteFileName = null;
   public loadedFromWorkspace = false;
   public aspect: Quad_Subject;
+
+  get loadedRdfModel(): boolean {
+    return this._loadedRdfModel;
+  }
 
   get store(): Store {
     return this._store;
@@ -60,14 +64,6 @@ export class RdfModel {
     this._isExternalRef = value;
   }
 
-  get aspectModelFileName(): string {
-    return this._aspectModelFileName;
-  }
-
-  set aspectModelFileName(value: string) {
-    this._aspectModelFileName = value.split(':')[2] || value;
-  }
-
   get aspectUrn(): string {
     return this.aspect?.value || this.getAspectModelUrn();
   }
@@ -77,14 +73,11 @@ export class RdfModel {
   }
 
   set absoluteAspectModelFileName(absoluteFileName: string) {
-    this._absoluteAspectModelFileName = absoluteFileName.replace('urn:samm:', '');
+    this._absoluteAspectModelFileName = absoluteFileName.replace('urn:samm:', '').replace('#', ':');
   }
 
   get absoluteAspectModelFileName(): string {
     if (this._absoluteAspectModelFileName) {
-      if (this.aspect) {
-        return this.nameBasedOnAspect;
-      }
       return this._absoluteAspectModelFileName;
     }
 
@@ -92,11 +85,11 @@ export class RdfModel {
       return this.nameBasedOnAspect;
     }
 
-    if (this.aspectModelFileName) {
-      return `${this.getAspectModelUrn().replace('urn:samm:', '').replace('#', ':')}${this.aspectModelFileName}`;
-    }
-
     return null;
+  }
+
+  get aspectModelFileName(): string {
+    return this._absoluteAspectModelFileName.split(':')[2];
   }
 
   get isNamespaceChanged(): boolean {
@@ -117,6 +110,10 @@ export class RdfModel {
       RdfModelUtil.getNamespaceVersionFromRdf(this.originalAbsoluteFileName) !==
       RdfModelUtil.getNamespaceVersionFromRdf(this.absoluteAspectModelFileName)
     );
+  }
+
+  constructor(loadedRdfModel = false) {
+    this._loadedRdfModel = loadedRdfModel;
   }
 
   public initRdfModel(store: Store, prefixes: Prefixes, mode: 'empty' | 'loaded' = 'loaded'): RdfModel {
@@ -251,7 +248,7 @@ export class RdfModel {
   }
 
   getLocale(quad: Quad): string {
-    return quad ? locale.getByTag(quad.object['language']).tag : null;
+    return quad?.object?.['language'] ? locale.getByTag(quad.object['language']).tag : null;
   }
 
   public resolveRecursiveBlankNodes(uri: string, writer: Writer): Quad[] {

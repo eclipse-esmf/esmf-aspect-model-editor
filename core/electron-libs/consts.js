@@ -21,11 +21,16 @@ function inProdMode() {
   return !inDevMode();
 }
 
-const iconsPath = inDevMode() ? path.join('.', 'apps', 'ame', 'src', 'assets', 'img', 'png', 'app-menu') : path.join();
+const iconsPath = inDevMode()
+  ? path.join('.', 'apps', 'ame', 'src', 'assets', 'img', 'png', 'app-menu')
+  : path.join(__dirname, '..', '..', '..', 'app-menu');
+
 const disabledIconsPath = `${iconsPath}${path.sep}disabled`;
 const enabledIconsPath = `${iconsPath}${path.sep}enabled`;
 
-const modelsPath = inDevMode() ? path.join('.', 'apps', 'ame', 'src', 'assets', 'aspect-models') : path.join();
+const modelsPath = inDevMode()
+  ? path.join('.', 'apps', 'ame', 'src', 'assets', 'aspect-models', 'org.eclipse.examples', '1.0.0')
+  : path.join(__dirname, '..', '..', '..', 'default-models');
 
 module.exports.paths = {
   icons: {

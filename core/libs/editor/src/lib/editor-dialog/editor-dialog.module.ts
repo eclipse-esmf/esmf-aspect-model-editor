@@ -103,6 +103,7 @@ import {LargeFileWarningComponent} from '../large-file-warning-dialog/large-file
 import {SharedSettingsTitleComponent} from './components/shape-settings/shared-settings-title/shared-settings-title.component';
 import {LanguageTranslateModule} from '@ame/translation';
 import {ElementIconComponent} from '../../../../shared/src/lib/components/element/element.component';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
   providers: [EditorModelService],
@@ -126,6 +127,7 @@ import {ElementIconComponent} from '../../../../shared/src/lib/components/elemen
     CounterPipe,
     LanguageTranslateModule,
     ElementIconComponent,
+    MatDividerModule,
   ],
   declarations: [
     AspectComponent,

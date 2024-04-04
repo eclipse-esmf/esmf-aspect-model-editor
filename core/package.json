@@ -23,6 +23,20 @@
           "filter": [
             "**/*"
           ]
+        },
+        {
+          "from": "./apps/ame/src/assets/aspect-models/org.eclipse.examples/1.0.0/",
+          "to": "default-models/",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "./apps/ame/src/assets/img/png/app-menu/",
+          "to": "app-menu/",
+          "filter": [
+            "**/*"
+          ]
         }
       ]
     },
@@ -41,6 +55,20 @@
           "filter": [
             "**/*"
           ]
+        },
+        {
+          "from": "./apps/ame/src/assets/aspect-models/org.eclipse.examples/1.0.0/",
+          "to": "default-models/",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "./apps/ame/src/assets/img/png/app-menu/",
+          "to": "app-menu/",
+          "filter": [
+            "**/*"
+          ]
         }
       ]
     },
@@ -56,6 +84,20 @@
         {
           "from": "../backend/",
           "to": "backend/",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "./apps/ame/src/assets/aspect-models/org.eclipse.examples/1.0.0/",
+          "to": "default-models/",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "./apps/ame/src/assets/img/png/app-menu/",
+          "to": "app-menu/",
           "filter": [
             "**/*"
           ]
@@ -216,7 +258,7 @@
     "cypress": "^13.6.6",
     "cypress-real-events": "^1.12.0",
     "electron": "28.2.1",
-    "electron-builder": "^24.9.1",
+    "electron-builder": "^24.13.3",
     "eslint": "8.30.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-cypress": "^2.15.1",

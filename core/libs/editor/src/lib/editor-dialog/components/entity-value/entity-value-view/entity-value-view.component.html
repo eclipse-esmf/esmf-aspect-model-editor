@@ -22,6 +22,7 @@
   class="complex-value-items"
   expanded="true"
   *ngFor="let complexValue of complexValues | entityValue: searchFilter; trackBy: trackValue"
+  [attr.data-cy]="complexValue.name"
 >
   <mat-expansion-panel-header class="complex-value-header">
     <mat-panel-title class="complex-value-bar">
@@ -46,7 +47,7 @@
     >
       <!-- Property Name Column -->
       <ng-container matColumnDef="key">
-        <mat-header-cell *matHeaderCellDef>Property</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>{{ 'ENTITY_VALUE.PROPERTY' | translate }}</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <span
             class="property-key"
@@ -54,22 +55,19 @@
           >
             <span class="property-key__field">
               {{ element.key.property.name }}
-              <ng-container *ngIf="element.value.language"> ({{ element.value.language }}) </ng-container>
+              <ng-container *ngIf="element.language"> ({{ element.language }}) </ng-container>
             </span>
           </span>
         </mat-cell>
       </ng-container>
+
       <!-- Value Column -->
       <ng-container matColumnDef="value">
-        <mat-header-cell *matHeaderCellDef>Value</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>{{ 'ENTITY_VALUE.VALUE' | translate }}</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <ng-container [ngSwitch]="formFieldHelper.getDataType(element.key.property)">
             <ng-container *ngSwitchCase="dataType.DEFAULT">
               {{ element.value }}
-            </ng-container>
-
-            <ng-container *ngSwitchCase="dataType.LANG_STRING">
-              {{ element.value.value }}
             </ng-container>
 
             <ng-container *ngSwitchCase="dataType.COMPLEX">
@@ -79,6 +77,7 @@
           </ng-container>
         </mat-cell>
       </ng-container>
+
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row
         *matRowDef="let row; columns: displayedColumns"

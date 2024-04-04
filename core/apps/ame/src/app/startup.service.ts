@@ -53,7 +53,7 @@ export class StartupService {
         switchMap(() => this.electronTunnelService.startUpData$.asObservable()),
         sample(this.mxGraphService.graphInitialized$.pipe(filter(Boolean))),
         filter(data => {
-          if (data) {
+          if (data?.model) {
             return true;
           } else {
             this.fileHandlingService.createEmptyModel();
@@ -73,11 +73,12 @@ export class StartupService {
 
   loadModel(model: string): Observable<any> {
     let options: StartupPayload;
-    this.loadingScreenService.open({
-      title: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_LOADING,
-      content: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_LOADING_WAIT,
-    });
-
+    this.ngZone.run(() =>
+      this.loadingScreenService.open({
+        title: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_LOADING,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_LOADING_WAIT,
+      }),
+    );
     return this.electronSignalsService.call('requestWindowData').pipe(
       tap(data => (options = data.options)),
       switchMap(() =>

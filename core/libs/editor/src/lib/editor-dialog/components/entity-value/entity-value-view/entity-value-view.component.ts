@@ -96,8 +96,7 @@ export class EntityValueViewComponent implements OnInit, OnDestroy {
         dataType: this.parentForm.get('newDataType')?.value || this.parentForm.get('dataTypeEntity')?.value || this.enumeration.dataType,
         complexValues: this.complexValues,
       },
-      minWidth: '600px',
-      maxHeight: '600px',
+      minWidth: '700px',
     };
     this.matDialog
       .open(EntityValueModalComponent, config)

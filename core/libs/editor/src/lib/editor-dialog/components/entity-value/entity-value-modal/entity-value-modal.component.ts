@@ -12,7 +12,7 @@
  */
 
 import {Component, Inject} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {EditorModelService} from '../../../editor-model.service';
 import {EditorDialogValidators} from '../../../validators';
@@ -26,11 +26,12 @@ import {
 } from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
 import {isDataTypeLangString} from '@ame/shared';
+import {EntityValueUtil} from '../utils/EntityValueUtil';
 
 export interface NewEntityValueDialogOptions {
   metaModel: DefaultEnumeration | DefaultEntityValue;
   dataType: DefaultEntity;
-  complexValues;
+  complexValues: DefaultEntity[];
 }
 
 @Component({
@@ -48,9 +49,7 @@ export class EntityValueModalComponent {
   public enumeration: DefaultEnumeration;
   public complexValues: DefaultEntity[] = []; // already existing complex values
 
-  readonly displayedColumns = ['key', 'value'];
   readonly addTitle = 'Add new entity value';
-  readonly editTitle = 'Edit entity value';
 
   get propertiesForm(): FormGroup {
     return this.form?.get('properties') as FormGroup;
@@ -61,28 +60,16 @@ export class EntityValueModalComponent {
     private dialogRef: MatDialogRef<EntityValueModalComponent>,
     private editorModelService: EditorModelService,
     private namespacesCacheService: NamespacesCacheService,
-    private validators: EditorDialogValidators,
   ) {
     this.complexValues = data.complexValues;
-    if (data.metaModel instanceof DefaultEnumeration) {
-      this.enumeration = data.metaModel;
-      this.entity = this.data.dataType;
-      this.title = this.addTitle;
-      this.entityValueName = new FormControl('', [
-        Validators.required,
-        EditorDialogValidators.noWhiteSpace,
-        EditorDialogValidators.duplicateNameString(this.namespacesCacheService, this.entity.aspectModelUrn.split('#')[0]),
-      ]);
-    } else {
-      this.entityValue = data.metaModel;
-      this.entity = this.entityValue.entity as DefaultEntity;
-      this.title = this.editTitle;
-      this.entityValueName = new FormControl('', [
-        Validators.required,
-        EditorDialogValidators.noWhiteSpace,
-        this.validators.duplicateName(this.entityValue),
-      ]);
-    }
+    this.enumeration = data.metaModel as DefaultEnumeration;
+    this.entity = this.data.dataType;
+    this.title = this.addTitle;
+    this.entityValueName = new FormControl('', [
+      Validators.required,
+      EditorDialogValidators.noWhiteSpace,
+      EditorDialogValidators.duplicateNameString(this.namespacesCacheService, this.entity.aspectModelUrn.split('#')[0]),
+    ]);
     this.buildForm();
   }
 
@@ -93,18 +80,9 @@ export class EntityValueModalComponent {
       newEntityValues: new FormControl([]),
     });
 
-    this.entity.allProperties.forEach((element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>) => {
-      const validators = [];
-      if (!element.keys.optional) {
-        validators.push(EditorDialogValidators.requiredObject);
-      }
-
-      this.propertiesForm.setControl(element.property.name, new FormControl(null, validators));
-
-      if (element.property instanceof DefaultProperty && isDataTypeLangString(element.property)) {
-        this.propertiesForm.setControl(`${element.property.name}-lang`, new FormControl(null, validators));
-      }
-    });
+    this.entity.allProperties.forEach((element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>) =>
+      this.propertiesForm.setControl(element.property.name, new FormArray([])),
+    );
   }
 
   onSave(): void {
@@ -118,12 +96,6 @@ export class EntityValueModalComponent {
       });
       return;
     }
-
-    // map with property name -> value or new/existing Entity Value
-    const propertyEntityValueMap = {};
-    Object.keys(this.propertiesForm.controls).forEach(key => {
-      propertyEntityValueMap[key] = this.propertiesForm.get(key).value;
-    });
 
     this.dialogRef.close({
       entityValue: this.createNewEntityValue(),
@@ -148,15 +120,20 @@ export class EntityValueModalComponent {
     entityValue.entity = this.entity;
     entityValue.addParent(this.enumeration);
 
-    this.entity.allProperties.forEach(element => {
-      const propertyForm = this.form.get('properties');
-      const value = propertyForm.get(element.property.name).value;
+    const propertiesForm = this.form.get('properties');
 
-      if (this.isDefaultPropertyWithLangString(element)) {
-        const language = propertyForm.get(`${element.property.name}-lang`).value;
-        entityValue.addProperty(element, {value: value, language: language});
+    this.entity.allProperties.forEach(propertyElement => {
+      const propertyArray = propertiesForm.get(propertyElement.property.name) as FormArray;
+
+      if (EntityValueUtil.isDefaultPropertyWithLangString(propertyElement)) {
+        propertyArray.controls.forEach(control => {
+          const value = control.get('value').value;
+          const language = control.get('language').value;
+          entityValue.addProperty(propertyElement, value, language);
+        });
       } else {
-        entityValue.addProperty(element, value);
+        const value = propertyArray.at(0).get('value').value;
+        entityValue.addProperty(propertyElement, value);
       }
     });
 
@@ -165,9 +142,5 @@ export class EntityValueModalComponent {
 
   isEntityValueNameAlreadyUsed(entityValueName: string): boolean {
     return this.complexValues.some(value => value.name === entityValueName);
-  }
-
-  private isDefaultPropertyWithLangString(element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): boolean {
-    return element.property instanceof DefaultProperty && isDataTypeLangString(element.property);
   }
 }

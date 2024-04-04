@@ -34,7 +34,7 @@ function createRegexValidator(regex: RegExp, errorKey: string): ValidatorFn {
   };
 }
 
-export const namespaceValidator = (): ValidatorFn => createRegexValidator(/^[A-Za-z]+(\.[A-Za-z]+)*$/, 'invalidPattern');
+export const namespaceValidator = (): ValidatorFn => createRegexValidator(/^[A-Za-z0-9]+(\.[A-Za-z0-9]+)*$/, 'invalidPattern');
 
 export const versionFormatValidator = (): ValidatorFn => createRegexValidator(/^\d+\.\d+\.\d+$/, 'invalidVersionFormat');
 

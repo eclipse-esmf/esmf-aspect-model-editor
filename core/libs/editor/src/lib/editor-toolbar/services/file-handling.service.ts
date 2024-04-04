@@ -212,7 +212,7 @@ export class FileHandlingService {
 
     this.sidebarService.sammElements.open();
 
-    newRdfModel.aspectModelFileName = fileName;
+    newRdfModel.absoluteAspectModelFileName = `${emptyNamespace}:${fileName}`;
     this.rdfService.currentRdfModel = newRdfModel;
     if (oldFile) {
       this.namespaceCacheService.removeFile(oldFile.namespace, oldFile.fileName);

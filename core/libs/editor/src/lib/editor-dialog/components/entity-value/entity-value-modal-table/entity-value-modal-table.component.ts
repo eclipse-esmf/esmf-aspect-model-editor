@@ -11,10 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
+import {FormArray, FormBuilder, FormControl, FormGroup, UntypedFormGroup} from '@angular/forms';
 import {
+  Characteristic,
   DefaultAbstractProperty,
+  DefaultCollection,
   DefaultEntity,
   DefaultEntityValue,
   DefaultEnumeration,
@@ -22,11 +24,10 @@ import {
   EntityValueProperty,
   OverWrittenProperty,
 } from '@ame/meta-model';
-import {DataType, FormFieldHelper} from '@ame/editor';
+import {DataType, EditorDialogValidators, FormFieldHelper} from '@ame/editor';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
-import {MatTableDataSource} from '@angular/material/table';
 import {EntityValueUtil} from '../utils/EntityValueUtil';
-import {map, Observable, startWith} from 'rxjs';
+import {map, Observable, of, startWith, Subscription} from 'rxjs';
 import * as locale from 'locale-codes';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
@@ -35,7 +36,7 @@ import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
   templateUrl: './entity-value-modal-table.component.html',
   styleUrls: ['./entity-value-modal-table.component.scss'],
 })
-export class EntityValueModalTableComponent implements OnChanges {
+export class EntityValueModalTableComponent implements OnChanges, OnDestroy {
   @Input()
   form: FormGroup;
 
@@ -48,20 +49,18 @@ export class EntityValueModalTableComponent implements OnChanges {
   @Input()
   entityValue: DefaultEntityValue;
 
-  @ViewChild('autoTrigger') autocompleteTrigger: MatAutocompleteTrigger;
+  @ViewChildren(MatAutocompleteTrigger) autocompleteTriggers: QueryList<MatAutocompleteTrigger>;
 
   protected readonly EntityValueUtil = EntityValueUtil;
   protected readonly formFieldHelper = FormFieldHelper;
   protected readonly dataType = DataType;
 
-  // only used for displaying the name of an entity value within an input as string
-  displayForm = new FormGroup({});
-
-  displayedColumns = ['key', 'value'];
-  dataSource: MatTableDataSource<EntityValueProperty>;
+  sources: EntityValueProperty[] = [];
 
   filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
   filteredLanguageValues$: {[key: string]: Observable<any[]>} = {};
+
+  subscriptions = new Subscription();
 
   get propertiesForm(): FormGroup {
     return this.form.get('properties') as FormGroup;
@@ -74,79 +73,143 @@ export class EntityValueModalTableComponent implements OnChanges {
   constructor(
     private changeDetector: ChangeDetectorRef,
     private namespacesCacheService: NamespacesCacheService,
+    private fb: FormBuilder,
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes.hasOwnProperty('entity') || !this.entity) return;
+    if ('entity' in changes && this.entity) {
+      this.sources = this.buildEntityValueArray();
 
-    const entityValue = this.buildEntityValueArray();
-    this.dataSource = new MatTableDataSource(entityValue);
+      this.entity.allProperties.forEach((element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>) => {
+        const propertyName = (element.property as DefaultProperty).name;
 
-    this.entity.allProperties.forEach((element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>) => {
-      const property = element.property as DefaultProperty;
+        this.filteredEntityValues$[propertyName] = of(this.getPropertyValues(element.property as DefaultProperty));
 
-      this.filteredEntityValues$[property.name] = EntityValueUtil.initFilteredEntityValues(property, this.displayForm).pipe(
-        startWith(''),
-        map(value => this.getPropertyValues(property).filter(entityValue => entityValue.name.startsWith(value))),
-      );
-
-      if (EntityValueUtil.isDefaultPropertyWithLangString(element)) {
-        this.filteredLanguageValues$[property.name] = EntityValueUtil.initFilteredLanguages(property, this.displayForm).pipe(
-          startWith(''),
-          map(value => locale.all.filter(lang => lang.tag.startsWith(value))),
-        );
-      }
-    });
-  }
-
-  getControl(controlName: string): FormControl {
-    return this.propertiesForm.get(controlName) as FormControl;
-  }
-
-  changeSelection(controlName: string, propertyValue: any) {
-    EntityValueUtil.changeSelection(this.displayForm, this.propertiesForm, controlName, propertyValue);
-
-    if (this.autocompleteTrigger) {
-      this.autocompleteTrigger.closePanel();
+        if (EntityValueUtil.isDefaultPropertyWithLangString(element)) {
+          this.filteredLanguageValues$[propertyName] = of(locale.all.filter(lang => lang.tag));
+        }
+      });
     }
-
-    this.changeDetector.detectChanges();
   }
 
-  createNewEntityValue(property: DefaultProperty, entityValue: string) {
-    EntityValueUtil.createNewEntityValue(this.displayForm, this.form, property, entityValue);
-    this.changeDetector.detectChanges();
+  getFormArray(value: string): FormArray {
+    return this.propertiesForm.get(value) as FormArray;
   }
 
   private buildEntityValueArray(): EntityValueProperty[] {
-    const entityValues: EntityValueProperty[] = [];
-
-    for (const element of this.entity.allProperties) {
-      if (EntityValueUtil.isDefaultPropertyWithLangString(element)) {
-        if (!this.displayedColumns.includes('language')) {
-          this.displayedColumns.push('language');
-        }
-
-        entityValues.push(this.getLangStringEntityValues(element as OverWrittenProperty));
-        continue;
-      }
-
-      entityValues.push({key: element as OverWrittenProperty, value: ''});
-    }
-
-    return entityValues;
+    return this.entity.allProperties.map(prop => this.createEntityValueProp(prop));
   }
 
-  private getLangStringEntityValues(element: OverWrittenProperty): EntityValueProperty {
+  private createEntityValueProp(prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): EntityValueProperty {
+    const valueControl = this.createFormControl(prop);
+    this.subscribeToEntityValueChanges(valueControl, prop);
+
+    const group = new UntypedFormGroup({value: valueControl});
+    this.addGroupToPropertiesForm(prop.property.name, group);
+
+    if (EntityValueUtil.isDefaultPropertyWithLangString(prop)) {
+      const languageControl = this.createFormControl(prop);
+      this.subscribeToLangValueChanges(languageControl, prop);
+      group.addControl('language', languageControl);
+    }
+
     return {
-      key: element,
-      value: {value: '', language: ''},
+      key: prop as OverWrittenProperty,
+      value: '',
+      language: EntityValueUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined,
+      optional: prop.keys.optional,
     };
+  }
+
+  private createFormControl(prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): FormControl {
+    return new FormControl('', prop.keys.optional ? null : EditorDialogValidators.requiredObject);
+  }
+
+  private subscribeToEntityValueChanges(control: FormControl, prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): void {
+    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeEntityValueInput(prop.property as DefaultProperty, value)));
+  }
+
+  private subscribeToLangValueChanges(control: FormControl, prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): void {
+    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeLanguageInput(prop.property.name, value)));
+  }
+
+  private addGroupToPropertiesForm(propertyName: string, group: UntypedFormGroup): void {
+    const propertiesArray = this.propertiesForm.get(propertyName) as FormArray;
+    propertiesArray.push(group);
+  }
+
+  private changeEntityValueInput(property: DefaultProperty, value: string): void {
+    this.filteredEntityValues$[property.name] = of(this.getPropertyValues(property)).pipe(
+      map(ev => ev.filter(entityValue => entityValue.name.startsWith(value))),
+    );
   }
 
   private getPropertyValues(property: DefaultProperty): DefaultEntityValue[] {
     const existingEntityValues = EntityValueUtil.existingEntityValues(this.currentCachedFile, property);
     const entityValues = EntityValueUtil.entityValues(this.form, property);
     return [...existingEntityValues, ...entityValues];
+  }
+
+  changeSelection(controlName: string, propertyValue: any): void {
+    EntityValueUtil.changeSelection(this.propertiesForm, controlName, propertyValue);
+    this.closeAllAutocompletePanels();
+    this.changeDetector.detectChanges();
+  }
+
+  changeLanguageSelection(ev: EntityValueProperty, propertyValue: string, index: number): void {
+    EntityValueUtil.changeLanguageSelection(this.propertiesForm, ev, propertyValue, index);
+    this.closeAllAutocompletePanels();
+    this.changeDetector.detectChanges();
+  }
+
+  private closeAllAutocompletePanels() {
+    this.autocompleteTriggers.forEach(trigger => {
+      trigger.closePanel();
+    });
+  }
+
+  createNewEntityValue(property: DefaultProperty, entityValue: string) {
+    EntityValueUtil.createNewEntityValue(this.form, property, entityValue);
+    this.changeDetector.detectChanges();
+  }
+
+  addLanguage(entityValueProp: EntityValueProperty): void {
+    const fieldValidators = entityValueProp.optional ? null : EditorDialogValidators.requiredObject;
+    const languagesFormArray = this.propertiesForm.get(entityValueProp.key.property.name) as FormArray;
+
+    const languageInputControl = new FormControl('', fieldValidators);
+
+    this.subscriptions.add(
+      languageInputControl.valueChanges.subscribe(value => {
+        this.changeLanguageInput(entityValueProp.key.property.name, value);
+      }),
+    );
+
+    const languageFormGroup = this.fb.group({
+      value: ['', fieldValidators],
+      language: languageInputControl,
+    });
+
+    languagesFormArray.push(languageFormGroup);
+  }
+
+  private changeLanguageInput(name: string, value: string): void {
+    this.filteredLanguageValues$[name] = of(locale.all.filter(lang => lang.tag)).pipe(
+      startWith(locale.all),
+      map(local => local.filter(lang => lang.tag.startsWith(value))),
+    );
+  }
+
+  removeLanguage(entityValueProp: EntityValueProperty, index: number): void {
+    const languagesFormArray = this.propertiesForm.get(entityValueProp.key.property.name) as FormArray;
+    languagesFormArray.removeAt(index);
+  }
+
+  isCharacteristicCollectionType(characteristic: Characteristic | undefined): boolean {
+    return characteristic instanceof DefaultCollection;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

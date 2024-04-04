@@ -13,10 +13,17 @@
 
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
-import {BaseMetaModelElement, DefaultEntityValue, EntityValueProperty} from '@ame/meta-model';
+import {
+  BaseMetaModelElement,
+  DefaultAbstractProperty,
+  DefaultEntityValue,
+  DefaultProperty,
+  Entity,
+  EntityValueProperty,
+  OverWrittenProperty,
+} from '@ame/meta-model';
 import {BaseModelService} from './base-model-service';
 import {EntityValueRenderService, MxGraphHelper} from '@ame/mx-graph';
-import {isDataTypeLangString} from '@ame/shared';
 
 @Injectable({providedIn: 'root'})
 export class EntityValueModelService extends BaseModelService {
@@ -56,14 +63,35 @@ export class EntityValueModelService extends BaseModelService {
 
   private updatePropertiesEntityValues(metaModelElement: DefaultEntityValue, form: {[key: string]: any}): void {
     const {entityValueProperties} = form;
+    metaModelElement.properties = [];
 
-    metaModelElement.properties.forEach(element => {
-      const propertyKey = element.key.property.name;
+    Object.keys(entityValueProperties).forEach(key => {
+      const property = this.findPropertyInEntities(this.currentCachedFile.getCachedEntities(), key);
 
-      element.value = isDataTypeLangString(element.key.property)
-        ? {value: entityValueProperties[propertyKey], language: entityValueProperties[`${propertyKey}-lang`]}
-        : entityValueProperties[propertyKey];
+      if (!property) return;
+
+      const propertyValues = entityValueProperties[key].map(({value, language}) => ({
+        key: property,
+        value,
+        language,
+      }));
+
+      metaModelElement.properties.push(...propertyValues);
     });
+  }
+
+  private findPropertyInEntities(
+    entities: Array<Entity>,
+    propertyName: string,
+  ): OverWrittenProperty<DefaultProperty | DefaultAbstractProperty> {
+    for (const entity of entities) {
+      const property = entity.properties.find(prop => prop.property.name === propertyName);
+      if (property) {
+        return property;
+      }
+    }
+
+    return null;
   }
 
   private removeObsoleteEntityValues(metaModelElement: DefaultEntityValue): void {

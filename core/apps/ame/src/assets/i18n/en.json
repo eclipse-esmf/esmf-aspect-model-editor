@@ -89,7 +89,10 @@
     "ASPECT_MISSING_TITLE": "Aspect Model is missing",
     "ASPECT_MISSING_CONTENT": "To start modelling, please create a new or load an existing model first. After that you can add new node types",
     "LOAD_MODEL_INFO_TITLE": "Load a Model to Continue",
-    "LOAD_MODEL_INFO_MESSAGE": "To view the file contents, please load a model first."
+    "LOAD_MODEL_INFO_MESSAGE": "To view the file contents, please load a model first.",
+    "FALLBACK_TO_DEFAULT_LANGUAGE_TITLE": "Fallback to Default Language.",
+    "FALLBACK_TO_DEFAULT_LANGUAGE_DESC_MESSAGE": "The specified language for {{subject}}'s description was not found in {{fileName}}. Proceeding with the default language settings.",
+    "FALLBACK_TO_DEFAULT_LANGUAGE_PREF_MESSAGE": "The specified language for {{subject}}'s preferred name was not found in {{fileName}}. Proceeding with the default language settings."
   },
   "TOOLBAR": {
     "NEW_LOAD": "New/Load",
@@ -420,6 +423,12 @@
         },
         "SEE_INPUT": {
           "TYPE_TO_SEARCH": "Type to search or write an URN or URL"
+        },
+        "VALUE": {
+          "PLEASE_DEFINE": "Please define a value"
+        },
+        "LANGUAGE": {
+          "PLEASE_DEFINE": "Please define a language"
         }
       },
       "AME_ELEMENT_LIST_LABEL": {
@@ -546,6 +555,16 @@
         "OPEN_IN_THIS_WINDOW": "Open in this window",
         "OPEN_IN_NEW_WINDOW": "Open in new window"
       }
+    }
+  },
+  "ENTITY_VALUE": {
+    "NAME": "Name",
+    "VALUE": "Value",
+    "ENTITY_VALUE": "Entity Value",
+    "LANGUAGE": "Language",
+    "PROPERTY": "Property",
+    "EDIT": {
+      "SEARCH_BAR": "Find complex value"
     }
   }
 }

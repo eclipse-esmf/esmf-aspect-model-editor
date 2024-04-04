@@ -27,7 +27,6 @@ import {SearchesStateService} from '@ame/utils';
 @Component({
   selector: 'ame-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   private language = 'en';

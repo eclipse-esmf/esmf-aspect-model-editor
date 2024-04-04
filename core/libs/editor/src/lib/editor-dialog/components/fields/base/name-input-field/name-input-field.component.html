@@ -12,7 +12,7 @@
   -->
 
 <mat-form-field [floatLabel]="getControl('name')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-  <mat-label for="name">name</mat-label>
+  <mat-label for="name">Name</mat-label>
   <input [formControl]="getControl('name')" matInput class="ellipsis" name="name" data-cy="name" />
   <mat-error *ngIf="getControl('name')?.errors?.required"
     >{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_DEFINE' | translate }}

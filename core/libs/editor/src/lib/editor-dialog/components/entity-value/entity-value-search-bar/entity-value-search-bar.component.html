@@ -12,7 +12,7 @@
   -->
 
 <mat-form-field appearance="fill">
-  <mat-label>Find complex value</mat-label>
+  <mat-label>{{ 'ENTITY_VALUE.EDIT.SEARCH_BAR' | translate }}</mat-label>
   <input (input)="sendNewSearchValue($event)" matInput type="search" data-cy="searchEntityValueInputField" />
   <mat-icon matSuffix>search</mat-icon>
 </mat-form-field>

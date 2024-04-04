@@ -520,16 +520,11 @@ describe('Test edit property', () => {
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic :Characteristic1.');
-          expect(rdf).to.contain(
-            ':AspectDefault a samm:Aspect;\n' +
-              '    samm:properties ([\n' +
-              '  samm:property :property1;\n' +
-              '  samm:optional true\n' +
-              ']);\n' +
-              '    samm:operations ();\n' +
-              '    samm:events ().\n',
-          );
+          expect(rdf).to.contain(':property1 a samm:Property;');
+          expect(rdf).to.contain('samm:characteristic :Characteristic1.');
+          expect(rdf).to.contain('samm:properties ([\n  samm:property :property1;\n');
+          expect(rdf).to.contain('samm:optional true\n])');
+          expect(rdf).not.to.contain('notInPayload');
         });
     });
 
@@ -559,13 +554,10 @@ describe('Test edit property', () => {
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain(
-            ':Entity1 a samm:Entity;\n' +
-              '    samm:properties ([\n' +
-              '  samm:property :property2;\n' +
-              '  samm:notInPayload true\n' +
-              ']).',
-          );
+          expect(rdf).to.contain(':Entity1 a samm:Entity;\n');
+          expect(rdf).to.contain('samm:properties ([\n  samm:property :property2;\n');
+          expect(rdf).to.contain('samm:notInPayload true\n])');
+          expect(rdf).not.to.contain('optional');
         });
     });
 
