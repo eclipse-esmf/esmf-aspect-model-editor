@@ -21,11 +21,11 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-flat-button (click)="closeAndGiveResult(confirmDialogEnum.cancel)">{{ data.closeButtonText }}</button>
-  <button *ngIf="data.actionButtonText" mat-flat-button (click)="closeAndGiveResult(confirmDialogEnum.action)">
+  <button mat-flat-button (click)="closeAndGiveResult(confirmDialogEnum.cancel)" data-cy="cancelBtn">{{ data.closeButtonText }}</button>
+  <button *ngIf="data.actionButtonText" mat-flat-button (click)="closeAndGiveResult(confirmDialogEnum.action)" data-cy="actionBtn">
     {{ data.actionButtonText }}
   </button>
-  <button mat-flat-button color="primary" (click)="closeAndGiveResult(confirmDialogEnum.ok)" data-cy="okButton">
+  <button mat-flat-button color="primary" (click)="closeAndGiveResult(confirmDialogEnum.ok)" data-cy="okBtn">
     {{ data.okButtonText }}
   </button>
 </mat-dialog-actions>

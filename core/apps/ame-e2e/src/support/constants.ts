@@ -22,8 +22,6 @@ export const SIDEBAR_CLOSE_BUTTON = '[data-cy="sidebar-close"]';
 export const SELECTOR_elementBtn = '[data-cy="elementsBtn"]';
 export const SELECTOR_workspaceBtn = '[data-cy="workspaceBtn"]';
 export const SELECTOR_searchElementsInp = '[data-cy="searchElements"]';
-export const SELECTOR_namespaceFileMenuButton = '[data-cy="namespaceFileMenuButton"]';
-export const SELECTOR_fileMenuFindElements = '[data-cy="fileMenuFindElements"]';
 
 // Settings -> Namespace
 export const SELECTOR_namespaceTabValueInput = '[data-cy="namespaceTabValueInput"]';
@@ -31,7 +29,6 @@ export const SELECTOR_namespaceTabVersionInput = '[data-cy="namespaceTabVersionI
 export const SELECTOR_addEntityValue = '[data-cy="addNewEntityValueButton"]';
 export const SELECTOR_clearEntityValueButton = '[data-cy="clear-entityValue-button"]';
 export const SELECTOR_clearLanguageButton = '[data-cy="clear-language-button"]';
-export const SELECTOR_clearElementCharacteristicButton = '[data-cy="clear-element-characteristic-button"]';
 export const SELECTOR_clearLeftCharacteristicButton = '[data-cy="clear-left-button"]';
 export const SELECTOR_entitySaveButton = '[data-cy="entitySaveButton"]';
 export const SELECTOR_openNamespacesButton = '.content > span';
@@ -106,6 +103,7 @@ export const SELECTOR_searchInputField = '[data-cy="searchInputField"]';
 export const SELECTOR_searchEntityValueInputField = '[data-cy="searchEntityValueInputField"]';
 
 // Editor canvas
+export const SELECTOR_ecAspect = '[data-type="aspect"]';
 export const SELECTOR_ecProperty = '[data-type="property"]';
 export const SELECTOR_ecAbstractProperty = '[data-type="abstract-property"]';
 export const SELECTOR_ecOperation = '[data-type="operation"]';
@@ -144,3 +142,8 @@ export const GENERATION_tbOutputButton = '[data-cy="tbOutputButton"]';
 export const GENERATION_tbOutputButton_YAML = '[data-cy="tbOutputButton-yaml"]';
 export const GENERATION_tbDownloadDoc = '[data-cy="tbDownloadDoc"]';
 export const GENERATION_downloadFileButton = '[data-cy="downloadFileButton"]';
+
+// Confirmation dialog
+export const CANCEL_dialogButton = '[data-cy="cancelBtn"]';
+export const ACTION_dialogButton = '[data-cy="actionBtn"]';
+export const OK_dialogButton = '[data-cy="okBtn"]';

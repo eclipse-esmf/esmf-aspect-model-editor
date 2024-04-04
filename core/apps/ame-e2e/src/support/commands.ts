@@ -517,7 +517,7 @@ Cypress.Commands.add('loadModel', (rdfString: string) => {
 
 Cypress.Commands.add('saveAspectModelToWorkspace', () => {
   cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', {fixture: '/default-models/aspect-default.txt'});
 
   return cy.window().then(win => {
     const fileHandlingService: FileHandlingService = win['angular.fileHandlingService'];
