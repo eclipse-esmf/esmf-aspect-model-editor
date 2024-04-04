@@ -319,6 +319,7 @@ export class FileHandlingService {
       switchMap(() => this.handleNamespaceChange(modelState)),
       switchMap(confirm => (confirm !== ConfirmDialogEnum.cancel ? this.editorService.saveModel() : of(null))),
       tap(rdfModel => this.handleRdfModel(rdfModel, modelState)),
+      switchMap(() => this.editorService.loadExternalModels()),
       finalize(() => {
         this.modelSaveTracker.updateSavedModel();
         this.loadingScreenService.close();

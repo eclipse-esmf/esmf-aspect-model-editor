@@ -58,10 +58,6 @@ export abstract class BaseModelService {
 
     this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
 
-    if (form.name) {
-      this.currentCachedFile.originalAspectName = modelElement.name;
-    }
-
     modelElement.name = form.name;
     modelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 

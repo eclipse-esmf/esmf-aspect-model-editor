@@ -18,6 +18,7 @@ import {ModelApiService} from '@ame/api';
 import {APP_CONFIG, AppConfig, BrowserService, ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
 import {ExporterHelper} from '@ame/migrator';
 import {environment} from '../../../../environments/environment';
+import {NamespacesCacheService} from '@ame/cache';
 
 class SidebarState {
   private opened$ = new BehaviorSubject(false);
@@ -84,6 +85,8 @@ export class FileStatus {
 }
 
 class NamespacesManager {
+  private namespacesCacheService: NamespacesCacheService = inject(NamespacesCacheService);
+
   public namespaces: {[key: string]: FileStatus[]} = {};
   public hasOutdatedFiles = false;
 
@@ -109,7 +112,9 @@ class NamespacesManager {
   lockFiles(files: {namespace: string; file: string}[]) {
     for (const namespace of this.namespacesKeys) {
       for (const fileStatus of this.namespaces[namespace]) {
-        fileStatus.locked = files.some(file => file.namespace === namespace && file.file === fileStatus.name);
+        if (fileStatus.name !== this.namespacesCacheService.currentCachedFile?.fileName) {
+          fileStatus.locked = files.some(file => file.namespace === namespace && file.file === fileStatus.name);
+        }
       }
     }
   }
@@ -122,7 +127,9 @@ class NamespacesManager {
 @Injectable({providedIn: 'root'})
 export class SidebarStateService {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+  private namespacesCacheService: NamespacesCacheService = inject(NamespacesCacheService);
   private config: AppConfig = inject(APP_CONFIG);
+
   public sammElements = new SidebarState();
   public workspace = new SidebarStateWithRefresh();
   public fileElements = new SidebarState();
@@ -146,11 +153,11 @@ export class SidebarStateService {
     return Boolean(currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName);
   }
 
-  public isCurrentFile(namespace: string, namespaceFile: string): boolean {
-    const currentRdfModel = this.rdfService.currentRdfModel;
+  public isCurrentFile(namespace: string, fileName: string): boolean {
+    const currentFileName = this.namespacesCacheService.currentCachedFile?.fileName;
+    const currentNamespace = this.rdfService.currentRdfModel.getAspectModelUrn().replace('urn:samm:', '').replace('#', '');
 
-    const fileName = currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName;
-    return fileName === `${namespace}:${namespaceFile}`;
+    return `${currentNamespace}:${currentFileName}` === `${namespace}:${fileName}`;
   }
 
   public requestGetNamespaces() {

@@ -92,15 +92,13 @@ export class EditorDialogValidators {
           continue;
         }
 
-        const [namespace, originalAspectName] = aspectModelUrn.split('#');
-        const files = this.namespaceCacheService.getFiles(namespace);
+        const [namespace] = aspectModelUrn.split('#');
+        const files = this.namespaceCacheService
+          .getFiles(namespace)
+          .filter(file => file.fileName !== this.namespaceCacheService.currentCachedFile.fileName);
 
         for (const file of files) {
-          if (file.originalAspectName === originalAspectName) {
-            foundExternalElement = file.aspect;
-          } else {
-            foundExternalElement = file.getEitherElement(aspectModelUrn);
-          }
+          foundExternalElement = file.getEitherElement(aspectModelUrn);
 
           if (foundExternalElement) {
             break;

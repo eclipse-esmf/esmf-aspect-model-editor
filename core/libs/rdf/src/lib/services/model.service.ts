@@ -149,7 +149,7 @@ export class ModelService {
       [, , fileName] = namespaceFileName.split(':');
     }
 
-    this.namespaceCacheService.currentCachedFile = this.namespaceCacheService.addFile(this.rdfModel.getAspectModelUrn(), fileName);
+    this.namespaceCacheService.currentCachedFile = new CachedFile(fileName, this.rdfModel.getAspectModelUrn());
   }
 
   private instantiateFile(namespaceFileName: string) {
