@@ -9,9 +9,9 @@ incorporated in the Aspect Model Editor in a convenient way with a smart user fl
 
 [NOTE]
 ====
-Beside this current version, the most recent older versions of this documentation are also available here. You can access them from the dropdown top right on this page.
+In addition to this current version, the most recent older versions of this documentation are also available. They can be accessed from the dropdown menu located in the top right corner of this page.
 
-image:versions-dropdown.png[Versions dropdown,width=40%]
+image:versions-dropdown.png[Versions dropdown, width=20%]
 ====
 
 Typically, Aspect Models are edited as code, that is, text-based.
