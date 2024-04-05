@@ -15,7 +15,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {filter} from 'rxjs/operators';
 import {EntityValueModalComponent} from '..';
-import {DefaultEntityValue, DefaultEnumeration, EntityValueProperty} from '@ame/meta-model';
+import {DefaultEntityInstance, DefaultEnumeration, EntityValueProperty} from '@ame/meta-model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {DataType, FormFieldHelper} from '../../../../helpers/form-field.helper';
@@ -26,7 +26,7 @@ import {DataType, FormFieldHelper} from '../../../../helpers/form-field.helper';
   styleUrls: ['./entity-value-view.component.scss'],
 })
 export class EntityValueViewComponent implements OnInit, OnDestroy {
-  private _complexValues: DefaultEntityValue[];
+  private _complexValues: DefaultEntityInstance[];
   private _enumeration: DefaultEnumeration;
 
   protected readonly formFieldHelper = FormFieldHelper;
@@ -40,20 +40,20 @@ export class EntityValueViewComponent implements OnInit, OnDestroy {
   @Input() public parentForm: FormGroup;
 
   @Input()
-  public set complexValues(newValues: DefaultEntityValue[]) {
-    if (newValues?.length > 0 && newValues.some(val => val instanceof DefaultEntityValue)) {
+  public set complexValues(newValues: DefaultEntityInstance[]) {
+    if (newValues?.length > 0 && newValues.some(val => val instanceof DefaultEntityInstance)) {
       newValues = this.checkInnerComplexValues(newValues);
     } else {
       newValues = [];
     }
     this._complexValues = newValues;
     // keep the original entity references
-    this._complexValues.forEach((complexValue: DefaultEntityValue) => {
+    this._complexValues.forEach((complexValue: DefaultEntityInstance) => {
       complexValue.entity = newValues.find(newValue => newValue.aspectModelUrn === complexValue.aspectModelUrn).entity;
     });
   }
 
-  public get complexValues(): DefaultEntityValue[] {
+  public get complexValues(): DefaultEntityInstance[] {
     return this._complexValues;
   }
 
@@ -66,7 +66,7 @@ export class EntityValueViewComponent implements OnInit, OnDestroy {
     return this._enumeration;
   }
 
-  @Output() complexValueChange = new EventEmitter<DefaultEntityValue[]>();
+  @Output() complexValueChange = new EventEmitter<DefaultEntityInstance[]>();
 
   constructor(private matDialog: MatDialog) {}
 
@@ -85,7 +85,7 @@ export class EntityValueViewComponent implements OnInit, OnDestroy {
     return `${item?.key.property.name}`;
   }
 
-  trackValue(_index: number, item: DefaultEntityValue): string {
+  trackValue(_index: number, item: DefaultEntityInstance): string {
     return `${item?.name}`;
   }
 
@@ -113,9 +113,9 @@ export class EntityValueViewComponent implements OnInit, OnDestroy {
       });
   }
 
-  onDelete(item: DefaultEntityValue, event: Event): void {
+  onDelete(item: DefaultEntityInstance, event: Event): void {
     event.stopPropagation();
-    const filterEv = (ev: DefaultEntityValue) => ev.aspectModelUrn !== item.aspectModelUrn;
+    const filterEv = (ev: DefaultEntityInstance) => ev.aspectModelUrn !== item.aspectModelUrn;
     this.complexValues = this._complexValues.filter(filterEv);
     if (this.parentForm.get('newEntityValues').value.includes(item)) {
       // new value, no need to delete from model
@@ -127,12 +127,12 @@ export class EntityValueViewComponent implements OnInit, OnDestroy {
     this.complexValueChange.emit([...this.complexValues]);
   }
 
-  private checkInnerComplexValues(newValue: DefaultEntityValue[]) {
+  private checkInnerComplexValues(newValue: DefaultEntityInstance[]) {
     newValue.forEach(value =>
       value?.properties.forEach(innerVal => {
-        innerVal.isComplex = innerVal.value instanceof DefaultEntityValue;
+        innerVal.isComplex = innerVal.value instanceof DefaultEntityInstance;
       }),
     );
-    return newValue.filter(value => value instanceof DefaultEntityValue);
+    return newValue.filter(value => value instanceof DefaultEntityInstance);
   }
 }

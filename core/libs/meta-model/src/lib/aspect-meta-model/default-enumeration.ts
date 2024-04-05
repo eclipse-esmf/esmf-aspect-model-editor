@@ -12,12 +12,12 @@
  */
 import {Type} from './type';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
-import {DefaultEntityValue} from './default-entity-value';
+import {DefaultEntityInstance} from './default-entity-value';
 import {BaseMetaModelElement} from './base';
 import {DefaultEntity, Entity} from './default-entity';
 
 export interface Enumeration extends Characteristic {
-  values: Array<DefaultEntityValue | string | number | boolean>;
+  values: Array<DefaultEntityInstance | string | number | boolean>;
 }
 
 export class DefaultEnumeration extends DefaultCharacteristic implements Enumeration {
@@ -35,7 +35,7 @@ export class DefaultEnumeration extends DefaultCharacteristic implements Enumera
     public metaModelVersion: string,
     aspectModelUrn: string,
     name: string,
-    public values: Array<DefaultEntityValue | string | number | boolean>,
+    public values: Array<DefaultEntityInstance | string | number | boolean>,
     dataType?: Type,
   ) {
     super(metaModelVersion, aspectModelUrn, name, dataType);

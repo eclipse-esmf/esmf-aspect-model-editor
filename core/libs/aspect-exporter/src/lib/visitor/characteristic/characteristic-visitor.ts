@@ -20,7 +20,7 @@ import {
   DefaultDuration,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultList,
   DefaultMeasurement,
@@ -147,7 +147,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     }
 
     for (const value of characteristic.values) {
-      if (value instanceof DefaultEntityValue) {
+      if (value instanceof DefaultEntityInstance) {
         this.setPrefix(value.aspectModelUrn);
       }
     }

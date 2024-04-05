@@ -19,7 +19,7 @@ import {
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
@@ -53,5 +53,5 @@ export interface ModelRenderer<T, U> {
 
   renderAbstractEntity(abstractEntity: ModelTree<DefaultAbstractEntity>, context: U): T;
 
-  renderEntityValue(entityValue: ModelTree<DefaultEntityValue>, context: U): T;
+  renderEntityValue(entityValue: ModelTree<DefaultEntityInstance>, context: U): T;
 }

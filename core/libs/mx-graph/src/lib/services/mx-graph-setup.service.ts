@@ -22,7 +22,7 @@ import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
 import {MxGraphHelper, ShapeAttribute} from '../helpers';
 import {mxConstants, mxEditor, mxLayoutManager, mxOutline, mxPoint, mxRectangle, mxStackLayout, mxUtils} from '../providers';
-import {DefaultAbstractProperty, DefaultEntity, DefaultEntityValue, DefaultProperty, DefaultTrait} from '@ame/meta-model';
+import {DefaultAbstractProperty, DefaultEntity, DefaultEntityInstance, DefaultProperty, DefaultTrait} from '@ame/meta-model';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {APP_CONFIG, AppConfig, AssetsPath, BindingsService, BrowserService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
@@ -105,7 +105,7 @@ export class MxGraphSetupService {
 
   private getTooltipForCell(cell: mxgraph.mxCell) {
     const metaModelElement = MxGraphHelper.getModelElement(cell);
-    if ([DefaultEntityValue, DefaultTrait].some(e => metaModelElement instanceof e)) {
+    if ([DefaultEntityInstance, DefaultTrait].some(e => metaModelElement instanceof e)) {
       return this.getToolTipContent(cell);
     }
 
@@ -313,7 +313,7 @@ export class MxGraphSetupService {
 
     if (
       !this.configurationService.getSettings().showEntityValueEntityEdge &&
-      MxGraphHelper.getModelElement(cell.source) instanceof DefaultEntityValue &&
+      MxGraphHelper.getModelElement(cell.source) instanceof DefaultEntityInstance &&
       MxGraphHelper.getModelElement(cell.target) instanceof DefaultEntity
     ) {
       return false;

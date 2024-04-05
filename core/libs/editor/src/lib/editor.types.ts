@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultEntityValue, DefaultEnumeration} from '@ame/meta-model';
+import {DefaultEntityInstance, DefaultEnumeration} from '@ame/meta-model';
 
 export interface ILastSavedModel {
   rdf: string;
@@ -21,8 +21,8 @@ export interface ILastSavedModel {
 
 export interface IEnumEntityValue {
   enumeration?: DefaultEnumeration;
-  entityValue: DefaultEntityValue;
-  parentEntityValue?: DefaultEntityValue;
+  entityValue: DefaultEntityInstance;
+  parentEntityValue?: DefaultEntityInstance;
 }
 
 export enum CharacteristicClassType {

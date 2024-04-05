@@ -16,7 +16,7 @@ import {
   DefaultAspect,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
@@ -52,7 +52,7 @@ export class PropertiesFilterLoader implements FilterLoader {
   }
 
   generateTree(element: BaseMetaModelElement, options?: ModelTreeOptions): ModelTree<BaseMetaModelElement> {
-    if (!element || element instanceof DefaultEntityValue) {
+    if (!element || element instanceof DefaultEntityInstance) {
       return null;
     }
 
@@ -77,7 +77,7 @@ export class PropertiesFilterLoader implements FilterLoader {
       if (this.cache[path]) continue;
       this.cache[path] = true;
 
-      if (child instanceof DefaultEntityValue || child instanceof DefaultOperation || child instanceof DefaultEvent) {
+      if (child instanceof DefaultEntityInstance || child instanceof DefaultOperation || child instanceof DefaultEvent) {
         continue;
       }
 

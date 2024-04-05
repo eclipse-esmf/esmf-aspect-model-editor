@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultEntityValue} from '../aspect-meta-model';
+import {DefaultEntityInstance} from '../aspect-meta-model';
 import {mxgraph} from 'mxgraph-factory';
 
 export interface SearchResult {
   cell?: mxgraph.mxCell;
-  entityValue?: DefaultEntityValue;
+  entityValue?: DefaultEntityInstance;
   namespacePrefix?: string;
 }

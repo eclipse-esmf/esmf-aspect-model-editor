@@ -18,7 +18,7 @@ import {
   DefaultAbstractProperty,
   DefaultCollection,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
   EntityValueProperty,
@@ -47,7 +47,7 @@ export class EntityValueModalTableComponent implements OnChanges, OnDestroy {
   enumeration: DefaultEnumeration;
 
   @Input()
-  entityValue: DefaultEntityValue;
+  entityValue: DefaultEntityInstance;
 
   @ViewChildren(MatAutocompleteTrigger) autocompleteTriggers: QueryList<MatAutocompleteTrigger>;
 
@@ -144,7 +144,7 @@ export class EntityValueModalTableComponent implements OnChanges, OnDestroy {
     );
   }
 
-  private getPropertyValues(property: DefaultProperty): DefaultEntityValue[] {
+  private getPropertyValues(property: DefaultProperty): DefaultEntityInstance[] {
     const existingEntityValues = EntityValueUtil.existingEntityValues(this.currentCachedFile, property);
     const entityValues = EntityValueUtil.entityValues(this.form, property);
     return [...existingEntityValues, ...entityValues];

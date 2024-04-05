@@ -19,7 +19,7 @@ import {EditorDialogValidators} from '../../../validators';
 import {
   DefaultAbstractProperty,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
   OverWrittenProperty,
@@ -29,7 +29,7 @@ import {isDataTypeLangString} from '@ame/shared';
 import {EntityValueUtil} from '../utils/EntityValueUtil';
 
 export interface NewEntityValueDialogOptions {
-  metaModel: DefaultEnumeration | DefaultEntityValue;
+  metaModel: DefaultEnumeration | DefaultEntityInstance;
   dataType: DefaultEntity;
   complexValues: DefaultEntity[];
 }
@@ -45,7 +45,7 @@ export class EntityValueModalComponent {
   public entityValueName: FormControl;
 
   public entity: DefaultEntity;
-  public entityValue: DefaultEntityValue;
+  public entityValue: DefaultEntityInstance;
   public enumeration: DefaultEnumeration;
   public complexValues: DefaultEntity[] = []; // already existing complex values
 
@@ -112,8 +112,8 @@ export class EntityValueModalComponent {
     return `${nameSpace}${name}`;
   }
 
-  private createNewEntityValue(): DefaultEntityValue {
-    const entityValue = DefaultEntityValue.createInstance();
+  private createNewEntityValue(): DefaultEntityInstance {
+    const entityValue = DefaultEntityInstance.createInstance();
 
     entityValue.name = this.entityValueName.value;
     entityValue.aspectModelUrn = this.getAspectModelUrnFromName(this.entityValueName.value);

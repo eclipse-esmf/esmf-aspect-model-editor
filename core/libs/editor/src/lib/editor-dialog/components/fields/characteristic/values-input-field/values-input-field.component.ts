@@ -17,7 +17,7 @@ import {MatChipInputEvent, MatChipGrid} from '@angular/material/chips';
 import {debounceTime} from 'rxjs/operators';
 import {ENTER} from '@angular/cdk/keycodes';
 import {InputFieldComponent} from '../../input-field.component';
-import {BaseMetaModelElement, DefaultEntity, DefaultEntityValue, DefaultEnumeration} from '@ame/meta-model';
+import {BaseMetaModelElement, DefaultEntity, DefaultEntityInstance, DefaultEnumeration} from '@ame/meta-model';
 import {DataTypeService} from '@ame/shared';
 import {NamespacesCacheService} from '@ame/cache';
 
@@ -35,10 +35,10 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
   public removable = true;
   public addOnBlur = true;
   public hasComplexValues = false;
-  public enumValues: Array<string | number | boolean | Partial<DefaultEntityValue>> = [];
+  public enumValues: Array<string | number | boolean | Partial<DefaultEntityInstance>> = [];
 
-  get enumEntityValues(): DefaultEntityValue[] {
-    return this.enumValues as DefaultEntityValue[];
+  get enumEntityValues(): DefaultEntityInstance[] {
+    return this.enumValues as DefaultEntityInstance[];
   }
 
   constructor(
@@ -103,7 +103,7 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
       });
   }
 
-  remove(value: string | number | boolean | Partial<DefaultEntityValue>) {
+  remove(value: string | number | boolean | Partial<DefaultEntityInstance>) {
     const index = this.enumValues.indexOf(value);
 
     if (index >= 0) {
@@ -111,7 +111,7 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
     }
   }
 
-  enumValueChange(enumValues: DefaultEntityValue[]) {
+  enumValueChange(enumValues: DefaultEntityInstance[]) {
     this.enumValues = enumValues;
     this.parentForm.get('chipList').setValue(this.enumValues);
   }
@@ -171,7 +171,7 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
       return;
     }
 
-    this.enumValues = currentValues.some(val => val instanceof DefaultEntityValue)
+    this.enumValues = currentValues.some(val => val instanceof DefaultEntityInstance)
       ? currentValues
       : (currentValues.map(value => (typeof value === 'string' ? {name: value} : value)) as any[]);
   }

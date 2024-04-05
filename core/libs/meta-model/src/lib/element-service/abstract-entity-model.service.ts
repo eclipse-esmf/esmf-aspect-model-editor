@@ -28,7 +28,7 @@ import {
   BaseMetaModelElement,
   DefaultAbstractEntity,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
   OverWrittenPropertyKeys,
@@ -67,8 +67,8 @@ export class AbstractEntityModelService extends BaseModelService {
 
       this.namespacesCacheService.currentCachedFile
         .getCachedEntityValues()
-        ?.filter((entityValue: DefaultEntityValue) => entityValue.entity === metaModelElement)
-        ?.forEach((entityValue: DefaultEntityValue) => {
+        ?.filter((entityValue: DefaultEntityInstance) => entityValue.entity === metaModelElement)
+        ?.forEach((entityValue: DefaultEntityInstance) => {
           for (const entityValueProperty of entityValue.properties) {
             const property = metaModelElement.properties.find(prop => prop.property.name === entityValueProperty.key.property.name);
             entityValueProperty.key.keys.optional = property.keys.optional;
@@ -137,7 +137,7 @@ export class AbstractEntityModelService extends BaseModelService {
           this.mxGraphShapeOverlayService.addBottomShapeOverlay(edge.source);
         }
 
-        if (modelElement instanceof DefaultEntityValue && edge.source.style.includes('entityValue')) {
+        if (modelElement instanceof DefaultEntityInstance && edge.source.style.includes('entityValue')) {
           entityValuesToDelete.push(edge.source);
         }
       }

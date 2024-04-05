@@ -27,7 +27,7 @@ import {
   Characteristic,
   DefaultAbstractProperty,
   DefaultCollection,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultProperty,
   EntityValueProperty,
   OverWrittenProperty,
@@ -44,7 +44,7 @@ import {LanguageTranslationService} from '@ame/translation';
   templateUrl: './entity-value-table.component.html',
   styleUrls: ['./entity-value-table.component.scss'],
 })
-export class EntityValueTableComponent extends InputFieldComponent<DefaultEntityValue> implements OnInit, OnChanges, OnDestroy {
+export class EntityValueTableComponent extends InputFieldComponent<DefaultEntityInstance> implements OnInit, OnChanges, OnDestroy {
   @ViewChildren(MatAutocompleteTrigger) autocompleteTriggers: QueryList<MatAutocompleteTrigger>;
 
   protected readonly EntityValueUtil = EntityValueUtil;
@@ -77,7 +77,7 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
     this.subscription.add(
       this.getMetaModelData().subscribe((metaModelElement: BaseMetaModelElement) => {
         this.propertiesForm = new FormGroup({});
-        this.metaModelElement = metaModelElement as DefaultEntityValue;
+        this.metaModelElement = metaModelElement as DefaultEntityInstance;
         this.parentForm.setControl('entityValueProperties', this.propertiesForm);
 
         const {properties, entity} = this.metaModelElement;
@@ -139,7 +139,7 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
   private initializeFormControl(
     property: DefaultProperty,
     validators: (control: AbstractControl) => ValidationErrors | null,
-    propertyValue: string | number | boolean | DefaultEntityValue,
+    propertyValue: string | number | boolean | DefaultEntityInstance,
     propertyLanguage: string,
   ): void {
     // Ensure the properties FormArray exists and is correctly initialized
@@ -165,8 +165,8 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
     return propertiesFormArray;
   }
 
-  private createValueControl(propertyValue: string | number | boolean | DefaultEntityValue, validators): FormControl {
-    const isEntityValue = propertyValue instanceof DefaultEntityValue;
+  private createValueControl(propertyValue: string | number | boolean | DefaultEntityInstance, validators): FormControl {
+    const isEntityValue = propertyValue instanceof DefaultEntityInstance;
     return new FormControl({value: propertyValue, disabled: isEntityValue}, validators);
   }
 
@@ -205,7 +205,7 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
     }
   }
 
-  private getPropertyValues(property: DefaultProperty): DefaultEntityValue[] {
+  private getPropertyValues(property: DefaultProperty): DefaultEntityInstance[] {
     const existingEntityValues = EntityValueUtil.existingEntityValues(this.currentCachedFile, property);
     const entityValues = EntityValueUtil.entityValues(this.parentForm, property);
     return [...existingEntityValues, ...entityValues];

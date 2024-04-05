@@ -23,7 +23,7 @@ import {
   MxGraphShapeOverlayService,
   MxGraphVisitorHelper,
 } from '@ame/mx-graph';
-import {Base, BaseMetaModelElement, DefaultEntity, DefaultEntityValue, DefaultEnumeration, OverWrittenPropertyKeys} from '@ame/meta-model';
+import {Base, BaseMetaModelElement, DefaultEntity, DefaultEntityInstance, DefaultEnumeration, OverWrittenPropertyKeys} from '@ame/meta-model';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {BaseEntityModelService} from './base-entity-model.service';
 
@@ -61,8 +61,8 @@ export class EntityModelService extends BaseModelService {
 
       this.namespacesCacheService.currentCachedFile
         .getCachedEntityValues()
-        ?.filter((entityValue: DefaultEntityValue) => entityValue.entity === modelElement)
-        ?.forEach((entityValue: DefaultEntityValue) => {
+        ?.filter((entityValue: DefaultEntityInstance) => entityValue.entity === modelElement)
+        ?.forEach((entityValue: DefaultEntityInstance) => {
           for (const entityValueProperty of entityValue.properties) {
             const property = modelElement.properties.find(prop => prop.property.name === entityValueProperty.key.property.name);
             entityValueProperty.key.keys.optional = property.keys.optional;
@@ -106,7 +106,7 @@ export class EntityModelService extends BaseModelService {
           this.mxGraphShapeOverlayService.addBottomShapeOverlay(edge.source);
         }
 
-        if (sourceModelElement instanceof DefaultEntityValue && edge.source.style.includes('entityValue')) {
+        if (sourceModelElement instanceof DefaultEntityInstance && edge.source.style.includes('entityValue')) {
           entityValuesToDelete.push(edge.source);
           MxGraphHelper.removeRelation(sourceModelElement, modelElement);
         }

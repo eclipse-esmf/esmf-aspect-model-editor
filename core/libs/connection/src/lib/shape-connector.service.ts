@@ -20,7 +20,7 @@ import {
   DefaultCharacteristic,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
@@ -192,7 +192,7 @@ export class ShapeConnectorService {
       case metaModel instanceof DefaultAbstractEntity:
         connectionHandler = this.abstractEntityConnectionHandler;
         break;
-      case metaModel instanceof DefaultEntityValue:
+      case metaModel instanceof DefaultEntityInstance:
         connectionHandler = this.entityValueConnectionHandler;
         break;
       case metaModel instanceof DefaultEvent:

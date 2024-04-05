@@ -26,7 +26,7 @@ import {
   Base,
   BaseMetaModelElement,
   DefaultCollection,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
   DefaultQuantifiable,
@@ -175,7 +175,7 @@ export class CharacteristicModelService extends BaseModelService {
   private removeEntityDependency(cell: mxgraph.mxCell) {
     this.mxGraphAttributeService.graph.getOutgoingEdges(cell).forEach(edge => {
       const modelElement = MxGraphHelper.getModelElement(edge.target);
-      if (modelElement instanceof DefaultEntityValue) {
+      if (modelElement instanceof DefaultEntityInstance) {
         MxGraphHelper.removeRelation(MxGraphHelper.getModelElement(cell), modelElement);
         this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
       }
@@ -270,7 +270,7 @@ export class CharacteristicModelService extends BaseModelService {
   }
 
   private updateComplexEnumeration(metaModelElement: DefaultEnumeration, form: {[key: string]: any}) {
-    const deletedEntityValues: DefaultEntityValue[] = form.deletedEntityValues || [];
+    const deletedEntityValues: DefaultEntityInstance[] = form.deletedEntityValues || [];
     deletedEntityValues.forEach(entityValue => this.deleteEntityValue(entityValue, metaModelElement));
 
     // create new entity values (add to cache service)

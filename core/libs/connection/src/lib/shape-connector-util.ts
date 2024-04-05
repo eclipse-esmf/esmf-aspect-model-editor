@@ -21,7 +21,7 @@ import {
   DefaultConstraint,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultEvent,
   DefaultMeasurement,
@@ -164,7 +164,7 @@ export class ShapeConnectorUtil {
   static isEnumerationEntityValueConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
     return (
       parentModel instanceof DefaultEnumeration &&
-      childModel instanceof DefaultEntityValue &&
+      childModel instanceof DefaultEntityInstance &&
       parentModel.dataType?.getUrn() === childModel.entity?.getUrn()
     );
   }

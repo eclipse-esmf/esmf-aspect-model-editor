@@ -19,7 +19,7 @@ import {
   BaseMetaModelElement,
   CharacteristicModelService,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
 } from '@ame/meta-model';
@@ -139,13 +139,13 @@ export class ElementModelService {
       return;
     }
 
-    if (sourceModelElement instanceof DefaultEntityValue && targetModelElement instanceof DefaultEntity) {
+    if (sourceModelElement instanceof DefaultEntityInstance && targetModelElement instanceof DefaultEntity) {
       this.mxGraphService.updateEnumerationsWithEntityValue(sourceModelElement);
       this.mxGraphService.updateEntityValuesWithCellReference([edge.source]);
       this.mxGraphService.removeCells([edge.source]);
     }
 
-    if (targetModelElement instanceof DefaultEntityValue) {
+    if (targetModelElement instanceof DefaultEntityInstance) {
       this.mxGraphService.updateEnumerationsWithEntityValue(targetModelElement);
       this.mxGraphService.removeCells([edge.target]);
     }
@@ -303,7 +303,7 @@ export class ElementModelService {
     targetModelElement: BaseMetaModelElement,
     edge: mxgraph.mxCell,
   ): void {
-    if (sourceModelElement instanceof DefaultEnumeration && targetModelElement instanceof DefaultEntityValue) {
+    if (sourceModelElement instanceof DefaultEnumeration && targetModelElement instanceof DefaultEntityInstance) {
       const entityValueIndex = sourceModelElement.values.indexOf(targetModelElement);
       const enumerationIndex = targetModelElement.parents.indexOf(sourceModelElement);
 
