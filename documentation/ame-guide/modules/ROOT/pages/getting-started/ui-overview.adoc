@@ -243,7 +243,7 @@ For more information, see xref:getting-started/edit-models.adoc[Edit models].
 
 {nbsp}
 [[bottom-workspace-sidebar]]
-== 4. Bottom workspace sidebar
+=== Bottom workspace sidebar
 
 [cols="15%,25%,60%"]
 |===
@@ -273,7 +273,7 @@ For more information, see xref:getting-started/validation-and-notifications.adoc
 |===
 
 [[graph-area]]
-== 5. Graph area canvas
+== 4. Graph area canvas
 This is the space where your Aspect Models are visualized... 
 
 With the map, you can easily navigate your Aspect Model in the graph area canvas.
@@ -288,7 +288,7 @@ For more information, see xref:getting-started/navigate-models.adoc[Navigate mod
 
 {nbsp}
 [[edit-dialog]]
-== 6. Edit dialog
+== 5. Edit dialog
 
 Edit the attributes of a selected element of your Aspect Model with the Edit dialog.
 
