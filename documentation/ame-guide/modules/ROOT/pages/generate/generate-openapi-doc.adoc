@@ -2,10 +2,10 @@
 
 To generate an OpenAPI specification from the Aspect Model, proceed as follows:
 
-* Click the *Generate* on xref:getting-started/ui-overview.adoc#menu-generate[menu]. +
-A menu offers one option to generate the OpenAPI specification. +:
+* Click the xref:getting-started/ui-overview.adoc#menu-generate[Generate Menu]. +
+It offers one option to generate the OpenAPI specification.
 
-** *OpenAPI specification* -- continue with this one
+** *OpenAPI specification* -- continue with this one.
 +
 image:generate-api-spec.png[Generate document, width=15%]
 
@@ -13,12 +13,15 @@ image:generate-api-spec.png[Generate document, width=15%]
 * Select *JSON* or *YAML* as the desired file format.
 * Set the *Base URL* were the Aspect API will be served from.
 * Check the *IncludeQueryAPI* checkbox, if you need a path section for the Query API Endpoint of the Aspect API to be included in the specification.
-* Check the *UseSemanticVersion* checkbox, if you need the complete semantic version of the Aspect Model to be used as the version of the API. Otherwise, only the major part of the Aspect Version is used as the version of the API.
+* Check the *UseSemanticVersion* checkbox, if you need the complete semantic version of the Aspect Model to be used as the version of the API. +
+Otherwise, only the major part of the Aspect Version is used as the version of the API.
 * Select the preferred option for paging:
 ** Cursor-based paging
 ** Offset-based paging
 ** Time-based paging
 * Click *Generate* and store the Open API specification file locally.
++
+image:generate-api-config.png[Generate OpenAPI document, width=35%]
 
 TIP: If you run into errors, please make sure that the graph is valid. +
 If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.
