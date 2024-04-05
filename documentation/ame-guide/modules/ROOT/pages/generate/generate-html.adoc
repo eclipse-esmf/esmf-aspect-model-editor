@@ -2,10 +2,7 @@
 
 To generate HTML from the Aspect Model, proceed as follows:
 
-* Click the xref:getting-started/ui-overview.adoc#menu-generate[*Generate Menu*]. +
-A menu offers one option for generating HTML documentation:
-
-** *HTML documentation* -- continue with this one.
+* Click the xref:getting-started/ui-overview.adoc#menu-generate[Generate menu] and select *HTML Documentation*.
 +
 image:generate-html.png[Generate document, width=15%]
 

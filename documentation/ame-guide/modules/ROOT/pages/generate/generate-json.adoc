@@ -5,7 +5,7 @@
 
 To generate a JSON file from an Aspect Model, proceed as follows:
 
-* Click the xref:getting-started/ui-overview.adoc#menu-generate[*Generate Menu*].
+* Click the xref:getting-started/ui-overview.adoc#menu-generate[Generate menu].
 +
 The menu offers two options for JSON generation:
 

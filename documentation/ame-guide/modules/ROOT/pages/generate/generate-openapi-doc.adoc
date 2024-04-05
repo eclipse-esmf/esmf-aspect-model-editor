@@ -2,10 +2,7 @@
 
 To generate an OpenAPI specification from the Aspect Model, proceed as follows:
 
-* Click the xref:getting-started/ui-overview.adoc#menu-generate[Generate Menu]. +
-It offers one option to generate the OpenAPI specification.
-
-** *OpenAPI specification* -- continue with this one.
+* Click the xref:getting-started/ui-overview.adoc#menu-generate[Generate menu] and select *OpenAPI Specification*.
 +
 image:generate-api-spec.png[Generate document, width=15%]
 
