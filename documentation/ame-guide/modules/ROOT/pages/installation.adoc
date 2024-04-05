@@ -14,9 +14,10 @@ Before you install the latest version of the Aspect Model Editor, make sure you 
 * Download the installation file for your system at https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor^, opts=nofollow]. +
 
 We offer assets for the following OS:
-    ** Linux
-    ** Mac
-    ** Windows
+
+** Linux
+** Mac
+** Windows
 
 
 [[installation]]
