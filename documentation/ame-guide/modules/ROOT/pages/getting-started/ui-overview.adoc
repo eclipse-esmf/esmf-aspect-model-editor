@@ -233,7 +233,7 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 
 The Workspace sidebar &ndash; see screenshot below &ndash; allows you to access namespaces (2) and to drag and drop elements to the graph area canvas (1).
 
-image::ame-ui-overview-workspace-numbers.png[width=100%]
+image::ame-ui-overview-workspace-numbers.png[width=60%]
 
 Expand the Workspace sidebar to view the description of each element.
 
@@ -274,11 +274,11 @@ For more information, see xref:getting-started/validation-and-notifications.adoc
 
 [[graph-area]]
 == 4. Graph area canvas
-This is the space where your Aspect Models are visualized... 
+This is the space where your Aspect Model is visualized. You can easily navigate it in the graph area canvas using the Minimap. 
 
-With the map, you can easily navigate your Aspect Model in the graph area canvas.
+To show or hide it, click the Toggle Minimap icon in the upper right corner of the graph area canvas.
 
-To toggle its visibility, click the Show/Hide map icon in the toolbar.
+Alternatively, you can also use the *Toggle Minimap* option in the xref:getting-started/ui-overview.adoc#menu-view[View Menu].
 
 image:mini-map.png[Map toggle icon,50%]
 
