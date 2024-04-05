@@ -3,7 +3,12 @@
 The elements of an Aspect Model &ndash; such as Properties, Operations, Characteristics, Constraints, Entities, or Events &ndash;
 can be distributed over the complete editor main canvas.
 
-To connect two elements manually, proceed as follows:
+There are two ways, in which you can connect elements: 
+
+* Manually
+* Using the context menu
+
+== Connect manually
 
 . Click both elements while holding the CTRL key on your keyboard.
 . Click the *Connect* icon in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
@@ -16,16 +21,16 @@ image::connecting-elements.png[width=50%]
 * If both directions are permitted, the arrow will be set for the element selected first to the element selected second.
 * If a connection is not permitted, a respective warning will appear and the elements will not be connected.
 
-The larger the diagram, the harder it might get to connect elements that are far away in the model. In that case, you can also use the alternative procedure decribed bellow.
+The larger the diagram, the harder it might get to connect elements that are far away in the model. In that case, you can also use the alternative decribed bellow.
 
 == Connect via context menu
 
-* Click the source element.
-* Right-click to access the context menu.
-* Select *Connect with ...*. +
+. Click the source element.
+. Right-click to access the context menu.
+. Select *Connect with ...*. +
 The new pop-up displays all the elements of the model. You can use the search field to find the correct one. 
-* Select the target element.
-* Click *Connect* to confirm. +
+. Select the target element.
+. Click *Connect* to confirm. +
 Upon success the arrow is visible.
 
 In case you try to connect elements which cannot be connected, a validation notification will inform you respectively.
