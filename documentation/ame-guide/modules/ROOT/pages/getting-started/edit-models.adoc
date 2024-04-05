@@ -70,7 +70,7 @@ See also xref:support/known-issues.adoc[known issues].
 [[searching-elements]]
 == Find elements
 
-Use the search dialog in the xref:getting-started/ui-overview.adoc#menu-search[search] to find elements.
+Use the search dialog in the xref:getting-started/ui-overview.adoc#menu-search[Search menu] to find elements.
 By selecting an element it will be highlighted and centered in the diagram area.
 
 image::element-search.png[width=50%]
