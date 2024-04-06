@@ -12,7 +12,7 @@ On your local file directory, you can manually add, edit, and delete the folder 
 
 Of course, this is also possible with the Aspect Model Editor. The same folder structure is displayed in the xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar].
 
-image::namespace-file-structure.png[width=80%]
+image::namespace-file-structure.png[width=85%, link=self]
 
 NOTE: Namespaces that do not follow this file structure might not work and might break the xref:namespace/use-references.adoc[references] feature.
 
@@ -61,4 +61,4 @@ as it will not be able to load this Aspect Model.
 
 In such a case you will need some expert who can fix it with a text editor.
 
-image::workspace-warning.png[, 70%]
+image::workspace-warning.png[Workspace warning, 85%, link=self]
