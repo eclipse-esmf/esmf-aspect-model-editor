@@ -41,11 +41,11 @@ image:menu-bar/menu-file.png[, width=30%, align="center"]
 | *Save to Workspace*
 | Store the current Model in the workspace for future use.
 
-| image:toolbar-icons/download.png[,20%,20%]
+| image:toolbar-icons/download.png[,15%,20%]
 | *Export Model*
 | Download the current Model as a TTL file.
 
-| image:toolbar-icons/download_fill.png[,20%,20%]
+| image:toolbar-icons/download_fill.png[,15%,20%]
 | *Export Package*
 | Download Model namespaces in a ZIP format.
 |===
@@ -194,7 +194,7 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 |===
 | Icon | Name | Action
 
-| image:toolbar-icons/jump.png[, width=30%, align="center"]
+| image:toolbar-icons/jump.png[,20%,20%]
 | Open highlighted element
 | Open the Edit dialog of the selected element (alternative: double-click an element inside the model).
 
