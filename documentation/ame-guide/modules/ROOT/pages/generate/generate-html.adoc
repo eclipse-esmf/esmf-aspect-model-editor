@@ -11,4 +11,5 @@ image:generate-html.png[Generate document, width=15%]
 +
 image:html-download.png[Download HTML documentation, width=30%]
 
-TIP: If you run into errors, please make sure that your Aspect Model is valid. If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.
+TIP: If you run into errors, please make sure that your Aspect Model is valid. +
+If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.
