@@ -4,7 +4,7 @@
 
 To export a namespace, proceed as follows:
 
-. Click *File* -> *Export Package* in the xref:getting-started/ui-overview.adoc#menu-file[file menu].
+. Open the xref:getting-started/ui-overview.adoc#menu-file[File menu] and select *Export Package*.
 . Select the available namespace.
 +
 image::select-namespace-export.png[width=65%]

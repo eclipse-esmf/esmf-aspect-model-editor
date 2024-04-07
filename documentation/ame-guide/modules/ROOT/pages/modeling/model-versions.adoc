@@ -16,7 +16,7 @@ image::settings-namespaces.png[width=50%]
 A window pops up asking you to confirm your changes.
 . Click *Save* to confirm and then *OK* to apply the changes. +
 The window is closed. 
-. Click *Save to Workspace* in the *File* xref:getting-started/ui-overview.adoc#menu-file[menu].
+. Click *Save to Workspace* in the xref:getting-started/ui-overview.adoc#menu-file[File menu].
 
 → Now a new version of your currently opened model is saved and added to your Workspace.
 

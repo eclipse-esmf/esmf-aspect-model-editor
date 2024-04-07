@@ -3,7 +3,7 @@
 
 To import a package with namespaces, proceed as follows:
 
-. Click *File* ->  *Import Package* in the xref:getting-started/ui-overview.adoc#menu-file[file menu].
+. Click the xref:getting-started/ui-overview.adoc#menu-file[File menu] and select *Import Package*.
 +
 → A File Explorer window opens.
 . Navigate to the package ZIP file which contains a single namespace.
