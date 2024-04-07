@@ -17,7 +17,7 @@ To see more details for a notification, expand it by clicking the Expand arrow i
 
 To locate a validation error in your model, click the Options icon image:options.png[Options icon, 1.5%] for a particular validation error and select *Go to*.
 
-image:notification-02.png[Go to,width=50%]
+image:notification-02.png[Go to,width=60%, link=self]
 
 Resolve the issue within your model.
 For more information on valid Aspect Models, refer to the https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidelines.html[SAMM Aspect Meta Model version 2.1.0 > Aspects^,opts=nofollow].
@@ -29,7 +29,7 @@ loading TTL files].
 
 To manually trigger a validation, click the Validate icon image:toolbar-icons/validate.png[Validate icon, 3%] in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 
-image:notification-01.png[width=65%]
+image:notification-01.png[width=75%, link=self]
 
 ++++
 <style>

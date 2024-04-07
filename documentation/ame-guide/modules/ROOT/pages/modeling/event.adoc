@@ -28,6 +28,6 @@ To select or create an Event in the Edit field, proceed as follows:
 * Double-click the Event to access the details.
 * Adjust all fields to your needs.
 
-image::event.png[,60%]
+image::event.png[,70%, link=self]
 
 NOTE: The details of such events — e.g. which data (MQTT package) will be sent at which occurrence or time via an MQTT topic — are to be decided when implementing the event. The SAMM specification does not prescribe any defaults or rules. Thus, events can be adapted to your own implementation needs.

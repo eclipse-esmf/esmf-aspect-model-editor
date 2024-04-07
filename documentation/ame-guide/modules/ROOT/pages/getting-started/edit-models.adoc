@@ -49,12 +49,15 @@ To add and connect the next logical element, click the Add icon at the bottom ed
 * After a Characteristic a default Entity will be added.
 * After an Entity a default Property will be added.
 +
-image::adding-elements-all.png[width=50%]
+image::adding-elements-all.png[width=60%, link=self]
 
-NOTE: For Characteristics, you will also find an Add icon on the top to insert a Constraint between the Property and the Characteristic.
+[NOTE]
+====
+For Characteristics, you will also find an Add icon on the top to insert a Constraint between the Property and the Characteristic.
 This also creates a Trait that is connected to the property and constraint.
 
-image::adding-elements.png[width=50%]
+image::adding-elements.png[width=60%]
+====
 
 {nbsp}
 [[adding-dedicated-way]]
@@ -73,7 +76,7 @@ See also xref:support/known-issues.adoc[known issues].
 Use the search dialog in the xref:getting-started/ui-overview.adoc#menu-search[Search menu] to find elements.
 By selecting an element it will be highlighted and centered in the diagram area.
 
-image::element-search.png[width=50%]
+image::element-search.png[width=70%, link=self]
 
 Use the following advanced search possibilities for more specific search results:
 [cols="30%,70%"]

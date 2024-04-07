@@ -22,7 +22,7 @@ image::copy-paste-file.png[width=50%]
 
 The model will be saved in your local workspace directory with the name of the Aspect element.
 
-image:save-to-workspace.png[width=65%]
+image:save-to-workspace.png[width=65%, link=self]
 
 In the Workspace you can find all models stored so far.
 
