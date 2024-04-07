@@ -9,7 +9,7 @@ TIP: In case you want to extract a part of an Aspect Model graph into a "shared 
 After deleting the Aspect element, you can choose a new file name to describe the resulting "shared model".
 This file can then be saved in the workspace like any other ttl file.
 
-image:shared-model-file-name.png[Save changes in Edit dialog,width=50%]
+image:shared-model-file-name.png[Save changes in Edit dialog,width=40%]
 
 As a result, you create a valid ttl file, which just does not contain the "Aspect" element.
 From all other points of view the lifecycle of such a model is similar with the one of an Aspect Model.

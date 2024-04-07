@@ -18,7 +18,7 @@ To add an abstract entity, proceed as follows:
 . Open the Workspace sidebar.
 . Drag the Abstract Entity element and drop it to the graph area canvas.
 
-image::drag-and-drop-abstract-entity.png[Drag and drop Abstract Entity, 60%]
+image:drag-and-drop-abstract-entity.png[Drag and drop Abstract Entity, 40%]
 
 == Adjust an Entity in the extends field
 
@@ -27,7 +27,7 @@ To select or create an abstract entity in the Edit field of an Entity, proceed a
 . Double-click the entity or abstract entity that should derive from another entity.
 . Abstract entity can be created or selected in the "extends" field.
 
-image::extends-field-abstract-entity.png[Extends fiels Abstract Entity, 50%]
+image::extends-field-abstract-entity.png[Extends fiels Abstract Entity, 40%]
 
 [[abstract-entity-example]]
 == Abstract Entities Example
@@ -46,4 +46,4 @@ For a new model that only has an Aspect so far:
 
 → As a result you have connected the Abstract Entity with the Entity.
 
-image::connect-abstract-entiy-with-entity.png[Connect Abstract Entity with Entity, 50%]
+image:connect-abstract-entiy-with-entity.png[Connect Abstract Entity with Entity, 30%]

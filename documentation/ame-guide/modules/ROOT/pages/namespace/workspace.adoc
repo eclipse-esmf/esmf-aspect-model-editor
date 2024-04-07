@@ -28,7 +28,7 @@ The *...* icon next to a model opens the options to
 * *Copy file path* - copies the file path to the clipboard
 * *Delete* - deletes the Aspect Model from the workspace
 
-image::workspace-action.png[,65%]
+image:workspace-action.png[,40%]
 
 If you just select another Aspect Model, it will not be loaded but its elements will be listed in the left sidebar.
 
