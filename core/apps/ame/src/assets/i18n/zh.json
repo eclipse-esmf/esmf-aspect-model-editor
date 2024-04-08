@@ -1,10 +1,10 @@
 {
   "LOAD_MODAL": {
-    "TITLE": "是否加载自动保存的Model?",
+    "TITLE": "加载一个Model",
     "CONTENT": "您可以继续使用自动保存的Model, 也可以关闭它以开始使用默认的Aspect Model。",
     "FIELD_LABEL": "粘贴在这里",
-    "LOAD_BUTTON": "加载自动保存Model",
-    "DISMISS_BUTTON": "拒绝"
+    "LOAD_MODEL_BUTTON": "加载自动保存Model",
+    "CANCEL": "拒绝"
   },
   "SAVE_MODAL_DIALOG": {
     "TITLE": "关闭前保存更改?",
@@ -423,6 +423,12 @@
         },
         "SEE_INPUT": {
           "TYPE_TO_SEARCH": "输入搜索或写入 URN 或 URL"
+        },
+        "VALUE": {
+          "PLEASE_DEFINE": "请定义一个值"
+        },
+        "LANGUAGE": {
+          "PLEASE_DEFINE": "请定义一种语言"
         }
       },
       "AME_ELEMENT_LIST_LABEL": {
@@ -552,75 +558,75 @@
     }
   },
   "ENTITY_VALUE": {
-    "NAME": "",
-    "VALUE": "",
-    "ENTITY_VALUE": "",
-    "LANGUAGE": "",
-    "PROPERTY": "",
+    "NAME": "名称",
+    "VALUE": "值",
+    "ENTITY_VALUE": "Entity值",
+    "LANGUAGE": "语言",
+    "PROPERTY": "属性",
     "EDIT": {
-      "SEARCH_BAR": ""
+      "SEARCH_BAR": "找到复杂值"
     }
   },
   "MENU": {
     "FILE": {
-      "LABEL": "",
+      "LABEL": "文件",
       "NEW": {
-        "LABEL": "",
+        "LABEL": "新...",
         "SUBMENU": {
-          "EMPTY_MODEL": "",
-          "LOAD_FILE": "",
-          "COPY_PASTE": "",
-          "EXAMPLES": ""
+          "EMPTY_MODEL": "空Model",
+          "LOAD_FILE": "加载文件...",
+          "COPY_PASTE": "复制 粘贴",
+          "EXAMPLES": "示例"
         }
       },
-      "NEW_WINDOW": "",
-      "IMPORT_MODEL": "",
-      "IMPORT_PACKAGE": "",
-      "COPY_TO_CLIPBOARD": "",
-      "SAVE_TO_WORKSPACE": "",
-      "EXPORT_MODEL": "",
-      "EXPORT_PACKAGE": ""
+      "NEW_WINDOW": "新的窗口",
+      "IMPORT_MODEL": "加载Model",
+      "IMPORT_PACKAGE": "加载Package",
+      "COPY_TO_CLIPBOARD": "粘贴到剪切板",
+      "SAVE_TO_WORKSPACE": "保存至Workspace",
+      "EXPORT_MODEL": "导出Model",
+      "EXPORT_PACKAGE": "导出Package"
     },
     "VIEW": {
-      "LABEL": "",
-      "TOGGLE_TOOLBAR": "",
-      "TOGGLE_MINIMAP": "",
+      "LABEL": "视图",
+      "TOGGLE_TOOLBAR": "切换工具栏",
+      "TOGGLE_MINIMAP": "切换小地图",
       "FILTER": {
-        "LABEL": "",
+        "LABEL": "过滤Model",
         "SUBMENU": {
-          "NONE": "",
-          "PROPERTIES": ""
+          "NONE": "无",
+          "PROPERTIES": "属性"
         }
       },
-      "ZOOM_IN": "",
-      "ZOOM_OUT": "",
-      "ZOOM_TO_FIT": "",
-      "ZOOM_TO_100": ""
+      "ZOOM_IN": "放大",
+      "ZOOM_OUT": "缩小",
+      "ZOOM_TO_FIT": "放缩以适应",
+      "ZOOM_TO_100": "放缩至100%"
     },
     "EDIT": {
-      "LABEL": "\u200B",
-      "OPEN_SELECTED_ELEMENT": "",
-      "REMOVE_SELECTED_ELEMENT": "",
-      "COLLAPSE_EXPAND_MODEL": "",
-      "FORMAT_MODEL": "",
-      "CONNECT_SELECTED_ELEMENTS": ""
+      "LABEL": "编辑\u200B",
+      "OPEN_SELECTED_ELEMENT": "打开选择的元素",
+      "REMOVE_SELECTED_ELEMENT": "移除选择的元素",
+      "COLLAPSE_EXPAND_MODEL": "折叠/展开 Model",
+      "FORMAT_MODEL": "格式化Model",
+      "CONNECT_SELECTED_ELEMENTS": "连接选择的元素"
     },
     "VALIDATE": {
-      "LABEL": "",
-      "CURRENT_MODEL": ""
+      "LABEL": "校验",
+      "CURRENT_MODEL": "当前Model"
     },
     "GENERATE": {
-      "LABEL": "",
-      "HTML_DOCUMENTATION": "",
-      "OPEN_API_SPECIFICATION": "",
-      "AASX_XML": "",
-      "SAMPLE_JSON_PAYLOAD": "",
-      "JSON_SCHEMA": ""
+      "LABEL": "生成",
+      "HTML_DOCUMENTATION": "HTML文档",
+      "OPEN_API_SPECIFICATION": "OpenAPI规格",
+      "AASX_XML": "AASX / XML",
+      "SAMPLE_JSON_PAYLOAD": "JSON Payload示例",
+      "JSON_SCHEMA": "JSON格式"
     },
     "SEARCH": {
-      "LABEL": "",
-      "ELEMENTS": "",
-      "FILES": ""
+      "LABEL": "搜索",
+      "ELEMENTS": "元素",
+      "FILES": "文件"
     }
   }
 }
