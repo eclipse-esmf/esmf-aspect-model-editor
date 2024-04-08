@@ -16,5 +16,4 @@ export * from './system-configuration/editor-configuration/editor-configuration.
 export * from './system-configuration/header-copyright/header-copyright.component';
 export * from './model-configuration/language-settings/language-settings.component';
 export * from './model-configuration/namespace-settings/namespace-settings.component';
-export * from './model-configuration/namespace-confirmation-modal/namespace-confirmation-modal.component';
 export * from './settings-dialog/setting-dialog.component';

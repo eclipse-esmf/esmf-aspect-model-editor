@@ -64,7 +64,7 @@ export class AppComponent implements OnInit {
 
     this.themeService.setCssVars(this.configurationService.getSettings()?.useSaturatedColors ? 'dark' : 'light');
 
-    if (window.location.search.includes('e2e=true')) {
+    if (window.location.search.includes('?e2e=true')) {
       return;
     }
 

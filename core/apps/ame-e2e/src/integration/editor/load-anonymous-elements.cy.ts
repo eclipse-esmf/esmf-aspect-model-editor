@@ -56,9 +56,10 @@ describe('Test load aspect model with anonymous elements', () => {
                   ':Trait1 a samm-c:Trait;\n' +
                   '    samm-c:baseCharacteristic :Characteristic3;\n' +
                   '    samm-c:constraint :Constraint1, :Constraint2.\n' +
-                  ':Characteristic3 a samm:Characteristic.\n' +
+                  ':Characteristic3 a samm:Characteristic;\n' +
+                  '    samm:dataType xsd:string.\n' +
                   ':Constraint1 a samm:Constraint.\n' +
-                  ':Constraint2 a samm:Constraint.\n',
+                  ':Constraint2 a samm:Constraint.',
               );
             });
           });

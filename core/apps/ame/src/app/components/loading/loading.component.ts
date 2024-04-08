@@ -36,7 +36,8 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
     if (!this.electronTunnel.ipcRenderer) {
       this.modelApiService.getPredefinedModel(PREDEFINED_MODELS.SIMPLE_ASPECT).subscribe(model => {
         this.electronTunnel.startUpData$.next({isFirstWindow: true, model});
-        this.router.navigate(['/editor']);
+        const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
+        this.ngZone.run(() => this.router.navigate(['/editor'], {queryParams}));
       });
       return;
     }
@@ -54,7 +55,8 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
           // Because complete is called in electron callback,
           // router.navigate is called outside ngZone
           // and needs to be called in ngZone to function
-          this.ngZone.run(() => this.router.navigate(['/editor']));
+          const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
+          this.ngZone.run(() => this.router.navigate(['/editor'], {queryParams}));
         },
       });
 
