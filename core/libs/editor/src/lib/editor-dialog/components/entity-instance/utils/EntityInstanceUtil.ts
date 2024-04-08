@@ -21,7 +21,6 @@ import {
   Entity,
   EntityValueProperty,
   OverWrittenProperty,
-  Property,
 } from '@ame/meta-model';
 import {CachedFile} from '@ame/cache';
 import {extractNamespace} from '@ame/utils';
