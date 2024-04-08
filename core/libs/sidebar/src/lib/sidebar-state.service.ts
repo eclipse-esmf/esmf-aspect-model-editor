@@ -85,7 +85,7 @@ export class FileStatus {
 }
 
 class NamespacesManager {
-  private namespacesCacheService: NamespacesCacheService = inject(NamespacesCacheService);
+  public namespacesCacheService: NamespacesCacheService = inject(NamespacesCacheService);
 
   public namespaces: {[key: string]: FileStatus[]} = {};
   public hasOutdatedFiles = false;
