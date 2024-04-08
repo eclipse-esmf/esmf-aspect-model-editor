@@ -18,10 +18,9 @@
 /** @typedef {{namespace: string; file: string}} LockedFile */
 
 const {BrowserWindow, ipcMain, Menu} = require('electron');
-const {APP_MENU_TEMPLATE, getIcon} = require('./app-menu');
+const {appMenuTemplate} = require('./menu/app-menu');
 const electronRemote = require('@electron/remote/main');
 const path = require('path');
-const electronLocalShortcut = require('electron-localshortcut');
 const {
   REQUEST_MAXIMIZE_WINDOW,
   REQUEST_CREATE_WINDOW,
@@ -44,8 +43,10 @@ const {
   REQUEST_LOCKED_FILES,
   SIGNAL_WINDOW_FOCUS,
   SIGNAL_UPDATE_MENU_ITEM,
+  SIGNAL_TRANSLATE_MENU_ITEMS,
 } = require('./events');
 const {inDevMode, icons} = require('./consts');
+const {getIcon} = require('./menu/utils');
 
 class WindowsManager {
   #windowConfig = {
@@ -164,6 +165,10 @@ class WindowsManager {
       this.state.focusedWindowId = event.sender.id;
       this.updateMenuItemById(id, payload);
     });
+
+    ipcMain.on(SIGNAL_TRANSLATE_MENU_ITEMS, (event, {id, payload}) => {
+      Menu.setApplicationMenu(Menu.buildFromTemplate([...appMenuTemplate(payload.translation)]));
+    });
   }
 
   //#region Selectors
@@ -205,7 +210,7 @@ class WindowsManager {
         this.#updateMenuIcon(currentUpdate.id, currentUpdate.update);
         this.#updates.shift();
       }
-      Menu.setApplicationMenu(Menu.buildFromTemplate([...APP_MENU_TEMPLATE]));
+      Menu.setApplicationMenu(Menu.buildFromTemplate([...appMenuTemplate(update.translation)]));
     }, 150);
   }
 
@@ -244,7 +249,6 @@ class WindowsManager {
       id: newWindow.webContents.id,
       window: newWindow,
       options,
-      menu: Menu.buildFromTemplate(APP_MENU_TEMPLATE),
     };
 
     this.#configureWindow(windowInfo);
@@ -273,7 +277,7 @@ class WindowsManager {
     if (!activeMenu) return;
 
     /** @type {any[]}  */
-    const stack = [APP_MENU_TEMPLATE];
+    const stack = [appMenuTemplate(updates.translation)];
 
     while (stack.length) {
       const menuList = stack.pop();
@@ -310,7 +314,7 @@ class WindowsManager {
 
     win.show();
     win.removeMenu();
-    Menu.setApplicationMenu(windowInfo.menu);
+    Menu.setApplicationMenu(windowInfo.menu || null);
 
     win.webContents.setWindowOpenHandler(() => {
       return {action: 'allow', overrideBrowserWindowOptions: {width: 1280, height: 720}};
@@ -353,19 +357,11 @@ class WindowsManager {
     ipcMain.on(REQUEST_WINDOW_DATA, executeFn);
   }
 
-  /** @param {BrowserWindow} window */
-  #enableDevtools(window) {
-    window.webContents.openDevTools();
-    electronLocalShortcut.register(window, 'CommandOrControl+F12', () => {
-      window.webContents.openDevTools();
-    });
-  }
-
   /** @param {WindowInfo} _ */
   #loadApplication({window, id}) {
     if (inDevMode()) {
       return window.loadURL('http://localhost:4200').then(() => {
-        this.#enableDevtools(window);
+        window.webContents.openDevTools();
         console.log(`Window \x1b[36m${id}\x1b[0m created!`);
       });
     }

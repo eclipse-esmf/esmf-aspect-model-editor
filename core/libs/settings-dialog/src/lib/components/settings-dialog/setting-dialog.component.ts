@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Component} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatDialogRef} from '@angular/material/dialog';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {SammLanguageSettingsService, SettingsFormService} from '../../services';
@@ -19,9 +19,10 @@ import * as locale from 'locale-codes';
 import {AlertService, LoadingScreenService, LogService, TitleService} from '@ame/shared';
 import {MxGraphAttributeService, MxGraphService, MxGraphShapeSelectorService, ShapeLanguageRemover} from '@ame/mx-graph';
 import {ModelService} from '@ame/rdf/services';
-import {NamespaceConfirmationModalComponent} from '../model-configuration/namespace-confirmation-modal/namespace-confirmation-modal.component';
-import {finalize} from 'rxjs';
 import {FormGroup} from '@angular/forms';
+import {NamespacesCacheService} from '@ame/cache';
+import {RdfModel} from '@ame/rdf/utils';
+import {NamespaceConfiguration} from '../../model';
 
 enum NodeNames {
   CONFIGURATION = 'System Configuration',
@@ -129,7 +130,6 @@ export class SettingDialogComponent {
   }
 
   constructor(
-    private matDialog: MatDialog,
     private settingDialogComponentMatDialogRef: MatDialogRef<SettingDialogComponent>,
     private formService: SettingsFormService,
     private alertService: AlertService,
@@ -141,6 +141,7 @@ export class SettingDialogComponent {
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private loadingScreen: LoadingScreenService,
     private titleService: TitleService,
+    private namespaceCacheService: NamespacesCacheService,
   ) {
     this.initializeComponent();
   }
@@ -194,23 +195,59 @@ export class SettingDialogComponent {
     if (!this.formService.hasNamespaceChanged()) return;
 
     const namespaceConfig = this.formService.getNamespaceConfiguration();
-    this.matDialog
-      .open(NamespaceConfirmationModalComponent, namespaceConfig)
-      .afterClosed()
-      .pipe(
-        finalize(() => {
-          this.formService.setNamespace(namespaceConfig.data.newNamespace);
-          this.formService.setVersion(namespaceConfig.data.newVersion);
 
-          const title = this.titleService.getTitle().split(' | ');
+    this.updateNamespacesIfNeeded(namespaceConfig);
+    this.updateNamespaceAndVersion(namespaceConfig);
+    this.updateTitleIfNeeded();
+  }
 
-          if (title.length > 1) {
-            const type = title[1].includes('Aspect') ? 'Aspect' : 'Shared';
-            this.titleService.updateTitle(this.modelService.getLoadedAspectModel().rdfModel.absoluteAspectModelFileName, type);
-          }
-        }),
-      )
-      .subscribe();
+  private updateNamespacesIfNeeded(namespaceConfig: NamespaceConfiguration): void {
+    const {oldNamespace, newNamespace, rdfModel, oldVersion, newVersion} = namespaceConfig;
+
+    if (oldNamespace !== newNamespace) {
+      this.updateAllNamespacesFromCurrentCachedFile(oldNamespace, newNamespace, rdfModel);
+    }
+
+    if (oldVersion !== newVersion) {
+      this.updateAllNamespacesFromCurrentCachedFile(oldVersion, newVersion, rdfModel);
+    }
+  }
+
+  private updateAllNamespacesFromCurrentCachedFile(oldValue: string, newValue: string, rdfModel: RdfModel): void {
+    const currentCachedFile = this.namespaceCacheService.currentCachedFile;
+
+    currentCachedFile.updateCachedElementsNamespace(oldValue, newValue);
+    rdfModel.updatePrefix('', oldValue, newValue);
+    rdfModel.aspectModelFileName;
+  }
+
+  private updateNamespaceAndVersion(namespaceConfig: NamespaceConfiguration): void {
+    const {newNamespace, newVersion, rdfModel} = namespaceConfig;
+
+    this.updateNamespaceKey(newNamespace, newVersion, rdfModel);
+    this.formService.setNamespace(newNamespace);
+    this.formService.setVersion(newVersion);
+  }
+
+  private updateNamespaceKey(newNamespace: string, newVersion: string, rdfModel: RdfModel): void {
+    const newUrn = `urn:samm:${newNamespace}:${newVersion}#`;
+
+    this.namespaceCacheService.addFile(newUrn, rdfModel.aspectModelFileName);
+    if (rdfModel.aspect) {
+      const [, aspectName] = rdfModel.aspect.value.split('#');
+      rdfModel.namespaceHasChanged = true;
+      rdfModel.setAspect(`${newUrn}${aspectName}`);
+      rdfModel.absoluteAspectModelFileName = `${newUrn.replace('#', ':')}${aspectName}.ttl`;
+    }
+  }
+
+  private updateTitleIfNeeded(): void {
+    const title = this.titleService.getTitle().split(' | ');
+
+    if (title.length > 1) {
+      const type = title[1].includes('Aspect') ? 'Aspect' : 'Shared';
+      this.titleService.updateTitle(this.modelService.getLoadedAspectModel().rdfModel.absoluteAspectModelFileName, type);
+    }
   }
 
   openConfirmBox(): void {

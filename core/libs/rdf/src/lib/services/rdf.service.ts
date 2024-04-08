@@ -166,7 +166,7 @@ export class RdfService {
   }
 
   parseFileName(fileName: string, urn: string): string {
-    if (this.browserService.isStartedAsElectronApp()) {
+    if (this.browserService.isStartedAsElectronApp() && window.require) {
       const path = window.require('path');
       fileName = fileName.includes(path.sep) ? `${urn.replace('#', ':')}${path.basename(fileName)}` : fileName;
     }

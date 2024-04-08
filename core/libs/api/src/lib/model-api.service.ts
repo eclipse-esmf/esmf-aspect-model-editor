@@ -13,7 +13,7 @@
 
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {catchError, map, mergeMap, tap, timeout, retry} from 'rxjs/operators';
+import {catchError, map, mergeMap, retry, tap, timeout} from 'rxjs/operators';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, LogService} from '@ame/shared';
 import {ModelValidatorService} from './model-validator.service';
@@ -42,7 +42,7 @@ export class ModelApiService {
     private browserService: BrowserService,
     private modelValidatorService: ModelValidatorService,
   ) {
-    if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('e2e=true')) {
+    if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
       this.serviceUrl = this.serviceUrl.replace(this.defaultPort, remote.getGlobal('backendPort'));
     }
@@ -94,10 +94,15 @@ export class ModelApiService {
       const [namespace, version, file] = absoluteModelName.split(':');
       headers = new HttpHeaderBuilder().withNamespace(`${namespace}:${version}`).withFileName(file).build();
     }
-    return this.http.post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent, {headers}).pipe(
-      timeout(this.requestTimeout),
-      catchError(res => throwError(() => res)),
-    );
+    return this.http
+      .post(`${this.serviceUrl}${this.api.models}`, rdfContent, {
+        headers,
+        responseType: 'text',
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => throwError(() => res)),
+      );
   }
 
   formatModel(rdfContent: string): Observable<string> {

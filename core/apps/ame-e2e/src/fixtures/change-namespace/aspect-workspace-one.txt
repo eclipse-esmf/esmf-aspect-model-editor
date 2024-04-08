@@ -16,25 +16,15 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix : <urn:samm:org.eclipse:1.0.0#> .
+@prefix : <urn:samm:org.eclipse.examples.one:1.0.0#> .
 
 :AspectDefault a samm:Aspect ;
-    samm:properties (:property1 :property2 :property3) ;
-    samm:operations () .
+    samm:properties (:property1) ;
+    samm:operations ();
+    samm:events () .
 
-:property1 a samm:Property ;
+:property1 a samm:Property;
     samm:characteristic :Characteristic1 .
-
-:property2 a samm:Property ;
-    samm:characteristic [ a samm:Characteristic; samm:dataType xsd:string ] .
-
-:property3 a samm:Property ;
-    samm:characteristic [
-        a samm-c:Trait ;
-        samm-c:baseCharacteristic [ a samm:Characteristic; samm:dataType xsd:string ] ;
-        samm-c:constraint [ a samm:Constraint ] ;
-        samm-c:constraint [ a samm:Constraint ]
-    ] .
 
 :Characteristic1 a samm:Characteristic ;
     samm:dataType xsd:string .

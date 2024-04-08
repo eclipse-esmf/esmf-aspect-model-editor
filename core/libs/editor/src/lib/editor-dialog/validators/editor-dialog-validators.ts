@@ -16,7 +16,6 @@ import {AbstractControl, ValidatorFn} from '@angular/forms';
 import {NamespacesCacheService} from '@ame/cache';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {RFC2141} from 'urn-lib';
-import {DataFactory} from 'n3';
 import {RdfService} from '@ame/rdf/services';
 
 @Injectable({providedIn: 'root'})
@@ -93,14 +92,14 @@ export class EditorDialogValidators {
           continue;
         }
 
-        const element = rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null)?.[0]?.subject;
+        const [namespace] = aspectModelUrn.split('#');
+        const files = this.namespaceCacheService
+          .getFiles(namespace)
+          .filter(file => file.fileName !== this.namespaceCacheService.currentCachedFile.fileName);
 
-        // @TODO: load elements efficiently
-        if (element) {
-          const [namespace] = element.value.split('#');
-          // @TODO: Solve this // namespaceCacheService.sidebarService.loadNamespaceFiles(namespace, namespaceCacheService.currentCachedFile);
-          const files = this.namespaceCacheService.getFiles(namespace);
-          foundExternalElement = files.reduce<BaseMetaModelElement>((acc, file) => acc || file.getEitherElement(element.value), null);
+        for (const file of files) {
+          foundExternalElement = file.getEitherElement(aspectModelUrn);
+
           if (foundExternalElement) {
             break;
           }

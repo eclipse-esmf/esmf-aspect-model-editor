@@ -380,20 +380,6 @@ export class cyHelp {
   }
 
   /**
-   * Updates the namespace and version of the current model.
-   * @param {string} name - The new namespace to set.
-   * @param {string} version - The new version to set.
-   */
-  static updateNamespace(name: string, version: string): void {
-    cy.get(SELECTOR_settingsButton).click().wait(500);
-    cy.get(':nth-child(6) > .settings__node').click();
-    cy.get(SELECTOR_namespaceTabValueInput).clear().type(name);
-    cy.get(SELECTOR_namespaceTabVersionInput).clear().type(version);
-    cy.get(SettingsDialogSelectors.settingsDialogOkButton).click();
-    cy.get(SELECTOR_overrideNamespace).click();
-  }
-
-  /**
    * Loads a model from a given RDF string.
    * @param {string} rdfString - The RDF string representing the model to load.
    * @returns {Cypress.Chainable} - Returns a chainable Cypress command that performs the model load operation.

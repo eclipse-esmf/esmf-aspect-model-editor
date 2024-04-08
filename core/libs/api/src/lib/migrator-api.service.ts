@@ -46,7 +46,7 @@ export class MigratorApiService {
     private modelApiService: ModelApiService,
     private editorService: EditorService,
   ) {
-    if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('e2e=true')) {
+    if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
       this.serviceUrl = this.serviceUrl.replace(this.defaultPort, remote.getGlobal('backendPort'));
     }
