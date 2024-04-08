@@ -12,7 +12,7 @@
  */
 import {Injectable} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings-dialog';
+import {ConfigurationService, NamespaceConfiguration, SammLanguageSettingsService} from '@ame/settings-dialog';
 import {LanguageTranslationService} from '@ame/translation';
 import * as locale from 'locale-codes';
 import {GeneralConfig} from '@ame/shared';
@@ -102,7 +102,13 @@ export class SettingsFormService {
     this.form = this.formBuilder.group({
       automatedWorkflow: this.formBuilder.group({
         autoSaveEnabled: [settings.autoSaveEnabled],
-        saveTimerSeconds: [{value: settings.saveTimerSeconds, disabled: !settings.autoSaveEnabled}, [Validators.min(60)]],
+        saveTimerSeconds: [
+          {
+            value: settings.saveTimerSeconds,
+            disabled: !settings.autoSaveEnabled,
+          },
+          [Validators.min(60)],
+        ],
         autoValidationEnabled: [settings.autoValidationEnabled],
         validationTimerSeconds: [
           {
@@ -165,26 +171,20 @@ export class SettingsFormService {
   }
 
   hasNamespaceChanged(): boolean {
-    const namespaceConfiguration = this.getNamespaceConfiguration();
-    return (
-      namespaceConfiguration &&
-      (namespaceConfiguration.data.oldNamespace !== namespaceConfiguration.data.newNamespace ||
-        namespaceConfiguration.data.oldVersion !== namespaceConfiguration.data.newVersion)
-    );
+    const {oldNamespace, newNamespace, oldVersion, newVersion} = this.getNamespaceConfiguration();
+    return oldNamespace !== newNamespace || oldVersion !== newVersion;
   }
 
   getNamespaceConfiguration(): any {
     const settings = this.configurationService.getSettings();
 
     return {
-      data: {
-        oldNamespace: this.namespace,
-        oldVersion: this.version,
-        rdfModel: this.loadedRdfModel,
-        newNamespace: settings.namespace,
-        newVersion: settings.version,
-      },
-    };
+      oldNamespace: this.namespace,
+      oldVersion: this.version,
+      rdfModel: this.loadedRdfModel,
+      newNamespace: settings.namespace,
+      newVersion: settings.version,
+    } as NamespaceConfiguration;
   }
 
   getForm(): FormGroup {

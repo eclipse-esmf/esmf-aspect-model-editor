@@ -21,10 +21,8 @@ import {
   Entity,
   EntityValueProperty,
   OverWrittenProperty,
-  Property,
 } from '@ame/meta-model';
 import {CachedFile} from '@ame/cache';
-import {Observable} from 'rxjs';
 import {extractNamespace} from '@ame/utils';
 import {isDataTypeLangString} from '@ame/shared';
 

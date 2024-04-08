@@ -467,19 +467,18 @@
       "CLOSE_BUTTON": "Keep current",
       "OK_BUTTON": "Reload"
     },
-    "UPDATE_ASPECT_MODEL": {
-      "PHRASE1": "The Aspect model \"{{fileName}}\" is already defined in your file structure.",
-      "PHRASE2": "Are you sure you want to overwrite it?",
-      "TITLE": "Update Aspect Model",
-      "OK_BUTTON": "Overwrite"
-    },
     "NAMESPACE_CHANGE": {
-      "PHRASE1": "The namespace for \"{{originalModelName}}\" model has been changed. The process will make the following changes:",
-      "PHRASE2": "• move \"{{originalModelName}}\" from \"{{originalModelNamespace}}\" to \"{{newNamespace}}\" namespace",
-      "PHRASE3": "• update Aspect models which depend on \"{{originalModelName}}\" model",
-      "PHRASE4": "Are you sure you want to continue?",
-      "TITLE": "Model's namespace has been changed",
-      "OK_BUTTON": "Continue"
+      "TITLE": "Update Model namespace",
+      "PHRASE1": "The namespace for the model \"{{originalModelName}}\" has been updated.",
+      "PHRASE2": "Old namespace: \"{{originalModelNamespace}}\"",
+      "PHRASE3": "New namespace: \"{{newNamespace}}\"",
+      "PHRASE4": "This update will:",
+      "PHRASE5": "• Relocate \"{{originalModelName}}\" from the old namespace to the new namespace.",
+      "PHRASE6": "• Refresh any Aspect models that are linked to \"{{originalModelName}}\" to reflect this change.",
+      "PHRASE7": "Do you want to apply these changes now?",
+      "OK_BUTTON": "Save and Update Dependencies",
+      "ACTION_BUTTON": "Save Changes Only",
+      "CANCEL_BUTTON": "Cancel"
     },
     "SAVE_BEFORE_LOAD": {
       "PHRASE1": "You are about to load {{fileName}}.",
@@ -565,6 +564,68 @@
     "PROPERTY": "Property",
     "EDIT": {
       "SEARCH_BAR": "Find complex value"
+    }
+  },
+  "MENU": {
+    "FILE": {
+      "LABEL": "File",
+      "NEW": {
+        "LABEL": "New...",
+        "SUBMENU": {
+          "EMPTY_MODEL": "Empty Model",
+          "LOAD_FILE": "Load File...",
+          "COPY_PASTE": "Copy Paste",
+          "EXAMPLES": "Examples"
+        }
+      },
+      "NEW_WINDOW": "New Window",
+      "IMPORT_MODEL": "Import Model",
+      "IMPORT_PACKAGE": "Import Package",
+      "COPY_TO_CLIPBOARD": "Copy to Clipboard",
+      "SAVE_TO_WORKSPACE": "Save to Workspace",
+      "EXPORT_MODEL": "Export Model",
+      "EXPORT_PACKAGE": "Export Package"
+    },
+    "VIEW": {
+      "LABEL": "View",
+      "TOGGLE_TOOLBAR": "Toggle Toolbar",
+      "TOGGLE_MINIMAP": "Toggle Minimap",
+      "FILTER": {
+        "LABEL": "Filter Model by",
+        "SUBMENU": {
+          "NONE": "None",
+          "PROPERTIES": "Properties"
+        }
+      },
+      "ZOOM_IN": "Zoom in",
+      "ZOOM_OUT": "Zoom out",
+      "ZOOM_TO_FIT": "Zoom to Fit",
+      "ZOOM_TO_100": "Zoom to 100%"
+    },
+    "EDIT": {
+      "LABEL": "Edit\u200B",
+      "OPEN_SELECTED_ELEMENT": "Open selected element",
+      "REMOVE_SELECTED_ELEMENT": "Remove selected element",
+      "COLLAPSE_EXPAND_MODEL": "Collapse/Expand Model",
+      "FORMAT_MODEL": "Format Model",
+      "CONNECT_SELECTED_ELEMENTS": "Connect selected elements"
+    },
+    "VALIDATE": {
+      "LABEL": "Validate",
+      "CURRENT_MODEL": "Current Model"
+    },
+    "GENERATE": {
+      "LABEL": "Generate",
+      "HTML_DOCUMENTATION": "HTML Documentation",
+      "OPEN_API_SPECIFICATION": "OpenAPI Specification",
+      "AASX_XML": "AASX / XML",
+      "SAMPLE_JSON_PAYLOAD": "Sample JSON Payload",
+      "JSON_SCHEMA": "JSON Schema"
+    },
+    "SEARCH": {
+      "LABEL": "Search",
+      "ELEMENTS": "Elements",
+      "FILES": "Files"
     }
   }
 }

@@ -18,7 +18,6 @@ import {
   EditorConfigurationComponent,
   HeaderCopyrightComponent,
   LanguageSettingsComponent,
-  NamespaceConfirmationModalComponent,
   NamespaceSettingsComponent,
   SettingDialogComponent,
 } from './components';
@@ -48,7 +47,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
     AutomatedWorkflowComponent,
     EditorConfigurationComponent,
     HeaderCopyrightComponent,
-    NamespaceConfirmationModalComponent,
   ],
   imports: [
     CommonModule,

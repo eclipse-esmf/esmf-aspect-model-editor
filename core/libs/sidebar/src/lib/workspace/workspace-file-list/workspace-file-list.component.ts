@@ -19,6 +19,7 @@ import {RdfService} from '@ame/rdf/services';
 import {ModelApiService} from '@ame/api';
 import {Subscription, switchMap} from 'rxjs';
 import {LanguageTranslationService} from '@ame/translation';
+import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-dialog.enum';
 
 @Component({
   selector: 'ame-workspace-file-list',
@@ -173,7 +174,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
         okButtonText: this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.OK_BUTTON,
       })
       .subscribe(confirmed => {
-        if (confirmed) {
+        if (confirmed !== ConfirmDialogEnum.cancel) {
           this.editorService.saveModel().subscribe();
         }
         // TODO improve this functionality
@@ -192,8 +193,8 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
         ],
         title: this.translate.language.CONFIRM_DIALOG.DELETE_FILE.TITLE,
       })
-      .subscribe(confirmed => {
-        if (confirmed) {
+      .subscribe(confirm => {
+        if (confirm !== ConfirmDialogEnum.cancel) {
           this.modelApiService.deleteFile(aspectModelFileName).subscribe(() => {
             this.sidebarService.workspace.refresh();
             this.electronSignalsService.call('requestRefreshWorkspaces');

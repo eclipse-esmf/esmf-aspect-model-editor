@@ -14,18 +14,21 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {DialogOptions} from './confirm-dialog.service';
+import {ConfirmDialogEnum} from '../models/confirm-dialog.enum';
 
 @Component({
   templateUrl: './confirm-dialog.component.html',
   styles: ['.dialog-title { font-size: 24px !important; }'],
 })
 export class ConfirmDialogComponent {
+  protected readonly confirmDialogEnum = ConfirmDialogEnum;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogOptions,
     private dialogRef: MatDialogRef<ConfirmDialogComponent>,
   ) {}
 
-  closeAndGiveResult(result: boolean) {
+  closeAndGiveResult(result: ConfirmDialogEnum) {
     this.dialogRef.close(result);
   }
 }

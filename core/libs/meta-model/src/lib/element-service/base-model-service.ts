@@ -57,6 +57,7 @@ export abstract class BaseModelService {
     const aspectModelUrn = this.modelService.currentRdfModel.getAspectModelUrn();
 
     this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
+
     modelElement.name = form.name;
     modelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 

@@ -12,7 +12,7 @@
   -->
 
 <h3 mat-dialog-title>{{ data.title }}</h3>
-<button class="close-button" mat-icon-button tabindex="-1" (click)="closeAndGiveResult(false)">
+<button class="close-button" mat-icon-button tabindex="-1" (click)="closeAndGiveResult(confirmDialogEnum.cancel)">
   <mat-icon>close</mat-icon>
 </button>
 
@@ -21,6 +21,11 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-flat-button (click)="closeAndGiveResult(false)">{{ data.closeButtonText }}</button>
-  <button mat-flat-button color="primary" (click)="closeAndGiveResult(true)" data-cy="okButton">{{ data.okButtonText }}</button>
+  <button mat-flat-button (click)="closeAndGiveResult(confirmDialogEnum.cancel)" data-cy="cancelBtn">{{ data.closeButtonText }}</button>
+  <button *ngIf="data.actionButtonText" mat-flat-button (click)="closeAndGiveResult(confirmDialogEnum.action)" data-cy="actionBtn">
+    {{ data.actionButtonText }}
+  </button>
+  <button mat-flat-button color="primary" (click)="closeAndGiveResult(confirmDialogEnum.ok)" data-cy="okBtn">
+    {{ data.okButtonText }}
+  </button>
 </mat-dialog-actions>
