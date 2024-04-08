@@ -30,7 +30,7 @@ For a new model that only has an Aspect so far:
 . Remove the second Characteristic.
 . Connect the second Trait with the first Characteristic:
 .. Click the Trait,
-.. Then CTRL+click the Abstract Entity and click the Connect icon image:toolbar-icons/connect.png[Connect icon, 2%] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+.. Then CTRL+click the Abstract Entity and click the Connect icon image:toolbar-icons/connect.png[Connect icon, 3%] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 . Click the Format icon image:toolbar-icons/format.png[Format icon, 3%].
 
 → As a result you have connected two Properties to the same Characteristic with each Property having different Constraints.
