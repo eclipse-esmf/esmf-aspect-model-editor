@@ -314,7 +314,7 @@ class WindowsManager {
 
     win.show();
     win.removeMenu();
-    Menu.setApplicationMenu(windowInfo.menu);
+    Menu.setApplicationMenu(windowInfo.menu || null);
 
     win.webContents.setWindowOpenHandler(() => {
       return {action: 'allow', overrideBrowserWindowOptions: {width: 1280, height: 720}};
