@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorService, FileHandlingService} from '@ame/editor';
+import {EditorService, FileHandlingService, LoadAspectModelService} from '@ame/editor';
 import {MigratorService} from '@ame/migrator';
 import {MxGraphService} from '@ame/mx-graph';
 import {
@@ -36,7 +36,7 @@ export class StartupService {
     private migratorService: MigratorService,
     private sidebarService: SidebarStateService,
     private router: Router,
-    private editorService: EditorService,
+    private loadingAspectModelService: LoadAspectModelService,
     private modelSaveTracker: ModelSavingTrackerService,
     private electronTunnelService: ElectronTunnelService,
     private loadingScreenService: LoadingScreenService,
@@ -84,7 +84,7 @@ export class StartupService {
       switchMap(() =>
         this.ngZone.run(() =>
           model
-            ? this.editorService.loadNewAspectModel({
+            ? this.loadingAspectModelService.loadNewAspectModel({
                 rdfAspectModel: model,
                 namespaceFileName: options ? `${options.namespace}:${options.file}` : '',
                 fromWorkspace: options?.fromWorkspace,

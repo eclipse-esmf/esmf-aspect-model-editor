@@ -17,7 +17,7 @@ import {Router} from '@angular/router';
 import {NamespacesManagerService} from '../../../shared';
 import {Prefixes} from 'n3';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
-import {EditorService} from '@ame/editor';
+import {LoadAspectModelService} from '@ame/editor';
 import {tap} from 'rxjs/operators';
 import {first} from 'rxjs';
 import {APP_CONFIG, AppConfig} from '@ame/shared';
@@ -53,13 +53,13 @@ export class SelectNamespacesComponent implements OnInit {
 
   constructor(
     private namespacesManager: NamespacesManagerService,
-    private editorService: EditorService,
+    private loadAspectModelService: LoadAspectModelService,
     private router: Router,
     @Inject(APP_CONFIG) public config: AppConfig,
   ) {}
 
   ngOnInit(): void {
-    this.editorService
+    this.loadAspectModelService
       .loadModels()
       .pipe(
         first(),

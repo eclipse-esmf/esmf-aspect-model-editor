@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorService} from '@ame/editor';
+import {LoadAspectModelService} from '@ame/editor';
 import {ExporterHelper} from '@ame/migrator';
 import {RdfModel} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
@@ -44,7 +44,7 @@ export class MigratorApiService {
     private http: HttpClient,
     private browserService: BrowserService,
     private modelApiService: ModelApiService,
-    private editorService: EditorService,
+    private loadAspectModelService: LoadAspectModelService,
   ) {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
@@ -53,7 +53,7 @@ export class MigratorApiService {
   }
 
   public hasFilesToMigrate(): Observable<boolean> {
-    return this.editorService
+    return this.loadAspectModelService
       .loadExternalModels()
       .pipe(
         map((rdfModels: RdfModel[]) =>

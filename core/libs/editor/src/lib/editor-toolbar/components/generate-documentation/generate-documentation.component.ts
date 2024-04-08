@@ -18,7 +18,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 import * as locale from 'locale-codes';
 import {finalize, first} from 'rxjs/operators';
 import {ModelApiService} from '@ame/api';
-import {EditorService} from '../../../editor.service';
+import {EditorService} from '../../../services';
 import {map} from 'rxjs';
 import {saveAs} from 'file-saver';
 import {ModelService} from '@ame/rdf/services';

@@ -14,7 +14,7 @@
 import {ChangeDetectorRef, Component, inject, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
-import {ConfirmDialogService, EditorService, FileHandlingService} from '@ame/editor';
+import {ConfirmDialogService, EditorService, FileHandlingService, SaveService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
 import {ModelApiService} from '@ame/api';
 import {Subscription, switchMap} from 'rxjs';
@@ -50,8 +50,8 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
   constructor(
     private notificationService: NotificationsService,
     private confirmDialogService: ConfirmDialogService,
-    private rdfService: RdfService,
     private editorService: EditorService,
+    private saveService: SaveService,
     private modelApiService: ModelApiService,
     private fileHandlingService: FileHandlingService,
     private changeDetector: ChangeDetectorRef,
@@ -175,7 +175,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
       })
       .subscribe(confirmed => {
         if (confirmed !== ConfirmDialogEnum.cancel) {
-          this.editorService.saveModel().subscribe();
+          this.saveService.saveModel().subscribe();
         }
         // TODO improve this functionality
         this.loadNamespaceFile(absoluteFileName);

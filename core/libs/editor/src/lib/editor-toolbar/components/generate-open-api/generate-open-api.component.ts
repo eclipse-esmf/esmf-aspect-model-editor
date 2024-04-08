@@ -20,7 +20,7 @@ import {EditorDialogValidators} from '../../../editor-dialog';
 import {finalize, first} from 'rxjs/operators';
 import {map} from 'rxjs';
 import {saveAs} from 'file-saver';
-import {EditorService} from '../../../editor.service';
+import {EditorService, GenerateService} from '../../../services';
 import {ModelService} from '@ame/rdf/services';
 import {NamespacesCacheService} from '@ame/cache';
 
@@ -52,7 +52,7 @@ export class GenerateOpenApiComponent implements OnInit {
     private languageService: SammLanguageSettingsService,
     private namespaceCacheService: NamespacesCacheService,
     private modelService: ModelService,
-    private editorService: EditorService,
+    private generateService: GenerateService,
   ) {}
 
   ngOnInit(): void {
@@ -82,7 +82,7 @@ export class GenerateOpenApiComponent implements OnInit {
 
     this.isGenerating = true;
 
-    this.editorService
+    this.generateService
       .generateOpenApiSpec(this.modelService.currentRdfModel, openApi)
       .pipe(
         first(),

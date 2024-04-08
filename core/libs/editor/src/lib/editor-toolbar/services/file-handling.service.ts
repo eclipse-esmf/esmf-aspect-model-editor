@@ -15,11 +15,14 @@ import {Injectable} from '@angular/core';
 import {
   ConfirmDialogService,
   DialogOptions,
-  EditorService,
   FileTypes,
   FileUploadOptions,
   FileUploadService,
+  HandleConflictService,
+  LoadAspectModelService,
+  SaveService,
   ShapeSettingsStateService,
+  ValidateService,
 } from '@ame/editor';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
 import {forkJoin, from, Observable, of, throwError} from 'rxjs';
@@ -39,7 +42,6 @@ import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {MigratorService} from '@ame/migrator';
 import {BlankNode, NamedNode, Store} from 'n3';
-import {Title} from '@angular/platform-browser';
 import {LanguageTranslationService} from '@ame/translation';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {environment} from '../../../../../../environments/environment';
@@ -81,7 +83,10 @@ interface ModelLoaderState {
 export class FileHandlingService {
   constructor(
     private logService: LogService,
-    private editorService: EditorService,
+    private validateService: ValidateService,
+    private saveService: SaveService,
+    private loadAspectModelService: LoadAspectModelService,
+    private handlingConflictService: HandleConflictService,
     private modelService: ModelService,
     private rdfService: RdfService,
     private modelApiService: ModelApiService,
@@ -91,7 +96,6 @@ export class FileHandlingService {
     private namespaceCacheService: NamespacesCacheService,
     private migratorService: MigratorService,
     private sidebarService: SidebarStateService,
-    private titleService: Title,
     private translate: LanguageTranslationService,
     private electronSignalsService: ElectronSignalsService,
     private configurationService: ConfigurationService,
@@ -123,7 +127,7 @@ export class FileHandlingService {
     return this.modelApiService.validate(migratedModel).pipe(
       switchMap(validations => {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
-        return found ? throwError(() => found.message) : this.editorService.loadNewAspectModel({rdfAspectModel: migratedModel});
+        return found ? throwError(() => found.message) : this.loadAspectModelService.loadNewAspectModel({rdfAspectModel: migratedModel});
       }),
       catchError(error => {
         this.notificationsService.info({
@@ -160,7 +164,7 @@ export class FileHandlingService {
           this.loadingScreenService.open(loadingScreenOptions);
         }),
         switchMap(rdfAspectModel =>
-          this.editorService
+          this.loadAspectModelService
             .loadNewAspectModel({
               rdfAspectModel,
               namespaceFileName: absoluteFileName,
@@ -228,7 +232,7 @@ export class FileHandlingService {
     this.modelService.addAspect(null);
     this.modelSaveTracker.updateSavedModel(true);
 
-    const loadExternalModels$ = this.editorService
+    const loadExternalModels$ = this.loadAspectModelService
       .loadExternalModels()
       .pipe(finalize(() => loadExternalModels$.unsubscribe()))
       .subscribe();
@@ -317,9 +321,9 @@ export class FileHandlingService {
       switchMap(() => this.getModelLoaderState()),
       tap(state => (modelState = state)),
       switchMap(() => this.handleNamespaceChange(modelState)),
-      switchMap(confirm => (confirm !== ConfirmDialogEnum.cancel ? this.editorService.saveModel() : of(null))),
+      switchMap(confirm => (confirm !== ConfirmDialogEnum.cancel ? this.saveService.saveModel() : of(null))),
       tap(rdfModel => this.handleRdfModel(rdfModel, modelState)),
-      switchMap(() => this.editorService.loadExternalModels()),
+      switchMap(() => this.loadAspectModelService.loadExternalModels()),
       finalize(() => {
         this.modelSaveTracker.updateSavedModel();
         this.loadingScreenService.close();
@@ -429,7 +433,7 @@ export class FileHandlingService {
         }
         this.sidebarService.workspace.refresh();
       }),
-      switchMap(() => this.editorService.handleFileVersionConflicts(newModelAbsoluteFileName, newModelContent)),
+      switchMap(() => this.handlingConflictService.handleFileVersionConflicts(newModelAbsoluteFileName, newModelContent)),
       catchError(error => {
         this.logService.logError(`'Error adding file to namespaces. ${JSON.stringify(error)}.`);
         if (uploadOptions.showNotifications) {
@@ -468,7 +472,7 @@ export class FileHandlingService {
     };
     this.loadingScreenService.open(loadingScreenOptions);
 
-    return this.editorService.validate().pipe(
+    return this.validateService.validate().pipe(
       map(correctableErrors => {
         this.loadingScreenService.close();
         if (correctableErrors?.length === 0) {

@@ -12,8 +12,7 @@
  */
 
 import {Inject, Injectable, Injector} from '@angular/core';
-import {DefaultFilter} from './filters/default-filter';
-import {PropertiesFilterLoader} from './filters/properties-filter';
+import {DefaultFilter, PropertiesFilterLoader} from './filters';
 import {FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from './models';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphRenderer, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
@@ -23,7 +22,7 @@ import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {LoadingScreenService} from '@ame/shared';
 import {FILTER_ATTRIBUTES, FilterAttributesService} from './active-filter.session';
 import {switchMap} from 'rxjs';
-import {EditorService} from '@ame/editor';
+import {ValidateService} from '@ame/editor';
 import {LanguageTranslationService} from '@ame/translation';
 
 export type Filters = {
@@ -79,7 +78,10 @@ export class FiltersService {
 
   updateNodeInfo<T extends BaseMetaModelElement = BaseMetaModelElement>(node: ModelTree<T>, options?: ModelTreeOptions): ModelTree<T> {
     node.fromParentArrow = options?.parent ? this.currentFilter.getArrowStyle(node.element, options.parent) : null;
-    node.shape = {...this.currentFilter.getShapeGeometry(node.element), mxGraphStyle: this.currentFilter.getMxGraphStyle(node.element)};
+    node.shape = {
+      ...this.currentFilter.getShapeGeometry(node.element),
+      mxGraphStyle: this.currentFilter.getMxGraphStyle(node.element),
+    };
     node.filterType = this.currentFilter.filterType;
     return node;
   }
@@ -90,7 +92,7 @@ export class FiltersService {
 
   renderByFilter(filter: ModelFilter) {
     const mxGraphService = this.injector.get(MxGraphService);
-    const editorService = this.injector.get(EditorService);
+    const validateService = this.injector.get(ValidateService);
     let selectedCell = mxGraphService.graph.selectionModel.cells?.[0];
     const selectedModelElement = selectedCell && MxGraphHelper.getModelElement(selectedCell);
 
@@ -133,7 +135,7 @@ export class FiltersService {
           selectedCell = selectedModelElement && mxGraphService.resolveCellByModelElement(selectedModelElement);
           if (selectedCell) mxGraphService.navigateToCellByUrn(selectedModelElement.aspectModelUrn);
 
-          return editorService.validate();
+          return validateService.validate();
         }),
       )
       .subscribe(() => {
