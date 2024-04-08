@@ -165,12 +165,13 @@ export class RdfService {
     return subject;
   }
 
-  parseFileName(fileName: string, urn: string): string {
+  private parseFileName(fileName: string, urn: string): string {
     if (this.browserService.isStartedAsElectronApp()) {
       const path = window.require('path');
       fileName = fileName.includes(path.sep) ? `${urn.replace('#', ':')}${path.basename(fileName)}` : fileName;
     }
-    return fileName;
+
+    return fileName.charAt(0) === '/' ? fileName.substring(1) : fileName;
   }
 
   parseModels(fileContentModels: FileContentModel[]): Observable<RdfModel[]> {

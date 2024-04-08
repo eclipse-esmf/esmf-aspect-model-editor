@@ -273,7 +273,7 @@ export class EditorService {
 
   loadExternalAspectModel(extRefAbsoluteAspectModelFileName: string): CachedFile {
     const extRdfModel = this.rdfService.externalRdfModels.find(
-      extRef => this.removeStartingCharacter(extRef.absoluteAspectModelFileName,'/')  === extRefAbsoluteAspectModelFileName,
+      extRef => extRef.absoluteAspectModelFileName === extRefAbsoluteAspectModelFileName,
     );
     const fileName = extRdfModel.aspectModelFileName;
     let foundCachedFile = this.namespaceCacheService.getFile([extRdfModel.getAspectModelUrn(), fileName]);
@@ -285,13 +285,6 @@ export class EditorService {
     return foundCachedFile;
   }
 
-  removeStartingCharacter(value: string, character: string): string {
-    if (value.charAt(0) === character) {
-      return value.substring(1);
-    }
-    return value;
-  }
-  
   loadExternalModels(): Observable<Array<RdfModel>> {
     this.rdfService.externalRdfModels = [];
     return this.modelApiService.getAllNamespacesFilesContent().pipe(
