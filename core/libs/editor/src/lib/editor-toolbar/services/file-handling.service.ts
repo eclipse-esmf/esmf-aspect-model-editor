@@ -594,13 +594,13 @@ export class FileHandlingService {
   private migrateAffectedModels(originalModelName: string, newModelName: string): Observable<RdfModel[]> {
     const originalNamespace = RdfModelUtil.getUrnFromFileName(originalModelName);
     const newNamespace = RdfModelUtil.getUrnFromFileName(newModelName);
-    const affectedModels = this.updateAffectedQuads(originalNamespace, newNamespace);
+    const affectedModels = this.updateAffectedQuads(originalModelName, originalNamespace, newNamespace);
     return this.updateAffectedModels(affectedModels, originalNamespace, newNamespace);
   }
 
-  public updateAffectedQuads(originalNamespace: string, newNamespace: string): RdfModel[] {
+  public updateAffectedQuads(originalModelName: string, originalNamespace: string, newNamespace: string): RdfModel[] {
     const subjects = this.rdfService.currentRdfModel.store.getSubjects(null, null, null);
-    const models = this.rdfService.externalRdfModels;
+    const models = this.rdfService.externalRdfModels.filter(model => model.absoluteAspectModelFileName !== originalModelName);
     const affectedModels: RdfModel[] = [];
 
     subjects.forEach(subject => {
