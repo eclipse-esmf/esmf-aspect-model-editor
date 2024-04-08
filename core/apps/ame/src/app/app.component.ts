@@ -50,13 +50,18 @@ export class AppComponent implements OnInit {
     this.domainModelToRdf.listenForStoreUpdates();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.language = this.getApplicationLanguage();
     this.translate.initTranslationService(this.language);
 
     this.electronTunnelService.subscribeMessages();
     this.titleService.setTitle(this.title);
-    this.setContextMenu();
+
+    if (this.browserService.isStartedAsElectronApp() || !window.require) {
+      this.setMenuTranslation();
+      this.setContextMenu();
+    }
+
     this.themeService.setCssVars(this.configurationService.getSettings()?.useSaturatedColors ? 'dark' : 'light');
 
     if (window.location.search.includes('e2e=true')) {
@@ -76,17 +81,17 @@ export class AppComponent implements OnInit {
   }
 
   @HostListener('window:keydown.control.f')
-  openSearchElements() {
+  openSearchElements(): void {
     this.searchesStateService.elementsSearch.toggle();
   }
 
   @HostListener('window:keydown.control.p')
-  openFilesElements() {
+  openFilesElements(): void {
     this.searchesStateService.filesSearch.toggle();
   }
 
   @HostListener('window:keydown.esc')
-  closeSearchModals() {
+  closeSearchModals(): void {
     this.searchesStateService.filesSearch.close();
     this.searchesStateService.elementsSearch.close();
   }
@@ -95,7 +100,7 @@ export class AppComponent implements OnInit {
     return localStorage.getItem('applicationLanguage') || this.translate.translateService.defaultLang;
   }
 
-  private isGraphElement(target: HTMLElement) {
+  private isGraphElement(target: HTMLElement): boolean {
     let element = target;
     while (element.parentElement !== document.body) {
       if (element.id === 'graph') {
@@ -106,11 +111,7 @@ export class AppComponent implements OnInit {
     return false;
   }
 
-  setContextMenu() {
-    if (!this.browserService.isStartedAsElectronApp() || !window.require) {
-      return;
-    }
-
+  setContextMenu(): void {
     const {Menu} = window.require('@electron/remote');
     const {shell} = window.require('electron');
 
@@ -149,5 +150,9 @@ export class AppComponent implements OnInit {
         menu.popup();
       }
     });
+  }
+
+  setMenuTranslation(): void {
+    this.electronTunnelService.sendTranslationsToElectron(this.translate.translateService.currentLang);
   }
 }
