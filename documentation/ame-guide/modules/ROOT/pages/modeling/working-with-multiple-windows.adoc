@@ -19,7 +19,7 @@ To open a model from the workspace in a new window:
 * Double-click a file to instantly open it in a new window.
 * Click on the three-dot menu beside the file, and choose the Open in new window option.
 
-image:multi-windows/workspace-new-window.png[link=self]
+image:multi-windows/workspace-new-window.png[width=30%, link=self]
 
 NOTE: To quickly navigate to an already opened window, simply double-click its associated file in the workspace. This action will bring the respective window to the forefront.
 
