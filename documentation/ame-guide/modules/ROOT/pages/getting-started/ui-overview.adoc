@@ -195,7 +195,7 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 | Icon | Name | Action
 
 | image:toolbar-icons/jump.png[,20%,20%]
-| Open highlighted element
+| Edit highligted cell
 | Open the Edit dialog of the selected element (alternative: double-click an element inside the model).
 
 | image:toolbar-icons/delete.png[,20%,20%]
@@ -292,7 +292,7 @@ For more information, see xref:getting-started/navigate-models.adoc[Navigate mod
 
 Edit the attributes of a selected element of your Aspect Model with the Edit dialog.
 
-To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Open element icon image:toolbar-icons/edit.png[Edit icon, width="5%"] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Edit highlighted cell icon image:toolbar-icons/jump.png[Edit icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 
 For more information, see xref:modeling/edit-elements.adoc[Edit elements].
 
