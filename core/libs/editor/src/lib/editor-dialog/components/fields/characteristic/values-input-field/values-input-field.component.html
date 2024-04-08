@@ -41,11 +41,11 @@
   <mat-error *ngIf="getControl('values')?.errors?.required">This field is required</mat-error>
 </mat-form-field>
 
-<ame-entity-value-view
+<ame-entity-instance-view
   class="entity-values"
   *ngIf="hasComplexValues"
   [complexValues]="enumEntityValues"
   [enumeration]="metaModelElement"
   [parentForm]="parentForm"
   (complexValueChange)="enumValueChange($event)"
-></ame-entity-value-view>
+></ame-entity-instance-view>

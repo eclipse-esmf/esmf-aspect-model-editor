@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EntityValueService} from '@ame/editor';
+import {EntityInstanceService} from '@ame/editor';
 import {FiltersService} from '@ame/loader-filters';
 import {
   Entity,
@@ -35,7 +35,7 @@ export class AbstractEntityConnectionHandler implements SingleShapeConnector<Ent
   constructor(
     private mxGraphService: MxGraphService,
     private modelElementNamingService: ModelElementNamingService,
-    private entityValueService: EntityValueService,
+    private entityInstanceService: EntityInstanceService,
     private propertyAbstractPropertyConnector: PropertyAbstractPropertyConnectionHandler,
     private entityPropertyConnector: EntityPropertyConnectionHandler,
     private filtersService: FiltersService,
@@ -49,7 +49,7 @@ export class AbstractEntityConnectionHandler implements SingleShapeConnector<Ent
     );
     const overWrittenProperty: OverWrittenProperty<DefaultAbstractProperty> = {property: abstractProperty, keys: {}};
     abstractEntity.properties.push(overWrittenProperty as any);
-    this.entityValueService.onNewProperty(overWrittenProperty as any, abstractEntity);
+    this.entityInstanceService.onNewProperty(overWrittenProperty as any, abstractEntity);
 
     this.mxGraphService.assignToParent(abstractPropertyCell, source);
     this.mxGraphService.formatCell(source);

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EntityValueService} from '@ame/editor';
+import {EntityInstanceService} from '@ame/editor';
 import {DefaultEntity, DefaultProperty} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {Injectable} from '@angular/core';
@@ -24,14 +24,14 @@ import {mxgraph} from 'mxgraph-factory';
 export class EntityPropertyConnectionHandler implements MultiShapeConnector<DefaultEntity, DefaultProperty> {
   constructor(
     private mxGraphService: MxGraphService,
-    private entityValueService: EntityValueService,
+    private entityInstanceService: EntityInstanceService,
   ) {}
 
   public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
     if (!parentMetaModel.properties.find(({property}) => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
       const overWrittenProperty = {property: childMetaModel, keys: {}};
       parentMetaModel.properties.push(overWrittenProperty);
-      this.entityValueService.onNewProperty(overWrittenProperty, parentMetaModel);
+      this.entityInstanceService.onNewProperty(overWrittenProperty, parentMetaModel);
     }
     this.mxGraphService.assignToParent(childCell, parentCell);
   }

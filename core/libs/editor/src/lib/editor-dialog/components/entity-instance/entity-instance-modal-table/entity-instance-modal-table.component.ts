@@ -26,17 +26,17 @@ import {
 } from '@ame/meta-model';
 import {DataType, EditorDialogValidators, FormFieldHelper} from '@ame/editor';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
-import {EntityValueUtil} from '../utils/EntityValueUtil';
+import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
 import {map, Observable, of, startWith, Subscription} from 'rxjs';
 import * as locale from 'locale-codes';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
-  selector: 'ame-entity-value-modal-table',
-  templateUrl: './entity-value-modal-table.component.html',
-  styleUrls: ['./entity-value-modal-table.component.scss'],
+  selector: 'ame-entity-instance-modal-table',
+  templateUrl: './entity-instance-modal-table.component.html',
+  styleUrls: ['./entity-instance-modal-table.component.scss'],
 })
-export class EntityValueModalTableComponent implements OnChanges, OnDestroy {
+export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
   @Input()
   form: FormGroup;
 
@@ -51,7 +51,7 @@ export class EntityValueModalTableComponent implements OnChanges, OnDestroy {
 
   @ViewChildren(MatAutocompleteTrigger) autocompleteTriggers: QueryList<MatAutocompleteTrigger>;
 
-  protected readonly EntityValueUtil = EntityValueUtil;
+  protected readonly EntityInstanceUtil = EntityInstanceUtil;
   protected readonly formFieldHelper = FormFieldHelper;
   protected readonly dataType = DataType;
 
@@ -85,7 +85,7 @@ export class EntityValueModalTableComponent implements OnChanges, OnDestroy {
 
         this.filteredEntityValues$[propertyName] = of(this.getPropertyValues(element.property as DefaultProperty));
 
-        if (EntityValueUtil.isDefaultPropertyWithLangString(element)) {
+        if (EntityInstanceUtil.isDefaultPropertyWithLangString(element)) {
           this.filteredLanguageValues$[propertyName] = of(locale.all.filter(lang => lang.tag));
         }
       });
@@ -107,7 +107,7 @@ export class EntityValueModalTableComponent implements OnChanges, OnDestroy {
     const group = new UntypedFormGroup({value: valueControl});
     this.addGroupToPropertiesForm(prop.property.name, group);
 
-    if (EntityValueUtil.isDefaultPropertyWithLangString(prop)) {
+    if (EntityInstanceUtil.isDefaultPropertyWithLangString(prop)) {
       const languageControl = this.createFormControl(prop);
       this.subscribeToLangValueChanges(languageControl, prop);
       group.addControl('language', languageControl);
@@ -116,7 +116,7 @@ export class EntityValueModalTableComponent implements OnChanges, OnDestroy {
     return {
       key: prop as OverWrittenProperty,
       value: '',
-      language: EntityValueUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined,
+      language: EntityInstanceUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined,
       optional: prop.keys.optional,
     };
   }
@@ -145,19 +145,19 @@ export class EntityValueModalTableComponent implements OnChanges, OnDestroy {
   }
 
   private getPropertyValues(property: DefaultProperty): DefaultEntityInstance[] {
-    const existingEntityValues = EntityValueUtil.existingEntityValues(this.currentCachedFile, property);
-    const entityValues = EntityValueUtil.entityValues(this.form, property);
+    const existingEntityValues = EntityInstanceUtil.existingEntityValues(this.currentCachedFile, property);
+    const entityValues = EntityInstanceUtil.entityValues(this.form, property);
     return [...existingEntityValues, ...entityValues];
   }
 
   changeSelection(controlName: string, propertyValue: any): void {
-    EntityValueUtil.changeSelection(this.propertiesForm, controlName, propertyValue);
+    EntityInstanceUtil.changeSelection(this.propertiesForm, controlName, propertyValue);
     this.closeAllAutocompletePanels();
     this.changeDetector.detectChanges();
   }
 
   changeLanguageSelection(ev: EntityValueProperty, propertyValue: string, index: number): void {
-    EntityValueUtil.changeLanguageSelection(this.propertiesForm, ev, propertyValue, index);
+    EntityInstanceUtil.changeLanguageSelection(this.propertiesForm, ev, propertyValue, index);
     this.closeAllAutocompletePanels();
     this.changeDetector.detectChanges();
   }
@@ -169,7 +169,7 @@ export class EntityValueModalTableComponent implements OnChanges, OnDestroy {
   }
 
   createNewEntityValue(property: DefaultProperty, entityValue: string) {
-    EntityValueUtil.createNewEntityValue(this.form, property, entityValue);
+    EntityInstanceUtil.createNewEntityValue(this.form, property, entityValue);
     this.changeDetector.detectChanges();
   }
 

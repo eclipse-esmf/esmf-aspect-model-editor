@@ -14,18 +14,18 @@
 import {SelectionModel} from '@angular/cdk/collections';
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {filter} from 'rxjs/operators';
-import {EntityValueModalComponent} from '..';
+import {EntityInstanceModalComponent} from '..';
 import {DefaultEntityInstance, DefaultEnumeration, EntityValueProperty} from '@ame/meta-model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {DataType, FormFieldHelper} from '../../../../helpers/form-field.helper';
 
 @Component({
-  selector: 'ame-entity-value-view',
-  templateUrl: './entity-value-view.component.html',
-  styleUrls: ['./entity-value-view.component.scss'],
+  selector: 'ame-entity-instance-view',
+  templateUrl: './entity-instance-view.component.html',
+  styleUrls: ['./entity-instance-view.component.scss'],
 })
-export class EntityValueViewComponent implements OnInit, OnDestroy {
+export class EntityInstanceViewComponent implements OnInit, OnDestroy {
   private _complexValues: DefaultEntityInstance[];
   private _enumeration: DefaultEnumeration;
 
@@ -99,7 +99,7 @@ export class EntityValueViewComponent implements OnInit, OnDestroy {
       minWidth: '700px',
     };
     this.matDialog
-      .open(EntityValueModalComponent, config)
+      .open(EntityInstanceModalComponent, config)
       .afterClosed()
       .pipe(filter(entityValue => entityValue))
       .subscribe(entityValueConfig => {

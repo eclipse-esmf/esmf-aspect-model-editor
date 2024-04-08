@@ -32,7 +32,7 @@ import {
   EntityValueProperty,
   OverWrittenProperty,
 } from '@ame/meta-model';
-import {DataType, EditorDialogValidators, EntityValueUtil, FormFieldHelper} from '@ame/editor';
+import {DataType, EditorDialogValidators, EntityInstanceUtil, FormFieldHelper} from '@ame/editor';
 import {InputFieldComponent} from '../../fields';
 import {map, Observable, of, startWith, Subscription} from 'rxjs';
 import * as locale from 'locale-codes';
@@ -40,14 +40,14 @@ import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
-  selector: 'ame-entity-value-table',
-  templateUrl: './entity-value-table.component.html',
-  styleUrls: ['./entity-value-table.component.scss'],
+  selector: 'ame-entity-instance-table',
+  templateUrl: './entity-instance-table.component.html',
+  styleUrls: ['./entity-instance-table.component.scss'],
 })
-export class EntityValueTableComponent extends InputFieldComponent<DefaultEntityInstance> implements OnInit, OnChanges, OnDestroy {
+export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEntityInstance> implements OnInit, OnChanges, OnDestroy {
   @ViewChildren(MatAutocompleteTrigger) autocompleteTriggers: QueryList<MatAutocompleteTrigger>;
 
-  protected readonly EntityValueUtil = EntityValueUtil;
+  protected readonly EntityValueUtil = EntityInstanceUtil;
   protected readonly formFieldHelper = FormFieldHelper;
   protected readonly dataType = DataType;
 
@@ -106,14 +106,14 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
     const propertyControl = this.propertiesForm.get(property.name);
 
     if (!propertyControl) {
-      const propertiesFormArray = EntityValueUtil.getDisplayControl(this.propertiesForm, property.name);
+      const propertiesFormArray = EntityInstanceUtil.getDisplayControl(this.propertiesForm, property.name);
       const valueControl = this.createFormControl(prop);
       this.subscribeToEntityValueChanges(valueControl, prop.property as DefaultProperty);
 
       const group = new UntypedFormGroup({value: valueControl});
       propertiesFormArray.push(group);
 
-      if (EntityValueUtil.isDefaultPropertyWithLangString(prop)) {
+      if (EntityInstanceUtil.isDefaultPropertyWithLangString(prop)) {
         const languageControl = this.createFormControl(prop);
         this.subscribeToLangValueChanges(languageControl, property);
         group.addControl('language', languageControl);
@@ -123,7 +123,7 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
     return {
       key: prop as OverWrittenProperty,
       value: '',
-      language: EntityValueUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined,
+      language: EntityInstanceUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined,
       optional: prop.keys.optional,
     };
   }
@@ -206,19 +206,19 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
   }
 
   private getPropertyValues(property: DefaultProperty): DefaultEntityInstance[] {
-    const existingEntityValues = EntityValueUtil.existingEntityValues(this.currentCachedFile, property);
-    const entityValues = EntityValueUtil.entityValues(this.parentForm, property);
+    const existingEntityValues = EntityInstanceUtil.existingEntityValues(this.currentCachedFile, property);
+    const entityValues = EntityInstanceUtil.entityValues(this.parentForm, property);
     return [...existingEntityValues, ...entityValues];
   }
 
   changeSelection(controlName: string, propertyValue: any): void {
-    EntityValueUtil.changeSelection(this.entityValuePropertiesForm, controlName, propertyValue);
+    EntityInstanceUtil.changeSelection(this.entityValuePropertiesForm, controlName, propertyValue);
     this.closeAllAutocompletePanels();
     this.changeDetector.detectChanges();
   }
 
   changeLanguageSelection(ev: EntityValueProperty, propertyValue: string, index: number): void {
-    EntityValueUtil.changeLanguageSelection(this.propertiesForm, ev, propertyValue, index);
+    EntityInstanceUtil.changeLanguageSelection(this.propertiesForm, ev, propertyValue, index);
     this.closeAllAutocompletePanels();
     this.changeDetector.detectChanges();
   }
@@ -230,7 +230,7 @@ export class EntityValueTableComponent extends InputFieldComponent<DefaultEntity
   }
 
   createNewEntityValue(property: DefaultProperty, entityValue: string) {
-    EntityValueUtil.createNewEntityValue(this.parentForm, property, entityValue);
+    EntityInstanceUtil.createNewEntityValue(this.parentForm, property, entityValue);
     this.changeDetector.detectChanges();
   }
 

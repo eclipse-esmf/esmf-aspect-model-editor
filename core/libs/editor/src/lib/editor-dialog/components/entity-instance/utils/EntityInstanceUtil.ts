@@ -24,11 +24,10 @@ import {
   Property,
 } from '@ame/meta-model';
 import {CachedFile} from '@ame/cache';
-import {Observable} from 'rxjs';
 import {extractNamespace} from '@ame/utils';
 import {isDataTypeLangString} from '@ame/shared';
 
-export class EntityValueUtil {
+export class EntityInstanceUtil {
   /**
    * Ensures a FormArray exists for a given control name within a FormGroup. If the control does not exist or is not a FormArray,
    * a new FormArray is created and assigned to the control name. This method is useful for dynamically adding controls to a form.
@@ -205,7 +204,7 @@ export class EntityValueUtil {
       } else {
         propertyForm.patchValue(newEntityValue);
       }
-      EntityValueUtil.getDisplayControl(formGroup as FormGroup, property.name).disable();
+      EntityInstanceUtil.getDisplayControl(formGroup as FormGroup, property.name).disable();
     }
   }
 

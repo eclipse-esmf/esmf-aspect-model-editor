@@ -15,10 +15,10 @@ import {FormGroup} from '@angular/forms';
 import {EditorModelService} from '../../editor-model.service';
 
 @Component({
-  selector: 'ame-entity-value',
-  templateUrl: './entity-value.component.html',
+  selector: 'ame-entity-instance',
+  templateUrl: './entity-instance.component.html',
 })
-export class EntityValueComponent {
+export class EntityInstanceComponent {
   @Input() parentForm: FormGroup;
 
   public metaModelDialogService = inject(EditorModelService);

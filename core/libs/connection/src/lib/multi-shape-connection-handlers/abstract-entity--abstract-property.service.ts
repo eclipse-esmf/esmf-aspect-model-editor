@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EntityValueService} from '@ame/editor';
+import {EntityInstanceService} from '@ame/editor';
 import {FiltersService} from '@ame/loader-filters';
 import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultEntity, DefaultProperty} from '@ame/meta-model';
 import {MxGraphService, MxGraphHelper} from '@ame/mx-graph';
@@ -29,7 +29,7 @@ export class AbstractEntityAbstractPropertyConnectionHandler
 {
   constructor(
     private mxGraphService: MxGraphService,
-    private entityValueService: EntityValueService,
+    private entityInstanceService: EntityInstanceService,
     private propertyAbstractPropertyConnector: PropertyAbstractPropertyConnectionHandler,
     private entityPropertyConnector: EntityPropertyConnectionHandler,
     private filtersService: FiltersService,
@@ -45,7 +45,7 @@ export class AbstractEntityAbstractPropertyConnectionHandler
       const overWrittenProperty = {property: childMetaModel, keys: {}};
       parentMetaModel.properties.push(overWrittenProperty as any);
       parentMetaModel.children.push(childMetaModel);
-      this.entityValueService.onNewProperty(overWrittenProperty as any, parentMetaModel);
+      this.entityInstanceService.onNewProperty(overWrittenProperty as any, parentMetaModel);
     }
 
     const grandParents = this.mxGraphService.graph

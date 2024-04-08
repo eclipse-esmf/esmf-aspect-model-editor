@@ -21,7 +21,7 @@ import {MxGraphHelper} from '@ame/mx-graph';
 @Injectable({
   providedIn: 'root',
 })
-export class EntityValueService {
+export class EntityInstanceService {
   get currentCachedFile() {
     return this.namespacesCacheService.currentCachedFile;
   }

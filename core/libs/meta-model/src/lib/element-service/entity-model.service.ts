@@ -14,7 +14,7 @@
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
-import {EntityValueService} from '@ame/editor';
+import {EntityInstanceService} from '@ame/editor';
 import {
   EntityRenderService,
   MxGraphAttributeService,
@@ -31,7 +31,7 @@ import {BaseEntityModelService} from './base-entity-model.service';
 export class EntityModelService extends BaseModelService {
   constructor(
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private entityValueService: EntityValueService,
+    private entityInstanceService: EntityInstanceService,
     private mxGraphService: MxGraphService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private entityRenderer: EntityRenderService,
@@ -86,7 +86,7 @@ export class EntityModelService extends BaseModelService {
     this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
     this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, modelElement);
 
-    this.entityValueService.onEntityRemove(modelElement, () => {
+    this.entityInstanceService.onEntityRemove(modelElement, () => {
       if (!cell?.edges) {
         this.mxGraphService.removeCells([cell]);
         return;

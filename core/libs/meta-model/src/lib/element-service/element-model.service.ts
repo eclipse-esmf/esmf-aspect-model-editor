@@ -23,7 +23,7 @@ import {
   DefaultEnumeration,
   DefaultProperty,
 } from '@ame/meta-model';
-import {EntityValueService, RenameModelDialogService} from '@ame/editor';
+import {EntityInstanceService, RenameModelDialogService} from '@ame/editor';
 import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultAspect, DefaultStructuredValue} from '../aspect-meta-model';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {ModelRootService} from './model-root.service';
@@ -39,7 +39,7 @@ export class ElementModelService {
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphService: MxGraphService,
     private namespacesCacheService: NamespacesCacheService,
-    private entityValueService: EntityValueService,
+    private entityInstanceService: EntityInstanceService,
     private sammLangService: SammLanguageSettingsService,
     private modelRootService: ModelRootService,
     private modelService: ModelService,
@@ -256,7 +256,7 @@ export class ElementModelService {
         this.mxGraphService.removeCells([edge.target]);
       }
 
-      this.entityValueService.onPropertyRemove(target, () => {
+      this.entityInstanceService.onPropertyRemove(target, () => {
         this.removeConnectionBetweenElements(edge, source, target);
         this.mxGraphService.removeCells([edge]);
       });
@@ -269,7 +269,7 @@ export class ElementModelService {
 
   private handleEnumerationEntityDecoupling(edge: mxgraph.mxCell, source: BaseMetaModelElement, target: BaseMetaModelElement) {
     if (source instanceof DefaultEnumeration && target instanceof DefaultEntity) {
-      return this.entityValueService.onEntityDisconnect(source, target, () => {
+      return this.entityInstanceService.onEntityDisconnect(source, target, () => {
         const obsoleteEntityValues = MxGraphCharacteristicHelper.findObsoleteEntityValues(edge);
         this.removeConnectionBetweenElements(edge, source, target);
         this.mxGraphService.updateEntityValuesWithCellReference(obsoleteEntityValues);
