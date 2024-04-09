@@ -19,7 +19,7 @@ import {
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
@@ -75,7 +75,7 @@ export class ModelStyleResolver {
       return ModelStyle.ENTITY;
     } else if (metaModelElement instanceof DefaultUnit) {
       return ModelStyle.UNIT;
-    } else if (metaModelElement instanceof DefaultEntityValue) {
+    } else if (metaModelElement instanceof DefaultEntityInstance) {
       return ModelStyle.ENTITY_VALUE;
     } else if (metaModelElement instanceof DefaultEvent) {
       return ModelStyle.EVENT;

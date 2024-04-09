@@ -16,7 +16,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {
   BaseMetaModelElement,
   DefaultAbstractProperty,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultProperty,
   Entity,
   EntityValueProperty,
@@ -32,11 +32,11 @@ export class EntityValueModelService extends BaseModelService {
   }
 
   isApplicable(metaModelElement: BaseMetaModelElement): boolean {
-    return metaModelElement instanceof DefaultEntityValue;
+    return metaModelElement instanceof DefaultEntityInstance;
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}): void {
-    const modelElement = MxGraphHelper.getModelElement<DefaultEntityValue>(cell);
+    const modelElement = MxGraphHelper.getModelElement<DefaultEntityInstance>(cell);
     // update name
     const aspectModelUrn = this.modelService.currentRdfModel.getAspectModelUrn();
     this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
@@ -61,7 +61,7 @@ export class EntityValueModelService extends BaseModelService {
     this.entityValueRenderService.delete(cell);
   }
 
-  private updatePropertiesEntityValues(metaModelElement: DefaultEntityValue, form: {[key: string]: any}): void {
+  private updatePropertiesEntityValues(metaModelElement: DefaultEntityInstance, form: {[key: string]: any}): void {
     const {entityValueProperties} = form;
     metaModelElement.properties = [];
 
@@ -94,9 +94,9 @@ export class EntityValueModelService extends BaseModelService {
     return null;
   }
 
-  private removeObsoleteEntityValues(metaModelElement: DefaultEntityValue): void {
+  private removeObsoleteEntityValues(metaModelElement: DefaultEntityInstance): void {
     metaModelElement.properties.forEach((property: EntityValueProperty) => {
-      if (property.value instanceof DefaultEntityValue && !property.value.parents?.length) {
+      if (property.value instanceof DefaultEntityInstance && !property.value.parents?.length) {
         this.deleteEntityValue(property.value, metaModelElement);
       }
     });

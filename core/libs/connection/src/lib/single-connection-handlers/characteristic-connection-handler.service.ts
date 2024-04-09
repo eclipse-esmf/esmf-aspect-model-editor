@@ -18,7 +18,7 @@ import {
   ModelElementNamingService,
   DefaultEnumeration,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultProperty,
   DefaultTrait,
   DefaultCollection,
@@ -185,8 +185,8 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
    * @param source mxgraph shape from which the plus button was clicked
    * @returns a cell and model element for newly created Entity Value
    */
-  private createEntityValue(characteristic: DefaultEnumeration, source: mxgraph.mxCell): [mxgraph.mxCell, DefaultEntityValue] {
-    const entityValue = DefaultEntityValue.createInstance();
+  private createEntityValue(characteristic: DefaultEnumeration, source: mxgraph.mxCell): [mxgraph.mxCell, DefaultEntityInstance] {
+    const entityValue = DefaultEntityInstance.createInstance();
     const characteristicDataType = characteristic.dataType as DefaultEntity;
 
     entityValue.entity = characteristicDataType;

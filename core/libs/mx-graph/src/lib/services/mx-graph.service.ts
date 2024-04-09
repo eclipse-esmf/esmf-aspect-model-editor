@@ -21,7 +21,7 @@ import {environment} from 'environments/environment';
 import {MxGraphGeometryProviderService, MxGraphSetupService} from '.';
 import {MxGraphCharacteristicHelper, MxGraphHelper} from '../helpers';
 import {mxCell, mxConstants, mxUtils} from '../providers';
-import {BaseMetaModelElement, DefaultCharacteristic, DefaultEntityValue} from '@ame/meta-model';
+import {BaseMetaModelElement, DefaultCharacteristic, DefaultEntityInstance} from '@ame/meta-model';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {overlayGeometry, NotificationsService} from '@ame/shared';
 import {NamespacesCacheService} from '@ame/cache';
@@ -194,7 +194,7 @@ export class MxGraphService {
    *
    * @param selectedModelElement - EntityValue meta model which will be deleted
    */
-  public updateEnumerationsWithEntityValue(selectedModelElement: DefaultEntityValue): void {
+  public updateEnumerationsWithEntityValue(selectedModelElement: DefaultEntityInstance): void {
     if (selectedModelElement.isExternalReference()) {
       return;
     }
@@ -527,7 +527,7 @@ export class MxGraphService {
    *
    * @param deletedEntityValue - EntityValueProperty.value that needs to be cleared.
    */
-  public updateEntityValuesWithReference(deletedEntityValue: DefaultEntityValue): void {
+  public updateEntityValuesWithReference(deletedEntityValue: DefaultEntityInstance): void {
     if (deletedEntityValue.isExternalReference()) {
       return;
     }
@@ -535,7 +535,7 @@ export class MxGraphService {
     this.currentCachedFile.getCachedEntityValues().forEach(entityValue =>
       entityValue.properties.forEach(entityValueToUpdate => {
         if (
-          entityValueToUpdate.value instanceof DefaultEntityValue &&
+          entityValueToUpdate.value instanceof DefaultEntityInstance &&
           entityValueToUpdate.value.aspectModelUrn === deletedEntityValue.aspectModelUrn
         )
           entityValueToUpdate.value = '';
@@ -551,7 +551,7 @@ export class MxGraphService {
   public updateEntityValuesWithCellReference(deletedEntityValueCells: Array<mxgraph.mxCell>): void {
     deletedEntityValueCells
       .filter(entityValueCell => entityValueCell.isVertex())
-      .forEach(entityValueCell => this.updateEntityValuesWithReference(MxGraphHelper.getModelElement<DefaultEntityValue>(entityValueCell)));
+      .forEach(entityValueCell => this.updateEntityValuesWithReference(MxGraphHelper.getModelElement<DefaultEntityInstance>(entityValueCell)));
   }
 
   private applyDelta(cell: mxgraph.mxCell, deltaX: number, deltaY: number, formattedCells: mxgraph.mxCell[]) {

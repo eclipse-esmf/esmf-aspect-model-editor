@@ -11,4 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './entity-value/entity-value.pipe';
+export * from './entity-instance/entity-instance.pipe';

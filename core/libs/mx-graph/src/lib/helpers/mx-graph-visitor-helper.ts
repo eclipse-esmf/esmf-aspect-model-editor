@@ -26,7 +26,7 @@ import {
   DefaultEither,
   DefaultEncodingConstraint,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultEvent,
   DefaultFixedPointConstraint,
@@ -79,7 +79,7 @@ export class MxGraphVisitorHelper {
     if (
       characteristic instanceof DefaultEnumeration &&
       characteristic.values?.length &&
-      !characteristic.values.every(value => value instanceof DefaultEntityValue)
+      !characteristic.values.every(value => value instanceof DefaultEntityInstance)
     ) {
       return {
         label: `values = ${RdfModelUtil.getValuesWithoutUrnDefinition(characteristic.values)}`,

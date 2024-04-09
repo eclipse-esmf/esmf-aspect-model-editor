@@ -63,8 +63,8 @@
                 data-cy="propertyValueComplex"
               />
               <button
-                *ngIf="EntityValueUtil.getDisplayControl(propertiesForm, source.key.property.name).disabled"
-                (click)="EntityValueUtil.unlockValue(propertiesForm, source.key.property.name, 0, 'value')"
+                *ngIf="EntityInstanceUtil.getDisplayControl(propertiesForm, source.key.property.name).disabled"
+                (click)="EntityInstanceUtil.unlockValue(propertiesForm, source.key.property.name, 0, 'value')"
                 data-cy="clear-entityValue-button"
                 matSuffix
                 mat-icon-button
@@ -80,7 +80,7 @@
                 >
                   <mat-option
                     *ngIf="
-                      EntityValueUtil.showCreateNewEntityOption(
+                      EntityInstanceUtil.showCreateNewEntityOption(
                         entityValueInput.value,
                         filteredEntityValues,
                         currentCachedFile,
@@ -119,8 +119,8 @@
                 <mat-label>{{ 'ENTITY_VALUE.LANGUAGE' | translate }}</mat-label>
                 <input matInput formControlName="language" [matAutocomplete]="auto" data-cy="propertyLanguageValue" />
                 <button
-                  *ngIf="EntityValueUtil.getDisplayControl(propertiesForm, source.key.property.name).at(i)?.get('language')?.disabled"
-                  (click)="EntityValueUtil.unlockValue(propertiesForm, source.key.property.name, i, 'language')"
+                  *ngIf="EntityInstanceUtil.getDisplayControl(propertiesForm, source.key.property.name).at(i)?.get('language')?.disabled"
+                  (click)="EntityInstanceUtil.unlockValue(propertiesForm, source.key.property.name, i, 'language')"
                   data-cy="clear-language-button"
                   matSuffix
                   mat-icon-button

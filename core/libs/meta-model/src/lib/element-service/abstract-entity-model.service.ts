@@ -14,7 +14,7 @@
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
-import {EntityValueService} from '@ame/editor';
+import {EntityInstanceService} from '@ame/editor';
 import {
   AbstractEntityRenderService,
   MxGraphAttributeService,
@@ -28,7 +28,7 @@ import {
   BaseMetaModelElement,
   DefaultAbstractEntity,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
   OverWrittenPropertyKeys,
@@ -40,7 +40,7 @@ import {BaseEntityModelService} from './base-entity-model.service';
 export class AbstractEntityModelService extends BaseModelService {
   constructor(
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private entityValueService: EntityValueService,
+    private entityInstanceService: EntityInstanceService,
     private mxGraphService: MxGraphService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private abstractEntityRenderer: AbstractEntityRenderService,
@@ -67,8 +67,8 @@ export class AbstractEntityModelService extends BaseModelService {
 
       this.namespacesCacheService.currentCachedFile
         .getCachedEntityValues()
-        ?.filter((entityValue: DefaultEntityValue) => entityValue.entity === metaModelElement)
-        ?.forEach((entityValue: DefaultEntityValue) => {
+        ?.filter((entityValue: DefaultEntityInstance) => entityValue.entity === metaModelElement)
+        ?.forEach((entityValue: DefaultEntityInstance) => {
           for (const entityValueProperty of entityValue.properties) {
             const property = metaModelElement.properties.find(prop => prop.property.name === entityValueProperty.key.property.name);
             entityValueProperty.key.keys.optional = property.keys.optional;
@@ -117,7 +117,7 @@ export class AbstractEntityModelService extends BaseModelService {
 
     this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
     this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, modelElement);
-    this.entityValueService.onEntityRemove(modelElement, () => {
+    this.entityInstanceService.onEntityRemove(modelElement, () => {
       if (!cell?.edges) {
         this.mxGraphService.removeCells([cell]);
         return;
@@ -137,7 +137,7 @@ export class AbstractEntityModelService extends BaseModelService {
           this.mxGraphShapeOverlayService.addBottomShapeOverlay(edge.source);
         }
 
-        if (modelElement instanceof DefaultEntityValue && edge.source.style.includes('entityValue')) {
+        if (modelElement instanceof DefaultEntityInstance && edge.source.style.includes('entityValue')) {
           entityValuesToDelete.push(edge.source);
         }
       }

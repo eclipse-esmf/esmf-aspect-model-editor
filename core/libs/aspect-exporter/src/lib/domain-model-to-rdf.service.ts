@@ -21,7 +21,7 @@ import {
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
@@ -139,7 +139,7 @@ export class DomainModelToRdfService {
       return this.entityVisitorService;
     } else if (metaModelElement instanceof DefaultAbstractEntity) {
       return this.abstractEntityVisitorService;
-    } else if (metaModelElement instanceof DefaultEntityValue) {
+    } else if (metaModelElement instanceof DefaultEntityInstance) {
       return this.entityValueVisitor;
     } else if (metaModelElement instanceof DefaultEvent) {
       return this.eventVisitorService;

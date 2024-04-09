@@ -20,7 +20,7 @@ import {
   DefaultAspect,
   DefaultCharacteristic,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultProperty,
   DefaultUnit,
@@ -138,9 +138,9 @@ export class CachedFile {
     return properties;
   }
 
-  getCachedEntityValues(): Array<DefaultEntityValue> {
+  getCachedEntityValues(): Array<DefaultEntityInstance> {
     return Array.from(this.cachedElements.values()).reduce(
-      (acc: DefaultEntityValue[], item: any) => (item instanceof DefaultEntityValue ? [...acc, item] : acc),
+      (acc: DefaultEntityInstance[], item: any) => (item instanceof DefaultEntityInstance ? [...acc, item] : acc),
       [],
     );
   }

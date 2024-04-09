@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EntityValuePipe} from '@ame/editor';
+import {EntityInstancePipe} from '@ame/editor';
 
-describe('EntityValuePipe', () => {
+describe('EntityInstancePipe', () => {
   it('create an instance', () => {
-    const pipe = new EntityValuePipe();
+    const pipe = new EntityInstancePipe();
     expect(pipe).toBeTruthy();
   });
 });

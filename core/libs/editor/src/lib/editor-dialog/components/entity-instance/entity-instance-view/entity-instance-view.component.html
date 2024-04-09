@@ -11,17 +11,17 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<ame-entity-value-search-bar
-  [count]="(complexValues | entityValue: searchFilter)?.length"
+<ame-entity-instance-search-bar
+  [count]="(complexValues | entityInstance: searchFilter)?.length"
   [disableAddNewEntityValue]="enumeration?.isExternalReference()"
   (add)="onNew()"
   (newSearch)="searchFilter = $event"
-></ame-entity-value-search-bar>
+></ame-entity-instance-search-bar>
 
 <mat-expansion-panel
   class="complex-value-items"
   expanded="true"
-  *ngFor="let complexValue of complexValues | entityValue: searchFilter; trackBy: trackValue"
+  *ngFor="let complexValue of complexValues | entityInstance: searchFilter; trackBy: trackValue"
   [attr.data-cy]="complexValue.name"
 >
   <mat-expansion-panel-header class="complex-value-header">
@@ -92,4 +92,4 @@
 </mat-expansion-panel>
 
 <div class="text--center" *ngIf="complexValues?.length === 0">No entity values</div>
-<div class="text--center" *ngIf="(complexValues | entityValue: searchFilter)?.length === 0">Entity values are filtered out.</div>
+<div class="text--center" *ngIf="(complexValues | entityInstance: searchFilter)?.length === 0">Entity values are filtered out.</div>

@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {DefaultCollection, DefaultEntityValue, EntityValueProperty} from '@ame/meta-model';
+import {DefaultCollection, DefaultEntityInstance, EntityValueProperty} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {DataFactory, Literal, NamedNode} from 'n3';
 import {BaseVisitor} from '../base-visitor';
@@ -21,7 +21,7 @@ import {RdfListService} from '../../rdf-list';
 import {Samm} from '@ame/vocabulary';
 
 @Injectable()
-export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
+export class EntityValueVisitor extends BaseVisitor<DefaultEntityInstance> {
   constructor(
     private rdfListService: RdfListService,
     public modelService: ModelService,
@@ -30,18 +30,18 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
     super(rdfService);
   }
 
-  visit(entityValue: DefaultEntityValue): DefaultEntityValue {
+  visit(entityValue: DefaultEntityInstance): DefaultEntityInstance {
     return this.visitModel(entityValue);
   }
 
-  visitModel(entityValue: DefaultEntityValue): DefaultEntityValue {
+  visitModel(entityValue: DefaultEntityInstance): DefaultEntityInstance {
     this.setPrefix(entityValue.aspectModelUrn);
     this.updateProperties(entityValue);
     this.updateBaseProperties(entityValue);
     return entityValue;
   }
 
-  private updateProperties(entityValue: DefaultEntityValue): void {
+  private updateProperties(entityValue: DefaultEntityInstance): void {
     const {aspectModelUrn} = entityValue;
     const rdfModel = this.modelService.currentRdfModel;
 
@@ -90,7 +90,7 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
   }
 
   private createObjectForRDF({key, value, language}: EntityValueProperty): NamedNode | Literal {
-    if (value instanceof DefaultEntityValue) {
+    if (value instanceof DefaultEntityInstance) {
       return DataFactory.namedNode(value.aspectModelUrn);
     }
 
@@ -103,12 +103,12 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityValue> {
   }
 
   private handleExternalReference(value: any, aspectModelUrn: string): void {
-    if (value instanceof DefaultEntityValue && value.isExternalReference()) {
+    if (value instanceof DefaultEntityInstance && value.isExternalReference()) {
       this.setPrefix(aspectModelUrn);
     }
   }
 
-  private updateBaseProperties(entityValue: DefaultEntityValue): void {
+  private updateBaseProperties(entityValue: DefaultEntityInstance): void {
     const rdfModel = this.modelService.currentRdfModel;
     rdfModel.store.addQuad(
       DataFactory.namedNode(entityValue.aspectModelUrn),

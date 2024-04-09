@@ -15,7 +15,7 @@ import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {
   DefaultAbstractProperty,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultProperty,
   DefaultTrait,
   Entity,
@@ -26,7 +26,7 @@ import {CachedFile} from '@ame/cache';
 import {extractNamespace} from '@ame/utils';
 import {isDataTypeLangString} from '@ame/shared';
 
-export class EntityValueUtil {
+export class EntityInstanceUtil {
   /**
    * Ensures a FormArray exists for a given control name within a FormGroup. If the control does not exist or is not a FormArray,
    * a new FormArray is created and assigned to the control name. This method is useful for dynamically adding controls to a form.
@@ -65,7 +65,7 @@ export class EntityValueUtil {
     return form.get('newEntityValues')?.value?.filter(val => this.entityValueFilter(val, property)) || [];
   };
 
-  private static entityValueFilter = (entityValue: DefaultEntityValue, property?: DefaultProperty) => {
+  private static entityValueFilter = (entityValue: DefaultEntityInstance, property?: DefaultProperty) => {
     const characteristic =
       property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property?.characteristic;
 
@@ -83,10 +83,10 @@ export class EntityValueUtil {
    */
   static showCreateNewEntityOption(
     entityValueName: string,
-    entityValues: DefaultEntityValue[],
+    entityValues: DefaultEntityInstance[],
     currentCachedFile: CachedFile,
     form: FormGroup,
-    entity: Entity | DefaultEntityValue,
+    entity: Entity | DefaultEntityInstance,
   ): boolean {
     if (!this.isEntityNameValid(entityValueName, form, entityValues)) {
       return false;
@@ -97,7 +97,7 @@ export class EntityValueUtil {
     return this.isEntityValueAvailable(entityValueName, namespace, currentCachedFile, form);
   }
 
-  private static isEntityNameValid(entityValueName: string, form: FormGroup, entityValues: DefaultEntityValue[]): boolean {
+  private static isEntityNameValid(entityValueName: string, form: FormGroup, entityValues: DefaultEntityInstance[]): boolean {
     return (
       entityValueName &&
       entityValueName !== form.get('name')?.value &&
@@ -130,7 +130,7 @@ export class EntityValueUtil {
    * @param {DefaultEntityValue} ev - The new value to be set for the specified control. This parameter
    *  represents the updated entity value that should be reflected in the UI.
    */
-  static changeSelection(propertiesForm: FormGroup, controlName: string, ev: DefaultEntityValue): void {
+  static changeSelection(propertiesForm: FormGroup, controlName: string, ev: DefaultEntityInstance): void {
     (propertiesForm.get(controlName) as FormArray).at(0).get('value').setValue(ev);
     propertiesForm.get(controlName).disable();
   }
@@ -177,7 +177,7 @@ export class EntityValueUtil {
     const characteristic =
       property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
     const urn = `${property.aspectModelUrn.split('#')?.[0]}#${entityValueName}`;
-    const newEntityValue = new DefaultEntityValue(
+    const newEntityValue = new DefaultEntityInstance(
       property.metaModelVersion,
       entityValueName,
       urn,
@@ -203,7 +203,7 @@ export class EntityValueUtil {
       } else {
         propertyForm.patchValue(newEntityValue);
       }
-      EntityValueUtil.getDisplayControl(formGroup as FormGroup, property.name).disable();
+      EntityInstanceUtil.getDisplayControl(formGroup as FormGroup, property.name).disable();
     }
   }
 

@@ -13,7 +13,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {DefaultEntityValue, DefaultState, EntityValue} from '@ame/meta-model';
+import {DefaultEntityInstance, DefaultState, EntityValue} from '@ame/meta-model';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -53,7 +53,7 @@ export class DefaultValueEntityInputFieldComponent extends InputFieldComponent<D
     this.formSubscription.add(
       defaultValueControl.valueChanges.subscribe(value => {
         const entityValues = this.parentForm?.get('chipList')?.value;
-        this.entityValues = entityValues?.filter(({name}: DefaultEntityValue) => name.includes(value));
+        this.entityValues = entityValues?.filter(({name}: DefaultEntityInstance) => name.includes(value));
       }),
     );
   }

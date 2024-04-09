@@ -18,7 +18,7 @@ import {
   Constraint,
   DefaultAspect,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultOperation,
   DefaultScalar,
   Entity,
@@ -321,7 +321,7 @@ export class MetaModelElementInstantiator {
       return callback(new EntityValueInstantiator(this).createEntityValue(entityValueQuads, quad.object));
     }
 
-    const extReference = this.namespaceCacheService.findElementOnExtReference<DefaultEntityValue>(quad.object.value);
+    const extReference = this.namespaceCacheService.findElementOnExtReference<DefaultEntityInstance>(quad.object.value);
     if (extReference) {
       extReference.setExternalReference(true);
       if (typeof callback === 'function') {

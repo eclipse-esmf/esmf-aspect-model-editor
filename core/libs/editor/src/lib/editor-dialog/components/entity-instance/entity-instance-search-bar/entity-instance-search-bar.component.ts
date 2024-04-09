@@ -14,11 +14,11 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-  selector: 'ame-entity-value-search-bar',
-  templateUrl: './entity-value-search-bar.component.html',
-  styleUrls: ['./entity-value-search-bar.component.scss'],
+  selector: 'ame-entity-instance-search-bar',
+  templateUrl: './entity-instance-search-bar.component.html',
+  styleUrls: ['./entity-instance-search-bar.component.scss'],
 })
-export class EntityValueSearchBarComponent {
+export class EntityInstanceSearchBarComponent {
   @Input() count: number;
   @Input() disableAddNewEntityValue = false;
   @Output() newSearch = new EventEmitter<string>();

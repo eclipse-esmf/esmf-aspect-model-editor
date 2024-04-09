@@ -19,44 +19,44 @@ import {EditorDialogValidators} from '../../../validators';
 import {
   DefaultAbstractProperty,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
   OverWrittenProperty,
 } from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
-import {EntityValueUtil} from '../utils/EntityValueUtil';
+import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
 
-export interface NewEntityValueDialogOptions {
-  metaModel: DefaultEnumeration | DefaultEntityValue;
+export interface NewEntityInstanceDialogOptions {
+  metaModel: DefaultEnumeration | DefaultEntityInstance;
   dataType: DefaultEntity;
   complexValues: DefaultEntity[];
 }
 
 @Component({
-  templateUrl: './entity-value-modal.component.html',
-  styleUrls: ['./entity-value-modal.component.scss'],
+  templateUrl: './entity-instance-modal.component.html',
+  styleUrls: ['./entity-instance-modal.component.scss'],
 })
-export class EntityValueModalComponent {
+export class EntityInstanceModalComponent {
   public title: string;
 
   public form: FormGroup;
   public entityValueName: FormControl;
 
   public entity: DefaultEntity;
-  public entityValue: DefaultEntityValue;
+  public entityValue: DefaultEntityInstance;
   public enumeration: DefaultEnumeration;
   public complexValues: DefaultEntity[] = []; // already existing complex values
 
-  readonly addTitle = 'Add new entity value';
+  readonly addTitle = 'Add new entity instance';
 
   get propertiesForm(): FormGroup {
     return this.form?.get('properties') as FormGroup;
   }
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: NewEntityValueDialogOptions,
-    private dialogRef: MatDialogRef<EntityValueModalComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: NewEntityInstanceDialogOptions,
+    private dialogRef: MatDialogRef<EntityInstanceModalComponent>,
     private editorModelService: EditorModelService,
     private namespacesCacheService: NamespacesCacheService,
   ) {
@@ -111,8 +111,8 @@ export class EntityValueModalComponent {
     return `${nameSpace}${name}`;
   }
 
-  private createNewEntityValue(): DefaultEntityValue {
-    const entityValue = DefaultEntityValue.createInstance();
+  private createNewEntityValue(): DefaultEntityInstance {
+    const entityValue = DefaultEntityInstance.createInstance();
 
     entityValue.name = this.entityValueName.value;
     entityValue.aspectModelUrn = this.getAspectModelUrnFromName(this.entityValueName.value);
@@ -124,7 +124,7 @@ export class EntityValueModalComponent {
     this.entity.allProperties.forEach(propertyElement => {
       const propertyArray = propertiesForm.get(propertyElement.property.name) as FormArray;
 
-      if (EntityValueUtil.isDefaultPropertyWithLangString(propertyElement)) {
+      if (EntityInstanceUtil.isDefaultPropertyWithLangString(propertyElement)) {
         propertyArray.controls.forEach(control => {
           const value = control.get('value').value;
           const language = control.get('language').value;

@@ -12,7 +12,7 @@
  */
 
 import {FiltersService} from '@ame/loader-filters';
-import {DefaultEntityValue, DefaultEnumeration} from '@ame/meta-model';
+import {DefaultEntityInstance, DefaultEnumeration} from '@ame/meta-model';
 import {MxGraphService, MxGraphHelper, EdgeStyles} from '@ame/mx-graph';
 import {Injectable} from '@angular/core';
 import {SingleShapeConnector} from '../models';
@@ -21,13 +21,13 @@ import {mxgraph} from 'mxgraph-factory';
 @Injectable({
   providedIn: 'root',
 })
-export class EntityValueConnectionHandler implements SingleShapeConnector<DefaultEntityValue> {
+export class EntityValueConnectionHandler implements SingleShapeConnector<DefaultEntityInstance> {
   constructor(
     private mxGraphService: MxGraphService,
     private filtersService: FiltersService,
   ) {}
 
-  public connect(entityValue: DefaultEntityValue, source: mxgraph.mxCell) {
+  public connect(entityValue: DefaultEntityInstance, source: mxgraph.mxCell) {
     const child = this.mxGraphService.renderModelElement(
       this.filtersService.createNode(entityValue, {parent: MxGraphHelper.getModelElement(source)}),
     );

@@ -12,13 +12,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DefaultEntityValue} from '@ame/meta-model';
+import {DefaultEntityInstance} from '@ame/meta-model';
 
 @Pipe({
-  name: 'entityValue',
+  name: 'entityInstance',
 })
-export class EntityValuePipe implements PipeTransform {
-  transform(value: DefaultEntityValue[], search: string): DefaultEntityValue[] {
+export class EntityInstancePipe implements PipeTransform {
+  transform(value: DefaultEntityInstance[], search: string): DefaultEntityInstance[] {
     if (!value || value.length === 0) {
       return null;
     }

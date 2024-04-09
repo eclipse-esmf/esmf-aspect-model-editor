@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {NamedNode, Quad, Util} from 'n3';
-import {Characteristic, DefaultEntityValue, DefaultEnumeration} from '@ame/meta-model';
+import {Characteristic, DefaultEntityInstance, DefaultEnumeration} from '@ame/meta-model';
 import {CharacteristicInstantiator} from './characteristic-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {RdfModel} from '@ame/rdf/utils';
@@ -39,22 +39,22 @@ export class EnumerationCharacteristicInstantiator extends CharacteristicInstant
       }
     }
 
-    if (enumeration.values[0] instanceof DefaultEntityValue) {
-      enumeration.children.push(...(enumeration.values as DefaultEntityValue[]));
+    if (enumeration.values[0] instanceof DefaultEntityInstance) {
+      enumeration.children.push(...(enumeration.values as DefaultEntityInstance[]));
     }
 
     syncElementWithChildren(enumeration);
     return enumeration;
   }
 
-  private getEnumerationValues(quad: Quad): Array<string | DefaultEntityValue> {
+  private getEnumerationValues(quad: Quad): Array<string | DefaultEntityInstance> {
     const quads = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(quad.object.value);
     const isEntityValue = this.isEntityValue(quads?.[0]);
 
     const values = [];
     for (const entityValueQuad of quads) {
       if (isEntityValue) {
-        this.metaModelElementInstantiator.loadEntityValue(entityValueQuad, (ev: DefaultEntityValue) => {
+        this.metaModelElementInstantiator.loadEntityValue(entityValueQuad, (ev: DefaultEntityInstance) => {
           values.push(ev);
         });
         continue;

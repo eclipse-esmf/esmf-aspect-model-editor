@@ -26,7 +26,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {RenameModelComponent} from '../rename-model/rename-model.component';
-import {EntityValuePipe} from './pipes';
+import {EntityInstancePipe} from './pipes';
 import {
   AbstractEntityComponent,
   AbstractPropertyComponent,
@@ -47,12 +47,6 @@ import {
   EncodingInputFieldComponent,
   EntityComponent,
   EntityExtendsFieldComponent,
-  EntityValueComponent,
-  EntityValueModalComponent,
-  EntityValueModalTableComponent,
-  EntityValueSearchBarComponent,
-  EntityValueTableComponent,
-  EntityValueViewComponent,
   EventComponent,
   ExampleValueInputFieldComponent,
   InputChiplistFieldComponent,
@@ -104,6 +98,7 @@ import {SharedSettingsTitleComponent} from './components/shape-settings/shared-s
 import {LanguageTranslateModule} from '@ame/translation';
 import {ElementIconComponent} from '../../../../shared/src/lib/components/element/element.component';
 import {MatDividerModule} from '@angular/material/divider';
+import { EntityInstanceComponent, EntityInstanceModalComponent, EntityInstanceModalTableComponent, EntityInstanceSearchBarComponent, EntityInstanceTableComponent, EntityInstanceViewComponent } from './components/entity-instance';
 
 @NgModule({
   providers: [EditorModelService],
@@ -139,11 +134,12 @@ import {MatDividerModule} from '@angular/material/divider';
     ConstraintComponent,
     ShapeSettingsComponent,
     EntityComponent,
-    EntityValueModalComponent,
-    EntityValuePipe,
-    EntityValueSearchBarComponent,
-    EntityValueTableComponent,
-    EntityValueViewComponent,
+    EntityInstanceModalComponent,
+    EntityInstanceModalTableComponent,
+    EntityInstancePipe,
+    EntityInstanceSearchBarComponent,
+    EntityInstanceTableComponent,
+    EntityInstanceViewComponent,
     EventComponent,
     PropertiesButtonComponent,
     PropertiesModalComponent,
@@ -188,8 +184,8 @@ import {MatDividerModule} from '@angular/material/divider';
     TraitCharacteristicComponent,
     CharacteristicNameDropdownFieldComponent,
     ConstraintNameDropdownFieldComponent,
-    EntityValueComponent,
-    EntityValueModalTableComponent,
+    EntityInstanceComponent,
+    EntityInstanceModalTableComponent,
     StructuredValueComponent,
     StructuredValuePropertyFieldComponent,
     StructuredValuePropertiesComponent,

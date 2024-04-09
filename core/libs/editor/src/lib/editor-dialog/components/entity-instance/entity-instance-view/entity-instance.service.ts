@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {DefaultEntity, DefaultEntityValue, DefaultEnumeration, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
+import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
 import {ConfirmDialogService} from '@ame/editor';
 import {NamespacesCacheService} from '@ame/cache';
 import {NotificationsService} from '@ame/shared';
@@ -22,7 +22,7 @@ import {ConfirmDialogEnum} from '../../../../models/confirm-dialog.enum';
 @Injectable({
   providedIn: 'root',
 })
-export class EntityValueService {
+export class EntityInstanceService {
   get currentCachedFile() {
     return this.namespacesCacheService.currentCachedFile;
   }
@@ -139,7 +139,7 @@ export class EntityValueService {
       return;
     }
 
-    const characteristicEntityValues = characteristic.values as DefaultEntityValue[];
+    const characteristicEntityValues = characteristic.values as DefaultEntityInstance[];
     for (const entityValue of characteristicEntityValues) {
       entityValue.removeParent(characteristic);
 
