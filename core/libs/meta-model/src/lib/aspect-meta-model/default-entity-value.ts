@@ -54,7 +54,7 @@ export class DefaultEntityInstance extends Base implements EntityValue {
     this.properties = properties?.map(key => ({key, value: ''})) || [];
   }
 
-  public addProperty(overWrittenProperty: OverWrittenProperty<any>, value: string | DefaultEntityInstance = '', language?: string) {
+  public addProperty(overWrittenProperty: OverWrittenProperty<any>, value: string | DefaultEntityInstance = '', language = '') {
     this.properties.push({key: overWrittenProperty, value, language});
   }
 
