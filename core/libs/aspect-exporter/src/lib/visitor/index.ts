@@ -18,7 +18,7 @@ export * from './characteristic';
 export * from './entity';
 export * from './constraint';
 export * from './cleanup-visitor';
-export * from './entity-value';
+export * from './entity-instance';
 export * from './unit';
 export * from './event';
 export * from './abstract-entity';

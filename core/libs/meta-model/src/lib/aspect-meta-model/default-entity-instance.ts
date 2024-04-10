@@ -17,7 +17,7 @@ import {DefaultEnumeration} from './default-enumeration';
 import {DefaultProperty} from './default-property';
 import {OverWrittenProperty} from './overwritten-property';
 
-export interface EntityValueProperty {
+export interface EntityInstanceProperty {
   key: OverWrittenProperty;
   value: string | number | boolean | DefaultEntityInstance;
   optional?: boolean;
@@ -25,18 +25,18 @@ export interface EntityValueProperty {
   isComplex?: boolean;
 }
 
-export interface EntityValueProperties {
-  properties: EntityValueProperty[];
+export interface EntityInstanceProperties {
+  properties: EntityInstanceProperty[];
 }
 
-export interface EntityValue extends BaseMetaModelElement, EntityValueProperties {}
+export interface EntityInstance extends BaseMetaModelElement, EntityInstanceProperties {}
 
-export class DefaultEntityInstance extends Base implements EntityValue {
-  public properties: EntityValueProperty[] = [];
+export class DefaultEntityInstance extends Base implements EntityInstance {
+  public properties: EntityInstanceProperty[] = [];
   public parents: any = new ModelRelationArray<DefaultEnumeration | DefaultEntityInstance>();
 
   static createInstance() {
-    return new DefaultEntityInstance(null, 'EntityValue', null, null, []);
+    return new DefaultEntityInstance(null, 'EntityInstance', null, null, []);
   }
 
   get className() {

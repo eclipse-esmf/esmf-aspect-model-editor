@@ -12,7 +12,7 @@
  */
 import {Type} from './type';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
-import {DefaultEntityInstance} from './default-entity-value';
+import {DefaultEntityInstance} from './default-entity-instance';
 import {BaseMetaModelElement} from './base';
 import {DefaultEntity, Entity} from './default-entity';
 

@@ -19,7 +19,7 @@ import {
   DefaultEntityInstance,
   DefaultProperty,
   Entity,
-  EntityValueProperty,
+  EntityInstanceProperty,
   OverWrittenProperty,
 } from '@ame/meta-model';
 import {BaseModelService} from './base-model-service';
@@ -95,7 +95,7 @@ export class EntityValueModelService extends BaseModelService {
   }
 
   private removeObsoleteEntityValues(metaModelElement: DefaultEntityInstance): void {
-    metaModelElement.properties.forEach((property: EntityValueProperty) => {
+    metaModelElement.properties.forEach((property: EntityInstanceProperty) => {
       if (property.value instanceof DefaultEntityInstance && !property.value.parents?.length) {
         this.deleteEntityValue(property.value, metaModelElement);
       }

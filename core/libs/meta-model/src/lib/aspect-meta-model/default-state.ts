@@ -12,7 +12,7 @@
  */
 import {Type} from './type';
 import {DefaultEnumeration, Enumeration} from './default-enumeration';
-import {DefaultEntityInstance} from './default-entity-value';
+import {DefaultEntityInstance} from './default-entity-instance';
 
 export interface State extends Enumeration {
   defaultValue: DefaultEntityInstance | string | number;

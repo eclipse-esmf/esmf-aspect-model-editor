@@ -29,7 +29,7 @@ import {
   DefaultCollection,
   DefaultEntityInstance,
   DefaultProperty,
-  EntityValueProperty,
+  EntityInstanceProperty,
   OverWrittenProperty,
 } from '@ame/meta-model';
 import {DataType, EditorDialogValidators, EntityInstanceUtil, FormFieldHelper} from '@ame/editor';
@@ -52,7 +52,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
   protected readonly dataType = DataType;
 
   propertiesForm: FormGroup;
-  sources: EntityValueProperty[] = [];
+  sources: EntityInstanceProperty[] = [];
   subscriptions = new Subscription();
 
   filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
@@ -101,7 +101,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     );
   }
 
-  private createEntityValueProp(prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): EntityValueProperty {
+  private createEntityValueProp(prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): EntityInstanceProperty {
     const property = prop.property as DefaultProperty;
     const propertyControl = this.propertiesForm.get(property.name);
 
@@ -132,7 +132,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     return new FormControl('', prop.keys.optional ? null : EditorDialogValidators.requiredObject);
   }
 
-  private getValidators(entityValueProperty: EntityValueProperty): (control: AbstractControl) => ValidationErrors | null {
+  private getValidators(entityValueProperty: EntityInstanceProperty): (control: AbstractControl) => ValidationErrors | null {
     return entityValueProperty.key.keys.optional ? null : Validators.required;
   }
 
@@ -231,7 +231,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     this.changeDetector.detectChanges();
   }
 
-  changeLanguageSelection(ev: EntityValueProperty, propertyValue: string, index: number): void {
+  changeLanguageSelection(ev: EntityInstanceProperty, propertyValue: string, index: number): void {
     EntityInstanceUtil.changeLanguageSelection(this.propertiesForm, ev, propertyValue, index);
     this.closeAllAutocompletePanels();
     this.changeDetector.detectChanges();
@@ -248,7 +248,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     this.changeDetector.detectChanges();
   }
 
-  addLanguage(entityValueProp: EntityValueProperty): void {
+  addLanguage(entityValueProp: EntityInstanceProperty): void {
     const fieldValidators = entityValueProp.optional ? null : EditorDialogValidators.requiredObject;
     const languagesFormArray = this.propertiesForm.get(entityValueProp.key.property.name) as FormArray;
 
@@ -268,7 +268,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     languagesFormArray.push(languageFormGroup);
   }
 
-  removeLanguage(entityValueProp: EntityValueProperty, index: number): void {
+  removeLanguage(entityValueProp: EntityInstanceProperty, index: number): void {
     const languagesFormArray = this.propertiesForm.get(entityValueProp.key.property.name) as FormArray;
     languagesFormArray.removeAt(index);
   }

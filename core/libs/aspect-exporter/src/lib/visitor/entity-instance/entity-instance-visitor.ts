@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {DefaultCollection, DefaultEntityInstance, EntityValueProperty} from '@ame/meta-model';
+import {DefaultCollection, DefaultEntityInstance, EntityInstanceProperty} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {DataFactory, Literal, NamedNode} from 'n3';
 import {BaseVisitor} from '../base-visitor';
@@ -21,7 +21,7 @@ import {RdfListService} from '../../rdf-list';
 import {Samm} from '@ame/vocabulary';
 
 @Injectable()
-export class EntityValueVisitor extends BaseVisitor<DefaultEntityInstance> {
+export class EntityInstanceVisitor extends BaseVisitor<DefaultEntityInstance> {
   constructor(
     private rdfListService: RdfListService,
     public modelService: ModelService,
@@ -82,14 +82,14 @@ export class EntityValueVisitor extends BaseVisitor<DefaultEntityInstance> {
     }
   }
 
-  private createObjectForCollectionLangStringRDF(ev: EntityValueProperty): {predicate: NamedNode; literal: Literal} {
+  private createObjectForCollectionLangStringRDF(ev: EntityInstanceProperty): {predicate: NamedNode; literal: Literal} {
     return {
       predicate: DataFactory.namedNode(ev.key.property.aspectModelUrn),
       literal: DataFactory.literal(ev?.value?.toString(), ev?.language?.toString()),
     };
   }
 
-  private createObjectForRDF({key, value, language}: EntityValueProperty): NamedNode | Literal {
+  private createObjectForRDF({key, value, language}: EntityInstanceProperty): NamedNode | Literal {
     if (value instanceof DefaultEntityInstance) {
       return DataFactory.namedNode(value.aspectModelUrn);
     }
