@@ -37,6 +37,7 @@ import {InputFieldComponent} from '../../fields';
 import {map, Observable, of, startWith, Subscription} from 'rxjs';
 import * as locale from 'locale-codes';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {isDataTypeLangString} from '@ame/shared';
 
 @Component({
   selector: 'ame-entity-instance-table',
@@ -178,7 +179,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     validators: ValidationErrors | null,
     property: DefaultProperty,
   ): void {
-    if (propertyLanguage || propertyLanguage === '') {
+    if ((propertyLanguage || propertyLanguage === '') && isDataTypeLangString(property)) {
       const languageControl = new FormControl(
         {
           value: propertyLanguage,
