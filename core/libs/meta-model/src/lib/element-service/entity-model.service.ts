@@ -23,7 +23,14 @@ import {
   MxGraphShapeOverlayService,
   MxGraphVisitorHelper,
 } from '@ame/mx-graph';
-import {Base, BaseMetaModelElement, DefaultEntity, DefaultEntityInstance, DefaultEnumeration, OverWrittenPropertyKeys} from '@ame/meta-model';
+import {
+  Base,
+  BaseMetaModelElement,
+  DefaultEntity,
+  DefaultEntityInstance,
+  DefaultEnumeration,
+  OverWrittenPropertyKeys,
+} from '@ame/meta-model';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {BaseEntityModelService} from './base-entity-model.service';
 

@@ -37,6 +37,7 @@ import {InputFieldComponent} from '../../fields';
 import {map, Observable, of, startWith, Subscription} from 'rxjs';
 import * as locale from 'locale-codes';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {isDataTypeLangString} from '@ame/shared';
 
 @Component({
   selector: 'ame-entity-instance-table',
@@ -164,14 +165,28 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     return propertiesFormArray;
   }
 
-  private createValueControl(propertyValue: string | number | boolean | DefaultEntityInstance, validators): FormControl {
+  private createValueControl(
+    propertyValue: string | number | boolean | DefaultEntityInstance,
+    validators: ValidationErrors | null,
+  ): FormControl {
     const isEntityValue = propertyValue instanceof DefaultEntityInstance;
     return new FormControl({value: propertyValue, disabled: isEntityValue}, validators);
   }
 
-  private addLanguageControl(group: UntypedFormGroup, propertyLanguage: string, validators, property): void {
-    if (propertyLanguage) {
-      const languageControl = new FormControl({value: propertyLanguage, disabled: true}, validators);
+  private addLanguageControl(
+    group: UntypedFormGroup,
+    propertyLanguage: string,
+    validators: ValidationErrors | null,
+    property: DefaultProperty,
+  ): void {
+    if ((propertyLanguage || propertyLanguage === '') && isDataTypeLangString(property)) {
+      const languageControl = new FormControl(
+        {
+          value: propertyLanguage,
+          disabled: propertyLanguage !== '',
+        },
+        validators,
+      );
       this.subscribeToLangValueChanges(languageControl, property);
       group.addControl('language', languageControl);
     }

@@ -551,7 +551,9 @@ export class MxGraphService {
   public updateEntityValuesWithCellReference(deletedEntityValueCells: Array<mxgraph.mxCell>): void {
     deletedEntityValueCells
       .filter(entityValueCell => entityValueCell.isVertex())
-      .forEach(entityValueCell => this.updateEntityValuesWithReference(MxGraphHelper.getModelElement<DefaultEntityInstance>(entityValueCell)));
+      .forEach(entityValueCell =>
+        this.updateEntityValuesWithReference(MxGraphHelper.getModelElement<DefaultEntityInstance>(entityValueCell)),
+      );
   }
 
   private applyDelta(cell: mxgraph.mxCell, deltaX: number, deltaY: number, formattedCells: mxgraph.mxCell[]) {
