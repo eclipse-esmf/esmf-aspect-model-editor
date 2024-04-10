@@ -258,7 +258,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cyHelp.clickSaveButton());
   });
 
-  it('import new model with entity values', () => {
+  it('import new model with entity instances', () => {
     cy.visitDefault();
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.fixture('entity-values-enumeration')
@@ -295,7 +295,7 @@ describe('Test enumeration entity value', () => {
       });
   });
 
-  it('search for entity value', () => {
+  it('search for entity instance', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(SELECTOR_searchEntityValueInputField).should('exist').type('test2', {force: true}))
@@ -305,7 +305,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cyHelp.clickSaveButton());
   });
 
-  it('edit all entity values', () => {
+  it('edit all entity instances', () => {
     cy.shapeExists('test1')
       .then(() => cy.dbClickShape('test1').wait(200))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('edit1', {force: true}))
@@ -360,7 +360,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get(SELECTOR_editorCancelButton).click({force: true}));
   });
 
-  it('edit one entity values', () => {
+  it('edit one entity instances', () => {
     cy.shapeExists('edit2')
       .then(() => cy.dbClickShape('edit2'))
       .then(() => cy.get(FIELD_name).should('exist').clear({force: true}).type('editOnlyOnEntityValue', {force: true}))
@@ -430,7 +430,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cyHelp.clickSaveButton());
   });
 
-  it('delete all entity value one by one', () => {
+  it('delete all entity instance one by one', () => {
     cy.visitDefault();
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.fixture('entity-values-enumeration')
@@ -475,7 +475,7 @@ describe('Test enumeration entity value', () => {
       });
   });
 
-  it('it should add manually new entity value shape', () => {
+  it('it should add manually new entity instance shape', () => {
     cy.visitDefault();
     cy.startModelling()
       .wait(500)
@@ -493,7 +493,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cyHelp.hasAddShapeOverlay('Characteristic1'))
       .then(() => {
         cyHelp.hasAddShapeOverlay('Characteristic1');
-        testEntityValuesExists(['EntityValue1']);
+        testEntityValuesExists(['EntityInstance1']);
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf =>
@@ -506,22 +506,22 @@ describe('Test enumeration entity value', () => {
             '    samm:characteristic :Characteristic1.\n' +
             ':Characteristic1 a samm-c:Enumeration;\n' +
             '    samm:dataType :Entity1;\n' +
-            '    samm-c:values (:FillGapEntityValue :EntityValue1).\n' +
+            '    samm-c:values (:FillGapEntityValue :EntityInstance1).\n' +
             ':Entity1 a samm:Entity;\n' +
             '    samm:properties ().\n' +
             ':FillGapEntityValue a :Entity1.\n' +
-            ':EntityValue1 a :Entity1.',
+            ':EntityInstance1 a :Entity1.',
         ),
       );
   });
 
   it('it should delete entity value', () => {
-    cy.getHTMLCell('EntityValue1')
+    cy.getHTMLCell('EntityInstance1')
       .click({force: true})
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() => {
         cyHelp.hasAddShapeOverlay('Characteristic1');
-        testEntityValuesDoesNotExist(['EntityValue1']);
+        testEntityValuesDoesNotExist(['EntityInstance1']);
       })
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
