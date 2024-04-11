@@ -11,7 +11,7 @@ Before you install the latest version of the Aspect Model Editor, make sure you 
 
 * Login with administrator permissions to install or uninstall the Aspect Model Editor.
 * If you have previously installed the Aspect Model Editor, see xref:installation.adoc#upgrade[Upgrade].
-* Download the installation file for your system at https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor^, opts=nofollow]. +
+* Download the installation file for your system from the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor release page^, opts=nofollow].
 
 We offer assets for the following OS:
 
