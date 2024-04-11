@@ -15,7 +15,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {filter} from 'rxjs/operators';
 import {EntityInstanceModalComponent} from '..';
-import {DefaultEntityInstance, DefaultEnumeration, EntityValueProperty} from '@ame/meta-model';
+import {DefaultEntityInstance, DefaultEnumeration, EntityInstanceProperty} from '@ame/meta-model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {DataType, FormFieldHelper} from '../../../../helpers/form-field.helper';
@@ -33,7 +33,7 @@ export class EntityInstanceViewComponent implements OnInit, OnDestroy {
   protected readonly dataType = DataType;
 
   public searchFilter: string;
-  public selection: SelectionModel<EntityValueProperty> = new SelectionModel<EntityValueProperty>();
+  public selection: SelectionModel<EntityInstanceProperty> = new SelectionModel<EntityInstanceProperty>();
 
   readonly displayedColumns = ['key', 'value'];
 
@@ -81,7 +81,7 @@ export class EntityInstanceViewComponent implements OnInit, OnDestroy {
     this.complexValues = [];
   }
 
-  trackProperty(_index: number, item: EntityValueProperty): string {
+  trackProperty(_index: number, item: EntityInstanceProperty): string {
     return `${item?.key.property.name}`;
   }
 

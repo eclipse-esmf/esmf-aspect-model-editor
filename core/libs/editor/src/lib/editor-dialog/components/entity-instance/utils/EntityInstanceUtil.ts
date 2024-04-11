@@ -19,7 +19,7 @@ import {
   DefaultProperty,
   DefaultTrait,
   Entity,
-  EntityValueProperty,
+  EntityInstanceProperty,
   OverWrittenProperty,
 } from '@ame/meta-model';
 import {CachedFile} from '@ame/cache';
@@ -146,7 +146,7 @@ export class EntityInstanceUtil {
    * @param {string} propertyValue - The value to set for the language control.
    * @param {number} index - The index of the control within the FormArray that should be updated.
    */
-  static changeLanguageSelection(propertiesForm: FormGroup, ev: EntityValueProperty, propertyValue: string, index: number): void {
+  static changeLanguageSelection(propertiesForm: FormGroup, ev: EntityInstanceProperty, propertyValue: string, index: number): void {
     const propertiesFormArray = propertiesForm.get(ev.key.property.name) as FormArray;
     const languageControl = propertiesFormArray.at(index).get('language');
     languageControl.setValue(propertyValue);

@@ -12,7 +12,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {DefaultEntityInstance, EntityValueProperty} from '@ame/meta-model';
+import {DefaultEntityInstance, EntityInstanceProperty} from '@ame/meta-model';
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
@@ -44,7 +44,7 @@ export class MxGraphCharacteristicHelper {
 
   static getChildEntityValuesToDelete(entityValue: DefaultEntityInstance, notInclude: DefaultEntityInstance[]): DefaultEntityInstance[] {
     let entityValues = [];
-    entityValue.properties.forEach((prop: EntityValueProperty) => {
+    entityValue.properties.forEach((prop: EntityInstanceProperty) => {
       if (
         prop.value instanceof DefaultEntityInstance &&
         (prop.value.parents.length === 0 || !prop.value.parents) &&
