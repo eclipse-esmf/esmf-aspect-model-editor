@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ macos-latest, windows-latest, ubuntu-20.04 ]
+        os: [ macos-12, windows-latest, ubuntu-20.04 ]
 
     steps:
       - name: Checkout project
@@ -74,7 +74,7 @@ jobs:
           git push origin v${{ github.event.inputs.release_version }}
 
       - name: Download aspect model service into project (Mac)
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-12'
         run: |
           mkdir backend
 
@@ -168,7 +168,7 @@ jobs:
         working-directory: core
 
       - name: Set app version (Unix)
-        if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'macos-12' || matrix.os == 'ubuntu-20.04'
         run: npm version ${{ github.event.inputs.release_version }}
         working-directory: core
 
@@ -178,7 +178,7 @@ jobs:
         working-directory: core
 
       - name: Build electron app (Mac)
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-12'
         run: npm run build:mac:prod
         working-directory: core
 
@@ -202,7 +202,7 @@ jobs:
           arguments: "-V3 -DVERSION=${{ github.event.inputs.release_version }}"
 
       - name: Create GitHub release (Mac)
-        if: ${{ (matrix.os == 'macos-latest') && (!contains( github.ref, '-rc' )) }}
+        if: ${{ (matrix.os == 'macos-12') && (!contains( github.ref, '-rc' )) }}
         uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
@@ -212,7 +212,7 @@ jobs:
           tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub pre-release (Mac)
-        if: ${{ (matrix.os == 'macos-latest') && (contains( github.ref, '-rc' )) }}
+        if: ${{ (matrix.os == 'macos-12') && (contains( github.ref, '-rc' )) }}
         uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
