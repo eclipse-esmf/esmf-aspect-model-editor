@@ -13,7 +13,7 @@
 
 import {Injectable, inject} from '@angular/core';
 import {ShapeConnectorService} from '@ame/connection';
-import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultState, EntityValueProperty} from '@ame/meta-model';
+import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultState, EntityInstanceProperty} from '@ame/meta-model';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
@@ -183,7 +183,7 @@ export class EntityValueRenderService extends BaseRenderService {
           return parentModelElement.aspectModelUrn !== modelElement.aspectModelUrn;
         });
         const childModelElement = MxGraphHelper.getModelElement(child);
-        const isPartOfTheModel = modelElement.properties.some((prop: EntityValueProperty) => prop.value === childModelElement);
+        const isPartOfTheModel = modelElement.properties.some((prop: EntityInstanceProperty) => prop.value === childModelElement);
         if (!isLinkedToOtherEntityValues && !childModelElement.parents?.length && !isPartOfTheModel) {
           this.delete(child);
         } else if (!isLinkedToOtherEntityValues && childModelElement.parents?.length > 0 && !isPartOfTheModel && connectingEdge) {

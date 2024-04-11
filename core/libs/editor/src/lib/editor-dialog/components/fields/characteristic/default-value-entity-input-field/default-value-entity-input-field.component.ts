@@ -13,7 +13,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {DefaultEntityInstance, DefaultState, EntityValue} from '@ame/meta-model';
+import {DefaultEntityInstance, DefaultState, EntityInstance} from '@ame/meta-model';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -21,7 +21,7 @@ import {InputFieldComponent} from '../../input-field.component';
   templateUrl: './default-value-entity-input-field.component.html',
 })
 export class DefaultValueEntityInputFieldComponent extends InputFieldComponent<DefaultState> implements OnInit, OnDestroy {
-  entityValues: EntityValue[];
+  entityValues: EntityInstance[];
 
   constructor() {
     super();

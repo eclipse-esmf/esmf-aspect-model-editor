@@ -14,7 +14,7 @@
 import {TestBed} from '@angular/core/testing';
 import {DataFactory, Quad, Store} from 'n3';
 import {describe, expect, it} from '@jest/globals';
-import {EntityValueVisitor} from '@ame/aspect-exporter';
+import {EntityInstanceVisitor} from '@ame/aspect-exporter';
 import {Samm} from '@ame/vocabulary';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {provideMockObject} from '../../../../../../jest-helpers';
@@ -36,9 +36,9 @@ class MockRDFModel {
   SAMM = jest.fn((): Samm => new MockSamm() as any as Samm);
 }
 
-describe('Entity value visitor', () => {
+describe('Entity instance visitor', () => {
   let mockedRdfModel: MockRDFModel;
-  let service: EntityValueVisitor;
+  let service: EntityInstanceVisitor;
   let rdfService: jest.Mocked<RdfService>;
   const entity: any = {aspectModelUrn: 'entityUrn1'};
   const mockProperty1: any = {
@@ -80,7 +80,7 @@ describe('Entity value visitor', () => {
     mockedRdfModel = new MockRDFModel();
     TestBed.configureTestingModule({
       providers: [
-        EntityValueVisitor,
+        EntityInstanceVisitor,
         {
           provide: ModelService,
           useValue: {
@@ -95,7 +95,7 @@ describe('Entity value visitor', () => {
         },
       ],
     });
-    service = TestBed.inject(EntityValueVisitor);
+    service = TestBed.inject(EntityInstanceVisitor);
 
     rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
     rdfService.currentRdfModel = mockedRdfModel.rdfModel;
