@@ -39,8 +39,8 @@ import {
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
-describe('Test enumeration entity value', () => {
-  it('should create nested entity values', () => {
+describe('Test enumeration entity instance', () => {
+  it('should create nested entity instances', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
     cy.startModelling()
@@ -105,7 +105,7 @@ describe('Test enumeration entity value', () => {
       });
   });
 
-  it('should rename nested entity values', () => {
+  it('should rename nested entity instances', () => {
     cy.dbClickShape('ev1')
       .then(() => {
         cy.get(FIELD_propertyValueComplex).eq(0).should('have.value', 'ev2');
@@ -150,7 +150,7 @@ describe('Test enumeration entity value', () => {
       );
   });
 
-  it('add entity values with one property', () => {
+  it('add entity instances with one property', () => {
     cy.visitDefault();
     cy.startModelling()
       .wait(500)
@@ -168,48 +168,48 @@ describe('Test enumeration entity value', () => {
           .contains('Enumeration')
           .click({force: true})
           .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}))
-          .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityValue1', {force: true}))
+          .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityInstance1', {force: true}))
           .then(() => cy.get('[data-cy="property2Value"]').should('exist').type('TestPropertyValue1', {force: true}))
           .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}))
           .then(() => cy.wait(200))
-          .then(() => checkMatPanelTitleValues([0], ['EntityValue1']))
+          .then(() => checkMatPanelTitleValues([0], ['EntityInstance1']))
           .then(() => checkMatCellValues([0], ['property2']))
           .then(() => checkMatCellValues([1], ['TestPropertyValue1']))
           .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}))
-          .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityValue2', {force: true}))
+          .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityInstance2', {force: true}))
           .then(() => cy.get('[data-cy="property2Value"]').should('exist').type('TestPropertyValue2', {force: true}))
           .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}))
           .then(() => cy.wait(200))
-          .then(() => checkMatPanelTitleValues([1], ['EntityValue2']))
+          .then(() => checkMatPanelTitleValues([1], ['EntityInstance2']))
           .then(() => checkMatCellValues([2], ['property2']))
           .then(() => checkMatCellValues([3], ['TestPropertyValue2']))
           .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}))
-          .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityValue3', {force: true}))
+          .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityInstance3', {force: true}))
           .then(() => cy.get('[data-cy="property2Value"]').should('exist').type('TestPropertyValue3', {force: true}))
           .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}))
           .then(() => cy.wait(200))
-          .then(() => checkMatPanelTitleValues([2], ['EntityValue3']))
+          .then(() => checkMatPanelTitleValues([2], ['EntityInstance3']))
           .then(() => checkMatCellValues([4], ['property2']))
           .then(() => checkMatCellValues([5], ['TestPropertyValue3']));
       })
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.clickShape('Characteristic1'))
-      .then(() => testEntityValuesExists(['EntityValue1', 'EntityValue2', 'EntityValue3']))
+      .then(() => testEntityValuesExists(['EntityInstance1', 'EntityInstance2', 'EntityInstance3']))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain('samm-c:values (:EntityValue1 :EntityValue2 :EntityValue3)');
+          expect(rdf).to.contain('samm-c:values (:EntityInstance1 :EntityInstance2 :EntityInstance3)');
           expect(rdf).to.contain(':Entity1 a samm:Entity;');
-          expect(rdf).to.contain(':EntityValue1 a :Entity1;');
+          expect(rdf).to.contain(':EntityInstance1 a :Entity1;');
           expect(rdf).to.contain(':property2 "TestPropertyValue1"');
-          expect(rdf).to.contain(':EntityValue2 a :Entity1;');
+          expect(rdf).to.contain(':EntityInstance2 a :Entity1;');
           expect(rdf).to.contain(':property2 "TestPropertyValue2"');
-          expect(rdf).to.contain(':EntityValue3 a :Entity1;');
+          expect(rdf).to.contain(':EntityInstance3 a :Entity1;');
           expect(rdf).to.contain(':property2 "TestPropertyValue3"');
         });
       });
   });
 
-  it('add entity value without property', () => {
+  it('add entity instance without property', () => {
     cy.visitDefault();
     cy.startModelling()
       .wait(500)
@@ -221,18 +221,18 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
       .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}))
       .then(() => cy.wait(200))
-      .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityValue', {force: true}))
+      .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityInstance', {force: true}))
       .then(() => cy.get(FIELD_propertyValueNotComplex).should('not.exist'))
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}))
       .then(() => cy.wait(200))
-      .then(() => checkMatPanelTitleValues([0], ['EntityValue']))
+      .then(() => checkMatPanelTitleValues([0], ['EntityInstance']))
       .then(() => cyHelp.clickSaveButton().wait(1000))
-      .then(() => testEntityValuesExists(['EntityValue']))
+      .then(() => testEntityValuesExists(['EntityInstance']))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain('samm-c:values (:EntityValue).');
+        expect(rdf).to.contain('samm-c:values (:EntityInstance).');
         expect(rdf).to.contain(':Entity1 a samm:Entity;');
-        expect(rdf).to.contain(':EntityValue a :Entity1');
+        expect(rdf).to.contain(':EntityInstance a :Entity1');
       });
   });
 
@@ -252,9 +252,9 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
       .then(() => cy.get(SELECTOR_searchEntityValueInputField).should('exist'))
       .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}).wait(200))
-      .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityValue', {force: true}))
+      .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityInstance', {force: true}))
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
-      .then(() => checkMatPanelTitleValues([0], ['EntityValue']))
+      .then(() => checkMatPanelTitleValues([0], ['EntityInstance']))
       .then(() => cyHelp.clickSaveButton());
   });
 
@@ -515,7 +515,7 @@ describe('Test enumeration entity value', () => {
       );
   });
 
-  it('it should delete entity value', () => {
+  it('it should delete entity instance', () => {
     cy.getHTMLCell('EntityInstance1')
       .click({force: true})
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
@@ -573,7 +573,7 @@ describe('Test enumeration entity value', () => {
       .then(() => cy.shapeExists('NewEntity'));
   });
 
-  it('should create NewEntity and new entity values', () => {
+  it('should create NewEntity and new entity instances', () => {
     cy.visitDefault();
     cy.startModelling()
       .wait(500)
@@ -592,9 +592,9 @@ describe('Test enumeration entity value', () => {
           .click({force: true}),
       )
       .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}).wait(200))
-      .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityValue'))
+      .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityInstance'))
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
-      .then(() => checkMatPanelTitleValues([0], ['EntityValue']))
+      .then(() => checkMatPanelTitleValues([0], ['EntityInstance']))
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.shapeExists('NewEntity'));
   });
