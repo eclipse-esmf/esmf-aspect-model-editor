@@ -21,7 +21,7 @@ image::connecting-elements.png[width=50%]
 * If both directions are permitted, the arrow will be set for the element selected first to the element selected second.
 * If a connection is not permitted, a respective warning will appear and the elements will not be connected.
 
-The larger the diagram, the harder it might get to connect elements that are far away in the model. In that case, you can also use the alternative decribed bellow.
+The larger the diagram, the harder it might get to connect elements that are far away in the model. In that case, you can also use the alternative described below.
 
 == Connect via context menu
 
