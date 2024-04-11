@@ -9,7 +9,7 @@ incorporated in the Aspect Model Editor in a convenient way with a smart user fl
 
 [NOTE]
 ====
-In addition to this current version, the most recent older versions of this documentation are also available. They can be accessed from the dropdown menu located in the top right corner of this page.
+In addition to the version you are currently looking at, further versions of this documentation are also available, for example, for previous releases. They can be accessed from the dropdown menu located in the top right corner of this page.
 
 image:versions-dropdown.png[Versions dropdown, width=20%]
 ====
