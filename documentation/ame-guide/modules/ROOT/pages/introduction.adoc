@@ -11,7 +11,7 @@ incorporated in the Aspect Model Editor in a convenient way with a smart user fl
 ====
 In addition to the version you are currently looking at, further versions of this documentation are also available, for example, for previous releases. They can be accessed from the dropdown menu located in the top right corner of this page.
 
-image:versions-dropdown.png[Versions dropdown, width=20%]
+image:versions-dropdown.png[Versions dropdown, width=20%, link=self]
 ====
 
 Typically, Aspect Models are edited as code, that is, text-based.
