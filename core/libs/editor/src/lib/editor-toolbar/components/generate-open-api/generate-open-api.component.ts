@@ -97,7 +97,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.pattern(/^\/[a-zA-Z{}/]*$/),
       Validators.pattern(/^(?!.*\/\/)(?!.*{{)(?!.*}}).*$/),
-      Validators.pattern(/.*{.*}.*$/),
+      Validators.pattern(/.*{.+}.*$/),
     ];
 
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
