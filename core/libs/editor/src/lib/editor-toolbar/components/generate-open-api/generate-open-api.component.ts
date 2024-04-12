@@ -48,16 +48,11 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   form: FormGroup;
   languages: locale.ILocale[];
   isGenerating = false;
-  linkToSpecification = 'https://eclipse-esmf.github.io/ame-guide/generate/generate-openapi-doc.html';
+  linkToSpecification = '';
   uploadedFile: File = undefined;
   subscriptions = new Subscription();
 
-  private resourcePathValidators = [
-    Validators.required,
-    Validators.pattern(/^\/[a-zA-Z{}/]*$/),
-    Validators.pattern(/^(?!.*\/\/)(?!.*{{)(?!.*}}).*$/),
-    Validators.pattern(/.*({.*})?.*$/),
-  ];
+  private resourcePathValidators = [];
 
   public get output(): FormControl {
     return this.form.get('output') as FormControl;
@@ -65,10 +60,6 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
 
   public get activateResourcePath(): FormControl {
     return this.form.get('activateResourcePath') as FormControl;
-  }
-
-  public get resourcePath(): FormControl {
-    return this.form.get('resourcePath') as FormControl;
   }
 
   public get file(): FormControl {
@@ -102,6 +93,13 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   }
 
   private initializeForm(): void {
+    this.resourcePathValidators = [
+      Validators.required,
+      Validators.pattern(/^\/[a-zA-Z{}/]*$/),
+      Validators.pattern(/^(?!.*\/\/)(?!.*{{)(?!.*}}).*$/),
+      Validators.pattern(/.*{.+}.*$/),
+    ];
+
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
     this.form = new FormGroup({
       baseUrl: new FormControl('https://example.com', Validators.compose([Validators.required, EditorDialogValidators.baseUrl])),
@@ -111,8 +109,8 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
       activateResourcePath: new FormControl(false),
       output: new FormControl('yaml'),
       paging: new FormControl('NO_PAGING'),
-      resourcePath: new FormControl(null),
-      file: new FormControl(null),
+      resourcePath: new FormControl('/resource/{resourceId}', this.resourcePathValidators),
+      file: new FormControl(null, [Validators.required]),
       ymlProperties: new FormControl(null),
       jsonProperties: new FormControl(null),
     });
@@ -124,25 +122,8 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.activateResourcePath?.valueChanges.subscribe(activateResourcePath => {
         const resourcePathControl = this.form.get('resourcePath');
-
-        if (activateResourcePath) {
-          resourcePathControl?.setValue('/resource/{resourceId}');
-          resourcePathControl?.setValidators(this.resourcePathValidators);
-        } else {
-          resourcePathControl?.setValue(null);
-          resourcePathControl?.setValidators(null);
-        }
-
+        activateResourcePath ? resourcePathControl?.setValidators(this.resourcePathValidators) : resourcePathControl?.setValidators(null);
         resourcePathControl?.updateValueAndValidity();
-      }),
-    );
-
-    this.subscriptions.add(
-      this.resourcePath?.valueChanges.subscribe(resourcePath => {
-        const fileControl = this.form.get('file');
-        const hasBrackets = /{.*}/.test(resourcePath);
-        hasBrackets ? fileControl?.setValidators(Validators.required) : fileControl?.setValidators(null);
-        fileControl?.updateValueAndValidity();
       }),
     );
   }
@@ -191,11 +172,11 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     this.form.patchValue({[propertyName]: content});
   }
 
-  private getFileType(file: File): 'json' | 'yml' {
+  private getFileType(file: File): 'json' | 'yaml' {
     if (file.name.endsWith('.json')) {
       return 'json';
     } else if (file.name.endsWith('.yaml') || file.name.endsWith('.yml')) {
-      return 'yml';
+      return 'yaml';
     }
 
     throw new Error('Unsupported file type');
@@ -241,9 +222,17 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     if (files.length) {
       const file = files[0];
       this.uploadedFile = file;
-      this.readFileContent(file);
+      this.addFileContentIntoControl(file);
       this.file.patchValue(file);
     }
+  }
+
+  private addFileContentIntoControl(file: File): void {
+    const reader = new FileReader();
+    reader.onload = event => {
+      this.ymlProperties?.setValue(event.target.result);
+    };
+    reader.readAsText(file);
   }
 
   removeUploadedFile(): void {
