@@ -73,24 +73,7 @@ describe('Test generation and download of open api specification', () => {
           .should('be.visible')
           .should('contain.text', 'Resource path is required'),
       )
-      .then(() => {
-        cy.get(GENERATION_resourcePathInput).focus().type('/').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('//').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('resource').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{{').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{}}').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{}').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{resourceId}', {parseSpecialCharSequences: false}).blur();
-        cy.get(GENERATION_resourcePathPatternError).should('not.exist');
-      })
+      .then(() => checkResourcePath())
       .then(() => cy.get(GENERATION_uploadTitle).should('exist').should('be.visible').should('contain.text', 'Upload JSON File'))
       .then(() => cy.get(GENERATION_uploadContent).should('exist').should('be.visible'))
       .then(() =>
@@ -143,24 +126,7 @@ describe('Test generation and download of open api specification', () => {
           .should('be.visible')
           .should('contain.text', 'Resource path is required'),
       )
-      .then(() => {
-        cy.get(GENERATION_resourcePathInput).focus().type('/').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('//').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('resource').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{{').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{}}').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{}').blur();
-        cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
-        cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{resourceId}', {parseSpecialCharSequences: false}).blur();
-        cy.get(GENERATION_resourcePathPatternError).should('not.exist');
-      })
+      .then(() => checkResourcePath())
       .then(() => cy.get(GENERATION_uploadTitle).should('exist').should('be.visible').should('contain.text', 'Upload YAML File'))
       .then(() => cy.get(GENERATION_uploadContent).should('exist').should('be.visible'))
       .then(() =>
@@ -225,4 +191,23 @@ describe('Test generation and download of open api specification', () => {
         cy.get(GENERATION_tbGenerateOpenApiButton).should('be.enabled');
       });
   });
+
+  function checkResourcePath(): void {
+    cy.get(GENERATION_resourcePathInput).focus().type('/').blur();
+    cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
+    cy.get(GENERATION_resourcePathInput).focus().clear().type('//').blur();
+    cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
+    cy.get(GENERATION_resourcePathInput).focus().clear().type('resource').blur();
+    cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
+    cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource').blur();
+    cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
+    cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{{').blur();
+    cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
+    cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{}}').blur();
+    cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
+    cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{}').blur();
+    cy.get(GENERATION_resourcePathPatternError).should('exist').should('be.visible').should('contain.text', 'Pattern is not matching');
+    cy.get(GENERATION_resourcePathInput).focus().clear().type('/resource/{resourceId}', {parseSpecialCharSequences: false}).blur();
+    cy.get(GENERATION_resourcePathPatternError).should('not.exist');
+  }
 });
