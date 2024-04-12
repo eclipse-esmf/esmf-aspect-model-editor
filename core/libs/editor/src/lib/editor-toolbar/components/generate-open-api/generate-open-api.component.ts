@@ -52,7 +52,12 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   uploadedFile: File = undefined;
   subscriptions = new Subscription();
 
-  private resourcePathValidators = [];
+  private resourcePathValidators = [
+    Validators.required,
+    Validators.pattern(/^\/[a-zA-Z{}/]*$/),
+    Validators.pattern(/^(?!.*\/\/)(?!.*{{)(?!.*}}).*$/),
+    Validators.pattern(/.*{.+}.*$/),
+  ];
 
   public get output(): FormControl {
     return this.form.get('output') as FormControl;
@@ -93,13 +98,6 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   }
 
   private initializeForm(): void {
-    this.resourcePathValidators = [
-      Validators.required,
-      Validators.pattern(/^\/[a-zA-Z{}/]*$/),
-      Validators.pattern(/^(?!.*\/\/)(?!.*{{)(?!.*}}).*$/),
-      Validators.pattern(/.*{.+}.*$/),
-    ];
-
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
     this.form = new FormGroup({
       baseUrl: new FormControl('https://example.com', Validators.compose([Validators.required, EditorDialogValidators.baseUrl])),
@@ -109,8 +107,8 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
       activateResourcePath: new FormControl(false),
       output: new FormControl('yaml'),
       paging: new FormControl('NO_PAGING'),
-      resourcePath: new FormControl('/resource/{resourceId}', this.resourcePathValidators),
-      file: new FormControl(null, [Validators.required]),
+      resourcePath: new FormControl(null),
+      file: new FormControl(null),
       ymlProperties: new FormControl(null),
       jsonProperties: new FormControl(null),
     });
@@ -122,8 +120,20 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.activateResourcePath?.valueChanges.subscribe(activateResourcePath => {
         const resourcePathControl = this.form.get('resourcePath');
-        activateResourcePath ? resourcePathControl?.setValidators(this.resourcePathValidators) : resourcePathControl?.setValidators(null);
+        const fileControl = this.form.get('file');
+
+        if (activateResourcePath) {
+          resourcePathControl?.setValue('/resource/{resourceId}');
+          resourcePathControl?.setValidators(this.resourcePathValidators);
+          fileControl?.setValidators(Validators.required);
+        } else {
+          resourcePathControl?.setValue(null);
+          resourcePathControl?.setValidators(null);
+          fileControl?.setValidators(null);
+        }
+
         resourcePathControl?.updateValueAndValidity();
+        fileControl?.updateValueAndValidity();
       }),
     );
   }
@@ -169,7 +179,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   private handleFileContent(file: File, content: string): void {
     const fileType = this.getFileType(file);
     const propertyName = fileType === 'json' ? 'jsonProperties' : 'ymlProperties';
-    this.form.patchValue({[propertyName]: content});
+    this.form.setValue({[propertyName]: content});
   }
 
   private getFileType(file: File): 'json' | 'yaml' {
@@ -222,17 +232,9 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     if (files.length) {
       const file = files[0];
       this.uploadedFile = file;
-      this.addFileContentIntoControl(file);
+      this.readFileContent(file);
       this.file.patchValue(file);
     }
-  }
-
-  private addFileContentIntoControl(file: File): void {
-    const reader = new FileReader();
-    reader.onload = event => {
-      this.ymlProperties?.setValue(event.target.result);
-    };
-    reader.readAsText(file);
   }
 
   removeUploadedFile(): void {
