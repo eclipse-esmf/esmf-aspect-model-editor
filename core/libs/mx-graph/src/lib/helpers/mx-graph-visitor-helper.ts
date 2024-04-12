@@ -503,11 +503,11 @@ export class MxGraphVisitorHelper {
 
   static extractText(inputString: string, startChar: string, endChar: string) {
     let startIndex = inputString.indexOf(startChar);
-    if (startIndex === -1) return "";
+    if (startIndex === -1) return '';
     startIndex += startChar.length;
 
-    let endIndex = inputString.indexOf(endChar, startIndex);
-    if (endIndex === -1) return "";
+    const endIndex = inputString.indexOf(endChar, startIndex);
+    if (endIndex === -1) return '';
 
     return inputString.substring(startIndex, endIndex).trim();
 }
