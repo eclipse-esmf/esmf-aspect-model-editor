@@ -279,6 +279,8 @@ export class ModelApiService {
           baseUrl: openApi.baseUrl,
           includeQueryApi: openApi.includeQueryApi,
           pagingOption: openApi.paging,
+          resourcePath: openApi.resourcePath,
+          ymlProperties: openApi.ymlProperties,
         },
         responseType: openApi.output === 'yaml' ? ('text' as 'json') : 'json',
       })
