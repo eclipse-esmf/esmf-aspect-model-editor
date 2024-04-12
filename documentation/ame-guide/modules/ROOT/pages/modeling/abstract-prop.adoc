@@ -1,14 +1,14 @@
 [[abstract-property-case]]
 = Abstract Property
 
-There are two different ways to create an abstract property:
+There are two different ways to create an Abstract Property:
 
 * Use drag-and-drop from the Workspace sidebar.
 * Click the Add icon on an Abstract Entity.
 
 == Use drag-and-drop from the Workspace sidebar
 
-To add abstract property, proceed as follows:
+To add an Abstract Property, proceed as follows:
 
 . Open the Workspace sidebar.
 . Drag the Abstract Property element and drop it to the graph area canvas.
@@ -17,7 +17,8 @@ image:drag-and-drop-abstract-property.png[Drag and drop Abstract Property, 40%]
 
 == Click the Add icon on an Abstract Entity
 
-To add and connect an abstract property with an abstract entity, click the Add icon at the bottom edge of the existing abstract entity:
+To add and connect an Abstract Property with an Abstract Entity, click the Add icon at the bottom edge of the existing 
+Abstract Entity:
 
 image:use-add-icon-abstract-entity.png[Use add icon Abstract Entity, 30%]
 
