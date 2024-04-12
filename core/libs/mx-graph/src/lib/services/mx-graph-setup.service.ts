@@ -129,7 +129,8 @@ export class MxGraphSetupService {
       const table = document.createElement('table');
       if (!configuration?.baseProperties.isPredefined) {
         table.innerHTML += `<tr><td>Namespace</td><td>${configuration?.baseProperties.namespace}</td></tr>`;
-        table.innerHTML += `<tr><td>Version</td><td>${configuration?.baseProperties.version}</td></tr>`;
+        table.innerHTML += `<tr><td>SAMM Version</td><td>${configuration?.baseProperties.sammVersion}</td></tr>`;
+        table.innerHTML += `<tr><td>Model Version</td><td>${configuration?.baseProperties.version}</td></tr>`;
 
         if (configuration?.baseProperties.fileName) {
           table.innerHTML += `<tr><td>File</td><td>${configuration?.baseProperties.fileName}</td></tr>`;
