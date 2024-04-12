@@ -370,6 +370,7 @@ export interface GenerateOpenapiSpecDialog {
   ACTIVATE_RESOURCE_PATH: string;
   ACTIVATE_RESOURCE_PATH_TOOLTIP: string;
   RESOURCE_PATH: string;
+  RESOURCE_PATH_VALUE: string;
   RESOURCE_PATH_REQUIRED: string;
   RESOURCE_PATH_PATTERN: string;
   RESOURCE_PATH_ERROR: string;

@@ -261,6 +261,7 @@
     "ACTIVATE_RESOURCE_PATH": "If enabled, the resource path will be activated in the OpenAPI specification.",
     "ACTIVATE_RESOURCE_PATH_TOOLTIP": "Activate Resource Path",
     "RESOURCE_PATH": "Resource Path - The resource path for the Aspect API endpoints",
+    "RESOURCE_PATH_VALUE": "/",
     "RESOURCE_PATH_REQUIRED": "Resource path is required",
     "RESOURCE_PATH_PATTERN": "Pattern is not matching",
     "RESOURCE_PATH_ERROR": "Failed to generate Open Api Spec",
