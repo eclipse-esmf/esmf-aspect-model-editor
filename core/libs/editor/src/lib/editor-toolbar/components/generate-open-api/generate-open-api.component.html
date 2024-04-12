@@ -35,8 +35,8 @@
 
         <mat-form-field appearance="fill">
           <mat-label>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.BASEURL' | translate }}</mat-label>
-          <input matInput [formControl]="getControl('baseUrl')" placeholder="https://example.com" />
-          <mat-error *ngIf="getControl('baseUrl')?.errors?.invalidUrl">
+          <input matInput [formControl]="getControl('baseUrl')" placeholder="https://example.com" data-cy="tbBaseUrlInput" />
+          <mat-error *ngIf="getControl('baseUrl')?.errors?.invalidUrl" data-cy="tbBaseUrlInputError">
             {{ 'GENERATE_OPENAPI_SPEC_DIALOG.PLEASE_ADD_VALID_URL' | translate }}
           </mat-error>
         </mat-form-field>
@@ -73,6 +73,7 @@
           [formControl]="activateResourcePath"
           class="dialog__checkbox"
           [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ACTIVATE_RESOURCE_PATH' | translate"
+          data-cy="activateResourcePathCheckbox"
         >
           {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ACTIVATE_RESOURCE_PATH_TOOLTIP' | translate }}
         </mat-checkbox>
@@ -80,18 +81,18 @@
 
       <section *ngIf="activateResourcePath.value">
         <mat-form-field appearance="fill">
-          <mat-label>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH' | translate }}</mat-label>
-          <input matInput [formControl]="getControl('resourcePath')" placeholder="/resource/{resourceId}" />
-          <mat-error *ngIf="getControl('resourcePath')?.errors?.required">
+          <mat-label data-cy="resourcePathTitle">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH' | translate }}</mat-label>
+          <input matInput [formControl]="getControl('resourcePath')" placeholder="/resource/{resourceId}" data-cy="resourcePathInput" />
+          <mat-error *ngIf="getControl('resourcePath')?.errors?.required" data-cy="resourcePathRequiredError">
             {{ 'GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH_REQUIRED' | translate }}
           </mat-error>
-          <mat-error *ngIf="getControl('resourcePath')?.errors?.pattern">
+          <mat-error *ngIf="getControl('resourcePath')?.errors?.pattern" data-cy="resourcePathPatternError">
             {{ 'GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH_PATTERN' | translate }}
           </mat-error></mat-form-field
         >
 
-        <h1 class="dialog__title">
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_FILE_TITLE' | translate: {output: output.value.toUpperCase()} }} :
+        <h1 class="dialog__title" data-cy="uploadTitle">
+          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_FILE_TITLE' | translate: {output: output.value.toUpperCase()} }}:
         </h1>
         <p class="dialog__description">
           {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_FILE_DESCRIPTION' | translate: {output: output.value.toUpperCase()} }}
@@ -99,10 +100,12 @@
         </p>
 
         <div *ngIf="uploadedFile" class="dialog__file-info">
-          <h2>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOADED_FILE_TITLE' | translate: {output: output.value.toUpperCase()} }} :</h2>
+          <h2 data-cy="uploadFileTitle">
+            {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOADED_FILE_TITLE' | translate: {output: output.value.toUpperCase()} }}:
+          </h2>
           <span class="dialog__file-name">{{ uploadedFile.name }}</span>
           <button mat-icon-button (click)="removeUploadedFile()">
-            <mat-icon>remove_circle</mat-icon>
+            <mat-icon data-cy="removeUploadFile">remove_circle</mat-icon>
           </button>
         </div>
 
@@ -111,6 +114,7 @@
             #dropArea
             [ngClass]="file?.errors?.required ? 'dialog__border--error' : 'dialog__border--dashed'"
             class="dialog__upload-content"
+            data-cy="uploadContent"
           >
             <input
               class="dialog__upload-input"
@@ -118,6 +122,7 @@
               [accept]="output.value === 'yaml' ? '.yml,.yaml' : '.json'"
               (change)="onFileBrowseHandler($event)"
               #fileDropRef
+              data-cy="uploadContentFileInput"
             />
             <div>
               <button mat-icon-button (click)="fileDropRef.click()" tabindex="0">
@@ -126,7 +131,7 @@
               <p class="dialog__upload-text">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_DRAG_AND_DROP_TEXT' | translate }}</p>
             </div>
           </div>
-          <mat-error *ngIf="file?.errors?.required">
+          <mat-error *ngIf="file?.errors?.required" data-cy="uploadFileRequireError">
             {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_FILE_REQUIRED' | translate: {output: output.value.toUpperCase()} }}
           </mat-error></ng-container
         >
@@ -135,7 +140,7 @@
           <mat-accordion>
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title>
+                <mat-panel-title data-cy="accordionTitle">
                   {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_FILE_ACCORDION_TITLE' | translate }}
                 </mat-panel-title>
               </mat-expansion-panel-header>

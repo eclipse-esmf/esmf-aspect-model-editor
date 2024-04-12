@@ -23,6 +23,7 @@ import {FileHandlingService, GenerateHandlingService} from '@ame/editor';
 import {SearchesStateService} from '@ame/utils';
 import {NamespacesManagerService} from '@ame/namespace-manager';
 import {Aspect} from '@ame/meta-model';
+import 'cypress-file-upload';
 
 const {mxEventObject, mxEvent} = mxgraphFactory({});
 
@@ -528,13 +529,25 @@ Cypress.Commands.add('saveAspectModelToWorkspace', () => {
 Cypress.Commands.add('openGenerationOpenApiSpec', () => {
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING&resourcePath=null&ymlProperties=null&jsonProperties=null',
     {fixture: 'valid-open-api.json'},
   );
 
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING&resourcePath=null&ymlProperties=null&jsonProperties=null',
+    {fixture: 'valid-open-api.yaml'},
+  );
+
+  cy.intercept(
+    'POST',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING&resourcePath=/resource/%7BresourceId%7D&ymlProperties=null&jsonProperties=null',
+    {fixture: 'valid-open-api.json'},
+  );
+
+  cy.intercept(
+    'POST',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING&resourcePath=/resource/%7BresourceId%7D&ymlProperties=null&jsonProperties=null',
     {fixture: 'valid-open-api.yaml'},
   );
 
