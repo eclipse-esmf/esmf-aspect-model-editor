@@ -8,7 +8,7 @@ image:generate-api-spec.png[Generate document, width=15%]
 
 * In case your model supports multiple languages, select the specific language for the documentation.
 * Select *JSON* or *YAML* as the desired file format.
-* Set the *Base URL* were the Aspect API will be served from.
+* Set the base URL where the Aspect API will be served from.
 * Check the *IncludeQueryAPI* checkbox, if you need a path section for the Query API Endpoint of the Aspect API to be included in the specification.
 * Check the *UseSemanticVersion* checkbox, if you need the complete semantic version of the Aspect Model to be used as the version of the API. +
 Otherwise, only the major part of the Aspect Version is used as the version of the API.
