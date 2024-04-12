@@ -97,6 +97,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.pattern(/^\/[a-zA-Z{}/]*$/),
       Validators.pattern(/^(?!.*\/\/)(?!.*{{)(?!.*}}).*$/),
+      Validators.pattern(/.*{.*}.*$/),
     ];
 
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
@@ -108,8 +109,8 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
       activateResourcePath: new FormControl(false),
       output: new FormControl('yaml'),
       paging: new FormControl('NO_PAGING'),
-      resourcePath: new FormControl('/', this.resourcePathValidators),
-      file: new FormControl(null),
+      resourcePath: new FormControl('/resource/{resourceId}', this.resourcePathValidators),
+      file: new FormControl(null, [Validators.required]),
       ymlProperties: new FormControl(null),
       jsonProperties: new FormControl(null),
     });
@@ -123,15 +124,6 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
         const resourcePathControl = this.form.get('resourcePath');
         activateResourcePath ? resourcePathControl?.setValidators(this.resourcePathValidators) : resourcePathControl?.setValidators(null);
         resourcePathControl?.updateValueAndValidity();
-      }),
-    );
-
-    this.subscriptions.add(
-      this.form.get('resourcePath')?.valueChanges.subscribe(resourcePath => {
-        const fileControl = this.file;
-        const brackets = resourcePath.includes('{') && resourcePath.includes('}');
-        brackets ? fileControl?.setValidators([Validators.required]) : fileControl?.setValidators([]);
-        fileControl?.updateValueAndValidity();
       }),
     );
   }
