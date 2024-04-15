@@ -18,7 +18,7 @@ To add an abstract entity, proceed as follows:
 . Open the Workspace sidebar.
 . Drag the Abstract Entity element and drop it to the graph area canvas.
 
-image:drag-and-drop-abstract-entity.png[Drag and drop Abstract Entity, 40%]
+image:drag-and-drop-abstract-entity.png[Drag and drop Abstract Entity, 40%, link=self]
 
 == Adjust an Entity in the extends field
 
