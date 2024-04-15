@@ -144,7 +144,7 @@ export class MxGraphHelper {
       .some(firstEdge =>
         graph
           .getIncomingEdges(firstEdge.source)
-          .some(secondEdge => MxGraphHelper.getModelElement(secondEdge.source) instanceof DefaultStructuredValue),
+          .some(secondEdge => MxGraphHelper.getModelElement(secondEdge.source) instanceof DefaultStructuredValue)
       );
   }
 
@@ -332,9 +332,25 @@ export class MxGraphHelper {
       title.style.width = cell.geometry.width + 'px';
     }
     title.title = isSmallShape ? '' : modelElement.name;
+
     title.innerText = modelElement.name?.length > 24 ? modelElement.name?.substring(0, 21) + '...' : modelElement.name;
+    if (cell.collapsed) {
+      const isEntityInstance = modelElement instanceof DefaultEntityInstance;
+      if (isEntityInstance) {
+        title.innerText = this.formatSmallName(modelElement.name);
+      }
+    }
+
     title.classList.add('element-name');
     return title;
+  }
+
+  private static formatSmallName(name: string) {
+    if (name.length < 4) {
+      return name;
+    } else {
+      return name.charAt(0) + '..' + name.charAt(name.length - 1);
+    }
   }
 
   static createPropertiesLabel(cell: mxgraph.mxCell) {

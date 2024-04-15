@@ -23,7 +23,7 @@ import {
   DefaultUnit,
 } from '@ame/meta-model';
 import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
-import {ShapeGeometry, basicShapeGeometry, circleShapeGeometry} from '@ame/shared';
+import {ShapeGeometry, basicShapeGeometry, smallCircleShapeGeometry} from '@ame/shared';
 import {MxGraphHelper} from '@ame/mx-graph';
 import {Injector} from '@angular/core';
 import {ShapeSettingsStateService} from '@ame/editor';
@@ -137,11 +137,12 @@ export class PropertiesFilterLoader implements FilterLoader {
   }
 
   getShapeGeometry(element: BaseMetaModelElement): ShapeGeometry {
+    console.log('in properties filter!!!');
     if (element instanceof DefaultAspect) {
       return basicShapeGeometry;
     }
-
-    return element instanceof DefaultProperty ? basicShapeGeometry : circleShapeGeometry;
+    
+    return element instanceof DefaultProperty ? basicShapeGeometry : smallCircleShapeGeometry;
   }
 
   getMxGraphStyle(element: BaseMetaModelElement): string {

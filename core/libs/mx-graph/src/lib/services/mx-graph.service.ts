@@ -320,6 +320,7 @@ export class MxGraphService {
         if (MxGraphHelper.isComplexEnumeration(modelElement)) {
           this.mxGraphShapeOverlayService.removeOverlay(cell, MxGraphHelper.getRightOverlayButton(cell));
         }
+
         cell.overlays?.forEach(overlay => {
           overlay.image.width = overlayGeometry.collapsedWidth;
           overlay.image.height = overlayGeometry.collapsedHeight;
@@ -407,6 +408,7 @@ export class MxGraphService {
   }
 
   formatCell(cell: mxgraph.mxCell) {
+    console.log('+++++++++++++++ formatCell ++++++++++++++++ cell',cell);
     if (this.configurationService.getSettings().autoFormatEnabled) {
       // don't apply cell formatting in case auto format is enabled
       return;
