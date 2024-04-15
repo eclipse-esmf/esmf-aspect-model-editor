@@ -48,7 +48,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   form: FormGroup;
   languages: locale.ILocale[];
   isGenerating = false;
-  linkToSpecification = '';
+  linkToSpecification = 'https://eclipse-esmf.github.io/ame-guide/generate/generate-openapi-doc.html';
   uploadedFile: File = undefined;
   subscriptions = new Subscription();
 
