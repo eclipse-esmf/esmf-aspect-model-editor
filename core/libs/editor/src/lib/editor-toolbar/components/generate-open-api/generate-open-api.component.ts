@@ -179,14 +179,14 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   private handleFileContent(file: File, content: string): void {
     const fileType = this.getFileType(file);
     const propertyName = fileType === 'json' ? 'jsonProperties' : 'ymlProperties';
-    this.form.setValue({[propertyName]: content});
+    this.form.patchValue({[propertyName]: content});
   }
 
-  private getFileType(file: File): 'json' | 'yaml' {
+  private getFileType(file: File): 'json' | 'yml' {
     if (file.name.endsWith('.json')) {
       return 'json';
     } else if (file.name.endsWith('.yaml') || file.name.endsWith('.yml')) {
-      return 'yaml';
+      return 'yml';
     }
 
     throw new Error('Unsupported file type');
