@@ -35,7 +35,7 @@ export const circleShapeGeometry: ShapeGeometry = {
   collapsedWidth: 30,
   collapsedHeight: 30,
 };
-// here larisa tested
+
 export const smallBasicShapeGeometry: ShapeGeometry = {
   type: 'small',
   expandedWith: 80,

@@ -137,7 +137,6 @@ export class PropertiesFilterLoader implements FilterLoader {
   }
 
   getShapeGeometry(element: BaseMetaModelElement): ShapeGeometry {
-    console.log('in properties filter!!!');
     if (element instanceof DefaultAspect) {
       return basicShapeGeometry;
     }
