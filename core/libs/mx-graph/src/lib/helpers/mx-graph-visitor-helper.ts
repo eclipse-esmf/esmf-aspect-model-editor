@@ -486,7 +486,7 @@ export class MxGraphVisitorHelper {
       }
 
       return {
-        version: this.extractText(rdfModel.absoluteAspectModelFileName,':',':'),
+        version: RdfModelUtil.getNamespaceVersionFromRdf(rdfModel.absoluteAspectModelFileName),
         sammVersion: metaModelVersion,
         namespace: elementNamespace,
         external: modelElement.isExternalReference(),
@@ -500,16 +500,5 @@ export class MxGraphVisitorHelper {
       return null;
     }
   }
-
-  static extractText(inputString: string, startChar: string, endChar: string) {
-    let startIndex = inputString.indexOf(startChar);
-    if (startIndex === -1) return '';
-    startIndex += startChar.length;
-
-    const endIndex = inputString.indexOf(endChar, startIndex);
-    if (endIndex === -1) return '';
-
-    return inputString.substring(startIndex, endIndex).trim();
-}
 
 }
