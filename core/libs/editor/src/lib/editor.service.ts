@@ -332,7 +332,16 @@ export class EditorService {
 
   generateOpenApiSpec(rdfModel: RdfModel, openApi: OpenApi): Observable<string> {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.generateOpenApiSpec(serializedModel, openApi);
+    return this.modelApiService.generateOpenApiSpec(serializedModel, openApi).pipe(
+      catchError(err => {
+        this.notificationsService.error({
+          title: this.translate.language.GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH_ERROR,
+          message: err.error.message,
+          timeout: 5000,
+        });
+        return throwError(() => err.error);
+      }),
+    );
   }
 
   private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string, namespaceFileName: string, editElementUrn?: string): void {

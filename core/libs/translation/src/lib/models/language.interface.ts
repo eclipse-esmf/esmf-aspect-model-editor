@@ -372,6 +372,7 @@ export interface GenerateOpenapiSpecDialog {
   RESOURCE_PATH: string;
   RESOURCE_PATH_REQUIRED: string;
   RESOURCE_PATH_PATTERN: string;
+  RESOURCE_PATH_ERROR: string;
   UPLOAD_FILE_TITLE: string;
   UPLOAD_FILE_DESCRIPTION: string;
   UPLOAD_DRAG_AND_DROP_TEXT: string;
