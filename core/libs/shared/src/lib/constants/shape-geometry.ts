@@ -12,7 +12,7 @@
  */
 
 export type ShapeGeometry = {
-  type: 'basic' | 'circle' | 'small' | 'overlay';
+  type: 'basic' | 'circle' | 'small' | 'overlay'| 'smallCircle';
   expandedWith: number;
   expandedHeight: number;
   collapsedWidth: number;
@@ -40,7 +40,7 @@ export const smallBasicShapeGeometry: ShapeGeometry = {
   type: 'small',
   expandedWith: 80,
   expandedHeight: 35,
-  collapsedWidth: 30,
+  collapsedWidth: 46,
   collapsedHeight: 30,
 };
 
@@ -50,6 +50,14 @@ export const overlayGeometry: ShapeGeometry = {
   expandedHeight: 20,
   collapsedWidth: 16,
   collapsedHeight: 16,
+};
+
+export const smallCircleShapeGeometry: ShapeGeometry = {
+  type: 'smallCircle',
+  expandedWith: 45,
+  expandedHeight: 45,
+  collapsedWidth: 20,
+  collapsedHeight: 20,
 };
 
 export enum ModelHierarchicalLayout {

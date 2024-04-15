@@ -320,6 +320,7 @@ export class MxGraphService {
         if (MxGraphHelper.isComplexEnumeration(modelElement)) {
           this.mxGraphShapeOverlayService.removeOverlay(cell, MxGraphHelper.getRightOverlayButton(cell));
         }
+
         cell.overlays?.forEach(overlay => {
           overlay.image.width = overlayGeometry.collapsedWidth;
           overlay.image.height = overlayGeometry.collapsedHeight;
