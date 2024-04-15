@@ -11,7 +11,7 @@ In this scenario, the newly created Trait takes the name of the parent attribute
 
 A Trait has an Add icon image:add.png[Add icon] on the bottom of the element, which is always visible:
 
-* When clicking the "Add" icon image:add.png[Add icon], a Characteristic is created and connected to the Trait.
+* When clicking the Add icon image:add.png[Add icon], a Characteristic is created and connected to the Trait.
 
 * If there is already a Characteristic connected to the Trait, each Trait Add icon image:add.png[Add icon] click will create a new Constraint and connect it to the Trait.
 +

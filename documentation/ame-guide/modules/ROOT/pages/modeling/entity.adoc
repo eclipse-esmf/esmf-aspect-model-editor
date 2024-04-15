@@ -20,7 +20,7 @@ image:entity-instance-add-dialog.png[width=40%]
 image:entity-instance-new-value.png[width=40%]
 
 Now you can also create Entity instances using the Add icon image:add.png[Add icon] at the Enumeration Characteristic element in the Aspect Model.
-Note that first an Entity had to be created before an instance can be added.
+Note that first an Entity has to be created before an instance can be added.
 
 image:adding-entity-value-instance-plus-icon.png[width=40%]
 
