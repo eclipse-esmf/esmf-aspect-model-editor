@@ -292,7 +292,11 @@ For more information, see xref:getting-started/navigate-models.adoc[Navigate mod
 
 Edit the attributes of a selected element of your Aspect Model with the Edit dialog.
 
-To access the details of an element in the Edit dialog, either double-click the element or select the element and click the Edit highlighted cell icon image:toolbar-icons/jump.png[Edit icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
+How to access the details of an element in the Edit dialog: 
+
+* Double-click the element.
+* Select the element and right-click to open the context menu. Then select *Open in detail view* image:toolbar-icons/jump.png[Edit icon].
+* Select the element and click the *Edit highlighted cell* button image:toolbar-icons/jump.png[Edit icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 
 For more information, see xref:modeling/edit-elements.adoc[Edit elements].
 
