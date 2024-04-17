@@ -105,9 +105,12 @@ To create a new element from such a Structured Value Characteristic, proceed as 
 
 → As a result, a new Property is created.
 
-NOTE: A new Property created from a Structured Value Characteristic, is automatically inserted as an attribute in the Structured Value Characteristic and the `(regex)` capture group is automatically appended to `deconstructionRule`.
+[NOTE]
+====
+A new Property created from a Structured Value Characteristic, is automatically inserted as an attribute in the Structured Value Characteristic and the `(regex)` capture group is automatically appended to `deconstructionRule`.
 
-image:structured-value-add-icon.png[New Property from Structured Value,width=40%]
+image:structured-value-add-icon.png[New Property from Structured Value,width=50%]
+====
 
 &nbsp;
 

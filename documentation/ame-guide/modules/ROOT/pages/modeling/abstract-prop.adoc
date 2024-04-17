@@ -28,6 +28,6 @@ image:use-add-icon-abstract-entity.png[Use add icon Abstract Entity, 30%]
 When an Entity connects to an Abstract Entity with Abstract Properties, a Property is created for each non-optional Abstract Property.
 Each Property created extends one Abstract Property and is connected to the Entity.
 The Property that inherits an Abstract Property gets the same name as the Abstract Property and inherits all field information from Abstract Property.
-Data from the derived Property cannot be edited and is greyed out in the Edit dialog.
+Data from the derived Property cannot be edited and is grayed out in the Edit dialog.
 
 image::connect-abstract-property-with-abstract-entity.png[Connect Abstract Entity with Entity, 60%]
