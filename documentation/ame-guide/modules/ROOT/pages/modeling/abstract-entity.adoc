@@ -37,7 +37,7 @@ For a new model that only has an Aspect so far:
 . Create one Property by clicking twice on the Aspect's Add icon image:add.png[Add icon].
 . Create one Characteristic by clicking the Add icon image:add.png[Add icon].
 . Create one Entity by clicking the bottom Add icon image:add.png[Add icon].
-. Drag and Drop an Abstract Entity from the sidebar.
+. Drag and drop an Abstract Entity from the sidebar.
 . Connect the Abstract Entity with the Entity:
 .. Click the Entity,
 .. Then CTRL+click the Abstract Entity,
