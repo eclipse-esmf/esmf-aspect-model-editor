@@ -1,7 +1,7 @@
 [[migration-of-models]]
 = Migration of models
 
-Aspect Models created in older versions can be easily migrated to the latest version of the Aspect Model Editor.
+Aspect Models created based on older versions of the Semantic Aspect Meta Model (SAMM) can be easily migrated to the latest SAMM version.
 
 There are two ways to migrate an Aspect Model:
 
