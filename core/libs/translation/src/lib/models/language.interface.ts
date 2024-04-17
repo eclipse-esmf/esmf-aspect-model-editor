@@ -733,6 +733,7 @@ export interface Generate {
   LABEL: string;
   HTML_DOCUMENTATION: string;
   OPEN_API_SPECIFICATION: string;
+  ASYNC_API_SPECIFICATION: string;
   AASX_XML: string;
   SAMPLE_JSON_PAYLOAD: string;
   JSON_SCHEMA: string;

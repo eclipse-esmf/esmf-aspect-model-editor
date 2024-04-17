@@ -20,6 +20,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
   AASXGenerationModalComponent,
   DocumentComponent,
+  GenerateAsyncApiComponent,
   GenerateDocumentationComponent,
   GenerateOpenApiComponent,
   LanguageSelectorModalComponent,
@@ -84,6 +85,7 @@ import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/b
     DocumentComponent,
     NotificationsComponent,
     ThemeSwitcherComponent,
+    GenerateAsyncApiComponent,
     GenerateOpenApiComponent,
     GenerateDocumentationComponent,
     LanguageSelectorModalComponent,

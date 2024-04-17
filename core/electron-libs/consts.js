@@ -161,6 +161,10 @@ icons = {
     disabled: `${disabledIconsPath}${path.sep}api_FILL0_wght400_GRAD0_opsz24.png`,
     enabled: `${enabledIconsPath}${path.sep}api_FILL0_wght400_GRAD0_opsz24.png`,
   },
+  GENERATE_ASYNC_API_SPECIFICATION: {
+    disabled: `${disabledIconsPath}${path.sep}async_FILL0_wght400_GRAD0_opsz24.png`,
+    enabled: `${enabledIconsPath}${path.sep}async_FILL0_wght400_GRAD0_opsz24.png`,
+  },
   GENERATE_AASX_XML: {
     disabled: `${disabledIconsPath}${path.sep}data_array_FILL0_wght400_GRAD0_opsz24.png`,
     enabled: `${enabledIconsPath}${path.sep}data_array_FILL0_wght400_GRAD0_opsz24.png`,

@@ -1,0 +1,95 @@
+/*!
+ * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+
+  &__checkbox {
+    margin: 12px 12px;
+  }
+
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__content {
+    padding-bottom: 0;
+  }
+
+  &__border {
+    &--dashed {
+      border: 2px dashed #000;
+    }
+    &--error {
+      border: 2px dashed red;
+    }
+  }
+
+  &__title {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+  }
+
+  &__description {
+    margin-top: 0;
+  }
+
+  &__upload-input {
+    display: none;
+  }
+
+  &__upload-content {
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    button {
+      order: 1;
+    }
+
+    span {
+      order: 2;
+      font-size: 10px;
+    }
+  }
+
+  &__textarea {
+    background-color: lightgray;
+    padding-top: 10px;
+    padding-left: 6px;
+    width: 100%;
+    height: 150px;
+    resize: none;
+    border: none;
+  }
+
+  &__file-name {
+    padding-left: 10px;
+  }
+
+  &__file-info {
+    display: flex;
+    align-items: center;
+
+    &__name {
+      margin-left: 10px;
+    }
+  }
+}
