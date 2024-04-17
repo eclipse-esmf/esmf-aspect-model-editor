@@ -21,6 +21,7 @@ image::ame-ui-overview-numbers.png[Numbered UI overview, width=80%]
 [[menu-file]]
 === File Menu
 {nbsp}
+
 image:menu-bar/menu-file.png[, width=30%, align="center"]
 
 [cols="15%,25%,60%"]
@@ -64,6 +65,7 @@ image:menu-bar/menu-file.png[, width=30%, align="center"]
 [[menu-view]]
 === View Menu
 {nbsp}
+
 image:menu-bar/menu-view.png[, width=30%, align="center"]
 
 [cols="15%,25%,60%"]
@@ -104,6 +106,7 @@ image:menu-bar/menu-view.png[, width=30%, align="center"]
 [[menu-edit]]
 === Edit Menu
 {nbsp}
+
 image:menu-bar/menu-edit.png[, width=30%, align="center"]
 
 [cols="15%,25%,60%"]
@@ -135,6 +138,7 @@ image:menu-bar/menu-edit.png[, width=30%, align="center"]
 [[menu-valiadate]]
 === Validate Menu
 {nbsp}
+
 image:menu-bar/menu-validate.png[, width=30%, align="center"]
 
 [cols="15%,25%,60%"]
@@ -150,7 +154,8 @@ image:menu-bar/menu-validate.png[, width=30%, align="center"]
 [[menu-generate]]
 === Generate Menu
 {nbsp}
-image:menu-bar/menu-generate.png[,20%,20%]
+
+image:menu-bar/menu-generate.png[, width=30%, align="center"]
 
 [cols="15%,25%,60%"]
 |===
@@ -181,6 +186,7 @@ image:menu-bar/menu-generate.png[,20%,20%]
 [[menu-search]]
 === Search Menu
 {nbsp}
+
 image:menu-bar/menu-search.png[, width=30%, align="center"]
 
 [cols="15%,25%,60%"]
