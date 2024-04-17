@@ -6,7 +6,7 @@ To generate AASX/XML files from an Aspect Model, proceed as follows:
 +
 image:generate-aasx.png[Generate AASX/XML, width=15%]
 
-* Select *AASX* or *XML* as the desired file format.
+* Select *AASX* or *XML* in the *Output file format* drop-down.
 * Click *Generate* and store the file locally.
 +
 image:generate-aasx-dropdown.png[AASX/XML generation, width=30%]

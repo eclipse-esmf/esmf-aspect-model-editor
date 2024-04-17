@@ -7,7 +7,7 @@ To generate an OpenAPI specification from the Aspect Model, proceed as follows:
 image:generate-api-spec.png[Generate document, width=15%]
 
 * In case your model supports multiple languages, select the specific language for the documentation.
-* Select *JSON* or *YAML* as the desired file format.
+* Select *JSON* or *YAML* in the *Output file format* drop-down.
 * Set the base URL where the Aspect API will be served from.
 * Select the *IncludeQueryAPI* checkbox, if you need a path section for the Query API Endpoint of the Aspect API to be included in the specification.
 * Select the *UseSemanticVersion* checkbox, if you need the complete semantic version of the Aspect Model to be used as the version of the API. +
