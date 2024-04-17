@@ -1,5 +1,5 @@
 [[shared-models]]
-= Shared Models
+= Shared models
 
 The concept of "shared models" has been introduced in the Aspect Model Editor
 to support you defining model parts, which can be reused in multiple other models.

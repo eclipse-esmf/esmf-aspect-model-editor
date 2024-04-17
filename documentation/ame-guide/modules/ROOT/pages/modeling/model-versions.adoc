@@ -5,14 +5,14 @@
 
 To create a new version of an Aspect Model without deleting the previous one, proceed as follows:
 
-. Click *Settings*.
+. Click the Settings icon image:toolbar-icons/settings.png[Settings icon] on the Bottom workspace sidebar.
 +
-→ The Settings dialog opens.
+→ The *Settings* dialog opens.
 . Navigate to the menu *Namespaces*.
 . Enter the new version of the namespace in the field *Version*.
 +
 image::settings-namespaces.png[width=50%]
-. Click *Apply* to apply the changes. +
+. Click *Apply* to take over the changes. +
 A window pops up asking you to confirm your changes.
 . Click *Save* to confirm and then *OK* to apply the changes. +
 The window is closed. 
