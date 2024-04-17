@@ -14,7 +14,7 @@ A fresh window will appear, automatically loading the AspectDefault aspect model
 
 To open a model from the workspace in a new window:
 
-. Access the workspace by selecting its icon on the left sidebar. image:elements/workspace.png[width=3%]
+. Access the workspace by selecting its icon image:elements/workspace.png[width=3%] on the left sidebar. 
 . From here, you have two ways to open a model:
 * Double-click a file to instantly open it in a new window.
 * Click on the three-dot menu beside the file, and choose the Open in new window option.
