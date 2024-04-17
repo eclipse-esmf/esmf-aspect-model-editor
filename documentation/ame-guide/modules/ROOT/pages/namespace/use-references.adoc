@@ -3,7 +3,7 @@
 [[use-references]]
 = Use references
 
-You can make references between different Aspect Models by including elements of one into another.
+You can reuse elements from one Aspect Model within another Aspect Model. To do so, first add a reference Aspect Model that provides the elements you want to reuse.
 
 [[add-references]]
 == Add references
