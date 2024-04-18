@@ -140,6 +140,21 @@ export enum SettingsDialogSelectors {
 export const GENERATION_tbGenerateOpenApiButton = '[data-cy="tbGenerateOpenApiButton"]';
 export const GENERATION_tbOutputButton = '[data-cy="tbOutputButton"]';
 export const GENERATION_tbOutputButton_YAML = '[data-cy="tbOutputButton-yaml"]';
+export const GENERATION_tbOutputButton_JSON = '[data-cy="tbOutputButton-json"]';
+export const GENERATION_tbBaseUrlInput = '[data-cy="tbBaseUrlInput"]';
+export const GENERATION_tbBaseUrlInputError = '[data-cy="tbBaseUrlInputError"]';
+export const GENERATION_activateResourcePathCheckbox = '[data-cy="activateResourcePathCheckbox"]';
+export const GENERATION_resourcePathTitle = '[data-cy="resourcePathTitle"]';
+export const GENERATION_resourcePathInput = '[data-cy="resourcePathInput"]';
+export const GENERATION_resourcePathRequiredError = '[data-cy="resourcePathRequiredError"]';
+export const GENERATION_resourcePathPatternError = '[data-cy="resourcePathPatternError"]';
+export const GENERATION_uploadTitle = '[data-cy="uploadTitle"]';
+export const GENERATION_uploadFileTitle = '[data-cy="uploadFileTitle"]';
+export const GENERATION_uploadContent = '[data-cy="uploadContent"]';
+export const GENERATION_uploadContentFileInput = '[data-cy="uploadContentFileInput"]';
+export const GENERATION_uploadFileRequireError = '[data-cy="uploadFileRequireError"]';
+export const GENERATION_accordionTitle = '[data-cy="accordionTitle"]';
+export const GENERATION_removeUploadFile = '[data-cy="removeUploadFile"]';
 export const GENERATION_tbDownloadDoc = '[data-cy="tbDownloadDoc"]';
 export const GENERATION_downloadFileButton = '[data-cy="downloadFileButton"]';
 

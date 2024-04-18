@@ -91,7 +91,6 @@ export class FileHandlingService {
     private namespaceCacheService: NamespacesCacheService,
     private migratorService: MigratorService,
     private sidebarService: SidebarStateService,
-    private titleService: Title,
     private translate: LanguageTranslationService,
     private electronSignalsService: ElectronSignalsService,
     private configurationService: ConfigurationService,
