@@ -480,8 +480,8 @@ export class MxGraphVisitorHelper {
       const aspectVersionedNamespace = rdfModel.getAspectModelUrn().replace('#', '');
       const [elementVersionedNamespace] = modelElement.aspectModelUrn.split('#');
 
-      let metaModelVersion =  modelElement.metaModelVersion;
-      if(modelElement instanceof DefaultEntityInstance){
+      let metaModelVersion = modelElement.metaModelVersion;
+      if (modelElement instanceof DefaultEntityInstance) {
         metaModelVersion = modelElement.entity.metaModelVersion;
       }
 
@@ -500,5 +500,4 @@ export class MxGraphVisitorHelper {
       return null;
     }
   }
-
 }
