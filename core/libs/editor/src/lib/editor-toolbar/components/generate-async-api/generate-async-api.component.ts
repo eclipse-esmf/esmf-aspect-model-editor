@@ -21,7 +21,6 @@ import {ModelService} from '@ame/rdf/services';
 import * as locale from 'locale-codes';
 import {first} from 'rxjs/operators';
 import {saveAs} from 'file-saver';
-import {OpenApi} from '../generate-open-api/generate-open-api.component';
 
 export interface AsyncApi {
   language: string;
