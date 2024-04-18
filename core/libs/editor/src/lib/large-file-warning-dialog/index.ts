@@ -12,4 +12,3 @@
  */
 
 export * from './large-file-warning-dialog.service';
-export * from './large-file-warning-dialog.service';
