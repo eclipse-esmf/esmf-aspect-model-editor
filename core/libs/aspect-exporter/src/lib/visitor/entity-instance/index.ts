@@ -11,5 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './confirm-dialog.enum';
-export * from './load-model-payload.interface';
+export * from './entity-instance-visitor';
