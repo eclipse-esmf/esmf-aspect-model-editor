@@ -18,7 +18,7 @@ import {
   DefaultCharacteristic,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
 } from '@ame/meta-model';
@@ -34,8 +34,8 @@ import {RdfService} from '@ame/rdf/services';
 import {FiltersService} from '@ame/loader-filters';
 
 interface EnumerationForm {
-  chipList: DefaultEntityValue[];
-  deletedEntityValues: DefaultEntityValue[];
+  chipList: DefaultEntityInstance[];
+  deletedEntityValues: DefaultEntityInstance[];
 
   [key: string]: any;
 }
@@ -102,13 +102,13 @@ export class EnumerationRenderService extends BaseRenderService {
     const modelElement = MxGraphHelper.getModelElement<DefaultEnumeration>(cell);
     const outGoingCells =
       this.mxGraphService.graph.getOutgoingEdges(cell)?.filter(edge => {
-        const childModelElement = MxGraphHelper.getModelElement<DefaultEntityValue>(edge.target);
+        const childModelElement = MxGraphHelper.getModelElement<DefaultEntityInstance>(edge.target);
 
         if (childModelElement instanceof DefaultEntity) {
           return true;
         }
 
-        if (!(childModelElement instanceof DefaultEntityValue)) {
+        if (!(childModelElement instanceof DefaultEntityInstance)) {
           return false;
         }
 
@@ -130,7 +130,7 @@ export class EnumerationRenderService extends BaseRenderService {
     );
   }
 
-  private hasSameEntityAsEnumeration(childModelElement: DefaultEntityValue, modelElement: DefaultEnumeration) {
+  private hasSameEntityAsEnumeration(childModelElement: DefaultEntityInstance, modelElement: DefaultEnumeration) {
     return (
       childModelElement.entity.aspectModelUrn === modelElement.dataType?.getUrn() ||
       (childModelElement.parents.some(parent => parent.aspectModelUrn === modelElement.aspectModelUrn) &&

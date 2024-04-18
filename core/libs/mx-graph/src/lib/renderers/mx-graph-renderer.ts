@@ -24,7 +24,7 @@ import {
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
@@ -106,7 +106,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     return cell;
   }
 
-  renderEntityValue(node: ModelTree<DefaultEntityValue>, parent: mxCell): mxCell {
+  renderEntityValue(node: ModelTree<DefaultEntityInstance>, parent: mxCell): mxCell {
     const entityValue = node.element;
     const cell = this.getOrCreateMxCell(node, []);
     if (entityValue.parents.length > 0) {
@@ -232,7 +232,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
         return this.renderOperation(node, parent);
       case node.element instanceof DefaultEntity:
         return this.renderEntity(node, parent);
-      case node.element instanceof DefaultEntityValue:
+      case node.element instanceof DefaultEntityInstance:
         return this.renderEntityValue(node, parent);
       case node.element instanceof DefaultUnit:
         return this.renderUnit(node, parent);

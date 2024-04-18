@@ -18,7 +18,7 @@ import {
   DefaultCharacteristic,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultOperation,
   DefaultProperty,
@@ -332,9 +332,25 @@ export class MxGraphHelper {
       title.style.width = cell.geometry.width + 'px';
     }
     title.title = isSmallShape ? '' : modelElement.name;
+
     title.innerText = modelElement.name?.length > 24 ? modelElement.name?.substring(0, 21) + '...' : modelElement.name;
+    if (cell.collapsed) {
+      const isEntityInstance = modelElement instanceof DefaultEntityInstance;
+      if (isEntityInstance) {
+        title.innerText = this.formatSmallName(modelElement.name);
+      }
+    }
+
     title.classList.add('element-name');
     return title;
+  }
+
+  private static formatSmallName(name: string) {
+    if (name.length < 4) {
+      return name;
+    } else {
+      return name.charAt(0) + '..' + name.charAt(name.length - 1);
+    }
   }
 
   static createPropertiesLabel(cell: mxgraph.mxCell) {
@@ -348,7 +364,7 @@ export class MxGraphHelper {
       return null;
     }
 
-    const isSmallShape = [DefaultEntityValue].some(c => modelElement instanceof c);
+    const isSmallShape = [DefaultEntityInstance].some(c => modelElement instanceof c);
     const div = this.createLabelElement(cell);
     const title = this.createTitleLabelElement(cell, isSmallShape);
 
@@ -379,7 +395,7 @@ export class MxGraphHelper {
       title.title = '';
       title.classList.add('simple');
     } else {
-      iconsBar && !(modelElement instanceof DefaultEntityValue) && div.appendChild(iconsBar);
+      iconsBar && !(modelElement instanceof DefaultEntityInstance) && div.appendChild(iconsBar);
       const fields = cell['configuration']?.fields || [];
       const extendedFields = fields.filter(({extended}) => extended);
       const normalFields = fields.filter(({extended}) => !extended);

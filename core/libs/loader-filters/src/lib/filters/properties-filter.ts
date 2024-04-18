@@ -16,14 +16,14 @@ import {
   DefaultAspect,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
   DefaultUnit,
 } from '@ame/meta-model';
 import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
-import {ShapeGeometry, basicShapeGeometry, circleShapeGeometry} from '@ame/shared';
+import {ShapeGeometry, basicShapeGeometry, smallCircleShapeGeometry} from '@ame/shared';
 import {MxGraphHelper} from '@ame/mx-graph';
 import {Injector} from '@angular/core';
 import {ShapeSettingsStateService} from '@ame/editor';
@@ -52,7 +52,7 @@ export class PropertiesFilterLoader implements FilterLoader {
   }
 
   generateTree(element: BaseMetaModelElement, options?: ModelTreeOptions): ModelTree<BaseMetaModelElement> {
-    if (!element || element instanceof DefaultEntityValue) {
+    if (!element || element instanceof DefaultEntityInstance) {
       return null;
     }
 
@@ -77,7 +77,7 @@ export class PropertiesFilterLoader implements FilterLoader {
       if (this.cache[path]) continue;
       this.cache[path] = true;
 
-      if (child instanceof DefaultEntityValue || child instanceof DefaultOperation || child instanceof DefaultEvent) {
+      if (child instanceof DefaultEntityInstance || child instanceof DefaultOperation || child instanceof DefaultEvent) {
         continue;
       }
 
@@ -141,7 +141,7 @@ export class PropertiesFilterLoader implements FilterLoader {
       return basicShapeGeometry;
     }
 
-    return element instanceof DefaultProperty ? basicShapeGeometry : circleShapeGeometry;
+    return element instanceof DefaultProperty ? basicShapeGeometry : smallCircleShapeGeometry;
   }
 
   getMxGraphStyle(element: BaseMetaModelElement): string {

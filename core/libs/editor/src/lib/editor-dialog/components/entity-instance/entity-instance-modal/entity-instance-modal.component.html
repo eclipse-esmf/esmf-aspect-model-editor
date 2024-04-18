@@ -1,0 +1,59 @@
+<!--
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<h3 mat-dialog-title>{{ title }}</h3>
+
+<button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+  <mat-icon>close</mat-icon>
+</button>
+
+<form (submit)="onSave()">
+  <mat-dialog-content>
+    <mat-form-field class="entity-form-field" appearance="fill">
+      <mat-label for="entityValueName">{{ 'ENTITY_VALUE.NAME' | translate }}</mat-label>
+      <input
+        [formControl]="entityValueName"
+        [ngClass]="entityValueName.hasError('checkShapeName') || entityValueName.hasError('whitespace') ? 'ng-invalid-error' : ''"
+        matInput
+        type="text"
+        name="entityValueName"
+        data-cy="entityValueName"
+      />
+      <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('required')">{{
+        'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_DEFINE' | translate
+      }}</mat-error>
+      <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('checkShapeName')">
+        {{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_SELECT_DIFFERENT_NAME_NAMESPACE' | translate }}
+      </mat-error>
+      <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('whitespace')">
+        {{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.NO_CONTAIN_WHITESPACES' | translate }}
+      </mat-error>
+    </mat-form-field>
+
+    <ame-entity-instance-modal-table
+      [form]="form"
+      [entity]="entity"
+      [entityValue]="entityValue"
+      [enumeration]="enumeration"
+    ></ame-entity-instance-modal-table>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="sticky-dialog-actions">
+    <button type="button" mat-raised-button (click)="onClose()" data-cy="entityCancelButton">
+      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.CANCEL' | translate }}
+    </button>
+    <button [disabled]="form.invalid" mat-raised-button color="primary" type="submit" data-cy="entitySaveButton">
+      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.SAVE' | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>

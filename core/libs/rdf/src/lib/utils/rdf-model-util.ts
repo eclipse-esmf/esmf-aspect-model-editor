@@ -18,7 +18,7 @@ import {
   DefaultConstraint,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultEvent,
   DefaultFixedPointConstraint,
@@ -57,7 +57,7 @@ export class RdfModelUtil {
       return '';
     }
 
-    if (value instanceof DefaultEntityValue) {
+    if (value instanceof DefaultEntityInstance) {
       return value.name;
     }
 
@@ -67,7 +67,7 @@ export class RdfModelUtil {
     return `${value}`;
   }
 
-  static getValuesWithoutUrnDefinition(values: Array<DefaultEntityValue | string | number | boolean>): string {
+  static getValuesWithoutUrnDefinition(values: Array<DefaultEntityInstance | string | number | boolean>): string {
     return values.map(value => this.getValueWithoutUrnDefinition(value)).join(', ');
   }
 

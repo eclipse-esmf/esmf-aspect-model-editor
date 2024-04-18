@@ -12,10 +12,10 @@
  */
 import {Type} from './type';
 import {DefaultEnumeration, Enumeration} from './default-enumeration';
-import {DefaultEntityValue} from './default-entity-value';
+import {DefaultEntityInstance} from './default-entity-instance';
 
 export interface State extends Enumeration {
-  defaultValue: DefaultEntityValue | string | number;
+  defaultValue: DefaultEntityInstance | string | number;
 }
 
 export class DefaultState extends DefaultEnumeration implements State {
@@ -31,8 +31,8 @@ export class DefaultState extends DefaultEnumeration implements State {
     metaModelVersion: string,
     aspectModelUrn: string,
     name: string,
-    values: Array<DefaultEntityValue | string | number | boolean>,
-    public defaultValue: DefaultEntityValue | string | number,
+    values: Array<DefaultEntityInstance | string | number | boolean>,
+    public defaultValue: DefaultEntityInstance | string | number,
     dataType?: Type,
   ) {
     super(metaModelVersion, aspectModelUrn, name, values, dataType);

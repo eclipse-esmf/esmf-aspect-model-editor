@@ -279,12 +279,18 @@ export class ModelApiService {
           baseUrl: openApi.baseUrl,
           includeQueryApi: openApi.includeQueryApi,
           pagingOption: openApi.paging,
+          resourcePath: openApi.resourcePath,
+          ymlProperties: openApi.ymlProperties || '',
+          jsonProperties: openApi.jsonProperties || '',
         },
         responseType: openApi.output === 'yaml' ? ('text' as 'json') : 'json',
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
+        catchError(res => {
+          res.error = openApi.output === 'yaml' ? JSON.parse(res.error)?.error : res.error.error;
+          return throwError(() => res);
+        }),
       );
   }
 

@@ -12,7 +12,7 @@
  */
 
 import {DataFactory, NamedNode, Quad, Quad_Object, Util} from 'n3';
-import {DefaultEntity, DefaultEntityValue, Entity, OverWrittenProperty} from '@ame/meta-model';
+import {DefaultEntity, DefaultEntityInstance, Entity, OverWrittenProperty} from '@ame/meta-model';
 import {EntityInstantiator} from './entity-instantiator';
 import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {Samm} from '@ame/vocabulary';
@@ -39,7 +39,7 @@ export class EntityValueInstantiator {
 
   createEntityValue(quads: Quad[], object: Quad_Object) {
     if (!quads.length) {
-      const {externalReference} = this.metaModelElementInstantiator.getExternalElement<DefaultEntityValue>(
+      const {externalReference} = this.metaModelElementInstantiator.getExternalElement<DefaultEntityInstance>(
         object,
         this.rdfModel.isExternalRef,
       );
@@ -49,12 +49,12 @@ export class EntityValueInstantiator {
     }
 
     const subject = quads[0].subject.value;
-    const cachedElement = this.cachedFile.getElement<DefaultEntityValue>(subject);
+    const cachedElement = this.cachedFile.getElement<DefaultEntityInstance>(subject);
     if (cachedElement) {
       return cachedElement;
     }
 
-    const defaultEntityValue = new DefaultEntityValue(null, null, null, null, []);
+    const defaultEntityValue = new DefaultEntityInstance(null, null, null, null, []);
     defaultEntityValue.name = subject.split('#')?.[1];
     defaultEntityValue.aspectModelUrn = subject;
     defaultEntityValue.entity = this.getEntity(quads) as DefaultEntity;
@@ -93,24 +93,24 @@ export class EntityValueInstantiator {
     );
   }
 
-  private processBlankNode(property: Quad, defaultEntityValue: DefaultEntityValue): void {
+  private processBlankNode(property: Quad, defaultEntityValue: DefaultEntityInstance): void {
     const blankQuads = this.metaModelElementInstantiator.rdfModel.resolveBlankNodes(property.object.value);
     for (const blankQuad of blankQuads) {
       this.processQuadValue(blankQuad, defaultEntityValue, property.predicate);
     }
   }
 
-  private processNode(property: Quad, defaultEntityValue: DefaultEntityValue): void {
+  private processNode(property: Quad, defaultEntityValue: DefaultEntityInstance): void {
     this.processQuadValue(property, defaultEntityValue);
   }
 
-  private processQuadValue(quad: Quad, defaultEntityValue: DefaultEntityValue, predicateOverride?: any): void {
+  private processQuadValue(quad: Quad, defaultEntityValue: DefaultEntityInstance, predicateOverride?: any): void {
     const isLiteral = Util.isLiteral(quad.object);
     const processMethod = isLiteral ? this.processLiteralValue : this.processNonLiteralValue;
     processMethod.call(this, quad, defaultEntityValue, predicateOverride);
   }
 
-  private processLiteralValue(quad: Quad, defaultEntityValue: DefaultEntityValue, predicateOverride?: any): void {
+  private processLiteralValue(quad: Quad, defaultEntityValue: DefaultEntityInstance, predicateOverride?: any): void {
     this.resolveProperty(predicateOverride || quad.predicate, (overwrittenProperty: OverWrittenProperty) => {
       const language = this.rdfModel.hasLocalTag(quad) ? this.rdfModel.getLocale(quad) : undefined;
       defaultEntityValue.addProperty(overwrittenProperty, quad.object.value, language);
@@ -118,8 +118,8 @@ export class EntityValueInstantiator {
     });
   }
 
-  private processNonLiteralValue(quad: Quad, defaultEntityValue: DefaultEntityValue, predicateOverride?: any): void {
-    const value = this.cachedFile.getElement<DefaultEntityValue>(quad.object.value);
+  private processNonLiteralValue(quad: Quad, defaultEntityValue: DefaultEntityInstance, predicateOverride?: any): void {
+    const value = this.cachedFile.getElement<DefaultEntityInstance>(quad.object.value);
     if (value) {
       this.resolveProperty(predicateOverride || quad.predicate, (overwrittenProperty: OverWrittenProperty) => {
         defaultEntityValue.addProperty(overwrittenProperty, value);
@@ -134,11 +134,11 @@ export class EntityValueInstantiator {
     this.metaModelElementInstantiator.getProperty({quad: predicate}, callback);
   }
 
-  private queueEntityValueInstantiation(quad: Quad, defaultEntityValue: DefaultEntityValue): void {
+  private queueEntityValueInstantiation(quad: Quad, defaultEntityValue: DefaultEntityInstance): void {
     this.metaModelElementInstantiator.addInstantiatorFunctionToQueue(this.instantiateEntityValue.bind(this, quad, defaultEntityValue));
   }
 
-  private instantiateEntityValue(property: Quad, defaultEntityValue: DefaultEntityValue) {
+  private instantiateEntityValue(property: Quad, defaultEntityValue: DefaultEntityInstance) {
     if (property.object.equals(this.samm.RdfNil())) {
       return;
     }

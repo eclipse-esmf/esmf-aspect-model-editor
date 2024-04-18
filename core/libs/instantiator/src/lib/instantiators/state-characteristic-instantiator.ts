@@ -15,7 +15,7 @@ import {MetaModelElementInstantiator} from '../meta-model-element-instantiator';
 import {NamedNode, Quad, Util} from 'n3';
 import {EnumerationCharacteristicInstantiator} from './enumeration-characteristic-instantiator';
 import {EntityValueInstantiator} from './entity-value-instantiator';
-import {Characteristic, DefaultEntityValue, DefaultEnumeration, DefaultState, Enumeration} from '@ame/meta-model';
+import {Characteristic, DefaultEntityInstance, DefaultEnumeration, DefaultState, Enumeration} from '@ame/meta-model';
 import {syncElementWithChildren} from '../helpers';
 
 export class StateCharacteristicInstantiator extends EnumerationCharacteristicInstantiator {
@@ -46,7 +46,7 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
     quads.forEach(quad => {
       if (sammC.isDefaultValueProperty(quad.predicate.value)) {
         defaultState.defaultValue = this.getDefaultValue(quad);
-        if (defaultState.defaultValue instanceof DefaultEntityValue) defaultState.children.push(defaultState.defaultValue);
+        if (defaultState.defaultValue instanceof DefaultEntityInstance) defaultState.children.push(defaultState.defaultValue);
       }
     });
 
@@ -58,7 +58,7 @@ export class StateCharacteristicInstantiator extends EnumerationCharacteristicIn
     return new DefaultState(null, null, null, null, null);
   }
 
-  private getDefaultValue(quad: Quad): DefaultEntityValue | string {
+  private getDefaultValue(quad: Quad): DefaultEntityInstance | string {
     if (Util.isLiteral(quad.object)) {
       return `${quad.object.value}`;
     }

@@ -17,7 +17,7 @@ export * from './characteristics';
 export * from './constraints';
 export * from './shape-settings';
 export * from './entities';
-export * from './entity-value';
+export * from './entity-instance';
 export * from './fields';
 export * from './operations';
 export * from './properties';

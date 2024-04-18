@@ -22,7 +22,7 @@ import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
 import {MxGraphHelper, ShapeAttribute} from '../helpers';
 import {mxConstants, mxEditor, mxLayoutManager, mxOutline, mxPoint, mxRectangle, mxStackLayout, mxUtils} from '../providers';
-import {DefaultAbstractProperty, DefaultEntity, DefaultEntityValue, DefaultProperty, DefaultTrait} from '@ame/meta-model';
+import {DefaultAbstractProperty, DefaultEntity, DefaultEntityInstance, DefaultProperty, DefaultTrait} from '@ame/meta-model';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {APP_CONFIG, AppConfig, AssetsPath, BindingsService, BrowserService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
@@ -105,7 +105,7 @@ export class MxGraphSetupService {
 
   private getTooltipForCell(cell: mxgraph.mxCell) {
     const metaModelElement = MxGraphHelper.getModelElement(cell);
-    if ([DefaultEntityValue, DefaultTrait].some(e => metaModelElement instanceof e)) {
+    if ([DefaultEntityInstance, DefaultTrait].some(e => metaModelElement instanceof e)) {
       return this.getToolTipContent(cell);
     }
 
@@ -129,7 +129,8 @@ export class MxGraphSetupService {
       const table = document.createElement('table');
       if (!configuration?.baseProperties.isPredefined) {
         table.innerHTML += `<tr><td>Namespace</td><td>${configuration?.baseProperties.namespace}</td></tr>`;
-        table.innerHTML += `<tr><td>Version</td><td>${configuration?.baseProperties.version}</td></tr>`;
+        table.innerHTML += `<tr><td>SAMM Version</td><td>${configuration?.baseProperties.sammVersion}</td></tr>`;
+        table.innerHTML += `<tr><td>Model Version</td><td>${configuration?.baseProperties.version}</td></tr>`;
 
         if (configuration?.baseProperties.fileName) {
           table.innerHTML += `<tr><td>File</td><td>${configuration?.baseProperties.fileName}</td></tr>`;
@@ -313,7 +314,7 @@ export class MxGraphSetupService {
 
     if (
       !this.configurationService.getSettings().showEntityValueEntityEdge &&
-      MxGraphHelper.getModelElement(cell.source) instanceof DefaultEntityValue &&
+      MxGraphHelper.getModelElement(cell.source) instanceof DefaultEntityInstance &&
       MxGraphHelper.getModelElement(cell.target) instanceof DefaultEntity
     ) {
       return false;

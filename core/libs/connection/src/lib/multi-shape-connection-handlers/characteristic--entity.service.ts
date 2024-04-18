@@ -18,7 +18,7 @@ import {
   DefaultEnumeration,
   DefaultProperty,
   DefaultUnit,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultStructuredValue,
 } from '@ame/meta-model';
 import {MxGraphService, MxGraphAttributeService, MxGraphShapeOverlayService, MxGraphHelper} from '@ame/mx-graph';
@@ -104,7 +104,7 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
     }
 
     // TODO: Should be defined in more details
-    if (metaModel instanceof DefaultEntityValue) {
+    if (metaModel instanceof DefaultEntityInstance) {
       for (const child of metaModel.children) {
         MxGraphHelper.removeRelation(metaModel, child);
       }

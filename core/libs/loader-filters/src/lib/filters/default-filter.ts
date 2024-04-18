@@ -21,7 +21,7 @@ import {
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
@@ -65,7 +65,7 @@ export class DefaultFilter implements FilterLoader {
     DefaultCharacteristic,
     DefaultConstraint,
     DefaultEntity,
-    DefaultEntityValue,
+    DefaultEntityInstance,
     DefaultEvent,
     DefaultOperation,
     DefaultProperty,
@@ -110,7 +110,7 @@ export class DefaultFilter implements FilterLoader {
       return null;
     }
 
-    return parent instanceof DefaultEntityValue && !(element instanceof DefaultEntityValue)
+    return parent instanceof DefaultEntityInstance && !(element instanceof DefaultEntityInstance)
       ? EdgeStyles.entityValueEntityEdge
       : MxGraphHelper.isOptionalProperty(element as DefaultProperty, parent)
         ? EdgeStyles.optionalPropertyEdge
@@ -126,7 +126,7 @@ export class DefaultFilter implements FilterLoader {
       return circleShapeGeometry;
     }
 
-    if (element instanceof DefaultEntityValue) {
+    if (element instanceof DefaultEntityInstance) {
       return smallBasicShapeGeometry;
     }
 
@@ -154,7 +154,7 @@ export class DefaultFilter implements FilterLoader {
       return ModelStyle.ENTITY;
     } else if (element instanceof DefaultUnit) {
       return ModelStyle.UNIT;
-    } else if (element instanceof DefaultEntityValue) {
+    } else if (element instanceof DefaultEntityInstance) {
       return ModelStyle.ENTITY_VALUE;
     } else if (element instanceof DefaultEvent) {
       return ModelStyle.EVENT;

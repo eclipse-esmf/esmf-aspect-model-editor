@@ -16,9 +16,9 @@ import {
   BaseMetaModelElement,
   CanExtend,
   DefaultAspect,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
-  EntityValueProperty,
+  EntityInstanceProperty,
 } from '@ame/meta-model';
 import {mxgraph} from 'mxgraph-factory';
 import {NamespacesCacheService} from '@ame/cache';
@@ -141,20 +141,20 @@ export abstract class BaseModelService {
     });
   }
 
-  protected addNewEntityValues(newEntityValues: DefaultEntityValue[], parent: BaseMetaModelElement) {
+  protected addNewEntityValues(newEntityValues: DefaultEntityInstance[], parent: BaseMetaModelElement) {
     for (const entityValue of newEntityValues) {
       MxGraphHelper.establishRelation(parent, entityValue);
       this.currentCachedFile.resolveElement(entityValue);
     }
   }
 
-  protected deleteEntityValue(entityValue: DefaultEntityValue, parent: BaseMetaModelElement) {
+  protected deleteEntityValue(entityValue: DefaultEntityInstance, parent: BaseMetaModelElement) {
     MxGraphHelper.removeRelation(parent, entityValue);
     // delete the element
     this.namespacesCacheService.currentCachedFile.removeElement(entityValue.aspectModelUrn);
     // now delete other underlying entity values that don't belong to an enumeration
-    entityValue.properties.forEach((property: EntityValueProperty) => {
-      if (property.value instanceof DefaultEntityValue) {
+    entityValue.properties.forEach((property: EntityInstanceProperty) => {
+      if (property.value instanceof DefaultEntityInstance) {
         // this is another complex value, check if it belongs to an enumeration
         if (!property.value.parents?.length) {
           this.deleteEntityValue(property.value, entityValue);

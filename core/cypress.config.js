@@ -40,6 +40,8 @@ module.exports = defineConfig({
       'apps/ame-e2e/src/integration/drag-and-drop/same-namespace/*.ts',
       'apps/ame-e2e/src/integration/editor/*.ts',
       'apps/ame-e2e/src/integration/export/*.ts',
+      'apps/ame-e2e/src/integration/export/lang-string/*.ts',
+      'apps/ame-e2e/src/integration/generation/*.ts',
       'apps/ame-e2e/src/integration/settings/*.ts',
       'apps/ame-e2e/src/integration/*.ts',
     ],

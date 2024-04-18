@@ -14,7 +14,7 @@
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
-import {EntityValueService} from '@ame/editor';
+import {EntityInstanceService} from '@ame/editor';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper, PropertyRenderService} from '@ame/mx-graph';
 import {BaseMetaModelElement, DefaultProperty} from '@ame/meta-model';
 import {CanExtend, DefaultAbstractProperty, DefaultStructuredValue} from '../aspect-meta-model';
@@ -23,7 +23,7 @@ import {SammLanguageSettingsService} from '@ame/settings-dialog';
 @Injectable({providedIn: 'root'})
 export class PropertyModelService extends BaseModelService {
   constructor(
-    private entityValueService: EntityValueService,
+    private entityInstanceService: EntityInstanceService,
     private mxGraphService: MxGraphService,
     private sammLangService: SammLanguageSettingsService,
     private propertyRenderer: PropertyRenderService,
@@ -65,7 +65,7 @@ export class PropertyModelService extends BaseModelService {
     this.updateExtends(cell);
 
     super.delete(cell);
-    this.entityValueService.onPropertyRemove(node, () => {
+    this.entityInstanceService.onPropertyRemove(node, () => {
       this.mxGraphService.removeCells([cell]);
     });
   }

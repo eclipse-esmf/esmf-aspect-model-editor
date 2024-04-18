@@ -20,7 +20,7 @@ import {
   BaseMetaModelElement,
   DefaultAbstractProperty,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultProperty,
   OverWrittenProperty,
 } from '@ame/meta-model';
@@ -115,7 +115,7 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
     this.headers = this.standardHeaders;
     if (this.data.metaModelElement instanceof DefaultEntity) {
       const entityValues = this.cacheService.currentCachedFile.getCachedEntityValues();
-      entityValues.forEach((entityValue: DefaultEntityValue) => {
+      entityValues.forEach((entityValue: DefaultEntityInstance) => {
         if (entityValue.entity.aspectModelUrn === this.data.metaModelElement.aspectModelUrn) {
           this.headers = this.enumerationEntityHeaders;
         }

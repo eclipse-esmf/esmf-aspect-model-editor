@@ -13,7 +13,7 @@
 
 import {Injectable, inject} from '@angular/core';
 import {ShapeConnectorService} from '@ame/connection';
-import {DefaultEntity, DefaultEntityValue, DefaultEnumeration, DefaultState, EntityValueProperty} from '@ame/meta-model';
+import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultState, EntityInstanceProperty} from '@ame/meta-model';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
@@ -43,16 +43,16 @@ export class EntityValueRenderService extends BaseRenderService {
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {
-    return MxGraphHelper.getModelElement(cell) instanceof DefaultEntityValue;
+    return MxGraphHelper.getModelElement(cell) instanceof DefaultEntityInstance;
   }
 
   update({cell}: RendererUpdatePayload) {
-    const modelElement = MxGraphHelper.getModelElement<DefaultEntityValue>(cell);
+    const modelElement = MxGraphHelper.getModelElement<DefaultEntityInstance>(cell);
 
     this.removeChildrenEntityValuesIfNecessary(cell);
 
     for (const property of modelElement.properties || []) {
-      if (!(property.value instanceof DefaultEntityValue)) {
+      if (!(property.value instanceof DefaultEntityInstance)) {
         continue;
       }
 
@@ -66,7 +66,7 @@ export class EntityValueRenderService extends BaseRenderService {
     super.update({cell});
   }
 
-  create(modelElement: DefaultEntityValue, parent: mxgraph.mxCell) {
+  create(modelElement: DefaultEntityInstance, parent: mxgraph.mxCell) {
     this.shapeConnectorService.createAndConnectShape(modelElement, parent);
     this.mxGraphShapeOverlay.removeOverlaysByConnection(modelElement, parent);
 
@@ -79,7 +79,7 @@ export class EntityValueRenderService extends BaseRenderService {
   }
 
   delete(cell: mxgraph.mxCell) {
-    const modelElement = MxGraphHelper.getModelElement<DefaultEntityValue>(cell);
+    const modelElement = MxGraphHelper.getModelElement<DefaultEntityInstance>(cell);
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
     this.updateEnumeration(modelElement, incomingEdges);
     this.mxGraphService.updateEnumerationsWithEntityValue(modelElement);
@@ -87,7 +87,7 @@ export class EntityValueRenderService extends BaseRenderService {
     this.mxGraphService.removeCells([cell]);
   }
 
-  private updateEnumeration(entityValue: DefaultEntityValue, incomingEdges: Array<mxgraph.mxCell>) {
+  private updateEnumeration(entityValue: DefaultEntityInstance, incomingEdges: Array<mxgraph.mxCell>) {
     const edge = incomingEdges.find(incomingEdge => MxGraphHelper.getModelElement(incomingEdge?.source) instanceof DefaultEnumeration);
     const metaModelElement = MxGraphHelper.getModelElement(edge?.source);
 
@@ -101,7 +101,7 @@ export class EntityValueRenderService extends BaseRenderService {
     }
   }
 
-  deleteByModel(modelElement: DefaultEntityValue) {
+  deleteByModel(modelElement: DefaultEntityInstance) {
     const modelCell = this.mxGraphService
       .getAllCells()
       .find(cell => MxGraphHelper.getModelElement(cell).aspectModelUrn === modelElement.aspectModelUrn);
@@ -113,9 +113,9 @@ export class EntityValueRenderService extends BaseRenderService {
     this.delete(modelCell);
   }
 
-  private connectEntityValueWithChildren(modelElement: DefaultEntityValue) {
+  private connectEntityValueWithChildren(modelElement: DefaultEntityInstance) {
     for (const property of modelElement.properties || []) {
-      if (!(property.value instanceof DefaultEntityValue)) {
+      if (!(property.value instanceof DefaultEntityInstance)) {
         continue;
       }
 
@@ -124,13 +124,13 @@ export class EntityValueRenderService extends BaseRenderService {
     }
   }
 
-  private isChildOf(parent: mxgraph.mxCell, child: DefaultEntityValue) {
+  private isChildOf(parent: mxgraph.mxCell, child: DefaultEntityInstance) {
     return this.mxGraphService.graph
       .getOutgoingEdges(parent)
       .find(edge => MxGraphHelper.getModelElement(edge.target).aspectModelUrn === child?.aspectModelUrn);
   }
 
-  private connectEntityValues(parent: DefaultEntityValue, child: DefaultEntityValue) {
+  private connectEntityValues(parent: DefaultEntityInstance, child: DefaultEntityInstance) {
     const inGraph = this.inMxGraph(child);
 
     if (!inGraph) {
@@ -155,7 +155,7 @@ export class EntityValueRenderService extends BaseRenderService {
 
   private removeChildrenEntityValuesIfNecessary(cell: mxgraph.mxCell) {
     const children = this.mxGraphService.graph.getOutgoingEdges(cell);
-    const modelElement = MxGraphHelper.getModelElement<DefaultEntityValue>(cell);
+    const modelElement = MxGraphHelper.getModelElement<DefaultEntityInstance>(cell);
 
     if (!children.length) {
       return;
@@ -163,7 +163,7 @@ export class EntityValueRenderService extends BaseRenderService {
 
     children
       .map(edge => edge.target)
-      .filter(child => child && child.id !== cell.id && MxGraphHelper.getModelElement(child) instanceof DefaultEntityValue)
+      .filter(child => child && child.id !== cell.id && MxGraphHelper.getModelElement(child) instanceof DefaultEntityInstance)
       .forEach(child => {
         const connectingEdge: mxgraph.mxCell = this.mxGraphService.graph.getIncomingEdges(child).find(edge => edge?.source == cell);
         const isLinkedToOtherEntityValues = this.mxGraphService.graph.getOutgoingEdges(child).some(edge => {
@@ -173,7 +173,7 @@ export class EntityValueRenderService extends BaseRenderService {
 
           const parentModelElement = MxGraphHelper.getModelElement(edge.source);
           if (
-            !(parentModelElement instanceof DefaultEntityValue) ||
+            !(parentModelElement instanceof DefaultEntityInstance) ||
             !(parentModelElement instanceof DefaultEnumeration) ||
             !(parentModelElement instanceof DefaultState)
           ) {
@@ -183,7 +183,7 @@ export class EntityValueRenderService extends BaseRenderService {
           return parentModelElement.aspectModelUrn !== modelElement.aspectModelUrn;
         });
         const childModelElement = MxGraphHelper.getModelElement(child);
-        const isPartOfTheModel = modelElement.properties.some((prop: EntityValueProperty) => prop.value === childModelElement);
+        const isPartOfTheModel = modelElement.properties.some((prop: EntityInstanceProperty) => prop.value === childModelElement);
         if (!isLinkedToOtherEntityValues && !childModelElement.parents?.length && !isPartOfTheModel) {
           this.delete(child);
         } else if (!isLinkedToOtherEntityValues && childModelElement.parents?.length > 0 && !isPartOfTheModel && connectingEdge) {
