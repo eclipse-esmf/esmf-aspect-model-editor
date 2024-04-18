@@ -63,12 +63,12 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     return this.form.get('output') as FormControl;
   }
 
-  public get resourcePath(): FormControl {
-    return this.form.get('resourcePath') as FormControl;
-  }
-
   public get activateResourcePath(): FormControl {
     return this.form.get('activateResourcePath') as FormControl;
+  }
+
+  public get resourcePath(): FormControl {
+    return this.form.get('resourcePath') as FormControl;
   }
 
   public get file(): FormControl {
