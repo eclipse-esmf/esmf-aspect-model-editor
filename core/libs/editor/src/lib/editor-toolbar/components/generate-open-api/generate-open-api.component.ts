@@ -56,11 +56,15 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     Validators.required,
     Validators.pattern(/^\/[a-zA-Z{}/]*$/),
     Validators.pattern(/^(?!.*\/\/)(?!.*{{)(?!.*}}).*$/),
-    Validators.pattern(/.*{.+}.*$/),
+    Validators.pattern(/.*({.*})?.*$/),
   ];
 
   public get output(): FormControl {
     return this.form.get('output') as FormControl;
+  }
+
+  public get resourcePath(): FormControl {
+    return this.form.get('resourcePath') as FormControl;
   }
 
   public get activateResourcePath(): FormControl {
@@ -120,19 +124,24 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.activateResourcePath?.valueChanges.subscribe(activateResourcePath => {
         const resourcePathControl = this.form.get('resourcePath');
-        const fileControl = this.form.get('file');
 
         if (activateResourcePath) {
           resourcePathControl?.setValue('/resource/{resourceId}');
           resourcePathControl?.setValidators(this.resourcePathValidators);
-          fileControl?.setValidators(Validators.required);
         } else {
           resourcePathControl?.setValue(null);
           resourcePathControl?.setValidators(null);
-          fileControl?.setValidators(null);
         }
 
         resourcePathControl?.updateValueAndValidity();
+      }),
+    );
+
+    this.subscriptions.add(
+      this.resourcePath?.valueChanges.subscribe(resourcePath => {
+        const fileControl = this.form.get('file');
+        const hasBrackets = /{.*}/.test(resourcePath);
+        hasBrackets ? fileControl?.setValidators(Validators.required) : fileControl?.setValidators(null);
         fileControl?.updateValueAndValidity();
       }),
     );
