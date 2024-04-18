@@ -221,7 +221,7 @@
   },
   "devDependencies": {
     "@angular-builders/jest": "^16.0.0",
-    "@angular-devkit/build-angular": "16.1.4",
+    "@angular-devkit/build-angular": "16.2.14",
     "@angular-devkit/core": "16.1.4",
     "@angular-devkit/schematics": "16.1.4",
     "@angular-eslint/builder": "^16.0.0",
