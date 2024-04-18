@@ -295,7 +295,7 @@ export class ModelApiService {
       );
   }
 
-  generateAsyncApiSpec(rdfContent: string, asyncApi: AsyncApi): Observable<string> {
+  generateAsyncApiSpec(rdfContent: string, asyncApi: AsyncApi): Observable<any> {
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.generate}/async-api-spec`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
@@ -307,7 +307,7 @@ export class ModelApiService {
           useSemanticVersion: asyncApi.useSemanticVersion,
           writeSeparateFiles: asyncApi.writeSeparateFiles,
         },
-        responseType: asyncApi.output === 'yaml' ? ('text' as 'json') : 'json',
+        responseType: asyncApi.writeSeparateFiles ? ('blob' as 'json') : asyncApi.output === 'yaml' ? ('text' as 'json') : 'json',
       })
       .pipe(
         timeout(this.requestTimeout),

@@ -98,7 +98,7 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
   private handleGeneratedSpec(data: any, spec: AsyncApi): void {
     const fileType = spec.output === 'yaml' ? 'text/yaml' : 'application/json;charset=utf-8';
     const fileData = spec.output === 'yaml' ? data : JSON.stringify(data, null, 2);
-    const fileName = `${spec.language}-async-api.${spec.output}`;
+    const fileName = `${spec.language}-async-api.${spec.writeSeparateFiles ? 'zip' : spec.output}`;
     saveAs(new Blob([fileData], {type: fileType}), fileName);
   }
 
