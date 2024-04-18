@@ -20,7 +20,7 @@ import {EditorDialogValidators} from '../../../editor-dialog';
 import {finalize, first} from 'rxjs/operators';
 import {map, Subscription} from 'rxjs';
 import {saveAs} from 'file-saver';
-import {EditorService, GenerateService} from '../../../services';
+import {GenerateService} from '../../../services';
 import {ModelService} from '@ame/rdf/services';
 import {LanguageTranslationService} from '@ame/translation';
 import {NotificationsService} from '@ame/shared';

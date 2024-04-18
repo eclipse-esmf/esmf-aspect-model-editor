@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {MigratorApiService, ModelApiService} from '@ame/api';
-import {EditorService} from '@ame/editor';
+import {LoadAspectModelService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
-import {APP_CONFIG} from '@ame/shared';
+import {APP_CONFIG, ElectronTunnelService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
@@ -21,7 +21,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {RouterTestingModule} from '@angular/router/testing';
 import {provideMockObject} from 'jest-helpers';
 import {of} from 'rxjs';
-import {ElectronTunnelService} from '@ame/shared';
 
 import {VersionMigrationComponent} from './version-migration.component';
 import {TranslateModule} from '@ngx-translate/core';
@@ -31,6 +30,7 @@ describe('VersionMigrationComponent', () => {
   let component: VersionMigrationComponent;
   let fixture: ComponentFixture<VersionMigrationComponent>;
   let modelApiService: ModelApiService;
+  let loadAspectModelService: LoadAspectModelService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -67,10 +67,9 @@ describe('VersionMigrationComponent', () => {
           useValue: provideMockObject(ModelApiService),
         },
         {
-          provide: EditorService,
+          provide: LoadAspectModelService,
           useValue: {
             settings: {},
-            loadExternalModels: jest.fn(() => of()),
           },
         },
         {
@@ -79,6 +78,9 @@ describe('VersionMigrationComponent', () => {
         },
       ],
     });
+
+    loadAspectModelService = TestBed.inject(LoadAspectModelService);
+    loadAspectModelService.loadExternalModels = jest.fn(() => of([]));
 
     modelApiService = TestBed.inject(ModelApiService);
     modelApiService.getNamespacesStructure = jest.fn(() => of([]));
