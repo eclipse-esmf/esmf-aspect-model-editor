@@ -276,7 +276,7 @@
     "ng-mocks": "^14.11.0",
     "ng-packagr": "16.1.0",
     "ngx": "^2.4.0",
-    "ngx-build-plus": "^13.0.1",
+    "ngx-build-plus": "^17.0.0",
     "nx": "16.10",
     "nx-cloud": "16.0.5",
     "nyc": "^15.1.0",
