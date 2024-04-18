@@ -13,7 +13,7 @@
 
 import {Component, NgZone} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {EditorService} from '@ame/editor';
+import {SaveService} from '@ame/editor';
 
 @Component({
   templateUrl: 'save-model-dialog.component.html',
@@ -24,7 +24,7 @@ export class SaveModelDialogComponent {
 
   constructor(
     private matDialogRef: MatDialogRef<SaveModelDialogComponent>,
-    private editorService: EditorService,
+    private saveService: SaveService,
     private zone: NgZone,
   ) {}
 
@@ -35,7 +35,7 @@ export class SaveModelDialogComponent {
   saveModel() {
     this.disabledButton = true;
     this.zone.run(() => {
-      this.editorService.saveModel().subscribe(() => {
+      this.saveService.saveModel().subscribe(() => {
         this.disabledButton = false;
         this.matDialogRef.close(true);
       });

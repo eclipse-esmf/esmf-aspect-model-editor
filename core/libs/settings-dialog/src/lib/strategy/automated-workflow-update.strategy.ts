@@ -14,14 +14,17 @@
 import {FormGroup} from '@angular/forms';
 import {Settings} from '@ame/settings-dialog';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
-import {EditorService} from '@ame/editor';
+import {SaveService, ValidateService} from '@ame/editor';
 import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AutomatedWorkflowUpdateStrategy implements SettingsUpdateStrategy {
-  constructor(private editorService: EditorService) {}
+  constructor(
+    private validateService: ValidateService,
+    private saveService: SaveService,
+  ) {}
 
   updateSettings(form: FormGroup, settings: Settings): void {
     const automatedWorkflow = form.get('automatedWorkflow');
@@ -33,7 +36,7 @@ export class AutomatedWorkflowUpdateStrategy implements SettingsUpdateStrategy {
     settings.validationTimerSeconds = automatedWorkflow.get('validationTimerSeconds')?.value;
     settings.autoFormatEnabled = automatedWorkflow.get('autoFormatEnabled')?.value;
 
-    if (settings.autoValidationEnabled) this.editorService.enableAutoValidation();
-    if (settings.autoSaveEnabled) this.editorService.enableAutoSave();
+    if (settings.autoValidationEnabled) this.validateService.enableAutoValidation();
+    if (settings.autoSaveEnabled) this.saveService.enableAutoSave();
   }
 }

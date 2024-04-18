@@ -14,7 +14,7 @@
 import {ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
 import {SidebarStateService} from '@ame/sidebar';
 import {ElementType, sammElements} from '@ame/shared';
-import {EditorService} from '@ame/editor';
+import {EditorService, LoadAspectModelService} from '@ame/editor';
 import {filter} from 'rxjs';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
@@ -48,7 +48,7 @@ export class WorkspaceFileElementsComponent implements OnInit {
   private searchThrottle: NodeJS.Timeout;
 
   constructor(
-    private editorService: EditorService,
+    private loadAspectModelService: LoadAspectModelService,
     private mxGraphService: MxGraphService,
     private changeDetector: ChangeDetectorRef,
   ) {}
@@ -68,7 +68,7 @@ export class WorkspaceFileElementsComponent implements OnInit {
         this.searched[element] = this.elements[element].elements;
       }
 
-      const cachedFile = this.editorService.loadExternalAspectModel(`${namespace}:${file}`);
+      const cachedFile = this.loadAspectModelService.loadExternalAspectModel(`${namespace}:${file}`);
       const sections = Object.values(this.elements);
       for (const element of cachedFile.getAllElements()) {
         sections.find(e => element instanceof e.class)?.elements?.push?.(element);

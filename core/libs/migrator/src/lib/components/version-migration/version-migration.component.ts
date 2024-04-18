@@ -13,10 +13,10 @@
 import {MigratorApiService, ModelApiService} from '@ame/api';
 import {DataFactory} from 'n3';
 import {concatMap, from, map, Observable, of, switchMap, tap} from 'rxjs';
-import {EditorService} from '@ame/editor';
+import {LoadAspectModelService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
-import {Component, NgZone, OnInit, inject} from '@angular/core';
+import {Component, inject, NgZone, OnInit} from '@angular/core';
 import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService, LogService} from '@ame/shared';
 import {Router} from '@angular/router';
 
@@ -47,14 +47,14 @@ export class VersionMigrationComponent implements OnInit {
     private rdfService: RdfService,
     private modelApiService: ModelApiService,
     private migratorApiService: MigratorApiService,
-    private editorService: EditorService,
+    private loadAspectModelService: LoadAspectModelService,
     private logService: LogService,
     private router: Router,
     private ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
-    this.editorService
+    this.loadAspectModelService
       .loadExternalModels()
       .pipe(
         switchMap(() => this.modelApiService.getNamespacesStructure()),

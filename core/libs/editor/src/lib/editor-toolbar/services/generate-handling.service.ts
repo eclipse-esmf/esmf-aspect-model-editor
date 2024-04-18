@@ -18,6 +18,7 @@ import {
   FileHandlingService,
   GenerateDocumentationComponent,
   GenerateOpenApiComponent,
+  GenerateService,
   LanguageSelectorModalComponent,
 } from '@ame/editor';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -40,7 +41,7 @@ export class GenerateHandlingService {
 
   constructor(
     private matDialog: MatDialog,
-    private editorService: EditorService,
+    private generateService: GenerateService,
     private modelService: ModelService,
     private notificationsService: NotificationsService,
     private loadingScreenService: LoadingScreenService,
@@ -89,7 +90,7 @@ export class GenerateHandlingService {
     };
 
     this.loadingScreenService.open(loadingScreenOptions);
-    return this.editorService.generateJsonSample(this.modelService.currentRdfModel).pipe(
+    return this.generateService.generateJsonSample(this.modelService.currentRdfModel).pipe(
       first(),
       catchError(() => {
         this.notificationsService.error({
@@ -130,7 +131,7 @@ export class GenerateHandlingService {
       .pipe(
         first(),
         switchMap((language: string) =>
-          this.editorService.generateJsonSchema(this.modelService.currentRdfModel, language).pipe(
+          this.generateService.generateJsonSchema(this.modelService.currentRdfModel, language).pipe(
             first(),
             catchError(() => {
               this.notificationsService.error({

@@ -12,7 +12,7 @@
  */
 
 export type ShapeGeometry = {
-  type: 'basic' | 'circle' | 'small' | 'overlay'| 'smallCircle';
+  type: 'basic' | 'circle' | 'small' | 'overlay' | 'smallCircle';
   expandedWith: number;
   expandedHeight: number;
   collapsedWidth: number;

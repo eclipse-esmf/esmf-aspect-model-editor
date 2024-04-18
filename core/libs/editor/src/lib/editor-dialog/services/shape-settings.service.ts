@@ -15,12 +15,12 @@ import {Injectable, NgZone} from '@angular/core';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {mxEvent, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxUtils} from '@ame/mx-graph';
 import {BindingsService, NotificationsService} from '@ame/shared';
-import {EditorService} from '../../editor.service';
 import {ShapeSettingsStateService} from './shape-settings-state.service';
-import {OpenReferencedElementService} from '../../open-element-window/open-element-window.service';
+import {OpenReferencedElementService} from '../../open-element-window';
 import {BehaviorSubject} from 'rxjs';
 import {NamespacesCacheService} from '@ame/cache';
 import {LanguageTranslationService} from '@ame/translation';
+import {EditorService} from '../../services';
 
 @Injectable({providedIn: 'root'})
 export class ShapeSettingsService {

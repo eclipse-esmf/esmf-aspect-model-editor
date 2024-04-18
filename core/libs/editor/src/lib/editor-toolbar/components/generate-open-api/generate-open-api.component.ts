@@ -20,7 +20,7 @@ import {EditorDialogValidators} from '../../../editor-dialog';
 import {finalize, first} from 'rxjs/operators';
 import {map, Subscription} from 'rxjs';
 import {saveAs} from 'file-saver';
-import {EditorService} from '../../../editor.service';
+import {GenerateService} from '../../../services';
 import {ModelService} from '@ame/rdf/services';
 import {LanguageTranslationService} from '@ame/translation';
 import {NotificationsService} from '@ame/shared';
@@ -87,9 +87,9 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<GenerateOpenApiComponent>,
     private languageService: SammLanguageSettingsService,
     private modelService: ModelService,
-    private editorService: EditorService,
     private notificationsService: NotificationsService,
     private translate: LanguageTranslationService,
+    private generateService: GenerateService,
   ) {}
 
   ngOnInit(): void {
@@ -214,7 +214,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     this.isGenerating = true;
     const openApiSpec = this.form.value as OpenApi;
     this.subscriptions.add(
-      this.editorService
+      this.generateService
         .generateOpenApiSpec(this.modelService.currentRdfModel, openApiSpec)
         .pipe(
           first(),

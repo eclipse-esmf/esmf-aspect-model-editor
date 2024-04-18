@@ -12,7 +12,7 @@
  */
 
 import {ModelApiService} from '@ame/api';
-import {EditorService, FileInfo, FileTypes, FileUploadService} from '@ame/editor';
+import {FileInfo, FileTypes, FileUploadService, LoadAspectModelService} from '@ame/editor';
 import {Injectable, InjectionToken} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
@@ -35,7 +35,7 @@ export class NamespacesManagerService {
     private modelApiService: ModelApiService,
     private matDialog: MatDialog,
     private router: Router,
-    private editorService: EditorService,
+    private loadingAspectModelService: LoadAspectModelService,
     private fileUploadService: FileUploadService,
     private sidebarService: SidebarStateService,
   ) {
@@ -65,7 +65,7 @@ export class NamespacesManagerService {
     return this.session.modalRef.afterOpened().pipe(
       tap(() =>
         this.setOnClose(() => {
-          this.editorService.loadExternalModels().subscribe(() => this.sidebarService.workspace.refresh());
+          this.loadingAspectModelService.loadExternalModels().subscribe(() => this.sidebarService.workspace.refresh());
           this.router.navigate([{outlets: {'import-namespaces': null}}]);
         }),
       ),

@@ -12,8 +12,9 @@
  */
 
 import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {finalize, Subscription} from 'rxjs';
+import {finalize, Subscription, switchMap} from 'rxjs';
 import {SidebarStateService} from '@ame/sidebar';
+import {LoadAspectModelService} from '@ame/editor';
 
 @Component({
   selector: 'ame-workspace',
@@ -32,7 +33,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription();
 
-  constructor(private changeDetector: ChangeDetectorRef) {}
+  constructor(
+    private loadAspectModelService: LoadAspectModelService,
+    private changeDetector: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     const namespaces$ = this.sidebarService.workspace.refreshSignal$.subscribe(() => {
@@ -41,6 +45,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       const refreshing$ = this.sidebarService
         .requestGetNamespaces()
         .pipe(
+          switchMap(() => this.loadAspectModelService.loadExternalModels()),
           finalize(() => {
             this.loading = false;
             this.changeDetector.detectChanges();

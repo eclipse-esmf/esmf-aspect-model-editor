@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Inject, NgZone, OnInit, inject} from '@angular/core';
+import {Component, Inject, inject, NgZone, OnInit} from '@angular/core';
 import {NamespaceStatus} from '@ame/api';
 import {MigratorService} from '../../migrator.service';
 import {Router} from '@angular/router';
-import {EditorService} from '@ame/editor';
+import {LoadAspectModelService} from '@ame/editor';
 import {RdfModel} from '@ame/rdf/utils';
-import {ElectronSignals, ElectronSignalsService, APP_CONFIG, AppConfig} from '@ame/shared';
+import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService} from '@ame/shared';
 
 interface CompatibleAmeSammVersions {
   sammVersion: string;
@@ -54,7 +54,7 @@ export class MigrationStatusComponent implements OnInit {
 
   constructor(
     public migratorService: MigratorService,
-    private editorService: EditorService,
+    private loadingAspectModelService: LoadAspectModelService,
     private router: Router,
     private ngZone: NgZone,
     @Inject(APP_CONFIG) public config: AppConfig,
@@ -64,7 +64,7 @@ export class MigrationStatusComponent implements OnInit {
     this.migrationStatus = history.state.data?.namespaces || [];
     this.hasErrors = this.migrationStatus.length <= 0;
 
-    this.editorService.loadExternalModels().subscribe(rdfModels => {
+    this.loadingAspectModelService.loadExternalModels().subscribe(rdfModels => {
       const erroredModels = rdfModels.filter(rdfModel => rdfModel?.hasErrors);
       this.hasErrors ||= erroredModels.length > 0;
       this.setFilesWithError(erroredModels);

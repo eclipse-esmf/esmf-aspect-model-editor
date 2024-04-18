@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorService} from '@ame/editor';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -25,11 +24,12 @@ import {ElectronTunnelService} from '@ame/shared';
 import {MigrationStatusComponent} from './migration-status.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {LoadAspectModelService} from '@ame/editor';
 
 describe('MigrationStatusComponent', () => {
   let component: MigrationStatusComponent;
   let fixture: ComponentFixture<MigrationStatusComponent>;
-  let editorService: EditorService;
+  let loadAspectModelService: LoadAspectModelService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -45,7 +45,7 @@ describe('MigrationStatusComponent', () => {
           useValue: provideMockObject(ElectronTunnelService),
         },
         {
-          provide: EditorService,
+          provide: LoadAspectModelService,
           useValue: {
             settings: {},
           },
@@ -57,8 +57,8 @@ describe('MigrationStatusComponent', () => {
       ],
     });
 
-    editorService = TestBed.inject(EditorService);
-    editorService.loadExternalModels = jest.fn(() => of([]));
+    loadAspectModelService = TestBed.inject(LoadAspectModelService);
+    loadAspectModelService.loadExternalModels = jest.fn(() => of([]));
     history.pushState({data: null}, '');
 
     fixture = TestBed.createComponent(MigrationStatusComponent);
