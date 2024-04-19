@@ -23,6 +23,7 @@ import {FileHandlingService, GenerateHandlingService} from '@ame/editor';
 import {SearchesStateService} from '@ame/utils';
 import {NamespacesManagerService} from '@ame/namespace-manager';
 import {Aspect} from '@ame/meta-model';
+import 'cypress-file-upload';
 
 const {mxEventObject, mxEvent} = mxgraphFactory({});
 
@@ -60,6 +61,12 @@ declare global {
        * @returns {Cypress.Chainable} A chainable Cypress object.
        */
       openGenerationOpenApiSpec(): Chainable;
+
+      /**
+       * Custom command to open the generation of AsyncAPI specification.
+       * @returns {Cypress.Chainable} A chainable Cypress object.
+       */
+      openGenerationAsyncApiSpec(): Chainable;
 
       /**
        * Custom command to open the generation of documentation.
@@ -517,7 +524,7 @@ Cypress.Commands.add('loadModel', (rdfString: string) => {
 
 Cypress.Commands.add('saveAspectModelToWorkspace', () => {
   cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', {fixture: '/default-models/aspect-default.txt'});
 
   return cy.window().then(win => {
     const fileHandlingService: FileHandlingService = win['angular.fileHandlingService'];
@@ -528,19 +535,56 @@ Cypress.Commands.add('saveAspectModelToWorkspace', () => {
 Cypress.Commands.add('openGenerationOpenApiSpec', () => {
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=null&ymlProperties=&jsonProperties=',
     {fixture: 'valid-open-api.json'},
   );
 
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&pagingOption=NO_PAGING',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=null&ymlProperties=&jsonProperties=',
+    {fixture: 'valid-open-api.yaml'},
+  );
+
+  cy.intercept(
+    'POST',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=/resource/%7BresourceId%7D&ymlProperties=&jsonProperties=%7B%0A%20%20%22key%22:%20%22value%22%0A%7D',
+    {fixture: 'valid-open-api.json'},
+  );
+
+  cy.intercept(
+    'POST',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=/resource/%7BresourceId%7D&ymlProperties=resourceId:%0A%20%20name:%20resourceId%0A%20%20in:%20path%0A%20%20description:%20An%20example%20resource%20Id.%0A%20%20required:%20true%0A%20%20schema:%0A%20%20%20%20type:%20string%0A&jsonProperties=',
     {fixture: 'valid-open-api.yaml'},
   );
 
   return cy.window().then(win => {
     const generateHandlingService: GenerateHandlingService = win['angular.generateHandlingService'];
     return generateHandlingService.openGenerationOpenApiSpec().afterClosed().subscribe();
+  });
+});
+
+Cypress.Commands.add('openGenerationAsyncApiSpec', () => {
+  cy.intercept(
+    'POST',
+    'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=json&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=false',
+    {fixture: 'valid-open-api.json'},
+  );
+
+  cy.intercept(
+    'POST',
+    'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=yaml&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=false',
+    {fixture: 'valid-open-api.json'},
+  );
+
+  cy.intercept(
+    'POST',
+    'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=json&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=true',
+    {fixture: 'valid-open-api.json'},
+  );
+
+  return cy.window().then(win => {
+    const generateHandlingService: GenerateHandlingService = win['angular.generateHandlingService'];
+    return generateHandlingService.openGenerationAsyncApiSpec().afterClosed().subscribe();
   });
 });
 

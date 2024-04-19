@@ -19,7 +19,7 @@ import {
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
@@ -40,7 +40,7 @@ export enum ModelStyle {
   ENTITY = 'entity',
   UNIT = 'unit',
   TRAIT = 'trait',
-  ENTITY_VALUE = 'entityValue',
+  ENTITY_INSTANCE = 'entityInstance',
   ABSTRACT_ENTITY = 'abstractEntity',
   EVENT = 'event',
 }
@@ -75,8 +75,8 @@ export class ModelStyleResolver {
       return ModelStyle.ENTITY;
     } else if (metaModelElement instanceof DefaultUnit) {
       return ModelStyle.UNIT;
-    } else if (metaModelElement instanceof DefaultEntityValue) {
-      return ModelStyle.ENTITY_VALUE;
+    } else if (metaModelElement instanceof DefaultEntityInstance) {
+      return ModelStyle.ENTITY_INSTANCE;
     } else if (metaModelElement instanceof DefaultEvent) {
       return ModelStyle.EVENT;
     }
@@ -93,4 +93,5 @@ export interface ModelBaseProperties {
   sameNamespace: boolean;
   sameVersionedNamespace: boolean;
   isAbstract: boolean;
+  sammVersion: string;
 }

@@ -39,6 +39,7 @@ import {ShapeConnectorService} from '@ame/connection';
 import {SidebarStateService} from '@ame/sidebar';
 import {MatDialog} from '@angular/material/dialog';
 import {SearchesStateService} from '@ame/utils';
+import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({providedIn: 'root'})
 export class ElectronTunnelService {
@@ -66,8 +67,20 @@ export class ElectronTunnelService {
     private shapeConnectorService: ShapeConnectorService,
     private matDialog: MatDialog,
     private searchesStateService: SearchesStateService,
+    private translate: LanguageTranslationService,
     private ngZone: NgZone,
   ) {}
+
+  sendTranslationsToElectron(language: string): void {
+    this.translate.getTranslation(language).subscribe(translation => {
+      this.ipcRenderer.send(ElectronEvents.SIGNAL_TRANSLATE_MENU_ITEMS, {
+        id: 'TRANSLATE_MENU_ITEMS',
+        payload: {
+          translation: translation,
+        },
+      });
+    });
+  }
 
   public subscribeMessages() {
     if (!this.ipcRenderer) {
@@ -108,25 +121,30 @@ export class ElectronTunnelService {
       map(selectedCells => selectedCells.length),
       distinctUntilChanged(),
       tap(cellsCount => {
-        this.ipcRenderer.send(ElectronEvents.SIGNAL_UPDATE_MENU_ITEM, {
-          id: 'OPEN_SELECTED_ELEMENT',
-          payload: {
-            enabled: !!cellsCount,
-          },
-        });
+        this.translate.getTranslation(this.translate.translateService.currentLang).subscribe(translation => {
+          this.ipcRenderer.send(ElectronEvents.SIGNAL_UPDATE_MENU_ITEM, {
+            id: 'OPEN_SELECTED_ELEMENT',
+            payload: {
+              enabled: !!cellsCount,
+              translation: translation,
+            },
+          });
 
-        this.ipcRenderer.send(ElectronEvents.SIGNAL_UPDATE_MENU_ITEM, {
-          id: 'REMOVE_SELECTED_ELEMENT',
-          payload: {
-            enabled: !!cellsCount,
-          },
-        });
+          this.ipcRenderer.send(ElectronEvents.SIGNAL_UPDATE_MENU_ITEM, {
+            id: 'REMOVE_SELECTED_ELEMENT',
+            payload: {
+              enabled: !!cellsCount,
+              translation: translation,
+            },
+          });
 
-        this.ipcRenderer.send(ElectronEvents.SIGNAL_UPDATE_MENU_ITEM, {
-          id: 'CONNECT_ELEMENTS',
-          payload: {
-            enabled: cellsCount === 2,
-          },
+          this.ipcRenderer.send(ElectronEvents.SIGNAL_UPDATE_MENU_ITEM, {
+            id: 'CONNECT_ELEMENTS',
+            payload: {
+              enabled: cellsCount === 2,
+              translation: translation,
+            },
+          });
         });
       }),
     );
@@ -401,6 +419,9 @@ export class ElectronTunnelService {
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_OPEN_API_SPECIFICATION, () =>
       this.ngZone.run(() => this.generateHandlingService.onGenerateOpenApiSpec()),
+    );
+    this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_ASYNC_API_SPECIFICATION, () =>
+      this.ngZone.run(() => this.generateHandlingService.onGenerateAsyncApiSpec()),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_AASX_XML, () =>
       this.ngZone.run(() => this.generateHandlingService.onGenerateAASXFile()),

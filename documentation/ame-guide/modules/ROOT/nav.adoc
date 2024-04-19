@@ -34,6 +34,7 @@
 * xref:generate/generate-other-files.adoc[]
 ** xref:generate/generate-html.adoc[]
 ** xref:generate/generate-openapi-doc.adoc[]
+** xref:generate/generate-asyncapi-doc.adoc[]
 ** xref:generate/generate-aasx.adoc[]
 ** xref:generate/generate-json.adoc[Generate JSON]
 * xref:support/support.adoc[]

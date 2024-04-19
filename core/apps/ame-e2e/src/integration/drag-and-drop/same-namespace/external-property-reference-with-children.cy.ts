@@ -16,8 +16,6 @@
 import {cyHelp} from '../../../support/helpers';
 import {
   SELECTOR_ecProperty,
-  SELECTOR_fileMenuFindElements,
-  SELECTOR_namespaceFileMenuButton,
   SELECTOR_openNamespacesButton,
   SELECTOR_searchElementsInp,
   SELECTOR_workspaceBtn,

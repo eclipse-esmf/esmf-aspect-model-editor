@@ -1,0 +1,7 @@
+resourceId:
+  name: resourceId
+  in: path
+  description: An example resource Id.
+  required: true
+  schema:
+    type: string

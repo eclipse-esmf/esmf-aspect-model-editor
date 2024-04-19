@@ -26,7 +26,7 @@ import {
   DefaultConstraint,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultEvent,
   DefaultOperation,
@@ -165,7 +165,7 @@ export class MxGraphShapeOverlayService {
     if (cell.style === 'unit') return;
     if (cell.style === 'constraint') return;
     if (cell.style === 'entityValue') return;
-    if ([DefaultConstraint, DefaultEntityValue, DefaultAbstractProperty, DefaultUnit].some(c => modelElement instanceof c)) return;
+    if ([DefaultConstraint, DefaultEntityInstance, DefaultAbstractProperty, DefaultUnit].some(c => modelElement instanceof c)) return;
 
     const elementOffset = 40;
 

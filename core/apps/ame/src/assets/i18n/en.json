@@ -28,7 +28,7 @@
       "ERROR": "SAMM Version upgrade to {{version}} finished, but {{fileCount}} had to be skipped. Please fix {{fileCountMessage}} first (in a text editor, contacting us, or in a previous version of the editor that supports the original SAMM version that has to be temporarily installed). See below:",
       "SUCCESS": "Migration finished with success",
       "CLOSE": "Close",
-      "VERSION": "Migrate Version"
+      "VERSION": "Increase Version"
     },
     "WORKSPACE_MIGRATION_DIALOG": {
       "TITLE": "Migrate Workspace to SAMM",
@@ -252,12 +252,26 @@
     "CONFIGURATION": "Configuration",
     "LANGUAGE": "Language",
     "OUTPUT_FILE_FORMAT": "Output File format",
-    "BASEURL": "BaseUrl - the base URL for the Aspect API",
+    "BASEURL": "Base Url - the base URL for the Aspect API",
     "PLEASE_ADD_VALID_URL": "Please add a valid url",
-    "INCLUDE_QUERY_API_TOOLTIP": "if set to true, a path section for the Query API Endpoint of the Aspect API will be included in the specification.",
-    "INCLUDE_QUERY_API": "IncludeQueryApi",
-    "USE_SEMANTIC_VERSION": "UseSemanticVersion",
-    "USE_SEMANTIC_VERSION_TOOLTIP": "if set to true, the complete semantic version of the Aspect Model will be used as the version of the API. Otherwise only the major part of the Aspect Version is used as the version of the API.",
+    "INCLUDE_QUERY_API_TOOLTIP": "Include the path for the Query Aspect API Endpoint in the OpenApi specification.",
+    "INCLUDE_QUERY_API": "Include Query Api",
+    "USE_SEMANTIC_VERSION": "Use Semantic Version",
+    "USE_SEMANTIC_VERSION_TOOLTIP": "Use the full semantic version from the Aspect Model as the version for the Aspect API.",
+    "ACTIVATE_RESOURCE_PATH": "If enabled, the resource path will be activated in the OpenAPI specification.",
+    "ACTIVATE_RESOURCE_PATH_TOOLTIP": "Activate Resource Path",
+    "RESOURCE_PATH": "Resource Path - The resource path for the Aspect API endpoints",
+    "RESOURCE_PATH_REQUIRED": "Resource path is required",
+    "RESOURCE_PATH_PATTERN": "Pattern is not matching",
+    "RESOURCE_PATH_ERROR": "Failed to generate Open Api Spec",
+    "UPLOAD_FILE_TITLE": "Upload {{output}} File",
+    "UPLOAD_FILE_DESCRIPTION": "For information on the options, please refer to the ",
+    "UPLOAD_DRAG_AND_DROP_TEXT": "Drag and drop files here or click the icon to upload",
+    "UPLOADED_FILE_TITLE": "Uploaded {{output}} File",
+    "UPLOAD_FILE_ACCORDION_TITLE": "Properties",
+    "UPLOAD_ERROR_TITLE": "Wrong file format",
+    "UPLOAD_ERROR_MESSAGE": "Please upload a {{output}} file.",
+    "UPLOAD_FILE_REQUIRED": "{{output}} file is required - a variable has been defined in the resource path.",
     "PAGING_TYPE_OPTION": "Paging type/option",
     "NO_PAGING": "No paging",
     "CURSOR_BASED_PAGING": "Cursor based paging",
@@ -268,6 +282,25 @@
       "GENERATE": "Generate"
     }
   },
+  "GENERATE_ASYNCAPI_SPEC_DIALOG": {
+    "TITLE": "Generate AsyncAPI specification",
+    "GENERATING": "Generate",
+    "CONFIGURATION": "Configuration",
+    "LANGUAGE": "Language",
+    "OUTPUT_FILE_FORMAT": "Output File format",
+    "APPLICATION_ID": "Application ID - sets the application id, e.g. an identifying URL",
+    "CHANNEL_ADDRESS": "Channel Address - sets the channel address (i.e., for MQTT, the topic's name)",
+    "CHANNEL_ADDRESS_ERROR": "Channel address is pattern is not matching",
+    "USE_SEMANTIC_VERSION": "Use Semantic Version",
+    "USE_SEMANTIC_VERSION_TOOLTIP": "Use the full semantic version from the Aspect Model as the version for the Aspect API.",
+    "WRITE_SEPARATE_FILES": "Write Separate Files",
+    "WRITE_SEPARATE_FILES_TOOLTIP": "Package each schema into individual files.",
+    "BUTTON": {
+      "CANCEL": "Cancel",
+      "GENERATE": "Generate"
+    }
+  },
+
   "GENERATE_HANDLING": {
     "FAIL_GENERATE_OPENAPI_SPEC": "Failed to generate Open Api specification",
     "INVALID_MODEL": "Invalid Aspect Model",
@@ -467,19 +500,18 @@
       "CLOSE_BUTTON": "Keep current",
       "OK_BUTTON": "Reload"
     },
-    "UPDATE_ASPECT_MODEL": {
-      "PHRASE1": "The Aspect model \"{{fileName}}\" is already defined in your file structure.",
-      "PHRASE2": "Are you sure you want to overwrite it?",
-      "TITLE": "Update Aspect Model",
-      "OK_BUTTON": "Overwrite"
-    },
     "NAMESPACE_CHANGE": {
-      "PHRASE1": "The namespace for \"{{originalModelName}}\" model has been changed. The process will make the following changes:",
-      "PHRASE2": "• move \"{{originalModelName}}\" from \"{{originalModelNamespace}}\" to \"{{newNamespace}}\" namespace",
-      "PHRASE3": "• update Aspect models which depend on \"{{originalModelName}}\" model",
-      "PHRASE4": "Are you sure you want to continue?",
-      "TITLE": "Model's namespace has been changed",
-      "OK_BUTTON": "Continue"
+      "TITLE": "Update Model namespace",
+      "PHRASE1": "The namespace for the model \"{{originalModelName}}\" has been updated.",
+      "PHRASE2": "Old namespace: \"{{originalModelNamespace}}\"",
+      "PHRASE3": "New namespace: \"{{newNamespace}}\"",
+      "PHRASE4": "This update will:",
+      "PHRASE5": "• Relocate \"{{originalModelName}}\" from the old namespace to the new namespace.",
+      "PHRASE6": "• Refresh any Aspect models that are linked to \"{{originalModelName}}\" to reflect this change.",
+      "PHRASE7": "Do you want to apply these changes now?",
+      "OK_BUTTON": "Save and Update Dependencies",
+      "ACTION_BUTTON": "Save Changes Only",
+      "CANCEL_BUTTON": "Cancel"
     },
     "SAVE_BEFORE_LOAD": {
       "PHRASE1": "You are about to load {{fileName}}.",
@@ -565,6 +597,69 @@
     "PROPERTY": "Property",
     "EDIT": {
       "SEARCH_BAR": "Find complex value"
+    }
+  },
+  "MENU": {
+    "FILE": {
+      "LABEL": "File",
+      "NEW": {
+        "LABEL": "New...",
+        "SUBMENU": {
+          "EMPTY_MODEL": "Empty Model",
+          "LOAD_FILE": "Load File...",
+          "COPY_PASTE": "Copy Paste",
+          "EXAMPLES": "Examples"
+        }
+      },
+      "NEW_WINDOW": "New Window",
+      "IMPORT_MODEL": "Import Model",
+      "IMPORT_PACKAGE": "Import Package",
+      "COPY_TO_CLIPBOARD": "Copy to Clipboard",
+      "SAVE_TO_WORKSPACE": "Save to Workspace",
+      "EXPORT_MODEL": "Export Model",
+      "EXPORT_PACKAGE": "Export Package"
+    },
+    "VIEW": {
+      "LABEL": "View",
+      "TOGGLE_TOOLBAR": "Toggle Toolbar",
+      "TOGGLE_MINIMAP": "Toggle Minimap",
+      "FILTER": {
+        "LABEL": "Filter Model by",
+        "SUBMENU": {
+          "NONE": "None",
+          "PROPERTIES": "Properties"
+        }
+      },
+      "ZOOM_IN": "Zoom in",
+      "ZOOM_OUT": "Zoom out",
+      "ZOOM_TO_FIT": "Zoom to Fit",
+      "ZOOM_TO_100": "Zoom to 100%"
+    },
+    "EDIT": {
+      "LABEL": "Edit\u200B",
+      "OPEN_SELECTED_ELEMENT": "Open selected element",
+      "REMOVE_SELECTED_ELEMENT": "Remove selected element",
+      "COLLAPSE_EXPAND_MODEL": "Collapse/Expand Model",
+      "FORMAT_MODEL": "Format Model",
+      "CONNECT_SELECTED_ELEMENTS": "Connect selected elements"
+    },
+    "VALIDATE": {
+      "LABEL": "Validate",
+      "CURRENT_MODEL": "Current Model"
+    },
+    "GENERATE": {
+      "LABEL": "Generate",
+      "HTML_DOCUMENTATION": "HTML Documentation",
+      "OPEN_API_SPECIFICATION": "OpenAPI Specification",
+      "ASYNC_API_SPECIFICATION": "AsyncAPI Specification",
+      "AASX_XML": "AASX / XML",
+      "SAMPLE_JSON_PAYLOAD": "Sample JSON Payload",
+      "JSON_SCHEMA": "JSON Schema"
+    },
+    "SEARCH": {
+      "LABEL": "Search",
+      "ELEMENTS": "Elements",
+      "FILES": "Files"
     }
   }
 }

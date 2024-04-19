@@ -68,13 +68,14 @@ import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {ModelApiService} from '@ame/api';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
-import {OpenApi, ViolationError} from './editor-toolbar';
+import {AsyncApi, OpenApi, ViolationError} from './editor-toolbar';
 import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
 import {ShapeSettingsService, ShapeSettingsStateService} from './editor-dialog';
 import {LargeFileWarningService} from './large-file-warning-dialog/large-file-warning-dialog.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
 import {LanguageTranslationService} from '@ame/translation';
 import {SidebarStateService} from '@ame/sidebar';
+import {ConfirmDialogEnum} from './models/confirm-dialog.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -223,15 +224,17 @@ export class EditorService {
   }
 
   openReloadConfirmationDialog(fileName: string): Observable<boolean> {
-    return this.confirmDialogService.open({
-      phrases: [
-        `${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.VERSION_CHANGE_NOTICE} ${fileName} ${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.WORKSPACE_LOAD_NOTICE}`,
-        this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.RELOAD_WARNING,
-      ],
-      title: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.TITLE,
-      closeButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.CLOSE_BUTTON,
-      okButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.OK_BUTTON,
-    });
+    return this.confirmDialogService
+      .open({
+        phrases: [
+          `${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.VERSION_CHANGE_NOTICE} ${fileName} ${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.WORKSPACE_LOAD_NOTICE}`,
+          this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.RELOAD_WARNING,
+        ],
+        title: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.TITLE,
+        closeButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.CLOSE_BUTTON,
+        okButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.OK_BUTTON,
+      })
+      .pipe(map(confirm => confirm === ConfirmDialogEnum.ok));
   }
 
   loadNewAspectModel(payload: LoadModelPayload): Observable<Array<RdfModel>> {
@@ -329,7 +332,21 @@ export class EditorService {
 
   generateOpenApiSpec(rdfModel: RdfModel, openApi: OpenApi): Observable<string> {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.generateOpenApiSpec(serializedModel, openApi);
+    return this.modelApiService.generateOpenApiSpec(serializedModel, openApi).pipe(
+      catchError(err => {
+        this.notificationsService.error({
+          title: this.translate.language.GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH_ERROR,
+          message: err.error.message,
+          timeout: 5000,
+        });
+        return throwError(() => err.error);
+      }),
+    );
+  }
+
+  generateAsyncApiSpec(rdfModel: RdfModel, asyncApi: AsyncApi): Observable<string> {
+    const serializedModel = this.rdfService.serializeModel(rdfModel);
+    return this.modelApiService.generateAsyncApiSpec(serializedModel, asyncApi);
   }
 
   private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string, namespaceFileName: string, editElementUrn?: string): void {
@@ -519,8 +536,8 @@ export class EditorService {
         closeButtonText: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.CLOSE_BUTTON,
         okButtonText: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.OK_BUTTON,
       })
-      .subscribe(confirmed => {
-        if (!confirmed) {
+      .subscribe(confirm => {
+        if (confirm === ConfirmDialogEnum.cancel) {
           return;
         }
         const rdfModel = this.rdfService.currentRdfModel;

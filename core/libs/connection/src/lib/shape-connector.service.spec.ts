@@ -65,7 +65,7 @@ import {
 import {provideMockObject} from 'jest-helpers/utils';
 import {LogService, NotificationsService} from '@ame/shared';
 import {MxGraphAttributeService, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {EntityValueService} from '@ame/editor';
+import {EntityInstanceService} from '@ame/editor';
 import {TranslateModule} from '@ngx-translate/core';
 import {LanguageTranslateModule} from '@ame/translation';
 
@@ -112,8 +112,8 @@ describe('Test Shape connector service', () => {
           useValue: provideMockObject(MxGraphAttributeService),
         },
         {
-          provide: EntityValueService,
-          useValue: provideMockObject(EntityValueService),
+          provide: EntityInstanceService,
+          useValue: provideMockObject(EntityInstanceService),
         },
         {
           provide: AspectConnectionHandler,

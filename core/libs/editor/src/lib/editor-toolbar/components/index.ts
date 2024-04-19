@@ -12,6 +12,7 @@
  */
 
 export * from './generate-open-api/generate-open-api.component';
+export * from './generate-async-api/generate-async-api.component';
 export * from './generate-documentation/generate-documentation.component';
 export * from './help/document.component';
 export * from './theme-switcher/theme-switcher.component';

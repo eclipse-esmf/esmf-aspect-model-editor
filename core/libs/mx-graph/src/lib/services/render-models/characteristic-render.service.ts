@@ -19,7 +19,7 @@ import {
   DefaultCollection,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultProperty,
   DefaultQuantifiable,
   DefaultScalar,
@@ -258,7 +258,7 @@ export class CharacteristicRenderService extends BaseRenderService {
 
   private removeObsoleteEntityValues(cell: mxgraph.mxCell) {
     this.mxGraphService.graph.getOutgoingEdges(cell).forEach(outEdge => {
-      if (MxGraphHelper.getModelElement(outEdge.target) instanceof DefaultEntityValue) {
+      if (MxGraphHelper.getModelElement(outEdge.target) instanceof DefaultEntityInstance) {
         const entityValues = MxGraphCharacteristicHelper.findObsoleteEntityValues(outEdge);
         this.mxGraphService.removeCells(entityValues);
       }

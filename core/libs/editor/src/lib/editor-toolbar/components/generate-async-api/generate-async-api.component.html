@@ -1,0 +1,101 @@
+<!--
+  ~ Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<form [formGroup]="form">
+  <h2 mat-dialog-title>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.TITLE' | translate }}</h2>
+
+  <mat-dialog-content>
+    <ng-container *ngIf="!isGenerating; else loader">
+      <p>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.CONFIGURATION' | translate }}</p>
+      <mat-form-field appearance="fill">
+        <mat-label>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.LANGUAGE' | translate }}</mat-label>
+        <mat-select [formControl]="getControl('language')" data-cy="tbLanguageButton">
+          <mat-option *ngFor="let language of languages" [value]="language.tag">{{ language.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <section>
+        <mat-form-field appearance="fill">
+          <mat-label>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.OUTPUT_FILE_FORMAT' | translate }}</mat-label>
+          <mat-select [formControl]="getControl('output')" data-cy="tbOutputButton">
+            <mat-option data-cy="tbOutputButton-json" value="json">JSON</mat-option>
+            <mat-option data-cy="tbOutputButton-yaml" value="yaml">YAML</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.APPLICATION_ID' | translate }}</mat-label>
+          <input
+            matInput
+            [formControl]="getControl('applicationId')"
+            placeholder="application:id or application.id"
+            data-cy="tbApplicationIdInput"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.CHANNEL_ADDRESS' | translate }}</mat-label>
+          <input
+            matInput
+            [formControl]="getControl('channelAddress')"
+            placeholder="/foo..., foo/... or mqtt://... "
+            data-cy="tbChannelAddressInput"
+          />
+          <mat-error *ngIf="getControl('channelAddress')?.errors?.pattern" data-cy="tbChannelAddressError">
+            {{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.CHANNEL_ADDRESS_ERROR' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </section>
+
+      <section>
+        <mat-checkbox
+          [formControl]="getControl('useSemanticVersion')"
+          class="dialog__checkbox"
+          [matTooltip]="'GENERATE_ASYNCAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION_TOOLTIP' | translate"
+        >
+          {{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION' | translate }}
+        </mat-checkbox>
+
+        <mat-checkbox
+          [formControl]="getControl('writeSeparateFiles')"
+          class="dialog__checkbox"
+          [matTooltip]="'GENERATE_ASYNCAPI_SPEC_DIALOG.WRITE_SEPARATE_FILES_TOOLTIP' | translate"
+          data-cy="writeSeparateFilesCheckbox"
+        >
+          {{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.WRITE_SEPARATE_FILES' | translate }}
+        </mat-checkbox>
+      </section>
+    </ng-container>
+
+    <ng-template #loader>
+      <div class="dialog__loading">
+        <h3>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.GENERATING' | translate }}</h3>
+        <mat-spinner></mat-spinner>
+      </div>
+    </ng-template>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-flat-button (click)="close()">{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.BUTTON.CANCEL' | translate }}</button>
+    <button
+      (click)="generateAsyncApiSpec()"
+      type="button"
+      mat-flat-button
+      color="primary"
+      [disabled]="!form.valid"
+      data-cy="tbGenerateAsyncApiButton"
+    >
+      <span>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.BUTTON.GENERATE' | translate }}</span>
+    </button></mat-dialog-actions
+  >
+</form>

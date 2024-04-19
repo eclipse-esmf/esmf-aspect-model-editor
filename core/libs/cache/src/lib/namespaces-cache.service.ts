@@ -131,23 +131,6 @@ export class NamespacesCacheService {
   }
 
   /**
-   * Updates the association of a file from an old namespace key to a new one.
-   * It handles the removal of the file from the old namespace and adds it under the new namespace,
-   * managing multiple file associations gracefully.
-   *
-   * @param {string} oldUrn - The current namespace key of the file.
-   * @param {string} newUrn - The new namespace key to associate the file with.
-   * @param {string} fileName - The name of the file to update the namespace for.
-   */
-  updateNamespaceKey(oldUrn, newUrn, fileName) {
-    const oldUrnValues = this.#namespaces.get(oldUrn);
-    oldUrnValues?.size > 1 ? oldUrnValues.delete(fileName) : this.#namespaces.delete(oldUrn);
-
-    const newUrnValues = this.#namespaces.get(newUrn);
-    newUrnValues ? newUrnValues.set(fileName, this.#currentCachedFile) : this.addFile(newUrn, fileName);
-  }
-
-  /**
    * This method will resolve the element when it´s not defined external.
    *
    * @param element - MetaModelElement to resolve
@@ -163,12 +146,15 @@ export class NamespacesCacheService {
   /**
    * Retrieves a BaseMetaModelElement from a specified namespace using the provided aspectModelUrn.
    *
-   * @param {string} namespace - The namespace from which the element should be retrieved.
+   * @param {string} namespaceKey - The namespaceKey from which the element should be retrieved.
    * @param {string} aspectModelUrn - The URN of the aspect model element to find.
-   * @returns {BaseMetaModelElement | null} The found BaseMetaModelElement or null if not found.
+   * @returns {BaseMetaModelElement} The found BaseMetaModelElement or null if not found.
    */
-  getElementFromNamespace(namespace: string, aspectModelUrn: string): BaseMetaModelElement {
-    for (const value of this.getNamespace(namespace).values()) {
+  getElementFromNamespace(namespaceKey: string, aspectModelUrn: string): BaseMetaModelElement {
+    const namespace = this.getNamespace(namespaceKey);
+    const source = namespace ? Array.from(namespace.values()) : [this.currentCachedFile];
+
+    for (const value of source) {
       const element = value.getElement<BaseMetaModelElement>(aspectModelUrn);
       if (element) {
         return element;

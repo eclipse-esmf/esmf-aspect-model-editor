@@ -46,6 +46,7 @@ export interface Translation {
   TOOLTIPS: Tooltips;
   SEARCHES: Searches;
   ENTITY_VALUE: EntityValue;
+  MENU: Menu;
 }
 export interface Searches {
   ELEMENTS_LABEL: string;
@@ -109,7 +110,6 @@ export interface LoadingScreenDialog {
 export interface ConfirmDialog {
   CREATE_ASPECT: CreateAspect;
   RELOAD_CONFIRMATION: ReloadConfirmation;
-  UPDATE_ASPECT_MODEL: UpdateAspectModel;
   NAMESPACE_CHANGE: NamespaceChange;
   SAVE_BEFORE_LOAD: SaveBeforeLoad;
   DELETE_FILE: DeleteFile;
@@ -138,14 +138,13 @@ export interface NamespaceChange {
   PHRASE2: string;
   PHRASE3: string;
   PHRASE4: string;
+  PHRASE5: string;
+  PHRASE6: string;
+  PHRASE7: string;
   TITLE: string;
   OK_BUTTON: string;
-}
-export interface UpdateAspectModel {
-  PHRASE1: string;
-  PHRASE2: string;
-  TITLE: string;
-  OK_BUTTON: string;
+  ACTION_BUTTON: string;
+  CANCEL_BUTTON: string;
 }
 export interface ReloadConfirmation {
   TITLE: string;
@@ -368,6 +367,20 @@ export interface GenerateOpenapiSpecDialog {
   INCLUDE_QUERY_API: string;
   USE_SEMANTIC_VERSION: string;
   USE_SEMANTIC_VERSION_TOOLTIP: string;
+  ACTIVATE_RESOURCE_PATH: string;
+  ACTIVATE_RESOURCE_PATH_TOOLTIP: string;
+  RESOURCE_PATH: string;
+  RESOURCE_PATH_REQUIRED: string;
+  RESOURCE_PATH_PATTERN: string;
+  RESOURCE_PATH_ERROR: string;
+  UPLOAD_FILE_TITLE: string;
+  UPLOAD_FILE_DESCRIPTION: string;
+  UPLOAD_DRAG_AND_DROP_TEXT: string;
+  UPLOADED_FILE_TITLE: string;
+  UPLOAD_FILE_ACCORDION_TITLE: string;
+  UPLOAD_ERROR_TITLE: string;
+  UPLOAD_ERROR_MESSAGE: string;
+  UPLOAD_FILE_REQUIRED: string;
   PAGING_TYPE_OPTION: string;
   NO_PAGING: string;
   CURSOR_BASED_PAGING: string;
@@ -646,4 +659,88 @@ export interface EntityValue {
 }
 export interface SearchBar {
   SEARCH_BAR: string;
+}
+
+export interface Menu {
+  FILE: File;
+  VIEW: View;
+  EDIT: Edit;
+  VALIDATE: Validate;
+  GENERATE: Generate;
+  SEARCH: Search;
+}
+
+export interface File {
+  LABEL: string;
+  NEW: New;
+  NEW_WINDOW: string;
+  IMPORT_MODEL: string;
+  IMPORT_PACKAGE: string;
+  COPY_TO_CLIPBOARD: string;
+  SAVE_TO_WORKSPACE: string;
+  EXPORT_MODEL: string;
+  EXPORT_PACKAGE: string;
+}
+
+export interface New {
+  LABEL: string;
+  SUBMENU: Submenu;
+}
+
+export interface Submenu {
+  EMPTY_MODEL: string;
+  LOAD_FILE: string;
+  COPY_PASTE: string;
+  EXAMPLES: string;
+}
+
+export interface View {
+  LABEL: string;
+  TOGGLE_TOOLBAR: string;
+  TOGGLE_MINIMAP: string;
+  FILTER: Filter;
+  ZOOM_IN: string;
+  ZOOM_OUT: string;
+  ZOOM_TO_FIT: string;
+  ZOOM_TO_100: string;
+}
+
+export interface Filter {
+  LABEL: string;
+  SUBMENU: FilterSubmenu;
+}
+
+export interface FilterSubmenu {
+  NONE: string;
+  PROPERTIES: string;
+}
+
+export interface Edit {
+  LABEL: string;
+  OPEN_SELECTED_ELEMENT: string;
+  REMOVE_SELECTED_ELEMENT: string;
+  COLLAPSE_EXPAND_MODEL: string;
+  FORMAT_MODEL: string;
+  CONNECT_SELECTED_ELEMENTS: string;
+}
+
+export interface Validate {
+  LABEL: string;
+  CURRENT_MODEL: string;
+}
+
+export interface Generate {
+  LABEL: string;
+  HTML_DOCUMENTATION: string;
+  OPEN_API_SPECIFICATION: string;
+  ASYNC_API_SPECIFICATION: string;
+  AASX_XML: string;
+  SAMPLE_JSON_PAYLOAD: string;
+  JSON_SCHEMA: string;
+}
+
+export interface Search {
+  LABEL: string;
+  ELEMENTS: string;
+  FILES: string;
 }

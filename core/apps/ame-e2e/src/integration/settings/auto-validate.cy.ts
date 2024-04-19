@@ -14,7 +14,7 @@
 import {SELECTOR_settingsButton, SettingsDialogSelectors} from '../../support/constants';
 
 describe('Auto Validate', () => {
-  it('should open settings dialog', () => {
+  it('should open editor settings dialog', () => {
     cy.visitDefault()
       .then(() => cy.startModelling())
       .then(() => {

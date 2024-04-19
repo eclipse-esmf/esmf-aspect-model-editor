@@ -26,7 +26,7 @@ import {
   DefaultEither,
   DefaultEncodingConstraint,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultEvent,
   DefaultFixedPointConstraint,
@@ -79,7 +79,7 @@ export class MxGraphVisitorHelper {
     if (
       characteristic instanceof DefaultEnumeration &&
       characteristic.values?.length &&
-      !characteristic.values.every(value => value instanceof DefaultEntityValue)
+      !characteristic.values.every(value => value instanceof DefaultEntityInstance)
     ) {
       return {
         label: `values = ${RdfModelUtil.getValuesWithoutUrnDefinition(characteristic.values)}`,
@@ -480,8 +480,14 @@ export class MxGraphVisitorHelper {
       const aspectVersionedNamespace = rdfModel.getAspectModelUrn().replace('#', '');
       const [elementVersionedNamespace] = modelElement.aspectModelUrn.split('#');
 
+      let metaModelVersion = modelElement.metaModelVersion;
+      if (modelElement instanceof DefaultEntityInstance) {
+        metaModelVersion = modelElement.entity.metaModelVersion;
+      }
+
       return {
-        version: modelElement.metaModelVersion,
+        version: RdfModelUtil.getNamespaceVersionFromRdf(rdfModel.absoluteAspectModelFileName),
+        sammVersion: metaModelVersion,
         namespace: elementNamespace,
         external: modelElement.isExternalReference(),
         predefined: !!(modelElement as DefaultCharacteristic)?.isPredefined?.(),

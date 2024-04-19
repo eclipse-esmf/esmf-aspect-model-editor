@@ -21,7 +21,7 @@ import {
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
@@ -38,7 +38,7 @@ import {
   CharacteristicVisitor,
   CleanupVisitor,
   ConstraintVisitor,
-  EntityValueVisitor,
+  EntityInstanceVisitor,
   EntityVisitor,
   EventVisitor,
   OperationVisitor,
@@ -70,7 +70,7 @@ export class DomainModelToRdfService {
     private entityVisitorService: EntityVisitor,
     private abstractEntityVisitorService: AbstractEntityVisitor,
     private abstractPropertyVisitorService: AbstractPropertyVisitor,
-    private entityValueVisitor: EntityValueVisitor,
+    private entityInstanceVisitor: EntityInstanceVisitor,
     private eventVisitorService: EventVisitor,
     private unitVisitorService: UnitVisitor,
     private modelService: ModelService,
@@ -139,8 +139,8 @@ export class DomainModelToRdfService {
       return this.entityVisitorService;
     } else if (metaModelElement instanceof DefaultAbstractEntity) {
       return this.abstractEntityVisitorService;
-    } else if (metaModelElement instanceof DefaultEntityValue) {
-      return this.entityValueVisitor;
+    } else if (metaModelElement instanceof DefaultEntityInstance) {
+      return this.entityInstanceVisitor;
     } else if (metaModelElement instanceof DefaultEvent) {
       return this.eventVisitorService;
     } else if (metaModelElement instanceof DefaultUnit) {

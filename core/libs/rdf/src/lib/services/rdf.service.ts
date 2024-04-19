@@ -53,7 +53,7 @@ export class RdfService {
       window['angular.rdfService'] = this;
     }
 
-    this._rdfSerializer = new RdfSerializerService(translation);
+    this._rdfSerializer = new RdfSerializerService(this.translation);
     this._settings = this.configurationService.getSettings();
   }
 
@@ -166,11 +166,12 @@ export class RdfService {
   }
 
   parseFileName(fileName: string, urn: string): string {
-    if (this.browserService.isStartedAsElectronApp()) {
+    if (this.browserService.isStartedAsElectronApp() && window.require) {
       const path = window.require('path');
       fileName = fileName.includes(path.sep) ? `${urn.replace('#', ':')}${path.basename(fileName)}` : fileName;
     }
-    return fileName;
+
+    return fileName.charAt(0) === '/' ? fileName.substring(1) : fileName;
   }
 
   parseModels(fileContentModels: FileContentModel[]): Observable<RdfModel[]> {

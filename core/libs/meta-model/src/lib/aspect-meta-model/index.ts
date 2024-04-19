@@ -35,7 +35,7 @@ export * from './default-locale-constraint';
 export * from './default-collection';
 export * from './default-length-constraint';
 export * from './type';
-export * from './default-entity-value';
+export * from './default-entity-instance';
 export * from './default-entity';
 export * from './default-trait';
 export * from './default-regular-expression-constraint';

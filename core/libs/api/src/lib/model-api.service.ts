@@ -13,11 +13,11 @@
 
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {catchError, map, mergeMap, tap, timeout, retry} from 'rxjs/operators';
+import {catchError, map, mergeMap, retry, tap, timeout} from 'rxjs/operators';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, LogService} from '@ame/shared';
 import {ModelValidatorService} from './model-validator.service';
-import {OpenApi, ViolationError} from '@ame/editor';
+import {AsyncApi, OpenApi, ViolationError} from '@ame/editor';
 import {removeCommentsFromTTL} from '@ame/utils';
 
 export enum PREDEFINED_MODELS {
@@ -42,7 +42,7 @@ export class ModelApiService {
     private browserService: BrowserService,
     private modelValidatorService: ModelValidatorService,
   ) {
-    if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('e2e=true')) {
+    if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
       this.serviceUrl = this.serviceUrl.replace(this.defaultPort, remote.getGlobal('backendPort'));
     }
@@ -94,10 +94,15 @@ export class ModelApiService {
       const [namespace, version, file] = absoluteModelName.split(':');
       headers = new HttpHeaderBuilder().withNamespace(`${namespace}:${version}`).withFileName(file).build();
     }
-    return this.http.post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent, {headers}).pipe(
-      timeout(this.requestTimeout),
-      catchError(res => throwError(() => res)),
-    );
+    return this.http
+      .post(`${this.serviceUrl}${this.api.models}`, rdfContent, {
+        headers,
+        responseType: 'text',
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => throwError(() => res)),
+      );
   }
 
   formatModel(rdfContent: string): Observable<string> {
@@ -273,13 +278,43 @@ export class ModelApiService {
           output: openApi.output,
           baseUrl: openApi.baseUrl,
           includeQueryApi: openApi.includeQueryApi,
+          useSemanticVersion: openApi.useSemanticVersion,
           pagingOption: openApi.paging,
+          resourcePath: openApi.resourcePath,
+          ymlProperties: openApi.ymlProperties || '',
+          jsonProperties: openApi.jsonProperties || '',
         },
         responseType: openApi.output === 'yaml' ? ('text' as 'json') : 'json',
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
+        catchError(res => {
+          res.error = openApi.output === 'yaml' ? JSON.parse(res.error)?.error : res.error.error;
+          return throwError(() => res);
+        }),
+      );
+  }
+
+  generateAsyncApiSpec(rdfContent: string, asyncApi: AsyncApi): Observable<any> {
+    return this.http
+      .post<string>(`${this.serviceUrl}${this.api.generate}/async-api-spec`, rdfContent, {
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+        params: {
+          language: asyncApi.language,
+          output: asyncApi.output,
+          applicationId: asyncApi.applicationId,
+          channelAddress: asyncApi.channelAddress,
+          useSemanticVersion: asyncApi.useSemanticVersion,
+          writeSeparateFiles: asyncApi.writeSeparateFiles,
+        },
+        responseType: asyncApi.writeSeparateFiles ? ('blob' as 'json') : asyncApi.output === 'yaml' ? ('text' as 'json') : 'json',
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => {
+          res.error = asyncApi.output === 'yaml' ? JSON.parse(res.error)?.error : res.error.error;
+          return throwError(() => res);
+        }),
       );
   }
 

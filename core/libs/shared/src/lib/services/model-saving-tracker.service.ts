@@ -13,8 +13,8 @@
 
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {MxGraphService} from '@ame/mx-graph';
-import {Injectable, inject} from '@angular/core';
-import {map, take, Timestamp} from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {map, take} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ModelSavingTrackerService {

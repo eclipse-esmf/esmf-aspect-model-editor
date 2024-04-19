@@ -20,7 +20,7 @@ import {
   DefaultCharacteristic,
   DefaultConstraint,
   DefaultEntity,
-  DefaultEntityValue,
+  DefaultEntityInstance,
   DefaultProperty,
   DefaultUnit,
 } from '@ame/meta-model';
@@ -99,7 +99,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
       return nameValidators;
     }
 
-    if (!(this.metaModelElement instanceof DefaultEntityValue)) {
+    if (!(this.metaModelElement instanceof DefaultEntityInstance)) {
       nameValidators.push(this.isUpperCaseName() ? EditorDialogValidators.namingUpperCase : EditorDialogValidators.namingLowerCase);
     } else {
       nameValidators.push(EditorDialogValidators.noWhiteSpace);
