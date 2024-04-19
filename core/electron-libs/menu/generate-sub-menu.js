@@ -18,6 +18,7 @@ const {
   SIGNAL_GENERATE_JSON_PAYLOAD,
   SIGNAL_GENERATE_JSON_SCHEMA,
   SIGNAL_GENERATE_OPEN_API_SPECIFICATION,
+  SIGNAL_GENERATE_ASYNC_API_SPECIFICATION,
 } = require('../events');
 const {getIcon} = require('./utils');
 
@@ -34,6 +35,12 @@ function generateSubmenu(translation) {
       label: translation.OPEN_API_SPECIFICATION,
       icon: getIcon(icons.GENERATE_OPEN_API_SPECIFICATION.enabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_OPEN_API_SPECIFICATION),
+    },
+    {
+      id: 'GENERATE_ASYNC_API_SPECIFICATION',
+      label: translation.ASYNC_API_SPECIFICATION,
+      icon: getIcon(icons.GENERATE_ASYNC_API_SPECIFICATION.enabled),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_ASYNC_API_SPECIFICATION),
     },
     {
       id: 'GENERATE_AASX_XML',

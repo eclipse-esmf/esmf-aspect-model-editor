@@ -68,7 +68,7 @@ import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {ModelApiService} from '@ame/api';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
-import {OpenApi, ViolationError} from './editor-toolbar';
+import {AsyncApi, OpenApi, ViolationError} from './editor-toolbar';
 import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
 import {ShapeSettingsService, ShapeSettingsStateService} from './editor-dialog';
 import {LargeFileWarningService} from './large-file-warning-dialog/large-file-warning-dialog.service';
@@ -342,6 +342,11 @@ export class EditorService {
         return throwError(() => err.error);
       }),
     );
+  }
+
+  generateAsyncApiSpec(rdfModel: RdfModel, asyncApi: AsyncApi): Observable<string> {
+    const serializedModel = this.rdfService.serializeModel(rdfModel);
+    return this.modelApiService.generateAsyncApiSpec(serializedModel, asyncApi);
   }
 
   private loadCurrentModel(loadedRdfModel: RdfModel, rdfAspectModel: string, namespaceFileName: string, editElementUrn?: string): void {

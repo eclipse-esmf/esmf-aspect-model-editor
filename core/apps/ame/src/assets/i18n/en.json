@@ -254,10 +254,10 @@
     "OUTPUT_FILE_FORMAT": "Output File format",
     "BASEURL": "Base Url - the base URL for the Aspect API",
     "PLEASE_ADD_VALID_URL": "Please add a valid url",
-    "INCLUDE_QUERY_API_TOOLTIP": "If enabled, a dedicated section for the Query API Endpoint of the Aspect API will be included in the specification.",
+    "INCLUDE_QUERY_API_TOOLTIP": "Include the path for the Query Aspect API Endpoint in the OpenApi specification.",
     "INCLUDE_QUERY_API": "Include Query Api",
     "USE_SEMANTIC_VERSION": "Use Semantic Version",
-    "USE_SEMANTIC_VERSION_TOOLTIP": "If enabled, the complete semantic version of the Aspect Model will be utilized as the API version. Otherwise, only the major part of the Aspect Version will be used as the API version.",
+    "USE_SEMANTIC_VERSION_TOOLTIP": "Use the full semantic version from the Aspect Model as the version for the Aspect API.",
     "ACTIVATE_RESOURCE_PATH": "If enabled, the resource path will be activated in the OpenAPI specification.",
     "ACTIVATE_RESOURCE_PATH_TOOLTIP": "Activate Resource Path",
     "RESOURCE_PATH": "Resource Path - The resource path for the Aspect API endpoints",
@@ -282,6 +282,25 @@
       "GENERATE": "Generate"
     }
   },
+  "GENERATE_ASYNCAPI_SPEC_DIALOG": {
+    "TITLE": "Generate AsyncAPI specification",
+    "GENERATING": "Generate",
+    "CONFIGURATION": "Configuration",
+    "LANGUAGE": "Language",
+    "OUTPUT_FILE_FORMAT": "Output File format",
+    "APPLICATION_ID": "Application ID - sets the application id, e.g. an identifying URL",
+    "CHANNEL_ADDRESS": "Channel Address - sets the channel address (i.e., for MQTT, the topic's name)",
+    "CHANNEL_ADDRESS_ERROR": "Channel address is pattern is not matching",
+    "USE_SEMANTIC_VERSION": "Use Semantic Version",
+    "USE_SEMANTIC_VERSION_TOOLTIP": "Use the full semantic version from the Aspect Model as the version for the Aspect API.",
+    "WRITE_SEPARATE_FILES": "Write Separate Files",
+    "WRITE_SEPARATE_FILES_TOOLTIP": "Package each schema into individual files.",
+    "BUTTON": {
+      "CANCEL": "Cancel",
+      "GENERATE": "Generate"
+    }
+  },
+
   "GENERATE_HANDLING": {
     "FAIL_GENERATE_OPENAPI_SPEC": "Failed to generate Open Api specification",
     "INVALID_MODEL": "Invalid Aspect Model",
@@ -632,6 +651,7 @@
       "LABEL": "Generate",
       "HTML_DOCUMENTATION": "HTML Documentation",
       "OPEN_API_SPECIFICATION": "OpenAPI Specification",
+      "ASYNC_API_SPECIFICATION": "AsyncAPI Specification",
       "AASX_XML": "AASX / XML",
       "SAMPLE_JSON_PAYLOAD": "Sample JSON Payload",
       "JSON_SCHEMA": "JSON Schema"

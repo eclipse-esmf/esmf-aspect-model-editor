@@ -140,7 +140,7 @@ export class PropertiesFilterLoader implements FilterLoader {
     if (element instanceof DefaultAspect) {
       return basicShapeGeometry;
     }
-    
+
     return element instanceof DefaultProperty ? basicShapeGeometry : smallCircleShapeGeometry;
   }
 

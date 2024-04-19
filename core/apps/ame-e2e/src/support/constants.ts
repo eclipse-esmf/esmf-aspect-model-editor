@@ -138,12 +138,16 @@ export enum SettingsDialogSelectors {
 
 // Generation
 export const GENERATION_tbGenerateOpenApiButton = '[data-cy="tbGenerateOpenApiButton"]';
+export const GENERATION_tbGenerateAsyncApiButton = '[data-cy="tbGenerateAsyncApiButton"]';
 export const GENERATION_tbOutputButton = '[data-cy="tbOutputButton"]';
 export const GENERATION_tbOutputButton_YAML = '[data-cy="tbOutputButton-yaml"]';
 export const GENERATION_tbOutputButton_JSON = '[data-cy="tbOutputButton-json"]';
 export const GENERATION_tbBaseUrlInput = '[data-cy="tbBaseUrlInput"]';
 export const GENERATION_tbBaseUrlInputError = '[data-cy="tbBaseUrlInputError"]';
+export const GENERATION_tbApplicationIdInput = '[data-cy="tbApplicationIdInput"]';
+export const GENERATION_tbChannelAddressInput = '[data-cy="tbChannelAddressInput"]';
 export const GENERATION_activateResourcePathCheckbox = '[data-cy="activateResourcePathCheckbox"]';
+export const GENERATION_writeSeparateFilesCheckbox = '[data-cy="writeSeparateFilesCheckbox"]';
 export const GENERATION_resourcePathTitle = '[data-cy="resourcePathTitle"]';
 export const GENERATION_resourcePathInput = '[data-cy="resourcePathInput"]';
 export const GENERATION_resourcePathRequiredError = '[data-cy="resourcePathRequiredError"]';

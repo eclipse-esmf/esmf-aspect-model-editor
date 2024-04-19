@@ -16,6 +16,7 @@ import {
   AASXGenerationModalComponent,
   EditorService,
   FileHandlingService,
+  GenerateAsyncApiComponent,
   GenerateDocumentationComponent,
   GenerateOpenApiComponent,
   LanguageSelectorModalComponent,
@@ -60,6 +61,15 @@ export class GenerateHandlingService {
 
   openGenerationOpenApiSpec(): MatDialogRef<GenerateOpenApiComponent> {
     return this.matDialog.open(GenerateOpenApiComponent, {disableClose: true});
+  }
+
+  onGenerateAsyncApiSpec() {
+    const cb = () => this.openGenerationAsyncApiSpec();
+    this.validateFile(cb);
+  }
+
+  openGenerationAsyncApiSpec(): MatDialogRef<GenerateAsyncApiComponent> {
+    return this.matDialog.open(GenerateAsyncApiComponent, {disableClose: true});
   }
 
   onGenerateDocumentation() {

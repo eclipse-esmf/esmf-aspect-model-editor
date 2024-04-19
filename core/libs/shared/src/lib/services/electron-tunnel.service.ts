@@ -420,6 +420,9 @@ export class ElectronTunnelService {
     this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_OPEN_API_SPECIFICATION, () =>
       this.ngZone.run(() => this.generateHandlingService.onGenerateOpenApiSpec()),
     );
+    this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_ASYNC_API_SPECIFICATION, () =>
+      this.ngZone.run(() => this.generateHandlingService.onGenerateAsyncApiSpec()),
+    );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_AASX_XML, () =>
       this.ngZone.run(() => this.generateHandlingService.onGenerateAASXFile()),
     );
