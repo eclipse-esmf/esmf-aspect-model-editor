@@ -35,6 +35,7 @@
 ** xref:generate/generate-json.adoc[Generate JSON]
 ** xref:generate/generate-html.adoc[]
 ** xref:generate/generate-openapi-doc.adoc[]
+** xref:generate/generate-asyncapi-doc.adoc[]
 ** xref:generate/generate-aasx.adoc[]
 * xref:support/support.adoc[]
 ** xref:support/known-issues.adoc[]
