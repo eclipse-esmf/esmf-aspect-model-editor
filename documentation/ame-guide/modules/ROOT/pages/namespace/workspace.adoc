@@ -20,7 +20,7 @@ NOTE: Namespaces that do not follow this file structure might not work and might
 
 The currently loaded Aspect Model is highlighted gray.
 
-The *...* icon next to a model opens the options to
+The three-dot menu next to a model opens the options to
 
 * *Open in new window* - opens the Aspect Model in a new window
 * *Open in current* - opens the Aspect Model in the current window
