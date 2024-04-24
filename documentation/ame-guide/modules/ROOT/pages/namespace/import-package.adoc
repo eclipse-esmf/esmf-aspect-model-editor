@@ -25,5 +25,5 @@ NOTE: Be aware that this option will literally overwrite your existing namespace
 +
 image::replace-import.png[width=65%]
 . Click *Import* to move your files into the Workspace.
-
-Now your namespaces are added to the recent model.
++
+→ Now your namespaces are added to the recent model.
