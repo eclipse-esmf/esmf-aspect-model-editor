@@ -14,7 +14,6 @@ To add an Event, proceed as follows:
 == Connect the event with the Aspect
 For a new model that only has an Aspect so far:
 
-* Click the Event.
 * Right-click the Event to open the context menu.
 ** Click the *Connect with ...* option.
 ** Select the Aspect element.
