@@ -20,13 +20,13 @@ NOTE: Namespaces that do not follow this file structure might not work and might
 
 The currently loaded Aspect Model is highlighted gray.
 
-The three-dot menu next to a model opens the options to
+The three-dot menu next to a model offers the options:
 
-* *Open in new window* - opens the Aspect Model in a new window
-* *Open in current* - opens the Aspect Model in the current window
-* *Find elements* - opens the Find elements section
-* *Copy file path* - copies the file path to the clipboard
-* *Delete* - deletes the Aspect Model from the workspace
+* *Open in new window* to open the Aspect Model in a new window
+* *Open in current* to open the Aspect Model in the current window
+* *Find elements* to opens the Find elements section
+* *Copy file path* to copy the file path to the clipboard
+* *Delete* to delete the Aspect Model from the workspace
 
 image:workspace-action.png[,40%]
 

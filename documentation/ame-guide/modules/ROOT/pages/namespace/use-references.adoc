@@ -21,10 +21,12 @@ image::external-reference-drag-and-drop.png[width=65%]
 
 [NOTE]
 ====
-* References can only be dragged once into the current Aspect Model. These elements are marked with a special icon signifying that they are from a different location. You can only edit a reference by editing the file it is defined in. By double clicking a reference the file where that element exists will be opened in a different window.
+* References can only be dragged once into the current Aspect Model. 
+These elements are marked with a special icon signifying that they are from a different location. 
 +
 image::external-reference.png[width=80%]
 
+* You can only edit a reference in the Aspect Model from which it originated. Simply double-click the reference to open a new window that displays the referenced element inside the Aspect Model it is originally from.
 * When you drag and drop a reference, it will not include all the lower connections (dependencies) of the element.
 * Referenced elements displayed in the Aspect Model Editor should never have outgoing references. +
 Reason: models can have many referenced elements from multiple files, and these referenced elements can have multiple references. Checking every pair of referenced elements to determine whether they refer to each other or not is not feasible. 
