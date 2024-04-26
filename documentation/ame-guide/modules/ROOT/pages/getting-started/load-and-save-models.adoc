@@ -16,18 +16,13 @@ To start modeling, proceed as follows:
 
 . Click the xref:getting-started/ui-overview.adoc#menu-file[File menu] and select *New...*.
 . Choose one of the following options:
-* Click *Empty model* to start from scratch with an empty editor canvas.
-* Click *Load File* to open a file containing TTL code.
-* Click *SimpleExample.ttl* or *Movement.ttl* to start from the Simple Aspect or the Movement example.
-* Click *Copy Paste* to copy and paste TTL code of an existing model into the text area.
-
-{nbsp}
-[[copy-and-paste]]
-=== Copy and Paste
-
+* *Empty model*: to start from scratch with an empty editor canvas.
+* *Load File*: to open a file containing TTL code.
+* *Copy Paste*: to copy and paste TTL code of an existing model into the text area.
++
 image::copy-paste-file.png[width=50%]
-. Paste and modify the TTL code manually within the text area.
-. Click *Load Model* to display it.
+
+* *SimpleExample.ttl* or *Movement.ttl*: to start from the Simple Aspect or the Movement example.
 
 [[save-models]]
 == Save models
@@ -37,8 +32,8 @@ To save a model, proceed as follows:
 . Click the xref:getting-started/ui-overview.adoc#menu-file[File menu].
 . Choose one of the following options:
 +
-* Click *Export Model* to export the model.
-* Click *Export Package* to export one of the existing namespaces.
-* Click *Save to Workspace* to save the current namespace to the Workspace.
+* *Export Model*: to export the model.
+* *Export Package*: to export one of the existing namespaces.
+* *Save to Workspace*: to save the current namespace to the Workspace.
 
 TIP: For saving a new version of a model without overriding the existing one, see xref:modeling/model-versions.adoc[Model versions].
