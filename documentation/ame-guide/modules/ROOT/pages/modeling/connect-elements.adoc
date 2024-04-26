@@ -10,7 +10,7 @@ There are two ways, in which you can connect elements:
 
 == Connect manually
 
-. Click both elements while holding the CTRL key on your keyboard.
+. Click both elements while holding the Ctrl key on your keyboard.
 . Click the *Connect* icon in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 +
 image::connecting-elements.png[width=50%]

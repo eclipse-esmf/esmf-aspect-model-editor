@@ -40,7 +40,7 @@ For a new model that only has an Aspect so far:
 . Drag and drop an Abstract Entity from the sidebar.
 . Connect the Abstract Entity with the Entity:
 .. Click the Entity,
-.. Then CTRL+click the Abstract Entity,
+.. Then Ctrl+click the Abstract Entity,
 .. Then click the Connect icon image:toolbar-icons/connect.png[Connect icon, 3%] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 . Click the Format icon image:toolbar-icons/format.png[Format icon, 3%].
 
