@@ -13,19 +13,19 @@ image:generation/open-api-spec.png[Generate document, width=20%]
 ** Cursor-based paging
 ** Offset-based paging
 ** Time-based paging
-* Check the *Include Query API* checkbox, if you need a path section for the Query API Endpoint of the Aspect API to be included in the specification.
-* Check the *Use Semantic Version* checkbox, if you need the complete semantic version of the Aspect Model to be used as the version of the API. Otherwise, only the major part of the Aspect Version is used as the version of the API.
-* Check the *Active Resource Path* checkbox, if you need the active resource path to be included in the specification.
-* Click *Generate* and store the Open API specification file locally.
+* Select the *Include Query API* checkbox, if you need a path section for the Query API Endpoint of the Aspect API to be included in the specification.
+* Select the *Use Semantic Version* checkbox, if you need the complete semantic version of the Aspect Model to be used as the version of the API. Otherwise, only the major part of the Aspect Version is used as the version of the API.
+* Select the *Active Resource Path* checkbox, if you need the active resource path to be included in the specification.
+* Click *Generate* and store the OpenAPI specification file locally.
 
 [[resource-path]]
 == Configuring Resource Path in the OpenAPI Generation Dialog
 
-When the Resource Path is activated, additional fields are introduced in the OpenAPI Generation Dialog to allow for its configuration.
+When the resource path is activated, additional fields are introduced in the OpenAPI Generation Dialog to allow for its configuration.
 The inclusion of certain properties in the output depends on the selected output file format:
 
-* *YAML*: A property file in YAML format is required when YAML is chosen as the output file format.
-* *JSON*: A property file in JSON format is needed if JSON is selected.
+* *YAML*: a property file in YAML format is required when YAML is chosen as the output file format.
+* *JSON*: a property file in JSON format is needed if JSON is selected.
 
 It is crucial to ensure that the properties in the file match those specified in the resource path.
 Failure to do so will result in an error prompting a review of the mismatches.
