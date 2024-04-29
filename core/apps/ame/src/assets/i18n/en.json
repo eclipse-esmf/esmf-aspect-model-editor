@@ -300,7 +300,6 @@
       "GENERATE": "Generate"
     }
   },
-
   "GENERATE_HANDLING": {
     "FAIL_GENERATE_OPENAPI_SPEC": "Failed to generate Open Api specification",
     "INVALID_MODEL": "Invalid Aspect Model",

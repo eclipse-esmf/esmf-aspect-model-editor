@@ -124,10 +124,10 @@
     "IMPORT_PACKAGE": "导入 Package"
   },
   "SAVE_MENU": {
-    "EXPORT_ASPECT_MODEL": "导出 Model",
+    "EXPORT_ASPECT_MODEL": "导出Model",
     "EXPORT_NAMESPACE": "导出Namespace",
     "COPY_TO_CLIPBOARD": "复制到剪切板",
-    "COPIED_TO_CLIPBOARD": "Copied to Clipboard",
+    "COPIED_TO_CLIPBOARD": "复制到剪切板",
     "SAVE_TO_WORKSPACE": "保存到Workspace"
   },
   "GENERATE_DOCUMENT_MENU": {
@@ -210,10 +210,10 @@
     "GENERATE_JSON_PAYLOAD": "生成JSON payload",
     "GENERATE_JSON_SCHEMA": "生成JSON Schema",
     "WAIT_ACTION": "请等待操作完成！",
-    "NO_ASPECT_TITLE": "Load or create an Aspect Model before validating"
+    "NO_ASPECT_TITLE": "在验证之前加载或创建Aspect Model"
   },
   "HELP_DIALOG": {
-    "INFO_CONTENT": "Aspect Model Editor是基于 SAMM 的方面模型的可视化编辑器，作为 Eclipse 语义建模框架的一部分。",
+    "INFO_CONTENT": "Aspect Model Editor是基于SAMM的方面模型的可视化编辑器, 作为Eclipse语义建模框架的一部分。",
     "PLEASE_REFER": "请参考",
     "REGARD_USAGE_EDITOR": "来获得有关方面模型编辑器的使用的帮助。",
     "REGARD_DIGITAL_TWIN_SYSTEM": "来获得有关数字孪生系统和作为数字孪生系统一部分的语义方面元模型的帮助",
@@ -254,29 +254,47 @@
     "OUTPUT_FILE_FORMAT": "输出文件格式",
     "BASEURL": "BaseUrl - Aspect API的base URL",
     "PLEASE_ADD_VALID_URL": "请添加有效url",
-    "INCLUDE_QUERY_API_TOOLTIP": "如果设置为 true, 则 Aspect API 的查询 API 端点的路径部分将包含在规范中。",
+    "INCLUDE_QUERY_API_TOOLTIP": "如果设置为true, 则Aspect API的查询API端点的路径部分将包含在规范中。",
     "INCLUDE_QUERY_API": "包括QueryApi",
     "USE_SEMANTIC_VERSION": "使用Semantic版本",
-    "USE_SEMANTIC_VERSION_TOOLTIP": "如果设置为 true, 则方面模型的完整语义版本将用作 API 的版本。否则，只有方面版本的主要部分用作 API 的版本。",
-    "ACTIVATE_RESOURCE_PATH": "",
-    "ACTIVATE_RESOURCE_PATH_TOOLTIP": "",
-    "RESOURCE_PATH": "",
-    "RESOURCE_PATH_REQUIRED": "",
-    "RESOURCE_PATH_PATTERN": "",
-    "RESOURCE_PATH_ERROR": "",
-    "UPLOAD_FILE_TITLE": "",
-    "UPLOAD_FILE_DESCRIPTION": "",
-    "UPLOAD_DRAG_AND_DROP_TEXT": "",
-    "UPLOADED_FILE_TITLE": "",
-    "UPLOAD_FILE_ACCORDION_TITLE": "",
-    "UPLOAD_ERROR_TITLE": "",
-    "UPLOAD_ERROR_MESSAGE": "",
-    "UPLOAD_FILE_REQUIRED": "",
+    "USE_SEMANTIC_VERSION_TOOLTIP": "如果设置为 true, 则Aspect模型的完整语义版本将用作 API 的版本。否则只有Aspect版本的主要部分用作API的版本。",
+    "ACTIVATE_RESOURCE_PATH": "如果允许, 资源路径将在OpenAPI规范中被激活",
+    "ACTIVATE_RESOURCE_PATH_TOOLTIP": "激活资源路径",
+    "RESOURCE_PATH": "资源路径 - Aspect API端点的资源路径",
+    "RESOURCE_PATH_REQUIRED": "资源路径为必填项",
+    "RESOURCE_PATH_PATTERN": "格式不相符",
+    "RESOURCE_PATH_ERROR": "无法生成Open API规范",
+    "UPLOAD_FILE_TITLE": "上传 {{output}} 文件",
+    "UPLOAD_FILE_DESCRIPTION": "有关选项的信息，请参阅",
+    "UPLOAD_DRAG_AND_DROP_TEXT": "将文件拖放到此处或单击图标进行上传",
+    "UPLOADED_FILE_TITLE": "上传了 {{output}} 文件",
+    "UPLOAD_FILE_ACCORDION_TITLE": "属性",
+    "UPLOAD_ERROR_TITLE": "错误的文件格式",
+    "UPLOAD_ERROR_MESSAGE": "请上传一个 {{output}} 文件。",
+    "UPLOAD_FILE_REQUIRED": "{{output}} 文件是必需的 - 已在资源路径中定义了一个变量。",
     "PAGING_TYPE_OPTION": "Paging类型/选项",
     "NO_PAGING": "无需paging",
     "CURSOR_BASED_PAGING": "基于光标的paging",
     "OFFSET_BASED_PAGING": "基于抵消的paging",
     "TIME_BASED_PAGING": "基于时间的paging",
+    "BUTTON": {
+      "CANCEL": "取消",
+      "GENERATE": "生成"
+    }
+  },
+  "GENERATE_ASYNCAPI_SPEC_DIALOG": {
+    "TITLE": "生成AsyncAPI规范",
+    "GENERATING": "生成",
+    "CONFIGURATION": "配置",
+    "LANGUAGE": "语言",
+    "OUTPUT_FILE_FORMAT": "输出文件格式",
+    "APPLICATION_ID": "应用程序ID - 设置应用程序ID, 例如标识URL",
+    "CHANNEL_ADDRESS": "通道地址 - 设置通道地址（即对于MQTT, 主题的名称）",
+    "CHANNEL_ADDRESS_ERROR": "通道地址模式不匹配",
+    "USE_SEMANTIC_VERSION": "使用语义版本",
+    "USE_SEMANTIC_VERSION_TOOLTIP": "使用Aspect 模型中的完整语义版本作为Aspect API的版本。",
+    "WRITE_SEPARATE_FILES": "写入单独的文件",
+    "WRITE_SEPARATE_FILES_TOOLTIP": "将每个架构打包到单独的文件中。",
     "BUTTON": {
       "CANCEL": "取消",
       "GENERATE": "生成"
@@ -455,8 +473,8 @@
         "OPEN_ELEMENT_IN_NEW_WINDOW": "在新窗口打开元素"
       },
       "NOTIFICATION": {
-        "EDIT_VIEW_UNAVAILABLE": "Edit View Unavailable",
-        "EDIT_VIEW_UNAVAILABLE_MESSAGE": "The element you`re trying to edit doesn`t exist. Please check if the element ID is correct or if it has been removed."
+        "EDIT_VIEW_UNAVAILABLE": "编辑视图不可用",
+        "EDIT_VIEW_UNAVAILABLE_MESSAGE": "您尝试编辑的元素不存在。请检查元素ID是否正确或是否已被删除。"
       }
     }
   },
@@ -479,21 +497,20 @@
       "WORKSPACE_LOAD_NOTICE": "已加载到workspace。",
       "RELOAD_WARNING": "重新加载将用工作区中的版本替换当前的Aspect Model, 所有未保存的更改都将丢失。重新加载?",
       "CLOSE_BUTTON": "保持当前的修改",
-      "OK_BUTTON": "重新加载"
-    },
-    "UPDATE_ASPECT_MODEL": {
-      "PHRASE1": "Aspect model \"{{fileName}}\" 已经在文件结构中定义",
-      "PHRASE2": "您确定要重写它吗?",
-      "TITLE": "更新Aspect Model",
       "OK_BUTTON": "重写"
     },
     "NAMESPACE_CHANGE": {
-      "PHRASE1": "\"{{originalModelName}}\" 模型的namespace已被更改. 该流程将进行以下更改:",
-      "PHRASE2": "• 将\"{{originalModelName}}\" 从 \"{{originalModelNamespace}}\" 移动到 \"{{newNamespace}}\" namespace",
-      "PHRASE3": "• 更新依赖于 \"{{originalModelName}}\" 模型的Aspect Model",
-      "PHRASE4": "你确定要继续吗?",
       "TITLE": "模型的namespace已被更改",
-      "OK_BUTTON": "继续"
+      "PHRASE1": "model的命名空间 \"{{originalModelName}}\" 已被更新。",
+      "PHRASE2": "旧命名空间: \"{{originalModelNamespace}}\"",
+      "PHRASE3": "新命名空间: \"{{newNamespace}}\"",
+      "PHRASE4": "这个更新将会:",
+      "PHRASE5": "• 重定位 \"{{originalModelName}}\" 从旧命名空间到新命名空间.",
+      "PHRASE6": "• 刷新关联到 \"{{originalModelName}}\" 的Aspect Model来反映变化。",
+      "PHRASE7": "是否要立即应用这些更改？",
+      "OK_BUTTON": "继续",
+      "ACTION_BUTTON": "仅保存更新",
+      "CANCEL_BUTTON": "取消"
     },
     "SAVE_BEFORE_LOAD": {
       "PHRASE1": "你即将加载 {{fileName}}.",
@@ -633,6 +650,7 @@
       "LABEL": "生成",
       "HTML_DOCUMENTATION": "HTML文档",
       "OPEN_API_SPECIFICATION": "OpenAPI规格",
+      "ASYNC_API_SPECIFICATION": "",
       "AASX_XML": "AASX / XML",
       "SAMPLE_JSON_PAYLOAD": "JSON Payload示例",
       "JSON_SCHEMA": "JSON格式"
