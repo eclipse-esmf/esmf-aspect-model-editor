@@ -3,43 +3,43 @@
 [[generate-json]]
 = Generate JSON schema & sample JSON payload
 
-To generate JSON from the Aspect Model, proceed as follows:
+To generate a JSON file from an Aspect Model, proceed as follows:
 
-* Click the *Generate* on xref:getting-started/ui-overview.adoc#menu-generate[menu].
+* Click the xref:getting-started/ui-overview.adoc#menu-generate[Generate menu].
 +
-The menu offers two options for Json generation:
+The menu offers two options for JSON generation:
 
-** Generate sample JSON payload
-** Generate JSON schema
+** Sample JSON Payload
+** JSON Schema
++
+image::generate-json.png[Generate JSON, width=80%]
 
 TIP: If you run into errors, please make sure that your Aspect Model is valid. +
 If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.
 
 
 [[generate-json-payload]]
-== Generate sample JSON payload
+== Generate sample JSON Payload
 
-After selecting *Generate* -> *Sample JSON payload*, an example payload will be generated for the current model, and it will be displayed in the following dialog:
+After selecting *Generate* -> *Sample JSON Payload*, an example payload will be generated for the current model, and it will be displayed in the following preview dialog:
 
 image::json-payload.png[Generate sample JSON payload, width=70%]
 
-* A preview is displayed.
 * You can now:
 ** Edit the source in the preview.
-** Use the Copy to Clipboard function and continue editing with another tool.
+** Use the *Copy to Clipboard* function and continue editing with another tool.
 ** Download the file locally.
 
 [[generate-json-schema]]
-== Generate JSON schema
+== Generate JSON Schema
 
-After selecting *Generate* -> *JSON Schema*, a JSON schema will be generated for current model, and it will be displayed in the following dialog:
+After selecting *Generate* -> *JSON Schema*, a JSON schema will be generated for the current model, and it will be displayed in the following preview dialog:
 
 image::json-schema.png[Generate JSON schema, width=70%]
 
-* A preview is displayed.
 * You can now:
 ** Edit the source in the preview.
-** Use the Copy to Clipboard function and continue editing with another tool.
+** Use the *Copy to Clipboard* function and continue editing with another tool.
 ** Download the file locally.
 
 ++++

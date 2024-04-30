@@ -2,22 +2,19 @@
 
 To generate an AsyncAPI specification from the Aspect Model, proceed as follows:
 
-* Click the *Generate* on xref:getting-started/ui-overview.adoc#menu-generate[menu]. +
-A menu offers one option to generate the AsyncAPI specification. +:
-
-** *AsyncAPI specification* -- continue with this one
+* Click the xref:getting-started/ui-overview.adoc#menu-generate[Generate menu] and select *AsyncAPI Specification*.
 +
-image::generation/async-api-menu.png[Generate document, width=100%, align="left"]
+image:generation/async-api-menu.png[Generate document, width=15%]
 
 * In case your model supports multiple languages, select the specific language for the documentation.
 * Select *JSON* or *YAML* as the desired file format.
 * Set the *Application ID* to the identifying URL to ensure unique identification within the system.
 * Set the *Channel Address* to e.g. mqtt://... connecting to the MQTT broker and ensuring seamless message delivery.
 * Check the *Use Semantic Version* checkbox, if you need the complete semantic version of the Aspect Model to be used as the version of the API. Otherwise, only the major part of the Aspect Version is used as the version of the API.
-* Check the *Write Separate Files* checkbox, for each component of the specification and create a zip package that includes all these files for comprehensive documentation and easy distribution.
-* Click *Generate* and store the Async API specification file locally.
-
-image::generation/async-api-dialog.png[Generate document, width=100%, align="left"]
+* Check the *Write Separate Files* checkbox for each component of the specification and create a zip package that includes all these files for comprehensive documentation and easy distribution.
+* Click *Generate* and store the AsyncAPI specification file locally.
++
+image:generation/async-api-dialog.png[Generate document, width=50%]
 
 TIP: If you run into errors, please make sure that the graph is valid. +
 If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.

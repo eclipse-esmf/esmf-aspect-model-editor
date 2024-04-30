@@ -12,7 +12,7 @@ The Aspect Model Editor supports references and custom namespaces. The namespace
 
 In the Aspect Model Editor, to view a list of namespaces and files associated to the namespaces, click the Workspace icon image:elements/workspace.png[Workspace icon, 3%].
 
-The short menu of actions is available via the ... icon.
+The short menu of actions is available via the three-dot menu that appears when you hover over an Aspect Model. 
 
 image::workspace-context-menu.png[width=65%]
 

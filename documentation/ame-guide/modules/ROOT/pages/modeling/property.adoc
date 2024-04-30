@@ -6,7 +6,9 @@
 The Aspect as well as Entity elements can contain additional Properties.
 Entities are wrappers for encapsulating multiple Properties, so apart from its standard attributes the most important thing is to add the relevant Properties.
 
-To add and configure Properties, open the *Properties Configuration* by clicking the *Configure* button.
+To add and configure Properties, open the *Edit* dialog and click the *Configure* button to display the *Properties Configuration*.
+
+image::edit-properties-informations-dialog.png[width=65%]
 
 [cols="30%,70%"]
 |===
@@ -19,8 +21,6 @@ To add and configure Properties, open the *Properties Configuration* by clicking
 |_Payload Name_
 |Overrides the Property's name in the runtime payload.
 |===
-
-image::edit-properties-informations-dialog.png[width=65%]
 
 [[edit-properties]]
 == Property attributes

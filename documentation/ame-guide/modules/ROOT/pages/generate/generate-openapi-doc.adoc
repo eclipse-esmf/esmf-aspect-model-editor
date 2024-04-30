@@ -2,41 +2,38 @@
 
 To generate an OpenAPI specification from the Aspect Model, proceed as follows:
 
-* Click the *Generate* on xref:getting-started/ui-overview.adoc#menu-generate[menu]. +
-A menu offers one option to generate the OpenAPI specification. +:
-
-** *OpenAPI specification* -- continue with this one
+* Click the xref:getting-started/ui-overview.adoc#menu-generate[Generate menu] and select *OpenAPI Specification*.
 +
-image::generation/open-api-menu.png[Generate document, width=100%, align="left"]
+image:generation/open-api-spec.png[Generate document, width=20%]
 
 * In case your model supports multiple languages, select the specific language for the documentation.
-* Select *JSON* or *YAML* as the desired file format.
-* Set the *Base URL* were the Aspect API will be served from.
+* Select *JSON* or *YAML* in the *Output file format* drop-down.
+* Set the base URL where the Aspect API will be served from.
 * Select the preferred option for paging:
 ** Cursor-based paging
 ** Offset-based paging
 ** Time-based paging
-* Check the *Include Query API* checkbox, if you need a path section for the Query API Endpoint of the Aspect API to be included in the specification.
-* Check the *Use Semantic Version* checkbox, if you need the complete semantic version of the Aspect Model to be used as the version of the API. Otherwise, only the major part of the Aspect Version is used as the version of the API.
-* Check the *Active Resource Path* checkbox, if you need the active resource path to be included in the specification.
-* Click *Generate* and store the Open API specification file locally.
+* Select the *Include Query API* checkbox, if you need a path section for the Query API Endpoint of the Aspect API to be included in the specification.
+* Select the *Use Semantic Version* checkbox, if you need the complete semantic version of the Aspect Model to be used as the version of the API. Otherwise, only the major part of the Aspect Version is used as the version of the API.
+* Select the *Active Resource Path* checkbox, if you need the active resource path to be included in the specification.
+* Click *Generate* and store the OpenAPI specification file locally.
 
 [[resource-path]]
 == Configuring Resource Path in the OpenAPI Generation Dialog
 
-When the Resource Path is activated, additional fields are introduced in the OpenAPI Generation Dialog to allow for its configuration.
+When the resource path is activated, additional fields are introduced in the OpenAPI Generation Dialog to allow for its configuration.
 The inclusion of certain properties in the output depends on the selected output file format:
 
-*YAML*: A property file in YAML format is required when YAML is chosen as the output file format.
-*JSON*: A property file in JSON format is needed if JSON is selected.
+* *YAML*: a property file in YAML format is required when YAML is chosen as the output file format.
+* *JSON*: a property file in JSON format is needed if JSON is selected.
 
 It is crucial to ensure that the properties in the file match those specified in the resource path.
 Failure to do so will result in an error prompting a review of the mismatches.
 
-For additional details on configuring the Resource Path and generating OpenAPI specifications using the SAMM CLI, please consult our comprehensive guide:
-https://eclipse-esmf.github.io/esmf-developer-guide/2.6.1/tooling-guide/samm-cli.html#using-the-cli-to-create-a-json-openapi-specification)[Generating OpenAPI Specifications with SAMM CLI].
-
-image::generation/open-api-dialog.png[Generate document, width=100%, align="left"]
+image:generation/open-api-dialog.png[Generate OpenAPI document, width=50%, link=self]
 
 TIP: If you run into errors, please make sure that the graph is valid. +
 If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.
+
+For additional details on configuring the Resource Path and generating OpenAPI specifications using the SAMM CLI, please consult our comprehensive guide:
+https://eclipse-esmf.github.io/esmf-developer-guide/2.6.1/tooling-guide/samm-cli.html#using-the-cli-to-create-a-json-openapi-specification)[Generating OpenAPI Specifications with SAMM CLI].

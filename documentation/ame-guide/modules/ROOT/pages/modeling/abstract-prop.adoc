@@ -1,32 +1,33 @@
 [[abstract-property-case]]
 = Abstract Property
 
-There are two different ways to create an abstract property:
+There are two different ways to create an Abstract Property:
 
-* Use drag-and-drop from the Workspace sidebar
-* Click the add icon on an Abstract Entity
+* Use drag-and-drop from the Workspace sidebar.
+* Click the Add icon on an Abstract Entity.
 
 == Use drag-and-drop from the Workspace sidebar
 
-To add abstract property, proceed as follows:
+To add an Abstract Property, proceed as follows:
 
-. Open the Workspace sidebar
-. Drag the abstract property element and drop it to the graph area canvas
+. Open the Workspace sidebar.
+. Drag the Abstract Property element and drop it to the graph area canvas.
 
-image::drag-and-drop-abstract-property.png[Drag and drop Abstract Property, 60%]
+image:drag-and-drop-abstract-property.png[Drag and drop Abstract Property, 40%]
 
 == Click the Add icon on an Abstract Entity
 
-To add and connect an abstract property with an abstract entity, click the Add icon at the bottom edge of the existing abstract entity:
+To add and connect an Abstract Property with an Abstract Entity, click the Add icon at the bottom edge of the existing 
+Abstract Entity:
 
-image::use-add-icon-abstract-entity.png[Use add icon Abstract Entity, 60%]
+image:use-add-icon-abstract-entity.png[Use add icon Abstract Entity, 30%]
 
 [[abstract-property-example]]
 == Abstract Properties Example
 
-When an Entity connects to an Abstract Entity with Abstract Properties, for each non-optional Abstract Property, a Property is created.
+When an Entity connects to an Abstract Entity with Abstract Properties, a Property is created for each non-optional Abstract Property.
 Each Property created extends one Abstract Property and is connected to the Entity.
 The Property that inherits an Abstract Property gets the same name as the Abstract Property and inherits all field information from Abstract Property.
-Data from derived Property cannot be edited and is greyed out in the edit dialog.
+Data from the derived Property cannot be edited and is grayed out in the Edit dialog.
 
 image::connect-abstract-property-with-abstract-entity.png[Connect Abstract Entity with Entity, 60%]

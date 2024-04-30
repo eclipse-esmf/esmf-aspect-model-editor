@@ -18,25 +18,25 @@ To enable the community to give you the best possible advice, please include the
 
 {nbsp}
 
-*Accessing the chromium developers tools (for troubleshooting/debugging)*
+== Accessing the Chromium developer tools (for troubleshooting/debugging)
 
-To facilitate your troubleshooting efforts or when you need to compile detailed information for a GitHub issue, the Aspect Model editor includes access to Developer Tools.
+To facilitate your troubleshooting efforts or when you need to compile detailed information for a GitHub issue, the Aspect Model Editor includes access to developer tools.
 This feature enables you to inspect logs, errors, and other crucial debugging information seamlessly within the editor.
 
-_How to Open the Developer Tools:_
+*Opening the developer tools*
 
-* For Windows Users: Press *Control+Shift+I* on your keyboard to open the Developer Tools.
-* For Mac Users: Press *Command+Option+I* to open the Developer Tools.
+* For Windows users: Press Ctrl+Shift+I on your keyboard to open the developer tools.
+* For Mac users: Press Command+Option+I on your keyboard to open the developer tools.
 
-_Navigating the Developer Tools:_
+*Navigating the developer tools*
 
-After triggering the shortcut, the Developer Tools will be displayed.
-These tools are invaluable for developers and users alike, providing a deep dive into the Aspect Model editor's operations and behaviors.
+After triggering the shortcut, the developer tools will be displayed.
+These tools are invaluable for developers and users alike, providing a deep dive into the Aspect Model Editor's operations and behaviors.
 
-_Closing the Developer Tools:_
+*Closing the developer tools*
 
-To close the Developer Tools, simply click on the 'X' icon located on the right-hand side of the Developer Tools menu bar.
-This action will hide the Developer Tools, allowing you to resume your work in the editor without any interference.
+To close the developer tools, simply click on the 'X' icon located on the right-hand side of the developer tools menu bar.
+This action will hide the developer tools, allowing you to resume your work in the editor without any interference.
 
 image::show-developer-tools.png[Developer Tools,width=65%]
 

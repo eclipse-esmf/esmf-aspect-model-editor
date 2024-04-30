@@ -5,7 +5,7 @@
 
 All known limitations of the Aspect Model Editor, that is, features or improvements that are not yet implemented, are listed here.
 
-See also xref:support/known-issues.adoc#known-issues[known issues].
+See also xref:support/known-issues.adoc#known-issues[Known issues].
 
 [[current-known-limitations]]
 == Current limitations related to the SAMM Aspect Meta Model

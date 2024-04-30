@@ -4,13 +4,13 @@
 == Constraint attributes
 
 Constraints are special Characteristics that can restrict some features of the Characteristics.
-A list of the available Constraints can be found in the https://eclipse-esmf.github.io/samm-specification/2.1.0/characteristics.html[SAMM Aspect Meta Model version 2.1.0.^,opts=nofollow].
+A list of the available Constraints can be found in the https://eclipse-esmf.github.io/samm-specification/2.1.0/characteristics.html[SAMM Aspect Meta Model version 2.1.0^,opts=nofollow].
 
 Except for Length Constraint, Range Constraint, and Fixed Point Constraint, all other Constraint types use `string` as a defined Constraint value.
 
 For example, the Range Constraint uses minimum and maximum value.
 
-image::change-constraint-type.png[width=65%]
+image:change-constraint-type.png[width=30%]
 
 NOTE: Before you can add a Constraint to your Aspect Model, you have to add a Trait.
 

@@ -12,9 +12,9 @@ For a comfortable working experience, we recommend a screen resolution of 1920 x
 To use the Aspect Model Editor on Windows, you need:
 
 * 64-bit based laptop or PC
-** Check on Windows: Windows Start button → System information → System Type → Expected: x64-based PC
+** You can check this from the Windows Start button → System information → System Type → Expected: x64-based PC
 * Windows 7, Windows 8, Windows 8.1, Windows 10, or later
-* An Intel Pentium 4 processor or later that is SSE3-capable
+* An Intel Pentium 4 processor or faster that is SSE3-capable
 
 NOTE: Servers require Windows Server 2008 R2, Windows Server 2012, Windows Server 2012 R2, or Windows Server 2016.
 
@@ -30,6 +30,6 @@ To use the Aspect Model Editor on Mac, you need:
 To use the Aspect Model Editor on Linux, you need:
 
 * 64-bit Ubuntu 20.04+, Debian 10+, openSUSE 15.2+, or Fedora Linux 32+
-* An Intel Pentium 4 processor or later that is SSE3-capable
+* An Intel Pentium 4 processor or faster that is SSE3-capable
 
 

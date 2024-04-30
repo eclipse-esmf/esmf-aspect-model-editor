@@ -47,14 +47,14 @@ See also https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidel
 
 If no data type is selected, `string` is selected as default for the values.
 
-image::char-enumeration-ame-201-1.png[width=60%]
+image:char-enumeration-ame-201-1.png[width=30%, align="left"]
 
 [[characteristic-enumeration-complex-values]]
 ==== Complex data types for Enumeration Characteristics
 
 If the Characteristic is an Enumeration and the data type is an Entity, the possible values for this enumeration are the instances of the provided Entity.
 
-image::char-enumeration-ame-complex-values.png[width=60%]
+image::char-enumeration-ame-complex-values.png[width=60%, link=self]
 
 
 
@@ -83,7 +83,7 @@ For Structured Value Characteristics, the following attributes have to be define
 image:structured-value-deconstruction-rule.png[Structured Value deconstruction rule, 60%]
 
 |_Elements_
-| Opens up a dialog containing a table with two columns. One column shows all the capture groups from the `Deconstruction rule` attribute and the second column allows to choose or create a Property for the corresponding capture group. image:structured-value-elements.png[Structured Value elements, 60%] image:structured-value-elements-dialog.png[Structured Value elements dialog, 60%]
+| Opens up a dialog containing a table with two columns. One column shows all the capture groups from the `Deconstruction rule` attribute and the second column allows to choose or create a Property for the corresponding capture group. image:structured-value-elements.png[Structured Value elements, 80%, link=self] image:structured-value-elements-dialog.png[Structured Value elements dialog, 80%, link=self]
 
 |===
 
@@ -97,7 +97,7 @@ To edit a new Structured Value Characteristic, proceed as follows:
 
 → Now you can see the changes in editor.
 
-image::structured-value-model.png[width=60%]
+image:structured-value-model.png[width=40%, link=self]
 
 To create a new element from such a Structured Value Characteristic, proceed as follows:
 
@@ -105,9 +105,12 @@ To create a new element from such a Structured Value Characteristic, proceed as 
 
 → As a result, a new Property is created.
 
-NOTE: A new Property created from a Structured Value Characteristic, is automatically inserted as an attribute in the Structured Value Characteristic and the `(regex)` capture group is automatically appended to `deconstructionRule`.
+[NOTE]
+====
+A new Property created from a Structured Value Characteristic, is automatically inserted as an attribute in the Structured Value Characteristic and the `(regex)` capture group is automatically appended to `deconstructionRule`.
 
-image::structured-value-add-icon.png[New Property from Structured Value,width=60%]
+image:structured-value-add-icon.png[New Property from Structured Value,width=50%]
+====
 
 &nbsp;
 
@@ -125,8 +128,8 @@ Entering a value to the Unit attribute field is done through a search:
 * Start typing the Unit you are searching for.
 * You may also use advanced search syntax (=metre, *metre, perSecond$) as explained in xref:getting-started/edit-models.adoc#searching-elements[Search Elements].
 * Select your Unit from the drop-down menu of the Unit attribute.
-
-image::unit.png[width=60%]
++
+image:unit.png[width=30%]
 
 For a complete list of supported Units refer to the https://eclipse-esmf.github.io/samm-specification/2.1.0/appendix/unitcatalog.html[Unit Catalog (SAMM 2.1.0)^,opts=nofollow].
 

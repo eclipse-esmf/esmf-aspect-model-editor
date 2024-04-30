@@ -3,16 +3,16 @@
 
 To import a package with namespaces, proceed as follows:
 
-. Click *File* ->  *Import Package* in the xref:getting-started/ui-overview.adoc#menu-file[file menu].
+. Click the xref:getting-started/ui-overview.adoc#menu-file[File menu] and select *Import Package*.
 +
-→ An Explorer window opens.
+→ A File Explorer window opens.
 . Navigate to the package ZIP file which contains a single namespace.
 . Click *Open* to confirm your selection.
 +
 → After confirmation, the files inside the ZIP file will be validated.
 +
 image::import-validating.png[width=65%]
-. Click on files in the summary dialog to view the status of it. +
+. Click on files in the summary dialog to view their status. +
 TIP: In case the zip contains multiple namespaces, the dialog will show them all respectively.
 +
 image::validation-result.png[width=65%]
@@ -21,9 +21,9 @@ image::validation-result.png[width=65%]
 +
 * Click *Keep* to keep the existing namespace.
 * Click *Replace* to replace the namespace in the Workspace. +
-NOTE: Be aware that this option will literally overwrite your namespace with this content.
+NOTE: Be aware that this option will literally overwrite your existing namespace with this new one.
 +
 image::replace-import.png[width=65%]
 . Click *Import* to move your files into the Workspace.
-
-Now your namespaces are added to the recent model.
++
+→ Now your namespaces are added to the recent model.

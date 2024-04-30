@@ -2,15 +2,14 @@
 
 To generate HTML from the Aspect Model, proceed as follows:
 
-* Click the *Generate* on xref:getting-started/ui-overview.adoc#menu-generate[menu]. +
-A menu offers one option for generating HTML documentation:
-
-** *HTML documentation* -- continue with this one
+* Click the xref:getting-started/ui-overview.adoc#menu-generate[Generate menu] and select *HTML Documentation*.
 +
-image::generate-html.png[Generate document, width=100%, align="left"]
+image:generate-html.png[Generate document, width=15%]
 
 * In case your model supports multiple languages, select the specific language for the documentation.
 * Click *Download Documentation* and store the HTML file locally.
++
+image:html-download.png[Download HTML documentation, width=30%]
 
 TIP: If you run into errors, please make sure that your Aspect Model is valid. +
 If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.

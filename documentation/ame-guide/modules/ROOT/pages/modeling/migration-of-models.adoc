@@ -1,10 +1,12 @@
 [[migration-of-models]]
 = Migration of models
 
-There are three different ways to migrate an Aspect Model:
+Aspect Models created based on older versions of the Semantic Aspect Meta Model (SAMM) can be easily migrated to the latest SAMM version.
+
+There are two ways to migrate an Aspect Model:
 
 * Automatic migration when starting the application.
-* Loading a (syntactically valid) Aspect Model based on an older meta model version
+* Loading a (syntactically valid) Aspect Model based on an older meta model version.
 
 [[automatic-migration]]
 == Automatic migration when starting the application
@@ -22,5 +24,7 @@ A migration of an Aspect Model in an old version can also be loaded as usual.
 The tool automatically recognises the older version and migrates it to the latest SAMM version.
 
 image:model-to-migrate.png[Model To Migrate, 50%]
+
+When the migration is completed, the following confirmation messages will be displayed: 
 
 image:migrate-notification.png[Migrate Notification, 30%]

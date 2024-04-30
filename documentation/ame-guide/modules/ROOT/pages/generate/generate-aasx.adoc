@@ -1,15 +1,15 @@
 = Generate AASX/XML
 
-To generate an AASX/XML files from the Aspect Model, proceed as follows:
+To generate AASX/XML files from an Aspect Model, proceed as follows:
 
-* Click the *Generate* on xref:getting-started/ui-overview.adoc#menu-generate[menu]. +
-A menu offers one option:
-
-** *AASX/XML* -- continue with this one
+* Click the xref:getting-started/ui-overview.adoc#menu-generate[Generate menu] and select *AASX/XML*.
 +
-image::generate-aasx.png[Generate AASX/XML,width=100%,align="left"]
-* Select *AASX* or *XML* as the desired file format.
+image:generate-aasx.png[Generate AASX/XML, width=15%]
+
+* Select *AASX* or *XML* in the *Output file format* drop-down.
 * Click *Generate* and store the file locally.
++
+image:generate-aasx-dropdown.png[AASX/XML generation, width=30%]
 
 TIP: If you run into errors, please make sure that the graph is valid. +
 If the invalid element is not highlighted with a red border, click the Validate icon to get a hint.

@@ -5,9 +5,14 @@
 
 The Aspect Model Editor is a visual editor for Aspect Models, which automatically validates the models against the open-source 
 https://eclipse-esmf.github.io/samm-specification/2.1.0/index.html[SAMM Aspect Meta Model version 2.1.0]. All concepts, possibilities, and restrictions defined by the SAMM Aspect Meta Model are 
-incorporated in the Aspect Model Editor in a convenient way with a smart user flow. This documentation is available for recent 
-versions (and we do recommend frequent updats). Older documentation source see 
-https://eclipse-esmf/esmf-aspect-model-editor/tree/main/documentation[eclipse-esmf/esmf-aspect-model-editor/tree/main/documentation].
+incorporated in the Aspect Model Editor in a convenient way with a smart user flow.   
+
+[NOTE]
+====
+In addition to the version you are currently looking at, further versions of this documentation are also available, for example, for previous releases. They can be accessed from the dropdown menu located in the top right corner of this page.
+
+image:versions-dropdown.png[Versions dropdown, width=20%, link=self]
+====
 
 Typically, Aspect Models are edited as code, that is, text-based.
 With the Aspect Model Editor, such code gets visualized so that relationships and dependencies within the model can be understood quickly and easily.
@@ -27,7 +32,7 @@ The Aspect Model Editor focuses on practitioners, such as domain experts or data
 
 Especially for expert teams who model Aspects together, the visual representation of Aspect Models provides a low entry barrier and easy understanding, and facilitates collaboration.
 
-In addition to that, constant background validation ensures that your Aspect Models correspond to the SAMM Aspect Meta Model, enabling re-usability of your Aspect Models and automation of the downstream process steps for your Aspect Models.
+In addition to that, constant background validation ensures that your Aspect Models correspond to the Semantic Aspect Meta Model (SAMM), enabling the reusability of your Aspect Models and automation of the downstream process steps for your Aspect Models.
 
 == Capabilities
 

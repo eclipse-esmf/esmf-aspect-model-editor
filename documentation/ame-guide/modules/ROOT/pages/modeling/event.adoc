@@ -8,28 +8,25 @@ Assets can for instance emit events to notify other assets in case of special oc
 
 To add an Event, proceed as follows:
 
-* Open the Workspace sidebar
-* Drag the Event element and drop it to the graph area canvas
+* Open the Workspace sidebar.
+* Drag the Event element and drop it to the graph area canvas.
 
 == Connect the event with the Aspect
 For a new model that only has an Aspect so far:
 
-* Click the Event
-* Right-click the Event to open the context menu
-** Click the Connect with ...
-** Select the Aspect element
-** Confirm with Connect
+* Right-click the Event to open the context menu.
+** Click the *Connect with ...* option.
+** Select the Aspect element.
+** Confirm with *Connect*.
 
 → As a result you have connected the Event with the Aspect.
 
 == Adjust the Event
 To select or create an Event in the Edit field, proceed as follows:
 
-* Double-click the Event to access the details
-* Adjust all fields to your needs
+* Double-click the Event to access the details.
+* Adjust all fields to your needs.
 
-image::event.png[,60%]
+image::event.png[,70%, link=self]
 
-Note that the details of such events — for example, which data (MQTT package) gets sent at which occurrence or time via an MQTT topic — are to be decided when implementing the event. +
-The SAMM specification does not prescribe any defaults or rules. +
-Thus, events can be adapted to your own implementation needs.
+NOTE: The details of such events — e.g., which data (MQTT package) will be sent at which occurrence or time via an MQTT topic — are to be decided when implementing the event. The SAMM specification does not prescribe any defaults or rules. Thus, events can be adapted to your own implementation needs.

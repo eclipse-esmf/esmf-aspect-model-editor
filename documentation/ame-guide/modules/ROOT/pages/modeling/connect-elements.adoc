@@ -3,9 +3,14 @@
 The elements of an Aspect Model &ndash; such as Properties, Operations, Characteristics, Constraints, Entities, or Events &ndash;
 can be distributed over the complete editor main canvas.
 
-To connect two elements manually, proceed as follows:
+There are two ways, in which you can connect elements: 
 
-. Click both elements while holding the CTRL key on your keyboard.
+* Manually
+* Using the context menu
+
+== Connect manually
+
+. Click both elements while holding the Ctrl key on your keyboard.
 . Click the *Connect* icon in the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 +
 image::connecting-elements.png[width=50%]
@@ -14,27 +19,18 @@ image::connecting-elements.png[width=50%]
 
 * If only one direction is permitted, the arrow will be set respectively.
 * If both directions are permitted, the arrow will be set for the element selected first to the element selected second.
-* Tf a connection is not permitted, a respective warning will appear and the elements will not be connected.
+* If a connection is not permitted, a respective warning will appear and the elements will not be connected.
 
-TIP: Alternatively, you can use the context menu (right mouse click) to access the action items.
-
-The larger the diagram, the harder it might get elements that are fare away.
-
-In case you cannot connect two elements just the way you are most familiar with, try one of these procedures.
+The larger the diagram, the harder it might get to connect elements that are far away in the model. In that case, you can also use the alternative described below.
 
 == Connect via context menu
 
-* Click the source element.
-* Right-click to access the context menu.
-* Select *connect with ...*.
-* The new pop-up displays all the elements of the model. +
-  In case there are too element many type the name in the search field.
-* Select the target element.
-* Click *Connect* to confirm.
-
+. Click the source element.
+. Right-click to access the context menu.
+. Select *Connect with ...*. +
+The new pop-up displays all the elements of the model. You can use the search field to find the correct one. 
+. Select the target element.
+. Click *Connect* to confirm. +
 Upon success the arrow is visible.
+
 In case you try to connect elements which cannot be connected, a validation notification will inform you respectively.
-
-== Connect via focus
-
-* Single click the first element - this sets focus on element
