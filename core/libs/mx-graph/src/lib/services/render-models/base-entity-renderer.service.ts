@@ -37,7 +37,7 @@ export class BaseEntityRendererService {
     private namespacesCacheService: NamespacesCacheService,
     private shapeConnectorService: ShapeConnectorService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private rdfService: RdfService,
+    private rdfService: RdfService
   ) {}
 
   public handleExtendsElement(cell: mxgraph.mxCell) {
@@ -66,7 +66,7 @@ export class BaseEntityRendererService {
       this.mxGraphShapeOverlayService,
       this.namespacesCacheService,
       this.sammLangService,
-      this.rdfService.currentRdfModel,
+      this.rdfService.currentRdfModel
     );
 
     const extendsElement = metaModelElement.extendedElement as DefaultAbstractEntity;
@@ -100,7 +100,7 @@ export class BaseEntityRendererService {
   private hasPredefinedAbstractEntity(cell: mxgraph.mxCell): mxgraph.mxCell {
     const children = this.mxGraphService.graph.getOutgoingEdges(cell).map(e => e.target);
     const predefinedEntityInstantiator = new PredefinedEntityInstantiator(
-      new MetaModelElementInstantiator(this.rdfService.currentRdfModel, this.namespacesCacheService.currentCachedFile),
+      new MetaModelElementInstantiator(this.rdfService.currentRdfModel, this.namespacesCacheService.currentCachedFile)
     );
 
     for (const child of children) {
@@ -136,7 +136,7 @@ export class BaseEntityRendererService {
     const childrenEdges = this.mxGraphService.graph.getOutgoingEdges(cell);
 
     const entityChildEdge = childrenEdges.find(edge =>
-      [DefaultEntity, DefaultAbstractEntity].some(c => MxGraphHelper.getModelElement(edge.target) instanceof c),
+      [DefaultEntity, DefaultAbstractEntity].some(c => MxGraphHelper.getModelElement(edge.target) instanceof c)
     );
 
     if (!entityChildEdge) {
@@ -153,7 +153,7 @@ export class BaseEntityRendererService {
         }
 
         return entityChildModelElement.properties.some(
-          ({property}) => property.aspectModelUrn === childModelElement.extendedElement?.aspectModelUrn,
+          ({property}) => property.aspectModelUrn === childModelElement.extendedElement?.aspectModelUrn
         );
       });
 

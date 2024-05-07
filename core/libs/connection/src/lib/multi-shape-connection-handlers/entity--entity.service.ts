@@ -35,7 +35,7 @@ export class EntityEntityConnectionHandler extends EntityInheritanceConnector im
     protected entityPropertyConnector: EntityPropertyConnectionHandler,
     protected filtersService: FiltersService,
     protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService,
+    private notificationService: NotificationsService
   ) {
     super(
       mxGraphService,
@@ -45,7 +45,7 @@ export class EntityEntityConnectionHandler extends EntityInheritanceConnector im
       filtersService,
       translate,
       propertyAbstractPropertyConnector,
-      entityPropertyConnector,
+      entityPropertyConnector
     );
   }
 

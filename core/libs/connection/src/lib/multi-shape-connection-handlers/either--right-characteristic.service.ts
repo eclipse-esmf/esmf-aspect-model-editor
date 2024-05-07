@@ -21,10 +21,7 @@ import {mxgraph} from 'mxgraph-factory';
   providedIn: 'root',
 })
 export class EitherCharacteristicRightConnectionHandler implements MultiShapeConnector<DefaultEither, DefaultCharacteristic> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-  ) {}
+  constructor(private mxGraphService: MxGraphService, private mxGraphAttributeService: MxGraphAttributeService) {}
 
   public connect(parentMetaModel: DefaultEither, childMetaModel: DefaultCharacteristic, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
     parentMetaModel.right = childMetaModel;

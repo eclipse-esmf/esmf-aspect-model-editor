@@ -48,7 +48,7 @@ export class FileUploadService {
     return fromEvent(fileInput, 'change').pipe(
       switchMap(() => (fileInput?.files?.length ? [fileInput.files[0]] : [])),
       first(),
-      finalize(() => this.removeFileInput(fileInput)),
+      finalize(() => this.removeFileInput(fileInput))
     );
   }
 

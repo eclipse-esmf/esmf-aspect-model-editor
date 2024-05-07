@@ -85,7 +85,7 @@ export class NamespacesSession implements NamespacesSessionInterface {
       {
         replace: new Set(),
         keep: new Set(),
-      },
+      }
     );
 
     this.conflictFiles.keep = Array.from(keep);

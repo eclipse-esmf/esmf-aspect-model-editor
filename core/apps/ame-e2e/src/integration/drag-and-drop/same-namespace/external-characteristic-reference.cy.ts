@@ -41,7 +41,7 @@ describe('Test drag and drop ext characteristic', () => {
       },
       {
         fixture: `/external-reference/same-namespace/without-childrens/${fileName}`,
-      },
+      }
     );
 
     cy.visitDefault().then(() =>
@@ -62,7 +62,7 @@ describe('Test drag and drop ext characteristic', () => {
           expect(rdf).to.contain(':property1 a samm:Property');
           expect(rdf).to.contain('samm:characteristic :ExternalCharacteristic');
           expect(rdf).not.contain(':ExternalCharacteristic a samm:Characteristic');
-        }),
+        })
     );
   });
 });

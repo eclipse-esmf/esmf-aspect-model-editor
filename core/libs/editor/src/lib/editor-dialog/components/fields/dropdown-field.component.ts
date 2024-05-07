@@ -42,7 +42,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   protected constructor(
     public editorModelService: EditorModelService,
     public modelService: ModelService,
-    public languageSettings: SammLanguageSettingsService,
+    public languageSettings: SammLanguageSettingsService
   ) {}
 
   protected setPreviousData() {
@@ -78,7 +78,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
     return this.editorModelService.getMetaModelElement().pipe(
       tap(metaModelElement => {
         this.metaModelElement = <T>metaModelElement;
-      }),
+      })
     );
   }
 

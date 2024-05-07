@@ -35,7 +35,7 @@ export class AbstractPropertyRenderService extends BaseRenderService {
     sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
     private namespacesCacheService: NamespacesCacheService,
-    private shapeConnectorService: ShapeConnectorService,
+    private shapeConnectorService: ShapeConnectorService
   ) {
     super(mxGraphService, sammLangService, rdfService);
   }

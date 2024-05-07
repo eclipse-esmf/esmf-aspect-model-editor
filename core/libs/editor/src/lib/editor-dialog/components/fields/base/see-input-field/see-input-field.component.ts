@@ -66,7 +66,7 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
     this.subscription.add(
       this.searchControl.statusChanges.subscribe(status => {
         this.chipList.errorState = status === 'INVALID';
-      }),
+      })
     );
   }
 
@@ -112,8 +112,8 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
         },
         {
           validators: [EditorDialogValidators.seeURI],
-        },
-      ),
+        }
+      )
     );
 
     if (this.parentForm.get(this.fieldName).disabled) {
@@ -131,9 +131,9 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
           ? []
           : this.modelElements.filter(
               ({name, aspectModelUrn}) =>
-                name?.toLowerCase().includes(fieldValue?.toLowerCase()) && !this.elements.find(el => el.urn === aspectModelUrn),
-            ),
-      ),
+                name?.toLowerCase().includes(fieldValue?.toLowerCase()) && !this.elements.find(el => el.urn === aspectModelUrn)
+            )
+      )
     );
   }
 

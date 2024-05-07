@@ -22,7 +22,7 @@ export class ShapeLanguageRemover {
     private mxGraphService: MxGraphService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private logService: LogService,
-    private mxGraphAttributeService: MxGraphAttributeService,
+    private mxGraphAttributeService: MxGraphAttributeService
   ) {}
 
   removeUnnecessaryLanguages(): BaseMetaModelElement {

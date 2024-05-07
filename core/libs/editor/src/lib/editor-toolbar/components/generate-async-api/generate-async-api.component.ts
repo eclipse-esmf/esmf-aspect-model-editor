@@ -54,7 +54,7 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<GenerateAsyncApiComponent>,
     private languageService: SammLanguageSettingsService,
     private modelService: ModelService,
-    private editorService: EditorService,
+    private editorService: EditorService
   ) {}
 
   ngOnInit(): void {
@@ -89,9 +89,9 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
           finalize(() => {
             this.isGenerating = false;
             this.dialogRef.close();
-          }),
+          })
         )
-        .subscribe(),
+        .subscribe()
     );
   }
 

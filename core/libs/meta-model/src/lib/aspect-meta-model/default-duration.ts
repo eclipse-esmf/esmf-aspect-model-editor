@@ -23,13 +23,7 @@ export class DefaultDuration extends DefaultQuantifiable {
     return 'DefaultDuration';
   }
 
-  constructor(
-    metaModelVersion: string,
-    aspectModelUrn: string,
-    name: string,
-    dataType?: Type,
-    public unit?: Unit,
-  ) {
+  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, dataType?: Type, public unit?: Unit) {
     super(metaModelVersion, aspectModelUrn, name, dataType);
   }
 }

@@ -43,7 +43,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.addSeeElements('http://see.de'))
       .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
       .then(() =>
-        cy.get(FIELD_dataType).clear({force: true}).type('string', {force: true}).get(FIELD_dataTypeOption).eq(1).click({force: true}),
+        cy.get(FIELD_dataType).clear({force: true}).type('string', {force: true}).get(FIELD_dataTypeOption).eq(1).click({force: true})
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
       .then(() => cy.getUpdatedRDF())
@@ -53,8 +53,8 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:dataType xsd:string;\n' +
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
-            '    samm:see <http://see.de>.',
-        ),
+            '    samm:see <http://see.de>.'
+        )
       );
   });
 
@@ -70,8 +70,8 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:dataType xsd:string;\n' +
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
-            '    samm:see <http://see.de>.',
-        ),
+            '    samm:see <http://see.de>.'
+        )
       );
   });
 
@@ -91,7 +91,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
           .type('Characteristic', {force: true})
           .get('mat-option')
           .contains('Characteristic2')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
       .then(() => cy.getUpdatedRDF())
@@ -101,7 +101,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
-            '    samm-c:elementCharacteristic :Characteristic2.',
+            '    samm-c:elementCharacteristic :Characteristic2.'
         );
       });
   });
@@ -118,8 +118,8 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
-            '    samm-c:elementCharacteristic :Characteristic2.',
-        ),
+            '    samm-c:elementCharacteristic :Characteristic2.'
+        )
       );
   });
 
@@ -135,8 +135,8 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
-            '    samm-c:elementCharacteristic :Characteristic2.',
-        ),
+            '    samm-c:elementCharacteristic :Characteristic2.'
+        )
       );
   });
 
@@ -152,8 +152,8 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
-            '    samm-c:elementCharacteristic :Characteristic2.',
-        ),
+            '    samm-c:elementCharacteristic :Characteristic2.'
+        )
       );
   });
 
@@ -169,8 +169,8 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
-            '    samm-c:elementCharacteristic :Characteristic2.\n',
-        ),
+            '    samm-c:elementCharacteristic :Characteristic2.\n'
+        )
       );
   });
 
@@ -187,7 +187,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
-            '    samm-c:values ("1" "2" "a" "b" "3" "4").',
+            '    samm-c:values ("1" "2" "a" "b" "3" "4").'
         );
       });
   });
@@ -221,8 +221,8 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
-            '    samm-c:unit unit:commonYear.',
-        ),
+            '    samm-c:unit unit:commonYear.'
+        )
       );
   });
 
@@ -241,8 +241,8 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
-            '    samm-c:unit unit:ampere.',
-        ),
+            '    samm-c:unit unit:ampere.'
+        )
       );
   });
 
@@ -257,8 +257,8 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
           ':Characteristic1 a samm-c:SingleEntity;\n' +
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
-            '    samm:see <http://see.de>.',
-        ),
+            '    samm:see <http://see.de>.'
+        )
       );
   });
 
@@ -275,8 +275,8 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
           ':Characteristic1 a samm-c:SingleEntity;\n' +
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
-            '    samm:see <http://see.de>.',
-        ),
+            '    samm:see <http://see.de>.'
+        )
       );
   });
 
@@ -297,15 +297,15 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
-            '    samm-c:unit unit:acre.',
-        ),
+            '    samm-c:unit unit:acre.'
+        )
       )
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Duration').click({force: true}))
       .then(() => cy.get(FIELD_unit).should('have.value', 'acre'))
       .then(() => cy.get('[data-cy=clear-unit-button]').click({force: true}))
       .then(() =>
-        cy.get(FIELD_unit).clear({force: true}).type('day').get('mat-option[data-unit-cy="day"]').contains('day').click({force: true}),
+        cy.get(FIELD_unit).clear({force: true}).type('day').get('mat-option[data-unit-cy="day"]').contains('day').click({force: true})
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
       .then(() => cy.getUpdatedRDF())
@@ -316,8 +316,8 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
-            '    samm-c:unit unit:day.',
-        ),
+            '    samm-c:unit unit:day.'
+        )
       );
   });
 });

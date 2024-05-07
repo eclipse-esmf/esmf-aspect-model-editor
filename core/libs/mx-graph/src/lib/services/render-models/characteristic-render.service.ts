@@ -53,7 +53,7 @@ export class CharacteristicRenderService extends BaseRenderService {
     private shapeConnectorService: ShapeConnectorService,
     private unitRendererService: UnitRenderService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private namespacesCacheService: NamespacesCacheService,
+    private namespacesCacheService: NamespacesCacheService
   ) {
     super(mxGraphService, sammLangService, rdfService);
   }
@@ -113,7 +113,7 @@ export class CharacteristicRenderService extends BaseRenderService {
         this.metaModelElement,
         element.property,
         cell,
-        propertyCell || this.mxGraphService.renderModelElement(this.filtersService.createNode(element.property, {parent: modelElement})),
+        propertyCell || this.mxGraphService.renderModelElement(this.filtersService.createNode(element.property, {parent: modelElement}))
       );
 
       propertyCell = this.mxGraphService.resolveCellByModelElement(element.property);
@@ -131,20 +131,20 @@ export class CharacteristicRenderService extends BaseRenderService {
         propertyCell,
         childCharacteristicCell ||
           this.mxGraphService.renderModelElement(
-            this.filtersService.createNode(element.property.characteristic, {parent: element.property}),
-          ),
+            this.filtersService.createNode(element.property.characteristic, {parent: element.property})
+          )
       );
 
       childCharacteristicCell = this.mxGraphService.resolveCellByModelElement(element.property.characteristic);
       childCharacteristicCell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
         element.property.characteristic,
-        this.sammLangService,
+        this.sammLangService
       );
       this.graph.labelChanged(childCharacteristicCell, MxGraphHelper.createPropertiesLabel(childCharacteristicCell));
 
       this.mxGraphShapeOverlayService.removeOverlay(
         childCharacteristicCell,
-        MxGraphHelper.getNewShapeOverlayButton(childCharacteristicCell),
+        MxGraphHelper.getNewShapeOverlayButton(childCharacteristicCell)
       );
     }
   }
@@ -188,7 +188,7 @@ export class CharacteristicRenderService extends BaseRenderService {
       childCell
         ? childCell
         : this.mxGraphService.renderModelElement(this.filtersService.createNode(cachedCharacteristic, {parent: this.metaModelElement})),
-      modelInfo,
+      modelInfo
     );
   }
 
@@ -213,7 +213,7 @@ export class CharacteristicRenderService extends BaseRenderService {
     }
 
     const edgesToRemove = cell.edges?.filter(
-      edge => MxGraphHelper.getModelElement(edge.target).aspectModelUrn !== modelElement.aspectModelUrn,
+      edge => MxGraphHelper.getModelElement(edge.target).aspectModelUrn !== modelElement.aspectModelUrn
     );
     this.mxGraphService.removeCells(edgesToRemove || []);
   }
@@ -358,7 +358,7 @@ export class CharacteristicRenderService extends BaseRenderService {
           childCell
             ? childCell
             : this.mxGraphService.renderModelElement(this.filtersService.createNode(cachedCharacteristic, {parent: this.metaModelElement})),
-          ModelInfo.IS_CHARACTERISTIC,
+          ModelInfo.IS_CHARACTERISTIC
         );
       } else {
         this.removeCharacteristic(cell, this.metaModelElement);

@@ -57,7 +57,7 @@ export class MigrationStatusComponent implements OnInit {
     private editorService: EditorService,
     private router: Router,
     private ngZone: NgZone,
-    @Inject(APP_CONFIG) public config: AppConfig,
+    @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
   ngOnInit(): void {
@@ -96,7 +96,7 @@ export class MigrationStatusComponent implements OnInit {
             ];
           } else {
             this.filteredErrorFiles[status.namespace].push(
-              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels),
+              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels)
             );
           }
           continue;
@@ -118,7 +118,7 @@ export class MigrationStatusComponent implements OnInit {
             ];
           } else {
             this.filteredErrorFiles[status.namespace].push(
-              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels),
+              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels)
             );
           }
           this.hasErrors = true;

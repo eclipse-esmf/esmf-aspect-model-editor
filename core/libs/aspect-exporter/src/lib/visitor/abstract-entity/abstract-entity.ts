@@ -25,11 +25,7 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
   private store: Store;
   private samm: Samm;
 
-  constructor(
-    public rdfNodeService: RdfNodeService,
-    public rdfListService: RdfListService,
-    public rdfService: RdfService,
-  ) {
+  constructor(public rdfNodeService: RdfNodeService, public rdfListService: RdfListService, public rdfService: RdfService) {
     super(rdfService);
   }
 
@@ -76,7 +72,7 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
       this.store.addQuad(
         DataFactory.namedNode(entity.aspectModelUrn),
         this.samm.ExtendsProperty(),
-        DataFactory.namedNode(entity.extendedElement.aspectModelUrn),
+        DataFactory.namedNode(entity.extendedElement.aspectModelUrn)
       );
       this.setPrefix(entity.extendedElement.aspectModelUrn);
     }

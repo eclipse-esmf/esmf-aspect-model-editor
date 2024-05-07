@@ -40,7 +40,7 @@ export class ExampleValueInputFieldComponent extends InputFieldComponent<Default
           this.hasComplexDataType ||
           this.metaModelElement.isPredefined() ||
           this.isExtending(),
-      }),
+      })
     );
   }
 

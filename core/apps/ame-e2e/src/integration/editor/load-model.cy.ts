@@ -124,7 +124,7 @@ describe('Test load different characteristics', () => {
       cy.dbClickShape('TestMeasurement')
         .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
         .then(() =>
-          cy.get(FIELD_dataType).clear({force: true}).type('double', {force: true}).get(FIELD_dataTypeOption).eq(0).click({force: true}),
+          cy.get(FIELD_dataType).clear({force: true}).type('double', {force: true}).get(FIELD_dataTypeOption).eq(0).click({force: true})
         )
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:dataType xsd:double')));

@@ -58,7 +58,7 @@ export class EntityInstanceModalComponent {
     @Inject(MAT_DIALOG_DATA) private data: NewEntityInstanceDialogOptions,
     private dialogRef: MatDialogRef<EntityInstanceModalComponent>,
     private editorModelService: EditorModelService,
-    private namespacesCacheService: NamespacesCacheService,
+    private namespacesCacheService: NamespacesCacheService
   ) {
     this.complexValues = data.complexValues;
     this.enumeration = data.metaModel as DefaultEnumeration;
@@ -80,7 +80,7 @@ export class EntityInstanceModalComponent {
     });
 
     this.entity.allProperties.forEach((element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>) =>
-      this.propertiesForm.setControl(element.property.name, new FormArray([])),
+      this.propertiesForm.setControl(element.property.name, new FormArray([]))
     );
   }
 

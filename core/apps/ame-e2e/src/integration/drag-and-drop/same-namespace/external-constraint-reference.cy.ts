@@ -43,7 +43,7 @@ describe('Test drag and drop ext constraint', () => {
       },
       {
         fixture: `/external-reference/same-namespace/without-childrens/${fileName}`,
-      },
+      }
     );
 
     cy.visitDefault().then(() =>
@@ -71,7 +71,7 @@ describe('Test drag and drop ext constraint', () => {
           expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
           expect(rdf).to.contain('samm-c:constraint :ExternalConstraint');
           expect(rdf).not.contain(':ExternalConstraint a samm:Constraint');
-        }),
+        })
     );
   });
 });

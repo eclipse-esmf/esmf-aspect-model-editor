@@ -34,7 +34,7 @@ export class AbstractEntityAbstractEntityConnectionHandler
     protected sammLangService: SammLanguageSettingsService,
     protected filtersService: FiltersService,
     protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService,
+    private notificationService: NotificationsService
   ) {
     super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, filtersService, translate);
   }
@@ -43,7 +43,7 @@ export class AbstractEntityAbstractEntityConnectionHandler
     parentMetaModel: DefaultAbstractEntity,
     childMetaModel: DefaultAbstractEntity,
     parentCell: mxgraph.mxCell,
-    childCell: mxgraph.mxCell,
+    childCell: mxgraph.mxCell
   ) {
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({

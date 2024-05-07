@@ -39,7 +39,7 @@ describe('Constraint Visitor', () => {
   const rdfModel = {
     store: new Store(),
     SAMM: jest.fn(() => new Samm('')),
-    SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'}) as any),
+    SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'} as any)),
     hasNamespace: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
   };
@@ -51,7 +51,7 @@ describe('Constraint Visitor', () => {
     BoundDefinition.AT_MOST,
     BoundDefinition.AT_LEAST,
     0,
-    100,
+    100
   );
   const fixedPointConstraint = new DefaultFixedPointConstraint('1', 'samm#fixedPointConstraint', 'fixedPointConstraint', 1, 2);
   const lengthConstraint = new DefaultLengthConstraint('1', 'samm#lengthConstraint', 'lengthConstraint', 100, 200);
@@ -61,7 +61,7 @@ describe('Constraint Visitor', () => {
     '1',
     'samm#regularExpressionConstraint',
     'regularExpressionConstraint',
-    'regularExpressionValue',
+    'regularExpressionValue'
   );
   const localeConstraint = new DefaultLocaleConstraint('1', 'samm#localeConstraint', 'localeConstraint', 'en');
 

@@ -24,10 +24,7 @@ import {Subscription} from 'rxjs';
 export class WorkspaceMigrateComponent implements OnDestroy {
   private subscription = new Subscription();
 
-  constructor(
-    private migratorService: MigratorService,
-    private sidebarService: SidebarStateService,
-  ) {}
+  constructor(private migratorService: MigratorService, private sidebarService: SidebarStateService) {}
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

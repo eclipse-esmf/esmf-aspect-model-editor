@@ -35,7 +35,7 @@ describe('Test search for element', () => {
             expect(listing).to.have.length(5);
           })
           .get('.mat-mdc-option')
-          .each(option => expect(option).to.contain('property')),
+          .each(option => expect(option).to.contain('property'))
       );
     });
   });
@@ -77,7 +77,7 @@ describe('Test search for element', () => {
         .get('.mat-mdc-option')
         .each(option => expect(option).to.contain('Characteristic1'))
         .click({force: true})
-        .then(() => cy.contains('Characteristic1').should('be.visible')),
+        .then(() => cy.contains('Characteristic1').should('be.visible'))
     );
   });
 
@@ -98,7 +98,7 @@ describe('Test search for element', () => {
         .get('.mat-mdc-option')
         .each(option => expect(option).to.contain('property5'))
         .click({force: true})
-        .then(() => cy.contains('property5').should('be.visible')),
+        .then(() => cy.contains('property5').should('be.visible'))
     );
   });
 });

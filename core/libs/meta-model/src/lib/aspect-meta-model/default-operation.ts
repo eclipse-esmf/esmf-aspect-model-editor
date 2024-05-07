@@ -33,7 +33,7 @@ export class DefaultOperation extends Base implements Operation {
     aspectModelUrn: string,
     name: string,
     public input: Array<OverWrittenProperty> = [],
-    public output?: OverWrittenProperty,
+    public output?: OverWrittenProperty
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

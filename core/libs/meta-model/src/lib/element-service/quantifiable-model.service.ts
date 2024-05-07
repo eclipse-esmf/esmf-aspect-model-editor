@@ -21,7 +21,7 @@ export class QuantifiableModelService extends BaseModelService {
   constructor(
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphService: MxGraphService,
+    private mxGraphService: MxGraphService
   ) {
     super();
   }

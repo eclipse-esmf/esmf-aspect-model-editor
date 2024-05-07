@@ -27,7 +27,7 @@ export class DocumentComponent {
   constructor(
     private dialogRef: MatDialogRef<DocumentComponent>,
     @Inject(APP_CONFIG) public config: AppConfig,
-    private browserService: BrowserService,
+    private browserService: BrowserService
   ) {}
 
   openLink(event: MouseEvent) {

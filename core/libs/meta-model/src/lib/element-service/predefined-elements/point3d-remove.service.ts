@@ -22,10 +22,7 @@ import {PredefinedRemove} from './predefined-remove.type';
   providedIn: 'root',
 })
 export class Point3dRemoveService implements PredefinedRemove {
-  constructor(
-    private modelRootService: ModelRootService,
-    private mxGraphService: MxGraphService,
-  ) {}
+  constructor(private modelRootService: ModelRootService, private mxGraphService: MxGraphService) {}
 
   delete(cell: mxgraph.mxCell): boolean {
     const modelElement = MxGraphHelper.getModelElement(cell);

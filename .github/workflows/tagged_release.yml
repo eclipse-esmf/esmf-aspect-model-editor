@@ -6,6 +6,8 @@ on:
       release_version:
         description: 'Version number of the release'
         required: true
+    branches:
+      - certify-ame-win-frontend
 
 jobs:
   gh_tagged_release:
@@ -201,62 +203,114 @@ jobs:
           script-file: win-installer/installer.nsi
           arguments: "-V3 -DVERSION=${{ github.event.inputs.release_version }}"
 
-      - name: Create GitHub release (Mac)
-        if: ${{ (matrix.os == 'macos-12') && (!contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
+      - name: Upload binary (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v4
         with:
-          overwrite: true
-          prerelease: false
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
-          tag: v${{ github.event.inputs.release_version }}
+          name: aspect-model-editor-vDEV-SNAPSHOT-win
+          path: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
 
-      - name: Create GitHub pre-release (Mac)
-        if: ${{ (matrix.os == 'macos-12') && (contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
-        with:
-          overwrite: true
-          prerelease: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
-          tag: v${{ github.event.inputs.release_version }}
+      # Sign Windows executable
+      - name: Get Artifact ID (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: |
+          # Get the list of artifacts for the specified workflow run
+          response=$(curl -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${{ github.repository_owner }}/$(echo '${{ github.repository }}' | cut -d'/' -f2)/actions/runs/${{ github.run_id }}/artifacts")
 
-      - name: Create GitHub release (Linux)
-        if: ${{ (matrix.os == 'ubuntu-20.04') && (!contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
-        with:
-          overwrite: true
-          prerelease: false
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
-          tag: v${{ github.event.inputs.release_version }}
+          # Filter out the ID of the artifact with a name that contains "windows"
+          artifact_id=$(echo "$response" | jq -r '.artifacts[] | select(.name | contains("win")) | .id')
 
-      - name: Create GitHub pre-release (Linux)
-        if: ${{ (matrix.os == 'ubuntu-20.04') && (contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
-        with:
-          overwrite: true
-          prerelease: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
-          tag: v${{ github.event.inputs.release_version }}
+          # Save the artifact ID in an environment variable
+          echo "ARTIFACT_ID=$artifact_id" >> $GITHUB_ENV
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create GitHub release (Windows)
-        if: ${{ (matrix.os == 'windows-latest') && (!contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
-        with:
-          overwrite: true
-          prerelease: false
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
-          tag: v${{ github.event.inputs.release_version }}
+      - name: Commit Artifact url and version changes and push to pre release branch for jenkins (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: |
+          ARTIFACT_URL_WIN="https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/actions/artifacts/$ARTIFACT_ID/zip"
+          BRANCH_NAME="pre_release_configuration"
 
-      - name: Create GitHub pre-release (Windows)
-        if: ${{ (matrix.os == 'windows-latest') && (contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
-        with:
-          overwrite: true
-          prerelease: true
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
-          tag: v${{ github.event.inputs.release_version }}
+          echo "artifact_url_win=$ARTIFACT_URL_WIN" > parameters.txt
+          echo "version=${{ github.event.inputs.release_version }}" >> parameters.txt
+
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+          git checkout -b $BRANCH_NAME
+          git add parameters.txt
+          git commit -m "Add parameters.txt with artifact_url_win and version"
+          git push origin $BRANCH_NAME
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Jenkins Job, for signing executable
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: |
+          DATA='{"repository": {"url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor", "html_url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor", "owner": { "name": "ESMF"}}, "pusher": { "name": "GitHub Action", "email": "esmf-dev@eclipse.org"}}'
+          SHA1="$(echo -n "${DATA}" | openssl dgst -sha1 -hmac "${WEBHOOK_SECRET}" | sed 's/SHA1(stdin)= //')"
+          curl -X POST https://ci.eclipse.org/esmf/github-webhook/ -H "Content-Type: application/json" -H "X-GitHub-Event: push" -H "X-Hub-Signature: sha1=${SHA1}" -d "${DATA}"
+
+
+#      # Release Mac and Linux executables
+#      - name: Create GitHub release (Mac)
+#        if: ${{ (matrix.os == 'macos-12') && (!contains( github.ref, '-rc' )) }}
+#        uses: svenstaro/upload-release-action@latest
+#        with:
+#          overwrite: true
+#          prerelease: false
+#          repo_token: ${{ secrets.GITHUB_TOKEN }}
+#          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
+#          tag: v${{ github.event.inputs.release_version }}
+#
+#      - name: Create GitHub pre-release (Mac)
+#        if: ${{ (matrix.os == 'macos-12') && (contains( github.ref, '-rc' )) }}
+#        uses: svenstaro/upload-release-action@latest
+#        with:
+#          overwrite: true
+#          prerelease: true
+#          repo_token: ${{ secrets.GITHUB_TOKEN }}
+#          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.dmg
+#          tag: v${{ github.event.inputs.release_version }}
+#
+#      - name: Create GitHub release (Linux)
+#        if: ${{ (matrix.os == 'ubuntu-20.04') && (!contains( github.ref, '-rc' )) }}
+#        uses: svenstaro/upload-release-action@latest
+#        with:
+#          overwrite: true
+#          prerelease: false
+#          repo_token: ${{ secrets.GITHUB_TOKEN }}
+#          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
+#          tag: v${{ github.event.inputs.release_version }}
+#
+#      - name: Create GitHub pre-release (Linux)
+#        if: ${{ (matrix.os == 'ubuntu-20.04') && (contains( github.ref, '-rc' )) }}
+#        uses: svenstaro/upload-release-action@latest
+#        with:
+#          overwrite: true
+#          prerelease: true
+#          repo_token: ${{ secrets.GITHUB_TOKEN }}
+#          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
+#          tag: v${{ github.event.inputs.release_version }}
+#
+#      - name: Create GitHub release (Windows)
+#        if: ${{ (matrix.os == 'windows-latest') && (!contains( github.ref, '-rc' )) }}
+#        uses: svenstaro/upload-release-action@latest
+#        with:
+#          overwrite: true
+#          prerelease: false
+#          repo_token: ${{ secrets.GITHUB_TOKEN }}
+#          file: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
+#          tag: v${{ github.event.inputs.release_version }}
+#
+#      - name: Create GitHub pre-release (Windows)
+#        if: ${{ (matrix.os == 'windows-latest') && (contains( github.ref, '-rc' )) }}
+#        uses: svenstaro/upload-release-action@latest
+#        with:
+#          overwrite: true
+#          prerelease: true
+#          repo_token: ${{ secrets.GITHUB_TOKEN }}
+#          file: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
+#          tag: v${{ github.event.inputs.release_version }}

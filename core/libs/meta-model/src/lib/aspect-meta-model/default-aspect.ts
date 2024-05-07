@@ -41,7 +41,7 @@ export class DefaultAspect extends Base implements Aspect {
     public properties: Array<OverWrittenProperty> = [],
     public operations: Array<Operation> = [],
     public events: Array<Event> = [],
-    public isCollectionAspect: boolean = false,
+    public isCollectionAspect: boolean = false
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

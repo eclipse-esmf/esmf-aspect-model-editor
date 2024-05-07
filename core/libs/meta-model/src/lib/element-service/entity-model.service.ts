@@ -43,7 +43,7 @@ export class EntityModelService extends BaseModelService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private entityRenderer: EntityRenderService,
     private languageService: SammLanguageSettingsService,
-    private baseEntityModel: BaseEntityModelService,
+    private baseEntityModel: BaseEntityModelService
   ) {
     super();
   }

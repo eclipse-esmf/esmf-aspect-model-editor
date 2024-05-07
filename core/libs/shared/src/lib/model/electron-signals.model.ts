@@ -49,14 +49,14 @@ export interface ElectronSignals {
   call<K extends keyof ElectronReturnDataOnly>(listener: K): ElectronReturnDataOnly[K];
   call<K extends keyof ElectronPayloadAndReturn>(
     listener: K,
-    payload: ElectronPayloadAndReturn[K]['payload'],
+    payload: ElectronPayloadAndReturn[K]['payload']
   ): ElectronPayloadAndReturn[K]['return'];
 
   addListener<K extends keyof ElectronPayloadOnly>(listener: K, callback: (payload: ElectronPayloadOnly[K]) => void): void;
   addListener<K extends ElectronEventKeys>(listener: K, callback: () => void): void;
   addListener<K extends keyof ElectronPayloadAndReturn>(
     listener: K,
-    callback: (payload: ElectronPayloadAndReturn[K]['payload']) => ElectronPayloadAndReturn[K]['return'],
+    callback: (payload: ElectronPayloadAndReturn[K]['payload']) => ElectronPayloadAndReturn[K]['return']
   ): void;
 
   removeListener<K extends ElectronEventKeys>(listener: K, callback: Function): void;

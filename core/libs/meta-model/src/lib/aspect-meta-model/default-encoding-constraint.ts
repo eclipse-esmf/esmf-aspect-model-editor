@@ -25,12 +25,7 @@ export class DefaultEncodingConstraint extends DefaultConstraint implements Enco
     return 'DefaultEncodingConstraint';
   }
 
-  constructor(
-    metaModelVersion: string,
-    aspectModelUrn: string,
-    name: string,
-    public value: string,
-  ) {
+  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public value: string) {
     super(metaModelVersion, aspectModelUrn, name);
   }
 }

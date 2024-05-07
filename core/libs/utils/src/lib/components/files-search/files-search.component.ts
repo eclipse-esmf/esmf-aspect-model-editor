@@ -72,7 +72,7 @@ export class FilesSearchComponent {
     private saveModelDialog: SaveModelDialogService,
     private fileHandlingService: FileHandlingService,
     private searchService: SearchService,
-    private translate: LanguageTranslationService,
+    private translate: LanguageTranslationService
   ) {
     this.loading = true;
     this.parseFiles(this.namespaces);
@@ -93,7 +93,7 @@ export class FilesSearchComponent {
       .afterClosed()
       .pipe(
         filter(result => result),
-        switchMap(result => (result === 'open-in' ? this.loadModel(file, namespace) : this.openWindow(file, namespace))),
+        switchMap(result => (result === 'open-in' ? this.loadModel(file, namespace) : this.openWindow(file, namespace)))
       )
 
       .subscribe(console.log);
@@ -116,7 +116,7 @@ export class FilesSearchComponent {
   private checkUnsavedChanges(): Observable<boolean> {
     return this.modelSavingTracker.isSaved$.pipe(
       first(),
-      switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialog.openDialog())),
+      switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialog.openDialog()))
     );
   }
 
@@ -141,8 +141,8 @@ export class FilesSearchComponent {
           namespace,
           file,
           fromWorkspace: true,
-        }),
-      ),
+        })
+      )
     );
   }
 
@@ -154,8 +154,8 @@ export class FilesSearchComponent {
         message: fileStatus.errored
           ? this.translate.language.SEARCHES.FILES.NOTIFICATIONS.ERROR_MESSAGE
           : fileStatus.loaded
-            ? this.translate.language.SEARCHES.FILES.NOTIFICATIONS.ALREADY_LOADED_FILE_MESSAGE
-            : this.translate.language.SEARCHES.FILES.NOTIFICATIONS.LOCKED_FILE_MESSAGE,
+          ? this.translate.language.SEARCHES.FILES.NOTIFICATIONS.ALREADY_LOADED_FILE_MESSAGE
+          : this.translate.language.SEARCHES.FILES.NOTIFICATIONS.LOCKED_FILE_MESSAGE,
       });
       return 'invalid-file';
     }

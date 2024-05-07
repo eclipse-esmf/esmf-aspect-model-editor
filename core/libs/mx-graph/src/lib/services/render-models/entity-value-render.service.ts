@@ -37,7 +37,7 @@ export class EntityValueRenderService extends BaseRenderService {
     rdfService: RdfService,
     private mxGraphShapeOverlay: MxGraphShapeOverlayService,
     private shapeConnectorService: ShapeConnectorService,
-    private mxGraphAttributeService: MxGraphAttributeService,
+    private mxGraphAttributeService: MxGraphAttributeService
   ) {
     super(mxGraphService, sammLangService, rdfService);
   }
@@ -141,7 +141,7 @@ export class EntityValueRenderService extends BaseRenderService {
       this.mxGraphService.assignToParent(
         this.mxGraphService.resolveCellByModelElement(child.entity),
         this.mxGraphService.resolveCellByModelElement(child),
-        EdgeStyles.entityValueEntityEdge,
+        EdgeStyles.entityValueEntityEdge
       );
     }
 
@@ -149,7 +149,7 @@ export class EntityValueRenderService extends BaseRenderService {
     this.mxGraphService.assignToParent(
       this.mxGraphService.resolveCellByModelElement(child),
       this.mxGraphService.resolveCellByModelElement(parent),
-      EdgeStyles.entityValueEntityEdge,
+      EdgeStyles.entityValueEntityEdge
     );
   }
 

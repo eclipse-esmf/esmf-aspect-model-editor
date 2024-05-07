@@ -33,7 +33,7 @@ export class DefaultTrait extends DefaultCharacteristic implements Trait {
     aspectModelUrn: string,
     name: string,
     public baseCharacteristic?: Characteristic,
-    public constraints?: Array<Constraint>,
+    public constraints?: Array<Constraint>
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

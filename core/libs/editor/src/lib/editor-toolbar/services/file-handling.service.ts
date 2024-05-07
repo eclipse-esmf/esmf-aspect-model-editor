@@ -97,7 +97,7 @@ export class FileHandlingService {
     private modelSaveTracker: ModelSavingTrackerService,
     private fileUploadService: FileUploadService,
     private shapeSettingsStateService: ShapeSettingsStateService,
-    private mxGraphService: MxGraphService,
+    private mxGraphService: MxGraphService
   ) {
     if (!environment.production) {
       window['angular.fileHandlingService'] = this;
@@ -139,7 +139,7 @@ export class FileHandlingService {
           this.shapeSettingsStateService.closeShapeSettings();
         }
         this.sidebarService.workspace.close();
-      }),
+      })
     );
   }
 
@@ -183,9 +183,9 @@ export class FileHandlingService {
                 if (this.shapeSettingsStateService.isShapeSettingOpened) {
                   this.shapeSettingsStateService.closeShapeSettings();
                 }
-              }),
-            ),
-        ),
+              })
+            )
+        )
       )
       .subscribe();
   }
@@ -259,7 +259,7 @@ export class FileHandlingService {
           timeout: 5000,
         });
       }),
-      first(),
+      first()
     );
   }
 
@@ -289,7 +289,7 @@ export class FileHandlingService {
           tap(formattedModel => {
             const header = this.configurationService.getSettings().copyrightHeader.join('\n');
             saveAs(new Blob([header + '\n\n' + formattedModel], {type: 'text/turtle;charset=utf-8'}), fileName);
-          }),
+          })
         );
       }),
       catchError(error => {
@@ -301,7 +301,7 @@ export class FileHandlingService {
         });
         return throwError(() => error);
       }),
-      finalize(() => this.loadingScreenService.close()),
+      finalize(() => this.loadingScreenService.close())
     );
   }
 
@@ -322,7 +322,7 @@ export class FileHandlingService {
       finalize(() => {
         this.modelSaveTracker.updateSavedModel();
         this.loadingScreenService.close();
-      }),
+      })
     );
   }
 
@@ -330,7 +330,7 @@ export class FileHandlingService {
     this.resolveModelFileContent(fileInfo)
       .pipe(
         switchMap(fileInfo => this.addFileToNamespace(fileInfo)),
-        first(),
+        first()
       )
       .subscribe();
   }
@@ -346,7 +346,7 @@ export class FileHandlingService {
 
   addFileToNamespace(fileInfo: FileInfoParsed): Observable<any> {
     return this.addFileToWorkspace(fileInfo.path, fileInfo.content, {showNotifications: true}).pipe(
-      map(() => this.electronSignalsService.call('requestRefreshWorkspaces')),
+      map(() => this.electronSignalsService.call('requestRefreshWorkspaces'))
     );
   }
 
@@ -357,8 +357,8 @@ export class FileHandlingService {
           content: readFile(file),
           path: of(file.path),
           name: of(file.path.split('/').pop()),
-        }),
-      ),
+        })
+      )
     );
   }
 
@@ -368,7 +368,7 @@ export class FileHandlingService {
       replace: string[];
       keep: string[];
     },
-    showLoading = true,
+    showLoading = true
   ): Observable<RdfModel[]> {
     const loadingOptions: LoadingScreenOptions = {
       title: this.translate.language.LOADING_SCREEN_DIALOG.WORKSPACE_IMPORT,
@@ -388,7 +388,7 @@ export class FileHandlingService {
 
         return of(null);
       }),
-      finalize(() => (showLoading ? this.loadingScreenService.close() : null)),
+      finalize(() => (showLoading ? this.loadingScreenService.close() : null))
     );
   }
 
@@ -439,7 +439,7 @@ export class FileHandlingService {
         }
         return throwError(() => error);
       }),
-      finalize(() => (uploadOptions.showLoading ? this.loadingScreenService.close() : null)),
+      finalize(() => (uploadOptions.showLoading ? this.loadingScreenService.close() : null))
     );
   }
 
@@ -488,7 +488,7 @@ export class FileHandlingService {
         this.logService.logError(`Error occurred while validating the current model (${JSON.stringify(error)})`);
         return throwError(() => 'Validation completed with errors');
       }),
-      finalize(() => localStorage.removeItem('validating')),
+      finalize(() => localStorage.removeItem('validating'))
     );
   }
 
@@ -501,12 +501,12 @@ export class FileHandlingService {
           entry.files.forEach(file => {
             const fileName = `${entry.namespace}:${file}`;
             requests.push(this.importFile(fileName));
-          }),
+          })
         );
 
         return requests;
       }),
-      switchMap(requests => forkJoin(requests)),
+      switchMap(requests => forkJoin(requests))
     );
   }
 
@@ -518,7 +518,7 @@ export class FileHandlingService {
 
   private getFilesReplacement(
     files: string[],
-    {keep, replace}: {replace: string[]; keep: string[]},
+    {keep, replace}: {replace: string[]; keep: string[]}
   ): {namespace: string; files: string[]}[] {
     // Should "keep" files be excluded?
     return Array.from(new Set([...keep, ...replace])).map(namespace => ({
@@ -586,7 +586,7 @@ export class FileHandlingService {
         }
 
         return of(confirm);
-      }),
+      })
     );
   }
 

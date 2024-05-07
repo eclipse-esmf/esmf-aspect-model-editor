@@ -44,12 +44,12 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
         value: this.overwrittenProperty?.property?.name || '',
         disabled: !!this.overwrittenProperty?.property?.name || this.overwrittenProperty?.property?.isExternalReference(),
       },
-      [Validators.required, EditorDialogValidators.namingLowerCase],
+      [Validators.required, EditorDialogValidators.namingLowerCase]
     );
     this.filteredProperties$ = this.control.valueChanges.pipe(
       startWith([]),
       debounceTime(250),
-      map(value => this.currentCacheFile.getCachedProperties().filter(property => property.name.includes(value))),
+      map(value => this.currentCacheFile.getCachedProperties().filter(property => property.name.includes(value)))
     );
   }
 

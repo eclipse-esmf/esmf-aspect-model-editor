@@ -60,7 +60,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
     public modelService: ModelService,
     public languageSettings: SammLanguageSettingsService,
     private namespacesCacheService: NamespacesCacheService,
-    private modelElementNamingService: ModelElementNamingService,
+    private modelElementNamingService: ModelElementNamingService
   ) {
     super(editorModelService, modelService, languageSettings);
   }
@@ -72,7 +72,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
         this.selectedMetaModelElement = this.metaModelElement;
         this.setMetaModelClassName();
         this.selectedCharacteristic.emit(this.metaModelClassName as CharacteristicClassType);
-      }),
+      })
     );
   }
 
@@ -86,7 +86,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
     this.metaModelElement = newCharacteristicType;
     if (!this.unitInstantiator) {
       this.unitInstantiator = new UnitInstantiator(
-        new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.namespacesCacheService.currentCachedFile),
+        new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.namespacesCacheService.currentCachedFile)
       );
     }
 
@@ -161,11 +161,11 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
     const sammC = this.modelService.currentRdfModel.SAMMC();
     if (!this.defaultCharacteristicInstantiator) {
       this.defaultCharacteristicInstantiator = new PredefinedCharacteristicInstantiator(
-        new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.namespacesCacheService.currentCachedFile),
+        new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.namespacesCacheService.currentCachedFile)
       );
     }
     return this.defaultCharacteristicInstantiator.createCharacteristic(
-      DataFactory.namedNode(`${sammC.getNamespace()}${characteristicName}`),
+      DataFactory.namedNode(`${sammC.getNamespace()}${characteristicName}`)
     );
   }
 
@@ -177,7 +177,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
             unit =>
               unit.quantityKinds &&
               unit.quantityKinds.includes('time') &&
-              unit.name.toLowerCase().indexOf(oldMetaModelElement[oldKey].name.toLowerCase()) >= 0,
+              unit.name.toLowerCase().indexOf(oldMetaModelElement[oldKey].name.toLowerCase()) >= 0
           );
           if (matchedUnit) {
             this.metaModelElement[oldKey] = this.unitInstantiator.getUnit(matchedUnit.name);

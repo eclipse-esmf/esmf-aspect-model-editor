@@ -23,12 +23,7 @@ export class DefaultCode extends DefaultCharacteristic {
     return 'DefaultCode';
   }
 
-  constructor(
-    metaModelVersion: string,
-    aspectModelUrn: string,
-    name: string,
-    public dataType?: Type,
-  ) {
+  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public dataType?: Type) {
     super(metaModelVersion, aspectModelUrn, name, dataType);
   }
 }

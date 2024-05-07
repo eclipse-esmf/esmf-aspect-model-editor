@@ -62,7 +62,7 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<PropertiesModalComponent>,
     private cacheService: NamespacesCacheService,
-    @Inject(MAT_DIALOG_DATA) public data: PropertiesDialogData,
+    @Inject(MAT_DIALOG_DATA) public data: PropertiesDialogData
   ) {}
 
   ngOnInit() {

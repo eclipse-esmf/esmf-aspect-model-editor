@@ -63,7 +63,7 @@ describe('Test namespace settings dialog', () => {
         },
         {
           fixture: '/change-namespace/aspect-workspace-one.txt',
-        },
+        }
       );
 
       cy.saveAspectModelToWorkspace().then(() => cy.get(SELECTOR_workspaceBtn).click());
@@ -81,7 +81,7 @@ describe('Test namespace settings dialog', () => {
         },
         {
           fixture: '/change-namespace/aspect-workspace-two.txt',
-        },
+        }
       );
 
       openNamespaceSettings()
@@ -114,7 +114,7 @@ describe('Test namespace settings dialog', () => {
         },
         {
           fixture: '/change-namespace/aspect-workspace-one.txt',
-        },
+        }
       );
 
       cy.intercept(
@@ -125,7 +125,7 @@ describe('Test namespace settings dialog', () => {
         },
         {
           fixture: '/change-namespace/aspect-workspace-two.txt',
-        },
+        }
       );
 
       cy.intercept(
@@ -136,7 +136,7 @@ describe('Test namespace settings dialog', () => {
         },
         {
           fixture: '/change-namespace/aspect-workspace-three.txt',
-        },
+        }
       );
 
       cy.dbClickShape('AspectDefault')

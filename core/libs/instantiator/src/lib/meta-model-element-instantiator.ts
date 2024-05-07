@@ -93,7 +93,7 @@ export class MetaModelElementInstantiator {
     public namespaceCacheService?: NamespacesCacheService,
     public recursiveModelElements?: Map<string, Array<BaseMetaModelElement>>,
     public notificationsService?: NotificationsService,
-    public translate?: LanguageTranslationService,
+    public translate?: LanguageTranslationService
   ) {
     this.samm = this.rdfModel.samm;
     this.sammC = this.rdfModel.sammC;
@@ -119,7 +119,7 @@ export class MetaModelElementInstantiator {
   getProperties(
     subject: Quad_Subject,
     predicate: NamedNode,
-    parent?: DefaultAspect | DefaultEntity | DefaultOperation,
+    parent?: DefaultAspect | DefaultEntity | DefaultOperation
   ): Array<OverWrittenProperty> {
     const properties: Array<OverWrittenProperty> = [];
     this.rdfModel.store.getQuads(subject, predicate, null, null).forEach(propertyQuad => {
@@ -458,7 +458,7 @@ export class MetaModelElementInstantiator {
    */
   getExternalElement<T>(
     quad: NamedNode | Quad_Object,
-    skipSetExternal = false,
+    skipSetExternal = false
   ): {
     externalRdfModel: RdfModel;
     externalReference: T;
@@ -504,7 +504,7 @@ export class MetaModelElementInstantiator {
 
   getRdfModelByElement(quad: NamedNode | Quad_Object): RdfModel {
     return this.instantiatorService.rdfService.externalRdfModels.find(
-      (extRdfModel: RdfModel) => extRdfModel.store.getQuads(quad, null, null, null).length,
+      (extRdfModel: RdfModel) => extRdfModel.store.getQuads(quad, null, null, null).length
     );
   }
 

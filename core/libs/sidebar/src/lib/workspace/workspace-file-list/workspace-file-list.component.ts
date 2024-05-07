@@ -56,7 +56,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
     private fileHandlingService: FileHandlingService,
     private changeDetector: ChangeDetectorRef,
     private translate: LanguageTranslationService,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {

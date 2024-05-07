@@ -46,7 +46,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     public dataTypeService: DataTypeService,
     public mxGraphService: MxGraphService,
     public rdfService: RdfService,
-    private validators: EditorDialogValidators,
+    private validators: EditorDialogValidators
   ) {
     super();
     this.fieldName = 'dataTypeEntity';
@@ -90,8 +90,8 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
           value,
           disabled: !!value || this.metaModelElement?.isExternalReference() || this.isDisabled,
         },
-        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)],
-      ),
+        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)]
+      )
     );
     this.getControl('dataType').markAsTouched();
     this.parentForm.setControl(
@@ -99,7 +99,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
       new FormControl({
         value: dataType,
         disabled: this.metaModelElement?.isExternalReference(),
-      }),
+      })
     );
     this.dataTypeControl = this.parentForm.get('dataType') as FormControl;
     this.dataTypeEntityControl = this.parentForm.get('dataTypeEntity') as FormControl;
@@ -175,7 +175,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
 
     this.filteredDataTypes$ = this.dataTypeControl?.valueChanges.pipe(
       map((value: string) => (value ? types.filter(type => this.inSearchList(type, value)) : types)),
-      startWith(types),
+      startWith(types)
     );
   }
 
@@ -186,7 +186,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
       .some(firstEdge =>
         this.mxGraphService.graph
           .getIncomingEdges(firstEdge.source)
-          .some(secondEdge => MxGraphHelper.getModelElement(secondEdge.source) instanceof DefaultStructuredValue),
+          .some(secondEdge => MxGraphHelper.getModelElement(secondEdge.source) instanceof DefaultStructuredValue)
       );
   }
 }

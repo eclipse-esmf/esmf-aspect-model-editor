@@ -47,7 +47,7 @@ export class OpenElementWindowComponent implements OnInit {
     private rdfService: RdfService,
     private modelApiService: ModelApiService,
     private notificationService: NotificationsService,
-    @Inject(MAT_DIALOG_DATA) private elementInfo: {urn: string; file: string},
+    @Inject(MAT_DIALOG_DATA) private elementInfo: {urn: string; file: string}
   ) {}
 
   ngOnInit() {
@@ -77,7 +77,7 @@ export class OpenElementWindowComponent implements OnInit {
           this.notificationService.error({title: 'Could not open file', message: `${this.elementInfo.file} could not be opened.`});
           this.dialogRef.close();
           return of(error);
-        }),
+        })
       )
       .subscribe();
   }

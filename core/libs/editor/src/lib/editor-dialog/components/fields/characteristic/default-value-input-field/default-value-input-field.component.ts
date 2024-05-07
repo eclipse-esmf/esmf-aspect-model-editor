@@ -43,8 +43,8 @@ export class DefaultValueInputFieldComponent extends InputFieldComponent<Default
       this.fieldName,
       new FormControl(
         {value: defaultValueString || this.metaModelElement.defaultValue, disabled: this.metaModelElement?.isExternalReference()},
-        Validators.required,
-      ),
+        Validators.required
+      )
     );
 
     this.formSubscription.add(
@@ -52,7 +52,7 @@ export class DefaultValueInputFieldComponent extends InputFieldComponent<Default
         if (dataType instanceof DefaultEntity) {
           this.parentForm.get(this.fieldName).patchValue('');
         }
-      }),
+      })
     );
   }
 }
