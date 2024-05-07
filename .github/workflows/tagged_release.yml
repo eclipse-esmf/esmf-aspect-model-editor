@@ -6,8 +6,6 @@ on:
       release_version:
         description: 'Version number of the release'
         required: true
-    branches:
-      - certify-ame-win-frontend
 
 jobs:
   gh_tagged_release:
