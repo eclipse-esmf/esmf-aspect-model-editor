@@ -97,7 +97,7 @@ describe('Test editing Aspect', () => {
       .then(() =>
         cy
           .getCellLabel('NewAspect', META_MODEL_preferredName)
-          .should('eq', `${META_MODEL_preferredName} = New Preffered Name for Aspect @en`),
+          .should('eq', `${META_MODEL_preferredName} = New Preffered Name for Aspect @en`)
       )
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('samm:preferredName "New Preffered Name for Aspect"@en'))
@@ -113,7 +113,7 @@ describe('Test editing Aspect', () => {
       .then(() =>
         cy
           .getCellLabel('NewAspect', META_MODEL_description)
-          .should('eq', `${META_MODEL_description} = New description for the aspect model @en`),
+          .should('eq', `${META_MODEL_description} = New description for the aspect model @en`)
       )
       .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:description "New description for the aspect model"@en')))
       .then(() => cy.getAspect().then(aspect => expect(aspect.getDescription('en')).to.equal('New description for the aspect model')));
@@ -127,16 +127,16 @@ describe('Test editing Aspect', () => {
       .then(() =>
         cy
           .getCellLabel('NewAspect', META_MODEL_see)
-          .should('eq', `${META_MODEL_see} = http://www.seeA.de,http://www.seeB.de,http://www.seeC.de`),
+          .should('eq', `${META_MODEL_see} = http://www.seeA.de,http://www.seeB.de,http://www.seeC.de`)
       )
       .then(() =>
-        cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:see <http://www.seeA.de>, <http://www.seeB.de>, <http://www.seeC.de>')),
+        cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:see <http://www.seeA.de>, <http://www.seeB.de>, <http://www.seeC.de>'))
       )
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.getSeeReferences()).to.have.length(3);
           expect(aspect.getSeeReferences()[2]).to.equal('http://www.seeC.de');
-        }),
+        })
       );
     cy.dbClickShape('NewAspect')
       .then(() => cy.removeSeeElements('http://www.seeB.de'))
@@ -148,7 +148,7 @@ describe('Test editing Aspect', () => {
         cy.getAspect().then(aspect => {
           expect(aspect.getSeeReferences()).to.have.length(2);
           expect(aspect.getSeeReferences()[1]).to.equal('http://www.seeC.de');
-        }),
+        })
       );
   });
 
@@ -161,7 +161,7 @@ describe('Test editing Aspect', () => {
       .then(() =>
         cy
           .getCellLabel('NewAspect', META_MODEL_see)
-          .should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001`),
+          .should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001`)
       )
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>, <urn:irdi:iec:0112/2///62683#ACC011#001>'))

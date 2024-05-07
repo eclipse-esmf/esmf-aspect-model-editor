@@ -30,7 +30,7 @@ export class EntityInheritanceConnector extends InheritanceConnector {
     protected filtersService: FiltersService,
     protected translate: LanguageTranslationService,
     protected propertyAbstractPropertyConnector?: PropertyAbstractPropertyConnectionHandler,
-    protected entityPropertyConnector?: EntityPropertyConnectionHandler,
+    protected entityPropertyConnector?: EntityPropertyConnectionHandler
   ) {
     super(mxGraphService, mxGraphAttributeService, sammLangService, notificationsService, translate);
   }
@@ -39,7 +39,7 @@ export class EntityInheritanceConnector extends InheritanceConnector {
     parentMetaModel: DefaultEntity,
     childMetaModel: DefaultAbstractEntity | DefaultEntity,
     parent: mxgraph.mxCell,
-    child: mxgraph.mxCell,
+    child: mxgraph.mxCell
   ) {
     if (parentMetaModel.extendedElement?.aspectModelUrn === childMetaModel.aspectModelUrn) {
       return;
@@ -50,7 +50,7 @@ export class EntityInheritanceConnector extends InheritanceConnector {
       .filter(
         abstractProperty =>
           abstractProperty instanceof DefaultAbstractProperty &&
-          !childMetaModel.allProperties?.some(({property: p}) => p.extendedElement?.aspectModelUrn === abstractProperty.aspectModelUrn),
+          !childMetaModel.allProperties?.some(({property: p}) => p.extendedElement?.aspectModelUrn === abstractProperty.aspectModelUrn)
       );
 
     const newProperties = abstractProperties.map(abstractProperty => {
@@ -72,7 +72,7 @@ export class EntityInheritanceConnector extends InheritanceConnector {
 
     for (let i = 0; i < newProperties.length; i++) {
       const propertyCell = this.mxGraphService.renderModelElement(
-        this.filtersService.createNode(newProperties[i], {parent: parentMetaModel}),
+        this.filtersService.createNode(newProperties[i], {parent: parentMetaModel})
       );
       this.entityPropertyConnector.connect(parentMetaModel, newProperties[i], parent, propertyCell);
 
@@ -80,7 +80,7 @@ export class EntityInheritanceConnector extends InheritanceConnector {
         newProperties[i],
         abstractProperties[i],
         propertyCell,
-        this.mxGraphService.resolveCellByModelElement(abstractProperties[i]),
+        this.mxGraphService.resolveCellByModelElement(abstractProperties[i])
       );
     }
 

@@ -68,7 +68,7 @@ export class QuantityKindsInputFieldComponent extends InputFieldComponent<Defaul
       new FormControl({
         value: this.quantityKindValues,
         disabled: this.metaModelDialogService.isReadOnly(),
-      }),
+      })
     );
 
     this.filteredQuantityKinds$ = this.initFilteredQuantityKinds(this.inputControl);
@@ -78,7 +78,7 @@ export class QuantityKindsInputFieldComponent extends InputFieldComponent<Defaul
     return control?.valueChanges.pipe(
       map((value: string) => {
         return value ? this.supportedQuantityKinds?.filter(qk => qk.startsWith(value)) : this.supportedQuantityKinds;
-      }),
+      })
     );
   }
 

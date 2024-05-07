@@ -45,7 +45,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].input[1].property.name).to.equal('property3');
           expect(aspect.operations[0].input[2].property.name).to.equal('property4');
           expect(aspect.operations[0].output.property.name).to.equal('property5');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -58,7 +58,7 @@ describe('Test edit operation', () => {
           expect(rdf).to.contain(':property3 a samm:Property');
           expect(rdf).to.contain(':property4 a samm:Property');
           expect(rdf).to.contain(':property5 a samm:Property');
-        }),
+        })
       );
   });
 
@@ -76,7 +76,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].input[1].property.name).to.equal('property3');
           expect(aspect.operations[0].input[2].property.name).to.equal('property4');
           expect(aspect.operations[0].output.property.name).to.equal('property5');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -89,7 +89,7 @@ describe('Test edit operation', () => {
           expect(rdf).to.contain(':property3 a samm:Property');
           expect(rdf).to.contain(':property4 a samm:Property');
           expect(rdf).to.contain(':property5 a samm:Property');
-        }),
+        })
       );
   });
 
@@ -106,7 +106,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].input).to.have.length(1);
           expect(aspect.operations[0].input[0].property.name).to.equal('property3');
           expect(aspect.operations[0].output.property.name).to.equal('property5');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -119,7 +119,7 @@ describe('Test edit operation', () => {
           expect(rdf).to.contain(':property3 a samm:Property');
           expect(rdf).not.contain(':property4 a samm:Property');
           expect(rdf).to.contain(':property5 a samm:Property');
-        }),
+        })
       );
   });
 
@@ -134,7 +134,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].input).to.have.length(1);
           expect(aspect.operations[0].input[0].property.name).to.equal('property3');
           expect(aspect.operations[0].output).to.be.null;
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -145,7 +145,7 @@ describe('Test edit operation', () => {
           expect(rdf).not.contain('samm:output :property5');
           expect(rdf).to.contain(':property3 a samm:Property');
           expect(rdf).not.contain(':property5 a samm:Property');
-        }),
+        })
       );
   });
 
@@ -159,7 +159,7 @@ describe('Test edit operation', () => {
           .type('addInputProperty1', {force: true})
           .get('mat-option')
           .contains('addInputProperty1')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() =>
         cy
@@ -168,7 +168,7 @@ describe('Test edit operation', () => {
           .type('addInputProperty2', {force: true})
           .get('mat-option')
           .contains('addInputProperty2')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() =>
         cy
@@ -177,7 +177,7 @@ describe('Test edit operation', () => {
           .type('addOutputProperty1', {force: true})
           .get('mat-option')
           .contains('addOutputProperty1')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() =>
@@ -189,7 +189,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].input[1].property.name).to.equal('addInputProperty1');
           expect(aspect.operations[0].input[2].property.name).to.equal('addInputProperty2');
           expect(aspect.operations[0].output.property.name).to.equals('addOutputProperty1');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -202,7 +202,7 @@ describe('Test edit operation', () => {
           expect(rdf).to.contain(':addInputProperty1 a samm:Property');
           expect(rdf).to.contain(':addInputProperty2 a samm:Property');
           expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
-        }),
+        })
       );
   });
 
@@ -219,7 +219,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].input).to.have.length(1);
           expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
           expect(aspect.operations[0].output.property.name).to.equals('addOutputProperty1');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -232,7 +232,7 @@ describe('Test edit operation', () => {
           expect(rdf).to.contain(':addInputProperty1 a samm:Property');
           expect(rdf).to.contain(':addInputProperty2 a samm:Property');
           expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
-        }),
+        })
       );
   });
 
@@ -247,7 +247,7 @@ describe('Test edit operation', () => {
           .type('addNewOutputProperty1', {force: true})
           .get('mat-option')
           .contains('addNewOutputProperty1')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() =>
@@ -257,7 +257,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].input).to.have.length(1);
           expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
           expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty1');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -271,7 +271,7 @@ describe('Test edit operation', () => {
           expect(rdf).to.contain(':addInputProperty2 a samm:Property');
           expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
           expect(rdf).to.contain(':addNewOutputProperty1 a samm:Property');
-        }),
+        })
       );
   });
 
@@ -286,7 +286,7 @@ describe('Test edit operation', () => {
           .type('addNewOutputProperty1', {force: true})
           .get('mat-option')
           .contains('addNewOutputProperty1')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() =>
         cy
@@ -295,7 +295,7 @@ describe('Test edit operation', () => {
           .type('addNewOutputProperty2', {force: true})
           .get('mat-option')
           .contains('addNewOutputProperty2')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() =>
@@ -306,7 +306,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
           expect(aspect.operations[0].input[1].property.name).to.equal('addNewOutputProperty1');
           expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty2');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -321,7 +321,7 @@ describe('Test edit operation', () => {
           expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
           expect(rdf).to.contain(':addNewOutputProperty1 a samm:Property');
           expect(rdf).to.contain(':addNewOutputProperty2 a samm:Property');
-        }),
+        })
       )
       .then(() => cy.dbClickShape('newOperation'))
       .then(() => cy.get('[data-cy="input"]').eq(1).click({force: true}))
@@ -333,7 +333,7 @@ describe('Test edit operation', () => {
           .type('addNewOutputProperty1', {force: true})
           .get('mat-option')
           .contains('addNewOutputProperty1')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() =>
@@ -343,7 +343,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].input).to.have.length(1);
           expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
           expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty1');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -358,7 +358,7 @@ describe('Test edit operation', () => {
           expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
           expect(rdf).to.contain(':addNewOutputProperty1 a samm:Property');
           expect(rdf).to.contain(':addNewOutputProperty2 a samm:Property');
-        }),
+        })
       );
   });
 
@@ -372,7 +372,7 @@ describe('Test edit operation', () => {
           .type('addNewOutputProperty1', {force: true})
           .get('mat-option')
           .contains('addNewOutputProperty1')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() =>
@@ -383,7 +383,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
           expect(aspect.operations[0].input[1].property.name).to.equal('addNewOutputProperty1');
           expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty1');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -397,7 +397,7 @@ describe('Test edit operation', () => {
           expect(rdf).to.contain(':addInputProperty2 a samm:Property');
           expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
           expect(rdf).to.contain(':addNewOutputProperty1 a samm:Property');
-        }),
+        })
       )
       .then(() => cy.dbClickShape('newOperation'))
       .then(() => cy.get('[data-cy="clear-output-button"]').click({force: true}))
@@ -408,7 +408,7 @@ describe('Test edit operation', () => {
           .type('addNewOutputProperty2', {force: true})
           .get('mat-option')
           .contains('addNewOutputProperty2')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() =>
@@ -419,7 +419,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
           expect(aspect.operations[0].input[1].property.name).to.equal('addNewOutputProperty1');
           expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty2');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -433,7 +433,7 @@ describe('Test edit operation', () => {
           expect(rdf).to.contain(':addInputProperty2 a samm:Property');
           expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
           expect(rdf).to.contain(':addNewOutputProperty1 a samm:Property');
-        }),
+        })
       );
   });
 
@@ -449,7 +449,7 @@ describe('Test edit operation', () => {
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(0);
           expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty2');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -462,7 +462,7 @@ describe('Test edit operation', () => {
           expect(rdf).to.contain(':addInputProperty1 a samm:Property');
           expect(rdf).to.contain(':addInputProperty2 a samm:Property');
           expect(rdf).to.contain(':addOutputProperty1 a samm:Property');
-        }),
+        })
       );
   });
 });

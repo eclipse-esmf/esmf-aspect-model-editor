@@ -50,10 +50,7 @@ class Selection {
   #selection$ = new BehaviorSubject<{namespace: string; file: string}>(null);
   public selection$ = this.#selection$.asObservable();
 
-  constructor(
-    public namespace?: string,
-    public file?: string,
-  ) {}
+  constructor(public namespace?: string, public file?: string) {}
 
   public select(namespace: string, file: string) {
     if (namespace && file) {
@@ -140,7 +137,7 @@ export class SidebarStateService {
     private rdfService: RdfService,
     private modelApiService: ModelApiService,
     private notificationService: NotificationsService,
-    private browserService: BrowserService,
+    private browserService: BrowserService
   ) {
     this.manageSidebars();
     requestAnimationFrame(() => {
@@ -182,9 +179,9 @@ export class SidebarStateService {
           this.notificationService.error({
             title: 'Could not retrieve the namespaces!',
             message: !err.status ? 'Please try to close and reopen the application.' : '',
-          }),
-        ),
-      ),
+          })
+        )
+      )
     );
   }
 

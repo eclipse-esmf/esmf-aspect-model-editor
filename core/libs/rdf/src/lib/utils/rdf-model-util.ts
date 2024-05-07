@@ -75,7 +75,7 @@ export class RdfModelUtil {
     metaModelElement: BaseMetaModelElement,
     predicateUrn: string,
     rdfModel: RdfModel,
-    characteristicType: Type,
+    characteristicType: Type
   ): NamedNode {
     const samm = rdfModel.SAMM();
     const sammC = rdfModel.SAMMC();
@@ -244,7 +244,7 @@ export class RdfModelUtil {
       DataFactory.namedNode(elementType),
       null,
       metaModelElementInstantiator.samm.Entity(),
-      null,
+      null
     );
 
     if (quads.length) {

@@ -117,7 +117,7 @@ export class ShapeConnectorService {
     private enumerationEntityValueConnectionHandler: EnumerationEntityValueConnectionHandler,
     private characteristicUnitConnectionHandler: CharacteristicUnitConnectionHandler,
     private structuredValuePropertyConnectionHandler: StructuredValueCharacteristicPropertyConnectionHandler,
-    private translate: LanguageTranslationService,
+    private translate: LanguageTranslationService
   ) {
     if (!environment.production) {
       window['angular.shapeConnectorService'] = this;
@@ -210,7 +210,7 @@ export class ShapeConnectorService {
     childModel: BaseMetaModelElement,
     parentSource: mxCell,
     childSource: mxCell,
-    modelInfo?: ModelInfo,
+    modelInfo?: ModelInfo
   ): boolean {
     let connectionHandler: MultiShapeConnector<BaseMetaModelElement, BaseMetaModelElement>;
 

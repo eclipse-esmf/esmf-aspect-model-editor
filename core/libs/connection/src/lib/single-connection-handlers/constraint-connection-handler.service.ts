@@ -25,14 +25,14 @@ export class ConstraintConnectionHandler implements SingleShapeConnector<Default
   constructor(
     private mxGraphService: MxGraphService,
     private modelElementNamingService: ModelElementNamingService,
-    private filtersService: FiltersService,
+    private filtersService: FiltersService
   ) {}
 
   public connect(constraint: DefaultConstraint, source: mxgraph.mxCell) {
     const defaultCharacteristic = DefaultCharacteristic.createInstance();
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultCharacteristic);
     const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
+      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)})
     );
     constraint.update(defaultCharacteristic);
     this.mxGraphService.assignToParent(child, source);

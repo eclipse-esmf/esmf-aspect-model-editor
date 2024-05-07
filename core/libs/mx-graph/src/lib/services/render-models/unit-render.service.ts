@@ -35,7 +35,7 @@ export class UnitRenderService extends BaseRenderService {
     sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private namespacesCacheService: NamespacesCacheService,
+    private namespacesCacheService: NamespacesCacheService
   ) {
     super(mxGraphService, sammLangService, rdfService);
   }
@@ -49,7 +49,7 @@ export class UnitRenderService extends BaseRenderService {
       this.mxGraphShapeOverlayService,
       this.namespacesCacheService,
       this.sammLangService,
-      null,
+      null
     ).renderUnit(this.filterService.createNode(unit, {parent: MxGraphHelper.getModelElement(parentCell)}), parentCell);
   }
 

@@ -31,7 +31,7 @@ export class CodeInputFieldComponent extends InputFieldComponent<DefaultUnit> im
       new FormControl({
         value: this.metaModelElement?.code,
         disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
-      }),
+      })
     );
   }
 }

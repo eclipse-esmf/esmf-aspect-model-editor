@@ -61,7 +61,7 @@ describe('Test edit Events', () => {
           expect(aspect.events[0].name).to.equal('event1');
           expect(aspect.events[0].parameters[0].property.name).to.equal('property2');
           expect(aspect.events[0].parameters[1].property.name).to.equal('property3');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -71,7 +71,7 @@ describe('Test edit Events', () => {
           expect(rdf).to.contain('samm:parameters (:property2 :property3)');
           expect(rdf).to.contain(':property2 a samm:Property');
           expect(rdf).to.contain(':property3 a samm:Property');
-        }),
+        })
       );
   });
 
@@ -87,7 +87,7 @@ describe('Test edit Events', () => {
           expect(aspect.events[0].parameters).to.have.length(2);
           expect(aspect.events[0].parameters[0].property.name).to.equal('property2');
           expect(aspect.events[0].parameters[1].property.name).to.equal('property3');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -97,7 +97,7 @@ describe('Test edit Events', () => {
           expect(rdf).to.contain('samm:parameters (:property2 :property3)');
           expect(rdf).to.contain(':property2 a samm:Property');
           expect(rdf).to.contain(':property3 a samm:Property');
-        }),
+        })
       );
   });
 
@@ -111,7 +111,7 @@ describe('Test edit Events', () => {
           expect(aspect.events[0].name).to.equal('newEvent');
           expect(aspect.events[0].parameters).to.have.length(1);
           expect(aspect.events[0].parameters[0].property.name).to.equal('property3');
-        }),
+        })
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -121,7 +121,7 @@ describe('Test edit Events', () => {
           expect(rdf).to.contain('samm:parameters (:property3)');
           expect(rdf).not.contain(':property2 a samm:Property');
           expect(rdf).to.contain(':property3 a samm:Property');
-        }),
+        })
       );
   });
 });

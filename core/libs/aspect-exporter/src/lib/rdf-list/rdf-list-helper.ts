@@ -38,7 +38,7 @@ export class RdfListHelper {
 
       return DataFactory.literal(
         modelElement,
-        source.dataType && !(source instanceof DefaultStructuredValue) ? DataFactory.namedNode(source.dataType.getUrn()) : undefined,
+        source.dataType && !(source instanceof DefaultStructuredValue) ? DataFactory.namedNode(source.dataType.getUrn()) : undefined
       );
     });
 

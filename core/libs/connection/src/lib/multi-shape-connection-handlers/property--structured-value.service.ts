@@ -25,7 +25,7 @@ import {MxGraphHelper} from '@ame/mx-graph';
 export class PropertyStructuredValueConnectionHandler implements MultiShapeConnector<DefaultProperty, DefaultStructuredValue> {
   constructor(
     private notificationsService: NotificationsService,
-    private propertyCharacteristicConnectionHandler: PropertyCharacteristicConnectionHandler,
+    private propertyCharacteristicConnectionHandler: PropertyCharacteristicConnectionHandler
   ) {}
 
   connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultStructuredValue, parent: mxgraph.mxCell, child: mxgraph.mxCell): void {

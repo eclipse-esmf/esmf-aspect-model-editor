@@ -22,11 +22,7 @@ import {catchError, of} from 'rxjs';
   styleUrls: ['./loading-migrating.component.scss'],
 })
 export class LoadingMigratingComponent implements OnInit {
-  constructor(
-    private migratorApiService: MigratorApiService,
-    private router: Router,
-    private ngZone: NgZone,
-  ) {}
+  constructor(private migratorApiService: MigratorApiService, private router: Router, private ngZone: NgZone) {}
 
   ngOnInit(): void {
     this.migratorApiService

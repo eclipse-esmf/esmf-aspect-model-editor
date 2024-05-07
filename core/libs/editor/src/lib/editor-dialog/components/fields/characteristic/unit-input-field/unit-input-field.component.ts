@@ -40,14 +40,10 @@ export class UnitInputFieldComponent
   unitDisplayControl: FormControl;
   private unitInstantiator: UnitInstantiator;
 
-  constructor(
-    private modelService: ModelService,
-    private rdfService: RdfService,
-    private validators: EditorDialogValidators,
-  ) {
+  constructor(private modelService: ModelService, private rdfService: RdfService, private validators: EditorDialogValidators) {
     super();
     this.unitInstantiator = new UnitInstantiator(
-      new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile),
+      new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile)
     );
     this.fieldName = 'unit';
   }
@@ -99,8 +95,8 @@ export class UnitInputFieldComponent
           value: unit,
           disabled: this.metaModelElement?.isExternalReference(),
         },
-        this.unitRequired ? Validators.required : null,
-      ),
+        this.unitRequired ? Validators.required : null
+      )
     );
 
     this.parentForm.setControl('changedUnit', new FormControl(this.getPredefinedUnit(unitName) || unit));

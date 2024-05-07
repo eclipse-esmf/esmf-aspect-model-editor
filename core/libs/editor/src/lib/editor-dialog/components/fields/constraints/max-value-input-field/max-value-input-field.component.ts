@@ -25,10 +25,7 @@ import {InputFieldComponent} from '../../input-field.component';
 export class MaxValueInputFieldComponent extends InputFieldComponent<DefaultRangeConstraint> implements OnInit, OnDestroy {
   public rangeConstraintDataType: Type;
 
-  constructor(
-    public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService,
-  ) {
+  constructor(public dataTypeService: DataTypeService, public mxGraphService: MxGraphService) {
     super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'maxValue';
@@ -65,7 +62,7 @@ export class MaxValueInputFieldComponent extends InputFieldComponent<DefaultRang
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
         disabled: this.metaModelElement.isExternalReference(),
-      }),
+      })
     );
   }
 

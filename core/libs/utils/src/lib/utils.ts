@@ -76,7 +76,7 @@ export const setUniqueElementName = (
   modelElement: BaseMetaModelElement,
   rdfModel: RdfModel,
   namespaceCacheService: NamespacesCacheService,
-  name?: string,
+  name?: string
 ) => {
   name = name || `${modelElement.className}`.replace('Default', '');
 

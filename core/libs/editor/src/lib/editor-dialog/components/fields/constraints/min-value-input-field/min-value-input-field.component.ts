@@ -25,10 +25,7 @@ import {InputFieldComponent} from '../../input-field.component';
 export class MinValueInputFieldComponent extends InputFieldComponent<DefaultRangeConstraint> implements OnInit, OnDestroy {
   public rangeConstraintDataType: Type;
 
-  constructor(
-    public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService,
-  ) {
+  constructor(public dataTypeService: DataTypeService, public mxGraphService: MxGraphService) {
     super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'minValue';
@@ -64,7 +61,7 @@ export class MinValueInputFieldComponent extends InputFieldComponent<DefaultRang
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
         disabled: this.metaModelElement.isExternalReference(),
-      }),
+      })
     );
   }
 

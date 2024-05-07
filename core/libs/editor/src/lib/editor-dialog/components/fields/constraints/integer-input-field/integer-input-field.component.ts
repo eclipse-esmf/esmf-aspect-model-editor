@@ -43,8 +43,8 @@ export class IntegerInputFieldComponent extends InputFieldComponent<DefaultFixed
       this.fieldName,
       new FormControl(
         {value: this.getCurrentValue(this.fieldName), disabled: this.metaModelElement.isExternalReference()},
-        Validators.required,
-      ),
+        Validators.required
+      )
     );
   }
 }

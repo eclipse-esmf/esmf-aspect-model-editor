@@ -74,14 +74,14 @@ export class DomainModelToRdfService {
     private eventVisitorService: EventVisitor,
     private unitVisitorService: UnitVisitor,
     private modelService: ModelService,
-    private cleanupVisitorService: CleanupVisitor,
+    private cleanupVisitorService: CleanupVisitor
   ) {}
 
   listenForStoreUpdates() {
     this.modelService.visitorAnnouncer$
       .pipe(
         filter(() => !this.working),
-        tap(() => (this.working = true)),
+        tap(() => (this.working = true))
       )
       .subscribe(({observer}) => {
         try {

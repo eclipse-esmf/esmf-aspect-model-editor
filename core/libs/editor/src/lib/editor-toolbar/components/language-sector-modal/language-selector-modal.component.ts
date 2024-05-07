@@ -24,10 +24,7 @@ export class LanguageSelectorModalComponent {
   public languages: locale.ILocale[] = [];
   public languageControl: FormControl;
 
-  constructor(
-    private dialogRef: MatDialogRef<LanguageSelectorModalComponent>,
-    private languageService: SammLanguageSettingsService,
-  ) {
+  constructor(private dialogRef: MatDialogRef<LanguageSelectorModalComponent>, private languageService: SammLanguageSettingsService) {
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
     this.languageControl = new FormControl(this.languages[0].tag);
 

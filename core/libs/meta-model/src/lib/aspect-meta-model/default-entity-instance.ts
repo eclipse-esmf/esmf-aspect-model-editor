@@ -48,7 +48,7 @@ export class DefaultEntityInstance extends Base implements EntityInstance {
     public name: string,
     public aspectModelUrn: string,
     public entity: DefaultEntity,
-    properties?: OverWrittenProperty[],
+    properties?: OverWrittenProperty[]
   ) {
     super(metaModelVersion, aspectModelUrn, name);
     this.properties = properties?.map(key => ({key, value: ''})) || [];

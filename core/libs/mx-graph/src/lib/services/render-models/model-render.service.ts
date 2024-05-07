@@ -41,7 +41,7 @@ export class ModelRenderService {
     private enumerationRenderService: EnumerationRenderService,
     private eventRenderService: EventRenderService,
     private unitRenderService: UnitRenderService,
-    private constraintRenderService: ConstraintRenderService,
+    private constraintRenderService: ConstraintRenderService
   ) {}
 
   update(cell: mxgraph.mxCell) {

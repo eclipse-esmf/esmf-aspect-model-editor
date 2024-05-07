@@ -24,10 +24,7 @@ export class FileConflictComponent {
   public namespacesToReplace: string[] = [];
   public conflictFiles: any;
 
-  constructor(
-    @Inject(NAMESPACES_SESSION) private importSession: NamespacesSessionInterface,
-    private router: Router,
-  ) {
+  constructor(@Inject(NAMESPACES_SESSION) private importSession: NamespacesSessionInterface, private router: Router) {
     this.conflictFiles = this.importSession.conflictFiles;
     this.namespacesToReplace = [...this.conflictFiles.replace];
   }

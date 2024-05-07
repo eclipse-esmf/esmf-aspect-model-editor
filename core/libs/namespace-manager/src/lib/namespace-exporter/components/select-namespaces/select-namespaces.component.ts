@@ -55,7 +55,7 @@ export class SelectNamespacesComponent implements OnInit {
     private namespacesManager: NamespacesManagerService,
     private editorService: EditorService,
     private router: Router,
-    @Inject(APP_CONFIG) public config: AppConfig,
+    @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +63,7 @@ export class SelectNamespacesComponent implements OnInit {
       .loadModels()
       .pipe(
         first(),
-        tap(models => (this.namespacesDependencies = this.getNamespacesDependencies(models))),
+        tap(models => (this.namespacesDependencies = this.getNamespacesDependencies(models)))
       )
       .subscribe();
   }
@@ -100,7 +100,7 @@ export class SelectNamespacesComponent implements OnInit {
       }
 
       nDependency.dependencies = Array.from(
-        new Set([...nDependency.dependencies, ...this.getDependentNamespaces(rdfModel.getNamespaces())]),
+        new Set([...nDependency.dependencies, ...this.getDependentNamespaces(rdfModel.getNamespaces())])
       );
       nDependency.files = Array.from(new Set([...nDependency.files, fileName]));
       return acc;

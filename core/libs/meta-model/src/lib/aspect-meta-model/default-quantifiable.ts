@@ -29,13 +29,7 @@ export class DefaultQuantifiable extends DefaultCharacteristic implements Quanti
     return 'DefaultQuantifiable';
   }
 
-  constructor(
-    metaModelVersion: string,
-    aspectModelUrn: string,
-    name: string,
-    dataType?: Type,
-    public unit?: Unit,
-  ) {
+  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, dataType?: Type, public unit?: Unit) {
     super(metaModelVersion, aspectModelUrn, name, dataType);
   }
 

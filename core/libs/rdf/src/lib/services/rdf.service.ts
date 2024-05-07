@@ -47,7 +47,7 @@ export class RdfService {
     private configurationService: ConfigurationService,
     private translation: LanguageTranslationService,
     private browserService: BrowserService,
-    @Inject(APP_CONFIG) public config: AppConfig,
+    @Inject(APP_CONFIG) public config: AppConfig
   ) {
     if (!environment.production) {
       window['angular.rdfService'] = this;
@@ -77,7 +77,7 @@ export class RdfService {
 
         return this.modelApiService.saveModel(content, rdfModel.absoluteAspectModelFileName);
       }),
-      switchMap(() => this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.absoluteAspectModelFileName, rdfContent))),
+      switchMap(() => this.loadExternalReferenceModelIntoStore(new FileContentModel(rdfModel.absoluteAspectModelFileName, rdfContent)))
     );
   }
 
@@ -219,7 +219,7 @@ export class RdfService {
   removeExternalRdfModel(modelName: string): void {
     this.externalRdfModels = this.externalRdfModels.reduce<RdfModel[]>(
       (models, model) => (model.absoluteAspectModelFileName !== modelName ? [...models, model] : models),
-      [],
+      []
     );
   }
 }

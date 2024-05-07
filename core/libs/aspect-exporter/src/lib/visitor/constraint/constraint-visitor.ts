@@ -52,11 +52,7 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
     DefaultLocaleConstraint: (constraint: DefaultLocaleConstraint) => this.updateLocale(constraint),
   };
 
-  constructor(
-    public rdfNodeService: RdfNodeService,
-    public mxGraphService: MxGraphService,
-    rdfService: RdfService,
-  ) {
+  constructor(public rdfNodeService: RdfNodeService, public mxGraphService: MxGraphService, rdfService: RdfService) {
     super(rdfService);
   }
 
@@ -139,7 +135,7 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
         DataFactory.namedNode(parent.aspectModelUrn),
         this.sammC.ConstraintProperty(),
         DataFactory.namedNode(constraint.aspectModelUrn),
-        DataFactory.namedNode(constraint.aspectModelUrn),
+        DataFactory.namedNode(constraint.aspectModelUrn)
       );
     });
   }

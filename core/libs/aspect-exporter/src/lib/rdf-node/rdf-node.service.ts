@@ -24,10 +24,7 @@ import {BasePropertiesInterface, LocaleInterface} from './interfaces';
   providedIn: 'root',
 })
 export class RdfNodeService {
-  constructor(
-    public loggerService: LogService,
-    public modelService: ModelService,
-  ) {}
+  constructor(public loggerService: LogService, public modelService: ModelService) {}
 
   /**
    * Removes the quads corresponding to the given properties of an element.
@@ -49,8 +46,8 @@ export class RdfNodeService {
               DataFactory.namedNode(metaModelElement.aspectModelUrn),
               DataFactory.namedNode(rdfModel.SAMM().getAspectModelUrn(property)),
               null,
-              null,
-            )?.[0],
+              null
+            )?.[0]
         )
         .filter(quad => quad); // filter null/undefined
     }
@@ -73,7 +70,7 @@ export class RdfNodeService {
       const newElement = DataFactory.triple(
         DataFactory.namedNode(metaModelElement.aspectModelUrn),
         rdfModel.SAMM().RdfType(),
-        DataFactory.namedNode(RdfModelUtil.getFullQualifiedModelName(metaModelElement)),
+        DataFactory.namedNode(RdfModelUtil.getFullQualifiedModelName(metaModelElement))
       );
       rdfModel.store.addQuad(newElement);
     }
@@ -87,7 +84,7 @@ export class RdfNodeService {
         DataFactory.namedNode(metaModelElement.aspectModelUrn),
         DataFactory.namedNode(rdfModel.SAMM().getAspectModelUrn(key)),
         null,
-        null,
+        null
       );
 
       if (outdatedQuad?.length) {
@@ -117,7 +114,7 @@ export class RdfNodeService {
           this.addDatatype(
             metaModelElement,
             samm.getAspectModelUrn(key),
-            encodingsList.find((el: any) => el.value === propKey).isDefinedBy,
+            encodingsList.find((el: any) => el.value === propKey).isDefinedBy
           );
           break;
         }
@@ -171,8 +168,8 @@ export class RdfNodeService {
               DataFactory.triple(
                 DataFactory.namedNode(metaModelElement.aspectModelUrn),
                 DataFactory.namedNode(rdfModel.SAMM().getAspectModelUrn(key)),
-                DataFactory.literal(localeValue.value, localeValue.language),
-              ),
+                DataFactory.literal(localeValue.value, localeValue.language)
+              )
             );
           });
           break;
@@ -205,8 +202,8 @@ export class RdfNodeService {
         DataFactory.triple(
           DataFactory.namedNode(metaModelElement.aspectModelUrn),
           DataFactory.namedNode(rdfModel.SAMM().getAspectModelUrn(key)),
-          DataFactory.literal(localeValue.value, localeValue.language),
-        ),
+          DataFactory.literal(localeValue.value, localeValue.language)
+        )
       );
     });
   }
@@ -215,7 +212,7 @@ export class RdfNodeService {
     metaModelElement: BaseMetaModelElement,
     properties: BasePropertiesInterface,
     key: string,
-    aspectModelUrn: string,
+    aspectModelUrn: string
   ) {
     const arrayProperty: string[] = properties[key];
     arrayProperty.forEach(property => {
@@ -227,7 +224,7 @@ export class RdfNodeService {
     metaModelElement: BaseMetaModelElement,
     aspectModelUrn: string,
     value: string | number | boolean,
-    encodeUrn?: boolean,
+    encodeUrn?: boolean
   ) {
     if (!value && value !== 0) {
       return;
@@ -238,8 +235,8 @@ export class RdfNodeService {
       DataFactory.triple(
         DataFactory.namedNode(metaModelElement.aspectModelUrn),
         DataFactory.namedNode(aspectModelUrn),
-        DataFactory.namedNode(encodeUrn ? encodeURIComponent(`${value}`) : `${value}`),
-      ),
+        DataFactory.namedNode(encodeUrn ? encodeURIComponent(`${value}`) : `${value}`)
+      )
     );
   }
 
@@ -247,7 +244,7 @@ export class RdfNodeService {
     metaModelElement: BaseMetaModelElement,
     value: string | number | boolean,
     aspectModelUrn: string,
-    characteristicType?: Type,
+    characteristicType?: Type
   ) {
     if (!value && value !== 0) {
       return;
@@ -258,8 +255,8 @@ export class RdfNodeService {
       DataFactory.triple(
         DataFactory.namedNode(metaModelElement.aspectModelUrn),
         DataFactory.namedNode(aspectModelUrn),
-        DataFactory.literal(`${value}`, RdfModelUtil.resolveAccurateType(metaModelElement, aspectModelUrn, rdfModel, characteristicType)),
-      ),
+        DataFactory.literal(`${value}`, RdfModelUtil.resolveAccurateType(metaModelElement, aspectModelUrn, rdfModel, characteristicType))
+      )
     );
   }
 }

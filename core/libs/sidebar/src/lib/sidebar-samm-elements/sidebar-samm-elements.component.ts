@@ -44,10 +44,7 @@ export class SidebarSAMMElementsComponent {
     return !this.mxGraphService.getAllCells()?.length;
   }
 
-  constructor(
-    private modelService: ModelService,
-    private mxGraphService: MxGraphService,
-  ) {}
+  constructor(private modelService: ModelService, private mxGraphService: MxGraphService) {}
 
   public isAspectAvailable(): Aspect {
     return this.modelService.loadedAspect;

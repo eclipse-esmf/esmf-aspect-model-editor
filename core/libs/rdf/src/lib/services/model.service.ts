@@ -59,7 +59,7 @@ export class ModelService {
     private modelApiService: ModelApiService,
     private notificationsService: NotificationsService,
     private instantiatorService: InstantiatorService,
-    private logService: LogService,
+    private logService: LogService
   ) {
     if (!environment.production) {
       window['angular.modelService'] = this;
@@ -93,7 +93,7 @@ export class ModelService {
       if (sammVersion > this.config.currentSammVersion) {
         return throwError(
           () => `The provided Aspect Model is using SAMM version ${sammVersion} which is too high.
-            The Aspect Model Editor is currently based on SAMM ${this.config.currentSammVersion}.`,
+            The Aspect Model Editor is currently based on SAMM ${this.config.currentSammVersion}.`
         );
       }
 
@@ -114,8 +114,8 @@ export class ModelService {
             console.groupEnd();
             this.logService.logError(`Error while loading the model. ${JSON.stringify(error.message)}.`);
             return error.message;
-          }),
-        ),
+          })
+        )
       );
     } catch (error: any) {
       console.groupCollapsed('model.service -> loadRDFmodel', error);
@@ -137,9 +137,9 @@ export class ModelService {
         this.notificationsService.info({
           title: `Successfully migrated from SAMM Version ${sammVersion} to SAMM version ${this.config.currentSammVersion} SAMM version`,
           timeout: 5000,
-        }),
+        })
       ),
-      switchMap(migratedAspectModel => this.rdfService.loadModel(migratedAspectModel).pipe(first())),
+      switchMap(migratedAspectModel => this.rdfService.loadModel(migratedAspectModel).pipe(first()))
     );
   }
 
@@ -166,7 +166,7 @@ export class ModelService {
   saveModel() {
     const synchronizedModel = this.synchronizeModelToRdf();
     return (synchronizedModel || throwError(() => ({type: SaveValidateErrorsCodes.desynchronized}))).pipe(
-      switchMap(() => this.rdfService.saveModel(this.rdfModel)),
+      switchMap(() => this.rdfService.saveModel(this.rdfModel))
     );
   }
 

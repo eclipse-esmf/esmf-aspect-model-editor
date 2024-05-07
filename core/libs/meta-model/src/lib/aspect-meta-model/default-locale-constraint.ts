@@ -26,12 +26,7 @@ export class DefaultLocaleConstraint extends DefaultConstraint implements Locale
     return 'DefaultLocaleConstraint';
   }
 
-  constructor(
-    metaModelVersion: string,
-    aspectModelUrn: string,
-    name: string,
-    public localeCode: string,
-  ) {
+  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public localeCode: string) {
     super(metaModelVersion, aspectModelUrn, name);
   }
 }

@@ -88,7 +88,7 @@ describe('Test edit property', () => {
       },
       {
         fixture: `/external-reference/same-namespace/with-childrens/${fileNameOne}`,
-      },
+      }
     );
 
     cy.visitDefault();
@@ -98,7 +98,7 @@ describe('Test edit property', () => {
       .then(() => cy.dbClickShape('property1'))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('externalPropertyWithChildren ', {force: true}).wait(1000))
       .then(() =>
-        cy.get('ame-name-input-field mat-error').contains('Please start with a lower case character followed by letters/numerals.'),
+        cy.get('ame-name-input-field mat-error').contains('Please start with a lower case character followed by letters/numerals.')
       );
   });
 
@@ -138,7 +138,7 @@ describe('Test edit property', () => {
       .then(() =>
         cy
           .getCellLabel('property1', META_MODEL_preferredName)
-          .should('eq', `${META_MODEL_preferredName} = New Preffered Name for property @en`),
+          .should('eq', `${META_MODEL_preferredName} = New Preffered Name for property @en`)
       )
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('samm:preferredName "New Preffered Name for property"@en'));
@@ -152,7 +152,7 @@ describe('Test edit property', () => {
       .then(() =>
         cy
           .getCellLabel('property1', META_MODEL_description)
-          .should('eq', `${META_MODEL_description} = New description for the property @en`),
+          .should('eq', `${META_MODEL_description} = New description for the property @en`)
       )
       .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:description "New description for the property"@en')));
   });
@@ -165,16 +165,16 @@ describe('Test edit property', () => {
       .then(() =>
         cy
           .getCellLabel('property1', META_MODEL_see)
-          .should('eq', `${META_MODEL_see} = http://www.seeA.de,http://www.seeB.de,http://www.seeC.de`),
+          .should('eq', `${META_MODEL_see} = http://www.seeA.de,http://www.seeB.de,http://www.seeC.de`)
       )
       .then(() =>
-        cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:see <http://www.seeA.de>, <http://www.seeB.de>, <http://www.seeC.de>')),
+        cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:see <http://www.seeA.de>, <http://www.seeB.de>, <http://www.seeC.de>'))
       )
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.getSeeReferences()).to.have.length(3);
           expect(aspect.properties[0].property.getSeeReferences()[2]).to.equal('http://www.seeC.de');
-        }),
+        })
       );
     cy.dbClickShape('property1')
       .then(() => cy.removeSeeElements('http://www.seeB.de'))
@@ -186,7 +186,7 @@ describe('Test edit property', () => {
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.getSeeReferences()).to.have.length(2);
           expect(aspect.properties[0].property.getSeeReferences()[1]).to.equal('http://www.seeC.de');
-        }),
+        })
       );
   });
 
@@ -199,7 +199,7 @@ describe('Test edit property', () => {
       .then(() =>
         cy
           .getCellLabel('property1', META_MODEL_see)
-          .should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001`),
+          .should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001`)
       )
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>, <urn:irdi:iec:0112/2///62683#ACC011#001>'))
@@ -386,7 +386,7 @@ describe('Test edit property', () => {
           ':NewAspect a samm:Aspect;\n' +
             '    samm:properties (:newProperty :property1);\n' +
             '    samm:operations ();\n' +
-            '    samm:events ().\n',
+            '    samm:events ().\n'
         );
         expect(rdf).to.contain(':newProperty a samm:Property;\n' + '    samm:characteristic :Characteristic1.');
       });
@@ -411,7 +411,7 @@ describe('Test edit property', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
-          ':AspectDefault a samm:Aspect;\n' + '    samm:properties (:property1);\n' + '    samm:operations ();\n' + '    samm:events ().\n',
+          ':AspectDefault a samm:Aspect;\n' + '    samm:properties (:property1);\n' + '    samm:operations ();\n' + '    samm:events ().\n'
         );
         expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic :Characteristic1.');
         expect(rdf).to.contain(':Characteristic1 a samm:Characteristic;\n' + '    samm:dataType :Entity1.');
@@ -446,7 +446,7 @@ describe('Test edit property', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
-          ':AspectDefault a samm:Aspect;\n' + '    samm:properties (:property1);\n' + '    samm:operations ();\n' + '    samm:events ().\n',
+          ':AspectDefault a samm:Aspect;\n' + '    samm:properties (:property1);\n' + '    samm:operations ();\n' + '    samm:events ().\n'
         );
         expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic :Characteristic1.');
         expect(rdf).to.contain(':Characteristic1 a samm:Characteristic;\n' + '    samm:dataType :NewEntity.');
@@ -493,7 +493,7 @@ describe('Test edit property', () => {
           ':NewAspect a samm:Aspect;\n' +
             '    samm:properties (:property1 :property3);\n' +
             '    samm:operations ();\n' +
-            '    samm:events ().\n',
+            '    samm:events ().\n'
         );
         expect(rdf).to.contain(':property3 a samm:Property.\n');
         expect(rdf).to.contain(':NewEntity a samm:Entity;\n' + '    samm:properties (:newProperty :property2).');
@@ -583,7 +583,7 @@ describe('Test edit property', () => {
               '  samm:payloadName "payloadName"\n' +
               ']);\n' +
               '    samm:operations ();\n' +
-              '    samm:events ().',
+              '    samm:events ().'
           );
         });
     });

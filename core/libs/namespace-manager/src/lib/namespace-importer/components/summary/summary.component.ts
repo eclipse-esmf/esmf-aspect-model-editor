@@ -29,10 +29,7 @@ export class ImportSummaryComponent {
 
   public missingElements: MissingElement[] = this.importSession.missingElements;
 
-  constructor(
-    private dialogRef: MatDialogRef<WorkspaceSummaryComponent>,
-    private fileHandlingService: FileHandlingService,
-  ) {}
+  constructor(private dialogRef: MatDialogRef<WorkspaceSummaryComponent>, private fileHandlingService: FileHandlingService) {}
 
   importFiles() {
     this.dialogRef.close();
@@ -42,7 +39,7 @@ export class ImportSummaryComponent {
       .importFilesToWorkspace(this.importSession.files, this.importSession.conflictFiles)
       .pipe(
         tap(() => this.importSession.state.importing$.next(false)),
-        take(1),
+        take(1)
       )
       .subscribe(() => {
         this.electronSignalsService.call('requestRefreshWorkspaces');

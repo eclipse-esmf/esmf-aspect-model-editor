@@ -40,7 +40,7 @@ export abstract class ModelElementEditorComponent<T extends BaseMetaModelElement
     return this.metaModelDialogService.getMetaModelElement().pipe(
       tap(metaModelElement => {
         this.metaModelElement = <T>metaModelElement;
-      }),
+      })
     );
   }
 

@@ -50,7 +50,7 @@ export class FiltersService {
     private injector: Injector,
     private loadingScreen: LoadingScreenService,
     private translate: LanguageTranslationService,
-    @Inject(FILTER_ATTRIBUTES) private filterAttributesService: FilterAttributesService,
+    @Inject(FILTER_ATTRIBUTES) private filterAttributesService: FilterAttributesService
   ) {
     window['_filter'] = this;
     this.selectDefaultFilter();
@@ -111,7 +111,7 @@ export class FiltersService {
             this.injector.get(MxGraphShapeOverlayService),
             namespaceCacheService,
             this.injector.get(SammLanguageSettingsService),
-            this.injector.get(ModelService).getLoadedAspectModel().rdfModel,
+            this.injector.get(ModelService).getLoadedAspectModel().rdfModel
           );
 
           const currentFile = namespaceCacheService.currentCachedFile;
@@ -134,7 +134,7 @@ export class FiltersService {
           if (selectedCell) mxGraphService.navigateToCellByUrn(selectedModelElement.aspectModelUrn);
 
           return editorService.validate();
-        }),
+        })
       )
       .subscribe(() => {
         localStorage.removeItem('validating');

@@ -25,7 +25,7 @@ export abstract class InheritanceConnector {
     protected mxGraphAttributeService: MxGraphAttributeService,
     protected sammLangService: SammLanguageSettingsService,
     protected notificationsService: NotificationsService,
-    protected translate: LanguageTranslationService,
+    protected translate: LanguageTranslationService
   ) {}
 
   public connect(parentMetaModel: BaseMetaModelElement, childMetaModel: BaseMetaModelElement, parentCell: mxCell, childCell: mxCell) {

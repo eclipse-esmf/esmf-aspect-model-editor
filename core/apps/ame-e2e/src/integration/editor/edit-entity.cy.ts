@@ -137,7 +137,7 @@ describe('Test editing Entity', () => {
         cy.get(FIELD_name).clear().type('entity23$%$');
         cy.get('ame-name-input-field mat-error').should(
           'contain',
-          'Please start with an upper case character followed by letters/numerals.',
+          'Please start with an upper case character followed by letters/numerals.'
         );
       })
       .then(() => cy.get(FIELD_name).clear())
@@ -170,7 +170,7 @@ describe('Test editing Entity', () => {
       .then(() =>
         cy
           .getCellLabel('NewEntity', META_MODEL_preferredName)
-          .should('eq', `${META_MODEL_preferredName} = New Preffered Name for entity @en`),
+          .should('eq', `${META_MODEL_preferredName} = New Preffered Name for entity @en`)
       )
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('samm:preferredName "New Preffered Name for entity"@en'));
@@ -182,15 +182,15 @@ describe('Test editing Entity', () => {
       .then(() => cy.get(FIELD_descriptionen).clear({force: true}).type('New description for the entity', {force: true}))
       .then(() => cyHelp.clickSaveButton())
       .then(() =>
-        cy.getCellLabel('NewEntity', META_MODEL_description).should('eq', `${META_MODEL_description} = New description for the entity @en`),
+        cy.getCellLabel('NewEntity', META_MODEL_description).should('eq', `${META_MODEL_description} = New description for the entity @en`)
       )
       .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:description "New description for the entity"@en')))
       .then(() =>
         cy
           .getAspect()
           .then(aspect =>
-            expect(aspect.properties[0].property.characteristic.dataType.getDescription('en')).to.equal('New description for the entity'),
-          ),
+            expect(aspect.properties[0].property.characteristic.dataType.getDescription('en')).to.equal('New description for the entity')
+          )
       );
   });
 
@@ -204,7 +204,7 @@ describe('Test editing Entity', () => {
         expect(rdf).to.contain('samm:properties (:newProperty2 :property3)');
         cy.clickShape('NewEntity').then(shape => assert.isNotNull(shape));
         cy.getAspect().then(aspect =>
-          expect(aspect.properties[0].property.characteristic.dataType.properties[0].property.name).to.equal('newProperty2'),
+          expect(aspect.properties[0].property.characteristic.dataType.properties[0].property.name).to.equal('newProperty2')
         );
       });
   });
@@ -301,7 +301,7 @@ describe('Test editing Entity', () => {
               ':NewAspect a samm:Aspect;\n' +
               '    samm:properties (:property1 :property4);\n' +
               '    samm:operations ();\n' +
-              '    samm:events ().',
+              '    samm:events ().'
           );
         });
       });
@@ -344,7 +344,7 @@ describe('Test editing Entity', () => {
               ':NewAspect a samm:Aspect;\n' +
               '    samm:properties (:property1 :property4);\n' +
               '    samm:operations ();\n' +
-              '    samm:events ().',
+              '    samm:events ().'
           );
         });
       });

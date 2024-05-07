@@ -22,10 +22,7 @@ import {ElectronTunnelService} from '@ame/shared';
   providedIn: 'root',
 })
 export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrategy {
-  constructor(
-    private translate: LanguageTranslationService,
-    private electronTunnelService: ElectronTunnelService,
-  ) {}
+  constructor(private translate: LanguageTranslationService, private electronTunnelService: ElectronTunnelService) {}
 
   updateSettings(form: FormGroup, settings: Settings): void {
     const languageConfiguration = form.get('languageConfiguration');
@@ -37,7 +34,7 @@ export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrate
     localStorage.setItem('applicationLanguage', userInterfaceLang);
 
     settings.aspectModelLanguages = (languageConfiguration.get('aspectModel') as FormArray).controls.map(
-      control => control.get('language')?.value.tag,
+      control => control.get('language')?.value.tag
     );
   }
 }

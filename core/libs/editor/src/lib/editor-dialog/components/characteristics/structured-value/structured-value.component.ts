@@ -58,10 +58,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
     return hasErrors;
   }
 
-  constructor(
-    private predefinedRulesService: PredefinedRulesService,
-    private matDialog: MatDialog,
-  ) {
+  constructor(private predefinedRulesService: PredefinedRulesService, private matDialog: MatDialog) {
     super();
   }
 
@@ -90,14 +87,14 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
       'deconstructionRule',
       new FormControl(
         {value: this.deconstructionRule || '', disabled: !this.customRuleActive || this.metaModelElement?.isExternalReference()},
-        {validators: [Validators.required, EditorDialogValidators.regexValidator]},
-      ),
+        {validators: [Validators.required, EditorDialogValidators.regexValidator]}
+      )
     );
     this.parentForm.get('deconstructionRule').markAsTouched();
 
     this.parentForm.setControl(
       'elements',
-      new FormControl({value: [...this.elements], disabled: this.metaModelElement?.isExternalReference()}),
+      new FormControl({value: [...this.elements], disabled: this.metaModelElement?.isExternalReference()})
     );
 
     this.rebuildElements();
@@ -155,7 +152,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
           this.selectedRule = predefinedRules[value] ? value : customRule;
           this.elements = this.parentForm.get('elements')?.value || this.elements;
           this.rebuildElements();
-        }),
+        })
     );
   }
 

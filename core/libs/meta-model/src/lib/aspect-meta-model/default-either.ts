@@ -27,13 +27,7 @@ export class DefaultEither extends DefaultCharacteristic implements Either {
     return 'DefaultEither';
   }
 
-  constructor(
-    metaModelVersion: string,
-    aspectModelUrn: string,
-    name: string,
-    public left: Characteristic,
-    public right: Characteristic,
-  ) {
+  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public left: Characteristic, public right: Characteristic) {
     super(metaModelVersion, aspectModelUrn, name);
   }
 

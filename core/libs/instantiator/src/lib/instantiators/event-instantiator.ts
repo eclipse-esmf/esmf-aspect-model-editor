@@ -50,7 +50,7 @@ export class EventInstantiator {
       if (samm.isParametersProperty(quad.predicate.value)) {
         event.parameters = this.metaModelElementInstantiator.getProperties(
           DataFactory.namedNode(quad.subject.value),
-          samm.ParametersProperty(),
+          samm.ParametersProperty()
         );
       }
     });

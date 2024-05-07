@@ -24,11 +24,7 @@ export class EventVisitor extends BaseVisitor<DefaultEvent> {
     return this.rdfNodeService.modelService.currentRdfModel.store;
   }
 
-  constructor(
-    private rdfNodeService: RdfNodeService,
-    rdfService: RdfService,
-    public rdfListService: RdfListService,
-  ) {
+  constructor(private rdfNodeService: RdfNodeService, rdfService: RdfService, public rdfListService: RdfListService) {
     super(rdfService);
   }
 

@@ -43,7 +43,7 @@ describe('Test generation and download of open api specification', () => {
       .then(() => cy.get(GENERATION_tbOutputButton_JSON).click())
       .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().clear().blur())
       .then(() =>
-        cy.get(GENERATION_tbBaseUrlInputError).should('exist').should('be.visible').should('contain.text', 'Please add a valid url'),
+        cy.get(GENERATION_tbBaseUrlInputError).should('exist').should('be.visible').should('contain.text', 'Please add a valid url')
       )
       .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().type('https://example.com').blur())
       .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click().wait(5000))
@@ -63,7 +63,7 @@ describe('Test generation and download of open api specification', () => {
           .get(GENERATION_resourcePathTitle)
           .should('exist')
           .should('be.visible')
-          .should('contain.text', 'Resource Path - The resource path for the Aspect API endpoints'),
+          .should('contain.text', 'Resource Path - The resource path for the Aspect API endpoints')
       )
       .then(() => cy.get(GENERATION_resourcePathInput).should('exist').should('be.visible').focus().clear().blur())
       .then(() =>
@@ -71,7 +71,7 @@ describe('Test generation and download of open api specification', () => {
           .get(GENERATION_resourcePathRequiredError)
           .should('exist')
           .should('be.visible')
-          .should('contain.text', 'Resource path is required'),
+          .should('contain.text', 'Resource path is required')
       )
       .then(() => checkResourcePath())
       .then(() => cy.get(GENERATION_uploadTitle).should('exist').should('be.visible').should('contain.text', 'Upload JSON File'))
@@ -81,7 +81,7 @@ describe('Test generation and download of open api specification', () => {
           .get(GENERATION_uploadFileRequireError)
           .should('exist')
           .should('be.visible')
-          .should('contain.text', 'JSON file is required - a variable has been defined in the resource path.'),
+          .should('contain.text', 'JSON file is required - a variable has been defined in the resource path.')
       )
       .then(() => cy.get(GENERATION_uploadContentFileInput).attachFile('valid-json.json'))
       .then(() => cy.get(GENERATION_uploadContent).should('not.exist'))
@@ -98,7 +98,7 @@ describe('Test generation and download of open api specification', () => {
       .then(() => cy.get(GENERATION_tbOutputButton_YAML).click())
       .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().clear().blur())
       .then(() =>
-        cy.get(GENERATION_tbBaseUrlInputError).should('exist').should('be.visible').should('contain.text', 'Please add a valid url'),
+        cy.get(GENERATION_tbBaseUrlInputError).should('exist').should('be.visible').should('contain.text', 'Please add a valid url')
       )
       .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().type('https://example.com').blur())
       .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force: true}).wait(5000))
@@ -116,7 +116,7 @@ describe('Test generation and download of open api specification', () => {
           .get(GENERATION_resourcePathTitle)
           .should('exist')
           .should('be.visible')
-          .should('contain.text', 'Resource Path - The resource path for the Aspect API endpoints'),
+          .should('contain.text', 'Resource Path - The resource path for the Aspect API endpoints')
       )
       .then(() => cy.get(GENERATION_resourcePathInput).should('exist').should('be.visible').focus().clear().blur())
       .then(() =>
@@ -124,7 +124,7 @@ describe('Test generation and download of open api specification', () => {
           .get(GENERATION_resourcePathRequiredError)
           .should('exist')
           .should('be.visible')
-          .should('contain.text', 'Resource path is required'),
+          .should('contain.text', 'Resource path is required')
       )
       .then(() => checkResourcePath())
       .then(() => cy.get(GENERATION_uploadTitle).should('exist').should('be.visible').should('contain.text', 'Upload YAML File'))
@@ -134,7 +134,7 @@ describe('Test generation and download of open api specification', () => {
           .get(GENERATION_uploadFileRequireError)
           .should('exist')
           .should('be.visible')
-          .should('contain.text', 'YAML file is required - a variable has been defined in the resource path.'),
+          .should('contain.text', 'YAML file is required - a variable has been defined in the resource path.')
       )
       .then(() => cy.get(GENERATION_uploadContentFileInput).attachFile('valid-yml.yml'))
       .then(() => cy.get(GENERATION_uploadContent).should('not.exist'))

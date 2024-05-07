@@ -45,7 +45,7 @@ export class AbstractEntityModelService extends BaseModelService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private abstractEntityRenderer: AbstractEntityRenderService,
     private baseEntityModel: BaseEntityModelService,
-    private languageService: SammLanguageSettingsService,
+    private languageService: SammLanguageSettingsService
   ) {
     super();
   }

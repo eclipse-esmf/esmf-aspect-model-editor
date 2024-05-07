@@ -57,7 +57,7 @@ describe('Time Series Entity', () => {
       .then(() =>
         cy
           .getCellLabel('MimeType', 'description')
-          .should('eq', 'description = A MIME type as defined in RFC 2046, for example "application/pdf. @en'),
+          .should('eq', 'description = A MIME type as defined in RFC 2046, for example "application/pdf. @en')
       );
   });
 

@@ -26,7 +26,7 @@ export class BaseEntityModelService {
     private mxGraphService: MxGraphService,
     private notificationService: NotificationsService,
     private shapeConnectorService: ShapeConnectorService,
-    private translate: LanguageTranslationService,
+    private translate: LanguageTranslationService
   ) {}
 
   checkExtendedElement(metaModelElement: CanExtend, extendedElement: CanExtend) {
@@ -50,7 +50,7 @@ export class BaseEntityModelService {
         metaModelElement,
         extendedElement,
         this.mxGraphService.resolveCellByModelElement(metaModelElement),
-        resolvedCell,
+        resolvedCell
       );
     }
 

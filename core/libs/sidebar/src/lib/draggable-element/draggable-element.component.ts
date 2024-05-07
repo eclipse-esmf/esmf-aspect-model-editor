@@ -24,11 +24,7 @@ export class DraggableElementComponent implements AfterViewInit {
   @Input() type: ElementType;
   @Input() urn?: string = '';
 
-  constructor(
-    public editorService: EditorService,
-    private elementRef: ElementRef<HTMLDivElement>,
-    private renderer: Renderer2,
-  ) {}
+  constructor(public editorService: EditorService, private elementRef: ElementRef<HTMLDivElement>, private renderer: Renderer2) {}
 
   ngAfterViewInit(): void {
     this.elementRef.nativeElement.dataset.type = this.type;

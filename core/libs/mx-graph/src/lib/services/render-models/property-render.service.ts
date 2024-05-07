@@ -32,7 +32,7 @@ export class PropertyRenderService extends BaseRenderService {
     sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
     private namespacesCacheService: NamespacesCacheService,
-    private shapeConnectorService: ShapeConnectorService,
+    private shapeConnectorService: ShapeConnectorService
   ) {
     super(mxGraphService, sammLangService, rdfService);
   }
@@ -60,7 +60,7 @@ export class PropertyRenderService extends BaseRenderService {
     const entityCell = resolvedCell
       ? resolvedCell
       : this.mxGraphService.renderModelElement(
-          node.children.find(childNode => childNode.element.aspectModelUrn === extendsElement.aspectModelUrn),
+          node.children.find(childNode => childNode.element.aspectModelUrn === extendsElement.aspectModelUrn)
         );
     this.shapeConnectorService.connectShapes(metaModelElement, extendsElement, cell, entityCell);
   }

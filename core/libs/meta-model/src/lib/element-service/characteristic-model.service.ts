@@ -48,7 +48,7 @@ export class CharacteristicModelService extends BaseModelService {
     private mxGraphService: MxGraphService,
     private characteristicRenderer: CharacteristicRenderService,
     private enumerationRenderer: EnumerationRenderService,
-    private filtersService: FiltersService,
+    private filtersService: FiltersService
   ) {
     super();
   }
@@ -228,7 +228,7 @@ export class CharacteristicModelService extends BaseModelService {
   private handleQuantifiableUnit(
     metaModelElement: DefaultQuantifiable,
     form: {[key: string]: any},
-    originalModelElement?: DefaultQuantifiable,
+    originalModelElement?: DefaultQuantifiable
   ) {
     if (metaModelElement.unit) {
       if (

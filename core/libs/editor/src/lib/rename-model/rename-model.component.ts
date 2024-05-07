@@ -29,7 +29,7 @@ export class RenameModelComponent {
     @Inject(MAT_DIALOG_DATA) public data: {namespaces: string; rdfModel: RdfModel},
     private dialogRef: MatDialogRef<RenameModelComponent>,
     private rdfService: RdfService,
-    private modelApiService: ModelApiService,
+    private modelApiService: ModelApiService
   ) {
     const rdfModel = this.rdfService.currentRdfModel;
     this.modelApiService.getNamespacesAppendWithFiles().subscribe(namespaces => {
@@ -51,7 +51,7 @@ export class RenameModelComponent {
     return this.dialogRef.close(
       result && {
         name: this.fileNameControl.value.endsWith('.ttl') ? this.fileNameControl.value : `${this.fileNameControl.value}.ttl`,
-      },
+      }
     );
   }
 }

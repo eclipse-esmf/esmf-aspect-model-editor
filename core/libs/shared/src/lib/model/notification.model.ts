@@ -17,12 +17,7 @@ export class NotificationModel {
   public expanded = false;
   public date: Date = new Date();
 
-  constructor(
-    public title?: string,
-    public description?: string,
-    public link?: string,
-    public type?: NotificationType,
-  ) {}
+  constructor(public title?: string, public description?: string, public link?: string, public type?: NotificationType) {}
 
   get formattedTime(): string {
     return this.date.toLocaleTimeString();

@@ -25,7 +25,7 @@ export class AspectModelService extends BaseModelService {
     private aspectRenderer: AspectRenderService,
     private titleService: TitleService,
     private mxGraphService: MxGraphService,
-    private sidebarStateService: SidebarStateService,
+    private sidebarStateService: SidebarStateService
   ) {
     super();
   }

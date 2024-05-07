@@ -27,10 +27,7 @@ export class NamespaceModel {
     return Object.values(this.fileStatus).reduce((acc: boolean, {outdated}) => acc || outdated, false);
   }
 
-  constructor(
-    public name: string,
-    public files: string[],
-  ) {}
+  constructor(public name: string, public files: string[]) {}
 
   setFileStatus(file: string, version: string, outdated: boolean) {
     this.fileStatus[file] = this.fileStatus[file] ? {...this.fileStatus[file], version, outdated} : {version, outdated};

@@ -44,7 +44,7 @@ export class LanguageTranslationService {
     const onLangChangeSubscription$ = this.translate.onLangChange
       .pipe(
         switchMap((event: LangChangeEvent) => this.getTranslation(event.lang)),
-        finalize(() => onLangChangeSubscription$.unsubscribe()),
+        finalize(() => onLangChangeSubscription$.unsubscribe())
       )
       .subscribe();
   }
@@ -52,7 +52,7 @@ export class LanguageTranslationService {
   getTranslation(language: string): Observable<Translation> {
     const getTranslateSubscription$ = this.translate.getTranslation(language).pipe(
       tap((translation: Translation) => (this.language = translation)),
-      finalize(() => getTranslateSubscription$.unsubscribe()),
+      finalize(() => getTranslateSubscription$.unsubscribe())
     );
 
     return getTranslateSubscription$;

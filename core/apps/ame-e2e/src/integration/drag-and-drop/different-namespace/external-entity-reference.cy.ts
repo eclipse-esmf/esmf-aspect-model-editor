@@ -38,7 +38,7 @@ describe('Test drag and drop', () => {
       },
       {
         fixture: `/external-reference/different-namespace/without-childrens/${fileName}`,
-      },
+      }
     );
 
     cy.visitDefault().then(() =>
@@ -64,7 +64,7 @@ describe('Test drag and drop', () => {
           expect(rdf).to.contain('samm:dataType ext-different:ExternalEntity');
 
           expect(rdf).not.contain(':ExternalEntity a samm:Entity');
-        }),
+        })
     );
   });
 });

@@ -43,7 +43,7 @@ export class DefaultUnit extends Base implements Unit {
     public referenceUnit?: Unit,
     public conversionFactor?: string,
     public numericConversionFactor?: string,
-    public quantityKinds: Array<QuantityKind> = [],
+    public quantityKinds: Array<QuantityKind> = []
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

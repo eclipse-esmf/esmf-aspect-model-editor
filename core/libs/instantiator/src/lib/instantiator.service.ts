@@ -40,7 +40,7 @@ export class InstantiatorService {
     private namespaceCacheService: NamespacesCacheService,
     public rdfService: RdfService,
     public notificationsService: NotificationsService,
-    public translate: LanguageTranslationService,
+    public translate: LanguageTranslationService
   ) {}
 
   public instantiateFile(rdfModel: RdfModel, cachedFile: CachedFile, fileName: string): CachedFile {
@@ -58,7 +58,7 @@ export class InstantiatorService {
       this.namespaceCacheService,
       new Map<string, Array<BaseMetaModelElement>>(),
       this.notificationsService,
-      this.translate,
+      this.translate
     );
 
     if (aspect) {
@@ -70,7 +70,7 @@ export class InstantiatorService {
       .getSubjects(null, null, null)
       .reduce(
         (subjects, subject) => (!Util.isBlankNode(subject) && !cachedFile.getElement(subject.value) ? [...subjects, subject] : subjects),
-        [],
+        []
       );
 
     metaModelElementInstantiator.isIsolated = true;
@@ -91,7 +91,7 @@ export class InstantiatorService {
     subject: Quad_Subject,
     rdfModel: RdfModel,
     cachedFile: CachedFile,
-    metaModelElementInstantiator: MetaModelElementInstantiator,
+    metaModelElementInstantiator: MetaModelElementInstantiator
   ) {
     const samm = rdfModel.SAMM();
     const sammC = rdfModel.SAMMC();
@@ -176,7 +176,7 @@ export class InstantiatorService {
 
     if (samm.isAbstractEntity(elementType)) {
       const entity = new AbstractEntityInstantiator(metaModelElementInstantiator).createAbstractEntity(
-        rdfModel.store.getQuads(subject, null, null, null),
+        rdfModel.store.getQuads(subject, null, null, null)
       );
       if (entity) {
         cachedFile.resolveElement(entity);
@@ -187,7 +187,7 @@ export class InstantiatorService {
     if (RdfModelUtil.isEntityValue(elementType, metaModelElementInstantiator)) {
       const entityValue = new EntityValueInstantiator(metaModelElementInstantiator).createEntityValue(
         rdfModel.store.getQuads(subject, null, null, null),
-        subject,
+        subject
       );
       if (entityValue) {
         cachedFile.resolveElement(entityValue);

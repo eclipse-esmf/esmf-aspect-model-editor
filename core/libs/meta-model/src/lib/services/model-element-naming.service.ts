@@ -20,10 +20,7 @@ import {RdfService} from '@ame/rdf/services';
   providedIn: 'root',
 })
 export class ModelElementNamingService {
-  constructor(
-    private namespacesCacheService: NamespacesCacheService,
-    private rdfService: RdfService,
-  ) {}
+  constructor(private namespacesCacheService: NamespacesCacheService, private rdfService: RdfService) {}
   /**
    * Creates a new instance of the element and assigns it a default name
    *
