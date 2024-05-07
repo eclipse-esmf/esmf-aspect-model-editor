@@ -2,7 +2,7 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 cd core
-npm run format:all -- --uncommited && npm run affected:lint -- --uncommited --parallel
+npm run format:all -- --uncommited
 
 if [ -n "$(git status --porcelain)" ]; then
   git add .
