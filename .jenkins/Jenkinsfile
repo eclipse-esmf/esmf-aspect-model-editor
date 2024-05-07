@@ -51,8 +51,7 @@ pipeline {
       steps {
         script {
           sh "mkdir -p signed_dir"
-          sh "find unpack_dir -name '*.dll' -exec mv {} signed_dir \\;"
-          sh "curl -o signed_dir/ame-frontend-${env.version}-win.exe -F file=@unpack_dir/ame-frontend-${env.version}-win.exe https://cbi.eclipse.org/authenticode/sign"
+          sh "curl -o signed_dir/aspect-model-editor-v${env.version}-win.exe -F file=@unpack_dir/aspect-model-editor-v${env.version}-win.exe https://cbi.eclipse.org/authenticode/sign"
           sh "zip -r aspect-model-editor-v${env.version}-win-signed.zip signed_dir"
         }
       }
