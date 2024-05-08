@@ -61,7 +61,8 @@ function startService() {
       stopPort: 31000,
     })
     .then(port => {
-      const rootPath = path.join(__dirname, '..', '..', '..', 'backend', 'signed_dir');
+      const rootPath = path.join(__dirname, '..', '..', '..', 'backend', platformData.isWin ? 'signed_dir' : '');
+
       if (processes.length === 0) {
         global.backendPort = port;
         const process = spawn(path.join(rootPath, `ame-backend-${projectVersion}-${platformData.extension}`), [`-Dserver.port=${port}`]);
