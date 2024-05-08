@@ -52,7 +52,6 @@ pipeline {
         script {
           sh "mkdir -p signed_dir"
           sh "curl -o signed_dir/aspect-model-editor-v${env.version}-win.exe -F file=@unpack_dir/aspect-model-editor-v${env.version}-win.exe https://cbi.eclipse.org/authenticode/sign"
-          sh "zip -r aspect-model-editor-v${env.version}-win-signed.zip signed_dir"
         }
       }
     }
@@ -62,7 +61,7 @@ pipeline {
         script {
           def repo = "eclipse-esmf/esmf-aspect-model-editor"
           def tagName = "v${env.version}"
-          def fileName = "aspect-model-editor-v${env.version}-win-signed.zip"
+          def fileName = "signed_dir/aspect-model-editor-v${env.version}-win.exe"
           def releaseId = ""
 
           def tagExists = sh(script: """
