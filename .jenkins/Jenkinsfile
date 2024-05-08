@@ -98,7 +98,7 @@ pipeline {
                          -H "Authorization: Bearer \$GITHUB_BOT_TOKEN" \
                          -H "Content-Type: application/octet-stream" \
                          --data-binary @${fileName} \
-                         "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=${fileName}"
+                         "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=aspect-model-editor-v${env.version}-win.exe"
                     """
 
           sh """
