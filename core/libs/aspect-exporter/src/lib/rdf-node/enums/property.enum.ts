@@ -34,5 +34,5 @@ export enum PropertyEnum {
   Symbol = 'symbol',
   CommonCode = 'commonCode',
   ConversionFactor = 'conversionFactor',
-  NumericConversionFactor = 'numericConversionFactor',
+  NumericConversionFactor = 'numericConversionFactor'
 }

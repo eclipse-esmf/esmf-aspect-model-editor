@@ -26,7 +26,7 @@ interface Element {
 @Component({
   selector: 'ame-connect-with-dialog',
   templateUrl: './connect-with-dialog.component.html',
-  styleUrls: ['./connect-with-dialog.component.scss'],
+  styleUrls: ['./connect-with-dialog.component.scss']
 })
 export class ConnectWithDialogComponent {
   public elements: Element[];
@@ -38,7 +38,7 @@ export class ConnectWithDialogComponent {
   constructor(
     private mxGraphService: MxGraphService,
     private dialogRef: MatDialogRef<ConnectWithDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public connectWithCell,
+    @Inject(MAT_DIALOG_DATA) public connectWithCell
   ) {
     this.connectWithModel = MxGraphHelper.getModelElement(connectWithCell);
     this.elements = this.mxGraphService.getAllCells().map(e => {

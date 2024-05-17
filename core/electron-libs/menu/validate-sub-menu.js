@@ -21,8 +21,8 @@ function validateSubmenu(translation) {
       id: 'VALIDATE_MODEL',
       label: translation.CURRENT_MODEL,
       icon: getIcon(icons.VALIDATE_MODEL.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_VALIDATE_MODEL),
-    },
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_VALIDATE_MODEL)
+    }
   ];
 }
 

@@ -34,7 +34,7 @@ interface ErrorFileItem {
 @Component({
   selector: 'ame-migration-status',
   templateUrl: './migration-status.component.html',
-  styleUrls: ['./migration-status.component.scss'],
+  styleUrls: ['./migration-status.component.scss']
 })
 export class MigrationStatusComponent implements OnInit {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
@@ -48,7 +48,7 @@ export class MigrationStatusComponent implements OnInit {
     return {
       version: this.config.currentSammVersion,
       fileCount: this.hasMoreThanOneErrorFile ? 'several files' : 'one file',
-      fileCountMessage: this.hasMoreThanOneErrorFile ? 'these files' : 'this file',
+      fileCountMessage: this.hasMoreThanOneErrorFile ? 'these files' : 'this file'
     };
   }
 
@@ -57,7 +57,7 @@ export class MigrationStatusComponent implements OnInit {
     private editorService: EditorService,
     private router: Router,
     private ngZone: NgZone,
-    @Inject(APP_CONFIG) public config: AppConfig,
+    @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
   ngOnInit(): void {
@@ -92,11 +92,11 @@ export class MigrationStatusComponent implements OnInit {
           this.hasErrors = true;
           if (!this.filteredErrorFiles[status.namespace]) {
             this.filteredErrorFiles[status.namespace] = [
-              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels),
+              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels)
             ];
           } else {
             this.filteredErrorFiles[status.namespace].push(
-              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels),
+              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels)
             );
           }
           continue;
@@ -114,11 +114,11 @@ export class MigrationStatusComponent implements OnInit {
         if (hasErroredRdfModel) {
           if (!this.filteredErrorFiles[status.namespace]) {
             this.filteredErrorFiles[status.namespace] = [
-              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels),
+              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels)
             ];
           } else {
             this.filteredErrorFiles[status.namespace].push(
-              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels),
+              this.createErrorFileItem(fileStatus.name, fileStatus.message, status.namespace, rdfModels)
             );
           }
           this.hasErrors = true;
@@ -133,7 +133,7 @@ export class MigrationStatusComponent implements OnInit {
       name: name,
       message: this.formatErrorMessage(message),
       namespace: namespace,
-      ameSammCompatibleVersions: this.getAmeAndSammCompatibleVersions(rdfModels, namespace),
+      ameSammCompatibleVersions: this.getAmeAndSammCompatibleVersions(rdfModels, namespace)
     };
   }
 

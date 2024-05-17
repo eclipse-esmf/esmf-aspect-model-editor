@@ -18,7 +18,7 @@ import {ChangeDetectorRef, Component, OnDestroy, OnInit, inject} from '@angular/
 @Component({
   selector: 'ame-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss'],
+  styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   public sidebarService = inject(SidebarStateService);
@@ -32,7 +32,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         requestAnimationFrame(() => {
           this.changeDetector.detectChanges();
         });
-      }),
+      })
     );
   }
 

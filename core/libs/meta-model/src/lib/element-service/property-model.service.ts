@@ -27,7 +27,7 @@ export class PropertyModelService extends BaseModelService {
     private mxGraphService: MxGraphService,
     private sammLangService: SammLanguageSettingsService,
     private propertyRenderer: PropertyRenderService,
-    private mxGraphAttributeService: MxGraphAttributeService,
+    private mxGraphAttributeService: MxGraphAttributeService
   ) {
     super();
   }

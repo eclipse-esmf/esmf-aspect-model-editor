@@ -31,5 +31,5 @@ export const darkColors: ThemeColors = {
   error: '#E83F22',
   primary: '#8DA5BF',
   accent: '#995FAB',
-  background: '#000000',
+  background: '#000000'
 };

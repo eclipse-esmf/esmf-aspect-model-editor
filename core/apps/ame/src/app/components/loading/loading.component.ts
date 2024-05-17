@@ -18,7 +18,7 @@ import {forkJoin, Observable, of, Subscription, switchMap, take} from 'rxjs';
 
 @Component({
   templateUrl: 'loading.component.html',
-  styleUrls: ['loading.component.scss'],
+  styleUrls: ['loading.component.scss']
 })
 export class LoadingComponent implements AfterViewInit, OnDestroy {
   private subscription = new Subscription();
@@ -29,7 +29,7 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     private electronTunnel: ElectronTunnelService,
     private modelApiService: ModelApiService,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {}
 
   ngAfterViewInit(): void {
@@ -57,7 +57,7 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
           // and needs to be called in ngZone to function
           const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
           this.ngZone.run(() => this.router.navigate(['/editor'], {queryParams}));
-        },
+        }
       });
 
     this.subscription.add(sub);
@@ -76,7 +76,7 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
 
         const {namespace, file} = data.options;
         return this.modelApiService.getAspectMetaModel(`${namespace}:${file}`);
-      }),
+      })
     );
   }
 }

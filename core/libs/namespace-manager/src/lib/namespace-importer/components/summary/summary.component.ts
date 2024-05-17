@@ -21,7 +21,7 @@ import {ElectronSignals, ElectronSignalsService} from '@ame/shared';
 
 @Component({
   templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.scss'],
+  styleUrls: ['./summary.component.scss']
 })
 export class ImportSummaryComponent {
   private importSession: NamespacesSessionInterface = inject(NAMESPACES_SESSION);
@@ -31,7 +31,7 @@ export class ImportSummaryComponent {
 
   constructor(
     private dialogRef: MatDialogRef<WorkspaceSummaryComponent>,
-    private fileHandlingService: FileHandlingService,
+    private fileHandlingService: FileHandlingService
   ) {}
 
   importFiles() {
@@ -42,7 +42,7 @@ export class ImportSummaryComponent {
       .importFilesToWorkspace(this.importSession.files, this.importSession.conflictFiles)
       .pipe(
         tap(() => this.importSession.state.importing$.next(false)),
-        take(1),
+        take(1)
       )
       .subscribe(() => {
         this.electronSignalsService.call('requestRefreshWorkspaces');

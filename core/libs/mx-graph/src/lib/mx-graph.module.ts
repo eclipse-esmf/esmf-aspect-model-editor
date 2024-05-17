@@ -19,7 +19,7 @@ import {
   MxGraphService,
   MxGraphSetupService,
   MxGraphShapeOverlayService,
-  MxGraphShapeSelectorService,
+  MxGraphShapeSelectorService
 } from './services';
 
 @NgModule({
@@ -29,9 +29,9 @@ import {
     MxGraphService,
     MxGraphSetupService,
     MxGraphShapeOverlayService,
-    MxGraphShapeSelectorService,
+    MxGraphShapeSelectorService
   ],
   exports: [],
-  imports: [CommonModule],
+  imports: [CommonModule]
 })
 export class MxGraphModule {}

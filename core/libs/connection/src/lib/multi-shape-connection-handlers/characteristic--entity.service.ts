@@ -19,7 +19,7 @@ import {
   DefaultProperty,
   DefaultUnit,
   DefaultEntityInstance,
-  DefaultStructuredValue,
+  DefaultStructuredValue
 } from '@ame/meta-model';
 import {MxGraphService, MxGraphAttributeService, MxGraphShapeOverlayService, MxGraphHelper} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
@@ -29,7 +29,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {NotificationsService} from '@ame/shared';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class CharacteristicEntityConnectionHandler implements MultiShapeConnector<DefaultCharacteristic, DefaultEntity> {
   get currentCachedFile() {
@@ -42,7 +42,7 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private sammLangService: SammLanguageSettingsService,
     private namespacesCacheService: NamespacesCacheService,
-    private notificationsService: NotificationsService,
+    private notificationsService: NotificationsService
   ) {}
 
   connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultEntity, parent: mxgraph.mxCell, child: mxgraph.mxCell): void {
@@ -50,7 +50,7 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
       return this.notificationsService.warning({
         title: 'Unable to connect elements',
         message: 'StructuredValue can only contain a scalar "string-like value space" value',
-        timeout: 5000,
+        timeout: 5000
       });
     }
 

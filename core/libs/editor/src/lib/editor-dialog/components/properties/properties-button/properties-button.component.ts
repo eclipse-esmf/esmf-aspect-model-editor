@@ -19,7 +19,7 @@ import {
   DefaultAspect,
   DefaultEntity,
   OverWrittenProperty,
-  OverWrittenPropertyKeys,
+  OverWrittenPropertyKeys
 } from '@ame/meta-model';
 import {first} from 'rxjs/operators';
 import {PropertiesModalComponent} from '..';
@@ -32,7 +32,7 @@ export interface UpdatedProperties {
 @Component({
   selector: 'ame-properties-button',
   templateUrl: './properties-button.component.html',
-  styleUrls: ['./properties-button.component.scss'],
+  styleUrls: ['./properties-button.component.scss']
 })
 export class PropertiesButtonComponent implements OnInit {
   @Output() overwrite = new EventEmitter();
@@ -46,7 +46,7 @@ export class PropertiesButtonComponent implements OnInit {
 
   constructor(
     private matDialog: MatDialog,
-    private metaModelDialogService: EditorModelService,
+    private metaModelDialogService: EditorModelService
   ) {}
 
   ngOnInit(): void {
@@ -69,9 +69,9 @@ export class PropertiesButtonComponent implements OnInit {
           properties: this.propertiesClone || this.metaModelElement.properties,
           isExternalRef: this.metaModelElement.isExternalReference(),
           metaModelElement: this.metaModelElement,
-          isPredefined: this.isPredefined,
+          isPredefined: this.isPredefined
         },
-        autoFocus: false,
+        autoFocus: false
       })
       .afterClosed()
       .pipe(first())
@@ -83,7 +83,7 @@ export class PropertiesButtonComponent implements OnInit {
         this.propertiesClone = this.metaModelElement.properties.map(({property, keys}) => ({property, keys: {...keys}}));
         for (const {
           property: {aspectModelUrn},
-          keys,
+          keys
         } of this.propertiesClone) {
           if (!data[aspectModelUrn]) {
             continue;

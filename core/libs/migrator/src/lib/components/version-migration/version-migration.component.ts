@@ -28,13 +28,13 @@ export const defaultNamespaces = (sammVersion: string) => [
 
   `http://www.w3.org/1999/02/22-rdf-syntax-ns#`,
   `http://www.w3.org/2000/01/rdf-schema#`,
-  `http://www.w3.org/2001/XMLSchema#`,
+  `http://www.w3.org/2001/XMLSchema#`
 ];
 
 @Component({
   selector: 'ame-version-migration',
   templateUrl: './version-migration.component.html',
-  styleUrls: ['./version-migration.component.scss'],
+  styleUrls: ['./version-migration.component.scss']
 })
 export class VersionMigrationComponent implements OnInit {
   public namespaces: {[namespace: string]: {name: string; migrated: boolean}[]};
@@ -50,7 +50,7 @@ export class VersionMigrationComponent implements OnInit {
     private editorService: EditorService,
     private logService: LogService,
     private router: Router,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -61,11 +61,11 @@ export class VersionMigrationComponent implements OnInit {
         map(namespaces => this.prepareNamespaces(namespaces)),
         tap(namespaces => (this.namespaces = namespaces)),
         switchMap(() => this.rewriteStores()),
-        switchMap(modelsTobeDeleted => this.rewriteAndDeleteModels(modelsTobeDeleted)),
+        switchMap(modelsTobeDeleted => this.rewriteAndDeleteModels(modelsTobeDeleted))
       )
       .subscribe({
         complete: () => this.navigateToMigrationSuccess(),
-        error: err => this.logService.logError('Error when migration to new version', err),
+        error: err => this.logService.logError('Error when migration to new version', err)
       });
   }
 
@@ -81,9 +81,9 @@ export class VersionMigrationComponent implements OnInit {
       tap(() =>
         this.deleteModels(modelsTobeDeleted).subscribe({
           complete: () => this.electronSignalsService.call('requestRefreshWorkspaces'),
-          error: err => this.logService.logError('Error when deleting old Aspect Model to new version', err),
-        }),
-      ),
+          error: err => this.logService.logError('Error when deleting old Aspect Model to new version', err)
+        })
+      )
     );
   }
 
@@ -110,8 +110,7 @@ export class VersionMigrationComponent implements OnInit {
     for (const namespace in this.namespaces) {
       for (let i = 0; i < this.namespaces[namespace].length; i++) {
         const rdfModel = this.rdfService.externalRdfModels.find(
-          rdf =>
-            rdf.getPrefixes()[''].startsWith(`urn:samm:${namespace}`) && rdf.aspectModelFileName === this.namespaces[namespace][i].name,
+          rdf => rdf.getPrefixes()[''].startsWith(`urn:samm:${namespace}`) && rdf.aspectModelFileName === this.namespaces[namespace][i].name
         );
         const serializedUpdatedModel = this.rewriteStore(rdfModel, this.namespaces[namespace][i]);
         if (serializedUpdatedModel) {
@@ -135,7 +134,7 @@ export class VersionMigrationComponent implements OnInit {
     const returnObject = {
       oldNamespaceFile: rdfModel.absoluteAspectModelFileName,
       serializedUpdatedModel: '',
-      file,
+      file
     };
 
     for (const namespace of toMigrate) {
@@ -160,7 +159,7 @@ export class VersionMigrationComponent implements OnInit {
         rdfModel.store.addQuad(
           oldSubjectValue !== newSubjectValue ? DataFactory.namedNode(newSubjectValue) : subject,
           oldPredicateValue !== newPredicateValue ? DataFactory.namedNode(newPredicateValue) : predicate,
-          oldObjectValue !== newObjectValue ? DataFactory.namedNode(newObjectValue) : object,
+          oldObjectValue !== newObjectValue ? DataFactory.namedNode(newObjectValue) : object
         );
 
         rdfModel.store.removeQuad(subject, predicate, object);

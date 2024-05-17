@@ -19,12 +19,12 @@ import {MultiShapeConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EntityPropertyConnectionHandler implements MultiShapeConnector<DefaultEntity, DefaultProperty> {
   constructor(
     private mxGraphService: MxGraphService,
-    private entityInstanceService: EntityInstanceService,
+    private entityInstanceService: EntityInstanceService
   ) {}
 
   public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {

@@ -31,7 +31,7 @@ export class DefaultFixedPointConstraint extends DefaultConstraint implements Fi
     aspectModelUrn: string,
     name: string,
     public scale: number,
-    public integer: number,
+    public integer: number
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

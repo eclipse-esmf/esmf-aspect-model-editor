@@ -31,7 +31,7 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
 
   constructor(
     private rdfNodeService: RdfNodeService,
-    rdfService: RdfService,
+    rdfService: RdfService
   ) {
     super(rdfService);
   }
@@ -54,12 +54,12 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
     this.rdfNodeService.update(unit, {
       preferredName: unit.getAllLocalesPreferredNames().map(language => ({
         language,
-        value: unit.getPreferredName(language),
+        value: unit.getPreferredName(language)
       })),
       symbol: unit.symbol,
       commonCode: unit.code,
       conversionFactor: unit.conversionFactor,
-      numericConversionFactor: unit.numericConversionFactor,
+      numericConversionFactor: unit.numericConversionFactor
     });
 
     // update reference unit
@@ -67,7 +67,7 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
       this.store.addQuad(
         DataFactory.namedNode(unit.aspectModelUrn),
         this.samm.ReferenceUnitProperty(),
-        DataFactory.namedNode(unit.referenceUnit.aspectModelUrn),
+        DataFactory.namedNode(unit.referenceUnit.aspectModelUrn)
       );
       this.setPrefix(unit.referenceUnit.aspectModelUrn);
     }
@@ -84,8 +84,8 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
         DataFactory.triple(
           DataFactory.namedNode(unit.aspectModelUrn),
           this.samm.QuantityKindProperty(),
-          DataFactory.namedNode(quantityKind.aspectModelUrn),
-        ),
+          DataFactory.namedNode(quantityKind.aspectModelUrn)
+        )
       );
 
       this.setPrefix(quantityKind.aspectModelUrn);

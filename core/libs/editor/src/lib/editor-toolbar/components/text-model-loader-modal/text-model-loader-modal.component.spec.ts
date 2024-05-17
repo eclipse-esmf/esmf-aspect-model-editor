@@ -23,11 +23,11 @@ describe('TextModelLoaderModalComponent', () => {
         {
           provide: FileHandlingService,
           useValue: {
-            loadModel: () => of(null),
-          },
+            loadModel: () => of(null)
+          }
         },
-        TranslateService,
-      ],
+        TranslateService
+      ]
     }).compileComponents();
   });
 

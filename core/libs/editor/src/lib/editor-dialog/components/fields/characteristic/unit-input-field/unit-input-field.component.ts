@@ -26,7 +26,7 @@ declare const sammUDefinition: any;
 @Component({
   selector: 'ame-unit-input-field',
   templateUrl: './unit-input-field.component.html',
-  styleUrls: ['../../field.scss'],
+  styleUrls: ['../../field.scss']
 })
 export class UnitInputFieldComponent
   extends InputFieldComponent<DefaultQuantifiable | DefaultDuration | DefaultMeasurement>
@@ -43,11 +43,11 @@ export class UnitInputFieldComponent
   constructor(
     private modelService: ModelService,
     private rdfService: RdfService,
-    private validators: EditorDialogValidators,
+    private validators: EditorDialogValidators
   ) {
     super();
     this.unitInstantiator = new UnitInstantiator(
-      new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile),
+      new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile)
     );
     this.fieldName = 'unit';
   }
@@ -89,7 +89,7 @@ export class UnitInputFieldComponent
     const unitName = unit instanceof DefaultUnit ? unit.name : unit;
     this.unitDisplayControl = new FormControl({value: unitName, disabled: !!unit}, [
       this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultUnit),
-      ...(this.unitRequired ? [Validators.required] : []),
+      ...(this.unitRequired ? [Validators.required] : [])
     ]);
 
     this.parentForm.setControl(
@@ -97,10 +97,10 @@ export class UnitInputFieldComponent
       new FormControl(
         {
           value: unit,
-          disabled: this.metaModelElement?.isExternalReference(),
+          disabled: this.metaModelElement?.isExternalReference()
         },
-        this.unitRequired ? Validators.required : null,
-      ),
+        this.unitRequired ? Validators.required : null
+      )
     );
 
     this.parentForm.setControl('changedUnit', new FormControl(this.getPredefinedUnit(unitName) || unit));

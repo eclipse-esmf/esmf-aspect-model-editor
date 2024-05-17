@@ -20,13 +20,13 @@ export enum PredefinedProperties {
   mimeType = 'mimeType',
   x = 'x',
   y = 'y',
-  z = 'z',
+  z = 'z'
 }
 
 export enum PredefinedEntities {
   TimeSeriesEntity = 'TimeSeriesEntity',
   Point3d = 'Point3d',
-  FileResource = 'FileResource',
+  FileResource = 'FileResource'
 }
 
 export class SammE {

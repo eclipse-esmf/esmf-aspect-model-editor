@@ -27,15 +27,15 @@ type Cell = Partial<mxgraph.mxCell & {getMetaModelElement: () => {element: BaseM
 
 const cell: Cell = {
   getMetaModelElement: () => new DefaultAspect('aspect', 'aspect', 'aspect', [], []) as any,
-  style: 'aspect',
+  style: 'aspect'
 };
 const cells: Cell[] = [
   {style: 'property', getMetaModelElement: () => ({element: new DefaultProperty('property', 'property', 'property', null)}) as any},
   {
     style: 'characteristic',
-    getMetaModelElement: () => ({element: new DefaultCharacteristic('characteristic', 'characteristic', 'characteristic')}) as any,
+    getMetaModelElement: () => ({element: new DefaultCharacteristic('characteristic', 'characteristic', 'characteristic')}) as any
   },
-  {style: 'entity', getMetaModelElement: () => ({element: new DefaultEntity('entity', 'entity', 'entity', [])}) as any},
+  {style: 'entity', getMetaModelElement: () => ({element: new DefaultEntity('entity', 'entity', 'entity', [])}) as any}
 ];
 
 describe('RdfNodeService', () => {
@@ -51,17 +51,17 @@ describe('RdfNodeService', () => {
       providers: [
         {
           provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
+          useValue: provideMockObject(MxGraphService)
         },
         {
           provide: MatDialogRef,
-          useValue: provideMockObject(MatDialogRef),
+          useValue: provideMockObject(MatDialogRef)
         },
         {
           provide: MAT_DIALOG_DATA,
-          useValue: cell,
-        },
-      ],
+          useValue: cell
+        }
+      ]
     });
 
     mxGraphService = TestBed.inject(MxGraphService);
@@ -107,9 +107,9 @@ describe('RdfNodeService', () => {
       const result = component.isFiltered(
         {
           model: new DefaultProperty('property', 'property', 'property', null),
-          cell: {} as any,
+          cell: {} as any
         },
-        'property',
+        'property'
       );
       expect(result).toBe(true);
     });
@@ -118,9 +118,9 @@ describe('RdfNodeService', () => {
       const result = component.isFiltered(
         {
           model: new DefaultProperty('property', 'property', 'property', null),
-          cell: {} as any,
+          cell: {} as any
         },
-        'aspect',
+        'aspect'
       );
       expect(result).toBe(false);
     });
@@ -130,11 +130,11 @@ describe('RdfNodeService', () => {
     it('should return false', () => {
       component.selectedElement = {
         model: new DefaultProperty('property', 'property', 'property', null),
-        cell: {} as any,
+        cell: {} as any
       };
       const result = component.isSelected({
         model: new DefaultProperty('non-property', 'non-property', 'non-property', null),
-        cell: {} as any,
+        cell: {} as any
       });
       expect(result).toBe(false);
     });
@@ -142,7 +142,7 @@ describe('RdfNodeService', () => {
     it('should return true', () => {
       component.selectedElement = {
         model: new DefaultProperty('property', 'property', 'property', null),
-        cell: {} as any,
+        cell: {} as any
       };
       const result = component.isSelected(component.selectedElement);
       expect(result).toBe(true);
@@ -158,12 +158,12 @@ describe('RdfNodeService', () => {
     it('should call close', () => {
       component.selectedElement = {
         model: new DefaultProperty('property', 'property', 'property', null),
-        cell: {} as any,
+        cell: {} as any
       };
       component.connect();
       expect(dialogRef.close).toHaveBeenCalledWith({
         model: new DefaultProperty('property', 'property', 'property', null),
-        cell: {} as any,
+        cell: {} as any
       });
     });
   });

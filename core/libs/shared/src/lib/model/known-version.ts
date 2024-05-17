@@ -12,7 +12,7 @@
  */
 
 export enum SammVersion {
-  SAMM_2_1_0 = '2.1.0',
+  SAMM_2_1_0 = '2.1.0'
 }
 
 export class KnownVersion {

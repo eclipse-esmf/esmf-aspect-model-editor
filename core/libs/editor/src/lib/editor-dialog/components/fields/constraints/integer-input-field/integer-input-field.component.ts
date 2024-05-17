@@ -18,7 +18,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-integer-input-field',
   templateUrl: './integer-input-field.component.html',
-  styleUrls: ['../../field.scss'],
+  styleUrls: ['../../field.scss']
 })
 export class IntegerInputFieldComponent extends InputFieldComponent<DefaultFixedPointConstraint> implements OnInit, OnDestroy {
   constructor() {
@@ -43,8 +43,8 @@ export class IntegerInputFieldComponent extends InputFieldComponent<DefaultFixed
       this.fieldName,
       new FormControl(
         {value: this.getCurrentValue(this.fieldName), disabled: this.metaModelElement.isExternalReference()},
-        Validators.required,
-      ),
+        Validators.required
+      )
     );
   }
 }

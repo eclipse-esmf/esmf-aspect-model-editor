@@ -31,8 +31,8 @@ describe('Loading Entity value with lang string properties', () => {
           {key: 'modeCode', value: '10'},
           {key: 'modeDescription  (de)', value: 'Test'},
           {key: 'modeDescription  (en)', value: 'Test'},
-          {key: 'modeValue  (de)', value: 'Test'},
-        ],
+          {key: 'modeValue  (de)', value: 'Test'}
+        ]
       },
       {
         dataCy: 'Complaint20',
@@ -41,9 +41,9 @@ describe('Loading Entity value with lang string properties', () => {
           {key: 'modeCode', value: '20'},
           {key: 'modeDescription  (de)', value: 'Test'},
           {key: 'modeDescription  (en)', value: 'Test'},
-          {key: 'modeValue  (de)', value: 'Test'},
-        ],
-      },
+          {key: 'modeValue  (de)', value: 'Test'}
+        ]
+      }
     ]);
 
     assertRdf([
@@ -54,8 +54,8 @@ describe('Loading Entity value with lang string properties', () => {
           ':modeDescription ("Test"@de "Test"@en);',
           ':ModeDescription a samm-c:Collection;',
           'ModeValue a samm:Characteristic',
-          ':modeValue "Test"@de',
-        ],
+          ':modeValue "Test"@de'
+        ]
       },
       {
         rdfAssertions: [
@@ -64,9 +64,9 @@ describe('Loading Entity value with lang string properties', () => {
           ':modeDescription ("Test"@de "Test"@en);',
           ':ModeDescription a samm-c:Collection;',
           'ModeValue a samm:Characteristic',
-          ':modeValue "Test"@de',
-        ],
-      },
+          ':modeValue "Test"@de'
+        ]
+      }
     ]);
   });
 
@@ -81,8 +81,8 @@ describe('Loading Entity value with lang string properties', () => {
           {key: 'modeDescription  (de)', value: 'Test'},
           {key: 'modeDescription  (en)', value: 'Test'},
           {key: 'modeValue  (de)', value: 'Test'},
-          {key: 'modeValue  (en)', value: 'Test'},
-        ],
+          {key: 'modeValue  (en)', value: 'Test'}
+        ]
       },
       {
         dataCy: 'Complaint20',
@@ -92,9 +92,9 @@ describe('Loading Entity value with lang string properties', () => {
           {key: 'modeDescription  (de)', value: 'Test'},
           {key: 'modeDescription  (en)', value: 'Test'},
           {key: 'modeValue  (de)', value: 'Test'},
-          {key: 'modeValue  (en)', value: 'Test'},
-        ],
-      },
+          {key: 'modeValue  (en)', value: 'Test'}
+        ]
+      }
     ]);
 
     assertRdf([
@@ -105,8 +105,8 @@ describe('Loading Entity value with lang string properties', () => {
           ':ModeDescription a samm-c:Collection;',
           ':modeDescription ("Test"@de "Test"@en);',
           ':ModeValue a samm-c:Collection',
-          ':modeValue ("Test"@de "Test"@en)',
-        ],
+          ':modeValue ("Test"@de "Test"@en)'
+        ]
       },
       {
         rdfAssertions: [
@@ -115,9 +115,9 @@ describe('Loading Entity value with lang string properties', () => {
           ':ModeDescription a samm-c:Collection;',
           ':modeDescription ("Test"@de "Test"@en);',
           ':ModeValue a samm-c:Collection',
-          ':modeValue ("Test"@de "Test"@en)',
-        ],
-      },
+          ':modeValue ("Test"@de "Test"@en)'
+        ]
+      }
     ]);
   });
 });

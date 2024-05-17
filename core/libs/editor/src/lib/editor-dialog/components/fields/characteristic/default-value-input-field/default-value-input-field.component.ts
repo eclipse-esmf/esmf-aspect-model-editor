@@ -18,7 +18,7 @@ import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-default-value-input-field',
-  templateUrl: './default-value-input-field.component.html',
+  templateUrl: './default-value-input-field.component.html'
 })
 export class DefaultValueInputFieldComponent extends InputFieldComponent<DefaultState> implements OnInit, OnDestroy {
   constructor() {
@@ -43,8 +43,8 @@ export class DefaultValueInputFieldComponent extends InputFieldComponent<Default
       this.fieldName,
       new FormControl(
         {value: defaultValueString || this.metaModelElement.defaultValue, disabled: this.metaModelElement?.isExternalReference()},
-        Validators.required,
-      ),
+        Validators.required
+      )
     );
 
     this.formSubscription.add(
@@ -52,7 +52,7 @@ export class DefaultValueInputFieldComponent extends InputFieldComponent<Default
         if (dataType instanceof DefaultEntity) {
           this.parentForm.get(this.fieldName).patchValue('');
         }
-      }),
+      })
     );
   }
 }

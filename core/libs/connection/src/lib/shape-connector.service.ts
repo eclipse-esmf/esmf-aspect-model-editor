@@ -25,7 +25,7 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultStructuredValue,
-  DefaultTrait,
+  DefaultTrait
 } from '@ame/meta-model';
 import {environment} from 'environments/environment';
 import {cellRelations, LogService, NotificationsService} from '@ame/shared';
@@ -41,7 +41,7 @@ import {
   OperationConnectionHandler,
   PropertyConnectionHandler,
   StructuredValueConnectionHandler,
-  TraitConnectionHandler,
+  TraitConnectionHandler
 } from './single-connection-handlers';
 import {SingleShapeConnector, MultiShapeConnector} from './models';
 import {
@@ -68,13 +68,13 @@ import {
   EnumerationEntityValueConnectionHandler,
   StructuredValueCharacteristicPropertyConnectionHandler,
   CharacteristicUnitConnectionHandler,
-  PropertyStructuredValueConnectionHandler,
+  PropertyStructuredValueConnectionHandler
 } from './multi-shape-connection-handlers';
 import mxCell = mxgraph.mxCell;
 import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ShapeConnectorService {
   constructor(
@@ -117,7 +117,7 @@ export class ShapeConnectorService {
     private enumerationEntityValueConnectionHandler: EnumerationEntityValueConnectionHandler,
     private characteristicUnitConnectionHandler: CharacteristicUnitConnectionHandler,
     private structuredValuePropertyConnectionHandler: StructuredValueCharacteristicPropertyConnectionHandler,
-    private translate: LanguageTranslationService,
+    private translate: LanguageTranslationService
   ) {
     if (!environment.production) {
       window['angular.shapeConnectorService'] = this;
@@ -210,7 +210,7 @@ export class ShapeConnectorService {
     childModel: BaseMetaModelElement,
     parentSource: mxCell,
     childSource: mxCell,
-    modelInfo?: ModelInfo,
+    modelInfo?: ModelInfo
   ): boolean {
     let connectionHandler: MultiShapeConnector<BaseMetaModelElement, BaseMetaModelElement>;
 
@@ -227,7 +227,7 @@ export class ShapeConnectorService {
       case ShapeConnectorUtil.isOperationPropertyConnection(parentModel, childModel) ||
         ShapeConnectorUtil.isPropertyOperationConnection(parentModel, childModel):
         this.notificationsService.warning({
-          title: 'For connecting input/output Properties use the icons below the Aspect or the edit the Operation properties via edit area',
+          title: 'For connecting input/output Properties use the icons below the Aspect or the edit the Operation properties via edit area'
         });
         break;
       case ShapeConnectorUtil.isEitherCharacteristicLeftConnection(parentModel, childModel, modelInfo):

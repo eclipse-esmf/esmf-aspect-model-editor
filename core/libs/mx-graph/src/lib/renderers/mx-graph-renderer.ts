@@ -29,7 +29,7 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultQuantityKind,
-  DefaultUnit,
+  DefaultUnit
 } from '@ame/meta-model';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NamespacesCacheService} from '@ame/cache';
@@ -51,7 +51,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private namespacesCacheService: NamespacesCacheService,
     private sammLangService: SammLanguageSettingsService,
-    private rdfModel: RdfModel,
+    private rdfModel: RdfModel
   ) {
     this.shapes = new Map<string, mxCell>();
   }

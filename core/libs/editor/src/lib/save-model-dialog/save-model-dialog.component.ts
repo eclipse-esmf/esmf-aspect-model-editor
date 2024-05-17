@@ -17,7 +17,7 @@ import {EditorService} from '@ame/editor';
 
 @Component({
   templateUrl: 'save-model-dialog.component.html',
-  styleUrls: ['save-model-dialog.component.scss'],
+  styleUrls: ['save-model-dialog.component.scss']
 })
 export class SaveModelDialogComponent {
   public disabledButton = false;
@@ -25,7 +25,7 @@ export class SaveModelDialogComponent {
   constructor(
     private matDialogRef: MatDialogRef<SaveModelDialogComponent>,
     private editorService: EditorService,
-    private zone: NgZone,
+    private zone: NgZone
   ) {}
 
   close(destroyWindow: boolean) {

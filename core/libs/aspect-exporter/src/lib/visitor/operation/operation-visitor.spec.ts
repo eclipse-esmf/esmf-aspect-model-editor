@@ -30,22 +30,22 @@ describe('Operation Visitor', () => {
         OperationVisitor,
         {
           provide: RdfNodeService,
-          useValue: {update: jest.fn()},
+          useValue: {update: jest.fn()}
         },
         {
           provide: RdfService,
           useValue: {
             currentRdfModel: {hasNamespace: jest.fn(() => true)},
-            externalRdfModels: [],
-          },
+            externalRdfModels: []
+          }
         },
         {
           provide: RdfListService,
           useValue: {
-            createEmpty: jest.fn(),
-          },
-        },
-      ],
+            createEmpty: jest.fn()
+          }
+        }
+      ]
     });
 
     rdfNodeService = TestBed.inject(RdfNodeService);
@@ -59,7 +59,7 @@ describe('Operation Visitor', () => {
     expect(rdfNodeService.update).toHaveBeenCalledWith(operation, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
   });
 });

@@ -34,7 +34,7 @@ jest.mock('../../../../../../../../instantiator/src/lib/instantiators/samm-e-pre
   }
 
   return {
-    PredefinedEntityInstantiator,
+    PredefinedEntityInstantiator
   };
 });
 
@@ -52,29 +52,29 @@ describe('EntityExtendsFieldComponent', () => {
       providers: [
         {
           provide: NotificationsService,
-          useValue: provideMockObject(NotificationsService),
+          useValue: provideMockObject(NotificationsService)
         },
         {
           provide: EditorModelService,
-          useValue: provideMockObject(EditorModelService),
+          useValue: provideMockObject(EditorModelService)
         },
         {
           provide: NamespacesCacheService,
-          useValue: provideMockObject(NamespacesCacheService),
+          useValue: provideMockObject(NamespacesCacheService)
         },
         {
           provide: RdfService,
-          useValue: provideMockObject(RdfService),
+          useValue: provideMockObject(RdfService)
         },
         {
           provide: SearchService,
-          useValue: provideMockObject(SearchService),
+          useValue: provideMockObject(SearchService)
         },
         {
           provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
-        },
-      ],
+          useValue: provideMockObject(MxGraphService)
+        }
+      ]
     });
 
     editorModelService = TestBed.inject(EditorModelService);

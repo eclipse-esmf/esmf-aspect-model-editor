@@ -32,7 +32,7 @@ const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
 @Component({
   selector: 'ame-editor-canvas',
   templateUrl: './editor-canvas.component.html',
-  styleUrls: ['./editor-canvas.component.scss'],
+  styleUrls: ['./editor-canvas.component.scss']
 })
 export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('graph') public graph: ElementRef;
@@ -74,13 +74,13 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
     private changeDetector: ChangeDetectorRef,
     private editorService: EditorService,
     private configurationService: ConfigurationService,
-    public searchesStateService: SearchesStateService,
+    public searchesStateService: SearchesStateService
   ) {
     this.isShapeSettingsOpened$ = this.shapeSettingsStateService.onSettingsOpened$.asObservable();
     this.isShapeSettingsOpened$.subscribe(() =>
       requestAnimationFrame(() => {
         this.changeDetector.detectChanges();
-      }),
+      })
     );
   }
 
@@ -91,15 +91,15 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
         map(params => params?.get('urn')),
         filter(urn => !!urn),
         tap(urn =>
-          this.mxGraphService.navigateToCellByUrn(urn) ? this.shapeSettingsService.editSelectedCell() : this.closeShapeSettings(),
+          this.mxGraphService.navigateToCellByUrn(urn) ? this.shapeSettingsService.editSelectedCell() : this.closeShapeSettings()
         ),
         switchMap(() =>
           this.router.navigate([], {
             relativeTo: this.activatedRoute,
             queryParams: {urn: null},
-            queryParamsHandling: 'merge',
-          }),
-        ),
+            queryParamsHandling: 'merge'
+          })
+        )
       )
       .subscribe();
   }
@@ -130,7 +130,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
     } else {
       this.sidebarDragPosition = {
         x: this.sidebarDragPosition.x + event.distance.x,
-        y: this.sidebarDragPosition.y,
+        y: this.sidebarDragPosition.y
       };
     }
   }
@@ -162,7 +162,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
       .pipe(
         debounceTime(250),
         tap(event => this.mxGraphService.setScrollPosition(event)),
-        takeUntil(this.unsubscribe),
+        takeUntil(this.unsubscribe)
       )
       .subscribe();
   }

@@ -20,7 +20,7 @@ import {
   EventRenderService,
   PropertyRenderService,
   TraitRenderService,
-  UnitRenderService,
+  UnitRenderService
 } from '.';
 import {AspectRenderService} from './aspect-render.service';
 import {BaseRenderService} from './base-render-service';
@@ -28,7 +28,7 @@ import {EntityRenderService} from './entity-render.service';
 import {EntityValueRenderService} from './entity-value-render.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ModelRenderService {
   constructor(
@@ -41,7 +41,7 @@ export class ModelRenderService {
     private enumerationRenderService: EnumerationRenderService,
     private eventRenderService: EventRenderService,
     private unitRenderService: UnitRenderService,
-    private constraintRenderService: ConstraintRenderService,
+    private constraintRenderService: ConstraintRenderService
   ) {}
 
   update(cell: mxgraph.mxCell) {
@@ -60,7 +60,7 @@ export class ModelRenderService {
       this.entityValueRenderService,
       this.entityRenderService,
       this.eventRenderService,
-      this.propertyRenderService,
+      this.propertyRenderService
     ];
 
     // choose the applicable model service

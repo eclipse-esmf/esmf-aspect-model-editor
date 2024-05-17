@@ -32,11 +32,11 @@ const DEFAULT_SETTINGS: Settings = {
   showAbstractPropertyConnection: true,
   copyrightHeader: [],
   aspectModelLanguages: [],
-  toolbarVisibility: true,
+  toolbarVisibility: true
 };
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ConfigurationService {
   private readonly SETTINGS_ITEM_KEY: string = 'settings';

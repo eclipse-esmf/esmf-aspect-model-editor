@@ -21,7 +21,7 @@ export class NotificationModel {
     public title?: string,
     public description?: string,
     public link?: string,
-    public type?: NotificationType,
+    public type?: NotificationType
   ) {}
 
   get formattedTime(): string {

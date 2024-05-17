@@ -14,7 +14,7 @@
 import {Injectable} from '@angular/core';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class SammLanguageSettingsService {
   private readonly LANG_CODE_ITEM_KEY: string = 'languageCodes';

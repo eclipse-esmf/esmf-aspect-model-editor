@@ -29,11 +29,11 @@ var sammUDefinition = {
     activity: {name: 'activity', label: 'activity'},
     activityCoefficientOfBInALiquidAsASolidMixture: {
       name: 'activityCoefficientOfBInALiquidAsASolidMixture',
-      label: 'activity coefficient of B (in a liquid as a solid mixture)',
+      label: 'activity coefficient of B (in a liquid as a solid mixture)'
     },
     activityCoefficientOfSoluteBEspeciallyInADiluteSolution: {
       name: 'activityCoefficientOfSoluteBEspeciallyInADiluteSolution',
-      label: 'activity coefficient of solute B (especially in a dilute solution)',
+      label: 'activity coefficient of solute B (especially in a dilute solution)'
     },
     activityConcentration: {name: 'activityConcentration', label: 'activity concentration'},
     activityOfSolventA: {name: 'activityOfSolventA', label: 'activity of solvent A'},
@@ -51,7 +51,7 @@ var sammUDefinition = {
     angularMomentum: {name: 'angularMomentum', label: 'angular momentum'},
     angularReciprocalLatticeVector: {
       name: 'angularReciprocalLatticeVector',
-      label: 'angular reciprocal lattice vector',
+      label: 'angular reciprocal lattice vector'
     },
     angularRepetency: {name: 'angularRepetency', label: 'angular repetency'},
     angularVelocity: {name: 'angularVelocity', label: 'angular velocity'},
@@ -66,7 +66,7 @@ var sammUDefinition = {
     attenuationCoefficient: {name: 'attenuationCoefficient', label: 'attenuation coefficient'},
     averageLogarithmicEnergyDecrement: {
       name: 'averageLogarithmicEnergyDecrement',
-      label: 'average logarithmic energy decrement',
+      label: 'average logarithmic energy decrement'
     },
     avogadroConstant: {name: 'avogadroConstant', label: 'Avogadro constant'},
     betaDisintegrationEnergy: {name: 'betaDisintegrationEnergy', label: 'beta disintegration energy'},
@@ -87,7 +87,7 @@ var sammUDefinition = {
     catalyticActivity: {name: 'catalyticActivity', label: 'catalytic activity'},
     characteristicImpedanceOfAMedium: {
       name: 'characteristicImpedanceOfAMedium',
-      label: 'characteristic impedance of a medium',
+      label: 'characteristic impedance of a medium'
     },
     chargeDensity: {name: 'chargeDensity', label: 'charge density'},
     chargeNumberOfIon: {name: 'chargeNumberOfIon', label: 'charge number of ion'},
@@ -99,7 +99,7 @@ var sammUDefinition = {
     coefficientOfHeatTransfer: {name: 'coefficientOfHeatTransfer', label: 'coefficient of heat transfer'},
     coefficientOfThermalInsulation: {
       name: 'coefficientOfThermalInsulation',
-      label: 'coefficient of thermal insulation',
+      label: 'coefficient of thermal insulation'
     },
     coherenceLength: {name: 'coherenceLength', label: 'coherence length'},
     complexAdmittance: {name: 'complexAdmittance', label: 'complex admittance'},
@@ -109,7 +109,7 @@ var sammUDefinition = {
     concentrationOfB: {name: 'concentrationOfB', label: 'concentration of B'},
     conductanceForAlternatingCurrent: {
       name: 'conductanceForAlternatingCurrent',
-      label: 'conductance (for alternating current)',
+      label: 'conductance (for alternating current)'
     },
     conductanceForDirectCurrent: {name: 'conductanceForDirectCurrent', label: 'conductance (for direct current)'},
     conductivity: {name: 'conductivity', label: 'conductivity'},
@@ -142,15 +142,15 @@ var sammUDefinition = {
     diffusionCoefficient: {name: 'diffusionCoefficient', label: 'diffusion coefficient'},
     diffusionCoefficientForNeutronFluenceRate: {
       name: 'diffusionCoefficientForNeutronFluenceRate',
-      label: 'diffusion coefficient for neutron fluence rate',
+      label: 'diffusion coefficient for neutron fluence rate'
     },
     diffusionCoefficientForNeutronFluxDensity: {
       name: 'diffusionCoefficientForNeutronFluxDensity',
-      label: 'diffusion coefficient for neutron flux density',
+      label: 'diffusion coefficient for neutron flux density'
     },
     diffusionCoefficientForNeutronNumberDensity: {
       name: 'diffusionCoefficientForNeutronNumberDensity',
-      label: 'diffusion coefficient for neutron number density',
+      label: 'diffusion coefficient for neutron number density'
     },
     diffusionLength: {name: 'diffusionLength', label: 'diffusion length'},
     dimensionless: {name: 'dimensionless', label: 'dimensionless'},
@@ -158,11 +158,11 @@ var sammUDefinition = {
     disintegrationConstant: {name: 'disintegrationConstant', label: 'disintegration constant'},
     displacementElectricPolarization: {
       name: 'displacementElectricPolarization',
-      label: 'displacement electric polarization',
+      label: 'displacement electric polarization'
     },
     displacementVectorOfIonOrAtom: {
       name: 'displacementVectorOfIonOrAtom',
-      label: 'displacement vector of ion or atom',
+      label: 'displacement vector of ion or atom'
     },
     dissipance: {name: 'dissipance', label: 'dissipance'},
     dissipationFactor: {name: 'dissipationFactor', label: 'dissipation factor'},
@@ -178,17 +178,17 @@ var sammUDefinition = {
     electricDipoleMoment: {name: 'electricDipoleMoment', label: 'electric dipole moment'},
     electricDipoleMomentOfMolecule: {
       name: 'electricDipoleMomentOfMolecule',
-      label: 'electric dipole moment of molecule',
+      label: 'electric dipole moment of molecule'
     },
     electricFieldStrength: {name: 'electricFieldStrength', label: 'electric field strength'},
     electricFluxDensity: {name: 'electricFluxDensity', label: 'electric flux density'},
     electricFluxFluxOfDisplacement: {
       name: 'electricFluxFluxOfDisplacement',
-      label: 'electric flux (flux of displacement)',
+      label: 'electric flux (flux of displacement)'
     },
     electricPolarizabilityOfAMolecule: {
       name: 'electricPolarizabilityOfAMolecule',
-      label: 'electric polarizability of a molecule',
+      label: 'electric polarizability of a molecule'
     },
     electricPotential: {name: 'electricPotential', label: 'electric potential'},
     electricSusceptibility: {name: 'electricSusceptibility', label: 'electric susceptibility'},
@@ -203,7 +203,7 @@ var sammUDefinition = {
     emissivity: {name: 'emissivity', label: 'emissivity'},
     emissivityAtASpecifiedWavelength: {
       name: 'emissivityAtASpecifiedWavelength',
-      label: 'emissivity at a specified wavelength',
+      label: 'emissivity at a specified wavelength'
     },
     energy: {name: 'energy', label: 'energy'},
     energyDensity: {name: 'energyDensity', label: 'energy density'},
@@ -215,12 +215,12 @@ var sammUDefinition = {
     entropy: {name: 'entropy', label: 'entropy'},
     equilibriumPositionVectorOfIonOrAtom: {
       name: 'equilibriumPositionVectorOfIonOrAtom',
-      label: 'equilibrium position vector of ion or atom',
+      label: 'equilibrium position vector of ion or atom'
     },
     equivalenceDoseOutput: {name: 'equivalenceDoseOutput', label: 'equivalence dose output'},
     equivalentAbsorptionAreaOfASurfaceOrObject: {
       name: 'equivalentAbsorptionAreaOfASurfaceOrObject',
-      label: 'equivalent absorption area of a surface or object',
+      label: 'equivalent absorption area of a surface or object'
     },
     eulerNumber: {name: 'eulerNumber', label: 'Euler number'},
     exchangeIntergral: {name: 'exchangeIntergral', label: 'exchange intergral'},
@@ -247,19 +247,19 @@ var sammUDefinition = {
     froudeNumber: {name: 'froudeNumber', label: 'Froude number'},
     fugacityOfBInAGaseousMixture: {
       name: 'fugacityOfBInAGaseousMixture',
-      label: 'fugacity of B (in a gaseous mixture)',
+      label: 'fugacity of B (in a gaseous mixture)'
     },
     fundamentalLatticeVector: {name: 'fundamentalLatticeVector', label: 'fundamental lattice vector'},
     fundamentalReciprocalLatticeVector: {
       name: 'fundamentalReciprocalLatticeVector',
-      label: 'fundamental reciprocal lattice vector',
+      label: 'fundamental reciprocal lattice vector'
     },
     gFactorOfAtomOrElectron: {name: 'gFactorOfAtomOrElectron', label: 'g-factor of atom or electron'},
     gFactorOfNucleus: {name: 'gFactorOfNucleus', label: 'g-factor of nucleus'},
     gapEnergy: {name: 'gapEnergy', label: 'gap energy'},
     grandCanonicalPartitionFunction: {
       name: 'grandCanonicalPartitionFunction',
-      label: 'grand-canonical partition function',
+      label: 'grand-canonical partition function'
     },
     grandPartitionFunction: {name: 'grandPartitionFunction', label: 'grand partition function'},
     grashofNumber: {name: 'grashofNumber', label: 'Grashof number'},
@@ -285,7 +285,7 @@ var sammUDefinition = {
     holeNumberDensity: {name: 'holeNumberDensity', label: 'hole number density'},
     hyperfineStructureQuantumNumber: {
       name: 'hyperfineStructureQuantumNumber',
-      label: 'hyperfine structure quantum number',
+      label: 'hyperfine structure quantum number'
     },
     illuminance: {name: 'illuminance', label: 'illuminance'},
     imageDistance: {name: 'imageDistance', label: 'image distance'},
@@ -293,20 +293,20 @@ var sammUDefinition = {
     impulse: {name: 'impulse', label: 'impulse'},
     infiniteMediumMultiplicationFactor: {
       name: 'infiniteMediumMultiplicationFactor',
-      label: 'infinite medium multiplication factor',
+      label: 'infinite medium multiplication factor'
     },
     informationEntropy: {name: 'informationEntropy', label: 'Information entropy'},
     instantaneousSoundParticleAcceleration: {
       name: 'instantaneousSoundParticleAcceleration',
-      label: '(instantaneous) sound particle acceleration',
+      label: '(instantaneous) sound particle acceleration'
     },
     instantaneousSoundParticleDisplacement: {
       name: 'instantaneousSoundParticleDisplacement',
-      label: '(instantaneous) sound particle displacement',
+      label: '(instantaneous) sound particle displacement'
     },
     instantaneousSoundParticleVelocity: {
       name: 'instantaneousSoundParticleVelocity',
-      label: '(instantaneous) sound particle velocity',
+      label: '(instantaneous) sound particle velocity'
     },
     instantaneousSoundPressure: {name: 'instantaneousSoundPressure', label: '(instantaneous) sound pressure'},
     instantaneousVolumeFlowRate: {name: 'instantaneousVolumeFlowRate', label: '(instantaneous) volume flow rate'},
@@ -358,18 +358,18 @@ var sammUDefinition = {
     loudnessLevel: {name: 'loudnessLevel', label: 'loudness level'},
     lowerCriticalMagneticFluxDensity: {
       name: 'lowerCriticalMagneticFluxDensity',
-      label: 'lower critical magnetic flux density',
+      label: 'lower critical magnetic flux density'
     },
     luminance: {name: 'luminance', label: 'luminance'},
     luminiousEfficacy: {name: 'luminiousEfficacy', label: 'luminious efficacy'},
     luminousEfficacyAtASpecifiedWavelength: {
       name: 'luminousEfficacyAtASpecifiedWavelength',
-      label: 'luminous efficacy at a specified wavelength',
+      label: 'luminous efficacy at a specified wavelength'
     },
     luminousEfficiency: {name: 'luminousEfficiency', label: 'luminous efficiency'},
     luminousEfficiencyAtASpecifiedWavelength: {
       name: 'luminousEfficiencyAtASpecifiedWavelength',
-      label: 'luminous efficiency at a specified wavelength',
+      label: 'luminous efficiency at a specified wavelength'
     },
     luminousExitance: {name: 'luminousExitance', label: 'luminous exitance'},
     luminousFlux: {name: 'luminousFlux', label: 'luminous flux'},
@@ -419,13 +419,13 @@ var sammUDefinition = {
     maximumBetaParticleEnergy: {name: 'maximumBetaParticleEnergy', label: 'maximum beta particle energy'},
     maximumSpectralLuminousEfficacy: {
       name: 'maximumSpectralLuminousEfficacy',
-      label: 'maximum spectral luminous efficacy',
+      label: 'maximum spectral luminous efficacy'
     },
     meanEnergyImparted: {name: 'meanEnergyImparted', label: 'mean energy imparted'},
     meanFreePath: {name: 'meanFreePath', label: 'mean free path'},
     meanFreePathOfPhononsOrElectrons: {
       name: 'meanFreePathOfPhononsOrElectrons',
-      label: 'mean free path of phonons or electrons',
+      label: 'mean free path of phonons or electrons'
     },
     meanLife: {name: 'meanLife', label: 'mean life'},
     meanLinearRange: {name: 'meanLinearRange', label: 'mean linear range'},
@@ -433,7 +433,7 @@ var sammUDefinition = {
     mechanicalImpedance: {name: 'mechanicalImpedance', label: 'mechanical impedance'},
     microcanonicalPartitionFunction: {
       name: 'microcanonicalPartitionFunction',
-      label: 'microcanonical partition function',
+      label: 'microcanonical partition function'
     },
     migrationArea: {name: 'migrationArea', label: 'migration area'},
     migrationLength: {name: 'migrationLength', label: 'migration length'},
@@ -464,7 +464,7 @@ var sammUDefinition = {
     momentOfForce: {name: 'momentOfForce', label: 'moment of force'},
     momentOfInertiaDynamicMomentOfInertia: {
       name: 'momentOfInertiaDynamicMomentOfInertia',
-      label: 'moment of inertia (dynamic moment of inertia)',
+      label: 'moment of inertia (dynamic moment of inertia)'
     },
     momentOfMomentum: {name: 'momentOfMomentum', label: 'moment of momentum'},
     momentum: {name: 'momentum', label: 'momentum'},
@@ -489,11 +489,11 @@ var sammUDefinition = {
     nuclidicMass: {name: 'nuclidicMass', label: 'nuclidic mass'},
     numberDensityOfMoleculesOrParticles: {
       name: 'numberDensityOfMoleculesOrParticles',
-      label: 'number density of molecules  (or particles)',
+      label: 'number density of molecules  (or particles)'
     },
     numberOfMoleculesOrOtherElementaryEntities: {
       name: 'numberOfMoleculesOrOtherElementaryEntities',
-      label: 'number of molecules or other elementary entities',
+      label: 'number of molecules or other elementary entities'
     },
     numberOfPairsOfPoles: {name: 'numberOfPairsOfPoles', label: 'number of pairs of poles'},
     numberOfPhases: {name: 'numberOfPhases', label: 'number of phases'},
@@ -504,18 +504,18 @@ var sammUDefinition = {
     opticalDensity: {name: 'opticalDensity', label: 'optical density'},
     orbitalAngularMomentumQuantumNumber: {
       name: 'orbitalAngularMomentumQuantumNumber',
-      label: 'orbital angular momentum quantum number',
+      label: 'orbital angular momentum quantum number'
     },
     orderOfReflexion: {name: 'orderOfReflexion', label: 'order of reflexion'},
     osmoticCoefficientOfTheSolventAEspeciallyInADiluteSolution: {
       name: 'osmoticCoefficientOfTheSolventAEspeciallyInADiluteSolution',
-      label: 'osmotic coefficient of the solvent A (especially in a dilute solution)',
+      label: 'osmotic coefficient of the solvent A (especially in a dilute solution)'
     },
     osmoticPressure: {name: 'osmoticPressure', label: 'osmotic pressure'},
     packingFraction: {name: 'packingFraction', label: 'packing fraction'},
     partialPressureOfBInAGaseousMixture: {
       name: 'partialPressureOfBInAGaseousMixture',
-      label: 'partial pressure of B (in a gaseous mixture)',
+      label: 'partial pressure of B (in a gaseous mixture)'
     },
     particalFluxDensity: {name: 'particalFluxDensity', label: 'partical flux density'},
     particleFluence: {name: 'particleFluence', label: 'particle fluence'},
@@ -526,7 +526,7 @@ var sammUDefinition = {
     pecletNumberForMassTransfer: {name: 'pecletNumberForMassTransfer', label: 'Peclet number for mass transfer'},
     peltierCoefficientForSubstancesAAndB: {
       name: 'peltierCoefficientForSubstancesAAndB',
-      label: 'Peltier coefficient for substances a and b',
+      label: 'Peltier coefficient for substances a and b'
     },
     performanceCharacteristic: {name: 'performanceCharacteristic', label: 'performance characteristic'},
     period: {name: 'period', label: 'period'},
@@ -541,12 +541,12 @@ var sammUDefinition = {
     phaseDisplacement: {name: 'phaseDisplacement', label: 'phase displacement'},
     phaseSpeedOfElectromagneticWaves: {
       name: 'phaseSpeedOfElectromagneticWaves',
-      label: 'phase speed of electromagnetic waves',
+      label: 'phase speed of electromagnetic waves'
     },
     phaseVelocity: {name: 'phaseVelocity', label: 'phase velocity'},
     phaseVelocityOfElectromagneticWaves: {
       name: 'phaseVelocityOfElectromagneticWaves',
-      label: 'phase velocity of electromagnetic waves',
+      label: 'phase velocity of electromagnetic waves'
     },
     photonExitance: {name: 'photonExitance', label: 'photon exitance'},
     photonExposure: {name: 'photonExposure', label: 'photon exposure'},
@@ -589,7 +589,7 @@ var sammUDefinition = {
     ratioOfTheMassicHeatCapacity: {name: 'ratioOfTheMassicHeatCapacity', label: 'ratio of the massic heat capacity'},
     ratioOfTheSpecificHeatCapacities: {
       name: 'ratioOfTheSpecificHeatCapacities',
-      label: 'ratio of the specific heat capacities',
+      label: 'ratio of the specific heat capacities'
     },
     rayleighNumber: {name: 'rayleighNumber', label: 'Rayleigh number'},
     reactance: {name: 'reactance', label: 'reactance'},
@@ -603,7 +603,7 @@ var sammUDefinition = {
     refractiveIndex: {name: 'refractiveIndex', label: 'refractive index'},
     relativeActivityOfSolventAEspeciallyInADiluteSolution: {
       name: 'relativeActivityOfSolventAEspeciallyInADiluteSolution',
-      label: 'relative activity of solvent A (especially in a dilute solution)',
+      label: 'relative activity of solvent A (especially in a dilute solution)'
     },
     relativeAtomicMass: {name: 'relativeAtomicMass', label: 'relative atomic mass'},
     relativeDensity: {name: 'relativeDensity', label: 'relative density'},
@@ -622,7 +622,7 @@ var sammUDefinition = {
     resistanceLoadPerUnitLength: {name: 'resistanceLoadPerUnitLength', label: 'resistance load per unit length'},
     resistanceToAlternatingCurrent: {
       name: 'resistanceToAlternatingCurrent',
-      label: 'resistance (to alternating current)',
+      label: 'resistance (to alternating current)'
     },
     resistanceToDirectCurrent: {name: 'resistanceToDirectCurrent', label: 'resistance (to direct current)'},
     resistivity: {name: 'resistivity', label: 'resistivity'},
@@ -645,7 +645,7 @@ var sammUDefinition = {
     sectionModulus: {name: 'sectionModulus', label: 'section modulus'},
     seebeckCoefficientForSubstancesAAndB: {
       name: 'seebeckCoefficientForSubstancesAAndB',
-      label: 'Seebeck coefficient for substances a and b',
+      label: 'Seebeck coefficient for substances a and b'
     },
     selfInductance: {name: 'selfInductance', label: 'self inductance'},
     shearModulus: {name: 'shearModulus', label: 'shear modulus'},
@@ -670,15 +670,15 @@ var sammUDefinition = {
     specificEnthalpy: {name: 'specificEnthalpy', label: 'specific enthalpy'},
     specificHeatCapacityAtConstantPressure: {
       name: 'specificHeatCapacityAtConstantPressure',
-      label: 'specific heat capacity at constant pressure',
+      label: 'specific heat capacity at constant pressure'
     },
     specificHeatCapacityAtConstantVolume: {
       name: 'specificHeatCapacityAtConstantVolume',
-      label: 'specific heat capacity at constant volume',
+      label: 'specific heat capacity at constant volume'
     },
     specificHeatCapacityAtSaturation: {
       name: 'specificHeatCapacityAtSaturation',
-      label: 'specific heat capacity at saturation',
+      label: 'specific heat capacity at saturation'
     },
     specificOpticalRotatoryPower: {name: 'specificOpticalRotatoryPower', label: 'specific optical rotatory power'},
     specificThermodynamicEnergy: {name: 'specificThermodynamicEnergy', label: 'specific thermodynamic energy'},
@@ -688,11 +688,11 @@ var sammUDefinition = {
     spectralAngularCrossSection: {name: 'spectralAngularCrossSection', label: 'spectral angular cross-section'},
     spectralConcentrationOfRadiantEnergyDensityInTermsOfWavelength: {
       name: 'spectralConcentrationOfRadiantEnergyDensityInTermsOfWavelength',
-      label: 'spectral concentration of radiant energy density (in terms of wavelength)',
+      label: 'spectral concentration of radiant energy density (in terms of wavelength)'
     },
     spectralConcentrationOfVibrationalModesInTermsOfAngularFrequency: {
       name: 'spectralConcentrationOfVibrationalModesInTermsOfAngularFrequency',
-      label: 'spectral concentration of vibrational modes (in terms of angular frequency)',
+      label: 'spectral concentration of vibrational modes (in terms of angular frequency)'
     },
     spectralCrossSection: {name: 'spectralCrossSection', label: 'spectral cross-section'},
     spectralEmissivity: {name: 'spectralEmissivity', label: 'spectral emissivity'},
@@ -701,7 +701,7 @@ var sammUDefinition = {
     spectralRadianceFactor: {name: 'spectralRadianceFactor', label: 'spectral radiance factor'},
     spectralRadiantEnergyDensityInTermsOfWaveLength: {
       name: 'spectralRadiantEnergyDensityInTermsOfWaveLength',
-      label: 'spectral radiant energy density (in terms of wave length)',
+      label: 'spectral radiant energy density (in terms of wave length)'
     },
     spectralReflectance: {name: 'spectralReflectance', label: 'spectral reflectance'},
     spectralReflectionfactor: {name: 'spectralReflectionfactor', label: 'spectral reflectionfactor'},
@@ -709,23 +709,23 @@ var sammUDefinition = {
     spectralTransmittance: {name: 'spectralTransmittance', label: 'spectral transmittance'},
     spinAngularMomentumQuantumNumber: {
       name: 'spinAngularMomentumQuantumNumber',
-      label: 'spin angular momentum quantum number',
+      label: 'spin angular momentum quantum number'
     },
     standardAbsoluteActivityOfBInAGaseousMixture: {
       name: 'standardAbsoluteActivityOfBInAGaseousMixture',
-      label: 'standard absolute activity of B (in a gaseous mixture)',
+      label: 'standard absolute activity of B (in a gaseous mixture)'
     },
     standardAbsoluteActivityOfBInALiquidOrASolidMixture: {
       name: 'standardAbsoluteActivityOfBInALiquidOrASolidMixture',
-      label: 'standard absolute activity of B (in a liquid or a solid mixture)',
+      label: 'standard absolute activity of B (in a liquid or a solid mixture)'
     },
     standardAbsoluteActivityOfSoluteBEspeciallyInADiluteSolution: {
       name: 'standardAbsoluteActivityOfSoluteBEspeciallyInADiluteSolution',
-      label: 'standard absolute activity of solute B (especially in a dilute solution)',
+      label: 'standard absolute activity of solute B (especially in a dilute solution)'
     },
     standardAbsoluteActivityOfSolventAEspeciallyInADiluteSolution: {
       name: 'standardAbsoluteActivityOfSolventAEspeciallyInADiluteSolution',
-      label: 'standard absolute activity of solvent A (especially in a dilute solution)',
+      label: 'standard absolute activity of solvent A (especially in a dilute solution)'
     },
     standardEquilibriumConstant: {name: 'standardEquilibriumConstant', label: 'standard equilibrium constant'},
     stantonNumber: {name: 'stantonNumber', label: 'Stanton number'},
@@ -737,12 +737,12 @@ var sammUDefinition = {
     strouhalNumber: {name: 'strouhalNumber', label: 'Strouhal number'},
     superConductorTransitionTemperature: {
       name: 'superConductorTransitionTemperature',
-      label: 'Super conductor transition temperature',
+      label: 'Super conductor transition temperature'
     },
     superconductorEnergyGap: {name: 'superconductorEnergyGap', label: 'superconductor energy gap'},
     surfaceCoefficientOfHeatTransfer: {
       name: 'surfaceCoefficientOfHeatTransfer',
-      label: 'surface coefficient of heat transfer',
+      label: 'surface coefficient of heat transfer'
     },
     surfaceDensity: {name: 'surfaceDensity', label: 'surface density'},
     surfaceDensityOfCharge: {name: 'surfaceDensityOfCharge', label: 'surface density of charge'},
@@ -762,12 +762,12 @@ var sammUDefinition = {
     thermodynamic: {name: 'thermodynamic', label: 'thermodynamic'},
     thermodynamicCriticalMagneticFluxDensity: {
       name: 'thermodynamicCriticalMagneticFluxDensity',
-      label: 'thermodynamic critical magnetic flux density',
+      label: 'thermodynamic critical magnetic flux density'
     },
     thermodynamicEnergy: {name: 'thermodynamicEnergy', label: 'thermodynamic energy'},
     thermoelectromotiveForceBetweenSubstancesAAndB: {
       name: 'thermoelectromotiveForceBetweenSubstancesAAndB',
-      label: 'thermoelectromotive force between substances a and b',
+      label: 'thermoelectromotive force between substances a and b'
     },
     thickness: {name: 'thickness', label: 'thickness'},
     thompsonCoefficient: {name: 'thompsonCoefficient', label: 'Thompson coefficient'},
@@ -777,7 +777,7 @@ var sammUDefinition = {
     torsionalStiffness: {name: 'torsionalStiffness', label: 'torsional stiffness'},
     totalAngularMomentumQuantumNumber: {
       name: 'totalAngularMomentumQuantumNumber',
-      label: 'total angular momentum quantum number',
+      label: 'total angular momentum quantum number'
     },
     totalAtomicStoppingPower: {name: 'totalAtomicStoppingPower', label: 'total atomic stopping power'},
     totalCrossSection: {name: 'totalCrossSection', label: 'total cross-section'},
@@ -790,13 +790,13 @@ var sammUDefinition = {
     unifiedAtomicMassConstant: {name: 'unifiedAtomicMassConstant', label: 'unified atomic mass constant'},
     upperCriticalMagneticFluxDensity: {
       name: 'upperCriticalMagneticFluxDensity',
-      label: 'upper critical magnetic flux density',
+      label: 'upper critical magnetic flux density'
     },
     velocity: {name: 'velocity', label: 'velocity'},
     velocityOfSoundPhaseVelocity: {name: 'velocityOfSoundPhaseVelocity', label: 'velocity of sound (phase velocity)'},
     velocitySpeedOnPropagationOfElectromagneticWavesInVacuo: {
       name: 'velocitySpeedOnPropagationOfElectromagneticWavesInVacuo',
-      label: 'velocity (speed) on propagation of electromagnetic waves in vacuo',
+      label: 'velocity (speed) on propagation of electromagnetic waves in vacuo'
     },
     vergence: {name: 'vergence', label: 'vergence'},
     viscosityDynamicViscosity: {name: 'viscosityDynamicViscosity', label: 'viscosity (dynamic viscosity)'},
@@ -821,7 +821,7 @@ var sammUDefinition = {
     volumicMass: {name: 'volumicMass', label: 'volumic mass'},
     volumicNumberOfMoleculesOrParticles: {
       name: 'volumicNumberOfMoleculesOrParticles',
-      label: 'volumic number of molecules (or particles)',
+      label: 'volumic number of molecules (or particles)'
     },
     volumicTotalCrossSection: {name: 'volumicTotalCrossSection', label: 'volumic total cross-section'},
     waveNumber: {name: 'waveNumber', label: 'wave number'},
@@ -831,7 +831,7 @@ var sammUDefinition = {
     weight: {name: 'weight', label: 'weight'},
     work: {name: 'work', label: 'work'},
     workFunction: {name: 'workFunction', label: 'work function'},
-    workPerUnitWeight: {name: 'workPerUnitWeight', label: 'work per unit weight'},
+    workPerUnitWeight: {name: 'workPerUnitWeight', label: 'work per unit weight'}
   },
 
   units: {
@@ -842,7 +842,7 @@ var sammUDefinition = {
       code: 'AL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     accountingUnit: {
       name: 'accountingUnit',
@@ -851,7 +851,7 @@ var sammUDefinition = {
       code: 'E50',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     acre: {
       name: 'acre',
@@ -871,8 +871,8 @@ var sammUDefinition = {
         'equivalentAbsorptionAreaOfASurfaceOrObject',
         'atomicAttenuationCoefficient',
         'area',
-        'crossSection',
-      ],
+        'crossSection'
+      ]
     },
     acreFootBasedOnUsSurveyFoot: {
       name: 'acreFootBasedOnUsSurveyFoot',
@@ -883,7 +883,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.233489 × 10³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     activeUnit: {
       name: 'activeUnit',
@@ -892,7 +892,7 @@ var sammUDefinition = {
       code: 'E25',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     actualPer360: {
       name: 'actualPer360',
@@ -913,8 +913,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     additionalMinute: {
       name: 'additionalMinute',
@@ -923,7 +923,7 @@ var sammUDefinition = {
       code: 'AH',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     airDryMetricTon: {
       name: 'airDryMetricTon',
@@ -932,7 +932,7 @@ var sammUDefinition = {
       code: 'MD',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     airDryTon: {
       name: 'airDryTon',
@@ -941,7 +941,7 @@ var sammUDefinition = {
       code: 'E28',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     alcoholicStrengthByMass: {
       name: 'alcoholicStrengthByMass',
@@ -950,7 +950,7 @@ var sammUDefinition = {
       code: 'ASM',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     alcoholicStrengthByVolume: {
       name: 'alcoholicStrengthByVolume',
@@ -959,7 +959,7 @@ var sammUDefinition = {
       code: 'ASU',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     ampere: {
       name: 'ampere',
@@ -968,7 +968,7 @@ var sammUDefinition = {
       code: 'AMP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['magneticPotentialDifference', 'magnetomotiveForce', 'currentLinkage', 'electricCurrent'],
+      quantityKinds: ['magneticPotentialDifference', 'magnetomotiveForce', 'currentLinkage', 'electricCurrent']
     },
     ampereHour: {
       name: 'ampereHour',
@@ -986,8 +986,8 @@ var sammUDefinition = {
         'elementaryCharge',
         'quantityOfElectricity',
         'electricFluxFluxOfDisplacement',
-        'electricCharge',
-      ],
+        'electricCharge'
+      ]
     },
     ampereMinute: {
       name: 'ampereMinute',
@@ -1005,8 +1005,8 @@ var sammUDefinition = {
         'electricCharge',
         'electricFluxFluxOfDisplacement',
         'electricCharge',
-        'quantityOfElectricity',
-      ],
+        'quantityOfElectricity'
+      ]
     },
     amperePerCentimetre: {
       name: 'amperePerCentimetre',
@@ -1024,8 +1024,8 @@ var sammUDefinition = {
         'magneticFieldStrength',
         'magnetization',
         'linearElectricCurrentDensity',
-        'lineicElectricCurrent',
-      ],
+        'lineicElectricCurrent'
+      ]
     },
     amperePerKilogram: {
       name: 'amperePerKilogram',
@@ -1034,7 +1034,7 @@ var sammUDefinition = {
       code: 'H31',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['currentDensity'],
+      quantityKinds: ['currentDensity']
     },
     amperePerMetre: {
       name: 'amperePerMetre',
@@ -1043,7 +1043,7 @@ var sammUDefinition = {
       code: 'AE',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['magneticFieldStrength', 'magnetization', 'linearElectricCurrentDensity', 'lineicElectricCurrent'],
+      quantityKinds: ['magneticFieldStrength', 'magnetization', 'linearElectricCurrentDensity', 'lineicElectricCurrent']
     },
     amperePerMillimetre: {
       name: 'amperePerMillimetre',
@@ -1061,8 +1061,8 @@ var sammUDefinition = {
         'magneticFieldStrength',
         'magnetization',
         'linearElectricCurrentDensity',
-        'lineicElectricCurrent',
-      ],
+        'lineicElectricCurrent'
+      ]
     },
     amperePerPascal: {
       name: 'amperePerPascal',
@@ -1071,7 +1071,7 @@ var sammUDefinition = {
       code: 'N93',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['currentDensity'],
+      quantityKinds: ['currentDensity']
     },
     amperePerSquareCentimetre: {
       name: 'amperePerSquareCentimetre',
@@ -1082,7 +1082,7 @@ var sammUDefinition = {
         return sammUDefinition.units['amperePerSquareMetre'];
       },
       conversionFactor: '10⁴ A/m²',
-      quantityKinds: ['currentDensity', 'currentDensity'],
+      quantityKinds: ['currentDensity', 'currentDensity']
     },
     amperePerSquareMetre: {
       name: 'amperePerSquareMetre',
@@ -1091,7 +1091,7 @@ var sammUDefinition = {
       code: 'A41',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['currentDensity'],
+      quantityKinds: ['currentDensity']
     },
     amperePerSquareMetreKelvinSquared: {
       name: 'amperePerSquareMetreKelvinSquared',
@@ -1100,7 +1100,7 @@ var sammUDefinition = {
       code: 'A6',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['richardsonConstant'],
+      quantityKinds: ['richardsonConstant']
     },
     amperePerSquareMillimetre: {
       name: 'amperePerSquareMillimetre',
@@ -1111,7 +1111,7 @@ var sammUDefinition = {
         return sammUDefinition.units['amperePerSquareMetre'];
       },
       conversionFactor: '10⁶ A/m²',
-      quantityKinds: ['currentDensity', 'currentDensity'],
+      quantityKinds: ['currentDensity', 'currentDensity']
     },
     ampereSecond: {
       name: 'ampereSecond',
@@ -1129,8 +1129,8 @@ var sammUDefinition = {
         'elementaryCharge',
         'quantityOfElectricity',
         'electricFluxFluxOfDisplacement',
-        'electricCharge',
-      ],
+        'electricCharge'
+      ]
     },
     ampereSquareMetre: {
       name: 'ampereSquareMetre',
@@ -1145,8 +1145,8 @@ var sammUDefinition = {
         'magneticAreaMoment',
         'magneticMoment',
         'bohrMagneton',
-        'nuclearMagnetonOrnucleus',
-      ],
+        'nuclearMagnetonOrnucleus'
+      ]
     },
     ampereSquareMetrePerJouleSecond: {
       name: 'ampereSquareMetrePerJouleSecond',
@@ -1155,7 +1155,7 @@ var sammUDefinition = {
       code: 'A10',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['gyromagneticRatio', 'gyromagneticCoefficient'],
+      quantityKinds: ['gyromagneticRatio', 'gyromagneticCoefficient']
     },
     ampereSquaredSecond: {
       name: 'ampereSquaredSecond',
@@ -1164,7 +1164,7 @@ var sammUDefinition = {
       code: 'H32',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['quantityOfElectricity', 'electricFluxFluxOfDisplacement', 'electricCharge'],
+      quantityKinds: ['quantityOfElectricity', 'electricFluxFluxOfDisplacement', 'electricCharge']
     },
     angstrom: {
       name: 'angstrom',
@@ -1225,8 +1225,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     antiHemophilicFactorAhfUnit: {
       name: 'antiHemophilicFactorAhfUnit',
@@ -1235,7 +1235,7 @@ var sammUDefinition = {
       code: 'AQ',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     assembly: {
       name: 'assembly',
@@ -1244,7 +1244,7 @@ var sammUDefinition = {
       code: 'AY',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     assortment: {
       name: 'assortment',
@@ -1253,7 +1253,7 @@ var sammUDefinition = {
       code: 'AS',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     astronomicalUnit: {
       name: 'astronomicalUnit',
@@ -1310,8 +1310,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     attofarad: {
       name: 'attofarad',
@@ -1320,7 +1320,7 @@ var sammUDefinition = {
       code: 'H48',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['capacitance'],
+      quantityKinds: ['capacitance']
     },
     attojoule: {
       name: 'attojoule',
@@ -1359,8 +1359,8 @@ var sammUDefinition = {
         'donorIonizationEnergy',
         'energy',
         'potentialEnergy',
-        'exchangeIntergral',
-      ],
+        'exchangeIntergral'
+      ]
     },
     averageMinutePerCall: {
       name: 'averageMinutePerCall',
@@ -1369,7 +1369,7 @@ var sammUDefinition = {
       code: 'AI',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     ball: {
       name: 'ball',
@@ -1378,7 +1378,7 @@ var sammUDefinition = {
       code: 'AA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     barCubicMetrePerSecond: {
       name: 'barCubicMetrePerSecond',
@@ -1387,7 +1387,7 @@ var sammUDefinition = {
       code: 'F92',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['leakageRateOfGas'],
+      quantityKinds: ['leakageRateOfGas']
     },
     barLitrePerSecond: {
       name: 'barLitrePerSecond',
@@ -1396,7 +1396,7 @@ var sammUDefinition = {
       code: 'F91',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['leakageRateOfGas'],
+      quantityKinds: ['leakageRateOfGas']
     },
     barPerBar: {
       name: 'barPerBar',
@@ -1405,7 +1405,7 @@ var sammUDefinition = {
       code: 'J56',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['pressureRatio'],
+      quantityKinds: ['pressureRatio']
     },
     barPerKelvin: {
       name: 'barPerKelvin',
@@ -1414,7 +1414,7 @@ var sammUDefinition = {
       code: 'F81',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['pressureCoefficient'],
+      quantityKinds: ['pressureCoefficient']
     },
     barUnitOfPressure: {
       name: 'barUnitOfPressure',
@@ -1448,8 +1448,8 @@ var sammUDefinition = {
         'bulkModulus',
         'normalStress',
         'modulusOfRigidity',
-        'shearModulus',
-      ],
+        'shearModulus'
+      ]
     },
     barn: {
       name: 'barn',
@@ -1469,8 +1469,8 @@ var sammUDefinition = {
         'atomicAttenuationCoefficient',
         'area',
         'crossSection',
-        'totalCrossSection',
-      ],
+        'totalCrossSection'
+      ]
     },
     barnPerElectronvolt: {
       name: 'barnPerElectronvolt',
@@ -1481,7 +1481,7 @@ var sammUDefinition = {
         return sammUDefinition.units['squareMetrePerJoule'];
       },
       conversionFactor: '6.241 51 × 10⁻¹⁰ m²/J',
-      quantityKinds: ['spectralCrossSection', 'spectralCrossSection'],
+      quantityKinds: ['spectralCrossSection', 'spectralCrossSection']
     },
     barnPerSteradian: {
       name: 'barnPerSteradian',
@@ -1492,7 +1492,7 @@ var sammUDefinition = {
         return sammUDefinition.units['squareMetrePerSteradian'];
       },
       conversionFactor: '1 × 10⁻²⁸ m²/sr',
-      quantityKinds: ['angularCrossSection', 'angularCrossSection'],
+      quantityKinds: ['angularCrossSection', 'angularCrossSection']
     },
     barnPerSteradianElectronvolt: {
       name: 'barnPerSteradianElectronvolt',
@@ -1501,7 +1501,7 @@ var sammUDefinition = {
       code: 'A16',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['spectralAngularCrossSection'],
+      quantityKinds: ['spectralAngularCrossSection']
     },
     barrelImperial: {
       name: 'barrelImperial',
@@ -1510,7 +1510,7 @@ var sammUDefinition = {
       code: 'B4',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     barrelUkPetroleum: {
       name: 'barrelUkPetroleum',
@@ -1521,7 +1521,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '0.15911315 m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     barrelUkPetroleumPerDay: {
       name: 'barrelUkPetroleumPerDay',
@@ -1532,7 +1532,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.8415874 × 10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     barrelUkPetroleumPerHour: {
       name: 'barrelUkPetroleumPerHour',
@@ -1543,7 +1543,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.419810 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     barrelUkPetroleumPerMinute: {
       name: 'barrelUkPetroleumPerMinute',
@@ -1554,7 +1554,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.651886 m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     barrelUkPetroleumPerSecond: {
       name: 'barrelUkPetroleumPerSecond',
@@ -1565,7 +1565,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '0.15911315 m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     barrelUs: {
       name: 'barrelUs',
@@ -1576,7 +1576,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '158.9873 × 10⁻³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     barrelUsPerDay: {
       name: 'barrelUsPerDay',
@@ -1587,7 +1587,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.84013 × 10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     barrelUsPerMinute: {
       name: 'barrelUsPerMinute',
@@ -1598,7 +1598,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.64979 × 10⁻³ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     barrelUsPetroleumPerHour: {
       name: 'barrelUsPetroleumPerHour',
@@ -1609,7 +1609,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.416314 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     barrelUsPetroleumPerSecond: {
       name: 'barrelUsPetroleumPerSecond',
@@ -1620,7 +1620,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '0.1589873 m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     baseBox: {
       name: 'baseBox',
@@ -1629,7 +1629,7 @@ var sammUDefinition = {
       code: 'BB',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     batch: {
       name: 'batch',
@@ -1638,7 +1638,7 @@ var sammUDefinition = {
       code: '5B',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     battingPound: {
       name: 'battingPound',
@@ -1647,7 +1647,7 @@ var sammUDefinition = {
       code: 'B3',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     baud: {
       name: 'baud',
@@ -1656,7 +1656,7 @@ var sammUDefinition = {
       code: 'J38',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     beaufort: {
       name: 'beaufort',
@@ -1665,7 +1665,7 @@ var sammUDefinition = {
       code: 'M19',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     becquerel: {
       name: 'becquerel',
@@ -1676,7 +1676,7 @@ var sammUDefinition = {
         return sammUDefinition.units['curie'];
       },
       conversionFactor: '27.027 × 10⁻¹² Ci',
-      quantityKinds: ['activity', 'activity'],
+      quantityKinds: ['activity', 'activity']
     },
     becquerelPerCubicMetre: {
       name: 'becquerelPerCubicMetre',
@@ -1685,7 +1685,7 @@ var sammUDefinition = {
       code: 'A19',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicActivity', 'activityConcentration'],
+      quantityKinds: ['volumicActivity', 'activityConcentration']
     },
     becquerelPerKilogram: {
       name: 'becquerelPerKilogram',
@@ -1696,7 +1696,7 @@ var sammUDefinition = {
         return sammUDefinition.units['curiePerKilogram'];
       },
       conversionFactor: '27.027 × 10⁻¹² Ci/kg',
-      quantityKinds: ['specificActivityInASample', 'specificActivityInASample'],
+      quantityKinds: ['specificActivityInASample', 'specificActivityInASample']
     },
     bel: {
       name: 'bel',
@@ -1705,7 +1705,7 @@ var sammUDefinition = {
       code: 'M72',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['levelOfAPowerQuantity', 'levelOfAFieldQuantity'],
+      quantityKinds: ['levelOfAPowerQuantity', 'levelOfAFieldQuantity']
     },
     belPerMetre: {
       name: 'belPerMetre',
@@ -1714,7 +1714,7 @@ var sammUDefinition = {
       code: 'P43',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['soundPressureLevel', 'soundPowerLevel'],
+      quantityKinds: ['soundPressureLevel', 'soundPowerLevel']
     },
     bigPoint: {
       name: 'bigPoint',
@@ -1761,8 +1761,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     billionEur: {
       name: 'billionEur',
@@ -1771,7 +1771,7 @@ var sammUDefinition = {
       code: 'BIL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     biot: {
       name: 'biot',
@@ -1790,8 +1790,8 @@ var sammUDefinition = {
         'magnetomotiveForce',
         'currentLinkage',
         'electricCurrent',
-        'magneticPotentialDifference',
-      ],
+        'magneticPotentialDifference'
+      ]
     },
     bit: {
       name: 'bit',
@@ -1800,7 +1800,7 @@ var sammUDefinition = {
       code: 'A99',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['informationEntropy'],
+      quantityKinds: ['informationEntropy']
     },
     bitPerCubicMetre: {
       name: 'bitPerCubicMetre',
@@ -1809,7 +1809,7 @@ var sammUDefinition = {
       code: 'F01',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     bitPerMetre: {
       name: 'bitPerMetre',
@@ -1818,7 +1818,7 @@ var sammUDefinition = {
       code: 'E88',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     bitPerSecond: {
       name: 'bitPerSecond',
@@ -1827,7 +1827,7 @@ var sammUDefinition = {
       code: 'B10',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     bitPerSquareMetre: {
       name: 'bitPerSquareMetre',
@@ -1836,7 +1836,7 @@ var sammUDefinition = {
       code: 'E89',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     blank: {
       name: 'blank',
@@ -1845,7 +1845,7 @@ var sammUDefinition = {
       code: 'H21',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     boardFoot: {
       name: 'boardFoot',
@@ -1854,7 +1854,7 @@ var sammUDefinition = {
       code: 'BFT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     book: {
       name: 'book',
@@ -1863,7 +1863,7 @@ var sammUDefinition = {
       code: 'D63',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     brakeHorsePower: {
       name: 'brakeHorsePower',
@@ -1882,8 +1882,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     britishThermalUnit39Degreesf: {
       name: 'britishThermalUnit39Degreesf',
@@ -1920,8 +1920,8 @@ var sammUDefinition = {
         'enthalpy',
         'helmholtzFunction',
         'heat',
-        'energy',
-      ],
+        'energy'
+      ]
     },
     britishThermalUnit59Degreesf: {
       name: 'britishThermalUnit59Degreesf',
@@ -1958,8 +1958,8 @@ var sammUDefinition = {
         'enthalpy',
         'heat',
         'thermodynamicEnergy',
-        'helmholtzFreeEnergy',
-      ],
+        'helmholtzFreeEnergy'
+      ]
     },
     britishThermalUnit60Degreesf: {
       name: 'britishThermalUnit60Degreesf',
@@ -1996,8 +1996,8 @@ var sammUDefinition = {
         'helmholtzFunction',
         'enthalpy',
         'thermodynamicEnergy',
-        'helmholtzFreeEnergy',
-      ],
+        'helmholtzFreeEnergy'
+      ]
     },
     britishThermalUnitInternationalTable: {
       name: 'britishThermalUnitInternationalTable',
@@ -2034,8 +2034,8 @@ var sammUDefinition = {
         'thermodynamicEnergy',
         'helmholtzFunction',
         'helmholtzFreeEnergy',
-        'heat',
-      ],
+        'heat'
+      ]
     },
     britishThermalUnitInternationalTableFootPerHourSquareFootDegreeFahrenheit: {
       name: 'britishThermalUnitInternationalTableFootPerHourSquareFootDegreeFahrenheit',
@@ -2046,7 +2046,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '1.730735 W/(m × K)',
-      quantityKinds: ['thermalConductivity', 'thermalConductivity'],
+      quantityKinds: ['thermalConductivity', 'thermalConductivity']
     },
     britishThermalUnitInternationalTableInchPerHourSquareFootDegreeFahrenheit: {
       name: 'britishThermalUnitInternationalTableInchPerHourSquareFootDegreeFahrenheit',
@@ -2057,7 +2057,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '0.1442279 W/(m × K)',
-      quantityKinds: ['thermalConductivity', 'thermalConductivity'],
+      quantityKinds: ['thermalConductivity', 'thermalConductivity']
     },
     britishThermalUnitInternationalTableInchPerSecondSquareFootDegreeFahrenheit: {
       name: 'britishThermalUnitInternationalTableInchPerSecondSquareFootDegreeFahrenheit',
@@ -2068,7 +2068,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '5.192204 × 10² W/(m × K)',
-      quantityKinds: ['thermalConductivity', 'thermalConductivity'],
+      quantityKinds: ['thermalConductivity', 'thermalConductivity']
     },
     britishThermalUnitInternationalTablePerCubicFoot: {
       name: 'britishThermalUnitInternationalTablePerCubicFoot',
@@ -2086,8 +2086,8 @@ var sammUDefinition = {
         'soundEnergyDensity',
         'volumic',
         'radiantEnergyDensity',
-        'energyDensity',
-      ],
+        'energyDensity'
+      ]
     },
     britishThermalUnitInternationalTablePerDegreeFahrenheit: {
       name: 'britishThermalUnitInternationalTablePerDegreeFahrenheit',
@@ -2098,7 +2098,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '1.899101 × 10³ J/K',
-      quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction'],
+      quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction']
     },
     britishThermalUnitInternationalTablePerDegreeRankine: {
       name: 'britishThermalUnitInternationalTablePerDegreeRankine',
@@ -2109,7 +2109,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '1.899101 × 10³ J/K',
-      quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction'],
+      quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction']
     },
     britishThermalUnitInternationalTablePerHour: {
       name: 'britishThermalUnitInternationalTablePerHour',
@@ -2128,8 +2128,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     britishThermalUnitInternationalTablePerHourSquareFootDegreeFahrenheit: {
       name: 'britishThermalUnitInternationalTablePerHourSquareFootDegreeFahrenheit',
@@ -2140,7 +2140,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '5.678263 W/(m² × K)',
-      quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer'],
+      quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer']
     },
     britishThermalUnitInternationalTablePerHourSquareFootDegreeRankine: {
       name: 'britishThermalUnitInternationalTablePerHourSquareFootDegreeRankine',
@@ -2149,7 +2149,7 @@ var sammUDefinition = {
       code: 'A23',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['surfaceCoefficientOfHeatTransfer'],
+      quantityKinds: ['surfaceCoefficientOfHeatTransfer']
     },
     britishThermalUnitInternationalTablePerMinute: {
       name: 'britishThermalUnitInternationalTablePerMinute',
@@ -2168,8 +2168,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     britishThermalUnitInternationalTablePerPound: {
       name: 'britishThermalUnitInternationalTablePerPound',
@@ -2180,7 +2180,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerKilogram'];
       },
       conversionFactor: '2326 J/kg',
-      quantityKinds: ['specificEnergy', 'massicEnergy', 'massicHelmholtzFreeEnergy'],
+      quantityKinds: ['specificEnergy', 'massicEnergy', 'massicHelmholtzFreeEnergy']
     },
     britishThermalUnitInternationalTablePerPoundDegreeFahrenheit: {
       name: 'britishThermalUnitInternationalTablePerPoundDegreeFahrenheit',
@@ -2196,8 +2196,8 @@ var sammUDefinition = {
         'entropy',
         'specificHeatCapacityAtSaturation',
         'specificHeatCapacityAtConstantVolume',
-        'specificHeatCapacityAtConstantPressure',
-      ],
+        'specificHeatCapacityAtConstantPressure'
+      ]
     },
     britishThermalUnitInternationalTablePerPoundDegreeRankine: {
       name: 'britishThermalUnitInternationalTablePerPoundDegreeRankine',
@@ -2214,8 +2214,8 @@ var sammUDefinition = {
         'specificHeatCapacityAtSaturation',
         'specificHeatCapacityAtSaturation',
         'specificHeatCapacityAtConstantVolume',
-        'specificHeatCapacityAtConstantPressure',
-      ],
+        'specificHeatCapacityAtConstantPressure'
+      ]
     },
     britishThermalUnitInternationalTablePerSecond: {
       name: 'britishThermalUnitInternationalTablePerSecond',
@@ -2234,8 +2234,8 @@ var sammUDefinition = {
         'powerForDirectCurrent',
         'radiantPower',
         'soundPower',
-        'heatFlowRate',
-      ],
+        'heatFlowRate'
+      ]
     },
     britishThermalUnitInternationalTablePerSecondFootDegreeRankine: {
       name: 'britishThermalUnitInternationalTablePerSecondFootDegreeRankine',
@@ -2246,7 +2246,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '6230.64 W/(m × K)',
-      quantityKinds: ['thermalConductivity', 'thermalConductivity'],
+      quantityKinds: ['thermalConductivity', 'thermalConductivity']
     },
     britishThermalUnitInternationalTablePerSecondSquareFootDegreeFahrenheit: {
       name: 'britishThermalUnitInternationalTablePerSecondSquareFootDegreeFahrenheit',
@@ -2257,7 +2257,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '2.044175 × 10⁴ W/(m² × K)',
-      quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer'],
+      quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer']
     },
     britishThermalUnitInternationalTablePerSecondSquareFootDegreeRankine: {
       name: 'britishThermalUnitInternationalTablePerSecondSquareFootDegreeRankine',
@@ -2268,7 +2268,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '20441.7 W/(m² × K)',
-      quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer'],
+      quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer']
     },
     britishThermalUnitInternationalTablePerSquareFoot: {
       name: 'britishThermalUnitInternationalTablePerSquareFoot',
@@ -2279,7 +2279,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerSquareMetre'];
       },
       conversionFactor: '1.135653 × 10⁴ J/m²',
-      quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence'],
+      quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence']
     },
     britishThermalUnitInternationalTablePerSquareFootHour: {
       name: 'britishThermalUnitInternationalTablePerSquareFootHour',
@@ -2301,8 +2301,8 @@ var sammUDefinition = {
         'energyFluenceRate',
         'soundIntensity',
         'radiantEnergy',
-        'radiantExitance',
-      ],
+        'radiantExitance'
+      ]
     },
     britishThermalUnitInternationalTablePerSquareFootSecond: {
       name: 'britishThermalUnitInternationalTablePerSquareFootSecond',
@@ -2324,8 +2324,8 @@ var sammUDefinition = {
         'soundIntensity',
         'radiantEnergy',
         'radiantExitance',
-        'densityOfHeatFlowRate',
-      ],
+        'densityOfHeatFlowRate'
+      ]
     },
     britishThermalUnitInternationalTablePerSquareInchSecond: {
       name: 'britishThermalUnitInternationalTablePerSquareInchSecond',
@@ -2347,8 +2347,8 @@ var sammUDefinition = {
         'soundIntensity',
         'radiantEnergy',
         'radiantExitance',
-        'densityOfHeatFlowRate',
-      ],
+        'densityOfHeatFlowRate'
+      ]
     },
     britishThermalUnitMean: {
       name: 'britishThermalUnitMean',
@@ -2385,8 +2385,8 @@ var sammUDefinition = {
         'helmholtzFunction',
         'quantityOfHeat',
         'energy',
-        'thermodynamicEnergy',
-      ],
+        'thermodynamicEnergy'
+      ]
     },
     britishThermalUnitThermochemicalFootPerHourSquareFootDegreeFahrenheit: {
       name: 'britishThermalUnitThermochemicalFootPerHourSquareFootDegreeFahrenheit',
@@ -2397,7 +2397,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '1.729577 W/(m × K)',
-      quantityKinds: ['thermalConductivity', 'thermalConductivity'],
+      quantityKinds: ['thermalConductivity', 'thermalConductivity']
     },
     britishThermalUnitThermochemicalInchPerHourSquareFootDegreeFahrenheit: {
       name: 'britishThermalUnitThermochemicalInchPerHourSquareFootDegreeFahrenheit',
@@ -2408,7 +2408,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '0.1441314 W/(m × K)',
-      quantityKinds: ['thermalConductivity', 'thermalConductivity'],
+      quantityKinds: ['thermalConductivity', 'thermalConductivity']
     },
     britishThermalUnitThermochemicalInchPerSecondSquareFootDegreeFahrenheit: {
       name: 'britishThermalUnitThermochemicalInchPerSecondSquareFootDegreeFahrenheit',
@@ -2419,7 +2419,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '5.188732 × 10² W/(m × K)',
-      quantityKinds: ['thermalConductivity', 'thermalConductivity'],
+      quantityKinds: ['thermalConductivity', 'thermalConductivity']
     },
     britishThermalUnitThermochemicalPerCubicFoot: {
       name: 'britishThermalUnitThermochemicalPerCubicFoot',
@@ -2437,8 +2437,8 @@ var sammUDefinition = {
         'soundEnergy',
         'soundEnergyDensity',
         'volumic',
-        'radiantEnergyDensity',
-      ],
+        'radiantEnergyDensity'
+      ]
     },
     britishThermalUnitThermochemicalPerDegreeFahrenheit: {
       name: 'britishThermalUnitThermochemicalPerDegreeFahrenheit',
@@ -2449,7 +2449,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '1.897830 × 10³ J/K',
-      quantityKinds: ['boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction', 'heatCapacity', 'entropy'],
+      quantityKinds: ['boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction', 'heatCapacity', 'entropy']
     },
     britishThermalUnitThermochemicalPerDegreeRankine: {
       name: 'britishThermalUnitThermochemicalPerDegreeRankine',
@@ -2460,7 +2460,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '1.897830 × 10³ J/K',
-      quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction'],
+      quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction']
     },
     britishThermalUnitThermochemicalPerHour: {
       name: 'britishThermalUnitThermochemicalPerHour',
@@ -2479,8 +2479,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     britishThermalUnitThermochemicalPerHourSquareFootDegreeFahrenheit: {
       name: 'britishThermalUnitThermochemicalPerHourSquareFootDegreeFahrenheit',
@@ -2491,7 +2491,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '5.674466 W/(m² × K)',
-      quantityKinds: ['surfaceCoefficientOfHeatTransfer', 'coefficientOfHeatTransfer'],
+      quantityKinds: ['surfaceCoefficientOfHeatTransfer', 'coefficientOfHeatTransfer']
     },
     britishThermalUnitThermochemicalPerMinute: {
       name: 'britishThermalUnitThermochemicalPerMinute',
@@ -2510,8 +2510,8 @@ var sammUDefinition = {
         'powerForDirectCurrent',
         'radiantPower',
         'soundPower',
-        'heatFlowRate',
-      ],
+        'heatFlowRate'
+      ]
     },
     britishThermalUnitThermochemicalPerPound: {
       name: 'britishThermalUnitThermochemicalPerPound',
@@ -2522,7 +2522,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerKilogram'];
       },
       conversionFactor: '2.324444 × 10³ J/kg',
-      quantityKinds: ['specificEnergy', 'massicEnergy', 'massicHelmholtzFreeEnergy'],
+      quantityKinds: ['specificEnergy', 'massicEnergy', 'massicHelmholtzFreeEnergy']
     },
     britishThermalUnitThermochemicalPerPoundDegreeFahrenheit: {
       name: 'britishThermalUnitThermochemicalPerPoundDegreeFahrenheit',
@@ -2538,8 +2538,8 @@ var sammUDefinition = {
         'heatCapacity',
         'specificHeatCapacityAtSaturation',
         'specificHeatCapacityAtConstantVolume',
-        'specificHeatCapacityAtConstantPressure',
-      ],
+        'specificHeatCapacityAtConstantPressure'
+      ]
     },
     britishThermalUnitThermochemicalPerPoundDegreeRankine: {
       name: 'britishThermalUnitThermochemicalPerPoundDegreeRankine',
@@ -2555,8 +2555,8 @@ var sammUDefinition = {
         'heatCapacity',
         'specificHeatCapacityAtSaturation',
         'specificHeatCapacityAtConstantVolume',
-        'specificHeatCapacityAtConstantPressure',
-      ],
+        'specificHeatCapacityAtConstantPressure'
+      ]
     },
     britishThermalUnitThermochemicalPerSecond: {
       name: 'britishThermalUnitThermochemicalPerSecond',
@@ -2575,8 +2575,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     britishThermalUnitThermochemicalPerSecondSquareFootDegreeFahrenheit: {
       name: 'britishThermalUnitThermochemicalPerSecondSquareFootDegreeFahrenheit',
@@ -2587,7 +2587,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '2.042808 × 10⁴ W/(m² × K)',
-      quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer'],
+      quantityKinds: ['coefficientOfHeatTransfer', 'surfaceCoefficientOfHeatTransfer']
     },
     britishThermalUnitThermochemicalPerSquareFoot: {
       name: 'britishThermalUnitThermochemicalPerSquareFoot',
@@ -2598,7 +2598,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerSquareMetre'];
       },
       conversionFactor: '1.134893 × 10⁴ J/m²',
-      quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence'],
+      quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence']
     },
     britishThermalUnitThermochemicalPerSquareFootHour: {
       name: 'britishThermalUnitThermochemicalPerSquareFootHour',
@@ -2620,8 +2620,8 @@ var sammUDefinition = {
         'soundIntensity',
         'radiantEnergy',
         'radiantExitance',
-        'densityOfHeatFlowRate',
-      ],
+        'densityOfHeatFlowRate'
+      ]
     },
     britishThermalUnitThermochemicalPerSquareFootMinute: {
       name: 'britishThermalUnitThermochemicalPerSquareFootMinute',
@@ -2643,8 +2643,8 @@ var sammUDefinition = {
         'energyFluenceRate',
         'soundIntensity',
         'radiantEnergy',
-        'radiantExitance',
-      ],
+        'radiantExitance'
+      ]
     },
     britishThermalUnitThermochemicalPerSquareFootSecond: {
       name: 'britishThermalUnitThermochemicalPerSquareFootSecond',
@@ -2666,8 +2666,8 @@ var sammUDefinition = {
         'soundIntensity',
         'radiantEnergy',
         'radiantExitance',
-        'densityOfHeatFlowRate',
-      ],
+        'densityOfHeatFlowRate'
+      ]
     },
     bulkPack: {
       name: 'bulkPack',
@@ -2676,7 +2676,7 @@ var sammUDefinition = {
       code: 'AB',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     bushelUk: {
       name: 'bushelUk',
@@ -2687,7 +2687,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '3.636872 × 10⁻² m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     bushelUkPerDay: {
       name: 'bushelUkPerDay',
@@ -2698,7 +2698,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.209343 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     bushelUkPerHour: {
       name: 'bushelUkPerHour',
@@ -2709,7 +2709,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.010242 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     bushelUkPerMinute: {
       name: 'bushelUkPerMinute',
@@ -2720,7 +2720,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '6.061453 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     bushelUkPerSecond: {
       name: 'bushelUkPerSecond',
@@ -2731,7 +2731,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.636872 × 10⁻² m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     bushelUs: {
       name: 'bushelUs',
@@ -2742,7 +2742,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '3.523907 × 10⁻² m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     bushelUsDryPerDay: {
       name: 'bushelUsDryPerDay',
@@ -2753,7 +2753,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.078596 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     bushelUsDryPerHour: {
       name: 'bushelUsDryPerHour',
@@ -2764,7 +2764,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '9.788631 × 10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     bushelUsDryPerMinute: {
       name: 'bushelUsDryPerMinute',
@@ -2775,7 +2775,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '5.873178 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     bushelUsDryPerSecond: {
       name: 'bushelUsDryPerSecond',
@@ -2786,7 +2786,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.523907 × 10⁻² m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     byte: {
       name: 'byte',
@@ -2795,7 +2795,7 @@ var sammUDefinition = {
       code: 'AD',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['informationEntropy'],
+      quantityKinds: ['informationEntropy']
     },
     bytePerSecond: {
       name: 'bytePerSecond',
@@ -2804,7 +2804,7 @@ var sammUDefinition = {
       code: 'P93',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     cake: {
       name: 'cake',
@@ -2813,7 +2813,7 @@ var sammUDefinition = {
       code: 'KA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     call: {
       name: 'call',
@@ -2822,7 +2822,7 @@ var sammUDefinition = {
       code: 'C0',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     calorie20Degreesc: {
       name: 'calorie20Degreesc',
@@ -2859,8 +2859,8 @@ var sammUDefinition = {
         'quantityOfHeat',
         'helmholtzFunction',
         'heat',
-        'energy',
-      ],
+        'energy'
+      ]
     },
     calorieInternationalTablePerGramDegreeCelsius: {
       name: 'calorieInternationalTablePerGramDegreeCelsius',
@@ -2876,8 +2876,8 @@ var sammUDefinition = {
         'entropy',
         'specificHeatCapacityAtSaturation',
         'specificHeatCapacityAtConstantVolume',
-        'specificHeatCapacityAtConstantPressure',
-      ],
+        'specificHeatCapacityAtConstantPressure'
+      ]
     },
     calorieMean: {
       name: 'calorieMean',
@@ -2914,8 +2914,8 @@ var sammUDefinition = {
         'energy',
         'thermodynamicEnergy',
         'enthalpy',
-        'helmholtzFreeEnergy',
-      ],
+        'helmholtzFreeEnergy'
+      ]
     },
     calorieThermochemicalPerCentimetreSecondDegreeCelsius: {
       name: 'calorieThermochemicalPerCentimetreSecondDegreeCelsius',
@@ -2926,7 +2926,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '4.184 × 10² W/(m × K)',
-      quantityKinds: ['thermalConductivity', 'thermalConductivity'],
+      quantityKinds: ['thermalConductivity', 'thermalConductivity']
     },
     calorieThermochemicalPerGramDegreeCelsius: {
       name: 'calorieThermochemicalPerGramDegreeCelsius',
@@ -2942,8 +2942,8 @@ var sammUDefinition = {
         'heatCapacity',
         'specificHeatCapacityAtSaturation',
         'specificHeatCapacityAtConstantVolume',
-        'specificHeatCapacityAtConstantPressure',
-      ],
+        'specificHeatCapacityAtConstantPressure'
+      ]
     },
     calorieThermochemicalPerMinute: {
       name: 'calorieThermochemicalPerMinute',
@@ -2962,8 +2962,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     calorieThermochemicalPerSecond: {
       name: 'calorieThermochemicalPerSecond',
@@ -2982,8 +2982,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     calorieThermochemicalPerSquareCentimetre: {
       name: 'calorieThermochemicalPerSquareCentimetre',
@@ -2994,7 +2994,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerSquareMetre'];
       },
       conversionFactor: '4.184 × 10⁴ J/m²',
-      quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence'],
+      quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence']
     },
     calorieThermochemicalPerSquareCentimetreMinute: {
       name: 'calorieThermochemicalPerSquareCentimetreMinute',
@@ -3016,8 +3016,8 @@ var sammUDefinition = {
         'soundIntensity',
         'radiantEnergy',
         'radiantExitance',
-        'densityOfHeatFlowRate',
-      ],
+        'densityOfHeatFlowRate'
+      ]
     },
     calorieThermochemicalPerSquareCentimetreSecond: {
       name: 'calorieThermochemicalPerSquareCentimetreSecond',
@@ -3039,8 +3039,8 @@ var sammUDefinition = {
         'soundIntensity',
         'radiantEnergy',
         'radiantExitance',
-        'densityOfHeatFlowRate',
-      ],
+        'densityOfHeatFlowRate'
+      ]
     },
     candela: {
       name: 'candela',
@@ -3049,7 +3049,7 @@ var sammUDefinition = {
       code: 'CDL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['luminousIntensity'],
+      quantityKinds: ['luminousIntensity']
     },
     candelaPerSquareFoot: {
       name: 'candelaPerSquareFoot',
@@ -3060,7 +3060,7 @@ var sammUDefinition = {
         return sammUDefinition.units['candelaPerSquareMetre'];
       },
       conversionFactor: '1.076391 × 10 cd/m²',
-      quantityKinds: ['luminance', 'luminance'],
+      quantityKinds: ['luminance', 'luminance']
     },
     candelaPerSquareInch: {
       name: 'candelaPerSquareInch',
@@ -3071,7 +3071,7 @@ var sammUDefinition = {
         return sammUDefinition.units['candelaPerSquareMetre'];
       },
       conversionFactor: '1.550003 × 10³ cd/m²',
-      quantityKinds: ['luminance', 'luminance'],
+      quantityKinds: ['luminance', 'luminance']
     },
     candelaPerSquareMetre: {
       name: 'candelaPerSquareMetre',
@@ -3080,7 +3080,7 @@ var sammUDefinition = {
       code: 'A24',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['luminance'],
+      quantityKinds: ['luminance']
     },
     card: {
       name: 'card',
@@ -3089,7 +3089,7 @@ var sammUDefinition = {
       code: 'CG',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     carryingCapacityInMetricTon: {
       name: 'carryingCapacityInMetricTon',
@@ -3098,7 +3098,7 @@ var sammUDefinition = {
       code: 'CCT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     centalUk: {
       name: 'centalUk',
@@ -3109,7 +3109,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '45.359237 kg',
-      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     centigram: {
       name: 'centigram',
@@ -3120,7 +3120,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻⁵ kg',
-      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
+      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass']
     },
     centilitre: {
       name: 'centilitre',
@@ -3131,7 +3131,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁵ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     centimetre: {
       name: 'centimetre',
@@ -3188,8 +3188,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     centimetreOfMercury0Degreesc: {
       name: 'centimetreOfMercury0Degreesc',
@@ -3221,8 +3221,8 @@ var sammUDefinition = {
         'shearModulus',
         'normalStress',
         'bulkModulus',
-        'shearStress',
-      ],
+        'shearStress'
+      ]
     },
     centimetreOfWater4Degreesc: {
       name: 'centimetreOfWater4Degreesc',
@@ -3254,8 +3254,8 @@ var sammUDefinition = {
         'shearModulus',
         'normalStress',
         'bulkModulus',
-        'modulusOfRigidity',
-      ],
+        'modulusOfRigidity'
+      ]
     },
     centimetrePerBar: {
       name: 'centimetrePerBar',
@@ -3274,8 +3274,8 @@ var sammUDefinition = {
         'lengthOfPath',
         'distance',
         'cartesianCoordinates',
-        'radiusOfCurvature',
-      ],
+        'radiusOfCurvature'
+      ]
     },
     centimetrePerHour: {
       name: 'centimetrePerHour',
@@ -3284,7 +3284,7 @@ var sammUDefinition = {
       code: 'H49',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity'],
+      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity']
     },
     centimetrePerKelvin: {
       name: 'centimetrePerKelvin',
@@ -3303,8 +3303,8 @@ var sammUDefinition = {
         'breadth',
         'cartesianCoordinates',
         'distance',
-        'lengthOfPath',
-      ],
+        'lengthOfPath'
+      ]
     },
     centimetrePerSecond: {
       name: 'centimetrePerSecond',
@@ -3327,8 +3327,8 @@ var sammUDefinition = {
         'velocityOfSoundPhaseVelocity',
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
-        'phaseVelocity',
-      ],
+        'phaseVelocity'
+      ]
     },
     centimetrePerSecondBar: {
       name: 'centimetrePerSecondBar',
@@ -3339,7 +3339,7 @@ var sammUDefinition = {
         return sammUDefinition.units['metrePerSecondPascal'];
       },
       conversionFactor: '10⁻⁷ (m/s)/Pa',
-      quantityKinds: ['groupVelocity', 'velocity', 'phaseVelocity', 'velocity', 'phaseVelocity', 'groupVelocity'],
+      quantityKinds: ['groupVelocity', 'velocity', 'phaseVelocity', 'velocity', 'phaseVelocity', 'groupVelocity']
     },
     centimetrePerSecondKelvin: {
       name: 'centimetrePerSecondKelvin',
@@ -3350,7 +3350,7 @@ var sammUDefinition = {
         return sammUDefinition.units['metrePerSecondKelvin'];
       },
       conversionFactor: '10⁻² (m/s)/K',
-      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'phaseVelocity', 'velocity', 'groupVelocity'],
+      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'phaseVelocity', 'velocity', 'groupVelocity']
     },
     centimetrePerSecondSquared: {
       name: 'centimetrePerSecondSquared',
@@ -3368,8 +3368,8 @@ var sammUDefinition = {
         'accelerationDueToGravity',
         'accelerationOfFreeFall',
         'instantaneousSoundParticleAcceleration',
-        'acceleration',
-      ],
+        'acceleration'
+      ]
     },
     centinewtonMetre: {
       name: 'centinewtonMetre',
@@ -3380,7 +3380,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁻² N × m',
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfACouple', 'torque', 'momentOfForce'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfACouple', 'torque', 'momentOfForce']
     },
     centipoise: {
       name: 'centipoise',
@@ -3391,7 +3391,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '10⁻³ Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     centipoisePerBar: {
       name: 'centipoisePerBar',
@@ -3413,8 +3413,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     centipoisePerKelvin: {
       name: 'centipoisePerKelvin',
@@ -3423,7 +3423,7 @@ var sammUDefinition = {
       code: 'J73',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity']
     },
     centistokes: {
       name: 'centistokes',
@@ -3440,8 +3440,8 @@ var sammUDefinition = {
         'thermalDiffusionCoefficient',
         'kinematicViscosity',
         'diffusionCoefficientForNeutronNumberDensity',
-        'thermalDiffusivity',
-      ],
+        'thermalDiffusivity'
+      ]
     },
     chainBasedOnUsSurveyFoot: {
       name: 'chainBasedOnUsSurveyFoot',
@@ -3498,8 +3498,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     circularMil: {
       name: 'circularMil',
@@ -3519,8 +3519,8 @@ var sammUDefinition = {
         'atomicAttenuationCoefficient',
         'area',
         'crossSection',
-        'area',
-      ],
+        'area'
+      ]
     },
     clo: {
       name: 'clo',
@@ -3531,7 +3531,7 @@ var sammUDefinition = {
         return sammUDefinition.units['squareMetreKelvinPerWatt'];
       },
       conversionFactor: '0.155 m² × K/W',
-      quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation', 'coefficientOfThermalInsulation', 'thermalInsulance'],
+      quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation', 'coefficientOfThermalInsulation', 'thermalInsulance']
     },
     coilGroup: {
       name: 'coilGroup',
@@ -3540,7 +3540,7 @@ var sammUDefinition = {
       code: 'C9',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     commonYear: {
       name: 'commonYear',
@@ -3562,8 +3562,8 @@ var sammUDefinition = {
         'time',
         'carrierLifeTime',
         'reactorTimeConstant',
-        'time',
-      ],
+        'time'
+      ]
     },
     contentGram: {
       name: 'contentGram',
@@ -3572,7 +3572,7 @@ var sammUDefinition = {
       code: 'CTG',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     contentTonMetric: {
       name: 'contentTonMetric',
@@ -3581,7 +3581,7 @@ var sammUDefinition = {
       code: 'CTN',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     conventionalMetreOfWater: {
       name: 'conventionalMetreOfWater',
@@ -3613,8 +3613,8 @@ var sammUDefinition = {
         'modulusOfCompression',
         'pressure',
         'shearStress',
-        'bulkModulus',
-      ],
+        'bulkModulus'
+      ]
     },
     cord: {
       name: 'cord',
@@ -3625,7 +3625,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '3.63 m³',
-      quantityKinds: ['volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'sectionModulus']
     },
     cord128Ft3: {
       name: 'cord128Ft3',
@@ -3636,7 +3636,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '3.624556 m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     coulomb: {
       name: 'coulomb',
@@ -3654,8 +3654,8 @@ var sammUDefinition = {
         'elementaryCharge',
         'quantityOfElectricity',
         'electricFluxFluxOfDisplacement',
-        'electricCharge',
-      ],
+        'electricCharge'
+      ]
     },
     coulombMetre: {
       name: 'coulombMetre',
@@ -3664,7 +3664,7 @@ var sammUDefinition = {
       code: 'A26',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricDipoleMomentOfMolecule', 'electricDipoleMoment'],
+      quantityKinds: ['electricDipoleMomentOfMolecule', 'electricDipoleMoment']
     },
     coulombMetreSquaredPerVolt: {
       name: 'coulombMetreSquaredPerVolt',
@@ -3673,7 +3673,7 @@ var sammUDefinition = {
       code: 'A27',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricPolarizabilityOfAMolecule'],
+      quantityKinds: ['electricPolarizabilityOfAMolecule']
     },
     coulombPerCubicCentimetre: {
       name: 'coulombPerCubicCentimetre',
@@ -3684,7 +3684,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁶ C/m³',
-      quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'chargeDensity', 'volumeDensityOfCharge', 'volumicCharge'],
+      quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'chargeDensity', 'volumeDensityOfCharge', 'volumicCharge']
     },
     coulombPerCubicMetre: {
       name: 'coulombPerCubicMetre',
@@ -3693,7 +3693,7 @@ var sammUDefinition = {
       code: 'A29',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity'],
+      quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity']
     },
     coulombPerCubicMillimetre: {
       name: 'coulombPerCubicMillimetre',
@@ -3704,7 +3704,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁹ C/m³',
-      quantityKinds: ['volumeDensityOfCharge', 'volumicCharge', 'chargeDensity', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity'],
+      quantityKinds: ['volumeDensityOfCharge', 'volumicCharge', 'chargeDensity', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity']
     },
     coulombPerKilogram: {
       name: 'coulombPerKilogram',
@@ -3713,7 +3713,7 @@ var sammUDefinition = {
       code: 'CKG',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['exposure'],
+      quantityKinds: ['exposure']
     },
     coulombPerKilogramSecond: {
       name: 'coulombPerKilogramSecond',
@@ -3724,7 +3724,7 @@ var sammUDefinition = {
         return sammUDefinition.units['amperePerKilogram'];
       },
       conversionFactor: 'A/kg',
-      quantityKinds: ['exposureRate', 'currentDensity'],
+      quantityKinds: ['exposureRate', 'currentDensity']
     },
     coulombPerMetre: {
       name: 'coulombPerMetre',
@@ -3733,7 +3733,7 @@ var sammUDefinition = {
       code: 'P10',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['lineicCharge'],
+      quantityKinds: ['lineicCharge']
     },
     coulombPerMole: {
       name: 'coulombPerMole',
@@ -3742,7 +3742,7 @@ var sammUDefinition = {
       code: 'A32',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['faradayConstant'],
+      quantityKinds: ['faradayConstant']
     },
     coulombPerSquareCentimetre: {
       name: 'coulombPerSquareCentimetre',
@@ -3759,8 +3759,8 @@ var sammUDefinition = {
         'displacementElectricPolarization',
         'displacementElectricPolarization',
         'surfaceDensityOfCharge',
-        'electricFluxDensity',
-      ],
+        'electricFluxDensity'
+      ]
     },
     coulombPerSquareMetre: {
       name: 'coulombPerSquareMetre',
@@ -3769,7 +3769,7 @@ var sammUDefinition = {
       code: 'A34',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['surfaceDensityOfCharge', 'electricFluxDensity', 'displacementElectricPolarization'],
+      quantityKinds: ['surfaceDensityOfCharge', 'electricFluxDensity', 'displacementElectricPolarization']
     },
     coulombPerSquareMillimetre: {
       name: 'coulombPerSquareMillimetre',
@@ -3786,8 +3786,8 @@ var sammUDefinition = {
         'displacementElectricPolarization',
         'electricFluxDensity',
         'surfaceDensityOfCharge',
-        'displacementElectricPolarization',
-      ],
+        'displacementElectricPolarization'
+      ]
     },
     coulombSquareMetrePerKilogram: {
       name: 'coulombSquareMetrePerKilogram',
@@ -3796,7 +3796,7 @@ var sammUDefinition = {
       code: 'J53',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['exposure'],
+      quantityKinds: ['exposure']
     },
     credit: {
       name: 'credit',
@@ -3805,7 +3805,7 @@ var sammUDefinition = {
       code: 'B17',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     cubicCentimetre: {
       name: 'cubicCentimetre',
@@ -3816,7 +3816,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁶ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     cubicCentimetrePerBar: {
       name: 'cubicCentimetrePerBar',
@@ -3825,7 +3825,7 @@ var sammUDefinition = {
       code: 'G94',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volume'],
+      quantityKinds: ['volume']
     },
     cubicCentimetrePerCubicMetre: {
       name: 'cubicCentimetrePerCubicMetre',
@@ -3834,7 +3834,7 @@ var sammUDefinition = {
       code: 'J87',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeRatio'],
+      quantityKinds: ['volumeRatio']
     },
     cubicCentimetrePerDay: {
       name: 'cubicCentimetrePerDay',
@@ -3843,7 +3843,7 @@ var sammUDefinition = {
       code: 'G47',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicCentimetrePerDayBar: {
       name: 'cubicCentimetrePerDayBar',
@@ -3852,7 +3852,7 @@ var sammUDefinition = {
       code: 'G78',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicCentimetrePerDayKelvin: {
       name: 'cubicCentimetrePerDayKelvin',
@@ -3861,7 +3861,7 @@ var sammUDefinition = {
       code: 'G61',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicCentimetrePerHour: {
       name: 'cubicCentimetrePerHour',
@@ -3870,7 +3870,7 @@ var sammUDefinition = {
       code: 'G48',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicCentimetrePerHourBar: {
       name: 'cubicCentimetrePerHourBar',
@@ -3879,7 +3879,7 @@ var sammUDefinition = {
       code: 'G79',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicCentimetrePerHourKelvin: {
       name: 'cubicCentimetrePerHourKelvin',
@@ -3888,7 +3888,7 @@ var sammUDefinition = {
       code: 'G62',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicCentimetrePerKelvin: {
       name: 'cubicCentimetrePerKelvin',
@@ -3897,7 +3897,7 @@ var sammUDefinition = {
       code: 'G27',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumePerTemperature'],
+      quantityKinds: ['volumePerTemperature']
     },
     cubicCentimetrePerMinute: {
       name: 'cubicCentimetrePerMinute',
@@ -3906,7 +3906,7 @@ var sammUDefinition = {
       code: 'G49',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicCentimetrePerMinuteBar: {
       name: 'cubicCentimetrePerMinuteBar',
@@ -3915,7 +3915,7 @@ var sammUDefinition = {
       code: 'G80',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicCentimetrePerMinuteKelvin: {
       name: 'cubicCentimetrePerMinuteKelvin',
@@ -3924,7 +3924,7 @@ var sammUDefinition = {
       code: 'G63',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicCentimetrePerMole: {
       name: 'cubicCentimetrePerMole',
@@ -3935,7 +3935,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerMole'];
       },
       conversionFactor: '10⁻⁶ m³/mol',
-      quantityKinds: ['molarVolume', 'molarVolume'],
+      quantityKinds: ['molarVolume', 'molarVolume']
     },
     cubicCentimetrePerSecond: {
       name: 'cubicCentimetrePerSecond',
@@ -3946,7 +3946,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     cubicCentimetrePerSecondBar: {
       name: 'cubicCentimetrePerSecondBar',
@@ -3955,7 +3955,7 @@ var sammUDefinition = {
       code: 'G81',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicCentimetrePerSecondKelvin: {
       name: 'cubicCentimetrePerSecondKelvin',
@@ -3964,7 +3964,7 @@ var sammUDefinition = {
       code: 'G64',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicDecametre: {
       name: 'cubicDecametre',
@@ -3975,7 +3975,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     cubicDecimetre: {
       name: 'cubicDecimetre',
@@ -3986,7 +3986,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     cubicDecimetrePerCubicMetre: {
       name: 'cubicDecimetrePerCubicMetre',
@@ -3995,7 +3995,7 @@ var sammUDefinition = {
       code: 'J91',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeRatio'],
+      quantityKinds: ['volumeRatio']
     },
     cubicDecimetrePerDay: {
       name: 'cubicDecimetrePerDay',
@@ -4006,7 +4006,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.15741 × 10⁻⁸ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     cubicDecimetrePerHour: {
       name: 'cubicDecimetrePerHour',
@@ -4015,7 +4015,7 @@ var sammUDefinition = {
       code: 'E92',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicDecimetrePerKilogram: {
       name: 'cubicDecimetrePerKilogram',
@@ -4024,7 +4024,7 @@ var sammUDefinition = {
       code: 'N28',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['specificVolume', 'massicVolume'],
+      quantityKinds: ['specificVolume', 'massicVolume']
     },
     cubicDecimetrePerMinute: {
       name: 'cubicDecimetrePerMinute',
@@ -4035,7 +4035,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     cubicDecimetrePerMole: {
       name: 'cubicDecimetrePerMole',
@@ -4046,7 +4046,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerMole'];
       },
       conversionFactor: '10⁻³ m³/mol',
-      quantityKinds: ['molarVolume', 'molarVolume'],
+      quantityKinds: ['molarVolume', 'molarVolume']
     },
     cubicDecimetrePerSecond: {
       name: 'cubicDecimetrePerSecond',
@@ -4057,7 +4057,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '10⁻³ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     cubicFoot: {
       name: 'cubicFoot',
@@ -4068,7 +4068,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '2.831685 × 10⁻² m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     cubicFootPerDay: {
       name: 'cubicFootPerDay',
@@ -4079,7 +4079,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.277413 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     cubicFootPerDegreeFahrenheit: {
       name: 'cubicFootPerDegreeFahrenheit',
@@ -4090,7 +4090,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerKelvin'];
       },
       conversionFactor: '5.097033 × 10⁻² m³/K',
-      quantityKinds: ['volume', 'volumePerTemperature'],
+      quantityKinds: ['volume', 'volumePerTemperature']
     },
     cubicFootPerHour: {
       name: 'cubicFootPerHour',
@@ -4101,7 +4101,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '7.86579 × 10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     cubicFootPerMinute: {
       name: 'cubicFootPerMinute',
@@ -4112,7 +4112,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.719474 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     cubicFootPerPound: {
       name: 'cubicFootPerPound',
@@ -4123,7 +4123,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerKilogram'];
       },
       conversionFactor: '6.242796 × 10⁻² m³/kg',
-      quantityKinds: ['specificVolume', 'massicVolume', 'massicVolume', 'specificVolume'],
+      quantityKinds: ['specificVolume', 'massicVolume', 'massicVolume', 'specificVolume']
     },
     cubicFootPerPsi: {
       name: 'cubicFootPerPsi',
@@ -4134,7 +4134,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerPascal'];
       },
       conversionFactor: '4.107012 × 10⁻⁶ m³/Pa',
-      quantityKinds: ['volume', 'volume'],
+      quantityKinds: ['volume', 'volume']
     },
     cubicFootPerSecond: {
       name: 'cubicFootPerSecond',
@@ -4145,7 +4145,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.831685 × 10⁻² m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     cubicHectometre: {
       name: 'cubicHectometre',
@@ -4156,7 +4156,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁶ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     cubicInch: {
       name: 'cubicInch',
@@ -4167,7 +4167,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '16.387064 × 10⁻⁶ m³',
-      quantityKinds: ['sectionModulus', 'volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['sectionModulus', 'volume', 'volume', 'sectionModulus']
     },
     cubicInchPerHour: {
       name: 'cubicInchPerHour',
@@ -4176,7 +4176,7 @@ var sammUDefinition = {
       code: 'G56',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicInchPerMinute: {
       name: 'cubicInchPerMinute',
@@ -4185,7 +4185,7 @@ var sammUDefinition = {
       code: 'G57',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicInchPerPound: {
       name: 'cubicInchPerPound',
@@ -4196,7 +4196,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerKilogram'];
       },
       conversionFactor: '3.612728 × 10⁻⁵ m³/kg',
-      quantityKinds: ['specificVolume', 'massicVolume', 'massicVolume', 'specificVolume'],
+      quantityKinds: ['specificVolume', 'massicVolume', 'massicVolume', 'specificVolume']
     },
     cubicInchPerSecond: {
       name: 'cubicInchPerSecond',
@@ -4205,7 +4205,7 @@ var sammUDefinition = {
       code: 'G58',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicKilometre: {
       name: 'cubicKilometre',
@@ -4216,7 +4216,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁹ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     cubicMetre: {
       name: 'cubicMetre',
@@ -4225,7 +4225,7 @@ var sammUDefinition = {
       code: 'MTQ',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'sectionModulus']
     },
     cubicMetrePerBar: {
       name: 'cubicMetrePerBar',
@@ -4234,7 +4234,7 @@ var sammUDefinition = {
       code: 'G96',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volume'],
+      quantityKinds: ['volume']
     },
     cubicMetrePerCoulomb: {
       name: 'cubicMetrePerCoulomb',
@@ -4243,7 +4243,7 @@ var sammUDefinition = {
       code: 'A38',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['hallCoefficient'],
+      quantityKinds: ['hallCoefficient']
     },
     cubicMetrePerCubicMetre: {
       name: 'cubicMetrePerCubicMetre',
@@ -4252,7 +4252,7 @@ var sammUDefinition = {
       code: 'H60',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeRatio'],
+      quantityKinds: ['volumeRatio']
     },
     cubicMetrePerDay: {
       name: 'cubicMetrePerDay',
@@ -4261,7 +4261,7 @@ var sammUDefinition = {
       code: 'G52',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicMetrePerDayBar: {
       name: 'cubicMetrePerDayBar',
@@ -4270,7 +4270,7 @@ var sammUDefinition = {
       code: 'G86',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicMetrePerDayKelvin: {
       name: 'cubicMetrePerDayKelvin',
@@ -4279,7 +4279,7 @@ var sammUDefinition = {
       code: 'G69',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicMetrePerHour: {
       name: 'cubicMetrePerHour',
@@ -4290,7 +4290,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     cubicMetrePerHourBar: {
       name: 'cubicMetrePerHourBar',
@@ -4299,7 +4299,7 @@ var sammUDefinition = {
       code: 'G87',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicMetrePerHourKelvin: {
       name: 'cubicMetrePerHourKelvin',
@@ -4308,7 +4308,7 @@ var sammUDefinition = {
       code: 'G70',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicMetrePerKelvin: {
       name: 'cubicMetrePerKelvin',
@@ -4317,7 +4317,7 @@ var sammUDefinition = {
       code: 'G29',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumePerTemperature'],
+      quantityKinds: ['volumePerTemperature']
     },
     cubicMetrePerKilogram: {
       name: 'cubicMetrePerKilogram',
@@ -4326,7 +4326,7 @@ var sammUDefinition = {
       code: 'A39',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['specificVolume', 'massicVolume'],
+      quantityKinds: ['specificVolume', 'massicVolume']
     },
     cubicMetrePerMinute: {
       name: 'cubicMetrePerMinute',
@@ -4335,7 +4335,7 @@ var sammUDefinition = {
       code: 'G53',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicMetrePerMinuteBar: {
       name: 'cubicMetrePerMinuteBar',
@@ -4344,7 +4344,7 @@ var sammUDefinition = {
       code: 'G88',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicMetrePerMinuteKelvin: {
       name: 'cubicMetrePerMinuteKelvin',
@@ -4353,7 +4353,7 @@ var sammUDefinition = {
       code: 'G71',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicMetrePerMole: {
       name: 'cubicMetrePerMole',
@@ -4362,7 +4362,7 @@ var sammUDefinition = {
       code: 'A40',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['molarVolume'],
+      quantityKinds: ['molarVolume']
     },
     cubicMetrePerPascal: {
       name: 'cubicMetrePerPascal',
@@ -4371,7 +4371,7 @@ var sammUDefinition = {
       code: 'M71',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volume'],
+      quantityKinds: ['volume']
     },
     cubicMetrePerSecond: {
       name: 'cubicMetrePerSecond',
@@ -4380,7 +4380,7 @@ var sammUDefinition = {
       code: 'MQS',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     cubicMetrePerSecondBar: {
       name: 'cubicMetrePerSecondBar',
@@ -4389,7 +4389,7 @@ var sammUDefinition = {
       code: 'G89',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicMetrePerSecondKelvin: {
       name: 'cubicMetrePerSecondKelvin',
@@ -4398,7 +4398,7 @@ var sammUDefinition = {
       code: 'G72',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicMetrePerSecondPascal: {
       name: 'cubicMetrePerSecondPascal',
@@ -4407,7 +4407,7 @@ var sammUDefinition = {
       code: 'N45',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     cubicMetrePerSecondSquareMetre: {
       name: 'cubicMetrePerSecondSquareMetre',
@@ -4428,8 +4428,8 @@ var sammUDefinition = {
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
         'phaseVelocity',
-        'porosity',
-      ],
+        'porosity'
+      ]
     },
     cubicMicrometre: {
       name: 'cubicMicrometre',
@@ -4440,7 +4440,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻¹⁸ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     cubicMileUkStatute: {
       name: 'cubicMileUkStatute',
@@ -4451,7 +4451,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4.168182 × 10⁹ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     cubicMillimetre: {
       name: 'cubicMillimetre',
@@ -4462,7 +4462,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁹ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     cubicMillimetrePerCubicMetre: {
       name: 'cubicMillimetrePerCubicMetre',
@@ -4471,7 +4471,7 @@ var sammUDefinition = {
       code: 'L21',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeRatio'],
+      quantityKinds: ['volumeRatio']
     },
     cubicYard: {
       name: 'cubicYard',
@@ -4482,7 +4482,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '0.764555 m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     cubicYardPerDay: {
       name: 'cubicYardPerDay',
@@ -4493,7 +4493,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '8.849015 × 10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     cubicYardPerDegreeFahrenheit: {
       name: 'cubicYardPerDegreeFahrenheit',
@@ -4504,7 +4504,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerKelvin'];
       },
       conversionFactor: '1.376199 m³/K',
-      quantityKinds: ['volume', 'volumePerTemperature'],
+      quantityKinds: ['volume', 'volumePerTemperature']
     },
     cubicYardPerHour: {
       name: 'cubicYardPerHour',
@@ -4515,7 +4515,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.123764 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     cubicYardPerMinute: {
       name: 'cubicYardPerMinute',
@@ -4526,7 +4526,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.274258 × 10⁻² m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     cubicYardPerPsi: {
       name: 'cubicYardPerPsi',
@@ -4537,7 +4537,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerPascal'];
       },
       conversionFactor: '1.108893 × 10⁻⁴ m³/Pa',
-      quantityKinds: ['volume', 'volume'],
+      quantityKinds: ['volume', 'volume']
     },
     cubicYardPerSecond: {
       name: 'cubicYardPerSecond',
@@ -4548,7 +4548,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '0.7645549 m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     cupUnitOfVolume: {
       name: 'cupUnitOfVolume',
@@ -4559,7 +4559,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '2.365882 × 10⁻⁴ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     curie: {
       name: 'curie',
@@ -4570,7 +4570,7 @@ var sammUDefinition = {
         return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '3.7 × 10¹⁰ Bq',
-      quantityKinds: ['activity', 'activity'],
+      quantityKinds: ['activity', 'activity']
     },
     curiePerKilogram: {
       name: 'curiePerKilogram',
@@ -4581,7 +4581,7 @@ var sammUDefinition = {
         return sammUDefinition.units['becquerelPerKilogram'];
       },
       conversionFactor: '3.7 × 10¹⁰ Bq/kg',
-      quantityKinds: ['specificActivityInASample', 'specificActivityInASample'],
+      quantityKinds: ['specificActivityInASample', 'specificActivityInASample']
     },
     cycle: {
       name: 'cycle',
@@ -4590,7 +4590,7 @@ var sammUDefinition = {
       code: 'B7',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     day: {
       name: 'day',
@@ -4612,8 +4612,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     deadweightTonnage: {
       name: 'deadweightTonnage',
@@ -4622,7 +4622,7 @@ var sammUDefinition = {
       code: 'A43',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     decade: {
       name: 'decade',
@@ -4631,7 +4631,7 @@ var sammUDefinition = {
       code: 'DEC',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     decadeLogarithmic: {
       name: 'decadeLogarithmic',
@@ -4640,7 +4640,7 @@ var sammUDefinition = {
       code: 'P41',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['logarithmicDecrement'],
+      quantityKinds: ['logarithmicDecrement']
     },
     decagram: {
       name: 'decagram',
@@ -4651,7 +4651,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻² kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     decalitre: {
       name: 'decalitre',
@@ -4662,7 +4662,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻² m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     decametre: {
       name: 'decametre',
@@ -4719,8 +4719,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     decapascal: {
       name: 'decapascal',
@@ -4752,8 +4752,8 @@ var sammUDefinition = {
         'shearModulus',
         'modulusOfElasticity',
         'pressure',
-        'bulkModulus',
-      ],
+        'bulkModulus'
+      ]
     },
     decare: {
       name: 'decare',
@@ -4773,8 +4773,8 @@ var sammUDefinition = {
         'atomicAttenuationCoefficient',
         'area',
         'crossSection',
-        'area',
-      ],
+        'area'
+      ]
     },
     decibel: {
       name: 'decibel',
@@ -4793,8 +4793,8 @@ var sammUDefinition = {
         'levelOfAFieldQuantity',
         'levelOfAPowerQuantity',
         'soundPowerLevel',
-        'soundReductionIndex',
-      ],
+        'soundReductionIndex'
+      ]
     },
     decibelPerKilometre: {
       name: 'decibelPerKilometre',
@@ -4805,7 +4805,7 @@ var sammUDefinition = {
         return sammUDefinition.units['belPerMetre'];
       },
       conversionFactor: '10⁻⁴ B/m',
-      quantityKinds: ['soundPressureLevel', 'soundPowerLevel', 'soundPressureLevel', 'soundPowerLevel'],
+      quantityKinds: ['soundPressureLevel', 'soundPowerLevel', 'soundPressureLevel', 'soundPowerLevel']
     },
     decibelPerMetre: {
       name: 'decibelPerMetre',
@@ -4816,7 +4816,7 @@ var sammUDefinition = {
         return sammUDefinition.units['belPerMetre'];
       },
       conversionFactor: '10⁻¹ B/m',
-      quantityKinds: ['soundPressureLevel', 'soundPowerLevel', 'soundPressureLevel', 'soundPowerLevel'],
+      quantityKinds: ['soundPressureLevel', 'soundPowerLevel', 'soundPressureLevel', 'soundPowerLevel']
     },
     decigram: {
       name: 'decigram',
@@ -4827,7 +4827,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻⁴ kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     decilitre: {
       name: 'decilitre',
@@ -4838,7 +4838,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁴ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     decilitrePerGram: {
       name: 'decilitrePerGram',
@@ -4849,7 +4849,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerKilogram'];
       },
       conversionFactor: '10⁻¹ × m³/kg',
-      quantityKinds: ['specificVolume', 'massicVolume', 'specificVolume', 'massicVolume'],
+      quantityKinds: ['specificVolume', 'massicVolume', 'specificVolume', 'massicVolume']
     },
     decimetre: {
       name: 'decimetre',
@@ -4906,8 +4906,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     decinewtonMetre: {
       name: 'decinewtonMetre',
@@ -4918,7 +4918,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁻¹ N × m',
-      quantityKinds: ['momentOfForce', 'torque', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['momentOfForce', 'torque', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple']
     },
     decitex: {
       name: 'decitex',
@@ -4927,7 +4927,7 @@ var sammUDefinition = {
       code: 'A47',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     decitonne: {
       name: 'decitonne',
@@ -4938,7 +4938,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10² kg',
-      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
+      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass']
     },
     degreeApi: {
       name: 'degreeApi',
@@ -4947,7 +4947,7 @@ var sammUDefinition = {
       code: 'J13',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     degreeBalling: {
       name: 'degreeBalling',
@@ -4956,7 +4956,7 @@ var sammUDefinition = {
       code: 'J17',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     degreeBaumeOriginScale: {
       name: 'degreeBaumeOriginScale',
@@ -4965,7 +4965,7 @@ var sammUDefinition = {
       code: 'J14',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     degreeBaumeUsHeavy: {
       name: 'degreeBaumeUsHeavy',
@@ -4974,7 +4974,7 @@ var sammUDefinition = {
       code: 'J15',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     degreeBaumeUsLight: {
       name: 'degreeBaumeUsLight',
@@ -4983,7 +4983,7 @@ var sammUDefinition = {
       code: 'J16',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     degreeBrix: {
       name: 'degreeBrix',
@@ -4992,7 +4992,7 @@ var sammUDefinition = {
       code: 'J18',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     degreeCelsius: {
       name: 'degreeCelsius',
@@ -5010,8 +5010,8 @@ var sammUDefinition = {
         'thermodynamic',
         'superConductorTransitionTemperature',
         'neelTemperature',
-        'curieTemperature',
-      ],
+        'curieTemperature'
+      ]
     },
     degreeCelsiusPerBar: {
       name: 'degreeCelsiusPerBar',
@@ -5020,7 +5020,7 @@ var sammUDefinition = {
       code: 'F60',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     degreeCelsiusPerHour: {
       name: 'degreeCelsiusPerHour',
@@ -5029,7 +5029,7 @@ var sammUDefinition = {
       code: 'H12',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     degreeCelsiusPerKelvin: {
       name: 'degreeCelsiusPerKelvin',
@@ -5038,7 +5038,7 @@ var sammUDefinition = {
       code: 'E98',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     degreeCelsiusPerMinute: {
       name: 'degreeCelsiusPerMinute',
@@ -5047,7 +5047,7 @@ var sammUDefinition = {
       code: 'H13',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     degreeCelsiusPerSecond: {
       name: 'degreeCelsiusPerSecond',
@@ -5056,7 +5056,7 @@ var sammUDefinition = {
       code: 'H14',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     degreeDay: {
       name: 'degreeDay',
@@ -5065,7 +5065,7 @@ var sammUDefinition = {
       code: 'E10',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     degreeFahrenheit: {
       name: 'degreeFahrenheit',
@@ -5074,7 +5074,7 @@ var sammUDefinition = {
       code: 'FAH',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['fahrenheitTemperature'],
+      quantityKinds: ['fahrenheitTemperature']
     },
     degreeFahrenheitHourPerBritishThermalUnitInternationalTable: {
       name: 'degreeFahrenheitHourPerBritishThermalUnitInternationalTable',
@@ -5085,7 +5085,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinPerWatt'];
       },
       conversionFactor: '1.895634 K/W',
-      quantityKinds: ['thermalResistance', 'thermalResistance'],
+      quantityKinds: ['thermalResistance', 'thermalResistance']
     },
     degreeFahrenheitHourPerBritishThermalUnitThermochemical: {
       name: 'degreeFahrenheitHourPerBritishThermalUnitThermochemical',
@@ -5096,7 +5096,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinPerWatt'];
       },
       conversionFactor: '1.896903 K/W',
-      quantityKinds: ['thermalResistance', 'thermalResistance'],
+      quantityKinds: ['thermalResistance', 'thermalResistance']
     },
     degreeFahrenheitHourSquareFootPerBritishThermalUnitInternationalTable: {
       name: 'degreeFahrenheitHourSquareFootPerBritishThermalUnitInternationalTable',
@@ -5107,7 +5107,7 @@ var sammUDefinition = {
         return sammUDefinition.units['squareMetreKelvinPerWatt'];
       },
       conversionFactor: '0.1761102 m² × K/W',
-      quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation', 'thermalInsulance', 'coefficientOfThermalInsulation'],
+      quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation', 'thermalInsulance', 'coefficientOfThermalInsulation']
     },
     degreeFahrenheitHourSquareFootPerBritishThermalUnitInternationalTableInch: {
       name: 'degreeFahrenheitHourSquareFootPerBritishThermalUnitInternationalTableInch',
@@ -5118,7 +5118,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinMetrePerWatt'];
       },
       conversionFactor: '6.933472 K × m/W',
-      quantityKinds: ['thermalResistance', 'thermalResistance'],
+      quantityKinds: ['thermalResistance', 'thermalResistance']
     },
     degreeFahrenheitHourSquareFootPerBritishThermalUnitThermochemical: {
       name: 'degreeFahrenheitHourSquareFootPerBritishThermalUnitThermochemical',
@@ -5129,7 +5129,7 @@ var sammUDefinition = {
         return sammUDefinition.units['squareMetreKelvinPerWatt'];
       },
       conversionFactor: '0.176228 m² × K/W',
-      quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation', 'thermalInsulance', 'coefficientOfThermalInsulation'],
+      quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation', 'thermalInsulance', 'coefficientOfThermalInsulation']
     },
     degreeFahrenheitHourSquareFootPerBritishThermalUnitThermochemicalInch: {
       name: 'degreeFahrenheitHourSquareFootPerBritishThermalUnitThermochemicalInch',
@@ -5140,7 +5140,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinMetrePerWatt'];
       },
       conversionFactor: '6.938112 K × m/W',
-      quantityKinds: ['thermalResistance', 'thermalResistance'],
+      quantityKinds: ['thermalResistance', 'thermalResistance']
     },
     degreeFahrenheitPerBar: {
       name: 'degreeFahrenheitPerBar',
@@ -5151,7 +5151,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinPerPascal'];
       },
       conversionFactor: '0.5555556 × 10⁻⁵ K/Pa',
-      quantityKinds: ['temperature', 'temperature'],
+      quantityKinds: ['temperature', 'temperature']
     },
     degreeFahrenheitPerHour: {
       name: 'degreeFahrenheitPerHour',
@@ -5162,7 +5162,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '1.543210 × 10⁻⁴ K/s',
-      quantityKinds: ['temperatureVariationOverTime', 'temperature'],
+      quantityKinds: ['temperatureVariationOverTime', 'temperature']
     },
     degreeFahrenheitPerKelvin: {
       name: 'degreeFahrenheitPerKelvin',
@@ -5171,7 +5171,7 @@ var sammUDefinition = {
       code: 'J20',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     degreeFahrenheitPerMinute: {
       name: 'degreeFahrenheitPerMinute',
@@ -5182,7 +5182,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '9.259259 × 10⁻³ K/s',
-      quantityKinds: ['temperatureVariationOverTime', 'temperature'],
+      quantityKinds: ['temperatureVariationOverTime', 'temperature']
     },
     degreeFahrenheitPerSecond: {
       name: 'degreeFahrenheitPerSecond',
@@ -5193,7 +5193,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '0.5555556 K/s',
-      quantityKinds: ['temperatureVariationOverTime', 'temperature'],
+      quantityKinds: ['temperatureVariationOverTime', 'temperature']
     },
     degreeFahrenheitSecondPerBritishThermalUnitInternationalTable: {
       name: 'degreeFahrenheitSecondPerBritishThermalUnitInternationalTable',
@@ -5204,7 +5204,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinPerWatt'];
       },
       conversionFactor: '5.265651 × 10⁻⁴ K/W',
-      quantityKinds: ['thermalResistance', 'thermalResistance'],
+      quantityKinds: ['thermalResistance', 'thermalResistance']
     },
     degreeFahrenheitSecondPerBritishThermalUnitThermochemical: {
       name: 'degreeFahrenheitSecondPerBritishThermalUnitThermochemical',
@@ -5215,7 +5215,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinPerWatt'];
       },
       conversionFactor: '5.269175 × 10⁻⁴ K/W',
-      quantityKinds: ['thermalResistance', 'thermalResistance'],
+      quantityKinds: ['thermalResistance', 'thermalResistance']
     },
     degreeOechsle: {
       name: 'degreeOechsle',
@@ -5224,7 +5224,7 @@ var sammUDefinition = {
       code: 'J27',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     degreePerMetre: {
       name: 'degreePerMetre',
@@ -5241,8 +5241,8 @@ var sammUDefinition = {
         'debyeAngularRepetency',
         'angularWaveNumber',
         'debyeAngularWaveNumber',
-        'solidAngle',
-      ],
+        'solidAngle'
+      ]
     },
     degreePerSecond: {
       name: 'degreePerSecond',
@@ -5251,7 +5251,7 @@ var sammUDefinition = {
       code: 'E96',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['solidAngle'],
+      quantityKinds: ['solidAngle']
     },
     degreePlato: {
       name: 'degreePlato',
@@ -5260,7 +5260,7 @@ var sammUDefinition = {
       code: 'PLA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     degreeRankine: {
       name: 'degreeRankine',
@@ -5269,7 +5269,7 @@ var sammUDefinition = {
       code: 'A48',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     degreeRankinePerHour: {
       name: 'degreeRankinePerHour',
@@ -5280,7 +5280,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '1.543210 × 10⁻⁴ K/s',
-      quantityKinds: ['temperatureVariationOverTime', 'temperature'],
+      quantityKinds: ['temperatureVariationOverTime', 'temperature']
     },
     degreeRankinePerMinute: {
       name: 'degreeRankinePerMinute',
@@ -5291,7 +5291,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '9.259259 × 10⁻³ K/s',
-      quantityKinds: ['temperatureVariationOverTime', 'temperature'],
+      quantityKinds: ['temperatureVariationOverTime', 'temperature']
     },
     degreeRankinePerSecond: {
       name: 'degreeRankinePerSecond',
@@ -5302,7 +5302,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kelvinPerSecond'];
       },
       conversionFactor: '0.5555556 K/s',
-      quantityKinds: ['temperature', 'temperatureVariationOverTime'],
+      quantityKinds: ['temperature', 'temperatureVariationOverTime']
     },
     degreeTwaddell: {
       name: 'degreeTwaddell',
@@ -5311,7 +5311,7 @@ var sammUDefinition = {
       code: 'J31',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     degreeUnitOfAngle: {
       name: 'degreeUnitOfAngle',
@@ -5322,7 +5322,7 @@ var sammUDefinition = {
         return sammUDefinition.units['rad'];
       },
       conversionFactor: '1.745329 × 10⁻² rad',
-      quantityKinds: ['absorbedDose', 'anglePlane', 'braggAngle'],
+      quantityKinds: ['absorbedDose', 'anglePlane', 'braggAngle']
     },
     degreeUnitOfAnglePerSecondSquared: {
       name: 'degreeUnitOfAnglePerSecondSquared',
@@ -5331,7 +5331,7 @@ var sammUDefinition = {
       code: 'M45',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['angularAcceleration'],
+      quantityKinds: ['angularAcceleration']
     },
     denier: {
       name: 'denier',
@@ -5342,7 +5342,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '1.111111 × 10⁻⁷ kg/m',
-      quantityKinds: ['linearDensity', 'linearMass', 'linearMass', 'linearDensity'],
+      quantityKinds: ['linearDensity', 'linearMass', 'linearMass', 'linearDensity']
     },
     digit: {
       name: 'digit',
@@ -5351,7 +5351,7 @@ var sammUDefinition = {
       code: 'B19',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     dioptre: {
       name: 'dioptre',
@@ -5385,8 +5385,8 @@ var sammUDefinition = {
         'angularRepetency',
         'volumicTotalCrossSection',
         'macroscopicCrossSection',
-        'linearAbsorptionCoefficient',
-      ],
+        'linearAbsorptionCoefficient'
+      ]
     },
     displacementTonnage: {
       name: 'displacementTonnage',
@@ -5395,7 +5395,7 @@ var sammUDefinition = {
       code: 'DPT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     dose: {
       name: 'dose',
@@ -5404,7 +5404,7 @@ var sammUDefinition = {
       code: 'E27',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     dotsPerInch: {
       name: 'dotsPerInch',
@@ -5413,7 +5413,7 @@ var sammUDefinition = {
       code: 'E39',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     dozen: {
       name: 'dozen',
@@ -5422,7 +5422,7 @@ var sammUDefinition = {
       code: 'DZN',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     dozenPack: {
       name: 'dozenPack',
@@ -5431,7 +5431,7 @@ var sammUDefinition = {
       code: 'DZP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     dozenPair: {
       name: 'dozenPair',
@@ -5440,7 +5440,7 @@ var sammUDefinition = {
       code: 'DPR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     dozenPiece: {
       name: 'dozenPiece',
@@ -5449,7 +5449,7 @@ var sammUDefinition = {
       code: 'DPC',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     dozenRoll: {
       name: 'dozenRoll',
@@ -5458,7 +5458,7 @@ var sammUDefinition = {
       code: 'DRL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     dramUk: {
       name: 'dramUk',
@@ -5469,7 +5469,7 @@ var sammUDefinition = {
         return sammUDefinition.units['gram'];
       },
       conversionFactor: '1.771745 g',
-      quantityKinds: ['mass'],
+      quantityKinds: ['mass']
     },
     dramUs: {
       name: 'dramUs',
@@ -5480,7 +5480,7 @@ var sammUDefinition = {
         return sammUDefinition.units['gram'];
       },
       conversionFactor: '3.887935 g',
-      quantityKinds: ['mass'],
+      quantityKinds: ['mass']
     },
     dryBarrelUs: {
       name: 'dryBarrelUs',
@@ -5491,7 +5491,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.15627 × 10⁻¹ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     dryGallonUs: {
       name: 'dryGallonUs',
@@ -5502,7 +5502,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4.404884 × 10⁻³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     dryPintUs: {
       name: 'dryPintUs',
@@ -5513,7 +5513,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '5.506105 × 10⁻⁴ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     dryPound: {
       name: 'dryPound',
@@ -5522,7 +5522,7 @@ var sammUDefinition = {
       code: 'DB',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     dryQuartUs: {
       name: 'dryQuartUs',
@@ -5533,7 +5533,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.101221 × 10⁻³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     dryTon: {
       name: 'dryTon',
@@ -5542,7 +5542,7 @@ var sammUDefinition = {
       code: 'DT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     dyneMetre: {
       name: 'dyneMetre',
@@ -5553,7 +5553,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁻⁵ N × m',
-      quantityKinds: ['momentOfForce', 'torque', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['momentOfForce', 'torque', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple']
     },
     each: {
       name: 'each',
@@ -5562,7 +5562,7 @@ var sammUDefinition = {
       code: 'EA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     eightPartCloudCover: {
       name: 'eightPartCloudCover',
@@ -5571,7 +5571,7 @@ var sammUDefinition = {
       code: 'A59',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     electronicMailBox: {
       name: 'electronicMailBox',
@@ -5580,7 +5580,7 @@ var sammUDefinition = {
       code: 'EB',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     electronvolt: {
       name: 'electronvolt',
@@ -5618,8 +5618,8 @@ var sammUDefinition = {
         'potentialEnergy',
         'energy',
         'fermiEnergy',
-        'maximumBetaParticleEnergy',
-      ],
+        'maximumBetaParticleEnergy'
+      ]
     },
     electronvoltPerMetre: {
       name: 'electronvoltPerMetre',
@@ -5630,7 +5630,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerMetre'];
       },
       conversionFactor: '1.602176487 × 10⁻¹⁹ J/m',
-      quantityKinds: ['totalLinearStoppingPower', 'linearEnergyTransfer', 'totalLinearStoppingPower', 'linearEnergyTransfer'],
+      quantityKinds: ['totalLinearStoppingPower', 'linearEnergyTransfer', 'totalLinearStoppingPower', 'linearEnergyTransfer']
     },
     electronvoltSquareMetre: {
       name: 'electronvoltSquareMetre',
@@ -5641,7 +5641,7 @@ var sammUDefinition = {
         return sammUDefinition.units['jouleSquareMetre'];
       },
       conversionFactor: '1.602176487 × 10⁻¹⁹ J × m²',
-      quantityKinds: ['totalAtomicStoppingPower', 'totalAtomicStoppingPower'],
+      quantityKinds: ['totalAtomicStoppingPower', 'totalAtomicStoppingPower']
     },
     electronvoltSquareMetrePerKilogram: {
       name: 'electronvoltSquareMetrePerKilogram',
@@ -5652,7 +5652,7 @@ var sammUDefinition = {
         return sammUDefinition.units['jouleSquareMetrePerKilogram'];
       },
       conversionFactor: '1.602176487 × 10⁻¹⁹ J × m²/kg',
-      quantityKinds: ['totalMassStoppingPower', 'totalMassStoppingPower'],
+      quantityKinds: ['totalMassStoppingPower', 'totalMassStoppingPower']
     },
     equivalentGallon: {
       name: 'equivalentGallon',
@@ -5661,7 +5661,7 @@ var sammUDefinition = {
       code: 'EQ',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     erlang: {
       name: 'erlang',
@@ -5670,7 +5670,7 @@ var sammUDefinition = {
       code: 'Q11',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     exabitPerSecond: {
       name: 'exabitPerSecond',
@@ -5679,7 +5679,7 @@ var sammUDefinition = {
       code: 'E58',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     exabyte: {
       name: 'exabyte',
@@ -5690,7 +5690,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '10¹⁸ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     exajoule: {
       name: 'exajoule',
@@ -5724,8 +5724,8 @@ var sammUDefinition = {
         'work',
         'energy',
         'potentialEnergy',
-        'kineticEnergy',
-      ],
+        'kineticEnergy'
+      ]
     },
     exbibitPerCubicMetre: {
       name: 'exbibitPerCubicMetre',
@@ -5734,7 +5734,7 @@ var sammUDefinition = {
       code: 'E67',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     exbibitPerMetre: {
       name: 'exbibitPerMetre',
@@ -5743,7 +5743,7 @@ var sammUDefinition = {
       code: 'E65',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     exbibitPerSquareMetre: {
       name: 'exbibitPerSquareMetre',
@@ -5752,7 +5752,7 @@ var sammUDefinition = {
       code: 'E66',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     exbibyte: {
       name: 'exbibyte',
@@ -5763,7 +5763,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '2⁶⁰ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     failuresInTime: {
       name: 'failuresInTime',
@@ -5784,8 +5784,8 @@ var sammUDefinition = {
         'disintegrationConstant',
         'dampingCoefficient',
         'photonFlux',
-        'debyeAngularFrequency',
-      ],
+        'debyeAngularFrequency'
+      ]
     },
     farad: {
       name: 'farad',
@@ -5794,7 +5794,7 @@ var sammUDefinition = {
       code: 'FAR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['capacitance'],
+      quantityKinds: ['capacitance']
     },
     faradPerKilometre: {
       name: 'faradPerKilometre',
@@ -5811,8 +5811,8 @@ var sammUDefinition = {
         'permittivityOfVacuum',
         'permittivityOfVacuum',
         'permittivity',
-        'electricConstant',
-      ],
+        'electricConstant'
+      ]
     },
     faradPerMetre: {
       name: 'faradPerMetre',
@@ -5821,7 +5821,7 @@ var sammUDefinition = {
       code: 'A69',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['permittivityOfVacuum', 'permittivity', 'electricConstant'],
+      quantityKinds: ['permittivityOfVacuum', 'permittivity', 'electricConstant']
     },
     fathom: {
       name: 'fathom',
@@ -5878,8 +5878,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     femtojoule: {
       name: 'femtojoule',
@@ -5914,8 +5914,8 @@ var sammUDefinition = {
         'potentialEnergy',
         'kineticEnergy',
         'energy',
-        'gapEnergy',
-      ],
+        'gapEnergy'
+      ]
     },
     femtometre: {
       name: 'femtometre',
@@ -5972,8 +5972,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     fibreMetre: {
       name: 'fibreMetre',
@@ -5982,7 +5982,7 @@ var sammUDefinition = {
       code: 'FBM',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     fivePack: {
       name: 'fivePack',
@@ -5991,7 +5991,7 @@ var sammUDefinition = {
       code: 'P5',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     fixedRate: {
       name: 'fixedRate',
@@ -6000,7 +6000,7 @@ var sammUDefinition = {
       code: '1I',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     flakeTon: {
       name: 'flakeTon',
@@ -6009,7 +6009,7 @@ var sammUDefinition = {
       code: 'FL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     fluidOunceUk: {
       name: 'fluidOunceUk',
@@ -6020,7 +6020,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '2.841306 × 10⁻⁵ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     fluidOunceUs: {
       name: 'fluidOunceUs',
@@ -6031,7 +6031,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '2.957353 × 10⁻⁵ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     foot: {
       name: 'foot',
@@ -6088,8 +6088,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     footOfWater392Degreesf: {
       name: 'footOfWater392Degreesf',
@@ -6121,8 +6121,8 @@ var sammUDefinition = {
         'modulusOfCompression',
         'modulusOfElasticity',
         'modulusOfRigidity',
-        'shearStress',
-      ],
+        'shearStress'
+      ]
     },
     footPerDegreeFahrenheit: {
       name: 'footPerDegreeFahrenheit',
@@ -6153,8 +6153,8 @@ var sammUDefinition = {
         'lengthOfPath',
         'radiusOfCurvature',
         'radius',
-        'breadth',
-      ],
+        'breadth'
+      ]
     },
     footPerHour: {
       name: 'footPerHour',
@@ -6177,8 +6177,8 @@ var sammUDefinition = {
         'velocityOfSoundPhaseVelocity',
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
-        'phaseVelocity',
-      ],
+        'phaseVelocity'
+      ]
     },
     footPerMinute: {
       name: 'footPerMinute',
@@ -6201,8 +6201,8 @@ var sammUDefinition = {
         'velocityOfSoundPhaseVelocity',
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
-        'phaseVelocity',
-      ],
+        'phaseVelocity'
+      ]
     },
     footPerPsi: {
       name: 'footPerPsi',
@@ -6233,8 +6233,8 @@ var sammUDefinition = {
         'radiusOfCurvature',
         'breadth',
         'length',
-        'cartesianCoordinates',
-      ],
+        'cartesianCoordinates'
+      ]
     },
     footPerSecond: {
       name: 'footPerSecond',
@@ -6257,8 +6257,8 @@ var sammUDefinition = {
         'velocityOfSoundPhaseVelocity',
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
-        'phaseVelocity',
-      ],
+        'phaseVelocity'
+      ]
     },
     footPerSecondDegreeFahrenheit: {
       name: 'footPerSecondDegreeFahrenheit',
@@ -6269,7 +6269,7 @@ var sammUDefinition = {
         return sammUDefinition.units['metrePerSecondKelvin'];
       },
       conversionFactor: '0.54864 (m/s)/K',
-      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'phaseVelocity', 'velocity', 'groupVelocity'],
+      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'phaseVelocity', 'velocity', 'groupVelocity']
     },
     footPerSecondPsi: {
       name: 'footPerSecondPsi',
@@ -6280,7 +6280,7 @@ var sammUDefinition = {
         return sammUDefinition.units['metrePerSecondPascal'];
       },
       conversionFactor: '4.420750 × 10⁻⁵ (m/s)/Pa',
-      quantityKinds: ['phaseVelocity', 'velocity', 'groupVelocity', 'velocity', 'phaseVelocity', 'groupVelocity'],
+      quantityKinds: ['phaseVelocity', 'velocity', 'groupVelocity', 'velocity', 'phaseVelocity', 'groupVelocity']
     },
     footPerSecondSquared: {
       name: 'footPerSecondSquared',
@@ -6298,8 +6298,8 @@ var sammUDefinition = {
         'accelerationDueToGravity',
         'accelerationOfFreeFall',
         'instantaneousSoundParticleAcceleration',
-        'acceleration',
-      ],
+        'acceleration'
+      ]
     },
     footPerThousand: {
       name: 'footPerThousand',
@@ -6346,8 +6346,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     footPoundForce: {
       name: 'footPoundForce',
@@ -6381,8 +6381,8 @@ var sammUDefinition = {
         'work',
         'energy',
         'potentialEnergy',
-        'kineticEnergy',
-      ],
+        'kineticEnergy'
+      ]
     },
     footPoundForcePerHour: {
       name: 'footPoundForcePerHour',
@@ -6401,8 +6401,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     footPoundForcePerMinute: {
       name: 'footPoundForcePerMinute',
@@ -6421,8 +6421,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     footPoundForcePerSecond: {
       name: 'footPoundForcePerSecond',
@@ -6441,8 +6441,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     footPoundal: {
       name: 'footPoundal',
@@ -6476,8 +6476,8 @@ var sammUDefinition = {
         'potentialEnergy',
         'work',
         'energy',
-        'kineticEnergy',
-      ],
+        'kineticEnergy'
+      ]
     },
     footToTheFourthPower: {
       name: 'footToTheFourthPower',
@@ -6488,7 +6488,7 @@ var sammUDefinition = {
         return sammUDefinition.units['metreToTheFourthPower'];
       },
       conversionFactor: '8.630975 × 10⁻³ m⁴',
-      quantityKinds: ['secondMomentOfArea', 'secondAxialMomentOfArea', 'secondPolarMomentOfArea'],
+      quantityKinds: ['secondMomentOfArea', 'secondAxialMomentOfArea', 'secondPolarMomentOfArea']
     },
     footUsSurvey: {
       name: 'footUsSurvey',
@@ -6545,8 +6545,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     footcandle: {
       name: 'footcandle',
@@ -6555,7 +6555,7 @@ var sammUDefinition = {
       code: 'P27',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['illuminance'],
+      quantityKinds: ['illuminance']
     },
     footlambert: {
       name: 'footlambert',
@@ -6566,7 +6566,7 @@ var sammUDefinition = {
         return sammUDefinition.units['candelaPerSquareMetre'];
       },
       conversionFactor: '3.426259 cd/m²',
-      quantityKinds: ['luminance', 'luminance'],
+      quantityKinds: ['luminance', 'luminance']
     },
     fortyFootContainer: {
       name: 'fortyFootContainer',
@@ -6575,7 +6575,7 @@ var sammUDefinition = {
       code: '21',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     franklin: {
       name: 'franklin',
@@ -6593,8 +6593,8 @@ var sammUDefinition = {
         'electricCharge',
         'quantityOfElectricity',
         'electricCharge',
-        'electricFluxFluxOfDisplacement',
-      ],
+        'electricFluxFluxOfDisplacement'
+      ]
     },
     freightTon: {
       name: 'freightTon',
@@ -6603,7 +6603,7 @@ var sammUDefinition = {
       code: 'A75',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     frenchGauge: {
       name: 'frenchGauge',
@@ -6660,8 +6660,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     furlong: {
       name: 'furlong',
@@ -6718,8 +6718,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     gal: {
       name: 'gal',
@@ -6737,8 +6737,8 @@ var sammUDefinition = {
         'accelerationDueToGravity',
         'accelerationOfFreeFall',
         'instantaneousSoundParticleAcceleration',
-        'acceleration',
-      ],
+        'acceleration'
+      ]
     },
     gallonUk: {
       name: 'gallonUk',
@@ -6749,7 +6749,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4.546092 × 10⁻³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     gallonUkPerDay: {
       name: 'gallonUkPerDay',
@@ -6760,7 +6760,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '5.261678 × 10⁻⁸ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     gallonUkPerHour: {
       name: 'gallonUkPerHour',
@@ -6771,7 +6771,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.262803 × 10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     gallonUkPerSecond: {
       name: 'gallonUkPerSecond',
@@ -6782,7 +6782,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.54609 × 10⁻³ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     gallonUs: {
       name: 'gallonUs',
@@ -6793,7 +6793,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '3.785412 × 10⁻³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     gallonUsLiquidPerSecond: {
       name: 'gallonUsLiquidPerSecond',
@@ -6804,7 +6804,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.785412 × 10⁻³ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     gallonUsPerDay: {
       name: 'gallonUsPerDay',
@@ -6815,7 +6815,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.381264 × 10⁻⁸ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     gallonUsPerHour: {
       name: 'gallonUsPerHour',
@@ -6824,7 +6824,7 @@ var sammUDefinition = {
       code: 'G50',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     gamma: {
       name: 'gamma',
@@ -6844,8 +6844,8 @@ var sammUDefinition = {
         'upperCriticalMagneticFluxDensity',
         'magneticFluxDensity',
         'magneticPolarization',
-        'magneticInduction',
-      ],
+        'magneticInduction'
+      ]
     },
     gibibit: {
       name: 'gibibit',
@@ -6854,7 +6854,7 @@ var sammUDefinition = {
       code: 'B30',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gibibitPerCubicMetre: {
       name: 'gibibitPerCubicMetre',
@@ -6863,7 +6863,7 @@ var sammUDefinition = {
       code: 'E71',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gibibitPerMetre: {
       name: 'gibibitPerMetre',
@@ -6872,7 +6872,7 @@ var sammUDefinition = {
       code: 'E69',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gibibitPerSquareMetre: {
       name: 'gibibitPerSquareMetre',
@@ -6881,7 +6881,7 @@ var sammUDefinition = {
       code: 'E70',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gibibyte: {
       name: 'gibibyte',
@@ -6892,7 +6892,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '2³⁰ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     gigaabyte: {
       name: 'gigaabyte',
@@ -6903,7 +6903,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '10⁹ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     gigabecquerel: {
       name: 'gigabecquerel',
@@ -6914,7 +6914,7 @@ var sammUDefinition = {
         return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '10⁹ Bq',
-      quantityKinds: ['activity', 'activity'],
+      quantityKinds: ['activity', 'activity']
     },
     gigabit: {
       name: 'gigabit',
@@ -6923,7 +6923,7 @@ var sammUDefinition = {
       code: 'B68',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gigabitPerSecond: {
       name: 'gigabitPerSecond',
@@ -6932,7 +6932,7 @@ var sammUDefinition = {
       code: 'B80',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gigabytePerSecond: {
       name: 'gigabytePerSecond',
@@ -6941,7 +6941,7 @@ var sammUDefinition = {
       code: 'E68',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gigacoulombPerCubicMetre: {
       name: 'gigacoulombPerCubicMetre',
@@ -6952,7 +6952,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁹ C/m³',
-      quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'volumeDensityOfCharge', 'volumicCharge', 'chargeDensity'],
+      quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'volumeDensityOfCharge', 'volumicCharge', 'chargeDensity']
     },
     gigaelectronvolt: {
       name: 'gigaelectronvolt',
@@ -6975,8 +6975,8 @@ var sammUDefinition = {
         'potentialEnergy',
         'energy',
         'fermiEnergy',
-        'maximumBetaParticleEnergy',
-      ],
+        'maximumBetaParticleEnergy'
+      ]
     },
     gigahertz: {
       name: 'gigahertz',
@@ -6987,7 +6987,7 @@ var sammUDefinition = {
         return sammUDefinition.units['hertz'];
       },
       conversionFactor: '10⁹ Hz',
-      quantityKinds: ['frequency', 'frequency'],
+      quantityKinds: ['frequency', 'frequency']
     },
     gigahertzMetre: {
       name: 'gigahertzMetre',
@@ -6998,7 +6998,7 @@ var sammUDefinition = {
         return sammUDefinition.units['hertzMetre'];
       },
       conversionFactor: '10⁹ Hz × m',
-      quantityKinds: ['performanceCharacteristic', 'coefficient', 'performanceCharacteristic', 'coefficient'],
+      quantityKinds: ['performanceCharacteristic', 'coefficient', 'performanceCharacteristic', 'coefficient']
     },
     gigajoule: {
       name: 'gigajoule',
@@ -7032,8 +7032,8 @@ var sammUDefinition = {
         'work',
         'energy',
         'potentialEnergy',
-        'kineticEnergy',
-      ],
+        'kineticEnergy'
+      ]
     },
     gigaohm: {
       name: 'gigaohm',
@@ -7056,8 +7056,8 @@ var sammUDefinition = {
         'resistanceToAlternatingCurrent',
         'complexImpedances',
         'impedance',
-        'resistanceToDirectCurrent',
-      ],
+        'resistanceToDirectCurrent'
+      ]
     },
     gigaohmMetre: {
       name: 'gigaohmMetre',
@@ -7068,7 +7068,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁹ Ω × m',
-      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
+      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity']
     },
     gigaohmPerMetre: {
       name: 'gigaohmPerMetre',
@@ -7079,7 +7079,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '10⁹ Ω/m',
-      quantityKinds: ['lineicResistance', 'resistanceLoadPerUnitLength'],
+      quantityKinds: ['lineicResistance', 'resistanceLoadPerUnitLength']
     },
     gigapascal: {
       name: 'gigapascal',
@@ -7111,8 +7111,8 @@ var sammUDefinition = {
         'normalStress',
         'pressure',
         'bulkModulus',
-        'modulusOfCompression',
-      ],
+        'modulusOfCompression'
+      ]
     },
     gigawatt: {
       name: 'gigawatt',
@@ -7133,8 +7133,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     gigawattHour: {
       name: 'gigawattHour',
@@ -7168,8 +7168,8 @@ var sammUDefinition = {
         'kineticEnergy',
         'work',
         'energy',
-        'potentialEnergy',
-      ],
+        'potentialEnergy'
+      ]
     },
     gilbert: {
       name: 'gilbert',
@@ -7188,8 +7188,8 @@ var sammUDefinition = {
         'magneticPotentialDifference',
         'magnetomotiveForce',
         'currentLinkage',
-        'electricCurrent',
-      ],
+        'electricCurrent'
+      ]
     },
     gillUk: {
       name: 'gillUk',
@@ -7200,7 +7200,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.420653 × 10⁻⁴ m³',
-      quantityKinds: ['volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'sectionModulus']
     },
     gillUkPerDay: {
       name: 'gillUkPerDay',
@@ -7211,7 +7211,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.644274 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     gillUkPerHour: {
       name: 'gillUkPerHour',
@@ -7222,7 +7222,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.946258 × 10⁻⁸ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     gillUkPerMinute: {
       name: 'gillUkPerMinute',
@@ -7233,7 +7233,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '0.02367755 m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     gillUkPerSecond: {
       name: 'gillUkPerSecond',
@@ -7244,7 +7244,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.420653 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     gillUs: {
       name: 'gillUs',
@@ -7255,7 +7255,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.182941 × 10⁻⁴ m³',
-      quantityKinds: ['volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'sectionModulus']
     },
     gillUsPerDay: {
       name: 'gillUsPerDay',
@@ -7266,7 +7266,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.369145 × 10⁻⁹ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     gillUsPerHour: {
       name: 'gillUsPerHour',
@@ -7277,7 +7277,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.285947 × 10⁻⁸ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     gillUsPerMinute: {
       name: 'gillUsPerMinute',
@@ -7288,7 +7288,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.971568 × 10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     gillUsPerSecond: {
       name: 'gillUsPerSecond',
@@ -7299,7 +7299,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.182941 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     gon: {
       name: 'gon',
@@ -7310,7 +7310,7 @@ var sammUDefinition = {
         return sammUDefinition.units['rad'];
       },
       conversionFactor: '1.570796 × 10⁻² rad',
-      quantityKinds: ['absorbedDose', 'anglePlane'],
+      quantityKinds: ['absorbedDose', 'anglePlane']
     },
     grain: {
       name: 'grain',
@@ -7321,7 +7321,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '64.79891 × 10⁻⁶ kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     grainPerGallonUs: {
       name: 'grainPerGallonUs',
@@ -7341,8 +7341,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     gram: {
       name: 'gram',
@@ -7353,7 +7353,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻³ kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     gramCentimetrePerSecond: {
       name: 'gramCentimetrePerSecond',
@@ -7364,7 +7364,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramMetrePerSecond'];
       },
       conversionFactor: '10⁻⁵ kg × m/s',
-      quantityKinds: ['momentum', 'momentum'],
+      quantityKinds: ['momentum', 'momentum']
     },
     gramDryWeight: {
       name: 'gramDryWeight',
@@ -7373,7 +7373,7 @@ var sammUDefinition = {
       code: 'GDW',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gramForcePerSquareCentimetre: {
       name: 'gramForcePerSquareCentimetre',
@@ -7405,8 +7405,8 @@ var sammUDefinition = {
         'bulkModulus',
         'modulusOfRigidity',
         'normalStress',
-        'pressure',
-      ],
+        'pressure'
+      ]
     },
     gramIncludingContainer: {
       name: 'gramIncludingContainer',
@@ -7415,7 +7415,7 @@ var sammUDefinition = {
       code: 'GIC',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gramIncludingInnerPackaging: {
       name: 'gramIncludingInnerPackaging',
@@ -7424,7 +7424,7 @@ var sammUDefinition = {
       code: 'GIP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gramMillimetre: {
       name: 'gramMillimetre',
@@ -7448,8 +7448,8 @@ var sammUDefinition = {
         'cartesianCoordinates',
         'lengthOfPath',
         'diameter',
-        'height',
-      ],
+        'height'
+      ]
     },
     gramOfFissileIsotope: {
       name: 'gramOfFissileIsotope',
@@ -7458,7 +7458,7 @@ var sammUDefinition = {
       code: 'GFI',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gramPerBar: {
       name: 'gramPerBar',
@@ -7467,7 +7467,7 @@ var sammUDefinition = {
       code: 'F74',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerCentimetreSecond: {
       name: 'gramPerCentimetreSecond',
@@ -7478,7 +7478,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '0.1 Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     gramPerCubicCentimetre: {
       name: 'gramPerCubicCentimetre',
@@ -7498,8 +7498,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'volumicMass',
         'massDensity',
-        'density',
-      ],
+        'density'
+      ]
     },
     gramPerCubicCentimetreBar: {
       name: 'gramPerCubicCentimetreBar',
@@ -7508,7 +7508,7 @@ var sammUDefinition = {
       code: 'G11',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerCubicCentimetreKelvin: {
       name: 'gramPerCubicCentimetreKelvin',
@@ -7517,7 +7517,7 @@ var sammUDefinition = {
       code: 'G33',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerCubicDecimetre: {
       name: 'gramPerCubicDecimetre',
@@ -7526,7 +7526,7 @@ var sammUDefinition = {
       code: 'F23',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerCubicDecimetreBar: {
       name: 'gramPerCubicDecimetreBar',
@@ -7535,7 +7535,7 @@ var sammUDefinition = {
       code: 'G12',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerCubicDecimetreKelvin: {
       name: 'gramPerCubicDecimetreKelvin',
@@ -7544,7 +7544,7 @@ var sammUDefinition = {
       code: 'G34',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerCubicMetre: {
       name: 'gramPerCubicMetre',
@@ -7564,8 +7564,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'volumicMass',
         'massDensity',
-        'density',
-      ],
+        'density'
+      ]
     },
     gramPerCubicMetreBar: {
       name: 'gramPerCubicMetreBar',
@@ -7574,7 +7574,7 @@ var sammUDefinition = {
       code: 'G14',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerCubicMetreKelvin: {
       name: 'gramPerCubicMetreKelvin',
@@ -7583,7 +7583,7 @@ var sammUDefinition = {
       code: 'G36',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerDay: {
       name: 'gramPerDay',
@@ -7592,7 +7592,7 @@ var sammUDefinition = {
       code: 'F26',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerDayBar: {
       name: 'gramPerDayBar',
@@ -7601,7 +7601,7 @@ var sammUDefinition = {
       code: 'F62',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerDayKelvin: {
       name: 'gramPerDayKelvin',
@@ -7610,7 +7610,7 @@ var sammUDefinition = {
       code: 'F35',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerHertz: {
       name: 'gramPerHertz',
@@ -7619,7 +7619,7 @@ var sammUDefinition = {
       code: 'F25',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerHour: {
       name: 'gramPerHour',
@@ -7628,7 +7628,7 @@ var sammUDefinition = {
       code: 'F27',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerHourBar: {
       name: 'gramPerHourBar',
@@ -7637,7 +7637,7 @@ var sammUDefinition = {
       code: 'F63',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerHourKelvin: {
       name: 'gramPerHourKelvin',
@@ -7646,7 +7646,7 @@ var sammUDefinition = {
       code: 'F36',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerKelvin: {
       name: 'gramPerKelvin',
@@ -7655,7 +7655,7 @@ var sammUDefinition = {
       code: 'F14',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerLitre: {
       name: 'gramPerLitre',
@@ -7675,8 +7675,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'volumicMass',
         'massDensity',
-        'density',
-      ],
+        'density'
+      ]
     },
     gramPerLitreBar: {
       name: 'gramPerLitreBar',
@@ -7685,7 +7685,7 @@ var sammUDefinition = {
       code: 'G13',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerLitreKelvin: {
       name: 'gramPerLitreKelvin',
@@ -7694,7 +7694,7 @@ var sammUDefinition = {
       code: 'G35',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerMetreGramPer100Centimetres: {
       name: 'gramPerMetreGramPer100Centimetres',
@@ -7705,7 +7705,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10⁻³ kg/m',
-      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
+      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity']
     },
     gramPerMillilitre: {
       name: 'gramPerMillilitre',
@@ -7725,8 +7725,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     gramPerMillilitreBar: {
       name: 'gramPerMillilitreBar',
@@ -7735,7 +7735,7 @@ var sammUDefinition = {
       code: 'G15',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerMillilitreKelvin: {
       name: 'gramPerMillilitreKelvin',
@@ -7744,7 +7744,7 @@ var sammUDefinition = {
       code: 'G37',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     gramPerMillimetre: {
       name: 'gramPerMillimetre',
@@ -7753,7 +7753,7 @@ var sammUDefinition = {
       code: 'H76',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['linearMass', 'linearDensity'],
+      quantityKinds: ['linearMass', 'linearDensity']
     },
     gramPerMinute: {
       name: 'gramPerMinute',
@@ -7762,7 +7762,7 @@ var sammUDefinition = {
       code: 'F28',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerMinuteBar: {
       name: 'gramPerMinuteBar',
@@ -7771,7 +7771,7 @@ var sammUDefinition = {
       code: 'F64',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerMinuteKelvin: {
       name: 'gramPerMinuteKelvin',
@@ -7780,7 +7780,7 @@ var sammUDefinition = {
       code: 'F37',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerMole: {
       name: 'gramPerMole',
@@ -7791,7 +7791,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerMole'];
       },
       conversionFactor: '10⁻³ kg/mol',
-      quantityKinds: ['molarMass', 'molarMass'],
+      quantityKinds: ['molarMass', 'molarMass']
     },
     gramPerSecond: {
       name: 'gramPerSecond',
@@ -7800,7 +7800,7 @@ var sammUDefinition = {
       code: 'F29',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerSecondBar: {
       name: 'gramPerSecondBar',
@@ -7809,7 +7809,7 @@ var sammUDefinition = {
       code: 'F65',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerSecondKelvin: {
       name: 'gramPerSecondKelvin',
@@ -7818,7 +7818,7 @@ var sammUDefinition = {
       code: 'F38',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     gramPerSquareCentimetre: {
       name: 'gramPerSquareCentimetre',
@@ -7829,7 +7829,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '10 kg/m²',
-      quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass'],
+      quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass']
     },
     gramPerSquareMetre: {
       name: 'gramPerSquareMetre',
@@ -7840,7 +7840,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '10⁻³ kg/m²',
-      quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass'],
+      quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass']
     },
     gramPerSquareMillimetre: {
       name: 'gramPerSquareMillimetre',
@@ -7862,8 +7862,8 @@ var sammUDefinition = {
         'shearStress',
         'surfaceDensity',
         'meanMassRange',
-        'areicMass',
-      ],
+        'areicMass'
+      ]
     },
     gray: {
       name: 'gray',
@@ -7872,7 +7872,7 @@ var sammUDefinition = {
       code: 'A95',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['specificEnergyImparted', 'massicEnergyImparted'],
+      quantityKinds: ['specificEnergyImparted', 'massicEnergyImparted']
     },
     grayPerHour: {
       name: 'grayPerHour',
@@ -7883,7 +7883,7 @@ var sammUDefinition = {
         return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ Gy/s',
-      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate']
     },
     grayPerMinute: {
       name: 'grayPerMinute',
@@ -7894,7 +7894,7 @@ var sammUDefinition = {
         return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻² Gy/s',
-      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate']
     },
     grayPerSecond: {
       name: 'grayPerSecond',
@@ -7903,7 +7903,7 @@ var sammUDefinition = {
       code: 'A96',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate']
     },
     greatGross: {
       name: 'greatGross',
@@ -7912,7 +7912,7 @@ var sammUDefinition = {
       code: 'GGR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     gross: {
       name: 'gross',
@@ -7921,7 +7921,7 @@ var sammUDefinition = {
       code: 'GRO',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     grossKilogram: {
       name: 'grossKilogram',
@@ -7930,7 +7930,7 @@ var sammUDefinition = {
       code: 'E4',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     group: {
       name: 'group',
@@ -7939,7 +7939,7 @@ var sammUDefinition = {
       code: '10',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     guntersChain: {
       name: 'guntersChain',
@@ -7996,8 +7996,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     halfYear6Months: {
       name: 'halfYear6Months',
@@ -8006,7 +8006,7 @@ var sammUDefinition = {
       code: 'SAN',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hangingContainer: {
       name: 'hangingContainer',
@@ -8015,7 +8015,7 @@ var sammUDefinition = {
       code: 'Z11',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hank: {
       name: 'hank',
@@ -8024,7 +8024,7 @@ var sammUDefinition = {
       code: 'HA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hartley: {
       name: 'hartley',
@@ -8033,7 +8033,7 @@ var sammUDefinition = {
       code: 'Q15',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hartleyPerSecond: {
       name: 'hartleyPerSecond',
@@ -8042,7 +8042,7 @@ var sammUDefinition = {
       code: 'Q18',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     head: {
       name: 'head',
@@ -8051,7 +8051,7 @@ var sammUDefinition = {
       code: 'HEA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hectobar: {
       name: 'hectobar',
@@ -8083,8 +8083,8 @@ var sammUDefinition = {
         'normalStress',
         'modulusOfCompression',
         'bulkModulus',
-        'shearModulus',
-      ],
+        'shearModulus'
+      ]
     },
     hectogram: {
       name: 'hectogram',
@@ -8095,7 +8095,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻¹ kg',
-      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
+      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass']
     },
     hectolitre: {
       name: 'hectolitre',
@@ -8106,7 +8106,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻¹ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     hectolitreOfPureAlcohol: {
       name: 'hectolitreOfPureAlcohol',
@@ -8115,7 +8115,7 @@ var sammUDefinition = {
       code: 'HPA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hectometre: {
       name: 'hectometre',
@@ -8172,8 +8172,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     hectopascal: {
       name: 'hectopascal',
@@ -8205,8 +8205,8 @@ var sammUDefinition = {
         'bulkModulus',
         'shearModulus',
         'pressure',
-        'shearStress',
-      ],
+        'shearStress'
+      ]
     },
     hectopascalCubicMetrePerSecond: {
       name: 'hectopascalCubicMetrePerSecond',
@@ -8223,8 +8223,8 @@ var sammUDefinition = {
         'modulusOfRigidity',
         'shearStress',
         'normalStress',
-        'shearModulus',
-      ],
+        'shearModulus'
+      ]
     },
     hectopascalLitrePerSecond: {
       name: 'hectopascalLitrePerSecond',
@@ -8241,8 +8241,8 @@ var sammUDefinition = {
         'normalStress',
         'modulusOfRigidity',
         'shearModulus',
-        'pressure',
-      ],
+        'pressure'
+      ]
     },
     hectopascalPerBar: {
       name: 'hectopascalPerBar',
@@ -8251,7 +8251,7 @@ var sammUDefinition = {
       code: 'E99',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['pressureRatio'],
+      quantityKinds: ['pressureRatio']
     },
     hectopascalPerKelvin: {
       name: 'hectopascalPerKelvin',
@@ -8268,8 +8268,8 @@ var sammUDefinition = {
         'pressure',
         'shearModulus',
         'modulusOfRigidity',
-        'shearStress',
-      ],
+        'shearStress'
+      ]
     },
     hectopascalPerMetre: {
       name: 'hectopascalPerMetre',
@@ -8278,7 +8278,7 @@ var sammUDefinition = {
       code: 'P82',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['hardnessIndex'],
+      quantityKinds: ['hardnessIndex']
     },
     hefnerKerze: {
       name: 'hefnerKerze',
@@ -8289,7 +8289,7 @@ var sammUDefinition = {
         return sammUDefinition.units['candela'];
       },
       conversionFactor: '0.903 cd',
-      quantityKinds: ['luminousIntensity', 'luminousIntensity'],
+      quantityKinds: ['luminousIntensity', 'luminousIntensity']
     },
     henry: {
       name: 'henry',
@@ -8298,7 +8298,7 @@ var sammUDefinition = {
       code: '81',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['selfInductance', 'permeance', 'mutualInductance'],
+      quantityKinds: ['selfInductance', 'permeance', 'mutualInductance']
     },
     henryPerKiloohm: {
       name: 'henryPerKiloohm',
@@ -8322,8 +8322,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     henryPerMetre: {
       name: 'henryPerMetre',
@@ -8332,7 +8332,7 @@ var sammUDefinition = {
       code: 'A98',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['permeabilityOfVacuum', 'permeability', 'magneticConstant'],
+      quantityKinds: ['permeabilityOfVacuum', 'permeability', 'magneticConstant']
     },
     henryPerOhm: {
       name: 'henryPerOhm',
@@ -8356,8 +8356,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     hertz: {
       name: 'hertz',
@@ -8366,7 +8366,7 @@ var sammUDefinition = {
       code: 'HTZ',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['frequency'],
+      quantityKinds: ['frequency']
     },
     hertzMetre: {
       name: 'hertzMetre',
@@ -8375,7 +8375,7 @@ var sammUDefinition = {
       code: 'H34',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['performanceCharacteristic', 'coefficient'],
+      quantityKinds: ['performanceCharacteristic', 'coefficient']
     },
     horsepowerBoiler: {
       name: 'horsepowerBoiler',
@@ -8394,8 +8394,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     horsepowerElectric: {
       name: 'horsepowerElectric',
@@ -8415,8 +8415,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     hour: {
       name: 'hour',
@@ -8438,8 +8438,8 @@ var sammUDefinition = {
         'time',
         'carrierLifeTime',
         'reactorTimeConstant',
-        'time',
-      ],
+        'time'
+      ]
     },
     hundred: {
       name: 'hundred',
@@ -8448,7 +8448,7 @@ var sammUDefinition = {
       code: 'CEN',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredBoardFoot: {
       name: 'hundredBoardFoot',
@@ -8457,7 +8457,7 @@ var sammUDefinition = {
       code: 'BP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredBoxes: {
       name: 'hundredBoxes',
@@ -8466,7 +8466,7 @@ var sammUDefinition = {
       code: 'HBX',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredCount: {
       name: 'hundredCount',
@@ -8475,7 +8475,7 @@ var sammUDefinition = {
       code: 'HC',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredCubicFoot: {
       name: 'hundredCubicFoot',
@@ -8484,7 +8484,7 @@ var sammUDefinition = {
       code: 'HH',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredCubicMetre: {
       name: 'hundredCubicMetre',
@@ -8493,7 +8493,7 @@ var sammUDefinition = {
       code: 'FF',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredInternationalUnit: {
       name: 'hundredInternationalUnit',
@@ -8502,7 +8502,7 @@ var sammUDefinition = {
       code: 'HIU',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredKilogramDryWeight: {
       name: 'hundredKilogramDryWeight',
@@ -8511,7 +8511,7 @@ var sammUDefinition = {
       code: 'HDW',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredKilogramNetMass: {
       name: 'hundredKilogramNetMass',
@@ -8520,7 +8520,7 @@ var sammUDefinition = {
       code: 'HKM',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredLeave: {
       name: 'hundredLeave',
@@ -8529,7 +8529,7 @@ var sammUDefinition = {
       code: 'CLF',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredMetre: {
       name: 'hundredMetre',
@@ -8538,7 +8538,7 @@ var sammUDefinition = {
       code: 'JPS',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredPack: {
       name: 'hundredPack',
@@ -8547,7 +8547,7 @@ var sammUDefinition = {
       code: 'CNP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     hundredPoundCwtOrHundredWeightUs: {
       name: 'hundredPoundCwtOrHundredWeightUs',
@@ -8558,7 +8558,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '45.3592 kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     hundredWeightUk: {
       name: 'hundredWeightUk',
@@ -8569,7 +8569,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '50.80235 kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     hydraulicHorsePower: {
       name: 'hydraulicHorsePower',
@@ -8578,7 +8578,7 @@ var sammUDefinition = {
       code: '5J',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     imperialGallonPerMinute: {
       name: 'imperialGallonPerMinute',
@@ -8589,7 +8589,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '7.57682 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     inch: {
       name: 'inch',
@@ -8646,8 +8646,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     inchOfMercury: {
       name: 'inchOfMercury',
@@ -8664,8 +8664,8 @@ var sammUDefinition = {
         'bulkModulus',
         'pressure',
         'shearStress',
-        'shearModulus',
-      ],
+        'shearModulus'
+      ]
     },
     inchOfMercury32Degreesf: {
       name: 'inchOfMercury32Degreesf',
@@ -8697,8 +8697,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'shearModulus',
         'pressure',
-        'modulusOfRigidity',
-      ],
+        'modulusOfRigidity'
+      ]
     },
     inchOfMercury60Degreesf: {
       name: 'inchOfMercury60Degreesf',
@@ -8730,8 +8730,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'modulusOfRigidity',
         'pressure',
-        'shearStress',
-      ],
+        'shearStress'
+      ]
     },
     inchOfWater: {
       name: 'inchOfWater',
@@ -8748,8 +8748,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'shearStress',
         'bulkModulus',
-        'modulusOfCompression',
-      ],
+        'modulusOfCompression'
+      ]
     },
     inchOfWater392Degreesf: {
       name: 'inchOfWater392Degreesf',
@@ -8781,8 +8781,8 @@ var sammUDefinition = {
         'modulusOfRigidity',
         'shearStress',
         'modulusOfElasticity',
-        'pressure',
-      ],
+        'pressure'
+      ]
     },
     inchOfWater60Degreesf: {
       name: 'inchOfWater60Degreesf',
@@ -8814,8 +8814,8 @@ var sammUDefinition = {
         'modulusOfRigidity',
         'pressure',
         'shearStress',
-        'normalStress',
-      ],
+        'normalStress'
+      ]
     },
     inchPerDegreeFahrenheit: {
       name: 'inchPerDegreeFahrenheit',
@@ -8846,8 +8846,8 @@ var sammUDefinition = {
         'lengthOfPath',
         'radiusOfCurvature',
         'radius',
-        'breadth',
-      ],
+        'breadth'
+      ]
     },
     inchPerLinearFoot: {
       name: 'inchPerLinearFoot',
@@ -8856,7 +8856,7 @@ var sammUDefinition = {
       code: 'B82',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     inchPerMinute: {
       name: 'inchPerMinute',
@@ -8879,8 +8879,8 @@ var sammUDefinition = {
         'velocityOfSoundPhaseVelocity',
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
-        'phaseVelocity',
-      ],
+        'phaseVelocity'
+      ]
     },
     inchPerPsi: {
       name: 'inchPerPsi',
@@ -8911,8 +8911,8 @@ var sammUDefinition = {
         'cartesianCoordinates',
         'radius',
         'lengthOfPath',
-        'distance',
-      ],
+        'distance'
+      ]
     },
     inchPerSecond: {
       name: 'inchPerSecond',
@@ -8935,8 +8935,8 @@ var sammUDefinition = {
         'phaseVelocity',
         'velocity',
         'phaseVelocity',
-        'groupVelocity',
-      ],
+        'groupVelocity'
+      ]
     },
     inchPerSecondDegreeFahrenheit: {
       name: 'inchPerSecondDegreeFahrenheit',
@@ -8947,7 +8947,7 @@ var sammUDefinition = {
         return sammUDefinition.units['metrePerSecondKelvin'];
       },
       conversionFactor: '4.572 × 10⁻² (m/s)/K',
-      quantityKinds: ['phaseVelocity', 'velocity', 'groupVelocity', 'velocity', 'phaseVelocity', 'groupVelocity'],
+      quantityKinds: ['phaseVelocity', 'velocity', 'groupVelocity', 'velocity', 'phaseVelocity', 'groupVelocity']
     },
     inchPerSecondPsi: {
       name: 'inchPerSecondPsi',
@@ -8958,7 +8958,7 @@ var sammUDefinition = {
         return sammUDefinition.units['metrePerSecondPascal'];
       },
       conversionFactor: '3.683959 × 10⁻⁶ (m/s)/Pa',
-      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'phaseVelocity', 'groupVelocity', 'velocity'],
+      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'phaseVelocity', 'groupVelocity', 'velocity']
     },
     inchPerSecondSquared: {
       name: 'inchPerSecondSquared',
@@ -8976,8 +8976,8 @@ var sammUDefinition = {
         'accelerationDueToGravity',
         'accelerationOfFreeFall',
         'instantaneousSoundParticleAcceleration',
-        'acceleration',
-      ],
+        'acceleration'
+      ]
     },
     inchPerTwoPiRadiant: {
       name: 'inchPerTwoPiRadiant',
@@ -8986,7 +8986,7 @@ var sammUDefinition = {
       code: 'H57',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['solidAngle'],
+      quantityKinds: ['solidAngle']
     },
     inchPerYear: {
       name: 'inchPerYear',
@@ -9009,8 +9009,8 @@ var sammUDefinition = {
         'velocityOfSoundPhaseVelocity',
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
-        'phaseVelocity',
-      ],
+        'phaseVelocity'
+      ]
     },
     inchPoundPoundInch: {
       name: 'inchPoundPoundInch',
@@ -9021,7 +9021,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramMetre'];
       },
       conversionFactor: '1.15212 × 10⁻² kg × m',
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfACouple', 'torque', 'momentOfForce'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfACouple', 'torque', 'momentOfForce']
     },
     inchPoundal: {
       name: 'inchPoundal',
@@ -9055,8 +9055,8 @@ var sammUDefinition = {
         'potentialEnergy',
         'work',
         'energy',
-        'kineticEnergy',
-      ],
+        'kineticEnergy'
+      ]
     },
     inchToTheFourthPower: {
       name: 'inchToTheFourthPower',
@@ -9067,7 +9067,7 @@ var sammUDefinition = {
         return sammUDefinition.units['metreToTheFourthPower'];
       },
       conversionFactor: '41.62314 × 10⁻⁸ m⁴',
-      quantityKinds: ['secondMomentOfArea', 'secondAxialMomentOfArea', 'secondPolarMomentOfArea'],
+      quantityKinds: ['secondMomentOfArea', 'secondAxialMomentOfArea', 'secondPolarMomentOfArea']
     },
     internationalCandle: {
       name: 'internationalCandle',
@@ -9078,7 +9078,7 @@ var sammUDefinition = {
         return sammUDefinition.units['candela'];
       },
       conversionFactor: '1.019 cd',
-      quantityKinds: ['luminousIntensity', 'luminousIntensity'],
+      quantityKinds: ['luminousIntensity', 'luminousIntensity']
     },
     internationalSugarDegree: {
       name: 'internationalSugarDegree',
@@ -9087,7 +9087,7 @@ var sammUDefinition = {
       code: 'ISD',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     job: {
       name: 'job',
@@ -9096,7 +9096,7 @@ var sammUDefinition = {
       code: 'E51',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     joule: {
       name: 'joule',
@@ -9124,8 +9124,8 @@ var sammUDefinition = {
         'reactionEnergy',
         'quantityOfHeat',
         'kineticEnergy',
-        'radiantEnergy',
-      ],
+        'radiantEnergy'
+      ]
     },
     joulePerCubicMetre: {
       name: 'joulePerCubicMetre',
@@ -9140,8 +9140,8 @@ var sammUDefinition = {
         'soundEnergy',
         'soundEnergyDensity',
         'volumic',
-        'radiantEnergyDensity',
-      ],
+        'radiantEnergyDensity'
+      ]
     },
     joulePerDay: {
       name: 'joulePerDay',
@@ -9161,8 +9161,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     joulePerGram: {
       name: 'joulePerGram',
@@ -9171,7 +9171,7 @@ var sammUDefinition = {
       code: 'D95',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massicThermodynamicEnergy'],
+      quantityKinds: ['massicThermodynamicEnergy']
     },
     joulePerHour: {
       name: 'joulePerHour',
@@ -9191,8 +9191,8 @@ var sammUDefinition = {
         'radiantPower',
         'soundPower',
         'powerForDirectCurrent',
-        'activePower',
-      ],
+        'activePower'
+      ]
     },
     joulePerKelvin: {
       name: 'joulePerKelvin',
@@ -9201,7 +9201,7 @@ var sammUDefinition = {
       code: 'JE',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction'],
+      quantityKinds: ['boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction']
     },
     joulePerKilogram: {
       name: 'joulePerKilogram',
@@ -9210,7 +9210,7 @@ var sammUDefinition = {
       code: 'J2',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['specificEnergy', 'massicEnergy'],
+      quantityKinds: ['specificEnergy', 'massicEnergy']
     },
     joulePerKilogramKelvin: {
       name: 'joulePerKilogramKelvin',
@@ -9219,7 +9219,7 @@ var sammUDefinition = {
       code: 'B11',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['specificHeatCapacityAtSaturation', 'specificHeatCapacityAtConstantVolume', 'specificHeatCapacityAtConstantPressure'],
+      quantityKinds: ['specificHeatCapacityAtSaturation', 'specificHeatCapacityAtConstantVolume', 'specificHeatCapacityAtConstantPressure']
     },
     joulePerMetre: {
       name: 'joulePerMetre',
@@ -9228,7 +9228,7 @@ var sammUDefinition = {
       code: 'B12',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['totalLinearStoppingPower', 'linearEnergyTransfer'],
+      quantityKinds: ['totalLinearStoppingPower', 'linearEnergyTransfer']
     },
     joulePerMetreToTheFourthPower: {
       name: 'joulePerMetreToTheFourthPower',
@@ -9237,7 +9237,7 @@ var sammUDefinition = {
       code: 'B14',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['spectralRadiantEnergyDensityInTermsOfWaveLength', 'spectralConcentrationOfRadiantEnergyDensityInTermsOfWavelength'],
+      quantityKinds: ['spectralRadiantEnergyDensityInTermsOfWaveLength', 'spectralConcentrationOfRadiantEnergyDensityInTermsOfWavelength']
     },
     joulePerMinute: {
       name: 'joulePerMinute',
@@ -9257,8 +9257,8 @@ var sammUDefinition = {
         'radiantPower',
         'soundPower',
         'activePower',
-        'powerForDirectCurrent',
-      ],
+        'powerForDirectCurrent'
+      ]
     },
     joulePerMole: {
       name: 'joulePerMole',
@@ -9267,7 +9267,7 @@ var sammUDefinition = {
       code: 'B15',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['molarThermodynamicEnergy', 'chemicalPotential', 'affinityOfAChemicalReaction'],
+      quantityKinds: ['molarThermodynamicEnergy', 'chemicalPotential', 'affinityOfAChemicalReaction']
     },
     joulePerMoleKelvin: {
       name: 'joulePerMoleKelvin',
@@ -9276,7 +9276,7 @@ var sammUDefinition = {
       code: 'B16',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['molarHeatCapacity', 'molarGasConstant', 'molarEntropy'],
+      quantityKinds: ['molarHeatCapacity', 'molarGasConstant', 'molarEntropy']
     },
     joulePerSecond: {
       name: 'joulePerSecond',
@@ -9296,8 +9296,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     joulePerSquareCentimetre: {
       name: 'joulePerSquareCentimetre',
@@ -9308,7 +9308,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerSquareMetre'];
       },
       conversionFactor: '10⁴ J/m²',
-      quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence'],
+      quantityKinds: ['radianceExposure', 'radiantEnergyFluence', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence']
     },
     joulePerSquareMetre: {
       name: 'joulePerSquareMetre',
@@ -9317,7 +9317,7 @@ var sammUDefinition = {
       code: 'B13',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['radiantEnergyFluence', 'radianceExposure', 'energyFluence'],
+      quantityKinds: ['radiantEnergyFluence', 'radianceExposure', 'energyFluence']
     },
     joulePerTesla: {
       name: 'joulePerTesla',
@@ -9326,7 +9326,7 @@ var sammUDefinition = {
       code: 'Q10',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     jouleSecond: {
       name: 'jouleSecond',
@@ -9335,7 +9335,7 @@ var sammUDefinition = {
       code: 'B18',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['planckConstant'],
+      quantityKinds: ['planckConstant']
     },
     jouleSquareMetre: {
       name: 'jouleSquareMetre',
@@ -9344,7 +9344,7 @@ var sammUDefinition = {
       code: 'D73',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['totalAtomicStoppingPower'],
+      quantityKinds: ['totalAtomicStoppingPower']
     },
     jouleSquareMetrePerKilogram: {
       name: 'jouleSquareMetrePerKilogram',
@@ -9353,7 +9353,7 @@ var sammUDefinition = {
       code: 'B20',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['totalMassStoppingPower'],
+      quantityKinds: ['totalMassStoppingPower']
     },
     katal: {
       name: 'katal',
@@ -9362,7 +9362,7 @@ var sammUDefinition = {
       code: 'KAT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['catalyticActivity'],
+      quantityKinds: ['catalyticActivity']
     },
     kelvin: {
       name: 'kelvin',
@@ -9377,8 +9377,8 @@ var sammUDefinition = {
         'thermodynamic',
         'superConductorTransitionTemperature',
         'neelTemperature',
-        'curieTemperature',
-      ],
+        'curieTemperature'
+      ]
     },
     kelvinMetrePerWatt: {
       name: 'kelvinMetrePerWatt',
@@ -9387,7 +9387,7 @@ var sammUDefinition = {
       code: 'H35',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['thermalResistance'],
+      quantityKinds: ['thermalResistance']
     },
     kelvinPerBar: {
       name: 'kelvinPerBar',
@@ -9396,7 +9396,7 @@ var sammUDefinition = {
       code: 'F61',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     kelvinPerHour: {
       name: 'kelvinPerHour',
@@ -9405,7 +9405,7 @@ var sammUDefinition = {
       code: 'F10',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     kelvinPerKelvin: {
       name: 'kelvinPerKelvin',
@@ -9414,7 +9414,7 @@ var sammUDefinition = {
       code: 'F02',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     kelvinPerMinute: {
       name: 'kelvinPerMinute',
@@ -9423,7 +9423,7 @@ var sammUDefinition = {
       code: 'F11',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     kelvinPerPascal: {
       name: 'kelvinPerPascal',
@@ -9432,7 +9432,7 @@ var sammUDefinition = {
       code: 'N79',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     kelvinPerSecond: {
       name: 'kelvinPerSecond',
@@ -9441,7 +9441,7 @@ var sammUDefinition = {
       code: 'F12',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     kelvinPerWatt: {
       name: 'kelvinPerWatt',
@@ -9450,7 +9450,7 @@ var sammUDefinition = {
       code: 'B21',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['thermalResistance'],
+      quantityKinds: ['thermalResistance']
     },
     kibibit: {
       name: 'kibibit',
@@ -9459,7 +9459,7 @@ var sammUDefinition = {
       code: 'C21',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kibibitPerCubicMetre: {
       name: 'kibibitPerCubicMetre',
@@ -9468,7 +9468,7 @@ var sammUDefinition = {
       code: 'E74',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kibibitPerMetre: {
       name: 'kibibitPerMetre',
@@ -9477,7 +9477,7 @@ var sammUDefinition = {
       code: 'E72',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kibibitPerSquareMetre: {
       name: 'kibibitPerSquareMetre',
@@ -9486,7 +9486,7 @@ var sammUDefinition = {
       code: 'E73',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kibibyte: {
       name: 'kibibyte',
@@ -9497,7 +9497,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '2¹⁰ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     kiloampere: {
       name: 'kiloampere',
@@ -9516,8 +9516,8 @@ var sammUDefinition = {
         'magneticPotentialDifference',
         'magnetomotiveForce',
         'currentLinkage',
-        'electricCurrent',
-      ],
+        'electricCurrent'
+      ]
     },
     kiloampereHourThousandAmpereHour: {
       name: 'kiloampereHourThousandAmpereHour',
@@ -9535,8 +9535,8 @@ var sammUDefinition = {
         'electricCharge',
         'quantityOfElectricity',
         'electricFluxFluxOfDisplacement',
-        'electricCharge',
-      ],
+        'electricCharge'
+      ]
     },
     kiloamperePerMetre: {
       name: 'kiloamperePerMetre',
@@ -9554,8 +9554,8 @@ var sammUDefinition = {
         'lineicElectricCurrent',
         'linearElectricCurrentDensity',
         'magneticFieldStrength',
-        'lineicElectricCurrent',
-      ],
+        'lineicElectricCurrent'
+      ]
     },
     kiloamperePerSquareMetre: {
       name: 'kiloamperePerSquareMetre',
@@ -9566,7 +9566,7 @@ var sammUDefinition = {
         return sammUDefinition.units['amperePerSquareMetre'];
       },
       conversionFactor: '10³ A/m²',
-      quantityKinds: ['currentDensity', 'currentDensity'],
+      quantityKinds: ['currentDensity', 'currentDensity']
     },
     kilobar: {
       name: 'kilobar',
@@ -9598,8 +9598,8 @@ var sammUDefinition = {
         'shearStress',
         'normalStress',
         'modulusOfRigidity',
-        'modulusOfCompression',
-      ],
+        'modulusOfCompression'
+      ]
     },
     kilobaud: {
       name: 'kilobaud',
@@ -9610,7 +9610,7 @@ var sammUDefinition = {
         return sammUDefinition.units['baud'];
       },
       conversionFactor: '10³ Bd',
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilobecquerel: {
       name: 'kilobecquerel',
@@ -9621,7 +9621,7 @@ var sammUDefinition = {
         return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '10³ Bq',
-      quantityKinds: ['activity', 'activity'],
+      quantityKinds: ['activity', 'activity']
     },
     kilobecquerelPerKilogram: {
       name: 'kilobecquerelPerKilogram',
@@ -9632,7 +9632,7 @@ var sammUDefinition = {
         return sammUDefinition.units['becquerelPerKilogram'];
       },
       conversionFactor: '10³ Bq/kg',
-      quantityKinds: ['specificActivityInASample', 'specificActivityInASample'],
+      quantityKinds: ['specificActivityInASample', 'specificActivityInASample']
     },
     kilobit: {
       name: 'kilobit',
@@ -9641,7 +9641,7 @@ var sammUDefinition = {
       code: 'C37',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilobitPerSecond: {
       name: 'kilobitPerSecond',
@@ -9652,7 +9652,7 @@ var sammUDefinition = {
         return sammUDefinition.units['bitPerSecond'];
       },
       conversionFactor: '10³ bit/s',
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilobyte: {
       name: 'kilobyte',
@@ -9663,7 +9663,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '10³ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     kilobytePerSecond: {
       name: 'kilobytePerSecond',
@@ -9674,7 +9674,7 @@ var sammUDefinition = {
         return sammUDefinition.units['bytePerSecond'];
       },
       conversionFactor: '10³ byte/s',
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilocalorieInternationalTable: {
       name: 'kilocalorieInternationalTable',
@@ -9711,8 +9711,8 @@ var sammUDefinition = {
         'enthalpy',
         'heat',
         'thermodynamicEnergy',
-        'quantityOfHeat',
-      ],
+        'quantityOfHeat'
+      ]
     },
     kilocalorieInternationalTablePerGramKelvin: {
       name: 'kilocalorieInternationalTablePerGramKelvin',
@@ -9728,8 +9728,8 @@ var sammUDefinition = {
         'heatCapacity',
         'specificHeatCapacityAtSaturation',
         'specificHeatCapacityAtConstantVolume',
-        'specificHeatCapacityAtConstantPressure',
-      ],
+        'specificHeatCapacityAtConstantPressure'
+      ]
     },
     kilocalorieInternationalTablePerHourMetreDegreeCelsius: {
       name: 'kilocalorieInternationalTablePerHourMetreDegreeCelsius',
@@ -9738,7 +9738,7 @@ var sammUDefinition = {
       code: 'K52',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['thermalConductivity'],
+      quantityKinds: ['thermalConductivity']
     },
     kilocalorieMean: {
       name: 'kilocalorieMean',
@@ -9775,8 +9775,8 @@ var sammUDefinition = {
         'quantityOfHeat',
         'enthalpy',
         'energy',
-        'heat',
-      ],
+        'heat'
+      ]
     },
     kilocalorieThermochemical: {
       name: 'kilocalorieThermochemical',
@@ -9813,8 +9813,8 @@ var sammUDefinition = {
         'thermodynamicEnergy',
         'energy',
         'helmholtzFunction',
-        'heat',
-      ],
+        'heat'
+      ]
     },
     kilocalorieThermochemicalPerHour: {
       name: 'kilocalorieThermochemicalPerHour',
@@ -9833,8 +9833,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     kilocalorieThermochemicalPerMinute: {
       name: 'kilocalorieThermochemicalPerMinute',
@@ -9853,8 +9853,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     kilocalorieThermochemicalPerSecond: {
       name: 'kilocalorieThermochemicalPerSecond',
@@ -9873,8 +9873,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     kilocandela: {
       name: 'kilocandela',
@@ -9885,7 +9885,7 @@ var sammUDefinition = {
         return sammUDefinition.units['candela'];
       },
       conversionFactor: '10³ cd',
-      quantityKinds: ['luminousIntensity', 'luminousIntensity'],
+      quantityKinds: ['luminousIntensity', 'luminousIntensity']
     },
     kilocharacter: {
       name: 'kilocharacter',
@@ -9894,7 +9894,7 @@ var sammUDefinition = {
       code: 'KB',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilocoulomb: {
       name: 'kilocoulomb',
@@ -9912,8 +9912,8 @@ var sammUDefinition = {
         'electricCharge',
         'electricFluxFluxOfDisplacement',
         'electricCharge',
-        'quantityOfElectricity',
-      ],
+        'quantityOfElectricity'
+      ]
     },
     kilocoulombPerCubicMetre: {
       name: 'kilocoulombPerCubicMetre',
@@ -9924,7 +9924,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10³ C/m³',
-      quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity'],
+      quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity']
     },
     kilocoulombPerSquareMetre: {
       name: 'kilocoulombPerSquareMetre',
@@ -9941,8 +9941,8 @@ var sammUDefinition = {
         'displacementElectricPolarization',
         'surfaceDensityOfCharge',
         'electricFluxDensity',
-        'displacementElectricPolarization',
-      ],
+        'displacementElectricPolarization'
+      ]
     },
     kilocurie: {
       name: 'kilocurie',
@@ -9953,7 +9953,7 @@ var sammUDefinition = {
         return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '3.7 × 10¹³ Bq',
-      quantityKinds: ['activity', 'activity'],
+      quantityKinds: ['activity', 'activity']
     },
     kiloelectronvolt: {
       name: 'kiloelectronvolt',
@@ -9976,8 +9976,8 @@ var sammUDefinition = {
         'potentialEnergy',
         'energy',
         'fermiEnergy',
-        'maximumBetaParticleEnergy',
-      ],
+        'maximumBetaParticleEnergy'
+      ]
     },
     kilofarad: {
       name: 'kilofarad',
@@ -9988,7 +9988,7 @@ var sammUDefinition = {
         return sammUDefinition.units['farad'];
       },
       conversionFactor: '10³ F',
-      quantityKinds: ['capacitance', 'capacitance'],
+      quantityKinds: ['capacitance', 'capacitance']
     },
     kilogram: {
       name: 'kilogram',
@@ -9997,7 +9997,7 @@ var sammUDefinition = {
       code: 'KGM',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     kilogramCentimetrePerSecond: {
       name: 'kilogramCentimetrePerSecond',
@@ -10008,7 +10008,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramMetrePerSecond'];
       },
       conversionFactor: '10⁻² kg × m/s',
-      quantityKinds: ['momentum', 'momentum'],
+      quantityKinds: ['momentum', 'momentum']
     },
     kilogramDrainedNetWeight: {
       name: 'kilogramDrainedNetWeight',
@@ -10017,7 +10017,7 @@ var sammUDefinition = {
       code: 'KDW',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramDryWeight: {
       name: 'kilogramDryWeight',
@@ -10026,7 +10026,7 @@ var sammUDefinition = {
       code: 'MND',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramForceMetrePerSquareCentimetre: {
       name: 'kilogramForceMetrePerSquareCentimetre',
@@ -10035,7 +10035,7 @@ var sammUDefinition = {
       code: 'E44',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramForcePerSquareCentimetre: {
       name: 'kilogramForcePerSquareCentimetre',
@@ -10067,8 +10067,8 @@ var sammUDefinition = {
         'shearStress',
         'modulusOfCompression',
         'modulusOfElasticity',
-        'modulusOfRigidity',
-      ],
+        'modulusOfRigidity'
+      ]
     },
     kilogramForcePerSquareMillimetre: {
       name: 'kilogramForcePerSquareMillimetre',
@@ -10100,8 +10100,8 @@ var sammUDefinition = {
         'normalStress',
         'modulusOfRigidity',
         'modulusOfElasticity',
-        'shearStress',
-      ],
+        'shearStress'
+      ]
     },
     kilogramIncludingContainer: {
       name: 'kilogramIncludingContainer',
@@ -10110,7 +10110,7 @@ var sammUDefinition = {
       code: 'KIC',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramIncludingInnerPackaging: {
       name: 'kilogramIncludingInnerPackaging',
@@ -10119,7 +10119,7 @@ var sammUDefinition = {
       code: 'KIP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramMetre: {
       name: 'kilogramMetre',
@@ -10128,7 +10128,7 @@ var sammUDefinition = {
       code: 'M94',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     kilogramMetrePerSecond: {
       name: 'kilogramMetrePerSecond',
@@ -10137,7 +10137,7 @@ var sammUDefinition = {
       code: 'B31',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['momentum'],
+      quantityKinds: ['momentum']
     },
     kilogramMetrePerSecondSquared: {
       name: 'kilogramMetrePerSecondSquared',
@@ -10146,7 +10146,7 @@ var sammUDefinition = {
       code: 'M77',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['weight', 'force'],
+      quantityKinds: ['weight', 'force']
     },
     kilogramMetreSquared: {
       name: 'kilogramMetreSquared',
@@ -10155,7 +10155,7 @@ var sammUDefinition = {
       code: 'B32',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['momentOfInertiaDynamicMomentOfInertia'],
+      quantityKinds: ['momentOfInertiaDynamicMomentOfInertia']
     },
     kilogramMetreSquaredPerSecond: {
       name: 'kilogramMetreSquaredPerSecond',
@@ -10164,7 +10164,7 @@ var sammUDefinition = {
       code: 'B33',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['momentOfMomentum', 'angularMomentum'],
+      quantityKinds: ['momentOfMomentum', 'angularMomentum']
     },
     kilogramNamedSubstance: {
       name: 'kilogramNamedSubstance',
@@ -10173,7 +10173,7 @@ var sammUDefinition = {
       code: 'KNS',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfCholineChloride: {
       name: 'kilogramOfCholineChloride',
@@ -10182,7 +10182,7 @@ var sammUDefinition = {
       code: 'KCC',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfHydrogenPeroxide: {
       name: 'kilogramOfHydrogenPeroxide',
@@ -10191,7 +10191,7 @@ var sammUDefinition = {
       code: 'KHY',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfImportedMeatLessOffal: {
       name: 'kilogramOfImportedMeatLessOffal',
@@ -10200,7 +10200,7 @@ var sammUDefinition = {
       code: 'TMS',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfMethylamine: {
       name: 'kilogramOfMethylamine',
@@ -10209,7 +10209,7 @@ var sammUDefinition = {
       code: 'KMA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfNitrogen: {
       name: 'kilogramOfNitrogen',
@@ -10218,7 +10218,7 @@ var sammUDefinition = {
       code: 'KNI',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfPhosphorusPentoxidePhosphoricAnhydride: {
       name: 'kilogramOfPhosphorusPentoxidePhosphoricAnhydride',
@@ -10227,7 +10227,7 @@ var sammUDefinition = {
       code: 'KPP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfPotassiumHydroxideCausticPotash: {
       name: 'kilogramOfPotassiumHydroxideCausticPotash',
@@ -10236,7 +10236,7 @@ var sammUDefinition = {
       code: 'KPH',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfPotassiumOxide: {
       name: 'kilogramOfPotassiumOxide',
@@ -10245,7 +10245,7 @@ var sammUDefinition = {
       code: 'KPO',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfSodiumHydroxideCausticSoda: {
       name: 'kilogramOfSodiumHydroxideCausticSoda',
@@ -10254,7 +10254,7 @@ var sammUDefinition = {
       code: 'KSH',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfSubstance90PercentDry: {
       name: 'kilogramOfSubstance90PercentDry',
@@ -10263,7 +10263,7 @@ var sammUDefinition = {
       code: 'KSD',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfTungstenTrioxide: {
       name: 'kilogramOfTungstenTrioxide',
@@ -10272,7 +10272,7 @@ var sammUDefinition = {
       code: 'KWO',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramOfUranium: {
       name: 'kilogramOfUranium',
@@ -10281,7 +10281,7 @@ var sammUDefinition = {
       code: 'KUR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramPerBar: {
       name: 'kilogramPerBar',
@@ -10290,7 +10290,7 @@ var sammUDefinition = {
       code: 'H53',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerCubicCentimetre: {
       name: 'kilogramPerCubicCentimetre',
@@ -10299,7 +10299,7 @@ var sammUDefinition = {
       code: 'G31',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerCubicCentimetreBar: {
       name: 'kilogramPerCubicCentimetreBar',
@@ -10308,7 +10308,7 @@ var sammUDefinition = {
       code: 'G16',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerCubicCentimetreKelvin: {
       name: 'kilogramPerCubicCentimetreKelvin',
@@ -10317,7 +10317,7 @@ var sammUDefinition = {
       code: 'G38',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerCubicDecimetre: {
       name: 'kilogramPerCubicDecimetre',
@@ -10337,8 +10337,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'density',
         'volumicMass',
-        'massDensity',
-      ],
+        'massDensity'
+      ]
     },
     kilogramPerCubicDecimetreBar: {
       name: 'kilogramPerCubicDecimetreBar',
@@ -10347,7 +10347,7 @@ var sammUDefinition = {
       code: 'H55',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerCubicDecimetreKelvin: {
       name: 'kilogramPerCubicDecimetreKelvin',
@@ -10356,7 +10356,7 @@ var sammUDefinition = {
       code: 'H54',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerCubicMetre: {
       name: 'kilogramPerCubicMetre',
@@ -10365,7 +10365,7 @@ var sammUDefinition = {
       code: 'KMQ',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'concentrationOfB', 'amountOfSubstance', 'density', 'massDensity', 'massConcentrationOfB'],
+      quantityKinds: ['volumicMass', 'concentrationOfB', 'amountOfSubstance', 'density', 'massDensity', 'massConcentrationOfB']
     },
     kilogramPerCubicMetreBar: {
       name: 'kilogramPerCubicMetreBar',
@@ -10374,7 +10374,7 @@ var sammUDefinition = {
       code: 'G18',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerCubicMetreKelvin: {
       name: 'kilogramPerCubicMetreKelvin',
@@ -10383,7 +10383,7 @@ var sammUDefinition = {
       code: 'G40',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerCubicMetrePascal: {
       name: 'kilogramPerCubicMetrePascal',
@@ -10392,7 +10392,7 @@ var sammUDefinition = {
       code: 'M73',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerDay: {
       name: 'kilogramPerDay',
@@ -10401,7 +10401,7 @@ var sammUDefinition = {
       code: 'F30',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerDayBar: {
       name: 'kilogramPerDayBar',
@@ -10410,7 +10410,7 @@ var sammUDefinition = {
       code: 'F66',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerDayKelvin: {
       name: 'kilogramPerDayKelvin',
@@ -10419,7 +10419,7 @@ var sammUDefinition = {
       code: 'F39',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerHour: {
       name: 'kilogramPerHour',
@@ -10428,7 +10428,7 @@ var sammUDefinition = {
       code: 'E93',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerHourBar: {
       name: 'kilogramPerHourBar',
@@ -10437,7 +10437,7 @@ var sammUDefinition = {
       code: 'F67',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerHourKelvin: {
       name: 'kilogramPerHourKelvin',
@@ -10446,7 +10446,7 @@ var sammUDefinition = {
       code: 'F40',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerKelvin: {
       name: 'kilogramPerKelvin',
@@ -10455,7 +10455,7 @@ var sammUDefinition = {
       code: 'F15',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerKilogram: {
       name: 'kilogramPerKilogram',
@@ -10464,7 +10464,7 @@ var sammUDefinition = {
       code: 'M29',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massRatio'],
+      quantityKinds: ['massRatio']
     },
     kilogramPerKilometre: {
       name: 'kilogramPerKilometre',
@@ -10475,7 +10475,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10⁻³ kg/m',
-      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
+      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity']
     },
     kilogramPerKilomol: {
       name: 'kilogramPerKilomol',
@@ -10484,7 +10484,7 @@ var sammUDefinition = {
       code: 'F24',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerLitre: {
       name: 'kilogramPerLitre',
@@ -10507,8 +10507,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'volumicMass',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     kilogramPerLitreBar: {
       name: 'kilogramPerLitreBar',
@@ -10517,7 +10517,7 @@ var sammUDefinition = {
       code: 'G17',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerLitreKelvin: {
       name: 'kilogramPerLitreKelvin',
@@ -10526,7 +10526,7 @@ var sammUDefinition = {
       code: 'G39',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerMetre: {
       name: 'kilogramPerMetre',
@@ -10535,7 +10535,7 @@ var sammUDefinition = {
       code: 'KL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['linearMass', 'linearDensity'],
+      quantityKinds: ['linearMass', 'linearDensity']
     },
     kilogramPerMetreDay: {
       name: 'kilogramPerMetreDay',
@@ -10546,7 +10546,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '1.15741 × 10⁻⁵ Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     kilogramPerMetreHour: {
       name: 'kilogramPerMetreHour',
@@ -10557,7 +10557,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     kilogramPerMetreMinute: {
       name: 'kilogramPerMetreMinute',
@@ -10568,7 +10568,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '1.66667 × 10⁻² Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     kilogramPerMetreSecond: {
       name: 'kilogramPerMetreSecond',
@@ -10579,7 +10579,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: 'Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     kilogramPerMillimetre: {
       name: 'kilogramPerMillimetre',
@@ -10590,7 +10590,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10³ kg/m',
-      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
+      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity']
     },
     kilogramPerMillimetreWidth: {
       name: 'kilogramPerMillimetreWidth',
@@ -10601,7 +10601,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10³ kg/m',
-      quantityKinds: ['linearMass', 'linearDensity'],
+      quantityKinds: ['linearMass', 'linearDensity']
     },
     kilogramPerMinute: {
       name: 'kilogramPerMinute',
@@ -10610,7 +10610,7 @@ var sammUDefinition = {
       code: 'F31',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerMinuteBar: {
       name: 'kilogramPerMinuteBar',
@@ -10619,7 +10619,7 @@ var sammUDefinition = {
       code: 'F68',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerMinuteKelvin: {
       name: 'kilogramPerMinuteKelvin',
@@ -10628,7 +10628,7 @@ var sammUDefinition = {
       code: 'F41',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerMole: {
       name: 'kilogramPerMole',
@@ -10637,7 +10637,7 @@ var sammUDefinition = {
       code: 'D74',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['molarMass'],
+      quantityKinds: ['molarMass']
     },
     kilogramPerPascal: {
       name: 'kilogramPerPascal',
@@ -10646,7 +10646,7 @@ var sammUDefinition = {
       code: 'M74',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramPerSecond: {
       name: 'kilogramPerSecond',
@@ -10655,7 +10655,7 @@ var sammUDefinition = {
       code: 'KGS',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerSecondBar: {
       name: 'kilogramPerSecondBar',
@@ -10664,7 +10664,7 @@ var sammUDefinition = {
       code: 'F69',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerSecondKelvin: {
       name: 'kilogramPerSecondKelvin',
@@ -10673,7 +10673,7 @@ var sammUDefinition = {
       code: 'F42',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerSecondPascal: {
       name: 'kilogramPerSecondPascal',
@@ -10682,7 +10682,7 @@ var sammUDefinition = {
       code: 'M87',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramPerSquareCentimetre: {
       name: 'kilogramPerSquareCentimetre',
@@ -10693,7 +10693,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '10⁴ kg/m²',
-      quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass'],
+      quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass']
     },
     kilogramPerSquareMetre: {
       name: 'kilogramPerSquareMetre',
@@ -10702,7 +10702,7 @@ var sammUDefinition = {
       code: '28',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['surfaceDensity', 'meanMassRange', 'areicMass'],
+      quantityKinds: ['surfaceDensity', 'meanMassRange', 'areicMass']
     },
     kilogramPerSquareMetrePascalSecond: {
       name: 'kilogramPerSquareMetrePascalSecond',
@@ -10711,7 +10711,7 @@ var sammUDefinition = {
       code: 'Q28',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilogramPerSquareMetreSecond: {
       name: 'kilogramPerSquareMetreSecond',
@@ -10720,7 +10720,7 @@ var sammUDefinition = {
       code: 'H56',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     kilogramSquareCentimetre: {
       name: 'kilogramSquareCentimetre',
@@ -10729,7 +10729,7 @@ var sammUDefinition = {
       code: 'F18',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilogramSquareMillimetre: {
       name: 'kilogramSquareMillimetre',
@@ -10738,7 +10738,7 @@ var sammUDefinition = {
       code: 'F19',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     kilohenry: {
       name: 'kilohenry',
@@ -10749,7 +10749,7 @@ var sammUDefinition = {
         return sammUDefinition.units['henry'];
       },
       conversionFactor: '10³ H',
-      quantityKinds: ['permeance', 'mutualInductance', 'selfInductance', 'selfInductance', 'permeance', 'mutualInductance'],
+      quantityKinds: ['permeance', 'mutualInductance', 'selfInductance', 'selfInductance', 'permeance', 'mutualInductance']
     },
     kilohertz: {
       name: 'kilohertz',
@@ -10760,7 +10760,7 @@ var sammUDefinition = {
         return sammUDefinition.units['hertz'];
       },
       conversionFactor: '10³ Hz',
-      quantityKinds: ['frequency', 'frequency'],
+      quantityKinds: ['frequency', 'frequency']
     },
     kilohertzMetre: {
       name: 'kilohertzMetre',
@@ -10771,7 +10771,7 @@ var sammUDefinition = {
         return sammUDefinition.units['hertzMetre'];
       },
       conversionFactor: '10³ Hz × m',
-      quantityKinds: ['performanceCharacteristic', 'coefficient', 'performanceCharacteristic', 'coefficient'],
+      quantityKinds: ['performanceCharacteristic', 'coefficient', 'performanceCharacteristic', 'coefficient']
     },
     kilojoule: {
       name: 'kilojoule',
@@ -10805,8 +10805,8 @@ var sammUDefinition = {
         'kineticEnergy',
         'energy',
         'potentialEnergy',
-        'work',
-      ],
+        'work'
+      ]
     },
     kilojoulePerDay: {
       name: 'kilojoulePerDay',
@@ -10826,8 +10826,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     kilojoulePerHour: {
       name: 'kilojoulePerHour',
@@ -10847,8 +10847,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     kilojoulePerKelvin: {
       name: 'kilojoulePerKelvin',
@@ -10859,7 +10859,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '10³ J/K',
-      quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction'],
+      quantityKinds: ['heatCapacity', 'entropy', 'boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction']
     },
     kilojoulePerKilogram: {
       name: 'kilojoulePerKilogram',
@@ -10870,7 +10870,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerKilogram'];
       },
       conversionFactor: '10³ J/kg',
-      quantityKinds: ['specificEnergy', 'massicEnergy', 'specificEnthalpy', 'massicEnthalpy'],
+      quantityKinds: ['specificEnergy', 'massicEnergy', 'specificEnthalpy', 'massicEnthalpy']
     },
     kilojoulePerKilogramKelvin: {
       name: 'kilojoulePerKilogramKelvin',
@@ -10887,8 +10887,8 @@ var sammUDefinition = {
         'specificHeatCapacityAtConstantVolume',
         'specificHeatCapacityAtSaturation',
         'specificHeatCapacityAtConstantVolume',
-        'specificHeatCapacityAtConstantPressure',
-      ],
+        'specificHeatCapacityAtConstantPressure'
+      ]
     },
     kilojoulePerMinute: {
       name: 'kilojoulePerMinute',
@@ -10908,8 +10908,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     kilojoulePerMole: {
       name: 'kilojoulePerMole',
@@ -10920,7 +10920,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerMole'];
       },
       conversionFactor: '10³ J/mol',
-      quantityKinds: ['molarThermodynamicEnergy', 'chemicalPotential', 'affinityOfAChemicalReaction', 'molarThermodynamicEnergy'],
+      quantityKinds: ['molarThermodynamicEnergy', 'chemicalPotential', 'affinityOfAChemicalReaction', 'molarThermodynamicEnergy']
     },
     kilojoulePerSecond: {
       name: 'kilojoulePerSecond',
@@ -10940,8 +10940,8 @@ var sammUDefinition = {
         'radiantPower',
         'soundPower',
         'powerForDirectCurrent',
-        'activePower',
-      ],
+        'activePower'
+      ]
     },
     kilolitre: {
       name: 'kilolitre',
@@ -10952,7 +10952,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: 'm³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     kilolitrePerHour: {
       name: 'kilolitrePerHour',
@@ -10963,7 +10963,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     kilolux: {
       name: 'kilolux',
@@ -10972,7 +10972,7 @@ var sammUDefinition = {
       code: 'KLX',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['illuminance'],
+      quantityKinds: ['illuminance']
     },
     kilometre: {
       name: 'kilometre',
@@ -11029,8 +11029,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     kilometrePerHour: {
       name: 'kilometrePerHour',
@@ -11053,8 +11053,8 @@ var sammUDefinition = {
         'phaseVelocity',
         'groupVelocity',
         'phaseVelocity',
-        'velocity',
-      ],
+        'velocity'
+      ]
     },
     kilometrePerSecond: {
       name: 'kilometrePerSecond',
@@ -11077,8 +11077,8 @@ var sammUDefinition = {
         'velocityOfSoundPhaseVelocity',
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
-        'phaseVelocity',
-      ],
+        'phaseVelocity'
+      ]
     },
     kilometrePerSecondSquared: {
       name: 'kilometrePerSecondSquared',
@@ -11096,8 +11096,8 @@ var sammUDefinition = {
         'accelerationDueToGravity',
         'accelerationOfFreeFall',
         'instantaneousSoundParticleAcceleration',
-        'acceleration',
-      ],
+        'acceleration'
+      ]
     },
     kilomole: {
       name: 'kilomole',
@@ -11108,7 +11108,7 @@ var sammUDefinition = {
         return sammUDefinition.units['mole'];
       },
       conversionFactor: '10³ mol',
-      quantityKinds: ['amountOfSubstance', 'amountOfSubstance'],
+      quantityKinds: ['amountOfSubstance', 'amountOfSubstance']
     },
     kilomolePerCubicMetre: {
       name: 'kilomolePerCubicMetre',
@@ -11131,8 +11131,8 @@ var sammUDefinition = {
         'massDensity',
         'density',
         'volumicMass',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     kilomolePerCubicMetreBar: {
       name: 'kilomolePerCubicMetreBar',
@@ -11155,8 +11155,8 @@ var sammUDefinition = {
         'density',
         'massConcentrationOfB',
         'concentrationOfB',
-        'volumicMass',
-      ],
+        'volumicMass'
+      ]
     },
     kilomolePerCubicMetreKelvin: {
       name: 'kilomolePerCubicMetreKelvin',
@@ -11179,8 +11179,8 @@ var sammUDefinition = {
         'density',
         'volumicMass',
         'massDensity',
-        'concentrationOfB',
-      ],
+        'concentrationOfB'
+      ]
     },
     kilomolePerHour: {
       name: 'kilomolePerHour',
@@ -11191,15 +11191,7 @@ var sammUDefinition = {
         return sammUDefinition.units['molePerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻¹ mol/s',
-      quantityKinds: [
-        'volumicMass',
-        'amountOfSubstance',
-        'massConcentrationOfB',
-        'density',
-        'concentrationOfB',
-        'massDensity',
-        'molarFlux',
-      ],
+      quantityKinds: ['volumicMass', 'amountOfSubstance', 'massConcentrationOfB', 'density', 'concentrationOfB', 'massDensity', 'molarFlux']
     },
     kilomolePerKilogram: {
       name: 'kilomolePerKilogram',
@@ -11210,7 +11202,7 @@ var sammUDefinition = {
         return sammUDefinition.units['molePerKilogram'];
       },
       conversionFactor: '10³ mol/kg',
-      quantityKinds: ['molalityOfSoluteB', 'ionicStrength'],
+      quantityKinds: ['molalityOfSoluteB', 'ionicStrength']
     },
     kilomolePerMinute: {
       name: 'kilomolePerMinute',
@@ -11221,15 +11213,7 @@ var sammUDefinition = {
         return sammUDefinition.units['molePerSecond'];
       },
       conversionFactor: '16.6667 mol/s',
-      quantityKinds: [
-        'molarFlux',
-        'volumicMass',
-        'amountOfSubstance',
-        'massConcentrationOfB',
-        'density',
-        'concentrationOfB',
-        'massDensity',
-      ],
+      quantityKinds: ['molarFlux', 'volumicMass', 'amountOfSubstance', 'massConcentrationOfB', 'density', 'concentrationOfB', 'massDensity']
     },
     kilomolePerSecond: {
       name: 'kilomolePerSecond',
@@ -11238,7 +11222,7 @@ var sammUDefinition = {
       code: 'E94',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['catalyticActivity'],
+      quantityKinds: ['catalyticActivity']
     },
     kilonewton: {
       name: 'kilonewton',
@@ -11249,7 +11233,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newton'];
       },
       conversionFactor: '10³ N',
-      quantityKinds: ['weight', 'force', 'weight', 'force'],
+      quantityKinds: ['weight', 'force', 'weight', 'force']
     },
     kilonewtonMetre: {
       name: 'kilonewtonMetre',
@@ -11260,7 +11244,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10³ N × m',
-      quantityKinds: ['momentOfForce', 'momentOfACouple', 'torque', 'torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['momentOfForce', 'momentOfACouple', 'torque', 'torque', 'momentOfForce', 'momentOfACouple']
     },
     kilonewtonPerMetre: {
       name: 'kilonewtonPerMetre',
@@ -11271,7 +11255,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonPerMetre'];
       },
       conversionFactor: '10³ N/m',
-      quantityKinds: ['surfaceTension', 'surfaceTension'],
+      quantityKinds: ['surfaceTension', 'surfaceTension']
     },
     kiloohm: {
       name: 'kiloohm',
@@ -11294,8 +11278,8 @@ var sammUDefinition = {
         'reactance',
         'resistanceToAlternatingCurrent',
         'resistanceToDirectCurrent',
-        'complexImpedances',
-      ],
+        'complexImpedances'
+      ]
     },
     kiloohmMetre: {
       name: 'kiloohmMetre',
@@ -11306,7 +11290,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10³ Ω × m',
-      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
+      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity']
     },
     kilopascal: {
       name: 'kilopascal',
@@ -11338,8 +11322,8 @@ var sammUDefinition = {
         'bulkModulus',
         'shearModulus',
         'pressure',
-        'modulusOfElasticity',
-      ],
+        'modulusOfElasticity'
+      ]
     },
     kilopascalPerBar: {
       name: 'kilopascalPerBar',
@@ -11348,7 +11332,7 @@ var sammUDefinition = {
       code: 'F03',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['pressureRatio'],
+      quantityKinds: ['pressureRatio']
     },
     kilopascalPerKelvin: {
       name: 'kilopascalPerKelvin',
@@ -11365,8 +11349,8 @@ var sammUDefinition = {
         'normalStress',
         'modulusOfRigidity',
         'modulusOfCompression',
-        'modulusOfElasticity',
-      ],
+        'modulusOfElasticity'
+      ]
     },
     kilopascalPerMetre: {
       name: 'kilopascalPerMetre',
@@ -11375,7 +11359,7 @@ var sammUDefinition = {
       code: 'P81',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['hardnessIndex'],
+      quantityKinds: ['hardnessIndex']
     },
     kilopascalPerMillimetre: {
       name: 'kilopascalPerMillimetre',
@@ -11384,7 +11368,7 @@ var sammUDefinition = {
       code: '34',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['hardnessIndex'],
+      quantityKinds: ['hardnessIndex']
     },
     kilopascalSquareMetrePerGram: {
       name: 'kilopascalSquareMetrePerGram',
@@ -11400,8 +11384,8 @@ var sammUDefinition = {
         'accelerationDueToGravity',
         'accelerationOfFreeFall',
         'instantaneousSoundParticleAcceleration',
-        'acceleration',
-      ],
+        'acceleration'
+      ]
     },
     kilopoundForce: {
       name: 'kilopoundForce',
@@ -11412,7 +11396,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newton'];
       },
       conversionFactor: '4.448222 × 10³ N',
-      quantityKinds: ['weight', 'force', 'weight', 'force'],
+      quantityKinds: ['weight', 'force', 'weight', 'force']
     },
     kilopoundPerHour: {
       name: 'kilopoundPerHour',
@@ -11423,7 +11407,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '0.125997889 kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     kiloroentgen: {
       name: 'kiloroentgen',
@@ -11434,7 +11418,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerKilogram'];
       },
       conversionFactor: '2.58 × 10⁻¹ C/kg',
-      quantityKinds: ['exposure', 'exposure'],
+      quantityKinds: ['exposure', 'exposure']
     },
     kilosecond: {
       name: 'kilosecond',
@@ -11456,8 +11440,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     kilosegment: {
       name: 'kilosegment',
@@ -11466,7 +11450,7 @@ var sammUDefinition = {
       code: 'KJ',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilosiemens: {
       name: 'kilosiemens',
@@ -11487,8 +11471,8 @@ var sammUDefinition = {
         'complexAdmittance',
         'admittance',
         'conductanceForDirectCurrent',
-        'conductanceForAlternatingCurrent',
-      ],
+        'conductanceForAlternatingCurrent'
+      ]
     },
     kilosiemensPerMetre: {
       name: 'kilosiemensPerMetre',
@@ -11499,7 +11483,7 @@ var sammUDefinition = {
         return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10³ S/m',
-      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
+      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity']
     },
     kilotesla: {
       name: 'kilotesla',
@@ -11519,8 +11503,8 @@ var sammUDefinition = {
         'upperCriticalMagneticFluxDensity',
         'magneticFluxDensity',
         'magneticPolarization',
-        'magneticInduction',
-      ],
+        'magneticInduction'
+      ]
     },
     kilotonne: {
       name: 'kilotonne',
@@ -11531,7 +11515,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁶ kg',
-      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
+      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass']
     },
     kilovar: {
       name: 'kilovar',
@@ -11542,7 +11526,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: '10³ V × A',
-      quantityKinds: ['apparentPower', 'reactivePower'],
+      quantityKinds: ['apparentPower', 'reactivePower']
     },
     kilovolt: {
       name: 'kilovolt',
@@ -11565,8 +11549,8 @@ var sammUDefinition = {
         'electromotiveForce',
         'potentialDifference',
         'tension',
-        'voltage',
-      ],
+        'voltage'
+      ]
     },
     kilovoltAmpere: {
       name: 'kilovoltAmpere',
@@ -11577,7 +11561,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: '10³ V × A',
-      quantityKinds: ['apparentPower', 'apparentPower'],
+      quantityKinds: ['apparentPower', 'apparentPower']
     },
     kilovoltAmpereHour: {
       name: 'kilovoltAmpereHour',
@@ -11586,7 +11570,7 @@ var sammUDefinition = {
       code: 'C79',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilovoltAmpereReactiveDemand: {
       name: 'kilovoltAmpereReactiveDemand',
@@ -11595,7 +11579,7 @@ var sammUDefinition = {
       code: 'K2',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilovoltAmpereReactiveHour: {
       name: 'kilovoltAmpereReactiveHour',
@@ -11604,7 +11588,7 @@ var sammUDefinition = {
       code: 'K3',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilovoltPerMetre: {
       name: 'kilovoltPerMetre',
@@ -11615,7 +11599,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltPerMetre'];
       },
       conversionFactor: '10³ V/m',
-      quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength', 'electricFieldStrength']
     },
     kilowatt: {
       name: 'kilowatt',
@@ -11637,8 +11621,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     kilowattDemand: {
       name: 'kilowattDemand',
@@ -11647,7 +11631,7 @@ var sammUDefinition = {
       code: 'K1',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilowattHour: {
       name: 'kilowattHour',
@@ -11681,8 +11665,8 @@ var sammUDefinition = {
         'work',
         'potentialEnergy',
         'energy',
-        'kineticEnergy',
-      ],
+        'kineticEnergy'
+      ]
     },
     kilowattHourPerCubicMetre: {
       name: 'kilowattHourPerCubicMetre',
@@ -11699,8 +11683,8 @@ var sammUDefinition = {
         'soundEnergy',
         'soundEnergyDensity',
         'volumic',
-        'radiantEnergyDensity',
-      ],
+        'radiantEnergyDensity'
+      ]
     },
     kilowattHourPerHour: {
       name: 'kilowattHourPerHour',
@@ -11709,7 +11693,7 @@ var sammUDefinition = {
       code: 'D03',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     kilowattHourPerKelvin: {
       name: 'kilowattHourPerKelvin',
@@ -11720,7 +11704,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerKelvin'];
       },
       conversionFactor: '3.6 × 10⁶ J/K',
-      quantityKinds: ['boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction'],
+      quantityKinds: ['boltzmannConstant', 'entropy', 'massieuFunction', 'heatCapacity', 'planckFunction']
     },
     kilowattPerMetreDegreeCelsius: {
       name: 'kilowattPerMetreDegreeCelsius',
@@ -11731,7 +11715,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '10³ W/(m × K)',
-      quantityKinds: ['thermalConductivity', 'thermalConductivity'],
+      quantityKinds: ['thermalConductivity', 'thermalConductivity']
     },
     kilowattPerMetreKelvin: {
       name: 'kilowattPerMetreKelvin',
@@ -11742,7 +11726,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: '10³ W/(m × K)',
-      quantityKinds: ['thermalConductivity', 'thermalConductivity'],
+      quantityKinds: ['thermalConductivity', 'thermalConductivity']
     },
     kilowattPerSquareMetreKelvin: {
       name: 'kilowattPerSquareMetreKelvin',
@@ -11753,7 +11737,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerSquareMetreKelvin'];
       },
       conversionFactor: '10³ W/(m² × K)',
-      quantityKinds: ['surfaceCoefficientOfHeatTransfer', 'coefficientOfHeatTransfer'],
+      quantityKinds: ['surfaceCoefficientOfHeatTransfer', 'coefficientOfHeatTransfer']
     },
     kiloweber: {
       name: 'kiloweber',
@@ -11764,7 +11748,7 @@ var sammUDefinition = {
         return sammUDefinition.units['weber'];
       },
       conversionFactor: '10³ Wb',
-      quantityKinds: ['magneticFluxQuantum', 'magneticFlux', 'magneticFlux'],
+      quantityKinds: ['magneticFluxQuantum', 'magneticFlux', 'magneticFlux']
     },
     kiloweberPerMetre: {
       name: 'kiloweberPerMetre',
@@ -11775,7 +11759,7 @@ var sammUDefinition = {
         return sammUDefinition.units['weberPerMetre'];
       },
       conversionFactor: '10³ Wb/m',
-      quantityKinds: ['magneticVectorPotential', 'magneticVectorPotential'],
+      quantityKinds: ['magneticVectorPotential', 'magneticVectorPotential']
     },
     kipPerSquareInch: {
       name: 'kipPerSquareInch',
@@ -11807,8 +11791,8 @@ var sammUDefinition = {
         'modulusOfCompression',
         'modulusOfElasticity',
         'shearModulus',
-        'shearStress',
-      ],
+        'shearStress'
+      ]
     },
     kit: {
       name: 'kit',
@@ -11817,7 +11801,7 @@ var sammUDefinition = {
       code: 'KT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     knot: {
       name: 'knot',
@@ -11840,8 +11824,8 @@ var sammUDefinition = {
         'phaseVelocity',
         'groupVelocity',
         'phaseVelocity',
-        'velocity',
-      ],
+        'velocity'
+      ]
     },
     labourHour: {
       name: 'labourHour',
@@ -11850,7 +11834,7 @@ var sammUDefinition = {
       code: 'LH',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     lacticDryMaterialPercentage: {
       name: 'lacticDryMaterialPercentage',
@@ -11859,7 +11843,7 @@ var sammUDefinition = {
       code: 'KLK',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     lactoseExcessPercentage: {
       name: 'lactoseExcessPercentage',
@@ -11868,7 +11852,7 @@ var sammUDefinition = {
       code: 'LAC',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     lambert: {
       name: 'lambert',
@@ -11879,7 +11863,7 @@ var sammUDefinition = {
         return sammUDefinition.units['candelaPerSquareMetre'];
       },
       conversionFactor: '3.183099 × 10³ cd/m²',
-      quantityKinds: ['luminance', 'luminance'],
+      quantityKinds: ['luminance', 'luminance']
     },
     langley: {
       name: 'langley',
@@ -11890,7 +11874,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerSquareMetre'];
       },
       conversionFactor: '4.184 × 10⁴ J/m²',
-      quantityKinds: ['radiantEnergyFluence', 'radianceExposure', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence'],
+      quantityKinds: ['radiantEnergyFluence', 'radianceExposure', 'radiantEnergyFluence', 'radianceExposure', 'energyFluence']
     },
     layer: {
       name: 'layer',
@@ -11899,7 +11883,7 @@ var sammUDefinition = {
       code: 'LR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     leaf: {
       name: 'leaf',
@@ -11908,7 +11892,7 @@ var sammUDefinition = {
       code: 'LEF',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     lengthUnit: {
       name: 'lengthUnit',
@@ -11917,7 +11901,7 @@ var sammUDefinition = {
       code: 'LN',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     lightYear: {
       name: 'lightYear',
@@ -11974,8 +11958,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     linearFoot: {
       name: 'linearFoot',
@@ -11984,7 +11968,7 @@ var sammUDefinition = {
       code: 'LF',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     linearMetre: {
       name: 'linearMetre',
@@ -11993,7 +11977,7 @@ var sammUDefinition = {
       code: 'LM',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     linearYard: {
       name: 'linearYard',
@@ -12002,7 +11986,7 @@ var sammUDefinition = {
       code: 'LY',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     link: {
       name: 'link',
@@ -12011,7 +11995,7 @@ var sammUDefinition = {
       code: 'LK',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     liquidPintUs: {
       name: 'liquidPintUs',
@@ -12022,7 +12006,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4. 731765 × 10⁻⁴ m³',
-      quantityKinds: ['volume', 'sectionModulus', 'volume'],
+      quantityKinds: ['volume', 'sectionModulus', 'volume']
     },
     liquidPound: {
       name: 'liquidPound',
@@ -12031,7 +12015,7 @@ var sammUDefinition = {
       code: 'LP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     liquidQuartUs: {
       name: 'liquidQuartUs',
@@ -12042,7 +12026,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '9.463529 × 10⁻⁴ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     litre: {
       name: 'litre',
@@ -12053,7 +12037,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     litreOfPureAlcohol: {
       name: 'litreOfPureAlcohol',
@@ -12062,7 +12046,7 @@ var sammUDefinition = {
       code: 'LPA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     litrePerBar: {
       name: 'litrePerBar',
@@ -12071,7 +12055,7 @@ var sammUDefinition = {
       code: 'G95',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volume'],
+      quantityKinds: ['volume']
     },
     litrePerDay: {
       name: 'litrePerDay',
@@ -12082,7 +12066,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.15741 × 10⁻⁸ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     litrePerDayBar: {
       name: 'litrePerDayBar',
@@ -12091,7 +12075,7 @@ var sammUDefinition = {
       code: 'G82',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     litrePerDayKelvin: {
       name: 'litrePerDayKelvin',
@@ -12100,7 +12084,7 @@ var sammUDefinition = {
       code: 'G65',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     litrePerHour: {
       name: 'litrePerHour',
@@ -12111,7 +12095,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     litrePerHourBar: {
       name: 'litrePerHourBar',
@@ -12120,7 +12104,7 @@ var sammUDefinition = {
       code: 'G83',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     litrePerHourKelvin: {
       name: 'litrePerHourKelvin',
@@ -12129,7 +12113,7 @@ var sammUDefinition = {
       code: 'G66',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     litrePerKelvin: {
       name: 'litrePerKelvin',
@@ -12138,7 +12122,7 @@ var sammUDefinition = {
       code: 'G28',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumePerTemperature'],
+      quantityKinds: ['volumePerTemperature']
     },
     litrePerKilogram: {
       name: 'litrePerKilogram',
@@ -12147,7 +12131,7 @@ var sammUDefinition = {
       code: 'H83',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['specificVolume', 'massicVolume'],
+      quantityKinds: ['specificVolume', 'massicVolume']
     },
     litrePerLitre: {
       name: 'litrePerLitre',
@@ -12156,7 +12140,7 @@ var sammUDefinition = {
       code: 'K62',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeRatio'],
+      quantityKinds: ['volumeRatio']
     },
     litrePerMinute: {
       name: 'litrePerMinute',
@@ -12167,7 +12151,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     litrePerMinuteBar: {
       name: 'litrePerMinuteBar',
@@ -12176,7 +12160,7 @@ var sammUDefinition = {
       code: 'G84',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     litrePerMinuteKelvin: {
       name: 'litrePerMinuteKelvin',
@@ -12185,7 +12169,7 @@ var sammUDefinition = {
       code: 'G67',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     litrePerMole: {
       name: 'litrePerMole',
@@ -12196,7 +12180,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerMole'];
       },
       conversionFactor: '10⁻³ m³/mol',
-      quantityKinds: ['molarVolume', 'molarVolume'],
+      quantityKinds: ['molarVolume', 'molarVolume']
     },
     litrePerSecond: {
       name: 'litrePerSecond',
@@ -12205,7 +12189,7 @@ var sammUDefinition = {
       code: 'G51',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     litrePerSecondBar: {
       name: 'litrePerSecondBar',
@@ -12214,7 +12198,7 @@ var sammUDefinition = {
       code: 'G85',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     litrePerSecondKelvin: {
       name: 'litrePerSecondKelvin',
@@ -12223,7 +12207,7 @@ var sammUDefinition = {
       code: 'G68',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     load: {
       name: 'load',
@@ -12232,7 +12216,7 @@ var sammUDefinition = {
       code: 'NL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     lotUnitOfProcurement: {
       name: 'lotUnitOfProcurement',
@@ -12241,7 +12225,7 @@ var sammUDefinition = {
       code: 'LO',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     lotUnitOfWeight: {
       name: 'lotUnitOfWeight',
@@ -12250,7 +12234,7 @@ var sammUDefinition = {
       code: 'D04',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     lumen: {
       name: 'lumen',
@@ -12259,7 +12243,7 @@ var sammUDefinition = {
       code: 'LUM',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['luminousFlux'],
+      quantityKinds: ['luminousFlux']
     },
     lumenHour: {
       name: 'lumenHour',
@@ -12268,7 +12252,7 @@ var sammUDefinition = {
       code: 'B59',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['quantityOfLight'],
+      quantityKinds: ['quantityOfLight']
     },
     lumenPerSquareFoot: {
       name: 'lumenPerSquareFoot',
@@ -12277,7 +12261,7 @@ var sammUDefinition = {
       code: 'P25',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['illuminance'],
+      quantityKinds: ['illuminance']
     },
     lumenPerSquareMetre: {
       name: 'lumenPerSquareMetre',
@@ -12286,7 +12270,7 @@ var sammUDefinition = {
       code: 'B60',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['luminousExitance'],
+      quantityKinds: ['luminousExitance']
     },
     lumenPerWatt: {
       name: 'lumenPerWatt',
@@ -12299,8 +12283,8 @@ var sammUDefinition = {
         'spectralLuminousEfficacy',
         'luminiousEfficacy',
         'luminousEfficacyAtASpecifiedWavelength',
-        'maximumSpectralLuminousEfficacy',
-      ],
+        'maximumSpectralLuminousEfficacy'
+      ]
     },
     lumenSecond: {
       name: 'lumenSecond',
@@ -12309,7 +12293,7 @@ var sammUDefinition = {
       code: 'B62',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['quantityOfLight'],
+      quantityKinds: ['quantityOfLight']
     },
     lumpSum: {
       name: 'lumpSum',
@@ -12318,7 +12302,7 @@ var sammUDefinition = {
       code: 'LS',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     lux: {
       name: 'lux',
@@ -12327,7 +12311,7 @@ var sammUDefinition = {
       code: 'LUX',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['illuminance'],
+      quantityKinds: ['illuminance']
     },
     luxHour: {
       name: 'luxHour',
@@ -12336,7 +12320,7 @@ var sammUDefinition = {
       code: 'B63',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['lightExposure'],
+      quantityKinds: ['lightExposure']
     },
     luxSecond: {
       name: 'luxSecond',
@@ -12345,7 +12329,7 @@ var sammUDefinition = {
       code: 'B64',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['lightExposure'],
+      quantityKinds: ['lightExposure']
     },
     manmonth: {
       name: 'manmonth',
@@ -12354,7 +12338,7 @@ var sammUDefinition = {
       code: '3C',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     meal: {
       name: 'meal',
@@ -12363,7 +12347,7 @@ var sammUDefinition = {
       code: 'Q3',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     mebibit: {
       name: 'mebibit',
@@ -12372,7 +12356,7 @@ var sammUDefinition = {
       code: 'D11',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     mebibitPerCubicMetre: {
       name: 'mebibitPerCubicMetre',
@@ -12381,7 +12365,7 @@ var sammUDefinition = {
       code: 'E77',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     mebibitPerMetre: {
       name: 'mebibitPerMetre',
@@ -12390,7 +12374,7 @@ var sammUDefinition = {
       code: 'E75',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     mebibitPerSquareMetre: {
       name: 'mebibitPerSquareMetre',
@@ -12399,7 +12383,7 @@ var sammUDefinition = {
       code: 'E76',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     mebibyte: {
       name: 'mebibyte',
@@ -12410,7 +12394,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '2²⁰ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     megaampere: {
       name: 'megaampere',
@@ -12429,8 +12413,8 @@ var sammUDefinition = {
         'magneticPotentialDifference',
         'magnetomotiveForce',
         'currentLinkage',
-        'electricCurrent',
-      ],
+        'electricCurrent'
+      ]
     },
     megaamperePerSquareMetre: {
       name: 'megaamperePerSquareMetre',
@@ -12441,7 +12425,7 @@ var sammUDefinition = {
         return sammUDefinition.units['amperePerSquareMetre'];
       },
       conversionFactor: '10⁶ A/m²',
-      quantityKinds: ['currentDensity', 'currentDensity'],
+      quantityKinds: ['currentDensity', 'currentDensity']
     },
     megabaud: {
       name: 'megabaud',
@@ -12452,7 +12436,7 @@ var sammUDefinition = {
         return sammUDefinition.units['baud'];
       },
       conversionFactor: '10⁶ Bd',
-      quantityKinds: null,
+      quantityKinds: null
     },
     megabecquerel: {
       name: 'megabecquerel',
@@ -12463,7 +12447,7 @@ var sammUDefinition = {
         return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '10⁶ Bq',
-      quantityKinds: ['activity', 'activity'],
+      quantityKinds: ['activity', 'activity']
     },
     megabecquerelPerKilogram: {
       name: 'megabecquerelPerKilogram',
@@ -12474,7 +12458,7 @@ var sammUDefinition = {
         return sammUDefinition.units['becquerelPerKilogram'];
       },
       conversionFactor: '10⁶ Bq/kg',
-      quantityKinds: ['specificActivityInASample', 'specificActivityInASample'],
+      quantityKinds: ['specificActivityInASample', 'specificActivityInASample']
     },
     megabit: {
       name: 'megabit',
@@ -12483,7 +12467,7 @@ var sammUDefinition = {
       code: 'D36',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     megabitPerSecond: {
       name: 'megabitPerSecond',
@@ -12492,7 +12476,7 @@ var sammUDefinition = {
       code: 'E20',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     megabyte: {
       name: 'megabyte',
@@ -12503,7 +12487,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '10⁶ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     megabytePerSecond: {
       name: 'megabytePerSecond',
@@ -12514,7 +12498,7 @@ var sammUDefinition = {
         return sammUDefinition.units['bytePerSecond'];
       },
       conversionFactor: '10⁶ byte/s',
-      quantityKinds: null,
+      quantityKinds: null
     },
     megacoulomb: {
       name: 'megacoulomb',
@@ -12532,8 +12516,8 @@ var sammUDefinition = {
         'electricCharge',
         'electricFluxFluxOfDisplacement',
         'electricCharge',
-        'quantityOfElectricity',
-      ],
+        'quantityOfElectricity'
+      ]
     },
     megacoulombPerCubicMetre: {
       name: 'megacoulombPerCubicMetre',
@@ -12544,7 +12528,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁶ C/m³',
-      quantityKinds: ['chargeDensity', 'volumicCharge', 'volumeDensityOfCharge', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity'],
+      quantityKinds: ['chargeDensity', 'volumicCharge', 'volumeDensityOfCharge', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity']
     },
     megacoulombPerSquareMetre: {
       name: 'megacoulombPerSquareMetre',
@@ -12561,8 +12545,8 @@ var sammUDefinition = {
         'displacementElectricPolarization',
         'surfaceDensityOfCharge',
         'electricFluxDensity',
-        'displacementElectricPolarization',
-      ],
+        'displacementElectricPolarization'
+      ]
     },
     megaelectronvolt: {
       name: 'megaelectronvolt',
@@ -12585,8 +12569,8 @@ var sammUDefinition = {
         'potentialEnergy',
         'energy',
         'fermiEnergy',
-        'maximumBetaParticleEnergy',
-      ],
+        'maximumBetaParticleEnergy'
+      ]
     },
     megagram: {
       name: 'megagram',
@@ -12597,7 +12581,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10³ kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     megagramPerCubicMetre: {
       name: 'megagramPerCubicMetre',
@@ -12617,8 +12601,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'volumicMass',
         'density',
-        'massDensity',
-      ],
+        'massDensity'
+      ]
     },
     megahertz: {
       name: 'megahertz',
@@ -12629,7 +12613,7 @@ var sammUDefinition = {
         return sammUDefinition.units['hertz'];
       },
       conversionFactor: '10⁶ Hz',
-      quantityKinds: ['frequency', 'frequency'],
+      quantityKinds: ['frequency', 'frequency']
     },
     megahertzKilometre: {
       name: 'megahertzKilometre',
@@ -12640,7 +12624,7 @@ var sammUDefinition = {
         return sammUDefinition.units['hertzMetre'];
       },
       conversionFactor: '10⁹ Hz × m',
-      quantityKinds: ['performanceCharacteristic', 'coefficient', 'coefficient', 'performanceCharacteristic'],
+      quantityKinds: ['performanceCharacteristic', 'coefficient', 'coefficient', 'performanceCharacteristic']
     },
     megahertzMetre: {
       name: 'megahertzMetre',
@@ -12651,7 +12635,7 @@ var sammUDefinition = {
         return sammUDefinition.units['hertzMetre'];
       },
       conversionFactor: '10⁶ Hz × m',
-      quantityKinds: ['performanceCharacteristic', 'coefficient', 'performanceCharacteristic', 'coefficient'],
+      quantityKinds: ['performanceCharacteristic', 'coefficient', 'performanceCharacteristic', 'coefficient']
     },
     megajoule: {
       name: 'megajoule',
@@ -12685,8 +12669,8 @@ var sammUDefinition = {
         'work',
         'potentialEnergy',
         'energy',
-        'kineticEnergy',
-      ],
+        'kineticEnergy'
+      ]
     },
     megajoulePerCubicMetre: {
       name: 'megajoulePerCubicMetre',
@@ -12704,8 +12688,8 @@ var sammUDefinition = {
         'soundEnergy',
         'soundEnergyDensity',
         'volumic',
-        'radiantEnergyDensity',
-      ],
+        'radiantEnergyDensity'
+      ]
     },
     megajoulePerKilogram: {
       name: 'megajoulePerKilogram',
@@ -12716,7 +12700,7 @@ var sammUDefinition = {
         return sammUDefinition.units['joulePerKilogram'];
       },
       conversionFactor: '10⁶ J/kg',
-      quantityKinds: ['specificThermodynamicEnergy', 'specificEnergy', 'massicEnergy'],
+      quantityKinds: ['specificThermodynamicEnergy', 'specificEnergy', 'massicEnergy']
     },
     megajoulePerSecond: {
       name: 'megajoulePerSecond',
@@ -12725,7 +12709,7 @@ var sammUDefinition = {
       code: 'D78',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     megalitre: {
       name: 'megalitre',
@@ -12736,7 +12720,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     megametre: {
       name: 'megametre',
@@ -12793,8 +12777,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     meganewton: {
       name: 'meganewton',
@@ -12805,7 +12789,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newton'];
       },
       conversionFactor: '10⁶ N',
-      quantityKinds: ['force', 'weight', 'weight', 'force'],
+      quantityKinds: ['force', 'weight', 'weight', 'force']
     },
     meganewtonMetre: {
       name: 'meganewtonMetre',
@@ -12816,7 +12800,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁶ N × m',
-      quantityKinds: ['momentOfACouple', 'torque', 'momentOfForce', 'torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['momentOfACouple', 'torque', 'momentOfForce', 'torque', 'momentOfForce', 'momentOfACouple']
     },
     megaohm: {
       name: 'megaohm',
@@ -12839,8 +12823,8 @@ var sammUDefinition = {
         'resistanceToAlternatingCurrent',
         'complexImpedances',
         'impedance',
-        'resistanceToDirectCurrent',
-      ],
+        'resistanceToDirectCurrent'
+      ]
     },
     megaohmKilometre: {
       name: 'megaohmKilometre',
@@ -12851,7 +12835,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁹ Ω × m',
-      quantityKinds: ['resistivity', 'resistivity', 'residualResistivity'],
+      quantityKinds: ['resistivity', 'resistivity', 'residualResistivity']
     },
     megaohmMetre: {
       name: 'megaohmMetre',
@@ -12862,7 +12846,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁶ Ω × m',
-      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
+      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity']
     },
     megaohmPerKilometre: {
       name: 'megaohmPerKilometre',
@@ -12873,7 +12857,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '10³ Ω/m',
-      quantityKinds: ['lineicResistance', 'lineicResistance'],
+      quantityKinds: ['lineicResistance', 'lineicResistance']
     },
     megaohmPerMetre: {
       name: 'megaohmPerMetre',
@@ -12884,7 +12868,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '10⁶ Ω/m',
-      quantityKinds: ['lineicResistance', 'lineicResistance'],
+      quantityKinds: ['lineicResistance', 'lineicResistance']
     },
     megapascal: {
       name: 'megapascal',
@@ -12916,8 +12900,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'shearStress',
         'modulusOfCompression',
-        'modulusOfRigidity',
-      ],
+        'modulusOfRigidity'
+      ]
     },
     megapascalCubicMetrePerSecond: {
       name: 'megapascalCubicMetrePerSecond',
@@ -12934,8 +12918,8 @@ var sammUDefinition = {
         'shearModulus',
         'bulkModulus',
         'modulusOfElasticity',
-        'pressure',
-      ],
+        'pressure'
+      ]
     },
     megapascalLitrePerSecond: {
       name: 'megapascalLitrePerSecond',
@@ -12952,8 +12936,8 @@ var sammUDefinition = {
         'shearStress',
         'modulusOfRigidity',
         'modulusOfElasticity',
-        'bulkModulus',
-      ],
+        'bulkModulus'
+      ]
     },
     megapascalPerBar: {
       name: 'megapascalPerBar',
@@ -12962,7 +12946,7 @@ var sammUDefinition = {
       code: 'F05',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['pressureRatio'],
+      quantityKinds: ['pressureRatio']
     },
     megapascalPerKelvin: {
       name: 'megapascalPerKelvin',
@@ -12979,8 +12963,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'pressure',
         'modulusOfCompression',
-        'normalStress',
-      ],
+        'normalStress'
+      ]
     },
     megapixel: {
       name: 'megapixel',
@@ -12989,7 +12973,7 @@ var sammUDefinition = {
       code: 'E38',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     megasiemensPerMetre: {
       name: 'megasiemensPerMetre',
@@ -13000,7 +12984,7 @@ var sammUDefinition = {
         return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁶ S/m',
-      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
+      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity']
     },
     megavar: {
       name: 'megavar',
@@ -13011,7 +12995,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: '10³ V × A',
-      quantityKinds: ['reactivePower', 'apparentPower'],
+      quantityKinds: ['reactivePower', 'apparentPower']
     },
     megavolt: {
       name: 'megavolt',
@@ -13034,8 +13018,8 @@ var sammUDefinition = {
         'electromotiveForce',
         'potentialDifference',
         'tension',
-        'voltage',
-      ],
+        'voltage'
+      ]
     },
     megavoltAmpere: {
       name: 'megavoltAmpere',
@@ -13046,7 +13030,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: '10⁶ V × A',
-      quantityKinds: ['apparentPower', 'apparentPower'],
+      quantityKinds: ['apparentPower', 'apparentPower']
     },
     megavoltAmpereReactiveHour: {
       name: 'megavoltAmpereReactiveHour',
@@ -13055,7 +13039,7 @@ var sammUDefinition = {
       code: 'MAH',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     megavoltPerMetre: {
       name: 'megavoltPerMetre',
@@ -13066,7 +13050,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltPerMetre'];
       },
       conversionFactor: '10⁶ V/m',
-      quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength', 'electricFieldStrength']
     },
     megawatt: {
       name: 'megawatt',
@@ -13087,8 +13071,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     megawattHour1000Kwh: {
       name: 'megawattHour1000Kwh',
@@ -13122,8 +13106,8 @@ var sammUDefinition = {
         'work',
         'kineticEnergy',
         'potentialEnergy',
-        'energy',
-      ],
+        'energy'
+      ]
     },
     megawattHourPerHour: {
       name: 'megawattHourPerHour',
@@ -13132,7 +13116,7 @@ var sammUDefinition = {
       code: 'E07',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     megawattPerHertz: {
       name: 'megawattPerHertz',
@@ -13141,7 +13125,7 @@ var sammUDefinition = {
       code: 'E08',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     mesh: {
       name: 'mesh',
@@ -13150,7 +13134,7 @@ var sammUDefinition = {
       code: '57',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     message: {
       name: 'message',
@@ -13159,7 +13143,7 @@ var sammUDefinition = {
       code: 'NF',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     metre: {
       name: 'metre',
@@ -13204,8 +13188,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     metreKelvin: {
       name: 'metreKelvin',
@@ -13214,7 +13198,7 @@ var sammUDefinition = {
       code: 'D18',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['secondRadiationConstant'],
+      quantityKinds: ['secondRadiationConstant']
     },
     metrePerBar: {
       name: 'metrePerBar',
@@ -13233,8 +13217,8 @@ var sammUDefinition = {
         'diameter',
         'cartesianCoordinates',
         'thickness',
-        'distance',
-      ],
+        'distance'
+      ]
     },
     metrePerDegreeCelsiusMetre: {
       name: 'metrePerDegreeCelsiusMetre',
@@ -13245,7 +13229,7 @@ var sammUDefinition = {
         return sammUDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
       },
       conversionFactor: 'K⁻¹',
-      quantityKinds: ['thermalDiffusivity', 'relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient'],
+      quantityKinds: ['thermalDiffusivity', 'relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient']
     },
     metrePerHour: {
       name: 'metrePerHour',
@@ -13268,8 +13252,8 @@ var sammUDefinition = {
         'phaseVelocity',
         'phaseVelocity',
         'groupVelocity',
-        'velocity',
-      ],
+        'velocity'
+      ]
     },
     metrePerKelvin: {
       name: 'metrePerKelvin',
@@ -13288,8 +13272,8 @@ var sammUDefinition = {
         'lengthOfPath',
         'radiusOfCurvature',
         'radius',
-        'breadth',
-      ],
+        'breadth'
+      ]
     },
     metrePerMinute: {
       name: 'metrePerMinute',
@@ -13312,8 +13296,8 @@ var sammUDefinition = {
         'velocityOfSoundPhaseVelocity',
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
-        'phaseVelocity',
-      ],
+        'phaseVelocity'
+      ]
     },
     metrePerPascal: {
       name: 'metrePerPascal',
@@ -13332,8 +13316,8 @@ var sammUDefinition = {
         'diameter',
         'breadth',
         'length',
-        'height',
-      ],
+        'height'
+      ]
     },
     metrePerRadiant: {
       name: 'metrePerRadiant',
@@ -13342,7 +13326,7 @@ var sammUDefinition = {
       code: 'M55',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['solidAngle'],
+      quantityKinds: ['solidAngle']
     },
     metrePerSecond: {
       name: 'metrePerSecond',
@@ -13360,8 +13344,8 @@ var sammUDefinition = {
         'velocityOfSoundPhaseVelocity',
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
-        'phaseVelocity',
-      ],
+        'phaseVelocity'
+      ]
     },
     metrePerSecondBar: {
       name: 'metrePerSecondBar',
@@ -13372,7 +13356,7 @@ var sammUDefinition = {
         return sammUDefinition.units['metrePerSecondPascal'];
       },
       conversionFactor: '10⁻⁵ (m/s)/Pa',
-      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'groupVelocity', 'velocity', 'phaseVelocity'],
+      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'groupVelocity', 'velocity', 'phaseVelocity']
     },
     metrePerSecondKelvin: {
       name: 'metrePerSecondKelvin',
@@ -13381,7 +13365,7 @@ var sammUDefinition = {
       code: 'L12',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity'],
+      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity']
     },
     metrePerSecondPascal: {
       name: 'metrePerSecondPascal',
@@ -13390,7 +13374,7 @@ var sammUDefinition = {
       code: 'M59',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity'],
+      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity']
     },
     metrePerSecondSquared: {
       name: 'metrePerSecondSquared',
@@ -13399,7 +13383,7 @@ var sammUDefinition = {
       code: 'MSK',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['accelerationDueToGravity', 'accelerationOfFreeFall', 'instantaneousSoundParticleAcceleration', 'acceleration'],
+      quantityKinds: ['accelerationDueToGravity', 'accelerationOfFreeFall', 'instantaneousSoundParticleAcceleration', 'acceleration']
     },
     metrePerVoltSecond: {
       name: 'metrePerVoltSecond',
@@ -13408,7 +13392,7 @@ var sammUDefinition = {
       code: 'H58',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['mobility'],
+      quantityKinds: ['mobility']
     },
     metreToTheFourthPower: {
       name: 'metreToTheFourthPower',
@@ -13417,7 +13401,7 @@ var sammUDefinition = {
       code: 'B83',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['secondMomentOfArea', 'secondAxialMomentOfArea'],
+      quantityKinds: ['secondMomentOfArea', 'secondAxialMomentOfArea']
     },
     metricCarat: {
       name: 'metricCarat',
@@ -13428,7 +13412,7 @@ var sammUDefinition = {
         return sammUDefinition.units['milligram'];
       },
       conversionFactor: '200 mg',
-      quantityKinds: ['mass'],
+      quantityKinds: ['mass']
     },
     metricTonIncludingContainer: {
       name: 'metricTonIncludingContainer',
@@ -13437,7 +13421,7 @@ var sammUDefinition = {
       code: 'TIC',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     metricTonIncludingInnerPackaging: {
       name: 'metricTonIncludingInnerPackaging',
@@ -13446,7 +13430,7 @@ var sammUDefinition = {
       code: 'TIP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     metricTonLubricatingOil: {
       name: 'metricTonLubricatingOil',
@@ -13455,7 +13439,7 @@ var sammUDefinition = {
       code: 'LUB',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     microInch: {
       name: 'microInch',
@@ -13512,8 +13496,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     microampere: {
       name: 'microampere',
@@ -13532,8 +13516,8 @@ var sammUDefinition = {
         'magneticPotentialDifference',
         'magnetomotiveForce',
         'currentLinkage',
-        'electricCurrent',
-      ],
+        'electricCurrent'
+      ]
     },
     microbar: {
       name: 'microbar',
@@ -13565,8 +13549,8 @@ var sammUDefinition = {
         'modulusOfCompression',
         'bulkModulus',
         'normalStress',
-        'modulusOfRigidity',
-      ],
+        'modulusOfRigidity'
+      ]
     },
     microbecquerel: {
       name: 'microbecquerel',
@@ -13577,7 +13561,7 @@ var sammUDefinition = {
         return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '10⁻⁶ Bq',
-      quantityKinds: ['activity', 'activity'],
+      quantityKinds: ['activity', 'activity']
     },
     microcoulomb: {
       name: 'microcoulomb',
@@ -13595,8 +13579,8 @@ var sammUDefinition = {
         'elementaryCharge',
         'quantityOfElectricity',
         'electricFluxFluxOfDisplacement',
-        'electricCharge',
-      ],
+        'electricCharge'
+      ]
     },
     microcoulombPerCubicMetre: {
       name: 'microcoulombPerCubicMetre',
@@ -13607,7 +13591,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁻⁶ C/m³',
-      quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'chargeDensity', 'volumeDensityOfCharge', 'volumicCharge'],
+      quantityKinds: ['volumicCharge', 'volumeDensityOfCharge', 'chargeDensity', 'chargeDensity', 'volumeDensityOfCharge', 'volumicCharge']
     },
     microcoulombPerSquareMetre: {
       name: 'microcoulombPerSquareMetre',
@@ -13624,8 +13608,8 @@ var sammUDefinition = {
         'displacementElectricPolarization',
         'surfaceDensityOfCharge',
         'electricFluxDensity',
-        'displacementElectricPolarization',
-      ],
+        'displacementElectricPolarization'
+      ]
     },
     microcurie: {
       name: 'microcurie',
@@ -13636,7 +13620,7 @@ var sammUDefinition = {
         return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '3.7 × 10⁴ Bq',
-      quantityKinds: ['activity', 'activity'],
+      quantityKinds: ['activity', 'activity']
     },
     microfarad: {
       name: 'microfarad',
@@ -13647,7 +13631,7 @@ var sammUDefinition = {
         return sammUDefinition.units['farad'];
       },
       conversionFactor: '10⁻⁶ F',
-      quantityKinds: ['capacitance', 'capacitance'],
+      quantityKinds: ['capacitance', 'capacitance']
     },
     microfaradPerKilometre: {
       name: 'microfaradPerKilometre',
@@ -13664,8 +13648,8 @@ var sammUDefinition = {
         'permittivityOfVacuum',
         'permittivityOfVacuum',
         'permittivity',
-        'electricConstant',
-      ],
+        'electricConstant'
+      ]
     },
     microfaradPerMetre: {
       name: 'microfaradPerMetre',
@@ -13682,8 +13666,8 @@ var sammUDefinition = {
         'electricConstant',
         'electricConstant',
         'permittivityOfVacuum',
-        'permittivity',
-      ],
+        'permittivity'
+      ]
     },
     microgram: {
       name: 'microgram',
@@ -13694,7 +13678,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻⁹ kg',
-      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
+      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass']
     },
     microgramPerCubicMetre: {
       name: 'microgramPerCubicMetre',
@@ -13714,8 +13698,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     microgramPerCubicMetreBar: {
       name: 'microgramPerCubicMetreBar',
@@ -13726,7 +13710,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerCubicMetrePascal'];
       },
       conversionFactor: '10⁻¹⁴ (kg/m³)/Pa',
-      quantityKinds: ['volumicMass', 'massDensity', 'density', 'massDensity', 'volumicMass', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density', 'massDensity', 'volumicMass', 'density']
     },
     microgramPerCubicMetreKelvin: {
       name: 'microgramPerCubicMetreKelvin',
@@ -13735,7 +13719,7 @@ var sammUDefinition = {
       code: 'J34',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     microgramPerKilogram: {
       name: 'microgramPerKilogram',
@@ -13744,7 +13728,7 @@ var sammUDefinition = {
       code: 'J33',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massRatio'],
+      quantityKinds: ['massRatio']
     },
     microgramPerLitre: {
       name: 'microgramPerLitre',
@@ -13753,7 +13737,7 @@ var sammUDefinition = {
       code: 'H29',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     micrograyPerHour: {
       name: 'micrograyPerHour',
@@ -13764,7 +13748,7 @@ var sammUDefinition = {
         return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻¹⁰ Gy/s',
-      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate']
     },
     micrograyPerMinute: {
       name: 'micrograyPerMinute',
@@ -13775,7 +13759,7 @@ var sammUDefinition = {
         return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻⁸ Gy/s',
-      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate']
     },
     micrograyPerSecond: {
       name: 'micrograyPerSecond',
@@ -13786,7 +13770,7 @@ var sammUDefinition = {
         return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '10⁻⁶ Gy/s',
-      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate']
     },
     microhenry: {
       name: 'microhenry',
@@ -13797,7 +13781,7 @@ var sammUDefinition = {
         return sammUDefinition.units['henry'];
       },
       conversionFactor: '10⁻⁶ H',
-      quantityKinds: ['selfInductance', 'mutualInductance', 'permeance', 'selfInductance', 'permeance', 'mutualInductance'],
+      quantityKinds: ['selfInductance', 'mutualInductance', 'permeance', 'selfInductance', 'permeance', 'mutualInductance']
     },
     microhenryPerKiloohm: {
       name: 'microhenryPerKiloohm',
@@ -13821,8 +13805,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     microhenryPerMetre: {
       name: 'microhenryPerMetre',
@@ -13839,8 +13823,8 @@ var sammUDefinition = {
         'permeability',
         'permeabilityOfVacuum',
         'permeability',
-        'magneticConstant',
-      ],
+        'magneticConstant'
+      ]
     },
     microhenryPerOhm: {
       name: 'microhenryPerOhm',
@@ -13864,8 +13848,8 @@ var sammUDefinition = {
         'reactorTimeConstant',
         'permeance',
         'mutualInductance',
-        'selfInductance',
-      ],
+        'selfInductance'
+      ]
     },
     microlitre: {
       name: 'microlitre',
@@ -13876,7 +13860,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁹ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     microlitrePerLitre: {
       name: 'microlitrePerLitre',
@@ -13885,7 +13869,7 @@ var sammUDefinition = {
       code: 'J36',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeRatio'],
+      quantityKinds: ['volumeRatio']
     },
     micrometreMicron: {
       name: 'micrometreMicron',
@@ -13942,8 +13926,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     micrometrePerKelvin: {
       name: 'micrometrePerKelvin',
@@ -13962,8 +13946,8 @@ var sammUDefinition = {
         'radiusOfCurvature',
         'length',
         'cartesianCoordinates',
-        'radius',
-      ],
+        'radius'
+      ]
     },
     micromole: {
       name: 'micromole',
@@ -13974,7 +13958,7 @@ var sammUDefinition = {
         return sammUDefinition.units['mole'];
       },
       conversionFactor: '10⁻⁶ mol',
-      quantityKinds: ['amountOfSubstance', 'amountOfSubstance'],
+      quantityKinds: ['amountOfSubstance', 'amountOfSubstance']
     },
     micronewton: {
       name: 'micronewton',
@@ -13985,7 +13969,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newton'];
       },
       conversionFactor: '10⁻⁶ N',
-      quantityKinds: ['force', 'weight', 'weight', 'force'],
+      quantityKinds: ['force', 'weight', 'weight', 'force']
     },
     micronewtonMetre: {
       name: 'micronewtonMetre',
@@ -13996,7 +13980,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁻⁶ N × m',
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfACouple']
     },
     microohm: {
       name: 'microohm',
@@ -14019,8 +14003,8 @@ var sammUDefinition = {
         'resistanceToAlternatingCurrent',
         'complexImpedances',
         'impedance',
-        'resistanceToDirectCurrent',
-      ],
+        'resistanceToDirectCurrent'
+      ]
     },
     microohmMetre: {
       name: 'microohmMetre',
@@ -14031,7 +14015,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁻⁶ Ω × m',
-      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
+      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity']
     },
     micropascal: {
       name: 'micropascal',
@@ -14063,8 +14047,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'shearStress',
         'modulusOfCompression',
-        'shearModulus',
-      ],
+        'shearModulus'
+      ]
     },
     micropoise: {
       name: 'micropoise',
@@ -14075,7 +14059,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '10⁻⁶ Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     microradian: {
       name: 'microradian',
@@ -14086,7 +14070,7 @@ var sammUDefinition = {
         return sammUDefinition.units['rad'];
       },
       conversionFactor: '10⁻⁶ rad',
-      quantityKinds: ['absorbedDose', 'anglePlane'],
+      quantityKinds: ['absorbedDose', 'anglePlane']
     },
     microsecond: {
       name: 'microsecond',
@@ -14108,8 +14092,8 @@ var sammUDefinition = {
         'time',
         'carrierLifeTime',
         'reactorTimeConstant',
-        'time',
-      ],
+        'time'
+      ]
     },
     microsiemens: {
       name: 'microsiemens',
@@ -14130,8 +14114,8 @@ var sammUDefinition = {
         'admittance',
         'complexAdmittance',
         'conductanceForAlternatingCurrent',
-        'conductanceForDirectCurrent',
-      ],
+        'conductanceForDirectCurrent'
+      ]
     },
     microsiemensPerCentimetre: {
       name: 'microsiemensPerCentimetre',
@@ -14149,8 +14133,8 @@ var sammUDefinition = {
         'admittance',
         'complexAdmittance',
         'electrolyticConductivity',
-        'conductivity',
-      ],
+        'conductivity'
+      ]
     },
     microsiemensPerMetre: {
       name: 'microsiemensPerMetre',
@@ -14168,8 +14152,8 @@ var sammUDefinition = {
         'complexAdmittance',
         'modulusOfAdmittance',
         'conductanceForAlternatingCurrent',
-        'admittance',
-      ],
+        'admittance'
+      ]
     },
     microsievertPerHour: {
       name: 'microsievertPerHour',
@@ -14180,7 +14164,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '0.277777778 × 10⁻¹⁰ Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     microsievertPerMinute: {
       name: 'microsievertPerMinute',
@@ -14191,7 +14175,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '1.666666667 × 10⁻⁸ Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     microsievertPerSecond: {
       name: 'microsievertPerSecond',
@@ -14202,7 +14186,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '10⁻⁶ Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     microtesla: {
       name: 'microtesla',
@@ -14222,8 +14206,8 @@ var sammUDefinition = {
         'upperCriticalMagneticFluxDensity',
         'magneticInduction',
         'magneticPolarization',
-        'magneticFluxDensity',
-      ],
+        'magneticFluxDensity'
+      ]
     },
     microvolt: {
       name: 'microvolt',
@@ -14246,8 +14230,8 @@ var sammUDefinition = {
         'electromotiveForce',
         'potentialDifference',
         'tension',
-        'voltage',
-      ],
+        'voltage'
+      ]
     },
     microvoltPerMetre: {
       name: 'microvoltPerMetre',
@@ -14258,7 +14242,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltPerMetre'];
       },
       conversionFactor: '10⁻⁶ V/m',
-      quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength', 'electricFieldStrength']
     },
     microwatt: {
       name: 'microwatt',
@@ -14279,8 +14263,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     microwattPerSquareMetre: {
       name: 'microwattPerSquareMetre',
@@ -14302,8 +14286,8 @@ var sammUDefinition = {
         'soundIntensity',
         'radiantEnergy',
         'radiantExitance',
-        'soundIntensity',
-      ],
+        'soundIntensity'
+      ]
     },
     mil: {
       name: 'mil',
@@ -14314,7 +14298,7 @@ var sammUDefinition = {
         return sammUDefinition.units['rad'];
       },
       conversionFactor: '9.817477 × 10⁻⁴ rad',
-      quantityKinds: ['absorbedDose', 'anglePlane'],
+      quantityKinds: ['absorbedDose', 'anglePlane']
     },
     mileBasedOnUsSurveyFoot: {
       name: 'mileBasedOnUsSurveyFoot',
@@ -14371,8 +14355,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     milePerHourStatuteMile: {
       name: 'milePerHourStatuteMile',
@@ -14395,8 +14379,8 @@ var sammUDefinition = {
         'phaseVelocity',
         'phaseVelocity',
         'groupVelocity',
-        'velocity',
-      ],
+        'velocity'
+      ]
     },
     milePerMinute: {
       name: 'milePerMinute',
@@ -14419,8 +14403,8 @@ var sammUDefinition = {
         'velocityOfSoundPhaseVelocity',
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
-        'phaseVelocity',
-      ],
+        'phaseVelocity'
+      ]
     },
     milePerSecond: {
       name: 'milePerSecond',
@@ -14443,8 +14427,8 @@ var sammUDefinition = {
         'phaseVelocity',
         'phaseVelocity',
         'velocity',
-        'groupVelocity',
-      ],
+        'groupVelocity'
+      ]
     },
     mileStatuteMile: {
       name: 'mileStatuteMile',
@@ -14501,8 +14485,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     mileStatuteMilePerSecondSquared: {
       name: 'mileStatuteMilePerSecondSquared',
@@ -14520,8 +14504,8 @@ var sammUDefinition = {
         'accelerationDueToGravity',
         'accelerationOfFreeFall',
         'instantaneousSoundParticleAcceleration',
-        'acceleration',
-      ],
+        'acceleration'
+      ]
     },
     mille: {
       name: 'mille',
@@ -14530,7 +14514,7 @@ var sammUDefinition = {
       code: 'E12',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     milliInch: {
       name: 'milliInch',
@@ -14587,8 +14571,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     milliampere: {
       name: 'milliampere',
@@ -14607,8 +14591,8 @@ var sammUDefinition = {
         'electricCurrent',
         'magnetomotiveForce',
         'currentLinkage',
-        'magneticPotentialDifference',
-      ],
+        'magneticPotentialDifference'
+      ]
     },
     milliampereHour: {
       name: 'milliampereHour',
@@ -14626,8 +14610,8 @@ var sammUDefinition = {
         'elementaryCharge',
         'quantityOfElectricity',
         'electricFluxFluxOfDisplacement',
-        'electricCharge',
-      ],
+        'electricCharge'
+      ]
     },
     milliamperePerBar: {
       name: 'milliamperePerBar',
@@ -14636,7 +14620,7 @@ var sammUDefinition = {
       code: 'F59',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['magneticFieldStrength', 'lineicElectricCurrent', 'linearElectricCurrentDensity'],
+      quantityKinds: ['magneticFieldStrength', 'lineicElectricCurrent', 'linearElectricCurrentDensity']
     },
     milliamperePerInch: {
       name: 'milliamperePerInch',
@@ -14645,7 +14629,7 @@ var sammUDefinition = {
       code: 'F08',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['magneticFieldStrength', 'lineicElectricCurrent', 'linearElectricCurrentDensity'],
+      quantityKinds: ['magneticFieldStrength', 'lineicElectricCurrent', 'linearElectricCurrentDensity']
     },
     milliamperePerLitreMinute: {
       name: 'milliamperePerLitreMinute',
@@ -14654,7 +14638,7 @@ var sammUDefinition = {
       code: 'G59',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['currentDensity'],
+      quantityKinds: ['currentDensity']
     },
     milliamperePerMillimetre: {
       name: 'milliamperePerMillimetre',
@@ -14663,7 +14647,7 @@ var sammUDefinition = {
       code: 'F76',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['magneticFieldStrength', 'lineicElectricCurrent', 'linearElectricCurrentDensity'],
+      quantityKinds: ['magneticFieldStrength', 'lineicElectricCurrent', 'linearElectricCurrentDensity']
     },
     milliamperePerPoundForcePerSquareInch: {
       name: 'milliamperePerPoundForcePerSquareInch',
@@ -14672,7 +14656,7 @@ var sammUDefinition = {
       code: 'F57',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['currentDensity'],
+      quantityKinds: ['currentDensity']
     },
     milliard: {
       name: 'milliard',
@@ -14681,7 +14665,7 @@ var sammUDefinition = {
       code: 'MLD',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     millibar: {
       name: 'millibar',
@@ -14713,8 +14697,8 @@ var sammUDefinition = {
         'shearModulus',
         'shearStress',
         'modulusOfRigidity',
-        'bulkModulus',
-      ],
+        'bulkModulus'
+      ]
     },
     millibarCubicMetrePerSecond: {
       name: 'millibarCubicMetrePerSecond',
@@ -14731,8 +14715,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'normalStress',
         'modulusOfCompression',
-        'shearModulus',
-      ],
+        'shearModulus'
+      ]
     },
     millibarLitrePerSecond: {
       name: 'millibarLitrePerSecond',
@@ -14749,8 +14733,8 @@ var sammUDefinition = {
         'shearStress',
         'modulusOfCompression',
         'bulkModulus',
-        'modulusOfElasticity',
-      ],
+        'modulusOfElasticity'
+      ]
     },
     millibarPerBar: {
       name: 'millibarPerBar',
@@ -14759,7 +14743,7 @@ var sammUDefinition = {
       code: 'F04',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['pressureRatio'],
+      quantityKinds: ['pressureRatio']
     },
     millibarPerKelvin: {
       name: 'millibarPerKelvin',
@@ -14776,8 +14760,8 @@ var sammUDefinition = {
         'normalStress',
         'modulusOfElasticity',
         'pressure',
-        'modulusOfCompression',
-      ],
+        'modulusOfCompression'
+      ]
     },
     millicandela: {
       name: 'millicandela',
@@ -14788,7 +14772,7 @@ var sammUDefinition = {
         return sammUDefinition.units['candela'];
       },
       conversionFactor: '10⁻³ cd',
-      quantityKinds: ['luminousIntensity', 'luminousIntensity'],
+      quantityKinds: ['luminousIntensity', 'luminousIntensity']
     },
     millicoulomb: {
       name: 'millicoulomb',
@@ -14806,8 +14790,8 @@ var sammUDefinition = {
         'elementaryCharge',
         'quantityOfElectricity',
         'electricFluxFluxOfDisplacement',
-        'electricCharge',
-      ],
+        'electricCharge'
+      ]
     },
     millicoulombPerCubicMetre: {
       name: 'millicoulombPerCubicMetre',
@@ -14818,7 +14802,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerCubicMetre'];
       },
       conversionFactor: '10⁻³ C/m³',
-      quantityKinds: ['volumeDensityOfCharge', 'chargeDensity', 'volumicCharge', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity'],
+      quantityKinds: ['volumeDensityOfCharge', 'chargeDensity', 'volumicCharge', 'volumicCharge', 'volumeDensityOfCharge', 'chargeDensity']
     },
     millicoulombPerKilogram: {
       name: 'millicoulombPerKilogram',
@@ -14829,7 +14813,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerKilogram'];
       },
       conversionFactor: '10⁻³ C/kg',
-      quantityKinds: ['exposure', 'exposure'],
+      quantityKinds: ['exposure', 'exposure']
     },
     millicoulombPerSquareMetre: {
       name: 'millicoulombPerSquareMetre',
@@ -14846,8 +14830,8 @@ var sammUDefinition = {
         'displacementElectricPolarization',
         'displacementElectricPolarization',
         'surfaceDensityOfCharge',
-        'electricFluxDensity',
-      ],
+        'electricFluxDensity'
+      ]
     },
     millicurie: {
       name: 'millicurie',
@@ -14858,7 +14842,7 @@ var sammUDefinition = {
         return sammUDefinition.units['becquerel'];
       },
       conversionFactor: '3.7 × 10⁷ Bq',
-      quantityKinds: ['activity', 'activity'],
+      quantityKinds: ['activity', 'activity']
     },
     milliequivalenceCausticPotashPerGramOfProduct: {
       name: 'milliequivalenceCausticPotashPerGramOfProduct',
@@ -14867,7 +14851,7 @@ var sammUDefinition = {
       code: 'KO',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     millifarad: {
       name: 'millifarad',
@@ -14878,7 +14862,7 @@ var sammUDefinition = {
         return sammUDefinition.units['farad'];
       },
       conversionFactor: '10⁻³ F',
-      quantityKinds: ['capacitance', 'capacitance'],
+      quantityKinds: ['capacitance', 'capacitance']
     },
     milligal: {
       name: 'milligal',
@@ -14896,8 +14880,8 @@ var sammUDefinition = {
         'accelerationDueToGravity',
         'accelerationOfFreeFall',
         'instantaneousSoundParticleAcceleration',
-        'acceleration',
-      ],
+        'acceleration'
+      ]
     },
     milligram: {
       name: 'milligram',
@@ -14908,7 +14892,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10⁻⁶ kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     milligramPerBar: {
       name: 'milligramPerBar',
@@ -14917,7 +14901,7 @@ var sammUDefinition = {
       code: 'F75',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     milligramPerCubicMetre: {
       name: 'milligramPerCubicMetre',
@@ -14937,8 +14921,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     milligramPerCubicMetreBar: {
       name: 'milligramPerCubicMetreBar',
@@ -14949,7 +14933,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerCubicMetrePascal'];
       },
       conversionFactor: '10⁻¹¹ (kg/m³)/Pa',
-      quantityKinds: ['volumicMass', 'massDensity', 'density', 'volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density', 'volumicMass', 'massDensity', 'density']
     },
     milligramPerCubicMetreKelvin: {
       name: 'milligramPerCubicMetreKelvin',
@@ -14958,7 +14942,7 @@ var sammUDefinition = {
       code: 'L17',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     milligramPerDay: {
       name: 'milligramPerDay',
@@ -14967,7 +14951,7 @@ var sammUDefinition = {
       code: 'F32',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     milligramPerDayBar: {
       name: 'milligramPerDayBar',
@@ -14976,7 +14960,7 @@ var sammUDefinition = {
       code: 'F70',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     milligramPerDayKelvin: {
       name: 'milligramPerDayKelvin',
@@ -14985,7 +14969,7 @@ var sammUDefinition = {
       code: 'F43',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     milligramPerGram: {
       name: 'milligramPerGram',
@@ -14994,7 +14978,7 @@ var sammUDefinition = {
       code: 'H64',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     milligramPerHour: {
       name: 'milligramPerHour',
@@ -15005,7 +14989,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻¹⁰ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     milligramPerHourBar: {
       name: 'milligramPerHourBar',
@@ -15014,7 +14998,7 @@ var sammUDefinition = {
       code: 'F71',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     milligramPerHourKelvin: {
       name: 'milligramPerHourKelvin',
@@ -15023,7 +15007,7 @@ var sammUDefinition = {
       code: 'F44',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     milligramPerKelvin: {
       name: 'milligramPerKelvin',
@@ -15032,7 +15016,7 @@ var sammUDefinition = {
       code: 'F16',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     milligramPerKilogram: {
       name: 'milligramPerKilogram',
@@ -15041,7 +15025,7 @@ var sammUDefinition = {
       code: 'NA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massRatio'],
+      quantityKinds: ['massRatio']
     },
     milligramPerLitre: {
       name: 'milligramPerLitre',
@@ -15061,8 +15045,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     milligramPerMetre: {
       name: 'milligramPerMetre',
@@ -15073,7 +15057,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10⁻⁶ kg/m',
-      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
+      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity']
     },
     milligramPerMinute: {
       name: 'milligramPerMinute',
@@ -15082,7 +15066,7 @@ var sammUDefinition = {
       code: 'F33',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     milligramPerMinuteBar: {
       name: 'milligramPerMinuteBar',
@@ -15091,7 +15075,7 @@ var sammUDefinition = {
       code: 'F72',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     milligramPerMinuteKelvin: {
       name: 'milligramPerMinuteKelvin',
@@ -15100,7 +15084,7 @@ var sammUDefinition = {
       code: 'F45',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     milligramPerSecond: {
       name: 'milligramPerSecond',
@@ -15109,7 +15093,7 @@ var sammUDefinition = {
       code: 'F34',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     milligramPerSecondBar: {
       name: 'milligramPerSecondBar',
@@ -15118,7 +15102,7 @@ var sammUDefinition = {
       code: 'F73',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     milligramPerSecondKelvin: {
       name: 'milligramPerSecondKelvin',
@@ -15127,7 +15111,7 @@ var sammUDefinition = {
       code: 'F46',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     milligramPerSquareCentimetre: {
       name: 'milligramPerSquareCentimetre',
@@ -15136,7 +15120,7 @@ var sammUDefinition = {
       code: 'H63',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['surfaceDensity', 'areicMass'],
+      quantityKinds: ['surfaceDensity', 'areicMass']
     },
     milligramPerSquareMetre: {
       name: 'milligramPerSquareMetre',
@@ -15147,7 +15131,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '10⁻⁶ kg/m²',
-      quantityKinds: ['areicMass', 'surfaceDensity', 'surfaceDensity', 'meanMassRange', 'areicMass'],
+      quantityKinds: ['areicMass', 'surfaceDensity', 'surfaceDensity', 'meanMassRange', 'areicMass']
     },
     milligray: {
       name: 'milligray',
@@ -15158,7 +15142,7 @@ var sammUDefinition = {
         return sammUDefinition.units['gray'];
       },
       conversionFactor: '10⁻³ Gy',
-      quantityKinds: ['specificEnergyImparted', 'massicEnergyImparted', 'massicEnergyImparted', 'specificEnergyImparted'],
+      quantityKinds: ['specificEnergyImparted', 'massicEnergyImparted', 'massicEnergyImparted', 'specificEnergyImparted']
     },
     milligrayPerHour: {
       name: 'milligrayPerHour',
@@ -15169,7 +15153,7 @@ var sammUDefinition = {
         return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁷ Gy/s',
-      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate']
     },
     milligrayPerMinute: {
       name: 'milligrayPerMinute',
@@ -15180,7 +15164,7 @@ var sammUDefinition = {
         return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻⁵ Gy/s',
-      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate']
     },
     milligrayPerSecond: {
       name: 'milligrayPerSecond',
@@ -15191,7 +15175,7 @@ var sammUDefinition = {
         return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '10⁻³ Gy/s',
-      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate']
     },
     millihenry: {
       name: 'millihenry',
@@ -15202,7 +15186,7 @@ var sammUDefinition = {
         return sammUDefinition.units['henry'];
       },
       conversionFactor: '10⁻³ H',
-      quantityKinds: ['selfInductance', 'permeance', 'mutualInductance', 'selfInductance', 'permeance', 'mutualInductance'],
+      quantityKinds: ['selfInductance', 'permeance', 'mutualInductance', 'selfInductance', 'permeance', 'mutualInductance']
     },
     millihenryPerKiloohm: {
       name: 'millihenryPerKiloohm',
@@ -15226,8 +15210,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     millihenryPerOhm: {
       name: 'millihenryPerOhm',
@@ -15251,8 +15235,8 @@ var sammUDefinition = {
         'reactorTimeConstant',
         'selfInductance',
         'mutualInductance',
-        'permeance',
-      ],
+        'permeance'
+      ]
     },
     millijoule: {
       name: 'millijoule',
@@ -15286,8 +15270,8 @@ var sammUDefinition = {
         'work',
         'potentialEnergy',
         'kineticEnergy',
-        'energy',
-      ],
+        'energy'
+      ]
     },
     millilitre: {
       name: 'millilitre',
@@ -15298,7 +15282,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10⁻⁶ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     millilitrePerBar: {
       name: 'millilitrePerBar',
@@ -15307,7 +15291,7 @@ var sammUDefinition = {
       code: 'G97',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volume'],
+      quantityKinds: ['volume']
     },
     millilitrePerCubicMetre: {
       name: 'millilitrePerCubicMetre',
@@ -15316,7 +15300,7 @@ var sammUDefinition = {
       code: 'H65',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['specificVolume', 'massicVolume'],
+      quantityKinds: ['specificVolume', 'massicVolume']
     },
     millilitrePerDay: {
       name: 'millilitrePerDay',
@@ -15325,7 +15309,7 @@ var sammUDefinition = {
       code: 'G54',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     millilitrePerDayBar: {
       name: 'millilitrePerDayBar',
@@ -15334,7 +15318,7 @@ var sammUDefinition = {
       code: 'G90',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     millilitrePerDayKelvin: {
       name: 'millilitrePerDayKelvin',
@@ -15343,7 +15327,7 @@ var sammUDefinition = {
       code: 'G73',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     millilitrePerHour: {
       name: 'millilitrePerHour',
@@ -15352,7 +15336,7 @@ var sammUDefinition = {
       code: 'G55',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     millilitrePerHourBar: {
       name: 'millilitrePerHourBar',
@@ -15361,7 +15345,7 @@ var sammUDefinition = {
       code: 'G91',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     millilitrePerHourKelvin: {
       name: 'millilitrePerHourKelvin',
@@ -15370,7 +15354,7 @@ var sammUDefinition = {
       code: 'G74',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     millilitrePerKelvin: {
       name: 'millilitrePerKelvin',
@@ -15379,7 +15363,7 @@ var sammUDefinition = {
       code: 'G30',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumePerTemperature'],
+      quantityKinds: ['volumePerTemperature']
     },
     millilitrePerKilogram: {
       name: 'millilitrePerKilogram',
@@ -15390,7 +15374,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerKilogram'];
       },
       conversionFactor: '10⁻⁶ m³/kg',
-      quantityKinds: ['specificVolume', 'massicVolume', 'specificVolume', 'massicVolume'],
+      quantityKinds: ['specificVolume', 'massicVolume', 'specificVolume', 'massicVolume']
     },
     millilitrePerLitre: {
       name: 'millilitrePerLitre',
@@ -15399,7 +15383,7 @@ var sammUDefinition = {
       code: 'L19',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeRatio'],
+      quantityKinds: ['volumeRatio']
     },
     millilitrePerMinute: {
       name: 'millilitrePerMinute',
@@ -15410,7 +15394,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻⁸ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     millilitrePerMinuteBar: {
       name: 'millilitrePerMinuteBar',
@@ -15419,7 +15403,7 @@ var sammUDefinition = {
       code: 'G92',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     millilitrePerMinuteKelvin: {
       name: 'millilitrePerMinuteKelvin',
@@ -15428,7 +15412,7 @@ var sammUDefinition = {
       code: 'G75',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     millilitrePerSecond: {
       name: 'millilitrePerSecond',
@@ -15439,7 +15423,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     millilitrePerSecondBar: {
       name: 'millilitrePerSecondBar',
@@ -15448,7 +15432,7 @@ var sammUDefinition = {
       code: 'G93',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     millilitrePerSecondKelvin: {
       name: 'millilitrePerSecondKelvin',
@@ -15457,7 +15441,7 @@ var sammUDefinition = {
       code: 'G76',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate']
     },
     millilitrePerSquareCentimetreMinute: {
       name: 'millilitrePerSquareCentimetreMinute',
@@ -15468,7 +15452,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecondSquareMetre'];
       },
       conversionFactor: '2.777778 × 10⁻⁶ (m³/s)/m²',
-      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'porosity'],
+      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity', 'porosity']
     },
     millilitrePerSquareCentimetreSecond: {
       name: 'millilitrePerSquareCentimetreSecond',
@@ -15489,8 +15473,8 @@ var sammUDefinition = {
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
         'phaseVelocity',
-        'porosity',
-      ],
+        'porosity'
+      ]
     },
     millimetre: {
       name: 'millimetre',
@@ -15547,8 +15531,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     millimetrePerBar: {
       name: 'millimetrePerBar',
@@ -15567,8 +15551,8 @@ var sammUDefinition = {
         'radiusOfCurvature',
         'cartesianCoordinates',
         'height',
-        'thickness',
-      ],
+        'thickness'
+      ]
     },
     millimetrePerDegreeCelsiusMetre: {
       name: 'millimetrePerDegreeCelsiusMetre',
@@ -15579,7 +15563,7 @@ var sammUDefinition = {
         return sammUDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
       },
       conversionFactor: '10⁻³ K⁻¹',
-      quantityKinds: ['thermalDiffusivity', 'relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient'],
+      quantityKinds: ['thermalDiffusivity', 'relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient']
     },
     millimetrePerHour: {
       name: 'millimetrePerHour',
@@ -15588,7 +15572,7 @@ var sammUDefinition = {
       code: 'H67',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity'],
+      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity']
     },
     millimetrePerKelvin: {
       name: 'millimetrePerKelvin',
@@ -15597,7 +15581,7 @@ var sammUDefinition = {
       code: 'F53',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['thermalDiffusivity'],
+      quantityKinds: ['thermalDiffusivity']
     },
     millimetrePerMinute: {
       name: 'millimetrePerMinute',
@@ -15606,7 +15590,7 @@ var sammUDefinition = {
       code: 'H81',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity'],
+      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity']
     },
     millimetrePerSecond: {
       name: 'millimetrePerSecond',
@@ -15629,8 +15613,8 @@ var sammUDefinition = {
         'phaseVelocity',
         'groupVelocity',
         'phaseVelocity',
-        'velocity',
-      ],
+        'velocity'
+      ]
     },
     millimetrePerSecondSquared: {
       name: 'millimetrePerSecondSquared',
@@ -15648,8 +15632,8 @@ var sammUDefinition = {
         'acceleration',
         'acceleration',
         'accelerationDueToGravity',
-        'accelerationOfFreeFall',
-      ],
+        'accelerationOfFreeFall'
+      ]
     },
     millimetrePerYear: {
       name: 'millimetrePerYear',
@@ -15658,7 +15642,7 @@ var sammUDefinition = {
       code: 'H66',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity'],
+      quantityKinds: ['velocity', 'phaseVelocity', 'groupVelocity']
     },
     millimetreSquaredPerSecond: {
       name: 'millimetreSquaredPerSecond',
@@ -15675,8 +15659,8 @@ var sammUDefinition = {
         'thermalDiffusionCoefficient',
         'kinematicViscosity',
         'diffusionCoefficientForNeutronNumberDensity',
-        'thermalDiffusivity',
-      ],
+        'thermalDiffusivity'
+      ]
     },
     millimetreToTheFourthPower: {
       name: 'millimetreToTheFourthPower',
@@ -15687,7 +15671,7 @@ var sammUDefinition = {
         return sammUDefinition.units['metreToTheFourthPower'];
       },
       conversionFactor: '10⁻¹² m⁴',
-      quantityKinds: ['secondMomentOfArea', 'secondAxialMomentOfArea', 'secondAxialMomentOfArea', 'secondMomentOfArea'],
+      quantityKinds: ['secondMomentOfArea', 'secondAxialMomentOfArea', 'secondAxialMomentOfArea', 'secondMomentOfArea']
     },
     millimole: {
       name: 'millimole',
@@ -15698,7 +15682,7 @@ var sammUDefinition = {
         return sammUDefinition.units['mole'];
       },
       conversionFactor: '10⁻³ mol',
-      quantityKinds: ['amountOfSubstance', 'amountOfSubstance'],
+      quantityKinds: ['amountOfSubstance', 'amountOfSubstance']
     },
     millimolePerGram: {
       name: 'millimolePerGram',
@@ -15707,7 +15691,7 @@ var sammUDefinition = {
       code: 'H68',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['ionicStrength'],
+      quantityKinds: ['ionicStrength']
     },
     millimolePerKilogram: {
       name: 'millimolePerKilogram',
@@ -15718,7 +15702,7 @@ var sammUDefinition = {
         return sammUDefinition.units['molePerKilogram'];
       },
       conversionFactor: '10⁻³ mol/kg',
-      quantityKinds: ['molalityOfSoluteB', 'ionicStrength'],
+      quantityKinds: ['molalityOfSoluteB', 'ionicStrength']
     },
     millimolePerLitre: {
       name: 'millimolePerLitre',
@@ -15741,8 +15725,8 @@ var sammUDefinition = {
         'volumicMass',
         'amountOfSubstance',
         'density',
-        'massDensity',
-      ],
+        'massDensity'
+      ]
     },
     millinewton: {
       name: 'millinewton',
@@ -15753,7 +15737,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newton'];
       },
       conversionFactor: '10⁻³ N',
-      quantityKinds: ['weight', 'force', 'weight', 'force'],
+      quantityKinds: ['weight', 'force', 'weight', 'force']
     },
     millinewtonMetre: {
       name: 'millinewtonMetre',
@@ -15764,7 +15748,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '10⁻³ N × m',
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple']
     },
     millinewtonPerMetre: {
       name: 'millinewtonPerMetre',
@@ -15775,7 +15759,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonPerMetre'];
       },
       conversionFactor: '10⁻³ N/m',
-      quantityKinds: ['surfaceTension', 'surfaceTension'],
+      quantityKinds: ['surfaceTension', 'surfaceTension']
     },
     milliohm: {
       name: 'milliohm',
@@ -15798,8 +15782,8 @@ var sammUDefinition = {
         'resistanceToAlternatingCurrent',
         'complexImpedances',
         'impedance',
-        'resistanceToDirectCurrent',
-      ],
+        'resistanceToDirectCurrent'
+      ]
     },
     milliohmMetre: {
       name: 'milliohmMetre',
@@ -15810,7 +15794,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁻³ Ω × m',
-      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
+      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity']
     },
     milliohmPerMetre: {
       name: 'milliohmPerMetre',
@@ -15821,7 +15805,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '10⁻³ Ω/m',
-      quantityKinds: ['lineicResistance', 'lineicResistance'],
+      quantityKinds: ['lineicResistance', 'lineicResistance']
     },
     million: {
       name: 'million',
@@ -15830,7 +15814,7 @@ var sammUDefinition = {
       code: 'MIO',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     millionBtuItPerHour: {
       name: 'millionBtuItPerHour',
@@ -15841,7 +15825,7 @@ var sammUDefinition = {
         return sammUDefinition.units['watt'];
       },
       conversionFactor: '293071.1 W',
-      quantityKinds: ['heatFlowRate', 'power', 'activePower', 'radiantEnergyflux', 'powerForDirectCurrent', 'radiantPower', 'soundPower'],
+      quantityKinds: ['heatFlowRate', 'power', 'activePower', 'radiantEnergyflux', 'powerForDirectCurrent', 'radiantPower', 'soundPower']
     },
     millionBtuPer1000CubicFoot: {
       name: 'millionBtuPer1000CubicFoot',
@@ -15850,7 +15834,7 @@ var sammUDefinition = {
       code: 'M9',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     millionCubicMetre: {
       name: 'millionCubicMetre',
@@ -15859,7 +15843,7 @@ var sammUDefinition = {
       code: 'HMQ',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     millionInternationalUnit: {
       name: 'millionInternationalUnit',
@@ -15868,7 +15852,7 @@ var sammUDefinition = {
       code: 'MIU',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     millipascal: {
       name: 'millipascal',
@@ -15900,8 +15884,8 @@ var sammUDefinition = {
         'partialPressureOfBInAGaseousMixture',
         'staticPressure',
         'modulusOfElasticity',
-        'instantaneousSoundPressure',
-      ],
+        'instantaneousSoundPressure'
+      ]
     },
     millipascalPerMetre: {
       name: 'millipascalPerMetre',
@@ -15910,7 +15894,7 @@ var sammUDefinition = {
       code: 'P80',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['hardnessIndex'],
+      quantityKinds: ['hardnessIndex']
     },
     millipascalSecond: {
       name: 'millipascalSecond',
@@ -15921,7 +15905,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '10⁻³ Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     millipascalSecondPerBar: {
       name: 'millipascalSecondPerBar',
@@ -15943,8 +15927,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     millipascalSecondPerKelvin: {
       name: 'millipascalSecondPerKelvin',
@@ -15953,7 +15937,7 @@ var sammUDefinition = {
       code: 'L15',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity']
     },
     milliradian: {
       name: 'milliradian',
@@ -15964,7 +15948,7 @@ var sammUDefinition = {
         return sammUDefinition.units['rad'];
       },
       conversionFactor: '10⁻³ rad',
-      quantityKinds: ['anglePlane', 'absorbedDose'],
+      quantityKinds: ['anglePlane', 'absorbedDose']
     },
     milliroentgen: {
       name: 'milliroentgen',
@@ -15975,7 +15959,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerKilogram'];
       },
       conversionFactor: '2.58 × 10⁻⁷ C/kg',
-      quantityKinds: ['exposure', 'exposure'],
+      quantityKinds: ['exposure', 'exposure']
     },
     milliroentgenAequivalentMen: {
       name: 'milliroentgenAequivalentMen',
@@ -15986,7 +15970,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievert'];
       },
       conversionFactor: '10⁻⁵ Sv',
-      quantityKinds: ['doseEquivalent', 'doseEquivalent'],
+      quantityKinds: ['doseEquivalent', 'doseEquivalent']
     },
     millisecond: {
       name: 'millisecond',
@@ -16008,8 +15992,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     millisiemens: {
       name: 'millisiemens',
@@ -16030,8 +16014,8 @@ var sammUDefinition = {
         'modulusOfAdmittance',
         'complexAdmittance',
         'conductanceForDirectCurrent',
-        'conductanceForAlternatingCurrent',
-      ],
+        'conductanceForAlternatingCurrent'
+      ]
     },
     millisiemensPerCentimetre: {
       name: 'millisiemensPerCentimetre',
@@ -16042,7 +16026,7 @@ var sammUDefinition = {
         return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁻¹ S/m',
-      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
+      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity']
     },
     millisievert: {
       name: 'millisievert',
@@ -16053,7 +16037,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievert'];
       },
       conversionFactor: '10⁻³ Sv',
-      quantityKinds: ['doseEquivalent', 'doseEquivalent'],
+      quantityKinds: ['doseEquivalent', 'doseEquivalent']
     },
     millisievertPerHour: {
       name: 'millisievertPerHour',
@@ -16064,7 +16048,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '0.277777778 × 10⁻⁷ Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     millisievertPerMinute: {
       name: 'millisievertPerMinute',
@@ -16075,7 +16059,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '1.666666667 × 10⁻⁵ Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     millisievertPerSecond: {
       name: 'millisievertPerSecond',
@@ -16086,7 +16070,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '10⁻³ Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     millitesla: {
       name: 'millitesla',
@@ -16106,8 +16090,8 @@ var sammUDefinition = {
         'upperCriticalMagneticFluxDensity',
         'magneticFluxDensity',
         'magneticPolarization',
-        'magneticInduction',
-      ],
+        'magneticInduction'
+      ]
     },
     millivolt: {
       name: 'millivolt',
@@ -16130,8 +16114,8 @@ var sammUDefinition = {
         'potentialDifference',
         'electromotiveForce',
         'voltage',
-        'tension',
-      ],
+        'tension'
+      ]
     },
     millivoltAmpere: {
       name: 'millivoltAmpere',
@@ -16142,7 +16126,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: '10⁻³ V × A',
-      quantityKinds: ['apparentPower', 'apparentPower'],
+      quantityKinds: ['apparentPower', 'apparentPower']
     },
     millivoltPerKelvin: {
       name: 'millivoltPerKelvin',
@@ -16153,7 +16137,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltPerKelvin'];
       },
       conversionFactor: '10⁻³ V/K',
-      quantityKinds: ['seebeckCoefficientForSubstancesAAndB', 'thompsonCoefficient'],
+      quantityKinds: ['seebeckCoefficientForSubstancesAAndB', 'thompsonCoefficient']
     },
     millivoltPerMetre: {
       name: 'millivoltPerMetre',
@@ -16164,7 +16148,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltPerMetre'];
       },
       conversionFactor: '10⁻³ V/m',
-      quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength', 'electricFieldStrength']
     },
     millivoltPerMinute: {
       name: 'millivoltPerMinute',
@@ -16173,7 +16157,7 @@ var sammUDefinition = {
       code: 'H62',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength']
     },
     milliwatt: {
       name: 'milliwatt',
@@ -16194,8 +16178,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     milliwattPerSquareMetre: {
       name: 'milliwattPerSquareMetre',
@@ -16217,8 +16201,8 @@ var sammUDefinition = {
         'soundIntensity',
         'radiantEnergy',
         'radiantExitance',
-        'soundIntensity',
-      ],
+        'soundIntensity'
+      ]
     },
     milliweber: {
       name: 'milliweber',
@@ -16229,7 +16213,7 @@ var sammUDefinition = {
         return sammUDefinition.units['weber'];
       },
       conversionFactor: '10⁻³ Wb',
-      quantityKinds: ['magneticFluxQuantum', 'magneticFlux', 'magneticFlux'],
+      quantityKinds: ['magneticFluxQuantum', 'magneticFlux', 'magneticFlux']
     },
     minuteUnitOfAngle: {
       name: 'minuteUnitOfAngle',
@@ -16240,7 +16224,7 @@ var sammUDefinition = {
         return sammUDefinition.units['rad'];
       },
       conversionFactor: '2.908882 × 10⁻⁴ rad',
-      quantityKinds: ['absorbedDose', 'anglePlane'],
+      quantityKinds: ['absorbedDose', 'anglePlane']
     },
     minuteUnitOfTime: {
       name: 'minuteUnitOfTime',
@@ -16262,8 +16246,8 @@ var sammUDefinition = {
         'time',
         'carrierLifeTime',
         'reactorTimeConstant',
-        'time',
-      ],
+        'time'
+      ]
     },
     mmscfPerDay: {
       name: 'mmscfPerDay',
@@ -16272,7 +16256,7 @@ var sammUDefinition = {
       code: '5E',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     moduleWidth: {
       name: 'moduleWidth',
@@ -16281,7 +16265,7 @@ var sammUDefinition = {
       code: 'H77',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     molPerCubicMetrePascal: {
       name: 'molPerCubicMetrePascal',
@@ -16290,7 +16274,7 @@ var sammUDefinition = {
       code: 'P52',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['density', 'massDensity', 'massConcentrationOfB', 'concentrationOfB', 'volumicMass', 'amountOfSubstance'],
+      quantityKinds: ['density', 'massDensity', 'massConcentrationOfB', 'concentrationOfB', 'volumicMass', 'amountOfSubstance']
     },
     molPerKilogramPascal: {
       name: 'molPerKilogramPascal',
@@ -16299,7 +16283,7 @@ var sammUDefinition = {
       code: 'P51',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['concentrationOfB', 'density', 'volumicMass', 'massDensity', 'amountOfSubstance', 'massConcentrationOfB'],
+      quantityKinds: ['concentrationOfB', 'density', 'volumicMass', 'massDensity', 'amountOfSubstance', 'massConcentrationOfB']
     },
     mole: {
       name: 'mole',
@@ -16308,7 +16292,7 @@ var sammUDefinition = {
       code: 'C34',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['amountOfSubstance'],
+      quantityKinds: ['amountOfSubstance']
     },
     molePerCubicDecimetre: {
       name: 'molePerCubicDecimetre',
@@ -16331,8 +16315,8 @@ var sammUDefinition = {
         'density',
         'massDensity',
         'volumicMass',
-        'amountOfSubstance',
-      ],
+        'amountOfSubstance'
+      ]
     },
     molePerCubicMetre: {
       name: 'molePerCubicMetre',
@@ -16341,7 +16325,7 @@ var sammUDefinition = {
       code: 'C36',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['concentrationOfB', 'massConcentrationOfB', 'density', 'massDensity', 'volumicMass', 'amountOfSubstance'],
+      quantityKinds: ['concentrationOfB', 'massConcentrationOfB', 'density', 'massDensity', 'volumicMass', 'amountOfSubstance']
     },
     molePerCubicMetreBar: {
       name: 'molePerCubicMetreBar',
@@ -16364,8 +16348,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'concentrationOfB',
-        'massDensity',
-      ],
+        'massDensity'
+      ]
     },
     molePerCubicMetreKelvin: {
       name: 'molePerCubicMetreKelvin',
@@ -16374,7 +16358,7 @@ var sammUDefinition = {
       code: 'L28',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massConcentrationOfB', 'amountOfSubstance', 'density', 'volumicMass', 'massDensity', 'concentrationOfB'],
+      quantityKinds: ['massConcentrationOfB', 'amountOfSubstance', 'density', 'volumicMass', 'massDensity', 'concentrationOfB']
     },
     molePerCubicMetreToThePowerSumOfStoichiometricNumbers: {
       name: 'molePerCubicMetreToThePowerSumOfStoichiometricNumbers',
@@ -16383,7 +16367,7 @@ var sammUDefinition = {
       code: 'P99',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     molePerHour: {
       name: 'molePerHour',
@@ -16394,15 +16378,7 @@ var sammUDefinition = {
         return sammUDefinition.units['molePerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ mol/s',
-      quantityKinds: [
-        'molarFlux',
-        'volumicMass',
-        'amountOfSubstance',
-        'massConcentrationOfB',
-        'density',
-        'concentrationOfB',
-        'massDensity',
-      ],
+      quantityKinds: ['molarFlux', 'volumicMass', 'amountOfSubstance', 'massConcentrationOfB', 'density', 'concentrationOfB', 'massDensity']
     },
     molePerKilogram: {
       name: 'molePerKilogram',
@@ -16411,7 +16387,7 @@ var sammUDefinition = {
       code: 'C19',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['molalityOfSoluteB'],
+      quantityKinds: ['molalityOfSoluteB']
     },
     molePerKilogramBar: {
       name: 'molePerKilogramBar',
@@ -16434,8 +16410,8 @@ var sammUDefinition = {
         'volumicMass',
         'massDensity',
         'amountOfSubstance',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     molePerKilogramKelvin: {
       name: 'molePerKilogramKelvin',
@@ -16444,7 +16420,7 @@ var sammUDefinition = {
       code: 'L24',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['density', 'massDensity', 'massConcentrationOfB', 'concentrationOfB', 'volumicMass', 'amountOfSubstance'],
+      quantityKinds: ['density', 'massDensity', 'massConcentrationOfB', 'concentrationOfB', 'volumicMass', 'amountOfSubstance']
     },
     molePerLitre: {
       name: 'molePerLitre',
@@ -16467,8 +16443,8 @@ var sammUDefinition = {
         'volumicMass',
         'massDensity',
         'massConcentrationOfB',
-        'concentrationOfB',
-      ],
+        'concentrationOfB'
+      ]
     },
     molePerLitreBar: {
       name: 'molePerLitreBar',
@@ -16491,8 +16467,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'concentrationOfB',
         'volumicMass',
-        'amountOfSubstance',
-      ],
+        'amountOfSubstance'
+      ]
     },
     molePerLitreKelvin: {
       name: 'molePerLitreKelvin',
@@ -16515,8 +16491,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'concentrationOfB',
         'volumicMass',
-        'density',
-      ],
+        'density'
+      ]
     },
     molePerMinute: {
       name: 'molePerMinute',
@@ -16527,15 +16503,7 @@ var sammUDefinition = {
         return sammUDefinition.units['molePerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻² mol/s',
-      quantityKinds: [
-        'volumicMass',
-        'amountOfSubstance',
-        'massConcentrationOfB',
-        'density',
-        'concentrationOfB',
-        'massDensity',
-        'molarFlux',
-      ],
+      quantityKinds: ['volumicMass', 'amountOfSubstance', 'massConcentrationOfB', 'density', 'concentrationOfB', 'massDensity', 'molarFlux']
     },
     molePerSecond: {
       name: 'molePerSecond',
@@ -16544,7 +16512,7 @@ var sammUDefinition = {
       code: 'E95',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'amountOfSubstance', 'massConcentrationOfB', 'density', 'concentrationOfB', 'massDensity'],
+      quantityKinds: ['volumicMass', 'amountOfSubstance', 'massConcentrationOfB', 'density', 'concentrationOfB', 'massDensity']
     },
     monetaryValue: {
       name: 'monetaryValue',
@@ -16553,7 +16521,7 @@ var sammUDefinition = {
       code: 'M4',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     month: {
       name: 'month',
@@ -16575,8 +16543,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     mutuallyDefined: {
       name: 'mutuallyDefined',
@@ -16585,7 +16553,7 @@ var sammUDefinition = {
       code: 'ZZ',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     nanoampere: {
       name: 'nanoampere',
@@ -16604,8 +16572,8 @@ var sammUDefinition = {
         'magneticPotentialDifference',
         'magnetomotiveForce',
         'currentLinkage',
-        'electricCurrent',
-      ],
+        'electricCurrent'
+      ]
     },
     nanocoulomb: {
       name: 'nanocoulomb',
@@ -16623,8 +16591,8 @@ var sammUDefinition = {
         'electricCharge',
         'electricCharge',
         'electricFluxFluxOfDisplacement',
-        'quantityOfElectricity',
-      ],
+        'quantityOfElectricity'
+      ]
     },
     nanofarad: {
       name: 'nanofarad',
@@ -16635,7 +16603,7 @@ var sammUDefinition = {
         return sammUDefinition.units['farad'];
       },
       conversionFactor: '10⁻⁹ F',
-      quantityKinds: ['capacitance', 'capacitance'],
+      quantityKinds: ['capacitance', 'capacitance']
     },
     nanofaradPerMetre: {
       name: 'nanofaradPerMetre',
@@ -16652,8 +16620,8 @@ var sammUDefinition = {
         'electricConstant',
         'electricConstant',
         'permittivity',
-        'permittivityOfVacuum',
-      ],
+        'permittivityOfVacuum'
+      ]
     },
     nanogramPerKilogram: {
       name: 'nanogramPerKilogram',
@@ -16662,7 +16630,7 @@ var sammUDefinition = {
       code: 'L32',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massRatio'],
+      quantityKinds: ['massRatio']
     },
     nanograyPerHour: {
       name: 'nanograyPerHour',
@@ -16673,7 +16641,7 @@ var sammUDefinition = {
         return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻¹³ Gy/s',
-      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate']
     },
     nanograyPerMinute: {
       name: 'nanograyPerMinute',
@@ -16684,7 +16652,7 @@ var sammUDefinition = {
         return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '1.66667 × 10⁻¹¹ Gy/s',
-      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate']
     },
     nanograyPerSecond: {
       name: 'nanograyPerSecond',
@@ -16695,7 +16663,7 @@ var sammUDefinition = {
         return sammUDefinition.units['grayPerSecond'];
       },
       conversionFactor: '10⁻⁹ Gy/s',
-      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate'],
+      quantityKinds: ['absorbedDoseRate', 'absorbedDoseRate']
     },
     nanohenry: {
       name: 'nanohenry',
@@ -16706,7 +16674,7 @@ var sammUDefinition = {
         return sammUDefinition.units['henry'];
       },
       conversionFactor: '10⁻⁹ H',
-      quantityKinds: ['selfInductance', 'mutualInductance', 'permeance', 'selfInductance', 'permeance', 'mutualInductance'],
+      quantityKinds: ['selfInductance', 'mutualInductance', 'permeance', 'selfInductance', 'permeance', 'mutualInductance']
     },
     nanohenryPerMetre: {
       name: 'nanohenryPerMetre',
@@ -16723,8 +16691,8 @@ var sammUDefinition = {
         'magneticConstant',
         'permeabilityOfVacuum',
         'permeability',
-        'magneticConstant',
-      ],
+        'magneticConstant'
+      ]
     },
     nanometre: {
       name: 'nanometre',
@@ -16781,8 +16749,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     nanoohm: {
       name: 'nanoohm',
@@ -16805,8 +16773,8 @@ var sammUDefinition = {
         'modulusOfImpedance',
         'complexImpedances',
         'reactance',
-        'resistanceToDirectCurrent',
-      ],
+        'resistanceToDirectCurrent'
+      ]
     },
     nanoohmMetre: {
       name: 'nanoohmMetre',
@@ -16815,7 +16783,7 @@ var sammUDefinition = {
       code: 'C46',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['resistivity'],
+      quantityKinds: ['resistivity']
     },
     nanosecond: {
       name: 'nanosecond',
@@ -16837,8 +16805,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     nanosiemensPerCentimetre: {
       name: 'nanosiemensPerCentimetre',
@@ -16849,7 +16817,7 @@ var sammUDefinition = {
         return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁻⁷ S/m',
-      quantityKinds: ['conductivity', 'electrolyticConductivity', 'conductivity'],
+      quantityKinds: ['conductivity', 'electrolyticConductivity', 'conductivity']
     },
     nanosiemensPerMetre: {
       name: 'nanosiemensPerMetre',
@@ -16860,7 +16828,7 @@ var sammUDefinition = {
         return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁻⁹ S/m',
-      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
+      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity']
     },
     nanosievertPerHour: {
       name: 'nanosievertPerHour',
@@ -16871,7 +16839,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '0.277777778 × 10⁻¹³ Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     nanosievertPerMinute: {
       name: 'nanosievertPerMinute',
@@ -16882,7 +16850,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '1.666666667 × 10⁻¹¹ Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     nanosievertPerSecond: {
       name: 'nanosievertPerSecond',
@@ -16893,7 +16861,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '10⁻⁹ Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     nanotesla: {
       name: 'nanotesla',
@@ -16913,8 +16881,8 @@ var sammUDefinition = {
         'upperCriticalMagneticFluxDensity',
         'magneticPolarization',
         'magneticInduction',
-        'magneticFluxDensity',
-      ],
+        'magneticFluxDensity'
+      ]
     },
     nanowatt: {
       name: 'nanowatt',
@@ -16934,8 +16902,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     naturalUnitOfInformation: {
       name: 'naturalUnitOfInformation',
@@ -16944,7 +16912,7 @@ var sammUDefinition = {
       code: 'Q16',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     naturalUnitOfInformationPerSecond: {
       name: 'naturalUnitOfInformationPerSecond',
@@ -16953,7 +16921,7 @@ var sammUDefinition = {
       code: 'Q19',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     nauticalMile: {
       name: 'nauticalMile',
@@ -17010,8 +16978,8 @@ var sammUDefinition = {
         'distance',
         'length',
         'radiusOfCurvature',
-        'height',
-      ],
+        'height'
+      ]
     },
     neper: {
       name: 'neper',
@@ -17020,7 +16988,7 @@ var sammUDefinition = {
       code: 'C50',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['logarithmicDecrement', 'levelOfAPowerQuantity', 'levelOfAFieldQuantity'],
+      quantityKinds: ['logarithmicDecrement', 'levelOfAPowerQuantity', 'levelOfAFieldQuantity']
     },
     neperPerSecond: {
       name: 'neperPerSecond',
@@ -17029,7 +16997,7 @@ var sammUDefinition = {
       code: 'C51',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['dampingCoefficient'],
+      quantityKinds: ['dampingCoefficient']
     },
     netKilogram: {
       name: 'netKilogram',
@@ -17038,7 +17006,7 @@ var sammUDefinition = {
       code: '58',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     netTon: {
       name: 'netTon',
@@ -17047,7 +17015,7 @@ var sammUDefinition = {
       code: 'NT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     newton: {
       name: 'newton',
@@ -17056,7 +17024,7 @@ var sammUDefinition = {
       code: 'NEW',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['weight', 'force'],
+      quantityKinds: ['weight', 'force']
     },
     newtonCentimetre: {
       name: 'newtonCentimetre',
@@ -17065,7 +17033,7 @@ var sammUDefinition = {
       code: 'F88',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     newtonMetre: {
       name: 'newtonMetre',
@@ -17074,7 +17042,7 @@ var sammUDefinition = {
       code: 'NU',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     newtonMetrePerAmpere: {
       name: 'newtonMetrePerAmpere',
@@ -17083,7 +17051,7 @@ var sammUDefinition = {
       code: 'F90',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     newtonMetrePerDegree: {
       name: 'newtonMetrePerDegree',
@@ -17092,7 +17060,7 @@ var sammUDefinition = {
       code: 'F89',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     newtonMetrePerKilogram: {
       name: 'newtonMetrePerKilogram',
@@ -17101,7 +17069,7 @@ var sammUDefinition = {
       code: 'G19',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     newtonMetrePerMetre: {
       name: 'newtonMetrePerMetre',
@@ -17110,7 +17078,7 @@ var sammUDefinition = {
       code: 'Q27',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     newtonMetrePerRadian: {
       name: 'newtonMetrePerRadian',
@@ -17119,7 +17087,7 @@ var sammUDefinition = {
       code: 'M93',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     newtonMetrePerSquareMetre: {
       name: 'newtonMetrePerSquareMetre',
@@ -17128,7 +17096,7 @@ var sammUDefinition = {
       code: 'M34',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torsionalStiffness', 'areaRelatedTorsionalMoment'],
+      quantityKinds: ['torsionalStiffness', 'areaRelatedTorsionalMoment']
     },
     newtonMetreSecond: {
       name: 'newtonMetreSecond',
@@ -17137,7 +17105,7 @@ var sammUDefinition = {
       code: 'C53',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['angularImpulse'],
+      quantityKinds: ['angularImpulse']
     },
     newtonMetreSquaredPerKilogramSquared: {
       name: 'newtonMetreSquaredPerKilogramSquared',
@@ -17146,7 +17114,7 @@ var sammUDefinition = {
       code: 'C54',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['gravitationalConstant'],
+      quantityKinds: ['gravitationalConstant']
     },
     newtonMetreWattToThePowerMinus0point5: {
       name: 'newtonMetreWattToThePowerMinus0point5',
@@ -17155,7 +17123,7 @@ var sammUDefinition = {
       code: 'H41',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     newtonPerAmpere: {
       name: 'newtonPerAmpere',
@@ -17164,7 +17132,7 @@ var sammUDefinition = {
       code: 'H40',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     newtonPerCentimetre: {
       name: 'newtonPerCentimetre',
@@ -17175,7 +17143,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonPerMetre'];
       },
       conversionFactor: '10² N/m',
-      quantityKinds: ['surfaceTension', 'surfaceTension'],
+      quantityKinds: ['surfaceTension', 'surfaceTension']
     },
     newtonPerMetre: {
       name: 'newtonPerMetre',
@@ -17184,7 +17152,7 @@ var sammUDefinition = {
       code: '4P',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['surfaceTension'],
+      quantityKinds: ['surfaceTension']
     },
     newtonPerMillimetre: {
       name: 'newtonPerMillimetre',
@@ -17193,7 +17161,7 @@ var sammUDefinition = {
       code: 'F47',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     newtonPerSquareCentimetre: {
       name: 'newtonPerSquareCentimetre',
@@ -17225,8 +17193,8 @@ var sammUDefinition = {
         'shearStress',
         'shearModulus',
         'normalStress',
-        'modulusOfCompression',
-      ],
+        'modulusOfCompression'
+      ]
     },
     newtonPerSquareMetre: {
       name: 'newtonPerSquareMetre',
@@ -17258,8 +17226,8 @@ var sammUDefinition = {
         'shearStress',
         'bulkModulus',
         'shearModulus',
-        'modulusOfCompression',
-      ],
+        'modulusOfCompression'
+      ]
     },
     newtonPerSquareMillimetre: {
       name: 'newtonPerSquareMillimetre',
@@ -17291,8 +17259,8 @@ var sammUDefinition = {
         'normalStress',
         'shearModulus',
         'modulusOfElasticity',
-        'pressure',
-      ],
+        'pressure'
+      ]
     },
     newtonSecond: {
       name: 'newtonSecond',
@@ -17301,7 +17269,7 @@ var sammUDefinition = {
       code: 'C57',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['impulse'],
+      quantityKinds: ['impulse']
     },
     newtonSecondPerMetre: {
       name: 'newtonSecondPerMetre',
@@ -17310,7 +17278,7 @@ var sammUDefinition = {
       code: 'C58',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['mechanicalImpedance'],
+      quantityKinds: ['mechanicalImpedance']
     },
     newtonSecondPerSquareMetre: {
       name: 'newtonSecondPerSquareMetre',
@@ -17321,7 +17289,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: 'Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     newtonSquareMetrePerAmpere: {
       name: 'newtonSquareMetrePerAmpere',
@@ -17330,7 +17298,7 @@ var sammUDefinition = {
       code: 'P49',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['magneticDipoleMoment'],
+      quantityKinds: ['magneticDipoleMoment']
     },
     nil: {
       name: 'nil',
@@ -17339,7 +17307,7 @@ var sammUDefinition = {
       code: 'NIL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     numberOfArticles: {
       name: 'numberOfArticles',
@@ -17348,7 +17316,7 @@ var sammUDefinition = {
       code: 'NAR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     numberOfCells: {
       name: 'numberOfCells',
@@ -17357,7 +17325,7 @@ var sammUDefinition = {
       code: 'NCL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     numberOfInternationalUnits: {
       name: 'numberOfInternationalUnits',
@@ -17366,7 +17334,7 @@ var sammUDefinition = {
       code: 'NIU',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     numberOfJewels: {
       name: 'numberOfJewels',
@@ -17375,7 +17343,7 @@ var sammUDefinition = {
       code: 'JWL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     numberOfPacks: {
       name: 'numberOfPacks',
@@ -17384,7 +17352,7 @@ var sammUDefinition = {
       code: 'NMP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     numberOfParts: {
       name: 'numberOfParts',
@@ -17393,7 +17361,7 @@ var sammUDefinition = {
       code: 'NPT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     numberOfWords: {
       name: 'numberOfWords',
@@ -17402,7 +17370,7 @@ var sammUDefinition = {
       code: 'D68',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     octave: {
       name: 'octave',
@@ -17411,7 +17379,7 @@ var sammUDefinition = {
       code: 'C59',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['frequencyInterval'],
+      quantityKinds: ['frequencyInterval']
     },
     octet: {
       name: 'octet',
@@ -17422,7 +17390,7 @@ var sammUDefinition = {
         return sammUDefinition.units['bit'];
       },
       conversionFactor: '8 bit',
-      quantityKinds: ['informationEntropy'],
+      quantityKinds: ['informationEntropy']
     },
     octetPerSecond: {
       name: 'octetPerSecond',
@@ -17433,7 +17401,7 @@ var sammUDefinition = {
         return sammUDefinition.units['bitPerSecond'];
       },
       conversionFactor: '8 bit/s',
-      quantityKinds: null,
+      quantityKinds: null
     },
     ohm: {
       name: 'ohm',
@@ -17448,8 +17416,8 @@ var sammUDefinition = {
         'resistanceToAlternatingCurrent',
         'complexImpedances',
         'impedance',
-        'resistanceToDirectCurrent',
-      ],
+        'resistanceToDirectCurrent'
+      ]
     },
     ohmCentimetre: {
       name: 'ohmCentimetre',
@@ -17460,7 +17428,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10⁻² Ω × m',
-      quantityKinds: ['resistivity', 'resistivity', 'residualResistivity'],
+      quantityKinds: ['resistivity', 'resistivity', 'residualResistivity']
     },
     ohmCircularMilPerFoot: {
       name: 'ohmCircularMilPerFoot',
@@ -17471,7 +17439,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '1.662426 × 10⁻⁹ Ω × m',
-      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity'],
+      quantityKinds: ['resistivity', 'residualResistivity', 'resistivity']
     },
     ohmKilometre: {
       name: 'ohmKilometre',
@@ -17482,7 +17450,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmMetre'];
       },
       conversionFactor: '10³ Ω × m',
-      quantityKinds: ['resistivity', 'resistivity', 'residualResistivity'],
+      quantityKinds: ['resistivity', 'resistivity', 'residualResistivity']
     },
     ohmMetre: {
       name: 'ohmMetre',
@@ -17491,7 +17459,7 @@ var sammUDefinition = {
       code: 'C61',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['resistivity', 'residualResistivity'],
+      quantityKinds: ['resistivity', 'residualResistivity']
     },
     ohmPerKilometre: {
       name: 'ohmPerKilometre',
@@ -17502,7 +17470,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '10⁻³ Ω/m',
-      quantityKinds: ['lineicResistance', 'lineicResistance'],
+      quantityKinds: ['lineicResistance', 'lineicResistance']
     },
     ohmPerMetre: {
       name: 'ohmPerMetre',
@@ -17511,7 +17479,7 @@ var sammUDefinition = {
       code: 'H26',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['lineicResistance'],
+      quantityKinds: ['lineicResistance']
     },
     ohmPerMileStatuteMile: {
       name: 'ohmPerMileStatuteMile',
@@ -17522,7 +17490,7 @@ var sammUDefinition = {
         return sammUDefinition.units['ohmPerMetre'];
       },
       conversionFactor: '6.21371 × 10⁻⁴  Ω/m',
-      quantityKinds: ['lineicResistance', 'lineicResistance'],
+      quantityKinds: ['lineicResistance', 'lineicResistance']
     },
     one: {
       name: 'one',
@@ -17677,8 +17645,8 @@ var sammUDefinition = {
         'packingFraction',
         'absoluteActivity',
         'mobilityRatio',
-        'averageLogarithmicEnergyDecrement',
-      ],
+        'averageLogarithmicEnergyDecrement'
+      ]
     },
     onePerOne: {
       name: 'onePerOne',
@@ -17687,7 +17655,7 @@ var sammUDefinition = {
       code: 'Q26',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     ounceAvoirdupois: {
       name: 'ounceAvoirdupois',
@@ -17698,7 +17666,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '2.834952 × 10⁻² kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     ounceAvoirdupoisForce: {
       name: 'ounceAvoirdupoisForce',
@@ -17709,7 +17677,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newton'];
       },
       conversionFactor: '0.2780139 N',
-      quantityKinds: ['weight', 'force', 'weight', 'force'],
+      quantityKinds: ['weight', 'force', 'weight', 'force']
     },
     ounceAvoirdupoisForceInch: {
       name: 'ounceAvoirdupoisForceInch',
@@ -17720,7 +17688,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '7.061552 × 10⁻³ N × m',
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'torque', 'momentOfForce', 'momentOfACouple']
     },
     ounceAvoirdupoisPerCubicInch: {
       name: 'ounceAvoirdupoisPerCubicInch',
@@ -17740,8 +17708,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'massDensity',
         'volumicMass',
-        'density',
-      ],
+        'density'
+      ]
     },
     ounceAvoirdupoisPerCubicYard: {
       name: 'ounceAvoirdupoisPerCubicYard',
@@ -17750,7 +17718,7 @@ var sammUDefinition = {
       code: 'G32',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     ounceAvoirdupoisPerDay: {
       name: 'ounceAvoirdupoisPerDay',
@@ -17761,7 +17729,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '3.281194 × 10⁻⁷kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     ounceAvoirdupoisPerGallonUk: {
       name: 'ounceAvoirdupoisPerGallonUk',
@@ -17781,8 +17749,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     ounceAvoirdupoisPerGallonUs: {
       name: 'ounceAvoirdupoisPerGallonUs',
@@ -17802,8 +17770,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'density',
         'volumicMass',
-        'massDensity',
-      ],
+        'massDensity'
+      ]
     },
     ounceAvoirdupoisPerHour: {
       name: 'ounceAvoirdupoisPerHour',
@@ -17814,7 +17782,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '7.874867 × 10⁻⁶ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     ounceAvoirdupoisPerMinute: {
       name: 'ounceAvoirdupoisPerMinute',
@@ -17825,7 +17793,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '4.72492 × 10⁻⁴ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     ounceAvoirdupoisPerSecond: {
       name: 'ounceAvoirdupoisPerSecond',
@@ -17836,7 +17804,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '2.834952 × 10⁻² kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     ounceAvoirdupoisPerSquareInch: {
       name: 'ounceAvoirdupoisPerSquareInch',
@@ -17858,8 +17826,8 @@ var sammUDefinition = {
         'modulusOfCompression',
         'modulusOfElasticity',
         'pressure',
-        'modulusOfRigidity',
-      ],
+        'modulusOfRigidity'
+      ]
     },
     ounceFoot: {
       name: 'ounceFoot',
@@ -17870,7 +17838,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramMetre'];
       },
       conversionFactor: '8.640934 × 10⁻³ kg × m',
-      quantityKinds: ['torque', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfForce', 'momentOfACouple']
     },
     ounceInch: {
       name: 'ounceInch',
@@ -17881,7 +17849,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramMetre'];
       },
       conversionFactor: '7.200778 × 10⁻⁴ kg × m',
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'momentOfACouple', 'torque'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'momentOfACouple', 'torque']
     },
     ouncePerSquareFoot: {
       name: 'ouncePerSquareFoot',
@@ -17892,7 +17860,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '0.3051517 kg/m²',
-      quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass'],
+      quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass']
     },
     ouncePerSquareFootPer0point01inch: {
       name: 'ouncePerSquareFootPer0point01inch',
@@ -17901,7 +17869,7 @@ var sammUDefinition = {
       code: '38',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     ouncePerSquareYard: {
       name: 'ouncePerSquareYard',
@@ -17912,7 +17880,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSquareMetre'];
       },
       conversionFactor: '3.390575 × 10⁻² kg/m²',
-      quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass'],
+      quantityKinds: ['surfaceDensity', 'areicMass', 'surfaceDensity', 'meanMassRange', 'areicMass']
     },
     ounceUkFluidPerDay: {
       name: 'ounceUkFluidPerDay',
@@ -17923,7 +17891,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.288549 × 10⁻¹⁰ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     ounceUkFluidPerHour: {
       name: 'ounceUkFluidPerHour',
@@ -17934,7 +17902,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '7.892517 × 10⁻⁹ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     ounceUkFluidPerMinute: {
       name: 'ounceUkFluidPerMinute',
@@ -17945,7 +17913,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.73551 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     ounceUkFluidPerSecond: {
       name: 'ounceUkFluidPerSecond',
@@ -17956,7 +17924,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.841306 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     ounceUsFluidPerDay: {
       name: 'ounceUsFluidPerDay',
@@ -17967,7 +17935,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.422862 × 10⁻¹⁰ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     ounceUsFluidPerHour: {
       name: 'ounceUsFluidPerHour',
@@ -17978,7 +17946,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '8.214869 × 10⁻⁹ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     ounceUsFluidPerMinute: {
       name: 'ounceUsFluidPerMinute',
@@ -17989,7 +17957,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.928922 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     ounceUsFluidPerSecond: {
       name: 'ounceUsFluidPerSecond',
@@ -18000,7 +17968,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.957353 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     outfit: {
       name: 'outfit',
@@ -18009,7 +17977,7 @@ var sammUDefinition = {
       code: '11',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     overtimeHour: {
       name: 'overtimeHour',
@@ -18018,7 +17986,7 @@ var sammUDefinition = {
       code: 'OT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     ozoneDepletionEquivalent: {
       name: 'ozoneDepletionEquivalent',
@@ -18027,7 +17995,7 @@ var sammUDefinition = {
       code: 'ODE',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pad: {
       name: 'pad',
@@ -18036,7 +18004,7 @@ var sammUDefinition = {
       code: 'PD',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     page: {
       name: 'page',
@@ -18045,7 +18013,7 @@ var sammUDefinition = {
       code: 'ZP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pageFacsimile: {
       name: 'pageFacsimile',
@@ -18054,7 +18022,7 @@ var sammUDefinition = {
       code: 'QA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pageHardcopy: {
       name: 'pageHardcopy',
@@ -18063,7 +18031,7 @@ var sammUDefinition = {
       code: 'QB',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pagePerInch: {
       name: 'pagePerInch',
@@ -18072,7 +18040,7 @@ var sammUDefinition = {
       code: 'PQ',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pair: {
       name: 'pair',
@@ -18081,7 +18049,7 @@ var sammUDefinition = {
       code: 'PR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     panel: {
       name: 'panel',
@@ -18090,7 +18058,7 @@ var sammUDefinition = {
       code: 'OA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     parsec: {
       name: 'parsec',
@@ -18147,8 +18115,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     partPerBillionUs: {
       name: 'partPerBillionUs',
@@ -18157,7 +18125,7 @@ var sammUDefinition = {
       code: '61',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     partPerHundredThousand: {
       name: 'partPerHundredThousand',
@@ -18166,7 +18134,7 @@ var sammUDefinition = {
       code: 'E40',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     partPerMillion: {
       name: 'partPerMillion',
@@ -18175,7 +18143,7 @@ var sammUDefinition = {
       code: '59',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     partPerQuadrillionUs: {
       name: 'partPerQuadrillionUs',
@@ -18184,7 +18152,7 @@ var sammUDefinition = {
       code: null,
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     partPerThousand: {
       name: 'partPerThousand',
@@ -18193,7 +18161,7 @@ var sammUDefinition = {
       code: 'NX',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     partPerTrillionUs: {
       name: 'partPerTrillionUs',
@@ -18202,7 +18170,7 @@ var sammUDefinition = {
       code: null,
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pascal: {
       name: 'pascal',
@@ -18224,8 +18192,8 @@ var sammUDefinition = {
         'partialPressureOfBInAGaseousMixture',
         'staticPressure',
         'modulusOfElasticity',
-        'instantaneousSoundPressure',
-      ],
+        'instantaneousSoundPressure'
+      ]
     },
     pascalCubicMetrePerSecond: {
       name: 'pascalCubicMetrePerSecond',
@@ -18242,8 +18210,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'modulusOfRigidity',
         'shearStress',
-        'normalStress',
-      ],
+        'normalStress'
+      ]
     },
     pascalLitrePerSecond: {
       name: 'pascalLitrePerSecond',
@@ -18260,8 +18228,8 @@ var sammUDefinition = {
         'shearModulus',
         'modulusOfCompression',
         'shearStress',
-        'bulkModulus',
-      ],
+        'bulkModulus'
+      ]
     },
     pascalPerBar: {
       name: 'pascalPerBar',
@@ -18270,7 +18238,7 @@ var sammUDefinition = {
       code: 'F07',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['pressureRatio'],
+      quantityKinds: ['pressureRatio']
     },
     pascalPerKelvin: {
       name: 'pascalPerKelvin',
@@ -18279,7 +18247,7 @@ var sammUDefinition = {
       code: 'C64',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['pressureCoefficient'],
+      quantityKinds: ['pressureCoefficient']
     },
     pascalPerMetre: {
       name: 'pascalPerMetre',
@@ -18288,7 +18256,7 @@ var sammUDefinition = {
       code: 'H42',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['hardnessIndex'],
+      quantityKinds: ['hardnessIndex']
     },
     pascalSecond: {
       name: 'pascalSecond',
@@ -18297,7 +18265,7 @@ var sammUDefinition = {
       code: 'C65',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity']
     },
     pascalSecondPerBar: {
       name: 'pascalSecondPerBar',
@@ -18326,8 +18294,8 @@ var sammUDefinition = {
         'normalStress',
         'shearStress',
         'pressure',
-        'shearModulus',
-      ],
+        'shearModulus'
+      ]
     },
     pascalSecondPerCubicMetre: {
       name: 'pascalSecondPerCubicMetre',
@@ -18336,7 +18304,7 @@ var sammUDefinition = {
       code: 'C66',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['acousticImpedance'],
+      quantityKinds: ['acousticImpedance']
     },
     pascalSecondPerKelvin: {
       name: 'pascalSecondPerKelvin',
@@ -18353,8 +18321,8 @@ var sammUDefinition = {
         'modulusOfCompression',
         'normalStress',
         'modulusOfElasticity',
-        'pressure',
-      ],
+        'pressure'
+      ]
     },
     pascalSecondPerLitre: {
       name: 'pascalSecondPerLitre',
@@ -18365,7 +18333,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecondPerCubicMetre'];
       },
       conversionFactor: '10³ Pa × s/m³',
-      quantityKinds: ['acousticImpedance', 'acousticImpedance'],
+      quantityKinds: ['acousticImpedance', 'acousticImpedance']
     },
     pascalSecondPerMetre: {
       name: 'pascalSecondPerMetre',
@@ -18374,7 +18342,7 @@ var sammUDefinition = {
       code: 'C67',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['characteristicImpedanceOfAMedium'],
+      quantityKinds: ['characteristicImpedanceOfAMedium']
     },
     pascalSquareMetrePerKilogram: {
       name: 'pascalSquareMetrePerKilogram',
@@ -18390,8 +18358,8 @@ var sammUDefinition = {
         'accelerationDueToGravity',
         'accelerationOfFreeFall',
         'instantaneousSoundParticleAcceleration',
-        'acceleration',
-      ],
+        'acceleration'
+      ]
     },
     pascalSquaredSecond: {
       name: 'pascalSquaredSecond',
@@ -18400,7 +18368,7 @@ var sammUDefinition = {
       code: 'P42',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['soundExposure'],
+      quantityKinds: ['soundExposure']
     },
     pascalToThePowerSumOfStoichiometricNumbers: {
       name: 'pascalToThePowerSumOfStoichiometricNumbers',
@@ -18409,7 +18377,7 @@ var sammUDefinition = {
       code: 'P98',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pebibitPerCubicMetre: {
       name: 'pebibitPerCubicMetre',
@@ -18418,7 +18386,7 @@ var sammUDefinition = {
       code: 'E82',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pebibitPerMetre: {
       name: 'pebibitPerMetre',
@@ -18427,7 +18395,7 @@ var sammUDefinition = {
       code: 'E80',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pebibitPerSquareMetre: {
       name: 'pebibitPerSquareMetre',
@@ -18436,7 +18404,7 @@ var sammUDefinition = {
       code: 'E81',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pebibyte: {
       name: 'pebibyte',
@@ -18447,7 +18415,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '2⁵⁰ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     peck: {
       name: 'peck',
@@ -18458,7 +18426,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '8.809768 × 10⁻³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     peckUk: {
       name: 'peckUk',
@@ -18469,7 +18437,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '9.092181 × 10⁻³ m³',
-      quantityKinds: ['volume', 'sectionModulus', 'volume'],
+      quantityKinds: ['volume', 'sectionModulus', 'volume']
     },
     peckUkPerDay: {
       name: 'peckUkPerDay',
@@ -18480,7 +18448,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.052336 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     peckUkPerHour: {
       name: 'peckUkPerHour',
@@ -18491,7 +18459,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.525606 × 10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     peckUkPerMinute: {
       name: 'peckUkPerMinute',
@@ -18502,7 +18470,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.5153635 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     peckUkPerSecond: {
       name: 'peckUkPerSecond',
@@ -18513,7 +18481,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '9.092181 × 10⁻³ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     peckUsDryPerDay: {
       name: 'peckUsDryPerDay',
@@ -18524,7 +18492,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.019649 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     peckUsDryPerHour: {
       name: 'peckUsDryPerHour',
@@ -18535,7 +18503,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.447158 × 10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     peckUsDryPerMinute: {
       name: 'peckUsDryPerMinute',
@@ -18546,7 +18514,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.468295 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     peckUsDryPerSecond: {
       name: 'peckUsDryPerSecond',
@@ -18557,7 +18525,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '8.809768 × 10⁻³ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     penCalorie: {
       name: 'penCalorie',
@@ -18566,7 +18534,7 @@ var sammUDefinition = {
       code: 'N1',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     penGramProtein: {
       name: 'penGramProtein',
@@ -18575,7 +18543,7 @@ var sammUDefinition = {
       code: 'D23',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pennyweight: {
       name: 'pennyweight',
@@ -18586,7 +18554,7 @@ var sammUDefinition = {
         return sammUDefinition.units['gram'];
       },
       conversionFactor: '1.555174 g',
-      quantityKinds: ['mass'],
+      quantityKinds: ['mass']
     },
     perMillePerPsi: {
       name: 'perMillePerPsi',
@@ -18597,7 +18565,7 @@ var sammUDefinition = {
         return sammUDefinition.units['reciprocalPascalOrPascalToThePowerMinusOne'];
       },
       conversionFactor: '1.450377 × 10⁻⁷ Pa⁻¹',
-      quantityKinds: ['isothermalCompressibility', 'compressibility', 'bulkCompressibility', 'isentropicCompressibility'],
+      quantityKinds: ['isothermalCompressibility', 'compressibility', 'bulkCompressibility', 'isentropicCompressibility']
     },
     percent: {
       name: 'percent',
@@ -18606,7 +18574,7 @@ var sammUDefinition = {
       code: 'P1',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['dimensionless'],
+      quantityKinds: ['dimensionless']
     },
     percentPerBar: {
       name: 'percentPerBar',
@@ -18617,7 +18585,7 @@ var sammUDefinition = {
         return sammUDefinition.units['reciprocalPascalOrPascalToThePowerMinusOne'];
       },
       conversionFactor: '10⁻⁷ Pa⁻¹',
-      quantityKinds: ['isothermalCompressibility', 'compressibility', 'bulkCompressibility', 'isentropicCompressibility'],
+      quantityKinds: ['isothermalCompressibility', 'compressibility', 'bulkCompressibility', 'isentropicCompressibility']
     },
     percentPerDecakelvin: {
       name: 'percentPerDecakelvin',
@@ -18628,7 +18596,7 @@ var sammUDefinition = {
         return sammUDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
       },
       conversionFactor: '10⁻³ K⁻¹',
-      quantityKinds: ['relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient'],
+      quantityKinds: ['relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient']
     },
     percentPerDegree: {
       name: 'percentPerDegree',
@@ -18637,7 +18605,7 @@ var sammUDefinition = {
       code: 'H90',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     percentPerDegreeCelsius: {
       name: 'percentPerDegreeCelsius',
@@ -18646,7 +18614,7 @@ var sammUDefinition = {
       code: 'M25',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     percentPerHectobar: {
       name: 'percentPerHectobar',
@@ -18655,7 +18623,7 @@ var sammUDefinition = {
       code: 'H72',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     percentPerHundred: {
       name: 'percentPerHundred',
@@ -18664,7 +18632,7 @@ var sammUDefinition = {
       code: 'H93',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     percentPerInch: {
       name: 'percentPerInch',
@@ -18698,8 +18666,8 @@ var sammUDefinition = {
         'angularRepetency',
         'volumicTotalCrossSection',
         'macroscopicCrossSection',
-        'linearAbsorptionCoefficient',
-      ],
+        'linearAbsorptionCoefficient'
+      ]
     },
     percentPerKelvin: {
       name: 'percentPerKelvin',
@@ -18710,7 +18678,7 @@ var sammUDefinition = {
         return sammUDefinition.units['reciprocalKelvinOrKelvinToThePowerMinusOne'];
       },
       conversionFactor: '10⁻² K⁻¹',
-      quantityKinds: ['relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient'],
+      quantityKinds: ['relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient']
     },
     percentPerMetre: {
       name: 'percentPerMetre',
@@ -18744,8 +18712,8 @@ var sammUDefinition = {
         'angularRepetency',
         'volumicTotalCrossSection',
         'macroscopicCrossSection',
-        'linearAbsorptionCoefficient',
-      ],
+        'linearAbsorptionCoefficient'
+      ]
     },
     percentPerMillimetre: {
       name: 'percentPerMillimetre',
@@ -18779,8 +18747,8 @@ var sammUDefinition = {
         'angularRepetency',
         'volumicTotalCrossSection',
         'macroscopicCrossSection',
-        'linearAbsorptionCoefficient',
-      ],
+        'linearAbsorptionCoefficient'
+      ]
     },
     percentPerMonth: {
       name: 'percentPerMonth',
@@ -18789,7 +18757,7 @@ var sammUDefinition = {
       code: 'H71',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     percentPerOhm: {
       name: 'percentPerOhm',
@@ -18798,7 +18766,7 @@ var sammUDefinition = {
       code: 'H89',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     percentPerOneHundredThousand: {
       name: 'percentPerOneHundredThousand',
@@ -18807,7 +18775,7 @@ var sammUDefinition = {
       code: 'H92',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     percentPerTenThousand: {
       name: 'percentPerTenThousand',
@@ -18816,7 +18784,7 @@ var sammUDefinition = {
       code: 'H91',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     percentPerThousand: {
       name: 'percentPerThousand',
@@ -18825,7 +18793,7 @@ var sammUDefinition = {
       code: 'H94',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     percentPerVolt: {
       name: 'percentPerVolt',
@@ -18834,7 +18802,7 @@ var sammUDefinition = {
       code: 'H95',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     percentVolume: {
       name: 'percentVolume',
@@ -18843,7 +18811,7 @@ var sammUDefinition = {
       code: 'VP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     percentWeight: {
       name: 'percentWeight',
@@ -18852,7 +18820,7 @@ var sammUDefinition = {
       code: '60',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     perm0Degreesc: {
       name: 'perm0Degreesc',
@@ -18863,7 +18831,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSquareMetrePascalSecond'];
       },
       conversionFactor: '5.72135 × 10⁻¹¹ kg/(m² × Pa × s)',
-      quantityKinds: null,
+      quantityKinds: null
     },
     perm23Degreesc: {
       name: 'perm23Degreesc',
@@ -18874,7 +18842,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSquareMetrePascalSecond'];
       },
       conversionFactor: '5.74525 × 10⁻¹¹ kg/(m² × Pa × s)',
-      quantityKinds: null,
+      quantityKinds: null
     },
     person: {
       name: 'person',
@@ -18883,7 +18851,7 @@ var sammUDefinition = {
       code: 'IE',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     petabit: {
       name: 'petabit',
@@ -18892,7 +18860,7 @@ var sammUDefinition = {
       code: 'E78',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     petabitPerSecond: {
       name: 'petabitPerSecond',
@@ -18901,7 +18869,7 @@ var sammUDefinition = {
       code: 'E79',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     petabyte: {
       name: 'petabyte',
@@ -18912,7 +18880,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '10¹⁵ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     petajoule: {
       name: 'petajoule',
@@ -18946,8 +18914,8 @@ var sammUDefinition = {
         'energy',
         'kineticEnergy',
         'work',
-        'potentialEnergy',
-      ],
+        'potentialEnergy'
+      ]
     },
     pferdestaerke: {
       name: 'pferdestaerke',
@@ -18966,8 +18934,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     pfund: {
       name: 'pfund',
@@ -18978,7 +18946,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '0.5 kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     phon: {
       name: 'phon',
@@ -18987,7 +18955,7 @@ var sammUDefinition = {
       code: 'C69',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['loudnessLevel'],
+      quantityKinds: ['loudnessLevel']
     },
     phot: {
       name: 'phot',
@@ -18996,7 +18964,7 @@ var sammUDefinition = {
       code: 'P26',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['illuminance'],
+      quantityKinds: ['illuminance']
     },
     pica: {
       name: 'pica',
@@ -19043,8 +19011,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     picoampere: {
       name: 'picoampere',
@@ -19063,8 +19031,8 @@ var sammUDefinition = {
         'magneticPotentialDifference',
         'magnetomotiveForce',
         'currentLinkage',
-        'electricCurrent',
-      ],
+        'electricCurrent'
+      ]
     },
     picocoulomb: {
       name: 'picocoulomb',
@@ -19082,8 +19050,8 @@ var sammUDefinition = {
         'electricCharge',
         'quantityOfElectricity',
         'electricCharge',
-        'electricFluxFluxOfDisplacement',
-      ],
+        'electricFluxFluxOfDisplacement'
+      ]
     },
     picofarad: {
       name: 'picofarad',
@@ -19094,7 +19062,7 @@ var sammUDefinition = {
         return sammUDefinition.units['farad'];
       },
       conversionFactor: '10⁻¹² F',
-      quantityKinds: ['capacitance', 'capacitance'],
+      quantityKinds: ['capacitance', 'capacitance']
     },
     picofaradPerMetre: {
       name: 'picofaradPerMetre',
@@ -19111,8 +19079,8 @@ var sammUDefinition = {
         'electricConstant',
         'permittivityOfVacuum',
         'permittivity',
-        'electricConstant',
-      ],
+        'electricConstant'
+      ]
     },
     picohenry: {
       name: 'picohenry',
@@ -19123,7 +19091,7 @@ var sammUDefinition = {
         return sammUDefinition.units['henry'];
       },
       conversionFactor: '10⁻¹² H',
-      quantityKinds: ['selfInductance', 'permeance', 'mutualInductance', 'permeance', 'mutualInductance', 'selfInductance'],
+      quantityKinds: ['selfInductance', 'permeance', 'mutualInductance', 'permeance', 'mutualInductance', 'selfInductance']
     },
     picometre: {
       name: 'picometre',
@@ -19180,8 +19148,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     picopascalPerKilometre: {
       name: 'picopascalPerKilometre',
@@ -19190,7 +19158,7 @@ var sammUDefinition = {
       code: 'H69',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['hardnessIndex'],
+      quantityKinds: ['hardnessIndex']
     },
     picosecond: {
       name: 'picosecond',
@@ -19212,8 +19180,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     picosiemens: {
       name: 'picosiemens',
@@ -19234,8 +19202,8 @@ var sammUDefinition = {
         'conductanceForAlternatingCurrent',
         'conductanceForDirectCurrent',
         'modulusOfAdmittance',
-        'admittance',
-      ],
+        'admittance'
+      ]
     },
     picosiemensPerMetre: {
       name: 'picosiemensPerMetre',
@@ -19246,7 +19214,7 @@ var sammUDefinition = {
         return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10⁻¹² S/m',
-      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
+      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity']
     },
     picovolt: {
       name: 'picovolt',
@@ -19269,8 +19237,8 @@ var sammUDefinition = {
         'electromotiveForce',
         'potentialDifference',
         'tension',
-        'voltage',
-      ],
+        'voltage'
+      ]
     },
     picowatt: {
       name: 'picowatt',
@@ -19290,8 +19258,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     picowattPerSquareMetre: {
       name: 'picowattPerSquareMetre',
@@ -19313,8 +19281,8 @@ var sammUDefinition = {
         'soundIntensity',
         'radiantEnergy',
         'radiantExitance',
-        'soundIntensity',
-      ],
+        'soundIntensity'
+      ]
     },
     piece: {
       name: 'piece',
@@ -19323,7 +19291,7 @@ var sammUDefinition = {
       code: 'H87',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     ping: {
       name: 'ping',
@@ -19342,8 +19310,8 @@ var sammUDefinition = {
         'equivalentAbsorptionAreaOfASurfaceOrObject',
         'atomicAttenuationCoefficient',
         'area',
-        'crossSection',
-      ],
+        'crossSection'
+      ]
     },
     pintUk: {
       name: 'pintUk',
@@ -19354,7 +19322,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '5. 68261 × 10⁻⁴ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     pintUkPerDay: {
       name: 'pintUkPerDay',
@@ -19365,7 +19333,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '6.577098 × 10⁻⁹ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     pintUkPerHour: {
       name: 'pintUkPerHour',
@@ -19376,7 +19344,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.578504 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     pintUkPerMinute: {
       name: 'pintUkPerMinute',
@@ -19387,7 +19355,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '9.471022 × 10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     pintUkPerSecond: {
       name: 'pintUkPerSecond',
@@ -19398,7 +19366,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '5.682613 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     pintUsLiquidPerDay: {
       name: 'pintUsLiquidPerDay',
@@ -19409,7 +19377,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '5.476580 × 10⁻⁹ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     pintUsLiquidPerHour: {
       name: 'pintUsLiquidPerHour',
@@ -19420,7 +19388,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.314379 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     pintUsLiquidPerMinute: {
       name: 'pintUsLiquidPerMinute',
@@ -19431,7 +19399,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '7.886275 × 10⁻⁶ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     pintUsLiquidPerSecond: {
       name: 'pintUsLiquidPerSecond',
@@ -19442,7 +19410,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '4.731765 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     pipelineJoint: {
       name: 'pipelineJoint',
@@ -19451,7 +19419,7 @@ var sammUDefinition = {
       code: 'JNT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pitch: {
       name: 'pitch',
@@ -19460,7 +19428,7 @@ var sammUDefinition = {
       code: 'PI',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     pixel: {
       name: 'pixel',
@@ -19469,7 +19437,7 @@ var sammUDefinition = {
       code: 'E37',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     poise: {
       name: 'poise',
@@ -19480,7 +19448,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '0.1 Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     poisePerBar: {
       name: 'poisePerBar',
@@ -19502,8 +19470,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     poisePerKelvin: {
       name: 'poisePerKelvin',
@@ -19512,7 +19480,7 @@ var sammUDefinition = {
       code: 'F86',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity']
     },
     poisePerPascal: {
       name: 'poisePerPascal',
@@ -19534,8 +19502,8 @@ var sammUDefinition = {
         'time',
         'carrierLifeTime',
         'reactorTimeConstant',
-        'viscosityDynamicViscosity',
-      ],
+        'viscosityDynamicViscosity'
+      ]
     },
     pond: {
       name: 'pond',
@@ -19546,7 +19514,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newton'];
       },
       conversionFactor: '9.80665 × 10⁻³ N',
-      quantityKinds: ['force', 'weight', 'weight', 'force'],
+      quantityKinds: ['force', 'weight', 'weight', 'force']
     },
     pound: {
       name: 'pound',
@@ -19557,7 +19525,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '0.45359237 kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     poundAvoirdupoisPerCubicFootDegreeFahrenheit: {
       name: 'poundAvoirdupoisPerCubicFootDegreeFahrenheit',
@@ -19566,7 +19534,7 @@ var sammUDefinition = {
       code: 'K69',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     poundAvoirdupoisPerCubicFootPsi: {
       name: 'poundAvoirdupoisPerCubicFootPsi',
@@ -19575,7 +19543,7 @@ var sammUDefinition = {
       code: 'K70',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     poundAvoirdupoisPerCubicInchDegreeFahrenheit: {
       name: 'poundAvoirdupoisPerCubicInchDegreeFahrenheit',
@@ -19584,7 +19552,7 @@ var sammUDefinition = {
       code: 'K75',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     poundAvoirdupoisPerCubicInchPsi: {
       name: 'poundAvoirdupoisPerCubicInchPsi',
@@ -19595,7 +19563,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerCubicMetrePascal'];
       },
       conversionFactor: '4.014632 (kg/m³)/Pa',
-      quantityKinds: ['volumicMass', 'massDensity', 'density', 'massDensity', 'volumicMass', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density', 'massDensity', 'volumicMass', 'density']
     },
     poundAvoirdupoisPerDay: {
       name: 'poundAvoirdupoisPerDay',
@@ -19606,7 +19574,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '5.249912 × 10⁻⁶ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     poundAvoirdupoisPerDegreeFahrenheit: {
       name: 'poundAvoirdupoisPerDegreeFahrenheit',
@@ -19617,7 +19585,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerKelvin'];
       },
       conversionFactor: '0.8164663 kg/K',
-      quantityKinds: ['mass', 'volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['mass', 'volumicMass', 'massDensity', 'density']
     },
     poundAvoirdupoisPerGallonUk: {
       name: 'poundAvoirdupoisPerGallonUk',
@@ -19637,8 +19605,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'volumicMass',
         'massDensity',
-        'density',
-      ],
+        'density'
+      ]
     },
     poundAvoirdupoisPerHourDegreeFahrenheit: {
       name: 'poundAvoirdupoisPerHourDegreeFahrenheit',
@@ -19647,7 +19615,7 @@ var sammUDefinition = {
       code: 'K73',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     poundAvoirdupoisPerHourPsi: {
       name: 'poundAvoirdupoisPerHourPsi',
@@ -19658,7 +19626,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '1.827445 × 10⁻⁸ (kg/s)/Pa',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     poundAvoirdupoisPerMinute: {
       name: 'poundAvoirdupoisPerMinute',
@@ -19669,7 +19637,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '7.559873 × 10⁻³ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     poundAvoirdupoisPerMinuteDegreeFahrenheit: {
       name: 'poundAvoirdupoisPerMinuteDegreeFahrenheit',
@@ -19678,7 +19646,7 @@ var sammUDefinition = {
       code: 'K79',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     poundAvoirdupoisPerMinutePsi: {
       name: 'poundAvoirdupoisPerMinutePsi',
@@ -19689,7 +19657,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '1.096467 × 10⁻⁶ (kg/s)/Pa',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     poundAvoirdupoisPerPsi: {
       name: 'poundAvoirdupoisPerPsi',
@@ -19700,7 +19668,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerPascal'];
       },
       conversionFactor: '6.578802 × 10⁻⁵ kg/Pa',
-      quantityKinds: ['volumicMass', 'massDensity', 'density', 'volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density', 'volumicMass', 'massDensity', 'density']
     },
     poundAvoirdupoisPerSecond: {
       name: 'poundAvoirdupoisPerSecond',
@@ -19711,7 +19679,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '0.4535924 kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     poundAvoirdupoisPerSecondDegreeFahrenheit: {
       name: 'poundAvoirdupoisPerSecondDegreeFahrenheit',
@@ -19720,7 +19688,7 @@ var sammUDefinition = {
       code: 'K82',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     poundAvoirdupoisPerSecondPsi: {
       name: 'poundAvoirdupoisPerSecondPsi',
@@ -19731,7 +19699,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '6.578802 × 10⁻⁵ (kg/s)/Pa',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     poundAvoirdupoisSquareFoot: {
       name: 'poundAvoirdupoisSquareFoot',
@@ -19742,7 +19710,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramMetreSquared'];
       },
       conversionFactor: '4.214011 × 10⁻² kg × m²',
-      quantityKinds: ['momentOfInertiaDynamicMomentOfInertia', 'momentOfInertiaDynamicMomentOfInertia'],
+      quantityKinds: ['momentOfInertiaDynamicMomentOfInertia', 'momentOfInertiaDynamicMomentOfInertia']
     },
     poundFootPerSecond: {
       name: 'poundFootPerSecond',
@@ -19753,7 +19721,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramMetrePerSecond'];
       },
       conversionFactor: '1.382550 × 10⁻¹ kg × m/s',
-      quantityKinds: ['momentum', 'momentum'],
+      quantityKinds: ['momentum', 'momentum']
     },
     poundForce: {
       name: 'poundForce',
@@ -19764,7 +19732,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newton'];
       },
       conversionFactor: '4.448222 N',
-      quantityKinds: ['weight', 'force', 'weight', 'force'],
+      quantityKinds: ['weight', 'force', 'weight', 'force']
     },
     poundForceFoot: {
       name: 'poundForceFoot',
@@ -19775,7 +19743,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '1.355818 N × m',
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfACouple']
     },
     poundForceFootPerAmpere: {
       name: 'poundForceFootPerAmpere',
@@ -19784,7 +19752,7 @@ var sammUDefinition = {
       code: 'F22',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     poundForceFootPerInch: {
       name: 'poundForceFootPerInch',
@@ -19793,7 +19761,7 @@ var sammUDefinition = {
       code: 'P89',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     poundForceFootPerPound: {
       name: 'poundForceFootPerPound',
@@ -19802,7 +19770,7 @@ var sammUDefinition = {
       code: 'G20',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['workPerUnitWeight', 'momentOfForce', 'torque', 'momentOfACouple'],
+      quantityKinds: ['workPerUnitWeight', 'momentOfForce', 'torque', 'momentOfACouple']
     },
     poundForceInch: {
       name: 'poundForceInch',
@@ -19811,7 +19779,7 @@ var sammUDefinition = {
       code: 'F21',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     poundForceInchPerInch: {
       name: 'poundForceInchPerInch',
@@ -19820,7 +19788,7 @@ var sammUDefinition = {
       code: 'P90',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     poundForcePerFoot: {
       name: 'poundForcePerFoot',
@@ -19829,7 +19797,7 @@ var sammUDefinition = {
       code: 'F17',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['forceDividedByLength'],
+      quantityKinds: ['forceDividedByLength']
     },
     poundForcePerInch: {
       name: 'poundForcePerInch',
@@ -19838,7 +19806,7 @@ var sammUDefinition = {
       code: 'F48',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['forceDividedByLength'],
+      quantityKinds: ['forceDividedByLength']
     },
     poundForcePerSquareFoot: {
       name: 'poundForcePerSquareFoot',
@@ -19870,8 +19838,8 @@ var sammUDefinition = {
         'normalStress',
         'pressure',
         'modulusOfCompression',
-        'shearStress',
-      ],
+        'shearStress'
+      ]
     },
     poundForcePerSquareInch: {
       name: 'poundForcePerSquareInch',
@@ -19903,8 +19871,8 @@ var sammUDefinition = {
         'shearStress',
         'normalStress',
         'modulusOfElasticity',
-        'shearModulus',
-      ],
+        'shearModulus'
+      ]
     },
     poundForcePerSquareInchDegreeFahrenheit: {
       name: 'poundForcePerSquareInchDegreeFahrenheit',
@@ -19924,8 +19892,8 @@ var sammUDefinition = {
         'modulusOfCompression',
         'pressure',
         'shearStress',
-        'modulusOfElasticity',
-      ],
+        'modulusOfElasticity'
+      ]
     },
     poundForcePerYard: {
       name: 'poundForcePerYard',
@@ -19936,7 +19904,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonPerMetre'];
       },
       conversionFactor: '4.864635 N/m',
-      quantityKinds: ['surfaceTension', 'surfaceTension'],
+      quantityKinds: ['surfaceTension', 'surfaceTension']
     },
     poundForceSecondPerSquareFoot: {
       name: 'poundForceSecondPerSquareFoot',
@@ -19947,7 +19915,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '47.88026 Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     poundForceSecondPerSquareInch: {
       name: 'poundForceSecondPerSquareInch',
@@ -19958,7 +19926,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '6.894757 × 10³ Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     poundInchPerSecond: {
       name: 'poundInchPerSecond',
@@ -19969,7 +19937,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramMetrePerSecond'];
       },
       conversionFactor: '1.152125 × 10⁻² kg × m/s',
-      quantityKinds: ['momentum', 'momentum'],
+      quantityKinds: ['momentum', 'momentum']
     },
     poundInchSquared: {
       name: 'poundInchSquared',
@@ -19980,7 +19948,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramMetreSquared'];
       },
       conversionFactor: '2.926397 × 10⁻⁴ kg × m²',
-      quantityKinds: ['momentOfInertiaDynamicMomentOfInertia', 'momentOfInertiaDynamicMomentOfInertia'],
+      quantityKinds: ['momentOfInertiaDynamicMomentOfInertia', 'momentOfInertiaDynamicMomentOfInertia']
     },
     poundMole: {
       name: 'poundMole',
@@ -19991,7 +19959,7 @@ var sammUDefinition = {
         return sammUDefinition.units['mole'];
       },
       conversionFactor: '453.5924 mol',
-      quantityKinds: ['amountOfSubstance', 'amountOfSubstance'],
+      quantityKinds: ['amountOfSubstance', 'amountOfSubstance']
     },
     poundMolePerMinute: {
       name: 'poundMolePerMinute',
@@ -20009,8 +19977,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'density',
         'concentrationOfB',
-        'massDensity',
-      ],
+        'massDensity'
+      ]
     },
     poundMolePerPound: {
       name: 'poundMolePerPound',
@@ -20021,7 +19989,7 @@ var sammUDefinition = {
         return sammUDefinition.units['molePerKilogram'];
       },
       conversionFactor: '10³ mol/kg',
-      quantityKinds: ['molalityOfSoluteB', 'ionicStrength'],
+      quantityKinds: ['molalityOfSoluteB', 'ionicStrength']
     },
     poundMolePerSecond: {
       name: 'poundMolePerSecond',
@@ -20039,8 +20007,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'density',
         'concentrationOfB',
-        'massDensity',
-      ],
+        'massDensity'
+      ]
     },
     poundPerCubicFoot: {
       name: 'poundPerCubicFoot',
@@ -20060,8 +20028,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'volumicMass',
         'density',
-        'massDensity',
-      ],
+        'massDensity'
+      ]
     },
     poundPerCubicInch: {
       name: 'poundPerCubicInch',
@@ -20081,8 +20049,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     poundPerCubicYard: {
       name: 'poundPerCubicYard',
@@ -20102,8 +20070,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     poundPerFoot: {
       name: 'poundPerFoot',
@@ -20114,7 +20082,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '1.488164 kg/m',
-      quantityKinds: ['linearDensity', 'linearMass', 'linearMass', 'linearDensity'],
+      quantityKinds: ['linearDensity', 'linearMass', 'linearMass', 'linearDensity']
     },
     poundPerFootDay: {
       name: 'poundPerFootDay',
@@ -20125,7 +20093,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '1.722412 × 10⁻⁵ Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     poundPerFootHour: {
       name: 'poundPerFootHour',
@@ -20136,7 +20104,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '4.133789 × 10⁻⁴ Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     poundPerFootMinute: {
       name: 'poundPerFootMinute',
@@ -20147,7 +20115,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '2.480273 × 10⁻² Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     poundPerFootSecond: {
       name: 'poundPerFootSecond',
@@ -20158,7 +20126,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '1.488164 Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     poundPerGallonUs: {
       name: 'poundPerGallonUs',
@@ -20178,8 +20146,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     poundPerHour: {
       name: 'poundPerHour',
@@ -20190,7 +20158,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '1.259979 × 10⁻⁴ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     poundPerInchOfLengthUnit: {
       name: 'poundPerInchOfLengthUnit',
@@ -20201,7 +20169,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '1.785797 × 10¹ kg/m',
-      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
+      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity']
     },
     poundPerPound: {
       name: 'poundPerPound',
@@ -20210,7 +20178,7 @@ var sammUDefinition = {
       code: 'M91',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massRatio'],
+      quantityKinds: ['massRatio']
     },
     poundPerReam: {
       name: 'poundPerReam',
@@ -20219,7 +20187,7 @@ var sammUDefinition = {
       code: 'RP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     poundPerSquareFoot: {
       name: 'poundPerSquareFoot',
@@ -20241,8 +20209,8 @@ var sammUDefinition = {
         'modulusOfCompression',
         'surfaceDensity',
         'meanMassRange',
-        'areicMass',
-      ],
+        'areicMass'
+      ]
     },
     poundPerSquareInchAbsolute: {
       name: 'poundPerSquareInchAbsolute',
@@ -20264,8 +20232,8 @@ var sammUDefinition = {
         'shearModulus',
         'surfaceDensity',
         'meanMassRange',
-        'areicMass',
-      ],
+        'areicMass'
+      ]
     },
     poundPerSquareYard: {
       name: 'poundPerSquareYard',
@@ -20287,8 +20255,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'surfaceDensity',
         'meanMassRange',
-        'areicMass',
-      ],
+        'areicMass'
+      ]
     },
     poundPerYard: {
       name: 'poundPerYard',
@@ -20299,7 +20267,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '4.960546 × 10⁻¹ kg/m',
-      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity'],
+      quantityKinds: ['linearMass', 'linearDensity', 'linearMass', 'linearDensity']
     },
     poundal: {
       name: 'poundal',
@@ -20310,7 +20278,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newton'];
       },
       conversionFactor: '1.382550 × 10⁻¹ N',
-      quantityKinds: ['weight', 'force', 'force', 'weight'],
+      quantityKinds: ['weight', 'force', 'force', 'weight']
     },
     poundalFoot: {
       name: 'poundalFoot',
@@ -20321,7 +20289,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '4.214011 × 10⁻² N × m',
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfACouple']
     },
     poundalInch: {
       name: 'poundalInch',
@@ -20332,7 +20300,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonMetre'];
       },
       conversionFactor: '3.51167710⁻³ N × m',
-      quantityKinds: ['torque', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfACouple', 'momentOfForce', 'torque', 'momentOfForce', 'momentOfACouple']
     },
     poundalPerInch: {
       name: 'poundalPerInch',
@@ -20343,7 +20311,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newtonPerMetre'];
       },
       conversionFactor: '5.443110 N/m',
-      quantityKinds: ['surfaceTension', 'surfaceTension'],
+      quantityKinds: ['surfaceTension', 'surfaceTension']
     },
     poundalPerSquareFoot: {
       name: 'poundalPerSquareFoot',
@@ -20375,8 +20343,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'normalStress',
         'modulusOfCompression',
-        'shearModulus',
-      ],
+        'shearModulus'
+      ]
     },
     poundalPerSquareInch: {
       name: 'poundalPerSquareInch',
@@ -20408,8 +20376,8 @@ var sammUDefinition = {
         'modulusOfRigidity',
         'shearStress',
         'bulkModulus',
-        'normalStress',
-      ],
+        'normalStress'
+      ]
     },
     poundalSecondPerSquareFoot: {
       name: 'poundalSecondPerSquareFoot',
@@ -20420,7 +20388,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '1.488164 Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     poundalSecondPerSquareInch: {
       name: 'poundalSecondPerSquareInch',
@@ -20431,7 +20399,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '2.142957 × 10² Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     printPoint: {
       name: 'printPoint',
@@ -20440,7 +20408,7 @@ var sammUDefinition = {
       code: 'N3',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     proofGallon: {
       name: 'proofGallon',
@@ -20449,7 +20417,7 @@ var sammUDefinition = {
       code: 'PGL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     proofLitre: {
       name: 'proofLitre',
@@ -20458,7 +20426,7 @@ var sammUDefinition = {
       code: 'PFL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     psiCubicInchPerSecond: {
       name: 'psiCubicInchPerSecond',
@@ -20478,8 +20446,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'modulusOfRigidity',
         'shearStress',
-        'normalStress',
-      ],
+        'normalStress'
+      ]
     },
     psiCubicMetrePerSecond: {
       name: 'psiCubicMetrePerSecond',
@@ -20499,8 +20467,8 @@ var sammUDefinition = {
         'modulusOfRigidity',
         'shearStress',
         'normalStress',
-        'leakageRateOfGas',
-      ],
+        'leakageRateOfGas'
+      ]
     },
     psiCubicYardPerSecond: {
       name: 'psiCubicYardPerSecond',
@@ -20520,8 +20488,8 @@ var sammUDefinition = {
         'modulusOfRigidity',
         'shearStress',
         'normalStress',
-        'leakageRateOfGas',
-      ],
+        'leakageRateOfGas'
+      ]
     },
     psiLitrePerSecond: {
       name: 'psiLitrePerSecond',
@@ -20541,8 +20509,8 @@ var sammUDefinition = {
         'modulusOfElasticity',
         'modulusOfRigidity',
         'shearStress',
-        'normalStress',
-      ],
+        'normalStress'
+      ]
     },
     psiPerInch: {
       name: 'psiPerInch',
@@ -20551,7 +20519,7 @@ var sammUDefinition = {
       code: 'P86',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['hardnessIndex'],
+      quantityKinds: ['hardnessIndex']
     },
     psiPerPsi: {
       name: 'psiPerPsi',
@@ -20560,7 +20528,7 @@ var sammUDefinition = {
       code: 'L52',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['pressureRatio'],
+      quantityKinds: ['pressureRatio']
     },
     quad1015Btuit: {
       name: 'quad1015Btuit',
@@ -20597,8 +20565,8 @@ var sammUDefinition = {
         'energy',
         'helmholtzFunction',
         'quantityOfHeat',
-        'helmholtzFreeEnergy',
-      ],
+        'helmholtzFreeEnergy'
+      ]
     },
     quartUk: {
       name: 'quartUk',
@@ -20609,7 +20577,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.1365225 × 10⁻³ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     quartUkLiquidPerDay: {
       name: 'quartUkLiquidPerDay',
@@ -20620,7 +20588,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.315420 × 10⁻⁸ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     quartUkLiquidPerHour: {
       name: 'quartUkLiquidPerHour',
@@ -20631,7 +20599,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '3.157008 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     quartUkLiquidPerMinute: {
       name: 'quartUkLiquidPerMinute',
@@ -20642,7 +20610,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.894205 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     quartUkLiquidPerSecond: {
       name: 'quartUkLiquidPerSecond',
@@ -20653,7 +20621,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.136523 × 10⁻³ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     quartUsLiquidPerDay: {
       name: 'quartUsLiquidPerDay',
@@ -20664,7 +20632,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.095316 × 10⁻⁸ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     quartUsLiquidPerHour: {
       name: 'quartUsLiquidPerHour',
@@ -20675,7 +20643,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '2.628758 × 10⁻⁷ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     quartUsLiquidPerMinute: {
       name: 'quartUsLiquidPerMinute',
@@ -20686,7 +20654,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.577255 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     quartUsLiquidPerSecond: {
       name: 'quartUsLiquidPerSecond',
@@ -20697,7 +20665,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '9.463529 × 10⁻⁴ m³/s',
-      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     quarterOfAYear: {
       name: 'quarterOfAYear',
@@ -20706,7 +20674,7 @@ var sammUDefinition = {
       code: 'QAN',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     quarterUk: {
       name: 'quarterUk',
@@ -20717,7 +20685,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '12.700 59 kg',
-      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     quire: {
       name: 'quire',
@@ -20726,7 +20694,7 @@ var sammUDefinition = {
       code: 'QR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     rackUnit: {
       name: 'rackUnit',
@@ -20773,8 +20741,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     rad: {
       name: 'rad',
@@ -20785,7 +20753,7 @@ var sammUDefinition = {
         return sammUDefinition.units['gray'];
       },
       conversionFactor: '10⁻² Gy',
-      quantityKinds: ['absorbedDose', 'specificEnergyImparted', 'massicEnergyImparted'],
+      quantityKinds: ['absorbedDose', 'specificEnergyImparted', 'massicEnergyImparted']
     },
     radian: {
       name: 'radian',
@@ -20794,7 +20762,7 @@ var sammUDefinition = {
       code: 'C81',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['anglePlane', 'braggAngle', 'phaseDifference', 'angleOfOpticalRotation', 'phaseDisplacement', 'lossAngle'],
+      quantityKinds: ['anglePlane', 'braggAngle', 'phaseDifference', 'angleOfOpticalRotation', 'phaseDisplacement', 'lossAngle']
     },
     radianPerMetre: {
       name: 'radianPerMetre',
@@ -20803,7 +20771,7 @@ var sammUDefinition = {
       code: 'C84',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['angularWavenumber', 'angularRepetency', 'debyeAngularRepetency', 'angularWaveNumber', 'debyeAngularWaveNumber'],
+      quantityKinds: ['angularWavenumber', 'angularRepetency', 'debyeAngularRepetency', 'angularWaveNumber', 'debyeAngularWaveNumber']
     },
     radianPerSecond: {
       name: 'radianPerSecond',
@@ -20819,8 +20787,8 @@ var sammUDefinition = {
         'angularVelocity',
         'debyeAngularFrequency',
         'angularFrequency',
-        'nuclearPrecession',
-      ],
+        'nuclearPrecession'
+      ]
     },
     radianPerSecondSquared: {
       name: 'radianPerSecondSquared',
@@ -20829,7 +20797,7 @@ var sammUDefinition = {
       code: '2B',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['angularAcceleration'],
+      quantityKinds: ['angularAcceleration']
     },
     radianSquareMetrePerKilogram: {
       name: 'radianSquareMetrePerKilogram',
@@ -20838,7 +20806,7 @@ var sammUDefinition = {
       code: 'C83',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['specificOpticalRotatoryPower', 'rotatoryPower', 'massicOptical'],
+      quantityKinds: ['specificOpticalRotatoryPower', 'rotatoryPower', 'massicOptical']
     },
     radianSquareMetrePerMole: {
       name: 'radianSquareMetrePerMole',
@@ -20847,7 +20815,7 @@ var sammUDefinition = {
       code: 'C82',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['molarOpticalRotatoryPower'],
+      quantityKinds: ['molarOpticalRotatoryPower']
     },
     rate: {
       name: 'rate',
@@ -20856,7 +20824,7 @@ var sammUDefinition = {
       code: 'A9',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     ration: {
       name: 'ration',
@@ -20865,7 +20833,7 @@ var sammUDefinition = {
       code: '13',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     ream: {
       name: 'ream',
@@ -20874,7 +20842,7 @@ var sammUDefinition = {
       code: 'RM',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     reciprocalAngstrom: {
       name: 'reciprocalAngstrom',
@@ -20910,8 +20878,8 @@ var sammUDefinition = {
         'angularRepetency',
         'volumicTotalCrossSection',
         'macroscopicCrossSection',
-        'linearAbsorptionCoefficient',
-      ],
+        'linearAbsorptionCoefficient'
+      ]
     },
     reciprocalBar: {
       name: 'reciprocalBar',
@@ -20920,7 +20888,7 @@ var sammUDefinition = {
       code: 'F58',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['compressibility', 'bulkCompressibility'],
+      quantityKinds: ['compressibility', 'bulkCompressibility']
     },
     reciprocalCentimetre: {
       name: 'reciprocalCentimetre',
@@ -20954,8 +20922,8 @@ var sammUDefinition = {
         'angularRepetency',
         'volumicTotalCrossSection',
         'macroscopicCrossSection',
-        'linearAbsorptionCoefficient',
-      ],
+        'linearAbsorptionCoefficient'
+      ]
     },
     reciprocalCubicCentimetre: {
       name: 'reciprocalCubicCentimetre',
@@ -20985,8 +20953,8 @@ var sammUDefinition = {
         'volumicIntrinsisNumber',
         'acceptorNumberDensity',
         'ionNumberDensity',
-        'holeNumberDensity',
-      ],
+        'holeNumberDensity'
+      ]
     },
     reciprocalCubicFoot: {
       name: 'reciprocalCubicFoot',
@@ -21016,8 +20984,8 @@ var sammUDefinition = {
         'holeNumberDensity',
         'volumicNumberOfMoleculesOrParticles',
         'numberDensityOfMoleculesOrParticles',
-        'molecularConcentrationOfB',
-      ],
+        'molecularConcentrationOfB'
+      ]
     },
     reciprocalCubicInch: {
       name: 'reciprocalCubicInch',
@@ -21047,8 +21015,8 @@ var sammUDefinition = {
         'volumicIntrinsisNumber',
         'acceptorNumberDensity',
         'ionNumberDensity',
-        'holeNumberDensity',
-      ],
+        'holeNumberDensity'
+      ]
     },
     reciprocalCubicMetre: {
       name: 'reciprocalCubicMetre',
@@ -21073,8 +21041,8 @@ var sammUDefinition = {
         'volumicIntrinsisNumber',
         'acceptorNumberDensity',
         'ionNumberDensity',
-        'holeNumberDensity',
-      ],
+        'holeNumberDensity'
+      ]
     },
     reciprocalCubicMetrePerSecond: {
       name: 'reciprocalCubicMetrePerSecond',
@@ -21083,7 +21051,7 @@ var sammUDefinition = {
       code: 'C87',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['slowingDownDensity'],
+      quantityKinds: ['slowingDownDensity']
     },
     reciprocalCubicMillimetre: {
       name: 'reciprocalCubicMillimetre',
@@ -21113,8 +21081,8 @@ var sammUDefinition = {
         'volumicIntrinsisNumber',
         'acceptorNumberDensity',
         'ionNumberDensity',
-        'holeNumberDensity',
-      ],
+        'holeNumberDensity'
+      ]
     },
     reciprocalCubicYard: {
       name: 'reciprocalCubicYard',
@@ -21144,8 +21112,8 @@ var sammUDefinition = {
         'holeNumberDensity',
         'volumicNumberOfMoleculesOrParticles',
         'molecularConcentrationOfB',
-        'numberDensityOfMoleculesOrParticles',
-      ],
+        'numberDensityOfMoleculesOrParticles'
+      ]
     },
     reciprocalDay: {
       name: 'reciprocalDay',
@@ -21166,8 +21134,8 @@ var sammUDefinition = {
         'disintegrationConstant',
         'dampingCoefficient',
         'photonFlux',
-        'debyeAngularFrequency',
-      ],
+        'debyeAngularFrequency'
+      ]
     },
     reciprocalDegreeFahrenheit: {
       name: 'reciprocalDegreeFahrenheit',
@@ -21176,7 +21144,7 @@ var sammUDefinition = {
       code: 'J26',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['temperature'],
+      quantityKinds: ['temperature']
     },
     reciprocalElectronVoltPerCubicMetre: {
       name: 'reciprocalElectronVoltPerCubicMetre',
@@ -21187,7 +21155,7 @@ var sammUDefinition = {
         return sammUDefinition.units['reciprocalJoulePerCubicMetre'];
       },
       conversionFactor: '6.24146 × 10¹⁸ J⁻¹/m³',
-      quantityKinds: ['densityOfStates', 'densityOfStates'],
+      quantityKinds: ['densityOfStates', 'densityOfStates']
     },
     reciprocalHenry: {
       name: 'reciprocalHenry',
@@ -21196,7 +21164,7 @@ var sammUDefinition = {
       code: 'C89',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['reluctance'],
+      quantityKinds: ['reluctance']
     },
     reciprocalHour: {
       name: 'reciprocalHour',
@@ -21218,8 +21186,8 @@ var sammUDefinition = {
         'disintegrationConstant',
         'dampingCoefficient',
         'photonFlux',
-        'debyeAngularFrequency',
-      ],
+        'debyeAngularFrequency'
+      ]
     },
     reciprocalInch: {
       name: 'reciprocalInch',
@@ -21253,8 +21221,8 @@ var sammUDefinition = {
         'angularRepetency',
         'volumicTotalCrossSection',
         'macroscopicCrossSection',
-        'linearAbsorptionCoefficient',
-      ],
+        'linearAbsorptionCoefficient'
+      ]
     },
     reciprocalJoule: {
       name: 'reciprocalJoule',
@@ -21263,7 +21231,7 @@ var sammUDefinition = {
       code: 'N91',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['performanceCharacteristic', 'coefficient'],
+      quantityKinds: ['performanceCharacteristic', 'coefficient']
     },
     reciprocalJoulePerCubicMetre: {
       name: 'reciprocalJoulePerCubicMetre',
@@ -21272,7 +21240,7 @@ var sammUDefinition = {
       code: 'C90',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['densityOfStates'],
+      quantityKinds: ['densityOfStates']
     },
     reciprocalKelvinOrKelvinToThePowerMinusOne: {
       name: 'reciprocalKelvinOrKelvinToThePowerMinusOne',
@@ -21281,7 +21249,7 @@ var sammUDefinition = {
       code: 'C91',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient'],
+      quantityKinds: ['relativePressureCoefficient', 'linearExpansionCoefficient', 'cubicExpansionCoefficient']
     },
     reciprocalKilovoltAmpereReciprocalHour: {
       name: 'reciprocalKilovoltAmpereReciprocalHour',
@@ -21290,7 +21258,7 @@ var sammUDefinition = {
       code: 'M21',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['performanceCharacteristic', 'coefficient'],
+      quantityKinds: ['performanceCharacteristic', 'coefficient']
     },
     reciprocalLitre: {
       name: 'reciprocalLitre',
@@ -21320,8 +21288,8 @@ var sammUDefinition = {
         'holeNumberDensity',
         'molecularConcentrationOfB',
         'volumicNumberOfMoleculesOrParticles',
-        'numberDensityOfMoleculesOrParticles',
-      ],
+        'numberDensityOfMoleculesOrParticles'
+      ]
     },
     reciprocalMegakelvinOrMegakelvinToThePowerMinusOne: {
       name: 'reciprocalMegakelvinOrMegakelvinToThePowerMinusOne',
@@ -21338,8 +21306,8 @@ var sammUDefinition = {
         'cubicExpansionCoefficient',
         'cubicExpansionCoefficient',
         'linearExpansionCoefficient',
-        'relativePressureCoefficient',
-      ],
+        'relativePressureCoefficient'
+      ]
     },
     reciprocalMetre: {
       name: 'reciprocalMetre',
@@ -21371,8 +21339,8 @@ var sammUDefinition = {
         'angularRepetency',
         'volumicTotalCrossSection',
         'macroscopicCrossSection',
-        'linearAbsorptionCoefficient',
-      ],
+        'linearAbsorptionCoefficient'
+      ]
     },
     reciprocalMetreSquaredReciprocalSecond: {
       name: 'reciprocalMetreSquaredReciprocalSecond',
@@ -21381,13 +21349,7 @@ var sammUDefinition = {
       code: 'B81',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: [
-        'particleFluenceRate',
-        'currentDensityOfParticles',
-        'neutronfluxDensity',
-        'particalFluxDensity',
-        'neutronFluenceRate',
-      ],
+      quantityKinds: ['particleFluenceRate', 'currentDensityOfParticles', 'neutronfluxDensity', 'particalFluxDensity', 'neutronFluenceRate']
     },
     reciprocalMinute: {
       name: 'reciprocalMinute',
@@ -21409,8 +21371,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     reciprocalMole: {
       name: 'reciprocalMole',
@@ -21419,7 +21381,7 @@ var sammUDefinition = {
       code: 'C95',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['avogadroConstant'],
+      quantityKinds: ['avogadroConstant']
     },
     reciprocalMonth: {
       name: 'reciprocalMonth',
@@ -21441,8 +21403,8 @@ var sammUDefinition = {
         'dampingCoefficient',
         'photonFlux',
         'debyeAngularFrequency',
-        'frequency',
-      ],
+        'frequency'
+      ]
     },
     reciprocalPascalOrPascalToThePowerMinusOne: {
       name: 'reciprocalPascalOrPascalToThePowerMinusOne',
@@ -21451,7 +21413,7 @@ var sammUDefinition = {
       code: 'C96',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['isothermalCompressibility', 'compressibility', 'bulkCompressibility', 'isentropicCompressibility'],
+      quantityKinds: ['isothermalCompressibility', 'compressibility', 'bulkCompressibility', 'isentropicCompressibility']
     },
     reciprocalPsi: {
       name: 'reciprocalPsi',
@@ -21472,8 +21434,8 @@ var sammUDefinition = {
         'density',
         'volumicMass',
         'massConcentrationOfB',
-        'concentrationOfB',
-      ],
+        'concentrationOfB'
+      ]
     },
     reciprocalRadian: {
       name: 'reciprocalRadian',
@@ -21482,7 +21444,7 @@ var sammUDefinition = {
       code: 'P97',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     reciprocalSecond: {
       name: 'reciprocalSecond',
@@ -21501,8 +21463,8 @@ var sammUDefinition = {
         'disintegrationConstant',
         'dampingCoefficient',
         'photonFlux',
-        'debyeAngularFrequency',
-      ],
+        'debyeAngularFrequency'
+      ]
     },
     reciprocalSecondPerMetreSquared: {
       name: 'reciprocalSecondPerMetreSquared',
@@ -21511,7 +21473,7 @@ var sammUDefinition = {
       code: 'C99',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['photonExitance', 'irradiance'],
+      quantityKinds: ['photonExitance', 'irradiance']
     },
     reciprocalSecondPerSteradian: {
       name: 'reciprocalSecondPerSteradian',
@@ -21520,7 +21482,7 @@ var sammUDefinition = {
       code: 'D1',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['photonIntensity'],
+      quantityKinds: ['photonIntensity']
     },
     reciprocalSecondPerSteradianMetreSquared: {
       name: 'reciprocalSecondPerSteradianMetreSquared',
@@ -21529,7 +21491,7 @@ var sammUDefinition = {
       code: 'D2',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['photonRadiance', 'photonLuminance'],
+      quantityKinds: ['photonRadiance', 'photonLuminance']
     },
     reciprocalSquareInch: {
       name: 'reciprocalSquareInch',
@@ -21540,7 +21502,7 @@ var sammUDefinition = {
         return sammUDefinition.units['reciprocalSquareMetre'];
       },
       conversionFactor: '1.550003 × 10³ m⁻²',
-      quantityKinds: ['photonExposure', 'particleFluence', 'particleFluence'],
+      quantityKinds: ['photonExposure', 'particleFluence', 'particleFluence']
     },
     reciprocalSquareMetre: {
       name: 'reciprocalSquareMetre',
@@ -21549,7 +21511,7 @@ var sammUDefinition = {
       code: 'C93',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['photonExposure', 'particleFluence'],
+      quantityKinds: ['photonExposure', 'particleFluence']
     },
     reciprocalVolt: {
       name: 'reciprocalVolt',
@@ -21558,7 +21520,7 @@ var sammUDefinition = {
       code: 'P96',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     reciprocalVoltAmpereReciprocalSecond: {
       name: 'reciprocalVoltAmpereReciprocalSecond',
@@ -21567,7 +21529,7 @@ var sammUDefinition = {
       code: 'M30',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['performanceCharacteristic', 'coefficient'],
+      quantityKinds: ['performanceCharacteristic', 'coefficient']
     },
     reciprocalWeek: {
       name: 'reciprocalWeek',
@@ -21589,8 +21551,8 @@ var sammUDefinition = {
         'disintegrationConstant',
         'dampingCoefficient',
         'photonFlux',
-        'debyeAngularFrequency',
-      ],
+        'debyeAngularFrequency'
+      ]
     },
     reciprocalYear: {
       name: 'reciprocalYear',
@@ -21612,8 +21574,8 @@ var sammUDefinition = {
         'dampingCoefficient',
         'photonFlux',
         'debyeAngularFrequency',
-        'frequency',
-      ],
+        'frequency'
+      ]
     },
     rem: {
       name: 'rem',
@@ -21624,7 +21586,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievert'];
       },
       conversionFactor: '10⁻² Sv',
-      quantityKinds: ['doseEquivalent', 'doseEquivalent'],
+      quantityKinds: ['doseEquivalent', 'doseEquivalent']
     },
     remPerSecond: {
       name: 'remPerSecond',
@@ -21635,7 +21597,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '10⁻² Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     revenueTonMile: {
       name: 'revenueTonMile',
@@ -21644,7 +21606,7 @@ var sammUDefinition = {
       code: 'RT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     revolution: {
       name: 'revolution',
@@ -21655,7 +21617,7 @@ var sammUDefinition = {
         return sammUDefinition.units['rad'];
       },
       conversionFactor: '6.283185 rad',
-      quantityKinds: ['absorbedDose', 'anglePlane'],
+      quantityKinds: ['absorbedDose', 'anglePlane']
     },
     revolutionPerMinute: {
       name: 'revolutionPerMinute',
@@ -21674,8 +21636,8 @@ var sammUDefinition = {
         'angularVelocity',
         'debyeAngularFrequency',
         'angularFrequency',
-        'nuclearPrecession',
-      ],
+        'nuclearPrecession'
+      ]
     },
     revolutionsPerMinute: {
       name: 'revolutionsPerMinute',
@@ -21684,7 +21646,7 @@ var sammUDefinition = {
       code: 'RPM',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['rotationalFrequency'],
+      quantityKinds: ['rotationalFrequency']
     },
     revolutionsPerSecond: {
       name: 'revolutionsPerSecond',
@@ -21693,7 +21655,7 @@ var sammUDefinition = {
       code: 'RPS',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['rotationalFrequency'],
+      quantityKinds: ['rotationalFrequency']
     },
     rhe: {
       name: 'rhe',
@@ -21702,7 +21664,7 @@ var sammUDefinition = {
       code: 'P88',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     rodUnitOfDistance: {
       name: 'rodUnitOfDistance',
@@ -21759,8 +21721,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     roentgen: {
       name: 'roentgen',
@@ -21771,7 +21733,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerKilogram'];
       },
       conversionFactor: '2.58 × 10⁻⁴ C/kg',
-      quantityKinds: ['exposure', 'exposure'],
+      quantityKinds: ['exposure', 'exposure']
     },
     roentgenPerSecond: {
       name: 'roentgenPerSecond',
@@ -21782,7 +21744,7 @@ var sammUDefinition = {
         return sammUDefinition.units['coulombPerKilogramSecond'];
       },
       conversionFactor: '2.58 × 10⁻⁴ C/(kg × s)',
-      quantityKinds: ['exposureRate', 'exposureRate'],
+      quantityKinds: ['exposureRate', 'exposureRate']
     },
     room: {
       name: 'room',
@@ -21791,7 +21753,7 @@ var sammUDefinition = {
       code: 'ROM',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     round: {
       name: 'round',
@@ -21800,7 +21762,7 @@ var sammUDefinition = {
       code: 'D65',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     runFoot: {
       name: 'runFoot',
@@ -21809,7 +21771,7 @@ var sammUDefinition = {
       code: 'E52',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     runningOrOperatingHour: {
       name: 'runningOrOperatingHour',
@@ -21818,7 +21780,7 @@ var sammUDefinition = {
       code: 'RH',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     score: {
       name: 'score',
@@ -21827,7 +21789,7 @@ var sammUDefinition = {
       code: 'SCO',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     scruple: {
       name: 'scruple',
@@ -21838,7 +21800,7 @@ var sammUDefinition = {
         return sammUDefinition.units['gram'];
       },
       conversionFactor: '1.295982 g',
-      quantityKinds: ['mass'],
+      quantityKinds: ['mass']
     },
     secondPerCubicMetre: {
       name: 'secondPerCubicMetre',
@@ -21847,7 +21809,7 @@ var sammUDefinition = {
       code: 'D93',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicDose'],
+      quantityKinds: ['volumicDose']
     },
     secondPerCubicMetreRadian: {
       name: 'secondPerCubicMetreRadian',
@@ -21856,7 +21818,7 @@ var sammUDefinition = {
       code: 'D94',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['spectralConcentrationOfVibrationalModesInTermsOfAngularFrequency'],
+      quantityKinds: ['spectralConcentrationOfVibrationalModesInTermsOfAngularFrequency']
     },
     secondPerKilogramm: {
       name: 'secondPerKilogramm',
@@ -21865,7 +21827,7 @@ var sammUDefinition = {
       code: 'Q20',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     secondPerRadianCubicMetre: {
       name: 'secondPerRadianCubicMetre',
@@ -21874,7 +21836,7 @@ var sammUDefinition = {
       code: 'Q22',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     secondUnitOfAngle: {
       name: 'secondUnitOfAngle',
@@ -21885,7 +21847,7 @@ var sammUDefinition = {
         return sammUDefinition.units['rad'];
       },
       conversionFactor: '4.848137 × 10⁻⁶ rad',
-      quantityKinds: ['anglePlane', 'absorbedDose'],
+      quantityKinds: ['anglePlane', 'absorbedDose']
     },
     secondUnitOfTime: {
       name: 'secondUnitOfTime',
@@ -21904,8 +21866,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     segment: {
       name: 'segment',
@@ -21914,7 +21876,7 @@ var sammUDefinition = {
       code: 'SG',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     serviceUnit: {
       name: 'serviceUnit',
@@ -21923,7 +21885,7 @@ var sammUDefinition = {
       code: 'E48',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     set: {
       name: 'set',
@@ -21932,7 +21894,7 @@ var sammUDefinition = {
       code: 'SET',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     shake: {
       name: 'shake',
@@ -21954,8 +21916,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     shannon: {
       name: 'shannon',
@@ -21964,7 +21926,7 @@ var sammUDefinition = {
       code: 'Q14',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     shannonPerSecond: {
       name: 'shannonPerSecond',
@@ -21973,7 +21935,7 @@ var sammUDefinition = {
       code: 'Q17',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     shares: {
       name: 'shares',
@@ -21982,7 +21944,7 @@ var sammUDefinition = {
       code: 'E21',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     shipment: {
       name: 'shipment',
@@ -21991,7 +21953,7 @@ var sammUDefinition = {
       code: 'SX',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     shot: {
       name: 'shot',
@@ -22000,7 +21962,7 @@ var sammUDefinition = {
       code: '14',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     siderealYear: {
       name: 'siderealYear',
@@ -22022,8 +21984,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     siemens: {
       name: 'siemens',
@@ -22037,8 +21999,8 @@ var sammUDefinition = {
         'modulusOfAdmittance',
         'conductanceForAlternatingCurrent',
         'conductanceForDirectCurrent',
-        'complexAdmittance',
-      ],
+        'complexAdmittance'
+      ]
     },
     siemensPerCentimetre: {
       name: 'siemensPerCentimetre',
@@ -22049,7 +22011,7 @@ var sammUDefinition = {
         return sammUDefinition.units['siemensPerMetre'];
       },
       conversionFactor: '10² S/m',
-      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity'],
+      quantityKinds: ['electrolyticConductivity', 'conductivity', 'conductivity']
     },
     siemensPerMetre: {
       name: 'siemensPerMetre',
@@ -22058,7 +22020,7 @@ var sammUDefinition = {
       code: 'D10',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electrolyticConductivity', 'conductivity'],
+      quantityKinds: ['electrolyticConductivity', 'conductivity']
     },
     siemensSquareMetrePerMole: {
       name: 'siemensSquareMetrePerMole',
@@ -22067,7 +22029,7 @@ var sammUDefinition = {
       code: 'D12',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['molarConductivity'],
+      quantityKinds: ['molarConductivity']
     },
     sievert: {
       name: 'sievert',
@@ -22076,7 +22038,7 @@ var sammUDefinition = {
       code: 'D13',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['doseEquivalent'],
+      quantityKinds: ['doseEquivalent']
     },
     sievertPerHour: {
       name: 'sievertPerHour',
@@ -22087,7 +22049,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻⁴ Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     sievertPerMinute: {
       name: 'sievertPerMinute',
@@ -22098,7 +22060,7 @@ var sammUDefinition = {
         return sammUDefinition.units['sievertPerSecond'];
       },
       conversionFactor: '0.016666 Sv/s',
-      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput', 'equivalenceDoseOutput']
     },
     sievertPerSecond: {
       name: 'sievertPerSecond',
@@ -22107,7 +22069,7 @@ var sammUDefinition = {
       code: 'P65',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['equivalenceDoseOutput'],
+      quantityKinds: ['equivalenceDoseOutput']
     },
     sitas: {
       name: 'sitas',
@@ -22116,7 +22078,7 @@ var sammUDefinition = {
       code: '56',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     skein: {
       name: 'skein',
@@ -22125,7 +22087,7 @@ var sammUDefinition = {
       code: 'SW',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     slug: {
       name: 'slug',
@@ -22136,7 +22098,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '1.459390 × 10¹ kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     slugPerCubicFoot: {
       name: 'slugPerCubicFoot',
@@ -22156,8 +22118,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     slugPerDay: {
       name: 'slugPerDay',
@@ -22168,7 +22130,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '1.689109 × 10⁻⁴ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     slugPerFootSecond: {
       name: 'slugPerFootSecond',
@@ -22179,7 +22141,7 @@ var sammUDefinition = {
         return sammUDefinition.units['pascalSecond'];
       },
       conversionFactor: '47.88026 Pa × s',
-      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity'],
+      quantityKinds: ['viscosityDynamicViscosity', 'viscosityDynamicViscosity']
     },
     slugPerHour: {
       name: 'slugPerHour',
@@ -22190,7 +22152,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '4.053861 × 10⁻³ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     slugPerMinute: {
       name: 'slugPerMinute',
@@ -22201,7 +22163,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '0.2432317 kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     slugPerSecond: {
       name: 'slugPerSecond',
@@ -22212,7 +22174,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '14.59390 kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     sone: {
       name: 'sone',
@@ -22221,7 +22183,7 @@ var sammUDefinition = {
       code: 'D15',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['loudness'],
+      quantityKinds: ['loudness']
     },
     square: {
       name: 'square',
@@ -22230,7 +22192,7 @@ var sammUDefinition = {
       code: 'SQ',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     squareCentimetre: {
       name: 'squareCentimetre',
@@ -22250,8 +22212,8 @@ var sammUDefinition = {
         'equivalentAbsorptionAreaOfASurfaceOrObject',
         'atomicAttenuationCoefficient',
         'area',
-        'crossSection',
-      ],
+        'crossSection'
+      ]
     },
     squareCentimetrePerErg: {
       name: 'squareCentimetrePerErg',
@@ -22262,7 +22224,7 @@ var sammUDefinition = {
         return sammUDefinition.units['squareMetrePerJoule'];
       },
       conversionFactor: '10³ m²/J',
-      quantityKinds: ['spectralCrossSection', 'spectralCrossSection'],
+      quantityKinds: ['spectralCrossSection', 'spectralCrossSection']
     },
     squareCentimetrePerGram: {
       name: 'squareCentimetrePerGram',
@@ -22271,7 +22233,7 @@ var sammUDefinition = {
       code: 'H15',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['specificVolume', 'massicVolume'],
+      quantityKinds: ['specificVolume', 'massicVolume']
     },
     squareCentimetrePerSecond: {
       name: 'squareCentimetrePerSecond',
@@ -22288,8 +22250,8 @@ var sammUDefinition = {
         'thermalDiffusionCoefficient',
         'kinematicViscosity',
         'diffusionCoefficientForNeutronNumberDensity',
-        'thermalDiffusivity',
-      ],
+        'thermalDiffusivity'
+      ]
     },
     squareCentimetrePerSteradianErg: {
       name: 'squareCentimetrePerSteradianErg',
@@ -22300,7 +22262,7 @@ var sammUDefinition = {
         return sammUDefinition.units['squareMetrePerSteradianJoule'];
       },
       conversionFactor: '10³ m²/(sr × J)',
-      quantityKinds: ['spectralAngularCrossSection', 'spectralAngularCrossSection'],
+      quantityKinds: ['spectralAngularCrossSection', 'spectralAngularCrossSection']
     },
     squareDecametre: {
       name: 'squareDecametre',
@@ -22320,8 +22282,8 @@ var sammUDefinition = {
         'equivalentAbsorptionAreaOfASurfaceOrObject',
         'atomicAttenuationCoefficient',
         'area',
-        'crossSection',
-      ],
+        'crossSection'
+      ]
     },
     squareDecimetre: {
       name: 'squareDecimetre',
@@ -22341,8 +22303,8 @@ var sammUDefinition = {
         'atomicAttenuationCoefficient',
         'area',
         'crossSection',
-        'area',
-      ],
+        'area'
+      ]
     },
     squareFoot: {
       name: 'squareFoot',
@@ -22362,8 +22324,8 @@ var sammUDefinition = {
         'equivalentAbsorptionAreaOfASurfaceOrObject',
         'atomicAttenuationCoefficient',
         'area',
-        'crossSection',
-      ],
+        'crossSection'
+      ]
     },
     squareFootPerHour: {
       name: 'squareFootPerHour',
@@ -22380,8 +22342,8 @@ var sammUDefinition = {
         'thermalDiffusionCoefficient',
         'kinematicViscosity',
         'diffusionCoefficientForNeutronNumberDensity',
-        'thermalDiffusivity',
-      ],
+        'thermalDiffusivity'
+      ]
     },
     squareFootPerSecond: {
       name: 'squareFootPerSecond',
@@ -22399,8 +22361,8 @@ var sammUDefinition = {
         'thermalDiffusionCoefficient',
         'kinematicViscosity',
         'diffusionCoefficientForNeutronNumberDensity',
-        'thermalDiffusivity',
-      ],
+        'thermalDiffusivity'
+      ]
     },
     squareHectometre: {
       name: 'squareHectometre',
@@ -22420,8 +22382,8 @@ var sammUDefinition = {
         'atomicAttenuationCoefficient',
         'area',
         'crossSection',
-        'area',
-      ],
+        'area'
+      ]
     },
     squareInch: {
       name: 'squareInch',
@@ -22441,8 +22403,8 @@ var sammUDefinition = {
         'atomicAttenuationCoefficient',
         'area',
         'crossSection',
-        'area',
-      ],
+        'area'
+      ]
     },
     squareInchPerSecond: {
       name: 'squareInchPerSecond',
@@ -22451,7 +22413,7 @@ var sammUDefinition = {
       code: 'G08',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['kinematicViscosity'],
+      quantityKinds: ['kinematicViscosity']
     },
     squareKilometre: {
       name: 'squareKilometre',
@@ -22471,8 +22433,8 @@ var sammUDefinition = {
         'atomicAttenuationCoefficient',
         'area',
         'crossSection',
-        'area',
-      ],
+        'area'
+      ]
     },
     squareMetre: {
       name: 'squareMetre',
@@ -22489,8 +22451,8 @@ var sammUDefinition = {
         'equivalentAbsorptionAreaOfASurfaceOrObject',
         'atomicAttenuationCoefficient',
         'area',
-        'crossSection',
-      ],
+        'crossSection'
+      ]
     },
     squareMetreHourDegreeCelsiusPerKilocalorieInternationalTable: {
       name: 'squareMetreHourDegreeCelsiusPerKilocalorieInternationalTable',
@@ -22499,7 +22461,7 @@ var sammUDefinition = {
       code: 'L14',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation'],
+      quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation']
     },
     squareMetreKelvinPerWatt: {
       name: 'squareMetreKelvinPerWatt',
@@ -22508,7 +22470,7 @@ var sammUDefinition = {
       code: 'D19',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation'],
+      quantityKinds: ['thermalInsulance', 'coefficientOfThermalInsulation']
     },
     squareMetrePerJoule: {
       name: 'squareMetrePerJoule',
@@ -22517,7 +22479,7 @@ var sammUDefinition = {
       code: 'D20',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['spectralCrossSection'],
+      quantityKinds: ['spectralCrossSection']
     },
     squareMetrePerKilogram: {
       name: 'squareMetrePerKilogram',
@@ -22526,7 +22488,7 @@ var sammUDefinition = {
       code: 'D21',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massEnergyTransferCoefficient', 'massAttenuationCoefficient'],
+      quantityKinds: ['massEnergyTransferCoefficient', 'massAttenuationCoefficient']
     },
     squareMetrePerLitre: {
       name: 'squareMetrePerLitre',
@@ -22535,7 +22497,7 @@ var sammUDefinition = {
       code: 'E31',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     squareMetrePerMole: {
       name: 'squareMetrePerMole',
@@ -22544,7 +22506,7 @@ var sammUDefinition = {
       code: 'D22',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['molarAttenuationCoefficient', 'molarAbsorptionCoefficient'],
+      quantityKinds: ['molarAttenuationCoefficient', 'molarAbsorptionCoefficient']
     },
     squareMetrePerNewton: {
       name: 'squareMetrePerNewton',
@@ -22553,7 +22515,7 @@ var sammUDefinition = {
       code: 'H59',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['area'],
+      quantityKinds: ['area']
     },
     squareMetrePerSecond: {
       name: 'squareMetrePerSecond',
@@ -22567,8 +22529,8 @@ var sammUDefinition = {
         'thermalDiffusionCoefficient',
         'kinematicViscosity',
         'diffusionCoefficientForNeutronNumberDensity',
-        'thermalDiffusivity',
-      ],
+        'thermalDiffusivity'
+      ]
     },
     squareMetrePerSecondBar: {
       name: 'squareMetrePerSecondBar',
@@ -22577,7 +22539,7 @@ var sammUDefinition = {
       code: 'G41',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['kinematicViscosity'],
+      quantityKinds: ['kinematicViscosity']
     },
     squareMetrePerSecondKelvin: {
       name: 'squareMetrePerSecondKelvin',
@@ -22586,7 +22548,7 @@ var sammUDefinition = {
       code: 'G09',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['kinematicViscosity'],
+      quantityKinds: ['kinematicViscosity']
     },
     squareMetrePerSecondPascal: {
       name: 'squareMetrePerSecondPascal',
@@ -22595,7 +22557,7 @@ var sammUDefinition = {
       code: 'M82',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['kinematicViscosity'],
+      quantityKinds: ['kinematicViscosity']
     },
     squareMetrePerSteradian: {
       name: 'squareMetrePerSteradian',
@@ -22604,7 +22566,7 @@ var sammUDefinition = {
       code: 'D24',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['angularCrossSection'],
+      quantityKinds: ['angularCrossSection']
     },
     squareMetrePerSteradianJoule: {
       name: 'squareMetrePerSteradianJoule',
@@ -22613,7 +22575,7 @@ var sammUDefinition = {
       code: 'D25',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['spectralAngularCrossSection'],
+      quantityKinds: ['spectralAngularCrossSection']
     },
     squareMetrePerVoltSecond: {
       name: 'squareMetrePerVoltSecond',
@@ -22622,7 +22584,7 @@ var sammUDefinition = {
       code: 'D26',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['mobility'],
+      quantityKinds: ['mobility']
     },
     squareMicrometreSquareMicron: {
       name: 'squareMicrometreSquareMicron',
@@ -22642,8 +22604,8 @@ var sammUDefinition = {
         'atomicAttenuationCoefficient',
         'area',
         'crossSection',
-        'area',
-      ],
+        'area'
+      ]
     },
     squareMileBasedOnUsSurveyFoot: {
       name: 'squareMileBasedOnUsSurveyFoot',
@@ -22663,8 +22625,8 @@ var sammUDefinition = {
         'atomicAttenuationCoefficient',
         'area',
         'crossSection',
-        'area',
-      ],
+        'area'
+      ]
     },
     squareMileStatuteMile: {
       name: 'squareMileStatuteMile',
@@ -22675,7 +22637,7 @@ var sammUDefinition = {
         return sammUDefinition.units['squareKilometre'];
       },
       conversionFactor: '2.589988 km²',
-      quantityKinds: ['area', 'area'],
+      quantityKinds: ['area', 'area']
     },
     squareMillimetre: {
       name: 'squareMillimetre',
@@ -22695,8 +22657,8 @@ var sammUDefinition = {
         'atomicAttenuationCoefficient',
         'area',
         'crossSection',
-        'area',
-      ],
+        'area'
+      ]
     },
     squareRoofing: {
       name: 'squareRoofing',
@@ -22705,7 +22667,7 @@ var sammUDefinition = {
       code: 'SQR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     squareYard: {
       name: 'squareYard',
@@ -22725,8 +22687,8 @@ var sammUDefinition = {
         'equivalentAbsorptionAreaOfASurfaceOrObject',
         'atomicAttenuationCoefficient',
         'area',
-        'crossSection',
-      ],
+        'crossSection'
+      ]
     },
     standard: {
       name: 'standard',
@@ -22737,7 +22699,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4.672 m³',
-      quantityKinds: ['volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'sectionModulus']
     },
     standardAccelerationOfFreeFall: {
       name: 'standardAccelerationOfFreeFall',
@@ -22755,8 +22717,8 @@ var sammUDefinition = {
         'accelerationDueToGravity',
         'accelerationOfFreeFall',
         'instantaneousSoundParticleAcceleration',
-        'acceleration',
-      ],
+        'acceleration'
+      ]
     },
     standardAtmosphere: {
       name: 'standardAtmosphere',
@@ -22788,8 +22750,8 @@ var sammUDefinition = {
         'normalStress',
         'modulusOfElasticity',
         'pressure',
-        'modulusOfRigidity',
-      ],
+        'modulusOfRigidity'
+      ]
     },
     standardAtmospherePerMetre: {
       name: 'standardAtmospherePerMetre',
@@ -22798,7 +22760,7 @@ var sammUDefinition = {
       code: 'P83',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['hardnessIndex'],
+      quantityKinds: ['hardnessIndex']
     },
     standardKilolitre: {
       name: 'standardKilolitre',
@@ -22807,7 +22769,7 @@ var sammUDefinition = {
       code: 'DMO',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     standardLitre: {
       name: 'standardLitre',
@@ -22816,7 +22778,7 @@ var sammUDefinition = {
       code: 'STL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     steradian: {
       name: 'steradian',
@@ -22825,7 +22787,7 @@ var sammUDefinition = {
       code: 'D27',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['solidAngle'],
+      quantityKinds: ['solidAngle']
     },
     stere: {
       name: 'stere',
@@ -22836,7 +22798,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: 'm³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     stick: {
       name: 'stick',
@@ -22845,7 +22807,7 @@ var sammUDefinition = {
       code: 'STC',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     stickCigarette: {
       name: 'stickCigarette',
@@ -22854,7 +22816,7 @@ var sammUDefinition = {
       code: 'STK',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     stickMilitary: {
       name: 'stickMilitary',
@@ -22863,7 +22825,7 @@ var sammUDefinition = {
       code: '15',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     stilb: {
       name: 'stilb',
@@ -22874,7 +22836,7 @@ var sammUDefinition = {
         return sammUDefinition.units['candelaPerSquareMetre'];
       },
       conversionFactor: '10⁴ cd/m²',
-      quantityKinds: ['luminance', 'luminance'],
+      quantityKinds: ['luminance', 'luminance']
     },
     stokes: {
       name: 'stokes',
@@ -22891,8 +22853,8 @@ var sammUDefinition = {
         'thermalDiffusionCoefficient',
         'kinematicViscosity',
         'diffusionCoefficientForNeutronNumberDensity',
-        'thermalDiffusivity',
-      ],
+        'thermalDiffusivity'
+      ]
     },
     stokesPerBar: {
       name: 'stokesPerBar',
@@ -22901,7 +22863,7 @@ var sammUDefinition = {
       code: 'G46',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['kinematicViscosity'],
+      quantityKinds: ['kinematicViscosity']
     },
     stokesPerKelvin: {
       name: 'stokesPerKelvin',
@@ -22910,7 +22872,7 @@ var sammUDefinition = {
       code: 'G10',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['kinematicViscosity'],
+      quantityKinds: ['kinematicViscosity']
     },
     stokesPerPascal: {
       name: 'stokesPerPascal',
@@ -22919,7 +22881,7 @@ var sammUDefinition = {
       code: 'M80',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['kinematicViscosity'],
+      quantityKinds: ['kinematicViscosity']
     },
     stoneUk: {
       name: 'stoneUk',
@@ -22930,7 +22892,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '6.350293 kg',
-      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
+      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass']
     },
     strand: {
       name: 'strand',
@@ -22939,7 +22901,7 @@ var sammUDefinition = {
       code: 'E30',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     straw: {
       name: 'straw',
@@ -22948,7 +22910,7 @@ var sammUDefinition = {
       code: 'STW',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     strip: {
       name: 'strip',
@@ -22957,7 +22919,7 @@ var sammUDefinition = {
       code: 'SR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     syringe: {
       name: 'syringe',
@@ -22966,7 +22928,7 @@ var sammUDefinition = {
       code: 'SYR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tablespoonUs: {
       name: 'tablespoonUs',
@@ -22977,7 +22939,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.478676 × 10⁻⁵ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     tablet: {
       name: 'tablet',
@@ -22986,7 +22948,7 @@ var sammUDefinition = {
       code: 'U2',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     teaspoonUs: {
       name: 'teaspoonUs',
@@ -22997,7 +22959,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '4.928922 × 10⁻⁶ m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     tebibitPerCubicMetre: {
       name: 'tebibitPerCubicMetre',
@@ -23006,7 +22968,7 @@ var sammUDefinition = {
       code: 'E86',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tebibitPerMetre: {
       name: 'tebibitPerMetre',
@@ -23015,7 +22977,7 @@ var sammUDefinition = {
       code: 'E85',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tebibitPerSquareMetre: {
       name: 'tebibitPerSquareMetre',
@@ -23024,7 +22986,7 @@ var sammUDefinition = {
       code: 'E87',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tebibyte: {
       name: 'tebibyte',
@@ -23035,7 +22997,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '2⁴⁰ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     technicalAtmospherePerMetre: {
       name: 'technicalAtmospherePerMetre',
@@ -23044,7 +23006,7 @@ var sammUDefinition = {
       code: 'P84',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['hardnessIndex'],
+      quantityKinds: ['hardnessIndex']
     },
     telecommunicationLineInService: {
       name: 'telecommunicationLineInService',
@@ -23053,7 +23015,7 @@ var sammUDefinition = {
       code: 'T0',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     telecommunicationLineInServiceAverage: {
       name: 'telecommunicationLineInServiceAverage',
@@ -23062,7 +23024,7 @@ var sammUDefinition = {
       code: 'UB',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     telecommunicationPort: {
       name: 'telecommunicationPort',
@@ -23071,7 +23033,7 @@ var sammUDefinition = {
       code: 'UC',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tenDay: {
       name: 'tenDay',
@@ -23080,7 +23042,7 @@ var sammUDefinition = {
       code: 'DAD',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tenPack: {
       name: 'tenPack',
@@ -23089,7 +23051,7 @@ var sammUDefinition = {
       code: 'TP',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tenPair: {
       name: 'tenPair',
@@ -23098,7 +23060,7 @@ var sammUDefinition = {
       code: 'TPR',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tenSet: {
       name: 'tenSet',
@@ -23107,7 +23069,7 @@ var sammUDefinition = {
       code: 'TST',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tenThousandSticks: {
       name: 'tenThousandSticks',
@@ -23116,7 +23078,7 @@ var sammUDefinition = {
       code: 'TTS',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     terabit: {
       name: 'terabit',
@@ -23125,7 +23087,7 @@ var sammUDefinition = {
       code: 'E83',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     terabitPerSecond: {
       name: 'terabitPerSecond',
@@ -23134,7 +23096,7 @@ var sammUDefinition = {
       code: 'E84',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     terabyte: {
       name: 'terabyte',
@@ -23145,7 +23107,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '10¹² B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     terahertz: {
       name: 'terahertz',
@@ -23156,7 +23118,7 @@ var sammUDefinition = {
         return sammUDefinition.units['hertz'];
       },
       conversionFactor: '10¹² Hz',
-      quantityKinds: ['frequency', 'frequency'],
+      quantityKinds: ['frequency', 'frequency']
     },
     terajoule: {
       name: 'terajoule',
@@ -23190,8 +23152,8 @@ var sammUDefinition = {
         'energy',
         'work',
         'potentialEnergy',
-        'kineticEnergy',
-      ],
+        'kineticEnergy'
+      ]
     },
     teraohm: {
       name: 'teraohm',
@@ -23214,8 +23176,8 @@ var sammUDefinition = {
         'resistanceToAlternatingCurrent',
         'complexImpedances',
         'impedance',
-        'resistanceToDirectCurrent',
-      ],
+        'resistanceToDirectCurrent'
+      ]
     },
     terawatt: {
       name: 'terawatt',
@@ -23235,8 +23197,8 @@ var sammUDefinition = {
         'radiantPower',
         'soundPower',
         'powerForDirectCurrent',
-        'activePower',
-      ],
+        'activePower'
+      ]
     },
     terawattHour: {
       name: 'terawattHour',
@@ -23270,8 +23232,8 @@ var sammUDefinition = {
         'energy',
         'potentialEnergy',
         'kineticEnergy',
-        'work',
-      ],
+        'work'
+      ]
     },
     tesla: {
       name: 'tesla',
@@ -23286,8 +23248,8 @@ var sammUDefinition = {
         'magneticFluxDensity',
         'magneticInduction',
         'thermodynamicCriticalMagneticFluxDensity',
-        'upperCriticalMagneticFluxDensity',
-      ],
+        'upperCriticalMagneticFluxDensity'
+      ]
     },
     test: {
       name: 'test',
@@ -23296,7 +23258,7 @@ var sammUDefinition = {
       code: 'E53',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     teu: {
       name: 'teu',
@@ -23305,7 +23267,7 @@ var sammUDefinition = {
       code: 'E22',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tex: {
       name: 'tex',
@@ -23316,7 +23278,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerMetre'];
       },
       conversionFactor: '10⁻⁶ kg/m',
-      quantityKinds: ['linearMass', 'linearDensity'],
+      quantityKinds: ['linearMass', 'linearDensity']
     },
     theoreticalPound: {
       name: 'theoreticalPound',
@@ -23325,7 +23287,7 @@ var sammUDefinition = {
       code: '24',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     theoreticalTon: {
       name: 'theoreticalTon',
@@ -23334,7 +23296,7 @@ var sammUDefinition = {
       code: '27',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     thermEc: {
       name: 'thermEc',
@@ -23371,8 +23333,8 @@ var sammUDefinition = {
         'heat',
         'helmholtzFreeEnergy',
         'energy',
-        'helmholtzFunction',
-      ],
+        'helmholtzFunction'
+      ]
     },
     thermUs: {
       name: 'thermUs',
@@ -23409,8 +23371,8 @@ var sammUDefinition = {
         'quantityOfHeat',
         'heat',
         'helmholtzFreeEnergy',
-        'energy',
-      ],
+        'energy'
+      ]
     },
     thirtyDayMonth: {
       name: 'thirtyDayMonth',
@@ -23431,8 +23393,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     thousand: {
       name: 'thousand',
@@ -23441,7 +23403,7 @@ var sammUDefinition = {
       code: 'MIL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     thousandBoardFoot: {
       name: 'thousandBoardFoot',
@@ -23450,7 +23412,7 @@ var sammUDefinition = {
       code: 'MBF',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     thousandCubicFoot: {
       name: 'thousandCubicFoot',
@@ -23459,7 +23421,7 @@ var sammUDefinition = {
       code: 'FC',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     thousandCubicMetre: {
       name: 'thousandCubicMetre',
@@ -23470,7 +23432,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '10³m³',
-      quantityKinds: ['volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'sectionModulus']
     },
     thousandCubicMetrePerDay: {
       name: 'thousandCubicMetrePerDay',
@@ -23481,7 +23443,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '1.15741 × 10⁻² m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate']
     },
     thousandPiece: {
       name: 'thousandPiece',
@@ -23490,7 +23452,7 @@ var sammUDefinition = {
       code: 'T3',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     thousandSquareInch: {
       name: 'thousandSquareInch',
@@ -23499,7 +23461,7 @@ var sammUDefinition = {
       code: 'TI',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     thousandStandardBrickEquivalent: {
       name: 'thousandStandardBrickEquivalent',
@@ -23508,7 +23470,7 @@ var sammUDefinition = {
       code: 'MBE',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tonAssay: {
       name: 'tonAssay',
@@ -23519,7 +23481,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '2.916667 × 10⁻² kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     tonForceUsShort: {
       name: 'tonForceUsShort',
@@ -23530,7 +23492,7 @@ var sammUDefinition = {
         return sammUDefinition.units['newton'];
       },
       conversionFactor: '8.896443 × 10³ N',
-      quantityKinds: ['weight', 'force', 'force', 'weight'],
+      quantityKinds: ['weight', 'force', 'force', 'weight']
     },
     tonLongPerDay: {
       name: 'tonLongPerDay',
@@ -23541,7 +23503,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '1.175980 × 10⁻² kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonRegister: {
       name: 'tonRegister',
@@ -23552,7 +23514,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '2.831685 m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     tonShortPerDay: {
       name: 'tonShortPerDay',
@@ -23563,7 +23525,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '1.049982 × 10⁻² kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonShortPerDegreeFahrenheit: {
       name: 'tonShortPerDegreeFahrenheit',
@@ -23574,7 +23536,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerKelvin'];
       },
       conversionFactor: '1.632932 × 10³ kg/K',
-      quantityKinds: ['mass', 'volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['mass', 'volumicMass', 'massDensity', 'density']
     },
     tonShortPerHourDegreeFahrenheit: {
       name: 'tonShortPerHourDegreeFahrenheit',
@@ -23583,7 +23545,7 @@ var sammUDefinition = {
       code: 'L89',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     tonShortPerHourPsi: {
       name: 'tonShortPerHourPsi',
@@ -23594,7 +23556,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '3.654889 × 10⁻⁵ (kg/s)/Pa',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonShortPerPsi: {
       name: 'tonShortPerPsi',
@@ -23603,7 +23565,7 @@ var sammUDefinition = {
       code: 'L91',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     tonUkLongPerCubicYard: {
       name: 'tonUkLongPerCubicYard',
@@ -23623,8 +23585,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     tonUkOrLongTonUs: {
       name: 'tonUkOrLongTonUs',
@@ -23635,7 +23597,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '1.016047 × 10³ kg',
-      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
+      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass']
     },
     tonUkShipping: {
       name: 'tonUkShipping',
@@ -23646,7 +23608,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.1893 m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     tonUsOrShortTonUkorus: {
       name: 'tonUsOrShortTonUkorus',
@@ -23657,7 +23619,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '0.9071847 × 10³ kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     tonUsPerHour: {
       name: 'tonUsPerHour',
@@ -23668,7 +23630,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '2.519958 × 10⁻¹ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonUsShipping: {
       name: 'tonUsShipping',
@@ -23679,7 +23641,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetre'];
       },
       conversionFactor: '1.1326 m³',
-      quantityKinds: ['volume', 'volume', 'sectionModulus'],
+      quantityKinds: ['volume', 'volume', 'sectionModulus']
     },
     tonUsShortPerCubicYard: {
       name: 'tonUsShortPerCubicYard',
@@ -23699,8 +23661,8 @@ var sammUDefinition = {
         'amountOfSubstance',
         'density',
         'massDensity',
-        'massConcentrationOfB',
-      ],
+        'massConcentrationOfB'
+      ]
     },
     tonneKilometre: {
       name: 'tonneKilometre',
@@ -23711,7 +23673,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramMetre'];
       },
       conversionFactor: '10⁶ kg × m',
-      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple'],
+      quantityKinds: ['torque', 'momentOfForce', 'momentOfACouple']
     },
     tonneMetricTon: {
       name: 'tonneMetricTon',
@@ -23722,7 +23684,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '10³ kg',
-      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass'],
+      quantityKinds: ['massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass', 'mass']
     },
     tonnePerBar: {
       name: 'tonnePerBar',
@@ -23733,7 +23695,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerPascal'];
       },
       conversionFactor: '10⁻² kg/Pa',
-      quantityKinds: ['density', 'massDensity', 'volumicMass', 'volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['density', 'massDensity', 'volumicMass', 'volumicMass', 'massDensity', 'density']
     },
     tonnePerCubicMetre: {
       name: 'tonnePerCubicMetre',
@@ -23753,8 +23715,8 @@ var sammUDefinition = {
         'massConcentrationOfB',
         'density',
         'massDensity',
-        'volumicMass',
-      ],
+        'volumicMass'
+      ]
     },
     tonnePerCubicMetreBar: {
       name: 'tonnePerCubicMetreBar',
@@ -23765,7 +23727,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerCubicMetrePascal'];
       },
       conversionFactor: '10⁻² (kg/m³)/Pa',
-      quantityKinds: ['volumicMass', 'massDensity', 'density', 'density', 'massDensity', 'volumicMass'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density', 'density', 'massDensity', 'volumicMass']
     },
     tonnePerCubicMetreKelvin: {
       name: 'tonnePerCubicMetreKelvin',
@@ -23774,7 +23736,7 @@ var sammUDefinition = {
       code: 'L76',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['volumicMass', 'massDensity', 'density']
     },
     tonnePerDay: {
       name: 'tonnePerDay',
@@ -23785,7 +23747,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '1.15741 × 10⁻² kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonnePerDayBar: {
       name: 'tonnePerDayBar',
@@ -23796,7 +23758,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '1.15741 × 10⁻⁷ (kg/s)/Pa',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonnePerDayKelvin: {
       name: 'tonnePerDayKelvin',
@@ -23805,7 +23767,7 @@ var sammUDefinition = {
       code: 'L72',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     tonnePerHour: {
       name: 'tonnePerHour',
@@ -23816,7 +23778,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '2.77778 × 10⁻¹ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonnePerHourBar: {
       name: 'tonnePerHourBar',
@@ -23827,7 +23789,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '2.77778 × 10⁻⁶ (kg/s)/Pa',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonnePerHourKelvin: {
       name: 'tonnePerHourKelvin',
@@ -23836,7 +23798,7 @@ var sammUDefinition = {
       code: 'L74',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     tonnePerKelvin: {
       name: 'tonnePerKelvin',
@@ -23847,7 +23809,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerKelvin'];
       },
       conversionFactor: '10³ kg/K',
-      quantityKinds: ['mass', 'volumicMass', 'massDensity', 'density'],
+      quantityKinds: ['mass', 'volumicMass', 'massDensity', 'density']
     },
     tonnePerMinute: {
       name: 'tonnePerMinute',
@@ -23858,7 +23820,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '16.6667 kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonnePerMinuteBar: {
       name: 'tonnePerMinuteBar',
@@ -23869,7 +23831,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '1.66667 × 10⁻⁴ (kg/s)/Pa',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonnePerMinuteKelvin: {
       name: 'tonnePerMinuteKelvin',
@@ -23878,7 +23840,7 @@ var sammUDefinition = {
       code: 'L79',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     tonnePerMonth: {
       name: 'tonnePerMonth',
@@ -23889,7 +23851,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '3.80257053768 × 10⁻⁴ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonnePerSecond: {
       name: 'tonnePerSecond',
@@ -23900,7 +23862,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '10³ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonnePerSecondBar: {
       name: 'tonnePerSecondBar',
@@ -23911,7 +23873,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecondPascal'];
       },
       conversionFactor: '10⁻² (kg/s)/Pa',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     tonnePerSecondKelvin: {
       name: 'tonnePerSecondKelvin',
@@ -23920,7 +23882,7 @@ var sammUDefinition = {
       code: 'L82',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['massFlowRate'],
+      quantityKinds: ['massFlowRate']
     },
     tonnePerYear: {
       name: 'tonnePerYear',
@@ -23931,7 +23893,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogramPerSecond'];
       },
       conversionFactor: '3.168808781 × 10⁻⁵ kg/s',
-      quantityKinds: ['massFlowRate', 'massFlowRate'],
+      quantityKinds: ['massFlowRate', 'massFlowRate']
     },
     torrPerMetre: {
       name: 'torrPerMetre',
@@ -23940,7 +23902,7 @@ var sammUDefinition = {
       code: 'P85',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['hardnessIndex'],
+      quantityKinds: ['hardnessIndex']
     },
     totalAcidNumber: {
       name: 'totalAcidNumber',
@@ -23949,7 +23911,7 @@ var sammUDefinition = {
       code: 'TAN',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     treatment: {
       name: 'treatment',
@@ -23958,7 +23920,7 @@ var sammUDefinition = {
       code: 'U1',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     trillionEur: {
       name: 'trillionEur',
@@ -23967,7 +23929,7 @@ var sammUDefinition = {
       code: 'TRL',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     trip: {
       name: 'trip',
@@ -23976,7 +23938,7 @@ var sammUDefinition = {
       code: 'E54',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tropicalYear: {
       name: 'tropicalYear',
@@ -23998,8 +23960,8 @@ var sammUDefinition = {
         'time',
         'carrierLifeTime',
         'reactorTimeConstant',
-        'time',
-      ],
+        'time'
+      ]
     },
     troyOunceOrApothecaryOunce: {
       name: 'troyOunceOrApothecaryOunce',
@@ -24010,7 +23972,7 @@ var sammUDefinition = {
         return sammUDefinition.units['kilogram'];
       },
       conversionFactor: '3.110348 × 10⁻³ kg',
-      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass'],
+      quantityKinds: ['mass', 'massOfAtomOfANuclideX', 'massExcess', 'mass', 'effectiveMass', 'massOfMolecule', 'nuclidicMass']
     },
     troyPoundUs: {
       name: 'troyPoundUs',
@@ -24021,7 +23983,7 @@ var sammUDefinition = {
         return sammUDefinition.units['gram'];
       },
       conversionFactor: '373.2417 g',
-      quantityKinds: ['mass'],
+      quantityKinds: ['mass']
     },
     twentyFootContainer: {
       name: 'twentyFootContainer',
@@ -24030,7 +23992,7 @@ var sammUDefinition = {
       code: '20',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     tyre: {
       name: 'tyre',
@@ -24039,7 +24001,7 @@ var sammUDefinition = {
       code: 'E23',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     unifiedAtomicMassUnit: {
       name: 'unifiedAtomicMassUnit',
@@ -24061,8 +24023,8 @@ var sammUDefinition = {
         'mass',
         'effectiveMass',
         'massOfMolecule',
-        'nuclidicMass',
-      ],
+        'nuclidicMass'
+      ]
     },
     unitPole: {
       name: 'unitPole',
@@ -24073,7 +24035,7 @@ var sammUDefinition = {
         return sammUDefinition.units['weber'];
       },
       conversionFactor: '1.256637 × 10⁻⁷ Wb',
-      quantityKinds: ['magneticFluxQuantum', 'magneticFlux', 'magneticFluxQuantum'],
+      quantityKinds: ['magneticFluxQuantum', 'magneticFlux', 'magneticFluxQuantum']
     },
     usGallonPerMinute: {
       name: 'usGallonPerMinute',
@@ -24084,7 +24046,7 @@ var sammUDefinition = {
         return sammUDefinition.units['cubicMetrePerSecond'];
       },
       conversionFactor: '6.309020 × 10⁻⁵ m³/s',
-      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate'],
+      quantityKinds: ['volumeFlowRate', 'recombinationCoefficient', 'instantaneousVolumeFlowRate', 'volumeFlowRate']
     },
     use: {
       name: 'use',
@@ -24093,7 +24055,7 @@ var sammUDefinition = {
       code: 'E55',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     var: {
       name: 'var',
@@ -24104,7 +24066,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltAmpere'];
       },
       conversionFactor: 'V × A',
-      quantityKinds: ['apparentPower', 'reactivePower'],
+      quantityKinds: ['apparentPower', 'reactivePower']
     },
     volt: {
       name: 'volt',
@@ -24120,8 +24082,8 @@ var sammUDefinition = {
         'electromotiveForce',
         'potentialDifference',
         'tension',
-        'voltage',
-      ],
+        'voltage'
+      ]
     },
     voltAc: {
       name: 'voltAc',
@@ -24130,7 +24092,7 @@ var sammUDefinition = {
       code: '2G',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     voltAmpere: {
       name: 'voltAmpere',
@@ -24149,8 +24111,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     voltAmperePerKilogram: {
       name: 'voltAmperePerKilogram',
@@ -24159,7 +24121,7 @@ var sammUDefinition = {
       code: 'VA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     voltDc: {
       name: 'voltDc',
@@ -24168,7 +24130,7 @@ var sammUDefinition = {
       code: '2H',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     voltPerBar: {
       name: 'voltPerBar',
@@ -24177,7 +24139,7 @@ var sammUDefinition = {
       code: 'G60',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength']
     },
     voltPerCentimetre: {
       name: 'voltPerCentimetre',
@@ -24186,7 +24148,7 @@ var sammUDefinition = {
       code: 'D47',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength']
     },
     voltPerInch: {
       name: 'voltPerInch',
@@ -24195,7 +24157,7 @@ var sammUDefinition = {
       code: 'H23',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength']
     },
     voltPerKelvin: {
       name: 'voltPerKelvin',
@@ -24204,7 +24166,7 @@ var sammUDefinition = {
       code: 'D48',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['seebeckCoefficientForSubstancesAAndB'],
+      quantityKinds: ['seebeckCoefficientForSubstancesAAndB']
     },
     voltPerLitreMinute: {
       name: 'voltPerLitreMinute',
@@ -24213,7 +24175,7 @@ var sammUDefinition = {
       code: 'F87',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength']
     },
     voltPerMetre: {
       name: 'voltPerMetre',
@@ -24222,7 +24184,7 @@ var sammUDefinition = {
       code: 'D50',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength']
     },
     voltPerMicrosecond: {
       name: 'voltPerMicrosecond',
@@ -24233,7 +24195,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltPerSecond'];
       },
       conversionFactor: '10⁶ V/s',
-      quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength', 'electricFieldStrength']
     },
     voltPerMillimetre: {
       name: 'voltPerMillimetre',
@@ -24244,7 +24206,7 @@ var sammUDefinition = {
         return sammUDefinition.units['voltPerMetre'];
       },
       conversionFactor: '10³ V/m',
-      quantityKinds: ['electricFieldStrength', 'electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength', 'electricFieldStrength']
     },
     voltPerPascal: {
       name: 'voltPerPascal',
@@ -24253,7 +24215,7 @@ var sammUDefinition = {
       code: 'N98',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength']
     },
     voltPerSecond: {
       name: 'voltPerSecond',
@@ -24262,7 +24224,7 @@ var sammUDefinition = {
       code: 'H46',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength']
     },
     voltSecondPerMetre: {
       name: 'voltSecondPerMetre',
@@ -24271,7 +24233,7 @@ var sammUDefinition = {
       code: 'H45',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength']
     },
     voltSquareInchPerPoundForce: {
       name: 'voltSquareInchPerPoundForce',
@@ -24280,7 +24242,7 @@ var sammUDefinition = {
       code: 'H22',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength']
     },
     voltSquaredPerKelvinSquared: {
       name: 'voltSquaredPerKelvinSquared',
@@ -24289,7 +24251,7 @@ var sammUDefinition = {
       code: 'D45',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['electricFieldStrength'],
+      quantityKinds: ['electricFieldStrength']
     },
     waterHorsePower: {
       name: 'waterHorsePower',
@@ -24308,8 +24270,8 @@ var sammUDefinition = {
         'radiantEnergyflux',
         'powerForDirectCurrent',
         'radiantPower',
-        'soundPower',
-      ],
+        'soundPower'
+      ]
     },
     watt: {
       name: 'watt',
@@ -24318,7 +24280,7 @@ var sammUDefinition = {
       code: 'WTT',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['heatFlowRate', 'power', 'activePower', 'radiantEnergyflux', 'powerForDirectCurrent', 'radiantPower', 'soundPower'],
+      quantityKinds: ['heatFlowRate', 'power', 'activePower', 'radiantEnergyflux', 'powerForDirectCurrent', 'radiantPower', 'soundPower']
     },
     wattHour: {
       name: 'wattHour',
@@ -24353,8 +24315,8 @@ var sammUDefinition = {
         'kineticEnergy',
         'potentialEnergy',
         'activeEnergy',
-        'work',
-      ],
+        'work'
+      ]
     },
     wattPerCubicMetre: {
       name: 'wattPerCubicMetre',
@@ -24363,7 +24325,7 @@ var sammUDefinition = {
       code: 'H47',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['irradiance', 'firstRadiationConstant', 'fluenceRate', 'radiantEnergy', 'radiantExitance'],
+      quantityKinds: ['irradiance', 'firstRadiationConstant', 'fluenceRate', 'radiantEnergy', 'radiantExitance']
     },
     wattPerKelvin: {
       name: 'wattPerKelvin',
@@ -24372,7 +24334,7 @@ var sammUDefinition = {
       code: 'D52',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['thermalConductance'],
+      quantityKinds: ['thermalConductance']
     },
     wattPerKilogram: {
       name: 'wattPerKilogram',
@@ -24381,7 +24343,7 @@ var sammUDefinition = {
       code: 'WA',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     wattPerMetre: {
       name: 'wattPerMetre',
@@ -24390,7 +24352,7 @@ var sammUDefinition = {
       code: 'H74',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['irradiance', 'firstRadiationConstant', 'radiantEnergy', 'radiantExitance', 'fluenceRate'],
+      quantityKinds: ['irradiance', 'firstRadiationConstant', 'radiantEnergy', 'radiantExitance', 'fluenceRate']
     },
     wattPerMetreDegreeCelsius: {
       name: 'wattPerMetreDegreeCelsius',
@@ -24401,7 +24363,7 @@ var sammUDefinition = {
         return sammUDefinition.units['wattPerMetreKelvin'];
       },
       conversionFactor: 'W/(m × K)',
-      quantityKinds: ['thermalConductivity', 'thermalConductivity'],
+      quantityKinds: ['thermalConductivity', 'thermalConductivity']
     },
     wattPerMetreKelvin: {
       name: 'wattPerMetreKelvin',
@@ -24410,7 +24372,7 @@ var sammUDefinition = {
       code: 'D53',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['thermalConductivity'],
+      quantityKinds: ['thermalConductivity']
     },
     wattPerSquareCentimetre: {
       name: 'wattPerSquareCentimetre',
@@ -24432,8 +24394,8 @@ var sammUDefinition = {
         'energyFluenceRate',
         'soundIntensity',
         'radiantEnergy',
-        'radiantExitance',
-      ],
+        'radiantExitance'
+      ]
     },
     wattPerSquareInch: {
       name: 'wattPerSquareInch',
@@ -24455,8 +24417,8 @@ var sammUDefinition = {
         'soundIntensity',
         'radiantEnergy',
         'radiantExitance',
-        'densityOfHeatFlowRate',
-      ],
+        'densityOfHeatFlowRate'
+      ]
     },
     wattPerSquareMetre: {
       name: 'wattPerSquareMetre',
@@ -24475,8 +24437,8 @@ var sammUDefinition = {
         'energyFluenceRate',
         'soundIntensity',
         'radiantEnergy',
-        'radiantExitance',
-      ],
+        'radiantExitance'
+      ]
     },
     wattPerSquareMetreKelvin: {
       name: 'wattPerSquareMetreKelvin',
@@ -24485,7 +24447,7 @@ var sammUDefinition = {
       code: 'D55',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['coefficientOfHeatTransfer'],
+      quantityKinds: ['coefficientOfHeatTransfer']
     },
     wattPerSquareMetreKelvinToTheFourthPower: {
       name: 'wattPerSquareMetreKelvinToTheFourthPower',
@@ -24494,7 +24456,7 @@ var sammUDefinition = {
       code: 'D56',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['stefanBoltzmannConstant'],
+      quantityKinds: ['stefanBoltzmannConstant']
     },
     wattPerSteradian: {
       name: 'wattPerSteradian',
@@ -24503,7 +24465,7 @@ var sammUDefinition = {
       code: 'D57',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['radiantIntensity'],
+      quantityKinds: ['radiantIntensity']
     },
     wattPerSteradianSquareMetre: {
       name: 'wattPerSteradianSquareMetre',
@@ -24512,7 +24474,7 @@ var sammUDefinition = {
       code: 'D58',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['radiance'],
+      quantityKinds: ['radiance']
     },
     wattSecond: {
       name: 'wattSecond',
@@ -24521,7 +24483,7 @@ var sammUDefinition = {
       code: 'J55',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['quantityOfHeat', 'enthalpy', 'energy', 'thermodynamicEnergy', 'heat', 'helmholtzFunction', 'helmholtzFreeEnergy'],
+      quantityKinds: ['quantityOfHeat', 'enthalpy', 'energy', 'thermodynamicEnergy', 'heat', 'helmholtzFunction', 'helmholtzFreeEnergy']
     },
     wattSquareMetre: {
       name: 'wattSquareMetre',
@@ -24530,7 +24492,7 @@ var sammUDefinition = {
       code: 'Q21',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     weber: {
       name: 'weber',
@@ -24539,7 +24501,7 @@ var sammUDefinition = {
       code: 'WEB',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['magneticFluxQuantum', 'magneticFlux'],
+      quantityKinds: ['magneticFluxQuantum', 'magneticFlux']
     },
     weberMetre: {
       name: 'weberMetre',
@@ -24548,7 +24510,7 @@ var sammUDefinition = {
       code: 'P50',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['magneticDipoleMoment'],
+      quantityKinds: ['magneticDipoleMoment']
     },
     weberPerMetre: {
       name: 'weberPerMetre',
@@ -24557,7 +24519,7 @@ var sammUDefinition = {
       code: 'D59',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: ['magneticVectorPotential'],
+      quantityKinds: ['magneticVectorPotential']
     },
     weberPerMillimetre: {
       name: 'weberPerMillimetre',
@@ -24568,7 +24530,7 @@ var sammUDefinition = {
         return sammUDefinition.units['weberPerMetre'];
       },
       conversionFactor: '10³ Wb/m',
-      quantityKinds: ['magneticVectorPotential', 'magneticVectorPotential'],
+      quantityKinds: ['magneticVectorPotential', 'magneticVectorPotential']
     },
     weberToThePowerMinusOne: {
       name: 'weberToThePowerMinusOne',
@@ -24577,7 +24539,7 @@ var sammUDefinition = {
       code: 'Q23',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     week: {
       name: 'week',
@@ -24599,8 +24561,8 @@ var sammUDefinition = {
         'meanLife',
         'time',
         'carrierLifeTime',
-        'reactorTimeConstant',
-      ],
+        'reactorTimeConstant'
+      ]
     },
     well: {
       name: 'well',
@@ -24609,7 +24571,7 @@ var sammUDefinition = {
       code: 'E56',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     wetKilo: {
       name: 'wetKilo',
@@ -24618,7 +24580,7 @@ var sammUDefinition = {
       code: 'W2',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     wetPound: {
       name: 'wetPound',
@@ -24627,7 +24589,7 @@ var sammUDefinition = {
       code: 'WB',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     wetTon: {
       name: 'wetTon',
@@ -24636,7 +24598,7 @@ var sammUDefinition = {
       code: 'WE',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     wineGallon: {
       name: 'wineGallon',
@@ -24645,7 +24607,7 @@ var sammUDefinition = {
       code: 'WG',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     workingDay: {
       name: 'workingDay',
@@ -24654,7 +24616,7 @@ var sammUDefinition = {
       code: 'E49',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     workingMonth: {
       name: 'workingMonth',
@@ -24663,7 +24625,7 @@ var sammUDefinition = {
       code: 'WM',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
+      quantityKinds: null
     },
     yard: {
       name: 'yard',
@@ -24720,8 +24682,8 @@ var sammUDefinition = {
         'thickness',
         'instantaneousSoundParticleDisplacement',
         'nuclearRadius',
-        'diffusionCoefficientForNeutronFluxDensity',
-      ],
+        'diffusionCoefficientForNeutronFluxDensity'
+      ]
     },
     yardPerDegreeFahrenheit: {
       name: 'yardPerDegreeFahrenheit',
@@ -24752,8 +24714,8 @@ var sammUDefinition = {
         'length',
         'cartesianCoordinates',
         'diameter',
-        'radiusOfCurvature',
-      ],
+        'radiusOfCurvature'
+      ]
     },
     yardPerHour: {
       name: 'yardPerHour',
@@ -24776,8 +24738,8 @@ var sammUDefinition = {
         'phaseVelocity',
         'groupVelocity',
         'phaseVelocity',
-        'velocity',
-      ],
+        'velocity'
+      ]
     },
     yardPerMinute: {
       name: 'yardPerMinute',
@@ -24800,8 +24762,8 @@ var sammUDefinition = {
         'phaseVelocity',
         'phaseVelocity',
         'groupVelocity',
-        'velocity',
-      ],
+        'velocity'
+      ]
     },
     yardPerPsi: {
       name: 'yardPerPsi',
@@ -24832,8 +24794,8 @@ var sammUDefinition = {
         'cartesianCoordinates',
         'radius',
         'radiusOfCurvature',
-        'breadth',
-      ],
+        'breadth'
+      ]
     },
     yardPerSecond: {
       name: 'yardPerSecond',
@@ -24856,8 +24818,8 @@ var sammUDefinition = {
         'velocityOfSoundPhaseVelocity',
         'phaseVelocityOfElectromagneticWaves',
         'groupVelocity',
-        'phaseVelocity',
-      ],
+        'phaseVelocity'
+      ]
     },
     yardPerSecondSquared: {
       name: 'yardPerSecondSquared',
@@ -24875,8 +24837,8 @@ var sammUDefinition = {
         'accelerationDueToGravity',
         'accelerationOfFreeFall',
         'instantaneousSoundParticleAcceleration',
-        'acceleration',
-      ],
+        'acceleration'
+      ]
     },
     year: {
       name: 'year',
@@ -24898,8 +24860,8 @@ var sammUDefinition = {
         'time',
         'carrierLifeTime',
         'reactorTimeConstant',
-        'time',
-      ],
+        'time'
+      ]
     },
     yobibyte: {
       name: 'yobibyte',
@@ -24910,7 +24872,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '2⁸⁰ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     yottabyte: {
       name: 'yottabyte',
@@ -24921,7 +24883,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '10²⁴ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     zebibyte: {
       name: 'zebibyte',
@@ -24932,7 +24894,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '2⁷⁰ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     zettabyte: {
       name: 'zettabyte',
@@ -24943,7 +24905,7 @@ var sammUDefinition = {
         return sammUDefinition.units['byte'];
       },
       conversionFactor: '10²¹ B',
-      quantityKinds: ['informationEntropy', 'informationEntropy'],
+      quantityKinds: ['informationEntropy', 'informationEntropy']
     },
     zone: {
       name: 'zone',
@@ -24952,7 +24914,7 @@ var sammUDefinition = {
       code: 'E57',
       referenceUnit: null,
       conversionFactor: null,
-      quantityKinds: null,
-    },
-  },
+      quantityKinds: null
+    }
+  }
 };

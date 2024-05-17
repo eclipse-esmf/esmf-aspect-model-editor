@@ -21,7 +21,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AbstractPropertyAbstractPropertyConnectionHandler
   extends PropertyInheritanceConnector
@@ -32,7 +32,7 @@ export class AbstractPropertyAbstractPropertyConnectionHandler
     protected mxGraphAttributeService: MxGraphAttributeService,
     protected sammLangService: SammLanguageSettingsService,
     protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService,
+    private notificationService: NotificationsService
   ) {
     super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, translate);
   }
@@ -41,12 +41,12 @@ export class AbstractPropertyAbstractPropertyConnectionHandler
     parentMetaModel: DefaultAbstractProperty,
     childMetaModel: DefaultAbstractProperty,
     parentCell: mxgraph.mxCell,
-    childCell: mxgraph.mxCell,
+    childCell: mxgraph.mxCell
   ) {
     if (this.hasEntityParent(parentCell)) {
       this.notificationsService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.MISSING_PARENT_ENTITY,
-        message: this.translate.language.NOTIFICATION_SERVICE.ABSTRACT_PROPERTY_PARENT_REQUIREMENT,
+        message: this.translate.language.NOTIFICATION_SERVICE.ABSTRACT_PROPERTY_PARENT_REQUIREMENT
       });
       return;
     }
@@ -55,7 +55,7 @@ export class AbstractPropertyAbstractPropertyConnectionHandler
       this.notificationService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
         message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
-        timeout: 5000,
+        timeout: 5000
       });
     } else {
       super.connect(parentMetaModel, childMetaModel, parentCell, childCell);

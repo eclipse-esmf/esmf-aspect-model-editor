@@ -19,14 +19,14 @@ import {CanExtend, DefaultAbstractEntity, DefaultEntity} from '../aspect-meta-mo
 import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BaseEntityModelService {
   constructor(
     private mxGraphService: MxGraphService,
     private notificationService: NotificationsService,
     private shapeConnectorService: ShapeConnectorService,
-    private translate: LanguageTranslationService,
+    private translate: LanguageTranslationService
   ) {}
 
   checkExtendedElement(metaModelElement: CanExtend, extendedElement: CanExtend) {
@@ -40,7 +40,7 @@ export class BaseEntityModelService {
       this.notificationService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
         message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
-        timeout: 5000,
+        timeout: 5000
       });
       return;
     }
@@ -50,7 +50,7 @@ export class BaseEntityModelService {
         metaModelElement,
         extendedElement,
         this.mxGraphService.resolveCellByModelElement(metaModelElement),
-        resolvedCell,
+        resolvedCell
       );
     }
 

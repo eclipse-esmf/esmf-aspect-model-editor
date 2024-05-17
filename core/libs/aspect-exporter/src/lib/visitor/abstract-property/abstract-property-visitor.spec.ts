@@ -36,7 +36,7 @@ describe('Property Visitor', () => {
       store: new Store(),
       SAMM: jest.fn(() => new Samm('')),
       hasNamespace: jest.fn(() => false),
-      addPrefix: jest.fn(() => {}),
+      addPrefix: jest.fn(() => {})
     } as any;
 
     TestBed.configureTestingModule({
@@ -44,21 +44,21 @@ describe('Property Visitor', () => {
         AbstractPropertyVisitor,
         {
           provide: RdfNodeService,
-          useValue: provideMockObject(RdfNodeService),
+          useValue: provideMockObject(RdfNodeService)
         },
         {
           provide: RdfService,
-          useValue: provideMockObject(RdfService),
+          useValue: provideMockObject(RdfService)
         },
         {
           provide: ModelService,
           useValue: {
             get currentRdfModel() {
               return rdfModel;
-            },
-          },
-        },
-      ],
+            }
+          }
+        }
+      ]
     });
 
     modelService = TestBed.inject(ModelService) as jest.Mocked<ModelService>;
@@ -81,7 +81,7 @@ describe('Property Visitor', () => {
       description: [],
       exampleValue: null,
       preferredName: [],
-      see: [],
+      see: []
     });
   });
 });

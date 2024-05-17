@@ -19,7 +19,7 @@ import {
   HeaderCopyrightComponent,
   LanguageSettingsComponent,
   NamespaceSettingsComponent,
-  SettingDialogComponent,
+  SettingDialogComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
@@ -46,7 +46,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     NamespaceSettingsComponent,
     AutomatedWorkflowComponent,
     EditorConfigurationComponent,
-    HeaderCopyrightComponent,
+    HeaderCopyrightComponent
   ],
   imports: [
     CommonModule,
@@ -67,8 +67,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatDividerModule,
     LanguageTranslateModule,
     MatMenuModule,
-    MatExpansionModule,
+    MatExpansionModule
   ],
-  exports: [SettingDialogComponent],
+  exports: [SettingDialogComponent]
 })
 export class SettingDialogModule {}

@@ -19,13 +19,13 @@ import {catchError, of} from 'rxjs';
 @Component({
   selector: 'ame-loading-migrating',
   templateUrl: './loading-migrating.component.html',
-  styleUrls: ['./loading-migrating.component.scss'],
+  styleUrls: ['./loading-migrating.component.scss']
 })
 export class LoadingMigratingComponent implements OnInit {
   constructor(
     private migratorApiService: MigratorApiService,
     private router: Router,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {

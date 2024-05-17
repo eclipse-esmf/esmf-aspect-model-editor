@@ -16,7 +16,7 @@ import {EditorModelService} from '../../editor-model.service';
 
 @Component({
   selector: 'ame-abstract-property',
-  templateUrl: './abstract-property.component.html',
+  templateUrl: './abstract-property.component.html'
 })
 export class AbstractPropertyComponent {
   @Input() parentForm: FormGroup;

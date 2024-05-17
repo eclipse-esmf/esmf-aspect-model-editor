@@ -16,7 +16,7 @@ import {CachedFile} from './cached-file';
 import {Base, BaseMetaModelElement} from '@ame/meta-model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class NamespacesCacheService {
   #namespaces = new Map<string, Map<string, CachedFile>>();

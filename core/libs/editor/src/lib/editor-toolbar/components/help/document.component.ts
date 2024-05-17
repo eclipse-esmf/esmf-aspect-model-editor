@@ -18,7 +18,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 @Component({
   selector: 'ame-document',
   templateUrl: './document.component.html',
-  styleUrls: ['./document.component.scss'],
+  styleUrls: ['./document.component.scss']
 })
 export class DocumentComponent {
   AMEDocumentationLink = 'https://eclipse-esmf.github.io/ame-guide/introduction.html';
@@ -27,7 +27,7 @@ export class DocumentComponent {
   constructor(
     private dialogRef: MatDialogRef<DocumentComponent>,
     @Inject(APP_CONFIG) public config: AppConfig,
-    private browserService: BrowserService,
+    private browserService: BrowserService
   ) {}
 
   openLink(event: MouseEvent) {

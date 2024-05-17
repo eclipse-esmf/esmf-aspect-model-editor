@@ -25,8 +25,8 @@ import {InputFieldComponent} from '../../input-field.component';
       textarea {
         line-height: 1.35;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class DescriptionInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
   constructor(public metaModelDialogService: EditorModelService) {
@@ -91,8 +91,8 @@ export class DescriptionInputFieldComponent extends InputFieldComponent<BaseMeta
         key,
         new FormControl({
           value: this.getCurrentValue(key, locale) || this.metaModelElement?.getDescription(locale),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
-        }),
+          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled()
+        })
       );
     });
   }

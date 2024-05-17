@@ -21,7 +21,7 @@ import {Langcode} from '../../../model';
 @Component({
   selector: 'ame-language-settings',
   templateUrl: './language-settings.component.html',
-  styleUrls: ['./language-settings.component.scss'],
+  styleUrls: ['./language-settings.component.scss']
 })
 export class LanguageSettingsComponent implements OnInit {
   form: FormGroup;
@@ -29,7 +29,7 @@ export class LanguageSettingsComponent implements OnInit {
 
   constructor(
     private translate: LanguageTranslationService,
-    private formService: SettingsFormService,
+    private formService: SettingsFormService
   ) {}
 
   ngOnInit(): void {
@@ -62,7 +62,7 @@ export class LanguageSettingsComponent implements OnInit {
   private getFilteredOptionsObservable(control: AbstractControl): Observable<Langcode[]> {
     return control.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterOptions(this.getLanguageName(value))),
+      map(value => this.filterOptions(this.getLanguageName(value)))
     );
   }
 
@@ -77,7 +77,7 @@ export class LanguageSettingsComponent implements OnInit {
       .filter(locale => this.isLocaleMatch(locale, filterValue))
       .map(locale => ({
         name: locale.name,
-        tag: locale.tag,
+        tag: locale.tag
       }));
   }
 

@@ -32,11 +32,11 @@ export const config: AppConfig = {
     models: '/ame/api/models',
     generate: '/ame/api/generate',
     package: '/ame/api/package',
-    fileHandling: '/ame/api/file-handling',
-  },
+    fileHandling: '/ame/api/file-handling'
+  }
 };
 
 export const APP_CONFIG = new InjectionToken<AppConfig>('app.config', {
   providedIn: 'root',
-  factory: () => config,
+  factory: () => config
 });

@@ -23,6 +23,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 @NgModule({
   imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule, MatTooltipModule, LanguageTranslateModule],
   declarations: [LoadingScreenComponent, AlertComponent],
-  exports: [],
+  exports: []
 })
 export class SharedModule {}

@@ -29,7 +29,7 @@ import {
   DefaultScalar,
   DefaultState,
   DefaultUnit,
-  Type,
+  Type
 } from '@ame/meta-model';
 import {DataFactory, NamedNode, Quad, Util} from 'n3';
 import {simpleDataTypes} from '@ame/shared';
@@ -75,7 +75,7 @@ export class RdfModelUtil {
     metaModelElement: BaseMetaModelElement,
     predicateUrn: string,
     rdfModel: RdfModel,
-    characteristicType: Type,
+    characteristicType: Type
   ): NamedNode {
     const samm = rdfModel.SAMM();
     const sammC = rdfModel.SAMMC();
@@ -226,7 +226,7 @@ export class RdfModelUtil {
       `${sammC.getNamespace()}Language`,
       `${sammC.getNamespace()}UnitReference`,
       `${sammC.getNamespace()}ResourcePath`,
-      `${sammC.getNamespace()}MimeType`,
+      `${sammC.getNamespace()}MimeType`
     ].some(predefinedUrn => predefinedUrn === aspectModelUrn);
   }
 
@@ -244,7 +244,7 @@ export class RdfModelUtil {
       DataFactory.namedNode(elementType),
       null,
       metaModelElementInstantiator.samm.Entity(),
-      null,
+      null
     );
 
     if (quads.length) {

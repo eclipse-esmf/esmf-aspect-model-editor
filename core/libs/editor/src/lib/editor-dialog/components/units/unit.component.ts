@@ -16,7 +16,7 @@ import {EditorModelService} from '../../editor-model.service';
 
 @Component({
   selector: 'ame-unit',
-  templateUrl: './unit.component.html',
+  templateUrl: './unit.component.html'
 })
 export class UnitComponent {
   @Input() parentForm: FormGroup;

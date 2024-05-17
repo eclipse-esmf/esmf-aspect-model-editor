@@ -19,12 +19,12 @@ import {NamespacesSessionInterface} from '../../../shared/models';
 @Component({
   selector: 'ame-export-validate',
   templateUrl: './validate.components.html',
-  styleUrls: [`validate.components.scss`],
+  styleUrls: [`validate.components.scss`]
 })
 export class ExportValidateComponent implements OnInit {
   constructor(
     private router: Router,
-    @Inject(NAMESPACES_SESSION) private namespacesSession: NamespacesSessionInterface,
+    @Inject(NAMESPACES_SESSION) private namespacesSession: NamespacesSessionInterface
   ) {}
 
   ngOnInit() {
@@ -38,7 +38,7 @@ export class ExportValidateComponent implements OnInit {
       },
       error: () => {
         this.router.navigate([{outlets: {'export-namespaces': 'error'}}]);
-      },
+      }
     });
   }
 }

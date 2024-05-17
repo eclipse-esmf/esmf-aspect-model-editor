@@ -18,7 +18,7 @@ import {NamespacesSessionInterface} from '../../../shared/models';
 
 @Component({
   templateUrl: './file-conflict.component.html',
-  styleUrls: ['./file-conflict.component.scss'],
+  styleUrls: ['./file-conflict.component.scss']
 })
 export class FileConflictComponent {
   public namespacesToReplace: string[] = [];
@@ -26,7 +26,7 @@ export class FileConflictComponent {
 
   constructor(
     @Inject(NAMESPACES_SESSION) private importSession: NamespacesSessionInterface,
-    private router: Router,
+    private router: Router
   ) {
     this.conflictFiles = this.importSession.conflictFiles;
     this.namespacesToReplace = [...this.conflictFiles.replace];

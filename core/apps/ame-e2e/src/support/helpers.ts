@@ -23,7 +23,7 @@ import {
   SELECTOR_overrideNamespace,
   SELECTOR_settingsButton,
   SettingsDialogSelectors,
-  SIDEBAR_CLOSE_BUTTON,
+  SIDEBAR_CLOSE_BUTTON
 } from './constants';
 import {FileHandlingService} from '@ame/editor';
 import {finalize} from 'rxjs/operators';

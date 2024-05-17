@@ -19,12 +19,12 @@ import {Injectable} from '@angular/core';
 import {ElectronTunnelService} from '@ame/shared';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrategy {
   constructor(
     private translate: LanguageTranslationService,
-    private electronTunnelService: ElectronTunnelService,
+    private electronTunnelService: ElectronTunnelService
   ) {}
 
   updateSettings(form: FormGroup, settings: Settings): void {
@@ -37,7 +37,7 @@ export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrate
     localStorage.setItem('applicationLanguage', userInterfaceLang);
 
     settings.aspectModelLanguages = (languageConfiguration.get('aspectModel') as FormArray).controls.map(
-      control => control.get('language')?.value.tag,
+      control => control.get('language')?.value.tag
     );
   }
 }

@@ -27,7 +27,7 @@ import {
   DefaultEntity,
   DefaultEntityInstance,
   DefaultUnit,
-  DefaultAbstractEntity,
+  DefaultAbstractEntity
 } from '@ame/meta-model';
 import {ClassReference, ModelFilter} from './filter-loader.interface';
 
@@ -38,7 +38,7 @@ export class FilterRelation {
     public exceptInFilter: {
       [ModelFilter.DEFAULT]?: ClassReference<BaseMetaModelElement>[];
       [ModelFilter.PROPERTIES]?: ClassReference<BaseMetaModelElement>[];
-    } = {},
+    } = {}
   ) {
     if (!this.exceptInFilter[ModelFilter.DEFAULT]) {
       this.exceptInFilter[ModelFilter.DEFAULT] = [];
@@ -57,11 +57,11 @@ export class FilterRelation {
 export const filterRelations = [
   new FilterRelation(DefaultAspect, [DefaultProperty, DefaultOperation, DefaultEvent]),
   new FilterRelation(DefaultProperty, [DefaultCharacteristic, DefaultTrait, DefaultAbstractProperty, DefaultProperty], {
-    [ModelFilter.PROPERTIES]: [DefaultProperty],
+    [ModelFilter.PROPERTIES]: [DefaultProperty]
   }),
   new FilterRelation(DefaultAbstractProperty, [DefaultAbstractProperty]),
   new FilterRelation(DefaultTrait, [DefaultConstraint, DefaultCharacteristic], {
-    [ModelFilter.PROPERTIES]: [DefaultProperty],
+    [ModelFilter.PROPERTIES]: [DefaultProperty]
   }),
   new FilterRelation(DefaultCollection, [DefaultCharacteristic]),
   new FilterRelation(DefaultStructuredValue, [DefaultProperty]),
@@ -72,5 +72,5 @@ export const filterRelations = [
   new FilterRelation(DefaultEvent, [DefaultProperty]),
   new FilterRelation(DefaultOperation, [DefaultProperty]),
   new FilterRelation(DefaultUnit, [DefaultUnit]),
-  new FilterRelation(DefaultAbstractEntity, [DefaultAbstractEntity, DefaultProperty, DefaultAbstractProperty]),
+  new FilterRelation(DefaultAbstractEntity, [DefaultAbstractEntity, DefaultProperty, DefaultAbstractProperty])
 ];

@@ -33,7 +33,7 @@ import {
   DefaultProperty,
   DefaultStructuredValue,
   DefaultTrait,
-  DefaultUnit,
+  DefaultUnit
 } from '@ame/meta-model';
 import {BrowserService} from '@ame/shared';
 import {ShapeConnectorService} from '@ame/connection';
@@ -50,7 +50,7 @@ export class MxGraphShapeOverlayService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private filtersService: FiltersService,
     private sammLangService: SammLanguageSettingsService,
-    private injector: Injector,
+    private injector: Injector
   ) {}
 
   removeOverlay(cell: mxgraph.mxCell, overlay?: mxgraph.mxCellOverlay): void {
@@ -176,7 +176,7 @@ export class MxGraphShapeOverlayService {
         ModelInfo.IS_EITHER_LEFT,
         -elementOffset,
         'arrow-left-frame',
-        mxConstants.ALIGN_LEFT,
+        mxConstants.ALIGN_LEFT
       );
 
       this.createConnectorElement(
@@ -185,7 +185,7 @@ export class MxGraphShapeOverlayService {
         ModelInfo.IS_EITHER_RIGHT,
         elementOffset,
         'arrow-right-frame',
-        mxConstants.ALIGN_RIGHT,
+        mxConstants.ALIGN_RIGHT
       );
 
       return;
@@ -198,7 +198,7 @@ export class MxGraphShapeOverlayService {
         ModelInfo.IS_OPERATION_INPUT,
         -elementOffset,
         'arrow-up-frame',
-        mxConstants.ALIGN_LEFT,
+        mxConstants.ALIGN_LEFT
       );
 
       this.createConnectorElement(
@@ -207,7 +207,7 @@ export class MxGraphShapeOverlayService {
         ModelInfo.IS_OPERATION_OUTPUT,
         elementOffset,
         'arrow-down-frame',
-        mxConstants.ALIGN_RIGHT,
+        mxConstants.ALIGN_RIGHT
       );
 
       return;
@@ -248,7 +248,7 @@ export class MxGraphShapeOverlayService {
     modelInfo: ModelInfo,
     offset = 0,
     svgFileName = 'add-frame',
-    align = mxConstants.ALIGN_CENTER,
+    align = mxConstants.ALIGN_CENTER
   ): void {
     const modelElement = MxGraphHelper.getModelElement(cell);
     if (!this.filtersService.currentFilter.hasOverlay(modelElement)) return;
@@ -413,7 +413,7 @@ export class MxGraphShapeOverlayService {
       geometry.y,
       geometry.width,
       geometry.height,
-      node.shape.mxGraphStyle,
+      node.shape.mxGraphStyle
     );
 
     const rdfService = this.injector.get(RdfService);
@@ -421,7 +421,7 @@ export class MxGraphShapeOverlayService {
     modelElementCell.setId(node.element.name);
     modelElementCell['configuration'] = {
       baseProperties: MxGraphVisitorHelper.getModelInfo(node.element, rdfService.currentRdfModel),
-      fields: cellConfiguration,
+      fields: cellConfiguration
     };
     graph.foldingEnabled = false;
     return modelElementCell;

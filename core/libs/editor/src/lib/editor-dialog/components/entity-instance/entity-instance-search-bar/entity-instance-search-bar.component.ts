@@ -16,7 +16,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 @Component({
   selector: 'ame-entity-instance-search-bar',
   templateUrl: './entity-instance-search-bar.component.html',
-  styleUrls: ['./entity-instance-search-bar.component.scss'],
+  styleUrls: ['./entity-instance-search-bar.component.scss']
 })
 export class EntityInstanceSearchBarComponent {
   @Input() count: number;

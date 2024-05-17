@@ -18,7 +18,7 @@ import {Injectable} from '@angular/core';
 import {MxGraphService} from '@ame/mx-graph';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EditorConfigurationUpdateStrategy implements SettingsUpdateStrategy {
   constructor(private mxGraphService: MxGraphService) {}

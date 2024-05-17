@@ -18,7 +18,7 @@ import {
   SELECTOR_ecCharacteristic,
   SELECTOR_openNamespacesButton,
   SELECTOR_searchElementsInp,
-  SELECTOR_workspaceBtn,
+  SELECTOR_workspaceBtn
 } from '../../../support/constants';
 import {checkAspect, connectElements} from '../../../support/utils';
 
@@ -28,18 +28,18 @@ describe('Test drag and drop ext characteristic', () => {
 
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.different:1.0.0': [fileName],
+      'org.eclipse.different:1.0.0': [fileName]
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': fileName},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': fileName}
       },
       {
-        fixture: `/external-reference/different-namespace/without-childrens/${fileName}`,
-      },
+        fixture: `/external-reference/different-namespace/without-childrens/${fileName}`
+      }
     );
 
     cy.visitDefault().then(() =>
@@ -61,7 +61,7 @@ describe('Test drag and drop ext characteristic', () => {
           expect(rdf).to.contain(':property1 a samm:Property');
           expect(rdf).to.contain('samm:characteristic ext-different:ExternalCharacteristic');
           expect(rdf).not.contain(':ExternalCharacteristic a samm:Characteristic');
-        }),
+        })
     );
   });
 });

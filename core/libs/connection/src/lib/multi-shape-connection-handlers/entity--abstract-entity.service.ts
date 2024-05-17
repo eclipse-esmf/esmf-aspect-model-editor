@@ -24,7 +24,7 @@ import {LanguageTranslationService} from '@ame/translation';
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EntityAbstractEntityConnectionHandler
   extends EntityInheritanceConnector
@@ -38,7 +38,7 @@ export class EntityAbstractEntityConnectionHandler
     protected entityPropertyConnector: EntityPropertyConnectionHandler,
     protected filtersService: FiltersService,
     protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService,
+    private notificationService: NotificationsService
   ) {
     super(
       mxGraphService,
@@ -48,7 +48,7 @@ export class EntityAbstractEntityConnectionHandler
       filtersService,
       translate,
       propertyAbstractPropertyConnector,
-      entityPropertyConnector,
+      entityPropertyConnector
     );
   }
 
@@ -56,13 +56,13 @@ export class EntityAbstractEntityConnectionHandler
     parentMetaModel: DefaultEntity,
     childMetaModel: DefaultAbstractEntity,
     parent: mxgraph.mxCell,
-    child: mxgraph.mxCell,
+    child: mxgraph.mxCell
   ): void {
     if (MxGraphHelper.isEntityCycleInheritance(child, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
         message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
-        timeout: 5000,
+        timeout: 5000
       });
       return;
     }

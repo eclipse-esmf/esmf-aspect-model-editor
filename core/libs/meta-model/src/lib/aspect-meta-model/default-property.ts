@@ -42,7 +42,7 @@ export class DefaultProperty extends CanExtend implements Property {
     name: string,
     public characteristic: Characteristic,
     predefined = false,
-    public exampleValue?: any,
+    public exampleValue?: any
   ) {
     super(metaModelVersion, aspectModelUrn, name);
     this.predefined = predefined;

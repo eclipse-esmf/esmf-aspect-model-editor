@@ -26,7 +26,7 @@ import {SearchesStateService} from '@ame/utils';
 
 @Component({
   selector: 'ame-root',
-  templateUrl: './app.component.html',
+  templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
   private language = 'en';
@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
     private fileHandlingService: FileHandlingService,
     private translate: LanguageTranslationService,
     private searchesStateService: SearchesStateService,
-    private router: Router,
+    private router: Router
   ) {
     this.domainModelToRdf.listenForStoreUpdates();
   }
@@ -129,8 +129,8 @@ export class AppComponent implements OnInit {
                 label: target.href.startsWith('mailto:') ? 'Send email' : 'Open in browser',
                 click: () => {
                   shell.openExternal((e.target as HTMLAnchorElement).href);
-                },
-              },
+                }
+              }
             ]
           : []),
         ...(target.tagName.toLowerCase() === 'a'
@@ -139,10 +139,10 @@ export class AppComponent implements OnInit {
                 label: 'Copy link address',
                 click: () => {
                   navigator.clipboard.writeText(target.href);
-                },
-              },
+                }
+              }
             ]
-          : []),
+          : [])
       ];
 
       if (template?.length) {

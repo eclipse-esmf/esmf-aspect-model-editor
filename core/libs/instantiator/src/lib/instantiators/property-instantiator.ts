@@ -41,7 +41,7 @@ export class PropertyInstantiator {
     return {
       optional: element.optional?.value === 'true',
       notInPayload: element.notInPayload?.value === 'true',
-      payloadName: element.payloadName?.value,
+      payloadName: element.payloadName?.value
     };
   }
 
@@ -99,7 +99,7 @@ export class PropertyInstantiator {
 
     return {
       property,
-      keys: this.resolveOverwrittenKeys(listElement),
+      keys: this.resolveOverwrittenKeys(listElement)
     };
   }
 }

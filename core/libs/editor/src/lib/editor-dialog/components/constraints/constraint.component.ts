@@ -17,7 +17,7 @@ import {EditorModelService} from '../../editor-model.service';
 
 @Component({
   selector: 'ame-constraint',
-  templateUrl: './constraint.component.html',
+  templateUrl: './constraint.component.html'
 })
 export class ConstraintComponent implements OnDestroy, AfterViewInit {
   @Input() parentForm: FormGroup;

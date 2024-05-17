@@ -20,7 +20,7 @@ import {
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
-  DefaultUnit,
+  DefaultUnit
 } from '@ame/meta-model';
 import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
 import {ShapeGeometry, basicShapeGeometry, smallCircleShapeGeometry} from '@ame/shared';
@@ -61,7 +61,7 @@ export class PropertiesFilterLoader implements FilterLoader {
       fromParentArrow: options?.parent ? this.getArrowStyle(element, options.parent) : null,
       shape: {...this.getShapeGeometry(element), mxGraphStyle: this.getMxGraphStyle(element)},
       children: new ChildrenArray(),
-      filterType: this.filterType,
+      filterType: this.filterType
     };
 
     if (options?.parentNode) {
@@ -111,7 +111,7 @@ export class PropertiesFilterLoader implements FilterLoader {
       const subtree = this.generateTree(child, {
         parent: element,
         notAllowed: element instanceof DefaultEither ? [DefaultEntity] : [],
-        parentNode: elementTree,
+        parentNode: elementTree
       });
       subtree && elementTree.children.push(subtree);
     }
@@ -160,11 +160,11 @@ export class PropertiesFilterLoader implements FilterLoader {
 
   private generateEitherTree(
     element: DefaultEither,
-    parentNode: ModelTree<BaseMetaModelElement>,
+    parentNode: ModelTree<BaseMetaModelElement>
   ): [ModelTree<BaseMetaModelElement>, ModelTree<BaseMetaModelElement>] {
     return [
       this.generateTree(element.left, {notAllowed: [DefaultEntity], parent: element, parentNode}),
-      this.generateTree(element.right, {notAllowed: [DefaultEntity], parent: element, parentNode}),
+      this.generateTree(element.right, {notAllowed: [DefaultEntity], parent: element, parentNode})
     ];
   }
 
@@ -187,7 +187,7 @@ export class PropertiesFilterLoader implements FilterLoader {
 
   private isAllowed(element: BaseMetaModelElement, options: ModelTreeOptions = {}): boolean {
     return allowedElements.some(
-      allowedElement => element instanceof allowedElement && !(options.notAllowed || [])?.some(c => element instanceof c),
+      allowedElement => element instanceof allowedElement && !(options.notAllowed || [])?.some(c => element instanceof c)
     );
   }
 

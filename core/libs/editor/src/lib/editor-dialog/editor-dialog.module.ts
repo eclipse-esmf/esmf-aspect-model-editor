@@ -85,7 +85,7 @@ import {
   UnitComponent,
   UnitInputFieldComponent,
   UpperBoundInputFieldComponent,
-  ValuesInputFieldComponent,
+  ValuesInputFieldComponent
 } from './components';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {CommonModule} from '@angular/common';
@@ -104,7 +104,7 @@ import {
   EntityInstanceModalTableComponent,
   EntityInstanceSearchBarComponent,
   EntityInstanceTableComponent,
-  EntityInstanceViewComponent,
+  EntityInstanceViewComponent
 } from './components/entity-instance';
 
 @NgModule({
@@ -129,7 +129,7 @@ import {
     CounterPipe,
     LanguageTranslateModule,
     ElementIconComponent,
-    MatDividerModule,
+    MatDividerModule
   ],
   declarations: [
     AspectComponent,
@@ -202,8 +202,8 @@ import {
     LocateElementComponent,
     SaveModelDialogComponent,
     LargeFileWarningComponent,
-    SharedSettingsTitleComponent,
+    SharedSettingsTitleComponent
   ],
-  exports: [ShapeSettingsComponent, ModelElementParserPipe],
+  exports: [ShapeSettingsComponent, ModelElementParserPipe]
 })
 export class EditorDialogModule {}

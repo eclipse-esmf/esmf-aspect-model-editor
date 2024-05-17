@@ -48,10 +48,10 @@ describe('RdfNodeService', () => {
           useValue: {
             get currentRdfModel() {
               return rdfModel;
-            },
-          },
-        },
-      ],
+            }
+          }
+        }
+      ]
     });
     service = TestBed.inject(RdfNodeService);
   });
@@ -62,10 +62,10 @@ describe('RdfNodeService', () => {
       service.update(mockModelElement2, {
         description: [
           {value: 'testDescriptionEn', language: 'en'},
-          {value: 'testDescriptionRo', language: 'ro'},
+          {value: 'testDescriptionRo', language: 'ro'}
         ],
         name: 'testName',
-        see: ['see1', 'see2'],
+        see: ['see1', 'see2']
       });
       const quads1: Quad[] = rdfModel.store.getQuads(DataFactory.namedNode('aspectModelUrn1'), null, null, null);
       const quads2: Quad[] = rdfModel.store.getQuads(DataFactory.namedNode('aspectModelUrn2'), null, null, null);

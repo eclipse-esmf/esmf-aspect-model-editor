@@ -19,7 +19,7 @@ import {NotificationModel, NotificationsService, NotificationType} from '@ame/sh
 @Component({
   selector: 'ame-notifications',
   templateUrl: './notifications.component.html',
-  styleUrls: ['./notifications.component.scss'],
+  styleUrls: ['./notifications.component.scss']
 })
 export class NotificationsComponent implements OnInit {
   currentItem = null;
@@ -29,7 +29,7 @@ export class NotificationsComponent implements OnInit {
     private dialogRef: MatDialogRef<NotificationsComponent>,
     public notificationsService: NotificationsService,
     public router: Router,
-    private activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -46,7 +46,7 @@ export class NotificationsComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: {urn},
-      queryParamsHandling: 'merge',
+      queryParamsHandling: 'merge'
     });
     this.onClose();
   }

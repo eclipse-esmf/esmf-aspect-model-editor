@@ -20,14 +20,14 @@ import {Samm, SammC} from '@ame/vocabulary';
 
 @Component({
   selector: 'ame-upper-bound-input-field',
-  templateUrl: './upper-bound-input-field.component.html',
+  templateUrl: './upper-bound-input-field.component.html'
 })
 export class UpperBoundInputFieldComponent extends InputFieldComponent<DefaultConstraint> implements OnInit, OnDestroy {
   public upperBoundDefinitionList = [];
 
   constructor(
     public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService,
+    public mxGraphService: MxGraphService
   ) {
     super();
     this.resetFormOnDestroy = false;
@@ -56,8 +56,8 @@ export class UpperBoundInputFieldComponent extends InputFieldComponent<DefaultCo
       this.fieldName,
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
-        disabled: this.metaModelElement.isExternalReference(),
-      }),
+        disabled: this.metaModelElement.isExternalReference()
+      })
     );
   }
 }

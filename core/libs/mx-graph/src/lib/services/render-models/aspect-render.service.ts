@@ -23,7 +23,7 @@ import {RdfService} from '@ame/rdf/services';
 import {NamedNode} from 'n3';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AspectRenderService extends BaseRenderService {
   constructor(mxGraphService: MxGraphService, sammLangService: SammLanguageSettingsService, rdfService: RdfService) {
@@ -35,7 +35,7 @@ export class AspectRenderService extends BaseRenderService {
       cell,
       callback: () => {
         this.renderOptionalProperties(cell);
-      },
+      }
     });
   }
 

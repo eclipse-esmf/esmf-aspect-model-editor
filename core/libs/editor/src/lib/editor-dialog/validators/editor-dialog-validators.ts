@@ -22,7 +22,7 @@ import {RdfService} from '@ame/rdf/services';
 export class EditorDialogValidators {
   constructor(
     private namespaceCacheService: NamespacesCacheService,
-    private rdfService: RdfService,
+    private rdfService: RdfService
   ) {}
 
   static namingLowerCase(control: AbstractControl) {
@@ -65,7 +65,7 @@ export class EditorDialogValidators {
 
     return invalidUris.length > 0
       ? {
-          uri: {invalidUris: invalidUris, elementsCount: elementsCount},
+          uri: {invalidUris: invalidUris, elementsCount: elementsCount}
         }
       : null;
   }
@@ -109,7 +109,7 @@ export class EditorDialogValidators {
       if (foundExternalElement) {
         return {
           checkShapeNameExtRef: true,
-          foundModel: foundExternalElement,
+          foundModel: foundExternalElement
         };
       }
 
@@ -120,7 +120,7 @@ export class EditorDialogValidators {
         (!haveTheSameName || modelElementDefinedInCurrentCachedFile.name !== metaModelElement.name)
         ? {
             checkShapeName: true,
-            foundModel: modelElementDefinedInCurrentCachedFile,
+            foundModel: modelElementDefinedInCurrentCachedFile
           }
         : null;
     };
@@ -158,7 +158,7 @@ export class EditorDialogValidators {
       const aspectModelUrn = `${namespace}#${control.value}`;
       return namespacesCacheService.currentCachedFile.getElement<BaseMetaModelElement>(aspectModelUrn)
         ? {
-            checkShapeName: true,
+            checkShapeName: true
           }
         : null;
     };
@@ -167,7 +167,7 @@ export class EditorDialogValidators {
   static requiredObject(control: AbstractControl) {
     if (!control?.value) {
       return {
-        required: true,
+        required: true
       };
     }
     return null;
@@ -185,8 +185,8 @@ export class EditorDialogValidators {
       const splitMessage = e?.message?.split(':');
       return {
         regexValidator: {
-          message: `${splitMessage[0]}:${splitMessage[2]}`,
-        },
+          message: `${splitMessage[0]}:${splitMessage[2]}`
+        }
       };
     }
   }

@@ -26,8 +26,8 @@ import {LanguageTranslateModule} from '@ame/translation';
       :host {
         --mdc-dialog-supporting-text-color: rgba(0, 0, 0, 0.8);
       }
-    `,
-  ],
+    `
+  ]
 })
 export class OpenFileDialogComponent {
   constructor(@Inject(DIALOG_DATA) public fileData: {file: string; namespace: string}) {}

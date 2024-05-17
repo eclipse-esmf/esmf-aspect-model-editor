@@ -40,7 +40,7 @@ export class ShapeSettingsService {
     private openReferencedElementService: OpenReferencedElementService,
     private namespaceCacheService: NamespacesCacheService,
     private translate: LanguageTranslationService,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {}
 
   setGraphListeners() {
@@ -58,7 +58,7 @@ export class ShapeSettingsService {
   setHotKeysActions() {
     this.editorService.bindAction(
       'deleteElement',
-      mxUtils.bind(this, () => this.ngZone.run(() => this.editorService.deleteSelectedElements())),
+      mxUtils.bind(this, () => this.ngZone.run(() => this.editorService.deleteSelectedElements()))
     );
 
     this.mxGraphService.graph.container.addEventListener('wheel', evt => {
@@ -79,7 +79,7 @@ export class ShapeSettingsService {
       mxEvent.MOVE_CELLS,
       mxUtils.bind(this, () => {
         this.ngZone.run(() => (this.mxGraphAttributeService.graph.resetEdgesOnMove = true));
-      }),
+      })
     );
   }
 
@@ -123,7 +123,7 @@ export class ShapeSettingsService {
     if (!element) {
       this.notificationsService.error({
         title: this.translate.language.EDITOR_CANVAS.SHAPE_SETTING.NOTIFICATION.EDIT_VIEW_UNAVAILABLE,
-        message: this.translate.language.EDITOR_CANVAS.SHAPE_SETTING.NOTIFICATION.EDIT_VIEW_UNAVAILABLE_MESSAGE,
+        message: this.translate.language.EDITOR_CANVAS.SHAPE_SETTING.NOTIFICATION.EDIT_VIEW_UNAVAILABLE_MESSAGE
       });
 
       return;

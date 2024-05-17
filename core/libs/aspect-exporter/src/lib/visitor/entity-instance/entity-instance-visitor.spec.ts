@@ -30,7 +30,7 @@ class MockRDFModel {
     SAMM: jest.fn(() => new Samm('')),
     SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'}) as any),
     hasNamespace: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    addPrefix: jest.fn(() => {})
   } as any;
   store = new Store();
   SAMM = jest.fn((): Samm => new MockSamm() as any as Samm);
@@ -48,10 +48,10 @@ describe('Entity instance visitor', () => {
       characteristic: {
         dataType: {
           urn: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
-          getUrn: jest.fn().mockReturnValue({getUrn: () => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString'}),
-        },
-      },
-    },
+          getUrn: jest.fn().mockReturnValue({getUrn: () => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString'})
+        }
+      }
+    }
   };
   const mockProperty2: any = {
     property: {
@@ -60,10 +60,10 @@ describe('Entity instance visitor', () => {
       characteristic: {
         dataType: {
           urn: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
-          getUrn: jest.fn().mockReturnValue({getUrn: () => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString'}),
-        },
-      },
-    },
+          getUrn: jest.fn().mockReturnValue({getUrn: () => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString'})
+        }
+      }
+    }
   };
 
   const mockEntityValue1: any = {
@@ -72,8 +72,8 @@ describe('Entity instance visitor', () => {
     entity: entity,
     properties: [
       {key: mockProperty1, value: 123},
-      {key: mockProperty2, value: 456},
-    ],
+      {key: mockProperty2, value: 456}
+    ]
   };
 
   beforeEach(() => {
@@ -86,14 +86,14 @@ describe('Entity instance visitor', () => {
           useValue: {
             get currentRdfModel() {
               return mockedRdfModel;
-            },
-          },
+            }
+          }
         },
         {
           provide: RdfService,
-          useValue: provideMockObject(RdfService),
-        },
-      ],
+          useValue: provideMockObject(RdfService)
+        }
+      ]
     });
     service = TestBed.inject(EntityInstanceVisitor);
 

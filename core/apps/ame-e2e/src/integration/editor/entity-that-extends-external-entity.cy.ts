@@ -29,9 +29,9 @@ describe('Test loading aspect with extended external Entity', () => {
               .wait(500)
               .get('.mat-mdc-cell')
               .contains(
-                ' The Aspect model contains an external reference that is not included in the namespace file structure or is invalid',
+                ' The Aspect model contains an external reference that is not included in the namespace file structure or is invalid'
               )
-              .should('exist'),
+              .should('exist')
           )
           .then(() => cy.wait(500).get(SELECTOR_notificationsDialogCloseButton).click({force: true}));
       });
@@ -40,7 +40,7 @@ describe('Test loading aspect with extended external Entity', () => {
   it('should load a model with an entity that extends an external entity in same namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.examples:1.0.0': ['example.txt'],
+      'org.eclipse.examples:1.0.0': ['example.txt']
     });
 
     cy.intercept(
@@ -49,12 +49,12 @@ describe('Test loading aspect with extended external Entity', () => {
         url: 'http://localhost:9091/ame/api/models',
         headers: {
           namespace: 'org.eclipse.examples:1.0.0',
-          'file-name': 'example.txt',
-        },
+          'file-name': 'example.txt'
+        }
       },
       {
-        fixture: '/external-reference/same-namespace/model-with-entity.txt',
-      },
+        fixture: '/external-reference/same-namespace/model-with-entity.txt'
+      }
     );
 
     cy.visitDefault();
@@ -80,7 +80,7 @@ describe('Test loading aspect with extended external Entity', () => {
   it('should load a model with an entity that extends an external entity in different namespace', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.different:1.0.0': ['example.txt'],
+      'org.eclipse.different:1.0.0': ['example.txt']
     });
 
     cy.intercept(
@@ -89,12 +89,12 @@ describe('Test loading aspect with extended external Entity', () => {
         url: 'http://localhost:9091/ame/api/models',
         headers: {
           namespace: 'org.eclipse.different:1.0.0',
-          'file-name': 'example.txt',
-        },
+          'file-name': 'example.txt'
+        }
       },
       {
-        fixture: '/external-reference/different-namespace/model-with-entity.txt',
-      },
+        fixture: '/external-reference/different-namespace/model-with-entity.txt'
+      }
     );
 
     cy.visitDefault();

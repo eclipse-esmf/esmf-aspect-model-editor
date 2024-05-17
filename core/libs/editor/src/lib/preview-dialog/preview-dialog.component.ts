@@ -24,7 +24,7 @@ interface PreviewDialogOptions {
 @Component({
   selector: 'ame-preview--dialog',
   templateUrl: './preview-dialog.component.html',
-  styleUrls: ['./preview-dialog.component.scss'],
+  styleUrls: ['./preview-dialog.component.scss']
 })
 export class PreviewDialogComponent {
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
@@ -36,7 +36,7 @@ export class PreviewDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: PreviewDialogOptions,
-    private dialogRef: MatDialogRef<PreviewDialogComponent>,
+    private dialogRef: MatDialogRef<PreviewDialogComponent>
   ) {
     this.title = data.title;
     this.content = data.content;
@@ -51,9 +51,9 @@ export class PreviewDialogComponent {
   onDownload() {
     saveAs(
       new Blob([this.content], {
-        type: 'application/json;charset=utf-8',
+        type: 'application/json;charset=utf-8'
       }),
-      this.fileName,
+      this.fileName
     );
   }
 

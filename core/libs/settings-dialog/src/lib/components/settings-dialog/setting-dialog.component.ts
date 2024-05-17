@@ -31,7 +31,7 @@ enum NodeNames {
   EDITOR = 'Editor',
   COPYRIGHT = 'Header/Copyright',
   LANGUAGES = 'Languages',
-  NAMESPACES = 'Namespaces',
+  NAMESPACES = 'Namespaces'
 }
 
 interface ConfigurationNode {
@@ -58,14 +58,14 @@ const TREE_DATA: ConfigurationNode[] = [
       {
         name: 'SETTINGS_DIALOG.SUB_NODE.AUTOMATED_WORKFLOW',
         type: NodeNames.AUTOMATED_WORKFLOW,
-        id: 'automatedWorkflow',
+        id: 'automatedWorkflow'
       },
       {
         name: 'SETTINGS_DIALOG.SUB_NODE.EDITOR',
         type: NodeNames.EDITOR,
-        id: 'editorConfiguration',
-      },
-    ],
+        id: 'editorConfiguration'
+      }
+    ]
   },
   {
     name: 'SETTINGS_DIALOG.NODE.MODEL_CONFIGURATION',
@@ -75,26 +75,26 @@ const TREE_DATA: ConfigurationNode[] = [
       {
         name: 'SETTINGS_DIALOG.SUB_NODE.LANGUAGES',
         type: NodeNames.LANGUAGES,
-        id: 'languageConfiguration',
+        id: 'languageConfiguration'
       },
       {
         name: 'SETTINGS_DIALOG.SUB_NODE.NAMESPACES',
         type: NodeNames.NAMESPACES,
-        id: 'namespaceConfiguration',
+        id: 'namespaceConfiguration'
       },
       {
         name: 'SETTINGS_DIALOG.SUB_NODE.COPYRIGHT',
         type: NodeNames.COPYRIGHT,
-        id: 'copyrightHeaderConfiguration',
-      },
-    ],
-  },
+        id: 'copyrightHeaderConfiguration'
+      }
+    ]
+  }
 ];
 
 @Component({
   selector: 'ame-setting-dialog',
   templateUrl: './setting-dialog.component.html',
-  styleUrls: ['./setting-dialog.component.scss'],
+  styleUrls: ['./setting-dialog.component.scss']
 })
 export class SettingDialogComponent {
   readonly NodeNames = NodeNames;
@@ -105,20 +105,20 @@ export class SettingDialogComponent {
       name: node.name,
       type: node.type,
       id: node.id,
-      level: level,
+      level: level
     };
   };
 
   treeControl = new FlatTreeControl<ConfigurationFlatNode>(
     node => node.level,
-    node => node.expandable,
+    node => node.expandable
   );
 
   treeFlattener = new MatTreeFlattener(
     this._transformer,
     node => node.level,
     node => node.expandable,
-    node => node.children,
+    node => node.children
   );
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -141,7 +141,7 @@ export class SettingDialogComponent {
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private loadingScreen: LoadingScreenService,
     private titleService: TitleService,
-    private namespaceCacheService: NamespacesCacheService,
+    private namespaceCacheService: NamespacesCacheService
   ) {
     this.initializeComponent();
   }
@@ -158,7 +158,7 @@ export class SettingDialogComponent {
   onNodeSelected(type: string): void {
     const typeMappings = {
       [NodeNames.CONFIGURATION]: NodeNames.AUTOMATED_WORKFLOW,
-      [NodeNames.MODEL_CONFIGURATION]: NodeNames.LANGUAGES,
+      [NodeNames.MODEL_CONFIGURATION]: NodeNames.LANGUAGES
     };
 
     this.selectedNodeType = typeMappings[type] || type;
@@ -267,8 +267,8 @@ export class SettingDialogComponent {
           this.submitAndCloseDialog();
         },
         hasLeftButton: true,
-        hasRightButton: true,
-      },
+        hasRightButton: true
+      }
     });
   }
 
@@ -276,7 +276,7 @@ export class SettingDialogComponent {
     if (this.modelService.getLoadedAspectModel().aspect !== null) {
       const loadingScreen = this.loadingScreen.open({
         title: 'Saving changes',
-        content: 'Changing the SAMM languages in application',
+        content: 'Changing the SAMM languages in application'
       });
 
       const aspectModelLanguages = this.formService
@@ -292,7 +292,7 @@ export class SettingDialogComponent {
             this.mxGraphService,
             this.mxGraphShapeSelectorService,
             this.logService,
-            this.mxGraphAttributeService,
+            this.mxGraphAttributeService
           ).removeUnnecessaryLanguages();
         });
       } finally {

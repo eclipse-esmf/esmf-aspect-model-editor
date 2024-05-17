@@ -25,7 +25,7 @@ export enum Elements {
   entityValue = 'entityValue',
   abstractEntity = 'abstractEntity',
   filteredProperties_entity = 'filteredProperties_entity',
-  filteredProperties_either = 'filteredProperties_either',
+  filteredProperties_either = 'filteredProperties_either'
 }
 
 export const cellRelations = {
@@ -42,5 +42,5 @@ export const cellRelations = {
   [Elements.unit]: [],
   [Elements.abstractEntity]: [Elements.abstractEntity, Elements.property, Elements.abstractProperty],
   [Elements.filteredProperties_entity]: [Elements.property],
-  [Elements.filteredProperties_either]: [Elements.property],
+  [Elements.filteredProperties_either]: [Elements.property]
 };

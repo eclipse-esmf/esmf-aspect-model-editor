@@ -20,7 +20,7 @@ import {
   DefaultTrait,
   Entity,
   EntityInstanceProperty,
-  OverWrittenProperty,
+  OverWrittenProperty
 } from '@ame/meta-model';
 import {CachedFile} from '@ame/cache';
 import {extractNamespace} from '@ame/utils';
@@ -86,7 +86,7 @@ export class EntityInstanceUtil {
     entityValues: DefaultEntityInstance[],
     currentCachedFile: CachedFile,
     form: FormGroup,
-    entity: Entity | DefaultEntityInstance,
+    entity: Entity | DefaultEntityInstance
   ): boolean {
     if (!this.isEntityNameValid(entityValueName, form, entityValues)) {
       return false;
@@ -110,7 +110,7 @@ export class EntityInstanceUtil {
     entityValueName: string,
     namespace: string,
     currentCachedFile: CachedFile,
-    form: FormGroup,
+    form: FormGroup
   ): boolean {
     return (
       !currentCachedFile.getElement(`${namespace}#${entityValueName}`) &&
@@ -182,7 +182,7 @@ export class EntityInstanceUtil {
       entityValueName,
       urn,
       characteristic?.dataType as DefaultEntity,
-      (characteristic?.dataType?.['properties'] as OverWrittenProperty[]) || [],
+      (characteristic?.dataType?.['properties'] as OverWrittenProperty[]) || []
     );
 
     const newEntityValues = form.get('newEntityValues');

@@ -28,7 +28,7 @@ interface SeeElement {
 @Component({
   selector: 'ame-see-input-field',
   templateUrl: './see-input-field.component.html',
-  styleUrls: ['./see-input-field.component.scss', '../../field.scss'],
+  styleUrls: ['./see-input-field.component.scss', '../../field.scss']
 })
 export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
   @ViewChild('see', {static: true}) seeInput;
@@ -37,7 +37,7 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
   public shapes$: Observable<BaseMetaModelElement[]>;
   public searchControl = new FormControl('', {
     validators: [EditorDialogValidators.seeURI],
-    updateOn: 'change',
+    updateOn: 'change'
   });
   public chipControl = new FormControl();
   public elements: SeeElement[] = [];
@@ -66,7 +66,7 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
     this.subscription.add(
       this.searchControl.statusChanges.subscribe(status => {
         this.chipList.errorState = status === 'INVALID';
-      }),
+      })
     );
   }
 
@@ -108,12 +108,12 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
       new FormControl(
         {
           value: this.decodeUriComponent(this.getCurrentValue()),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
+          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled()
         },
         {
-          validators: [EditorDialogValidators.seeURI],
-        },
-      ),
+          validators: [EditorDialogValidators.seeURI]
+        }
+      )
     );
 
     if (this.parentForm.get(this.fieldName).disabled) {
@@ -122,7 +122,7 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
     }
     this.elements = [...(this.decodeUriComponent(this.getCurrentValue())?.split(',') || [])].map(urn => ({
       name: urn.includes('#') && urn.startsWith('urn:samm') ? urn.split('#')[1] : '',
-      urn,
+      urn
     }));
 
     this.shapes$ = this.searchControl.valueChanges.pipe(
@@ -131,9 +131,9 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
           ? []
           : this.modelElements.filter(
               ({name, aspectModelUrn}) =>
-                name?.toLowerCase().includes(fieldValue?.toLowerCase()) && !this.elements.find(el => el.urn === aspectModelUrn),
-            ),
-      ),
+                name?.toLowerCase().includes(fieldValue?.toLowerCase()) && !this.elements.find(el => el.urn === aspectModelUrn)
+            )
+      )
     );
   }
 

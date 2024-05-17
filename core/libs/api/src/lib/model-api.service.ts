@@ -22,11 +22,11 @@ import {removeCommentsFromTTL} from '@ame/utils';
 
 export enum PREDEFINED_MODELS {
   SIMPLE_ASPECT = 'assets/aspect-models/org.eclipse.examples/1.0.0/SimpleAspect.ttl',
-  MOVEMENT = 'assets/aspect-models/org.eclipse.examples/1.0.0/Movement.ttl',
+  MOVEMENT = 'assets/aspect-models/org.eclipse.examples/1.0.0/Movement.ttl'
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ModelApiService {
   private config: AppConfig = inject(APP_CONFIG);
@@ -40,7 +40,7 @@ export class ModelApiService {
     private http: HttpClient,
     private loggerService: LogService,
     private browserService: BrowserService,
-    private modelValidatorService: ModelValidatorService,
+    private modelValidatorService: ModelValidatorService
   ) {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
@@ -56,11 +56,11 @@ export class ModelApiService {
     return this.http
       .get<string>(`${this.serviceUrl}${this.api.fileHandling}/lock`, {
         headers: new HttpHeaderBuilder().withTextContentType().withFileName(file).withNamespace(namespace).build(),
-        responseType: 'text' as 'json',
+        responseType: 'text' as 'json'
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
+        catchError(res => throwError(() => res))
       );
   }
 
@@ -68,11 +68,11 @@ export class ModelApiService {
     return this.http
       .get<string>(`${this.serviceUrl}${this.api.fileHandling}/unlock`, {
         headers: new HttpHeaderBuilder().withTextContentType().withFileName(file).withNamespace(namespace).build(),
-        responseType: 'text' as 'json',
+        responseType: 'text' as 'json'
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
+        catchError(res => throwError(() => res))
       );
   }
 
@@ -80,11 +80,11 @@ export class ModelApiService {
     return this.http
       .get<string>(`${this.serviceUrl}${this.api.models}`, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withFileName(this.LATEST_FILENAME).build(),
-        responseType: 'text' as 'json',
+        responseType: 'text' as 'json'
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
+        catchError(res => throwError(() => res))
       );
   }
 
@@ -97,11 +97,11 @@ export class ModelApiService {
     return this.http
       .post(`${this.serviceUrl}${this.api.models}`, rdfContent, {
         headers,
-        responseType: 'text',
+        responseType: 'text'
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
+        catchError(res => throwError(() => res))
       );
   }
 
@@ -110,14 +110,14 @@ export class ModelApiService {
     return this.http
       .post(`${this.serviceUrl}${this.api.models}/format`, rdfContent, {
         headers,
-        responseType: 'text',
+        responseType: 'text'
       })
       .pipe(
         timeout(this.requestTimeout),
         catchError(res => {
           res.error = JSON.parse(res.error)?.error;
           return throwError(() => res);
-        }),
+        })
       );
   }
 
@@ -135,11 +135,11 @@ export class ModelApiService {
   saveLatest(rdfContent: string): Observable<string> {
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withFileName(this.LATEST_FILENAME).build(),
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withFileName(this.LATEST_FILENAME).build()
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
+        catchError(res => throwError(() => res))
       );
   }
 
@@ -147,20 +147,20 @@ export class ModelApiService {
     const [namespace, version, file] = absoluteModelName.split(':');
     return this.http
       .delete<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withNamespace(`${namespace}:${version}`).withFileName(file).build(),
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withNamespace(`${namespace}:${version}`).withFileName(file).build()
       })
       .pipe(
         timeout(this.requestTimeout),
         catchError(res => throwError(() => res)),
-        retry(3),
+        retry(3)
       );
   }
 
   getNamespacesStructure(): Observable<any> {
     return this.http.get<Map<string, Array<string>>>(`${this.serviceUrl}${this.api.models}/namespaces`, {
       params: {
-        shouldRefresh: true,
-      },
+        shouldRefresh: true
+      }
     });
   }
 
@@ -171,9 +171,9 @@ export class ModelApiService {
       map(data => {
         return Object.keys(data).reduce<string[]>(
           (fileNames, namespace) => [...fileNames, ...data[namespace].map((fileName: string) => `${namespace}:${fileName}`)],
-          [],
+          []
         );
-      }),
+      })
     );
   }
 
@@ -183,13 +183,13 @@ export class ModelApiService {
         aspectModelFileNames.reduce<any[]>(
           (files, absoluteFileName) => [
             ...files,
-            this.getAspectMetaModel(absoluteFileName).pipe(map(aspectMetaModel => new FileContentModel(absoluteFileName, aspectMetaModel))),
+            this.getAspectMetaModel(absoluteFileName).pipe(map(aspectMetaModel => new FileContentModel(absoluteFileName, aspectMetaModel)))
           ],
-          [],
-        ),
+          []
+        )
       ),
       mergeMap((files$: Observable<string>[]) => (files$.length ? forkJoin(files$) : of([]))),
-      catchError(() => of([])),
+      catchError(() => of([]))
     );
   }
 
@@ -199,7 +199,7 @@ export class ModelApiService {
 
   getExportZipFile(): Observable<any> {
     return this.http.get(`${this.serviceUrl}${this.api.package}/export-zip`, {
-      responseType: 'blob' as 'json',
+      responseType: 'blob' as 'json'
     });
   }
 
@@ -208,22 +208,22 @@ export class ModelApiService {
     return this.http
       .get<string>(`${this.serviceUrl}${this.api.models}`, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withNamespace(`${namespace}:${version}`).withFileName(file).build(),
-        responseType: 'text' as 'json',
+        responseType: 'text' as 'json'
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
+        catchError(res => throwError(() => res))
       );
   }
 
   generateJsonSample(rdfContent: string): Observable<string> {
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.generate}/json-sample`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build()
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
+        catchError(res => throwError(() => res))
       );
   }
 
@@ -231,11 +231,11 @@ export class ModelApiService {
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.generate}/json-schema`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
-        params: {language},
+        params: {language}
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
+        catchError(res => throwError(() => res))
       );
   }
 
@@ -243,7 +243,7 @@ export class ModelApiService {
     return this.http
       .post(`${this.serviceUrl}${this.api.models}/migrate`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
-        responseType: 'text',
+        responseType: 'text'
       })
       .pipe(timeout(this.requestTimeout));
   }
@@ -253,19 +253,19 @@ export class ModelApiService {
    */
   validate(rdfContent: string, showNotifications = true): Observable<Array<ViolationError>> {
     return this.getViolationError(rdfContent).pipe(
-      tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors)),
+      tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors))
     );
   }
 
   getViolationError(rdfContent: string): Observable<Array<ViolationError>> {
     return this.http
       .post<Array<ViolationError>>(`${this.serviceUrl}${this.api.models}/validate`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build()
       })
       .pipe(
         timeout(this.requestTimeout),
         map((data: any) => data.violationErrors),
-        catchError(res => throwError(() => res)),
+        catchError(res => throwError(() => res))
       );
   }
 
@@ -282,16 +282,16 @@ export class ModelApiService {
           pagingOption: openApi.paging,
           resourcePath: openApi.resourcePath,
           ymlProperties: openApi.ymlProperties || '',
-          jsonProperties: openApi.jsonProperties || '',
+          jsonProperties: openApi.jsonProperties || ''
         },
-        responseType: openApi.output === 'yaml' ? ('text' as 'json') : 'json',
+        responseType: openApi.output === 'yaml' ? ('text' as 'json') : 'json'
       })
       .pipe(
         timeout(this.requestTimeout),
         catchError(res => {
           res.error = openApi.output === 'yaml' ? JSON.parse(res.error)?.error : res.error.error;
           return throwError(() => res);
-        }),
+        })
       );
   }
 
@@ -305,16 +305,16 @@ export class ModelApiService {
           applicationId: asyncApi.applicationId,
           channelAddress: asyncApi.channelAddress,
           useSemanticVersion: asyncApi.useSemanticVersion,
-          writeSeparateFiles: asyncApi.writeSeparateFiles,
+          writeSeparateFiles: asyncApi.writeSeparateFiles
         },
-        responseType: asyncApi.writeSeparateFiles ? ('blob' as 'json') : asyncApi.output === 'yaml' ? ('text' as 'json') : 'json',
+        responseType: asyncApi.writeSeparateFiles ? ('blob' as 'json') : asyncApi.output === 'yaml' ? ('text' as 'json') : 'json'
       })
       .pipe(
         timeout(this.requestTimeout),
         catchError(res => {
           res.error = asyncApi.output === 'yaml' ? JSON.parse(res.error)?.error : res.error.error;
           return throwError(() => res);
-        }),
+        })
       );
   }
 
@@ -323,9 +323,9 @@ export class ModelApiService {
       .post(`${this.serviceUrl}${this.api.generate}/documentation`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
         params: {
-          language: language,
+          language: language
         },
-        responseType: 'text',
+        responseType: 'text'
       })
       .pipe(timeout(this.requestTimeout));
   }
@@ -333,14 +333,14 @@ export class ModelApiService {
   getAASX(rdfContent: string): Observable<string> {
     return this.http.post(`${this.serviceUrl}${this.api.generate}/aasx`, rdfContent, {
       headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
-      responseType: 'text',
+      responseType: 'text'
     });
   }
 
   getAASasXML(rdfContent: string): Observable<string> {
     return this.http.post(`${this.serviceUrl}${this.api.generate}/aas-xml`, rdfContent, {
       headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
-      responseType: 'text',
+      responseType: 'text'
     });
   }
 
@@ -363,7 +363,7 @@ export class ModelApiService {
         const BrowserWindow = window.require('@electron/remote').BrowserWindow;
         const electronBrowserWindow = new BrowserWindow({
           width: 1920,
-          height: 1080,
+          height: 1080
         });
 
         if (!fs.existsSync(ameTmpDir)) {
@@ -390,7 +390,7 @@ export class ModelApiService {
           }
         }
         return throwError(() => 'Server error');
-      }),
+      })
     );
   }
 }

@@ -283,7 +283,7 @@ declare global {
         targetShapeParams: {
           name: string;
           fields?: object[];
-        },
+        }
       ): Chainable;
     }
   }
@@ -304,7 +304,7 @@ Cypress.Commands.add('getHTMLCell', (name: string) =>
   cy.get(`[data-cell-id="${name}"]`).then($el => {
     $el.get(0).scrollIntoView({block: 'center'});
     return $el;
-  }),
+  })
 );
 
 Cypress.Commands.add('dbClickShape', (name: string) => {
@@ -336,7 +336,7 @@ Cypress.Commands.add('clickAddShapePlusIcon', (name: string) =>
       plusIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250),
+    .wait(250)
 );
 
 Cypress.Commands.add('clickAddInputShapeIcon', (name: string) =>
@@ -354,7 +354,7 @@ Cypress.Commands.add('clickAddInputShapeIcon', (name: string) =>
       inputIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250),
+    .wait(250)
 );
 
 Cypress.Commands.add('clickAddOutputShapeIcon', (name: string) =>
@@ -372,7 +372,7 @@ Cypress.Commands.add('clickAddOutputShapeIcon', (name: string) =>
       outputIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250),
+    .wait(250)
 );
 
 Cypress.Commands.add('clickAddLeftShapeIcon', (name: string) =>
@@ -390,7 +390,7 @@ Cypress.Commands.add('clickAddLeftShapeIcon', (name: string) =>
       leftIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250),
+    .wait(250)
 );
 
 Cypress.Commands.add('clickAddRightShapeIcon', (name: string) =>
@@ -408,7 +408,7 @@ Cypress.Commands.add('clickAddRightShapeIcon', (name: string) =>
       rightIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250),
+    .wait(250)
 );
 
 Cypress.Commands.add('clickAddTraitPlusIcon', (characteristicName: string) =>
@@ -426,14 +426,14 @@ Cypress.Commands.add('clickAddTraitPlusIcon', (characteristicName: string) =>
       constraintIcon.fireEvent(new mxEventObject(mxEvent.CLICK));
       return foundShape;
     })
-    .wait(250),
+    .wait(250)
 );
 
 Cypress.Commands.add('clickConnectShapes', (nameSource, nameTarget) =>
   cy
     .then(() => cyHelp.clickShape(nameSource))
     .then(() => cyHelp.clickShape(nameTarget, true))
-    .then(() => cy.get(SELECTOR_tbConnectButton).click({force: true})),
+    .then(() => cy.get(SELECTOR_tbConnectButton).click({force: true}))
 );
 
 Cypress.Commands.add('getFormField', (name: string) => cy.get(`[ng-reflect-model="${name}"]`));
@@ -459,7 +459,7 @@ Cypress.Commands.add('dragElement', (selector: string, x: number, y: number) =>
       .trigger('pointerdown', {button: 0, force: true})
       .trigger('pointermove', {clientX: graphX, clientY: graphY, force: true, waitForAnimations: true})
       .then(() => cy.get('#graph > svg').click(graphX, graphY, {force: true}).trigger('pointerup', {force: true}));
-  }),
+  })
 );
 
 Cypress.Commands.add('getUpdatedRDF', () =>
@@ -471,7 +471,7 @@ Cypress.Commands.add('getUpdatedRDF', () =>
         resolve(win['angular.rdfService'].serializeModel(modelContent));
       });
     });
-  }),
+  })
 );
 
 Cypress.Commands.add('getByText', name => cy.contains(new RegExp('^' + name + '$', 'g')));
@@ -493,7 +493,7 @@ Cypress.Commands.add('shapesConnected', (sourceShapeName: string, targetShapeNam
     if (!shapesConnected) {
       throw new Error(`Shape ${sourceShapeName} is not connected to ${targetShapeName}`);
     }
-  }),
+  })
 );
 
 Cypress.Commands.add('startModellingInvalidModel', () => {
@@ -536,25 +536,25 @@ Cypress.Commands.add('openGenerationOpenApiSpec', () => {
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=null&ymlProperties=&jsonProperties=',
-    {fixture: 'valid-open-api.json'},
+    {fixture: 'valid-open-api.json'}
   );
 
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=null&ymlProperties=&jsonProperties=',
-    {fixture: 'valid-open-api.yaml'},
+    {fixture: 'valid-open-api.yaml'}
   );
 
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=/resource/%7BresourceId%7D&ymlProperties=&jsonProperties=%7B%0A%20%20%22key%22:%20%22value%22%0A%7D',
-    {fixture: 'valid-open-api.json'},
+    {fixture: 'valid-open-api.json'}
   );
 
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=/resource/%7BresourceId%7D&ymlProperties=resourceId:%0A%20%20name:%20resourceId%0A%20%20in:%20path%0A%20%20description:%20An%20example%20resource%20Id.%0A%20%20required:%20true%0A%20%20schema:%0A%20%20%20%20type:%20string%0A&jsonProperties=',
-    {fixture: 'valid-open-api.yaml'},
+    {fixture: 'valid-open-api.yaml'}
   );
 
   return cy.window().then(win => {
@@ -567,19 +567,19 @@ Cypress.Commands.add('openGenerationAsyncApiSpec', () => {
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=json&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=false',
-    {fixture: 'valid-open-api.json'},
+    {fixture: 'valid-open-api.json'}
   );
 
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=yaml&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=false',
-    {fixture: 'valid-open-api.json'},
+    {fixture: 'valid-open-api.json'}
   );
 
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=json&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=true',
-    {fixture: 'valid-open-api.json'},
+    {fixture: 'valid-open-api.json'}
   );
 
   return cy.window().then(win => {
@@ -653,7 +653,7 @@ Cypress.Commands.add(
     targetShapeParams: {
       name: string;
       fields?: object[];
-    },
+    }
   ) => {
     return cy.window().then(win => {
       const sourceCell = cyHelp.findShapeByName(sourceShapeParams.name, win);
@@ -667,5 +667,5 @@ Cypress.Commands.add(
       const mxGraphAttributeService: MxGraphAttributeService = win['angular.mxGraphAttributeService'];
       return mxGraphAttributeService.graph.getOutgoingEdges(sourceCell).some(edge => edge.target === targetCell);
     });
-  },
+  }
 );

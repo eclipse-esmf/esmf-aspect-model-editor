@@ -47,7 +47,7 @@ export class MxGraphShapeSelectorService {
       if (modelElement?.isExternalReference()) {
         withExternalSelectedElementCells = [
           ...withExternalSelectedElementCells,
-          ...this.getExternalUpperReferenceCells(cell, tempCurrentSelection),
+          ...this.getExternalUpperReferenceCells(cell, tempCurrentSelection)
         ];
       }
     });

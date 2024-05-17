@@ -19,7 +19,7 @@ import {SettingsFormService} from '../../../services';
 @Component({
   selector: 'ame-namespace',
   templateUrl: './namespace-settings.component.html',
-  styleUrls: ['./namespace-settings.component.scss'],
+  styleUrls: ['./namespace-settings.component.scss']
 })
 export class NamespaceSettingsComponent implements OnInit {
   form: FormGroup;
@@ -68,7 +68,7 @@ export class NamespaceSettingsComponent implements OnInit {
     return {
       name: namespaceParts[3],
       value: `${namespaceParts[0]}:${namespaceParts[1]}:${namespaceParts[2]}`,
-      version: namespaceParts[4].replace('#', ''),
+      version: namespaceParts[4].replace('#', '')
     };
   }
 

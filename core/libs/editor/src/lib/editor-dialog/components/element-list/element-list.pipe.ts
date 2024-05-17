@@ -15,7 +15,7 @@ import {ElementInfo, ElementType, sammElements} from '@ame/shared';
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'modelElementParser',
+  name: 'modelElementParser'
 })
 export class ModelElementParserPipe implements PipeTransform {
   getElementType(element: BaseMetaModelElement): [ElementType, ElementInfo[ElementType]] {
@@ -27,7 +27,7 @@ export class ModelElementParserPipe implements PipeTransform {
     return {
       element,
       symbol: elementData?.symbol,
-      type,
+      type
     };
   }
 }

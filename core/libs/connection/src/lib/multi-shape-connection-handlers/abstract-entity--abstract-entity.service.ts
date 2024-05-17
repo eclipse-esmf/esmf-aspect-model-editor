@@ -22,7 +22,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AbstractEntityAbstractEntityConnectionHandler
   extends EntityInheritanceConnector
@@ -34,7 +34,7 @@ export class AbstractEntityAbstractEntityConnectionHandler
     protected sammLangService: SammLanguageSettingsService,
     protected filtersService: FiltersService,
     protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService,
+    private notificationService: NotificationsService
   ) {
     super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, filtersService, translate);
   }
@@ -43,13 +43,13 @@ export class AbstractEntityAbstractEntityConnectionHandler
     parentMetaModel: DefaultAbstractEntity,
     childMetaModel: DefaultAbstractEntity,
     parentCell: mxgraph.mxCell,
-    childCell: mxgraph.mxCell,
+    childCell: mxgraph.mxCell
   ) {
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
         message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
-        timeout: 5000,
+        timeout: 5000
       });
     } else {
       super.connect(parentMetaModel, childMetaModel, parentCell, childCell);

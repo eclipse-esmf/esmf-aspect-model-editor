@@ -57,7 +57,7 @@ import {ElementIconComponent} from '../../../shared/src/lib/components/element/e
     MatCheckboxModule,
     LanguageTranslateModule,
     ElementIconComponent,
-    BarItemComponent,
+    BarItemComponent
   ],
   declarations: [
     SidebarMenuComponent,
@@ -68,8 +68,8 @@ import {ElementIconComponent} from '../../../shared/src/lib/components/element/e
     WorkspaceEmptyComponent,
     WorkspaceFileListComponent,
     WorkspaceFileElementsComponent,
-    WorkspaceMigrateComponent,
+    WorkspaceMigrateComponent
   ],
-  exports: [SidebarMenuComponent, SidebarComponent],
+  exports: [SidebarMenuComponent, SidebarComponent]
 })
 export class SidebarModule {}

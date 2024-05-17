@@ -18,7 +18,7 @@ import {
   MxGraphAttributeService,
   MxGraphHelper,
   MxGraphService,
-  MxGraphShapeOverlayService,
+  MxGraphShapeOverlayService
 } from '@ame/mx-graph';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {mxgraph} from 'mxgraph-factory';
@@ -33,7 +33,7 @@ import {
   DefaultScalar,
   DefaultState,
   DefaultStructuredValue,
-  DefaultUnit,
+  DefaultUnit
 } from '../aspect-meta-model';
 import {DefaultCharacteristic} from '../aspect-meta-model/default-characteristic';
 import {DefaultEntity} from '../aspect-meta-model/default-entity';
@@ -48,7 +48,7 @@ export class CharacteristicModelService extends BaseModelService {
     private mxGraphService: MxGraphService,
     private characteristicRenderer: CharacteristicRenderService,
     private enumerationRenderer: EnumerationRenderService,
-    private filtersService: FiltersService,
+    private filtersService: FiltersService
   ) {
     super();
   }
@@ -228,7 +228,7 @@ export class CharacteristicModelService extends BaseModelService {
   private handleQuantifiableUnit(
     metaModelElement: DefaultQuantifiable,
     form: {[key: string]: any},
-    originalModelElement?: DefaultQuantifiable,
+    originalModelElement?: DefaultQuantifiable
   ) {
     if (metaModelElement.unit) {
       if (

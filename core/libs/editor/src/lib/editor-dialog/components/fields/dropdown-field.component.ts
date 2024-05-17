@@ -42,7 +42,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   protected constructor(
     public editorModelService: EditorModelService,
     public modelService: ModelService,
-    public languageSettings: SammLanguageSettingsService,
+    public languageSettings: SammLanguageSettingsService
   ) {}
 
   protected setPreviousData() {
@@ -57,18 +57,18 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
       value: {
         ...(this.previousDataSnapshot.value || {}),
         ...(this._previousData.value || {}),
-        [this.metaModelElement.className]: this.parentForm.value?.value || '',
+        [this.metaModelElement.className]: this.parentForm.value?.value || ''
       },
       minValue: {
         ...(this.previousDataSnapshot.minValue || {}),
         ...(this._previousData.minValue || {}),
-        [this.metaModelElement.className]: this.parentForm.value?.minValue || '',
+        [this.metaModelElement.className]: this.parentForm.value?.minValue || ''
       },
       maxValue: {
         ...(this.previousDataSnapshot.maxValue || {}),
         ...(this._previousData.maxValue || {}),
-        [this.metaModelElement.className]: this.parentForm.value?.maxValue || '',
-      },
+        [this.metaModelElement.className]: this.parentForm.value?.maxValue || ''
+      }
     };
 
     this.previousData.emit(this._previousData);
@@ -78,7 +78,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
     return this.editorModelService.getMetaModelElement().pipe(
       tap(metaModelElement => {
         this.metaModelElement = <T>metaModelElement;
-      }),
+      })
     );
   }
 

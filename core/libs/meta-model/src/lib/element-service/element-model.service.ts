@@ -21,7 +21,7 @@ import {
   DefaultEntity,
   DefaultEntityInstance,
   DefaultEnumeration,
-  DefaultProperty,
+  DefaultProperty
 } from '@ame/meta-model';
 import {EntityInstanceService, RenameModelDialogService} from '@ame/editor';
 import {DefaultAbstractEntity, DefaultAbstractProperty, DefaultAspect, DefaultStructuredValue} from '../aspect-meta-model';
@@ -47,7 +47,7 @@ export class ElementModelService {
     private renameModelService: RenameModelDialogService,
     private notificationService: NotificationsService,
     private translate: LanguageTranslationService,
-    private zone: NgZone,
+    private zone: NgZone
   ) {}
 
   get currentCachedFile() {
@@ -80,7 +80,7 @@ export class ElementModelService {
       this.notificationService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.MODEL_EMPTY_MESSAGE,
         message: this.translate.language.NOTIFICATION_SERVICE.MODEL_MINIMUM_ELEMENT_REQUIREMENT,
-        timeout: 5000,
+        timeout: 5000
       });
       return;
     }
@@ -239,7 +239,7 @@ export class ElementModelService {
       source.extendedElement = null;
       edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
         MxGraphHelper.getModelElement(edge.source),
-        this.sammLangService,
+        this.sammLangService
       );
       this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));
       this.removeConnectionBetweenElements(edge, source, target);
@@ -301,7 +301,7 @@ export class ElementModelService {
   private decoupleEnumerationFromEntityValue(
     sourceModelElement: BaseMetaModelElement,
     targetModelElement: BaseMetaModelElement,
-    edge: mxgraph.mxCell,
+    edge: mxgraph.mxCell
   ): void {
     if (sourceModelElement instanceof DefaultEnumeration && targetModelElement instanceof DefaultEntityInstance) {
       const entityValueIndex = sourceModelElement.values.indexOf(targetModelElement);

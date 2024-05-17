@@ -19,7 +19,7 @@ import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-symbol-input-field',
-  templateUrl: './symbol-input-field.component.html',
+  templateUrl: './symbol-input-field.component.html'
 })
 export class SymbolInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
   constructor(public metaModelDialogService: EditorModelService) {
@@ -35,8 +35,8 @@ export class SymbolInputFieldComponent extends InputFieldComponent<DefaultUnit> 
       'symbol',
       new FormControl({
         value: this.metaModelElement?.symbol,
-        disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
-      }),
+        disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference()
+      })
     );
   }
 }

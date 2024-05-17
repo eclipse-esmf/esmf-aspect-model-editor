@@ -30,7 +30,7 @@ describe('Abstract Entity Visitor', () => {
     store: new Store(),
     SAMM: jest.fn(() => new Samm('')),
     hasNamespace: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    addPrefix: jest.fn(() => {})
   };
   const property: OverWrittenProperty = {property: new DefaultProperty('', '', '', null), keys: {}};
   const entity = new DefaultAbstractEntity('1', 'samm#abstractEntity1', 'abstractEntity1', [property]);
@@ -43,23 +43,23 @@ describe('Abstract Entity Visitor', () => {
         {
           provide: RdfListService,
           useValue: {
-            push: jest.fn(),
-          },
+            push: jest.fn()
+          }
         },
         {
           provide: RdfNodeService,
           useValue: {
-            update: jest.fn(),
-          },
+            update: jest.fn()
+          }
         },
         {
           provide: RdfService,
           useValue: {
             currentRdfModel: rdfModel,
-            externalRdfModels: [],
-          },
-        },
-      ],
+            externalRdfModels: []
+          }
+        }
+      ]
     });
 
     service = TestBed.inject(AbstractEntityVisitor);
@@ -71,7 +71,7 @@ describe('Abstract Entity Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(entity, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
     expect(service.rdfListService.push).toHaveBeenCalledWith(entity, property);
   });
@@ -82,7 +82,7 @@ describe('Abstract Entity Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(entity, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
     expect(entity.aspectModelUrn).toBe('samm#entity2');
   });

@@ -27,7 +27,7 @@ import {NamespacesCacheService} from '@ame/cache';
 @Component({
   selector: 'ame-generate-documentation',
   templateUrl: './generate-documentation.component.html',
-  styleUrls: ['./generate-documentation.component.scss'],
+  styleUrls: ['./generate-documentation.component.scss']
 })
 export class GenerateDocumentationComponent {
   languages: locale.ILocale[] = [];
@@ -44,7 +44,7 @@ export class GenerateDocumentationComponent {
     private namespaceCacheService: NamespacesCacheService,
     private modelService: ModelService,
     private modelApiService: ModelApiService,
-    private editorService: EditorService,
+    private editorService: EditorService
   ) {
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
     this.languageControl = new FormControl(this.languages[0].tag);
@@ -60,7 +60,7 @@ export class GenerateDocumentationComponent {
         finalize(() => {
           this.isGenerating = false;
           this.dialogRef.close();
-        }),
+        })
       )
       .subscribe();
   }
@@ -75,15 +75,15 @@ export class GenerateDocumentationComponent {
         map(data =>
           saveAs(
             new Blob([data], {
-              type: 'text/html',
+              type: 'text/html'
             }),
-            !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-documentation.html`,
-          ),
+            !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-documentation.html`
+          )
         ),
         finalize(() => {
           this.isGenerating = false;
           this.dialogRef.close();
-        }),
+        })
       )
       .subscribe();
   }

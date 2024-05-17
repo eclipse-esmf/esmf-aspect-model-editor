@@ -20,7 +20,7 @@ const {
   SIGNAL_ZOOM_IN,
   SIGNAL_ZOOM_OUT,
   SIGNAL_ZOOM_TO_ACTUAL,
-  SIGNAL_ZOOM_TO_FIT,
+  SIGNAL_ZOOM_TO_FIT
 } = require('../events');
 
 function viewSubmenu(translation) {
@@ -29,13 +29,13 @@ function viewSubmenu(translation) {
       id: 'SHOW_HIDE_TOOLBAR',
       label: translation.TOGGLE_TOOLBAR,
       icon: getIcon(icons.SHOW_HIDE_TOOLBAR.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_SHOW_HIDE_TOOLBAR),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_SHOW_HIDE_TOOLBAR)
     },
     {
       id: 'SHOW_HIDE_MINIMAP',
       label: translation.TOGGLE_MINIMAP,
       icon: getIcon(icons.SHOW_HIDE_MINIMAP.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_SHOW_HIDE_MINIMAP),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_SHOW_HIDE_MINIMAP)
     },
     {
       id: 'MENU_FILTER_MODEL_BY',
@@ -47,44 +47,44 @@ function viewSubmenu(translation) {
           label: translation.FILTER.SUBMENU.NONE,
           icon: getIcon(icons.FILTER_MODEL_BY_NONE.enabled),
           // Value must match "ModelFilter.DEFAULT" enum item
-          click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_FILTER_MODEL_BY, 'default'),
+          click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_FILTER_MODEL_BY, 'default')
         },
         {
           id: 'FILTER_MODEL_BY_PROPERTIES',
           label: translation.FILTER.SUBMENU.PROPERTIES,
           icon: getIcon(icons.FILTER_MODEL_BY_PROPERTIES.enabled),
           // Value must match "ModelFilter.PROPERTIES" enum item
-          click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_FILTER_MODEL_BY, 'properties'),
-        },
-      ],
+          click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_FILTER_MODEL_BY, 'properties')
+        }
+      ]
     },
     {
-      type: 'separator',
+      type: 'separator'
     },
     {
       id: 'ZOOM_IN',
       label: translation.ZOOM_IN,
       icon: getIcon(icons.ZOOM_IN.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_IN),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_IN)
     },
     {
       id: 'ZOOM_OUT',
       label: translation.ZOOM_OUT,
       icon: getIcon(icons.ZOOM_OUT.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_OUT),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_OUT)
     },
     {
       id: 'ZOOM_TO_FIT',
       label: translation.ZOOM_TO_FIT,
       icon: getIcon(icons.ZOOM_TO_FIT.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_TO_FIT),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_TO_FIT)
     },
     {
       id: 'ZOOM_TO_ACTUAL',
       label: translation.ZOOM_TO_100,
       icon: getIcon(icons.ZOOM_TO_ACTUAL.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_TO_ACTUAL),
-    },
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_TO_ACTUAL)
+    }
   ];
 }
 

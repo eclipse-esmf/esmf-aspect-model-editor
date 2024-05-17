@@ -40,7 +40,7 @@ export type FilteredTrees = {
 export class FiltersService {
   private filtersMethods = {
     [ModelFilter.DEFAULT]: () => this.selectDefaultFilter(),
-    [ModelFilter.PROPERTIES]: () => this.selectPropertiesFilter(),
+    [ModelFilter.PROPERTIES]: () => this.selectPropertiesFilter()
   };
   public filteredTree: Partial<FilteredTrees> = {};
   // TODO: To check why is behaving weirdly with BaseMetaModel instead of any
@@ -50,7 +50,7 @@ export class FiltersService {
     private injector: Injector,
     private loadingScreen: LoadingScreenService,
     private translate: LanguageTranslationService,
-    @Inject(FILTER_ATTRIBUTES) private filterAttributesService: FilterAttributesService,
+    @Inject(FILTER_ATTRIBUTES) private filterAttributesService: FilterAttributesService
   ) {
     window['_filter'] = this;
     this.selectDefaultFilter();
@@ -97,7 +97,7 @@ export class FiltersService {
     this.loadingScreen
       .open({
         title: this.translate.language.LOADING_SCREEN_DIALOG.FILTER_CHANGE,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.FILTER_WAIT,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.FILTER_WAIT
       })
       .afterOpened()
       .pipe(
@@ -111,7 +111,7 @@ export class FiltersService {
             this.injector.get(MxGraphShapeOverlayService),
             namespaceCacheService,
             this.injector.get(SammLanguageSettingsService),
-            this.injector.get(ModelService).getLoadedAspectModel().rdfModel,
+            this.injector.get(ModelService).getLoadedAspectModel().rdfModel
           );
 
           const currentFile = namespaceCacheService.currentCachedFile;
@@ -134,7 +134,7 @@ export class FiltersService {
           if (selectedCell) mxGraphService.navigateToCellByUrn(selectedModelElement.aspectModelUrn);
 
           return editorService.validate();
-        }),
+        })
       )
       .subscribe(() => {
         localStorage.removeItem('validating');

@@ -25,7 +25,7 @@ export const basicShapeGeometry: ShapeGeometry = {
   expandedWith: 300,
   expandedHeight: 120,
   collapsedWidth: 120,
-  collapsedHeight: 40,
+  collapsedHeight: 40
 };
 
 export const circleShapeGeometry: ShapeGeometry = {
@@ -33,7 +33,7 @@ export const circleShapeGeometry: ShapeGeometry = {
   expandedWith: 65,
   expandedHeight: 65,
   collapsedWidth: 30,
-  collapsedHeight: 30,
+  collapsedHeight: 30
 };
 
 export const smallBasicShapeGeometry: ShapeGeometry = {
@@ -41,7 +41,7 @@ export const smallBasicShapeGeometry: ShapeGeometry = {
   expandedWith: 80,
   expandedHeight: 35,
   collapsedWidth: 46,
-  collapsedHeight: 30,
+  collapsedHeight: 30
 };
 
 export const overlayGeometry: ShapeGeometry = {
@@ -49,7 +49,7 @@ export const overlayGeometry: ShapeGeometry = {
   expandedWith: 20,
   expandedHeight: 20,
   collapsedWidth: 16,
-  collapsedHeight: 16,
+  collapsedHeight: 16
 };
 
 export const smallCircleShapeGeometry: ShapeGeometry = {
@@ -57,7 +57,7 @@ export const smallCircleShapeGeometry: ShapeGeometry = {
   expandedWith: 45,
   expandedHeight: 45,
   collapsedWidth: 20,
-  collapsedHeight: 20,
+  collapsedHeight: 20
 };
 
 export enum ModelHierarchicalLayout {
@@ -65,7 +65,7 @@ export enum ModelHierarchicalLayout {
   expandedInterRankCellSpacing = 30,
   collapsedIntraCellSpacing = 15,
   collapsedInterRankCellSpacing = 20,
-  edgeStyle = 2,
+  edgeStyle = 2
 }
 
 export enum ModelCompactTreeLayout {
@@ -73,5 +73,5 @@ export enum ModelCompactTreeLayout {
   expandedLevelDistance = 30,
   collapsedLevelDistance = 15,
   expandedNodeDistance = 20,
-  collapsedNodeDistance = 10,
+  collapsedNodeDistance = 10
 }

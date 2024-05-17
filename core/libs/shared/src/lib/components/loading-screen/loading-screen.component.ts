@@ -18,12 +18,12 @@ import {LoadingScreenOptions} from '@ame/shared';
 @Component({
   selector: 'ame-loading-screen',
   templateUrl: './loading-screen.component.html',
-  styleUrls: ['./loading-screen.component.scss'],
+  styleUrls: ['./loading-screen.component.scss']
 })
 export class LoadingScreenComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: LoadingScreenOptions,
-    private dialog: MatDialogRef<LoadingScreenComponent>,
+    private dialog: MatDialogRef<LoadingScreenComponent>
   ) {}
 
   close() {

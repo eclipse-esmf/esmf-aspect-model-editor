@@ -29,7 +29,7 @@ describe('Files search', () => {
         MatDialogModule,
         BrowserAnimationsModule,
         TranslateModule.forRoot(),
-        HttpClientModule,
+        HttpClientModule
       ],
       providers: [
         MockProvider(MatDialogRef),
@@ -43,8 +43,8 @@ describe('Files search', () => {
         ModelSavingTrackerService,
         SaveModelDialogService,
         SearchService,
-        LanguageTranslationService,
-      ],
+        LanguageTranslationService
+      ]
     }).compileComponents();
   });
 
@@ -61,7 +61,7 @@ describe('Files search', () => {
       locked: false,
       outdated: false,
       errored: false,
-      sammVersion: '2.1.0',
+      sammVersion: '2.1.0'
     },
     {
       name: 'SharedModel.ttl',
@@ -69,12 +69,12 @@ describe('Files search', () => {
       outdated: false,
       errored: false,
       loaded: true,
-      sammVersion: '2.1.0',
-    },
+      sammVersion: '2.1.0'
+    }
   ];
 
   const namespaces = {
-    'org.eclipse.examples:1.0.0': files,
+    'org.eclipse.examples:1.0.0': files
   };
 
   it('should parse files correctly', () => {
@@ -82,7 +82,7 @@ describe('Files search', () => {
 
     expect(component.searchableFiles).toEqual([
       {file: 'AspectDefault.ttl', namespace: 'org.eclipse.examples:1.0.0'},
-      {file: 'SharedModel.ttl', namespace: 'org.eclipse.examples:1.0.0'},
+      {file: 'SharedModel.ttl', namespace: 'org.eclipse.examples:1.0.0'}
     ]);
   });
 

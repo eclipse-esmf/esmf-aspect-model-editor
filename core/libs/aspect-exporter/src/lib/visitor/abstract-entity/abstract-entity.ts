@@ -28,7 +28,7 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
   constructor(
     public rdfNodeService: RdfNodeService,
     public rdfListService: RdfListService,
-    public rdfService: RdfService,
+    public rdfService: RdfService
   ) {
     super(rdfService);
   }
@@ -52,13 +52,13 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
     this.rdfNodeService.update(abstractEntity, {
       preferredName: abstractEntity.getAllLocalesPreferredNames()?.map(language => ({
         language,
-        value: abstractEntity.getPreferredName(language),
+        value: abstractEntity.getPreferredName(language)
       })),
       description: abstractEntity.getAllLocalesDescriptions()?.map(language => ({
         language,
-        value: abstractEntity.getDescription(language),
+        value: abstractEntity.getDescription(language)
       })),
-      see: abstractEntity.getSeeReferences() || [],
+      see: abstractEntity.getSeeReferences() || []
     });
 
     if (abstractEntity.properties?.length) {
@@ -76,7 +76,7 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultAbstractEntity> {
       this.store.addQuad(
         DataFactory.namedNode(entity.aspectModelUrn),
         this.samm.ExtendsProperty(),
-        DataFactory.namedNode(entity.extendedElement.aspectModelUrn),
+        DataFactory.namedNode(entity.extendedElement.aspectModelUrn)
       );
       this.setPrefix(entity.extendedElement.aspectModelUrn);
     }

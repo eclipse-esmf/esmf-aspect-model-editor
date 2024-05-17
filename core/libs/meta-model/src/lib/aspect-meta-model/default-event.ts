@@ -32,14 +32,14 @@ export class DefaultEvent extends Base implements Event {
     metaModelVersion: string,
     aspectModelUrn: string,
     name: string,
-    public parameters: Array<OverWrittenProperty> = [],
+    public parameters: Array<OverWrittenProperty> = []
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }
 
   delete(baseMetalModelElement: BaseMetaModelElement) {
     this.parameters = this.parameters.filter(
-      overwrittenProperty => overwrittenProperty.property.aspectModelUrn !== baseMetalModelElement.aspectModelUrn,
+      overwrittenProperty => overwrittenProperty.property.aspectModelUrn !== baseMetalModelElement.aspectModelUrn
     );
   }
 

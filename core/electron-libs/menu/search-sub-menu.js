@@ -21,14 +21,14 @@ function searchSubmenu(translation) {
       id: 'SEARCH_ELEMENTS',
       label: translation.ELEMENTS,
       icon: getIcon(icons.SEARCH_ELEMENTS.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_SEARCH_ELEMENTS),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_SEARCH_ELEMENTS)
     },
     {
       id: 'SEARCH_FILES',
       label: translation.FILES,
       icon: getIcon(icons.SEARCH_FILES.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_SEARCH_FILES),
-    },
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_SEARCH_FILES)
+    }
   ];
 }
 

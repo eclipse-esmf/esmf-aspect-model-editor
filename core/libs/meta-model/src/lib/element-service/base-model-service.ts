@@ -18,7 +18,7 @@ import {
   DefaultAspect,
   DefaultEntityInstance,
   DefaultEnumeration,
-  EntityInstanceProperty,
+  EntityInstanceProperty
 } from '@ame/meta-model';
 import {mxgraph} from 'mxgraph-factory';
 import {NamespacesCacheService} from '@ame/cache';

@@ -27,7 +27,7 @@ const customRule = '--custom-rule--';
 @Component({
   selector: 'ame-structured-value',
   templateUrl: './structured-value.component.html',
-  styleUrls: ['./structured-value.component.scss'],
+  styleUrls: ['./structured-value.component.scss']
 })
 export class StructuredValueComponent extends InputFieldComponent<DefaultStructuredValue> implements OnInit, OnDestroy {
   public deconstructionRule = '';
@@ -38,7 +38,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   public elements: (OverWrittenProperty | string)[] = [];
   public predefinedRules = Object.entries(predefinedRules).map(([key, value]) => ({
     regex: key,
-    name: value.name,
+    name: value.name
   }));
 
   private subscription$: Subscription;
@@ -53,14 +53,14 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
     hasErrors &&
       this.parentForm.get('elements')?.setErrors({
         ...controller.errors,
-        noFilledGroups: {error: true},
+        noFilledGroups: {error: true}
       });
     return hasErrors;
   }
 
   constructor(
     private predefinedRulesService: PredefinedRulesService,
-    private matDialog: MatDialog,
+    private matDialog: MatDialog
   ) {
     super();
   }
@@ -90,14 +90,14 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
       'deconstructionRule',
       new FormControl(
         {value: this.deconstructionRule || '', disabled: !this.customRuleActive || this.metaModelElement?.isExternalReference()},
-        {validators: [Validators.required, EditorDialogValidators.regexValidator]},
-      ),
+        {validators: [Validators.required, EditorDialogValidators.regexValidator]}
+      )
     );
     this.parentForm.get('deconstructionRule').markAsTouched();
 
     this.parentForm.setControl(
       'elements',
-      new FormControl({value: [...this.elements], disabled: this.metaModelElement?.isExternalReference()}),
+      new FormControl({value: [...this.elements], disabled: this.metaModelElement?.isExternalReference()})
     );
 
     this.rebuildElements();
@@ -120,7 +120,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   openModal() {
     this.matDialog
       .open(StructuredValuePropertiesComponent, {
-        data: {groups: this.groups},
+        data: {groups: this.groups}
       })
       .afterClosed()
       .pipe(take(1))
@@ -155,7 +155,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
           this.selectedRule = predefinedRules[value] ? value : customRule;
           this.elements = this.parentForm.get('elements')?.value || this.elements;
           this.rebuildElements();
-        }),
+        })
     );
   }
 

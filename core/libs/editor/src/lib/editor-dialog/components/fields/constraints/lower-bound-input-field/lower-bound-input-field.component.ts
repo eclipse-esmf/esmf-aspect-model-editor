@@ -20,14 +20,14 @@ import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-lower-bound-input-field',
-  templateUrl: './lower-bound-input-field.component.html',
+  templateUrl: './lower-bound-input-field.component.html'
 })
 export class LowerBoundInputFieldComponent extends InputFieldComponent<DefaultConstraint> implements OnInit, OnDestroy {
   public lowerBoundDefinitionList = [];
 
   constructor(
     public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService,
+    public mxGraphService: MxGraphService
   ) {
     super();
     this.resetFormOnDestroy = false;
@@ -56,8 +56,8 @@ export class LowerBoundInputFieldComponent extends InputFieldComponent<DefaultCo
       this.fieldName,
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
-        disabled: this.metaModelElement.isExternalReference(),
-      }),
+        disabled: this.metaModelElement.isExternalReference()
+      })
     );
   }
 }

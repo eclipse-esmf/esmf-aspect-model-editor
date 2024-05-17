@@ -45,8 +45,8 @@ import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-di
     MatIconModule,
     EditorDialogModule,
     LanguageTranslateModule,
-    ElementIconComponent,
-  ],
+    ElementIconComponent
+  ]
 })
 export class ElementsSearchComponent {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
@@ -59,7 +59,7 @@ export class ElementsSearchComponent {
     private searchesStateService: SearchesStateService,
     private confirmDialogService: ConfirmDialogService,
     private searchService: SearchService,
-    private translate: LanguageTranslationService,
+    private translate: LanguageTranslationService
   ) {
     this.searchControl.valueChanges.pipe(startWith(''), throttleTime(150)).subscribe(value => {
       this.elements = this.searchService
@@ -75,7 +75,7 @@ export class ElementsSearchComponent {
           phrases: [this.translate.translateService.instant('CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.PHRASE1', {elementName: element.name})],
           title: this.translate.language.CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.TITLE,
           closeButtonText: this.translate.language.CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.CANCEL_BUTTON,
-          okButtonText: this.translate.language.CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.OK_BUTTON,
+          okButtonText: this.translate.language.CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.OK_BUTTON
         })
         .subscribe(confirm => {
           confirm !== ConfirmDialogEnum.cancel
@@ -83,7 +83,7 @@ export class ElementsSearchComponent {
                 file: element.fileName,
                 namespace: element.aspectModelUrn.replace('urn:samm:', '').split('#')[0],
                 editElement: element.aspectModelUrn,
-                fromWorkspace: true,
+                fromWorkspace: true
               })
             : null;
         });

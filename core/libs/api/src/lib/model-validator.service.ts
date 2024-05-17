@@ -17,13 +17,13 @@ import {LogService, NotificationsService} from '@ame/shared';
 import {ViolationError} from '@ame/editor';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ModelValidatorService {
   constructor(
     private mxGraphService: MxGraphService,
     private notificationsService: NotificationsService,
-    private logService: LogService,
+    private logService: LogService
   ) {
     this.notificationsService.clearNotifications();
   }
@@ -47,7 +47,7 @@ export class ModelValidatorService {
         title: error.message,
         message: error.fix[0], //TODO should be changed, when more fixes are available
         link: error.focusNode,
-        timeout: 5000,
+        timeout: 5000
       });
       this.mxGraphService.showValidationErrorOnShape(error.focusNode);
     });

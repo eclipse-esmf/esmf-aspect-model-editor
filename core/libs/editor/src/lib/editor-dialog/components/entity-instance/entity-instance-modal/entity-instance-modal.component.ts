@@ -22,7 +22,7 @@ import {
   DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
-  OverWrittenProperty,
+  OverWrittenProperty
 } from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
 import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
@@ -35,7 +35,7 @@ export interface NewEntityInstanceDialogOptions {
 
 @Component({
   templateUrl: './entity-instance-modal.component.html',
-  styleUrls: ['./entity-instance-modal.component.scss'],
+  styleUrls: ['./entity-instance-modal.component.scss']
 })
 export class EntityInstanceModalComponent {
   public title: string;
@@ -58,7 +58,7 @@ export class EntityInstanceModalComponent {
     @Inject(MAT_DIALOG_DATA) private data: NewEntityInstanceDialogOptions,
     private dialogRef: MatDialogRef<EntityInstanceModalComponent>,
     private editorModelService: EditorModelService,
-    private namespacesCacheService: NamespacesCacheService,
+    private namespacesCacheService: NamespacesCacheService
   ) {
     this.complexValues = data.complexValues;
     this.enumeration = data.metaModel as DefaultEnumeration;
@@ -67,7 +67,7 @@ export class EntityInstanceModalComponent {
     this.entityValueName = new FormControl('', [
       Validators.required,
       EditorDialogValidators.noWhiteSpace,
-      EditorDialogValidators.duplicateNameString(this.namespacesCacheService, this.entity.aspectModelUrn.split('#')[0]),
+      EditorDialogValidators.duplicateNameString(this.namespacesCacheService, this.entity.aspectModelUrn.split('#')[0])
     ]);
     this.buildForm();
   }
@@ -76,11 +76,11 @@ export class EntityInstanceModalComponent {
     this.form = new FormGroup({
       entityValueName: this.entityValueName,
       properties: new FormGroup({}),
-      newEntityValues: new FormControl([]),
+      newEntityValues: new FormControl([])
     });
 
     this.entity.allProperties.forEach((element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>) =>
-      this.propertiesForm.setControl(element.property.name, new FormArray([])),
+      this.propertiesForm.setControl(element.property.name, new FormArray([]))
     );
   }
 
@@ -91,14 +91,14 @@ export class EntityInstanceModalComponent {
 
     if (this.isEntityValueNameAlreadyUsed(this.entityValueName.value)) {
       this.entityValueName.setErrors({
-        nameAlreadyExists: {},
+        nameAlreadyExists: {}
       });
       return;
     }
 
     this.dialogRef.close({
       entityValue: this.createNewEntityValue(),
-      newEntityValues: this.form.get('newEntityValues').value,
+      newEntityValues: this.form.get('newEntityValues').value
     });
   }
 

@@ -25,6 +25,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 @NgModule({
   imports: [CommonModule, MatDialogModule, MatInputModule, MatIconModule, FormsModule, MatButtonModule, MatMenuModule, MatTooltipModule],
   declarations: [ConnectWithDialogComponent],
-  exports: [ConnectWithDialogComponent],
+  exports: [ConnectWithDialogComponent]
 })
 export class ConnectWithDialogModule {}

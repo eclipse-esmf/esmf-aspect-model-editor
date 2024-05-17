@@ -20,7 +20,7 @@ import {
   DefaultProperty,
   Entity,
   EntityInstanceProperty,
-  OverWrittenProperty,
+  OverWrittenProperty
 } from '@ame/meta-model';
 import {BaseModelService} from './base-model-service';
 import {EntityValueRenderService, MxGraphHelper} from '@ame/mx-graph';
@@ -73,7 +73,7 @@ export class EntityValueModelService extends BaseModelService {
       const propertyValues = entityValueProperties[key].map(({value, language}) => ({
         key: property,
         value,
-        language,
+        language
       }));
 
       metaModelElement.properties.push(...propertyValues);
@@ -82,7 +82,7 @@ export class EntityValueModelService extends BaseModelService {
 
   private findPropertyInEntities(
     entities: Array<Entity>,
-    propertyName: string,
+    propertyName: string
   ): OverWrittenProperty<DefaultProperty | DefaultAbstractProperty> {
     for (const entity of entities) {
       const property = entity.properties.find(prop => prop.property.name === propertyName);

@@ -20,7 +20,7 @@ import {sammElements} from '@ame/shared';
 @Component({
   selector: 'ame-element-list',
   templateUrl: './element-list.component.html',
-  styleUrls: ['element-list.component.scss'],
+  styleUrls: ['element-list.component.scss']
 })
 export class ElementListComponent implements OnInit {
   @Input() public label = '';
@@ -32,7 +32,7 @@ export class ElementListComponent implements OnInit {
     private mxGraphService: MxGraphService,
     private shapeSettingsService: ShapeSettingsService,
     private shapeSettingsStateService: ShapeSettingsStateService,
-    private openReferencedElementService: OpenReferencedElementService,
+    private openReferencedElementService: OpenReferencedElementService
   ) {}
 
   ngOnInit() {

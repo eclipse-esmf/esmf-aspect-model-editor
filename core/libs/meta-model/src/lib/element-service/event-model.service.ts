@@ -21,7 +21,7 @@ import {EventRenderService, MxGraphService} from '@ame/mx-graph';
 export class EventModelService extends BaseModelService {
   constructor(
     private mxGraphService: MxGraphService,
-    private aspectRenderer: EventRenderService,
+    private aspectRenderer: EventRenderService
   ) {
     super();
   }

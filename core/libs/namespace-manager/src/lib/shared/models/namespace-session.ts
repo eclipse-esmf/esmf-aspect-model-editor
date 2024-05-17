@@ -44,12 +44,12 @@ export class NamespacesSession implements NamespacesSessionInterface {
 
   public conflictFiles = {
     replace: [],
-    keep: [],
+    keep: []
   };
 
   public state = {
     validating$: new BehaviorSubject(false),
-    importing$: new BehaviorSubject(false),
+    importing$: new BehaviorSubject(false)
   };
 
   public parseResponse(validationResult: any) {
@@ -77,15 +77,15 @@ export class NamespacesSession implements NamespacesSessionInterface {
         }
         violation.value.push({
           file: file,
-          violationError: violationErrors,
+          violationError: violationErrors
         });
 
         return acc;
       },
       {
         replace: new Set(),
-        keep: new Set(),
-      },
+        keep: new Set()
+      }
     );
 
     this.conflictFiles.keep = Array.from(keep);

@@ -26,7 +26,7 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
 
   constructor(
     public rdfNodeService: RdfNodeService,
-    rdfService: RdfService,
+    rdfService: RdfService
   ) {
     super(rdfService);
   }
@@ -48,13 +48,13 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
       exampleValue: property.exampleValue,
       preferredName: property.getAllLocalesPreferredNames().map(language => ({
         language,
-        value: property.getPreferredName(language),
+        value: property.getPreferredName(language)
       })),
       description: property.getAllLocalesDescriptions().map(language => ({
         language,
-        value: property.getDescription(language),
+        value: property.getDescription(language)
       })),
-      see: property.getSeeReferences() || [],
+      see: property.getSeeReferences() || []
     });
   }
 
@@ -67,7 +67,7 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
     this.store.addQuad(
       DataFactory.namedNode(property.aspectModelUrn),
       this.rdfService.currentRdfModel.samm.CharacteristicProperty(),
-      DataFactory.namedNode(property.characteristic.aspectModelUrn),
+      DataFactory.namedNode(property.characteristic.aspectModelUrn)
     );
   }
 
@@ -80,7 +80,7 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
     this.store.addQuad(
       DataFactory.namedNode(property.aspectModelUrn),
       this.rdfService.currentRdfModel.samm.ExtendsProperty(),
-      DataFactory.namedNode(property.extendedElement.aspectModelUrn),
+      DataFactory.namedNode(property.extendedElement.aspectModelUrn)
     );
   }
 }

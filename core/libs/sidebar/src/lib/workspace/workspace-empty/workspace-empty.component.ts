@@ -17,7 +17,7 @@ import {Component, Input} from '@angular/core';
 @Component({
   selector: 'ame-workspace-empty',
   templateUrl: './workspace-empty.component.html',
-  styleUrls: ['./workspace-empty.component.scss'],
+  styleUrls: ['./workspace-empty.component.scss']
 })
 export class WorkspaceEmptyComponent {
   @Input() loading = false;

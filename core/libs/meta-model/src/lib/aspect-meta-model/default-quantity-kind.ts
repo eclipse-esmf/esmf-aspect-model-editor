@@ -26,7 +26,7 @@ export class DefaultQuantityKind extends Base implements QuantityKind {
     metaModelVersion: string,
     aspectModelUrn: string,
     name: string,
-    public label: string,
+    public label: string
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

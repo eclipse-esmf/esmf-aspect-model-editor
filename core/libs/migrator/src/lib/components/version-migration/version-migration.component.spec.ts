@@ -40,44 +40,44 @@ describe('VersionMigrationComponent', () => {
         MatProgressSpinnerModule,
         MatIconModule,
         TranslateModule.forRoot(),
-        LanguageTranslateModule,
+        LanguageTranslateModule
       ],
       declarations: [VersionMigrationComponent],
       providers: [
         {
           provide: APP_CONFIG,
           useValue: {
-            currentSammVersion: '2.1.0',
-          },
+            currentSammVersion: '2.1.0'
+          }
         },
         {
           provide: MigratorApiService,
-          useValue: provideMockObject(MigratorApiService),
+          useValue: provideMockObject(MigratorApiService)
         },
         {
           provide: ElectronTunnelService,
-          useValue: provideMockObject(ElectronTunnelService),
+          useValue: provideMockObject(ElectronTunnelService)
         },
         {
           provide: RdfService,
-          useValue: provideMockObject(RdfService),
+          useValue: provideMockObject(RdfService)
         },
         {
           provide: ModelApiService,
-          useValue: provideMockObject(ModelApiService),
+          useValue: provideMockObject(ModelApiService)
         },
         {
           provide: EditorService,
           useValue: {
             settings: {},
-            loadExternalModels: jest.fn(() => of()),
-          },
+            loadExternalModels: jest.fn(() => of())
+          }
         },
         {
           provide: LanguageTranslationService,
-          useValue: provideMockObject(LanguageTranslationService),
-        },
-      ],
+          useValue: provideMockObject(LanguageTranslationService)
+        }
+      ]
     });
 
     modelApiService = TestBed.inject(ModelApiService);

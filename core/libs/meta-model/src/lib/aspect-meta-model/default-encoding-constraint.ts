@@ -29,7 +29,7 @@ export class DefaultEncodingConstraint extends DefaultConstraint implements Enco
     metaModelVersion: string,
     aspectModelUrn: string,
     name: string,
-    public value: string,
+    public value: string
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

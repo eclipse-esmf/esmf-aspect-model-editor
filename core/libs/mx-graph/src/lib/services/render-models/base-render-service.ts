@@ -27,7 +27,7 @@ export abstract class BaseRenderService {
   constructor(
     protected mxGraphService: MxGraphService,
     protected sammLangService: SammLanguageSettingsService,
-    protected rdfService: RdfService,
+    protected rdfService: RdfService
   ) {}
   public abstract isApplicable(cell: mxgraph.mxCell): boolean;
 
@@ -57,7 +57,7 @@ export abstract class BaseRenderService {
       }
 
       const keys: OverWrittenPropertyKeys = modelElement.properties.find(
-        ({property: prop}) => prop.aspectModelUrn === property.aspectModelUrn,
+        ({property: prop}) => prop.aspectModelUrn === property.aspectModelUrn
       ).keys;
 
       this.mxGraphService.removeCells([e]);
@@ -68,7 +68,7 @@ export abstract class BaseRenderService {
         null,
         e.source,
         e.target,
-        keys.optional ? 'optionalPropertyEdge' : 'defaultEdge',
+        keys.optional ? 'optionalPropertyEdge' : 'defaultEdge'
       );
     });
   }

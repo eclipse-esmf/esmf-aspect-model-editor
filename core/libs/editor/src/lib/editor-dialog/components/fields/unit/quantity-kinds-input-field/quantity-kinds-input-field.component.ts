@@ -23,7 +23,7 @@ declare const sammUDefinition: any;
 
 @Component({
   selector: 'ame-quantity-kinds-input-field',
-  templateUrl: './quantity-kinds-input-field.component.html',
+  templateUrl: './quantity-kinds-input-field.component.html'
 })
 export class QuantityKindsInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
   @ViewChild('input') inputValue: any;
@@ -55,20 +55,20 @@ export class QuantityKindsInputFieldComponent extends InputFieldComponent<Defaul
   setInputControl() {
     this.editable = !this.metaModelDialogService.isReadOnly();
     this.quantityKindValues = [
-      ...((this.metaModelElement?.quantityKinds?.map(value => (value instanceof DefaultQuantityKind ? value.name : value)) as any) || []),
+      ...((this.metaModelElement?.quantityKinds?.map(value => (value instanceof DefaultQuantityKind ? value.name : value)) as any) || [])
     ];
 
     this.inputControl = new FormControl({
       value: '',
-      disabled: this.metaModelDialogService.isReadOnly(),
+      disabled: this.metaModelDialogService.isReadOnly()
     });
 
     this.parentForm.setControl(
       'quantityKindsChipList',
       new FormControl({
         value: this.quantityKindValues,
-        disabled: this.metaModelDialogService.isReadOnly(),
-      }),
+        disabled: this.metaModelDialogService.isReadOnly()
+      })
     );
 
     this.filteredQuantityKinds$ = this.initFilteredQuantityKinds(this.inputControl);
@@ -78,7 +78,7 @@ export class QuantityKindsInputFieldComponent extends InputFieldComponent<Defaul
     return control?.valueChanges.pipe(
       map((value: string) => {
         return value ? this.supportedQuantityKinds?.filter(qk => qk.startsWith(value)) : this.supportedQuantityKinds;
-      }),
+      })
     );
   }
 

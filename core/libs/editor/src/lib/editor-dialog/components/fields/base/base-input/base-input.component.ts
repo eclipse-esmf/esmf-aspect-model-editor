@@ -17,7 +17,7 @@ import {PreviousFormDataSnapshot} from '../../../../interfaces';
 
 @Component({
   selector: 'ame-base-input',
-  templateUrl: './base-input.component.html',
+  templateUrl: './base-input.component.html'
 })
 export class BaseInputComponent {
   @Input() hideDescription = false;

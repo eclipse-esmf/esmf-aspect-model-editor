@@ -18,7 +18,7 @@ import {FormGroup} from '@angular/forms';
 @Component({
   selector: 'ame-copyright',
   templateUrl: './header-copyright.component.html',
-  styleUrls: ['./header-copyright.component.scss'],
+  styleUrls: ['./header-copyright.component.scss']
 })
 export class HeaderCopyrightComponent implements OnInit {
   form: FormGroup;

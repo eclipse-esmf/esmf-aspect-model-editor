@@ -23,7 +23,7 @@ import {Component} from '@angular/core';
         width: 1000px;
         min-height: 50vh;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class RootNamespacesImporterComponent {}

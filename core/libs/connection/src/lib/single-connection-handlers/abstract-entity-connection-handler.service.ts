@@ -20,7 +20,7 @@ import {
   DefaultAbstractProperty,
   OverWrittenProperty,
   DefaultEntity,
-  DefaultProperty,
+  DefaultProperty
 } from '@ame/meta-model';
 import {MxGraphService, MxGraphHelper} from '@ame/mx-graph';
 import {Injectable} from '@angular/core';
@@ -29,7 +29,7 @@ import {PropertyAbstractPropertyConnectionHandler, EntityPropertyConnectionHandl
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AbstractEntityConnectionHandler implements SingleShapeConnector<Entity> {
   constructor(
@@ -38,14 +38,14 @@ export class AbstractEntityConnectionHandler implements SingleShapeConnector<Ent
     private entityInstanceService: EntityInstanceService,
     private propertyAbstractPropertyConnector: PropertyAbstractPropertyConnectionHandler,
     private entityPropertyConnector: EntityPropertyConnectionHandler,
-    private filtersService: FiltersService,
+    private filtersService: FiltersService
   ) {}
 
   public connect(abstractEntity: DefaultAbstractEntity, source: mxgraph.mxCell) {
     const abstractProperty = DefaultAbstractProperty.createInstance();
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(abstractProperty);
     const abstractPropertyCell = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
+      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)})
     );
     const overWrittenProperty: OverWrittenProperty<DefaultAbstractProperty> = {property: abstractProperty, keys: {}};
     abstractEntity.properties.push(overWrittenProperty as any);

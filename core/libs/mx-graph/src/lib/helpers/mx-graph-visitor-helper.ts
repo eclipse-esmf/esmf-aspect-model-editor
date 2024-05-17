@@ -42,7 +42,7 @@ import {
   DefaultUnit,
   Property,
   QuantityKind,
-  Unit,
+  Unit
 } from '@ame/meta-model';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
@@ -68,7 +68,7 @@ export class MxGraphVisitorHelper {
     ) {
       return {
         label: `dataType = ${RdfModelUtil.getValueWithoutUrnDefinition(metaModelElement.dataType.getUrn())}`,
-        key: 'dataType',
+        key: 'dataType'
       };
     }
 
@@ -83,7 +83,7 @@ export class MxGraphVisitorHelper {
     ) {
       return {
         label: `values = ${RdfModelUtil.getValuesWithoutUrnDefinition(characteristic.values)}`,
-        key: 'values',
+        key: 'values'
       };
     }
     return null;
@@ -93,7 +93,7 @@ export class MxGraphVisitorHelper {
     if (characteristic instanceof DefaultState && characteristic.defaultValue) {
       return {
         label: `defaultValue = ${RdfModelUtil.getValuesWithoutUrnDefinition(Array(characteristic.defaultValue))}`,
-        key: 'defaultValue',
+        key: 'defaultValue'
       };
     }
     return null;
@@ -117,7 +117,7 @@ export class MxGraphVisitorHelper {
             label: `description = ${description || extendedDescription} @${langTag}`,
             key: 'description',
             lang: langTag,
-            extended: !!extendedDescription && !description,
+            extended: !!extendedDescription && !description
           };
         }
         return null;
@@ -142,7 +142,7 @@ export class MxGraphVisitorHelper {
             label: `preferredName = ${preferredName || extendedPreferredName} @${langTag}`,
             key: 'preferredName',
             lang: langTag,
-            extended: !!extendedPreferredName && !preferredName,
+            extended: !!extendedPreferredName && !preferredName
           };
         }
         return null;
@@ -170,12 +170,12 @@ export class MxGraphVisitorHelper {
     if (metaModelElement.getSeeReferences()?.length > 0 || (metaModelElement as CanExtend)?.extendedSee?.length) {
       let extended = false;
       let elements = (metaModelElement.getSeeReferences() || []).map(e =>
-        e.startsWith('urn:samm') && e.includes('#') ? e.split('#')[1] : e,
+        e.startsWith('urn:samm') && e.includes('#') ? e.split('#')[1] : e
       );
 
       if (!elements.length) {
         elements = (metaModelElement as CanExtend)?.extendedSee.map(e =>
-          e.startsWith('urn:samm') && e.includes('#') ? e.split('#')[1] : e,
+          e.startsWith('urn:samm') && e.includes('#') ? e.split('#')[1] : e
         );
         extended = true;
       }
@@ -183,7 +183,7 @@ export class MxGraphVisitorHelper {
       return {
         label: `see = ${elements.join(',')}`,
         key: 'see',
-        extended,
+        extended
       };
     }
     return null;
@@ -339,7 +339,7 @@ export class MxGraphVisitorHelper {
     return [
       ...this.addLocalizedPreferredNames(operation, sammLangService),
       ...this.addLocalizedDescriptions(operation, sammLangService),
-      this.addSee(operation),
+      this.addSee(operation)
     ].filter(e => !!e);
   }
 
@@ -348,7 +348,7 @@ export class MxGraphVisitorHelper {
       this.addExtends(entity),
       ...this.addLocalizedPreferredNames(entity, sammLangService),
       ...this.addLocalizedDescriptions(entity, sammLangService),
-      this.addSee(entity),
+      this.addSee(entity)
     ].filter(e => !!e);
   }
 
@@ -364,7 +364,7 @@ export class MxGraphVisitorHelper {
       this.addConversionFactor(unit),
       this.addNumericConversionFactor(unit),
       this.addQuantityKinds(unit.quantityKinds),
-      this.addReferenceUnit(unit),
+      this.addReferenceUnit(unit)
     ].filter(e => !!e);
   }
 
@@ -374,7 +374,7 @@ export class MxGraphVisitorHelper {
       ...this.addLocalizedPreferredNames(property, sammLangService),
       ...this.addLocalizedDescriptions(property, sammLangService),
       this.addSee(property),
-      this.addExampleValue(property),
+      this.addExampleValue(property)
     ].filter(e => !!e);
   }
 
@@ -391,7 +391,7 @@ export class MxGraphVisitorHelper {
       this.addValues(characteristic),
       this.addDefaultValue(characteristic),
       this.addDeconstructionRule(characteristic),
-      this.addElements(characteristic),
+      this.addElements(characteristic)
     ].filter(e => !!e);
   }
 
@@ -400,7 +400,7 @@ export class MxGraphVisitorHelper {
       ...this.addLocalizedPreferredNames(aspect, sammLangService),
       ...this.addLocalizedDescriptions(aspect, sammLangService),
       this.addSee(aspect),
-      this.addIsCollectionAspect(aspect),
+      this.addIsCollectionAspect(aspect)
     ].filter(e => !!e);
   }
 
@@ -416,7 +416,7 @@ export class MxGraphVisitorHelper {
       this.addLanguageCode(constraint),
       this.addScale(constraint),
       this.addInteger(constraint),
-      this.addLocaleCode(constraint),
+      this.addLocaleCode(constraint)
     ].filter(e => !!e);
   }
 
@@ -424,7 +424,7 @@ export class MxGraphVisitorHelper {
     return [
       ...this.addLocalizedPreferredNames(event, sammLangService),
       ...this.addLocalizedDescriptions(event, sammLangService),
-      this.addSee(event),
+      this.addSee(event)
     ].filter(e => !!e);
   }
 
@@ -494,7 +494,7 @@ export class MxGraphVisitorHelper {
         sameNamespace: elementNamespace === currentNamespace,
         sameVersionedNamespace: aspectVersionedNamespace === elementVersionedNamespace,
         fileName: modelElement.fileName,
-        isAbstract: modelElement.className.toLowerCase().includes('abstract'),
+        isAbstract: modelElement.className.toLowerCase().includes('abstract')
       };
     } catch (error) {
       return null;

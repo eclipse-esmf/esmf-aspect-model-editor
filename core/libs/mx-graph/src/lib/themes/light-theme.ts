@@ -31,5 +31,5 @@ export const lightColors: ThemeColors = {
   primary: '#8da5bf',
   accent: '#995fab',
   error: '#E83F22',
-  background: '#FFFFFF',
+  background: '#FFFFFF'
 };

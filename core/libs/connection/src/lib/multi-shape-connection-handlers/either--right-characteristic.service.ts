@@ -18,12 +18,12 @@ import {MultiShapeConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EitherCharacteristicRightConnectionHandler implements MultiShapeConnector<DefaultEither, DefaultCharacteristic> {
   constructor(
     private mxGraphService: MxGraphService,
-    private mxGraphAttributeService: MxGraphAttributeService,
+    private mxGraphAttributeService: MxGraphAttributeService
   ) {}
 
   public connect(parentMetaModel: DefaultEither, childMetaModel: DefaultCharacteristic, parent: mxgraph.mxCell, child: mxgraph.mxCell) {

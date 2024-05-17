@@ -18,7 +18,7 @@ import {MultiShapeConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EventPropertyConnectionHandler implements MultiShapeConnector<DefaultEvent, DefaultProperty> {
   constructor(private mxGraphService: MxGraphService) {}

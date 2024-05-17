@@ -25,7 +25,7 @@ import {
   DefaultProperty,
   DefaultRangeConstraint,
   DefaultState,
-  Type,
+  Type
 } from '@ame/meta-model';
 import {RdfModel} from './rdf-model';
 import {Samm, SammC} from '@ame/vocabulary';
@@ -39,8 +39,8 @@ jest.mock('./rdf-model', () => ({
 
     get sammC() {
       return null;
-    },
-  })),
+    }
+  }))
 }));
 describe('Test RDF Model Util', () => {
   describe('getDataType', () => {
@@ -48,7 +48,7 @@ describe('Test RDF Model Util', () => {
       jest.fn().mockRestore();
       const expectedUrnResult = 'expectedUrnResult';
       const dataType = {
-        getUrn: () => expectedUrnResult,
+        getUrn: () => expectedUrnResult
       } as Type;
       const result = RdfModelUtil.getDataType(dataType);
       expect(result.id).toBe(expectedUrnResult);
@@ -56,7 +56,7 @@ describe('Test RDF Model Util', () => {
 
     test('should return null', () => {
       const dataType = {
-        getUrn: () => null,
+        getUrn: () => null
       } as Type;
 
       const result = RdfModelUtil.getDataType(dataType);
@@ -78,7 +78,7 @@ describe('Test RDF Model Util', () => {
       const samm: Samm = <Samm>{};
       const sammC: SammC = <SammC>{
         isMinValueProperty: value => !!value,
-        isMaxValueProperty: value => !!value,
+        isMaxValueProperty: value => !!value
       };
 
       rdfModel.SAMM = () => samm;
@@ -95,7 +95,7 @@ describe('Test RDF Model Util', () => {
       const samm: Samm = <Samm>{};
       const sammC: SammC = <any>{
         isScaleValueProperty: () => true,
-        isIntegerValueProperty: () => true,
+        isIntegerValueProperty: () => true
       };
 
       rdfModel.SAMM = () => samm;
@@ -110,7 +110,7 @@ describe('Test RDF Model Util', () => {
     test('should return DefaultProperty urn', () => {
       const metaModelElement = DefaultProperty.createInstance();
       const samm: Samm = <any>{
-        isExampleValueProperty: () => true,
+        isExampleValueProperty: () => true
       };
       const sammC: SammC = <SammC>{};
 
@@ -128,7 +128,7 @@ describe('Test RDF Model Util', () => {
       const samm: Samm = <Samm>{};
       const sammC: SammC = <SammC>{
         isMinValueProperty: value => !!value,
-        isMaxValueProperty: value => !!value,
+        isMaxValueProperty: value => !!value
       };
 
       rdfModel.SAMM = () => samm;
@@ -144,7 +144,7 @@ describe('Test RDF Model Util', () => {
       const metaModelElement = DefaultEnumeration.createInstance();
       const samm: Samm = <Samm>{};
       const sammC: SammC = <any>{
-        isValuesProperty: () => true,
+        isValuesProperty: () => true
       };
 
       rdfModel.SAMM = () => samm;
@@ -161,7 +161,7 @@ describe('Test RDF Model Util', () => {
       const samm: Samm = <Samm>{};
       const sammC: SammC = <any>{
         isValuesProperty: () => false,
-        isDefaultValueProperty: () => true,
+        isDefaultValueProperty: () => true
       };
 
       rdfModel.SAMM = () => samm;
@@ -178,7 +178,7 @@ describe('Test RDF Model Util', () => {
       const samm: Samm = <Samm>{};
       const sammC: SammC = <any>{
         isValuesProperty: () => false,
-        isDefaultValueProperty: () => false,
+        isDefaultValueProperty: () => false
       };
 
       rdfModel.SAMM = () => samm;
@@ -197,10 +197,10 @@ describe('Test RDF Model Util', () => {
       const parent = Object.create(DefaultAspect.prototype);
       const child = Object.create(DefaultProperty.prototype);
       const propertiesProperty: NamedNode = <NamedNode>{
-        id: 'propertiesPropertyNode',
+        id: 'propertiesPropertyNode'
       };
       const samm: Samm = <Samm>{
-        PropertiesProperty: () => propertiesProperty,
+        PropertiesProperty: () => propertiesProperty
       };
 
       rdfModel.SAMM = () => samm;
@@ -212,10 +212,10 @@ describe('Test RDF Model Util', () => {
       const parent = Object.create(DefaultAspect.prototype);
       const child = Object.create(DefaultOperation.prototype);
       const operationsProperty: NamedNode = <NamedNode>{
-        id: 'operationsPropertyNode',
+        id: 'operationsPropertyNode'
       };
       const samm: Samm = <Samm>{
-        OperationsProperty: () => operationsProperty,
+        OperationsProperty: () => operationsProperty
       };
 
       rdfModel.SAMM = () => samm;
@@ -227,10 +227,10 @@ describe('Test RDF Model Util', () => {
       const parent = Object.create(DefaultProperty.prototype);
       const child = Object.create(DefaultCharacteristic.prototype);
       const characteristicProperty: NamedNode = <NamedNode>{
-        id: 'characteristicPropertyNode',
+        id: 'characteristicPropertyNode'
       };
       const samm: Samm = <Samm>{
-        CharacteristicProperty: () => characteristicProperty,
+        CharacteristicProperty: () => characteristicProperty
       };
 
       rdfModel.SAMM = () => samm;
@@ -242,10 +242,10 @@ describe('Test RDF Model Util', () => {
       const parent = Object.create(DefaultCharacteristic.prototype);
       const child = Object.create(DefaultEntity.prototype);
       const dataTypeProperty: NamedNode = <NamedNode>{
-        id: 'dataTypePropertyNode',
+        id: 'dataTypePropertyNode'
       };
       const samm: Samm = <Samm>{
-        DataTypeProperty: () => dataTypeProperty,
+        DataTypeProperty: () => dataTypeProperty
       };
 
       rdfModel.SAMM = () => samm;
@@ -257,10 +257,10 @@ describe('Test RDF Model Util', () => {
       const parent = Object.create(DefaultEntity.prototype);
       const child = Object.create(DefaultProperty.prototype);
       const propertiesProperty: NamedNode = <NamedNode>{
-        id: 'propertiesPropertyNode',
+        id: 'propertiesPropertyNode'
       };
       const samm: Samm = <Samm>{
-        PropertiesProperty: () => propertiesProperty,
+        PropertiesProperty: () => propertiesProperty
       };
 
       rdfModel.SAMM = () => samm;
@@ -277,10 +277,10 @@ describe('Test RDF Model Util', () => {
       child.aspectModelUrn = rightPropertyUrn;
 
       const rightProperty: NamedNode = <NamedNode>{
-        id: 'rightPropertyNode',
+        id: 'rightPropertyNode'
       };
       const sammC: SammC = <SammC>{
-        EitherRightProperty: () => rightProperty,
+        EitherRightProperty: () => rightProperty
       };
 
       rdfModel.SAMMC = () => sammC;
@@ -298,10 +298,10 @@ describe('Test RDF Model Util', () => {
       child.aspectModelUrn = leftPropertyUrn;
 
       const leftProperty: NamedNode = <NamedNode>{
-        id: 'leftPropertyNode',
+        id: 'leftPropertyNode'
       };
       const sammC: SammC = <SammC>{
-        EitherLeftProperty: () => leftProperty,
+        EitherLeftProperty: () => leftProperty
       };
 
       rdfModel.SAMMC = () => sammC;

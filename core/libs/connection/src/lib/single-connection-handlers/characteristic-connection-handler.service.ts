@@ -23,7 +23,7 @@ import {
   DefaultTrait,
   DefaultCollection,
   DefaultEither,
-  DefaultConstraint,
+  DefaultConstraint
 } from '@ame/meta-model';
 import {
   MxGraphService,
@@ -31,7 +31,7 @@ import {
   MxGraphShapeOverlayService,
   ModelInfo,
   MxGraphHelper,
-  MxGraphVisitorHelper,
+  MxGraphVisitorHelper
 } from '@ame/mx-graph';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
@@ -40,7 +40,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {SingleShapeConnector} from '../models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class CharacteristicConnectionHandler implements SingleShapeConnector<Characteristic> {
   get currentCachedFile() {
@@ -54,7 +54,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private sammLangService: SammLanguageSettingsService,
-    private filtersService: FiltersService,
+    private filtersService: FiltersService
   ) {}
 
   public connect(characteristic: Characteristic, source: mxgraph.mxCell, modelInfo: ModelInfo) {
@@ -88,13 +88,13 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     // add trait
     const defaultTrait: DefaultTrait = this.modelElementNamingService.resolveElementNaming(
       DefaultTrait.createInstance(),
-      RdfModelUtil.capitalizeFirstLetter((incomingEdges.length ? incomingEdges[0].source.id : source.id)?.replace(/[[\]]/g, '')),
+      RdfModelUtil.capitalizeFirstLetter((incomingEdges.length ? incomingEdges[0].source.id : source.id)?.replace(/[[\]]/g, ''))
     );
 
     const traitShape = this.mxGraphService.renderModelElement(
       this.filtersService.createNode(this.currentCachedFile.resolveElement(defaultTrait), {
-        parent: MxGraphHelper.getModelElement(source),
-      }),
+        parent: MxGraphHelper.getModelElement(source)
+      })
     );
 
     if (incomingEdges.length) {
@@ -162,7 +162,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     });
 
     const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
+      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)})
     );
 
     this.mxGraphService.assignToParent(child, source);
@@ -195,7 +195,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     characteristic.values.push(entityValue);
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(entityValue);
     const entityValueCell = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
+      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)})
     );
 
     return [entityValueCell, entityValue];
@@ -233,8 +233,8 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     const defaultConstraint = this.modelElementNamingService.resolveElementNaming(DefaultConstraint.createInstance());
     const constraintShape = this.mxGraphService.renderModelElement(
       this.filtersService.createNode(this.currentCachedFile.resolveElement(defaultConstraint), {
-        parent: MxGraphHelper.getModelElement(traitShape),
-      }),
+        parent: MxGraphHelper.getModelElement(traitShape)
+      })
     );
 
     defaultTrait.update(defaultConstraint);

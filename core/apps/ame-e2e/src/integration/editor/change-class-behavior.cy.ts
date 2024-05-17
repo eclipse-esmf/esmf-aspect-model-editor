@@ -22,7 +22,7 @@ import {
   FIELD_see,
   SELECTOR_ecCharacteristic,
   SELECTOR_ecConstraint,
-  SELECTOR_elementBtn,
+  SELECTOR_elementBtn
 } from '../../support/constants';
 
 const constraintClassTypes = [
@@ -33,7 +33,7 @@ const constraintClassTypes = [
   'LengthConstraint',
   'LocaleConstraint',
   'RangeConstraint',
-  'RegularExpressionConstraint',
+  'RegularExpressionConstraint'
 ];
 
 const characteristicClassTypes = [
@@ -49,14 +49,14 @@ const characteristicClassTypes = [
   'SortedSet',
   'SingleEntity',
   'State',
-  'TimeSeries',
+  'TimeSeries'
 ];
 
 const fields = [
   {selector: FIELD_name, name: 'Name', value: 'ChangedName'},
   {selector: FIELD_descriptionen, name: 'Description', value: 'Changed Description'},
   {selector: FIELD_preferredNameen, name: 'Preferred Name', value: 'Changed Preferred Name'},
-  {selector: FIELD_see, name: 'See', value: 'http://example.com'},
+  {selector: FIELD_see, name: 'See', value: 'http://example.com'}
 ];
 
 describe('Constraint', () => {

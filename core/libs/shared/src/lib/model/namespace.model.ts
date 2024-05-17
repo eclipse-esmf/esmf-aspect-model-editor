@@ -29,7 +29,7 @@ export class NamespaceModel {
 
   constructor(
     public name: string,
-    public files: string[],
+    public files: string[]
   ) {}
 
   setFileStatus(file: string, version: string, outdated: boolean) {

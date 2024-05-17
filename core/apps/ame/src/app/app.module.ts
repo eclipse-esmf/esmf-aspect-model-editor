@@ -56,12 +56,12 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
       loader: {
         provide: TranslateLoader,
         useFactory: httpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [LogService, {provide: APP_CONFIG, useValue: config}],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
 

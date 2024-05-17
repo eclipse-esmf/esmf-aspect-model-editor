@@ -30,7 +30,7 @@ export class DefaultRegularExpressionConstraint extends DefaultConstraint implem
     metaModelVersion: string,
     aspectModelUrn: string,
     name: string,
-    public value: string,
+    public value: string
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

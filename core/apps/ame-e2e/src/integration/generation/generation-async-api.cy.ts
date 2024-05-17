@@ -20,7 +20,7 @@ import {
   GENERATION_tbGenerateAsyncApiButton,
   GENERATION_tbOutputButton,
   GENERATION_tbOutputButton_JSON,
-  GENERATION_writeSeparateFilesCheckbox,
+  GENERATION_writeSeparateFilesCheckbox
 } from '../../support/constants';
 
 describe('Test generation and download of async api specification', () => {

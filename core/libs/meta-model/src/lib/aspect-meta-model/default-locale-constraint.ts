@@ -30,7 +30,7 @@ export class DefaultLocaleConstraint extends DefaultConstraint implements Locale
     metaModelVersion: string,
     aspectModelUrn: string,
     name: string,
-    public localeCode: string,
+    public localeCode: string
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

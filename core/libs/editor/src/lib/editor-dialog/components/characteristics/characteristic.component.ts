@@ -19,7 +19,7 @@ import {CharacteristicClassType} from '@ame/editor';
 
 @Component({
   selector: 'ame-characteristic',
-  templateUrl: './characteristic.component.html',
+  templateUrl: './characteristic.component.html'
 })
 export class CharacteristicComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
@@ -36,12 +36,12 @@ export class CharacteristicComponent implements OnInit, OnDestroy {
     this.characteristicClassType.Set,
     this.characteristicClassType.SortedSet,
     this.characteristicClassType.List,
-    this.characteristicClassType.TimeSeries,
+    this.characteristicClassType.TimeSeries
   ];
   allowedClassesForUnit: CharacteristicClassType[] = [
     this.characteristicClassType.Measurement,
     this.characteristicClassType.Quantifiable,
-    this.characteristicClassType.Duration,
+    this.characteristicClassType.Duration
   ];
 
   @Input() parentForm: FormGroup;

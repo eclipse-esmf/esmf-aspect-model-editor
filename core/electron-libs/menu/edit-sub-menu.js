@@ -17,7 +17,7 @@ const {
   SIGNAL_CONNECT_ELEMENTS,
   SIGNAL_FORMAT_MODEL,
   SIGNAL_OPEN_SELECTED_ELEMENT,
-  SIGNAL_REMOVE_SELECTED_ELEMENT,
+  SIGNAL_REMOVE_SELECTED_ELEMENT
 } = require('../events');
 const {getIcon} = require('./utils');
 
@@ -28,34 +28,34 @@ function editSubmenu(translation) {
       label: translation.OPEN_SELECTED_ELEMENT,
       enabled: false,
       icon: getIcon(icons.OPEN_SELECTED_ELEMENT.disabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_OPEN_SELECTED_ELEMENT),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_OPEN_SELECTED_ELEMENT)
     },
     {
       id: 'REMOVE_SELECTED_ELEMENT',
       label: translation.REMOVE_SELECTED_ELEMENT,
       enabled: false,
       icon: getIcon(icons.REMOVE_SELECTED_ELEMENT.disabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_REMOVE_SELECTED_ELEMENT),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_REMOVE_SELECTED_ELEMENT)
     },
     {
       id: 'COLLAPSE_EXPAND_MODEL',
       label: translation.COLLAPSE_EXPAND_MODEL,
       icon: getIcon(icons.COLLAPSE_EXPAND_MODEL.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_COLLAPSE_EXPAND_MODEL),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_COLLAPSE_EXPAND_MODEL)
     },
     {
       id: 'FORMAT_MODEL',
       label: translation.FORMAT_MODEL,
       icon: getIcon(icons.FORMAT_MODEL.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_FORMAT_MODEL),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_FORMAT_MODEL)
     },
     {
       id: 'CONNECT_ELEMENTS',
       label: translation.CONNECT_SELECTED_ELEMENTS,
       enabled: false,
       icon: getIcon(icons.CONNECT_ELEMENTS.disabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_CONNECT_ELEMENTS),
-    },
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_CONNECT_ELEMENTS)
+    }
   ];
 }
 

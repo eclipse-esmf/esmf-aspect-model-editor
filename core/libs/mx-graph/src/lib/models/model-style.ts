@@ -24,7 +24,7 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultTrait,
-  DefaultUnit,
+  DefaultUnit
 } from '@ame/meta-model';
 
 /**
@@ -42,7 +42,7 @@ export enum ModelStyle {
   TRAIT = 'trait',
   ENTITY_INSTANCE = 'entityInstance',
   ABSTRACT_ENTITY = 'abstractEntity',
-  EVENT = 'event',
+  EVENT = 'event'
 }
 
 export enum EdgeStyles {
@@ -50,7 +50,7 @@ export enum EdgeStyles {
   optionalPropertyEdge = 'optionalPropertyEdge',
   abstractPropertyEdge = 'abstractPropertyEdge',
   abstractElementEdge = 'abstractElementEdge',
-  defaultEdge = 'defaultEdge',
+  defaultEdge = 'defaultEdge'
 }
 
 export class ModelStyleResolver {

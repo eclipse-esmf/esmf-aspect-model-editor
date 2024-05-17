@@ -24,7 +24,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EntityEntityConnectionHandler extends EntityInheritanceConnector implements MultiShapeConnector<DefaultEntity, DefaultEntity> {
   constructor(
@@ -35,7 +35,7 @@ export class EntityEntityConnectionHandler extends EntityInheritanceConnector im
     protected entityPropertyConnector: EntityPropertyConnectionHandler,
     protected filtersService: FiltersService,
     protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService,
+    private notificationService: NotificationsService
   ) {
     super(
       mxGraphService,
@@ -45,7 +45,7 @@ export class EntityEntityConnectionHandler extends EntityInheritanceConnector im
       filtersService,
       translate,
       propertyAbstractPropertyConnector,
-      entityPropertyConnector,
+      entityPropertyConnector
     );
   }
 
@@ -54,7 +54,7 @@ export class EntityEntityConnectionHandler extends EntityInheritanceConnector im
       this.notificationService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
         message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
-        timeout: 5000,
+        timeout: 5000
       });
       return;
     }

@@ -18,7 +18,7 @@ const {
   SIGNAL_GENERATE_JSON_PAYLOAD,
   SIGNAL_GENERATE_JSON_SCHEMA,
   SIGNAL_GENERATE_OPEN_API_SPECIFICATION,
-  SIGNAL_GENERATE_ASYNC_API_SPECIFICATION,
+  SIGNAL_GENERATE_ASYNC_API_SPECIFICATION
 } = require('../events');
 const {getIcon} = require('./utils');
 
@@ -28,41 +28,41 @@ function generateSubmenu(translation) {
       id: 'GENERATE_HTML_DOCUMENTATION',
       label: translation.HTML_DOCUMENTATION,
       icon: getIcon(icons.GENERATE_HTML_DOCUMENTATION.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_HTML_DOCUMENTATION),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_HTML_DOCUMENTATION)
     },
     {
       id: 'GENERATE_OPEN_API_SPECIFICATION',
       label: translation.OPEN_API_SPECIFICATION,
       icon: getIcon(icons.GENERATE_OPEN_API_SPECIFICATION.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_OPEN_API_SPECIFICATION),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_OPEN_API_SPECIFICATION)
     },
     {
       id: 'GENERATE_ASYNC_API_SPECIFICATION',
       label: translation.ASYNC_API_SPECIFICATION,
       icon: getIcon(icons.GENERATE_ASYNC_API_SPECIFICATION.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_ASYNC_API_SPECIFICATION),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_ASYNC_API_SPECIFICATION)
     },
     {
       id: 'GENERATE_AASX_XML',
       label: translation.AASX_XML,
       icon: getIcon(icons.GENERATE_AASX_XML.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_AASX_XML),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_AASX_XML)
     },
     {
-      type: 'separator',
+      type: 'separator'
     },
     {
       id: 'GENERATE_JSON_PAYLOAD',
       label: translation.SAMPLE_JSON_PAYLOAD,
       icon: getIcon(icons.GENERATE_JSON_PAYLOAD.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_JSON_PAYLOAD),
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_JSON_PAYLOAD)
     },
     {
       id: 'GENERATE_JSON_SCHEMA',
       label: translation.JSON_SCHEMA,
       icon: getIcon(icons.GENERATE_JSON_SCHEMA.enabled),
-      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_JSON_SCHEMA),
-    },
+      click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_GENERATE_JSON_SCHEMA)
+    }
   ];
 }
 

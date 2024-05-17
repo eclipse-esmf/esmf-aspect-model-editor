@@ -33,8 +33,8 @@ import {Subscription} from 'rxjs';
       :host {
         display: block;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class LocateElementComponent implements OnDestroy {
   public element: BaseMetaModelElement;
@@ -42,7 +42,7 @@ export class LocateElementComponent implements OnDestroy {
 
   constructor(
     public metaModelDialogService: EditorModelService,
-    private mxgraphService: MxGraphService,
+    private mxgraphService: MxGraphService
   ) {
     this.subscription = this.metaModelDialogService.getMetaModelElement().subscribe(element => (this.element = element));
   }

@@ -16,5 +16,5 @@ export enum VisibleStep {
   noError = 'no-error',
   hasErrors = 'has-errors',
   incorrectFile = 'incorrect-file',
-  missingElement = 'missing-element',
+  missingElement = 'missing-element'
 }

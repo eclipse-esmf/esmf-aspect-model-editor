@@ -20,7 +20,7 @@ import {
   DefaultEntity,
   DefaultEntityInstance,
   DefaultEnumeration,
-  DefaultProperty,
+  DefaultProperty
 } from '@ame/meta-model';
 import {MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
@@ -41,7 +41,7 @@ interface EnumerationForm {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EnumerationRenderService extends BaseRenderService {
   private filtersService = inject(FiltersService);
@@ -54,7 +54,7 @@ export class EnumerationRenderService extends BaseRenderService {
     private entityValueRenderer: EntityValueRenderService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private unitRendererService: UnitRenderService,
-    private namespaceCacheService: NamespacesCacheService,
+    private namespaceCacheService: NamespacesCacheService
   ) {
     super(mxGraphService, sammLangService, rdfService);
   }
@@ -126,7 +126,7 @@ export class EnumerationRenderService extends BaseRenderService {
           this.namespaceCacheService.currentCachedFile.removeElement(modelElement.aspectModelUrn);
         }
         return edge.target;
-      }),
+      })
     );
   }
 
@@ -158,7 +158,7 @@ export class EnumerationRenderService extends BaseRenderService {
 
     if (newDataType instanceof DefaultEntity) {
       const entityCell = this.mxGraphService.renderModelElement(
-        this.filtersService.createNode(newDataType, {parent: MxGraphHelper.getModelElement(cell)}),
+        this.filtersService.createNode(newDataType, {parent: MxGraphHelper.getModelElement(cell)})
       );
       this.shapeConnectorService.connectShapes(MxGraphHelper.getModelElement(cell), newDataType, cell, entityCell);
     }

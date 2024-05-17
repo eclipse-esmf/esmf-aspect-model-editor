@@ -20,7 +20,7 @@ import {MxGraphHelper} from '@ame/mx-graph';
 import {ConfirmDialogEnum} from '../../../../models/confirm-dialog.enum';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EntityInstanceService {
   get currentCachedFile() {
@@ -30,7 +30,7 @@ export class EntityInstanceService {
   constructor(
     private namespacesCacheService: NamespacesCacheService,
     private confirmDialogService: ConfirmDialogService,
-    private notifications: NotificationsService,
+    private notifications: NotificationsService
   ) {}
 
   onPropertyRemove(property: DefaultProperty, acceptCallback: Function) {
@@ -47,7 +47,7 @@ export class EntityInstanceService {
     const phrases = [
       `${entityValues[0].entity.name} has ${entityValues.length} instances.`,
       `If you remove the property ${property.name} from this entity all the entity instances will lose this property!`,
-      'Do you want to continue?',
+      'Do you want to continue?'
     ];
 
     this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(confirm => {
@@ -73,7 +73,7 @@ export class EntityInstanceService {
 
     this.notifications.warning({
       title: `Property ${property.property.name} was added to ${entity.name} instances. Make sure to add a value to them!`,
-      timeout: 5000,
+      timeout: 5000
     });
   }
 
@@ -88,7 +88,7 @@ export class EntityInstanceService {
     const title = `Remove ${entity.name}?`;
     const phrases = [
       `If you remove entity ${entity.name} all the entity instances created from ${entity.name} will be removed.`,
-      'Do you want to continue?',
+      'Do you want to continue?'
     ];
 
     this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(confirm => {
@@ -116,7 +116,7 @@ export class EntityInstanceService {
     const phrases = [
       `If you remove entity ${entity.name} from ${characteristic.name}
       all the entity instances from ${characteristic.name} will be removed.`,
-      'Do you want to continue?',
+      'Do you want to continue?'
     ];
 
     this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(confirm => {

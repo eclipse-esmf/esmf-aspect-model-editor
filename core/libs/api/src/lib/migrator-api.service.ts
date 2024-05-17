@@ -32,7 +32,7 @@ export interface FileStatus {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class MigratorApiService {
   private config: AppConfig = inject(APP_CONFIG);
@@ -44,7 +44,7 @@ export class MigratorApiService {
     private http: HttpClient,
     private browserService: BrowserService,
     private modelApiService: ModelApiService,
-    private editorService: EditorService,
+    private editorService: EditorService
   ) {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
@@ -57,8 +57,8 @@ export class MigratorApiService {
       .loadExternalModels()
       .pipe(
         map((rdfModels: RdfModel[]) =>
-          rdfModels.some(rdfModel => ExporterHelper.isVersionOutdated(rdfModel?.samm.version, this.config.currentSammVersion)),
-        ),
+          rdfModels.some(rdfModel => ExporterHelper.isVersionOutdated(rdfModel?.samm.version, this.config.currentSammVersion))
+        )
       );
   }
 

@@ -22,7 +22,7 @@ import {PropertyAbstractPropertyConnectionHandler} from './property--abstract-pr
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AbstractEntityAbstractPropertyConnectionHandler
   implements MultiShapeConnector<DefaultAbstractEntity, DefaultAbstractProperty>
@@ -32,14 +32,14 @@ export class AbstractEntityAbstractPropertyConnectionHandler
     private entityInstanceService: EntityInstanceService,
     private propertyAbstractPropertyConnector: PropertyAbstractPropertyConnectionHandler,
     private entityPropertyConnector: EntityPropertyConnectionHandler,
-    private filtersService: FiltersService,
+    private filtersService: FiltersService
   ) {}
 
   public connect(
     parentMetaModel: DefaultAbstractEntity,
     childMetaModel: DefaultAbstractProperty,
     parentCell: mxgraph.mxCell,
-    childCell: mxgraph.mxCell,
+    childCell: mxgraph.mxCell
   ) {
     if (!parentMetaModel.properties.find(({property}) => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
       const overWrittenProperty = {property: childMetaModel, keys: {}};
@@ -56,7 +56,7 @@ export class AbstractEntityAbstractPropertyConnectionHandler
     for (const grandParent of grandParents) {
       const grandParentElement = MxGraphHelper.getModelElement<DefaultEntity>(grandParent);
       const alreadyExtended = grandParentElement.properties.some(
-        ({property}) => property.extendedElement?.aspectModelUrn === childMetaModel.aspectModelUrn,
+        ({property}) => property.extendedElement?.aspectModelUrn === childMetaModel.aspectModelUrn
       );
 
       if (alreadyExtended) {

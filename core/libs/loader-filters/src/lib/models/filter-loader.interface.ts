@@ -79,7 +79,7 @@ export type ModelTreeOptions = Partial<{
 
 export enum ModelFilter {
   DEFAULT = 'default',
-  PROPERTIES = 'properties',
+  PROPERTIES = 'properties'
 }
 
 export interface FilterLoader<T extends BaseMetaModelElement = BaseMetaModelElement> {

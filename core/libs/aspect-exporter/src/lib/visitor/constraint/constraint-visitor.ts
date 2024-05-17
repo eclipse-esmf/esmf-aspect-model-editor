@@ -22,7 +22,7 @@ import {
   DefaultRangeConstraint,
   DefaultRegularExpressionConstraint,
   DefaultTrait,
-  Type,
+  Type
 } from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
@@ -49,13 +49,13 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
     DefaultLanguageConstraint: (constraint: DefaultLanguageConstraint) => this.updateLanguage(constraint),
     DefaultEncodingConstraint: (constraint: DefaultEncodingConstraint) => this.updateEncoding(constraint),
     DefaultRegularExpressionConstraint: (constraint: DefaultRegularExpressionConstraint) => this.updateRegularExpression(constraint),
-    DefaultLocaleConstraint: (constraint: DefaultLocaleConstraint) => this.updateLocale(constraint),
+    DefaultLocaleConstraint: (constraint: DefaultLocaleConstraint) => this.updateLocale(constraint)
   };
 
   constructor(
     public rdfNodeService: RdfNodeService,
     public mxGraphService: MxGraphService,
-    rdfService: RdfService,
+    rdfService: RdfService
   ) {
     super(rdfService);
   }
@@ -79,13 +79,13 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
     this.rdfNodeService.update(constraint, {
       preferredName: constraint.getAllLocalesPreferredNames()?.map(language => ({
         language,
-        value: constraint.getPreferredName(language),
+        value: constraint.getPreferredName(language)
       })),
       description: constraint.getAllLocalesDescriptions()?.map(language => ({
         language,
-        value: constraint.getDescription(language),
+        value: constraint.getDescription(language)
       })),
-      see: constraint.getSeeReferences() || [],
+      see: constraint.getSeeReferences() || []
     });
   }
 
@@ -95,33 +95,33 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
       minValue: constraint.minValue,
       maxValue: constraint.maxValue,
       lowerBoundDefinition: constraint.lowerBoundDefinition,
-      upperBoundDefinition: constraint.upperBoundDefinition,
+      upperBoundDefinition: constraint.upperBoundDefinition
     });
   }
 
   private updateFixedPoint(constraint: DefaultFixedPointConstraint) {
     this.rdfNodeService.update(constraint, {
       scale: constraint.scale,
-      integer: constraint.integer,
+      integer: constraint.integer
     });
   }
 
   private updateLength(constraint: DefaultLengthConstraint) {
     this.rdfNodeService.update(constraint, {
       maxValue: constraint.maxValue,
-      minValue: constraint.minValue,
+      minValue: constraint.minValue
     });
   }
 
   private updateLanguage(constraint: DefaultLanguageConstraint) {
     this.rdfNodeService.update(constraint, {
-      languageCode: constraint.languageCode,
+      languageCode: constraint.languageCode
     });
   }
 
   private updateEncoding(constraint: DefaultEncodingConstraint) {
     this.rdfNodeService.update(constraint, {
-      value: constraint.value,
+      value: constraint.value
     });
   }
 
@@ -139,7 +139,7 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
         DataFactory.namedNode(parent.aspectModelUrn),
         this.sammC.ConstraintProperty(),
         DataFactory.namedNode(constraint.aspectModelUrn),
-        DataFactory.namedNode(constraint.aspectModelUrn),
+        DataFactory.namedNode(constraint.aspectModelUrn)
       );
     });
   }

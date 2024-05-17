@@ -17,7 +17,7 @@ import {PreviousFormDataSnapshot} from '../../../interfaces';
 
 @Component({
   selector: 'ame-state-characteristic',
-  templateUrl: './state-characteristic.component.html',
+  templateUrl: './state-characteristic.component.html'
 })
 export class StateCharacteristicComponent extends ModelElementEditorComponent<DefaultState> {
   @Input() previousData: PreviousFormDataSnapshot = {};

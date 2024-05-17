@@ -20,7 +20,7 @@ import {MigratorService} from '../../migrator.service';
 @Component({
   selector: 'ame-start-migrating',
   templateUrl: './start-migrating.component.html',
-  styleUrls: ['./start-migrating.component.scss'],
+  styleUrls: ['./start-migrating.component.scss']
 })
 export class StartMigratingComponent {
   public migrateLoading = false;
@@ -31,7 +31,7 @@ export class StartMigratingComponent {
     @Inject(APP_CONFIG) public config: AppConfig,
     private migratorApiService: MigratorApiService,
     private router: Router,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {}
 
   migrate() {

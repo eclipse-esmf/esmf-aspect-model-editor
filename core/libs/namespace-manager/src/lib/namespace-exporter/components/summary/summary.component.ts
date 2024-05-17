@@ -21,7 +21,7 @@ import {LanguageTranslationService} from '@ame/translation';
 
 @Component({
   templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.scss'],
+  styleUrls: ['./summary.component.scss']
 })
 export class ExportSummaryComponent {
   private readonly packageName = 'namespaces.zip';
@@ -34,7 +34,7 @@ export class ExportSummaryComponent {
     private modelApiService: ModelApiService,
     private dialogRef: MatDialogRef<WorkspaceSummaryComponent>,
     private notificationService: NotificationsService,
-    private translate: LanguageTranslationService,
+    private translate: LanguageTranslationService
   ) {}
 
   export() {
@@ -52,9 +52,9 @@ export class ExportSummaryComponent {
       error: () => {
         this.notificationService.error({
           title: this.translate.language.NOTIFICATION_SERVICE.NAMESPACE_EXPORT_FAILURE,
-          message: this.translate.language.NOTIFICATION_SERVICE.INTERNAL_EXPORT_ERROR,
+          message: this.translate.language.NOTIFICATION_SERVICE.INTERNAL_EXPORT_ERROR
         });
-      },
+      }
     });
   }
 

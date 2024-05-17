@@ -28,9 +28,9 @@ import {RdfModelUtil} from '@ame/rdf/utils';
           line-height: 1 !important;
         }
       }
-    `,
+    `
   ],
-  styleUrls: ['../../field.scss'],
+  styleUrls: ['../../field.scss']
 })
 export class LanguageCodeInputFieldComponent extends InputFieldComponent<DefaultLanguageConstraint> implements OnInit, OnDestroy {
   public filteredLanguages: Observable<Array<locale.ILocale>>;
@@ -47,8 +47,8 @@ export class LanguageCodeInputFieldComponent extends InputFieldComponent<Default
           locale.all.filter(
             lang =>
               lang.location == null &&
-              (lang.tag.toLowerCase().includes(enteredLang.toLowerCase()) || lang.name.toLowerCase().includes(enteredLang.toLowerCase())),
-          ),
+              (lang.tag.toLowerCase().includes(enteredLang.toLowerCase()) || lang.name.toLowerCase().includes(enteredLang.toLowerCase()))
+          )
         )
       : null;
   }
@@ -70,17 +70,17 @@ export class LanguageCodeInputFieldComponent extends InputFieldComponent<Default
       new FormControl(
         {
           value: RdfModelUtil.getValueWithoutUrnDefinition(this.getCurrentValue(this.fieldName)),
-          disabled: this.metaModelElement.isExternalReference(),
+          disabled: this.metaModelElement.isExternalReference()
         },
-        Validators.required,
-      ),
+        Validators.required
+      )
     );
 
     const languageCode = this.parentForm.get(this.fieldName);
     this.formSubscription.add(
       languageCode.valueChanges.subscribe(value => {
         this.doFilterLanguages(value);
-      }),
+      })
     );
   }
 }

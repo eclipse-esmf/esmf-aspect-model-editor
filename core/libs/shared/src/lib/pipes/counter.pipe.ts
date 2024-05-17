@@ -18,7 +18,7 @@ import {Pipe, PipeTransform} from '@angular/core';
  */
 @Pipe({
   name: 'counter',
-  standalone: true,
+  standalone: true
 })
 export class CounterPipe implements PipeTransform {
   transform(value: string, counter: number | string): string {

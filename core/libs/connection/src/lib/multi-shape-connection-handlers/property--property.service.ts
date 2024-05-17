@@ -21,7 +21,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PropertyPropertyConnectionHandler
   extends PropertyInheritanceConnector
@@ -32,7 +32,7 @@ export class PropertyPropertyConnectionHandler
     protected mxGraphAttributeService: MxGraphAttributeService,
     protected sammLangService: SammLanguageSettingsService,
     protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService,
+    private notificationService: NotificationsService
   ) {
     super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, translate);
   }
@@ -46,7 +46,7 @@ export class PropertyPropertyConnectionHandler
     if (this.hasEntityParent(parentCell)) {
       this.notificationsService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.MISSING_PARENT_ENTITY,
-        message: this.translate.language.NOTIFICATION_SERVICE.ABSTRACT_PROPERTY_PARENT_REQUIREMENT,
+        message: this.translate.language.NOTIFICATION_SERVICE.ABSTRACT_PROPERTY_PARENT_REQUIREMENT
       });
       return;
     }
@@ -55,7 +55,7 @@ export class PropertyPropertyConnectionHandler
       this.notificationService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
         message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
-        timeout: 5000,
+        timeout: 5000
       });
       return;
     }
@@ -64,7 +64,7 @@ export class PropertyPropertyConnectionHandler
       this.notificationService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.ILLEGAL_OPERATION_MESSAGE,
         message: this.translate.language.NOTIFICATION_SERVICE.PROPERTY_EXTENSION_CONFLICT,
-        timeout: 5000,
+        timeout: 5000
       });
       return;
     }

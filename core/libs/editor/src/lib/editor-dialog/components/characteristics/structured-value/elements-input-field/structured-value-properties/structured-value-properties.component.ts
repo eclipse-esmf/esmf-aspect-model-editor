@@ -19,7 +19,7 @@ import {MatTableDataSource} from '@angular/material/table';
 @Component({
   selector: 'ame-structured-value-properties',
   templateUrl: './structured-value-properties.component.html',
-  styleUrls: ['./structured-value-properties.component.scss'],
+  styleUrls: ['./structured-value-properties.component.scss']
 })
 export class StructuredValuePropertiesComponent implements OnInit {
   public readonly displayedColumns = ['regex', 'property'];
@@ -28,12 +28,12 @@ export class StructuredValuePropertiesComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data,
-    private dialogRef: MatDialogRef<StructuredValuePropertiesComponent>,
+    private dialogRef: MatDialogRef<StructuredValuePropertiesComponent>
   ) {}
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource(
-      this.data.groups.map(group => ({data: group, regex: group.text, property: group.property || ''})),
+      this.data.groups.map(group => ({data: group, regex: group.text, property: group.property || ''}))
     );
     for (const group of this.data.groups || []) {
       this.form.addControl(this.getKey(group), new FormControl(group.property?.property, [Validators.required]));

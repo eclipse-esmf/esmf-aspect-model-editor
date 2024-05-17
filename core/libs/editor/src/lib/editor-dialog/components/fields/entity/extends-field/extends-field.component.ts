@@ -24,7 +24,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-entity-extends-field',
   templateUrl: './extends-field.component.html',
-  styleUrls: ['./extends-field.component.scss', '../../field.scss'],
+  styleUrls: ['./extends-field.component.scss', '../../field.scss']
 })
 export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEntity> implements OnInit, OnDestroy {
   public filteredAbstractEntities$: Observable<any[]>;
@@ -48,7 +48,7 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
   constructor(
     private notificationsService: NotificationsService,
     public rdfService: RdfService,
-    private validators: EditorDialogValidators,
+    private validators: EditorDialogValidators
   ) {
     super();
     this.fieldName = 'extends';
@@ -67,7 +67,7 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
           description: entity.getDescription('en') || '',
           urn: entity.getUrn(),
           complex: false,
-          entity,
+          entity
         };
       })
       .filter(({entity}) => (this.metaModelElement instanceof DefaultAbstractEntity ? entity instanceof DefaultAbstractEntity : true))
@@ -93,23 +93,23 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement.isExternalReference() || this.metaModelElement.isPredefined(),
+          disabled: !!value || this.metaModelElement.isExternalReference() || this.metaModelElement.isPredefined()
         },
         {
           validators: [
             this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultAbstractEntity),
-            this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity),
-          ],
-        },
-      ),
+            this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)
+          ]
+        }
+      )
     );
 
     this.parentForm.setControl(
       'extends',
       new FormControl({
         value: extendsElement,
-        disabled: this.metaModelElement?.isExternalReference(),
-      }),
+        disabled: this.metaModelElement?.isExternalReference()
+      })
     );
 
     this.extendsValueControl = this.parentForm.get('extendsValue') as FormControl;
@@ -117,7 +117,7 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
 
     this.filteredAbstractEntities$ = combineLatest([
       this.metaModelElement instanceof DefaultEntity ? this.initFilteredEntities(this.extendsValueControl) : of([]),
-      this.initFilteredAbstractEntities(this.extendsValueControl),
+      this.initFilteredAbstractEntities(this.extendsValueControl)
     ]).pipe(map(([a, b]) => [...a, ...b].filter(e => e.name !== this.metaModelElement.name)));
 
     this.filteredEntities$ = this.initFilteredEntities(this.extendsValueControl);

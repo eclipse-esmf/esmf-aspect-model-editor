@@ -48,7 +48,7 @@ import {
   StructuredValueCharacteristicPropertyConnectionHandler,
   StructuredValueConnectionHandler,
   TraitConnectionHandler,
-  TraitWithCharacteristicOrConstraintConnectionHandler,
+  TraitWithCharacteristicOrConstraintConnectionHandler
 } from '@ame/connection';
 import {TestBed} from '@angular/core/testing';
 import {
@@ -60,7 +60,7 @@ import {
   DefaultConstraint,
   DefaultEntity,
   DefaultProperty,
-  DefaultTrait,
+  DefaultTrait
 } from '@ame/meta-model';
 import {provideMockObject} from 'jest-helpers/utils';
 import {LogService, NotificationsService} from '@ame/shared';
@@ -93,169 +93,169 @@ describe('Test Shape connector service', () => {
         ShapeConnectorService,
         {
           provide: LogService,
-          useValue: provideMockObject(LogService),
+          useValue: provideMockObject(LogService)
         },
         {
           provide: MxGraphShapeOverlayService,
-          useValue: provideMockObject(MxGraphShapeOverlayService),
+          useValue: provideMockObject(MxGraphShapeOverlayService)
         },
         {
           provide: NotificationsService,
-          useValue: provideMockObject(NotificationsService),
+          useValue: provideMockObject(NotificationsService)
         },
         {
           provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
+          useValue: provideMockObject(MxGraphService)
         },
         {
           provide: MxGraphAttributeService,
-          useValue: provideMockObject(MxGraphAttributeService),
+          useValue: provideMockObject(MxGraphAttributeService)
         },
         {
           provide: EntityInstanceService,
-          useValue: provideMockObject(EntityInstanceService),
+          useValue: provideMockObject(EntityInstanceService)
         },
         {
           provide: AspectConnectionHandler,
-          useValue: provideMockObject(AspectConnectionHandler),
+          useValue: provideMockObject(AspectConnectionHandler)
         },
         {
           provide: AspectEventConnectionHandler,
-          useValue: provideMockObject(AspectEventConnectionHandler),
+          useValue: provideMockObject(AspectEventConnectionHandler)
         },
         {
           provide: OperationConnectionHandler,
-          useValue: provideMockObject(OperationConnectionHandler),
+          useValue: provideMockObject(OperationConnectionHandler)
         },
         {
           provide: OperationPropertyInputConnectionHandler,
-          useValue: provideMockObject(OperationPropertyInputConnectionHandler),
+          useValue: provideMockObject(OperationPropertyInputConnectionHandler)
         },
         {
           provide: OperationPropertyOutputConnectionHandler,
-          useValue: provideMockObject(OperationPropertyOutputConnectionHandler),
+          useValue: provideMockObject(OperationPropertyOutputConnectionHandler)
         },
         {
           provide: PropertyConnectionHandler,
-          useValue: provideMockObject(PropertyConnectionHandler),
+          useValue: provideMockObject(PropertyConnectionHandler)
         },
         {
           provide: EventConnectionHandler,
-          useValue: provideMockObject(EventConnectionHandler),
+          useValue: provideMockObject(EventConnectionHandler)
         },
         {
           provide: EventPropertyConnectionHandler,
-          useValue: provideMockObject(EventPropertyConnectionHandler),
+          useValue: provideMockObject(EventPropertyConnectionHandler)
         },
         {
           provide: CharacteristicConnectionHandler,
-          useValue: provideMockObject(CharacteristicConnectionHandler),
+          useValue: provideMockObject(CharacteristicConnectionHandler)
         },
         {
           provide: EitherCharacteristicLeftConnectionHandler,
-          useValue: provideMockObject(EitherCharacteristicLeftConnectionHandler),
+          useValue: provideMockObject(EitherCharacteristicLeftConnectionHandler)
         },
         {
           provide: EitherCharacteristicRightConnectionHandler,
-          useValue: provideMockObject(EitherCharacteristicRightConnectionHandler),
+          useValue: provideMockObject(EitherCharacteristicRightConnectionHandler)
         },
         {
           provide: EitherConnectionHandler,
-          useValue: provideMockObject(EitherConnectionHandler),
+          useValue: provideMockObject(EitherConnectionHandler)
         },
         {
           provide: StructuredValueConnectionHandler,
-          useValue: provideMockObject(StructuredValueConnectionHandler),
+          useValue: provideMockObject(StructuredValueConnectionHandler)
         },
         {
           provide: StructuredValueCharacteristicPropertyConnectionHandler,
-          useValue: provideMockObject(StructuredValueCharacteristicPropertyConnectionHandler),
+          useValue: provideMockObject(StructuredValueCharacteristicPropertyConnectionHandler)
         },
         {
           provide: ConstraintConnectionHandler,
-          useValue: provideMockObject(ConstraintConnectionHandler),
+          useValue: provideMockObject(ConstraintConnectionHandler)
         },
         {
           provide: EntityConnectionHandler,
-          useValue: provideMockObject(EntityConnectionHandler),
+          useValue: provideMockObject(EntityConnectionHandler)
         },
         {
           provide: EntityValueConnectionHandler,
-          useValue: provideMockObject(EntityConnectionHandler),
+          useValue: provideMockObject(EntityConnectionHandler)
         },
         {
           provide: EnumerationEntityValueConnectionHandler,
-          useValue: provideMockObject(EnumerationEntityValueConnectionHandler),
+          useValue: provideMockObject(EnumerationEntityValueConnectionHandler)
         },
         {
           provide: AspectPropertyConnectionHandler,
-          useValue: provideMockObject(AspectPropertyConnectionHandler),
+          useValue: provideMockObject(AspectPropertyConnectionHandler)
         },
         {
           provide: PropertyCharacteristicConnectionHandler,
-          useValue: provideMockObject(PropertyCharacteristicConnectionHandler),
+          useValue: provideMockObject(PropertyCharacteristicConnectionHandler)
         },
         {
           provide: CharacteristicEntityConnectionHandler,
-          useValue: provideMockObject(CharacteristicEntityConnectionHandler),
+          useValue: provideMockObject(CharacteristicEntityConnectionHandler)
         },
         {
           provide: CharacteristicUnitConnectionHandler,
-          useValue: provideMockObject(CharacteristicUnitConnectionHandler),
+          useValue: provideMockObject(CharacteristicUnitConnectionHandler)
         },
         {
           provide: TraitWithCharacteristicOrConstraintConnectionHandler,
-          useValue: provideMockObject(TraitWithCharacteristicOrConstraintConnectionHandler),
+          useValue: provideMockObject(TraitWithCharacteristicOrConstraintConnectionHandler)
         },
         {
           provide: CollectionCharacteristicConnectionHandler,
-          useValue: provideMockObject(CollectionCharacteristicConnectionHandler),
+          useValue: provideMockObject(CollectionCharacteristicConnectionHandler)
         },
         {
           provide: EntityPropertyConnectionHandler,
-          useValue: provideMockObject(EntityPropertyConnectionHandler),
+          useValue: provideMockObject(EntityPropertyConnectionHandler)
         },
         {
           provide: TraitConnectionHandler,
-          useValue: provideMockObject(TraitConnectionHandler),
+          useValue: provideMockObject(TraitConnectionHandler)
         },
         {
           provide: AbstractEntityConnectionHandler,
-          useValue: provideMockObject(AbstractEntityConnectionHandler),
+          useValue: provideMockObject(AbstractEntityConnectionHandler)
         },
         {
           provide: AbstractEntityAbstractEntityConnectionHandler,
-          useValue: provideMockObject(AbstractEntityAbstractEntityConnectionHandler),
+          useValue: provideMockObject(AbstractEntityAbstractEntityConnectionHandler)
         },
         {
           provide: EntityAbstractEntityConnectionHandler,
-          useValue: provideMockObject(EntityAbstractEntityConnectionHandler),
+          useValue: provideMockObject(EntityAbstractEntityConnectionHandler)
         },
         {
           provide: EntityEntityConnectionHandler,
-          useValue: provideMockObject(EntityEntityConnectionHandler),
+          useValue: provideMockObject(EntityEntityConnectionHandler)
         },
         {
           provide: AbstractEntityPropertyConnectionHandler,
-          useValue: provideMockObject(AbstractEntityPropertyConnectionHandler),
+          useValue: provideMockObject(AbstractEntityPropertyConnectionHandler)
         },
         {
           provide: PropertyPropertyConnectionHandler,
-          useValue: provideMockObject(PropertyPropertyConnectionHandler),
+          useValue: provideMockObject(PropertyPropertyConnectionHandler)
         },
         {
           provide: PropertyAbstractPropertyConnectionHandler,
-          useValue: provideMockObject(PropertyAbstractPropertyConnectionHandler),
+          useValue: provideMockObject(PropertyAbstractPropertyConnectionHandler)
         },
         {
           provide: AbstractEntityAbstractPropertyConnectionHandler,
-          useValue: provideMockObject(AbstractEntityAbstractPropertyConnectionHandler),
+          useValue: provideMockObject(AbstractEntityAbstractPropertyConnectionHandler)
         },
         {
           provide: AbstractPropertyAbstractPropertyConnectionHandler,
-          useValue: provideMockObject(AbstractPropertyAbstractPropertyConnectionHandler),
-        },
-      ],
+          useValue: provideMockObject(AbstractPropertyAbstractPropertyConnectionHandler)
+        }
+      ]
     });
 
     logService = TestBed.inject(LogService) as jest.Mocked<LogService>;
@@ -267,16 +267,16 @@ describe('Test Shape connector service', () => {
     entityConnectionHandler = TestBed.inject(EntityConnectionHandler) as jest.Mocked<EntityConnectionHandler>;
     abstractEntityConnectionHandler = TestBed.inject(AbstractEntityConnectionHandler) as jest.Mocked<AbstractEntityConnectionHandler>;
     propertyCharacteristicConnectionHandler = TestBed.inject(
-      PropertyCharacteristicConnectionHandler,
+      PropertyCharacteristicConnectionHandler
     ) as jest.Mocked<PropertyCharacteristicConnectionHandler>;
     characteristicEntityConnectionHandler = TestBed.inject(
-      CharacteristicEntityConnectionHandler,
+      CharacteristicEntityConnectionHandler
     ) as jest.Mocked<CharacteristicEntityConnectionHandler>;
     traitWithCharacteristicOrConstraintConnectionHandler = TestBed.inject(
-      TraitWithCharacteristicOrConstraintConnectionHandler,
+      TraitWithCharacteristicOrConstraintConnectionHandler
     ) as jest.Mocked<TraitWithCharacteristicOrConstraintConnectionHandler>;
     collectionCharacteristicConnectionHandler = TestBed.inject(
-      CollectionCharacteristicConnectionHandler,
+      CollectionCharacteristicConnectionHandler
     ) as jest.Mocked<CollectionCharacteristicConnectionHandler>;
     entityPropertyConnectionHandler = TestBed.inject(EntityPropertyConnectionHandler) as jest.Mocked<EntityPropertyConnectionHandler>;
     traitConnectionHandler = TestBed.inject(TraitConnectionHandler) as jest.Mocked<TraitConnectionHandler>;

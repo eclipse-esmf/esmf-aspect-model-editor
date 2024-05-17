@@ -22,7 +22,7 @@ const prefixesToMigrate = {
   'meta-model': 'samm',
   characteristic: 'samm-c',
   entity: 'samm-e',
-  unit: 'unit',
+  unit: 'unit'
 };
 
 const newUrn = 'urn:samm:org.eclipse.esmf.samm';
@@ -30,7 +30,7 @@ const newUrn = 'urn:samm:org.eclipse.esmf.samm';
 const oldUrnRegex = /@prefix\s+(\w+-?\w+:)\s+<urn:bamm:io.openmanufacturing:([\w-]+):([\d\.]+)#>/gim;
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class MigratorService {
   private _dialog: MatDialogRef<MigratorComponent>;
@@ -45,7 +45,7 @@ export class MigratorService {
     private router: Router,
     private migratorApi: MigratorApiService,
     private modelApiService: ModelApiService,
-    private notificationsService: NotificationsService,
+    private notificationsService: NotificationsService
   ) {}
 
   public startMigrating() {
@@ -60,9 +60,9 @@ export class MigratorService {
               this.router.navigate([{outlets: {migrator: null}}]);
             }
             return dialog$;
-          }),
-        ),
-      ),
+          })
+        )
+      )
     );
   }
 
@@ -84,14 +84,14 @@ export class MigratorService {
       mergeMap((requests: Observable<any>[]) => {
         if (requests.length) {
           this.notificationsService.info({
-            title: 'Migrated models from BAMM to SAMM',
+            title: 'Migrated models from BAMM to SAMM'
           });
           this.router.navigate([{outlets: {migrator: 'samm-migration'}}], {queryParams: {status: 'migrating'}});
           return forkJoin(requests).pipe(map(() => dialog$));
         }
         return of(dialog$);
       }),
-      catchError(() => of(dialog$)),
+      catchError(() => of(dialog$))
     );
   }
 
@@ -121,7 +121,7 @@ export class MigratorService {
     const migratedModel = this.detectBammAndReplaceWithSamm(model);
     if (migratedModel !== model) {
       this.notificationsService.info({
-        title: 'Model migrated from BAMM to SAMM',
+        title: 'Model migrated from BAMM to SAMM'
       });
     }
 
@@ -134,7 +134,7 @@ export class MigratorService {
       tap(() => {
         this._dialog = null;
         this.router.navigate([{outlets: {migrator: null}}]);
-      }),
+      })
     );
   }
 }

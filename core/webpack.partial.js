@@ -20,12 +20,12 @@ module.exports = {
       fs: false,
       os: require.resolve('os-browserify/browser'),
       path: require.resolve('path-browserify'),
-      stream: require.resolve('stream-browserify'),
-    },
+      stream: require.resolve('stream-browserify')
+    }
   },
   plugins: [
     new webpack.ProvidePlugin({
-      process: 'process/browser',
-    }),
-  ],
+      process: 'process/browser'
+    })
+  ]
 };

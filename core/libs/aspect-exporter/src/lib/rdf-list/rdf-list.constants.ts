@@ -21,7 +21,7 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultStructuredValue,
-  DefaultUnit,
+  DefaultUnit
 } from '@ame/meta-model';
 import {Samm, SammC} from '@ame/vocabulary';
 import {ListProperties, Relations} from './rdf-list.types';
@@ -35,43 +35,43 @@ export class RdfListConstants {
         children: [
           {type: DefaultProperty, predicate: samm.PropertiesProperty()},
           {type: DefaultOperation, predicate: samm.OperationsProperty()},
-          {type: DefaultEvent, predicate: samm.EventsProperty()},
-        ],
+          {type: DefaultEvent, predicate: samm.EventsProperty()}
+        ]
       },
       {
         source: DefaultOperation,
-        children: [{type: DefaultProperty, predicate: samm.InputProperty()}],
+        children: [{type: DefaultProperty, predicate: samm.InputProperty()}]
       },
       {
         source: DefaultEntity,
         children: [
           {type: DefaultProperty, predicate: samm.PropertiesProperty()},
-          {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()},
-        ],
+          {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()}
+        ]
       },
       {
         source: DefaultAbstractEntity,
         children: [
           {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()},
-          {type: DefaultProperty, predicate: samm.PropertiesProperty()},
-        ],
+          {type: DefaultProperty, predicate: samm.PropertiesProperty()}
+        ]
       },
       {
         source: DefaultEnumeration,
-        children: [{predicate: sammC.ValuesProperty()}],
+        children: [{predicate: sammC.ValuesProperty()}]
       },
       {
         source: DefaultStructuredValue,
-        children: [{predicate: sammC.ElementsProperty()}],
+        children: [{predicate: sammC.ElementsProperty()}]
       },
       {
         source: DefaultUnit,
-        children: [{type: DefaultUnit, predicate: samm.QuantityKindsProperty()}],
+        children: [{type: DefaultUnit, predicate: samm.QuantityKindsProperty()}]
       },
       {
         source: DefaultEvent,
-        children: [{type: DefaultProperty, predicate: samm.ParametersProperty()}],
-      },
+        children: [{type: DefaultProperty, predicate: samm.ParametersProperty()}]
+      }
     ];
   }
 
@@ -85,7 +85,7 @@ export class RdfListConstants {
       [ListProperties.input]: samm.InputProperty(),
       [ListProperties.quantityKinds]: samm.QuantityKindsProperty(),
       [ListProperties.events]: samm.EventsProperty(),
-      [ListProperties.parameters]: samm.ParametersProperty(),
+      [ListProperties.parameters]: samm.ParametersProperty()
     };
 
     return predicates[key];

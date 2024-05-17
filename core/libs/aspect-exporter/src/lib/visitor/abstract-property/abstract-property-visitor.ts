@@ -50,13 +50,13 @@ export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty
       exampleValue: abstractProperty.exampleValue,
       preferredName: abstractProperty.getAllLocalesPreferredNames().map(language => ({
         language,
-        value: abstractProperty.getPreferredName(language),
+        value: abstractProperty.getPreferredName(language)
       })),
       description: abstractProperty.getAllLocalesDescriptions().map(language => ({
         language,
-        value: abstractProperty.getDescription(language),
+        value: abstractProperty.getDescription(language)
       })),
-      see: abstractProperty.getSeeReferences() || [],
+      see: abstractProperty.getSeeReferences() || []
     });
   }
 
@@ -69,7 +69,7 @@ export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty
     this.store.addQuad(
       DataFactory.namedNode(abstractProperty.aspectModelUrn),
       this.rdfService.currentRdfModel.samm.ExtendsProperty(),
-      DataFactory.namedNode(abstractProperty.extendedElement.aspectModelUrn),
+      DataFactory.namedNode(abstractProperty.extendedElement.aspectModelUrn)
     );
   }
 

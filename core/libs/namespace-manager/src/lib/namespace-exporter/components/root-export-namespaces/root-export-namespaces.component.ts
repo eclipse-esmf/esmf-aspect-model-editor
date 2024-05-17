@@ -15,6 +15,6 @@ import {Component} from '@angular/core';
 
 @Component({
   template: '<router-outlet name="export-namespaces"></router-outlet>',
-  styleUrls: ['./root-export-namespaces.component.scss'],
+  styleUrls: ['./root-export-namespaces.component.scss']
 })
 export class RootExportNamespacesComponent {}

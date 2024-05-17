@@ -30,7 +30,7 @@ import {
   DefaultQuantifiable,
   DefaultStructuredValue,
   DefaultTrait,
-  DefaultUnit,
+  DefaultUnit
 } from '@ame/meta-model';
 import {ModelInfo} from '@ame/mx-graph';
 
@@ -112,7 +112,7 @@ export class ShapeConnectorUtil {
   static isEitherCharacteristicLeftConnection(
     parentModel: BaseMetaModelElement,
     childModel: BaseMetaModelElement,
-    modelInfo: ModelInfo,
+    modelInfo: ModelInfo
   ): boolean {
     return parentModel instanceof DefaultEither && childModel instanceof DefaultCharacteristic && modelInfo === ModelInfo.IS_EITHER_LEFT;
   }
@@ -120,7 +120,7 @@ export class ShapeConnectorUtil {
   static isEitherCharacteristicRightConnection(
     parentModel: BaseMetaModelElement,
     childModel: BaseMetaModelElement,
-    modelInfo: ModelInfo,
+    modelInfo: ModelInfo
   ): boolean {
     return parentModel instanceof DefaultEither && childModel instanceof DefaultCharacteristic && modelInfo === ModelInfo.IS_EITHER_RIGHT;
   }
@@ -128,7 +128,7 @@ export class ShapeConnectorUtil {
   static isOperationPropertyInputConnection(
     parentModel: BaseMetaModelElement,
     childModel: BaseMetaModelElement,
-    modelInfo: ModelInfo,
+    modelInfo: ModelInfo
   ): boolean {
     return this.isOperationPropertyConnection(parentModel, childModel) && modelInfo === ModelInfo.IS_OPERATION_INPUT;
   }
@@ -136,7 +136,7 @@ export class ShapeConnectorUtil {
   static isOperationPropertyOutputConnection(
     parentModel: BaseMetaModelElement,
     childModel: BaseMetaModelElement,
-    modelInfo: ModelInfo,
+    modelInfo: ModelInfo
   ): boolean {
     return this.isOperationPropertyConnection(parentModel, childModel) && modelInfo === ModelInfo.IS_OPERATION_OUTPUT;
   }

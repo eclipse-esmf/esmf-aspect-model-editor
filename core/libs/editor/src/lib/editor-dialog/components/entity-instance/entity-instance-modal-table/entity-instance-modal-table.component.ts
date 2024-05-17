@@ -22,7 +22,7 @@ import {
   DefaultEnumeration,
   DefaultProperty,
   EntityInstanceProperty,
-  OverWrittenProperty,
+  OverWrittenProperty
 } from '@ame/meta-model';
 import {DataType, EditorDialogValidators, FormFieldHelper} from '@ame/editor';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
@@ -34,7 +34,7 @@ import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 @Component({
   selector: 'ame-entity-instance-modal-table',
   templateUrl: './entity-instance-modal-table.component.html',
-  styleUrls: ['./entity-instance-modal-table.component.scss'],
+  styleUrls: ['./entity-instance-modal-table.component.scss']
 })
 export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
   @Input()
@@ -73,7 +73,7 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
   constructor(
     private changeDetector: ChangeDetectorRef,
     private namespacesCacheService: NamespacesCacheService,
-    private fb: FormBuilder,
+    private fb: FormBuilder
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -117,7 +117,7 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
       key: prop as OverWrittenProperty,
       value: '',
       language: EntityInstanceUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined,
-      optional: prop.keys.optional,
+      optional: prop.keys.optional
     };
   }
 
@@ -140,7 +140,7 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
 
   private changeEntityValueInput(property: DefaultProperty, value: string): void {
     this.filteredEntityValues$[property.name] = of(this.getPropertyValues(property)).pipe(
-      map(ev => ev.filter(entityValue => entityValue.name.startsWith(value))),
+      map(ev => ev.filter(entityValue => entityValue.name.startsWith(value)))
     );
   }
 
@@ -182,12 +182,12 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
     this.subscriptions.add(
       languageInputControl.valueChanges.subscribe(value => {
         this.changeLanguageInput(entityValueProp.key.property.name, value);
-      }),
+      })
     );
 
     const languageFormGroup = this.fb.group({
       value: ['', fieldValidators],
-      language: languageInputControl,
+      language: languageInputControl
     });
 
     languagesFormArray.push(languageFormGroup);
@@ -196,7 +196,7 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
   private changeLanguageInput(name: string, value: string): void {
     this.filteredLanguageValues$[name] = of(locale.all.filter(lang => lang.tag)).pipe(
       startWith(locale.all),
-      map(local => local.filter(lang => lang.tag.startsWith(value))),
+      map(local => local.filter(lang => lang.tag.startsWith(value)))
     );
   }
 

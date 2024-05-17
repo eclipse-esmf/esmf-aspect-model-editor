@@ -24,7 +24,7 @@ import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-di
 @Component({
   selector: 'ame-workspace-file-list',
   templateUrl: './workspace-file-list.component.html',
-  styleUrls: ['./workspace-file-list.component.scss'],
+  styleUrls: ['./workspace-file-list.component.scss']
 })
 export class WorkspaceFileListComponent implements OnInit, OnDestroy {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
@@ -56,7 +56,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
     private fileHandlingService: FileHandlingService,
     private changeDetector: ChangeDetectorRef,
     private translate: LanguageTranslationService,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -113,7 +113,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
     if (!this.sidebarService.isCurrentFileLoaded()) {
       this.notificationService.info({
         title: this.translate.language.NOTIFICATION_SERVICE.LOAD_MODEL_INFO_TITLE,
-        message: this.translate.language.NOTIFICATION_SERVICE.LOAD_MODEL_INFO_MESSAGE,
+        message: this.translate.language.NOTIFICATION_SERVICE.LOAD_MODEL_INFO_MESSAGE
       });
       return;
     }
@@ -140,7 +140,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
     this.electronSignalsService.call('openWindow', {
       namespace,
       file: file.name,
-      fromWorkspace: true,
+      fromWorkspace: true
     });
 
     this.menuSelection = null;
@@ -167,11 +167,11 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
       .open({
         phrases: [
           this.translate.translateService.instant('CONFIRM_DIALOG.SAVE_BEFORE_LOAD.PHRASE1', {fileName: file.name}),
-          this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.PHRASE2,
+          this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.PHRASE2
         ],
         title: this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.TITLE,
         closeButtonText: this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.CANCEL_BUTTON,
-        okButtonText: this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.OK_BUTTON,
+        okButtonText: this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.OK_BUTTON
       })
       .subscribe(confirmed => {
         if (confirmed !== ConfirmDialogEnum.cancel) {
@@ -189,9 +189,9 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
       .open({
         phrases: [
           this.translate.translateService.instant('CONFIRM_DIALOG.DELETE_FILE.PHRASE1', {fileName: file.name}),
-          this.translate.language.CONFIRM_DIALOG.DELETE_FILE.PHRASE2,
+          this.translate.language.CONFIRM_DIALOG.DELETE_FILE.PHRASE2
         ],
-        title: this.translate.language.CONFIRM_DIALOG.DELETE_FILE.TITLE,
+        title: this.translate.language.CONFIRM_DIALOG.DELETE_FILE.TITLE
       })
       .subscribe(confirm => {
         if (confirm !== ConfirmDialogEnum.cancel) {

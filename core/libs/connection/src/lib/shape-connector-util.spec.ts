@@ -19,7 +19,7 @@ import {
   DefaultConstraint,
   DefaultEntity,
   DefaultProperty,
-  DefaultTrait,
+  DefaultTrait
 } from '@ame/meta-model';
 import {ShapeConnectorUtil} from './shape-connector-util';
 

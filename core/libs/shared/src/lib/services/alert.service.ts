@@ -39,8 +39,8 @@ export class AlertService {
       data: {
         ...options.data,
         leftButtonText: options.data.leftButtonText || 'Close',
-        rightButtonText: options.data.rightButtonText || 'Ok',
-      },
+        rightButtonText: options.data.rightButtonText || 'Ok'
+      }
     });
   }
 }

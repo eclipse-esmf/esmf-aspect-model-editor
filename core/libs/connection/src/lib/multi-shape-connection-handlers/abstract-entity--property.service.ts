@@ -19,19 +19,19 @@ import {MultiShapeConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AbstractEntityPropertyConnectionHandler implements MultiShapeConnector<DefaultAbstractEntity, DefaultProperty> {
   constructor(
     private mxGraphService: MxGraphService,
-    private entityInstanceService: EntityInstanceService,
+    private entityInstanceService: EntityInstanceService
   ) {}
 
   public connect(
     parentMetaModel: DefaultAbstractEntity,
     childMetaModel: DefaultProperty,
     parentCell: mxgraph.mxCell,
-    childCell: mxgraph.mxCell,
+    childCell: mxgraph.mxCell
   ) {
     if (!parentMetaModel.properties.find(({property}) => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
       const overWrittenProperty = {property: childMetaModel, keys: {}};

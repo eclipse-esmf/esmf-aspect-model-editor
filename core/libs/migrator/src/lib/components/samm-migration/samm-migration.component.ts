@@ -17,7 +17,7 @@ import {map} from 'rxjs';
 
 @Component({
   templateUrl: './samm-migration.component.html',
-  styleUrls: ['./samm-migration.component.scss'],
+  styleUrls: ['./samm-migration.component.scss']
 })
 export class SammMigrationComponent {
   public get status$() {

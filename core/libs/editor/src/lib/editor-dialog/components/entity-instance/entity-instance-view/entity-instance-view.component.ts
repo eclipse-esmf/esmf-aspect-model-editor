@@ -23,7 +23,7 @@ import {DataType, FormFieldHelper} from '../../../../helpers/form-field.helper';
 @Component({
   selector: 'ame-entity-instance-view',
   templateUrl: './entity-instance-view.component.html',
-  styleUrls: ['./entity-instance-view.component.scss'],
+  styleUrls: ['./entity-instance-view.component.scss']
 })
 export class EntityInstanceViewComponent implements OnInit, OnDestroy {
   private _complexValues: DefaultEntityInstance[];
@@ -94,9 +94,9 @@ export class EntityInstanceViewComponent implements OnInit, OnDestroy {
       data: {
         metaModel: this.enumeration,
         dataType: this.parentForm.get('newDataType')?.value || this.parentForm.get('dataTypeEntity')?.value || this.enumeration.dataType,
-        complexValues: this.complexValues,
+        complexValues: this.complexValues
       },
-      minWidth: '700px',
+      minWidth: '700px'
     };
     this.matDialog
       .open(EntityInstanceModalComponent, config)
@@ -131,7 +131,7 @@ export class EntityInstanceViewComponent implements OnInit, OnDestroy {
     newValue.forEach(value =>
       value?.properties.forEach(innerVal => {
         innerVal.isComplex = innerVal.value instanceof DefaultEntityInstance;
-      }),
+      })
     );
     return newValue.filter(value => value instanceof DefaultEntityInstance);
   }

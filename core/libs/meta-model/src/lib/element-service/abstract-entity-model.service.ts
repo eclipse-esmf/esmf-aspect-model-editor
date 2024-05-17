@@ -21,7 +21,7 @@ import {
   MxGraphHelper,
   MxGraphService,
   MxGraphShapeOverlayService,
-  MxGraphVisitorHelper,
+  MxGraphVisitorHelper
 } from '@ame/mx-graph';
 import {
   Base,
@@ -31,7 +31,7 @@ import {
   DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
-  OverWrittenPropertyKeys,
+  OverWrittenPropertyKeys
 } from '@ame/meta-model';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {BaseEntityModelService} from './base-entity-model.service';
@@ -45,7 +45,7 @@ export class AbstractEntityModelService extends BaseModelService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private abstractEntityRenderer: AbstractEntityRenderService,
     private baseEntityModel: BaseEntityModelService,
-    private languageService: SammLanguageSettingsService,
+    private languageService: SammLanguageSettingsService
   ) {
     super();
   }

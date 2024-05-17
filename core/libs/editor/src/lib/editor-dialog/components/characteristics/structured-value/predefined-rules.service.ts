@@ -23,18 +23,18 @@ export const predefinedRules = {
       {
         label: 'username',
         property: true,
-        characteristic: {type: simpleDataTypes?.string, name: 'UsernameCharacteristic'},
+        characteristic: {type: simpleDataTypes?.string, name: 'UsernameCharacteristic'}
       },
       {
         label: '@',
-        property: false,
+        property: false
       },
       {
         label: 'host',
         property: true,
-        characteristic: {type: simpleDataTypes?.string, name: 'HostCharacteristic'},
-      },
-    ],
+        characteristic: {type: simpleDataTypes?.string, name: 'HostCharacteristic'}
+      }
+    ]
   },
   '(\\d{4})-(\\d{2})-(\\d{2})': {
     name: 'ISO 8601 Date',
@@ -42,56 +42,56 @@ export const predefinedRules = {
       {
         label: 'year',
         property: true,
-        characteristic: {type: simpleDataTypes?.int, name: 'YearCharacteristic'},
+        characteristic: {type: simpleDataTypes?.int, name: 'YearCharacteristic'}
       },
       {
         label: '-',
-        property: false,
+        property: false
       },
       {
         label: 'month',
         property: true,
-        characteristic: {type: simpleDataTypes?.int, name: 'MonthCharacteristic'},
+        characteristic: {type: simpleDataTypes?.int, name: 'MonthCharacteristic'}
       },
       {
         label: '-',
-        property: false,
+        property: false
       },
       {
         label: 'day',
         property: true,
-        characteristic: {type: simpleDataTypes?.int, name: 'DayCharacteristic'},
-      },
-    ],
+        characteristic: {type: simpleDataTypes?.int, name: 'DayCharacteristic'}
+      }
+    ]
   },
   '0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})': {
     name: 'Hex-encoded color',
     elements: [
       {
         label: '0x',
-        property: false,
+        property: false
       },
       {
         label: 'red',
         property: true,
-        characteristic: {type: simpleDataTypes?.string, name: 'RedCharacteristic'},
+        characteristic: {type: simpleDataTypes?.string, name: 'RedCharacteristic'}
       },
       {
         label: 'green',
         property: true,
-        characteristic: {type: simpleDataTypes?.string, name: 'GreenCharacteristic'},
+        characteristic: {type: simpleDataTypes?.string, name: 'GreenCharacteristic'}
       },
       {
         label: 'blue',
         property: true,
-        characteristic: {type: simpleDataTypes?.string, name: 'BlueCharacteristic'},
-      },
-    ],
-  },
+        characteristic: {type: simpleDataTypes?.string, name: 'BlueCharacteristic'}
+      }
+    ]
+  }
 };
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PredefinedRulesService {
   constructor(private rdfService: RdfService) {}
@@ -104,7 +104,7 @@ export class PredefinedRulesService {
 
     return {
       ...predefinedRule,
-      elements: predefinedRule.elements.map(element => (element.property ? this.createProperty(element) : element.label)),
+      elements: predefinedRule.elements.map(element => (element.property ? this.createProperty(element) : element.label))
     };
   }
 
@@ -116,9 +116,9 @@ export class PredefinedRulesService {
         version,
         namespace + property.label,
         property.label,
-        this.createCharacteristic(property.characteristic),
+        this.createCharacteristic(property.characteristic)
       ),
-      keys: {},
+      keys: {}
     };
   }
 
@@ -133,7 +133,7 @@ export class PredefinedRulesService {
       version,
       namespace + characteristic.name,
       characteristic.name,
-      new DefaultScalar(characteristic.type.isDefinedBy),
+      new DefaultScalar(characteristic.type.isDefinedBy)
     );
   }
 }

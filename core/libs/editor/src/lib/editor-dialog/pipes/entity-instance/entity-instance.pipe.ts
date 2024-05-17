@@ -15,7 +15,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {DefaultEntityInstance} from '@ame/meta-model';
 
 @Pipe({
-  name: 'entityInstance',
+  name: 'entityInstance'
 })
 export class EntityInstancePipe implements PipeTransform {
   transform(value: DefaultEntityInstance[], search: string): DefaultEntityInstance[] {

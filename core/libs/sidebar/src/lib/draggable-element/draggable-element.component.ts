@@ -18,7 +18,7 @@ import {AfterViewInit, Component, ElementRef, Input, Renderer2} from '@angular/c
 @Component({
   selector: 'ame-draggable-element',
   templateUrl: './draggable-element.component.html',
-  styleUrls: ['./draggable-element.component.scss'],
+  styleUrls: ['./draggable-element.component.scss']
 })
 export class DraggableElementComponent implements AfterViewInit {
   @Input() type: ElementType;
@@ -27,7 +27,7 @@ export class DraggableElementComponent implements AfterViewInit {
   constructor(
     public editorService: EditorService,
     private elementRef: ElementRef<HTMLDivElement>,
-    private renderer: Renderer2,
+    private renderer: Renderer2
   ) {}
 
   ngAfterViewInit(): void {

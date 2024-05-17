@@ -24,7 +24,7 @@ declare const sammUDefinition: any;
 
 @Component({
   selector: 'ame-reference-unit-input-field',
-  templateUrl: './reference-unit-input-field.component.html',
+  templateUrl: './reference-unit-input-field.component.html'
 })
 export class ReferenceUnitInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit, OnDestroy {
   private unitInstantiator: UnitInstantiator;
@@ -38,7 +38,7 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
   constructor(private modelService: ModelService) {
     super();
     this.unitInstantiator = new UnitInstantiator(
-      new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile),
+      new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile)
     );
   }
 
@@ -62,15 +62,15 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
 
     this.unitDisplayControl = new FormControl({
       value: referenceUnit?.name,
-      disabled: !!referenceUnit || this.metaModelElement.isExternalReference(),
+      disabled: !!referenceUnit || this.metaModelElement.isExternalReference()
     });
 
     this.parentForm.setControl(
       'referenceUnit',
       new FormControl({
         value: this.metaModelElement?.referenceUnit,
-        disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
-      }),
+        disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference()
+      })
     );
 
     this.referenceUnitControl = this.parentForm.get('referenceUnit') as FormControl;

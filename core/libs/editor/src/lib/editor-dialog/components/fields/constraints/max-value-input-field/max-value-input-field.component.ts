@@ -20,14 +20,14 @@ import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-max-value-input-field',
-  templateUrl: './max-value-input-field.component.html',
+  templateUrl: './max-value-input-field.component.html'
 })
 export class MaxValueInputFieldComponent extends InputFieldComponent<DefaultRangeConstraint> implements OnInit, OnDestroy {
   public rangeConstraintDataType: Type;
 
   constructor(
     public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService,
+    public mxGraphService: MxGraphService
   ) {
     super();
     this.resetFormOnDestroy = false;
@@ -64,8 +64,8 @@ export class MaxValueInputFieldComponent extends InputFieldComponent<DefaultRang
       this.fieldName,
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
-        disabled: this.metaModelElement.isExternalReference(),
-      }),
+        disabled: this.metaModelElement.isExternalReference()
+      })
     );
   }
 

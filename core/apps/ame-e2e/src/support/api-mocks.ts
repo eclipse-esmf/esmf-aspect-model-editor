@@ -44,10 +44,10 @@ export function setUpDynamicModellingInterceptors(namespacesConfig: InterceptorC
     values.reduce(
       (acc, value) => ({
         ...acc,
-        [value.name]: value.files.map(f => f.name),
+        [value.name]: value.files.map(f => f.name)
       }),
-      {},
-    ),
+      {}
+    )
   );
 
   // Set up files content to return
@@ -58,9 +58,9 @@ export function setUpDynamicModellingInterceptors(namespacesConfig: InterceptorC
         {
           method: 'GET',
           url: 'http://localhost:9091/ame/api/models',
-          headers: {namespace: value.name, 'file-name': file.name},
+          headers: {namespace: value.name, 'file-name': file.name}
         },
-        file.response,
+        file.response
       );
     });
   });

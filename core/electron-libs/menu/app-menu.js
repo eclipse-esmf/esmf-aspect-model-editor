@@ -27,40 +27,40 @@ function appMenuTemplate(translation) {
     ...(isMac
       ? [
           {
-            role: 'appMenu',
-          },
+            role: 'appMenu'
+          }
         ]
       : []),
     {
       id: 'MENU_FILE',
       label: translation.MENU.FILE.LABEL,
-      submenu: fileSubmenu(translation.MENU.FILE),
+      submenu: fileSubmenu(translation.MENU.FILE)
     },
     {
       id: 'MENU_VIEW',
       label: translation.MENU.VIEW.LABEL,
-      submenu: viewSubmenu(translation.MENU.VIEW),
+      submenu: viewSubmenu(translation.MENU.VIEW)
     },
     {
       id: 'MENU_EDIT',
       label: translation.MENU.EDIT.LABEL,
-      submenu: editSubmenu(translation.MENU.EDIT),
+      submenu: editSubmenu(translation.MENU.EDIT)
     },
     {
       id: 'MENU_VALIDATE',
       label: translation.MENU.VALIDATE.LABEL,
-      submenu: validateSubmenu(translation.MENU.VALIDATE),
+      submenu: validateSubmenu(translation.MENU.VALIDATE)
     },
     {
       id: 'MENU_GENERATE',
       label: translation.MENU.GENERATE.LABEL,
-      submenu: generateSubmenu(translation.MENU.GENERATE),
+      submenu: generateSubmenu(translation.MENU.GENERATE)
     },
     {
       id: 'MENU_SEARCH',
       label: translation.MENU.SEARCH.LABEL,
-      submenu: searchSubmenu(translation.MENU.SEARCH),
-    },
+      submenu: searchSubmenu(translation.MENU.SEARCH)
+    }
   ];
 }
 

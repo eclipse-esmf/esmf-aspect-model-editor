@@ -17,12 +17,12 @@ import {BaseMetaModelElement} from '@ame/meta-model';
 import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ModelElementNamingService {
   constructor(
     private namespacesCacheService: NamespacesCacheService,
-    private rdfService: RdfService,
+    private rdfService: RdfService
   ) {}
   /**
    * Creates a new instance of the element and assigns it a default name

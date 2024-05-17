@@ -22,14 +22,14 @@ import {BaseEntityRendererService} from './base-entity-renderer.service';
 import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EntityRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
-    private baseEntityRenderer: BaseEntityRendererService,
+    private baseEntityRenderer: BaseEntityRendererService
   ) {
     super(mxGraphService, sammLangService, rdfService);
   }
@@ -41,7 +41,7 @@ export class EntityRenderService extends BaseRenderService {
       cell,
       callback: () => {
         this.renderOptionalProperties(cell);
-      },
+      }
     });
   }
 

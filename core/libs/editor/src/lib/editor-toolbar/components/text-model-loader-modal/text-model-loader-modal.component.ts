@@ -30,13 +30,13 @@ import {MatDialogRef} from '@angular/material/dialog';
         min-height: 300px;
         max-height: 500px;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class TextModelLoaderModalComponent {
   constructor(
     private fileHandlingService: FileHandlingService,
-    private matDialogRef: MatDialogRef<TextModelLoaderModalComponent>,
+    private matDialogRef: MatDialogRef<TextModelLoaderModalComponent>
   ) {}
 
   loadModel(modelText: string) {

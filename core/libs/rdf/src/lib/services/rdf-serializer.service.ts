@@ -34,7 +34,7 @@ export class RdfSerializerService {
       null,
       null,
       null,
-      null,
+      null
     );
 
     let rdfContent = '';
@@ -47,7 +47,7 @@ export class RdfSerializerService {
       return new Writer({
         contentType: 'text/turtle',
         prefixes: {...rdfModel.getPrefixes()},
-        end: false,
+        end: false
       });
     } catch {
       return null;
@@ -96,7 +96,7 @@ export class RdfSerializerService {
     return DataFactory.quad(
       quad.subject,
       quad.predicate,
-      DataFactory.namedNode(quad.object.value.replace(originalNamespace, newNamespace)),
+      DataFactory.namedNode(quad.object.value.replace(originalNamespace, newNamespace))
     );
   }
 
@@ -112,7 +112,7 @@ export class RdfSerializerService {
     writer.addQuad(
       this._namedNode(quad.subject.value),
       this._namedNode(quad.predicate.value),
-      writer.list(blankNodes.map(({object}) => object)),
+      writer.list(blankNodes.map(({object}) => object))
     );
   }
 }

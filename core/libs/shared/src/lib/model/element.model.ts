@@ -22,7 +22,7 @@ import {
   DefaultAbstractEntity,
   DefaultUnit,
   DefaultConstraint,
-  DefaultTrait,
+  DefaultTrait
 } from '@ame/meta-model';
 
 export type ElementType =
@@ -69,76 +69,76 @@ export const sammElements: ElementInfo = {
     symbol: 'A',
     plural: 'Aspects',
     description: 'ELEMENT_MODEL_DESCRIPTION.ASPECT',
-    class: DefaultAspect,
+    class: DefaultAspect
   },
   event: {
     name: 'Event',
     symbol: 'Ev',
     plural: 'Events',
     description: 'ELEMENT_MODEL_DESCRIPTION.EVENT',
-    class: DefaultEvent,
+    class: DefaultEvent
   },
   operation: {
     name: 'Operation',
     symbol: 'O',
     plural: 'Operations',
     description: 'ELEMENT_MODEL_DESCRIPTION.OPERATION',
-    class: DefaultOperation,
+    class: DefaultOperation
   },
   property: {
     name: 'Property',
     symbol: 'P',
     plural: 'Properties',
     description: 'ELEMENT_MODEL_DESCRIPTION.PROPERTY',
-    class: DefaultProperty,
+    class: DefaultProperty
   },
   'abstract-property': {
     name: 'Abstract Property',
     symbol: 'AP',
     plural: 'Abstract Properties',
     description: 'ELEMENT_MODEL_DESCRIPTION.ABSTRACT_PROPERTY',
-    class: DefaultAbstractProperty,
+    class: DefaultAbstractProperty
   },
   characteristic: {
     name: 'Characteristic',
     symbol: 'C',
     plural: 'Characteristics',
     description: 'ELEMENT_MODEL_DESCRIPTION.CHARACTERISTIC',
-    class: DefaultCharacteristic,
+    class: DefaultCharacteristic
   },
   entity: {
     name: 'Entity',
     symbol: 'E',
     plural: 'Entities',
     description: 'ELEMENT_MODEL_DESCRIPTION.ENTITY',
-    class: DefaultEntity,
+    class: DefaultEntity
   },
   'abstract-entity': {
     name: 'Abstract Entity',
     symbol: 'AE',
     plural: 'Abstract Entities',
     description: 'ELEMENT_MODEL_DESCRIPTION.ABSTRACT_ENTITY',
-    class: DefaultAbstractEntity,
+    class: DefaultAbstractEntity
   },
   unit: {
     name: 'Unit',
     symbol: 'U',
     plural: 'Units',
     description: 'ELEMENT_MODEL_DESCRIPTION.UNIT',
-    class: DefaultUnit,
+    class: DefaultUnit
   },
   constraint: {
     name: 'Constraint',
     symbol: 'Co',
     plural: 'Constraints',
     description: 'ELEMENT_MODEL_DESCRIPTION.CONSTRAINT',
-    class: DefaultConstraint,
+    class: DefaultConstraint
   },
   trait: {
     name: 'Trait',
     symbol: 'T',
     plural: 'Traits',
     description: 'ELEMENT_MODEL_DESCRIPTION.TRAIT',
-    class: DefaultTrait,
-  },
+    class: DefaultTrait
+  }
 };

@@ -20,7 +20,7 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   templateUrl: './rename-model.component.html',
-  styles: ['.input-suffix { padding-right: 5px;}'],
+  styles: ['.input-suffix { padding-right: 5px;}']
 })
 export class RenameModelComponent {
   public fileNameControl: FormControl;
@@ -29,7 +29,7 @@ export class RenameModelComponent {
     @Inject(MAT_DIALOG_DATA) public data: {namespaces: string; rdfModel: RdfModel},
     private dialogRef: MatDialogRef<RenameModelComponent>,
     private rdfService: RdfService,
-    private modelApiService: ModelApiService,
+    private modelApiService: ModelApiService
   ) {
     const rdfModel = this.rdfService.currentRdfModel;
     this.modelApiService.getNamespacesAppendWithFiles().subscribe(namespaces => {
@@ -41,7 +41,7 @@ export class RenameModelComponent {
         (control: AbstractControl) => {
           const searchTerm = `${rdfModel.getAspectModelUrn().replace('urn:samm:', '').replace('#', ':')}${control.value}.ttl`.toLowerCase();
           return namespaces.includes(searchTerm) ? {sameFile: true} : null;
-        },
+        }
       ]);
       this.fileNameControl.markAsTouched();
     });
@@ -50,8 +50,8 @@ export class RenameModelComponent {
   closeAndGiveResult(result: boolean) {
     return this.dialogRef.close(
       result && {
-        name: this.fileNameControl.value.endsWith('.ttl') ? this.fileNameControl.value : `${this.fileNameControl.value}.ttl`,
-      },
+        name: this.fileNameControl.value.endsWith('.ttl') ? this.fileNameControl.value : `${this.fileNameControl.value}.ttl`
+      }
     );
   }
 }

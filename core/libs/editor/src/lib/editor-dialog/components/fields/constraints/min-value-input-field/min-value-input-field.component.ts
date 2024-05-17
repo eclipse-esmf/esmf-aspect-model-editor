@@ -20,14 +20,14 @@ import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-min-value-input-field',
-  templateUrl: './min-value-input-field.component.html',
+  templateUrl: './min-value-input-field.component.html'
 })
 export class MinValueInputFieldComponent extends InputFieldComponent<DefaultRangeConstraint> implements OnInit, OnDestroy {
   public rangeConstraintDataType: Type;
 
   constructor(
     public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService,
+    public mxGraphService: MxGraphService
   ) {
     super();
     this.resetFormOnDestroy = false;
@@ -63,8 +63,8 @@ export class MinValueInputFieldComponent extends InputFieldComponent<DefaultRang
       this.fieldName,
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
-        disabled: this.metaModelElement.isExternalReference(),
-      }),
+        disabled: this.metaModelElement.isExternalReference()
+      })
     );
   }
 

@@ -23,7 +23,7 @@ export class Samm {
 
   constructor(
     public version: string,
-    public identifier: string = 'urn:samm:org.eclipse.esmf.samm:',
+    public identifier: string = 'urn:samm:org.eclipse.esmf.samm:'
   ) {}
 
   static isDefaultNamespaceUri(value: string) {
@@ -351,7 +351,7 @@ export class Samm {
       {value: 'UTF-8', isDefinedBy: `${this.getNamespace()}UTF-8`},
       {value: 'UTF-16', isDefinedBy: `${this.getNamespace()}UTF-16`},
       {value: 'UTF-16BE', isDefinedBy: `${this.getNamespace()}UTF-16BE`},
-      {value: 'UTF-16LE', isDefinedBy: `${this.getNamespace()}UTF-16LE`},
+      {value: 'UTF-16LE', isDefinedBy: `${this.getNamespace()}UTF-16LE`}
     ];
   }
 

@@ -32,7 +32,7 @@ export class AbstractPropertyInstantiator {
     return property
       ? {
           property,
-          keys: this.resolveOverwrittenKeys(listElement),
+          keys: this.resolveOverwrittenKeys(listElement)
         }
       : this.constructAbstractProperty(listElement);
   }
@@ -41,7 +41,7 @@ export class AbstractPropertyInstantiator {
     return {
       optional: element.optional?.value === 'true',
       notInPayload: element.notInPayload?.value === 'true',
-      payloadName: element.payloadName?.value,
+      payloadName: element.payloadName?.value
     };
   }
 
@@ -72,7 +72,7 @@ export class AbstractPropertyInstantiator {
     syncElementWithChildren(property);
     return {
       property,
-      keys: this.resolveOverwrittenKeys(listElement),
+      keys: this.resolveOverwrittenKeys(listElement)
     };
   }
 }

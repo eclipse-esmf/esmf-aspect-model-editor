@@ -48,7 +48,7 @@ describe('Test language settings', () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', req => {
       req.reply({
         statusCode: 200,
-        body: req.body,
+        body: req.body
       });
     });
     cy.window()
@@ -61,7 +61,7 @@ describe('Test language settings', () => {
                 resolve(text);
               });
             },
-            error: reject,
+            error: reject
           });
         });
       })

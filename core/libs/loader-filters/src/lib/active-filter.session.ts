@@ -44,5 +44,5 @@ class FilterAttributes implements FilterAttributesService {
 
 export const FILTER_ATTRIBUTES = new InjectionToken<FilterAttributesService>(FILTER_ATTRIBUTES_TOKEN, {
   providedIn: 'root',
-  factory: () => new FilterAttributes(),
+  factory: () => new FilterAttributes()
 });

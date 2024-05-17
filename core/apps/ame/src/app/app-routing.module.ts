@@ -19,7 +19,7 @@ import {LoadingComponent} from './components/loading/loading.component';
 const routes: Routes = [
   {
     path: '',
-    component: LoadingComponent,
+    component: LoadingComponent
   },
   {
     path: 'editor',
@@ -27,19 +27,19 @@ const routes: Routes = [
     children: [
       {
         path: 'select/:urn',
-        component: EditorCanvasComponent,
-      },
-    ],
+        component: EditorCanvasComponent
+      }
+    ]
   },
   {
     path: '',
     redirectTo: '/loading',
-    pathMatch: 'full',
-  },
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

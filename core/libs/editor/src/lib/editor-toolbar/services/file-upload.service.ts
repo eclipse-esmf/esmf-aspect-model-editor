@@ -17,11 +17,11 @@ import {Injectable} from '@angular/core';
 
 export enum FileTypes {
   TTL = '.ttl',
-  ZIP = '.zip',
+  ZIP = '.zip'
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class FileUploadService {
   selectFile(acceptedTypes?: FileTypes[]): Observable<File> {
@@ -48,7 +48,7 @@ export class FileUploadService {
     return fromEvent(fileInput, 'change').pipe(
       switchMap(() => (fileInput?.files?.length ? [fileInput.files[0]] : [])),
       first(),
-      finalize(() => this.removeFileInput(fileInput)),
+      finalize(() => this.removeFileInput(fileInput))
     );
   }
 

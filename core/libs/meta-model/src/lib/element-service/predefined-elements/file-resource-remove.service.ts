@@ -19,12 +19,12 @@ import {ModelRootService} from '../model-root.service';
 import {PredefinedEntities, PredefinedProperties} from '@ame/vocabulary';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class FileResourceRemoveService implements PredefinedRemove {
   constructor(
     private modelRootService: ModelRootService,
-    private mxGraphService: MxGraphService,
+    private mxGraphService: MxGraphService
   ) {}
 
   delete(cell: mxgraph.mxCell): boolean {

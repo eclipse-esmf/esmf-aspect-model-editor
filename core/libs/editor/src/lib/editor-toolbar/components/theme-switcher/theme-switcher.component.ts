@@ -17,7 +17,7 @@ import {Component, HostListener} from '@angular/core';
 @Component({
   selector: 'ame-theme-switcher',
   templateUrl: './theme-switcher.component.html',
-  styleUrls: ['./theme-switcher.component.scss'],
+  styleUrls: ['./theme-switcher.component.scss']
 })
 export class ThemeSwitcherComponent {
   public selectedTheme = 'light';

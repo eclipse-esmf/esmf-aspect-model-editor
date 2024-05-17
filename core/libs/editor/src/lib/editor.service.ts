@@ -24,7 +24,7 @@ import {
   sammElements,
   SaveValidateErrorsCodes,
   TitleService,
-  ValidateStatus,
+  ValidateStatus
 } from '@ame/shared';
 import {environment} from 'environments/environment';
 import {mxgraph} from 'mxgraph-factory';
@@ -45,7 +45,7 @@ import {
   switchMap,
   tap,
   throwError,
-  timer,
+  timer
 } from 'rxjs';
 import {
   mxConstants,
@@ -58,7 +58,7 @@ import {
   MxGraphShapeOverlayService,
   MxGraphShapeSelectorService,
   mxUtils,
-  ShapeConfiguration,
+  ShapeConfiguration
 } from '@ame/mx-graph';
 import {Aspect, Base, BaseMetaModelElement, DefaultAspect, ElementModelService, ModelElementNamingService} from '@ame/meta-model';
 import {InstantiatorService} from '@ame/instantiator';
@@ -78,7 +78,7 @@ import {SidebarStateService} from '@ame/sidebar';
 import {ConfirmDialogEnum} from './models/confirm-dialog.enum';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EditorService {
   private filtersService: FiltersService = inject(FiltersService);
@@ -129,7 +129,7 @@ export class EditorService {
     private translate: LanguageTranslationService,
     private browserService: BrowserService,
     private injector: Injector,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {
     if (!environment.production) {
       window['angular.editorService'] = this;
@@ -155,7 +155,7 @@ export class EditorService {
           }
         });
       }),
-      null,
+      null
     );
 
     // TODO: Check this when refactoring editor service
@@ -185,7 +185,7 @@ export class EditorService {
             }
           });
         });
-      }),
+      })
     );
 
     // increase performance by not passing the event to the parent(s)
@@ -202,7 +202,7 @@ export class EditorService {
     if (!this.mxGraphAttributeService.graph) {
       this.delayedBindings.push({
         actionname: actionName,
-        funct: callback,
+        funct: callback
       });
       return;
     }
@@ -216,10 +216,10 @@ export class EditorService {
 
     return this.rdfService.isSameModelContent(fileName, fileContent, currentModel).pipe(
       switchMap(isSameModelContent =>
-        !isSameModelContent ? this.openReloadConfirmationDialog(currentModel.absoluteAspectModelFileName) : of(false),
+        !isSameModelContent ? this.openReloadConfirmationDialog(currentModel.absoluteAspectModelFileName) : of(false)
       ),
       switchMap(isApprove => (isApprove ? this.loadNewAspectModel({rdfAspectModel: fileContent}) : of(null))),
-      map(() => this.rdfService.currentRdfModel),
+      map(() => this.rdfService.currentRdfModel)
     );
   }
 
@@ -228,11 +228,11 @@ export class EditorService {
       .open({
         phrases: [
           `${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.VERSION_CHANGE_NOTICE} ${fileName} ${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.WORKSPACE_LOAD_NOTICE}`,
-          this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.RELOAD_WARNING,
+          this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.RELOAD_WARNING
         ],
         title: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.TITLE,
         closeButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.CLOSE_BUTTON,
-        okButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.OK_BUTTON,
+        okButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.OK_BUTTON
       })
       .pipe(map(confirm => confirm === ConfirmDialogEnum.ok));
   }
@@ -251,32 +251,32 @@ export class EditorService {
           rdfModel,
           payload.rdfAspectModel,
           payload.namespaceFileName || rdfModel.absoluteAspectModelFileName,
-          payload.editElementUrn,
-        ),
+          payload.editElementUrn
+        )
       ),
       tap(() => {
         this.modelSavingTracker.updateSavedModel();
         const [namespace, version, file] = (payload.namespaceFileName || this.rdfService.currentRdfModel.absoluteAspectModelFileName).split(
-          ':',
+          ':'
         );
 
         if (this.browserService.isStartedAsElectronApp() || window.require) {
           this.electronSignalsService.call('updateWindowInfo', {
             namespace: `${namespace}:${version}`,
             fromWorkspace: payload.fromWorkspace,
-            file,
+            file
           });
         }
         if (!payload.isDefault) {
           this.notificationsService.info({title: 'Aspect Model loaded', timeout: 3000});
         }
-      }),
+      })
     );
   }
 
   loadExternalAspectModel(extRefAbsoluteAspectModelFileName: string): CachedFile {
     const extRdfModel = this.rdfService.externalRdfModels.find(
-      extRef => extRef.absoluteAspectModelFileName === extRefAbsoluteAspectModelFileName,
+      extRef => extRef.absoluteAspectModelFileName === extRefAbsoluteAspectModelFileName
     );
     const fileName = extRdfModel.aspectModelFileName;
     let foundCachedFile = this.namespaceCacheService.getFile([extRdfModel.getAspectModelUrn(), fileName]);
@@ -295,11 +295,11 @@ export class EditorService {
       mergeMap((fileContentModels: Array<FileContentModel>) =>
         fileContentModels.length
           ? forkJoin(fileContentModels.map(fileContent => this.rdfService.loadExternalReferenceModelIntoStore(fileContent)))
-          : of([] as Array<RdfModel>),
+          : of([] as Array<RdfModel>)
       ),
       tap(extRdfModel => {
         extRdfModel.forEach(extRdfModel => this.loadExternalAspectModel(extRdfModel.absoluteAspectModelFileName));
-      }),
+      })
     );
   }
 
@@ -308,14 +308,14 @@ export class EditorService {
       .getAllNamespacesFilesContent()
       .pipe(
         mergeMap((fileContentModels: FileContentModel[]) =>
-          fileContentModels.length ? this.rdfService.parseModels(fileContentModels) : of([]),
-        ),
+          fileContentModels.length ? this.rdfService.parseModels(fileContentModels) : of([])
+        )
       );
   }
 
   removeAspectModelFileFromStore(aspectModelFileName: string) {
     const index = this.rdfService.externalRdfModels.findIndex(
-      extRdfModel => extRdfModel.absoluteAspectModelFileName === aspectModelFileName,
+      extRdfModel => extRdfModel.absoluteAspectModelFileName === aspectModelFileName
     );
     this.rdfService.externalRdfModels.splice(index, 1);
   }
@@ -337,10 +337,10 @@ export class EditorService {
         this.notificationsService.error({
           title: this.translate.language.GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH_ERROR,
           message: err.error.message,
-          timeout: 5000,
+          timeout: 5000
         });
         return throwError(() => err.error);
-      }),
+      })
     );
   }
 
@@ -367,7 +367,7 @@ export class EditorService {
           this.notificationsService.error({title: 'Error on loading the aspect model', message: error});
           // TODO: Use 'null' instead of empty object (requires thorough testing)
           return of({} as null);
-        }),
+        })
       )
       .subscribe();
   }
@@ -384,7 +384,7 @@ export class EditorService {
         this.mxGraphShapeOverlayService,
         this.namespaceCacheService,
         this.sammLangService,
-        rdfModel,
+        rdfModel
       );
 
       const elements = this.namespaceCacheService.currentCachedFile.getAllElements();
@@ -404,11 +404,11 @@ export class EditorService {
         filter(response => response !== 'cancel'),
         tap(() => this.toggleLoadingScreen()),
         delay(500), // Wait for modal animation
-        switchMap(() => this.graphUpdateWorkflow(mxGraphRenderer, elements)),
+        switchMap(() => this.graphUpdateWorkflow(mxGraphRenderer, elements))
       )
       .subscribe({
         next: () => this.finalizeGraphUpdate(editElementUrn),
-        error: () => this.loadingScreenService.close(),
+        error: () => this.loadingScreenService.close()
       });
   }
 
@@ -461,7 +461,7 @@ export class EditorService {
         const urn: string = element.dataset.urn;
         this.ngZone.run(() => this.createElement(x, y, elementType, urn));
       },
-      dragElement,
+      dragElement
     );
     ds.setGuidesEnabled(true);
   }
@@ -491,7 +491,7 @@ export class EditorService {
       metaModelElement
         ? this.mxGraphService.renderModelElement(this.filtersService.createNode(metaModelElement), {
             shapeAttributes: [],
-            geometry: {x, y},
+            geometry: {x, y}
           })
         : this.openAlertBox();
 
@@ -506,7 +506,7 @@ export class EditorService {
           this.mxGraphShapeOverlayService,
           this.namespaceCacheService,
           this.sammLangService,
-          null,
+          null
         );
 
         this.mxGraphService.setCoordinatesForNextCellRender(x, y);
@@ -519,7 +519,7 @@ export class EditorService {
         this.notificationsService.warning({
           title: 'Element is already used',
           link: `editor/select/${aspectModelUrn}`,
-          timeout: 2000,
+          timeout: 2000
         });
       }
     }
@@ -530,11 +530,11 @@ export class EditorService {
       .open({
         phrases: [
           this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.ASPECT_CREATION_WARNING,
-          this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.NAME_REPLACEMENT_NOTICE,
+          this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.NAME_REPLACEMENT_NOTICE
         ],
         title: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.TITLE,
         closeButtonText: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.CLOSE_BUTTON,
-        okButtonText: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.OK_BUTTON,
+        okButtonText: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.OK_BUTTON
       })
       .subscribe(confirm => {
         if (confirm === ConfirmDialogEnum.cancel) {
@@ -555,7 +555,7 @@ export class EditorService {
         metaModelElement
           ? this.mxGraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
               shapeAttributes: [],
-              geometry,
+              geometry
             })
           : this.openAlertBox();
         this.titleService.updateTitle(rdfModel.absoluteAspectModelFileName, 'Aspect');
@@ -619,7 +619,7 @@ export class EditorService {
       this.mxGraphAttributeService.graph.setCellStyles(
         mxConstants.STYLE_STROKECOLOR,
         'black',
-        this.mxGraphService.graph.getOutgoingEdges(cell).map(edge => edge.target),
+        this.mxGraphService.graph.getOutgoingEdges(cell).map(edge => edge.target)
       );
       this.elementModelService.deleteElement(cell);
     });
@@ -629,7 +629,7 @@ export class EditorService {
     this.loadingScreenService
       .open({
         title: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_IN_PROGRESS,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_IN_WAIT,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_IN_WAIT
       })
       .afterOpened()
       .subscribe(() => {
@@ -642,7 +642,7 @@ export class EditorService {
     this.loadingScreenService
       .open({
         title: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_OUT_PROGRESS,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_IN_WAIT,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_IN_WAIT
       })
       .afterOpened()
       .subscribe(() => {
@@ -655,7 +655,7 @@ export class EditorService {
     this.loadingScreenService
       .open({
         title: this.translate.language.LOADING_SCREEN_DIALOG.FITTING_PROGRESS,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.FITTING_WAIT,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.FITTING_WAIT
       })
       .afterOpened()
       .subscribe(() => {
@@ -668,7 +668,7 @@ export class EditorService {
     this.loadingScreenService
       .open({
         title: this.translate.language.LOADING_SCREEN_DIALOG.FIT_TO_VIEW_PROGRESS,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.FITTING_WAIT,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.FITTING_WAIT
       })
       .afterOpened()
       .subscribe(() => {
@@ -682,7 +682,7 @@ export class EditorService {
     this.loadingScreenService
       .open({
         title: isExpanded ? this.translate.language.LOADING_SCREEN_DIALOG.FOLDING : this.translate.language.LOADING_SCREEN_DIALOG.EXPANDING,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.ACTION_WAIT,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.ACTION_WAIT
       })
       .afterOpened()
       .pipe(switchMap(() => (isExpanded ? this.mxGraphService.foldCells() : this.mxGraphService.expandCells())))
@@ -697,7 +697,7 @@ export class EditorService {
     this.loadingScreenService
       .open({
         title: this.translate.language.LOADING_SCREEN_DIALOG.FORMATTING,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.WAIT_FORMAT,
+        content: this.translate.language.LOADING_SCREEN_DIALOG.WAIT_FORMAT
       })
       .afterOpened()
       .subscribe(() => {
@@ -736,14 +736,14 @@ export class EditorService {
             this.notificationsService.error({
               title: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_TITLE,
               message: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_MESSAGE,
-              timeout: 5000,
+              timeout: 5000
             });
           }
           localStorage.removeItem(ValidateStatus.validating);
 
           return timer(this.settings.validationTimerSeconds * 1000);
-        },
-      }),
+        }
+      })
     );
   }
 
@@ -754,7 +754,7 @@ export class EditorService {
       switchMap(value =>
         localStorage.getItem(ValidateStatus.validating)
           ? throwError(() => ({type: SaveValidateErrorsCodes.validationInProgress}))
-          : of(value),
+          : of(value)
       ),
       switchMap(() => {
         localStorage.setItem(ValidateStatus.validating, 'yes');
@@ -762,7 +762,7 @@ export class EditorService {
         return rdfModel
           ? this.modelApiService.validate(this.rdfService.serializeModel(rdfModel))
           : throwError(() => ({type: SaveValidateErrorsCodes.emptyModel}));
-      }),
+      })
     );
   }
 
@@ -788,12 +788,12 @@ export class EditorService {
         this.namespaceCacheService.currentCachedFile.hasCachedElements() &&
         !this.rdfService.currentRdfModel.aspectModelFileName.includes('empty.ttl')
           ? this.saveModel().pipe(first())
-          : of([]),
+          : of([])
       ),
       tap(() => this.enableAutoSave()),
       retry({
-        delay: () => timer(this.settings.saveTimerSeconds * 1000),
-      }),
+        delay: () => timer(this.settings.saveTimerSeconds * 1000)
+      })
     );
   }
 
@@ -813,7 +813,7 @@ export class EditorService {
         this.logService.logError('Error on saving aspect model', error);
         this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_ERROR});
         return of({});
-      }),
+      })
     );
   }
 
@@ -825,8 +825,8 @@ export class EditorService {
     this.alertService.open({
       data: {
         title: this.translate.language.NOTIFICATION_SERVICE.ASPECT_MISSING_TITLE,
-        content: this.translate.language.NOTIFICATION_SERVICE.ASPECT_MISSING_CONTENT,
-      },
+        content: this.translate.language.NOTIFICATION_SERVICE.ASPECT_MISSING_CONTENT
+      }
     });
   }
 }

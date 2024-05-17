@@ -19,7 +19,7 @@
 $ame-colors: (
   primary: var(--ame-primary),
   accent: var(--ame-accent),
-  warn: var(--ame-error),
+  warn: var(--ame-error)
 );
 
 $ame-primary-light: (
@@ -51,8 +51,8 @@ $ame-primary-light: (
     A100: var(--ame-font),
     A200: var(--ame-font),
     A400: var(--ame-font),
-    A700: var(--ame-font),
-  ),
+    A700: var(--ame-font)
+  )
 );
 
 $ame-accent-light: (
@@ -84,8 +84,8 @@ $ame-accent-light: (
     A100: var(--ame-font),
     A200: var(--ame-font),
     A400: var(--ame-font),
-    A700: var(--ame-font),
-  ),
+    A700: var(--ame-font)
+  )
 );
 
 $ame-warn-light: (
@@ -117,8 +117,8 @@ $ame-warn-light: (
     A100: white,
     A200: white,
     A400: white,
-    A700: white,
-  ),
+    A700: white
+  )
 );
 
 $ame-light-theme: mat.define-light-theme(
@@ -126,8 +126,8 @@ $ame-light-theme: mat.define-light-theme(
     color: (
       primary: mat.define-palette($ame-primary-light),
       accent: mat.define-palette($ame-accent-light),
-      warn: mat.define-palette($ame-warn-light),
-    ),
+      warn: mat.define-palette($ame-warn-light)
+    )
   )
 );
 

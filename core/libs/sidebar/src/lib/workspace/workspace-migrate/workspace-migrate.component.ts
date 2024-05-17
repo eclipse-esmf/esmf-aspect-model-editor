@@ -19,14 +19,14 @@ import {Subscription} from 'rxjs';
 @Component({
   selector: 'ame-workspace-migrate',
   templateUrl: './workspace-migrate.component.html',
-  styleUrls: ['./workspace-migrate.component.scss'],
+  styleUrls: ['./workspace-migrate.component.scss']
 })
 export class WorkspaceMigrateComponent implements OnDestroy {
   private subscription = new Subscription();
 
   constructor(
     private migratorService: MigratorService,
-    private sidebarService: SidebarStateService,
+    private sidebarService: SidebarStateService
   ) {}
 
   ngOnDestroy() {

@@ -30,7 +30,7 @@ describe('Aspect Visitor', () => {
     store: new Store(),
     SAMM: jest.fn(() => new Samm('')),
     hasNamespace: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    addPrefix: jest.fn(() => {})
   };
   const aspect = new DefaultAspect('1', 'samm#aspect', 'aspect1', null);
 
@@ -43,23 +43,23 @@ describe('Aspect Visitor', () => {
           provide: RdfListService,
           useValue: {
             push: jest.fn(),
-            createEmpty: jest.fn(),
-          },
+            createEmpty: jest.fn()
+          }
         },
         {
           provide: RdfNodeService,
           useValue: {
-            update: jest.fn(),
-          },
+            update: jest.fn()
+          }
         },
         {
           provide: RdfService,
           useValue: {
             currentRdfModel: rdfModel,
-            externalRdfModels: [],
-          },
-        },
-      ],
+            externalRdfModels: []
+          }
+        }
+      ]
     });
 
     service = TestBed.inject(AspectVisitor);
@@ -71,7 +71,7 @@ describe('Aspect Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(aspect, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
 
     expect(service.rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.properties);
@@ -93,7 +93,7 @@ describe('Aspect Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(aspect, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
     expect(aspect.aspectModelUrn).toBe('samm#aspect2');
   });

@@ -21,7 +21,7 @@ export const automatedWorkflowControlName = 'automatedWorkflow';
 @Component({
   selector: 'ame-automated-workflow-config',
   templateUrl: './automated-workflow.component.html',
-  styleUrls: ['./automated-workflow.component.scss'],
+  styleUrls: ['./automated-workflow.component.scss']
 })
 export class AutomatedWorkflowComponent implements OnInit {
   form: FormGroup;

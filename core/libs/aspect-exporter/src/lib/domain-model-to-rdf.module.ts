@@ -27,7 +27,7 @@ import {
   EventVisitor,
   OperationVisitor,
   PropertyVisitor,
-  UnitVisitor,
+  UnitVisitor
 } from './visitor';
 
 @NgModule({
@@ -48,7 +48,7 @@ import {
     OperationVisitor,
     PropertyVisitor,
     RdfNodeService,
-    UnitVisitor,
-  ],
+    UnitVisitor
+  ]
 })
 export class DomainModelToRdfModule {}

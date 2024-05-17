@@ -25,7 +25,7 @@ export class EntityInstanceVisitor extends BaseVisitor<DefaultEntityInstance> {
   constructor(
     private rdfListService: RdfListService,
     public modelService: ModelService,
-    rdfService: RdfService,
+    rdfService: RdfService
   ) {
     super(rdfService);
   }
@@ -54,8 +54,8 @@ export class EntityInstanceVisitor extends BaseVisitor<DefaultEntityInstance> {
       ),
       {
         propertyCollectionWithLangString: [],
-        property: [],
-      },
+        property: []
+      }
     );
 
     if (propertyCollectionWithLangString.length) {
@@ -85,7 +85,7 @@ export class EntityInstanceVisitor extends BaseVisitor<DefaultEntityInstance> {
   private createObjectForCollectionLangStringRDF(ev: EntityInstanceProperty): {predicate: NamedNode; literal: Literal} {
     return {
       predicate: DataFactory.namedNode(ev.key.property.aspectModelUrn),
-      literal: DataFactory.literal(ev?.value?.toString(), ev?.language?.toString()),
+      literal: DataFactory.literal(ev?.value?.toString(), ev?.language?.toString())
     };
   }
 
@@ -113,7 +113,7 @@ export class EntityInstanceVisitor extends BaseVisitor<DefaultEntityInstance> {
     rdfModel.store.addQuad(
       DataFactory.namedNode(entityValue.aspectModelUrn),
       rdfModel.SAMM().RdfType(),
-      DataFactory.namedNode(entityValue.entity.aspectModelUrn),
+      DataFactory.namedNode(entityValue.entity.aspectModelUrn)
     );
   }
 }

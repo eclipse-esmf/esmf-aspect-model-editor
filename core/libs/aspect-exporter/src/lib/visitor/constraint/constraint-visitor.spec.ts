@@ -21,7 +21,7 @@ import {
   DefaultLengthConstraint,
   DefaultLocaleConstraint,
   DefaultRangeConstraint,
-  DefaultRegularExpressionConstraint,
+  DefaultRegularExpressionConstraint
 } from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
@@ -41,7 +41,7 @@ describe('Constraint Visitor', () => {
     SAMM: jest.fn(() => new Samm('')),
     SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'}) as any),
     hasNamespace: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    addPrefix: jest.fn(() => {})
   };
   const constraint = new DefaultConstraint('1', 'samm#constraint1', 'constraint1');
   const rangeConstraint = new DefaultRangeConstraint(
@@ -51,7 +51,7 @@ describe('Constraint Visitor', () => {
     BoundDefinition.AT_MOST,
     BoundDefinition.AT_LEAST,
     0,
-    100,
+    100
   );
   const fixedPointConstraint = new DefaultFixedPointConstraint('1', 'samm#fixedPointConstraint', 'fixedPointConstraint', 1, 2);
   const lengthConstraint = new DefaultLengthConstraint('1', 'samm#lengthConstraint', 'lengthConstraint', 100, 200);
@@ -61,7 +61,7 @@ describe('Constraint Visitor', () => {
     '1',
     'samm#regularExpressionConstraint',
     'regularExpressionConstraint',
-    'regularExpressionValue',
+    'regularExpressionValue'
   );
   const localeConstraint = new DefaultLocaleConstraint('1', 'samm#localeConstraint', 'localeConstraint', 'en');
 
@@ -73,23 +73,23 @@ describe('Constraint Visitor', () => {
         {
           provide: RdfListService,
           useValue: {
-            push: jest.fn(),
-          },
+            push: jest.fn()
+          }
         },
         {
           provide: RdfNodeService,
           useValue: {
-            update: jest.fn(),
-          },
+            update: jest.fn()
+          }
         },
         {
           provide: RdfService,
           useValue: {
             currentRdfModel: rdfModel,
-            externalRdfModels: [],
-          },
-        },
-      ],
+            externalRdfModels: []
+          }
+        }
+      ]
     });
 
     service = TestBed.inject(ConstraintVisitor);
@@ -101,7 +101,7 @@ describe('Constraint Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(constraint, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
   });
 
@@ -111,13 +111,13 @@ describe('Constraint Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(rangeConstraint, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(rangeConstraint, {
       upperBoundDefinition: BoundDefinition.AT_MOST,
       lowerBoundDefinition: BoundDefinition.AT_LEAST,
       minValue: 0,
-      maxValue: 100,
+      maxValue: 100
     });
   });
 
@@ -127,11 +127,11 @@ describe('Constraint Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(fixedPointConstraint, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(fixedPointConstraint, {
       scale: 1,
-      integer: 2,
+      integer: 2
     });
   });
 
@@ -141,11 +141,11 @@ describe('Constraint Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(lengthConstraint, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(lengthConstraint, {
       minValue: 100,
-      maxValue: 200,
+      maxValue: 200
     });
   });
 
@@ -155,10 +155,10 @@ describe('Constraint Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(languageConstraint, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(languageConstraint, {
-      languageCode: 'en',
+      languageCode: 'en'
     });
   });
 
@@ -168,10 +168,10 @@ describe('Constraint Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(encodingConstraint, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(encodingConstraint, {
-      value: 'encodingValue',
+      value: 'encodingValue'
     });
   });
 
@@ -181,10 +181,10 @@ describe('Constraint Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(regularExpressionConstraint, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(regularExpressionConstraint, {
-      value: 'regularExpressionValue',
+      value: 'regularExpressionValue'
     });
   });
 
@@ -194,10 +194,10 @@ describe('Constraint Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(localeConstraint, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(localeConstraint, {
-      localeCode: 'en',
+      localeCode: 'en'
     });
   });
 });

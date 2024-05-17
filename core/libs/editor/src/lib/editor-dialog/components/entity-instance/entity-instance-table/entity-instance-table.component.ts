@@ -20,7 +20,7 @@ import {
   FormGroup,
   UntypedFormGroup,
   ValidationErrors,
-  Validators,
+  Validators
 } from '@angular/forms';
 import {
   BaseMetaModelElement,
@@ -30,7 +30,7 @@ import {
   DefaultEntityInstance,
   DefaultProperty,
   EntityInstanceProperty,
-  OverWrittenProperty,
+  OverWrittenProperty
 } from '@ame/meta-model';
 import {DataType, EditorDialogValidators, EntityInstanceUtil, FormFieldHelper} from '@ame/editor';
 import {InputFieldComponent} from '../../fields';
@@ -42,7 +42,7 @@ import {isDataTypeLangString} from '@ame/shared';
 @Component({
   selector: 'ame-entity-instance-table',
   templateUrl: './entity-instance-table.component.html',
-  styleUrls: ['./entity-instance-table.component.scss'],
+  styleUrls: ['./entity-instance-table.component.scss']
 })
 export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEntityInstance> implements OnInit, OnChanges, OnDestroy {
   @ViewChildren(MatAutocompleteTrigger) autocompleteTriggers: QueryList<MatAutocompleteTrigger>;
@@ -68,7 +68,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
 
   constructor(
     private changeDetector: ChangeDetectorRef,
-    private fb: FormBuilder,
+    private fb: FormBuilder
   ) {
     super();
   }
@@ -97,7 +97,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
         });
 
         this.sources = this.metaModelElement?.entity?.allProperties.map(prop => this.createEntityValueProp(prop));
-      }),
+      })
     );
   }
 
@@ -124,7 +124,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
       key: prop as OverWrittenProperty,
       value: '',
       language: EntityInstanceUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined,
-      optional: prop.keys.optional,
+      optional: prop.keys.optional
     };
   }
 
@@ -140,7 +140,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     property: DefaultProperty,
     validators: (control: AbstractControl) => ValidationErrors | null,
     propertyValue: string | number | boolean | DefaultEntityInstance,
-    propertyLanguage: string,
+    propertyLanguage: string
   ): void {
     // Ensure the properties FormArray exists and is correctly initialized
     const propertiesFormArray = this.ensurePropertiesFormArray(property.name);
@@ -167,7 +167,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
 
   private createValueControl(
     propertyValue: string | number | boolean | DefaultEntityInstance,
-    validators: ValidationErrors | null,
+    validators: ValidationErrors | null
   ): FormControl {
     const isEntityValue = propertyValue instanceof DefaultEntityInstance;
     return new FormControl({value: propertyValue, disabled: isEntityValue}, validators);
@@ -177,15 +177,15 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     group: UntypedFormGroup,
     propertyLanguage: string,
     validators: ValidationErrors | null,
-    property: DefaultProperty,
+    property: DefaultProperty
   ): void {
     if ((propertyLanguage || propertyLanguage === '') && isDataTypeLangString(property)) {
       const languageControl = new FormControl(
         {
           value: propertyLanguage,
-          disabled: propertyLanguage !== '',
+          disabled: propertyLanguage !== ''
         },
-        validators,
+        validators
       );
       this.subscribeToLangValueChanges(languageControl, property);
       group.addControl('language', languageControl);
@@ -198,7 +198,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
 
   private changeEntityValueInput(property: DefaultProperty, value: string): void {
     this.filteredEntityValues$[property.name] = of(this.getPropertyValues(property)).pipe(
-      map(ev => ev.filter(entityValue => entityValue.name.startsWith(value))),
+      map(ev => ev.filter(entityValue => entityValue.name.startsWith(value)))
     );
   }
 
@@ -209,7 +209,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
   private changeLanguageInput(name: string, value: string): void {
     this.filteredLanguageValues$[name] = of(locale.all.filter(lang => lang.tag)).pipe(
       startWith(locale.all),
-      map(local => local.filter(lang => lang.tag.startsWith(value))),
+      map(local => local.filter(lang => lang.tag.startsWith(value)))
     );
   }
 
@@ -257,12 +257,12 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     this.subscriptions.add(
       languageInputControl.valueChanges.subscribe(value => {
         this.changeLanguageInput(entityValueProp.key.property.name, value);
-      }),
+      })
     );
 
     const languageFormGroup = this.fb.group({
       value: ['', fieldValidators],
-      language: languageInputControl,
+      language: languageInputControl
     });
 
     languagesFormArray.push(languageFormGroup);

@@ -22,7 +22,7 @@ import {debounceTime, map, Observable, startWith} from 'rxjs';
 @Component({
   selector: 'ame-structured-value-property-field',
   templateUrl: './structured-value-property-field.component.html',
-  styleUrls: ['./structured-value-property-field.component.scss'],
+  styleUrls: ['./structured-value-property-field.component.scss']
 })
 export class StructuredValuePropertyFieldComponent implements OnInit {
   @Input() public overwrittenProperty: OverWrittenProperty = null;
@@ -42,14 +42,14 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
     this.control = new FormControl(
       {
         value: this.overwrittenProperty?.property?.name || '',
-        disabled: !!this.overwrittenProperty?.property?.name || this.overwrittenProperty?.property?.isExternalReference(),
+        disabled: !!this.overwrittenProperty?.property?.name || this.overwrittenProperty?.property?.isExternalReference()
       },
-      [Validators.required, EditorDialogValidators.namingLowerCase],
+      [Validators.required, EditorDialogValidators.namingLowerCase]
     );
     this.filteredProperties$ = this.control.valueChanges.pipe(
       startWith([]),
       debounceTime(250),
-      map(value => this.currentCacheFile.getCachedProperties().filter(property => property.name.includes(value))),
+      map(value => this.currentCacheFile.getCachedProperties().filter(property => property.name.includes(value)))
     );
   }
 

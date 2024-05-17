@@ -19,7 +19,7 @@ import {simpleDataTypes} from '@ame/shared';
 
 @Component({
   selector: 'ame-example-value-input-field',
-  templateUrl: './example-value-input-field.component.html',
+  templateUrl: './example-value-input-field.component.html'
 })
 export class ExampleValueInputFieldComponent extends InputFieldComponent<DefaultProperty> implements OnInit {
   public hasComplexDataType = false;
@@ -39,8 +39,8 @@ export class ExampleValueInputFieldComponent extends InputFieldComponent<Default
           this.metaModelElement.isExternalReference() ||
           this.hasComplexDataType ||
           this.metaModelElement.isPredefined() ||
-          this.isExtending(),
-      }),
+          this.isExtending()
+      })
     );
   }
 

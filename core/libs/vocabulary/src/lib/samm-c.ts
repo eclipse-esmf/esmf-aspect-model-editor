@@ -199,14 +199,14 @@ export class SammC {
   getUpperBoundDefinitionList(): Array<any> {
     return [
       {value: BoundDefinition.AT_MOST, isDefinedBy: `${this.getNamespace()}${BoundDefinition.AT_MOST}`},
-      {value: BoundDefinition.LESS_THAN, isDefinedBy: `${this.getNamespace()}${BoundDefinition.LESS_THAN}`},
+      {value: BoundDefinition.LESS_THAN, isDefinedBy: `${this.getNamespace()}${BoundDefinition.LESS_THAN}`}
     ];
   }
 
   getLowerBoundDefinitionList(): Array<any> {
     return [
       {value: BoundDefinition.AT_LEAST, isDefinedBy: `${this.getNamespace()}${BoundDefinition.AT_LEAST}`},
-      {value: BoundDefinition.GREATER_THAN, isDefinedBy: `${this.getNamespace()}${BoundDefinition.GREATER_THAN}`},
+      {value: BoundDefinition.GREATER_THAN, isDefinedBy: `${this.getNamespace()}${BoundDefinition.GREATER_THAN}`}
     ];
   }
 
@@ -323,7 +323,7 @@ export class SammC {
       this.SingleEntityCharacteristic().value,
       this.SortedSetCharacteristic().value,
       this.StructuredValueCharacteristic().value,
-      this.TimeSeriesCharacteristic().value,
+      this.TimeSeriesCharacteristic().value
     ];
   }
 }

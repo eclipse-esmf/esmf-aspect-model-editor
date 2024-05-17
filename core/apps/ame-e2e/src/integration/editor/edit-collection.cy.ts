@@ -22,7 +22,7 @@ import {
   SELECTOR_ecEntity,
   SELECTOR_editorSaveButton,
   SELECTOR_elementBtn,
-  SELECTOR_tbDeleteButton,
+  SELECTOR_tbDeleteButton
 } from '../../support/constants';
 
 describe('Test editing different Collections', () => {
@@ -207,7 +207,7 @@ describe('Test editing different Collections', () => {
           .type('Characteristic2', {force: true})
           .get('mat-option')
           .contains('Characteristic2')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())
@@ -229,7 +229,7 @@ describe('Test editing different Collections', () => {
           .type('Entity1', {force: true})
           .get('.mat-mdc-option')
           .contains('Entity1')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}))
       .then(() => cy.getUpdatedRDF())

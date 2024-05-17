@@ -19,30 +19,30 @@ import {first} from 'rxjs';
 
 enum ERROR_TYPES {
   UNKNOWN,
-  VALIDATION,
+  VALIDATION
 }
 
 @Component({
   templateUrl: './error.component.html',
-  styleUrls: ['./error.component.scss'],
+  styleUrls: ['./error.component.scss']
 })
 export class ErrorComponent {
   public errorTypes = ERROR_TYPES;
   public error = {
     message: 'An error has occurred while processing namespaces!',
-    type: ERROR_TYPES.UNKNOWN,
+    type: ERROR_TYPES.UNKNOWN
   };
 
   constructor(
     @Inject(NAMESPACES_SESSION) private session: NamespacesSessionInterface,
-    private notificationService: NotificationsService,
+    private notificationService: NotificationsService
   ) {
     this.session.state.validating$.pipe(first()).subscribe({
       error: (error: any) => {
         this.error.message = error?.error?.error?.message || this.error.message;
         this.error.type = ERROR_TYPES.VALIDATION;
         this.notificationService.error({title: 'Package validation error', message: this.error.message});
-      },
+      }
     });
   }
 }

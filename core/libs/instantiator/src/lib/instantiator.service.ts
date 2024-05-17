@@ -22,7 +22,7 @@ import {
   EventInstantiator,
   OperationInstantiator,
   PropertyInstantiator,
-  UnitInstantiator,
+  UnitInstantiator
 } from './instantiators';
 import {MetaModelElementInstantiator} from './meta-model-element-instantiator';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
@@ -33,14 +33,14 @@ import {AbstractEntityInstantiator} from './instantiators/abstract-entity-instan
 import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class InstantiatorService {
   constructor(
     private namespaceCacheService: NamespacesCacheService,
     public rdfService: RdfService,
     public notificationsService: NotificationsService,
-    public translate: LanguageTranslationService,
+    public translate: LanguageTranslationService
   ) {}
 
   public instantiateFile(rdfModel: RdfModel, cachedFile: CachedFile, fileName: string): CachedFile {
@@ -58,7 +58,7 @@ export class InstantiatorService {
       this.namespaceCacheService,
       new Map<string, Array<BaseMetaModelElement>>(),
       this.notificationsService,
-      this.translate,
+      this.translate
     );
 
     if (aspect) {
@@ -70,7 +70,7 @@ export class InstantiatorService {
       .getSubjects(null, null, null)
       .reduce(
         (subjects, subject) => (!Util.isBlankNode(subject) && !cachedFile.getElement(subject.value) ? [...subjects, subject] : subjects),
-        [],
+        []
       );
 
     metaModelElementInstantiator.isIsolated = true;
@@ -91,7 +91,7 @@ export class InstantiatorService {
     subject: Quad_Subject,
     rdfModel: RdfModel,
     cachedFile: CachedFile,
-    metaModelElementInstantiator: MetaModelElementInstantiator,
+    metaModelElementInstantiator: MetaModelElementInstantiator
   ) {
     const samm = rdfModel.SAMM();
     const sammC = rdfModel.SAMMC();
@@ -100,7 +100,7 @@ export class InstantiatorService {
     if (samm.isPropertyElement(elementType)) {
       const overwrittenProperty = new PropertyInstantiator(metaModelElementInstantiator).createProperty({
         blankNode: false,
-        quad: subject,
+        quad: subject
       });
       if (overwrittenProperty?.property) {
         cachedFile.resolveElement(overwrittenProperty.property);
@@ -111,7 +111,7 @@ export class InstantiatorService {
     if (samm.isAbstractPropertyElement(elementType)) {
       const overwrittenProperty = new AbstractPropertyInstantiator(metaModelElementInstantiator).createAbstractProperty({
         blankNode: false,
-        quad: subject,
+        quad: subject
       });
 
       if (overwrittenProperty?.property) {
@@ -139,7 +139,7 @@ export class InstantiatorService {
     if (samm.isOperationElement(elementType)) {
       const operation = new OperationInstantiator(metaModelElementInstantiator).createOperation({
         blankNode: false,
-        quad: subject,
+        quad: subject
       });
       if (operation) {
         cachedFile.resolveElement(operation);
@@ -150,7 +150,7 @@ export class InstantiatorService {
     if (samm.isEventElement(elementType)) {
       const event = new EventInstantiator(metaModelElementInstantiator).createEvent({
         blankNode: false,
-        quad: subject,
+        quad: subject
       });
       if (event) {
         cachedFile.resolveElement(event);
@@ -176,7 +176,7 @@ export class InstantiatorService {
 
     if (samm.isAbstractEntity(elementType)) {
       const entity = new AbstractEntityInstantiator(metaModelElementInstantiator).createAbstractEntity(
-        rdfModel.store.getQuads(subject, null, null, null),
+        rdfModel.store.getQuads(subject, null, null, null)
       );
       if (entity) {
         cachedFile.resolveElement(entity);
@@ -187,7 +187,7 @@ export class InstantiatorService {
     if (RdfModelUtil.isEntityValue(elementType, metaModelElementInstantiator)) {
       const entityValue = new EntityValueInstantiator(metaModelElementInstantiator).createEntityValue(
         rdfModel.store.getQuads(subject, null, null, null),
-        subject,
+        subject
       );
       if (entityValue) {
         cachedFile.resolveElement(entityValue);

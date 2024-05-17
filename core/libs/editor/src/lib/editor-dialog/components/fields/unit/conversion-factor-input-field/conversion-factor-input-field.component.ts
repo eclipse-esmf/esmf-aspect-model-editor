@@ -18,7 +18,7 @@ import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-conversion-factor-input-field',
-  templateUrl: './conversion-factor-input-field.component.html',
+  templateUrl: './conversion-factor-input-field.component.html'
 })
 export class ConversionFactorInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
   ngOnInit(): void {
@@ -30,8 +30,8 @@ export class ConversionFactorInputFieldComponent extends InputFieldComponent<Def
       'conversionFactor',
       new FormControl({
         value: this.metaModelElement?.conversionFactor,
-        disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
-      }),
+        disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference()
+      })
     );
   }
 }

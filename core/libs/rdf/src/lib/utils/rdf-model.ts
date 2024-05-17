@@ -302,7 +302,7 @@ export class RdfModel {
           notInPayload: blankNodeElements.find(e => e.predicate.value === this.samm.NotInPayloadProperty().value)?.object,
           payloadName: blankNodeElements.find(e => e.predicate.value === this.samm.payloadNameProperty().value)?.object,
           quad: blankNodeElements.find(e => e.predicate.value === this.samm.PropertyProperty().value)?.object || quad.subject,
-          extends: blankNodeElements.find(e => e.predicate.value === this.samm.ExtendsProperty().value)?.object,
+          extends: blankNodeElements.find(e => e.predicate.value === this.samm.ExtendsProperty().value)?.object
         });
         continue;
       }
@@ -358,7 +358,7 @@ export class RdfModel {
       replacement.subject || quad.subject,
       replacement.predicate || quad.predicate,
       replacement.object || quad.object,
-      replacement.graph || quad.graph,
+      replacement.graph || quad.graph
     ];
     this.store.addQuad(...updatedQuad);
     this.store.removeQuad(quad);

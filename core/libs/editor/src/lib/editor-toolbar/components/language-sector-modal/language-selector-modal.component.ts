@@ -18,7 +18,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 import * as locale from 'locale-codes';
 
 @Component({
-  templateUrl: './language-selector-modal.component.html',
+  templateUrl: './language-selector-modal.component.html'
 })
 export class LanguageSelectorModalComponent {
   public languages: locale.ILocale[] = [];
@@ -26,7 +26,7 @@ export class LanguageSelectorModalComponent {
 
   constructor(
     private dialogRef: MatDialogRef<LanguageSelectorModalComponent>,
-    private languageService: SammLanguageSettingsService,
+    private languageService: SammLanguageSettingsService
   ) {
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
     this.languageControl = new FormControl(this.languages[0].tag);

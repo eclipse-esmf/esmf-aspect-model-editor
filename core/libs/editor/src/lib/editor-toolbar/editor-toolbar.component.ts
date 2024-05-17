@@ -29,7 +29,7 @@ import {ShapeSettingsService} from '../editor-dialog';
 @Component({
   selector: 'ame-editor-toolbar',
   templateUrl: './editor-toolbar.component.html',
-  styleUrls: ['./editor-toolbar.component.scss'],
+  styleUrls: ['./editor-toolbar.component.scss']
 })
 export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy {
   public filtersService = inject(FiltersService);
@@ -60,7 +60,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private matDialog: MatDialog,
     private shapeSettingsService: ShapeSettingsService,
-    private mxGraphService: MxGraphService,
+    private mxGraphService: MxGraphService
   ) {}
 
   ngOnInit(): void {
@@ -110,7 +110,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     if (!selectedCell) {
       this.notificationsService.error({
         title: 'No element selected',
-        message: 'An element needs to be selected to be connected',
+        message: 'An element needs to be selected to be connected'
       });
     }
 

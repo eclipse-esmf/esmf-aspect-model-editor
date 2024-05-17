@@ -24,7 +24,7 @@ import {RdfService} from '@ame/rdf/services';
 @Component({
   selector: 'ame-left-input-field',
   templateUrl: './left-input-field.component.html',
-  styleUrls: ['../../field.scss'],
+  styleUrls: ['../../field.scss']
 })
 export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> implements OnInit, OnDestroy {
   filteredCharacteristicTypes$: Observable<any[]>;
@@ -36,7 +36,7 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
     public namespacesCacheService: NamespacesCacheService,
     private notificationsService: NotificationsService,
     private validators: EditorDialogValidators,
-    public rdfService: RdfService,
+    public rdfService: RdfService
   ) {
     super();
     this.fieldName = 'leftCharacteristic';
@@ -65,31 +65,31 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement.isExternalReference(),
+          disabled: !!value || this.metaModelElement.isExternalReference()
         },
         {
           validators: [
             Validators.required,
             EditorDialogValidators.disabled,
-            this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic),
-          ],
-        },
-      ),
+            this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic)
+          ]
+        }
+      )
     );
 
     this.parentForm.setControl(
       'leftCharacteristic',
       new FormControl({
         value: eitherLeft,
-        disabled: this.metaModelElement?.isExternalReference(),
-      }),
+        disabled: this.metaModelElement?.isExternalReference()
+      })
     );
 
     this.leftControl = this.parentForm.get('left') as FormControl;
     this.leftCharacteristicControl = this.parentForm.get('leftCharacteristic') as FormControl;
 
     this.filteredCharacteristicTypes$ = this.initFilteredCharacteristicTypes(this.leftControl, this.metaModelElement.aspectModelUrn).pipe(
-      map(charList => charList.filter(char => char.urn !== this.parentForm.get('rightCharacteristic')?.value?.aspectModelUrn)),
+      map(charList => charList.filter(char => char.urn !== this.parentForm.get('rightCharacteristic')?.value?.aspectModelUrn))
     );
   }
 

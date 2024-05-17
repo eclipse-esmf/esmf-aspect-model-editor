@@ -19,18 +19,18 @@ module.exports = on => {
     wp({
       webpackOptions: {
         resolve: {
-          extensions: ['.ts', '.js'],
+          extensions: ['.ts', '.js']
         },
         module: {
           rules: [
             {
               test: /\.tsx?$/,
               exclude: /node_modules/,
-              loader: 'ts-loader',
-            },
-          ],
-        },
-      },
-    }),
+              loader: 'ts-loader'
+            }
+          ]
+        }
+      }
+    })
   );
 };

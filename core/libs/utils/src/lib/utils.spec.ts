@@ -36,7 +36,7 @@ describe('utils', () => {
         expect(nextMock).toBeCalledWith(fileContent);
         expect(errorMock).not.toHaveBeenCalled();
         done();
-      },
+      }
     });
   });
 
@@ -54,7 +54,7 @@ describe('utils', () => {
         expect(err.message).toBeTruthy();
         done();
       },
-      complete: () => completeMock,
+      complete: () => completeMock
     });
   });
 });

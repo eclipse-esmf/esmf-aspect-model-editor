@@ -27,7 +27,7 @@ export class OperationVisitor extends BaseVisitor<DefaultOperation> {
   constructor(
     private rdfNodeService: RdfNodeService,
     rdfService: RdfService,
-    public rdfListService: RdfListService,
+    public rdfListService: RdfListService
   ) {
     super(rdfService);
   }
@@ -46,13 +46,13 @@ export class OperationVisitor extends BaseVisitor<DefaultOperation> {
     this.rdfNodeService.update(operation, {
       preferredName: operation.getAllLocalesPreferredNames().map(language => ({
         language,
-        value: operation.getPreferredName(language),
+        value: operation.getPreferredName(language)
       })),
       description: operation.getAllLocalesDescriptions().map(language => ({
         language,
-        value: operation.getDescription(language),
+        value: operation.getDescription(language)
       })),
-      see: operation.getSeeReferences() || [],
+      see: operation.getSeeReferences() || []
     });
 
     if (operation.input?.length) {
@@ -71,7 +71,7 @@ export class OperationVisitor extends BaseVisitor<DefaultOperation> {
       this.store.addQuad(
         DataFactory.namedNode(operation.aspectModelUrn),
         this.rdfService.currentRdfModel.samm.OutputProperty(),
-        DataFactory.namedNode(property.aspectModelUrn),
+        DataFactory.namedNode(property.aspectModelUrn)
       );
     }
   }

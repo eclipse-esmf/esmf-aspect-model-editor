@@ -18,7 +18,7 @@ import {SidebarStateService} from '../sidebar-state.service';
 @Component({
   selector: 'ame-sidebar-menu',
   templateUrl: './sidebar-menu.component.html',
-  styleUrls: ['./sidebar-menu.component.scss'],
+  styleUrls: ['./sidebar-menu.component.scss']
 })
 export class SidebarMenuComponent {
   public notificationService = inject(NotificationsService);

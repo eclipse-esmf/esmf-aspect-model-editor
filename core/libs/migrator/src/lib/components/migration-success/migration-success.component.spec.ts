@@ -34,14 +34,14 @@ describe('MigrationSuccessComponent', () => {
         {
           provide: MigratorService,
           useValue: {
-            dialogRef: {},
-          },
+            dialogRef: {}
+          }
         },
         {
           provide: LanguageTranslationService,
-          useValue: provideMockObject(LanguageTranslationService),
-        },
-      ],
+          useValue: provideMockObject(LanguageTranslationService)
+        }
+      ]
     });
 
     fixture = TestBed.createComponent(MigrationSuccessComponent);

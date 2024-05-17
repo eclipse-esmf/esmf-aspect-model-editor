@@ -18,14 +18,14 @@ import {ConfirmDialogEnum} from '../models/confirm-dialog.enum';
 
 @Component({
   templateUrl: './confirm-dialog.component.html',
-  styles: ['.dialog-title { font-size: 24px !important; }'],
+  styles: ['.dialog-title { font-size: 24px !important; }']
 })
 export class ConfirmDialogComponent {
   protected readonly confirmDialogEnum = ConfirmDialogEnum;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogOptions,
-    private dialogRef: MatDialogRef<ConfirmDialogComponent>,
+    private dialogRef: MatDialogRef<ConfirmDialogComponent>
   ) {}
 
   closeAndGiveResult(result: ConfirmDialogEnum) {

@@ -40,29 +40,29 @@ describe('StartMigratingComponent', () => {
         MatButtonModule,
         MatProgressSpinnerModule,
         TranslateModule.forRoot(),
-        LanguageTranslateModule,
+        LanguageTranslateModule
       ],
       declarations: [StartMigratingComponent],
       providers: [
         {
           provide: APP_CONFIG,
           useValue: {
-            currentSammVersion: '2.1.0',
-          },
+            currentSammVersion: '2.1.0'
+          }
         },
         {
           provide: MigratorApiService,
-          useValue: provideMockObject(MigratorApiService),
+          useValue: provideMockObject(MigratorApiService)
         },
         {
           provide: MigratorService,
-          useValue: provideMockObject(MigratorService),
+          useValue: provideMockObject(MigratorService)
         },
         {
           provide: LanguageTranslationService,
-          useValue: provideMockObject(LanguageTranslationService),
-        },
-      ],
+          useValue: provideMockObject(LanguageTranslationService)
+        }
+      ]
     });
 
     migratorApiService = TestBed.inject(MigratorApiService);

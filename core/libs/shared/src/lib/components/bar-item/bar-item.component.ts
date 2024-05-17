@@ -19,7 +19,7 @@ import {MatRipple} from '@angular/material/core';
   selector: 'ame-bar-item',
   templateUrl: './bar-item.component.html',
   styleUrls: ['./bar-item.component.scss'],
-  providers: [MatRipple],
+  providers: [MatRipple]
 })
 export class BarItemComponent {
   @Input()

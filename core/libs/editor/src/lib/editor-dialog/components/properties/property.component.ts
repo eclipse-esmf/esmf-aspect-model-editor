@@ -16,7 +16,7 @@ import {EditorModelService} from '../../editor-model.service';
 
 @Component({
   selector: 'ame-property',
-  templateUrl: './property.component.html',
+  templateUrl: './property.component.html'
 })
 export class PropertyComponent {
   @Input() parentForm: FormGroup;

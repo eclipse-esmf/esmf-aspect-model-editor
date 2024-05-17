@@ -17,7 +17,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'ame-abstract-entity',
-  templateUrl: './abstract-entity.component.html',
+  templateUrl: './abstract-entity.component.html'
 })
 export class AbstractEntityComponent {
   @Input() public parentForm: FormGroup;

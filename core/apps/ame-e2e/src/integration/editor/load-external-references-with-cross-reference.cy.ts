@@ -24,14 +24,14 @@ describe('Test load external reference with cross references', () => {
         'external-entity-reference.txt',
         'external-characteristic-reference.txt',
         'external-property-reference.txt',
-        'external-operation-reference.txt',
+        'external-operation-reference.txt'
       ],
       'org.eclipse.different:1.0.0': [
         'external-entity-reference.txt',
         'external-characteristic-reference.txt',
         'external-property-reference.txt',
-        'external-operation-reference.txt',
-      ],
+        'external-operation-reference.txt'
+      ]
     });
 
     // Same Namespace
@@ -39,44 +39,44 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/same-namespace/external-entity-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/same-namespace/external-entity-reference.txt'
+      }
     );
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-characteristic-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/same-namespace/external-characteristic-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/same-namespace/external-characteristic-reference.txt'
+      }
     );
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/same-namespace/external-property-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/same-namespace/external-property-reference.txt'
+      }
     );
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-operation-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-operation-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/same-namespace/external-operation-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/same-namespace/external-operation-reference.txt'
+      }
     );
 
     // Different Namespace
@@ -84,44 +84,44 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-entity-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-entity-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/different-namespace/external-entity-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/different-namespace/external-entity-reference.txt'
+      }
     );
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-characteristic-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/different-namespace/external-characteristic-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/different-namespace/external-characteristic-reference.txt'
+      }
     );
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-property-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/different-namespace/external-property-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/different-namespace/external-property-reference.txt'
+      }
     );
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-operation-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-operation-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/different-namespace/external-operation-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/different-namespace/external-operation-reference.txt'
+      }
     );
 
     cy.visitDefault();
@@ -187,9 +187,9 @@ describe('Test load external reference with cross references', () => {
       'org.eclipse.digitaltwin:1.0.0': [
         'external-entity-reference.txt',
         'external-property-reference.txt',
-        'external-operation-reference.txt',
+        'external-operation-reference.txt'
       ],
-      'org.eclipse.different:1.0.0': ['external-characteristic-reference.txt'],
+      'org.eclipse.different:1.0.0': ['external-characteristic-reference.txt']
     });
 
     // Same Namespace
@@ -197,33 +197,33 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/mixing-namespace/external-entity-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/mixing-namespace/external-entity-reference.txt'
+      }
     );
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/mixing-namespace/external-property-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/mixing-namespace/external-property-reference.txt'
+      }
     );
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-operation-reference.txt'},
+        headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-operation-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/mixing-namespace/external-operation-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/mixing-namespace/external-operation-reference.txt'
+      }
     );
 
     // Different Namespace
@@ -231,11 +231,11 @@ describe('Test load external reference with cross references', () => {
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-characteristic-reference.txt'}
       },
       {
-        fixture: '/external-reference/cross-references/mixing-namespace/external-characteristic-reference.txt',
-      },
+        fixture: '/external-reference/cross-references/mixing-namespace/external-characteristic-reference.txt'
+      }
     );
 
     cy.visitDefault();

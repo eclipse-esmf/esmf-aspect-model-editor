@@ -34,7 +34,7 @@ export interface AsyncApi {
 @Component({
   selector: 'ame-generate-async-api',
   templateUrl: './generate-async-api.component.html',
-  styleUrls: ['./generate-async-api.component.scss'],
+  styleUrls: ['./generate-async-api.component.scss']
 })
 export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -54,7 +54,7 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<GenerateAsyncApiComponent>,
     private languageService: SammLanguageSettingsService,
     private modelService: ModelService,
-    private editorService: EditorService,
+    private editorService: EditorService
   ) {}
 
   ngOnInit(): void {
@@ -73,7 +73,7 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
       applicationId: new FormControl(''),
       channelAddress: new FormControl('', Validators.pattern(/^(?:[a-zA-Z]+:\/\/|\/)?[^\s]*$/)),
       useSemanticVersion: new FormControl(false),
-      writeSeparateFiles: new FormControl(false),
+      writeSeparateFiles: new FormControl(false)
     });
   }
 
@@ -89,9 +89,9 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
           finalize(() => {
             this.isGenerating = false;
             this.dialogRef.close();
-          }),
+          })
         )
-        .subscribe(),
+        .subscribe()
     );
   }
 

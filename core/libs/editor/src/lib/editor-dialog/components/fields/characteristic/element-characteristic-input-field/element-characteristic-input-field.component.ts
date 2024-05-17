@@ -23,7 +23,7 @@ import {RdfService} from '@ame/rdf/services';
 @Component({
   selector: 'ame-element-characteristic-input-field',
   templateUrl: './element-characteristic-input-field.component.html',
-  styleUrls: ['../../field.scss'],
+  styleUrls: ['../../field.scss']
 })
 export class ElementCharacteristicInputFieldComponent extends InputFieldComponent<DefaultCollection> implements OnInit, OnDestroy {
   filteredCharacteristicTypes$: Observable<any[]>;
@@ -35,7 +35,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
   constructor(
     private notificationsService: NotificationsService,
     public rdfService: RdfService,
-    private validators: EditorDialogValidators,
+    private validators: EditorDialogValidators
   ) {
     super();
     this.fieldName = 'elementCharacteristic';
@@ -68,18 +68,18 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement.isExternalReference() || this.isDisabled,
+          disabled: !!value || this.metaModelElement.isExternalReference() || this.isDisabled
         },
-        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic)],
-      ),
+        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic)]
+      )
     );
     this.getControl('elementCharacteristicDisplay').markAsTouched();
     this.parentForm.setControl(
       'elementCharacteristic',
       new FormControl({
         value: elementCharacteristic,
-        disabled: this.metaModelElement?.isExternalReference() || this.isDisabled,
-      }),
+        disabled: this.metaModelElement?.isExternalReference() || this.isDisabled
+      })
     );
 
     this.elementCharacteristicDisplayControl = this.parentForm.get('elementCharacteristicDisplay') as FormControl;
@@ -87,7 +87,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
 
     this.filteredCharacteristicTypes$ = this.initFilteredCharacteristicTypes(
       this.elementCharacteristicDisplayControl,
-      this.metaModelElement.aspectModelUrn,
+      this.metaModelElement.aspectModelUrn
     );
   }
 

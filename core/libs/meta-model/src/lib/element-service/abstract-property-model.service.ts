@@ -25,7 +25,7 @@ export class AbstractPropertyModelService extends BaseModelService {
     private mxGraphService: MxGraphService,
     private abstractPropertyRenderer: AbstractPropertyRenderService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private languageService: SammLanguageSettingsService,
+    private languageService: SammLanguageSettingsService
   ) {
     super();
   }

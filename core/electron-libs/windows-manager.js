@@ -43,7 +43,7 @@ const {
   REQUEST_LOCKED_FILES,
   SIGNAL_WINDOW_FOCUS,
   SIGNAL_UPDATE_MENU_ITEM,
-  SIGNAL_TRANSLATE_MENU_ITEMS,
+  SIGNAL_TRANSLATE_MENU_ITEMS
 } = require('./events');
 const {inDevMode, icons} = require('./consts');
 const {getIcon} = require('./menu/utils');
@@ -55,8 +55,8 @@ class WindowsManager {
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
-      contextIsolation: false,
-    },
+      contextIsolation: false
+    }
   };
 
   // State is mutable at the moment
@@ -64,7 +64,7 @@ class WindowsManager {
   state = {
     focusedWindowId: undefined,
     activeWindows: [],
-    lockedFiles: [],
+    lockedFiles: []
   };
 
   activateCommunicationProtocol() {
@@ -226,7 +226,7 @@ class WindowsManager {
     const createdWindow = options
       ? this.state.activeWindows.find(
           winInfo =>
-            options.namespace === winInfo.options?.namespace && winInfo.options?.file === options.file && winInfo.options?.fromWorkspace,
+            options.namespace === winInfo.options?.namespace && winInfo.options?.file === options.file && winInfo.options?.fromWorkspace
         )
       : null;
 
@@ -248,7 +248,7 @@ class WindowsManager {
     const windowInfo = {
       id: newWindow.webContents.id,
       window: newWindow,
-      options,
+      options
     };
 
     this.#configureWindow(windowInfo);

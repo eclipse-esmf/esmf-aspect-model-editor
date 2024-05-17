@@ -24,7 +24,7 @@ import {NamespacesCacheService} from '@ame/cache';
 @Component({
   selector: 'ame-values-input-field',
   templateUrl: './values-input-field.component.html',
-  styleUrls: ['./values-input-field.component.scss', '../../field.scss'],
+  styleUrls: ['./values-input-field.component.scss', '../../field.scss']
 })
 export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumeration> implements OnInit, OnDestroy {
   @ViewChild('chipList') chipList: MatChipGrid;
@@ -43,7 +43,7 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
 
   constructor(
     public namespacesCacheService: NamespacesCacheService,
-    private dataTypeService: DataTypeService,
+    private dataTypeService: DataTypeService
   ) {
     super();
   }
@@ -120,7 +120,7 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
     this.parentForm.setControl('values', new FormControl({value: '', disabled: this.metaModelElement?.isExternalReference()}));
     this.parentForm.setControl(
       'chipList',
-      new FormControl({value: this.enumValues, disabled: this.metaModelElement?.isExternalReference()}, Validators.required),
+      new FormControl({value: this.enumValues, disabled: this.metaModelElement?.isExternalReference()}, Validators.required)
     );
 
     if (this.parentForm.get('dataTypeEntity').value instanceof DefaultEntity) {
@@ -131,13 +131,13 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
       this.parentForm
         .get('dataType')
         .valueChanges.pipe(debounceTime(300))
-        .subscribe(value => this.changeValuesByDataType(value)),
+        .subscribe(value => this.changeValuesByDataType(value))
     );
 
     this.formSubscription.add(
       this.parentForm.get('dataTypeEntity')?.valueChanges.subscribe(entity => {
         this.hasComplexValues = !!entity;
-      }),
+      })
     );
   }
 

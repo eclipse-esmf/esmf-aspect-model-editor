@@ -14,5 +14,5 @@
 export enum ConfirmDialogEnum {
   ok = 'ok',
   action = 'action',
-  cancel = 'cancel',
+  cancel = 'cancel'
 }

@@ -22,7 +22,7 @@ import {RdfService} from '@ame/rdf/services';
 @Component({
   selector: 'ame-output-input-field',
   templateUrl: './output-input-field.component.html',
-  styleUrls: ['../../field.scss'],
+  styleUrls: ['../../field.scss']
 })
 export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {
   filteredPropertyTypes$: Observable<any[]>;
@@ -32,7 +32,7 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
 
   constructor(
     public rdfService: RdfService,
-    private validators: EditorDialogValidators,
+    private validators: EditorDialogValidators
   ) {
     super();
   }
@@ -55,10 +55,10 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement.isExternalReference(),
+          disabled: !!value || this.metaModelElement.isExternalReference()
         },
-        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
-      ),
+        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)]
+      )
     );
     this.getControl('output').markAsTouched();
 
@@ -66,8 +66,8 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
       'outputValue',
       new FormControl({
         value: property,
-        disabled: this.metaModelElement?.isExternalReference(),
-      }),
+        disabled: this.metaModelElement?.isExternalReference()
+      })
     );
 
     this.outputControl = this.parentForm.get('output') as FormControl;

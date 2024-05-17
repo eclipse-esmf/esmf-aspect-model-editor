@@ -23,7 +23,7 @@ export class AspectVisitor extends BaseVisitor<DefaultAspect> {
   constructor(
     public rdfNodeService: RdfNodeService,
     public rdfListService: RdfListService,
-    rdfService: RdfService,
+    rdfService: RdfService
   ) {
     super(rdfService);
   }
@@ -39,13 +39,13 @@ export class AspectVisitor extends BaseVisitor<DefaultAspect> {
     this.rdfNodeService.update(aspect, {
       preferredName: aspect.getAllLocalesPreferredNames().map(language => ({
         language,
-        value: aspect.getPreferredName(language),
+        value: aspect.getPreferredName(language)
       })),
       description: aspect.getAllLocalesDescriptions().map(language => ({
         language,
-        value: aspect.getDescription(language),
+        value: aspect.getDescription(language)
       })),
-      see: aspect.getSeeReferences() || [],
+      see: aspect.getSeeReferences() || []
     });
 
     if (aspect.properties?.length) {

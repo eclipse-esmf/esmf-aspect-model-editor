@@ -32,11 +32,11 @@ export const {
   mxImage,
   mxRectangle,
   mxRubberband,
-  mxCodecRegistry,
+  mxCodecRegistry
 } = mxgraphFactory({
   mxImageBasePath: 'assets/mxgraph/images',
   mxBasePath: 'assets/mxgraph',
   mxLoadResources: false,
   mxLoadStylesheets: false,
-  mxResourceExtension: '.properties',
+  mxResourceExtension: '.properties'
 });

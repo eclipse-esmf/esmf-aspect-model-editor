@@ -18,7 +18,7 @@ import {
   MxGraphHelper,
   MxGraphService,
   MxGraphShapeOverlayService,
-  TraitRenderService,
+  TraitRenderService
 } from '@ame/mx-graph';
 import {mxgraph} from 'mxgraph-factory';
 import {ShapeConnectorService} from '@ame/connection';
@@ -38,7 +38,7 @@ export class TraitModelService extends BaseModelService {
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphService: MxGraphService,
     private shapeConnectorService: ShapeConnectorService,
-    private traitRendererService: TraitRenderService,
+    private traitRendererService: TraitRenderService
   ) {
     super();
   }
@@ -68,7 +68,7 @@ export class TraitModelService extends BaseModelService {
           right:
             sourceMetaModel.right instanceof DefaultTrait
               ? sourceMetaModel.right?.baseCharacteristic?.aspectModelUrn
-              : sourceMetaModel.right?.aspectModelUrn,
+              : sourceMetaModel.right?.aspectModelUrn
         });
       }
     });

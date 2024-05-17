@@ -27,7 +27,7 @@ import {MatOptionSelectionChange} from '@angular/material/core';
 @Component({
   selector: 'ame-data-type-input-field',
   templateUrl: './data-type-input-field.component.html',
-  styleUrls: ['./data-type-input-field.component.scss', '../../field.scss'],
+  styleUrls: ['./data-type-input-field.component.scss', '../../field.scss']
 })
 export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultCharacteristic> implements OnInit, OnDestroy {
   public filteredDataTypes$: Observable<any[]>;
@@ -46,7 +46,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     public dataTypeService: DataTypeService,
     public mxGraphService: MxGraphService,
     public rdfService: RdfService,
-    private validators: EditorDialogValidators,
+    private validators: EditorDialogValidators
   ) {
     super();
     this.fieldName = 'dataTypeEntity';
@@ -88,18 +88,18 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement?.isExternalReference() || this.isDisabled,
+          disabled: !!value || this.metaModelElement?.isExternalReference() || this.isDisabled
         },
-        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)],
-      ),
+        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)]
+      )
     );
     this.getControl('dataType').markAsTouched();
     this.parentForm.setControl(
       'dataTypeEntity',
       new FormControl({
         value: dataType,
-        disabled: this.metaModelElement?.isExternalReference(),
-      }),
+        disabled: this.metaModelElement?.isExternalReference()
+      })
     );
     this.dataTypeControl = this.parentForm.get('dataType') as FormControl;
     this.dataTypeEntityControl = this.parentForm.get('dataTypeEntity') as FormControl;
@@ -169,13 +169,13 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
         name: key,
         description: type.description || '',
         urn: type.isDefinedBy,
-        complex: false,
+        complex: false
       };
     });
 
     this.filteredDataTypes$ = this.dataTypeControl?.valueChanges.pipe(
       map((value: string) => (value ? types.filter(type => this.inSearchList(type, value)) : types)),
-      startWith(types),
+      startWith(types)
     );
   }
 
@@ -186,7 +186,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
       .some(firstEdge =>
         this.mxGraphService.graph
           .getIncomingEdges(firstEdge.source)
-          .some(secondEdge => MxGraphHelper.getModelElement(secondEdge.source) instanceof DefaultStructuredValue),
+          .some(secondEdge => MxGraphHelper.getModelElement(secondEdge.source) instanceof DefaultStructuredValue)
       );
   }
 }

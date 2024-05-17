@@ -18,7 +18,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EnumerationEntityValueConnectionHandler implements MultiShapeConnector<DefaultEnumeration, DefaultEntityInstance> {
   constructor(private mxGraphService: MxGraphService) {}

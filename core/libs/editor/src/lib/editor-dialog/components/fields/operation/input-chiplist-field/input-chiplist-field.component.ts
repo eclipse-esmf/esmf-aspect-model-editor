@@ -24,7 +24,7 @@ import {ErrorStateMatcher} from '@angular/material/core';
 @Component({
   selector: 'ame-input-chiplist-field',
   templateUrl: './input-chiplist-field.component.html',
-  styleUrls: ['../../field.scss'],
+  styleUrls: ['../../field.scss']
 })
 export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
@@ -39,7 +39,7 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
 
   constructor(
     public rdfService: RdfService,
-    private validators: EditorDialogValidators,
+    private validators: EditorDialogValidators
   ) {
     super();
   }
@@ -53,7 +53,7 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
 
   hasErrors(): ErrorStateMatcher {
     return {
-      isErrorState: () => !!this.searchControl?.errors,
+      isErrorState: () => !!this.searchControl?.errors
     };
   }
 
@@ -71,17 +71,17 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
     this.searchControl = new FormControl(
       {
         value: '',
-        disabled: this.metaModelElement.isExternalReference(),
+        disabled: this.metaModelElement.isExternalReference()
       },
-      [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
+      [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)]
     );
 
     this.parentForm.setControl(
       'inputChipList',
       new FormControl({
         value: this.inputValues,
-        disabled: this.metaModelElement?.isExternalReference(),
-      }),
+        disabled: this.metaModelElement?.isExternalReference()
+      })
     );
 
     if (this.metaModelElement?.isExternalReference()) this.chipControl.disable();

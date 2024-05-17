@@ -21,7 +21,7 @@ import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class StructuredValueCharacteristicPropertyConnectionHandler
   implements MultiShapeConnector<DefaultStructuredValue, DefaultProperty>
@@ -31,7 +31,7 @@ export class StructuredValueCharacteristicPropertyConnectionHandler
     private mxGraphAttributeService: MxGraphAttributeService,
     private namespacesCacheService: NamespacesCacheService,
     private sammLangService: SammLanguageSettingsService,
-    private notificationsService: NotificationsService,
+    private notificationsService: NotificationsService
   ) {}
 
   connect(parentMetaModel: DefaultStructuredValue, childMetaModel: DefaultProperty, first: mxgraph.mxCell, second: mxgraph.mxCell): void {
@@ -41,7 +41,7 @@ export class StructuredValueCharacteristicPropertyConnectionHandler
       return this.notificationsService.warning({
         title: 'Unable to connect elements',
         message: 'StructuredValue can not be recursively connected with Property element',
-        timeout: 5000,
+        timeout: 5000
       });
     }
 

@@ -25,7 +25,7 @@ import {
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
-  DefaultUnit,
+  DefaultUnit
 } from '@ame/meta-model';
 import {MxGraphAttributeService} from '@ame/mx-graph';
 import {ModelService} from '@ame/rdf/services';
@@ -43,7 +43,7 @@ import {
   EventVisitor,
   OperationVisitor,
   PropertyVisitor,
-  UnitVisitor,
+  UnitVisitor
 } from './visitor';
 
 @Injectable()
@@ -74,14 +74,14 @@ export class DomainModelToRdfService {
     private eventVisitorService: EventVisitor,
     private unitVisitorService: UnitVisitor,
     private modelService: ModelService,
-    private cleanupVisitorService: CleanupVisitor,
+    private cleanupVisitorService: CleanupVisitor
   ) {}
 
   listenForStoreUpdates() {
     this.modelService.visitorAnnouncer$
       .pipe(
         filter(() => !this.working),
-        tap(() => (this.working = true)),
+        tap(() => (this.working = true))
       )
       .subscribe(({observer}) => {
         try {

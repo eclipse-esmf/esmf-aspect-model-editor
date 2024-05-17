@@ -36,8 +36,8 @@ import {catchError, of, switchMap, tap} from 'rxjs';
       mat-dialog-content {
         min-height: 50px;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class OpenElementWindowComponent implements OnInit {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
@@ -47,7 +47,7 @@ export class OpenElementWindowComponent implements OnInit {
     private rdfService: RdfService,
     private modelApiService: ModelApiService,
     private notificationService: NotificationsService,
-    @Inject(MAT_DIALOG_DATA) private elementInfo: {urn: string; file: string},
+    @Inject(MAT_DIALOG_DATA) private elementInfo: {urn: string; file: string}
   ) {}
 
   ngOnInit() {
@@ -63,12 +63,12 @@ export class OpenElementWindowComponent implements OnInit {
               namespace: namespace,
               file: this.elementInfo.file,
               editElement: this.elementInfo.urn,
-              fromWorkspace: true,
+              fromWorkspace: true
             });
           } else {
             this.notificationService.error({
               title: 'No element found',
-              message: `${elementName} was not found in ${this.elementInfo.file}`,
+              message: `${elementName} was not found in ${this.elementInfo.file}`
             });
           }
           this.dialogRef.close();
@@ -77,7 +77,7 @@ export class OpenElementWindowComponent implements OnInit {
           this.notificationService.error({title: 'Could not open file', message: `${this.elementInfo.file} could not be opened.`});
           this.dialogRef.close();
           return of(error);
-        }),
+        })
       )
       .subscribe();
   }

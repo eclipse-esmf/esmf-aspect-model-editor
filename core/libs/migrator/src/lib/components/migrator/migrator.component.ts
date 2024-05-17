@@ -14,6 +14,6 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'ame-migrator',
-  template: '<router-outlet name="migrator"></router-outlet>',
+  template: '<router-outlet name="migrator"></router-outlet>'
 })
 export class MigratorComponent {}

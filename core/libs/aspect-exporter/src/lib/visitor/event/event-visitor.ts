@@ -27,7 +27,7 @@ export class EventVisitor extends BaseVisitor<DefaultEvent> {
   constructor(
     private rdfNodeService: RdfNodeService,
     rdfService: RdfService,
-    public rdfListService: RdfListService,
+    public rdfListService: RdfListService
   ) {
     super(rdfService);
   }
@@ -46,13 +46,13 @@ export class EventVisitor extends BaseVisitor<DefaultEvent> {
     this.rdfNodeService.update(event, {
       preferredName: event.getAllLocalesPreferredNames().map(language => ({
         language,
-        value: event.getPreferredName(language),
+        value: event.getPreferredName(language)
       })),
       description: event.getAllLocalesDescriptions().map(language => ({
         language,
-        value: event.getDescription(language),
+        value: event.getDescription(language)
       })),
-      see: event.getSeeReferences() || [],
+      see: event.getSeeReferences() || []
     });
 
     if (event.parameters?.length) {

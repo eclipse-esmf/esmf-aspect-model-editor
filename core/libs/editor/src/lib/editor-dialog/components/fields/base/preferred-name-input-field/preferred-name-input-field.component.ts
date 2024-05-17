@@ -18,7 +18,7 @@ import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-preferred-name-input-field',
-  templateUrl: './preferred-name-input-field.component.html',
+  templateUrl: './preferred-name-input-field.component.html'
 })
 export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
   public fieldName = 'preferredName';
@@ -80,8 +80,8 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMe
         key,
         new FormControl({
           value: this.getCurrentValue(key, locale),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
-        }),
+          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled()
+        })
       );
     });
   }

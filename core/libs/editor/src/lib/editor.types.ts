@@ -40,5 +40,5 @@ export enum CharacteristicClassType {
   Enumeration = 'Enumeration',
   SingleEntity = 'SingleEntity',
   State = 'State',
-  StructuredValue = 'StructuredValue',
+  StructuredValue = 'StructuredValue'
 }

@@ -15,5 +15,5 @@ export enum BoundDefinition {
   AT_LEAST = 'AT_LEAST',
   GREATER_THAN = 'GREATER_THAN',
   LESS_THAN = 'LESS_THAN',
-  AT_MOST = 'AT_MOST',
+  AT_MOST = 'AT_MOST'
 }

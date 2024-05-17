@@ -25,7 +25,7 @@ import {LanguageTranslationService} from '@ame/translation';
 @Component({
   selector: 'ame-shape-settings',
   templateUrl: './shape-settings.component.html',
-  styleUrls: ['./shape-settings.component.scss'],
+  styleUrls: ['./shape-settings.component.scss']
 })
 export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   public metaModelClassName: string;
@@ -34,7 +34,7 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   public tmpCharacteristic: Characteristic;
   public units: Unit[] = [];
   public formGroup: FormGroup = new FormGroup({
-    changedMetaModel: new FormControl(null),
+    changedMetaModel: new FormControl(null)
   });
 
   private subscription = new Subscription();
@@ -58,7 +58,7 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
     private loggerService: LogService,
     private languageSettings: SammLanguageSettingsService,
     private changeDetector: ChangeDetectorRef,
-    private translate: LanguageTranslationService,
+    private translate: LanguageTranslationService
   ) {}
 
   ngOnChanges(): void {

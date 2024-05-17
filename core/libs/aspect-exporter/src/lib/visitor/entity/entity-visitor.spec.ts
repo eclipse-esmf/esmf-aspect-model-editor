@@ -31,7 +31,7 @@ describe('Entity Visitor', () => {
     SAMM: jest.fn(() => new Samm('')),
     SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'}) as any),
     hasNamespace: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    addPrefix: jest.fn(() => {})
   };
   const property = new DefaultProperty('1', 'samm#property1', 'property1', null);
   const overwrittenProperty: OverWrittenProperty = {property, keys: {}};
@@ -45,23 +45,23 @@ describe('Entity Visitor', () => {
         {
           provide: RdfListService,
           useValue: {
-            push: jest.fn(),
-          },
+            push: jest.fn()
+          }
         },
         {
           provide: RdfNodeService,
           useValue: {
-            update: jest.fn(),
-          },
+            update: jest.fn()
+          }
         },
         {
           provide: RdfService,
           useValue: {
             currentRdfModel: rdfModel,
-            externalRdfModels: [],
-          },
-        },
-      ],
+            externalRdfModels: []
+          }
+        }
+      ]
     });
 
     service = TestBed.inject(EntityVisitor);
@@ -73,7 +73,7 @@ describe('Entity Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(entity, {
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
     expect(service.rdfListService.push).toHaveBeenCalledWith(entity, overwrittenProperty);
   });

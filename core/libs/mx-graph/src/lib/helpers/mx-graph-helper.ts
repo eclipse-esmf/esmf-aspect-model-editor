@@ -23,7 +23,7 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultStructuredValue,
-  DefaultTrait,
+  DefaultTrait
 } from '@ame/meta-model';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
@@ -144,7 +144,7 @@ export class MxGraphHelper {
       .some(firstEdge =>
         graph
           .getIncomingEdges(firstEdge.source)
-          .some(secondEdge => MxGraphHelper.getModelElement(secondEdge.source) instanceof DefaultStructuredValue),
+          .some(secondEdge => MxGraphHelper.getModelElement(secondEdge.source) instanceof DefaultStructuredValue)
       );
   }
 

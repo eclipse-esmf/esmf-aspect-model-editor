@@ -32,7 +32,7 @@ export class DefaultEither extends DefaultCharacteristic implements Either {
     aspectModelUrn: string,
     name: string,
     public left: Characteristic,
-    public right: Characteristic,
+    public right: Characteristic
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

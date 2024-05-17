@@ -17,7 +17,7 @@ import {CharacteristicInstantiator, MetaModelElementInstantiator} from '@ame/ins
 import {ModelService} from '@ame/rdf/services';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EditorModelService {
   protected metaModelElement: BaseMetaModelElement;
@@ -64,7 +64,7 @@ export class EditorModelService {
 
     if (!this.characteristicInstantiator) {
       this.characteristicInstantiator = new CharacteristicInstantiator(
-        new MetaModelElementInstantiator(this.modelService.currentRdfModel, null),
+        new MetaModelElementInstantiator(this.modelService.currentRdfModel, null)
       );
     }
 

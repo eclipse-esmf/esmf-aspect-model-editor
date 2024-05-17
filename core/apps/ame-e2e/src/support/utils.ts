@@ -86,7 +86,7 @@ export const dragExternalReferenceWithChildren = (selector: string, x: number, y
       cy.get(':nth-child(1) > ' + selector).trigger('pointermove', {
         clientX: graphX,
         clientY: graphY,
-        waitForAnimations: true,
+        waitForAnimations: true
       });
       cy.get('#graph > svg').click(graphX, graphY, {force: true});
       cy.get('#graph > svg').trigger('pointerup', {force: true});

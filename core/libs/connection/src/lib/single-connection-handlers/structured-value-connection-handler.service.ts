@@ -20,7 +20,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {SingleShapeConnector} from '../models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class StructuredValueConnectionHandler implements SingleShapeConnector<StructuredValue> {
   get currentCachedFile() {
@@ -31,7 +31,7 @@ export class StructuredValueConnectionHandler implements SingleShapeConnector<St
     private mxGraphService: MxGraphService,
     private modelElementNamingService: ModelElementNamingService,
     private namespacesCacheService: NamespacesCacheService,
-    private filtersService: FiltersService,
+    private filtersService: FiltersService
   ) {}
 
   public connect(structuredValue: StructuredValue, source: mxgraph.mxCell) {
@@ -40,7 +40,7 @@ export class StructuredValueConnectionHandler implements SingleShapeConnector<St
     structuredValue.deconstructionRule = `${structuredValue.deconstructionRule}(regex)`;
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(property);
     const propertyCell = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
+      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)})
     );
     this.mxGraphService.graph.labelChanged(source, MxGraphHelper.createPropertiesLabel(source));
     this.mxGraphService.assignToParent(propertyCell, source);

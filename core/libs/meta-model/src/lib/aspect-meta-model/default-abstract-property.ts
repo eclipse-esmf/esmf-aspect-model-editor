@@ -34,7 +34,7 @@ export class DefaultAbstractProperty extends CanExtend implements AbstractProper
     aspectModelUrn: string,
     name: string,
     public exampleValue?: any,
-    predefined = false,
+    predefined = false
   ) {
     super(metaModelVersion, aspectModelUrn, name);
     this.predefined = predefined;

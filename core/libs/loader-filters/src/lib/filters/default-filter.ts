@@ -26,7 +26,7 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultTrait,
-  DefaultUnit,
+  DefaultUnit
 } from '@ame/meta-model';
 import {EdgeStyles, MxGraphHelper} from '@ame/mx-graph';
 
@@ -34,7 +34,7 @@ const abstractRelations = {
   DefaultAbstractEntity: ['DefaultAbstractEntity'],
   DefaultEntity: ['DefaultAbstractEntity', 'DefaultEntity'],
   DefaultProperty: ['DefaultAbstractProperty', 'DefaultProperty'],
-  DefaultAbstractProperty: ['DefaultAbstractProperty'],
+  DefaultAbstractProperty: ['DefaultAbstractProperty']
 };
 
 /**
@@ -52,7 +52,7 @@ export enum ModelStyle {
   TRAIT = 'trait',
   ENTITY_VALUE = 'entityValue',
   ABSTRACT_ENTITY = 'abstractEntity',
-  EVENT = 'event',
+  EVENT = 'event'
 }
 
 export class DefaultFilter implements FilterLoader {
@@ -70,7 +70,7 @@ export class DefaultFilter implements FilterLoader {
     DefaultOperation,
     DefaultProperty,
     DefaultTrait,
-    DefaultUnit,
+    DefaultUnit
   ];
 
   filter(rootElements: BaseMetaModelElement[]): ModelTree<BaseMetaModelElement>[] {
@@ -87,7 +87,7 @@ export class DefaultFilter implements FilterLoader {
       fromParentArrow: this.getArrowStyle(element, options?.parent),
       children: new ChildrenArray(),
       shape: {...this.getShapeGeometry(element), mxGraphStyle: this.getMxGraphStyle(element)},
-      filterType: this.filterType,
+      filterType: this.filterType
     };
 
     for (const child of element.children) {

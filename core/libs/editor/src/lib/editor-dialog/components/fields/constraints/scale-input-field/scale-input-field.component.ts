@@ -18,7 +18,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-scale-input-field',
   templateUrl: './scale-input-field.component.html',
-  styleUrls: ['../../field.scss'],
+  styleUrls: ['../../field.scss']
 })
 export class ScaleInputFieldComponent extends InputFieldComponent<DefaultFixedPointConstraint> implements OnInit, OnDestroy {
   constructor() {
@@ -44,10 +44,10 @@ export class ScaleInputFieldComponent extends InputFieldComponent<DefaultFixedPo
       new FormControl(
         {
           value: this.getCurrentValue(this.fieldName),
-          disabled: this.metaModelElement.isExternalReference(),
+          disabled: this.metaModelElement.isExternalReference()
         },
-        Validators.required,
-      ),
+        Validators.required
+      )
     );
   }
 }

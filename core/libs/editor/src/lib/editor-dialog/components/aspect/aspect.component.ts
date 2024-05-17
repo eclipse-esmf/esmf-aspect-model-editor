@@ -19,7 +19,7 @@ import {UpdatedProperties} from '../properties';
 
 @Component({
   selector: 'ame-aspect',
-  templateUrl: './aspect.component.html',
+  templateUrl: './aspect.component.html'
 })
 export class AspectComponent extends ModelElementEditorComponent<DefaultAspect> {
   @Input() parentForm;

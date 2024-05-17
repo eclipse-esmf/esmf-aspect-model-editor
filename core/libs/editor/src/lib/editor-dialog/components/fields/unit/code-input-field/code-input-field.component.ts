@@ -18,7 +18,7 @@ import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'ame-code-input-field',
-  templateUrl: './code-input-field.component.html',
+  templateUrl: './code-input-field.component.html'
 })
 export class CodeInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
   ngOnInit(): void {
@@ -30,8 +30,8 @@ export class CodeInputFieldComponent extends InputFieldComponent<DefaultUnit> im
       'code',
       new FormControl({
         value: this.metaModelElement?.code,
-        disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
-      }),
+        disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference()
+      })
     );
   }
 }

@@ -37,7 +37,7 @@ export class NamespacesManagerService {
     private router: Router,
     private editorService: EditorService,
     private fileUploadService: FileUploadService,
-    private sidebarService: SidebarStateService,
+    private sidebarService: SidebarStateService
   ) {
     if (!environment.production) {
       window['angular.namespacesManagerService'] = this;
@@ -48,7 +48,7 @@ export class NamespacesManagerService {
     this.resolveNamespacesFile(fileInfo)
       .pipe(
         switchMap(file => this.importNamespaces(file)),
-        first(),
+        first()
       )
       .subscribe();
   }
@@ -67,14 +67,14 @@ export class NamespacesManagerService {
         this.setOnClose(() => {
           this.editorService.loadExternalModels().subscribe(() => this.sidebarService.workspace.refresh());
           this.router.navigate([{outlets: {'import-namespaces': null}}]);
-        }),
+        })
       ),
       switchMap(() => this.modelApiService.uploadZip(zip)),
       tap(result => {
         this.session.parseResponse(result);
         this.session.state.validating$.next(false);
       }),
-      catchError(e => of(this.session.state.validating$.error(e))),
+      catchError(e => of(this.session.state.validating$.error(e)))
     );
   }
 
@@ -89,7 +89,7 @@ export class NamespacesManagerService {
       tap(() => {
         const cb = () => this.router.navigate([{outlets: {'export-namespaces': null}}]);
         this.setOnClose(cb);
-      }),
+      })
     );
   }
 
@@ -100,14 +100,14 @@ export class NamespacesManagerService {
         this.session.parseResponse(result);
         this.session.state.validating$.next(false);
       }),
-      catchError(err => of(this.session.state.validating$.error(err))),
+      catchError(err => of(this.session.state.validating$.error(err)))
     );
   }
 
   private setInjectionTokens() {
     NAMESPACES_SESSION = new InjectionToken<NamespacesSession>(NAMESPACES_SESSION_NAME, {
       providedIn: 'root',
-      factory: () => this.session,
+      factory: () => this.session
     });
   }
 

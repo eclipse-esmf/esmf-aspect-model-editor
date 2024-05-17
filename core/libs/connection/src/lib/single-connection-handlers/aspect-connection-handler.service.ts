@@ -19,13 +19,13 @@ import {SingleShapeConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AspectConnectionHandler implements SingleShapeConnector<Aspect> {
   constructor(
     private mxGraphService: MxGraphService,
     private modelElementNamingService: ModelElementNamingService,
-    private filtersService: FiltersService,
+    private filtersService: FiltersService
   ) {}
 
   public connect(aspect: Aspect, source: mxgraph.mxCell) {

@@ -25,7 +25,7 @@ import {
   FileConflictComponent,
   RootNamespacesImporterComponent,
   ImportSummaryComponent,
-  ImportValidateComponent,
+  ImportValidateComponent
 } from './namespace-importer/components';
 import {ClipboardCopyButtonComponent, WorkspaceSummaryComponent} from './shared/components';
 import {NamespaceImporterRouterModule} from './namespace-importer';
@@ -36,7 +36,7 @@ import {
   ExportSummaryComponent,
   ExportValidateComponent,
   RootExportNamespacesComponent,
-  SelectNamespacesComponent,
+  SelectNamespacesComponent
 } from './namespace-exporter/components';
 import {MatTreeModule} from '@angular/material/tree';
 import {FormsModule} from '@angular/forms';
@@ -61,7 +61,7 @@ import {LanguageTranslateModule} from '@ame/translation';
     FormsModule,
     MatRadioModule,
     MatCheckboxModule,
-    LanguageTranslateModule,
+    LanguageTranslateModule
   ],
   declarations: [
     ImportSummaryComponent,
@@ -74,8 +74,8 @@ import {LanguageTranslateModule} from '@ame/translation';
     RootNamespacesImporterComponent,
     RootExportNamespacesComponent,
     SelectNamespacesComponent,
-    ClipboardCopyButtonComponent,
+    ClipboardCopyButtonComponent
   ],
-  providers: [NamespacesManagerService],
+  providers: [NamespacesManagerService]
 })
 export class NamespaceManagerModule {}

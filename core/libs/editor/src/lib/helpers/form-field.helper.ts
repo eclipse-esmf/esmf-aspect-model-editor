@@ -15,7 +15,7 @@ import {DefaultEntity, DefaultEnumeration, DefaultProperty, DefaultTrait, Proper
 
 export enum DataType {
   COMPLEX = 'COMPLEX',
-  DEFAULT = 'DEFAULT',
+  DEFAULT = 'DEFAULT'
 }
 
 export class FormFieldHelper {

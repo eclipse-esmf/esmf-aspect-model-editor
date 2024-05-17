@@ -23,7 +23,7 @@ export const editorConfigurationControlName = 'editorConfiguration';
 @Component({
   selector: 'ame-editor-configuration',
   templateUrl: './editor-configuration.component.html',
-  styleUrls: ['./editor-configuration.component.scss'],
+  styleUrls: ['./editor-configuration.component.scss']
 })
 export class EditorConfigurationComponent implements OnInit {
   form: FormGroup;
@@ -31,7 +31,7 @@ export class EditorConfigurationComponent implements OnInit {
 
   constructor(
     private formService: SettingsFormService,
-    private themeService: ThemeService,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit(): void {

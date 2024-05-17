@@ -133,7 +133,7 @@ export enum SettingsDialogSelectors {
   autoValidateToggle = '[data-cy="autoValidateToggle"]',
   settingsDialogApplyButton = '[data-cy="settingsDialogApplyButton"]',
   settingsDialogOkButton = '[data-cy="settingsDialogOkButton"]',
-  settingsDialogCancelButton = '[data-cy="settingsDialogCancelButton"]',
+  settingsDialogCancelButton = '[data-cy="settingsDialogCancelButton"]'
 }
 
 // Generation

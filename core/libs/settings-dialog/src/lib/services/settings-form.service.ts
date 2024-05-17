@@ -23,7 +23,7 @@ import {
   EditorConfigurationUpdateStrategy,
   LanguageConfigurationUpdateStrategy,
   NamespaceConfigurationUpdateStrategy,
-  SettingsUpdateStrategy,
+  SettingsUpdateStrategy
 } from '../strategy';
 import {CopyrightHeaderUpdateStrategy} from '../strategy/copyright-header-update.strategy';
 
@@ -39,7 +39,7 @@ export const namespaceValidator = (): ValidatorFn => createRegexValidator(/^[A-Z
 export const versionFormatValidator = (): ValidatorFn => createRegexValidator(/^\d+\.\d+\.\d+$/, 'invalidVersionFormat');
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class SettingsFormService {
   private form: FormGroup;
@@ -59,14 +59,14 @@ export class SettingsFormService {
     private editorConfigStrategy: EditorConfigurationUpdateStrategy,
     private languageConfigStrategy: LanguageConfigurationUpdateStrategy,
     private namespaceConfigStrategy: NamespaceConfigurationUpdateStrategy,
-    private copyrightHeaderUpdateStrategy: CopyrightHeaderUpdateStrategy,
+    private copyrightHeaderUpdateStrategy: CopyrightHeaderUpdateStrategy
   ) {
     this.strategies = [
       this.automatedWorkflowStrategy,
       this.editorConfigStrategy,
       this.languageConfigStrategy,
       this.namespaceConfigStrategy,
-      this.copyrightHeaderUpdateStrategy,
+      this.copyrightHeaderUpdateStrategy
     ];
   }
 
@@ -105,39 +105,39 @@ export class SettingsFormService {
         saveTimerSeconds: [
           {
             value: settings.saveTimerSeconds,
-            disabled: !settings.autoSaveEnabled,
+            disabled: !settings.autoSaveEnabled
           },
-          [Validators.min(60)],
+          [Validators.min(60)]
         ],
         autoValidationEnabled: [settings.autoValidationEnabled],
         validationTimerSeconds: [
           {
             value: settings.validationTimerSeconds,
-            disabled: !settings.autoValidationEnabled,
+            disabled: !settings.autoValidationEnabled
           },
-          [Validators.min(60)],
+          [Validators.min(60)]
         ],
-        autoFormatEnabled: [settings.autoFormatEnabled],
+        autoFormatEnabled: [settings.autoFormatEnabled]
       }),
       editorConfiguration: this.formBuilder.group({
         enableHierarchicalLayout: [settings.enableHierarchicalLayout],
         showEntityValueEntityEdge: [settings.showEntityValueEntityEdge],
         showConnectionLabels: [settings.showConnectionLabels],
-        showAbstractPropertyConnection: [settings.showAbstractPropertyConnection],
+        showAbstractPropertyConnection: [settings.showAbstractPropertyConnection]
       }),
       languageConfiguration: this.formBuilder.group({
         userInterface: [this.translate.translateService.currentLang],
-        aspectModel: this.formBuilder.array([]),
+        aspectModel: this.formBuilder.array([])
       }),
       namespaceConfiguration: this.formBuilder.group({
         aspectUri: [namespace, [Validators.required, namespaceValidator()]],
         aspectName: [{value: modelName, disabled: true}],
         aspectVersion: [version, [Validators.required, versionFormatValidator()]],
-        sammVersion: [{value: GeneralConfig.sammVersion, disabled: true}],
+        sammVersion: [{value: GeneralConfig.sammVersion, disabled: true}]
       }),
       copyrightHeaderConfiguration: this.formBuilder.group({
-        copyright: [settings.copyrightHeader.join('\n'), [this.startsWithoutHashValidator]],
-      }),
+        copyright: [settings.copyrightHeader.join('\n'), [this.startsWithoutHashValidator]]
+      })
     });
   }
 
@@ -159,8 +159,8 @@ export class SettingsFormService {
     const value = name && tag ? {name: name, tag: tag} : '';
     aspectModelArray.push(
       this.formBuilder.group({
-        language: [value, Validators.required],
-      }),
+        language: [value, Validators.required]
+      })
     );
   }
 
@@ -183,7 +183,7 @@ export class SettingsFormService {
       oldVersion: this.version,
       rdfModel: this.loadedRdfModel,
       newNamespace: settings.namespace,
-      newVersion: settings.version,
+      newVersion: settings.version
     } as NamespaceConfiguration;
   }
 

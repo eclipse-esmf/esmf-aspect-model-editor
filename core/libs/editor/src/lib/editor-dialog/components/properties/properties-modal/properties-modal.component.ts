@@ -22,7 +22,7 @@ import {
   DefaultEntity,
   DefaultEntityInstance,
   DefaultProperty,
-  OverWrittenProperty,
+  OverWrittenProperty
 } from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
 
@@ -41,7 +41,7 @@ export interface PropertyStatus {
 
 @Component({
   templateUrl: './properties-modal.component.html',
-  styleUrls: ['./properties-modal.component.scss'],
+  styleUrls: ['./properties-modal.component.scss']
 })
 export class PropertiesModalComponent implements OnInit, AfterViewInit {
   public form: FormGroup;
@@ -62,7 +62,7 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<PropertiesModalComponent>,
     private cacheService: NamespacesCacheService,
-    @Inject(MAT_DIALOG_DATA) public data: PropertiesDialogData,
+    @Inject(MAT_DIALOG_DATA) public data: PropertiesDialogData
   ) {}
 
   ngOnInit() {
@@ -70,7 +70,7 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
       .filter(({property}) => !(property instanceof DefaultAbstractProperty && this.data.metaModelElement instanceof DefaultEntity))
       .map(e => ({
         ...e,
-        inherited: true,
+        inherited: true
       }));
 
     const allProperties: (OverWrittenProperty & PropertyStatus)[] = [
@@ -78,8 +78,8 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
       ...this.data.properties.map(e => ({
         ...e,
         disabled: !!(e.property instanceof DefaultProperty && e.property.extendedElement),
-        abstract: e.property instanceof DefaultAbstractProperty,
-      })),
+        abstract: e.property instanceof DefaultAbstractProperty
+      }))
     ];
 
     this.dataSource = new MatTableDataSource(allProperties);
@@ -89,20 +89,20 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
       acc[curr.property.aspectModelUrn] = this.formBuilder.group({
         name: this.formBuilder.control({
           value: curr.property.name,
-          disabled: curr.inherited || curr.disabled,
+          disabled: curr.inherited || curr.disabled
         }),
         optional: this.formBuilder.control({
           value: curr.keys.optional || false,
-          disabled: curr.inherited || curr.disabled,
+          disabled: curr.inherited || curr.disabled
         }),
         notInPayload: this.formBuilder.control({
           value: curr.keys.notInPayload || false,
-          disabled: curr.inherited || curr.disabled,
+          disabled: curr.inherited || curr.disabled
         }),
         payloadName: this.formBuilder.control({
           value: curr.keys.payloadName || '',
-          disabled: curr.inherited || curr.disabled,
-        }),
+          disabled: curr.inherited || curr.disabled
+        })
       });
       return acc;
     }, {});

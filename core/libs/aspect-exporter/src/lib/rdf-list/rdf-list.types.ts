@@ -26,7 +26,7 @@ export enum ListProperties {
   elements = 'elements',
   quantityKinds = 'quantityKinds',
   events = 'events',
-  parameters = 'parameters',
+  parameters = 'parameters'
 }
 
 export interface ListElement {

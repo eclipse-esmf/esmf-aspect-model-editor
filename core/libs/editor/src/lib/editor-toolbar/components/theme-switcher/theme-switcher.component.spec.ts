@@ -31,8 +31,8 @@ describe('ThemeSwitcherComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
         {provide: MAT_DIALOG_DATA, useValue: {}},
-        {provide: MatDialogRef, useValue: {}},
-      ],
+        {provide: MatDialogRef, useValue: {}}
+      ]
     }).compileComponents();
   });
 

@@ -25,7 +25,7 @@ import {
   GenerateOpenApiComponent,
   LanguageSelectorModalComponent,
   TextModelLoaderModalComponent,
-  ThemeSwitcherComponent,
+  ThemeSwitcherComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -78,7 +78,7 @@ import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/b
     MatSelectModule,
     NamespaceManagerModule,
     LanguageTranslateModule,
-    BarItemComponent,
+    BarItemComponent
   ],
   declarations: [
     EditorToolbarComponent,
@@ -91,9 +91,9 @@ import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/b
     LanguageSelectorModalComponent,
     OpenElementWindowComponent,
     AASXGenerationModalComponent,
-    TextModelLoaderModalComponent,
+    TextModelLoaderModalComponent
   ],
   exports: [EditorToolbarComponent, ThemeSwitcherComponent, TextModelLoaderModalComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class EditorToolbarModule {}

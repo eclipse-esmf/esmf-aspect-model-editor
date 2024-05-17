@@ -36,7 +36,7 @@ export class DefaultCharacteristic extends Base implements Characteristic {
     metaModelVersion: string,
     aspectModelUrn: string,
     name: string,
-    public dataType?: Type,
+    public dataType?: Type
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

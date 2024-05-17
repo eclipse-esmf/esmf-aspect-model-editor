@@ -58,7 +58,7 @@ function startService() {
   portfinder
     .getPortPromise({
       port: 30000,
-      stopPort: 31000,
+      stopPort: 31000
     })
     .then(port => {
       const rootPath = path.join(__dirname, '..', '..', '..', 'backend', platformData.isWin ? 'signed_dir' : '');
@@ -96,5 +96,5 @@ function startService() {
 module.exports = {
   mainWindow,
   cleanUpProcesses,
-  startService,
+  startService
 };

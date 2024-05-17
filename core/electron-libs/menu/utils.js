@@ -31,7 +31,7 @@ async function getFileInfo(path) {
   return {
     path,
     content: await readFile(path),
-    name: path.split(pathOs.sep).pop(),
+    name: path.split(pathOs.sep).pop()
   };
 }
 

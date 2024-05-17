@@ -35,11 +35,11 @@ describe('Test models with intersected names', () => {
       const propertyForPredefinedCharacteristicParams = {name: 'withPredefinedBoolean'};
       const predefinedCharacteristicParams = {
         name: 'Boolean',
-        fields: [{label: 'preferredName = Boolean @en'}, {label: 'dataType = boolean'}],
+        fields: [{label: 'preferredName = Boolean @en'}, {label: 'dataType = boolean'}]
       };
       const customCharacteristicParams = {
         name: 'Boolean',
-        fields: [{label: "description = Custom 'Boolean' characteristic. @en"}, {label: 'dataType = boolean'}],
+        fields: [{label: "description = Custom 'Boolean' characteristic. @en"}, {label: 'dataType = boolean'}]
       };
 
       cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
@@ -53,11 +53,11 @@ describe('Test models with intersected names', () => {
       const propertyForPredefinedCharacteristicParams = {name: 'withPredefinedLanguage'};
       const predefinedCharacteristicParams = {
         name: 'Language',
-        fields: [{label: 'preferredName = Language @en'}, {label: 'dataType = string'}],
+        fields: [{label: 'preferredName = Language @en'}, {label: 'dataType = string'}]
       };
       const customCharacteristicParams = {
         name: 'Language',
-        fields: [{label: "description = Custom 'Language' characteristic. @en"}, {label: 'dataType = string'}],
+        fields: [{label: "description = Custom 'Language' characteristic. @en"}, {label: 'dataType = string'}]
       };
 
       cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
@@ -71,11 +71,11 @@ describe('Test models with intersected names', () => {
       const propertyForPredefinedCharacteristicParams = {name: 'withPredefinedLocale'};
       const predefinedCharacteristicParams = {
         name: 'Locale',
-        fields: [{label: 'preferredName = Locale @en'}, {label: 'dataType = string'}],
+        fields: [{label: 'preferredName = Locale @en'}, {label: 'dataType = string'}]
       };
       const customCharacteristicParams = {
         name: 'Locale',
-        fields: [{label: "description = Custom 'Locale' characteristic. @en"}, {label: 'dataType = string'}],
+        fields: [{label: "description = Custom 'Locale' characteristic. @en"}, {label: 'dataType = string'}]
       };
 
       cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
@@ -89,11 +89,11 @@ describe('Test models with intersected names', () => {
       const propertyForPredefinedCharacteristicParams = {name: 'withPredefinedMultiLanguageText'};
       const predefinedCharacteristicParams = {
         name: 'MultiLanguageText',
-        fields: [{label: 'preferredName = Multi-Language Text @en'}, {label: 'dataType = langString'}],
+        fields: [{label: 'preferredName = Multi-Language Text @en'}, {label: 'dataType = langString'}]
       };
       const customCharacteristicParams = {
         name: 'MultiLanguageText',
-        fields: [{label: "description = Custom 'MultiLanguageText' characteristic. @en"}, {label: 'dataType = langString'}],
+        fields: [{label: "description = Custom 'MultiLanguageText' characteristic. @en"}, {label: 'dataType = langString'}]
       };
 
       cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
@@ -107,11 +107,11 @@ describe('Test models with intersected names', () => {
       const propertyForPredefinedCharacteristicParams = {name: 'withPredefinedMimeType'};
       const predefinedCharacteristicParams = {
         name: 'MimeType',
-        fields: [{label: 'preferredName = MIME Type @en'}, {label: 'dataType = string'}],
+        fields: [{label: 'preferredName = MIME Type @en'}, {label: 'dataType = string'}]
       };
       const customCharacteristicParams = {
         name: 'MimeType',
-        fields: [{label: "description = Custom 'MimeType' characteristic. @en"}, {label: 'dataType = string'}],
+        fields: [{label: "description = Custom 'MimeType' characteristic. @en"}, {label: 'dataType = string'}]
       };
 
       cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
@@ -125,11 +125,11 @@ describe('Test models with intersected names', () => {
       const propertyForPredefinedCharacteristicParams = {name: 'withPredefinedResourcePath'};
       const predefinedCharacteristicParams = {
         name: 'ResourcePath',
-        fields: [{label: 'preferredName = Resource Path @en'}, {label: 'dataType = anyURI'}],
+        fields: [{label: 'preferredName = Resource Path @en'}, {label: 'dataType = anyURI'}]
       };
       const customCharacteristicParams = {
         name: 'ResourcePath',
-        fields: [{label: "description = Custom 'ResourcePath' characteristic. @en"}, {label: 'dataType = anyURI'}],
+        fields: [{label: "description = Custom 'ResourcePath' characteristic. @en"}, {label: 'dataType = anyURI'}]
       };
 
       cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
@@ -143,11 +143,11 @@ describe('Test models with intersected names', () => {
       const propertyForPredefinedCharacteristicParams = {name: 'withPredefinedText'};
       const predefinedCharacteristicParams = {
         name: 'Text',
-        fields: [{label: 'preferredName = Text @en'}, {label: 'dataType = string'}],
+        fields: [{label: 'preferredName = Text @en'}, {label: 'dataType = string'}]
       };
       const customCharacteristicParams = {
         name: 'Text',
-        fields: [{label: "description = Custom 'Text' characteristic. @en"}, {label: 'dataType = string'}],
+        fields: [{label: "description = Custom 'Text' characteristic. @en"}, {label: 'dataType = string'}]
       };
 
       cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
@@ -161,11 +161,11 @@ describe('Test models with intersected names', () => {
       const propertyForPredefinedCharacteristicParams = {name: 'withPredefinedTimestamp'};
       const predefinedCharacteristicParams = {
         name: 'Timestamp',
-        fields: [{label: 'preferredName = Timestamp @en'}, {label: 'dataType = dateTime'}],
+        fields: [{label: 'preferredName = Timestamp @en'}, {label: 'dataType = dateTime'}]
       };
       const customCharacteristicParams = {
         name: 'Timestamp',
-        fields: [{label: "description = Custom 'Timestamp' characteristic. @en"}, {label: 'dataType = dateTime'}],
+        fields: [{label: "description = Custom 'Timestamp' characteristic. @en"}, {label: 'dataType = dateTime'}]
       };
 
       cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');
@@ -179,7 +179,7 @@ describe('Test models with intersected names', () => {
       const propertyForPredefinedCharacteristicParams = {name: 'WithPredefinedUnitReference'};
       const predefinedCharacteristicParams = {
         name: 'baud',
-        fields: [{label: 'preferredName = baud @en'}, {label: 'code = J38'}, {label: 'symbol = Bd'}],
+        fields: [{label: 'preferredName = baud @en'}, {label: 'code = J38'}, {label: 'symbol = Bd'}]
       };
       const customCharacteristicParams = {
         name: 'curie',
@@ -189,8 +189,8 @@ describe('Test models with intersected names', () => {
           {label: 'symbol = Ci'},
           {label: 'conversionFactor = 3.7 × 10¹⁰ Bq'},
           {label: 'numericConversionFactor = undefined'},
-          {label: 'referenceUnit = becquerel'},
-        ],
+          {label: 'referenceUnit = becquerel'}
+        ]
       };
 
       cy.isConnected(propertyForCustomCharacteristicParams, customCharacteristicParams).should('be.true');

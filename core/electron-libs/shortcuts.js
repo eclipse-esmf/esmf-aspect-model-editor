@@ -20,7 +20,7 @@ function registerGlobalShortcuts() {
     {key: 'CommandOrControl+M', action: () => BrowserWindow.getFocusedWindow()?.minimize()},
     {key: 'CommandOrControl+Shift+M', action: () => BrowserWindow.getFocusedWindow()?.maximize()},
     {key: 'CommandOrControl+Shift+F', action: () => BrowserWindow.getFocusedWindow()?.setFullScreen(true)},
-    {key: 'CommandOrControl+Shift+G', action: () => BrowserWindow.getFocusedWindow()?.setFullScreen(false)},
+    {key: 'CommandOrControl+Shift+G', action: () => BrowserWindow.getFocusedWindow()?.setFullScreen(false)}
   ];
 
   const shortcutsMac = [
@@ -29,8 +29,8 @@ function registerGlobalShortcuts() {
     {key: 'CommandOrControl+R', action: () => BrowserWindow.getFocusedWindow()?.reload()},
     {
       key: 'CommandOrControl+Shift+R',
-      action: () => BrowserWindow.getFocusedWindow()?.webContents.reloadIgnoringCache(),
-    },
+      action: () => BrowserWindow.getFocusedWindow()?.webContents.reloadIgnoringCache()
+    }
   ];
 
   const shortcutsWin = [{key: 'Control+Shift+I', action: () => BrowserWindow.getFocusedWindow().webContents.openDevTools()}];
@@ -58,5 +58,5 @@ function unregisterGlobalShortcuts() {
 
 module.exports = {
   registerGlobalShortcuts,
-  unregisterGlobalShortcuts,
+  unregisterGlobalShortcuts
 };

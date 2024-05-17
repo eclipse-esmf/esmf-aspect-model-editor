@@ -16,7 +16,7 @@ import {DefaultEntityInstance, EntityInstanceProperty} from '@ame/meta-model';
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class MxGraphCharacteristicHelper {
   /**

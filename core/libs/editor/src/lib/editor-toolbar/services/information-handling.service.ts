@@ -18,7 +18,7 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {NotificationsComponent} from '../components/notifications/notifications.component';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class InformationHandlingService {
   constructor(private matDialog: MatDialog) {}

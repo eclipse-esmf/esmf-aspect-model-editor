@@ -31,9 +31,9 @@ import {LanguageTranslateModule} from '@ame/translation';
     FormsModule,
     MatButtonModule,
     MatMenuModule,
-    LanguageTranslateModule,
+    LanguageTranslateModule
   ],
   declarations: [PreviewDialogComponent],
-  exports: [PreviewDialogComponent],
+  exports: [PreviewDialogComponent]
 })
 export class PreviewDialogModule {}

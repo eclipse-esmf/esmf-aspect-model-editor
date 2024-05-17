@@ -20,7 +20,7 @@ import {LanguageTranslationService} from '@ame/translation';
 @Component({
   selector: 'ame-clipboard-copy-button',
   templateUrl: './clipboard-copy-button.component.html',
-  styleUrls: ['./clipboard-copy-button.component.scss'],
+  styleUrls: ['./clipboard-copy-button.component.scss']
 })
 export class ClipboardCopyButtonComponent {
   private namespaceSession: NamespacesSessionInterface = inject(NAMESPACES_SESSION);
@@ -33,10 +33,10 @@ export class ClipboardCopyButtonComponent {
       {
         namespaces: this.namespaceSession.violations,
         invalidFiles: this.namespaceSession.invalidFiles,
-        missingElements: this.namespaceSession.missingElements,
+        missingElements: this.namespaceSession.missingElements
       },
       null,
-      2,
+      2
     );
 
     try {

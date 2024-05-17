@@ -32,7 +32,7 @@ export class DefaultLengthConstraint extends DefaultConstraint implements Length
     aspectModelUrn: string,
     name: string,
     public minValue?: number,
-    public maxValue?: number,
+    public maxValue?: number
   ) {
     super(metaModelVersion, aspectModelUrn, name);
   }

@@ -20,12 +20,12 @@ import {PropertyCharacteristicConnectionHandler} from './property--characteristi
 import {MxGraphHelper} from '@ame/mx-graph';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PropertyStructuredValueConnectionHandler implements MultiShapeConnector<DefaultProperty, DefaultStructuredValue> {
   constructor(
     private notificationsService: NotificationsService,
-    private propertyCharacteristicConnectionHandler: PropertyCharacteristicConnectionHandler,
+    private propertyCharacteristicConnectionHandler: PropertyCharacteristicConnectionHandler
   ) {}
 
   connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultStructuredValue, parent: mxgraph.mxCell, child: mxgraph.mxCell): void {
@@ -35,7 +35,7 @@ export class PropertyStructuredValueConnectionHandler implements MultiShapeConne
       return this.notificationsService.warning({
         title: 'Unable to connect elements',
         message: 'StructuredValue can not be recursively connected with Property element',
-        timeout: 5000,
+        timeout: 5000
       });
     }
 

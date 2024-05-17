@@ -28,7 +28,7 @@ export class ThemeService {
     return {
       [mxConstants.STYLE_STROKEWIDTH]: 2,
       [mxConstants.STYLE_STROKECOLOR]: this.currentColors.border,
-      [mxConstants.STYLE_FONTCOLOR]: this.currentColors.font,
+      [mxConstants.STYLE_FONTCOLOR]: this.currentColors.font
     };
   }
 
@@ -47,7 +47,7 @@ export class ThemeService {
       unit: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.unit},
       entityValue: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.entityValue},
       filteredProperties_entity: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.entity},
-      filteredProperties_either: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.characteristic},
+      filteredProperties_either: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.characteristic}
     };
   }
 
@@ -72,7 +72,7 @@ export class ThemeService {
       shapeStyle +
       [...Object.entries(this.theme[shapeStyle]), ...Object.entries(this.getDefaultShapesColors)].reduce(
         (acc, [key, value]) => `${acc};${key}=${value}`,
-        '',
+        ''
       )
     );
   }

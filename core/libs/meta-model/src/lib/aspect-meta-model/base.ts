@@ -59,7 +59,7 @@ export abstract class Base implements BaseMetaModelElement {
   protected constructor(
     public metaModelVersion: string,
     public aspectModelUrn: string,
-    public name: string,
+    public name: string
   ) {
     this.preferredNames = new Map();
     this.descriptions = new Map();

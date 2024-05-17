@@ -35,7 +35,7 @@ import {
   SELECTOR_resizeGutter,
   SELECTOR_saveProperties,
   SELECTOR_searchEntityValueInputField,
-  SELECTOR_tbDeleteButton,
+  SELECTOR_tbDeleteButton
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
@@ -49,7 +49,7 @@ describe('Test enumeration entity instance', () => {
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_clearDataTypeBtn).click({force: true}))
       .then(() =>
-        cy.get(FIELD_dataType).clear().type('NewEntity', {force: true}).get('.mat-mdc-option').contains('NewEntity').click({force: true}),
+        cy.get(FIELD_dataType).clear().type('NewEntity', {force: true}).get('.mat-mdc-option').contains('NewEntity').click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.shapeExists('NewEntity'))
@@ -72,7 +72,7 @@ describe('Test enumeration entity instance', () => {
           .type('ev2', {force: true})
           .get('.mat-mdc-option')
           .contains('ev2')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() =>
         cy
@@ -83,7 +83,7 @@ describe('Test enumeration entity instance', () => {
           .type('ev3', {force: true})
           .get('.mat-mdc-option')
           .contains('ev3')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}))
       .then(() => cy.wait(200))
@@ -146,7 +146,7 @@ describe('Test enumeration entity instance', () => {
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain(':property4 "ev2Value".');
           expect(rdf).to.contain(':property5 "ev3Value".');
-        }),
+        })
       );
   });
 
@@ -365,10 +365,10 @@ describe('Test enumeration entity instance', () => {
       .then(() => cy.dbClickShape('edit2'))
       .then(() => cy.get(FIELD_name).should('exist').clear({force: true}).type('editOnlyOnEntityValue', {force: true}))
       .then(() =>
-        cy.get(FIELD_propertyValueNotComplex).eq(0).should('exist').clear({force: true}).type('editOnlyOnEntityValueProp2', {force: true}),
+        cy.get(FIELD_propertyValueNotComplex).eq(0).should('exist').clear({force: true}).type('editOnlyOnEntityValueProp2', {force: true})
       )
       .then(() =>
-        cy.get(FIELD_propertyValueNotComplex).eq(1).should('exist').clear({force: true}).type('editOnlyOnEntityValueProp3', {force: true}),
+        cy.get(FIELD_propertyValueNotComplex).eq(1).should('exist').clear({force: true}).type('editOnlyOnEntityValueProp3', {force: true})
       )
       .then(() => cyHelp.clickSaveButton().wait(200))
 
@@ -413,7 +413,7 @@ describe('Test enumeration entity instance', () => {
           .get(SELECTOR_editorSaveButton)
           .should('be.disabled')
           .then(() => cy.get(FIELD_propertyValueNotComplex).eq(0).should('exist').clear().type('editOnlyOnEntityValueProp2'))
-          .then(() => cyHelp.clickSaveButton()),
+          .then(() => cyHelp.clickSaveButton())
       );
   });
 
@@ -510,8 +510,8 @@ describe('Test enumeration entity instance', () => {
             ':Entity1 a samm:Entity;\n' +
             '    samm:properties ().\n' +
             ':FillGapEntityValue a :Entity1.\n' +
-            ':EntityInstance1 a :Entity1.',
-        ),
+            ':EntityInstance1 a :Entity1.'
+        )
       );
   });
 
@@ -537,7 +537,7 @@ describe('Test enumeration entity instance', () => {
             '    samm-c:values (:FillGapEntityValue).\n' +
             ':Entity1 a samm:Entity;\n' +
             '    samm:properties ().\n' +
-            ':FillGapEntityValue a :Entity1.',
+            ':FillGapEntityValue a :Entity1.'
         );
       });
   });
@@ -567,7 +567,7 @@ describe('Test enumeration entity instance', () => {
           .type('NewEntity', {force: true})
           .get('.mat-mdc-option')
           .contains('NewEntity')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.shapeExists('NewEntity'));
@@ -589,7 +589,7 @@ describe('Test enumeration entity instance', () => {
           .type('NewEntity', {force: true})
           .get('.mat-mdc-option')
           .contains('NewEntity')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}).wait(200))
       .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityInstance'))
@@ -612,12 +612,12 @@ describe('Test enumeration entity instance', () => {
       .then(() => cy.clickAddShapePlusIcon('property3'))
       .then(() => cy.dbClickShape('Characteristic2'))
       .then(() =>
-        cy.get(FIELD_dataType).clear({force: true}).type('langString', {force: true}).get(FIELD_dataTypeOption).eq(0).click({force: true}),
+        cy.get(FIELD_dataType).clear({force: true}).type('langString', {force: true}).get(FIELD_dataTypeOption).eq(0).click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('Characteristic3'))
       .then(() =>
-        cy.get(FIELD_dataType).clear({force: true}).type('langString', {force: true}).get(FIELD_dataTypeOption).eq(0).click({force: true}),
+        cy.get(FIELD_dataType).clear({force: true}).type('langString', {force: true}).get(FIELD_dataTypeOption).eq(0).click({force: true})
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('Characteristic1'))
@@ -635,7 +635,7 @@ describe('Test enumeration entity instance', () => {
           .type('de', {force: true})
           .get('.mat-mdc-option')
           .contains('de')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() =>
         cy
@@ -646,7 +646,7 @@ describe('Test enumeration entity instance', () => {
           .type('aa', {force: true})
           .get('.mat-mdc-option')
           .contains('aa')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
       .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}).wait(200))
@@ -662,7 +662,7 @@ describe('Test enumeration entity instance', () => {
           .type('aa', {force: true})
           .get('.mat-mdc-option')
           .contains('aa')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() =>
         cy
@@ -673,7 +673,7 @@ describe('Test enumeration entity instance', () => {
           .type('de', {force: true})
           .get('.mat-mdc-option')
           .contains('de')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
       .then(() => cyHelp.clickSaveButton())
@@ -689,7 +689,7 @@ describe('Test enumeration entity instance', () => {
           .type('en', {force: true})
           .get('.mat-mdc-option')
           .contains('en')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton().wait(200))
       .then(() => cy.dbClickShape('Characteristic1'))
@@ -747,7 +747,7 @@ describe('Test enumeration entity instance', () => {
           .type('ev1', {force: true})
           .get('.mat-mdc-option')
           .contains('ev1')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
       .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}).wait(200))
@@ -761,7 +761,7 @@ describe('Test enumeration entity instance', () => {
           .type('ev2', {force: true})
           .get('.mat-mdc-option')
           .contains('ev2')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
       .then(() => cyHelp.clickSaveButton())
@@ -778,7 +778,7 @@ describe('Test enumeration entity instance', () => {
           .type('ev3', {force: true})
           .get('.mat-mdc-option')
           .contains('ev3')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
       .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}).wait(200))
@@ -792,7 +792,7 @@ describe('Test enumeration entity instance', () => {
           .type('ev4', {force: true})
           .get('.mat-mdc-option')
           .contains('ev4')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
       .then(() => cyHelp.clickSaveButton())
@@ -822,7 +822,7 @@ describe('Test enumeration entity instance', () => {
           .type('ev2', {force: true})
           .get('.mat-mdc-option')
           .contains('ev2')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton().wait(200))
       .then(() => {
@@ -849,7 +849,7 @@ describe('Test enumeration entity instance', () => {
           .type('ev4', {force: true})
           .get('.mat-mdc-option')
           .contains('ev4')
-          .click({force: true}),
+          .click({force: true})
       )
       .then(() => cyHelp.clickSaveButton().wait(200))
       .then(() => {

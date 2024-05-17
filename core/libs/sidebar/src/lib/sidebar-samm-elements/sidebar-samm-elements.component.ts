@@ -21,7 +21,7 @@ import {Aspect} from '@ame/meta-model';
 @Component({
   selector: 'ame-sidebar-samm-elements',
   templateUrl: './sidebar-samm-elements.component.html',
-  styleUrls: ['./sidebar-samm-elements.component.scss'],
+  styleUrls: ['./sidebar-samm-elements.component.scss']
 })
 export class SidebarSAMMElementsComponent {
   public sidebarService = inject(SidebarStateService);
@@ -37,7 +37,7 @@ export class SidebarSAMMElementsComponent {
     'constraint',
     'trait',
     'operation',
-    'event',
+    'event'
   ];
 
   public get isEmptyModel(): boolean {
@@ -46,7 +46,7 @@ export class SidebarSAMMElementsComponent {
 
   constructor(
     private modelService: ModelService,
-    private mxGraphService: MxGraphService,
+    private mxGraphService: MxGraphService
   ) {}
 
   public isAspectAvailable(): Aspect {

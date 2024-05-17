@@ -22,7 +22,7 @@ import {
   SELECTOR_namespaceTabVersionInput,
   SELECTOR_settingsButton,
   SELECTOR_workspaceBtn,
-  SettingsDialogSelectors,
+  SettingsDialogSelectors
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
@@ -52,36 +52,36 @@ describe('Test namespace settings dialog', () => {
         .then(rdfString => cy.loadModel(rdfString));
 
       cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-        'org.eclipse.examples.one:1.0.0': ['AspectDefault.ttl'],
+        'org.eclipse.examples.one:1.0.0': ['AspectDefault.ttl']
       });
 
       cy.intercept(
         {
           method: 'POST',
           url: 'http://localhost:9091/ame/api/models',
-          headers: {namespace: 'org.eclipse.examples.one:1.0.0', 'file-name': 'AspectDefault.ttl'},
+          headers: {namespace: 'org.eclipse.examples.one:1.0.0', 'file-name': 'AspectDefault.ttl'}
         },
         {
-          fixture: '/change-namespace/aspect-workspace-one.txt',
-        },
+          fixture: '/change-namespace/aspect-workspace-one.txt'
+        }
       );
 
       cy.saveAspectModelToWorkspace().then(() => cy.get(SELECTOR_workspaceBtn).click());
 
       cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
         'org.eclipse.examples.one:1.0.0': ['AspectDefault.ttl'],
-        'org.eclipse.examples.two:2.0.0': ['AspectDefault.ttl'],
+        'org.eclipse.examples.two:2.0.0': ['AspectDefault.ttl']
       });
 
       cy.intercept(
         {
           method: 'POST',
           url: 'http://localhost:9091/ame/api/models',
-          headers: {namespace: 'org.eclipse.examples.two:2.0.0', 'file-name': 'AspectDefault.ttl'},
+          headers: {namespace: 'org.eclipse.examples.two:2.0.0', 'file-name': 'AspectDefault.ttl'}
         },
         {
-          fixture: '/change-namespace/aspect-workspace-two.txt',
-        },
+          fixture: '/change-namespace/aspect-workspace-two.txt'
+        }
       );
 
       openNamespaceSettings()
@@ -103,40 +103,40 @@ describe('Test namespace settings dialog', () => {
     it('should change name of aspect element and save to workspace', () => {
       cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
         'org.eclipse.examples.one:1.0.0': ['AspectDefault.ttl'],
-        'org.eclipse.examples.two:2.0.0': ['AspectDefault.ttl', 'NewName.ttl'],
+        'org.eclipse.examples.two:2.0.0': ['AspectDefault.ttl', 'NewName.ttl']
       });
 
       cy.intercept(
         {
           method: 'POST',
           url: 'http://localhost:9091/ame/api/models',
-          headers: {namespace: 'org.eclipse.examples.one:1.0.0', 'file-name': 'AspectDefault.ttl'},
+          headers: {namespace: 'org.eclipse.examples.one:1.0.0', 'file-name': 'AspectDefault.ttl'}
         },
         {
-          fixture: '/change-namespace/aspect-workspace-one.txt',
-        },
+          fixture: '/change-namespace/aspect-workspace-one.txt'
+        }
       );
 
       cy.intercept(
         {
           method: 'POST',
           url: 'http://localhost:9091/ame/api/models',
-          headers: {namespace: 'org.eclipse.examples.two:2.0.0', 'file-name': 'AspectDefault.ttl'},
+          headers: {namespace: 'org.eclipse.examples.two:2.0.0', 'file-name': 'AspectDefault.ttl'}
         },
         {
-          fixture: '/change-namespace/aspect-workspace-two.txt',
-        },
+          fixture: '/change-namespace/aspect-workspace-two.txt'
+        }
       );
 
       cy.intercept(
         {
           method: 'POST',
           url: 'http://localhost:9091/ame/api/models',
-          headers: {namespace: 'org.eclipse.examples.two:2.0.0', 'file-name': 'NewName.ttl'},
+          headers: {namespace: 'org.eclipse.examples.two:2.0.0', 'file-name': 'NewName.ttl'}
         },
         {
-          fixture: '/change-namespace/aspect-workspace-three.txt',
-        },
+          fixture: '/change-namespace/aspect-workspace-three.txt'
+        }
       );
 
       cy.dbClickShape('AspectDefault')

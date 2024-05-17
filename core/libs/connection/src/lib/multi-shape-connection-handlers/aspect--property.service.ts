@@ -18,7 +18,7 @@ import {MultiShapeConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AspectPropertyConnectionHandler implements MultiShapeConnector<DefaultAspect, DefaultProperty | DefaultOperation> {
   constructor(private mxGraphService: MxGraphService) {}
@@ -27,7 +27,7 @@ export class AspectPropertyConnectionHandler implements MultiShapeConnector<Defa
     parentMetaModel: DefaultAspect,
     childMetaModel: DefaultProperty | DefaultOperation,
     parent: mxgraph.mxCell,
-    child: mxgraph.mxCell,
+    child: mxgraph.mxCell
   ) {
     if (childMetaModel instanceof DefaultProperty && !parentMetaModel.properties.find(({property}) => property === childMetaModel)) {
       parentMetaModel.properties.push({property: childMetaModel, keys: {}});

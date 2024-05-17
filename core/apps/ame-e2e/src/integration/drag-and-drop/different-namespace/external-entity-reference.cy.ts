@@ -18,7 +18,7 @@ import {
   SELECTOR_ecEntity,
   SELECTOR_openNamespacesButton,
   SELECTOR_searchElementsInp,
-  SELECTOR_workspaceBtn,
+  SELECTOR_workspaceBtn
 } from '../../../support/constants';
 import {checkAspectAndChildrenEntity, connectElements} from '../../../support/utils';
 
@@ -27,18 +27,18 @@ describe('Test drag and drop', () => {
     const fileName = 'external-entity-reference.txt';
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.different:1.0.0': [fileName],
+      'org.eclipse.different:1.0.0': [fileName]
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': fileName},
+        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': fileName}
       },
       {
-        fixture: `/external-reference/different-namespace/without-childrens/${fileName}`,
-      },
+        fixture: `/external-reference/different-namespace/without-childrens/${fileName}`
+      }
     );
 
     cy.visitDefault().then(() =>
@@ -64,7 +64,7 @@ describe('Test drag and drop', () => {
           expect(rdf).to.contain('samm:dataType ext-different:ExternalEntity');
 
           expect(rdf).not.contain(':ExternalEntity a samm:Entity');
-        }),
+        })
     );
   });
 });

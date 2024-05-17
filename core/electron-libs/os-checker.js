@@ -17,5 +17,5 @@ module.exports = {
   extension: process.platform === 'win32' ? 'win.exe' : process.platform === 'darwin' ? 'mac' : 'linux',
   isWin: process.platform === 'win32',
   isLinux: process.platform === 'linux',
-  isMac: process.platform === 'darwin',
+  isMac: process.platform === 'darwin'
 };

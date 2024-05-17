@@ -19,12 +19,12 @@ import {ModelRootService} from '../model-root.service';
 import {PredefinedRemove} from './predefined-remove.type';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class Point3dRemoveService implements PredefinedRemove {
   constructor(
     private modelRootService: ModelRootService,
-    private mxGraphService: MxGraphService,
+    private mxGraphService: MxGraphService
   ) {}
 
   delete(cell: mxgraph.mxCell): boolean {

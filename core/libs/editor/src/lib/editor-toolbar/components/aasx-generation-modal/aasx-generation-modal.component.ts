@@ -21,7 +21,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   templateUrl: 'aasx-generation-modal.component.html',
-  styleUrls: ['aasx-generation-modal.component.scss'],
+  styleUrls: ['aasx-generation-modal.component.scss']
 })
 export class AASXGenerationModalComponent {
   control = new FormControl('aasx');
@@ -31,7 +31,7 @@ export class AASXGenerationModalComponent {
     private modelApiService: ModelApiService,
     private modelService: ModelService,
     private rdfService: RdfService,
-    private dialogRef: MatDialogRef<AssignedNodesOptions>,
+    private dialogRef: MatDialogRef<AssignedNodesOptions>
   ) {}
 
   generate() {
@@ -53,7 +53,7 @@ export class AASXGenerationModalComponent {
         finalize(() => {
           this.isGenerating = false;
           this.dialogRef.close();
-        }),
+        })
       )
       .subscribe();
   }

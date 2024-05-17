@@ -23,7 +23,7 @@ import {
   DefaultLengthConstraint,
   DefaultLocaleConstraint,
   DefaultRangeConstraint,
-  DefaultRegularExpressionConstraint,
+  DefaultRegularExpressionConstraint
 } from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
@@ -32,7 +32,7 @@ import {DropdownFieldComponent} from '../../dropdown-field.component';
 
 @Component({
   selector: 'ame-constraint-name-dropdown-field',
-  templateUrl: './constraint-name-dropdown-field.component.html',
+  templateUrl: './constraint-name-dropdown-field.component.html'
 })
 export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent<DefaultConstraint> implements OnInit {
   public listConstraintNames: Array<string>;
@@ -44,7 +44,7 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
     public editorModelService: EditorModelService,
     public modelService: ModelService,
     public namespacesCacheService: NamespacesCacheService,
-    public languageSettings: SammLanguageSettingsService,
+    public languageSettings: SammLanguageSettingsService
   ) {
     super(editorModelService, modelService, languageSettings);
   }
@@ -56,7 +56,7 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
         this.selectedMetaModelElement = this.metaModelElement;
         this.setMetaModelClassName();
         this.selectedConstraint.emit(this.metaModelClassName);
-      }),
+      })
     );
   }
 

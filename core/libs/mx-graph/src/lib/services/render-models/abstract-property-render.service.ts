@@ -25,7 +25,7 @@ import {RdfService} from '@ame/rdf/services';
 import {FiltersService} from '@ame/loader-filters';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AbstractPropertyRenderService extends BaseRenderService {
   private filtersService = inject(FiltersService);
@@ -35,7 +35,7 @@ export class AbstractPropertyRenderService extends BaseRenderService {
     sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
     private namespacesCacheService: NamespacesCacheService,
-    private shapeConnectorService: ShapeConnectorService,
+    private shapeConnectorService: ShapeConnectorService
   ) {
     super(mxGraphService, sammLangService, rdfService);
   }

@@ -31,7 +31,7 @@ describe('Property Visitor', () => {
     SAMM: jest.fn(() => new Samm('')),
     SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'}) as any),
     hasNamespace: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    addPrefix: jest.fn(() => {})
   };
   const property = new DefaultProperty('1', 'samm#property1', 'property1', null);
 
@@ -43,23 +43,23 @@ describe('Property Visitor', () => {
         {
           provide: RdfListService,
           useValue: {
-            push: jest.fn(),
-          },
+            push: jest.fn()
+          }
         },
         {
           provide: RdfNodeService,
           useValue: {
-            update: jest.fn(),
-          },
+            update: jest.fn()
+          }
         },
         {
           provide: RdfService,
           useValue: {
             currentRdfModel: rdfModel,
-            externalRdfModels: [],
-          },
-        },
-      ],
+            externalRdfModels: []
+          }
+        }
+      ]
     });
 
     service = TestBed.inject(PropertyVisitor);
@@ -72,7 +72,7 @@ describe('Property Visitor', () => {
       exampleValue: undefined,
       preferredName: [],
       description: [],
-      see: [],
+      see: []
     });
   });
 });

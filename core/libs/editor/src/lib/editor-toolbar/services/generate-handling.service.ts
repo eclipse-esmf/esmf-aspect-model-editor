@@ -19,7 +19,7 @@ import {
   GenerateAsyncApiComponent,
   GenerateDocumentationComponent,
   GenerateOpenApiComponent,
-  LanguageSelectorModalComponent,
+  LanguageSelectorModalComponent
 } from '@ame/editor';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {finalize, first} from 'rxjs/operators';
@@ -32,7 +32,7 @@ import {LanguageTranslationService} from '@ame/translation';
 import {environment} from '../../../../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class GenerateHandlingService {
   private get currentCachedFile() {
@@ -47,7 +47,7 @@ export class GenerateHandlingService {
     private loadingScreenService: LoadingScreenService,
     private namespaceCacheService: NamespacesCacheService,
     private translate: LanguageTranslationService,
-    private fileHandlingService: FileHandlingService,
+    private fileHandlingService: FileHandlingService
   ) {
     if (!environment.production) {
       window['angular.generateHandlingService'] = this;
@@ -95,7 +95,7 @@ export class GenerateHandlingService {
     const loadingScreenOptions: LoadingScreenOptions = {
       title: this.translate.language.NOTIFICATION_DIALOG.GENERATE_JSON_PAYLOAD,
       content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
-      hasCloseButton: true,
+      hasCloseButton: true
     };
 
     this.loadingScreenService.open(loadingScreenOptions);
@@ -105,7 +105,7 @@ export class GenerateHandlingService {
         this.notificationsService.error({
           title: this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SAMPLE,
           message: this.translate.language.GENERATE_HANDLING.INVALID_MODEL,
-          timeout: 5000,
+          timeout: 5000
         });
         return throwError(() => this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SAMPLE);
       }),
@@ -113,10 +113,10 @@ export class GenerateHandlingService {
         this.openPreview(
           this.translate.language.GENERATE_HANDLING.JSON_PAYLOAD_PREVIEW,
           this.formatStringToJson(data),
-          !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-sample.json`,
+          !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-sample.json`
         );
       }),
-      finalize(() => this.loadingScreenService.close()),
+      finalize(() => this.loadingScreenService.close())
     );
   }
 
@@ -129,7 +129,7 @@ export class GenerateHandlingService {
     const loadingScreenOptions: LoadingScreenOptions = {
       title: this.translate.language.NOTIFICATION_DIALOG.GENERATE_JSON_SCHEMA,
       content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
-      hasCloseButton: true,
+      hasCloseButton: true
     };
 
     this.loadingScreenService.open(loadingScreenOptions);
@@ -146,7 +146,7 @@ export class GenerateHandlingService {
               this.notificationsService.error({
                 title: this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SCHEMA,
                 message: this.translate.language.GENERATE_HANDLING.INVALID_MODEL,
-                timeout: 5000,
+                timeout: 5000
               });
               return throwError(() => this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SCHEMA);
             }),
@@ -155,11 +155,11 @@ export class GenerateHandlingService {
               this.openPreview(
                 this.translate.language.GENERATE_HANDLING.JSON_SCHEMA_PREVIEW,
                 this.formatStringToJson(data),
-                !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-schema.json`,
+                !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-schema.json`
               );
-            }),
-          ),
-        ),
+            })
+          )
+        )
       );
   }
 
@@ -171,7 +171,7 @@ export class GenerateHandlingService {
         if (!this.modelService.getLoadedAspectModel().aspect) {
           this.notificationsService.info({
             title: this.translate.language.GENERATE_HANDLING.NO_ASPECT_TITLE,
-            timeout: 5000,
+            timeout: 5000
           });
           return;
         }
@@ -188,8 +188,8 @@ export class GenerateHandlingService {
       data: {
         title: title,
         content: content,
-        fileName: fileName,
-      },
+        fileName: fileName
+      }
     };
     return this.matDialog.open(PreviewDialogComponent, config).afterClosed();
   }

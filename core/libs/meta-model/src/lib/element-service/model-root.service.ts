@@ -29,7 +29,7 @@ import {UnitModelService} from './unit-model.service';
 import {FileResourceRemoveService, Point3dRemoveService, PredefinedRemove, TimeSeriesEntityRemoveService} from './predefined-elements';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ModelRootService {
   private readonly predefinedModels: {[key: string]: ProviderToken<PredefinedRemove>} = {};
@@ -47,7 +47,7 @@ export class ModelRootService {
       [PredefinedProperties.mimeType]: FileResourceRemoveService,
       [PredefinedEntities.FileResource]: FileResourceRemoveService,
       ['ResourcePath']: FileResourceRemoveService,
-      ['MimeType']: FileResourceRemoveService,
+      ['MimeType']: FileResourceRemoveService
     };
   }
 
@@ -65,7 +65,7 @@ export class ModelRootService {
       EventModelService,
       OperationModelService,
       PropertyModelService,
-      UnitModelService,
+      UnitModelService
     ];
 
     // choose the applicable model service

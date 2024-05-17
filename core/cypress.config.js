@@ -43,9 +43,9 @@ module.exports = defineConfig({
       'apps/ame-e2e/src/integration/export/lang-string/*.ts',
       'apps/ame-e2e/src/integration/generation/*.ts',
       'apps/ame-e2e/src/integration/settings/*.ts',
-      'apps/ame-e2e/src/integration/*.ts',
+      'apps/ame-e2e/src/integration/*.ts'
     ],
     supportFile: 'apps/ame-e2e/src/support/index.ts',
-    baseUrl: 'http://localhost:4200/',
-  },
+    baseUrl: 'http://localhost:4200/'
+  }
 });

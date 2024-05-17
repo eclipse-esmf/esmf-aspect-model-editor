@@ -107,19 +107,19 @@ describe('Elements count', () => {
           files: [
             {
               name: 'AspectDefault.ttl',
-              response: {fixture: '/default-models/aspect-default.txt'},
-            },
-          ],
+              response: {fixture: '/default-models/aspect-default.txt'}
+            }
+          ]
         },
         movement: {
           name: 'org.eclipse.examples.movement:1.0.0',
           files: [
             {
               name: 'Movement.ttl',
-              response: {fixture: '/default-models/movement.txt'},
-            },
-          ],
-        },
+              response: {fixture: '/default-models/movement.txt'}
+            }
+          ]
+        }
       };
 
       setUpStaticModellingInterceptors();
@@ -186,19 +186,19 @@ describe('Elements count', () => {
           files: [
             {
               name: 'AspectDefault.ttl',
-              response: {fixture: '/default-models/aspect-default.txt'},
-            },
-          ],
+              response: {fixture: '/default-models/aspect-default.txt'}
+            }
+          ]
         },
         enumerationInstances: {
           name: 'org.eclipse.digitaltwin:1.0.0',
           files: [
             {
               name: 'EnumerationInstances.ttl',
-              response: {fixture: '/enumeration-instances.txt'},
-            },
-          ],
-        },
+              response: {fixture: '/enumeration-instances.txt'}
+            }
+          ]
+        }
       };
 
       setUpStaticModellingInterceptors();

@@ -22,7 +22,7 @@ import {
   DefaultEntity,
   DefaultEntityInstance,
   DefaultProperty,
-  DefaultUnit,
+  DefaultUnit
 } from '@ame/meta-model';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -31,7 +31,7 @@ import {Subscription} from 'rxjs';
 @Component({
   selector: 'ame-name-input-field',
   templateUrl: './name-input-field.component.html',
-  styleUrls: ['../../field.scss'],
+  styleUrls: ['../../field.scss']
 })
 export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit, OnDestroy {
   public fieldName = 'name';
@@ -65,12 +65,12 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
       new FormControl(
         {
           value: this.getCurrentValue('name'),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
+          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled()
         },
         {
-          validators: this.getNameValidators(),
-        },
-      ),
+          validators: this.getNameValidators()
+        }
+      )
     );
     nameControl = this.parentForm.get('name');
 
@@ -80,10 +80,10 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
         if (validation) {
           nameControl.setErrors({
             ...(nameControl.errors || {}),
-            ...(validation || {}),
+            ...(validation || {})
           });
         }
-      }),
+      })
     );
     nameControl.markAsTouched();
   }

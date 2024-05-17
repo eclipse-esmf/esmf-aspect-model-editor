@@ -29,7 +29,7 @@ const nonDependentNamespaces = (sammVersion: string) => [
   `urn:samm:org.eclipse.esmf.samm:characteristic:${sammVersion}#`,
   `urn:samm:org.eclipse.esmf.samm:entity:${sammVersion}#`,
   `urn:samm:org.eclipse.esmf.samm:unit:${sammVersion}#`,
-  'http://www.w3.org/2001/XMLSchema#',
+  'http://www.w3.org/2001/XMLSchema#'
 ];
 
 interface NamespacesDependencies {
@@ -43,7 +43,7 @@ interface NamespacesDependencies {
 
 @Component({
   templateUrl: './select-namespaces.component.html',
-  styleUrls: ['select-namespaces.component.scss'],
+  styleUrls: ['select-namespaces.component.scss']
 })
 export class SelectNamespacesComponent implements OnInit {
   selectedNamespaces: string[] = [];
@@ -55,7 +55,7 @@ export class SelectNamespacesComponent implements OnInit {
     private namespacesManager: NamespacesManagerService,
     private editorService: EditorService,
     private router: Router,
-    @Inject(APP_CONFIG) public config: AppConfig,
+    @Inject(APP_CONFIG) public config: AppConfig
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +63,7 @@ export class SelectNamespacesComponent implements OnInit {
       .loadModels()
       .pipe(
         first(),
-        tap(models => (this.namespacesDependencies = this.getNamespacesDependencies(models))),
+        tap(models => (this.namespacesDependencies = this.getNamespacesDependencies(models)))
       )
       .subscribe();
   }
@@ -77,7 +77,7 @@ export class SelectNamespacesComponent implements OnInit {
     const namespaces = Array.from(new Set(this.selectedNamespaces));
     const validatePayload = namespaces.map(namespace => ({
       namespace,
-      files: this.namespacesDependencies[namespace].files,
+      files: this.namespacesDependencies[namespace].files
     }));
     this.namespacesManager.validateExport(validatePayload).subscribe();
     this.router.navigate([{outlets: {'export-namespaces': 'validate'}}]);
@@ -94,13 +94,13 @@ export class SelectNamespacesComponent implements OnInit {
           disabled: false,
           checked: false,
           dependencies: [],
-          files: [],
+          files: []
         };
         nDependency = acc[versionedNamespace];
       }
 
       nDependency.dependencies = Array.from(
-        new Set([...nDependency.dependencies, ...this.getDependentNamespaces(rdfModel.getNamespaces())]),
+        new Set([...nDependency.dependencies, ...this.getDependentNamespaces(rdfModel.getNamespaces())])
       );
       nDependency.files = Array.from(new Set([...nDependency.files, fileName]));
       return acc;

@@ -19,7 +19,7 @@ import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'ame-event',
-  templateUrl: './event.component.html',
+  templateUrl: './event.component.html'
 })
 export class EventComponent extends ModelElementEditorComponent<DefaultEvent> {
   @Input() parentForm: FormGroup;

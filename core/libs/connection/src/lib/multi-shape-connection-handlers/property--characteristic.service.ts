@@ -19,12 +19,12 @@ import {MultiShapeConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PropertyCharacteristicConnectionHandler implements MultiShapeConnector<DefaultProperty, DefaultCharacteristic> {
   constructor(
     private mxGraphService: MxGraphService,
-    private mxGraphAttributeService: MxGraphAttributeService,
+    private mxGraphAttributeService: MxGraphAttributeService
   ) {}
 
   public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultCharacteristic, parent: mxgraph.mxCell, child: mxgraph.mxCell) {

@@ -18,12 +18,12 @@ import {AlertOptions} from '@ame/shared';
 @Component({
   selector: 'ame-alert',
   templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.scss'],
+  styleUrls: ['./alert.component.scss']
 })
 export class AlertComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: AlertOptions,
-    private dialogRef: MatDialogRef<AlertComponent>,
+    private dialogRef: MatDialogRef<AlertComponent>
   ) {}
 
   close(event: MouseEvent) {

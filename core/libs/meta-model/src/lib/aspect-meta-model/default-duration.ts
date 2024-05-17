@@ -28,7 +28,7 @@ export class DefaultDuration extends DefaultQuantifiable {
     aspectModelUrn: string,
     name: string,
     dataType?: Type,
-    public unit?: Unit,
+    public unit?: Unit
   ) {
     super(metaModelVersion, aspectModelUrn, name, dataType);
   }

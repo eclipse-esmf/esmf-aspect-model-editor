@@ -22,14 +22,14 @@ import {VisibleStep} from '@ame/editor';
 @Component({
   selector: 'ame-workspace-summary',
   templateUrl: './workspace-summary.component.html',
-  styleUrls: ['./workspace-summary.component.scss'],
+  styleUrls: ['./workspace-summary.component.scss']
 })
 export class WorkspaceSummaryComponent {
   private importSession: NamespacesSessionInterface = inject(NAMESPACES_SESSION);
 
   public readonly icons = {
     violation: 'error',
-    success: 'done',
+    success: 'done'
   };
   public readonly step = VisibleStep;
 
@@ -42,7 +42,7 @@ export class WorkspaceSummaryComponent {
 
   constructor(
     private notificationService: NotificationsService,
-    private translate: LanguageTranslationService,
+    private translate: LanguageTranslationService
   ) {}
 
   async copySummaryToClipboard() {
@@ -50,10 +50,10 @@ export class WorkspaceSummaryComponent {
       {
         namespaces: this.violations,
         invalidFiles: this.invalidFiles,
-        missingElements: this.missingElements,
+        missingElements: this.missingElements
       },
       null,
-      2,
+      2
     );
 
     try {

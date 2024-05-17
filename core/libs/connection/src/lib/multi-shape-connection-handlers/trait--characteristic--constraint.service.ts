@@ -18,7 +18,7 @@ import {MultiShapeConnector} from '../models';
 import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TraitWithCharacteristicOrConstraintConnectionHandler
   implements MultiShapeConnector<DefaultTrait, DefaultCharacteristic | DefaultConstraint>

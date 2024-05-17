@@ -22,7 +22,7 @@ import {sammElements} from '@ame/shared';
   selector: 'ame-shared-settings-title',
   templateUrl: './shared-settings-title.component.html',
   styleUrls: ['./shared-settings-title.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedSettingsTitleComponent implements OnInit {
   public metaModelElement: BaseMetaModelElement;
@@ -42,7 +42,7 @@ export class SharedSettingsTitleComponent implements OnInit {
 
   constructor(
     private cd: ChangeDetectorRef,
-    private translate: LanguageTranslationService,
+    private translate: LanguageTranslationService
   ) {}
 
   ngOnInit(): void {

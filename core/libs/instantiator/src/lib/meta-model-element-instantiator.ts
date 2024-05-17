@@ -27,7 +27,7 @@ import {
   OverWrittenProperty,
   Property,
   Type,
-  Unit,
+  Unit
 } from '@ame/meta-model';
 import {InstantiatorService} from './instantiator.service';
 import {
@@ -63,7 +63,7 @@ import {
   StructuredValueCharacteristicInstantiator,
   TimeSeriesCharacteristicInstantiator,
   TraitCharacteristicInstantiator,
-  UnitInstantiator,
+  UnitInstantiator
 } from './instantiators';
 import {CachedFile, NamespacesCacheService} from '@ame/cache';
 import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
@@ -93,7 +93,7 @@ export class MetaModelElementInstantiator {
     public namespaceCacheService?: NamespacesCacheService,
     public recursiveModelElements?: Map<string, Array<BaseMetaModelElement>>,
     public notificationsService?: NotificationsService,
-    public translate?: LanguageTranslationService,
+    public translate?: LanguageTranslationService
   ) {
     this.samm = this.rdfModel.samm;
     this.sammC = this.rdfModel.sammC;
@@ -119,7 +119,7 @@ export class MetaModelElementInstantiator {
   getProperties(
     subject: Quad_Subject,
     predicate: NamedNode,
-    parent?: DefaultAspect | DefaultEntity | DefaultOperation,
+    parent?: DefaultAspect | DefaultEntity | DefaultOperation
   ): Array<OverWrittenProperty> {
     const properties: Array<OverWrittenProperty> = [];
     this.rdfModel.store.getQuads(subject, predicate, null, null).forEach(propertyQuad => {
@@ -458,7 +458,7 @@ export class MetaModelElementInstantiator {
    */
   getExternalElement<T>(
     quad: NamedNode | Quad_Object,
-    skipSetExternal = false,
+    skipSetExternal = false
   ): {
     externalRdfModel: RdfModel;
     externalReference: T;
@@ -493,7 +493,7 @@ export class MetaModelElementInstantiator {
           ' namespace file structure or is invalid. Please also check the file structure of your local model folder with ' +
           'the defined standard in the documentation',
         message: message,
-        timeout: 5000,
+        timeout: 5000
       });
       return {externalRdfModel: null, externalReference: null};
     }
@@ -504,7 +504,7 @@ export class MetaModelElementInstantiator {
 
   getRdfModelByElement(quad: NamedNode | Quad_Object): RdfModel {
     return this.instantiatorService.rdfService.externalRdfModels.find(
-      (extRdfModel: RdfModel) => extRdfModel.store.getQuads(quad, null, null, null).length,
+      (extRdfModel: RdfModel) => extRdfModel.store.getQuads(quad, null, null, null).length
     );
   }
 
@@ -517,9 +517,9 @@ export class MetaModelElementInstantiator {
           title: this.translate.language.NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_TITLE,
           message: this.translate.translateService.instant('NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_DESC_MESSAGE', {
             subject: quad.subject.value,
-            fileName: metaModelElement?.fileName,
+            fileName: metaModelElement?.fileName
           }),
-          timeout: 5000,
+          timeout: 5000
         });
       }
       metaModelElement.addDescription('en', quad.object.value);
@@ -535,9 +535,9 @@ export class MetaModelElementInstantiator {
           title: this.translate.language.NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_TITLE,
           message: this.translate.translateService.instant('NOTIFICATION_SERVICE.FALLBACK_TO_DEFAULT_LANGUAGE_PREF_MESSAGE', {
             subject: quad.subject.value,
-            fileName: metaModelElement?.fileName,
+            fileName: metaModelElement?.fileName
           }),
-          timeout: 5000,
+          timeout: 5000
         });
       }
 

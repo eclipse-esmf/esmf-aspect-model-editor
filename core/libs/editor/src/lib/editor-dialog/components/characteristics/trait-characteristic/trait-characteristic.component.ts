@@ -17,7 +17,7 @@ import {EditorModelService} from '../../../editor-model.service';
 
 @Component({
   selector: 'ame-trait-characteristic',
-  templateUrl: './trait-characteristic.component.html',
+  templateUrl: './trait-characteristic.component.html'
 })
 export class TraitCharacteristicComponent {
   @Input() parentForm: FormGroup;

@@ -17,7 +17,7 @@ import {EditorModelService} from '../../editor-model.service';
 @Component({
   selector: 'ame-operation',
   templateUrl: './operation.component.html',
-  styleUrls: [],
+  styleUrls: []
 })
 export class OperationComponent {
   @Input() parentForm: FormGroup;

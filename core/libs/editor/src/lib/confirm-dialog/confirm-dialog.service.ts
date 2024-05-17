@@ -38,10 +38,10 @@ export class ConfirmDialogService {
           title,
           closeButtonText: closeButtonText || 'Close',
           actionButtonText: actionButtonText || undefined,
-          okButtonText: okButtonText || 'Continue',
+          okButtonText: okButtonText || 'Continue'
         },
         maxWidth: 650,
-        minWidth: 550,
+        minWidth: 550
       })
       .afterClosed()
       .pipe(first());

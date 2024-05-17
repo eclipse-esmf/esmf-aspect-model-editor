@@ -18,7 +18,7 @@ import {
   SELECTOR_ecProperty,
   SELECTOR_openNamespacesButton,
   SELECTOR_searchElementsInp,
-  SELECTOR_workspaceBtn,
+  SELECTOR_workspaceBtn
 } from '../../../support/constants';
 import {checkAspectTree, connectElements, dragExternalReferenceWithChildren} from '../../../support/utils';
 
@@ -27,18 +27,18 @@ describe('Test drag and drop ext properties', () => {
   it("can add Property with children's from external reference same namespace", () => {
     cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.examples.aspect:1.0.0': [fileName],
+      'org.eclipse.examples.aspect:1.0.0': [fileName]
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.examples.aspect:1.0.0', 'file-name': fileName},
+        headers: {namespace: 'org.eclipse.examples.aspect:1.0.0', 'file-name': fileName}
       },
       {
-        fixture: `/external-reference/same-namespace/with-childrens/${fileName}`,
-      },
+        fixture: `/external-reference/same-namespace/with-childrens/${fileName}`
+      }
     );
 
     cy.visitDefault().then(() =>
@@ -66,7 +66,7 @@ describe('Test drag and drop ext properties', () => {
           expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
           expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
           expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
-        }),
+        })
     );
   });
 });

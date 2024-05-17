@@ -37,9 +37,9 @@ describe('AlertComponent', () => {
         {provide: MatDialogRef, useValue: {}},
         {
           provide: LanguageTranslationService,
-          useValue: provideMockObject(LanguageTranslationService),
-        },
-      ],
+          useValue: provideMockObject(LanguageTranslationService)
+        }
+      ]
     }).compileComponents();
   });
 

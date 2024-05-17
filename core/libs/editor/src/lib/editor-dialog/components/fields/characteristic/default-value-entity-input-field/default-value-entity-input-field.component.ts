@@ -18,7 +18,7 @@ import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-default-value-entity-input-field',
-  templateUrl: './default-value-entity-input-field.component.html',
+  templateUrl: './default-value-entity-input-field.component.html'
 })
 export class DefaultValueEntityInputFieldComponent extends InputFieldComponent<DefaultState> implements OnInit, OnDestroy {
   entityValues: EntityInstance[];
@@ -45,8 +45,8 @@ export class DefaultValueEntityInputFieldComponent extends InputFieldComponent<D
       this.fieldName,
       new FormControl({
         value: defaultValueString || this.metaModelElement?.defaultValue?.['name'] || '',
-        disabled: this.metaModelElement?.isExternalReference(),
-      }),
+        disabled: this.metaModelElement?.isExternalReference()
+      })
     );
 
     const defaultValueControl = this.parentForm.get(this.fieldName);
@@ -54,7 +54,7 @@ export class DefaultValueEntityInputFieldComponent extends InputFieldComponent<D
       defaultValueControl.valueChanges.subscribe(value => {
         const entityValues = this.parentForm?.get('chipList')?.value;
         this.entityValues = entityValues?.filter(({name}: DefaultEntityInstance) => name.includes(value));
-      }),
+      })
     );
   }
 }

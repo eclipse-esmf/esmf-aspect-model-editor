@@ -25,7 +25,7 @@ import {
   MigrationSuccessComponent,
   MigratorComponent,
   StartMigratingComponent,
-  VersionMigrationComponent,
+  VersionMigrationComponent
 } from './components';
 import {SammMigrationComponent} from './components/samm-migration/samm-migration.component';
 import {LanguageTranslateModule} from '@ame/translation';
@@ -36,7 +36,7 @@ const routes: Routes = [
   {path: 'migrating', component: LoadingMigratingComponent, outlet: 'migrator'},
   {path: 'status', component: MigrationStatusComponent, outlet: 'migrator'},
   {path: 'increase-version', component: VersionMigrationComponent, outlet: 'migrator'},
-  {path: 'migration-success', component: MigrationSuccessComponent, outlet: 'migrator'},
+  {path: 'migration-success', component: MigrationSuccessComponent, outlet: 'migrator'}
 ];
 
 @NgModule({
@@ -49,7 +49,7 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatProgressBarModule,
     LanguageTranslateModule,
-    RouterModule.forChild(routes),
+    RouterModule.forChild(routes)
   ],
   declarations: [
     StartMigratingComponent,
@@ -58,7 +58,7 @@ const routes: Routes = [
     VersionMigrationComponent,
     MigrationSuccessComponent,
     MigrationStatusComponent,
-    SammMigrationComponent,
-  ],
+    SammMigrationComponent
+  ]
 })
 export class MigratorModule {}

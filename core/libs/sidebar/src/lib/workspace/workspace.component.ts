@@ -18,7 +18,7 @@ import {SidebarStateService} from '@ame/sidebar';
 @Component({
   selector: 'ame-workspace',
   templateUrl: './workspace.component.html',
-  styleUrls: ['./workspace.component.scss'],
+  styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent implements OnInit, OnDestroy {
   public sidebarService = inject(SidebarStateService);
@@ -44,7 +44,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
           finalize(() => {
             this.loading = false;
             this.changeDetector.detectChanges();
-          }),
+          })
         )
         .subscribe();
       this.subscription.add(refreshing$);

@@ -29,7 +29,7 @@ import {
   SELECTOR_clearLanguageButton,
   SELECTOR_editorSaveButton,
   SELECTOR_elementBtn,
-  SELECTOR_entitySaveButton,
+  SELECTOR_entitySaveButton
 } from '../../../support/constants';
 import {cyHelp} from '../../../support/helpers';
 
@@ -67,7 +67,7 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
       .then(() => cy.get(SELECTOR_addEntityValue).click())
       .then(() => cy.get(FIELD_entityValueName).should('exist').type('ev1'))
       .then(() =>
-        cy.get(FIELD_propertyValueComplex).eq(0).should('exist').clear().type('ev2').get('.mat-mdc-option').contains('ev2').click(),
+        cy.get(FIELD_propertyValueComplex).eq(0).should('exist').clear().type('ev2').get('.mat-mdc-option').contains('ev2').click()
       )
       .then(() => cy.get('[data-cy="property3Value"]').should('exist').clear().type('ev3'))
       .then(() => cy.get('[data-cy="property4Value"]').should('exist').clear().type('ev4'))
@@ -99,9 +99,9 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
           {key: 'Property', value: 'Value'},
           {key: 'property2', value: 'ev5'},
           {key: 'property3', value: 'ev6'},
-          {key: 'property4  (en)', value: 'ev7'},
-        ],
-      },
+          {key: 'property4  (en)', value: 'ev7'}
+        ]
+      }
     ]);
 
     assertRdf([
@@ -114,9 +114,9 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
           ':property4 "ev7"@en.',
           ':Characteristic2 a samm:Characteristic;',
           ':Characteristic3 a samm:Characteristic;',
-          ':Characteristic4 a samm:Characteristic;',
-        ],
-      },
+          ':Characteristic4 a samm:Characteristic;'
+        ]
+      }
     ]);
   });
 
@@ -150,25 +150,25 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
       .then(() => cy.get(SELECTOR_addEntityValue).click())
       .then(() => cy.get(FIELD_entityValueName).should('exist').type('ev1'))
       .then(() =>
-        cy.get(FIELD_propertyValueComplex).eq(0).should('exist').clear().type('ev2').get('.mat-mdc-option').contains('ev2').click(),
+        cy.get(FIELD_propertyValueComplex).eq(0).should('exist').clear().type('ev2').get('.mat-mdc-option').contains('ev2').click()
       )
       .then(() => cy.get('[data-cy="property3Value"]').should('exist').clear().type('ev3'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(0).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
+        cy.get(FIELD_propertyLanguageValue).eq(0).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click()
       )
       .then(() => cy.get('[data-cy="property3Add"]').click())
       .then(() => cy.get('[data-cy="property3Value"]').eq(1).should('exist').clear().type('ev4'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(1).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click(),
+        cy.get(FIELD_propertyLanguageValue).eq(1).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click()
       )
       .then(() => cy.get('[data-cy="property4Value"]').should('exist').clear().type('ev5'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
+        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click()
       )
       .then(() => cy.get('[data-cy="property4Add"]').click())
       .then(() => cy.get('[data-cy="property4Value"]').eq(1).should('exist').clear().type('ev6'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(3).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click(),
+        cy.get(FIELD_propertyLanguageValue).eq(3).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click()
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click().wait(200))
       .then(() => cyHelp.clickSaveButton())
@@ -209,9 +209,9 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
           {key: 'property3  (de)', value: 'ev6'},
           {key: 'property3  (en)', value: 'ev7'},
           {key: 'property4  (de)', value: 'ev8'},
-          {key: 'property4  (en)', value: 'ev9'},
-        ],
-      },
+          {key: 'property4  (en)', value: 'ev9'}
+        ]
+      }
     ]);
 
     assertRdf([
@@ -224,9 +224,9 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
           ':property4 ("ev8"@de "ev9"@en).',
           ':Characteristic2 a samm:Characteristic;',
           ':Characteristic3 a samm-c:Collection;',
-          ':Characteristic4 a samm-c:Collection;',
-        ],
-      },
+          ':Characteristic4 a samm-c:Collection;'
+        ]
+      }
     ]);
 
     cy.dbClickShape('ev1')
@@ -252,9 +252,9 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
           {key: 'property3  (en)', value: 'ev7'},
           {key: 'property4  (de)', value: 'ev8'},
           {key: 'property4  (en)', value: 'ev9'},
-          {key: 'property4  (bm)', value: 'ev10'},
-        ],
-      },
+          {key: 'property4  (bm)', value: 'ev10'}
+        ]
+      }
     ]);
 
     assertRdf([
@@ -267,9 +267,9 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
           ':property4 ("ev8"@de "ev9"@en "ev10"@bm).',
           ':Characteristic2 a samm:Characteristic;',
           ':Characteristic3 a samm-c:Collection;',
-          ':Characteristic4 a samm-c:Collection;',
-        ],
-      },
+          ':Characteristic4 a samm-c:Collection;'
+        ]
+      }
     ]);
   });
 });

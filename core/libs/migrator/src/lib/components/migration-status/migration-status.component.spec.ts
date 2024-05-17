@@ -38,23 +38,23 @@ describe('MigrationStatusComponent', () => {
       providers: [
         {
           provide: MigratorService,
-          useValue: provideMockObject(MigratorService),
+          useValue: provideMockObject(MigratorService)
         },
         {
           provide: ElectronTunnelService,
-          useValue: provideMockObject(ElectronTunnelService),
+          useValue: provideMockObject(ElectronTunnelService)
         },
         {
           provide: EditorService,
           useValue: {
-            settings: {},
-          },
+            settings: {}
+          }
         },
         {
           provide: LanguageTranslationService,
-          useValue: provideMockObject(LanguageTranslationService),
-        },
-      ],
+          useValue: provideMockObject(LanguageTranslationService)
+        }
+      ]
     });
 
     editorService = TestBed.inject(EditorService);

@@ -21,7 +21,7 @@ import {BaseRenderService} from './base-render-service';
 import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EventRenderService extends BaseRenderService {
   constructor(mxGraphService: MxGraphService, sammLangService: SammLanguageSettingsService, rdfService: RdfService) {

@@ -25,9 +25,9 @@ describe('DomainModelToRdfService', () => {
       providers: [
         {
           provide: DomainModelToRdfService,
-          useValue: provideMockObject(DomainModelToRdfService),
-        },
-      ],
+          useValue: provideMockObject(DomainModelToRdfService)
+        }
+      ]
     });
     service = TestBed.inject(DomainModelToRdfService);
   });

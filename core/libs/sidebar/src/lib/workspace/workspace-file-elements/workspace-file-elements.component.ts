@@ -22,7 +22,7 @@ import {MxGraphService} from '@ame/mx-graph';
 @Component({
   selector: 'ame-workspace-file-elements',
   templateUrl: './workspace-file-elements.component.html',
-  styleUrls: ['./workspace-file-elements.component.scss'],
+  styleUrls: ['./workspace-file-elements.component.scss']
 })
 export class WorkspaceFileElementsComponent implements OnInit {
   public sidebarService = inject(SidebarStateService);
@@ -39,7 +39,7 @@ export class WorkspaceFileElementsComponent implements OnInit {
     'constraint',
     'trait',
     'operation',
-    'event',
+    'event'
   ];
   public get selection$() {
     return this.sidebarService.selection.selection$;
@@ -50,7 +50,7 @@ export class WorkspaceFileElementsComponent implements OnInit {
   constructor(
     private editorService: EditorService,
     private mxGraphService: MxGraphService,
-    private changeDetector: ChangeDetectorRef,
+    private changeDetector: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +63,7 @@ export class WorkspaceFileElementsComponent implements OnInit {
           ...sammElements[element],
           elements: [],
           hidden: true,
-          displayed: true,
+          displayed: true
         };
         this.searched[element] = this.elements[element].elements;
       }

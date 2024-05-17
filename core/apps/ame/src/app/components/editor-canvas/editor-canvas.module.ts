@@ -50,9 +50,9 @@ import {ElementsSearchComponent, FilesSearchComponent} from '@ame/utils';
     LanguageTranslateModule,
     SidebarModule,
     ElementsSearchComponent,
-    FilesSearchComponent,
+    FilesSearchComponent
   ],
   declarations: [EditorCanvasComponent],
-  exports: [EditorCanvasComponent],
+  exports: [EditorCanvasComponent]
 })
 export class EditorCanvasModule {}

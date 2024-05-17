@@ -25,7 +25,7 @@ import {
   DefaultProperty,
   DefaultQuantityKind,
   DefaultUnit,
-  BaseMetaModelElement,
+  BaseMetaModelElement
 } from '@ame/meta-model';
 
 export interface ModelRenderer<T, U> {

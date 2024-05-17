@@ -18,7 +18,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-regular-expression-value-input-field',
   templateUrl: './regular-expression-value-input-field.component.html',
-  styleUrls: ['../../field.scss'],
+  styleUrls: ['../../field.scss']
 })
 export class RegularExpressionValueInputFieldComponent
   extends InputFieldComponent<DefaultRegularExpressionConstraint>
@@ -49,10 +49,10 @@ export class RegularExpressionValueInputFieldComponent
       new FormControl(
         {
           value: this.getCurrentValue(this.fieldName),
-          disabled: this.metaModelElement.isExternalReference(),
+          disabled: this.metaModelElement.isExternalReference()
         },
-        Validators.required,
-      ),
+        Validators.required
+      )
     );
   }
 }

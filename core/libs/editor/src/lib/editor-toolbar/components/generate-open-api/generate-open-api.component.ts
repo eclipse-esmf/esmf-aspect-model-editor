@@ -40,7 +40,7 @@ export interface OpenApi {
 @Component({
   selector: 'ame-generate-open-api',
   templateUrl: './generate-open-api.component.html',
-  styleUrls: ['./generate-open-api.component.scss'],
+  styleUrls: ['./generate-open-api.component.scss']
 })
 export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   @ViewChild('dropArea') dropArea: ElementRef;
@@ -56,7 +56,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     Validators.required,
     Validators.pattern(/^\/[a-zA-Z{}/]*$/),
     Validators.pattern(/^(?!.*\/\/)(?!.*{{)(?!.*}}).*$/),
-    Validators.pattern(/.*({.*})?.*$/),
+    Validators.pattern(/.*({.*})?.*$/)
   ];
 
   public get output(): FormControl {
@@ -89,7 +89,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     private modelService: ModelService,
     private editorService: EditorService,
     private notificationsService: NotificationsService,
-    private translate: LanguageTranslationService,
+    private translate: LanguageTranslationService
   ) {}
 
   ngOnInit(): void {
@@ -114,7 +114,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
       resourcePath: new FormControl(null),
       file: new FormControl(null),
       ymlProperties: new FormControl(null),
-      jsonProperties: new FormControl(null),
+      jsonProperties: new FormControl(null)
     });
   }
 
@@ -134,7 +134,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
         }
 
         resourcePathControl?.updateValueAndValidity();
-      }),
+      })
     );
 
     this.subscriptions.add(
@@ -143,7 +143,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
         const hasBrackets = /{.*}/.test(resourcePath);
         hasBrackets ? fileControl?.setValidators(Validators.required) : fileControl?.setValidators(null);
         fileControl?.updateValueAndValidity();
-      }),
+      })
     );
   }
 
@@ -205,8 +205,8 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     this.notificationsService.error({
       title: this.translate.translateService.instant('GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_ERROR_TITLE'),
       message: this.translate.translateService.instant('GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_ERROR_MESSAGE', {
-        output: this.form.value.output.toUpperCase(),
-      }),
+        output: this.form.value.output.toUpperCase()
+      })
     });
   }
 
@@ -222,9 +222,9 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
           finalize(() => {
             this.isGenerating = false;
             this.dialogRef.close();
-          }),
+          })
         )
-        .subscribe(),
+        .subscribe()
     );
   }
 

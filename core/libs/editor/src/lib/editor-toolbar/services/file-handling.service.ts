@@ -19,7 +19,7 @@ import {
   FileTypes,
   FileUploadOptions,
   FileUploadService,
-  ShapeSettingsStateService,
+  ShapeSettingsStateService
 } from '@ame/editor';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
 import {forkJoin, from, Observable, of, throwError} from 'rxjs';
@@ -30,7 +30,7 @@ import {
   LogService,
   ModelSavingTrackerService,
   NotificationsService,
-  SaveValidateErrorsCodes,
+  SaveValidateErrorsCodes
 } from '@ame/shared';
 import {saveAs} from 'file-saver';
 import {ModelService, RdfService} from '@ame/rdf/services';
@@ -76,7 +76,7 @@ interface ModelLoaderState {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class FileHandlingService {
   constructor(
@@ -97,7 +97,7 @@ export class FileHandlingService {
     private modelSaveTracker: ModelSavingTrackerService,
     private fileUploadService: FileUploadService,
     private shapeSettingsStateService: ShapeSettingsStateService,
-    private mxGraphService: MxGraphService,
+    private mxGraphService: MxGraphService
   ) {
     if (!environment.production) {
       window['angular.fileHandlingService'] = this;
@@ -114,7 +114,7 @@ export class FileHandlingService {
     const loadingScreenOptions: LoadingScreenOptions = {
       title: this.translate.language.NOTIFICATION_DIALOG.LOADING,
       content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
-      hasCloseButton: true,
+      hasCloseButton: true
     };
     this.loadingScreenService.open(loadingScreenOptions);
     const migratedModel = this.migratorService.bammToSamm(modelContent);
@@ -128,7 +128,7 @@ export class FileHandlingService {
         this.notificationsService.info({
           title: this.translate.language.NOTIFICATION_SERVICE.LOADING_ERROR,
           message: error.message,
-          timeout: 5000,
+          timeout: 5000
         });
         return of(null);
       }),
@@ -139,7 +139,7 @@ export class FileHandlingService {
           this.shapeSettingsStateService.closeShapeSettings();
         }
         this.sidebarService.workspace.close();
-      }),
+      })
     );
   }
 
@@ -154,7 +154,7 @@ export class FileHandlingService {
             hasCloseButton: true,
             closeButtonAction: () => {
               subscription.unsubscribe();
-            },
+            }
           };
           this.loadingScreenService.open(loadingScreenOptions);
         }),
@@ -163,7 +163,7 @@ export class FileHandlingService {
             .loadNewAspectModel({
               rdfAspectModel,
               namespaceFileName: absoluteFileName,
-              fromWorkspace: true,
+              fromWorkspace: true
             })
             .pipe(
               first(),
@@ -174,7 +174,7 @@ export class FileHandlingService {
                 this.notificationsService.error({
                   title: this.translate.language.NOTIFICATION_SERVICE.LOADING_ERROR,
                   message: `${error}`,
-                  timeout: 5000,
+                  timeout: 5000
                 });
                 return throwError(() => error);
               }),
@@ -183,9 +183,9 @@ export class FileHandlingService {
                 if (this.shapeSettingsStateService.isShapeSettingOpened) {
                   this.shapeSettingsStateService.closeShapeSettings();
                 }
-              }),
-            ),
-        ),
+              })
+            )
+        )
       )
       .subscribe();
   }
@@ -256,10 +256,10 @@ export class FileHandlingService {
         this.notificationsService.success({
           title: this.translate.language.SAVE_MENU.COPIED_TO_CLIPBOARD,
           message: this.translate.language.NOTIFICATION_SERVICE.COPIED_TO_CLIPBOARD_MESSAGE,
-          timeout: 5000,
+          timeout: 5000
         });
       }),
-      first(),
+      first()
     );
   }
 
@@ -278,7 +278,7 @@ export class FileHandlingService {
     this.loadingScreenService.open({
       title: this.translate.language.NOTIFICATION_DIALOG.SAVING,
       content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
-      hasCloseButton: false,
+      hasCloseButton: false
     });
 
     return this.modelService.synchronizeModelToRdf().pipe(
@@ -289,7 +289,7 @@ export class FileHandlingService {
           tap(formattedModel => {
             const header = this.configurationService.getSettings().copyrightHeader.join('\n');
             saveAs(new Blob([header + '\n\n' + formattedModel], {type: 'text/turtle;charset=utf-8'}), fileName);
-          }),
+          })
         );
       }),
       catchError(error => {
@@ -297,11 +297,11 @@ export class FileHandlingService {
         this.notificationsService.error({
           title: this.translate.language.NOTIFICATION_SERVICE.EXPORTING_TITLE_ERROR,
           message: `${error?.error?.message || error}`,
-          timeout: 5000,
+          timeout: 5000
         });
         return throwError(() => error);
       }),
-      finalize(() => this.loadingScreenService.close()),
+      finalize(() => this.loadingScreenService.close())
     );
   }
 
@@ -322,7 +322,7 @@ export class FileHandlingService {
       finalize(() => {
         this.modelSaveTracker.updateSavedModel();
         this.loadingScreenService.close();
-      }),
+      })
     );
   }
 
@@ -330,7 +330,7 @@ export class FileHandlingService {
     this.resolveModelFileContent(fileInfo)
       .pipe(
         switchMap(fileInfo => this.addFileToNamespace(fileInfo)),
-        first(),
+        first()
       )
       .subscribe();
   }
@@ -339,14 +339,14 @@ export class FileHandlingService {
     return fileInfo
       ? of({
           ...fileInfo,
-          content: decodeText(fileInfo.content),
+          content: decodeText(fileInfo.content)
         })
       : this.selectFile();
   }
 
   addFileToNamespace(fileInfo: FileInfoParsed): Observable<any> {
     return this.addFileToWorkspace(fileInfo.path, fileInfo.content, {showNotifications: true}).pipe(
-      map(() => this.electronSignalsService.call('requestRefreshWorkspaces')),
+      map(() => this.electronSignalsService.call('requestRefreshWorkspaces'))
     );
   }
 
@@ -356,9 +356,9 @@ export class FileHandlingService {
         forkJoin({
           content: readFile(file),
           path: of(file.path),
-          name: of(file.path.split('/').pop()),
-        }),
-      ),
+          name: of(file.path.split('/').pop())
+        })
+      )
     );
   }
 
@@ -368,11 +368,11 @@ export class FileHandlingService {
       replace: string[];
       keep: string[];
     },
-    showLoading = true,
+    showLoading = true
   ): Observable<RdfModel[]> {
     const loadingOptions: LoadingScreenOptions = {
       title: this.translate.language.LOADING_SCREEN_DIALOG.WORKSPACE_IMPORT,
-      hasCloseButton: false,
+      hasCloseButton: false
     };
     if (showLoading) this.loadingScreenService.open(loadingOptions);
 
@@ -388,14 +388,14 @@ export class FileHandlingService {
 
         return of(null);
       }),
-      finalize(() => (showLoading ? this.loadingScreenService.close() : null)),
+      finalize(() => (showLoading ? this.loadingScreenService.close() : null))
     );
   }
 
   addFileToWorkspace(fileName: string, fileContent: string, uploadOptions: FileUploadOptions = {}): Observable<RdfModel> {
     const loadingOptions: LoadingScreenOptions = {
       title: this.translate.language.LOADING_SCREEN_DIALOG.WORKSPACE_IMPORT,
-      hasCloseButton: false,
+      hasCloseButton: false
     };
     if (uploadOptions.showLoading) this.loadingScreenService.open(loadingOptions);
 
@@ -414,7 +414,7 @@ export class FileHandlingService {
           ? throwError(() => found.message)
           : this.rdfService.loadExternalReferenceModelIntoStore({
               fileName,
-              aspectMetaModel: newModelContent,
+              aspectMetaModel: newModelContent
             });
       }),
       tap(({absoluteAspectModelFileName}) => (newModelAbsoluteFileName = absoluteAspectModelFileName)),
@@ -423,7 +423,7 @@ export class FileHandlingService {
         if (uploadOptions.showNotifications) {
           this.notificationsService.success({
             title: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_SUCCESS_TITLE,
-            message: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_SUCCESS_MESSAGE,
+            message: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_SUCCESS_MESSAGE
           });
         }
         this.sidebarService.workspace.refresh();
@@ -434,12 +434,12 @@ export class FileHandlingService {
         if (uploadOptions.showNotifications) {
           this.notificationsService.error({
             title: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_TITLE,
-            message: error || this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_MESSAGE,
+            message: error || this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_MESSAGE
           });
         }
         return throwError(() => error);
       }),
-      finalize(() => (uploadOptions.showLoading ? this.loadingScreenService.close() : null)),
+      finalize(() => (uploadOptions.showLoading ? this.loadingScreenService.close() : null))
     );
   }
 
@@ -451,7 +451,7 @@ export class FileHandlingService {
         if (!this.namespaceCacheService.currentCachedFile.hasCachedElements()) {
           this.notificationsService.info({
             title: this.translate.language.NOTIFICATION_DIALOG.NO_ASPECT_TITLE,
-            timeout: 5000,
+            timeout: 5000
           });
           return;
         }
@@ -463,7 +463,7 @@ export class FileHandlingService {
     const loadingScreenOptions: LoadingScreenOptions = {
       title: this.translate.language.NOTIFICATION_DIALOG.VALIDATING,
       content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
-      hasCloseButton: true,
+      hasCloseButton: true
     };
     this.loadingScreenService.open(loadingScreenOptions);
 
@@ -483,12 +483,12 @@ export class FileHandlingService {
         this.notificationsService.error({
           title: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_TITLE,
           message: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_MESSAGE,
-          timeout: 5000,
+          timeout: 5000
         });
         this.logService.logError(`Error occurred while validating the current model (${JSON.stringify(error)})`);
         return throwError(() => 'Validation completed with errors');
       }),
-      finalize(() => localStorage.removeItem('validating')),
+      finalize(() => localStorage.removeItem('validating'))
     );
   }
 
@@ -501,12 +501,12 @@ export class FileHandlingService {
           entry.files.forEach(file => {
             const fileName = `${entry.namespace}:${file}`;
             requests.push(this.importFile(fileName));
-          }),
+          })
         );
 
         return requests;
       }),
-      switchMap(requests => forkJoin(requests)),
+      switchMap(requests => forkJoin(requests))
     );
   }
 
@@ -518,12 +518,12 @@ export class FileHandlingService {
 
   private getFilesReplacement(
     files: string[],
-    {keep, replace}: {replace: string[]; keep: string[]},
+    {keep, replace}: {replace: string[]; keep: string[]}
   ): {namespace: string; files: string[]}[] {
     // Should "keep" files be excluded?
     return Array.from(new Set([...keep, ...replace])).map(namespace => ({
       namespace,
-      files: files.filter(file => file.startsWith(namespace)).map(file => file.replace(`${namespace}:`, '')),
+      files: files.filter(file => file.startsWith(namespace)).map(file => file.replace(`${namespace}:`, ''))
     }));
   }
 
@@ -536,7 +536,7 @@ export class FileHandlingService {
       newFileName: rdfModel.absoluteAspectModelFileName?.split(':')?.pop(),
       loadedFromWorkspace: rdfModel.loadedFromWorkspace,
       isNameChanged: rdfModel.originalAbsoluteFileName && rdfModel.originalAbsoluteFileName !== rdfModel.absoluteAspectModelFileName,
-      isNamespaceChanged: rdfModel.namespaceHasChanged,
+      isNamespaceChanged: rdfModel.namespaceHasChanged
     };
     return of(response);
   }
@@ -549,33 +549,33 @@ export class FileHandlingService {
     const confirmationDialogConfig: DialogOptions = {
       phrases: [
         this.translate.translateService.instant('CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE1', {
-          originalModelName: modelState.newFileName,
+          originalModelName: modelState.newFileName
         }),
         this.translate.translateService.instant('CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE2', {
-          originalModelNamespace: RdfModelUtil.getNamespaceFromRdf(modelState.originalModelName),
+          originalModelNamespace: RdfModelUtil.getNamespaceFromRdf(modelState.originalModelName)
         }),
         this.translate.translateService.instant('CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE3', {
-          newNamespace: RdfModelUtil.getNamespaceFromRdf(modelState.newModelName),
+          newNamespace: RdfModelUtil.getNamespaceFromRdf(modelState.newModelName)
         }),
         this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE4,
         this.translate.translateService.instant('CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE5', {
-          originalModelName: modelState.newFileName,
+          originalModelName: modelState.newFileName
         }),
         this.translate.translateService.instant('CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE6', {
-          originalModelName: modelState.newFileName,
+          originalModelName: modelState.newFileName
         }),
-        this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE7,
+        this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE7
       ],
       title: this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.TITLE,
       okButtonText: this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.OK_BUTTON,
       actionButtonText: this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.ACTION_BUTTON,
-      closeButtonText: this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.CANCEL_BUTTON,
+      closeButtonText: this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.CANCEL_BUTTON
     };
 
     const loadingDialogConfig: LoadingScreenOptions = {
       hasCloseButton: true,
       title: this.translate.language.LOADING_SCREEN_DIALOG.SAVING_TO_WORKSPACE_TITLE,
-      content: this.translate.language.LOADING_SCREEN_DIALOG.SAVING_TO_WORKSPACE_CONTENT,
+      content: this.translate.language.LOADING_SCREEN_DIALOG.SAVING_TO_WORKSPACE_CONTENT
     };
 
     return this.confirmDialogService.open(confirmationDialogConfig).pipe(
@@ -586,7 +586,7 @@ export class FileHandlingService {
         }
 
         return of(confirm);
-      }),
+      })
     );
   }
 
@@ -649,7 +649,7 @@ export class FileHandlingService {
     this.electronSignalsService.call('updateWindowInfo', {
       namespace,
       fromWorkspace: true,
-      file: modelState.newFileName,
+      file: modelState.newFileName
     });
   }
 
@@ -657,7 +657,7 @@ export class FileHandlingService {
     const title = this.translate.language.NOTIFICATION_SERVICE.RENAMED_FILE_TITLE;
     const message = this.translate.translateService.instant('NOTIFICATION_SERVICE.RENAMED_FILE_MESSAGE', {
       oldFile: modelState.oldFileName,
-      newFile: modelState.newFileName,
+      newFile: modelState.newFileName
     });
 
     this.notificationsService.info({title, message});

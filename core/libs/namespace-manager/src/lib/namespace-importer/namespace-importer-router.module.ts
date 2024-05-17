@@ -20,11 +20,11 @@ const routes: Routes = [
   {path: '', component: ImportValidateComponent, outlet: 'import-namespaces'},
   {path: 'conflict', component: FileConflictComponent, outlet: 'import-namespaces'},
   {path: 'summary', component: ImportSummaryComponent, outlet: 'import-namespaces'},
-  {path: 'error', component: ErrorComponent, outlet: 'import-namespaces'},
+  {path: 'error', component: ErrorComponent, outlet: 'import-namespaces'}
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class NamespaceImporterRouterModule {}

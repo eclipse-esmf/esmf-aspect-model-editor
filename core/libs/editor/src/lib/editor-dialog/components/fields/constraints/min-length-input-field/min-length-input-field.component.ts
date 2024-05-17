@@ -18,7 +18,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-min-length-input-field',
   templateUrl: './min-length-input-field.component.html',
-  styleUrls: ['../../field.scss'],
+  styleUrls: ['../../field.scss']
 })
 export class MinLengthInputFieldComponent extends InputFieldComponent<DefaultLengthConstraint> implements OnInit, OnDestroy {
   constructor() {
@@ -47,8 +47,8 @@ export class MinLengthInputFieldComponent extends InputFieldComponent<DefaultLen
       this.fieldName,
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
-        disabled: this.metaModelElement.isExternalReference(),
-      }),
+        disabled: this.metaModelElement.isExternalReference()
+      })
     );
   }
 }

@@ -20,7 +20,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
   selector: 'ame-element',
   templateUrl: './element.component.html',
   styleUrls: ['./element.component.scss'],
-  imports: [NgClass, NgIf, MatTooltipModule],
+  imports: [NgClass, NgIf, MatTooltipModule]
 })
 export class ElementIconComponent implements OnChanges {
   @Input() type!: any;

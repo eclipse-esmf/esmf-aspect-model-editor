@@ -31,7 +31,7 @@ export class LoadingScreenService {
   open(options: LoadingScreenOptions): MatDialogRef<LoadingScreenComponent> {
     this.dialog = this.matDialog.open(LoadingScreenComponent, {
       data: options,
-      disableClose: true,
+      disableClose: true
     });
     return this.dialog;
   }

@@ -19,7 +19,7 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 
 @Component({
   selector: 'ame-encoding-input-field',
-  templateUrl: './encoding-input-field.component.html',
+  templateUrl: './encoding-input-field.component.html'
 })
 export class EncodingInputFieldComponent extends InputFieldComponent<DefaultEncodingConstraint> implements OnInit, OnDestroy {
   public encodingList = [];
@@ -58,10 +58,10 @@ export class EncodingInputFieldComponent extends InputFieldComponent<DefaultEnco
       new FormControl(
         {
           value: RdfModelUtil.getValueWithoutUrnDefinition(this.getCurrentValue(this.fieldName)),
-          disabled: this.metaModelElement.isExternalReference(),
+          disabled: this.metaModelElement.isExternalReference()
         },
-        Validators.required,
-      ),
+        Validators.required
+      )
     );
   }
 }

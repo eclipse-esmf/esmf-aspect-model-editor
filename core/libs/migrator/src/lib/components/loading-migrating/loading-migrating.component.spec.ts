@@ -35,13 +35,13 @@ describe('LoadingMigratingComponent', () => {
       providers: [
         {
           provide: MigratorApiService,
-          useValue: provideMockObject(MigratorApiService),
+          useValue: provideMockObject(MigratorApiService)
         },
         {
           provide: LanguageTranslationService,
-          useValue: provideMockObject(LanguageTranslationService),
-        },
-      ],
+          useValue: provideMockObject(LanguageTranslationService)
+        }
+      ]
     });
 
     migratorApiService = TestBed.inject(MigratorApiService);

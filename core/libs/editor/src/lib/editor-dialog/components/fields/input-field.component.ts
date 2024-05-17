@@ -25,7 +25,7 @@ import {
   DefaultEntity,
   DefaultProperty,
   DefaultUnit,
-  Unit,
+  Unit
 } from '@ame/meta-model';
 import {NamespacesCacheService} from '@ame/cache';
 import {PreviousFormDataSnapshot} from '../../interfaces';
@@ -112,7 +112,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
     return this.metaModelDialogService.getMetaModelElement().pipe(
       tap(metaModelElement => {
         this.metaModelElement = <T>metaModelElement;
-      }),
+      })
     );
   }
 
@@ -133,12 +133,12 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
               description: entity.getDescription('en') || '',
               urn: entity.getUrn(),
               complex: true,
-              entity,
+              entity
             }));
 
             return [...entities, ...this.searchExtEntity(value)]?.filter(type => this.inSearchList(type, value));
           }),
-          startWith([]),
+          startWith([])
         );
   }
 
@@ -154,12 +154,12 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
               description: abstractEntity.getDescription('en') || '',
               urn: abstractEntity.getUrn(),
               complex: true,
-              entity: abstractEntity,
+              entity: abstractEntity
             }));
 
             return [...entities, ...this.searchExtAbstractEntity(value)]?.filter(type => this.inSearchList(type, value));
           }),
-          startWith([]),
+          startWith([])
         );
   }
 
@@ -171,11 +171,11 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
         const properties: Array<FilteredType> = this.currentCachedFile.getCachedProperties()?.map(property => ({
           name: property.name,
           description: property.getDescription('en') || '',
-          urn: property.aspectModelUrn,
+          urn: property.aspectModelUrn
         }));
         return [...properties, ...this.searchExtProperty(value)]?.filter(type => this.inSearchList(type, value));
       }),
-      startWith([]),
+      startWith([])
     );
   }
 
@@ -187,11 +187,11 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
         const properties: Array<FilteredType> = this.currentCachedFile.getCachedAbstractProperties()?.map(property => ({
           name: property.name,
           description: property.getDescription('en') || '',
-          urn: property.aspectModelUrn,
+          urn: property.aspectModelUrn
         }));
         return [...properties, ...this.searchExtProperty(value)]?.filter(type => this.inSearchList(type, value));
       }),
-      startWith([]),
+      startWith([])
     );
   }
 
@@ -205,13 +205,13 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
           ?.map(cachedCharacteristic => ({
             name: cachedCharacteristic.name,
             description: cachedCharacteristic.getDescription('en') || '',
-            urn: cachedCharacteristic.aspectModelUrn,
+            urn: cachedCharacteristic.aspectModelUrn
           }))
           .filter(char => char.urn !== elementAspectUrn);
 
         return [...characteristics, ...this.searchExtCharacteristic(value)]?.filter(type => this.inSearchList(type, value));
       }),
-      startWith([]),
+      startWith([])
     );
   }
 
@@ -226,7 +226,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
         }
         return searchService.search<DefaultUnit>(value, units, unitSearchOption);
       }),
-      startWith(units),
+      startWith(units)
     );
   }
 
@@ -239,7 +239,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
         }
         return searchService.search<Unit>(value, units, unitSearchOption);
       }),
-      startWith(units),
+      startWith(units)
     );
   }
 
@@ -272,7 +272,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
             name: modelElement.name,
             description: modelElement.getDescription('en') || '',
             urn: modelElement.aspectModelUrn,
-            namespace: modelElement.aspectModelUrn.split('#')[0],
+            namespace: modelElement.aspectModelUrn.split('#')[0]
           };
         }
         return null;
@@ -289,7 +289,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
             name: modelElement.name,
             description: modelElement.getDescription('en') || '',
             urn: modelElement.aspectModelUrn,
-            namespace: modelElement.aspectModelUrn.split('#')[0],
+            namespace: modelElement.aspectModelUrn.split('#')[0]
           };
         }
         return null;
@@ -307,7 +307,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
             description: modelElement.getDescription('en') || '',
             urn: modelElement.aspectModelUrn,
             namespace: modelElement.aspectModelUrn.split('#')[0],
-            complex: true,
+            complex: true
           };
         }
         return null;
@@ -325,7 +325,7 @@ export abstract class InputFieldComponent<T extends BaseMetaModelElement> implem
             description: modelElement.getDescription('en') || '',
             urn: modelElement.aspectModelUrn,
             namespace: modelElement.aspectModelUrn.split('#')[0],
-            complex: true,
+            complex: true
           };
         }
         return null;
