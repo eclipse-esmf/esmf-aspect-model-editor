@@ -38,7 +38,7 @@ export class EntityAbstractEntityConnectionHandler
     protected entityPropertyConnector: EntityPropertyConnectionHandler,
     protected filtersService: FiltersService,
     protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService
+    private notificationService: NotificationsService,
   ) {
     super(
       mxGraphService,
@@ -48,7 +48,7 @@ export class EntityAbstractEntityConnectionHandler
       filtersService,
       translate,
       propertyAbstractPropertyConnector,
-      entityPropertyConnector
+      entityPropertyConnector,
     );
   }
 
@@ -56,7 +56,7 @@ export class EntityAbstractEntityConnectionHandler
     parentMetaModel: DefaultEntity,
     childMetaModel: DefaultAbstractEntity,
     parent: mxgraph.mxCell,
-    child: mxgraph.mxCell
+    child: mxgraph.mxCell,
   ): void {
     if (MxGraphHelper.isEntityCycleInheritance(child, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({

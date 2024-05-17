@@ -24,7 +24,7 @@ export class LargeFileWarningComponent {
   constructor(
     private namespacesCacheService: NamespacesCacheService,
     private dialogRef: MatDialogRef<LargeFileWarningComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: {elementsCount: number}
+    @Inject(MAT_DIALOG_DATA) private data: {elementsCount: number},
   ) {
     this.elementsCount = data?.elementsCount || 0;
   }

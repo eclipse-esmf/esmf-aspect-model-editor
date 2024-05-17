@@ -30,7 +30,7 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
     public rdfNodeService: RdfNodeService,
     public graphService: MxGraphService,
     public rdfListService: RdfListService,
-    public rdfService: RdfService
+    public rdfService: RdfService,
   ) {
     super(rdfService);
   }
@@ -87,7 +87,7 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
       this.store.addQuad(
         DataFactory.namedNode(entity.aspectModelUrn),
         this.samm.ExtendsProperty(),
-        DataFactory.namedNode(entity.extendedElement.aspectModelUrn)
+        DataFactory.namedNode(entity.extendedElement.aspectModelUrn),
       );
       this.setPrefix(entity.extendedElement.aspectModelUrn);
     }

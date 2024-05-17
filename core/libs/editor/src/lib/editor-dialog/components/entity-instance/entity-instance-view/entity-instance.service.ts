@@ -30,7 +30,7 @@ export class EntityInstanceService {
   constructor(
     private namespacesCacheService: NamespacesCacheService,
     private confirmDialogService: ConfirmDialogService,
-    private notifications: NotificationsService
+    private notifications: NotificationsService,
   ) {}
 
   onPropertyRemove(property: DefaultProperty, acceptCallback: Function) {

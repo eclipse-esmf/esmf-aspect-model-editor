@@ -62,7 +62,7 @@ export class MxGraphService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private notificationsService: NotificationsService,
     private themeService: ThemeService,
-    public mxGraphShapeSelectorService: MxGraphShapeSelectorService
+    public mxGraphShapeSelectorService: MxGraphShapeSelectorService,
   ) {
     this.document = mxUtils.createXmlDocument();
     if (!environment.production) {
@@ -162,7 +162,7 @@ export class MxGraphService {
     const geometry = this.mxGraphGeometryProviderService.createGeometry(
       node,
       (configuration && configuration.geometry.x) || this.nextCellCoordinates?.x || 0,
-      (configuration && configuration.geometry.y) || this.nextCellCoordinates?.y || 0
+      (configuration && configuration.geometry.y) || this.nextCellCoordinates?.y || 0,
     );
 
     this.nextCellCoordinates = null;
@@ -281,7 +281,7 @@ export class MxGraphService {
       for (const cell of cells) {
         this.graph.resizeCell(
           cell,
-          this.mxGraphGeometryProviderService.createGeometry(MxGraphHelper.getElementNode(cell), cell?.geometry?.x, cell?.geometry?.y)
+          this.mxGraphGeometryProviderService.createGeometry(MxGraphHelper.getElementNode(cell), cell?.geometry?.x, cell?.geometry?.y),
         );
         const modelElement = MxGraphHelper.getModelElement(cell);
         if (MxGraphHelper.isComplexEnumeration(modelElement)) {
@@ -540,7 +540,7 @@ export class MxGraphService {
           entityValueToUpdate.value.aspectModelUrn === deletedEntityValue.aspectModelUrn
         )
           entityValueToUpdate.value = '';
-      })
+      }),
     );
   }
 
@@ -553,7 +553,7 @@ export class MxGraphService {
     deletedEntityValueCells
       .filter(entityValueCell => entityValueCell.isVertex())
       .forEach(entityValueCell =>
-        this.updateEntityValuesWithReference(MxGraphHelper.getModelElement<DefaultEntityInstance>(entityValueCell))
+        this.updateEntityValuesWithReference(MxGraphHelper.getModelElement<DefaultEntityInstance>(entityValueCell)),
       );
   }
 

@@ -22,7 +22,11 @@ import {EditorService} from '@ame/editor';
 export class SaveModelDialogComponent {
   public disabledButton = false;
 
-  constructor(private matDialogRef: MatDialogRef<SaveModelDialogComponent>, private editorService: EditorService, private zone: NgZone) {}
+  constructor(
+    private matDialogRef: MatDialogRef<SaveModelDialogComponent>,
+    private editorService: EditorService,
+    private zone: NgZone,
+  ) {}
 
   close(destroyWindow: boolean) {
     this.matDialogRef.close(destroyWindow);

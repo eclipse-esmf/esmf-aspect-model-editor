@@ -36,7 +36,7 @@ export class ClipboardCopyButtonComponent {
         missingElements: this.namespaceSession.missingElements,
       },
       null,
-      2
+      2,
     );
 
     try {

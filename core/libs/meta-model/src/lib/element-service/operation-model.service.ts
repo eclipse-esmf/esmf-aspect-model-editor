@@ -27,7 +27,7 @@ export class OperationModelService extends BaseModelService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private shapeConnectorService: ShapeConnectorService,
     private mxGraphService: MxGraphService,
-    private operationRender: OperationRenderService
+    private operationRender: OperationRenderService,
   ) {
     super();
   }

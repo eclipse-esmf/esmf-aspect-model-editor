@@ -38,7 +38,7 @@ describe('Test drag and drop ext properties', () => {
       },
       {
         fixture: `/external-reference/same-namespace/with-childrens/${fileName}`,
-      }
+      },
     );
 
     cy.visitDefault().then(() =>
@@ -66,7 +66,7 @@ describe('Test drag and drop ext properties', () => {
           expect(rdf).not.contain('samm:characteristic samm-c:Boolean');
           expect(rdf).not.contain(':ChildrenCharacteristic2 a samm:Characteristic');
           expect(rdf).not.contain(':ChildrenEntity2 a samm:Entity');
-        })
+        }),
     );
   });
 });

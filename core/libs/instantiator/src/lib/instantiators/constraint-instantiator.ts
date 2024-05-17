@@ -25,26 +25,28 @@ export class ConstraintInstantiator extends BaseConstraintCharacteristicInstanti
     return this.metaModelElementInstantiator.rdfModel;
   }
 
-  constructor(protected metaModelElementInstantiator: MetaModelElementInstantiator, public nextProcessor?: ConstraintInstantiator) {
+  constructor(
+    protected metaModelElementInstantiator: MetaModelElementInstantiator,
+    public nextProcessor?: ConstraintInstantiator,
+  ) {
     super(metaModelElementInstantiator, nextProcessor);
   }
 
   create(quad: Quad): Constraint {
-    const extReference = this.namespaceCacheService.findElementOnExtReference<Characteristic>(quad.object.value);
-    if (extReference) {
-      extReference.setExternalReference(true);
-      return extReference;
+    let constraint = this.cachedFile.getElement<Constraint>(quad.object.value);
+    if (constraint) {
+      return constraint;
     }
 
     if (!this.rdfModel.store.getQuads(quad.object, null, null, null).length) {
       const {externalReference} = this.metaModelElementInstantiator.getExternalElement<Characteristic>(
         quad.object,
-        this.rdfModel.isExternalRef
+        this.rdfModel.isExternalRef,
       );
       return externalReference;
     }
 
-    const constraint = super.create(quad);
+    constraint = super.create(quad);
     constraint.setExternalReference(this.rdfModel.isExternalRef);
     constraint.fileName = this.metaModelElementInstantiator.fileName;
 

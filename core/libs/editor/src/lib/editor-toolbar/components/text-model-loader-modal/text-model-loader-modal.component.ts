@@ -34,7 +34,10 @@ import {MatDialogRef} from '@angular/material/dialog';
   ],
 })
 export class TextModelLoaderModalComponent {
-  constructor(private fileHandlingService: FileHandlingService, private matDialogRef: MatDialogRef<TextModelLoaderModalComponent>) {}
+  constructor(
+    private fileHandlingService: FileHandlingService,
+    private matDialogRef: MatDialogRef<TextModelLoaderModalComponent>,
+  ) {}
 
   loadModel(modelText: string) {
     this.matDialogRef.close();

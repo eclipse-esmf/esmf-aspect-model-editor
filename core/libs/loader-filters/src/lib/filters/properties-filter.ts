@@ -148,10 +148,10 @@ export class PropertiesFilterLoader implements FilterLoader {
     return element instanceof DefaultAspect
       ? 'aspect'
       : element instanceof DefaultProperty
-      ? 'property'
-      : element instanceof DefaultEntity
-      ? 'filteredProperties_entity'
-      : 'filteredProperties_either';
+        ? 'property'
+        : element instanceof DefaultEntity
+          ? 'filteredProperties_entity'
+          : 'filteredProperties_either';
   }
 
   hasOverlay(element?: BaseMetaModelElement): boolean {
@@ -160,7 +160,7 @@ export class PropertiesFilterLoader implements FilterLoader {
 
   private generateEitherTree(
     element: DefaultEither,
-    parentNode: ModelTree<BaseMetaModelElement>
+    parentNode: ModelTree<BaseMetaModelElement>,
   ): [ModelTree<BaseMetaModelElement>, ModelTree<BaseMetaModelElement>] {
     return [
       this.generateTree(element.left, {notAllowed: [DefaultEntity], parent: element, parentNode}),
@@ -187,7 +187,7 @@ export class PropertiesFilterLoader implements FilterLoader {
 
   private isAllowed(element: BaseMetaModelElement, options: ModelTreeOptions = {}): boolean {
     return allowedElements.some(
-      allowedElement => element instanceof allowedElement && !(options.notAllowed || [])?.some(c => element instanceof c)
+      allowedElement => element instanceof allowedElement && !(options.notAllowed || [])?.some(c => element instanceof c),
     );
   }
 

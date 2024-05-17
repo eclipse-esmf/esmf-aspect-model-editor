@@ -70,7 +70,11 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
     return this.namespacesCacheService.currentCachedFile;
   }
 
-  constructor(private changeDetector: ChangeDetectorRef, private namespacesCacheService: NamespacesCacheService, private fb: FormBuilder) {}
+  constructor(
+    private changeDetector: ChangeDetectorRef,
+    private namespacesCacheService: NamespacesCacheService,
+    private fb: FormBuilder,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if ('entity' in changes && this.entity) {
@@ -136,7 +140,7 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
 
   private changeEntityValueInput(property: DefaultProperty, value: string): void {
     this.filteredEntityValues$[property.name] = of(this.getPropertyValues(property)).pipe(
-      map(ev => ev.filter(entityValue => entityValue.name.startsWith(value)))
+      map(ev => ev.filter(entityValue => entityValue.name.startsWith(value))),
     );
   }
 
@@ -178,7 +182,7 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
     this.subscriptions.add(
       languageInputControl.valueChanges.subscribe(value => {
         this.changeLanguageInput(entityValueProp.key.property.name, value);
-      })
+      }),
     );
 
     const languageFormGroup = this.fb.group({
@@ -192,7 +196,7 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
   private changeLanguageInput(name: string, value: string): void {
     this.filteredLanguageValues$[name] = of(locale.all.filter(lang => lang.tag)).pipe(
       startWith(locale.all),
-      map(local => local.filter(lang => lang.tag.startsWith(value)))
+      map(local => local.filter(lang => lang.tag.startsWith(value))),
     );
   }
 

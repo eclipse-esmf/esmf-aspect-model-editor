@@ -27,13 +27,13 @@ export class ModelSavingTrackerService {
   private get currentModel$() {
     return this.modelService.synchronizeModelToRdf().pipe(
       take(1),
-      map(() => this.rdfService.serializeModel(this.rdfService.currentRdfModel))
+      map(() => this.rdfService.serializeModel(this.rdfService.currentRdfModel)),
     );
   }
 
   public get isSaved$() {
     return this.currentModel$.pipe(
-      map(currentModel => (!this.firstLoad && this.savedModel === currentModel) || !this.mxGraphService.getAllCells()?.length)
+      map(currentModel => (!this.firstLoad && this.savedModel === currentModel) || !this.mxGraphService.getAllCells()?.length),
     );
   }
 

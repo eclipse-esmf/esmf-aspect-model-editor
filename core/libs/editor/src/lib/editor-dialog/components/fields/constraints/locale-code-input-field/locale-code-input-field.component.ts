@@ -47,8 +47,8 @@ export class LocaleCodeInputFieldComponent extends InputFieldComponent<DefaultLo
           locale.all.filter(
             lang =>
               lang.location != null &&
-              (lang.tag.toLowerCase().includes(enteredLang.toLowerCase()) || lang.name.toLowerCase().includes(enteredLang.toLowerCase()))
-          )
+              (lang.tag.toLowerCase().includes(enteredLang.toLowerCase()) || lang.name.toLowerCase().includes(enteredLang.toLowerCase())),
+          ),
         )
       : null;
   }
@@ -73,15 +73,15 @@ export class LocaleCodeInputFieldComponent extends InputFieldComponent<DefaultLo
           value: RdfModelUtil.getValueWithoutUrnDefinition(this.getCurrentValue(this.fieldName)),
           disabled: this.metaModelElement.isExternalReference(),
         },
-        Validators.required
-      )
+        Validators.required,
+      ),
     );
 
     const localeCodeControl = this.parentForm.get(this.fieldName);
     this.formSubscription.add(
       localeCodeControl.valueChanges.subscribe(value => {
         this.doFilterLanguages(value);
-      })
+      }),
     );
   }
 }

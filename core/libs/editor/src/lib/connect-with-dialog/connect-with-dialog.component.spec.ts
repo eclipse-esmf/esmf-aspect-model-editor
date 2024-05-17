@@ -30,12 +30,12 @@ const cell: Cell = {
   style: 'aspect',
 };
 const cells: Cell[] = [
-  {style: 'property', getMetaModelElement: () => ({element: new DefaultProperty('property', 'property', 'property', null)} as any)},
+  {style: 'property', getMetaModelElement: () => ({element: new DefaultProperty('property', 'property', 'property', null)}) as any},
   {
     style: 'characteristic',
-    getMetaModelElement: () => ({element: new DefaultCharacteristic('characteristic', 'characteristic', 'characteristic')} as any),
+    getMetaModelElement: () => ({element: new DefaultCharacteristic('characteristic', 'characteristic', 'characteristic')}) as any,
   },
-  {style: 'entity', getMetaModelElement: () => ({element: new DefaultEntity('entity', 'entity', 'entity', [])} as any)},
+  {style: 'entity', getMetaModelElement: () => ({element: new DefaultEntity('entity', 'entity', 'entity', [])}) as any},
 ];
 
 describe('RdfNodeService', () => {
@@ -109,7 +109,7 @@ describe('RdfNodeService', () => {
           model: new DefaultProperty('property', 'property', 'property', null),
           cell: {} as any,
         },
-        'property'
+        'property',
       );
       expect(result).toBe(true);
     });
@@ -120,7 +120,7 @@ describe('RdfNodeService', () => {
           model: new DefaultProperty('property', 'property', 'property', null),
           cell: {} as any,
         },
-        'aspect'
+        'aspect',
       );
       expect(result).toBe(false);
     });

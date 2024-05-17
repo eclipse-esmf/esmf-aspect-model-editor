@@ -41,14 +41,14 @@ export class PredefinedCharacteristicInstantiator {
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('Text'),
       'Text',
-      new DefaultScalar(simpleDataTypes['string'].isDefinedBy)
+      new DefaultScalar(simpleDataTypes['string'].isDefinedBy),
     );
 
     characteristic.addPreferredName('en', 'Text');
     characteristic.addDescription(
       'en',
       'Describes a Property which contains plain text. ' +
-        'This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.'
+        'This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.',
     );
 
     return characteristic;
@@ -59,7 +59,7 @@ export class PredefinedCharacteristicInstantiator {
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('Timestamp'),
       'Timestamp',
-      new DefaultScalar(simpleDataTypes['dateTime'].isDefinedBy)
+      new DefaultScalar(simpleDataTypes['dateTime'].isDefinedBy),
     );
 
     characteristic.addPreferredName('en', 'Timestamp');
@@ -73,14 +73,14 @@ export class PredefinedCharacteristicInstantiator {
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('MultiLanguageText'),
       'MultiLanguageText',
-      new DefaultScalar(simpleDataTypes['langString'].isDefinedBy)
+      new DefaultScalar(simpleDataTypes['langString'].isDefinedBy),
     );
 
     characteristic.addPreferredName('en', 'Multi-Language Text');
     characteristic.addDescription(
       'en',
       'Describes a Property which contains plain text in multiple languages.' +
-        ' This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.'
+        ' This is intended exclusively for human readable strings, not for identifiers, measurement values, etc.',
     );
 
     return characteristic;
@@ -91,7 +91,7 @@ export class PredefinedCharacteristicInstantiator {
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('Boolean'),
       'Boolean',
-      new DefaultScalar(`${simpleDataTypes['boolean'].isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['boolean'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'Boolean');
@@ -105,7 +105,7 @@ export class PredefinedCharacteristicInstantiator {
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('Locale'),
       'Locale',
-      new DefaultScalar(`${simpleDataTypes['string'].isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['string'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'Locale');
@@ -119,7 +119,7 @@ export class PredefinedCharacteristicInstantiator {
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('Language'),
       'Language',
-      new DefaultScalar(`${simpleDataTypes['string'].isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['string'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'Language');
@@ -133,7 +133,7 @@ export class PredefinedCharacteristicInstantiator {
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('UnitReference'),
       'UnitReference',
-      new DefaultScalar(`${simpleDataTypes['curie'].isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['curie'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'Unit Reference');
@@ -147,7 +147,7 @@ export class PredefinedCharacteristicInstantiator {
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('ResourcePath'),
       'ResourcePath',
-      new DefaultScalar(`${simpleDataTypes['anyURI'].isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['anyURI'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'Resource Path');
@@ -161,7 +161,7 @@ export class PredefinedCharacteristicInstantiator {
       metaModelElementInstantiator.samm.version,
       metaModelElementInstantiator.sammC.getAspectModelUrn('MimeType'),
       'MimeType',
-      new DefaultScalar(`${simpleDataTypes['string'].isDefinedBy}`)
+      new DefaultScalar(`${simpleDataTypes['string'].isDefinedBy}`),
     );
 
     characteristic.addPreferredName('en', 'MIME Type');
