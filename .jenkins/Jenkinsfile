@@ -24,7 +24,8 @@ pipeline {
               }
             }
 
-            echo "Artifact URL: ${env.artifact_url_win}"
+            echo "Artifact URL Win: ${env.artifact_url_win}"
+            echo "Artifact URL Mac: ${env.artifact_url_mac}"
             echo "Version: ${env.version}"
           } else {
             echo "Error: parameters.txt does not exist."
@@ -33,35 +34,96 @@ pipeline {
       }
     }
 
-    stage('Download and unpack artifact') {
+    stage('Download and unpack Windows artifact') {
       steps {
         script {
+          def winOsFile = "aspect-model-editor-v${env.version}-win.zip"
           sh "curl -L -H 'Accept: application/vnd.github.v3+json' \
                         -H 'Authorization: Bearer ${GITHUB_BOT_TOKEN}' \
                         '${env.artifact_url_win}' \
-                        --output 'aspect-model-editor-v${env.version}-win.zip'"
+                        --output '${winOsFile}'"
           sh "mkdir -p unpack_dir"
           sh "unzip -o aspect-model-editor-v${env.version}-win.zip -d unpack_dir"
+          sh "rm '${winOsFile}'"
           sh "ls -a unpack_dir"
         }
       }
     }
 
-    stage('Sign Applications') {
+    stage('Sign Windows Applications') {
       steps {
         script {
           sh "mkdir -p signed_dir"
           sh "curl -o signed_dir/aspect-model-editor-v${env.version}-win.exe -F file=@unpack_dir/aspect-model-editor-v${env.version}-win.exe https://cbi.eclipse.org/authenticode/sign"
+          sh "ls -a signed_dir"
         }
       }
     }
 
-    stage('Release signed WINDOWS artifact to GitHub Releases') {
+    stage('Download Mac artifact') {
+      steps {
+        script {
+          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
+          sh "curl -L -H 'Accept: application/vnd.github.v3+json' \
+                        -H 'Authorization: Bearer ${GITHUB_BOT_TOKEN}' \
+                        '${env.artifact_url_mac}' \
+                        --output '${macOsFile}'"
+          sh "mv ${macOsFile} unpack_dir/"
+          sh "ls -a unpack_dir"
+        }
+      }
+    }
+
+    stage('Sign Mac Applications') {
+      steps {
+        script {
+          sh "mkdir -p signed_dir"
+          sh "curl -o signed_dir/aspect-model-editor-v${env.version}-mac.dmg -F file=@unpack_dir/aspect-model-editor-v${env.version}-mac.dmg -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign"
+          sh "ls -a signed_dir"
+        }
+      }
+    }
+
+    stage('MacOS Notarization') {
+      steps {
+        script {
+          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
+
+          sh "mv unpack_dir/${macOsFile} /"
+
+
+          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf\", \"staple\": true};type=application/json"
+          def response = sh(script: "curl -X POST -F file=@${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
+
+          def jsonSlurper = new JsonSlurper()
+          def json = jsonSlurper.parseText(response)
+          String uuid = json.uuid
+
+          while (json.notarizationStatus.status == 'IN_PROGRESS') {
+            sleep(time: 1, unit: 'MINUTES')
+            response = sh(script: "curl https://cbi.eclipse.org/macos/xcrun/${uuid}/status", returnStdout: true).trim()
+            json = jsonSlurper.parseText(response)
+          }
+
+          if (json.notarizationStatus.status != 'COMPLETE') {
+            echo "Notarization failed: ${response}"
+            error("Notarization failed.")
+          }
+
+          sh "rm '${macOsFile}'"
+
+          sh "curl -JO -o aspect-model-editor-v${env.version}-mac.dmg https://cbi.eclipse.org/macos/xcrun/${uuid}/download"
+        }
+      }
+    }
+
+    stage('Release signed Windows and Mac artifact to GitHub Releases') {
       steps {
         script {
           def repo = "eclipse-esmf/esmf-aspect-model-editor"
           def tagName = "v${env.version}"
-          def fileName = "signed_dir/aspect-model-editor-v${env.version}-win.exe"
+          def fileNameWin = "aspect-model-editor-v${env.version}-win.zip"
+          def fileNameMac = "aspect-model-editor-v${env.version}-mac.dmg"
           def releaseId = ""
 
           def tagExists = sh(script: """
@@ -97,14 +159,24 @@ pipeline {
                          -H "Accept: application/vnd.github+json" \\
                          -H "Authorization: Bearer \$GITHUB_BOT_TOKEN" \
                          -H "Content-Type: application/octet-stream" \
-                         --data-binary @${fileName} \
-                         "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=aspect-model-editor-v${env.version}-win.exe"
+                         --data-binary @${fileNameWin} \
+                         "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=${fileNameWin}"
+                    """
+
+          sh """
+                    curl -L \
+                         -X POST \
+                         -H "Accept: application/vnd.github+json" \\
+                         -H "Authorization: Bearer \$GITHUB_BOT_TOKEN" \
+                         -H "Content-Type: application/octet-stream" \
+                         --data-binary @${fileNameMac} \
+                         "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=${fileNameMac}"
                     """
 
           sh """
                     curl -X DELETE \
                          -H "Authorization: Bearer \$GITHUB_BOT_TOKEN" \
-                         "https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor/git/refs/heads/pre_release_configuration"
+                         "https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/git/refs/heads/pre_release_configuration"
                     """
         }
       }
