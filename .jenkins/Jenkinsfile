@@ -96,7 +96,7 @@ pipeline {
           def macOsFile = "aspect-model-editor-v${env.version}-mac.zip"
 
           def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf\", \"staple\": true};type=application/json"
-          def response = sh(script: "curl -X POST -F file=@signed_dir/${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
+          def response = sh(script: "curl -X POST -F file=@${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
 
           def jsonSlurper = new JsonSlurper()
           def json = jsonSlurper.parseText(response)
@@ -112,6 +112,8 @@ pipeline {
             echo "Notarization failed: ${response}"
             error("Notarization failed.")
           }
+
+          sh "rm '${macOsFile}'"
 
           sh "curl -JO -o aspect-model-editor-v${env.version}-mac.zip https://cbi.eclipse.org/macos/xcrun/${uuid}/download"
           sh "ls -a"
