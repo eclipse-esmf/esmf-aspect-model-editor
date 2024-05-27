@@ -57,6 +57,7 @@ pipeline {
         script {
           sh "mkdir -p signed_dir"
           sh "curl -o signed_dir/aspect-model-editor-v${env.version}-win.exe -F file=@unpack_dir/aspect-model-editor-v${env.version}-win.exe https://cbi.eclipse.org/authenticode/sign"
+          sh "zip -r aspect-model-editor-v${env.version}-win.zip signed_dir"
           sh "ls -a signed_dir"
         }
       }
@@ -90,11 +91,8 @@ pipeline {
         script {
           def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
 
-          sh "mv unpack_dir/${macOsFile} /"
-
-
           def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf\", \"staple\": true};type=application/json"
-          def response = sh(script: "curl -X POST -F file=@${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
+          def response = sh(script: "curl -X POST -F file=@signed_dir/${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
 
           def jsonSlurper = new JsonSlurper()
           def json = jsonSlurper.parseText(response)
@@ -111,9 +109,8 @@ pipeline {
             error("Notarization failed.")
           }
 
-          sh "rm '${macOsFile}'"
-
           sh "curl -JO -o aspect-model-editor-v${env.version}-mac.dmg https://cbi.eclipse.org/macos/xcrun/${uuid}/download"
+          sh "ls -a"
         }
       }
     }
