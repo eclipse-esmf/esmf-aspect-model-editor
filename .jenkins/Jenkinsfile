@@ -72,6 +72,7 @@ pipeline {
                         '${env.artifact_url_mac}' \
                         --output 'unpack_dir/${macOsFile}'"
           sh "unzip -o unpack_dir/${macOsFile} -d unpack_dir"
+          sh "unzip -o unpack_dir/${macOsFile} -d unpack_dir"
           sh "ls -a unpack_dir"
         }
       }
