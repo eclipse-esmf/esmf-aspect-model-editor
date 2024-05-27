@@ -41,7 +41,7 @@
       ]
     },
     "mac": {
-      "target": "zip",
+      "target": "dmg",
       "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
       "files": [
         "main.js",
