@@ -81,7 +81,7 @@ pipeline {
       steps {
         script {
           sh "mkdir -p signed_dir"
-          sh "curl -o signed_dir/aspect-model-editor-v${env.version}-mac.dmg -F file=@unpack_dir/aspect-model-editor-v${env.version}-mac.dmg -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign"
+          sh "curl -o signed_dir/Aspect-Model-Editor.app -F file=@unpack_dir/Aspect-Model-Editor.app -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign"
           sh "ls -a signed_dir"
         }
       }
@@ -90,7 +90,9 @@ pipeline {
     stage('MacOS Notarization') {
       steps {
         script {
-          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
+          sh "zip -j aspect-model-editor-v${env.version}-mac.zip signed_dir/Aspect-Model-Editor.app"
+
+          def macOsFile = "aspect-model-editor-v${env.version}-mac.zip"
 
           def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf\", \"staple\": true};type=application/json"
           def response = sh(script: "curl -X POST -F file=@signed_dir/${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
@@ -110,7 +112,7 @@ pipeline {
             error("Notarization failed.")
           }
 
-          sh "curl -JO -o aspect-model-editor-v${env.version}-mac.dmg https://cbi.eclipse.org/macos/xcrun/${uuid}/download"
+          sh "curl -JO -o aspect-model-editor-v${env.version}-mac.zip https://cbi.eclipse.org/macos/xcrun/${uuid}/download"
           sh "ls -a"
         }
       }
@@ -122,7 +124,7 @@ pipeline {
           def repo = "eclipse-esmf/esmf-aspect-model-editor"
           def tagName = "v${env.version}"
           def fileNameWin = "aspect-model-editor-v${env.version}-win.zip"
-          def fileNameMac = "aspect-model-editor-v${env.version}-mac.dmg"
+          def fileNameMac = "aspect-model-editor-v${env.version}-mac.zip"
           def releaseId = ""
 
           def tagExists = sh(script: """
