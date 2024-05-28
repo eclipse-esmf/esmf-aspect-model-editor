@@ -66,14 +66,16 @@ pipeline {
     stage('Download Mac artifact') {
       steps {
         script {
+          sh "mkdir -p unpack_mac_dir"
           def macOsFile = "aspect-model-editor-v${env.version}-mac.zip"
           sh "curl -L -H 'Accept: application/vnd.github.v3+json' \
                         -H 'Authorization: Bearer ${GITHUB_BOT_TOKEN}' \
                         '${env.artifact_url_mac}' \
-                        --output 'unpack_dir/${macOsFile}'"
-          sh "unzip -o unpack_dir/${macOsFile} -d unpack_dir"
-          sh "unzip -o unpack_dir/${macOsFile} -d unpack_dir"
-          sh "ls -a unpack_dir"
+                        --output 'unpack_mac_dir/${macOsFile}'"
+          sh "unzip -o unpack_mac_dir/${macOsFile} -d unpack_mac_dir"
+          sh "unzip -o unpack_mac_dir/${macOsFile} -d unpack_mac_dir"
+          sh "rm 'unpack_mac_dir/${macOsFile}'"
+          sh "ls -a unpack_mac_dir"
         }
       }
     }

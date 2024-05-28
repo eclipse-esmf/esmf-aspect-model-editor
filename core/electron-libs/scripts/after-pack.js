@@ -28,7 +28,7 @@ async function walkAsync(dir) {
 
 const signFile = file => {
   console.log(`Signing ${file}...`);
-  child_process.spawnSync(signCommand, [path.basename(file), entitlements, rootDir], {
+  child_process.spawnSync(signCommand, [path.basename(file), entitlements], {
     cwd: path.dirname(file),
     maxBuffer: 1024 * 10000,
     env: process.env,
@@ -38,7 +38,7 @@ const signFile = file => {
 };
 
 async function defaultFunction() {
-  const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_dir');
+  const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_mac_dir');
 
   const branch = process.env.BRANCH_NAME;
 
@@ -51,12 +51,11 @@ async function defaultFunction() {
 
   childPaths.sort((a, b) => b.split(path.sep).length - a.split(path.sep).length).forEach(file => signFile(file));
 
-  const singedDir = path.join(rootDir, 'signed');
-  const singedAppPath = path.resolve(singedDir, 'Aspect-Model-Editor.app');
+  const singedAppPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
   console.log('Notarizing the application...');
-  child_process.spawnSync(notarizeCommand, [path.basename(singedAppPath), 'org.eclipse.esmf.ame', rootDir], {
-    cwd: path.dirname(singedDir),
+  child_process.spawnSync(notarizeCommand, [path.basename(singedAppPath), 'org.eclipse.esmf.ame'], {
+    cwd: path.dirname(singedAppPath),
     maxBuffer: 1024 * 10000,
     env: process.env,
     stdio: 'inherit',
