@@ -56,7 +56,7 @@ async function defaultFunction() {
 
   console.log('Notarizing the application...');
   child_process.spawnSync(notarizeCommand, [path.basename(singedAppPath), 'org.eclipse.esmf.ame'], {
-    cwd: path.dirname(appPath),
+    cwd: path.dirname(singedDir),
     maxBuffer: 1024 * 10000,
     env: process.env,
     stdio: 'inherit',
