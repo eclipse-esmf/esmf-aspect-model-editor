@@ -82,16 +82,17 @@ pipeline {
       steps {
         script {
           nodejs(nodeJSInstallationName: 'node_20.x') {
-            sh "node --version"
-            sh "npm --version"
-            sh "cd core"
-            sh 'npm install'
-            sh 'npm run after-pack'
-            sh 'ls -a electron'
-            sh 'ls -a electron/mac'
-            sh 'ls -a electron/mac/signed'
-            sh 'ls -a electron/mac/notarized'
-            sh 'cd ..'
+            sh '''
+              echo "NPM version:"
+              npm --version
+              cd core
+              npm install
+              npm run after-pack
+              ls -a electron
+              ls -a electron/mac
+              ls -a electron/mac/signed
+              ls -a electron/mac/notarized
+            '''
           }
         }
       }
