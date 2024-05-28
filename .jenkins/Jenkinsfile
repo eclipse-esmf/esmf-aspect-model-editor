@@ -81,13 +81,17 @@ pipeline {
     stage('Sign Electron Application on Mac') {
       steps {
         script {
-          dir('core') {
+          nodejs(nodeJSInstallationName: 'node_20.x') {
+            sh "node --version"
+            sh "npm --version"
+            sh "cd core"
             sh 'npm install'
             sh 'npm run after-pack'
-            sh 'ls -a core/electron'
-            sh 'ls -a core/electron/mac'
-            sh 'ls -a core/electron/mac/signed'
-            sh 'ls -a core/electron/mac/notarized'
+            sh 'ls -a electron'
+            sh 'ls -a electron/mac'
+            sh 'ls -a electron/mac/signed'
+            sh 'ls -a electron/mac/notarized'
+            sh 'cd ..'
           }
         }
       }
