@@ -1,13 +1,29 @@
 #!/usr/bin/env node
 
-const os = require('os');
+const fs = require('fs').promises;
 const path = require('path');
 const child_process = require('child_process');
-const globby = require('globby');
 
 const signCommand = path.join(__dirname, 'sign.sh');
 const notarizeCommand = path.join(__dirname, 'notarize.sh');
 const entitlements = path.resolve(__dirname, '..', '..', '..', 'entitlements.plist');
+
+async function walkAsync(dir) {
+  let files = await fs.readdir(dir);
+  files = await Promise.all(
+    files.map(async file => {
+      const filePath = path.join(dir, file);
+      const stats = await fs.stat(filePath);
+      if (stats.isDirectory()) {
+        return walkAsync(filePath);
+      } else {
+        return filePath;
+      }
+    }),
+  );
+
+  return files.flat();
+}
 
 const signFile = file => {
   console.log(`Signing ${file}...`);
@@ -21,14 +37,8 @@ const signFile = file => {
 };
 
 async function defaultFunction() {
-  const running_on_mac = os.platform() === 'darwin' || os.platform() === 'mac';
   const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_dir');
   const appPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
-
-  // if (!running_on_mac) {
-  //   console.log('This will only run on MacOs.');
-  //   return;
-  // }
 
   const releaseDryRun = process.env.ESMF_JENKINS_RELEASE_DRYRUN === 'true';
   const branch = process.env.BRANCH_NAME;
@@ -41,7 +51,7 @@ async function defaultFunction() {
 
   console.log('Detected ESMF Release on Mac ' + (releaseDryRun ? ' (dry-run)' : '') + ' - proceeding with signing and notarizing');
 
-  let childPaths = await getFiles(appOutDir);
+  let childPaths = await walkAsync(appOutDir);
 
   childPaths.sort((a, b) => b.split(path.sep).length - a.split(path.sep).length).forEach(file => signFile(file));
 
@@ -53,10 +63,6 @@ async function defaultFunction() {
     stdio: 'inherit',
     encoding: 'utf-8',
   });
-}
-
-async function getFiles(dir) {
-  return await globby(`${dir}/**/*.*`);
 }
 
 defaultFunction().catch(console.error);
