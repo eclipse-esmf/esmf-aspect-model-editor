@@ -4,9 +4,10 @@ const fs = require('fs').promises;
 const path = require('path');
 const child_process = require('child_process');
 
+const rootDir = path.join(__dirname, '..', '..', '..');
 const signCommand = path.join(__dirname, 'sign.sh');
 const notarizeCommand = path.join(__dirname, 'notarize.sh');
-const entitlements = path.resolve(__dirname, '..', '..', '..', 'entitlements.plist');
+const entitlements = path.resolve(rootDir, 'entitlements.plist');
 
 async function walkAsync(dir) {
   let files = await fs.readdir(dir);
@@ -27,7 +28,7 @@ async function walkAsync(dir) {
 
 const signFile = file => {
   console.log(`Signing ${file}...`);
-  child_process.spawnSync(signCommand, [path.basename(file), entitlements], {
+  child_process.spawnSync(signCommand, [path.basename(file), entitlements, rootDir], {
     cwd: path.dirname(file),
     maxBuffer: 1024 * 10000,
     env: process.env,
@@ -50,11 +51,11 @@ async function defaultFunction() {
 
   childPaths.sort((a, b) => b.split(path.sep).length - a.split(path.sep).length).forEach(file => signFile(file));
 
-  const singedDir = path.join(appOutDir, 'signed');
+  const singedDir = path.join(rootDir, 'signed');
   const singedAppPath = path.resolve(singedDir, 'Aspect-Model-Editor.app');
 
   console.log('Notarizing the application...');
-  child_process.spawnSync(notarizeCommand, [path.basename(singedAppPath), 'org.eclipse.esmf.ame'], {
+  child_process.spawnSync(notarizeCommand, [path.basename(singedAppPath), 'org.eclipse.esmf.ame', rootDir], {
     cwd: path.dirname(singedDir),
     maxBuffer: 1024 * 10000,
     env: process.env,

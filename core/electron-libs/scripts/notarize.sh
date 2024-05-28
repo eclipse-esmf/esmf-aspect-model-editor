@@ -2,6 +2,7 @@
 
 INPUT=$1
 APP_ID=$2
+ROOT_DIR=$3
 NEEDS_UNZIP=false
 UUID_REGEX='"uuid"\s*:\s*"([^"]+)'
 STATUS_REGEX='"status"\s*:\s*"([^"]+)'
@@ -14,11 +15,8 @@ if [ -d "${INPUT}" ]; then
     INPUT=unsigned.zip
 fi
 
-ls -a
-ls -a ..
-
 # notarize over curl
-RESPONSE=$(curl -X POST -F file=@"${INPUT}" -F 'options={"primaryBundleId": "'${APP_ID}'", "staple": true};type=application/json' https://cbi.eclipse.org/macos/xcrun/notarize)
+RESPONSE=$(curl -X POST -F file=@"${ROOT_DIR}/${INPUT}" -F 'options={"primaryBundleId": "'${APP_ID}'", "staple": true};type=application/json' https://cbi.eclipse.org/macos/xcrun/notarize)
 
 # fund uuid and status
 [[ $RESPONSE =~ $UUID_REGEX ]]
@@ -42,8 +40,11 @@ if [[ $STATUS != 'COMPLETE' ]]; then
 fi
 
 # download stapled result
-mkdir -p notarized
-RESPONSE=$(curl -o "notarized/${INPUT}" https://cbi.eclipse.org/macos/xcrun/${UUID}/download)
+mkdir -p "${ROOT_DIR}/notarized"
+RESPONSE=$(curl -o "${ROOT_DIR}/notarized/${INPUT}" https://cbi.eclipse.org/macos/xcrun/${UUID}/download)
+
+ls -a "${ROOT_DIR}"
+ls -a "${ROOT_DIR}/notarized"
 
 # if unzip needed
 if [ "$NEEDS_UNZIP" = true ]; then
@@ -51,10 +52,10 @@ if [ "$NEEDS_UNZIP" = true ]; then
 
     if [ $? -ne 0 ]; then
         # echo contents if unzip failed
-        output=$(cat "notarized/${INPUT}")
+        output=$(cat "${ROOT_DIR}/notarized/${INPUT}")
         echo "$output"
         exit 1
     fi
 
-    rm -f "notarized/${INPUT}"
+    rm -f "${ROOT_DIR}/notarized/${INPUT}"
 fi
