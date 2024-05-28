@@ -86,12 +86,10 @@ pipeline {
               echo "NPM version:"
               npm --version
               cd core
-              npm install
-              npm run after-pack
-              ls -a electron
-              ls -a electron/mac
-              ls -a electron/mac/signed
-              ls -a electron/mac/notarized
+              npm install electron-osx-sign
+              node electron-libs/scripts/after-pack.js
+              ls -a signed
+              ls -a notarized
             '''
           }
         }

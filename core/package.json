@@ -137,7 +137,6 @@
     "build:win:prod": "ng build --configuration=production && electron-builder build --win",
     "build:mac:prod": "ng build --configuration=production && electron-builder build --mac",
     "build:linux:prod": "ng build --configuration=production && electron-builder build --linux",
-    "after-pack": "node electron-libs/scripts/after-pack.js",
     "help": "nx help",
     "affected:apps": "nx affected:apps",
     "affected:libs": "nx affected:libs",

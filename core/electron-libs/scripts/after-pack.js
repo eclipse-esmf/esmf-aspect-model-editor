@@ -22,7 +22,7 @@ const signFile = file => {
 
 async function defaultFunction() {
   const running_on_mac = os.platform() === 'darwin' || os.platform() === 'mac';
-  const appOutDir = path.join(__dirname, '..', '..', 'electron', 'mac');
+  const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_dir');
   const appPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
   if (!running_on_mac) {
