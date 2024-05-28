@@ -198,7 +198,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: aspect-model-editor-v5.6.0-rc2-mac
-          path: core/electron/aspect-model-editor-v5.6.0-rc2-mac.dmg
+          path: core/electron/mac/Aspect-Model-Editor.app
 
       # Release Linux executables
       - name: Create GitHub release (Linux)

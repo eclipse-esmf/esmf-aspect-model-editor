@@ -38,7 +38,7 @@ export class FilterRelation {
     public exceptInFilter: {
       [ModelFilter.DEFAULT]?: ClassReference<BaseMetaModelElement>[];
       [ModelFilter.PROPERTIES]?: ClassReference<BaseMetaModelElement>[];
-    } = {}
+    } = {},
   ) {
     if (!this.exceptInFilter[ModelFilter.DEFAULT]) {
       this.exceptInFilter[ModelFilter.DEFAULT] = [];

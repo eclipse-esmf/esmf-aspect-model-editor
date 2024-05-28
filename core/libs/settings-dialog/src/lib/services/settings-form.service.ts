@@ -59,7 +59,7 @@ export class SettingsFormService {
     private editorConfigStrategy: EditorConfigurationUpdateStrategy,
     private languageConfigStrategy: LanguageConfigurationUpdateStrategy,
     private namespaceConfigStrategy: NamespaceConfigurationUpdateStrategy,
-    private copyrightHeaderUpdateStrategy: CopyrightHeaderUpdateStrategy
+    private copyrightHeaderUpdateStrategy: CopyrightHeaderUpdateStrategy,
   ) {
     this.strategies = [
       this.automatedWorkflowStrategy,
@@ -160,7 +160,7 @@ export class SettingsFormService {
     aspectModelArray.push(
       this.formBuilder.group({
         language: [value, Validators.required],
-      })
+      }),
     );
   }
 

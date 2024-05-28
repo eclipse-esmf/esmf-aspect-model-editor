@@ -44,7 +44,10 @@ export class CachedFile {
     }
   }
 
-  constructor(public fileName: string, public namespace: string) {}
+  constructor(
+    public fileName: string,
+    public namespace: string,
+  ) {}
 
   resolveElement<T>(instance: T & IsNamed): T {
     const aspectModelUrn = instance.aspectModelUrn;
@@ -138,7 +141,7 @@ export class CachedFile {
   getCachedEntityValues(): Array<DefaultEntityInstance> {
     return Array.from(this.cachedElements.values()).reduce(
       (acc: DefaultEntityInstance[], item: any) => (item instanceof DefaultEntityInstance ? [...acc, item] : acc),
-      []
+      [],
     );
   }
 
@@ -155,14 +158,14 @@ export class CachedFile {
   getCachedUnits(): Array<DefaultUnit> {
     return Array.from(this.cachedElements.values()).reduce(
       (acc: DefaultUnit[], item: any) => (item instanceof DefaultUnit && !item.isPredefined() ? [...acc, item] : acc),
-      []
+      [],
     );
   }
 
   getCachedEvents(): Array<DefaultEvent> {
     return Array.from(this.cachedElements.values()).reduce(
       (acc: DefaultEvent[], item: any) => (item instanceof DefaultEvent && !item.isPredefined() ? [...acc, item] : acc),
-      []
+      [],
     );
   }
 

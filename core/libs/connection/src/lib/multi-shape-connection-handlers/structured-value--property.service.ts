@@ -31,7 +31,7 @@ export class StructuredValueCharacteristicPropertyConnectionHandler
     private mxGraphAttributeService: MxGraphAttributeService,
     private namespacesCacheService: NamespacesCacheService,
     private sammLangService: SammLanguageSettingsService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
   ) {}
 
   connect(parentMetaModel: DefaultStructuredValue, childMetaModel: DefaultProperty, first: mxgraph.mxCell, second: mxgraph.mxCell): void {
@@ -73,7 +73,7 @@ export class StructuredValueCharacteristicPropertyConnectionHandler
     isStartsWithDelimiter
       ? parentMetaModel.elements.unshift(element)
       : isEndsWithDelimiter
-      ? parentMetaModel.elements.push(element)
-      : undefined;
+        ? parentMetaModel.elements.push(element)
+        : undefined;
   }
 }

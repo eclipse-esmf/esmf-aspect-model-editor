@@ -22,7 +22,10 @@ import {PredefinedRemove} from './predefined-remove.type';
   providedIn: 'root',
 })
 export class TimeSeriesEntityRemoveService implements PredefinedRemove {
-  constructor(private mxGraphService: MxGraphService, private modelRootService: ModelRootService) {}
+  constructor(
+    private mxGraphService: MxGraphService,
+    private modelRootService: ModelRootService,
+  ) {}
 
   public delete(cell: mxgraph.mxCell) {
     const modelElement = MxGraphHelper.getModelElement(cell);

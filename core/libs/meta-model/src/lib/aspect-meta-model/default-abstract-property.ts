@@ -29,7 +29,13 @@ export class DefaultAbstractProperty extends CanExtend implements AbstractProper
     return 'DefaultAbstractProperty';
   }
 
-  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public exampleValue?: any, predefined = false) {
+  constructor(
+    metaModelVersion: string,
+    aspectModelUrn: string,
+    name: string,
+    public exampleValue?: any,
+    predefined = false,
+  ) {
     super(metaModelVersion, aspectModelUrn, name);
     this.predefined = predefined;
   }

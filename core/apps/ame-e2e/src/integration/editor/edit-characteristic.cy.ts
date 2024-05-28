@@ -70,25 +70,25 @@ describe('Test editing Characteristic', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() =>
-        cy.get(FIELD_descriptionen).clear({force: true}).type('New description for the new created characteristic', {force: true})
+        cy.get(FIELD_descriptionen).clear({force: true}).type('New description for the new created characteristic', {force: true}),
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy
           .getCellLabel('Characteristic1', META_MODEL_description)
-          .should('eq', `${META_MODEL_description} = New description for the new created characteristic @en`)
+          .should('eq', `${META_MODEL_description} = New description for the new created characteristic @en`),
       )
       .then(() =>
-        cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:description "New description for the new created characteristic"@en'))
+        cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:description "New description for the new created characteristic"@en')),
       )
       .then(() =>
         cy
           .getAspect()
           .then(aspect =>
             expect(aspect.properties[0].property.characteristic.getDescription('en')).to.equal(
-              'New description for the new created characteristic'
-            )
-          )
+              'New description for the new created characteristic',
+            ),
+          ),
       );
   });
 
@@ -104,7 +104,7 @@ describe('Test editing Characteristic', () => {
           .get('.mat-mdc-option')
           .eq(1)
           .contains('integer')
-          .click({force: true})
+          .click({force: true}),
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getCellLabel('Characteristic1', META_MODEL_dataType).should('eq', `${META_MODEL_dataType} = integer`))
@@ -119,24 +119,24 @@ describe('Test editing Characteristic', () => {
       .then(() =>
         cy
           .getCellLabel('Characteristic1', META_MODEL_see)
-          .should('eq', `${META_MODEL_see} = http://www.see1.de,http://www.see2.de,http://www.see3.de`)
+          .should('eq', `${META_MODEL_see} = http://www.see1.de,http://www.see2.de,http://www.see3.de`),
       )
       .then(() =>
-        cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>'))
+        cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>')),
       )
 
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.characteristic.getSeeReferences()).to.have.length(3);
           expect(aspect.properties[0].property.characteristic.getSeeReferences()[2]).to.equal('http://www.see3.de');
-        })
+        }),
       );
 
     cy.dbClickShape('Characteristic1')
       .then(() => cy.removeSeeElements('http://www.see2.de'))
       .then(() => cyHelp.clickSaveButton())
       .then(() =>
-        cy.getCellLabel('Characteristic1', META_MODEL_see).should('eq', `${META_MODEL_see} = http://www.see1.de,http://www.see3.de`)
+        cy.getCellLabel('Characteristic1', META_MODEL_see).should('eq', `${META_MODEL_see} = http://www.see1.de,http://www.see3.de`),
       )
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('samm:see <http://www.see1.de>, <http://www.see3.de>'))
@@ -144,7 +144,7 @@ describe('Test editing Characteristic', () => {
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.characteristic.getSeeReferences()).to.have.length(2);
           expect(aspect.properties[0].property.characteristic.getSeeReferences()[1]).to.equal('http://www.see3.de');
-        })
+        }),
       );
   });
 
@@ -157,7 +157,7 @@ describe('Test editing Characteristic', () => {
       .then(() =>
         cy
           .getCellLabel('Characteristic1', META_MODEL_see)
-          .should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001`)
+          .should('eq', `${META_MODEL_see} = urn:irdi:eclass:0173-1#02-AAO677,urn:irdi:iec:0112/2///62683#ACC011#001`),
       )
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>, <urn:irdi:iec:0112/2///62683#ACC011#001>'))
@@ -188,7 +188,7 @@ describe('Test editing Characteristic', () => {
       .then(() => cyHelp.clickSaveButton())
 
       .then(() =>
-        cy.getCellLabel('Characteristic1', META_MODEL_preferredName).should('eq', `${META_MODEL_preferredName} = new-preferredName @en`)
+        cy.getCellLabel('Characteristic1', META_MODEL_preferredName).should('eq', `${META_MODEL_preferredName} = new-preferredName @en`),
       )
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('samm:preferredName "new-preferredName"@en'))
@@ -242,7 +242,7 @@ describe('Test editing Characteristic', () => {
       .then(() => cy.dbClickShape('NewCharacteristic'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Measurement').click({force: true}))
       .then(() =>
-        cy.get(FIELD_unit).clear({force: true}).type('amper', {force: true}).get('mat-option').contains('ampere').click({force: true})
+        cy.get(FIELD_unit).clear({force: true}).type('amper', {force: true}).get('mat-option').contains('ampere').click({force: true}),
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getAspect())
@@ -262,7 +262,7 @@ describe('Test editing Characteristic', () => {
             '    samm:dataType xsd:integer;\n' +
             '    samm:description "New description for the new created characteristic"@en;\n' +
             '    samm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
-            '    samm:preferredName "new-preferredName"@en.'
+            '    samm:preferredName "new-preferredName"@en.',
         );
       })
       .then(() => cy.getAspect())
@@ -285,7 +285,7 @@ describe('Test editing Characteristic', () => {
             '    samm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
             '    samm:preferredName "new-preferredName"@en;\n' +
             '    samm-c:values' +
-            ' (1 2 "a"^^xsd:integer "b"^^xsd:integer 3 4).'
+            ' (1 2 "a"^^xsd:integer "b"^^xsd:integer 3 4).',
         );
       })
       .then(() => cy.getAspect())
@@ -305,8 +305,8 @@ describe('Test editing Characteristic', () => {
             '    samm:description "New description for the new created characteristic"@en;\n' +
             '    samm:see <urn:irdi:eclass:0173-1#02-AAO677>;\n' +
             '    samm:preferredName "new-preferredName"@en;\n' +
-            '    samm-c:values (2 "b"^^xsd:integer 3).'
-        )
+            '    samm-c:values (2 "b"^^xsd:integer 3).',
+        ),
       );
   });
 
@@ -314,7 +314,7 @@ describe('Test editing Characteristic', () => {
     cy.shapeExists('NewCharacteristic')
       .then(() => cy.dbClickShape('NewCharacteristic'))
       .then(() =>
-        cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('MultiLanguageText').click({force: true})
+        cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('MultiLanguageText').click({force: true}),
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cyHelp.getAddShapePlusIcon('MultiLanguageText').then(addShapeIcon => expect(addShapeIcon).to.be.false));
@@ -363,8 +363,8 @@ describe('Test editing Characteristic', () => {
             ':NewAspect a samm:Aspect;\n' +
             '    samm:properties (:property1 :property2);\n' +
             '    samm:operations ();\n' +
-            '    samm:events ().'
-        )
+            '    samm:events ().',
+        ),
       );
   });
 });
@@ -413,7 +413,7 @@ describe('Structured Value Characteristic', () => {
           cy
             .get(`[data-cy="property-${groups[index]}"] [data-cy="property-element"]`)
             .eq(placeNumber)
-            .should('have.value', properties[index])
+            .should('have.value', properties[index]),
         )
         .then(() => cy.get(`[data-cy="property-${groups[index]}"] [data-cy="property-element"]`).eq(placeNumber).should('not.be.enabled'));
     }
@@ -443,12 +443,12 @@ describe('Structured Value Characteristic', () => {
       .then(() =>
         cy
           .shapeExists('UsernameCharacteristic')
-          .then(() => cyHelp.hasAddShapeOverlay('UsernameCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+          .then(() => cyHelp.hasAddShapeOverlay('UsernameCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
       )
       .then(() =>
         cy
           .shapeExists('HostCharacteristic')
-          .then(() => cyHelp.hasAddShapeOverlay('HostCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+          .then(() => cyHelp.hasAddShapeOverlay('HostCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
       )
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_deconstructionRuleInput).should('not.be.enabled'))
@@ -458,7 +458,7 @@ describe('Structured Value Characteristic', () => {
           ':Characteristic1 a samm-c:StructuredValue;\n' +
             '    samm:dataType xsd:string;\n' +
             '    samm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})";\n' +
-            '    samm-c:elements (:username "@" :host).'
+            '    samm-c:elements (:username "@" :host).',
         );
       });
   }
@@ -469,12 +469,12 @@ describe('Structured Value Characteristic', () => {
       startApplication()
         .then(() => cy.dbClickShape('Characteristic1'))
         .then(() =>
-          cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('StructuredValue').click({force: true})
+          cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('StructuredValue').click({force: true}),
         )
         .then(() => cy.get(FIELD_deconstructionRuleSelect).click({force: true}))
         .then(() => cy.get('[value="--custom-rule--"]').click({force: true}))
         .then(() =>
-          cy.get(FIELD_deconstructionRuleInput).clear({force: true}).type('example-(group1)-splitter-(group2)-(group3)', {force: true})
+          cy.get(FIELD_deconstructionRuleInput).clear({force: true}).type('example-(group1)-splitter-(group2)-(group3)', {force: true}),
         )
         .then(() => cy.wait(500))
         .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
@@ -501,7 +501,7 @@ describe('Structured Value Characteristic', () => {
       cy.dbClickShape('Characteristic1')
         .then(() => cy.get(FIELD_deconstructionRuleSelect).should('contain', 'Custom Rule'))
         .then(() =>
-          cy.get(FIELD_deconstructionRuleInput).should('be.enabled').should('have.value', 'example-(group1)-splitter-(group2)-(group3)')
+          cy.get(FIELD_deconstructionRuleInput).should('be.enabled').should('have.value', 'example-(group1)-splitter-(group2)-(group3)'),
         )
         .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
         .then(() => shouldHaveValues(['(group1)', '(group2)', '(group3)'], ['group1Property', 'group2Property', 'group3Property']))
@@ -516,17 +516,17 @@ describe('Structured Value Characteristic', () => {
         .then(() =>
           cy
             .shapeExists('Characteristic2')
-            .then(() => cyHelp.hasAddShapeOverlay('Characteristic2').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+            .then(() => cyHelp.hasAddShapeOverlay('Characteristic2').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
         )
         .then(() =>
           cy
             .shapeExists('Characteristic3')
-            .then(() => cyHelp.hasAddShapeOverlay('Characteristic3').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+            .then(() => cyHelp.hasAddShapeOverlay('Characteristic3').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
         )
         .then(() =>
           cy
             .shapeExists('Characteristic4')
-            .then(() => cyHelp.hasAddShapeOverlay('Characteristic4').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+            .then(() => cyHelp.hasAddShapeOverlay('Characteristic4').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
         );
     });
 
@@ -536,7 +536,7 @@ describe('Structured Value Characteristic', () => {
           ':Characteristic1 a samm-c:StructuredValue;\n' +
             '    samm:dataType xsd:string;\n' +
             '    samm-c:deconstructionRule "example-(group1)-splitter-(group2)-(group3)";\n' +
-            '    samm-c:elements ("example-" :group1Property "-splitter-" :group2Property "-" :group3Property).'
+            '    samm-c:elements ("example-" :group1Property "-splitter-" :group2Property "-" :group3Property).',
         );
       });
     });
@@ -551,7 +551,7 @@ describe('Structured Value Characteristic', () => {
       startApplication()
         .then(() => cy.dbClickShape('Characteristic1'))
         .then(() =>
-          cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('StructuredValue').click({force: true})
+          cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('StructuredValue').click({force: true}),
         )
         .then(() => cy.get(FIELD_deconstructionRuleSelect).click({force: true}))
         .then(() => cy.contains('ISO 8601 Date').click({force: true}))
@@ -567,17 +567,17 @@ describe('Structured Value Characteristic', () => {
         .then(() =>
           cy
             .shapeExists('YearCharacteristic')
-            .then(() => cyHelp.hasAddShapeOverlay('YearCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+            .then(() => cyHelp.hasAddShapeOverlay('YearCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
         )
         .then(() =>
           cy
             .shapeExists('MonthCharacteristic')
-            .then(() => cyHelp.hasAddShapeOverlay('MonthCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+            .then(() => cyHelp.hasAddShapeOverlay('MonthCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
         )
         .then(() =>
           cy
             .shapeExists('DayCharacteristic')
-            .then(() => cyHelp.hasAddShapeOverlay('DayCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+            .then(() => cyHelp.hasAddShapeOverlay('DayCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
         )
         .then(() => cy.dbClickShape('Characteristic1'))
         .then(() => cy.get(FIELD_deconstructionRuleInput).should('not.be.enabled'))
@@ -587,7 +587,7 @@ describe('Structured Value Characteristic', () => {
             ':Characteristic1 a samm-c:StructuredValue;\n' +
               '    samm:dataType xsd:string;\n' +
               '    samm-c:deconstructionRule "(\\\\d{4})-(\\\\d{2})-(\\\\d{2})";\n' +
-              '    samm-c:elements (:year "-" :month "-" :day).'
+              '    samm-c:elements (:year "-" :month "-" :day).',
           );
         });
     });
@@ -596,7 +596,7 @@ describe('Structured Value Characteristic', () => {
       startApplication()
         .then(() => cy.dbClickShape('Characteristic1'))
         .then(() =>
-          cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('StructuredValue').click({force: true})
+          cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('StructuredValue').click({force: true}),
         )
         .then(() => cy.get(FIELD_deconstructionRuleSelect).click({force: true}))
         .then(() => cy.contains('Hex-encoded color').click({force: true}))
@@ -612,17 +612,17 @@ describe('Structured Value Characteristic', () => {
         .then(() =>
           cy
             .shapeExists('RedCharacteristic')
-            .then(() => cyHelp.hasAddShapeOverlay('RedCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+            .then(() => cyHelp.hasAddShapeOverlay('RedCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
         )
         .then(() =>
           cy
             .shapeExists('GreenCharacteristic')
-            .then(() => cyHelp.hasAddShapeOverlay('GreenCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+            .then(() => cyHelp.hasAddShapeOverlay('GreenCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
         )
         .then(() =>
           cy
             .shapeExists('BlueCharacteristic')
-            .then(() => cyHelp.hasAddShapeOverlay('BlueCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false))
+            .then(() => cyHelp.hasAddShapeOverlay('BlueCharacteristic').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
         )
         .then(() => cy.dbClickShape('Characteristic1'))
         .then(() => cy.get(FIELD_deconstructionRuleInput).should('not.be.enabled'))
@@ -632,7 +632,7 @@ describe('Structured Value Characteristic', () => {
             ':Characteristic1 a samm-c:StructuredValue;\n' +
               '    samm:dataType xsd:string;\n' +
               '    samm-c:deconstructionRule "0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})";\n' +
-              '    samm-c:elements ("0x" :red :green :blue).'
+              '    samm-c:elements ("0x" :red :green :blue).',
           );
         });
     });
@@ -664,7 +664,7 @@ describe('Structured Value Characteristic', () => {
             ':Characteristic1 a samm-c:StructuredValue;\n' +
               '    samm:dataType xsd:string;\n' +
               '    samm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})";\n' +
-              '    samm-c:elements (:property2 "@").'
+              '    samm-c:elements (:property2 "@").',
           );
         });
       });
@@ -684,7 +684,7 @@ describe('Structured Value Characteristic', () => {
             ':Characteristic1 a samm-c:StructuredValue;\n' +
               '    samm:dataType xsd:string;\n' +
               '    samm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})";\n' +
-              '    samm-c:elements (:property2 "@" :property3).'
+              '    samm-c:elements (:property2 "@" :property3).',
           );
         });
       });
@@ -702,7 +702,7 @@ describe('Structured Value Characteristic', () => {
             ':Characteristic1 a samm-c:StructuredValue;\n' +
               '    samm:dataType xsd:string;\n' +
               '    samm-c:deconstructionRule "([\\\\w\\\\.-]+)@([\\\\w\\\\.-]+\\\\.\\\\w{2,4})(regex)";\n' +
-              '    samm-c:elements (:property2 "@" :property3 :property4).'
+              '    samm-c:elements (:property2 "@" :property3 :property4).',
           );
         });
       });

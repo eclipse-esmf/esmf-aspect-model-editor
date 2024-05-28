@@ -33,7 +33,10 @@ export class CharacteristicInstantiator extends BaseConstraintCharacteristicInst
     return this.metaModelElementInstantiator.fileName;
   }
 
-  constructor(protected metaModelElementInstantiator: MetaModelElementInstantiator, public nextProcessor?: CharacteristicInstantiator) {
+  constructor(
+    protected metaModelElementInstantiator: MetaModelElementInstantiator,
+    public nextProcessor?: CharacteristicInstantiator,
+  ) {
     super(metaModelElementInstantiator, nextProcessor);
     this.standardCharacteristicInstantiator = new PredefinedCharacteristicInstantiator(metaModelElementInstantiator);
   }

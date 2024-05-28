@@ -73,7 +73,11 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     DefaultStructuredValue: (characteristic: DefaultStructuredValue) => this.updateStructuredValue(characteristic),
   };
 
-  constructor(private rdfNodeService: RdfNodeService, private rdfListService: RdfListService, rdfService: RdfService) {
+  constructor(
+    private rdfNodeService: RdfNodeService,
+    private rdfListService: RdfListService,
+    rdfService: RdfService,
+  ) {
     super(rdfService);
   }
 
@@ -98,14 +102,14 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
       this.store.addQuad(
         DataFactory.namedNode(characteristic.aspectModelUrn),
         this.sammC.BaseCharacteristicProperty(),
-        DataFactory.namedNode(characteristic.baseCharacteristic.aspectModelUrn)
+        DataFactory.namedNode(characteristic.baseCharacteristic.aspectModelUrn),
       );
       this.setPrefix(characteristic.baseCharacteristic.aspectModelUrn);
     }
 
     // update constraints
     this.store.removeQuads(
-      this.store.getQuads(DataFactory.namedNode(characteristic.aspectModelUrn), this.sammC.ConstraintProperty(), null, null)
+      this.store.getQuads(DataFactory.namedNode(characteristic.aspectModelUrn), this.sammC.ConstraintProperty(), null, null),
     );
 
     for (const constraint of characteristic.constraints || []) {
@@ -117,8 +121,8 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
         DataFactory.triple(
           DataFactory.namedNode(characteristic.aspectModelUrn),
           this.sammC.ConstraintProperty(),
-          DataFactory.namedNode(constraint.aspectModelUrn)
-        )
+          DataFactory.namedNode(constraint.aspectModelUrn),
+        ),
       );
       this.setPrefix(constraint.aspectModelUrn);
     }
@@ -158,7 +162,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     } else {
       object = DataFactory.literal(
         characteristic.defaultValue.toString(),
-        characteristic.dataType ? DataFactory.namedNode(characteristic.dataType?.getUrn()) : undefined
+        characteristic.dataType ? DataFactory.namedNode(characteristic.dataType?.getUrn()) : undefined,
       );
     }
 
@@ -188,7 +192,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
       this.store.addQuad(
         DataFactory.namedNode(characteristic.aspectModelUrn),
         this.sammC.EitherLeftProperty(),
-        DataFactory.namedNode(characteristic.left.aspectModelUrn)
+        DataFactory.namedNode(characteristic.left.aspectModelUrn),
       );
       this.setPrefix(characteristic.left.aspectModelUrn);
     }
@@ -198,7 +202,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
       this.store.addQuad(
         DataFactory.namedNode(characteristic.aspectModelUrn),
         this.sammC.EitherRightProperty(),
-        DataFactory.namedNode(characteristic.right.aspectModelUrn)
+        DataFactory.namedNode(characteristic.right.aspectModelUrn),
       );
       this.setPrefix(characteristic.right.aspectModelUrn);
     }
@@ -214,7 +218,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     this.store.addQuad(
       DataFactory.namedNode(characteristic.aspectModelUrn),
       this.sammC.DeconstructionRuleProperty(),
-      DataFactory.literal(characteristic.deconstructionRule)
+      DataFactory.literal(characteristic.deconstructionRule),
     );
 
     // update elements
@@ -265,7 +269,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     this.store.addQuad(
       DataFactory.namedNode(characteristic.aspectModelUrn),
       this.sammC.UnitProperty(),
-      DataFactory.namedNode(characteristic.unit.aspectModelUrn)
+      DataFactory.namedNode(characteristic.unit.aspectModelUrn),
     );
     this.setPrefix(characteristic.unit.aspectModelUrn);
   }
@@ -278,7 +282,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     this.store.addQuad(
       DataFactory.namedNode(characteristic.aspectModelUrn),
       this.sammC.ElementCharacteristicProperty(),
-      DataFactory.namedNode(characteristic.elementCharacteristic.aspectModelUrn)
+      DataFactory.namedNode(characteristic.elementCharacteristic.aspectModelUrn),
     );
     this.setPrefix(characteristic.elementCharacteristic.aspectModelUrn);
   }
@@ -307,7 +311,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
         this.removeOldAndAddNewReference(
           DataFactory.namedNode(parent.aspectModelUrn),
           parent instanceof DefaultCollection ? this.sammC.ElementCharacteristicProperty() : this.samm.CharacteristicProperty(),
-          DataFactory.namedNode(characteristic.aspectModelUrn)
+          DataFactory.namedNode(characteristic.aspectModelUrn),
         );
     }
 

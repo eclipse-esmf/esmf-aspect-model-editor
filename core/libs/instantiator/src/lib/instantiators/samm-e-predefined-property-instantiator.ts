@@ -43,7 +43,7 @@ export class PredefinedPropertyInstantiator {
       this.metaModelElementInstantiator.sammE.getNamespace() + PredefinedProperties.timestamp,
       PredefinedProperties.timestamp,
       defaultCharacteristicInstantiator.createTimestampCharacteristic(this.metaModelElementInstantiator),
-      true
+      true,
     );
 
     timestampProperty.addPreferredName('en', 'Timestamp');
@@ -61,7 +61,7 @@ export class PredefinedPropertyInstantiator {
       this.metaModelElementInstantiator.sammE.getNamespace() + PredefinedProperties.value,
       PredefinedProperties.value,
       '',
-      true
+      true,
     );
 
     valueProperty.addPreferredName('en', 'Value');
@@ -76,7 +76,7 @@ export class PredefinedPropertyInstantiator {
       this.metaModelElementInstantiator.sammE.getNamespace() + coordinate,
       coordinate,
       '',
-      true
+      true,
     );
 
     valueProperty.addPreferredName('en', coordinates[coordinate].preferredName);
@@ -93,7 +93,7 @@ export class PredefinedPropertyInstantiator {
       this.metaModelElementInstantiator.sammE.getNamespace() + PredefinedProperties.resource,
       PredefinedProperties.resource,
       defaultCharacteristicInstantiator.createResourcePathCharacteristic(this.metaModelElementInstantiator),
-      true
+      true,
     );
 
     resourceProperty.addPreferredName('en', 'Resource');
@@ -114,7 +114,7 @@ export class PredefinedPropertyInstantiator {
       PredefinedProperties.mimeType,
       defaultCharacteristicInstantiator.createMimeTypeCharacteristic(this.metaModelElementInstantiator),
       true,
-      'application/json'
+      'application/json',
     );
 
     mimeTypeProperty.addPreferredName('en', 'MIME Type');

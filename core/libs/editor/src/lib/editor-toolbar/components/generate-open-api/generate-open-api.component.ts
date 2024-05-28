@@ -89,7 +89,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     private modelService: ModelService,
     private editorService: EditorService,
     private notificationsService: NotificationsService,
-    private translate: LanguageTranslationService
+    private translate: LanguageTranslationService,
   ) {}
 
   ngOnInit(): void {
@@ -134,7 +134,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
         }
 
         resourcePathControl?.updateValueAndValidity();
-      })
+      }),
     );
 
     this.subscriptions.add(
@@ -143,7 +143,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
         const hasBrackets = /{.*}/.test(resourcePath);
         hasBrackets ? fileControl?.setValidators(Validators.required) : fileControl?.setValidators(null);
         fileControl?.updateValueAndValidity();
-      })
+      }),
     );
   }
 
@@ -222,9 +222,9 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
           finalize(() => {
             this.isGenerating = false;
             this.dialogRef.close();
-          })
+          }),
         )
-        .subscribe()
+        .subscribe(),
     );
   }
 

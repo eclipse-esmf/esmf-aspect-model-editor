@@ -46,7 +46,7 @@ export class DefaultValueEntityInputFieldComponent extends InputFieldComponent<D
       new FormControl({
         value: defaultValueString || this.metaModelElement?.defaultValue?.['name'] || '',
         disabled: this.metaModelElement?.isExternalReference(),
-      })
+      }),
     );
 
     const defaultValueControl = this.parentForm.get(this.fieldName);
@@ -54,7 +54,7 @@ export class DefaultValueEntityInputFieldComponent extends InputFieldComponent<D
       defaultValueControl.valueChanges.subscribe(value => {
         const entityValues = this.parentForm?.get('chipList')?.value;
         this.entityValues = entityValues?.filter(({name}: DefaultEntityInstance) => name.includes(value));
-      })
+      }),
     );
   }
 }

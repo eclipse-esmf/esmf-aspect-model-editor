@@ -39,13 +39,13 @@ export class PredefinedEntityInstantiator {
         {property: timestampProperty, keys: {}},
         {property: valueProperty, keys: {}},
       ],
-      true
+      true,
     );
 
     timeSeriesEntity.addPreferredName('en', 'Time Series Entity');
     timeSeriesEntity.addDescription(
       'en',
-      'An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded.'
+      'An Entity which represents a key/value pair. The key is the timestamp when the value was recorded and the value is the value which was recorded.',
     );
 
     timestampProperty.parents.push(timeSeriesEntity);
@@ -66,7 +66,7 @@ export class PredefinedEntityInstantiator {
         {property: propertyInstances[sammE.yProperty](), keys: {}},
         {property: propertyInstances[sammE.zProperty](), keys: {}},
       ],
-      true
+      true,
     );
 
     point3dEntity.addPreferredName('en', 'Point 3D');
@@ -89,7 +89,7 @@ export class PredefinedEntityInstantiator {
         {property: propertyInstances[sammE.resourceProperty](), keys: {}},
         {property: propertyInstances[sammE.mimeTypeProperty](), keys: {}},
       ],
-      true
+      true,
     );
 
     fileResourceEntity.addPreferredName('en', 'File Resource');

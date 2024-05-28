@@ -82,7 +82,7 @@ export class EntityValueModelService extends BaseModelService {
 
   private findPropertyInEntities(
     entities: Array<Entity>,
-    propertyName: string
+    propertyName: string,
   ): OverWrittenProperty<DefaultProperty | DefaultAbstractProperty> {
     for (const entity of entities) {
       const property = entity.properties.find(prop => prop.property.name === propertyName);

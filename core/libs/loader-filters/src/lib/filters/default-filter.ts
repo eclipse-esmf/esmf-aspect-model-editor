@@ -113,12 +113,12 @@ export class DefaultFilter implements FilterLoader {
     return parent instanceof DefaultEntityInstance && !(element instanceof DefaultEntityInstance)
       ? EdgeStyles.entityValueEntityEdge
       : MxGraphHelper.isOptionalProperty(element as DefaultProperty, parent)
-      ? EdgeStyles.optionalPropertyEdge
-      : element instanceof DefaultAbstractProperty && parent instanceof DefaultProperty
-      ? EdgeStyles.abstractPropertyEdge
-      : abstractRelations[parent?.className]?.includes(element?.className)
-      ? EdgeStyles.abstractElementEdge
-      : EdgeStyles.defaultEdge;
+        ? EdgeStyles.optionalPropertyEdge
+        : element instanceof DefaultAbstractProperty && parent instanceof DefaultProperty
+          ? EdgeStyles.abstractPropertyEdge
+          : abstractRelations[parent?.className]?.includes(element?.className)
+            ? EdgeStyles.abstractElementEdge
+            : EdgeStyles.defaultEdge;
   }
 
   getShapeGeometry(element: BaseMetaModelElement): ShapeGeometry {

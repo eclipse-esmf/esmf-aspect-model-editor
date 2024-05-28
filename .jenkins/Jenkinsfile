@@ -72,7 +72,23 @@ pipeline {
                         '${env.artifact_url_mac}' \
                         --output 'unpack_dir/${macOsFile}'"
           sh "unzip -o unpack_dir/${macOsFile} -d unpack_dir"
+          sh "unzip -o unpack_dir/${macOsFile} -d unpack_dir"
           sh "ls -a unpack_dir"
+        }
+      }
+    }
+
+    stage('Sign Electron Application on Mac') {
+      steps {
+        script {
+          dir('core') {
+            sh 'npm install'
+            sh 'npm run after-pack'
+            sh 'ls -a core/electron'
+            sh 'ls -a core/electron/mac'
+            sh 'ls -a core/electron/mac/signed'
+            sh 'ls -a core/electron/mac/notarized'
+          }
         }
       }
     }
@@ -93,7 +109,7 @@ pipeline {
         script {
           def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
 
-          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf\", \"staple\": true};type=application/json"
+          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf.ame\", \"staple\": true};type=application/json"
           def response = sh(script: "curl -X POST -F file=@signed_dir/${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
 
           def jsonSlurper = new JsonSlurper()

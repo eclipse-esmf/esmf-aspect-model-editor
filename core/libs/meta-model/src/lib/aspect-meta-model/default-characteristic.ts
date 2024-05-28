@@ -32,7 +32,12 @@ export class DefaultCharacteristic extends Base implements Characteristic {
     return 'DefaultCharacteristic';
   }
 
-  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public dataType?: Type) {
+  constructor(
+    metaModelVersion: string,
+    aspectModelUrn: string,
+    name: string,
+    public dataType?: Type,
+  ) {
     super(metaModelVersion, aspectModelUrn, name);
   }
 
