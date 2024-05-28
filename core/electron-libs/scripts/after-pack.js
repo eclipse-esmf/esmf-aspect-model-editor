@@ -40,23 +40,22 @@ async function defaultFunction() {
   const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_dir');
   const appPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
-  const releaseDryRun = process.env.ESMF_JENKINS_RELEASE_DRYRUN === 'true';
   const branch = process.env.BRANCH_NAME;
-  const running_ci = process.env.ESMF_JENKINS_CI === 'true';
 
   // if (!((branch === 'main' || releaseDryRun) && running_ci)) {
   //   console.log('Not a release or dry-run requiring signing/notarizing - skipping');
   //   return;
   // }
 
-  console.log('Detected ESMF Release on Mac ' + (releaseDryRun ? ' (dry-run)' : '') + ' - proceeding with signing and notarizing');
-
   let childPaths = await walkAsync(appOutDir);
 
   childPaths.sort((a, b) => b.split(path.sep).length - a.split(path.sep).length).forEach(file => signFile(file));
 
+  const singedDir = path.join(appOutDir, 'signed');
+  const singedAppPath = path.resolve(singedDir, 'Aspect-Model-Editor.app');
+
   console.log('Notarizing the application...');
-  child_process.spawnSync(notarizeCommand, [path.basename(appPath), 'org.eclipse.esmf.ame'], {
+  child_process.spawnSync(notarizeCommand, [path.basename(singedAppPath), 'org.eclipse.esmf.ame'], {
     cwd: path.dirname(appPath),
     maxBuffer: 1024 * 10000,
     env: process.env,
