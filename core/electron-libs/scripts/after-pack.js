@@ -38,7 +38,6 @@ const signFile = file => {
 
 async function defaultFunction() {
   const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_dir');
-  const appPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
   const branch = process.env.BRANCH_NAME;
 

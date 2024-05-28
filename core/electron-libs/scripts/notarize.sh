@@ -14,6 +14,9 @@ if [ -d "${INPUT}" ]; then
     INPUT=unsigned.zip
 fi
 
+ls -a
+ls -a ..
+
 # notarize over curl
 RESPONSE=$(curl -X POST -F file=@"${INPUT}" -F 'options={"primaryBundleId": "'${APP_ID}'", "staple": true};type=application/json' https://cbi.eclipse.org/macos/xcrun/notarize)
 

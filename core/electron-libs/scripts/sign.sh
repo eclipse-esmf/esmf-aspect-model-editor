@@ -16,6 +16,9 @@ fi
 mkdir -p signed
 curl -f -o "signed/${INPUT}" -F file=@"${INPUT}" -F entitlements=@"${ENTITLEMENTS}" https://cbi.eclipse.org/macos/codesign/sign
 
+ls -a
+ls -a ..
+
 # if unzip needed
 if [ "$NEEDS_UNZIP" = true ]; then
     unzip -qq "signed/${INPUT}"

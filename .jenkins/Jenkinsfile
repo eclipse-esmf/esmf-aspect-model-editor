@@ -89,8 +89,6 @@ pipeline {
               chmod +x electron-libs/scripts/sign.sh
               chmod +x electron-libs/scripts/notarize.sh
               node electron-libs/scripts/after-pack.js
-              ls -a signed
-              ls -a notarized
             '''
           }
         }
