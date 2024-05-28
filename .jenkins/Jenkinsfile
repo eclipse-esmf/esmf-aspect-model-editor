@@ -86,7 +86,7 @@ pipeline {
               echo "NPM version:"
               npm --version
               cd core
-              npm install electron-osx-sign
+              npm install globby
               node electron-libs/scripts/after-pack.js
               ls -a signed
               ls -a notarized

@@ -3,7 +3,7 @@
 const os = require('os');
 const path = require('path');
 const child_process = require('child_process');
-const sign_util = require('electron-osx-sign/util');
+const globby = require('globby');
 
 const signCommand = path.join(__dirname, 'sign.sh');
 const notarizeCommand = path.join(__dirname, 'notarize.sh');
@@ -25,10 +25,10 @@ async function defaultFunction() {
   const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_dir');
   const appPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
-  if (!running_on_mac) {
-    console.log('This will only run on MacOs.');
-    return;
-  }
+  // if (!running_on_mac) {
+  //   console.log('This will only run on MacOs.');
+  //   return;
+  // }
 
   const releaseDryRun = process.env.ESMF_JENKINS_RELEASE_DRYRUN === 'true';
   const branch = process.env.BRANCH_NAME;
@@ -41,7 +41,7 @@ async function defaultFunction() {
 
   console.log('Detected ESMF Release on Mac ' + (releaseDryRun ? ' (dry-run)' : '') + ' - proceeding with signing and notarizing');
 
-  let childPaths = await sign_util.walkAsync(appOutDir);
+  let childPaths = await getFiles(appOutDir);
 
   childPaths.sort((a, b) => b.split(path.sep).length - a.split(path.sep).length).forEach(file => signFile(file));
 
@@ -53,6 +53,10 @@ async function defaultFunction() {
     stdio: 'inherit',
     encoding: 'utf-8',
   });
+}
+
+async function getFiles(dir) {
+  return await globby(`${dir}/**/*.*`);
 }
 
 defaultFunction().catch(console.error);
