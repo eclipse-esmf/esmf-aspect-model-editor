@@ -72,7 +72,7 @@ export class ThemeService {
       shapeStyle +
       [...Object.entries(this.theme[shapeStyle]), ...Object.entries(this.getDefaultShapesColors)].reduce(
         (acc, [key, value]) => `${acc};${key}=${value}`,
-        ''
+        '',
       )
     );
   }

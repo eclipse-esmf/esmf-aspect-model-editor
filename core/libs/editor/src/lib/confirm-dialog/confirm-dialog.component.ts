@@ -23,7 +23,10 @@ import {ConfirmDialogEnum} from '../models/confirm-dialog.enum';
 export class ConfirmDialogComponent {
   protected readonly confirmDialogEnum = ConfirmDialogEnum;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogOptions, private dialogRef: MatDialogRef<ConfirmDialogComponent>) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: DialogOptions,
+    private dialogRef: MatDialogRef<ConfirmDialogComponent>,
+  ) {}
 
   closeAndGiveResult(result: ConfirmDialogEnum) {
     this.dialogRef.close(result);

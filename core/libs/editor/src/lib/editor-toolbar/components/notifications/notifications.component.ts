@@ -29,7 +29,7 @@ export class NotificationsComponent implements OnInit {
     private dialogRef: MatDialogRef<NotificationsComponent>,
     public notificationsService: NotificationsService,
     public router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit() {

@@ -32,7 +32,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         requestAnimationFrame(() => {
           this.changeDetector.detectChanges();
         });
-      })
+      }),
     );
   }
 

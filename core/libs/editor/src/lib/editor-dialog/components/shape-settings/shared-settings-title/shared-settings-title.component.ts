@@ -40,7 +40,10 @@ export class SharedSettingsTitleComponent implements OnInit {
 
   elementName: string;
 
-  constructor(private cd: ChangeDetectorRef, private translate: LanguageTranslationService) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    private translate: LanguageTranslationService,
+  ) {}
 
   ngOnInit(): void {
     this.elementName = this.getTitle();

@@ -69,8 +69,8 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
         },
         {
           validators: this.getNameValidators(),
-        }
-      )
+        },
+      ),
     );
     nameControl = this.parentForm.get('name');
 
@@ -83,7 +83,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
             ...(validation || {}),
           });
         }
-      })
+      }),
     );
     nameControl.markAsTouched();
   }

@@ -51,7 +51,7 @@ export class OperationInstantiator {
         operation.input = this.metaModelElementInstantiator.getProperties(
           DataFactory.namedNode(quad.subject.value),
           samm.InputProperty(),
-          operation
+          operation,
         );
         operation.input && operation.children.push(...operation.input.map(i => i.property));
       } else if (samm.isOutputProperty(quad.predicate.value)) {

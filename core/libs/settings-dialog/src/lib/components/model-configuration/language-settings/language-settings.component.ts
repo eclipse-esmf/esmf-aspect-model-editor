@@ -27,7 +27,10 @@ export class LanguageSettingsComponent implements OnInit {
   form: FormGroup;
   filteredOptions: Observable<Langcode[]>[] = [];
 
-  constructor(private translate: LanguageTranslationService, private formService: SettingsFormService) {}
+  constructor(
+    private translate: LanguageTranslationService,
+    private formService: SettingsFormService,
+  ) {}
 
   ngOnInit(): void {
     this.form = this.formService.getForm().get('languageConfiguration') as FormGroup;
@@ -59,7 +62,7 @@ export class LanguageSettingsComponent implements OnInit {
   private getFilteredOptionsObservable(control: AbstractControl): Observable<Langcode[]> {
     return control.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterOptions(this.getLanguageName(value)))
+      map(value => this.filterOptions(this.getLanguageName(value))),
     );
   }
 

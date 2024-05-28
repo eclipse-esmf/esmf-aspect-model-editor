@@ -58,7 +58,7 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
     private loggerService: LogService,
     private languageSettings: SammLanguageSettingsService,
     private changeDetector: ChangeDetectorRef,
-    private translate: LanguageTranslationService
+    private translate: LanguageTranslationService,
   ) {}
 
   ngOnChanges(): void {

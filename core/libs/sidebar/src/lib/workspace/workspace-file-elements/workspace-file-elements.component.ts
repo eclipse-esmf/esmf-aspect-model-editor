@@ -47,7 +47,11 @@ export class WorkspaceFileElementsComponent implements OnInit {
 
   private searchThrottle: NodeJS.Timeout;
 
-  constructor(private editorService: EditorService, private mxGraphService: MxGraphService, private changeDetector: ChangeDetectorRef) {}
+  constructor(
+    private editorService: EditorService,
+    private mxGraphService: MxGraphService,
+    private changeDetector: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
     this.selection$.pipe(filter(Boolean)).subscribe(({namespace, file}) => {

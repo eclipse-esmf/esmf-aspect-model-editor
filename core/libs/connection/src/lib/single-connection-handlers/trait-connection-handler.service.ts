@@ -25,7 +25,7 @@ export class TraitConnectionHandler implements SingleShapeConnector<DefaultTrait
   constructor(
     private mxGraphService: MxGraphService,
     private modelElementNamingService: ModelElementNamingService,
-    private filtersService: FiltersService
+    private filtersService: FiltersService,
   ) {}
 
   public connect(trait: DefaultTrait, source: mxgraph.mxCell) {
@@ -33,7 +33,7 @@ export class TraitConnectionHandler implements SingleShapeConnector<DefaultTrait
       trait.getBaseCharacteristic() == null ? DefaultCharacteristic.createInstance() : DefaultConstraint.createInstance();
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultElement);
     const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)})
+      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
     );
     trait.update(defaultElement);
     this.mxGraphService.assignToParent(child, source);

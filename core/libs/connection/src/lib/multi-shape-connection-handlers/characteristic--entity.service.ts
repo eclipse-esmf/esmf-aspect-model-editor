@@ -42,7 +42,7 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private sammLangService: SammLanguageSettingsService,
     private namespacesCacheService: NamespacesCacheService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
   ) {}
 
   connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultEntity, parent: mxgraph.mxCell, child: mxgraph.mxCell): void {

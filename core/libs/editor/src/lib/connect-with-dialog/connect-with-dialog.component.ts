@@ -38,7 +38,7 @@ export class ConnectWithDialogComponent {
   constructor(
     private mxGraphService: MxGraphService,
     private dialogRef: MatDialogRef<ConnectWithDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public connectWithCell
+    @Inject(MAT_DIALOG_DATA) public connectWithCell,
   ) {
     this.connectWithModel = MxGraphHelper.getModelElement(connectWithCell);
     this.elements = this.mxGraphService.getAllCells().map(e => {

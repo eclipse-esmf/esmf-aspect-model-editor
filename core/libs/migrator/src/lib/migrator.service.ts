@@ -45,7 +45,7 @@ export class MigratorService {
     private router: Router,
     private migratorApi: MigratorApiService,
     private modelApiService: ModelApiService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
   ) {}
 
   public startMigrating() {
@@ -60,9 +60,9 @@ export class MigratorService {
               this.router.navigate([{outlets: {migrator: null}}]);
             }
             return dialog$;
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
   }
 
@@ -91,7 +91,7 @@ export class MigratorService {
         }
         return of(dialog$);
       }),
-      catchError(() => of(dialog$))
+      catchError(() => of(dialog$)),
     );
   }
 
@@ -134,7 +134,7 @@ export class MigratorService {
       tap(() => {
         this._dialog = null;
         this.router.navigate([{outlets: {migrator: null}}]);
-      })
+      }),
     );
   }
 }

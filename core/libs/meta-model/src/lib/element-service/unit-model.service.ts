@@ -31,7 +31,7 @@ export class UnitModelService extends BaseModelService {
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphService: MxGraphService,
-    private unitRenderer: UnitRenderService
+    private unitRenderer: UnitRenderService,
   ) {
     super();
   }

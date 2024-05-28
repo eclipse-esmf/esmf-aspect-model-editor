@@ -40,7 +40,10 @@ export class LocateElementComponent implements OnDestroy {
   public element: BaseMetaModelElement;
   private subscription = new Subscription();
 
-  constructor(public metaModelDialogService: EditorModelService, private mxgraphService: MxGraphService) {
+  constructor(
+    public metaModelDialogService: EditorModelService,
+    private mxgraphService: MxGraphService,
+  ) {
     this.subscription = this.metaModelDialogService.getMetaModelElement().subscribe(element => (this.element = element));
   }
 

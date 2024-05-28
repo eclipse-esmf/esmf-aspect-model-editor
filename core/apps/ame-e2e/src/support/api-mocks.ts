@@ -46,8 +46,8 @@ export function setUpDynamicModellingInterceptors(namespacesConfig: InterceptorC
         ...acc,
         [value.name]: value.files.map(f => f.name),
       }),
-      {}
-    )
+      {},
+    ),
   );
 
   // Set up files content to return
@@ -60,7 +60,7 @@ export function setUpDynamicModellingInterceptors(namespacesConfig: InterceptorC
           url: 'http://localhost:9091/ame/api/models',
           headers: {namespace: value.name, 'file-name': file.name},
         },
-        file.response
+        file.response,
       );
     });
   });

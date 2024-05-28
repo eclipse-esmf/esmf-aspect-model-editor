@@ -43,7 +43,7 @@ export class StartupService {
     private fileHandlingService: FileHandlingService,
     private mxGraphService: MxGraphService,
     private translate: LanguageTranslationService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   listenForLoading() {
@@ -62,8 +62,8 @@ export class StartupService {
         }),
         take(1),
         switchMap(({isFirstWindow, model}) =>
-          (isFirstWindow ? this.migratorService.startMigrating() : of(null)).pipe(switchMap(() => this.loadModel(model)))
-        )
+          (isFirstWindow ? this.migratorService.startMigrating() : of(null)).pipe(switchMap(() => this.loadModel(model))),
+        ),
       )
       .subscribe(() => {
         this.sidebarService.workspace.refresh();
@@ -77,7 +77,7 @@ export class StartupService {
       this.loadingScreenService.open({
         title: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_LOADING,
         content: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_LOADING_WAIT,
-      })
+      }),
     );
     return this.electronSignalsService.call('requestWindowData').pipe(
       tap(data => (options = data.options)),
@@ -90,13 +90,13 @@ export class StartupService {
                 fromWorkspace: options?.fromWorkspace,
                 editElementUrn: options?.editElement,
               })
-            : of(this.fileHandlingService.createEmptyModel())
-        )
+            : of(this.fileHandlingService.createEmptyModel()),
+        ),
       ),
       tap(() => {
         this.modelSaveTracker.updateSavedModel();
         this.loadingScreenService.close();
-      })
+      }),
     );
   }
 }

@@ -26,7 +26,12 @@ export class DefaultLanguageConstraint extends DefaultConstraint implements Lang
     return 'DefaultLanguageConstraint';
   }
 
-  constructor(metaModelVersion: string, aspectModelUrn: string, name: string, public languageCode: string) {
+  constructor(
+    metaModelVersion: string,
+    aspectModelUrn: string,
+    name: string,
+    public languageCode: string,
+  ) {
     super(metaModelVersion, aspectModelUrn, name);
   }
 }

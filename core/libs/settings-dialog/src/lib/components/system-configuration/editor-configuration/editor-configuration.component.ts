@@ -29,7 +29,10 @@ export class EditorConfigurationComponent implements OnInit {
   form: FormGroup;
   settings: Settings;
 
-  constructor(private formService: SettingsFormService, private themeService: ThemeService) {}
+  constructor(
+    private formService: SettingsFormService,
+    private themeService: ThemeService,
+  ) {}
 
   ngOnInit(): void {
     this.form = this.formService.getForm().get('editorConfiguration') as FormGroup;

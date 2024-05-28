@@ -32,7 +32,7 @@ describe('Test load external reference with same namespace', () => {
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-property-reference.txt',
-      }
+      },
     );
 
     cy.visitDefault();
@@ -91,7 +91,7 @@ describe('Test load external reference with same namespace', () => {
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-operation-reference.txt',
-      }
+      },
     );
 
     cy.visitDefault();
@@ -169,7 +169,7 @@ describe('Test load external reference with same namespace', () => {
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-characteristic-reference.txt',
-      }
+      },
     );
 
     cy.visitDefault();
@@ -226,7 +226,7 @@ describe('Test load external reference with same namespace', () => {
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-unit-reference.txt',
-      }
+      },
     );
 
     cy.visitDefault();
@@ -275,7 +275,7 @@ describe('Test load external reference with same namespace', () => {
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-entity-reference.txt',
-      }
+      },
     );
 
     cy.visitDefault();
@@ -338,7 +338,7 @@ describe('Test load external reference with same namespace', () => {
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-entity-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -349,7 +349,7 @@ describe('Test load external reference with same namespace', () => {
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-characteristic-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -360,7 +360,7 @@ describe('Test load external reference with same namespace', () => {
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-property-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -371,7 +371,7 @@ describe('Test load external reference with same namespace', () => {
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-operation-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -382,7 +382,7 @@ describe('Test load external reference with same namespace', () => {
       },
       {
         fixture: '/external-reference/same-namespace/with-childrens/external-trait-reference.txt',
-      }
+      },
     );
 
     cy.intercept(
@@ -393,7 +393,7 @@ describe('Test load external reference with same namespace', () => {
       },
       {
         fixture: '/external-reference/same-namespace/without-childrens/external-constraint-reference.txt',
-      }
+      },
     );
 
     cy.visitDefault();

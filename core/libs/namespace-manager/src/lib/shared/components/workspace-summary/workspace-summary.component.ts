@@ -40,7 +40,10 @@ export class WorkspaceSummaryComponent {
   public violations: Violation[] = this.importSession.violations;
   public errors: ViolationError[];
 
-  constructor(private notificationService: NotificationsService, private translate: LanguageTranslationService) {}
+  constructor(
+    private notificationService: NotificationsService,
+    private translate: LanguageTranslationService,
+  ) {}
 
   async copySummaryToClipboard() {
     const textToClipboard = JSON.stringify(
@@ -50,7 +53,7 @@ export class WorkspaceSummaryComponent {
         missingElements: this.missingElements,
       },
       null,
-      2
+      2,
     );
 
     try {

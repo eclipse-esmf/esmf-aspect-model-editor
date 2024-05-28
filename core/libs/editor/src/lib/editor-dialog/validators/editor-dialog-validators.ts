@@ -20,7 +20,10 @@ import {RdfService} from '@ame/rdf/services';
 
 @Injectable({providedIn: 'root'})
 export class EditorDialogValidators {
-  constructor(private namespaceCacheService: NamespacesCacheService, private rdfService: RdfService) {}
+  constructor(
+    private namespaceCacheService: NamespacesCacheService,
+    private rdfService: RdfService,
+  ) {}
 
   static namingLowerCase(control: AbstractControl) {
     if (!control?.value) {
