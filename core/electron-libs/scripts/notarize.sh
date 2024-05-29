@@ -6,8 +6,6 @@ NEEDS_UNZIP=false
 UUID_REGEX='"uuid"\s*:\s*"([^"]+)'
 STATUS_REGEX='"status"\s*:\s*"([^"]+)'
 
-pwd
-
 # if folder, zip it
 if [ -d "${INPUT}" ]; then
     NEEDS_UNZIP=true
