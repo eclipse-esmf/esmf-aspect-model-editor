@@ -81,7 +81,7 @@ const signFile = file => {
 };
 
 async function defaultFunction() {
-  const appOutDir = path.join(__dirname, '..', '..', 'electron', 'mac');
+  const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_mac_dir');
   const singedAppPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
   const branch = process.env.BRANCH_NAME;
