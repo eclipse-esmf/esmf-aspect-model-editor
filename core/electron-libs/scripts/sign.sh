@@ -29,7 +29,7 @@ pwd
 ls -a
 
 # rename the temporary file to the original file name
-mv "temp-${TEMP_OUTPUT}" "${INPUT}"
+mv "temp-${INPUT}" "${INPUT}"
 
 pwd
 
