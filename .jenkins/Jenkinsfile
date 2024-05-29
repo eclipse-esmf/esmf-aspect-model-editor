@@ -96,53 +96,59 @@ pipeline {
       }
     }
 
-//    stage('Sign Mac Applications') {
-//      steps {
-//        script {
-//          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
-//          sh "mkdir -p signed_dir"
-//          sh "curl -o signed_dir/${macOsFile} -F file=@unpack_dir/${macOsFile} -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign"
-//          sh "ls -a signed_dir"
-//        }
-//      }
-//    }
-//
-//    stage('MacOS Notarization') {
-//      steps {
-//        script {
-//          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
-//
-//          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf.ame\", \"staple\": true};type=application/json"
-//          def response = sh(script: "curl -X POST -F file=@signed_dir/${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
-//
-//          def jsonSlurper = new JsonSlurper()
-//          def json = jsonSlurper.parseText(response)
-//          String uuid = json.uuid
-//
-//          while (json.notarizationStatus.status == 'IN_PROGRESS') {
-//            sleep(time: 1, unit: 'MINUTES')
-//            response = sh(script: "curl https://cbi.eclipse.org/macos/xcrun/${uuid}/status", returnStdout: true).trim()
-//            json = jsonSlurper.parseText(response)
-//          }
-//
-//          if (json.notarizationStatus.status != 'COMPLETE') {
-//            echo "Notarization failed: ${response}"
-//            error("Notarization failed.")
-//          }
-//
-//          sh "curl -JO -o ${macOsFile} https://cbi.eclipse.org/macos/xcrun/${uuid}/download"
-//          sh "ls -a"
-//        }
-//      }
-//    }
+    stage('Convert Mac Applications to DMG') {
+      steps {
+        script {
+          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
+          sh "zip -r Aspect-Model-Editor.zip ./unpack_mac_dir/Aspect-Model-Editor.app"
+          sh "mvn org.eclipse.cbi.maven.plugins:eclipse-dmg-packager:1.1.7:package-dmg -Dsource=Aspect-Model-Editor.zip -Doutput=./unpack_mac_dir/${macOsFile}"
+        }
+      }
+    }
+
+    stage('Sign Mac Applications') {
+      steps {
+        script {
+          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
+          sh "mkdir -p signed_dir"
+          sh "curl -o signed_dir/${macOsFile} -F file=@unpack_mac_dir/${macOsFile} -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign"
+          sh "ls -a signed_dir"
+        }
+      }
+    }
+
+    stage('MacOS Notarization') {
+      steps {
+        script {
+          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
+
+          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf.ame\", \"staple\": true};type=application/json"
+          def response = sh(script: "curl -X POST -F file=@signed_dir/${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
+
+          def jsonSlurper = new JsonSlurper()
+          def json = jsonSlurper.parseText(response)
+          String uuid = json.uuid
+
+          while (json.notarizationStatus.status == 'IN_PROGRESS') {
+            sleep(time: 1, unit: 'MINUTES')
+            response = sh(script: "curl https://cbi.eclipse.org/macos/xcrun/${uuid}/status", returnStdout: true).trim()
+            json = jsonSlurper.parseText(response)
+          }
+
+          if (json.notarizationStatus.status != 'COMPLETE') {
+            echo "Notarization failed: ${response}"
+            error("Notarization failed.")
+          }
+
+          sh "curl -JO -o ${macOsFile} https://cbi.eclipse.org/macos/xcrun/${uuid}/download"
+          sh "ls -a"
+        }
+      }
+    }
 
     stage('Release signed Windows and Mac artifact to GitHub Releases') {
       steps {
         script {
-          sh "pwd"
-          sh "ls -a"
-          sh "ls -a unpack_mac_dir"
-
           def repo = "eclipse-esmf/esmf-aspect-model-editor"
           def tagName = "v${env.version}"
           def fileNameWin = "aspect-model-editor-v${env.version}-win.zip"
