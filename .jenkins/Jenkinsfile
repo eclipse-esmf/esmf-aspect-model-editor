@@ -87,6 +87,7 @@ pipeline {
             sh '''
               echo "NPM version:"
               npm --version
+              npm install isbinaryfile
               cd core
               chmod +x electron-libs/scripts/sign.sh
               chmod +x electron-libs/scripts/notarize.sh

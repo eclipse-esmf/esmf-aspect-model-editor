@@ -3,27 +3,70 @@
 const fs = require('fs').promises;
 const path = require('path');
 const child_process = require('child_process');
+const isBinaryFile = require('isbinaryfile').isBinaryFile;
 
 const rootDir = path.join(__dirname, '..', '..', '..');
 const signCommand = path.join(__dirname, 'sign.sh');
 const notarizeCommand = path.join(__dirname, 'notarize.sh');
 const entitlements = path.resolve(rootDir, 'entitlements.plist');
 
-async function walkAsync(dir) {
-  let files = await fs.readdir(dir);
-  files = await Promise.all(
-    files.map(async file => {
-      const filePath = path.join(dir, file);
-      const stats = await fs.stat(filePath);
-      if (stats.isDirectory()) {
-        return walkAsync(filePath);
-      } else {
-        return filePath;
-      }
-    }),
-  );
+async function walkAsync(dirPath) {
+  console.log('Walking... ' + dirPath);
 
-  return files.flat();
+  async function _walkAsync(dirPath) {
+    const children = await fs.readdir(dirPath);
+    return await Promise.all(
+      children.map(async child => {
+        const filePath = path.resolve(dirPath, child);
+
+        const stat = await fs.stat(filePath);
+        if (stat.isFile()) {
+          switch (path.extname(filePath)) {
+            case '.cstemp': // Temporary file generated from past codesign
+              console.log('Removing... ' + filePath);
+              await fs.remove(filePath);
+              return null;
+            default:
+              return await getFilePathIfBinary(filePath);
+          }
+        } else if (stat.isDirectory() && !stat.isSymbolicLink()) {
+          const walkResult = await _walkAsync(filePath);
+          switch (path.extname(filePath)) {
+            case '.app': // Application
+            case '.framework': // Framework
+              walkResult.push(filePath);
+          }
+          return walkResult;
+        }
+        return null;
+      }),
+    );
+  }
+
+  const allPaths = await _walkAsync(dirPath);
+  return compactFlattenedList(allPaths);
+}
+
+async function getFilePathIfBinary(filePath) {
+  if (await isBinaryFile(filePath)) {
+    return filePath;
+  }
+  return null;
+}
+
+function compactFlattenedList(list) {
+  const result = [];
+
+  function populateResult(list) {
+    if (!Array.isArray(list)) {
+      if (list) result.push(list);
+    } else if (list.length > 0) {
+      for (const item of list) if (item) populateResult(item);
+    }
+  }
+
+  populateResult(list);
+  return result;
 }
 
 const signFile = file => {
@@ -38,7 +81,7 @@ const signFile = file => {
 };
 
 async function defaultFunction() {
-  const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_mac_dir');
+  const appOutDir = path.join(__dirname, '..', '..', 'electron', 'mac');
   const singedAppPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
   const branch = process.env.BRANCH_NAME;
