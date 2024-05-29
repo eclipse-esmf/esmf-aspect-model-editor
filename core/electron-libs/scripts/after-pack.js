@@ -53,7 +53,7 @@ async function defaultFunction() {
   childPaths.sort((a, b) => b.split(path.sep).length - a.split(path.sep).length).forEach(file => signFile(file));
 
   console.log('Notarizing the application...');
-  child_process.spawnSync(notarizeCommand, [path.basename(singedAppPath), 'org.eclipse.esmf.ame'], {
+  child_process.spawnSync(notarizeCommand, [path.basename(singedAppPath), 'org.eclipse.esmf'], {
     cwd: path.dirname(singedAppPath),
     maxBuffer: 1024 * 10000,
     env: process.env,

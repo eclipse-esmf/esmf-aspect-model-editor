@@ -6,7 +6,7 @@
   "version": "",
   "main": "main.js",
   "build": {
-    "appId": "org.eclipse.esmf.ame",
+    "appId": "org.eclipse.esmf",
     "artifactName": "${name}-v${version}-${os}.${ext}",
     "win": {
       "target": "zip",
