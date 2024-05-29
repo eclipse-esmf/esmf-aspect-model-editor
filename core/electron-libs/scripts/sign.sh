@@ -28,5 +28,3 @@ if [ "$NEEDS_UNZIP" = true ]; then
 
     rm -f "${INPUT}"
 fi
-
-ls -a

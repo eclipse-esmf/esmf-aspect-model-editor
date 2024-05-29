@@ -1,5 +1,3 @@
-import groovy.json.JsonSlurper;
-
 pipeline {
   agent any
 
@@ -44,10 +42,10 @@ pipeline {
                         -H 'Authorization: Bearer ${GITHUB_BOT_TOKEN}' \
                         '${env.artifact_url_win}' \
                         --output '${winOsFile}'"
-          sh "mkdir -p unpack_dir"
-          sh "unzip -o aspect-model-editor-v${env.version}-win.zip -d unpack_dir"
+          sh "mkdir -p unpack_win_dir"
+          sh "unzip -o aspect-model-editor-v${env.version}-win.zip -d unpack_win_dir"
           sh "rm '${winOsFile}'"
-          sh "ls -a unpack_dir"
+          sh "ls -a unpack_win_dir"
         }
       }
     }
@@ -56,7 +54,7 @@ pipeline {
       steps {
         script {
           sh "mkdir -p signed_dir"
-          sh "curl -o signed_dir/aspect-model-editor-v${env.version}-win.exe -F file=@unpack_dir/aspect-model-editor-v${env.version}-win.exe https://cbi.eclipse.org/authenticode/sign"
+          sh "curl -o signed_dir/aspect-model-editor-v${env.version}-win.exe -F file=@unpack_win_dir/aspect-model-editor-v${env.version}-win.exe https://cbi.eclipse.org/authenticode/sign"
           sh "zip -r aspect-model-editor-v${env.version}-win.zip signed_dir"
           sh "ls -a signed_dir"
         }
@@ -98,49 +96,53 @@ pipeline {
       }
     }
 
-    stage('Sign Mac Applications') {
-      steps {
-        script {
-          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
-          sh "mkdir -p signed_dir"
-          sh "curl -o signed_dir/${macOsFile} -F file=@unpack_dir/${macOsFile} -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign"
-          sh "ls -a signed_dir"
-        }
-      }
-    }
-
-    stage('MacOS Notarization') {
-      steps {
-        script {
-          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
-
-          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf.ame\", \"staple\": true};type=application/json"
-          def response = sh(script: "curl -X POST -F file=@signed_dir/${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
-
-          def jsonSlurper = new JsonSlurper()
-          def json = jsonSlurper.parseText(response)
-          String uuid = json.uuid
-
-          while (json.notarizationStatus.status == 'IN_PROGRESS') {
-            sleep(time: 1, unit: 'MINUTES')
-            response = sh(script: "curl https://cbi.eclipse.org/macos/xcrun/${uuid}/status", returnStdout: true).trim()
-            json = jsonSlurper.parseText(response)
-          }
-
-          if (json.notarizationStatus.status != 'COMPLETE') {
-            echo "Notarization failed: ${response}"
-            error("Notarization failed.")
-          }
-
-          sh "curl -JO -o ${macOsFile} https://cbi.eclipse.org/macos/xcrun/${uuid}/download"
-          sh "ls -a"
-        }
-      }
-    }
+//    stage('Sign Mac Applications') {
+//      steps {
+//        script {
+//          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
+//          sh "mkdir -p signed_dir"
+//          sh "curl -o signed_dir/${macOsFile} -F file=@unpack_dir/${macOsFile} -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign"
+//          sh "ls -a signed_dir"
+//        }
+//      }
+//    }
+//
+//    stage('MacOS Notarization') {
+//      steps {
+//        script {
+//          def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
+//
+//          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf.ame\", \"staple\": true};type=application/json"
+//          def response = sh(script: "curl -X POST -F file=@signed_dir/${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
+//
+//          def jsonSlurper = new JsonSlurper()
+//          def json = jsonSlurper.parseText(response)
+//          String uuid = json.uuid
+//
+//          while (json.notarizationStatus.status == 'IN_PROGRESS') {
+//            sleep(time: 1, unit: 'MINUTES')
+//            response = sh(script: "curl https://cbi.eclipse.org/macos/xcrun/${uuid}/status", returnStdout: true).trim()
+//            json = jsonSlurper.parseText(response)
+//          }
+//
+//          if (json.notarizationStatus.status != 'COMPLETE') {
+//            echo "Notarization failed: ${response}"
+//            error("Notarization failed.")
+//          }
+//
+//          sh "curl -JO -o ${macOsFile} https://cbi.eclipse.org/macos/xcrun/${uuid}/download"
+//          sh "ls -a"
+//        }
+//      }
+//    }
 
     stage('Release signed Windows and Mac artifact to GitHub Releases') {
       steps {
         script {
+          sh "pwd"
+          sh "ls -a"
+          sh "ls -a unpack_mac_dir"
+
           def repo = "eclipse-esmf/esmf-aspect-model-editor"
           def tagName = "v${env.version}"
           def fileNameWin = "aspect-model-editor-v${env.version}-win.zip"
