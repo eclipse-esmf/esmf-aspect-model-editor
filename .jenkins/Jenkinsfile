@@ -106,7 +106,7 @@ pipeline {
         script {
           def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
           sh "zip -r Aspect-Model-Editor.zip ./unpack_mac_dir/Aspect-Model-Editor.app"
-          sh "mvn org.eclipse.cbi.maven.plugins:eclipse-dmg-packager:1.4.3:package-dmg -Dsource=Aspect-Model-Editor.zip -Doutput=./unpack_mac_dir/${macOsFile}"
+          sh "mvn -Dmaven.repo.remote=https://repo.eclipse.org/content/repositories/cbi-releases/ org.eclipse.cbi.maven.plugins:eclipse-dmg-packager:1.4.3:package-dmg -Dsource=Aspect-Model-Editor.zip -Doutput=./unpack_mac_dir/${macOsFile}"
         }
       }
     }
