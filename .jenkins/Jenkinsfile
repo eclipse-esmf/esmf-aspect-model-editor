@@ -124,7 +124,7 @@ pipeline {
         script {
           def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
 
-          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf.ame\", \"staple\": true};type=application/json"
+          def jsonOptions = "options={\"primaryBundleId\": \"org.eclipse.esmf\", \"staple\": true};type=application/json"
           def response = sh(script: "curl -X POST -F file=@signed_dir/${macOsFile} -F '${jsonOptions}' https://cbi.eclipse.org/macos/xcrun/notarize", returnStdout: true).trim()
 
           def jsonSlurper = new JsonSlurper()
