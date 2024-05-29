@@ -2,6 +2,9 @@ import groovy.json.JsonSlurper;
 
 pipeline {
   agent any
+  tools {
+    maven 'apache-maven-latest'
+  }
 
   environment {
     GITHUB_BOT_TOKEN = credentials('github-bot-token')
