@@ -13,7 +13,7 @@ if [ -d "${INPUT}" ]; then
 fi
 
 # sign with curl
-curl -f -o "${INPUT}" -F file=@"${INPUT}" -F entitlements=@"${ENTITLEMENTS}" https://cbi.eclipse.org/macos/codesign/sign
+curl -o "${INPUT}" -F file=@"${INPUT}" -F entitlements=@"${ENTITLEMENTS}" https://cbi.eclipse.org/macos/codesign/sign
 
 # if unzip needed
 if [ "$NEEDS_UNZIP" = true ]; then

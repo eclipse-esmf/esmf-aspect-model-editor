@@ -39,6 +39,7 @@ const signFile = file => {
 
 async function defaultFunction() {
   const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_mac_dir');
+  const singedAppPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
   const branch = process.env.BRANCH_NAME;
 
@@ -50,8 +51,6 @@ async function defaultFunction() {
   let childPaths = await walkAsync(appOutDir);
 
   childPaths.sort((a, b) => b.split(path.sep).length - a.split(path.sep).length).forEach(file => signFile(file));
-
-  const singedAppPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
   console.log('Notarizing the application...');
   child_process.spawnSync(notarizeCommand, [path.basename(singedAppPath), 'org.eclipse.esmf.ame'], {
