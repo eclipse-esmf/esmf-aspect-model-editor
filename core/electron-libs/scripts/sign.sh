@@ -4,6 +4,8 @@ INPUT=$1
 ENTITLEMENTS=$2
 NEEDS_UNZIP=false
 
+pwd
+
 # if folder, zip it
 if [ -d "${INPUT}" ]; then
     NEEDS_UNZIP=true
@@ -13,7 +15,25 @@ if [ -d "${INPUT}" ]; then
 fi
 
 # sign with curl
-curl -o "${INPUT}" -F file=@"${INPUT}" -F entitlements=@"${ENTITLEMENTS}" https://cbi.eclipse.org/macos/codesign/sign
+curl -o "temp-${INPUT}" -F file=@"${INPUT}" -F entitlements=@"${ENTITLEMENTS}" https://cbi.eclipse.org/macos/codesign/sign
+
+pwd
+
+ls -a
+
+# remove the original file
+rm -f "${INPUT}"
+
+pwd
+
+ls -a
+
+# rename the temporary file to the original file name
+mv "temp-${TEMP_OUTPUT}" "${INPUT}"
+
+pwd
+
+ls -a
 
 # if unzip needed
 if [ "$NEEDS_UNZIP" = true ]; then
