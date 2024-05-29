@@ -13,14 +13,7 @@ if [ -d "${INPUT}" ]; then
 fi
 
 # sign with curl
-curl -o "temp-${INPUT}" -F file=@"${INPUT}" -F entitlements=@"${ENTITLEMENTS}" https://cbi.eclipse.org/macos/codesign/sign
-
-# remove the original file
-rm -f "${INPUT}"
-
-# rename the temporary file to the original file name
-mv "temp-${INPUT}" "${INPUT}"
-
+curl -o "${INPUT}" -F file=@"${INPUT}" -F entitlements=@"${ENTITLEMENTS}" https://cbi.eclipse.org/macos/codesign/sign
 
 # if unzip needed
 if [ "$NEEDS_UNZIP" = true ]; then
