@@ -6,6 +6,11 @@ NEEDS_UNZIP=false
 UUID_REGEX='"uuid"\s*:\s*"([^"]+)'
 STATUS_REGEX='"status"\s*:\s*"([^"]+)'
 
+# if input contains "ame-backend", do nothing
+if [[ $INPUT == *"ame-backend"* ]]; then
+    exit 0
+fi
+
 # if folder, zip it
 if [ -d "${INPUT}" ]; then
     NEEDS_UNZIP=true
