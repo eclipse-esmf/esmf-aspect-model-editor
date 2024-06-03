@@ -153,12 +153,13 @@ pipeline {
     stage('Release signed Windows and Mac artifact to GitHub Releases') {
       steps {
         script {
-          sh "mv unpack_mac_dir/notarized.zip ./notarized.zip"
+          def macOsFile = "aspect-model-editor-v${env.version}-mac.zip"
+          sh "mv unpack_mac_dir/notarized.zip ./${macOsFile}"
 
           def repo = "eclipse-esmf/esmf-aspect-model-editor"
           def tagName = "v${env.version}"
           def fileNameWin = "aspect-model-editor-v${env.version}-win.zip"
-          def fileNameMac = "aspect-model-editor-v${env.version}-mac.dmg"
+          def fileNameMac = "aspect-model-editor-v${env.version}-mac.zip"
           def releaseId = ""
 
           def tagExists = sh(script: """
