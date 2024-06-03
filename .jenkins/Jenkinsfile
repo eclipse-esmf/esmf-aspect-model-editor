@@ -106,6 +106,7 @@ pipeline {
       steps {
         script {
           def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
+          sh "mkdir -p unsigned_dir"
           sh "zip -r ./unsigned_dir/Aspect-Model-Editor.zip ./unpack_mac_dir/Aspect-Model-Editor.app"
           sh "mvn clean package"
           sh "mv unsigned_dir/Aspect-Model-Editor.dmg unsigned_dir/${macOsFile}"
