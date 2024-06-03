@@ -106,11 +106,8 @@ pipeline {
       steps {
         script {
           def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
-          sh "mkdir -p unsigned_dir"
-          sh "chmod -R 00755 ./unpack_mac_dir/Aspect-Model-Editor.app"
-          sh "cd unpack_mac_dir && tar --xattrs -czvf ../unsigned_dir/Aspect-Model-Editor.tar.gz Aspect-Model-Editor.app"
           sh "mvn clean package"
-          sh "mv unsigned_dir/Aspect-Model-Editor.dmg unsigned_dir/${macOsFile}"
+          sh "mv unpack_mac_dir/notarized.dmg unpack_mac_dir/${macOsFile}"
         }
       }
     }
@@ -120,7 +117,7 @@ pipeline {
         script {
           def macOsFile = "aspect-model-editor-v${env.version}-mac.dmg"
           sh "mkdir -p signed_dir"
-          sh "curl -o signed_dir/${macOsFile} -F file=@unsigned_dir/${macOsFile} -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign"
+          sh "curl -o signed_dir/${macOsFile} -F file=@unpack_mac_dir/${macOsFile} -F entitlements=@entitlements.plist https://cbi.eclipse.org/macos/codesign/sign"
           sh "ls -a signed_dir"
         }
       }

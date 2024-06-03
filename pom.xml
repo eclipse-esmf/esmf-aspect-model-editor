@@ -30,11 +30,10 @@
               <goal>package-dmg</goal>
             </goals>
             <configuration>
-              <source>${project.basedir}/unsigned_dir/Aspect-Model-Editor.tar.gz</source>
+              <source>${project.basedir}/unpack_mac_dir/notarized.zip</source>
               <continueOnFail>true</continueOnFail>
               <timeoutMillis>600000</timeoutMillis>
               <continueOnFail>false</continueOnFail>
-              <sign>false</sign>
             </configuration>
           </execution>
         </executions>

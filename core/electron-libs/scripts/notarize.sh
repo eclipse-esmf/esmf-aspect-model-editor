@@ -39,21 +39,4 @@ if [[ $STATUS != 'COMPLETE' ]]; then
 fi
 
 # download stapled result
-RESPONSE=$(curl -o "${INPUT}" https://cbi.eclipse.org/macos/xcrun/${UUID}/download)
-
-# if unzip needed
-if [ "$NEEDS_UNZIP" = true ]; then
-    pwd
-    ls -a
-    unzip -qq "${INPUT}"
-    ls -a
-
-    if [ $? -ne 0 ]; then
-        # echo contents if unzip failed
-        output=$(cat "${INPUT}")
-        echo "$output"
-        exit 1
-    fi
-
-    rm -f "${INPUT}"
-fi
+RESPONSE=$(curl -o "notarized.zip" https://cbi.eclipse.org/macos/xcrun/${UUID}/download)
