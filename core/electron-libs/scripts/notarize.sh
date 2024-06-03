@@ -39,4 +39,4 @@ if [[ $STATUS != 'COMPLETE' ]]; then
 fi
 
 # download stapled result
-RESPONSE=$(curl -o "notarized.zip" https://cbi.eclipse.org/macos/xcrun/${UUID}/download)
+curl -o "notarized.zip" https://cbi.eclipse.org/macos/xcrun/${UUID}/download
