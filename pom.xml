@@ -30,7 +30,7 @@
               <goal>package-dmg</goal>
             </goals>
             <configuration>
-              <source>${project.basedir}/unsigned_dir/Aspect-Model-Editor.tar.gz</source>
+              <source>${project.basedir}/unsigned_dir/Aspect-Model-Editor.zip</source>
               <continueOnFail>true</continueOnFail>
               <timeoutMillis>600000</timeoutMillis>
               <continueOnFail>false</continueOnFail>
