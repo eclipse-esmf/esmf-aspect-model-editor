@@ -70,22 +70,24 @@ jobs:
           if [[ ${ASSET_ONE_URL} == *"-mac"* ]];
             then
               echo $ASSET_ONE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v5.6.0-rc2 | jq -r '.assets[0].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v5.6.0-rc2 | jq -r '.assets[0].browser_download_url')
           fi
 
           if [[ ${ASSET_TWO_URL} == *"-mac"* ]];
             then
               echo $ASSET_TWO_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v5.6.0-rc2 | jq -r '.assets[1].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v5.6.0-rc2 | jq -r '.assets[1].browser_download_url')
           fi
 
           if [[ ${ASSET_THREE_URL} == *"-mac"* ]];
             then
               echo ASSET_THREE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v5.6.0-rc2 | jq -r '.assets[2].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v5.6.0-rc2 | jq -r '.assets[2].browser_download_url')
           fi
 
-          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend-5.6.0-rc2-mac
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend-5.6.0-rc2-mac.zip
+          unzip backend/ame-backend-5.6.0-rc2-mac.zip -d backend/
+          rm backend/ame-backend-5.6.0-rc2-mac.zip
           chmod 755 backend/ame-backend-5.6.0-rc2-mac
 
       - name: Download aspect model service into project (Linux)
