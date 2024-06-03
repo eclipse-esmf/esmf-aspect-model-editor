@@ -21,7 +21,10 @@ import {mxgraph} from 'mxgraph-factory';
   providedIn: 'root',
 })
 export class CollectionCharacteristicConnectionHandler implements MultiShapeConnector<DefaultCollection, DefaultCharacteristic> {
-  constructor(private mxGraphService: MxGraphService, private mxGraphAttributeService: MxGraphAttributeService) {}
+  constructor(
+    private mxGraphService: MxGraphService,
+    private mxGraphAttributeService: MxGraphAttributeService,
+  ) {}
 
   public connect(parentMetaModel: DefaultCollection, childMetaModel: DefaultCharacteristic, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
     this.mxGraphAttributeService.graph.getOutgoingEdges(parent).forEach(outEdge => {

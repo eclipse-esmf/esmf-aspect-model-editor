@@ -46,8 +46,8 @@ export class ScaleInputFieldComponent extends InputFieldComponent<DefaultFixedPo
           value: this.getCurrentValue(this.fieldName),
           disabled: this.metaModelElement.isExternalReference(),
         },
-        Validators.required
-      )
+        Validators.required,
+      ),
     );
   }
 }

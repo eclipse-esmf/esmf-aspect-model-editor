@@ -129,7 +129,7 @@ export class EditorService {
     private translate: LanguageTranslationService,
     private browserService: BrowserService,
     private injector: Injector,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {
     if (!environment.production) {
       window['angular.editorService'] = this;
@@ -155,7 +155,7 @@ export class EditorService {
           }
         });
       }),
-      null
+      null,
     );
 
     // TODO: Check this when refactoring editor service
@@ -185,7 +185,7 @@ export class EditorService {
             }
           });
         });
-      })
+      }),
     );
 
     // increase performance by not passing the event to the parent(s)
@@ -216,10 +216,10 @@ export class EditorService {
 
     return this.rdfService.isSameModelContent(fileName, fileContent, currentModel).pipe(
       switchMap(isSameModelContent =>
-        !isSameModelContent ? this.openReloadConfirmationDialog(currentModel.absoluteAspectModelFileName) : of(false)
+        !isSameModelContent ? this.openReloadConfirmationDialog(currentModel.absoluteAspectModelFileName) : of(false),
       ),
       switchMap(isApprove => (isApprove ? this.loadNewAspectModel({rdfAspectModel: fileContent}) : of(null))),
-      map(() => this.rdfService.currentRdfModel)
+      map(() => this.rdfService.currentRdfModel),
     );
   }
 
@@ -251,13 +251,13 @@ export class EditorService {
           rdfModel,
           payload.rdfAspectModel,
           payload.namespaceFileName || rdfModel.absoluteAspectModelFileName,
-          payload.editElementUrn
-        )
+          payload.editElementUrn,
+        ),
       ),
       tap(() => {
         this.modelSavingTracker.updateSavedModel();
         const [namespace, version, file] = (payload.namespaceFileName || this.rdfService.currentRdfModel.absoluteAspectModelFileName).split(
-          ':'
+          ':',
         );
 
         if (this.browserService.isStartedAsElectronApp() || window.require) {
@@ -270,13 +270,13 @@ export class EditorService {
         if (!payload.isDefault) {
           this.notificationsService.info({title: 'Aspect Model loaded', timeout: 3000});
         }
-      })
+      }),
     );
   }
 
   loadExternalAspectModel(extRefAbsoluteAspectModelFileName: string): CachedFile {
     const extRdfModel = this.rdfService.externalRdfModels.find(
-      extRef => extRef.absoluteAspectModelFileName === extRefAbsoluteAspectModelFileName
+      extRef => extRef.absoluteAspectModelFileName === extRefAbsoluteAspectModelFileName,
     );
     const fileName = extRdfModel.aspectModelFileName;
     let foundCachedFile = this.namespaceCacheService.getFile([extRdfModel.getAspectModelUrn(), fileName]);
@@ -295,11 +295,11 @@ export class EditorService {
       mergeMap((fileContentModels: Array<FileContentModel>) =>
         fileContentModels.length
           ? forkJoin(fileContentModels.map(fileContent => this.rdfService.loadExternalReferenceModelIntoStore(fileContent)))
-          : of([] as Array<RdfModel>)
+          : of([] as Array<RdfModel>),
       ),
       tap(extRdfModel => {
         extRdfModel.forEach(extRdfModel => this.loadExternalAspectModel(extRdfModel.absoluteAspectModelFileName));
-      })
+      }),
     );
   }
 
@@ -308,14 +308,14 @@ export class EditorService {
       .getAllNamespacesFilesContent()
       .pipe(
         mergeMap((fileContentModels: FileContentModel[]) =>
-          fileContentModels.length ? this.rdfService.parseModels(fileContentModels) : of([])
-        )
+          fileContentModels.length ? this.rdfService.parseModels(fileContentModels) : of([]),
+        ),
       );
   }
 
   removeAspectModelFileFromStore(aspectModelFileName: string) {
     const index = this.rdfService.externalRdfModels.findIndex(
-      extRdfModel => extRdfModel.absoluteAspectModelFileName === aspectModelFileName
+      extRdfModel => extRdfModel.absoluteAspectModelFileName === aspectModelFileName,
     );
     this.rdfService.externalRdfModels.splice(index, 1);
   }
@@ -340,7 +340,7 @@ export class EditorService {
           timeout: 5000,
         });
         return throwError(() => err.error);
-      })
+      }),
     );
   }
 
@@ -367,7 +367,7 @@ export class EditorService {
           this.notificationsService.error({title: 'Error on loading the aspect model', message: error});
           // TODO: Use 'null' instead of empty object (requires thorough testing)
           return of({} as null);
-        })
+        }),
       )
       .subscribe();
   }
@@ -384,7 +384,7 @@ export class EditorService {
         this.mxGraphShapeOverlayService,
         this.namespaceCacheService,
         this.sammLangService,
-        rdfModel
+        rdfModel,
       );
 
       const elements = this.namespaceCacheService.currentCachedFile.getAllElements();
@@ -404,7 +404,7 @@ export class EditorService {
         filter(response => response !== 'cancel'),
         tap(() => this.toggleLoadingScreen()),
         delay(500), // Wait for modal animation
-        switchMap(() => this.graphUpdateWorkflow(mxGraphRenderer, elements))
+        switchMap(() => this.graphUpdateWorkflow(mxGraphRenderer, elements)),
       )
       .subscribe({
         next: () => this.finalizeGraphUpdate(editElementUrn),
@@ -461,7 +461,7 @@ export class EditorService {
         const urn: string = element.dataset.urn;
         this.ngZone.run(() => this.createElement(x, y, elementType, urn));
       },
-      dragElement
+      dragElement,
     );
     ds.setGuidesEnabled(true);
   }
@@ -506,7 +506,7 @@ export class EditorService {
           this.mxGraphShapeOverlayService,
           this.namespaceCacheService,
           this.sammLangService,
-          null
+          null,
         );
 
         this.mxGraphService.setCoordinatesForNextCellRender(x, y);
@@ -619,7 +619,7 @@ export class EditorService {
       this.mxGraphAttributeService.graph.setCellStyles(
         mxConstants.STYLE_STROKECOLOR,
         'black',
-        this.mxGraphService.graph.getOutgoingEdges(cell).map(edge => edge.target)
+        this.mxGraphService.graph.getOutgoingEdges(cell).map(edge => edge.target),
       );
       this.elementModelService.deleteElement(cell);
     });
@@ -743,7 +743,7 @@ export class EditorService {
 
           return timer(this.settings.validationTimerSeconds * 1000);
         },
-      })
+      }),
     );
   }
 
@@ -754,7 +754,7 @@ export class EditorService {
       switchMap(value =>
         localStorage.getItem(ValidateStatus.validating)
           ? throwError(() => ({type: SaveValidateErrorsCodes.validationInProgress}))
-          : of(value)
+          : of(value),
       ),
       switchMap(() => {
         localStorage.setItem(ValidateStatus.validating, 'yes');
@@ -762,7 +762,7 @@ export class EditorService {
         return rdfModel
           ? this.modelApiService.validate(this.rdfService.serializeModel(rdfModel))
           : throwError(() => ({type: SaveValidateErrorsCodes.emptyModel}));
-      })
+      }),
     );
   }
 
@@ -788,12 +788,12 @@ export class EditorService {
         this.namespaceCacheService.currentCachedFile.hasCachedElements() &&
         !this.rdfService.currentRdfModel.aspectModelFileName.includes('empty.ttl')
           ? this.saveModel().pipe(first())
-          : of([])
+          : of([]),
       ),
       tap(() => this.enableAutoSave()),
       retry({
         delay: () => timer(this.settings.saveTimerSeconds * 1000),
-      })
+      }),
     );
   }
 
@@ -813,7 +813,7 @@ export class EditorService {
         this.logService.logError('Error on saving aspect model', error);
         this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_ERROR});
         return of({});
-      })
+      }),
     );
   }
 

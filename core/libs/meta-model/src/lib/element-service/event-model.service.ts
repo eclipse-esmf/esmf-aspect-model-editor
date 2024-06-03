@@ -19,7 +19,10 @@ import {EventRenderService, MxGraphService} from '@ame/mx-graph';
 
 @Injectable({providedIn: 'root'})
 export class EventModelService extends BaseModelService {
-  constructor(private mxGraphService: MxGraphService, private aspectRenderer: EventRenderService) {
+  constructor(
+    private mxGraphService: MxGraphService,
+    private aspectRenderer: EventRenderService,
+  ) {
     super();
   }
 

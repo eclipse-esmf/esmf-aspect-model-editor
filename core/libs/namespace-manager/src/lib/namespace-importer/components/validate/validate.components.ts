@@ -22,7 +22,10 @@ import {NamespacesSessionInterface} from '../../../shared/models';
   styleUrls: [`validate.components.scss`],
 })
 export class ImportValidateComponent implements OnInit {
-  constructor(private router: Router, @Inject(NAMESPACES_SESSION) private importSession: NamespacesSessionInterface) {}
+  constructor(
+    private router: Router,
+    @Inject(NAMESPACES_SESSION) private importSession: NamespacesSessionInterface,
+  ) {}
 
   ngOnInit() {
     this.importSession.state.validating$.subscribe({

@@ -27,14 +27,14 @@ export class EntityConnectionHandler implements SingleShapeConnector<Entity> {
     private mxGraphService: MxGraphService,
     private modelElementNamingService: ModelElementNamingService,
     private entityInstanceService: EntityInstanceService,
-    private filtersService: FiltersService
+    private filtersService: FiltersService,
   ) {}
 
   public connect(entity: Entity, source: mxgraph.mxCell) {
     const defaultProperty = DefaultProperty.createInstance();
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultProperty);
     const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)})
+      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
     );
     const overWrittenProperty = {property: defaultProperty, keys: {}};
     entity.properties.push(overWrittenProperty);

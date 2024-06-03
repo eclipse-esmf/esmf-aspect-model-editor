@@ -32,7 +32,7 @@ export class PropertyPropertyConnectionHandler
     protected mxGraphAttributeService: MxGraphAttributeService,
     protected sammLangService: SammLanguageSettingsService,
     protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService
+    private notificationService: NotificationsService,
   ) {
     super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, translate);
   }

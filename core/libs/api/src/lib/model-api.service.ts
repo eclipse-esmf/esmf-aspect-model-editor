@@ -40,7 +40,7 @@ export class ModelApiService {
     private http: HttpClient,
     private loggerService: LogService,
     private browserService: BrowserService,
-    private modelValidatorService: ModelValidatorService
+    private modelValidatorService: ModelValidatorService,
   ) {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
@@ -60,7 +60,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -72,7 +72,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -84,7 +84,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -101,7 +101,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -117,7 +117,7 @@ export class ModelApiService {
         catchError(res => {
           res.error = JSON.parse(res.error)?.error;
           return throwError(() => res);
-        })
+        }),
       );
   }
 
@@ -139,7 +139,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -152,7 +152,7 @@ export class ModelApiService {
       .pipe(
         timeout(this.requestTimeout),
         catchError(res => throwError(() => res)),
-        retry(3)
+        retry(3),
       );
   }
 
@@ -171,9 +171,9 @@ export class ModelApiService {
       map(data => {
         return Object.keys(data).reduce<string[]>(
           (fileNames, namespace) => [...fileNames, ...data[namespace].map((fileName: string) => `${namespace}:${fileName}`)],
-          []
+          [],
         );
-      })
+      }),
     );
   }
 
@@ -185,11 +185,11 @@ export class ModelApiService {
             ...files,
             this.getAspectMetaModel(absoluteFileName).pipe(map(aspectMetaModel => new FileContentModel(absoluteFileName, aspectMetaModel))),
           ],
-          []
-        )
+          [],
+        ),
       ),
       mergeMap((files$: Observable<string>[]) => (files$.length ? forkJoin(files$) : of([]))),
-      catchError(() => of([]))
+      catchError(() => of([])),
     );
   }
 
@@ -212,7 +212,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -223,7 +223,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -235,7 +235,7 @@ export class ModelApiService {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -253,7 +253,7 @@ export class ModelApiService {
    */
   validate(rdfContent: string, showNotifications = true): Observable<Array<ViolationError>> {
     return this.getViolationError(rdfContent).pipe(
-      tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors))
+      tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors)),
     );
   }
 
@@ -265,7 +265,7 @@ export class ModelApiService {
       .pipe(
         timeout(this.requestTimeout),
         map((data: any) => data.violationErrors),
-        catchError(res => throwError(() => res))
+        catchError(res => throwError(() => res)),
       );
   }
 
@@ -291,7 +291,7 @@ export class ModelApiService {
         catchError(res => {
           res.error = openApi.output === 'yaml' ? JSON.parse(res.error)?.error : res.error.error;
           return throwError(() => res);
-        })
+        }),
       );
   }
 
@@ -314,7 +314,7 @@ export class ModelApiService {
         catchError(res => {
           res.error = asyncApi.output === 'yaml' ? JSON.parse(res.error)?.error : res.error.error;
           return throwError(() => res);
-        })
+        }),
       );
   }
 
@@ -390,7 +390,7 @@ export class ModelApiService {
           }
         }
         return throwError(() => 'Server error');
-      })
+      }),
     );
   }
 }

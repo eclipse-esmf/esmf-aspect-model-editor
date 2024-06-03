@@ -25,7 +25,10 @@ export class ConstraintInstantiator extends BaseConstraintCharacteristicInstanti
     return this.metaModelElementInstantiator.rdfModel;
   }
 
-  constructor(protected metaModelElementInstantiator: MetaModelElementInstantiator, public nextProcessor?: ConstraintInstantiator) {
+  constructor(
+    protected metaModelElementInstantiator: MetaModelElementInstantiator,
+    public nextProcessor?: ConstraintInstantiator,
+  ) {
     super(metaModelElementInstantiator, nextProcessor);
   }
 
@@ -38,7 +41,7 @@ export class ConstraintInstantiator extends BaseConstraintCharacteristicInstanti
     if (!this.rdfModel.store.getQuads(quad.object, null, null, null).length) {
       const {externalReference} = this.metaModelElementInstantiator.getExternalElement<Characteristic>(
         quad.object,
-        this.rdfModel.isExternalRef
+        this.rdfModel.isExternalRef,
       );
       return externalReference;
     }

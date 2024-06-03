@@ -44,7 +44,10 @@ export class PropertiesButtonComponent implements OnInit {
     return this.metaModelElement?.isPredefined();
   }
 
-  constructor(private matDialog: MatDialog, private metaModelDialogService: EditorModelService) {}
+  constructor(
+    private matDialog: MatDialog,
+    private metaModelDialogService: EditorModelService,
+  ) {}
 
   ngOnInit(): void {
     this.metaModelDialogService.getMetaModelElement().subscribe((metaModelElement: BaseMetaModelElement) => {

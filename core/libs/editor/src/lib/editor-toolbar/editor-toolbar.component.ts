@@ -60,7 +60,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private matDialog: MatDialog,
     private shapeSettingsService: ShapeSettingsService,
-    private mxGraphService: MxGraphService
+    private mxGraphService: MxGraphService,
   ) {}
 
   ngOnInit(): void {

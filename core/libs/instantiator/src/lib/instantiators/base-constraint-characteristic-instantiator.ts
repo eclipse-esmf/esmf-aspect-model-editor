@@ -26,7 +26,7 @@ export class BaseConstraintCharacteristicInstantiator {
 
   constructor(
     protected metaModelElementInstantiator: MetaModelElementInstantiator,
-    public nextProcessor?: BaseConstraintCharacteristicInstantiator
+    public nextProcessor?: BaseConstraintCharacteristicInstantiator,
   ) {
     this.samm = metaModelElementInstantiator.samm;
     this.sammC = metaModelElementInstantiator.sammC;

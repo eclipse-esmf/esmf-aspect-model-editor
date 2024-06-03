@@ -69,7 +69,7 @@ export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty
     this.store.addQuad(
       DataFactory.namedNode(abstractProperty.aspectModelUrn),
       this.rdfService.currentRdfModel.samm.ExtendsProperty(),
-      DataFactory.namedNode(abstractProperty.extendedElement.aspectModelUrn)
+      DataFactory.namedNode(abstractProperty.extendedElement.aspectModelUrn),
     );
   }
 

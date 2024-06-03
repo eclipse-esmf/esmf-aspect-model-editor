@@ -144,7 +144,7 @@ export class MxGraphHelper {
       .some(firstEdge =>
         graph
           .getIncomingEdges(firstEdge.source)
-          .some(secondEdge => MxGraphHelper.getModelElement(secondEdge.source) instanceof DefaultStructuredValue)
+          .some(secondEdge => MxGraphHelper.getModelElement(secondEdge.source) instanceof DefaultStructuredValue),
       );
   }
 
