@@ -84,13 +84,6 @@ async function defaultFunction() {
   const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_mac_dir');
   const singedAppPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
-  const branch = process.env.BRANCH_NAME;
-
-  // if (!((branch === 'main' || releaseDryRun) && running_ci)) {
-  //   console.log('Not a release or dry-run requiring signing/notarizing - skipping');
-  //   return;
-  // }
-
   let childPaths = await walkAsync(appOutDir);
 
   childPaths.sort((a, b) => b.split(path.sep).length - a.split(path.sep).length).forEach(file => signFile(file));
