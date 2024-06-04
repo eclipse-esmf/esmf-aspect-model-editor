@@ -4,6 +4,11 @@ INPUT=$1
 ENTITLEMENTS=$2
 NEEDS_UNZIP=false
 
+# if input contains "ame-backend", do nothing
+if [[ $INPUT == *"ame-backend"* ]]; then
+    exit 0
+fi
+
 # if folder, zip it
 if [ -d "${INPUT}" ]; then
     NEEDS_UNZIP=true
@@ -13,19 +18,18 @@ if [ -d "${INPUT}" ]; then
 fi
 
 # sign with curl
-mkdir -p signed
-curl -f -o "signed/${INPUT}" -F file=@"${INPUT}" -F entitlements=@"${ENTITLEMENTS}" https://cbi.eclipse.org/macos/codesign/sign
+curl -o "${INPUT}" -F file=@"${INPUT}" -F entitlements=@"${ENTITLEMENTS}" https://cbi.eclipse.org/macos/codesign/sign
 
 # if unzip needed
 if [ "$NEEDS_UNZIP" = true ]; then
-    unzip -qq "signed/${INPUT}"
+    unzip -qq "${INPUT}"
 
     if [ $? -ne 0 ]; then
         # echo contents if unzip failed
-        output=$(cat "signed/${INPUT}")
+        output=$(cat "${INPUT}")
         echo "$output"
         exit 1
     fi
 
-    rm -f "signed/${INPUT}"
+    rm -f "${INPUT}"
 fi

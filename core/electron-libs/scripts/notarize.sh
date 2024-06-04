@@ -6,6 +6,11 @@ NEEDS_UNZIP=false
 UUID_REGEX='"uuid"\s*:\s*"([^"]+)'
 STATUS_REGEX='"status"\s*:\s*"([^"]+)'
 
+# if input contains "ame-backend", do nothing
+if [[ $INPUT == *"ame-backend"* ]]; then
+    exit 0
+fi
+
 # if folder, zip it
 if [ -d "${INPUT}" ]; then
     NEEDS_UNZIP=true
@@ -39,19 +44,4 @@ if [[ $STATUS != 'COMPLETE' ]]; then
 fi
 
 # download stapled result
-mkdir -p notarized
-RESPONSE=$(curl -o "notarized/${INPUT}" https://cbi.eclipse.org/macos/xcrun/${UUID}/download)
-
-# if unzip needed
-if [ "$NEEDS_UNZIP" = true ]; then
-    unzip -qq "notarized/${INPUT}"
-
-    if [ $? -ne 0 ]; then
-        # echo contents if unzip failed
-        output=$(cat "notarized/${INPUT}")
-        echo "$output"
-        exit 1
-    fi
-
-    rm -f "notarized/${INPUT}"
-fi
+curl -o "notarized.zip" https://cbi.eclipse.org/macos/xcrun/${UUID}/download

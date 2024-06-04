@@ -1,13 +1,73 @@
 #!/usr/bin/env node
 
-const os = require('os');
+const fs = require('fs').promises;
 const path = require('path');
 const child_process = require('child_process');
-const sign_util = require('electron-osx-sign/util');
+const isBinaryFile = require('isbinaryfile').isBinaryFile;
 
+const rootDir = path.join(__dirname, '..', '..', '..');
 const signCommand = path.join(__dirname, 'sign.sh');
 const notarizeCommand = path.join(__dirname, 'notarize.sh');
-const entitlements = path.resolve(__dirname, '..', '..', '..', 'entitlements.plist');
+const entitlements = path.resolve(rootDir, 'entitlements.plist');
+
+async function walkAsync(dirPath) {
+  console.log('Walking... ' + dirPath);
+
+  async function _walkAsync(dirPath) {
+    const children = await fs.readdir(dirPath);
+    return await Promise.all(
+      children.map(async child => {
+        const filePath = path.resolve(dirPath, child);
+
+        const stat = await fs.stat(filePath);
+        if (stat.isFile()) {
+          switch (path.extname(filePath)) {
+            case '.cstemp': // Temporary file generated from past codesign
+              console.log('Removing... ' + filePath);
+              await fs.remove(filePath);
+              return null;
+            default:
+              return await getFilePathIfBinary(filePath);
+          }
+        } else if (stat.isDirectory() && !stat.isSymbolicLink()) {
+          const walkResult = await _walkAsync(filePath);
+          switch (path.extname(filePath)) {
+            case '.app': // Application
+            case '.framework': // Framework
+              walkResult.push(filePath);
+          }
+          return walkResult;
+        }
+        return null;
+      }),
+    );
+  }
+
+  const allPaths = await _walkAsync(dirPath);
+  return compactFlattenedList(allPaths);
+}
+
+async function getFilePathIfBinary(filePath) {
+  if (await isBinaryFile(filePath)) {
+    return filePath;
+  }
+  return null;
+}
+
+function compactFlattenedList(list) {
+  const result = [];
+
+  function populateResult(list) {
+    if (!Array.isArray(list)) {
+      if (list) result.push(list);
+    } else if (list.length > 0) {
+      for (const item of list) if (item) populateResult(item);
+    }
+  }
+
+  populateResult(list);
+  return result;
+}
 
 const signFile = file => {
   console.log(`Signing ${file}...`);
@@ -21,33 +81,23 @@ const signFile = file => {
 };
 
 async function defaultFunction() {
-  const running_on_mac = os.platform() === 'darwin' || os.platform() === 'mac';
-  const appOutDir = path.join(__dirname, '..', '..', 'electron', 'mac');
-  const appPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
+  const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_mac_dir');
+  const singedAppPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
-  if (!running_on_mac) {
-    console.log('This will only run on MacOs.');
-    return;
-  }
-
-  const releaseDryRun = process.env.ESMF_JENKINS_RELEASE_DRYRUN === 'true';
   const branch = process.env.BRANCH_NAME;
-  const running_ci = process.env.ESMF_JENKINS_CI === 'true';
 
   // if (!((branch === 'main' || releaseDryRun) && running_ci)) {
   //   console.log('Not a release or dry-run requiring signing/notarizing - skipping');
   //   return;
   // }
 
-  console.log('Detected ESMF Release on Mac ' + (releaseDryRun ? ' (dry-run)' : '') + ' - proceeding with signing and notarizing');
-
-  let childPaths = await sign_util.walkAsync(appOutDir);
+  let childPaths = await walkAsync(appOutDir);
 
   childPaths.sort((a, b) => b.split(path.sep).length - a.split(path.sep).length).forEach(file => signFile(file));
 
   console.log('Notarizing the application...');
-  child_process.spawnSync(notarizeCommand, [path.basename(appPath), 'org.eclipse.esmf.ame'], {
-    cwd: path.dirname(appPath),
+  child_process.spawnSync(notarizeCommand, [path.basename(singedAppPath), 'org.eclipse.esmf'], {
+    cwd: path.dirname(singedAppPath),
     maxBuffer: 1024 * 10000,
     env: process.env,
     stdio: 'inherit',
