@@ -30,7 +30,7 @@ describe('Test editing Unit', () => {
           .type('CustomUnit1', {force: true})
           .get('mat-option')
           .contains('CustomUnit1')
-          .click({force: true})
+          .click({force: true}),
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cyHelp.hasAddShapeOverlay('Quantifiable1'))
@@ -61,7 +61,7 @@ describe('Test editing Unit', () => {
           .type('CustomUnit2', {force: true})
           .get('mat-option')
           .contains('CustomUnit2')
-          .click({force: true})
+          .click({force: true}),
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => {
@@ -115,7 +115,7 @@ describe('Test editing Unit', () => {
           .type('CustomUnit2', {force: true})
           .get('mat-option')
           .contains('CustomUnit2')
-          .click({force: true})
+          .click({force: true}),
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.clickShape('CustomUnit2'))
@@ -124,7 +124,7 @@ describe('Test editing Unit', () => {
         cy.getAspect().then(aspect => {
           expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
           expect(aspect.properties[0].property.characteristic.unit).to.be.null;
-        })
+        }),
       )
       .then(() =>
         cy.getUpdatedRDF().then(rdf => {
@@ -135,7 +135,7 @@ describe('Test editing Unit', () => {
           expect(rdf).not.contain('CustomUnit2 a samm:Unit');
           expect(rdf).not.contain('samm-c:unit :CustomUnit1');
           expect(rdf).not.contain('samm-c:unit :CustomUnit2');
-        })
+        }),
       );
   });
 
@@ -148,7 +148,7 @@ describe('Test editing Unit', () => {
           .type('CustomUnit1', {force: true})
           .get('mat-option')
           .contains('CustomUnit1')
-          .click({force: true})
+          .click({force: true}),
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('Quantifiable1'))
@@ -180,7 +180,7 @@ describe('Test editing Unit', () => {
           .type('CustomUnit1', {force: true})
           .get('mat-option')
           .contains('CustomUnit1')
-          .click({force: true})
+          .click({force: true}),
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cyHelp.hasAddShapeOverlay('Duration1'))
@@ -248,7 +248,7 @@ describe('Test editing Unit', () => {
           .get('mat-option')
           .last()
           .contains('metre')
-          .click({force: true})
+          .click({force: true}),
       );
   });
 });

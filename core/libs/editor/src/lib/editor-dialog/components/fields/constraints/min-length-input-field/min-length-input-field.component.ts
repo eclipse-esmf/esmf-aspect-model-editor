@@ -48,7 +48,7 @@ export class MinLengthInputFieldComponent extends InputFieldComponent<DefaultLen
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
         disabled: this.metaModelElement.isExternalReference(),
-      })
+      }),
     );
   }
 }

@@ -25,7 +25,10 @@ import {Samm, SammC} from '@ame/vocabulary';
 export class UpperBoundInputFieldComponent extends InputFieldComponent<DefaultConstraint> implements OnInit, OnDestroy {
   public upperBoundDefinitionList = [];
 
-  constructor(public dataTypeService: DataTypeService, public mxGraphService: MxGraphService) {
+  constructor(
+    public dataTypeService: DataTypeService,
+    public mxGraphService: MxGraphService,
+  ) {
     super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'upperBoundDefinition';
@@ -54,7 +57,7 @@ export class UpperBoundInputFieldComponent extends InputFieldComponent<DefaultCo
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
         disabled: this.metaModelElement.isExternalReference(),
-      })
+      }),
     );
   }
 }

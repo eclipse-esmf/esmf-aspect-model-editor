@@ -44,7 +44,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
           finalize(() => {
             this.loading = false;
             this.changeDetector.detectChanges();
-          })
+          }),
         )
         .subscribe();
       this.subscription.add(refreshing$);

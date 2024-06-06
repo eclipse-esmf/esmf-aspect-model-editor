@@ -51,7 +51,7 @@ export class UnitInstantiator {
           this.samm.version,
           `${this.metaModelElementInstantiator.sammU.getDefaultQuantityKindsUri()}#${quantityKind.name}`,
           quantityKind.name,
-          quantityKind.label
+          quantityKind.label,
         )
       : null;
   }

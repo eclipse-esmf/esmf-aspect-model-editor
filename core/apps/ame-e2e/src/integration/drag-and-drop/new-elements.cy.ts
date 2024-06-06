@@ -49,7 +49,9 @@ describe('Test drag and drop', () => {
 
       .then(() => cy.clickConnectShapes('AspectDefault', 'operation1'))
       .then(() =>
-        cyHelp.hasAddInputAndOutputShapeOverlay('operation1').then(hasInputAndOutputOverlay => expect(hasInputAndOutputOverlay).equal(true))
+        cyHelp
+          .hasAddInputAndOutputShapeOverlay('operation1')
+          .then(hasInputAndOutputOverlay => expect(hasInputAndOutputOverlay).equal(true)),
       )
 
       .then(() => cy.clickConnectShapes('property2', 'Trait1'))
@@ -77,7 +79,7 @@ describe('Test drag and drop', () => {
           expect(aspect.properties[1].property.characteristic.name).to.equals('Trait1');
           expect(aspect.properties[1].property.characteristic.baseCharacteristic.name).to.equals('Characteristic1');
           expect(aspect.properties[1].property.characteristic.baseCharacteristic.dataType.name).to.equals('Entity1');
-        })
+        }),
       );
   });
 });

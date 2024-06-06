@@ -36,22 +36,22 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
       .then(() => cy.get('[data-cy="modeCodeValue"]').type('30'))
       .then(() => cy.get('[data-cy="modeDescriptionValue"]').type('DescriptionOne'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(0).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click()
+        cy.get(FIELD_propertyLanguageValue).eq(0).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click(),
       )
       .then(() => cy.get('[data-cy="modeDescriptionAdd"]').click())
       .then(() => cy.get('[data-cy="modeDescriptionValue"]').eq(1).type('DescriptionTwo'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(1).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click()
+        cy.get(FIELD_propertyLanguageValue).eq(1).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
       )
       .then(() => cy.get('[data-cy="modeDescriptionAdd"]').click())
       .then(() => cy.get('[data-cy="modeDescriptionValue"]').eq(2).type('DescriptionThree'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click()
+        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
       )
       .then(() => cy.get('[data-cy="modeDescriptionRemove"]').eq(0).click())
       .then(() => cy.get('[data-cy="modeValueValue"]').type('Value'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click()
+        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
       )
       .then(() => cy.get(SELECTOR_entitySaveButton).click());
 
@@ -125,7 +125,7 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
               ':modeValue "Value"@en',
             ],
           },
-        ])
+        ]),
       );
   });
 
@@ -137,32 +137,32 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
       .then(() => cy.get('[data-cy="modeCodeValue"]').type('30'))
       .then(() => cy.get('[data-cy="modeDescriptionValue"]').type('DescriptionOne'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(0).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click()
+        cy.get(FIELD_propertyLanguageValue).eq(0).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click(),
       )
       .then(() => cy.get('[data-cy="modeDescriptionAdd"]').click())
       .then(() => cy.get('[data-cy="modeDescriptionValue"]').eq(1).type('DescriptionTwo'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(1).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click()
+        cy.get(FIELD_propertyLanguageValue).eq(1).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
       )
       .then(() => cy.get('[data-cy="modeDescriptionAdd"]').click())
       .then(() => cy.get('[data-cy="modeDescriptionValue"]').eq(2).type('DescriptionThree'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click()
+        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
       )
       .then(() => cy.get('[data-cy="modeDescriptionRemove"]').eq(0).click())
       .then(() => cy.get('[data-cy="modeValueValue"]').type('ValueOne'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click()
+        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
       )
       .then(() => cy.get('[data-cy="modeValueAdd"]').click())
       .then(() => cy.get('[data-cy="modeValueValue"]').eq(1).type('ValueTwo'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(3).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click()
+        cy.get(FIELD_propertyLanguageValue).eq(3).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click(),
       )
       .then(() => cy.get('[data-cy="modeValueAdd"]').click())
       .then(() => cy.get('[data-cy="modeValueValue"]').eq(2).type('ValueThree'))
       .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(4).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click()
+        cy.get(FIELD_propertyLanguageValue).eq(4).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click(),
       )
       .then(() => cy.get('[data-cy="modeValueRemove"]').eq(0).click())
       .then(() => cy.get(SELECTOR_entitySaveButton).click());
@@ -239,7 +239,7 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
               ':modeValue ("ValueOne"@en "ValueThree"@de)',
             ],
           },
-        ])
+        ]),
       );
   });
 });

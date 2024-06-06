@@ -31,7 +31,7 @@ export class StartMigratingComponent {
     @Inject(APP_CONFIG) public config: AppConfig,
     private migratorApiService: MigratorApiService,
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   migrate() {

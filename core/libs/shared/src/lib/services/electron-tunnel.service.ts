@@ -68,7 +68,7 @@ export class ElectronTunnelService {
     private matDialog: MatDialog,
     private searchesStateService: SearchesStateService,
     private translate: LanguageTranslationService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   sendTranslationsToElectron(language: string): void {
@@ -146,7 +146,7 @@ export class ElectronTunnelService {
             },
           });
         });
-      })
+      }),
     );
   }
 
@@ -241,13 +241,13 @@ export class ElectronTunnelService {
                     this.electronSignalsService.call('unlockFile', {
                       namespace: options?.namespace,
                       file: options?.file,
-                    })
+                    }),
                   ),
-                  map(() => close)
+                  map(() => close),
                 )
-              : of(close)
+              : of(close),
           ),
-          catchError(() => of(true))
+          catchError(() => of(true)),
         )
         .subscribe((close: boolean) => {
           close && this.ipcRenderer.send(ElectronEvents.REQUEST_CLOSE_WINDOW, windowId);
@@ -309,14 +309,14 @@ export class ElectronTunnelService {
     this.electronSignalsService.addListener('lockFile', ({namespace, file}) => {
       return this.modelApiService.lockFile(namespace, file).pipe(
         take(1),
-        tap(() => this.electronSignalsService.call('addLock', {namespace, file}))
+        tap(() => this.electronSignalsService.call('addLock', {namespace, file})),
       );
     });
 
     this.electronSignalsService.addListener('unlockFile', ({namespace, file}) => {
       return this.modelApiService.unlockFile(namespace, file).pipe(
         take(1),
-        tap(() => this.electronSignalsService.call('removeLock', {namespace, file}))
+        tap(() => this.electronSignalsService.call('removeLock', {namespace, file})),
       );
     });
 
@@ -357,7 +357,7 @@ export class ElectronTunnelService {
     });
 
     this.ipcRenderer.on(ElectronEvents.SIGNAL_LOAD_FILE, (_: unknown, fileInfo: FileInfo) =>
-      this.ngZone.run(() => this.fileHandlingService.onLoadModel(fileInfo))
+      this.ngZone.run(() => this.fileHandlingService.onLoadModel(fileInfo)),
     );
 
     this.ipcRenderer.on(ElectronEvents.SIGNAL_LOAD_FROM_TEXT, () => {
@@ -365,7 +365,7 @@ export class ElectronTunnelService {
     });
 
     this.ipcRenderer.on(ElectronEvents.SIGNAL_LOAD_SPECIFIC_FILE, (_: unknown, fileInfo: FileInfo) =>
-      this.ngZone.run(() => this.fileHandlingService.onLoadModel(fileInfo))
+      this.ngZone.run(() => this.fileHandlingService.onLoadModel(fileInfo)),
     );
 
     this.ipcRenderer.on(ElectronEvents.SIGNAL_NEW_WINDOW, () => {
@@ -373,20 +373,20 @@ export class ElectronTunnelService {
     });
 
     this.ipcRenderer.on(ElectronEvents.SIGNAL_IMPORT_TO_WORKSPACE, (_: unknown, fileInfo: FileInfo) =>
-      this.ngZone.run(() => this.fileHandlingService.onAddFileToNamespace(fileInfo))
+      this.ngZone.run(() => this.fileHandlingService.onAddFileToNamespace(fileInfo)),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_IMPORT_NAMESPACES, (_: unknown, fileInfo: FileInfo) =>
-      this.ngZone.run(() => this.namespacesManagerService.onImportNamespaces(fileInfo))
+      this.ngZone.run(() => this.namespacesManagerService.onImportNamespaces(fileInfo)),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_COPY_TO_CLIPBOARD, () => this.ngZone.run(() => this.fileHandlingService.onCopyToClipboard()));
     this.ipcRenderer.on(ElectronEvents.SIGNAL_SAVE_TO_WORKSPACE, () =>
-      this.ngZone.run(() => this.fileHandlingService.onSaveAspectModelToWorkspace())
+      this.ngZone.run(() => this.fileHandlingService.onSaveAspectModelToWorkspace()),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_EXPORT_MODEL, () =>
-      this.ngZone.run(() => this.fileHandlingService.onExportAsAspectModelFile())
+      this.ngZone.run(() => this.fileHandlingService.onExportAsAspectModelFile()),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_EXPORT_NAMESPACES, () =>
-      this.ngZone.run(() => this.namespacesManagerService.onExportNamespaces())
+      this.ngZone.run(() => this.namespacesManagerService.onExportNamespaces()),
     );
 
     this.ipcRenderer.on(ElectronEvents.SIGNAL_SHOW_HIDE_TOOLBAR, () => {
@@ -395,42 +395,42 @@ export class ElectronTunnelService {
 
     this.ipcRenderer.on(ElectronEvents.SIGNAL_SHOW_HIDE_MINIMAP, () => this.ngZone.run(() => this.configurationService.toggleEditorMap()));
     this.ipcRenderer.on(ElectronEvents.SIGNAL_FILTER_MODEL_BY, (_: unknown, rule: ModelFilter) =>
-      this.ngZone.run(() => this.filtersService.renderByFilter(rule))
+      this.ngZone.run(() => this.filtersService.renderByFilter(rule)),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_ZOOM_IN, () => this.ngZone.run(() => this.editorService.zoomIn()));
     this.ipcRenderer.on(ElectronEvents.SIGNAL_ZOOM_OUT, () => this.ngZone.run(() => this.editorService.zoomOut()));
     this.ipcRenderer.on(ElectronEvents.SIGNAL_ZOOM_TO_FIT, () => this.ngZone.run(() => this.editorService.fit()));
     this.ipcRenderer.on(ElectronEvents.SIGNAL_ZOOM_TO_ACTUAL, () => this.ngZone.run(() => this.editorService.actualSize()));
     this.ipcRenderer.on(ElectronEvents.SIGNAL_OPEN_SELECTED_ELEMENT, () =>
-      this.ngZone.run(() => this.shapeSettingsService.editSelectedCell())
+      this.ngZone.run(() => this.shapeSettingsService.editSelectedCell()),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_REMOVE_SELECTED_ELEMENT, () =>
-      this.ngZone.run(() => this.editorService.deleteSelectedElements())
+      this.ngZone.run(() => this.editorService.deleteSelectedElements()),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_COLLAPSE_EXPAND_MODEL, () => this.ngZone.run(() => this.editorService.toggleExpand()));
     this.ipcRenderer.on(ElectronEvents.SIGNAL_FORMAT_MODEL, () => this.ngZone.run(() => this.editorService.formatModel()));
     this.ipcRenderer.on(ElectronEvents.SIGNAL_CONNECT_ELEMENTS, () =>
-      this.ngZone.run(() => this.shapeConnectorService.connectSelectedElements())
+      this.ngZone.run(() => this.shapeConnectorService.connectSelectedElements()),
     );
 
     this.ipcRenderer.on(ElectronEvents.SIGNAL_VALIDATE_MODEL, () => this.ngZone.run(() => this.fileHandlingService.onValidateFile()));
     this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_HTML_DOCUMENTATION, () =>
-      this.ngZone.run(() => this.generateHandlingService.onGenerateDocumentation())
+      this.ngZone.run(() => this.generateHandlingService.onGenerateDocumentation()),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_OPEN_API_SPECIFICATION, () =>
-      this.ngZone.run(() => this.generateHandlingService.onGenerateOpenApiSpec())
+      this.ngZone.run(() => this.generateHandlingService.onGenerateOpenApiSpec()),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_ASYNC_API_SPECIFICATION, () =>
-      this.ngZone.run(() => this.generateHandlingService.onGenerateAsyncApiSpec())
+      this.ngZone.run(() => this.generateHandlingService.onGenerateAsyncApiSpec()),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_AASX_XML, () =>
-      this.ngZone.run(() => this.generateHandlingService.onGenerateAASXFile())
+      this.ngZone.run(() => this.generateHandlingService.onGenerateAASXFile()),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_JSON_PAYLOAD, () =>
-      this.ngZone.run(() => this.generateHandlingService.onGenerateJsonSample())
+      this.ngZone.run(() => this.generateHandlingService.onGenerateJsonSample()),
     );
     this.ipcRenderer.on(ElectronEvents.SIGNAL_GENERATE_JSON_SCHEMA, () =>
-      this.ngZone.run(() => this.generateHandlingService.onGenerateJsonSchema())
+      this.ngZone.run(() => this.generateHandlingService.onGenerateJsonSchema()),
     );
 
     this.ipcRenderer.on(ElectronEvents.SIGNAL_SEARCH_ELEMENTS, () => {

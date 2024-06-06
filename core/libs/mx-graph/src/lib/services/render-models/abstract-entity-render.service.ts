@@ -29,7 +29,7 @@ export class AbstractEntityRenderService extends BaseRenderService {
     mxGraphService: MxGraphService,
     sammLangService: SammLanguageSettingsService,
     rdfService: RdfService,
-    private baseEntityRenderer: BaseEntityRendererService
+    private baseEntityRenderer: BaseEntityRendererService,
   ) {
     super(mxGraphService, sammLangService, rdfService);
   }

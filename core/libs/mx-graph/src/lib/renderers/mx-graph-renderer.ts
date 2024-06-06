@@ -51,7 +51,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private namespacesCacheService: NamespacesCacheService,
     private sammLangService: SammLanguageSettingsService,
-    private rdfModel: RdfModel
+    private rdfModel: RdfModel,
   ) {
     this.shapes = new Map<string, mxCell>();
   }

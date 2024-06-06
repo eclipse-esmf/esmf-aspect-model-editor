@@ -31,7 +31,7 @@ export class ConversionFactorInputFieldComponent extends InputFieldComponent<Def
       new FormControl({
         value: this.metaModelElement?.conversionFactor,
         disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
-      })
+      }),
     );
   }
 }

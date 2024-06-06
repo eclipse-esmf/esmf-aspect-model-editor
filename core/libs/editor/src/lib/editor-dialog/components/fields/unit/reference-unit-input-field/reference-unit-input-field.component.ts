@@ -38,7 +38,7 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
   constructor(private modelService: ModelService) {
     super();
     this.unitInstantiator = new UnitInstantiator(
-      new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile)
+      new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile),
     );
   }
 
@@ -70,7 +70,7 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
       new FormControl({
         value: this.metaModelElement?.referenceUnit,
         disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
-      })
+      }),
     );
 
     this.referenceUnitControl = this.parentForm.get('referenceUnit') as FormControl;

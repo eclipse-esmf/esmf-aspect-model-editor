@@ -41,7 +41,7 @@ export class EntityValueInstantiator {
     if (!quads.length) {
       const {externalReference} = this.metaModelElementInstantiator.getExternalElement<DefaultEntityInstance>(
         object,
-        this.rdfModel.isExternalRef
+        this.rdfModel.isExternalRef,
       );
       if (externalReference) {
         return externalReference;
@@ -88,7 +88,7 @@ export class EntityValueInstantiator {
     return (
       this.cachedFile.getElement(quad.object.value) ||
       new EntityInstantiator(this.metaModelElementInstantiator).createEntity(
-        this.metaModelElementInstantiator.rdfModel.findAnyProperty(DataFactory.namedNode(quad.object.value))
+        this.metaModelElementInstantiator.rdfModel.findAnyProperty(DataFactory.namedNode(quad.object.value)),
       )
     );
   }
@@ -145,7 +145,7 @@ export class EntityValueInstantiator {
 
     const value = new EntityValueInstantiator(this.metaModelElementInstantiator).createEntityValue(
       this.metaModelElementInstantiator.rdfModel.findAnyProperty(property.object as NamedNode),
-      property.object
+      property.object,
     );
     this.metaModelElementInstantiator.getProperty({quad: property.predicate}, (overwrittenProperty: OverWrittenProperty) => {
       defaultEntityValue.addProperty(overwrittenProperty, value);

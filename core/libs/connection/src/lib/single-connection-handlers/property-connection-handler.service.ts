@@ -26,7 +26,7 @@ export class PropertyConnectionHandler implements SingleShapeConnector<Property>
     private mxGraphService: MxGraphService,
     private modelElementNamingService: ModelElementNamingService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private filtersService: FiltersService
+    private filtersService: FiltersService,
   ) {}
 
   public connect(property: Property, source: mxgraph.mxCell) {
@@ -37,7 +37,7 @@ export class PropertyConnectionHandler implements SingleShapeConnector<Property>
     property.characteristic = DefaultCharacteristic.createInstance();
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(property.characteristic);
     const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)})
+      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
     );
     property.characteristic = metaModelElement;
     this.mxGraphService.assignToParent(child, source);

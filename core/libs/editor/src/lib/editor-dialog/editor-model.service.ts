@@ -64,7 +64,7 @@ export class EditorModelService {
 
     if (!this.characteristicInstantiator) {
       this.characteristicInstantiator = new CharacteristicInstantiator(
-        new MetaModelElementInstantiator(this.modelService.currentRdfModel, null)
+        new MetaModelElementInstantiator(this.modelService.currentRdfModel, null),
       );
     }
 

@@ -50,7 +50,7 @@ export class VersionMigrationComponent implements OnInit {
     private editorService: EditorService,
     private logService: LogService,
     private router: Router,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
@@ -61,7 +61,7 @@ export class VersionMigrationComponent implements OnInit {
         map(namespaces => this.prepareNamespaces(namespaces)),
         tap(namespaces => (this.namespaces = namespaces)),
         switchMap(() => this.rewriteStores()),
-        switchMap(modelsTobeDeleted => this.rewriteAndDeleteModels(modelsTobeDeleted))
+        switchMap(modelsTobeDeleted => this.rewriteAndDeleteModels(modelsTobeDeleted)),
       )
       .subscribe({
         complete: () => this.navigateToMigrationSuccess(),
@@ -82,8 +82,8 @@ export class VersionMigrationComponent implements OnInit {
         this.deleteModels(modelsTobeDeleted).subscribe({
           complete: () => this.electronSignalsService.call('requestRefreshWorkspaces'),
           error: err => this.logService.logError('Error when deleting old Aspect Model to new version', err),
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -110,7 +110,8 @@ export class VersionMigrationComponent implements OnInit {
     for (const namespace in this.namespaces) {
       for (let i = 0; i < this.namespaces[namespace].length; i++) {
         const rdfModel = this.rdfService.externalRdfModels.find(
-          rdf => rdf.getPrefixes()[''].startsWith(`urn:samm:${namespace}`) && rdf.aspectModelFileName === this.namespaces[namespace][i].name
+          rdf =>
+            rdf.getPrefixes()[''].startsWith(`urn:samm:${namespace}`) && rdf.aspectModelFileName === this.namespaces[namespace][i].name,
         );
         const serializedUpdatedModel = this.rewriteStore(rdfModel, this.namespaces[namespace][i]);
         if (serializedUpdatedModel) {
@@ -159,7 +160,7 @@ export class VersionMigrationComponent implements OnInit {
         rdfModel.store.addQuad(
           oldSubjectValue !== newSubjectValue ? DataFactory.namedNode(newSubjectValue) : subject,
           oldPredicateValue !== newPredicateValue ? DataFactory.namedNode(newPredicateValue) : predicate,
-          oldObjectValue !== newObjectValue ? DataFactory.namedNode(newObjectValue) : object
+          oldObjectValue !== newObjectValue ? DataFactory.namedNode(newObjectValue) : object,
         );
 
         rdfModel.store.removeQuad(subject, predicate, object);

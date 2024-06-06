@@ -36,7 +36,7 @@ export class DefaultEnumeration extends DefaultCharacteristic implements Enumera
     aspectModelUrn: string,
     name: string,
     public values: Array<DefaultEntityInstance | string | number | boolean>,
-    dataType?: Type
+    dataType?: Type,
   ) {
     super(metaModelVersion, aspectModelUrn, name, dataType);
   }

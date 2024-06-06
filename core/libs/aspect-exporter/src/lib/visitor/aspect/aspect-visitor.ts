@@ -20,7 +20,11 @@ import {BaseVisitor} from '../base-visitor';
 
 @Injectable()
 export class AspectVisitor extends BaseVisitor<DefaultAspect> {
-  constructor(public rdfNodeService: RdfNodeService, public rdfListService: RdfListService, rdfService: RdfService) {
+  constructor(
+    public rdfNodeService: RdfNodeService,
+    public rdfListService: RdfListService,
+    rdfService: RdfService,
+  ) {
     super(rdfService);
   }
 

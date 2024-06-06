@@ -60,8 +60,8 @@ export class EncodingInputFieldComponent extends InputFieldComponent<DefaultEnco
           value: RdfModelUtil.getValueWithoutUrnDefinition(this.getCurrentValue(this.fieldName)),
           disabled: this.metaModelElement.isExternalReference(),
         },
-        Validators.required
-      )
+        Validators.required,
+      ),
     );
   }
 }
