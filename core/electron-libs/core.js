@@ -30,6 +30,7 @@ const processes = [];
  * @type BrowserWindow
  */
 let mainWindow = null;
+let splashWindow = null;
 
 async function cleanUpProcesses() {
   for (const process of processes) {
@@ -49,9 +50,14 @@ async function cleanUpProcesses() {
 }
 
 function startService() {
+  createSplashWindow();
+
   if (inDevMode()) {
     global.backendPort = 9091;
-    windowsManager.createWindow();
+    setTimeout(function () {
+      splashWindow.close();
+      windowsManager.createWindow();
+    }, 1000);
     return;
   }
 
@@ -70,6 +76,7 @@ function startService() {
         process.stdout.on('data', data => {
           if (data.includes(`Tomcat started on port(s): ${port}`)) {
             console.log(`Tomcat is now started on port ${port}`);
+            splashWindow.close();
             windowsManager.createWindow();
           }
         });
@@ -91,6 +98,22 @@ function startService() {
       console.log(error);
       alert('Port between 30000 and 31000 are already in use.');
     });
+}
+
+function createSplashWindow() {
+  splashWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    frame: false,
+    alwaysOnTop: true,
+    transparent: true,
+  });
+
+  const splashScreenPath = inDevMode()
+    ? path.join('.', 'electron-libs', 'loading-screen')
+    : path.join(__dirname, '..', '..', '..', 'loading-screen');
+
+  splashWindow.loadFile(`${splashScreenPath}${path.sep}splash.html`).catch(() => console.log('Splash screen not found.'));
 }
 
 module.exports = {
