@@ -67,6 +67,22 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     return this.form.get('output') as FormControl;
   }
 
+  public get includeCRUD(): FormControl {
+    return this.form.get('includeCrud') as FormControl;
+  }
+
+  public get includePost(): FormControl {
+    return this.form.get('includePost') as FormControl;
+  }
+
+  public get includePut(): FormControl {
+    return this.form.get('includePut') as FormControl;
+  }
+
+  public get includePatch(): FormControl {
+    return this.form.get('includePatch') as FormControl;
+  }
+
   public get activateResourcePath(): FormControl {
     return this.form.get('activateResourcePath') as FormControl;
   }
@@ -153,6 +169,23 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
         fileControl?.updateValueAndValidity();
       }),
     );
+
+    this.subscriptions.add(this.includeCRUD?.valueChanges.subscribe(() => {
+          console.log('this.includeCRUD?.', this.includeCRUD?.value);
+          if(this.includeCRUD?.value){
+            this.includePatch?.setValue(false);
+            this.includePatch?.disable();
+            this.includePost?.setValue(false);
+            this.includePost?.disable();
+            this.includePut?.setValue(false);
+            this.includePut?.disable();
+          }else{
+            this.includePatch?.enable();
+            this.includePost?.enable();
+            this.includePut?.enable();
+          }
+    }));
+
   }
 
   @HostListener('dragover', ['$event'])
