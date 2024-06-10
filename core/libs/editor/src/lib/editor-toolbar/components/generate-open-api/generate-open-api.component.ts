@@ -35,6 +35,10 @@ export interface OpenApi {
   resourcePath: string;
   ymlProperties: string;
   jsonProperties: string;
+  includeCrud: boolean;
+  includePost: boolean;
+  includePut: boolean;
+  includePatch: boolean;
 }
 
 @Component({
@@ -115,6 +119,10 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
       file: new FormControl(null),
       ymlProperties: new FormControl(null),
       jsonProperties: new FormControl(null),
+      includeCrud: new FormControl(false),
+      includePost: new FormControl(false),
+      includePut: new FormControl(false),
+      includePatch: new FormControl(false),
     });
   }
 
