@@ -170,22 +170,23 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
       }),
     );
 
-    this.subscriptions.add(this.includeCRUD?.valueChanges.subscribe(() => {
-          console.log('this.includeCRUD?.', this.includeCRUD?.value);
-          if(this.includeCRUD?.value){
-            this.includePatch?.setValue(false);
-            this.includePatch?.disable();
-            this.includePost?.setValue(false);
-            this.includePost?.disable();
-            this.includePut?.setValue(false);
-            this.includePut?.disable();
-          }else{
-            this.includePatch?.enable();
-            this.includePost?.enable();
-            this.includePut?.enable();
-          }
-    }));
-
+    this.subscriptions.add(
+      this.includeCRUD?.valueChanges.subscribe(() => {
+        console.log('this.includeCRUD?.', this.includeCRUD?.value);
+        if (this.includeCRUD?.value) {
+          this.includePatch?.setValue(false);
+          this.includePatch?.disable();
+          this.includePost?.setValue(false);
+          this.includePost?.disable();
+          this.includePut?.setValue(false);
+          this.includePut?.disable();
+        } else {
+          this.includePatch?.enable();
+          this.includePost?.enable();
+          this.includePut?.enable();
+        }
+      }),
+    );
   }
 
   @HostListener('dragover', ['$event'])
