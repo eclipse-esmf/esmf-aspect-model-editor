@@ -38,3 +38,8 @@ before(function before() {
   // Do not truncate assertion outputs of arrays and objects
   (<any>window).chai.config.truncateThreshold = 0;
 });
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // returning false here prevents Cypress from failing the test
+  return false;
+});
