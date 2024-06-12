@@ -79,8 +79,6 @@
         </mat-checkbox>
       </section>
 
-      <mat-divider></mat-divider>
-
       <section *ngIf="activateResourcePath.value">
         <mat-form-field appearance="fill">
           <mat-label data-cy="resourcePathTitle">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH' | translate }}</mat-label>
@@ -154,15 +152,13 @@
         </ng-container>
       </section>
 
-      <section>
-        <mat-checkbox
-          [formControl]="getControl('includeCrud')"
-          class="dialog__checkbox"
-          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_CRUD_TOOLTIP' | translate"
-        >
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_CRUD' | translate }}
-        </mat-checkbox>
-
+      <mat-expansion-panel  class="set-mat-expansion-panel-padding">
+        <mat-expansion-panel-header>
+          <mat-panel-description>
+            Include API extensions for additional CRUD operations
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+    
         <mat-checkbox
           [formControl]="getControl('includePost')"
           class="dialog__checkbox"
@@ -186,7 +182,8 @@
         >
           {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PATCH' | translate }}
         </mat-checkbox>
-      </section>
+    
+      </mat-expansion-panel>
 
     </ng-container>
 

@@ -280,7 +280,6 @@ export class ModelApiService {
           includeQueryApi: openApi.includeQueryApi,
           useSemanticVersion: openApi.useSemanticVersion,
           pagingOption: openApi.paging,
-          includeCrud: openApi.includeCrud,
           includePost: openApi.includePost || false,
           includePut: openApi.includePut || false,
           includePatch: openApi.includePatch || false,

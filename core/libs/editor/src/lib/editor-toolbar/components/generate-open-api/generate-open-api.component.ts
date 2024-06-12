@@ -35,7 +35,6 @@ export interface OpenApi {
   resourcePath: string;
   ymlProperties: string;
   jsonProperties: string;
-  includeCrud: boolean;
   includePost: boolean;
   includePut: boolean;
   includePatch: boolean;
@@ -65,22 +64,6 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
 
   public get output(): FormControl {
     return this.form.get('output') as FormControl;
-  }
-
-  public get includeCRUD(): FormControl {
-    return this.form.get('includeCrud') as FormControl;
-  }
-
-  public get includePost(): FormControl {
-    return this.form.get('includePost') as FormControl;
-  }
-
-  public get includePut(): FormControl {
-    return this.form.get('includePut') as FormControl;
-  }
-
-  public get includePatch(): FormControl {
-    return this.form.get('includePatch') as FormControl;
   }
 
   public get activateResourcePath(): FormControl {
@@ -135,7 +118,6 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
       file: new FormControl(null),
       ymlProperties: new FormControl(null),
       jsonProperties: new FormControl(null),
-      includeCrud: new FormControl(false),
       includePost: new FormControl(false),
       includePut: new FormControl(false),
       includePatch: new FormControl(false),
@@ -167,24 +149,6 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
         const hasBrackets = /{.*}/.test(resourcePath);
         hasBrackets ? fileControl?.setValidators(Validators.required) : fileControl?.setValidators(null);
         fileControl?.updateValueAndValidity();
-      }),
-    );
-
-    this.subscriptions.add(
-      this.includeCRUD?.valueChanges.subscribe(() => {
-        console.log('this.includeCRUD?.', this.includeCRUD?.value);
-        if (this.includeCRUD?.value) {
-          this.includePatch?.setValue(false);
-          this.includePatch?.disable();
-          this.includePost?.setValue(false);
-          this.includePost?.disable();
-          this.includePut?.setValue(false);
-          this.includePut?.disable();
-        } else {
-          this.includePatch?.enable();
-          this.includePost?.enable();
-          this.includePut?.enable();
-        }
       }),
     );
   }

@@ -277,8 +277,6 @@
     "CURSOR_BASED_PAGING": "Cursor based paging",
     "OFFSET_BASED_PAGING": "Offset based paging",
     "TIME_BASED_PAGING": "Time based paging",
-    "ADD_OPEN_API_CRUD": "Include CRUD",
-    "ADD_OPEN_API_CRUD_TOOLTIP": "Include CRUD in the OpenApi specification.",
     "ADD_OPEN_API_PUT": "Include PUT",
     "ADD_OPEN_API_PUT_TOOLTIP": "Include PUT in the OpenApi specification.",
     "ADD_OPEN_API_PATCH": "Include PATCH",
