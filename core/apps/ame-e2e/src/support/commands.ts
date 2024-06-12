@@ -535,13 +535,13 @@ Cypress.Commands.add('saveAspectModelToWorkspace', () => {
 Cypress.Commands.add('openGenerationOpenApiSpec', () => {
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=null&ymlProperties=&jsonProperties=',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=&ymlProperties=&jsonProperties=',
     {fixture: 'valid-open-api.json'},
   );
 
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=null&ymlProperties=&jsonProperties=',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=&ymlProperties=&jsonProperties=',
     {fixture: 'valid-open-api.yaml'},
   );
 
