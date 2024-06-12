@@ -19,7 +19,6 @@ image:generation/open-api-dialog.png[Generate OpenAPI document, width=50%, link=
 * Select the *Include Query API* checkbox, if you need a path section for the Query API Endpoint of the Aspect API to be included in the specification.
 * Select the *Use Semantic Version* checkbox, if you need the complete semantic version of the Aspect Model to be used as the version of the API. Otherwise, only the major part of the Aspect Version is used as the version of the API.
 * Select the *Active Resource Path* checkbox, if you need the active resource path to be included in the specification.
-* Select the *Include CRUD* checkbox, if you need the CRUD backend functionality.
 * Select the *Include POST*, *Include PUT*, *Include PATCH* checkboxes, if you need the corresponding backend functionality.
 * Click *Generate* and store the OpenAPI specification file locally.
 
