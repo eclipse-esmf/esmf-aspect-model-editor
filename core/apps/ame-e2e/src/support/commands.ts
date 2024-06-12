@@ -535,19 +535,19 @@ Cypress.Commands.add('saveAspectModelToWorkspace', () => {
 Cypress.Commands.add('openGenerationOpenApiSpec', () => {
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=null&ymlProperties=&jsonProperties=',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePOST=false&includePUT=false&includePATCH=false&resourcePath=null&ymlProperties=&jsonProperties=',
     {fixture: 'valid-open-api.json'},
   );
 
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=null&ymlProperties=&jsonProperties=',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePOST=false&includePUT=false&includePATCH=false&resourcePath=null&ymlProperties=&jsonProperties=',
     {fixture: 'valid-open-api.yaml'},
   );
 
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=/resource/%7BresourceId%7D&ymlProperties=&jsonProperties=%7B%0A%20%20%22key%22:%20%22value%22%0A%7D',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePOST=false&includePUT=false&includePATCH=false&resourcePath=/resource/%7BresourceId%7D&ymlProperties=&jsonProperties=%7B%0A%20%20%22key%22:%20%22value%22%0A%7D',
     {fixture: 'valid-open-api.json'},
   );
 
