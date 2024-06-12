@@ -269,6 +269,11 @@ export class ModelApiService {
       );
   }
 
+  // larisa
+  // includePost: openApi.includePost,
+  // includePut: openApi.includePut,
+  // includePatch: openApi.includePatch,
+
   generateOpenApiSpec(rdfContent: string, openApi: OpenApi): Observable<string> {
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.generate}/open-api-spec`, rdfContent, {
@@ -280,9 +285,9 @@ export class ModelApiService {
           includeQueryApi: openApi.includeQueryApi,
           useSemanticVersion: openApi.useSemanticVersion,
           pagingOption: openApi.paging,
-          includePost: openApi.includePost || false,
-          includePut: openApi.includePut || false,
-          includePatch: openApi.includePatch || false,
+          includePost: openApi.includePost,
+          includePut: openApi.includePut,
+          includePatch: openApi.includePatch,
           resourcePath: openApi.resourcePath,
           ymlProperties: openApi.ymlProperties || '',
           jsonProperties: openApi.jsonProperties || '',
