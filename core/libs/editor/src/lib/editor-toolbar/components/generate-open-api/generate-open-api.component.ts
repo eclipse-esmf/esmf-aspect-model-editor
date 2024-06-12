@@ -114,7 +114,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
       activateResourcePath: new FormControl(false),
       output: new FormControl('yaml'),
       paging: new FormControl('NO_PAGING'),
-      resourcePath: new FormControl(null),
+      resourcePath: new FormControl(''),
       file: new FormControl(null),
       ymlProperties: new FormControl(null),
       jsonProperties: new FormControl(null),
@@ -135,7 +135,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
           resourcePathControl?.setValue('/resource/{resourceId}');
           resourcePathControl?.setValidators(this.resourcePathValidators);
         } else {
-          resourcePathControl?.setValue(null);
+          resourcePathControl?.setValue('');
           resourcePathControl?.setValidators(null);
         }
 
