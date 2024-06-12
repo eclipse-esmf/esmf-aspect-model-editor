@@ -81,40 +81,6 @@
 
       <mat-divider></mat-divider>
 
-      <section>
-        <mat-checkbox
-          [formControl]="getControl('includeCrud')"
-          class="dialog__checkbox"
-          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_CRUD_TOOLTIP' | translate"
-        >
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_CRUD' | translate }}
-        </mat-checkbox>
-
-        <mat-checkbox
-          [formControl]="getControl('includePost')"
-          class="dialog__checkbox"
-          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_POST_TOOLTIP' | translate"
-        >
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_POST' | translate }}
-        </mat-checkbox>
-
-        <mat-checkbox
-          [formControl]="getControl('includePut')"
-          class="dialog__checkbox"
-          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PUT_TOOLTIP' | translate"
-        >
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PUT' | translate }}
-        </mat-checkbox>
-
-        <mat-checkbox
-          [formControl]="getControl('includePatch')"
-          class="dialog__checkbox"
-          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PATCH_TOOLTIP' | translate"
-        >
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PATCH' | translate }}
-        </mat-checkbox>
-      </section>
-
       <section *ngIf="activateResourcePath.value">
         <mat-form-field appearance="fill">
           <mat-label data-cy="resourcePathTitle">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH' | translate }}</mat-label>
@@ -187,6 +153,41 @@
           </mat-accordion>
         </ng-container>
       </section>
+
+      <section>
+        <mat-checkbox
+          [formControl]="getControl('includeCrud')"
+          class="dialog__checkbox"
+          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_CRUD_TOOLTIP' | translate"
+        >
+          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_CRUD' | translate }}
+        </mat-checkbox>
+
+        <mat-checkbox
+          [formControl]="getControl('includePost')"
+          class="dialog__checkbox"
+          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_POST_TOOLTIP' | translate"
+        >
+          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_POST' | translate }}
+        </mat-checkbox>
+
+        <mat-checkbox
+          [formControl]="getControl('includePut')"
+          class="dialog__checkbox"
+          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PUT_TOOLTIP' | translate"
+        >
+          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PUT' | translate }}
+        </mat-checkbox>
+
+        <mat-checkbox
+          [formControl]="getControl('includePatch')"
+          class="dialog__checkbox"
+          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PATCH_TOOLTIP' | translate"
+        >
+          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PATCH' | translate }}
+        </mat-checkbox>
+      </section>
+
     </ng-container>
 
     <ng-template #loader>
