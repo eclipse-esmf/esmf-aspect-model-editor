@@ -32,8 +32,8 @@ describe('Test generation and download of async api specification', () => {
       .then(() => cy.get(GENERATION_tbOutputButton_JSON).click())
       .then(() => cy.get(GENERATION_tbApplicationIdInput).focus().clear().type('application:id').blur())
       .then(() => cy.get(GENERATION_tbChannelAddressInput).focus().clear().type('foo/bar').blur())
-      // .then(() => cy.get(GENERATION_tbGenerateAsyncApiButton).click().wait(5000))
-      // .then(() => cy.fixture('cypress/downloads/en-async-api.json'));
+      .then(() => cy.get(GENERATION_tbGenerateAsyncApiButton).click().wait(5000))
+      .then(() => cy.fixture('cypress/downloads/en-async-api.json'));
   });
 
   it('Can generate valid YAML Async Api Specification', () => {
