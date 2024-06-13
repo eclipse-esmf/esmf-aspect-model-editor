@@ -256,7 +256,7 @@
     "@angularclass/hmr": "^3.0.0",
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-typescript": "^7.17.12",
-    "@compodoc/compodoc": "^1.1.14",
+    "@compodoc/compodoc": "^1.1.25",
     "@cypress/webpack-preprocessor": "^6.0.0",
     "@nx/angular": "16.10.0",
     "@nx/cypress": "16.10.0",
