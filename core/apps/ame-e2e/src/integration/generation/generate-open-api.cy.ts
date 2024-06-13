@@ -100,7 +100,7 @@ describe('Test generation and download of open api specification', () => {
       .then(() => cy.openGenerationOpenApiSpec().wait(500))
       .then(() => cy.get(GENERATION_tbOutputButton).click())
       .then(() => cy.get(GENERATION_tbOutputButton_YAML).click())
-      .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().clear())
+      .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().clear().blur())
       .then(() =>
         cy.get(GENERATION_tbBaseUrlInputError).should('exist').should('be.visible').should('contain.text', 'Please add a valid url'),
       )
