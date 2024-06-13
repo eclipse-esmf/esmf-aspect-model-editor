@@ -37,6 +37,13 @@
           "filter": [
             "**/*"
           ]
+        },
+        {
+          "from": "./electron-libs/loading-screen/",
+          "to": "loading-screen/",
+          "filter": [
+            "**/*"
+          ]
         }
       ]
     },
@@ -69,6 +76,13 @@
           "filter": [
             "**/*"
           ]
+        },
+        {
+          "from": "./electron-libs/loading-screen/",
+          "to": "loading-screen/",
+          "filter": [
+            "**/*"
+          ]
         }
       ]
     },
@@ -98,6 +112,13 @@
         {
           "from": "./apps/ame/src/assets/img/png/app-menu/",
           "to": "app-menu/",
+          "filter": [
+            "**/*"
+          ]
+        },
+        {
+          "from": "./electron-libs/loading-screen/",
+          "to": "loading-screen/",
           "filter": [
             "**/*"
           ]
