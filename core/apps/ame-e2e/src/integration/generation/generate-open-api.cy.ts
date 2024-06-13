@@ -99,12 +99,12 @@ describe('Test generation and download of open api specification', () => {
     cy.startModelling()
       .then(() => cy.openGenerationOpenApiSpec().wait(500))
       .then(() => cy.get(GENERATION_tbOutputButton).click())
-      .then(() => cy.get(GENERATION_tbOutputButton_YAML).click().blur())
-      .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().clear().blur())
+      .then(() => cy.get(GENERATION_tbOutputButton_YAML).click())
+      .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().clear())
       .then(() =>
         cy.get(GENERATION_tbBaseUrlInputError).should('exist').should('be.visible').should('contain.text', 'Please add a valid url'),
       )
-      .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().type('https://example.com').blur()).wait(7000)
+      .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().clear().type('https://example.com').blur()).wait(7000)
       .then(() =>
         cy.get(GENERATION_tbBaseUrlInputError).should('not.exist')
       )
@@ -147,7 +147,7 @@ describe('Test generation and download of open api specification', () => {
       .then(() => cy.get(GENERATION_uploadContent).should('not.exist'))
       .then(() => cy.get(GENERATION_accordionTitle).should('exist').should('be.visible').should('contain.text', 'Properties'))
       .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force:true}).wait(7000))
-      // .then(() => cy.fixture('cypress/downloads/en-open-api.yaml'));
+      .then(() => cy.fixture('cypress/downloads/en-open-api.yaml'));
   });
 
   it('Test some generate variations', () => {
