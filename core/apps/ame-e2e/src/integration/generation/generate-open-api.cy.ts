@@ -45,7 +45,7 @@ describe('Test generation and download of open api specification', () => {
       .then(() =>
         cy.get(GENERATION_tbBaseUrlInputError).should('exist').should('be.visible').should('contain.text', 'Please add a valid url'),
       )
-      .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().type('https://example.com').blur())
+      .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().type('https://example.com').blur()).wait(7000)
       .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force: true}).wait(7000))
       .then(() => cy.fixture('cypress/downloads/en-open-api.json'));
   });
