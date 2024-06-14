@@ -136,7 +136,7 @@
           </mat-error></ng-container
         >
 
-        <ng-container *ngIf="uploadedFile">
+        <div class="margin-bottom-10" *ngIf="uploadedFile">
           <mat-accordion>
             <mat-expansion-panel>
               <mat-expansion-panel-header>
@@ -149,8 +149,41 @@
               }}</textarea>
             </mat-expansion-panel>
           </mat-accordion>
-        </ng-container>
+        </div>
       </section>
+
+      <mat-expansion-panel data-cy="includeAPIextensions">
+        <mat-expansion-panel-header>
+          <mat-panel-description> Include API extensions for additional CRUD operations </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-checkbox
+          data-cy="includePost"
+          [formControl]="getControl('includePost')"
+          class="dialog__checkbox"
+          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_POST_TOOLTIP' | translate"
+        >
+          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_POST' | translate }}
+        </mat-checkbox>
+
+        <mat-checkbox
+          data-cy="includePut"
+          [formControl]="getControl('includePut')"
+          class="dialog__checkbox"
+          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PUT_TOOLTIP' | translate"
+        >
+          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PUT' | translate }}
+        </mat-checkbox>
+
+        <mat-checkbox
+          data-cy="includePatch"
+          [formControl]="getControl('includePatch')"
+          class="dialog__checkbox"
+          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PATCH_TOOLTIP' | translate"
+        >
+          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PATCH' | translate }}
+        </mat-checkbox>
+      </mat-expansion-panel>
     </ng-container>
 
     <ng-template #loader>

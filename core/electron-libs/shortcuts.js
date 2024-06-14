@@ -15,7 +15,7 @@ const {app, globalShortcut, BrowserWindow, Menu, nativeTheme} = require('electro
 const platformData = require('./os-checker');
 
 function registerGlobalShortcuts() {
-  const shortcutsGlobal = [
+  const globalShortcuts = [
     {key: 'CommandOrControl+W', action: () => BrowserWindow.getFocusedWindow()?.close()},
     {key: 'CommandOrControl+M', action: () => BrowserWindow.getFocusedWindow()?.minimize()},
     {key: 'CommandOrControl+Shift+M', action: () => BrowserWindow.getFocusedWindow()?.maximize()},
@@ -23,7 +23,7 @@ function registerGlobalShortcuts() {
     {key: 'CommandOrControl+Shift+G', action: () => BrowserWindow.getFocusedWindow()?.setFullScreen(false)},
   ];
 
-  const shortcutsMac = [
+  const macShortcuts = [
     {key: 'CommandOrControl+Q', action: () => (BrowserWindow.getFocusedWindow() ? app.quit() : null)},
     {key: 'Command+Option+I', action: () => BrowserWindow.getFocusedWindow().webContents.openDevTools()},
     {key: 'CommandOrControl+R', action: () => BrowserWindow.getFocusedWindow()?.reload()},
@@ -33,20 +33,26 @@ function registerGlobalShortcuts() {
     },
   ];
 
-  const shortcutsWin = [{key: 'Control+Shift+I', action: () => BrowserWindow.getFocusedWindow().webContents.openDevTools()}];
+  const openDevShortcut = [{key: 'Control+Shift+I', action: () => BrowserWindow.getFocusedWindow().webContents.openDevTools()}];
 
-  shortcutsGlobal.forEach(({key, action}) => {
+  globalShortcuts.forEach(({key, action}) => {
     globalShortcut.register(key, action);
   });
 
   if (platformData.isMac) {
-    shortcutsMac.forEach(({key, action}) => {
+    macShortcuts.forEach(({key, action}) => {
       globalShortcut.register(key, action);
     });
   }
 
   if (platformData.isWin) {
-    shortcutsWin.forEach(({key, action}) => {
+    openDevShortcut.forEach(({key, action}) => {
+      globalShortcut.register(key, action);
+    });
+  }
+
+  if (platformData.isLinux) {
+    openDevShortcut.forEach(({key, action}) => {
       globalShortcut.register(key, action);
     });
   }
