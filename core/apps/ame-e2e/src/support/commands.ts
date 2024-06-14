@@ -553,7 +553,7 @@ Cypress.Commands.add('openGenerationOpenApiSpec', () => {
 
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&resourcePath=/resource/%7BresourceId%7D&ymlProperties=resourceId:%0A%20%20name:%20resourceId%0A%20%20in:%20path%0A%20%20description:%20An%20example%20resource%20Id.%0A%20%20required:%20true%0A%20%20schema:%0A%20%20%20%20type:%20string%0A&jsonProperties=',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=/resource/%7BresourceId%7D&ymlProperties=resourceId:%0A%20%20name:%20resourceId%0A%20%20in:%20path%0A%20%20description:%20An%20example%20resource%20Id.%0A%20%20required:%20true%0A%20%20schema:%0A%20%20%20%20type:%20string%0A&jsonProperties=',
     {fixture: 'valid-open-api.yaml'},
   );
 

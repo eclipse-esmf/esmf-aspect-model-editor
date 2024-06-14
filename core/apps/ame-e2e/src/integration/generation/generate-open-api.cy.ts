@@ -108,7 +108,7 @@ describe('Test generation and download of open api specification', () => {
       .then(() =>
         cy.get(GENERATION_tbBaseUrlInputError).should('not.exist')
       )
-      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force: true}).wait(9000))
+      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force: true}).wait(5000))
       .then(() => cy.fixture('cypress/downloads/en-open-api.yaml'));
   });
 
@@ -146,7 +146,7 @@ describe('Test generation and download of open api specification', () => {
       .then(() => cy.get(GENERATION_uploadContentFileInput).attachFile('valid-yml.yml'))
       .then(() => cy.get(GENERATION_uploadContent).should('not.exist'))
       .then(() => cy.get(GENERATION_accordionTitle).should('exist').should('be.visible').should('contain.text', 'Properties'))
-      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force:true}).wait(7000))
+      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click().wait(7000))
       .then(() => cy.fixture('cypress/downloads/en-open-api.yaml'));
   });
 
@@ -197,6 +197,14 @@ describe('Test generation and download of open api specification', () => {
         cy.get(GENERATION_accordionTitle).should('not.exist');
         cy.get(GENERATION_tbGenerateOpenApiButton).should('be.enabled');
       });
+  });
+
+   it('should show the checkboxs when the expansion panel Include API extensions is opened', () => {
+    cy.get('[data-cy=includeAPIextensions]').click();
+    
+    cy.get('[data-cy=includePost]').should('be.visible');
+    cy.get('[data-cy=includePut]').should('be.visible');
+    cy.get('[data-cy=includePatch]').should('be.visible');
   });
 
   function checkResourcePath(): void {
