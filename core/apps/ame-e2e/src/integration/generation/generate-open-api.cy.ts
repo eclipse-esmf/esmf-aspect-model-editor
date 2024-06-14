@@ -108,7 +108,7 @@ describe('Test generation and download of open api specification', () => {
       .then(() =>
         cy.get(GENERATION_tbBaseUrlInputError).should('not.exist')
       )
-      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force: true}).wait(5000))
+      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click().wait(7000))
       .then(() => cy.fixture('cypress/downloads/en-open-api.yaml'));
   });
 
