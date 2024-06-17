@@ -277,6 +277,12 @@
     "CURSOR_BASED_PAGING": "基于光标的paging",
     "OFFSET_BASED_PAGING": "基于抵消的paging",
     "TIME_BASED_PAGING": "基于时间的paging",
+    "ADD_OPEN_API_PUT": "包含 PUT 方法",
+    "ADD_OPEN_API_PUT_TOOLTIP": "在 OpenApi 规范中包含 PUT 方法",
+    "ADD_OPEN_API_PATCH": "包含 PATCH 方法",
+    "ADD_OPEN_API_PATCH_TOOLTIP": "在 OpenApi 规范中包含 PATCH 方法",
+    "ADD_OPEN_API_POST": "包含 POST 方法",
+    "ADD_OPEN_API_POST_TOOLTIP": "在 OpenApi规范中包含 POST 方法",
     "BUTTON": {
       "CANCEL": "取消",
       "GENERATE": "生成"
