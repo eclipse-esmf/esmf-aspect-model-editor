@@ -72,7 +72,7 @@ describe('Test generation and download of open api specification', () => {
       .then(() => cy.get(GENERATION_uploadContent).should('not.exist'))
       .then(() => cy.get(GENERATION_accordionTitle).should('exist').should('be.visible').should('contain.text', 'Properties'))
       .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click().wait(5000))
-      .then(() => cy.fixture('cypress/downloads/en-open-api.json'));
+      .then(() => cy.fixture('cypress/downloads/AspectDefault-open-api.json'));
   });
 
   it('Can generate valid JSON Open Api Specification', () => {
@@ -89,7 +89,7 @@ describe('Test generation and download of open api specification', () => {
       .wait(7000)
       .then(() => cy.get(GENERATION_tbBaseUrlInputError).should('not.exist'))
       .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force: true}).wait(5000))
-      .then(() => cy.fixture('cypress/downloads/en-open-api.json'));
+      .then(() => cy.fixture('cypress/downloads/AspectDefault-open-api.json'));
   });
 
   it('Can generate valid YAML Open Api Specification with resource path', () => {
@@ -125,9 +125,9 @@ describe('Test generation and download of open api specification', () => {
       )
       .then(() => cy.get(GENERATION_uploadContentFileInput).attachFile('valid-yml.yml'))
       .then(() => cy.get(GENERATION_uploadContent).should('not.exist'))
-      .then(() => cy.get(GENERATION_accordionTitle).should('exist').should('be.visible').should('contain.text', 'Properties'))
-      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click().wait(7000))
-      .then(() => cy.fixture('cypress/downloads/en-open-api.yaml'));
+      .then(() => cy.get(GENERATION_accordionTitle).should('exist').should('be.visible').should('contain.text', 'Properties')).wait(3000)
+      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force:true})).wait(3000)
+      .then(() => cy.fixture('cypress/downloads/AspectDefault-open-api.yaml'));
   });
 
   it('Can generate and download valid YAML Open Api Specification', () => {
@@ -143,8 +143,8 @@ describe('Test generation and download of open api specification', () => {
       .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().clear().type('https://example.com').blur())
       .wait(7000)
       .then(() => cy.get(GENERATION_tbBaseUrlInputError).should('not.exist'))
-      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click().wait(7000))
-      .then(() => cy.fixture('cypress/downloads/en-open-api.yaml'));
+      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force:true}).wait(5000))
+      .then(() => cy.fixture('cypress/downloads/AspectDefault-open-api.yaml'));
   });
 
   it('Test some generate variations', () => {
@@ -197,11 +197,21 @@ describe('Test generation and download of open api specification', () => {
   });
 
   it('should show the checkboxs when the expansion panel Include API extensions is opened', () => {
-    cy.get('[data-cy=includeAPIextensions]').click();
-
-    cy.get('[data-cy=includePost]').should('be.visible');
-    cy.get('[data-cy=includePut]').should('be.visible');
-    cy.get('[data-cy=includePatch]').should('be.visible');
+    cy.visitDefault();
+    cy.startModelling()
+      .then(() => cy.openGenerationOpenApiSpec().wait(500))
+      .then(() =>
+        cy
+          .get('[data-cy=includeAPIextensions]')
+          .click()
+          .then(() => {
+            cy.get('[data-cy=includePost]').should('be.visible');
+            cy.get('[data-cy=includePut]').should('be.visible');
+            cy.get('[data-cy=includePatch]').should('be.visible');
+            cy.get('[data-cy=includePatch]').should('be.visible');
+            cy.get('[data-cy=cancelOpenApiButton]').click();
+          }),
+      );
   });
 
   function checkResourcePath(): void {

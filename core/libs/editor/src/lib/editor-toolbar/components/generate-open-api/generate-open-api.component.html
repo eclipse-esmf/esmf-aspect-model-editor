@@ -195,7 +195,7 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-flat-button (click)="close()">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.BUTTON.CANCEL' | translate }}</button>
+    <button mat-flat-button (click)="close()" data-cy="cancelOpenApiButton">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.BUTTON.CANCEL' | translate }}</button>
     <button
       (click)="generateOpenApiSpec()"
       type="button"
