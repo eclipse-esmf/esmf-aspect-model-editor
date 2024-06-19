@@ -536,25 +536,25 @@ Cypress.Commands.add('openGenerationOpenApiSpec', () => {
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=null&ymlProperties=&jsonProperties=',
-    {fixture: 'aspectDefault-open-api.json'},
+    {fixture: 'AspectDefault-open-api.json'},
   );
 
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=null&ymlProperties=&jsonProperties=',
-    {fixture: 'aspectDefault-open-api.yaml'},
+    {fixture: 'AspectDefault-open-api.yaml'},
   );
 
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=/resource/%7BresourceId%7D&ymlProperties=&jsonProperties=%7B%0A%20%20%22key%22:%20%22value%22%0A%7D',
-    {fixture: 'aspectDefault-open-api.json'},
+    {fixture: 'AspectDefault-open-api.json'},
   );
 
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=/resource/%7BresourceId%7D&ymlProperties=resourceId:%0A%20%20name:%20resourceId%0A%20%20in:%20path%0A%20%20description:%20An%20example%20resource%20Id.%0A%20%20required:%20true%0A%20%20schema:%0A%20%20%20%20type:%20string%0A&jsonProperties=',
-    {fixture: 'aspectDefault-open-api.yaml'},
+    {fixture: 'AspectDefault-open-api.yaml'},
   );
 
   return cy.window().then(win => {
@@ -567,19 +567,19 @@ Cypress.Commands.add('openGenerationAsyncApiSpec', () => {
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=json&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=false',
-    {fixture: 'aspectDefault-open-api.json'},
+    {fixture: 'AspectDefault-open-api.json'},
   );
 
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=yaml&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=false',
-    {fixture: 'aspectDefault-open-api.json'},
+    {fixture: 'AspectDefault-open-api.json'},
   );
 
   cy.intercept(
     'POST',
     'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=json&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=true',
-    {fixture: 'aspectDefault-open-api.json'},
+    {fixture: 'AspectDefault-open-api.json'},
   );
 
   return cy.window().then(win => {

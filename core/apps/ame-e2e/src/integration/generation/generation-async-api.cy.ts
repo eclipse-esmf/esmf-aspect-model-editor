@@ -34,7 +34,7 @@ describe('Test generation and download of async api specification', () => {
       .then(() => cy.get(GENERATION_tbApplicationIdInput).focus().clear().type('application:id').blur())
       .then(() => cy.get(GENERATION_tbChannelAddressInput).focus().clear().type('foo/bar').blur())
       .then(() => cy.get(GENERATION_tbGenerateAsyncApiButton).click().wait(5000))
-      .then(() => cy.fixture('cypress/downloads/aspectDefault-async-api.json'));
+      .then(() => cy.fixture('cypress/downloads/AspectDefault-async-api.json'));
   });
 
   it('Can generate valid YAML Async Api Specification', () => {
@@ -45,7 +45,7 @@ describe('Test generation and download of async api specification', () => {
       .then(() => cy.get(GENERATION_tbApplicationIdInput).focus().clear().type('application:id').blur())
       .then(() => cy.get(GENERATION_tbChannelAddressInput).focus().clear().type('foo/bar').blur())
       .then(() => cy.get(GENERATION_tbGenerateAsyncApiButton).click().wait(5000))
-      .then(() => cy.fixture('cypress/downloads/aspectDefault-async-api.yaml'));
+      .then(() => cy.fixture('cypress/downloads/AspectDefault-async-api.yaml'));
   });
 
   it('Can generate and download valid package for Async Api Specification', () => {
@@ -59,6 +59,6 @@ describe('Test generation and download of async api specification', () => {
       .then(() => cy.get(GENERATION_tbChannelAddressInput).focus().clear().type('foo/bar').blur())
       .then(() => cy.get(GENERATION_writeSeparateFilesCheckbox).click())
       .then(() => cy.get(GENERATION_tbGenerateAsyncApiButton).click().wait(5000))
-      .then(() => cy.fixture('cypress/downloads/aspectDefault-async-api.zip'));
+      .then(() => cy.fixture('cypress/downloads/AspectDefault-async-api.zip'));
   });
 });

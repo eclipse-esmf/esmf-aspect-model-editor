@@ -239,7 +239,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     const fileData = spec.output === 'yaml' ? data : JSON.stringify(data, null, 2);
 
     const aspectName = this.modelService.currentRdfModel.aspectModelFileName.slice(0, -4);
-    const fileName = `${aspectName.charAt(0).toLowerCase() + aspectName.slice(1)}-open-api.${spec.output}`;
+    const fileName = `${aspectName}-open-api.${spec.output}`;
     saveAs(new Blob([fileData], {type: fileType}), fileName);
   }
 

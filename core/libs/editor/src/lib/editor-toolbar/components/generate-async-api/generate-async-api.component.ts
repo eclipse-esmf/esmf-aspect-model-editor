@@ -99,7 +99,7 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
     const fileType = spec.output === 'yaml' ? 'text/yaml' : 'application/json;charset=utf-8';
     const fileData = spec.output === 'yaml' ? data : JSON.stringify(data, null, 2);
     const aspectName = this.modelService.currentRdfModel.aspectModelFileName.slice(0, -4);
-    const formattedAspectName = `${aspectName.charAt(0).toLowerCase() + aspectName.slice(1)}-async-api`;
+    const formattedAspectName = `${aspectName}-async-api`;
     const fileName = `${formattedAspectName}.${spec.writeSeparateFiles ? 'zip' : spec.output}`;
     saveAs(new Blob([fileData], {type: fileType}), fileName);
   }
