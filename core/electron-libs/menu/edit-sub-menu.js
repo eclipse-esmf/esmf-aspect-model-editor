@@ -26,14 +26,14 @@ function editSubmenu(translation) {
     {
       id: 'OPEN_SELECTED_ELEMENT',
       label: translation.OPEN_SELECTED_ELEMENT,
-      enabled: false,
+      enabled: true,
       icon: getIcon(icons.OPEN_SELECTED_ELEMENT.disabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_OPEN_SELECTED_ELEMENT),
     },
     {
       id: 'REMOVE_SELECTED_ELEMENT',
       label: translation.REMOVE_SELECTED_ELEMENT,
-      enabled: false,
+      enabled: true,
       icon: getIcon(icons.REMOVE_SELECTED_ELEMENT.disabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_REMOVE_SELECTED_ELEMENT),
     },
@@ -52,7 +52,7 @@ function editSubmenu(translation) {
     {
       id: 'CONNECT_ELEMENTS',
       label: translation.CONNECT_SELECTED_ELEMENTS,
-      enabled: false,
+      enabled: true,
       icon: getIcon(icons.CONNECT_ELEMENTS.disabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_CONNECT_ELEMENTS),
     },

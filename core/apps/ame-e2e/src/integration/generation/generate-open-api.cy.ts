@@ -125,8 +125,10 @@ describe('Test generation and download of open api specification', () => {
       )
       .then(() => cy.get(GENERATION_uploadContentFileInput).attachFile('valid-yml.yml'))
       .then(() => cy.get(GENERATION_uploadContent).should('not.exist'))
-      .then(() => cy.get(GENERATION_accordionTitle).should('exist').should('be.visible').should('contain.text', 'Properties')).wait(3000)
-      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force:true})).wait(3000)
+      .then(() => cy.get(GENERATION_accordionTitle).should('exist').should('be.visible').should('contain.text', 'Properties'))
+      .wait(3000)
+      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force: true}))
+      .wait(3000)
       .then(() => cy.fixture('cypress/downloads/AspectDefault-open-api.yaml'));
   });
 
@@ -143,7 +145,7 @@ describe('Test generation and download of open api specification', () => {
       .then(() => cy.get(GENERATION_tbBaseUrlInput).focus().clear().type('https://example.com').blur())
       .wait(7000)
       .then(() => cy.get(GENERATION_tbBaseUrlInputError).should('not.exist'))
-      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force:true}).wait(5000))
+      .then(() => cy.get(GENERATION_tbGenerateOpenApiButton).click({force: true}).wait(5000))
       .then(() => cy.fixture('cypress/downloads/AspectDefault-open-api.yaml'));
   });
 
