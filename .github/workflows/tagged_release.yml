@@ -145,7 +145,7 @@ jobs:
 
           $url = $null
           foreach ($asset in $RESPONSE_JSON.assets) {
-            if ($asset.browser_download_url -match ".zip") {
+            if ($asset.browser_download_url -match "-win.zip") {
               $url = $asset.browser_download_url
               break
             }
