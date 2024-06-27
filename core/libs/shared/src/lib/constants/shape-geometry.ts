@@ -62,6 +62,8 @@ export const smallCircleShapeGeometry: ShapeGeometry = {
 
 export enum ModelHierarchicalLayout {
   expandedIntraCellSpacing = 30,
+  // ESLint is not correctly identified
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   expandedInterRankCellSpacing = 30,
   collapsedIntraCellSpacing = 15,
   collapsedInterRankCellSpacing = 20,
@@ -73,5 +75,7 @@ export enum ModelCompactTreeLayout {
   expandedLevelDistance = 30,
   collapsedLevelDistance = 15,
   expandedNodeDistance = 20,
+  // ESLint is not correctly identified
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   collapsedNodeDistance = 10,
 }
