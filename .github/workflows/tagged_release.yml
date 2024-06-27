@@ -166,7 +166,7 @@ jobs:
         shell: pwsh
 
       - name: Install node modules
-        run: npm install
+        run: npm install --legacy-peer-deps # When @nx/angular plugin is updated, this flag can be removed
         working-directory: core
 
       - name: Set app version (Unix)
