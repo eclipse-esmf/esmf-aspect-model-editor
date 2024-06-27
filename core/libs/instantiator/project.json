@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/instantiator"],
       "options": {
-        "jestConfig": "libs/instantiator/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/instantiator/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/instantiator/src/**/*.ts", "libs/instantiator/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }

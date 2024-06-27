@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-@import './assets/styles/colors.scss';
-@import './assets/styles/theme.scss';
-@import './assets/styles/shape-label.scss';
+@use './assets/styles/colors';
+@use './assets/styles/theme';
+@use './assets/styles/shape-label';
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 * {
@@ -134,11 +134,11 @@ mat-icon {
 }
 
 .characteristic {
-  background-color: $characteristic-color;
+  background-color: colors.$characteristic-color;
 }
 
 .constraint {
-  background-color: $constraint-color;
+  background-color: colors.$constraint-color;
 }
 
 .entity,
@@ -146,34 +146,34 @@ mat-icon {
 .abstractentity,
 .abstractEntity,
 .abstract-entity {
-  background-color: $entity-color;
+  background-color: colors.$entity-color;
 }
 
 .unit {
-  background-color: $unit-color;
+  background-color: colors.$unit-color;
 }
 
 .property,
 .abstractproperty,
 .abstractProperty,
 .abstract-property {
-  background-color: $property-color;
+  background-color: colors.$property-color;
 }
 
 .operation {
-  background-color: $operation-color;
+  background-color: colors.$operation-color;
 }
 
 .aspect {
-  background-color: $aspect-color;
+  background-color: colors.$aspect-color;
 }
 
 .trait {
-  background-color: $trait-color;
+  background-color: colors.$trait-color;
 }
 
 .event {
-  background-color: $event-color;
+  background-color: colors.$event-color;
 }
 
 .mxTooltip {

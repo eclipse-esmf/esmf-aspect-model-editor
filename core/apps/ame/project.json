@@ -78,10 +78,10 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "ame:build:production"
+          "buildTarget": "ame:build:production"
         },
         "development": {
-          "browserTarget": "ame:build:development"
+          "buildTarget": "ame:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -90,10 +90,10 @@
       "executor": "ngx-build-plus:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "ame:build:production"
+          "buildTarget": "ame:build:production"
         },
         "development": {
-          "browserTarget": "ame:build:development"
+          "buildTarget": "ame:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -101,21 +101,17 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "ame:build"
+        "buildTarget": "ame:build"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/ame/src/**/*.ts", "apps/ame/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/ame"],
       "options": {
-        "jestConfig": "apps/ame/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "apps/ame/jest.config.js"
       }
     }
   }

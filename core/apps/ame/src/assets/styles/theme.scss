@@ -121,14 +121,34 @@ $ame-warn-light: (
   ),
 );
 
-$ame-light-theme: mat.define-light-theme(
+$ame-primary-light: mat.m2-define-palette(mat.$m2-indigo-palette);
+$ame-accent-light: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
+$ame-warn-light: mat.m2-define-palette(mat.$m2-red-palette);
+
+$ame-light-theme: mat.m2-define-light-theme(
   (
     color: (
-      primary: mat.define-palette($ame-primary-light),
-      accent: mat.define-palette($ame-accent-light),
-      warn: mat.define-palette($ame-warn-light),
+      primary: $ame-primary-light,
+      accent: $ame-accent-light,
+      warn: $ame-warn-light,
     ),
   )
 );
+
+.mat-mdc-mini-fab.mat-accent {
+  --mat-fab-small-foreground-color: var(--ame-font) !important;
+}
+
+.mat-badge-medium .mat-badge-content {
+  position: absolute;
+  width: 22px !important;
+  height: 22px !important;
+  line-height: 22px !important;
+  font-size: 14px !important;
+  font-family: sans-serif;
+  background: var(--ame-blue-500);
+  color: white;
+  right: -13px !important;
+}
 
 @include mat.all-component-themes($ame-light-theme);

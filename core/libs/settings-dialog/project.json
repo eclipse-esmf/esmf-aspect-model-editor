@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/settings-dialog"],
       "options": {
-        "jestConfig": "libs/settings-dialog/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/settings-dialog/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/settings-dialog/src/**/*.ts", "libs/settings-dialog/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }

@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/namespace-manager"],
       "options": {
-        "jestConfig": "libs/namespace-manager/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/namespace-manager/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/namespace-manager/src/**/*.ts", "libs/namespace-manager/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }

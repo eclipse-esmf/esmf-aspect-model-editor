@@ -20,7 +20,7 @@
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
-    "noStrictGenericChecks": true,
+    "ignoreDeprecations": "5.0",
     "strictNullChecks": false,
     "paths": {
       "@ame/api": ["libs/api/src/index.ts"],

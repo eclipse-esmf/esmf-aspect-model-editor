@@ -5,3 +5,5 @@
 /.vscode
 /assembly
 /.angular
+
+/.nx/cache

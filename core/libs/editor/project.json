@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/editor"],
       "options": {
-        "jestConfig": "libs/editor/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/editor/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/editor/src/**/*.ts", "libs/editor/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }

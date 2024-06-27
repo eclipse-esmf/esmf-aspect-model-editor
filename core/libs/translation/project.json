@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/translation"],
       "options": {
-        "jestConfig": "libs/translation/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/translation/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/translation/**/*.ts", "libs/translation/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }

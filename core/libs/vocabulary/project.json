@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/vocabulary"],
       "options": {
-        "jestConfig": "libs/vocabulary/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/vocabulary/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/vocabulary/src/**/*.ts", "libs/vocabulary/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }
