@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/api"],
       "options": {
-        "jestConfig": "libs/api/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/api/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/api/src/**/*.ts", "libs/api/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }

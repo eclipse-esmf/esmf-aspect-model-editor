@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/mx-graph"],
       "options": {
-        "jestConfig": "libs/mx-graph/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/mx-graph/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/mx-graph/src/**/*.ts", "libs/mx-graph/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }

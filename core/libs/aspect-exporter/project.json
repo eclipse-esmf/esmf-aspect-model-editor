@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/aspect-exporter"],
       "options": {
-        "jestConfig": "libs/aspect-exporter/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/aspect-exporter/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/aspect-exporter/src/**/*.ts", "libs/aspect-exporter/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }

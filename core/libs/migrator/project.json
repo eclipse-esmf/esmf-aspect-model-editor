@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/migrator"],
       "options": {
-        "jestConfig": "libs/migrator/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/migrator/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/migrator/src/**/*.ts", "libs/migrator/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }

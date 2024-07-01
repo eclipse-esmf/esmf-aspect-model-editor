@@ -20,19 +20,6 @@
   box-shadow: 4px 8px 8px 0 rgba($color: #000000, $alpha: 0.25);
   grid-template-rows: repeat(2, 50px) auto repeat(3, 50px);
   padding-bottom: 10px;
-
-  ::ng-deep {
-    .mat-badge-medium .mat-badge-content {
-      position: absolute;
-      width: 22px;
-      height: 22px;
-      line-height: 22px;
-      font-size: 13px;
-      background: var(--ame-blue-500);
-      color: white;
-      right: -13px !important;
-    }
-  }
 }
 
 .sidebar {

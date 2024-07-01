@@ -2,7 +2,7 @@
   "allowJs": true,
   "extends": "../../tsconfig.json",
   "include": ["src/integration/**/*.ts", "src/support/*.ts", "../../node_modules/cypress"],
-  "types": ["cypress", "mocha", "cypress-real-events"],
+  "types": ["mocha", "cypress-real-events"],
   "resolve": {
     "extensions": [".js", ".jsx", ".ts", ".tsx"]
   }

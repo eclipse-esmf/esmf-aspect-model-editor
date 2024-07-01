@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/rdf"],
       "options": {
-        "jestConfig": "libs/rdf/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/rdf/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/rdf/src/**/*.ts", "libs/rdf/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }

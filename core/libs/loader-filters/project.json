@@ -9,15 +9,11 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/loader-filters"],
       "options": {
-        "jestConfig": "libs/loader-filters/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/loader-filters/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/loader-filters/src/**/*.ts", "libs/loader-filters/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
   }
 }

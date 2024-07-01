@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-var sammUDefinition = {
+const sammUDefinition = {
   quantityKinds: {
     absoluteActivity: {name: 'absoluteActivity', label: 'absolute activity'},
     absorbance: {name: 'absorbance', label: 'absorbance'},
