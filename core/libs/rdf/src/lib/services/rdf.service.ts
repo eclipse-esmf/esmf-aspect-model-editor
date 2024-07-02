@@ -215,11 +215,4 @@ export class RdfService {
     const serializedModel: string = this.serializeModel(modelToCompare);
     return this.modelApiService.formatModel(serializedModel).pipe(map(formattedModel => formattedModel === fileContent));
   }
-
-  removeExternalRdfModel(modelName: string): void {
-    this.externalRdfModels = this.externalRdfModels.reduce<RdfModel[]>(
-      (models, model) => (model.absoluteAspectModelFileName !== modelName ? [...models, model] : models),
-      [],
-    );
-  }
 }

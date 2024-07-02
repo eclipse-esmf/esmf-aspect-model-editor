@@ -12,11 +12,11 @@
  */
 import {MigratorApiService, ModelApiService} from '@ame/api';
 import {DataFactory} from 'n3';
-import {concatMap, from, map, Observable, of, switchMap, tap} from 'rxjs';
+import {concatMap, from, Observable, of, switchMap, tap} from 'rxjs';
 import {EditorService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
-import {RdfModel} from '@ame/rdf/utils';
-import {Component, NgZone, OnInit, inject} from '@angular/core';
+import {RdfModel, RdfModelUtil} from '@ame/rdf/utils';
+import {Component, inject, NgZone, OnInit} from '@angular/core';
 import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService, LogService} from '@ame/shared';
 import {Router} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
@@ -24,7 +24,7 @@ import {KeyValuePipe} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {CdkScrollable} from '@angular/cdk/scrolling';
-import {MatDialogTitle, MatDialogContent} from '@angular/material/dialog';
+import {MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 
 export const defaultNamespaces = (sammVersion: string) => [
   `urn:samm:org.eclipse.esmf.samm:meta-model:${sammVersion}#`,
@@ -65,9 +65,7 @@ export class VersionMigrationComponent implements OnInit {
     this.editorService
       .loadExternalModels()
       .pipe(
-        switchMap(() => this.modelApiService.getNamespacesStructure()),
-        map(namespaces => this.prepareNamespaces(namespaces)),
-        tap(namespaces => (this.namespaces = namespaces)),
+        tap(() => this.prepareNamespaces(this.migratorApiService.rdfModelsToMigrate)),
         switchMap(() => this.rewriteStores()),
         switchMap(modelsTobeDeleted => this.rewriteAndDeleteModels(modelsTobeDeleted)),
       )
@@ -77,11 +75,16 @@ export class VersionMigrationComponent implements OnInit {
       });
   }
 
-  prepareNamespaces(namespaces: any): any {
-    for (const namespace in namespaces || {}) {
-      namespaces[namespace] = namespaces[namespace].map((name: string) => ({name, migrated: false}));
-    }
-    return namespaces;
+  prepareNamespaces(rdfModels: Array<RdfModel>): any {
+    this.namespaces = {};
+    rdfModels.forEach(rdfModel => {
+      const [namespace, version, file] = RdfModelUtil.splitRdfIntoChunks(rdfModel.absoluteAspectModelFileName);
+      const namespaceKey = `${namespace}:${version}`;
+      if (!this.namespaces[namespaceKey]) {
+        this.namespaces[namespaceKey] = [];
+      }
+      this.namespaces[namespaceKey].push({name: file, migrated: false});
+    });
   }
 
   rewriteAndDeleteModels(modelsTobeDeleted: any[]): Observable<any> {
