@@ -27,7 +27,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
 import {MatOptionModule} from '@angular/material/core';
-import {CommonModule} from '@angular/common';
+
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatInputModule} from '@angular/material/input';
@@ -55,7 +55,6 @@ export interface AsyncApi {
     ReactiveFormsModule,
     MatSelectModule,
     MatOptionModule,
-    CommonModule,
     MatCheckboxModule,
     MatTooltipModule,
     MatInputModule,

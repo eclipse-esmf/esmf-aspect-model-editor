@@ -13,12 +13,16 @@
 <mat-form-field [floatLabel]="inputControl?.disabled ? 'always' : 'auto'" appearance="fill">
   <mat-label for="input">quantityKinds</mat-label>
   <mat-chip-grid #chipList [formControl]="chipListControl">
-    <mat-chip-row *ngFor="let input of quantityKindValues" [disabled]="!editable" [removable]="editable" (removed)="remove(input)">
-      {{ input }}
-      <button matChipRemove *ngIf="editable" data-cy="input">
-        <mat-icon>cancel</mat-icon>
-      </button>
-    </mat-chip-row>
+    @for (input of quantityKindValues; track input) {
+      <mat-chip-row [disabled]="!editable" [removable]="editable" (removed)="remove(input)">
+        {{ input }}
+        @if (editable) {
+          <button matChipRemove data-cy="input">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        }
+      </mat-chip-row>
+    }
     <input
       #input
       [formControl]="inputControl"
@@ -32,10 +36,14 @@
     />
   </mat-chip-grid>
   <mat-autocomplete #auto="matAutocomplete">
-    <mat-optgroup *ngIf="filteredQuantityKinds$ | async as filteredQuantityKinds" label="Quantity Kind">
-      <mat-option *ngFor="let qk of filteredQuantityKinds" [value]="qk" (onSelectionChange)="onSelectionChange(qk)">
-        {{ qk }}
-      </mat-option>
-    </mat-optgroup>
+    @if (filteredQuantityKinds$ | async; as filteredQuantityKinds) {
+      <mat-optgroup label="Quantity Kind">
+        @for (qk of filteredQuantityKinds; track qk) {
+          <mat-option [value]="qk" (onSelectionChange)="onSelectionChange(qk)">
+            {{ qk }}
+          </mat-option>
+        }
+      </mat-optgroup>
+    }
   </mat-autocomplete>
 </mat-form-field>

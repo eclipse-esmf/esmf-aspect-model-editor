@@ -29,11 +29,17 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button *ngIf="!migrateLoading" (click)="closeDialog()" mat-flat-button>
-    {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.CANCEL' | translate }}
-  </button>
+  @if (!migrateLoading) {
+    <button (click)="closeDialog()" mat-flat-button>
+      {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.CANCEL' | translate }}
+    </button>
+  }
   <button [disabled]="migrateLoading" (click)="migrate()" mat-flat-button color="primary">
-    <span *ngIf="!migrateLoading">{{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.MIGRATE' | translate }}</span>
-    <mat-spinner *ngIf="migrateLoading" diameter="20" class="spinner"></mat-spinner>
+    @if (!migrateLoading) {
+      <span>{{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.MIGRATE' | translate }}</span>
+    }
+    @if (migrateLoading) {
+      <mat-spinner diameter="20" class="spinner"></mat-spinner>
+    }
   </button>
 </mat-dialog-actions>

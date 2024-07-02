@@ -23,21 +23,16 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {ErrorComponent} from './shared/components/error/error.component';
 import {
   FileConflictComponent,
-  RootNamespacesImporterComponent,
   ImportSummaryComponent,
   ImportValidateComponent,
+  RootNamespacesImporterComponent,
 } from './namespace-importer/components';
 import {ClipboardCopyButtonComponent, WorkspaceSummaryComponent} from './shared/components';
 import {NamespaceImporterRouterModule} from './namespace-importer';
 import {NamespaceExporterRouterModule} from './namespace-exporter';
 import {NamespacesManagerService} from './shared';
 import {MatButtonModule} from '@angular/material/button';
-import {
-  ExportSummaryComponent,
-  ExportValidateComponent,
-  RootExportNamespacesComponent,
-  SelectNamespacesComponent,
-} from './namespace-exporter/components';
+import {ExportSummaryComponent, ExportValidateComponent} from './namespace-exporter/components';
 import {MatTreeModule} from '@angular/material/tree';
 import {FormsModule} from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';
@@ -72,8 +67,6 @@ import {LanguageTranslateModule} from '@ame/translation';
     FileConflictComponent,
     WorkspaceSummaryComponent,
     RootNamespacesImporterComponent,
-    RootExportNamespacesComponent,
-    SelectNamespacesComponent,
     ClipboardCopyButtonComponent,
   ],
   providers: [NamespacesManagerService],

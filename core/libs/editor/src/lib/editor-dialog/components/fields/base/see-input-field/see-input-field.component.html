@@ -20,18 +20,19 @@
 >
   <mat-label for="see">see</mat-label>
   <mat-chip-grid [formControl]="chipControl" #chipList>
-    <mat-chip-row
-      *ngFor="let element of elements"
-      [matTooltip]="element.urn"
-      [attr.data-cy]="'chip__' + (element.name || element.urn)"
-      (removed)="removeElement(element)"
-      matTooltipClass="mat-tooltip--long"
-    >
-      <span class="chip-content">{{ element.name || element.urn }}</span>
-      <button data-cy="see-remove-chip" matChipRemove>
-        <mat-icon>cancel</mat-icon>
-      </button>
-    </mat-chip-row>
+    @for (element of elements; track element) {
+      <mat-chip-row
+        [matTooltip]="element.urn"
+        [attr.data-cy]="'chip__' + (element.name || element.urn)"
+        (removed)="removeElement(element)"
+        matTooltipClass="mat-tooltip--long"
+      >
+        <span class="chip-content">{{ element.name || element.urn }}</span>
+        <button data-cy="see-remove-chip" matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+    }
   </mat-chip-grid>
 
   <input
@@ -46,23 +47,19 @@
   />
 
   <mat-autocomplete #auto="matAutocomplete">
-    <mat-option
-      *ngIf="!(shapes$ | async)?.length && see.value"
-      [value]="see.value"
-      [attr.data-cy]="'option__' + see.value"
-      (click)="addElementToList()"
-    >
-      <span>{{ see.value }}</span>
-    </mat-option>
-    <mat-option
-      *ngFor="let shape of shapes$ | async"
-      [value]="shape.aspectModelUrn"
-      [attr.data-cy]="'option__' + shape.name"
-      (click)="addElementToList(shape.name)"
-    >
-      <span class="shape-name">{{ shape.name }}</span>
-      <span class="shape-urn">{{ shape.aspectModelUrn }}</span>
-    </mat-option>
-    <mat-error class="error" *ngIf="searchControl.hasError('uri')">Invalid URI '{{ searchControl?.errors.uri.invalidUris[0] }}'</mat-error>
+    @if (!(shapes$ | async)?.length && see.value) {
+      <mat-option [value]="see.value" [attr.data-cy]="'option__' + see.value" (click)="addElementToList()">
+        <span>{{ see.value }}</span>
+      </mat-option>
+    }
+    @for (shape of shapes$ | async; track shape) {
+      <mat-option [value]="shape.aspectModelUrn" [attr.data-cy]="'option__' + shape.name" (click)="addElementToList(shape.name)">
+        <span class="shape-name">{{ shape.name }}</span>
+        <span class="shape-urn">{{ shape.aspectModelUrn }}</span>
+      </mat-option>
+    }
+    @if (searchControl.hasError('uri')) {
+      <mat-error class="error">Invalid URI '{{ searchControl?.errors.uri.invalidUris[0] }}'</mat-error>
+    }
   </mat-autocomplete>
 </mat-form-field>

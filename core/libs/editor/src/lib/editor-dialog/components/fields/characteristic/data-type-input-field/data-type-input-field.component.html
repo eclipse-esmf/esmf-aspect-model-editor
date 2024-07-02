@@ -14,67 +14,76 @@
 <mat-form-field [floatLabel]="getControl('dataType')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="dataType">dataType</mat-label>
   <input #dataType [matAutocomplete]="auto" [formControl]="getControl('dataType')" matInput name="dataType" data-cy="dataType" />
-  <button
-    *ngIf="!frozen && dataTypeControl?.disabled && !metaModelElement?.isExternalReference()"
-    (click)="unlockDataType()"
-    data-cy="clear-dataType-button"
-    matSuffix
-    mat-icon-button
-    tabindex="-1"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
+  @if (!frozen && dataTypeControl?.disabled && !metaModelElement?.isExternalReference()) {
+    <button (click)="unlockDataType()" data-cy="clear-dataType-button" matSuffix mat-icon-button tabindex="-1">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
 
-  <mat-error *ngIf="getControl('dataType')?.errors?.checkShapeName"
-    >Please select a different name as this one is of different type</mat-error
-  >
-  <mat-error *ngIf="getControl('dataType')?.errors?.checkShapeNameExtRef"
-    >Please select a different name as this one is of different type in the same namespace</mat-error
-  >
+  @if (getControl('dataType')?.errors?.checkShapeName) {
+    <mat-error>Please select a different name as this one is of different type</mat-error>
+  }
+  @if (getControl('dataType')?.errors?.checkShapeNameExtRef) {
+    <mat-error>Please select a different name as this one is of different type in the same namespace</mat-error>
+  }
 
   <mat-autocomplete #auto="matAutocomplete" class="characteristic-datatype-autocomplete">
-    <mat-optgroup *ngIf="!entitiesDisabled && filteredEntityTypes$ | async as filteredEntityTypes" label="Entities">
-      <mat-option
-        *ngIf="!isAlreadyDefined(filteredEntityTypes, dataType.value) && !getControl('dataType')?.errors"
-        [disabled]="!isUpperCase(dataType.value)"
-        [value]="!isUpperCase(dataType.value) ? '' : dataType.value"
-        (click)="createNewEntity(dataType.value)"
-      >
-        <span *ngIf="isUpperCase(dataType.value)">
-          + Create new entity: <strong>{{ dataType.value }}</strong>
-        </span>
-        <span class="ellipsis" *ngIf="!isUpperCase(dataType.value)">Please provide the name for the new Entity in upper case.</span>
-      </mat-option>
-      <mat-option
-        *ngFor="let dataType of filteredEntityTypes"
-        [value]="dataType.name"
-        (onSelectionChange)="onSelectionChange('dataType', dataType, $event)"
-      >
-        <div class="ellipsis">
-          <span>{{ dataType.name }}</span>
-          <span *ngIf="dataType.description" class="horizontal-separator"></span>
-          <span *ngIf="dataType.description" class="option-description" [title]="dataType.description">
-            {{ dataType.description }}
-          </span>
-        </div>
-        <p *ngIf="dataType.namespace" class="namespace-prefix ellipsis" [title]="dataType.namespace">
-          {{ dataType.namespace }}
-        </p>
-      </mat-option>
-    </mat-optgroup>
-
-    <ng-container *ngIf="filteredDataTypes$ | async as filteredDataTypes">
-      <mat-optgroup label="Types" *ngIf="filteredDataTypes?.length">
-        <mat-option
-          *ngFor="let dataType of filteredDataTypes"
-          [value]="dataType.name"
-          (onSelectionChange)="onSelectionChange('dataType', dataType, $event)"
-          data-cy="dataTypeOption"
-        >
-          <span class="option-title">{{ dataType.name }}</span
-          ><span class="option-description">{{ dataType.description }}</span>
-        </mat-option>
+    @if (!entitiesDisabled && filteredEntityTypes$ | async; as filteredEntityTypes) {
+      <mat-optgroup label="Entities">
+        @if (!isAlreadyDefined(filteredEntityTypes, dataType.value) && !getControl('dataType')?.errors) {
+          <mat-option
+            [disabled]="!isUpperCase(dataType.value)"
+            [value]="!isUpperCase(dataType.value) ? '' : dataType.value"
+            (click)="createNewEntity(dataType.value)"
+          >
+            @if (isUpperCase(dataType.value)) {
+              <span>
+                + Create new entity: <strong>{{ dataType.value }}</strong>
+              </span>
+            }
+            @if (!isUpperCase(dataType.value)) {
+              <span class="ellipsis">Please provide the name for the new Entity in upper case.</span>
+            }
+          </mat-option>
+        }
+        @for (dataType of filteredEntityTypes; track dataType) {
+          <mat-option [value]="dataType.name" (onSelectionChange)="onSelectionChange('dataType', dataType, $event)">
+            <div class="ellipsis">
+              <span>{{ dataType.name }}</span>
+              @if (dataType.description) {
+                <span class="horizontal-separator"></span>
+              }
+              @if (dataType.description) {
+                <span class="option-description" [title]="dataType.description">
+                  {{ dataType.description }}
+                </span>
+              }
+            </div>
+            @if (dataType.namespace) {
+              <p class="namespace-prefix ellipsis" [title]="dataType.namespace">
+                {{ dataType.namespace }}
+              </p>
+            }
+          </mat-option>
+        }
       </mat-optgroup>
-    </ng-container>
+    }
+
+    @if (filteredDataTypes$ | async; as filteredDataTypes) {
+      @if (filteredDataTypes?.length) {
+        <mat-optgroup label="Types">
+          @for (dataType of filteredDataTypes; track dataType) {
+            <mat-option
+              [value]="dataType.name"
+              (onSelectionChange)="onSelectionChange('dataType', dataType, $event)"
+              data-cy="dataTypeOption"
+            >
+              <span class="option-title">{{ dataType.name }}</span
+              ><span class="option-description">{{ dataType.description }}</span>
+            </mat-option>
+          }
+        </mat-optgroup>
+      }
+    }
   </mat-autocomplete>
 </mat-form-field>

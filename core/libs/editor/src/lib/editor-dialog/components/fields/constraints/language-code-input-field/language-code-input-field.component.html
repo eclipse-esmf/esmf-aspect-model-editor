@@ -15,9 +15,13 @@
   <mat-label for="languageCode">languageCode</mat-label>
   <input matInput [formControl]="getControl('languageCode')" [matAutocomplete]="auto" name="languageCode" data-cy="languageCode" />
   <mat-autocomplete #auto="matAutocomplete">
-    <mat-option *ngFor="let lang of filteredLanguages | async" [value]="lang.tag" class="language-code">
-      {{ lang.tag }}<br /><span class="option-description">{{ lang.name }}</span>
-    </mat-option>
+    @for (lang of filteredLanguages | async; track lang) {
+      <mat-option [value]="lang.tag" class="language-code">
+        {{ lang.tag }}<br /><span class="option-description">{{ lang.name }}</span>
+      </mat-option>
+    }
   </mat-autocomplete>
-  <mat-error *ngIf="getControl('languageCode').errors?.required">Language Code is required</mat-error>
+  @if (getControl('languageCode').errors?.required) {
+    <mat-error>Language Code is required</mat-error>
+  }
 </mat-form-field>

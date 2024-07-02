@@ -21,26 +21,21 @@
     <input #search matInput placeholder="Search elements" />
   </mat-form-field>
   <section class="elements">
-    <ng-container *ngFor="let element of elements">
-      <div
-        *ngIf="isFiltered(element, search.value)"
-        [class.selected]="isSelected(element)"
-        (click)="selectedElement = element"
-        class="element"
-      >
-        <span class="element-icon element-icon--big" [ngClass]="getClass(element.model)">{{ getFirstLetter(element.model) }}</span>
-        <div class="element-content">
-          <span class="element-name">{{ element.model.name }}</span>
-          <span
-            *ngIf="element.model.getDescription('en') as description"
-            class="element-description"
-            [matTooltip]="description"
-            [matTooltipDisabled]="description.length < 80"
-            >{{ description }}</span
-          >
+    @for (element of elements; track element) {
+      @if (isFiltered(element, search.value)) {
+        <div [class.selected]="isSelected(element)" (click)="selectedElement = element" class="element">
+          <span class="element-icon element-icon--big" [ngClass]="getClass(element.model)">{{ getFirstLetter(element.model) }}</span>
+          <div class="element-content">
+            <span class="element-name">{{ element.model.name }}</span>
+            @if (element.model.getDescription('en'); as description) {
+              <span class="element-description" [matTooltip]="description" [matTooltipDisabled]="description.length < 80">{{
+                description
+              }}</span>
+            }
+          </div>
         </div>
-      </div>
-    </ng-container>
+      }
+    }
   </section>
 </mat-dialog-content>
 

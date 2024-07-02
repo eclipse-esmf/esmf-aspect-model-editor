@@ -10,22 +10,28 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<span *ngIf="type" class="element-icon" [class.rounded]="type.name === 'trait'" [ngClass]="className">{{ type.symbol }}</span>
-<div *ngIf="size !== 'small' && name" class="element-info">
-  <span
-    *ngIf="name"
-    [matTooltip]="name"
-    [matTooltipDisabled]="name.length < disabledTooltipNameLength"
-    matTooltipPosition="right"
-    class="element-name"
-    >{{ name }}</span
-  >
-  <span
-    *ngIf="description"
-    [matTooltip]="description"
-    [matTooltipDisabled]="description.length < disabledTooltipDescriptionLength"
-    matTooltipPosition="right"
-    class="element-description"
-    >{{ description }}</span
-  >
-</div>
+@if (type) {
+  <span class="element-icon" [class.rounded]="type.name === 'trait'" [ngClass]="className">{{ type.symbol }}</span>
+}
+@if (size !== 'small' && name) {
+  <div class="element-info">
+    @if (name) {
+      <span
+        [matTooltip]="name"
+        [matTooltipDisabled]="name.length < disabledTooltipNameLength"
+        matTooltipPosition="right"
+        class="element-name"
+        >{{ name }}</span
+      >
+    }
+    @if (description) {
+      <span
+        [matTooltip]="description"
+        [matTooltipDisabled]="description.length < disabledTooltipDescriptionLength"
+        matTooltipPosition="right"
+        class="element-description"
+        >{{ description }}</span
+      >
+    }
+  </div>
+}

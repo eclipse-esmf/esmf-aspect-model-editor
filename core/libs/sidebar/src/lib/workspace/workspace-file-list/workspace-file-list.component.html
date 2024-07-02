@@ -29,15 +29,17 @@
 </div>
 
 <div class="namespaces">
-  <ng-container *ngFor="let namespace of sortNamespaces(namespaces | keyvalue)">
-    <div *ngIf="searched[namespace.key]?.length" (click)="folded[namespace.key] = !folded[namespace.key]" class="namespace">
-      <mat-icon [matTooltip]="folded[namespace.key] ? ('TOOLTIPS.UNFOLD' | translate) : ('TOOLTIPS.FOLD' | translate)">
-        {{ folded[namespace.key] ? 'folder' : 'folder_open' }}
-      </mat-icon>
-      <span>{{ namespace.key }}</span>
-    </div>
-    <ng-container *ngIf="!folded[namespace.key] || searchString">
-      <ng-container *ngFor="let file of searched[namespace.key]">
+  @for (namespace of sortNamespaces(namespaces | keyvalue); track namespace) {
+    @if (searched[namespace.key]?.length) {
+      <div (click)="folded[namespace.key] = !folded[namespace.key]" class="namespace">
+        <mat-icon [matTooltip]="folded[namespace.key] ? ('TOOLTIPS.UNFOLD' | translate) : ('TOOLTIPS.FOLD' | translate)">
+          {{ folded[namespace.key] ? 'folder' : 'folder_open' }}
+        </mat-icon>
+        <span>{{ namespace.key }}</span>
+      </div>
+    }
+    @if (!folded[namespace.key] || searchString) {
+      @for (file of searched[namespace.key]; track file) {
         <div
           [class.selected]="selection.isSelected(namespace.key, file.name)"
           [class.outdated]="file.outdated"
@@ -66,13 +68,13 @@
             <mat-icon>more_horiz</mat-icon>
           </button>
         </div>
-      </ng-container>
-    </ng-container>
-  </ng-container>
+      }
+    }
+  }
 </div>
 
 <mat-menu #menu="matMenu">
-  <ng-container *ngIf="menuSelection">
+  @if (menuSelection) {
     <button [disabled]="!isOpenable()" (click)="loadInNewWindow()" mat-menu-item data-cy="fileMenuLoadAspectModelButton">
       {{ 'SIDEBAR.FILE_MENU.NEW_WINDOW' | translate }}
     </button>
@@ -93,7 +95,9 @@
     <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-cy="fileMenuDeleteButton">
       {{ 'SIDEBAR.FILE_MENU.DELETE' | translate }}
     </button>
-  </ng-container>
+  }
 </mat-menu>
 
-<ame-workspace-migrate *ngIf="sidebarService.namespacesState.hasOutdatedFiles"></ame-workspace-migrate>
+@if (sidebarService.namespacesState.hasOutdatedFiles) {
+  <ame-workspace-migrate></ame-workspace-migrate>
+}

@@ -20,7 +20,7 @@ import {MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef} from '
 import {MatIconModule} from '@angular/material/icon';
 import {LanguageTranslateModule} from '@ame/translation';
 import {MatButtonModule} from '@angular/material/button';
-import {CommonModule} from '@angular/common';
+
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 
@@ -32,7 +32,6 @@ import {MatInputModule} from '@angular/material/input';
     MatIconModule,
     MatDialogModule,
     LanguageTranslateModule,
-    CommonModule,
     ReactiveFormsModule,
     MatInputModule,
     MatDialogActions,

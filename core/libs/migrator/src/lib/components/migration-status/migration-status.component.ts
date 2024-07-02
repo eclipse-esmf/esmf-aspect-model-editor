@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Inject, NgZone, OnInit, inject} from '@angular/core';
+import {Component, Inject, inject, NgZone, OnInit} from '@angular/core';
 import {NamespaceStatus} from '@ame/api';
 import {MigratorService} from '../../migrator.service';
 import {Router} from '@angular/router';
 import {EditorService} from '@ame/editor';
 import {RdfModel} from '@ame/rdf/utils';
-import {ElectronSignals, ElectronSignalsService, APP_CONFIG, AppConfig} from '@ame/shared';
+import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService} from '@ame/shared';
 
 interface CompatibleAmeSammVersions {
   sammVersion: string;
@@ -186,5 +186,9 @@ export class MigrationStatusComponent implements OnInit {
       return this.removeAfterChar(withoutSammPrefix, ':') === this.removeAfterChar(errorFileNamespace, ':');
     });
     return {sammVersion: version[0].samm.version, ameVersion: this.getAmeVersion(version[0].samm.version)};
+  }
+
+  values(value: any): any {
+    return value as any;
   }
 }

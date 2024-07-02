@@ -24,7 +24,7 @@ import {saveAs} from 'file-saver';
 import {ModelService} from '@ame/rdf/services';
 import {NamespacesCacheService} from '@ame/cache';
 import {LanguageTranslateModule} from '@ame/translation';
-import {CommonModule} from '@angular/common';
+
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -37,7 +37,6 @@ import {MatButtonModule} from '@angular/material/button';
   templateUrl: './generate-documentation.component.html',
   styleUrls: ['./generate-documentation.component.scss'],
   imports: [
-    CommonModule,
     MatDialogModule,
     LanguageTranslateModule,
     MatFormFieldModule,

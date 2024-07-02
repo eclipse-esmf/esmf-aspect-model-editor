@@ -32,6 +32,7 @@ import {LoadingComponent} from './components/loading/loading.component';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {EditorCanvasComponent} from '@ame/app/components/editor-canvas/editor-canvas.component';
+import {EditorToolbarModule} from '@ame/editor';
 
 @NgModule({
   declarations: [AppComponent, LoadingComponent],
@@ -58,6 +59,7 @@ import {EditorCanvasComponent} from '@ame/app/components/editor-canvas/editor-ca
         deps: [HttpClient],
       },
     }),
+    EditorToolbarModule,
     EditorCanvasComponent,
     NgOptimizedImage,
   ],

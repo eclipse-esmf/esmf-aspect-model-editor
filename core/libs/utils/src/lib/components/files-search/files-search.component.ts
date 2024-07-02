@@ -12,7 +12,7 @@
  */
 
 import {Component, inject} from '@angular/core';
-import {CommonModule} from '@angular/common';
+
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -40,7 +40,6 @@ import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translat
   templateUrl: './files-search.component.html',
   styleUrls: ['./files-search.component.scss'],
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,

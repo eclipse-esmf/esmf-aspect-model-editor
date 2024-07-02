@@ -12,9 +12,12 @@
  */
 
 import {Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
+  standalone: true,
   template: '<router-outlet name="export-namespaces"></router-outlet>',
   styleUrls: ['./root-export-namespaces.component.scss'],
+  imports: [RouterOutlet],
 })
 export class RootExportNamespacesComponent {}

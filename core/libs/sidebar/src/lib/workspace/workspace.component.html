@@ -33,8 +33,17 @@
   </button>
 </div>
 
-<ame-workspace-empty *ngIf="namespacesKeys.length === 0; else list" [loading]="loading"></ame-workspace-empty>
+@if (namespacesKeys.length === 0) {
+  <ame-workspace-empty [loading]="loading"></ame-workspace-empty>
+} @else {
+  <ame-workspace-file-list class="list"></ame-workspace-file-list>
+  @if (sidebarService.fileElements.isOpened$ | async) {
+    <ame-workspace-file-elements class="column-two"></ame-workspace-file-elements>
+  }
+}
 <ng-template #list>
   <ame-workspace-file-list class="list"></ame-workspace-file-list>
-  <ame-workspace-file-elements *ngIf="sidebarService.fileElements.isOpened$ | async" class="column-two"></ame-workspace-file-elements>
+  @if (sidebarService.fileElements.isOpened$ | async) {
+    <ame-workspace-file-elements class="column-two"></ame-workspace-file-elements>
+  }
 </ng-template>

@@ -24,7 +24,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
 import {MatOptionModule} from '@angular/material/core';
-import {CommonModule} from '@angular/common';
 
 @Component({
   standalone: true,
@@ -39,7 +38,6 @@ import {CommonModule} from '@angular/common';
     ReactiveFormsModule,
     MatSelectModule,
     MatOptionModule,
-    CommonModule,
   ],
 })
 export class AASXGenerationModalComponent {

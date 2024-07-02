@@ -13,7 +13,6 @@ import {Component, inject} from '@angular/core';
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CommonModule} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -36,7 +35,6 @@ import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-di
   templateUrl: './elements-search.component.html',
   styleUrls: ['./elements-search.component.scss'],
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,

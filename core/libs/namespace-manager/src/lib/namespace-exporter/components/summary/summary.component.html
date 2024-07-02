@@ -14,14 +14,18 @@
 <h2 mat-dialog-title class="properties-title">{{ 'VALIDATION_RESULT_DIALOG.TITLE' | translate }}</h2>
 
 <mat-dialog-content>
-  <p *ngIf="!missingElements.length">
-    {{ 'VALIDATION_RESULT_DIALOG.HAVE_VALIDATED' | translate }}<b>{{ 'VALIDATION_RESULT_DIALOG.CAN_BE_EXPORTED' | translate }}</b
-    >.
-  </p>
-  <p *ngIf="missingElements.length">
-    {{ 'VALIDATION_RESULT_DIALOG.CAN_NOT_EXPORTED' | translate }}<b>{{ 'VALIDATION_RESULT_DIALOG.MISSING_FILES' | translate }}</b
-    >.
-  </p>
+  @if (!missingElements.length) {
+    <p>
+      {{ 'VALIDATION_RESULT_DIALOG.HAVE_VALIDATED' | translate }}<b>{{ 'VALIDATION_RESULT_DIALOG.CAN_BE_EXPORTED' | translate }}</b
+      >.
+    </p>
+  }
+  @if (missingElements.length) {
+    <p>
+      {{ 'VALIDATION_RESULT_DIALOG.CAN_NOT_EXPORTED' | translate }}<b>{{ 'VALIDATION_RESULT_DIALOG.MISSING_FILES' | translate }}</b
+      >.
+    </p>
+  }
 </mat-dialog-content>
 
 <ame-workspace-summary></ame-workspace-summary>
@@ -32,8 +36,10 @@
   </div>
   <div class="actions-right">
     <button mat-flat-button mat-dialog-close>{{ 'VALIDATION_RESULT_DIALOG.DISMISS_BUTTON' | translate }}</button>
-    <button *ngIf="!missingElements.length" mat-flat-button color="primary" (click)="export()">
-      {{ 'VALIDATION_RESULT_DIALOG.EXPORT' | translate }}
-    </button>
+    @if (!missingElements.length) {
+      <button mat-flat-button color="primary" (click)="export()">
+        {{ 'VALIDATION_RESULT_DIALOG.EXPORT' | translate }}
+      </button>
+    }
   </div>
 </mat-dialog-actions>

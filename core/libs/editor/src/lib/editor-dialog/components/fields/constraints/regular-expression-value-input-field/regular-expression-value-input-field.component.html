@@ -15,6 +15,8 @@
   <mat-form-field [floatLabel]="getControl('value')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
     <mat-label for="value">value</mat-label>
     <input matInput name="value" [formControl]="getControl('value')" data-cy="value" />
-    <mat-error *ngIf="getControl('value').errors?.required">Value is required</mat-error>
+    @if (getControl('value').errors?.required) {
+      <mat-error>Value is required</mat-error>
+    }
   </mat-form-field>
 </div>

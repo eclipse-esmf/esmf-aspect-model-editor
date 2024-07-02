@@ -11,10 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<ame-element
-  *ngIf="metaModelElement | modelElementParser as parsedElement"
-  [type]="sammElements[parsedElement.type]"
-  [name]="elementName + ' (' + metaModelClassName + ')'"
-  class="inline"
-  size="medium"
-></ame-element>
+@if (metaModelElement | modelElementParser; as parsedElement) {
+  <ame-element
+    [type]="sammElements[parsedElement.type]"
+    [name]="elementName + ' (' + metaModelClassName + ')'"
+    class="inline"
+    size="medium"
+  ></ame-element>
+}
