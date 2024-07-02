@@ -112,8 +112,8 @@ export class FileHandlingService {
     if (!modelContent) return of(null);
 
     const loadingScreenOptions: LoadingScreenOptions = {
-      title: this.translate.language.NOTIFICATION_DIALOG.LOADING,
-      content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
+      title: this.translate.language.NOTIFICATION_DIALOG?.LOADING,
+      content: this.translate.language.NOTIFICATION_DIALOG?.CONTENT,
       hasCloseButton: true,
     };
     this.loadingScreenService.open(loadingScreenOptions);
@@ -150,7 +150,7 @@ export class FileHandlingService {
         first(),
         tap(() => {
           const loadingScreenOptions: LoadingScreenOptions = {
-            title: this.translate.language.NOTIFICATION_DIALOG.LOADING,
+            title: this.translate.language.NOTIFICATION_DIALOG?.LOADING,
             hasCloseButton: true,
             closeButtonAction: () => {
               subscription.unsubscribe();
@@ -276,8 +276,8 @@ export class FileHandlingService {
     }
 
     this.loadingScreenService.open({
-      title: this.translate.language.NOTIFICATION_DIALOG.SAVING,
-      content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
+      title: this.translate.language.NOTIFICATION_DIALOG?.SAVING,
+      content: this.translate.language.NOTIFICATION_DIALOG?.CONTENT,
       hasCloseButton: false,
     });
 
@@ -450,7 +450,7 @@ export class FileHandlingService {
       .subscribe((): void => {
         if (!this.namespaceCacheService.currentCachedFile.hasCachedElements()) {
           this.notificationsService.info({
-            title: this.translate.language.NOTIFICATION_DIALOG.NO_ASPECT_TITLE,
+            title: this.translate.language.NOTIFICATION_DIALOG?.NO_ASPECT_TITLE,
             timeout: 5000,
           });
           return;
@@ -461,8 +461,8 @@ export class FileHandlingService {
 
   validateFile(callback?: Function) {
     const loadingScreenOptions: LoadingScreenOptions = {
-      title: this.translate.language.NOTIFICATION_DIALOG.VALIDATING,
-      content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
+      title: this.translate.language.NOTIFICATION_DIALOG?.VALIDATING,
+      content: this.translate.language.NOTIFICATION_DIALOG?.CONTENT,
       hasCloseButton: true,
     };
     this.loadingScreenService.open(loadingScreenOptions);
