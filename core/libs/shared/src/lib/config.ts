@@ -14,6 +14,8 @@
 import {InjectionToken} from '@angular/core';
 import {AppConfig} from '@ame/shared';
 import packageJson from '../../../../package.json';
+import {HttpClient} from '@angular/common/http';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 const defaultPort = '9091';
 

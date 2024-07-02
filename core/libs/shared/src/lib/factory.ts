@@ -11,14 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './components';
-export * from './constants';
-export * from './enums';
-export * from './model';
-export * from './pipes';
-export * from './services';
-export * from './config';
-export * from './factory';
-export * from './general-config';
-export * from './http-error.interceptor';
-export * from './http-header-builder';
+import {HttpClient} from '@angular/common/http';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+
+export function httpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
