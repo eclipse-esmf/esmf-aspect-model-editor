@@ -289,7 +289,7 @@ declare global {
   }
 }
 
-Cypress.Commands.add('visitDefault', () => cy.visit('?e2e=true'));
+Cypress.Commands.add('visitDefault', () => cy.visit('?e2e=true').wait(2000));
 
 Cypress.Commands.add('getAspect', () => cy.window().then(win => win['angular.modelService'].loadedAspect as Aspect));
 

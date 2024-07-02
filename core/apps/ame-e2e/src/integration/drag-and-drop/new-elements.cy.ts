@@ -32,9 +32,9 @@ describe('Test drag and drop', () => {
       .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300).then(() => cy.clickShape('property2')));
   });
 
-  it('can add new Operation', () => cy.dragElement(SELECTOR_ecOperation, 350, 300).then(() => cy.clickShape('Characteristic1')));
+  it('can add new Operation', () => cy.dragElement(SELECTOR_ecOperation, 350, 300).then(() => cy.clickShape('operation1')));
 
-  it('can add new Characteristic', () => cy.dragElement(SELECTOR_ecCharacteristic, 350, 300).then(() => cy.clickShape('Characteristic1')));
+  it('can add new Characteristic', () => cy.dragElement(SELECTOR_ecCharacteristic, 350, 300).then(() => cy.clickShape('Characteristic2')));
 
   it('can add new Entity', () => cy.dragElement(SELECTOR_ecEntity, 350, 300).then(() => cy.clickShape('Entity1')));
 
