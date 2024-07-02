@@ -13,24 +13,20 @@
 
 import {enableProdMode, importProvidersFrom} from '@angular/core';
 import {environment} from 'environments/environment';
-import {bootstrapApplication, BrowserModule} from '@angular/platform-browser';
+import {bootstrapApplication} from '@angular/platform-browser';
 import {AppComponent} from '@ame/app/app.component';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {DomainModelToRdfModule} from '@ame/aspect-exporter';
 import {MxGraphModule} from '@ame/mx-graph';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {ToastrModule} from 'ngx-toastr';
-import {MatButtonModule} from '@angular/material/button';
-import {FormsModule} from '@angular/forms';
-import {MigratorModule} from '@ame/migrator';
+import {MIGRATOR_ROUTES} from '@ame/migrator';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {HttpClient, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {EditorToolbarModule} from '@ame/editor';
-import {APP_CONFIG, config, httpLoaderFactory, LogService} from '@ame/shared';
+import {APP_CONFIG, config, httpLoaderFactory} from '@ame/shared';
 import {provideAnimations} from '@angular/platform-browser/animations';
-import {PreloadAllModules, provideRouter, withDebugTracing, withPreloading} from '@angular/router';
+import {PreloadAllModules, provideRouter, withPreloading} from '@angular/router';
 import {APP_ROUTES} from '@ame/app/app.routes';
+import {NAMESPACE_EXPORT_ROUTES} from '../../../libs/namespace-manager/src/lib/namespace-exporter';
+import {NAMESPACE_IMPORT_ROUTES} from '../../../libs/namespace-manager/src/lib/namespace-importer';
 
 if (environment.production) {
   enableProdMode();
@@ -43,16 +39,9 @@ const bootstrap = () =>
   bootstrapApplication(AppComponent, {
     providers: [
       importProvidersFrom(
-        CommonModule,
-        BrowserModule,
+        ToastrModule.forRoot(),
         DomainModelToRdfModule,
         MxGraphModule,
-        MatDialogModule,
-        MatProgressSpinnerModule,
-        ToastrModule.forRoot(),
-        MatButtonModule,
-        FormsModule,
-        MigratorModule,
         TranslateModule.forRoot({
           defaultLanguage: 'en',
           loader: {
@@ -61,13 +50,13 @@ const bootstrap = () =>
             deps: [HttpClient],
           },
         }),
-        EditorToolbarModule,
-        NgOptimizedImage,
       ),
-      LogService,
-      {provide: APP_CONFIG, useValue: config},
       provideAnimations(),
-      provideRouter(APP_ROUTES, withPreloading(PreloadAllModules)),
+      {provide: APP_CONFIG, useValue: config},
+      provideRouter(
+        [...APP_ROUTES, ...MIGRATOR_ROUTES, ...NAMESPACE_EXPORT_ROUTES, ...NAMESPACE_IMPORT_ROUTES],
+        withPreloading(PreloadAllModules),
+      ),
       provideHttpClient(withInterceptorsFromDi()),
     ],
   });

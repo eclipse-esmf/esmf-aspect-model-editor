@@ -16,13 +16,15 @@
 <mat-dialog-content>
   @if (!missingElements.length) {
     <p>
-      {{ 'VALIDATION_RESULT_DIALOG.HAVE_VALIDATED' | translate }}<b>{{ 'VALIDATION_RESULT_DIALOG.CAN_BE_EXPORTED' | translate }}</b
+      {{ 'VALIDATION_RESULT_DIALOG.HAVE_VALIDATED' | translate }}
+      <b>{{ 'VALIDATION_RESULT_DIALOG.CAN_BE_EXPORTED' | translate }}</b
       >.
     </p>
   }
   @if (missingElements.length) {
     <p>
-      {{ 'VALIDATION_RESULT_DIALOG.CAN_NOT_EXPORTED' | translate }}<b>{{ 'VALIDATION_RESULT_DIALOG.MISSING_FILES' | translate }}</b
+      {{ 'VALIDATION_RESULT_DIALOG.CAN_NOT_EXPORTED' | translate }}
+      <b>{{ 'VALIDATION_RESULT_DIALOG.MISSING_FILES' | translate }}</b
       >.
     </p>
   }

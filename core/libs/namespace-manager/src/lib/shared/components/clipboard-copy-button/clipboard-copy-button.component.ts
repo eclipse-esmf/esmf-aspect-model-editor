@@ -16,11 +16,17 @@ import {NamespacesSessionInterface} from '../../models';
 import {NAMESPACES_SESSION} from '../../services';
 import {NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
+import {TranslateModule} from '@ngx-translate/core';
+import {MatIcon} from '@angular/material/icon';
+import {MatTooltip} from '@angular/material/tooltip';
+import {MatButton} from '@angular/material/button';
 
 @Component({
   selector: 'ame-clipboard-copy-button',
   templateUrl: './clipboard-copy-button.component.html',
   styleUrls: ['./clipboard-copy-button.component.scss'],
+  standalone: true,
+  imports: [MatButton, MatTooltip, MatIcon, TranslateModule],
 })
 export class ClipboardCopyButtonComponent {
   private namespaceSession: NamespacesSessionInterface = inject(NAMESPACES_SESSION);

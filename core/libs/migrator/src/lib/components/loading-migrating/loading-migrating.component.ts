@@ -15,13 +15,18 @@ import {MigratorApiService} from '@ame/api';
 import {Component, NgZone, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {catchError, of} from 'rxjs';
-import {MatDialogTitle} from '@angular/material/dialog';
+import {MatDialogTitle, MatDialogContent} from '@angular/material/dialog';
 import {LanguageTranslateModule} from '@ame/translation';
+import {TranslateModule} from '@ngx-translate/core';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'ame-loading-migrating',
   templateUrl: './loading-migrating.component.html',
   styleUrls: ['./loading-migrating.component.scss'],
+  standalone: true,
+  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatProgressSpinner, TranslateModule],
 })
 export class LoadingMigratingComponent implements OnInit {
   constructor(

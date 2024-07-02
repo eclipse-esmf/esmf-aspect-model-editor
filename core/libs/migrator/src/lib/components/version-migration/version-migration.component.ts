@@ -19,6 +19,12 @@ import {RdfModel} from '@ame/rdf/utils';
 import {Component, NgZone, OnInit, inject} from '@angular/core';
 import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService, LogService} from '@ame/shared';
 import {Router} from '@angular/router';
+import {TranslateModule} from '@ngx-translate/core';
+import {KeyValuePipe} from '@angular/common';
+import {MatIcon} from '@angular/material/icon';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {CdkScrollable} from '@angular/cdk/scrolling';
+import {MatDialogTitle, MatDialogContent} from '@angular/material/dialog';
 
 export const defaultNamespaces = (sammVersion: string) => [
   `urn:samm:org.eclipse.esmf.samm:meta-model:${sammVersion}#`,
@@ -35,6 +41,8 @@ export const defaultNamespaces = (sammVersion: string) => [
   selector: 'ame-version-migration',
   templateUrl: './version-migration.component.html',
   styleUrls: ['./version-migration.component.scss'],
+  standalone: true,
+  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatProgressSpinner, MatIcon, KeyValuePipe, TranslateModule],
 })
 export class VersionMigrationComponent implements OnInit {
   public namespaces: {[namespace: string]: {name: string; migrated: boolean}[]};

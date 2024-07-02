@@ -12,17 +12,20 @@
  */
 
 import {Component, inject} from '@angular/core';
-import {NotificationsService} from '@ame/shared';
-import {ViolationError} from '@ame/editor';
+import {ViolationError, VisibleStep} from '@ame/editor';
 import {NAMESPACES_SESSION} from '../../services';
 import {MissingElement, NamespacesSessionInterface, Violation} from '../../models';
-import {LanguageTranslationService} from '@ame/translation';
-import {VisibleStep} from '@ame/editor';
+import {MatIcon} from '@angular/material/icon';
+import {MatDialogContent} from '@angular/material/dialog';
+import {MatTooltip} from '@angular/material/tooltip';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @Component({
+  standalone: true,
   selector: 'ame-workspace-summary',
   templateUrl: './workspace-summary.component.html',
   styleUrls: ['./workspace-summary.component.scss'],
+  imports: [MatIcon, MatDialogContent, MatTooltip, LanguageTranslateModule],
 })
 export class WorkspaceSummaryComponent {
   private importSession: NamespacesSessionInterface = inject(NAMESPACES_SESSION);
@@ -40,27 +43,5 @@ export class WorkspaceSummaryComponent {
   public violations: Violation[] = this.importSession.violations;
   public errors: ViolationError[];
 
-  constructor(
-    private notificationService: NotificationsService,
-    private translate: LanguageTranslationService,
-  ) {}
-
-  async copySummaryToClipboard() {
-    const textToClipboard = JSON.stringify(
-      {
-        namespaces: this.violations,
-        invalidFiles: this.invalidFiles,
-        missingElements: this.missingElements,
-      },
-      null,
-      2,
-    );
-
-    try {
-      await navigator.clipboard.writeText(textToClipboard);
-      this.notificationService.success({title: this.translate.language.NOTIFICATION_SERVICE.SUMMARY_CLIPBOARD_SUCCESS});
-    } catch {
-      this.notificationService.success({title: this.translate.language.NOTIFICATION_SERVICE.SUMMARY_CLIPBOARD_FAILURE});
-    }
-  }
+  constructor() {}
 }
