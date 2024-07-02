@@ -12,12 +12,16 @@
  */
 
 import {Component, NgZone} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {EditorService} from '@ame/editor';
+import {LanguageTranslateModule} from '@ame/translation';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
+  standalone: true,
   templateUrl: 'save-model-dialog.component.html',
   styleUrls: ['save-model-dialog.component.scss'],
+  imports: [MatDialogModule, LanguageTranslateModule, MatButtonModule],
 })
 export class SaveModelDialogComponent {
   public disabledButton = false;

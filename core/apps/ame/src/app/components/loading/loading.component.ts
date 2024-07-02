@@ -15,6 +15,7 @@ import {ElectronSignals, ElectronSignalsService, ElectronTunnelService} from '@a
 import {AfterViewInit, Component, inject, NgZone, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
 import {forkJoin, Observable, of, Subscription, switchMap, take} from 'rxjs';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   templateUrl: 'loading.component.html',

@@ -13,8 +13,8 @@
 
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Component} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MatDialogRef} from '@angular/material/dialog';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import * as locale from 'locale-codes';
 import {finalize, first} from 'rxjs/operators';
 import {ModelApiService} from '@ame/api';
@@ -23,11 +23,30 @@ import {map} from 'rxjs';
 import {saveAs} from 'file-saver';
 import {ModelService} from '@ame/rdf/services';
 import {NamespacesCacheService} from '@ame/cache';
+import {LanguageTranslateModule} from '@ame/translation';
+import {CommonModule} from '@angular/common';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatOptionModule} from '@angular/material/core';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
+  standalone: true,
   selector: 'ame-generate-documentation',
   templateUrl: './generate-documentation.component.html',
   styleUrls: ['./generate-documentation.component.scss'],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    LanguageTranslateModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+  ],
 })
 export class GenerateDocumentationComponent {
   languages: locale.ILocale[] = [];

@@ -15,6 +15,8 @@ import {MigratorApiService} from '@ame/api';
 import {Component, NgZone, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {catchError, of} from 'rxjs';
+import {MatDialogTitle} from '@angular/material/dialog';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @Component({
   selector: 'ame-loading-migrating',

@@ -14,9 +14,14 @@
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {Component, Inject} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {mxgraph} from 'mxgraph-factory';
-import {ModelElementParserPipe} from '../editor-dialog';
+import {CommonModule} from '@angular/common';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {ModelElementParserPipe} from '@ame/editor';
 
 interface Element {
   cell: mxgraph.mxCell;
@@ -24,9 +29,11 @@ interface Element {
 }
 
 @Component({
+  standalone: true,
   selector: 'ame-connect-with-dialog',
   templateUrl: './connect-with-dialog.component.html',
   styleUrls: ['./connect-with-dialog.component.scss'],
+  imports: [MatFormFieldModule, MatTooltipModule, CommonModule, MatButtonModule, MatDialogModule, MatInputModule],
 })
 export class ConnectWithDialogComponent {
   public elements: Element[];

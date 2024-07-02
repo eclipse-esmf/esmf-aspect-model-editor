@@ -15,6 +15,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {DefaultEntityInstance} from '@ame/meta-model';
 
 @Pipe({
+  standalone: true,
   name: 'entityInstance',
 })
 export class EntityInstancePipe implements PipeTransform {

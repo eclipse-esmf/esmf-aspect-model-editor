@@ -13,20 +13,9 @@
 
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {EditorToolbarComponent} from './editor-toolbar.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {
-  AASXGenerationModalComponent,
-  DocumentComponent,
-  GenerateAsyncApiComponent,
-  GenerateDocumentationComponent,
-  GenerateOpenApiComponent,
-  LanguageSelectorModalComponent,
-  TextModelLoaderModalComponent,
-  ThemeSwitcherComponent,
-} from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatExpansionModule} from '@angular/material/expansion';
@@ -35,7 +24,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {NotificationsComponent} from './components/notifications/notifications.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTableModule} from '@angular/material/table';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -43,12 +31,11 @@ import {MatInputModule} from '@angular/material/input';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {ConnectWithDialogModule} from '../connect-with-dialog/connect-with-dialog.module';
 import {MatSelectModule} from '@angular/material/select';
 import {NamespaceManagerModule} from '@ame/namespace-manager';
-import {OpenElementWindowComponent} from '../open-element-window/open-element-window.component';
 import {LanguageTranslateModule} from '@ame/translation';
 import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/bar-item.component';
+import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
 
 @NgModule({
   imports: [
@@ -56,7 +43,6 @@ import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/b
     FormsModule,
     MatAutocompleteModule,
     MatIconModule,
-    ConnectWithDialogModule,
     MatMenuModule,
     MatCheckboxModule,
     MatRadioModule,
@@ -79,21 +65,10 @@ import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/b
     NamespaceManagerModule,
     LanguageTranslateModule,
     BarItemComponent,
+    ConnectWithDialogComponent,
   ],
-  declarations: [
-    EditorToolbarComponent,
-    DocumentComponent,
-    NotificationsComponent,
-    ThemeSwitcherComponent,
-    GenerateAsyncApiComponent,
-    GenerateOpenApiComponent,
-    GenerateDocumentationComponent,
-    LanguageSelectorModalComponent,
-    OpenElementWindowComponent,
-    AASXGenerationModalComponent,
-    TextModelLoaderModalComponent,
-  ],
-  exports: [EditorToolbarComponent, ThemeSwitcherComponent, TextModelLoaderModalComponent],
+  declarations: [],
+  exports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class EditorToolbarModule {}

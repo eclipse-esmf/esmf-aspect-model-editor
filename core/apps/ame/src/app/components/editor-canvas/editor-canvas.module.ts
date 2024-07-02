@@ -13,13 +13,12 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {EditorCanvasComponent} from './editor-canvas.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {EditorDialogModule, EditorToolbarModule} from '@ame/editor';
+import {EditorToolbarModule} from '@ame/editor';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {FormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -35,7 +34,6 @@ import {ElementsSearchComponent, FilesSearchComponent} from '@ame/utils';
     CommonModule,
     MatIconModule,
     EditorToolbarModule,
-    EditorDialogModule,
     MatMenuModule,
     MatFormFieldModule,
     MatInputModule,
@@ -52,7 +50,7 @@ import {ElementsSearchComponent, FilesSearchComponent} from '@ame/utils';
     ElementsSearchComponent,
     FilesSearchComponent,
   ],
-  declarations: [EditorCanvasComponent],
-  exports: [EditorCanvasComponent],
+  declarations: [],
+  exports: [],
 })
 export class EditorCanvasModule {}

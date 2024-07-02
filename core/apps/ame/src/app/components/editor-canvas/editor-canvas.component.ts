@@ -19,20 +19,36 @@ import {mxgraph} from 'mxgraph-factory';
 import {BaseMetaModelElement, ElementModelService} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {LogService} from '@ame/shared';
-import {EditorService, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
+import {EditorDialogModule, EditorService, EditorToolbarComponent, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
 import {ModelService} from '@ame/rdf/services';
 import {FormGroup} from '@angular/forms';
-import {CdkDragEnd} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {SearchesStateService} from '@ame/utils';
+import {ElementsSearchComponent, FilesSearchComponent, SearchesStateService} from '@ame/utils';
+import {SidebarModule} from '@ame/sidebar';
+import {AsyncPipe, CommonModule} from '@angular/common';
+import {MatIconModule} from '@angular/material/icon';
 
 const SIDEBAR_MIN_WIDTH = 480;
 const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
 
 @Component({
+  standalone: true,
   selector: 'ame-editor-canvas',
   templateUrl: './editor-canvas.component.html',
   styleUrls: ['./editor-canvas.component.scss'],
+  imports: [
+    SidebarModule,
+    AsyncPipe,
+    CommonModule,
+    CdkDrag,
+    CdkDragHandle,
+    MatIconModule,
+    ElementsSearchComponent,
+    FilesSearchComponent,
+    EditorDialogModule,
+    EditorToolbarComponent,
+  ],
 })
 export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('graph') public graph: ElementRef;

@@ -13,12 +13,19 @@
 
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Component} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MatDialogRef} from '@angular/material/dialog';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import * as locale from 'locale-codes';
+import {LanguageTranslateModule} from '@ame/translation';
+import {MatSelectModule} from '@angular/material/select';
+import {MatOptionModule} from '@angular/material/core';
+import {CommonModule} from '@angular/common';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
+  standalone: true,
   templateUrl: './language-selector-modal.component.html',
+  imports: [CommonModule, MatButtonModule, MatDialogModule, LanguageTranslateModule, MatSelectModule, MatOptionModule, ReactiveFormsModule],
 })
 export class LanguageSelectorModalComponent {
   public languages: locale.ILocale[] = [];

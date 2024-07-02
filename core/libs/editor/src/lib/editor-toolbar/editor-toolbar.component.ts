@@ -11,33 +11,38 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AfterViewInit, Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {AfterViewInit, Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {first} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {MxGraphShapeSelectorService, MxGraphService} from '@ame/mx-graph';
+import {MxGraphService, MxGraphShapeSelectorService} from '@ame/mx-graph';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
-import {BindingsService, ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
+import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/bar-item.component';
+import {BindingsService, NotificationsService} from '@ame/shared';
 import {EditorService} from '../editor.service';
 import {ShapeConnectorService} from '@ame/connection';
 import {FileHandlingService} from './services';
 import {MatDialog} from '@angular/material/dialog';
 import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
 import {ModelService} from '@ame/rdf/services';
-import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService, ModelFilter} from '@ame/loader-filters';
+import {FiltersService} from '@ame/loader-filters';
 import {ShapeSettingsService} from '../editor-dialog';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {LanguageTranslateModule} from '@ame/translation';
+import {MatIconModule} from '@angular/material/icon';
+import {AsyncPipe, CommonModule} from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'ame-editor-toolbar',
   templateUrl: './editor-toolbar.component.html',
   styleUrls: ['./editor-toolbar.component.scss'],
+  imports: [BarItemComponent, CommonModule, MatTooltipModule, LanguageTranslateModule, MatIconModule, AsyncPipe],
 })
 export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy {
   public filtersService = inject(FiltersService);
-  public filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
   public isAllShapesExpanded$: Observable<boolean>;
   public settings$: Observable<Settings>;
-  public serializedModel: string;
-  public filterTypes = ModelFilter;
+
   public get isModelEmpty() {
     return !this.mxGraphService.getAllCells()?.length;
   }
@@ -47,7 +52,6 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   private checkChangesInterval: NodeJS.Timeout;
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
 
   constructor(
     public notificationsService: NotificationsService,
@@ -139,9 +143,5 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
 
   zoomOut() {
     this.editorService.zoomOut();
-  }
-
-  hasAspectElement(): boolean {
-    return !!this.modelService.loadedAspect;
   }
 }

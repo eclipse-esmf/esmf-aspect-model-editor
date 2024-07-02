@@ -12,8 +12,14 @@
  */
 import {Component, Inject, ViewChild} from '@angular/core';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {saveAs} from 'file-saver';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {FormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {LanguageTranslateModule} from '@ame/translation';
+import {MatIconModule} from '@angular/material/icon';
 
 interface PreviewDialogOptions {
   title?: string;
@@ -22,9 +28,11 @@ interface PreviewDialogOptions {
 }
 
 @Component({
+  standalone: true,
   selector: 'ame-preview--dialog',
   templateUrl: './preview-dialog.component.html',
   styleUrls: ['./preview-dialog.component.scss'],
+  imports: [MatDialogModule, MatIconModule, MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule, LanguageTranslateModule],
 })
 export class PreviewDialogComponent {
   @ViewChild('autosize') autosize: CdkTextareaAutosize;

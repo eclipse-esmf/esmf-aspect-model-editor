@@ -12,8 +12,8 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {finalize, map, Subscription} from 'rxjs';
 import {EditorService} from '../../../editor.service';
@@ -21,6 +21,16 @@ import {ModelService} from '@ame/rdf/services';
 import * as locale from 'locale-codes';
 import {first} from 'rxjs/operators';
 import {saveAs} from 'file-saver';
+import {LanguageTranslateModule} from '@ame/translation';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatButtonModule} from '@angular/material/button';
+import {MatSelectModule} from '@angular/material/select';
+import {MatOptionModule} from '@angular/material/core';
+import {CommonModule} from '@angular/common';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatInputModule} from '@angular/material/input';
 
 export interface AsyncApi {
   language: string;
@@ -32,9 +42,24 @@ export interface AsyncApi {
 }
 
 @Component({
+  standalone: true,
   selector: 'ame-generate-async-api',
   templateUrl: './generate-async-api.component.html',
   styleUrls: ['./generate-async-api.component.scss'],
+  imports: [
+    MatDialogModule,
+    LanguageTranslateModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatOptionModule,
+    CommonModule,
+    MatCheckboxModule,
+    MatTooltipModule,
+    MatInputModule,
+  ],
 })
 export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
   form: FormGroup;

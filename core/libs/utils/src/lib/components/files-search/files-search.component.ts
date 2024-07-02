@@ -26,7 +26,7 @@ import {
   SearchService,
   filesSearchOption,
 } from '@ame/shared';
-import {EditorDialogModule, FileHandlingService, SaveModelDialogService} from '@ame/editor';
+import {FileHandlingService, SaveModelDialogService} from '@ame/editor';
 import {SearchesStateService} from '../../search-state.service';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {Observable, filter, first, of, startWith, switchMap, tap, throttleTime} from 'rxjs';
@@ -47,7 +47,6 @@ import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translat
     MatAutocompleteModule,
     MatFormFieldModule,
     MatIconModule,
-    EditorDialogModule,
     OpenFileDialogComponent,
     MatDialogModule,
     LanguageTranslateModule,

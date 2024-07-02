@@ -24,7 +24,7 @@ import {BaseMetaModelElement} from '@ame/meta-model';
 import {startWith, throttleTime} from 'rxjs';
 import {ElectronSignals, ElectronSignalsService, SearchService, mxCellSearchOption, sammElements} from '@ame/shared';
 import {ElementIconComponent} from '../../../../../shared/src/lib/components/element/element.component';
-import {ConfirmDialogService, EditorDialogModule, ShapeSettingsService} from '@ame/editor';
+import {ConfirmDialogService, ModelElementParserPipe, ShapeSettingsService} from '@ame/editor';
 import {SearchesStateService} from '../../search-state.service';
 import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
@@ -43,9 +43,9 @@ import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-di
     MatAutocompleteModule,
     MatFormFieldModule,
     MatIconModule,
-    EditorDialogModule,
     LanguageTranslateModule,
     ElementIconComponent,
+    ModelElementParserPipe,
   ],
 })
 export class ElementsSearchComponent {

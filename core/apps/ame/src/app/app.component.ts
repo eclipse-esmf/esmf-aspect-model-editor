@@ -19,7 +19,7 @@ import {ConfigurationService} from '@ame/settings-dialog';
 import {ThemeService} from '@ame/mx-graph';
 import {StartupService} from './startup.service';
 import {MigratorService} from '@ame/migrator';
-import {Router} from '@angular/router';
+import {Router, RouterOutlet} from '@angular/router';
 import {LanguageTranslationService} from '@ame/translation';
 import {SidebarStateService} from '@ame/sidebar';
 import {SearchesStateService} from '@ame/utils';

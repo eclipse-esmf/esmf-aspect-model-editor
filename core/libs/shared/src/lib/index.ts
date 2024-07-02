@@ -21,4 +21,3 @@ export * from './config';
 export * from './general-config';
 export * from './http-error.interceptor';
 export * from './http-header-builder';
-export * from './shared.module';

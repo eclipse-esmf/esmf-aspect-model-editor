@@ -16,7 +16,6 @@ describe('TextModelLoaderModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TextModelLoaderModalComponent],
       imports: [FormsModule, MatFormFieldModule, MatInputModule, MatDialogModule, BrowserAnimationsModule, TranslateModule.forRoot()],
       providers: [
         MockProviders(MatDialogRef),

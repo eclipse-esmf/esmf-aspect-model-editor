@@ -17,8 +17,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {EditorCanvasModule} from './components/editor-canvas/editor-canvas.module';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {MxGraphModule} from '@ame/mx-graph';
 import {DomainModelToRdfModule} from '@ame/aspect-exporter';
 import {SettingDialogModule} from '@ame/settings-dialog';
@@ -32,6 +31,7 @@ import {MigratorModule} from '@ame/migrator';
 import {LoadingComponent} from './components/loading/loading.component';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {EditorCanvasComponent} from '@ame/app/components/editor-canvas/editor-canvas.component';
 
 @NgModule({
   declarations: [AppComponent, LoadingComponent],
@@ -41,7 +41,6 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-    EditorCanvasModule,
     SettingDialogModule,
     DomainModelToRdfModule,
     MxGraphModule,
@@ -59,6 +58,8 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
         deps: [HttpClient],
       },
     }),
+    EditorCanvasComponent,
+    NgOptimizedImage,
   ],
   providers: [LogService, {provide: APP_CONFIG, useValue: config}],
   bootstrap: [AppComponent],
