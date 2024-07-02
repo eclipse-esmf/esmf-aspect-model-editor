@@ -19,9 +19,11 @@
       <mat-form-field>
         <mat-label>{{ 'SETTINGS_DIALOG.LANGUAGES.CHOOSE_LANGUAGE' | translate }}</mat-label>
         <mat-select formControlName="userInterface">
-          <mat-option *ngFor="let appLang of supportedLanguages" [value]="appLang.code">
-            {{ 'SETTINGS_DIALOG.LANGUAGES.' + appLang.language | translate }}
-          </mat-option>
+          @for (appLang of supportedLanguages; track appLang) {
+            <mat-option [value]="appLang.code">
+              {{ 'SETTINGS_DIALOG.LANGUAGES.' + appLang.language | translate }}
+            </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </section>
@@ -32,35 +34,35 @@
     <section class="aspect-model-selection">
       <h3>Aspect Model</h3>
       <div formArrayName="aspectModel" class="language-scroll">
-        <div *ngFor="let aspectModelFormGroup of aspectModelFormArray.controls; let i = index" class="row" [formGroupName]="i">
-          <mat-form-field>
-            <input
-              matInput
-              [matAutocomplete]="auto"
-              formControlName="language"
-              placeholder="{{ 'SETTINGS_DIALOG.LANGUAGES.SELECT_LANGUAGE' | translate }}"
-              data-cy="langCode"
-            />
-            <button
-              *ngIf="aspectModelFormArray.controls.length > 1"
-              (click)="removeLanguage(i)"
-              matSuffix
-              mat-icon-button
-              class="delete-icon"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayLanguageWithTag">
-              <mat-option *ngFor="let option of filteredOptions[i] | async" [value]="option">
-                {{ option.name }} ({{ option.tag }})
-              </mat-option>
-            </mat-autocomplete>
+        @for (aspectModelFormGroup of aspectModelFormArray.controls; track aspectModelFormGroup; let i = $index) {
+          <div class="row" [formGroupName]="i">
+            <mat-form-field>
+              <input
+                matInput
+                [matAutocomplete]="auto"
+                formControlName="language"
+                placeholder="{{ 'SETTINGS_DIALOG.LANGUAGES.SELECT_LANGUAGE' | translate }}"
+                data-cy="langCode"
+              />
+              @if (aspectModelFormArray.controls.length > 1) {
+                <button (click)="removeLanguage(i)" matSuffix mat-icon-button class="delete-icon">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              }
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayLanguageWithTag">
+                @for (option of filteredOptions[i] | async; track option) {
+                  <mat-option [value]="option"> {{ option.name }} ({{ option.tag }}) </mat-option>
+                }
+              </mat-autocomplete>
 
-            <mat-error *ngIf="getLanguageFormGroup(i).controls['language']?.touched">
-              {{ 'SETTINGS_DIALOG.LANGUAGES.START_TYPE' | translate }}
-            </mat-error>
-          </mat-form-field>
-        </div>
+              @if (getLanguageFormGroup(i).controls['language']?.touched) {
+                <mat-error>
+                  {{ 'SETTINGS_DIALOG.LANGUAGES.START_TYPE' | translate }}
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+        }
       </div>
     </section>
 

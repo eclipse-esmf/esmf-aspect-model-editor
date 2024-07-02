@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, HostListener, Input, HostBinding} from '@angular/core';
+import {Component, HostBinding, HostListener, Input} from '@angular/core';
 import {MatRipple} from '@angular/material/core';
 
 @Component({

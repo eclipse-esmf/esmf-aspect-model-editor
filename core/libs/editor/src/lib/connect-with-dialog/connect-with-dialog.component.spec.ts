@@ -15,7 +15,7 @@ import {BaseMetaModelElement, DefaultAspect, DefaultCharacteristic, DefaultEntit
 import {MxGraphService} from '@ame/mx-graph';
 import {CommonModule} from '@angular/common';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatDialogModule, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -30,7 +30,10 @@ const cell: Cell = {
   style: 'aspect',
 };
 const cells: Cell[] = [
-  {style: 'property', getMetaModelElement: () => ({element: new DefaultProperty('property', 'property', 'property', null)}) as any},
+  {
+    style: 'property',
+    getMetaModelElement: () => ({element: new DefaultProperty('property', 'property', 'property', null)}) as any,
+  },
   {
     style: 'characteristic',
     getMetaModelElement: () => ({element: new DefaultCharacteristic('characteristic', 'characteristic', 'characteristic')}) as any,
@@ -46,7 +49,6 @@ describe('RdfNodeService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ConnectWithDialogComponent],
       imports: [CommonModule, BrowserAnimationsModule, MatDialogModule, MatFormFieldModule, MatInputModule],
       providers: [
         {

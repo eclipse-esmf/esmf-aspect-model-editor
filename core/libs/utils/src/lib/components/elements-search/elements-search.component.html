@@ -18,22 +18,26 @@
   <mat-icon matSuffix>view_comfy_alt</mat-icon>
 
   <mat-autocomplete class="search-autocomplete" #auto="matAutocomplete">
-    <ng-container *ngFor="let element of elements">
-      <mat-option class="list-option" *ngIf="element | modelElementParser as parsedElement" (click)="openElement(element)">
-        <div [class.has-external-element]="element.isExternalReference() && !element.isPredefined()">
-          <ame-element
-            [type]="sammElements[parsedElement.type]"
-            [name]="parsedElement.element.name"
-            [description]="parsedElement.element.aspectModelUrn"
-            [disabledTooltipDescriptionLength]="100"
-            [disabledTooltipNameLength]="60"
-            size="medium"
-          ></ame-element>
-          <div class="align-self-center">
-            <mat-icon *ngIf="element.isExternalReference() && !element.isPredefined()" class="open-icon">open_in_new</mat-icon>
+    @for (element of elements; track element) {
+      @if (element | modelElementParser; as parsedElement) {
+        <mat-option class="list-option" (click)="openElement(element)">
+          <div [class.has-external-element]="element.isExternalReference() && !element.isPredefined()">
+            <ame-element
+              [type]="sammElements[parsedElement.type]"
+              [name]="parsedElement.element.name"
+              [description]="parsedElement.element.aspectModelUrn"
+              [disabledTooltipDescriptionLength]="100"
+              [disabledTooltipNameLength]="60"
+              size="medium"
+            ></ame-element>
+            <div class="align-self-center">
+              @if (element.isExternalReference() && !element.isPredefined()) {
+                <mat-icon class="open-icon">open_in_new</mat-icon>
+              }
+            </div>
           </div>
-        </div>
-      </mat-option>
-    </ng-container>
+        </mat-option>
+      }
+    }
   </mat-autocomplete>
 </mat-form-field>

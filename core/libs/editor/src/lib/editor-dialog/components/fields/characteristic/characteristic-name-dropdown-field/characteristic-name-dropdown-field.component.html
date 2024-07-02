@@ -22,10 +22,14 @@
     data-cy="characteristicName"
     panelClass="characteristic-items-panel"
   >
-    <mat-optgroup *ngFor="let group of listCharacteristicGroup | keyvalue" [label]="group.key" [disabled]="group['disabled']">
-      <mat-option *ngFor="let characteristicName of group.value" [value]="characteristicName" [attr.cy-value]="characteristicName">
-        {{ characteristicName }}
-      </mat-option>
-    </mat-optgroup>
+    @for (group of listCharacteristicGroup | keyvalue; track group) {
+      <mat-optgroup [label]="group.key" [disabled]="group['disabled']">
+        @for (characteristicName of group.value; track characteristicName) {
+          <mat-option [value]="characteristicName" [attr.cy-value]="characteristicName">
+            {{ characteristicName }}
+          </mat-option>
+        }
+      </mat-optgroup>
+    }
   </mat-select>
 </mat-form-field>

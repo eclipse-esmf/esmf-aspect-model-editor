@@ -12,13 +12,18 @@
  */
 
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {LoadingScreenOptions} from '@ame/shared';
+import {LanguageTranslateModule} from '@ame/translation';
+import {MatButtonModule} from '@angular/material/button';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
+  standalone: true,
   selector: 'ame-loading-screen',
   templateUrl: './loading-screen.component.html',
   styleUrls: ['./loading-screen.component.scss'],
+  imports: [MatProgressBarModule, MatDialogModule, LanguageTranslateModule, MatButtonModule],
 })
 export class LoadingScreenComponent {
   constructor(

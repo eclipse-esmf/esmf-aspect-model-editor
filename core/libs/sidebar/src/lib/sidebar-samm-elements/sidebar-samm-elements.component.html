@@ -13,19 +13,23 @@
 
 <div class="header">
   <h2>{{ 'SIDEBAR.SAMM_ELEMENTS' | translate }}</h2>
-  <button *ngIf="!isEmptyModel" (click)="sidebarService.sammElements.close()" mat-mini-fab>
-    <mat-icon>close</mat-icon>
-  </button>
+  @if (!isEmptyModel) {
+    <button (click)="sidebarService.sammElements.close()" mat-mini-fab>
+      <mat-icon>close</mat-icon>
+    </button>
+  }
 </div>
 
 <div class="content">
-  <ng-container *ngFor="let element of elementsOrder">
-    <ame-draggable-element [type]="element" *ngIf="!(element === 'aspect' && isAspectAvailable())">
-      <ame-element
-        [type]="sammElements[element]"
-        [name]="sammElements[element].name"
-        [description]="sammElements[element].description | translate"
-      ></ame-element>
-    </ame-draggable-element>
-  </ng-container>
+  @for (element of elementsOrder; track element) {
+    @if (!(element === 'aspect' && isAspectAvailable())) {
+      <ame-draggable-element [type]="element">
+        <ame-element
+          [type]="sammElements[element]"
+          [name]="sammElements[element].name"
+          [description]="sammElements[element].description | translate"
+        ></ame-element>
+      </ame-draggable-element>
+    }
+  }
 </div>

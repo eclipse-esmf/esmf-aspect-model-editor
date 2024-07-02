@@ -46,19 +46,18 @@
       <mat-icon class="material-icons">commit</mat-icon>
     </ame-bar-item>
 
-    <ame-bar-item
-      *ngIf="isAllShapesExpanded$ | async; else collapsed"
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [disabled]="isModelEmpty"
-      (click)="onToggleExpand()"
-      [matTooltip]="'TOOLBAR.COLLAPSE_ALL' | translate"
-      data-cy="collapseExpandToggle"
-    >
-      <mat-icon class="material-icons rotate-45">unfold_less</mat-icon>
-    </ame-bar-item>
-
-    <ng-template #collapsed>
+    @if (isAllShapesExpanded$ | async) {
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
+        [disabled]="isModelEmpty"
+        (click)="onToggleExpand()"
+        [matTooltip]="'TOOLBAR.COLLAPSE_ALL' | translate"
+        data-cy="collapseExpandToggle"
+      >
+        <mat-icon class="material-icons rotate-45">unfold_less</mat-icon>
+      </ame-bar-item>
+    } @else {
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
@@ -69,7 +68,7 @@
       >
         <mat-icon class="material-icons rotate-45 editor-icon-active">unfold_more</mat-icon>
       </ame-bar-item>
-    </ng-template>
+    }
 
     <ame-bar-item
       [matTooltipShowDelay]="0"

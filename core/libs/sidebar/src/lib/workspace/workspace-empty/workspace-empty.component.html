@@ -11,16 +11,16 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div *ngIf="loading; else empty" class="loading">
-  <mat-spinner></mat-spinner>
-  <p>{{ 'SIDEBAR.EMPTY.LOADING_NAMESPACES' | translate }}</p>
-</div>
-
-<ng-template #empty>
+@if (loading) {
+  <div class="loading">
+    <mat-spinner></mat-spinner>
+    <p>{{ 'SIDEBAR.EMPTY.LOADING_NAMESPACES' | translate }}</p>
+  </div>
+} @else {
   <p>{{ 'SIDEBAR.EMPTY.SAVE_MESSAGE' | translate }}</p>
   <p>{{ 'SIDEBAR.EMPTY.CALL_TO_ACTION' | translate }}</p>
   <button mat-flat-button color="primary" (click)="fileInput.click()">
     {{ 'SIDEBAR.EMPTY.IMPORT_BUTTON' | translate }}
   </button>
   <input hidden type="file" #fileInput (change)="onFileInput(fileInput.files)" />
-</ng-template>
+}

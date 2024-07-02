@@ -13,11 +13,15 @@
 
 import {ThemeService} from '@ame/mx-graph';
 import {Component, HostListener} from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
+import {CommonModule} from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'ame-theme-switcher',
   templateUrl: './theme-switcher.component.html',
   styleUrls: ['./theme-switcher.component.scss'],
+  imports: [MatIconModule, CommonModule],
 })
 export class ThemeSwitcherComponent {
   public selectedTheme = 'light';

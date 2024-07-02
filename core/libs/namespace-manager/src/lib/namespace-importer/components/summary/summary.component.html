@@ -14,8 +14,12 @@
 <h2 mat-dialog-title class="properties-title">Validation result</h2>
 
 <mat-dialog-content>
-  <p *ngIf="!missingElements.length">The package has been validated and <b>can be imported</b>.</p>
-  <p *ngIf="missingElements.length">The package can not be imported due to <b>missing files</b>.</p>
+  @if (!missingElements.length) {
+    <p>The package has been validated and <b>can be imported</b>.</p>
+  }
+  @if (missingElements.length) {
+    <p>The package can not be imported due to <b>missing files</b>.</p>
+  }
 </mat-dialog-content>
 
 <ame-workspace-summary></ame-workspace-summary>
@@ -26,6 +30,8 @@
   </div>
   <div class="actions-right">
     <button mat-flat-button mat-dialog-close>Dismiss</button>
-    <button *ngIf="!missingElements.length" mat-flat-button color="primary" (click)="importFiles()">Import</button>
+    @if (!missingElements.length) {
+      <button mat-flat-button color="primary" (click)="importFiles()">Import</button>
+    }
   </div>
 </mat-dialog-actions>

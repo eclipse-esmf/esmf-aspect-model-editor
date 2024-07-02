@@ -12,7 +12,7 @@
  */
 
 import {Component, Inject, OnInit} from '@angular/core';
-import {MatCheckboxChange} from '@angular/material/checkbox';
+import {MatCheckboxChange, MatCheckboxModule} from '@angular/material/checkbox';
 import {Router} from '@angular/router';
 import {NamespacesManagerService} from '../../../shared';
 import {Prefixes} from 'n3';
@@ -21,6 +21,12 @@ import {EditorService} from '@ame/editor';
 import {tap} from 'rxjs/operators';
 import {first} from 'rxjs';
 import {APP_CONFIG, AppConfig} from '@ame/shared';
+import {MatDialogModule} from '@angular/material/dialog';
+import {LanguageTranslateModule} from '@ame/translation';
+import {KeyValuePipe} from '@angular/common';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltip, MatTooltipModule} from '@angular/material/tooltip';
 
 const nonDependentNamespaces = (sammVersion: string) => [
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -42,8 +48,10 @@ interface NamespacesDependencies {
 }
 
 @Component({
+  standalone: true,
   templateUrl: './select-namespaces.component.html',
   styleUrls: ['select-namespaces.component.scss'],
+  imports: [MatDialogModule, LanguageTranslateModule, MatCheckboxModule, KeyValuePipe, MatIconModule, MatButtonModule, MatTooltipModule],
 })
 export class SelectNamespacesComponent implements OnInit {
   selectedNamespaces: string[] = [];

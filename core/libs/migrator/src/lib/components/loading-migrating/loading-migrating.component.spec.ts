@@ -30,7 +30,6 @@ describe('LoadingMigratingComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoadingMigratingComponent],
       imports: [MatDialogModule, RouterTestingModule, MatProgressSpinnerModule, TranslateModule.forRoot(), LanguageTranslateModule],
       providers: [
         {

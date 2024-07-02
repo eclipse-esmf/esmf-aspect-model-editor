@@ -13,86 +13,107 @@
 
 <mat-dialog-content class="dialog-content">
   <div class="namespace-column">
-    <div *ngFor="let violation of violations" class="namespace">
-      <div class="namespace-title">
-        <mat-icon>folder</mat-icon>
-        <span>{{ violation.key }}</span>
-      </div>
-      <div
-        class="option"
-        *ngFor="let value of violation.value"
-        (click)="errors = value.violationError; visibleStep = errors?.length ? step.hasErrors : step.noError"
-      >
-        <div class="content" [matTooltip]="value.file.length > 25 ? value.file : ''" matTooltipPosition="right">
-          <mat-icon>description</mat-icon>
-          <span class="file-name">{{ value.file }}</span>
+    @for (violation of violations; track violation) {
+      <div class="namespace">
+        <div class="namespace-title">
+          <mat-icon>folder</mat-icon>
+          <span>{{ violation.key }}</span>
         </div>
+        @for (value of violation.value; track value) {
+          <div class="option" (click)="errors = value.violationError; visibleStep = errors?.length ? step.hasErrors : step.noError">
+            <div class="content" [matTooltip]="value.file.length > 25 ? value.file : ''" matTooltipPosition="right">
+              <mat-icon>description</mat-icon>
+              <span class="file-name">{{ value.file }}</span>
+            </div>
 
-        <mat-icon *ngIf="value.violationError?.length" matTooltip="This file has errors" matTooltipPosition="right" class="violation">
-          error
-        </mat-icon>
-        <mat-icon
-          *ngIf="!value.violationError?.length"
-          [matTooltip]="'WORKSPACE_SUMMARY.VALIDATED_SUCCESSFULLY' | translate"
-          matTooltipPosition="right"
-          class="success"
-        >
-          done
-        </mat-icon>
+            @if (value.violationError?.length) {
+              <mat-icon matTooltip="This file has errors" matTooltipPosition="right" class="violation"> error </mat-icon>
+            }
+            @if (!value.violationError?.length) {
+              <mat-icon [matTooltip]="'WORKSPACE_SUMMARY.VALIDATED_SUCCESSFULLY' | translate" matTooltipPosition="right" class="success">
+                done
+              </mat-icon>
+            }
+          </div>
+        }
       </div>
-    </div>
+    }
 
-    <div *ngIf="missingElements?.length" class="option missing-elements" (click)="visibleStep = step.missingElement">
-      <div class="content">
-        <mat-icon>sim_card_alert</mat-icon>
-        <span>Missing files</span>
+    @if (missingElements?.length) {
+      <div class="option missing-elements" (click)="visibleStep = step.missingElement">
+        <div class="content">
+          <mat-icon>sim_card_alert</mat-icon>
+          <span>Missing files</span>
+        </div>
       </div>
-    </div>
+    }
 
-    <div *ngIf="invalidFiles?.length" class="option incorrect-files" (click)="visibleStep = step.incorrectFile">
-      <div class="content">
-        <mat-icon>error</mat-icon>
-        <span>Incorrect files</span>
+    @if (invalidFiles?.length) {
+      <div class="option incorrect-files" (click)="visibleStep = step.incorrectFile">
+        <div class="content">
+          <mat-icon>error</mat-icon>
+          <span>Incorrect files</span>
+        </div>
       </div>
-    </div>
+    }
   </div>
 
   <div class="errors-column">
-    <ng-container *ngIf="visibleStep === step.hasErrors">
-      <p class="error-notifier" *ngIf="errors?.length">This model has the following errors:</p>
-      <div class="notification" *ngFor="let error of errors">
-        <div class="notification-content">
-          <p *ngIf="error.focusNode" class="notification-name">{{ error.focusNode }}</p>
-          <p class="notification-description">{{ error.message }}</p>
+    @if (visibleStep === step.hasErrors) {
+      @if (errors?.length) {
+        <p class="error-notifier">This model has the following errors:</p>
+      }
+      @for (error of errors; track error) {
+        <div class="notification">
+          <div class="notification-content">
+            @if (error.focusNode) {
+              <p class="notification-name">{{ error.focusNode }}</p>
+            }
+            <p class="notification-description">{{ error.message }}</p>
+          </div>
         </div>
-      </div>
-    </ng-container>
+      }
+    }
 
-    <ng-container *ngIf="visibleStep === step.missingElement">
-      <p class="error-notifier" *ngIf="missingElements?.length">These files are required in the selected namespace:</p>
-      <div class="notification" *ngFor="let missingElement of missingElements">
-        <mat-icon class="notification-icon violation">{{ icons.violation }}</mat-icon>
-        <div class="notification-content">
-          <p class="notification-name">{{ missingElement.analysedFileName }}</p>
-          <p class="notification-description">{{ missingElement?.errorMessage }}</p>
-          <p class="notification-missing-file" *ngIf="missingElement?.missingFileName as missingFile">Missing file: '{{ missingFile }}'</p>
+    @if (visibleStep === step.missingElement) {
+      @if (missingElements?.length) {
+        <p class="error-notifier">These files are required in the selected namespace:</p>
+      }
+      @for (missingElement of missingElements; track missingElement) {
+        <div class="notification">
+          <mat-icon class="notification-icon violation">{{ icons.violation }}</mat-icon>
+          <div class="notification-content">
+            <p class="notification-name">{{ missingElement.analysedFileName }}</p>
+            <p class="notification-description">{{ missingElement?.errorMessage }}</p>
+            @if (missingElement?.missingFileName; as missingFile) {
+              <p class="notification-missing-file">Missing file: '{{ missingFile }}'</p>
+            }
+          </div>
         </div>
+      }
+    }
+
+    @if (visibleStep === step.selection) {
+      <div class="no-notifications">
+        <p>{{ 'WORKSPACE_SUMMARY.SELECT_TO_VALIDATE' | translate }}</p>
       </div>
-    </ng-container>
+    }
 
-    <div *ngIf="visibleStep === step.selection" class="no-notifications">
-      <p>{{ 'WORKSPACE_SUMMARY.SELECT_TO_VALIDATE' | translate }}</p>
-    </div>
-
-    <div *ngIf="visibleStep === step.noError" class="no-notifications">
-      <p>{{ 'WORKSPACE_SUMMARY.VALIDATED_SUCCESSFULLY' | translate }}</p>
-    </div>
-
-    <div *ngIf="visibleStep === step.incorrectFile" class="incorrect-files">
-      <p class="error-notifier">{{ 'WORKSPACE_SUMMARY.FILES_NOT_IMPORTED' | translate }}</p>
-      <div class="incorrect-file" *ngFor="let file of invalidFiles">
-        <p class="file-name">{{ file }}</p>
+    @if (visibleStep === step.noError) {
+      <div class="no-notifications">
+        <p>{{ 'WORKSPACE_SUMMARY.VALIDATED_SUCCESSFULLY' | translate }}</p>
       </div>
-    </div>
+    }
+
+    @if (visibleStep === step.incorrectFile) {
+      <div class="incorrect-files">
+        <p class="error-notifier">{{ 'WORKSPACE_SUMMARY.FILES_NOT_IMPORTED' | translate }}</p>
+        @for (file of invalidFiles; track file) {
+          <div class="incorrect-file">
+            <p class="file-name">{{ file }}</p>
+          </div>
+        }
+      </div>
+    }
   </div>
 </mat-dialog-content>

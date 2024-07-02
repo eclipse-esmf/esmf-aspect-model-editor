@@ -11,13 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Inject, NgZone, OnInit, inject} from '@angular/core';
+import {Component, Inject, inject, NgZone, OnInit} from '@angular/core';
 import {NamespaceStatus} from '@ame/api';
 import {MigratorService} from '../../migrator.service';
 import {Router} from '@angular/router';
 import {EditorService} from '@ame/editor';
 import {RdfModel} from '@ame/rdf/utils';
-import {ElectronSignals, ElectronSignalsService, APP_CONFIG, AppConfig} from '@ame/shared';
+import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService} from '@ame/shared';
+import {TranslateModule} from '@ngx-translate/core';
+import {KeyValuePipe} from '@angular/common';
+import {MatButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
+import {CdkScrollable} from '@angular/cdk/scrolling';
+import {MatDialogTitle, MatDialogContent, MatDialogActions} from '@angular/material/dialog';
 
 interface CompatibleAmeSammVersions {
   sammVersion: string;
@@ -35,6 +41,8 @@ interface ErrorFileItem {
   selector: 'ame-migration-status',
   templateUrl: './migration-status.component.html',
   styleUrls: ['./migration-status.component.scss'],
+  standalone: true,
+  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatIcon, MatDialogActions, MatButton, KeyValuePipe, TranslateModule],
 })
 export class MigrationStatusComponent implements OnInit {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
@@ -186,5 +194,9 @@ export class MigrationStatusComponent implements OnInit {
       return this.removeAfterChar(withoutSammPrefix, ':') === this.removeAfterChar(errorFileNamespace, ':');
     });
     return {sammVersion: version[0].samm.version, ameVersion: this.getAmeVersion(version[0].samm.version)};
+  }
+
+  values(value: any): any {
+    return value as any;
   }
 }

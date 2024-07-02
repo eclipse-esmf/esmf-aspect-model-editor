@@ -16,6 +16,10 @@ import {NamespacesSessionInterface} from '../../models';
 import {NAMESPACES_SESSION} from '../../services';
 import {NotificationsService} from '@ame/shared';
 import {first} from 'rxjs';
+import {MatButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
+import {MatDialogContent, MatDialogTitle, MatDialogActions, MatDialogClose} from '@angular/material/dialog';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 
 enum ERROR_TYPES {
   UNKNOWN,
@@ -25,6 +29,8 @@ enum ERROR_TYPES {
 @Component({
   templateUrl: './error.component.html',
   styleUrls: ['./error.component.scss'],
+  standalone: true,
+  imports: [CdkScrollable, MatDialogContent, MatIcon, MatDialogTitle, MatDialogActions, MatButton, MatDialogClose],
 })
 export class ErrorComponent {
   public errorTypes = ERROR_TYPES;

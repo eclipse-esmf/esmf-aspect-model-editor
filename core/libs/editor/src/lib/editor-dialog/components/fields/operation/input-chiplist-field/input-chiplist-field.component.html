@@ -13,11 +13,17 @@
 <mat-form-field [floatLabel]="chipControl?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="input">input</mat-label>
   <mat-chip-grid #chipList [formControl]="chipControl" [errorStateMatcher]="hasErrors()">
-    <mat-chip-row *ngFor="let input of inputValues" [removable]="removable" (removed)="remove(input)">
-      <span *ngIf="!input.aspectModelUrn.includes(rdfService.currentRdfModel.getAspectModelUrn())">ext: </span>
-      {{ input['name'] }}
-      <mat-icon matChipRemove *ngIf="removable" data-cy="input">close</mat-icon>
-    </mat-chip-row>
+    @for (input of inputValues; track input) {
+      <mat-chip-row [removable]="removable" (removed)="remove(input)">
+        @if (!input.aspectModelUrn.includes(rdfService.currentRdfModel.getAspectModelUrn())) {
+          <span>ext: </span>
+        }
+        {{ input['name'] }}
+        @if (removable) {
+          <mat-icon matChipRemove data-cy="input">close</mat-icon>
+        }
+      </mat-chip-row>
+    }
     <input
       #searchInput
       [formControl]="searchControl"
@@ -34,38 +40,47 @@
   </mat-chip-grid>
 
   <mat-autocomplete #auto="matAutocomplete">
-    <mat-optgroup *ngIf="filteredPropertyTypes$ | async as filteredPropertyTypes" label="Property">
-      <mat-option
-        *ngIf="!isAlreadyDefined(filteredPropertyTypes, searchControl.value) && !searchControl.errors"
-        [disabled]="!isLowerCase(searchControl.value)"
-        [value]="!isLowerCase(searchControl.value) ? '' : searchControl.value"
-        (click)="createNewProperty(searchControl.value)"
-      >
-        <span *ngIf="isLowerCase(searchControl.value)">
-          + Create new property: <strong>{{ searchControl.value }}</strong>
-        </span>
-        <span *ngIf="!isLowerCase(searchControl.value)">Please provide the name for the new Property in lower case.</span>
-      </mat-option>
-      <mat-option
-        *ngFor="let filteredInput of filteredPropertyTypes"
-        [value]="filteredInput.name"
-        (onSelectionChange)="onSelectionChange('input', filteredInput)"
-      >
-        <div class="ellipsis">
-          {{ filteredInput.name }}
-          <span *ngIf="filteredInput.description" class="option-description" [title]="filteredInput.description">
-            - {{ filteredInput.description }}
-          </span>
-          <p *ngIf="filteredInput.namespace" class="namespace-prefix" [title]="filteredInput.namespace">
-            {{ filteredInput.namespace }}
-          </p>
-        </div>
-      </mat-option>
-    </mat-optgroup>
+    @if (filteredPropertyTypes$ | async; as filteredPropertyTypes) {
+      <mat-optgroup label="Property">
+        @if (!isAlreadyDefined(filteredPropertyTypes, searchControl.value) && !searchControl.errors) {
+          <mat-option
+            [disabled]="!isLowerCase(searchControl.value)"
+            [value]="!isLowerCase(searchControl.value) ? '' : searchControl.value"
+            (click)="createNewProperty(searchControl.value)"
+          >
+            @if (isLowerCase(searchControl.value)) {
+              <span>
+                + Create new property: <strong>{{ searchControl.value }}</strong>
+              </span>
+            }
+            @if (!isLowerCase(searchControl.value)) {
+              <span>Please provide the name for the new Property in lower case.</span>
+            }
+          </mat-option>
+        }
+        @for (filteredInput of filteredPropertyTypes; track filteredInput) {
+          <mat-option [value]="filteredInput.name" (onSelectionChange)="onSelectionChange('input', filteredInput)">
+            <div class="ellipsis">
+              {{ filteredInput.name }}
+              @if (filteredInput.description) {
+                <span class="option-description" [title]="filteredInput.description"> - {{ filteredInput.description }} </span>
+              }
+              @if (filteredInput.namespace) {
+                <p class="namespace-prefix" [title]="filteredInput.namespace">
+                  {{ filteredInput.namespace }}
+                </p>
+              }
+            </div>
+          </mat-option>
+        }
+      </mat-optgroup>
+    }
   </mat-autocomplete>
 
-  <mat-error *ngIf="searchControl?.errors?.checkShapeName">Please select a different name as this one is of different type</mat-error>
-  <mat-error *ngIf="searchControl?.errors?.checkShapeNameExtRef"
-    >Please select a different name as this one is of different type in the same namespace</mat-error
-  >
+  @if (searchControl?.errors?.checkShapeName) {
+    <mat-error>Please select a different name as this one is of different type</mat-error>
+  }
+  @if (searchControl?.errors?.checkShapeNameExtRef) {
+    <mat-error>Please select a different name as this one is of different type in the same namespace</mat-error>
+  }
 </mat-form-field>

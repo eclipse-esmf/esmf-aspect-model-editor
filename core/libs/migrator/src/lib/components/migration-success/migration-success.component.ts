@@ -13,11 +13,18 @@
 
 import {Component} from '@angular/core';
 import {MigratorService} from '../../migrator.service';
+import {TranslateModule} from '@ngx-translate/core';
+import {MatButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
+import {CdkScrollable} from '@angular/cdk/scrolling';
+import {MatDialogTitle, MatDialogContent, MatDialogActions} from '@angular/material/dialog';
 
 @Component({
   selector: 'ame-migration-success',
   templateUrl: './migration-success.component.html',
   styleUrls: ['./migration-success.component.scss'],
+  standalone: true,
+  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatIcon, MatDialogActions, MatButton, TranslateModule],
 })
 export class MigrationSuccessComponent {
   constructor(private migratorService: MigratorService) {}

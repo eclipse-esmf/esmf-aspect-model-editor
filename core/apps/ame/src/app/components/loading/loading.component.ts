@@ -15,10 +15,13 @@ import {ElectronSignals, ElectronSignalsService, ElectronTunnelService} from '@a
 import {AfterViewInit, Component, inject, NgZone, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
 import {forkJoin, Observable, of, Subscription, switchMap, take} from 'rxjs';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
+  standalone: true,
   templateUrl: 'loading.component.html',
   styleUrls: ['loading.component.scss'],
+  imports: [NgOptimizedImage],
 })
 export class LoadingComponent implements AfterViewInit, OnDestroy {
   private subscription = new Subscription();

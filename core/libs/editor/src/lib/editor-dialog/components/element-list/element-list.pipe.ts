@@ -15,6 +15,7 @@ import {ElementInfo, ElementType, sammElements} from '@ame/shared';
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
+  standalone: true,
   name: 'modelElementParser',
 })
 export class ModelElementParserPipe implements PipeTransform {

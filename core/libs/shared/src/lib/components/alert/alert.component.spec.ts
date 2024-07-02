@@ -29,7 +29,6 @@ describe('AlertComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AlertComponent],
       imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule, TranslateModule.forRoot(), LanguageTranslateModule],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [

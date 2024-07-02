@@ -16,13 +16,11 @@
   <mat-label for="deconstructionRule">Deconstruction rule name</mat-label>
   <mat-select [value]="selectedRule || ''" data-cy="deconstruction-rule-select">
     <mat-option value="--custom-rule--" (click)="customRuleActive = true; setCustomRule()">Custom Rule</mat-option>
-    <mat-option
-      *ngFor="let predefinedRule of predefinedRules"
-      [value]="predefinedRule.regex"
-      (click)="customRuleActive = false; selectPredefinedRule(predefinedRule)"
-    >
-      {{ predefinedRule.name }}
-    </mat-option>
+    @for (predefinedRule of predefinedRules; track predefinedRule) {
+      <mat-option [value]="predefinedRule.regex" (click)="customRuleActive = false; selectPredefinedRule(predefinedRule)">
+        {{ predefinedRule.name }}
+      </mat-option>
+    }
   </mat-select>
 </mat-form-field>
 
@@ -30,10 +28,12 @@
 <mat-form-field appearance="fill">
   <mat-label for="deconstructionRule">deconstructionRule</mat-label>
   <input [formControl]="getControl('deconstructionRule')" class="deconstruction-rule-input" data-cy="deconstruction-rule-input" matInput />
-  <mat-error *ngIf="getControl('deconstructionRule').errors?.required">Rule definition is required</mat-error>
-  <mat-error *ngIf="getControl('deconstructionRule').errors?.regexValidator">{{
-    getControl('deconstructionRule').errors?.regexValidator.message
-  }}</mat-error>
+  @if (getControl('deconstructionRule').errors?.required) {
+    <mat-error>Rule definition is required</mat-error>
+  }
+  @if (getControl('deconstructionRule').errors?.regexValidator) {
+    <mat-error>{{ getControl('deconstructionRule').errors?.regexValidator.message }}</mat-error>
+  }
 </mat-form-field>
 
 <!-- Elements Button to open the modal -->
@@ -46,5 +46,7 @@
     <button mat-button color="primary" (click)="openModal()" data-cy="elements-modal-button">Open elements table</button>
   </div>
 
-  <span *ngIf="hasGroupsError" class="groups-error">Please assign Properties to your elements</span>
+  @if (hasGroupsError) {
+    <span class="groups-error">Please assign Properties to your elements</span>
+  }
 </div>

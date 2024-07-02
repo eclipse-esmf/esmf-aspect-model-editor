@@ -18,8 +18,12 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button *ngIf="data.hasLeftButton" (click)="close($event)" mat-button data-cy="alert-left-btn">{{ data.leftButtonText }}</button>
-  <button *ngIf="data.hasRightButton" (click)="ok($event)" mat-raised-button color="primary" data-cy="alert-right-btn">
-    {{ data.rightButtonText }}
-  </button>
+  @if (data.hasLeftButton) {
+    <button (click)="close($event)" mat-button data-cy="alert-left-btn">{{ data.leftButtonText }}</button>
+  }
+  @if (data.hasRightButton) {
+    <button (click)="ok($event)" mat-raised-button color="primary" data-cy="alert-right-btn">
+      {{ data.rightButtonText }}
+    </button>
+  }
 </mat-dialog-actions>

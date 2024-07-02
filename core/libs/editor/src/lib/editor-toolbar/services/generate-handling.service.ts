@@ -93,8 +93,8 @@ export class GenerateHandlingService {
 
   generateJsonSample(): Observable<any> {
     const loadingScreenOptions: LoadingScreenOptions = {
-      title: this.translate.language.NOTIFICATION_DIALOG.GENERATE_JSON_PAYLOAD,
-      content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
+      title: this.translate.language.NOTIFICATION_DIALOG?.GENERATE_JSON_PAYLOAD,
+      content: this.translate.language.NOTIFICATION_DIALOG?.CONTENT,
       hasCloseButton: true,
     };
 
@@ -127,8 +127,8 @@ export class GenerateHandlingService {
 
   generateJsonSchema(): Observable<void> {
     const loadingScreenOptions: LoadingScreenOptions = {
-      title: this.translate.language.NOTIFICATION_DIALOG.GENERATE_JSON_SCHEMA,
-      content: this.translate.language.NOTIFICATION_DIALOG.CONTENT,
+      title: this.translate.language.NOTIFICATION_DIALOG?.GENERATE_JSON_SCHEMA,
+      content: this.translate.language.NOTIFICATION_DIALOG?.CONTENT,
       hasCloseButton: true,
     };
 

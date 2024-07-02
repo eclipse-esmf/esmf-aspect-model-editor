@@ -12,5 +12,9 @@
   -->
 
 <ame-sidebar-menu></ame-sidebar-menu>
-<ame-sidebar-samm-elements *ngIf="sidebarService.sammElements.isOpened$ | async" class="column-one"></ame-sidebar-samm-elements>
-<ame-workspace *ngIf="sidebarService.workspace.isOpened$ | async" class="column-one"></ame-workspace>
+@if (sidebarService.sammElements.isOpened$ | async) {
+  <ame-sidebar-samm-elements class="column-one"></ame-sidebar-samm-elements>
+}
+@if (sidebarService.workspace.isOpened$ | async) {
+  <ame-workspace class="column-one"></ame-workspace>
+}

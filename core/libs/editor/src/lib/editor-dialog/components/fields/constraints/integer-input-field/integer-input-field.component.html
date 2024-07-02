@@ -14,6 +14,10 @@
 <mat-form-field [floatLabel]="getControl('integer')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label>integer</mat-label>
   <input matInput name="integer" [formControl]="getControl('integer')" data-cy="integer" type="number" pattern="^[1-9]\d*$" />
-  <mat-error *ngIf="getControl('integer').errors?.required">Integer is required</mat-error>
-  <mat-error *ngIf="getControl('integer').errors?.pattern">Please provide a positive integer</mat-error>
+  @if (getControl('integer').errors?.required) {
+    <mat-error>Integer is required</mat-error>
+  }
+  @if (getControl('integer').errors?.pattern) {
+    <mat-error>Please provide a positive integer</mat-error>
+  }
 </mat-form-field>

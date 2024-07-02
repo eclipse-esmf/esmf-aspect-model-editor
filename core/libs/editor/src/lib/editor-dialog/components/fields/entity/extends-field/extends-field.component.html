@@ -13,87 +13,91 @@
 <mat-form-field [floatLabel]="getControl('extendsValue')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="extendsValue">extends</mat-label>
   <input #extends [matAutocomplete]="auto" [formControl]="getControl('extendsValue')" matInput name="extendsValue" data-cy="extendsValue" />
-  <button
-    *ngIf="extendsValueControl?.disabled && !metaModelElement?.isExternalReference() && !metaModelElement.isPredefined()"
-    (click)="unlockExtends()"
-    data-cy="clear-extends-button"
-    matSuffix
-    mat-icon-button
-    tabindex="-1"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
+  @if (extendsValueControl?.disabled && !metaModelElement?.isExternalReference() && !metaModelElement.isPredefined()) {
+    <button (click)="unlockExtends()" data-cy="clear-extends-button" matSuffix mat-icon-button tabindex="-1">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
 
   <mat-autocomplete #auto="matAutocomplete" class="extendsValue">
     <mat-optgroup label="Predefined Elements">
-      <ng-container *ngFor="let element of predefinedEntities">
-        <mat-option
-          *ngIf="element.name.includes(getControl('extendsValue').value)"
-          [attr.data-cy]="element.name"
-          [value]="element.name"
-          (click)="onSelectionChange(element)"
-        >
-          <div class="result">
-            <div class="ellipsis">
-              {{ element.name }}
-              <span *ngIf="element.description" class="option-description" [title]="element.description">- {{ element.description }}</span>
-              <p *ngIf="element.namespace" class="namespace-prefix" [title]="element.namespace">
-                {{ element.namespace }}
-              </p>
-            </div>
-          </div></mat-option
-        >
-      </ng-container>
+      @for (element of predefinedEntities; track element) {
+        @if (element.name.includes(getControl('extendsValue').value)) {
+          <mat-option [attr.data-cy]="element.name" [value]="element.name" (click)="onSelectionChange(element)">
+            <div class="result">
+              <div class="ellipsis">
+                {{ element.name }}
+                @if (element.description) {
+                  <span class="option-description" [title]="element.description">- {{ element.description }}</span>
+                }
+                @if (element.namespace) {
+                  <p class="namespace-prefix" [title]="element.namespace">
+                    {{ element.namespace }}
+                  </p>
+                }
+              </div>
+            </div></mat-option
+          >
+        }
+      }
     </mat-optgroup>
 
-    <mat-optgroup *ngIf="filteredAbstractEntities$ | async as filteredAbstractEntities" label="Elements">
-      <ng-container *ngIf="extends.value && !getControl('extendsValue')?.errors?.foundModel">
-        <mat-option
-          *ngIf="!isAlreadyDefined(filteredAbstractEntities, extends.value)"
-          [disabled]="!isUpperCase(extends.value)"
-          [value]="!isUpperCase(extends.value) ? '' : extends.value"
-          (click)="createNewAbstractEntity(extends.value)"
-        >
-          <span *ngIf="isUpperCase(extends.value); else abstractEntityErrors">
-            + Create new Abstract Entity: <strong>{{ extends.value }}</strong>
-          </span>
-          <ng-template #abstractEntityErrors>
-            <span>Abstract Entity should be upper case</span>
-          </ng-template>
-        </mat-option>
-        <mat-option
-          *ngIf="!isAlreadyDefined(filteredEntities$ | async, extends.value)"
-          [disabled]="!isUpperCase(extends.value)"
-          [value]="!isUpperCase(extends.value) ? '' : extends.value"
-          (click)="createEntity(extends.value)"
-        >
-          <span *ngIf="isUpperCase(extends.value); else entityErrors">
-            + Create new Entity: <strong>{{ extends.value }}</strong>
-          </span>
-          <ng-template #entityErrors>
-            <span>Entity should be upper case</span>
-          </ng-template>
-        </mat-option>
-      </ng-container>
-
-      <mat-option
-        *ngFor="let abstractEntity of filteredAbstractEntities"
-        [value]="abstractEntity.name"
-        (onSelectionChange)="onSelectionChange(abstractEntity)"
-      >
-        <div class="result">
-          <div class="ellipsis">
-            {{ abstractEntity.name }}
-            <span *ngIf="abstractEntity.description" class="option-description" [title]="abstractEntity.description"
-              >- {{ abstractEntity.description }}</span
+    @if (filteredAbstractEntities$ | async; as filteredAbstractEntities) {
+      <mat-optgroup label="Elements">
+        @if (extends.value && !getControl('extendsValue')?.errors?.foundModel) {
+          @if (!isAlreadyDefined(filteredAbstractEntities, extends.value)) {
+            <mat-option
+              [disabled]="!isUpperCase(extends.value)"
+              [value]="!isUpperCase(extends.value) ? '' : extends.value"
+              (click)="createNewAbstractEntity(extends.value)"
             >
-            <p *ngIf="abstractEntity.namespace" class="namespace-prefix" [title]="abstractEntity.namespace">
-              {{ abstractEntity.namespace }}
-            </p>
-          </div>
-        </div>
-      </mat-option>
-    </mat-optgroup>
+              @if (isUpperCase(extends.value)) {
+                <span>
+                  + Create new Abstract Entity: <strong>{{ extends.value }}</strong>
+                </span>
+              } @else {
+                <span>Abstract Entity should be upper case</span>
+              }
+            </mat-option>
+          }
+          @if (!isAlreadyDefined(filteredEntities$ | async, extends.value)) {
+            <mat-option
+              [disabled]="!isUpperCase(extends.value)"
+              [value]="!isUpperCase(extends.value) ? '' : extends.value"
+              (click)="createEntity(extends.value)"
+            >
+              @if (isUpperCase(extends.value)) {
+                <span>
+                  + Create new Entity: <strong>{{ extends.value }}</strong>
+                </span>
+              } @else {
+                <span>Entity should be upper case</span>
+              }
+            </mat-option>
+          }
+        }
+
+        @for (abstractEntity of filteredAbstractEntities; track abstractEntity) {
+          <mat-option [value]="abstractEntity.name" (onSelectionChange)="onSelectionChange(abstractEntity)">
+            <div class="result">
+              <div class="ellipsis">
+                {{ abstractEntity.name }}
+                @if (abstractEntity.description) {
+                  <span class="option-description" [title]="abstractEntity.description">- {{ abstractEntity.description }}</span>
+                }
+                @if (abstractEntity.namespace) {
+                  <p class="namespace-prefix" [title]="abstractEntity.namespace">
+                    {{ abstractEntity.namespace }}
+                  </p>
+                }
+              </div>
+            </div>
+          </mat-option>
+        }
+      </mat-optgroup>
+    }
   </mat-autocomplete>
-  <mat-error *ngIf="getControl('extendsValue')?.errors?.required">Please define an Abstract Entity</mat-error>
+  @if (getControl('extendsValue')?.errors?.required) {
+    <mat-error>Please define an Abstract Entity</mat-error>
+  }
 </mat-form-field>

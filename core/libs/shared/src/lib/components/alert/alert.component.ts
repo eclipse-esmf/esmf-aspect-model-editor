@@ -12,13 +12,17 @@
  */
 
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {AlertOptions} from '@ame/shared';
 
+import {MatButtonModule} from '@angular/material/button';
+
 @Component({
+  standalone: true,
   selector: 'ame-alert',
   templateUrl: './alert.component.html',
   styleUrls: ['./alert.component.scss'],
+  imports: [MatDialogModule, MatButtonModule],
 })
 export class AlertComponent {
   constructor(

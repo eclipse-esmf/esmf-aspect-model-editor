@@ -80,6 +80,7 @@ describe('Test create recursive element', () => {
         expect(rdf).to.contain(':newProperty2 a samm:Property;\n' + '    samm:characteristic :NewCharacteristic.');
         expect(rdf).to.contain(':newProperty3 a samm:Property;\n' + '    samm:characteristic :NewCharacteristic.');
         cy.getAspect().then(aspect => {
+          expect(aspect.properties[0].property.characteristic.name).to.equal('NewCharacteristic');
           expect(aspect.properties[0].property.characteristic.dataType.properties[0].property.characteristic.name).to.equal(
             'NewCharacteristic',
           );
@@ -95,37 +96,41 @@ describe('Test create recursive element', () => {
   it('change characteristic type', () => {
     cy.shapeExists('NewCharacteristic')
       .then(() => cy.dbClickShape('NewCharacteristic'))
-      .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Text').click({force: true}))
+      .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Code').click({force: true}))
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic samm-c:MultiLanguageText.');
-        expect(rdf).to.contain(':newProperty2 a samm:Property;\n' + '    samm:characteristic samm-c:MultiLanguageText.');
-        expect(rdf).to.contain(':newProperty3 a samm:Property;\n' + '    samm:characteristic samm-c:MultiLanguageText.');
+        expect(rdf).to.contain(':NewCharacteristic a samm-c:Code');
+        expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic :NewCharacteristic.');
+        expect(rdf).to.contain(':newProperty2 a samm:Property;\n' + '    samm:characteristic :NewCharacteristic.');
+        expect(rdf).to.contain(':newProperty3 a samm:Property;\n' + '    samm:characteristic :NewCharacteristic.');
+        cyHelp.hasAddShapeOverlay('property1').then(addShapeIcon => expect(addShapeIcon).to.be.false);
         cyHelp.hasAddShapeOverlay('newProperty2').then(addShapeIcon => expect(addShapeIcon).to.be.false);
         cyHelp.hasAddShapeOverlay('newProperty3').then(addShapeIcon => expect(addShapeIcon).to.be.false);
       });
   });
 
   it('add constraint to characteristic using trait with recursive properties', () => {
-    cy.shapeExists('MultiLanguageText')
-      .then(() => cy.dbClickShape('MultiLanguageText'))
+    cy.shapeExists('NewCharacteristic')
+      .then(() => cy.dbClickShape('NewCharacteristic'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Characteristic').click({force: true}))
       .then(() => cyHelp.clickSaveButton())
-      .then(() => cy.clickConnectShapes('Characteristic1', 'NewEntity'))
-      .then(() => cy.clickConnectShapes('Characteristic1', 'newProperty2'))
-      .then(() => cy.clickConnectShapes('Characteristic1', 'newProperty3'))
-      .then(() => cy.clickAddTraitPlusIcon('Characteristic1'))
+      .then(() => cy.clickConnectShapes('NewCharacteristic', 'NewEntity'))
+      .then(() => cy.clickConnectShapes('NewCharacteristic', 'newProperty2'))
+      .then(() => cy.clickConnectShapes('NewCharacteristic', 'newProperty3'))
+      .then(() => cy.clickAddTraitPlusIcon('NewCharacteristic'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic :Property1Trait.');
         expect(rdf).to.contain(':newProperty2 a samm:Property;\n' + '    samm:characteristic :Property1Trait.');
         expect(rdf).to.contain(':newProperty3 a samm:Property;\n' + '    samm:characteristic :Property1Trait.');
         expect(rdf).to.contain(
-          ':Property1Trait a samm-c:Trait;\n' + '    samm-c:baseCharacteristic :Characteristic1;\n' + '    samm-c:constraint :Constraint1.',
+          ':Property1Trait a samm-c:Trait;\n' +
+            '    samm-c:baseCharacteristic :NewCharacteristic;\n' +
+            '    samm-c:constraint :Constraint1.',
         );
         expect(rdf).to.contain(':Constraint1 a samm:Constraint.\n');
-        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic;\n' + '    samm:dataType :NewEntity.');
+        expect(rdf).to.contain(':NewCharacteristic a samm:Characteristic;\n' + '    samm:dataType :NewEntity.');
         cyHelp.hasAddShapeOverlay('newProperty2').then(addShapeIcon => expect(addShapeIcon).to.be.false);
         cyHelp.hasAddShapeOverlay('newProperty3').then(addShapeIcon => expect(addShapeIcon).to.be.false);
       });

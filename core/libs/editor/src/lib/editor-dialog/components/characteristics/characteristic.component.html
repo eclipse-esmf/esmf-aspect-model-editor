@@ -10,7 +10,7 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<ng-container *ngIf="property">
+@if (property) {
   <ame-characteristic-name-dropdown-field
     [parentForm]="parentForm"
     [previousDataSnapshot]="previousData"
@@ -19,39 +19,37 @@
   ></ame-characteristic-name-dropdown-field>
 
   <ame-base-input [previousData]="previousData || {}" [parentForm]="parentForm"></ame-base-input>
-  <ame-data-type-input-field
-    [previousData]="previousData || {}"
-    [parentForm]="parentForm"
-    *ngIf="selectedCharacteristic !== characteristicClassType.Either"
-  ></ame-data-type-input-field>
+  @if (selectedCharacteristic !== characteristicClassType.Either) {
+    <ame-data-type-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-data-type-input-field>
+  }
 
-  <ng-container *ngIf="isElementCharacteristicAllowed()">
+  @if (isElementCharacteristicAllowed()) {
     <ame-element-characteristic-input-field
       [previousData]="previousData || {}"
       [parentForm]="parentForm"
     ></ame-element-characteristic-input-field>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="selectedCharacteristic === characteristicClassType.Enumeration">
+  @if (selectedCharacteristic === characteristicClassType.Enumeration) {
     <ame-values-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-values-input-field>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="isUnitAllowed()">
+  @if (isUnitAllowed()) {
     <ame-unit-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-unit-input-field>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="selectedCharacteristic === characteristicClassType.State">
+  @if (selectedCharacteristic === characteristicClassType.State) {
     <ame-state-characteristic [previousData]="previousData || {}" [parentForm]="parentForm"></ame-state-characteristic>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="selectedCharacteristic === characteristicClassType.StructuredValue">
+  @if (selectedCharacteristic === characteristicClassType.StructuredValue) {
     <ame-structured-value [parentForm]="parentForm"></ame-structured-value>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="selectedCharacteristic === characteristicClassType.Either">
+  @if (selectedCharacteristic === characteristicClassType.Either) {
     <ame-left-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-left-input-field>
     <ame-right-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-right-input-field>
-  </ng-container>
+  }
 
   <ame-element-list
     [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.INCOMING_EDGES' | translate"
@@ -62,4 +60,4 @@
     [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.OUTGOING_EDGES' | translate"
     [elements]="(element$ | async)?.children"
   ></ame-element-list>
-</ng-container>
+}

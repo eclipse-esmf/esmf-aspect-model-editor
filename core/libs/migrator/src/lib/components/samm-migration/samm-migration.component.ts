@@ -14,10 +14,17 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {map} from 'rxjs';
+import {TranslateModule} from '@ngx-translate/core';
+import {AsyncPipe} from '@angular/common';
+import {MatProgressBar} from '@angular/material/progress-bar';
+import {CdkScrollable} from '@angular/cdk/scrolling';
+import {MatDialogTitle, MatDialogContent} from '@angular/material/dialog';
 
 @Component({
   templateUrl: './samm-migration.component.html',
   styleUrls: ['./samm-migration.component.scss'],
+  standalone: true,
+  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatProgressBar, AsyncPipe, TranslateModule],
 })
 export class SammMigrationComponent {
   public get status$() {

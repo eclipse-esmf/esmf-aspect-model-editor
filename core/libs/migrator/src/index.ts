@@ -10,6 +10,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-export * from './lib/migrator.module';
+export * from './lib/migrator.routes';
 export * from './lib/migrator.service';
 export * from './lib/migrator.helper';

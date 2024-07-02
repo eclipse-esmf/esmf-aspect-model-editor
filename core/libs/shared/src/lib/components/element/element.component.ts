@@ -12,7 +12,7 @@
  */
 
 import {Component, Input, OnChanges} from '@angular/core';
-import {NgClass, NgIf} from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
@@ -20,7 +20,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
   selector: 'ame-element',
   templateUrl: './element.component.html',
   styleUrls: ['./element.component.scss'],
-  imports: [NgClass, NgIf, MatTooltipModule],
+  imports: [CommonModule, MatTooltipModule],
 })
 export class ElementIconComponent implements OnChanges {
   @Input() type!: any;

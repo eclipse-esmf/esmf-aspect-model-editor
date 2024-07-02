@@ -13,4 +13,3 @@
 
 export * from './namespace-importer/components/root-namespace-importer/root-namespaces-importer.component';
 export * from './shared/services/namespaces-manager.service';
-export * from './namespace-manager.module';

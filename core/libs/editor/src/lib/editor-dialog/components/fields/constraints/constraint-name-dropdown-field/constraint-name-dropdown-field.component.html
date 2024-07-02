@@ -22,8 +22,10 @@
     data-cy="constraintName"
     panelClass="constraint-items-panel"
   >
-    <mat-option *ngFor="let constraintName of listConstraintNames" [value]="constraintName" [attr.cy-value]="constraintName">
-      {{ constraintName }}
-    </mat-option>
+    @for (constraintName of listConstraintNames; track constraintName) {
+      <mat-option [value]="constraintName" [attr.cy-value]="constraintName">
+        {{ constraintName }}
+      </mat-option>
+    }
   </mat-select>
 </mat-form-field>

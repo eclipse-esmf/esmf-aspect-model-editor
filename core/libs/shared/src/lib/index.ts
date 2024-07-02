@@ -18,7 +18,7 @@ export * from './model';
 export * from './pipes';
 export * from './services';
 export * from './config';
+export * from './factory';
 export * from './general-config';
 export * from './http-error.interceptor';
 export * from './http-header-builder';
-export * from './shared.module';

@@ -26,15 +26,23 @@
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.VALUE' | translate }}</mat-label>
       <input matInput spellcheck="false" class="form-control" formControlName="aspectUri" data-cy="namespaceTabValueInput" />
-      <mat-error *ngIf="form.get('aspectUri').errors?.required">Namespace is required</mat-error>
-      <mat-error *ngIf="form.get('aspectUri').errors?.invalidPattern">Not a valid namespace</mat-error>
+      @if (form.get('aspectUri').errors?.required) {
+        <mat-error>Namespace is required</mat-error>
+      }
+      @if (form.get('aspectUri').errors?.invalidPattern) {
+        <mat-error>Not a valid namespace</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.VERSION' | translate }}</mat-label>
       <input matInput spellcheck="false" class="form-control" formControlName="aspectVersion" data-cy="namespaceTabVersionInput" />
-      <mat-error *ngIf="form.get('aspectVersion').errors?.required">Version is required</mat-error>
-      <mat-error *ngIf="form.get('aspectVersion').errors?.invalidVersionFormat">Not a valid version</mat-error>
+      @if (form.get('aspectVersion').errors?.required) {
+        <mat-error>Version is required</mat-error>
+      }
+      @if (form.get('aspectVersion').errors?.invalidVersionFormat) {
+        <mat-error>Not a valid version</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field class="namespace-setting-field">

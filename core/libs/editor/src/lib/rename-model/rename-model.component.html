@@ -16,19 +16,27 @@
   <mat-icon>close</mat-icon>
 </button>
 
-<mat-dialog-content *ngIf="fileNameControl">
-  <p>
-    {{ 'DECLARE_NAME_DIALOG.INFO_CONTENT' | translate }}
-  </p>
+@if (fileNameControl) {
+  <mat-dialog-content>
+    <p>
+      {{ 'DECLARE_NAME_DIALOG.INFO_CONTENT' | translate }}
+    </p>
 
-  <mat-form-field>
-    <input [formControl]="fileNameControl" name="file-name" matInput placeholder="Name" data-cy="file-rename" />
-    <span matSuffix class="input-suffix">.ttl</span>
-    <mat-error *ngIf="fileNameControl.getError('required')">* {{ 'DECLARE_NAME_DIALOG.REQUIRED_ERROR' | translate }}</mat-error>
-    <mat-error *ngIf="fileNameControl.getError('pattern')">{{ 'DECLARE_NAME_DIALOG.CHARACTERS_ERROR' | translate }}</mat-error>
-    <mat-error *ngIf="fileNameControl.getError('sameFile')">{{ 'DECLARE_NAME_DIALOG.EXIST_ERROR' | translate }}</mat-error>
-  </mat-form-field>
-</mat-dialog-content>
+    <mat-form-field>
+      <input [formControl]="fileNameControl" name="file-name" matInput placeholder="Name" data-cy="file-rename" />
+      <span matSuffix class="input-suffix">.ttl</span>
+      @if (fileNameControl.getError('required')) {
+        <mat-error>* {{ 'DECLARE_NAME_DIALOG.REQUIRED_ERROR' | translate }}</mat-error>
+      }
+      @if (fileNameControl.getError('pattern')) {
+        <mat-error>{{ 'DECLARE_NAME_DIALOG.CHARACTERS_ERROR' | translate }}</mat-error>
+      }
+      @if (fileNameControl.getError('sameFile')) {
+        <mat-error>{{ 'DECLARE_NAME_DIALOG.EXIST_ERROR' | translate }}</mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+}
 
 <mat-dialog-actions align="end">
   <button mat-flat-button (click)="closeAndGiveResult(false)">{{ 'DECLARE_NAME_DIALOG.CANCEL' | translate }}</button>

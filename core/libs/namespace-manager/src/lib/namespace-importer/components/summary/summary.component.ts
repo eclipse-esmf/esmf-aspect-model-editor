@@ -13,15 +13,29 @@
 
 import {FileHandlingService} from '@ame/editor';
 import {Component, inject} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
-import {WorkspaceSummaryComponent, NAMESPACES_SESSION} from '../../../shared';
-import {NamespacesSessionInterface, MissingElement} from '../../../shared/models';
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {NAMESPACES_SESSION, WorkspaceSummaryComponent} from '../../../shared';
+import {MissingElement, NamespacesSessionInterface} from '../../../shared/models';
 import {take, tap} from 'rxjs/operators';
 import {ElectronSignals, ElectronSignalsService} from '@ame/shared';
+import {MatButton} from '@angular/material/button';
+import {ClipboardCopyButtonComponent} from '../../../shared/components/clipboard-copy-button/clipboard-copy-button.component';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 
 @Component({
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.scss'],
+  standalone: true,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    MatDialogActions,
+    ClipboardCopyButtonComponent,
+    MatButton,
+    MatDialogClose,
+    WorkspaceSummaryComponent,
+  ],
 })
 export class ImportSummaryComponent {
   private importSession: NamespacesSessionInterface = inject(NAMESPACES_SESSION);

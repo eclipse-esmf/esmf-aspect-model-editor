@@ -11,20 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {Routes} from '@angular/router';
 import {ErrorComponent} from '../shared';
-import {SelectNamespacesComponent, ExportSummaryComponent, ExportValidateComponent} from './components';
+import {ExportSummaryComponent, ExportValidateComponent, SelectNamespacesComponent} from './components';
 
-const routes: Routes = [
+export const NAMESPACE_EXPORT_ROUTES: Routes = [
   {path: '', component: SelectNamespacesComponent, outlet: 'export-namespaces'},
   {path: 'validate', component: ExportValidateComponent, outlet: 'export-namespaces'},
   {path: 'summary', component: ExportSummaryComponent, outlet: 'export-namespaces'},
   {path: 'error', component: ErrorComponent, outlet: 'export-namespaces'},
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class NamespaceExporterRouterModule {}

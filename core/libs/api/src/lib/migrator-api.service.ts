@@ -40,6 +40,8 @@ export class MigratorApiService {
   private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
 
+  public rdfModelsToMigrate = [];
+
   constructor(
     private http: HttpClient,
     private browserService: BrowserService,
@@ -53,13 +55,17 @@ export class MigratorApiService {
   }
 
   public hasFilesToMigrate(): Observable<boolean> {
-    return this.editorService
-      .loadExternalModels()
-      .pipe(
-        map((rdfModels: RdfModel[]) =>
-          rdfModels.some(rdfModel => ExporterHelper.isVersionOutdated(rdfModel?.samm.version, this.config.currentSammVersion)),
-        ),
-      );
+    this.rdfModelsToMigrate = [];
+
+    return this.editorService.loadExternalModels().pipe(
+      map((rdfModels: RdfModel[]) => {
+        this.rdfModelsToMigrate = rdfModels.filter(rdfModel =>
+          ExporterHelper.isVersionOutdated(rdfModel?.samm.version, this.config.currentSammVersion),
+        );
+
+        return this.rdfModelsToMigrate.length > 0;
+      }),
+    );
   }
 
   public createBackup(): Observable<NamespaceStatus[]> {

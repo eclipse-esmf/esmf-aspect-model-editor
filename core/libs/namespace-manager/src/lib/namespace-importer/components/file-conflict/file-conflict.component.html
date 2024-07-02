@@ -15,16 +15,20 @@
 
 <mat-dialog-content>
   <p>The following namespace(s) already exist. Please choose whether you want to keep the existing or replace.</p>
-  <div *ngFor="let namespace of namespacesToReplace" class="namespace">
-    <span class="namespace-name">{{ namespace }}</span>
-    <mat-button-toggle-group value="replace">
-      <mat-button-toggle value="keep" (click)="keepNamespace(namespace)">Keep</mat-button-toggle>
-      <mat-button-toggle value="replace" (click)="replaceNamespace(namespace)">Replace</mat-button-toggle>
-    </mat-button-toggle-group>
-  </div>
+  @for (namespace of namespacesToReplace; track namespace) {
+    <div class="namespace">
+      <span class="namespace-name">{{ namespace }}</span>
+      <mat-button-toggle-group value="replace">
+        <mat-button-toggle value="keep" (click)="keepNamespace(namespace)">Keep</mat-button-toggle>
+        <mat-button-toggle value="replace" (click)="replaceNamespace(namespace)">Replace</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  }
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-flat-button (click)="cancel()">Cancel</button>
-  <button mat-flat-button *ngIf="conflictFiles.replace?.length" (click)="goToImport()">Next</button>
+  @if (conflictFiles.replace?.length) {
+    <button mat-flat-button (click)="goToImport()">Next</button>
+  }
 </mat-dialog-actions>

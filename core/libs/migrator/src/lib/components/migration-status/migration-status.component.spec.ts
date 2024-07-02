@@ -34,7 +34,6 @@ describe('MigrationStatusComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, MatDialogModule, MatIconModule, MatButtonModule, TranslateModule.forRoot(), LanguageTranslateModule],
-      declarations: [MigrationStatusComponent],
       providers: [
         {
           provide: MigratorService,

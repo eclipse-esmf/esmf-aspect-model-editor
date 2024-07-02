@@ -19,9 +19,11 @@
         [metaModelClassNameInput]="metaModelClassName"
       ></ame-shared-settings-title>
     </h3>
-    <p class="shape-settings__header-description" *ngIf="metaModelElement?.isExternalReference()">
-      {{ metaModelElement?.aspectModelUrn?.split('#')[0] }}
-    </p>
+    @if (metaModelElement?.isExternalReference()) {
+      <p class="shape-settings__header-description">
+        {{ metaModelElement?.aspectModelUrn?.split('#')[0] }}
+      </p>
+    }
   </div>
 
   <div class="actions">
@@ -33,42 +35,67 @@
 </div>
 
 <div class="shape-settings__content">
-  <form *ngIf="metaModelElement" [formGroup]="formGroup" [ngSwitch]="true" novalidate>
-    <!-- the same view can be shown in more than one case -->
-    <ame-aspect *ngSwitchCase="isOfType(['DefaultAspect'])" [parentForm]="formGroup"></ame-aspect>
-    <ame-characteristic *ngSwitchCase="isCharacteristic() && !isOfType(['DefaultTrait'])" [parentForm]="formGroup"></ame-characteristic>
-    <ame-constraint *ngSwitchCase="isConstraint()" [parentForm]="formGroup"></ame-constraint>
-    <ame-property *ngSwitchCase="isOfType(['DefaultProperty'])" [parentForm]="formGroup"></ame-property>
-    <ame-abstract-property *ngSwitchCase="isOfType(['DefaultAbstractProperty'])" [parentForm]="formGroup"></ame-abstract-property>
-    <ame-operation *ngSwitchCase="isOfType(['DefaultOperation'])" [parentForm]="formGroup"></ame-operation>
-    <ame-abstract-entity *ngSwitchCase="isOfType(['DefaultAbstractEntity'])" [parentForm]="formGroup"></ame-abstract-entity>
-    <ame-entity *ngSwitchCase="isOfType(['DefaultEntity'])" [parentForm]="formGroup"></ame-entity>
-    <ame-unit *ngSwitchCase="isOfType(['DefaultUnit'])" [parentForm]="formGroup"></ame-unit>
-    <ame-trait-characteristic *ngSwitchCase="isOfType(['DefaultTrait'])" [parentForm]="formGroup"></ame-trait-characteristic>
-    <ame-entity-instance *ngSwitchCase="isOfType(['DefaultEntityInstance'])" [parentForm]="formGroup"></ame-entity-instance>
-    <ame-event *ngSwitchCase="isOfType(['DefaultEvent'])" [parentForm]="formGroup"></ame-event>
-  </form>
+  @if (metaModelElement) {
+    <form [formGroup]="formGroup" novalidate>
+      @switch (true) {
+        <!-- the same view can be shown in more than one case -->
+        @case (isOfType(['DefaultAspect'])) {
+          <ame-aspect [parentForm]="formGroup"></ame-aspect>
+        }
+        @case (isCharacteristic() && !isOfType(['DefaultTrait'])) {
+          <ame-characteristic [parentForm]="formGroup"></ame-characteristic>
+        }
+        @case (isConstraint()) {
+          <ame-constraint [parentForm]="formGroup"></ame-constraint>
+        }
+        @case (isOfType(['DefaultProperty'])) {
+          <ame-property [parentForm]="formGroup"></ame-property>
+        }
+        @case (isOfType(['DefaultAbstractProperty'])) {
+          <ame-abstract-property [parentForm]="formGroup"></ame-abstract-property>
+        }
+        @case (isOfType(['DefaultOperation'])) {
+          <ame-operation [parentForm]="formGroup"></ame-operation>
+        }
+        @case (isOfType(['DefaultAbstractEntity'])) {
+          <ame-abstract-entity [parentForm]="formGroup"></ame-abstract-entity>
+        }
+        @case (isOfType(['DefaultEntity'])) {
+          <ame-entity [parentForm]="formGroup"></ame-entity>
+        }
+        @case (isOfType(['DefaultUnit'])) {
+          <ame-unit [parentForm]="formGroup"></ame-unit>
+        }
+        @case (isOfType(['DefaultTrait'])) {
+          <ame-trait-characteristic [parentForm]="formGroup"></ame-trait-characteristic>
+        }
+        @case (isOfType(['DefaultEntityInstance'])) {
+          <ame-entity-instance [parentForm]="formGroup"></ame-entity-instance>
+        }
+        @case (isOfType(['DefaultEvent'])) {
+          <ame-event [parentForm]="formGroup"></ame-event>
+        }
+      }
+    </form>
+  }
 </div>
 
 <div class="shape-settings__actions">
-  <button
-    *ngIf="metaModelDialogService.isSaveButtonEnabled()"
-    (click)="onClose()"
-    type="button"
-    mat-flat-button
-    data-cy="editorCancelButton"
-  >
-    {{ 'EDITOR_CANVAS.SHAPE_SETTING.CANCEL' | translate }}
-  </button>
-  <button
-    *ngIf="metaModelDialogService.isSaveButtonEnabled()"
-    [disabled]="!formGroup.valid || metaModelElement?.isExternalReference()"
-    (click)="onSave()"
-    mat-flat-button
-    color="primary"
-    type="button"
-    data-cy="editorSaveButton"
-  >
-    {{ 'EDITOR_CANVAS.SHAPE_SETTING.SAVE' | translate }}
-  </button>
+  @if (metaModelDialogService.isSaveButtonEnabled()) {
+    <button (click)="onClose()" type="button" mat-flat-button data-cy="editorCancelButton">
+      {{ 'EDITOR_CANVAS.SHAPE_SETTING.CANCEL' | translate }}
+    </button>
+  }
+  @if (metaModelDialogService.isSaveButtonEnabled()) {
+    <button
+      [disabled]="!formGroup.valid || metaModelElement?.isExternalReference()"
+      (click)="onSave()"
+      mat-flat-button
+      color="primary"
+      type="button"
+      data-cy="editorSaveButton"
+    >
+      {{ 'EDITOR_CANVAS.SHAPE_SETTING.SAVE' | translate }}
+    </button>
+  }
 </div>

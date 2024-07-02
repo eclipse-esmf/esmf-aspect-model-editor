@@ -3,7 +3,6 @@
   "compilerOptions": {
     "rootDir": ".",
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -22,6 +21,7 @@
     "noImplicitAny": false,
     "ignoreDeprecations": "5.0",
     "strictNullChecks": false,
+    "esModuleInterop": true,
     "paths": {
       "@ame/api": ["libs/api/src/index.ts"],
       "@ame/app/*": ["apps/ame/src/app/*"],

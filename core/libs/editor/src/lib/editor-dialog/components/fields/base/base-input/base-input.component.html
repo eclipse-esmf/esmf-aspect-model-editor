@@ -14,4 +14,6 @@
 <ame-name-input-field [previousData]="previousData" [parentForm]="parentForm"></ame-name-input-field>
 <ame-preferred-name-input-field [previousData]="previousData" [parentForm]="parentForm"></ame-preferred-name-input-field>
 <ame-description-input-field [previousData]="previousData" [parentForm]="parentForm"></ame-description-input-field>
-<ame-see-input-field *ngIf="!hideSee" [previousData]="previousData" [parentForm]="parentForm"></ame-see-input-field>
+@if (!hideSee) {
+  <ame-see-input-field [previousData]="previousData" [parentForm]="parentForm"></ame-see-input-field>
+}

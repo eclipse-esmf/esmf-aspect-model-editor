@@ -54,9 +54,12 @@ export class MxGraphShapeOverlayService {
   ) {}
 
   removeOverlay(cell: mxgraph.mxCell, overlay?: mxgraph.mxCellOverlay): void {
+    const modelElement = MxGraphHelper.getModelElement(cell);
     overlay
       ? this.mxGraphAttributeService.graph.removeCellOverlay(cell, overlay)
-      : this.mxGraphAttributeService.graph.removeCellOverlay(cell);
+      : !(modelElement instanceof DefaultCharacteristic)
+        ? this.mxGraphAttributeService.graph.removeCellOverlay(cell)
+        : null;
   }
 
   /**

@@ -150,7 +150,7 @@ export class ShapeConnectorService {
 
     const newConnection = this.connectShapes(modelElements[0], modelElements[1], selectedCells[0], selectedCells[1]);
 
-    if (newConnection) {
+    if (newConnection && !(modelElements[1] instanceof DefaultEntity)) {
       this.mxGraphShapeOverlayService.removeOverlaysByConnection(modelElements[0], selectedCells[0]);
       this.mxGraphAttributeService.graph.clearSelection();
     }
