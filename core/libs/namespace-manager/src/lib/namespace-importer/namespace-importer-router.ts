@@ -12,7 +12,7 @@
  */
 
 import {Routes} from '@angular/router';
-import {ErrorComponent} from '../shared/components';
+import {ErrorComponent} from '../shared';
 import {FileConflictComponent, ImportSummaryComponent, ImportValidateComponent} from './components';
 
 export const NAMESPACE_IMPORT_ROUTES: Routes = [
