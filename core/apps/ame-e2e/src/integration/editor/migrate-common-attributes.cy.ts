@@ -93,6 +93,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
           .contains('Characteristic2')
           .click({force: true}),
       )
+      .wait(5000)
       .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
