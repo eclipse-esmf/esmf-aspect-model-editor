@@ -21,7 +21,15 @@ import {MatIconModule} from '@angular/material/icon';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {startWith, throttleTime} from 'rxjs';
-import {ElectronSignals, ElectronSignalsService, SearchService, mxCellSearchOption, sammElements} from '@ame/shared';
+import {
+  ElectronSignals,
+  ElectronSignalsService,
+  SearchService,
+  mxCellSearchOption,
+  sammElements,
+  ElementType,
+  ElementInfo,
+} from '@ame/shared';
 import {ElementIconComponent} from '../../../../../shared/src/lib/components/element/element.component';
 import {ConfirmDialogService, ModelElementParserPipe, ShapeSettingsService} from '@ame/editor';
 import {SearchesStateService} from '../../search-state.service';
@@ -98,6 +106,20 @@ export class ElementsSearchComponent {
 
   closeSearch() {
     this.searchesStateService.elementsSearch.close();
+  }
+
+  // TODO workaround for modelElementParser pipe because it does  not work in the template
+  transform(element: BaseMetaModelElement) {
+    const [type, elementData] = this.getElementType(element);
+    return {
+      element,
+      symbol: elementData?.symbol,
+      type,
+    };
+  }
+
+  private getElementType(element: BaseMetaModelElement): [ElementType, ElementInfo[ElementType]] {
+    return Object.entries(sammElements).find(([, value]) => element instanceof value.class) || (['', null] as any);
   }
 
   protected readonly sammElements = sammElements;

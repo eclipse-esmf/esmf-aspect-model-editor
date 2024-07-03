@@ -20,7 +20,7 @@ import {EditorDialogValidators} from '../../../validators';
 import {InputFieldComponent} from '../../fields';
 import {StructuredValueVanillaGroups} from './elements-input-field/model';
 import {StructuredValuePropertiesComponent} from './elements-input-field/structured-value-properties/structured-value-properties.component';
-import {predefinedRules, PredefinedRulesService} from './predefined-rules.service';
+import {PredefinedRulesService} from './predefined-rules.service';
 
 const customRule = '--custom-rule--';
 
@@ -36,10 +36,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   public groups: StructuredValueVanillaGroups[] = [];
   public splitters: StructuredValueVanillaGroups[] = [];
   public elements: (OverWrittenProperty | string)[] = [];
-  public predefinedRules = Object.entries(predefinedRules).map(([key, value]) => ({
-    regex: key,
-    name: value.name,
-  }));
+  public predefinedRules: Array<{regex: string; name: string}>;
 
   private subscription$: Subscription;
 
@@ -63,6 +60,10 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
     private matDialog: MatDialog,
   ) {
     super();
+    this.predefinedRules = Object.entries(this.predefinedRulesService.rules).map(([key, value]) => ({
+      regex: key,
+      name: (value as any).name,
+    }));
   }
 
   ngOnInit(): void {
@@ -81,7 +82,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
 
   initForm() {
     this.deconstructionRule = this.metaModelElement.deconstructionRule || '';
-    this.customRuleActive = !predefinedRules[this.deconstructionRule];
+    this.customRuleActive = !this.predefinedRulesService.rules[this.deconstructionRule];
     this.elements = [...(this.metaModelElement.elements || [])];
 
     this.selectedRule = this.customRuleActive ? customRule : this.deconstructionRule;
@@ -89,7 +90,10 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
     this.parentForm.setControl(
       'deconstructionRule',
       new FormControl(
-        {value: this.deconstructionRule || '', disabled: !this.customRuleActive || this.metaModelElement?.isExternalReference()},
+        {
+          value: this.deconstructionRule || '',
+          disabled: !this.customRuleActive || this.metaModelElement?.isExternalReference(),
+        },
         {validators: [Validators.required, EditorDialogValidators.regexValidator]},
       ),
     );
@@ -152,7 +156,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
         .get('deconstructionRule')
         ?.valueChanges.pipe(debounceTime(500))
         .subscribe((value: string) => {
-          this.selectedRule = predefinedRules[value] ? value : customRule;
+          this.selectedRule = this.predefinedRulesService.rules[value] ? value : customRule;
           this.elements = this.parentForm.get('elements')?.value || this.elements;
           this.rebuildElements();
         }),
@@ -188,7 +192,9 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
 
   private handlePredefinedRegex() {
     const deconstructionRule: string = this.parentForm.get('deconstructionRule')?.value;
-    const ruleName = Object.keys(predefinedRules).find(key => predefinedRules[key].rule === deconstructionRule);
+    const ruleName = Object.keys(this.predefinedRulesService.rules).find(
+      key => this.predefinedRulesService.rules[key].rule === deconstructionRule,
+    );
 
     const predefinedRule = this.predefinedRulesService.getRule(ruleName);
     if (!predefinedRule) {

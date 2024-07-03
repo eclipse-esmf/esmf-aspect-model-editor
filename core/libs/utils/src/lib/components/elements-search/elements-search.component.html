@@ -19,13 +19,13 @@
 
   <mat-autocomplete class="search-autocomplete" #auto="matAutocomplete">
     @for (element of elements; track element) {
-      @if (element | modelElementParser; as parsedElement) {
+      @if (transform(element)) {
         <mat-option class="list-option" (click)="openElement(element)">
           <div [class.has-external-element]="element.isExternalReference() && !element.isPredefined()">
             <ame-element
-              [type]="sammElements[parsedElement.type]"
-              [name]="parsedElement.element.name"
-              [description]="parsedElement.element.aspectModelUrn"
+              [type]="sammElements[transform(element).type]"
+              [name]="transform(element).element.name"
+              [description]="transform(element).element.aspectModelUrn"
               [disabledTooltipDescriptionLength]="100"
               [disabledTooltipNameLength]="60"
               size="medium"
