@@ -46,6 +46,7 @@ describe('TextModelLoaderModalComponent', () => {
 
     expect(component.loadModel).not.toHaveBeenCalled();
   });
+
   it('should call loadModel when textarea text is not empty', () => {
     jest.spyOn(component, 'loadModel');
 
@@ -55,7 +56,7 @@ describe('TextModelLoaderModalComponent', () => {
     textarea.dispatchEvent(new Event('input'));
     fixture.detectChanges();
 
-    const button = fixture.debugElement.nativeElement.querySelectorAll('button')[1];
+    const button = fixture.debugElement.nativeElement.querySelectorAll('button')[2];
     button.click();
     fixture.detectChanges();
 
