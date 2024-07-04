@@ -31,6 +31,7 @@ import {MatOptionModule} from '@angular/material/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatInputModule} from '@angular/material/input';
+import {MatIcon} from '@angular/material/icon';
 
 export interface AsyncApi {
   language: string;
@@ -58,6 +59,7 @@ export interface AsyncApi {
     MatCheckboxModule,
     MatTooltipModule,
     MatInputModule,
+    MatIcon,
   ],
 })
 export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
@@ -130,9 +132,5 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
 
   getControl(path: string): FormControl {
     return this.form.get(path) as FormControl;
-  }
-
-  close(): void {
-    this.dialogRef.close();
   }
 }

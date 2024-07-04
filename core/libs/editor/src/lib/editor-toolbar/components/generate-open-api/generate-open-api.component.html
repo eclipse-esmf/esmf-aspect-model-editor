@@ -13,6 +13,9 @@
 
 <form [formGroup]="form">
   <h2 mat-dialog-title>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.TITLE' | translate }}</h2>
+  <button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
 
   <mat-dialog-content>
     @if (!isGenerating) {
@@ -209,7 +212,7 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-flat-button (click)="close()" data-cy="cancelOpenApiButton">
+    <button mat-flat-button mat-dialog-close data-cy="cancelOpenApiButton">
       {{ 'GENERATE_OPENAPI_SPEC_DIALOG.BUTTON.CANCEL' | translate }}
     </button>
     <button

@@ -30,6 +30,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatOptionModule} from '@angular/material/core';
 import {MatButtonModule} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   standalone: true,
@@ -45,6 +46,7 @@ import {MatButtonModule} from '@angular/material/button';
     MatProgressSpinnerModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatIcon,
   ],
 })
 export class GenerateDocumentationComponent {
@@ -104,9 +106,5 @@ export class GenerateDocumentationComponent {
         }),
       )
       .subscribe();
-  }
-
-  close(): void {
-    this.dialogRef.close();
   }
 }

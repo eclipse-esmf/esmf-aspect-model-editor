@@ -46,17 +46,13 @@ export class NotificationsComponent implements OnInit {
     });
   }
 
-  onClose(): void {
-    this.dialogRef.close();
-  }
-
   goTo(urn: string): void {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: {urn},
       queryParamsHandling: 'merge',
     });
-    this.onClose();
+    this.dialogRef.close();
   }
 
   getTypeIcon(type: NotificationType): string {

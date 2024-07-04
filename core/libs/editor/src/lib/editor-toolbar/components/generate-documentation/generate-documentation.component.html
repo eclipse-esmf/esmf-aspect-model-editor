@@ -12,6 +12,9 @@
   -->
 
 <h2 mat-dialog-title>{{ 'GENERATE_HTML_DOC_DIALOG.TITLE' | translate }}</h2>
+<button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
+  <mat-icon>close</mat-icon>
+</button>
 
 <mat-dialog-content>
   @if (!isGenerating) {
@@ -32,7 +35,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-flat-button (click)="close()">{{ 'GENERATE_HTML_DOC_DIALOG.BUTTON.CANCEL' | translate }}</button>
+  <button mat-flat-button mat-dialog-close>{{ 'GENERATE_HTML_DOC_DIALOG.BUTTON.CANCEL' | translate }}</button>
   <button (click)="openDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbOpenDoc">
     {{ 'GENERATE_HTML_DOC_DIALOG.BUTTON.OPEN_DOC' | translate }}
   </button>

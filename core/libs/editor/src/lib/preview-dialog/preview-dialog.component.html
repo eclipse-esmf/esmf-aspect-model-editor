@@ -23,6 +23,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
+  <button mat-flat-button mat-dialog-close>{{ 'PREVIEW_DIALOG.CANCEL' | translate }}</button>
   <button mat-raised-button (click)="reset()">{{ 'PREVIEW_DIALOG.RESET_CONTENT' | translate }}</button>
   <button mat-raised-button (click)="onCopyToClipboard()">{{ 'PREVIEW_DIALOG.COPY_TO_CLIPBOARD' | translate }}</button>
   <button mat-raised-button color="primary" (click)="onDownload()" data-cy="downloadFileButton">

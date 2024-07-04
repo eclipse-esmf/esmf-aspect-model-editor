@@ -296,8 +296,4 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   getControlValue(path: string): string | boolean {
     return this.getControl(path).value;
   }
-
-  close(): void {
-    this.dialogRef.close();
-  }
 }

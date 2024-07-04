@@ -11,6 +11,9 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 <h2 mat-dialog-title>{{ 'GENERATE_AASX_DIALOG.TITLE' | translate }}</h2>
+<button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
+  <mat-icon>close</mat-icon>
+</button>
 
 <mat-dialog-content>
   @if (!isGenerating) {
@@ -31,5 +34,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-flat-button mat-dialog-close [disabled]="isGenerating">{{ 'GENERATE_AASX_DIALOG.CANCEL' | translate }}</button>
-  <button mat-flat-button [disabled]="isGenerating" (click)="generate()">{{ 'GENERATE_AASX_DIALOG.GENERATE' | translate }}</button>
+  <button mat-flat-button color="primary" [disabled]="isGenerating" (click)="generate()">
+    {{ 'GENERATE_AASX_DIALOG.GENERATE' | translate }}
+  </button>
 </mat-dialog-actions>

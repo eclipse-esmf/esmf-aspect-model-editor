@@ -316,6 +316,7 @@
     "NO_ASPECT_TITLE": "Load or create an Aspect Model before generating artefacts"
   },
   "PREVIEW_DIALOG": {
+    "CANCEL": "Cancel",
     "RESET_CONTENT": "Reset content",
     "COPY_TO_CLIPBOARD": "Copy to Clipboard",
     "DOWNLOAD_FILE": "Download file"
