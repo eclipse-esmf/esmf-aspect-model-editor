@@ -20,7 +20,7 @@
 >
   <mat-label for="see">see</mat-label>
   <mat-chip-grid [formControl]="chipControl" #chipList>
-    @for (element of elements; track element) {
+    @for (element of elements; track element.urn) {
       <mat-chip-row
         [matTooltip]="element.urn"
         [attr.data-cy]="'chip__' + (element.name || element.urn)"
