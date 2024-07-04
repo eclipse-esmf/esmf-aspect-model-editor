@@ -34,10 +34,9 @@ function createRegexValidator(regex: RegExp, errorKey: string): ValidatorFn {
   };
 }
 
-export const namespaceValidator = (): ValidatorFn => createRegexValidator(/^[A-Za-z0-9]+(\.[A-Za-z0-9]+)*$/, 'invalidPattern');
+export const namespaceValidator = (): ValidatorFn => createRegexValidator(/^[A-Za-z0-9]+([.-][A-Za-z0-9_]+)*$/, 'invalidPattern');
 
-export const versionFormatValidator = (): ValidatorFn => createRegexValidator(/^\d+\.\d+\.\d+$/, 'invalidVersionFormat');
-
+export const versionFormatValidator = (): ValidatorFn => createRegexValidator(/^\d+\.\d+\.\d+(-[A-Za-z0-9]+)?$/, 'invalidVersionFormat');
 @Injectable({
   providedIn: 'root',
 })
@@ -131,7 +130,7 @@ export class SettingsFormService {
       }),
       namespaceConfiguration: this.formBuilder.group({
         aspectUri: [namespace, [Validators.required, namespaceValidator()]],
-        aspectName: [{value: modelName, disabled: true}],
+        aspectName: [{value: modelName, disabled: !!this.modelService.loadedAspect}],
         aspectVersion: [version, [Validators.required, versionFormatValidator()]],
         sammVersion: [{value: GeneralConfig.sammVersion, disabled: true}],
       }),

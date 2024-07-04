@@ -360,7 +360,7 @@ export class EditorService {
         tap((aspect: Aspect) => {
           this.removeOldGraph();
           this.initializeNewGraph(editElementUrn);
-          this.titleService.updateTitle(namespaceFileName || aspect?.aspectModelUrn, aspect ? 'Aspect' : 'Shared');
+          this.titleService.updateTitle(namespaceFileName || aspect?.aspectModelUrn);
         }),
         catchError(error => {
           this.logService.logError('Error on loading aspect model', error);
@@ -558,7 +558,7 @@ export class EditorService {
               geometry,
             })
           : this.openAlertBox();
-        this.titleService.updateTitle(rdfModel.absoluteAspectModelFileName, 'Aspect');
+        this.titleService.updateTitle(rdfModel.absoluteAspectModelFileName);
       });
   }
 
