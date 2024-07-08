@@ -38,7 +38,7 @@
             }
           </mat-option>
         }
-        @for (filteredProperty of filteredProperties; track filteredProperty) {
+        @for (filteredProperty of filteredProperties; track filteredProperty.aspectModelUrn) {
           <mat-option [value]="filteredProperty.name" (onSelectionChange)="onSelectionChange(filteredProperty)">
             {{ filteredProperty.name }}<br /><span class="option-description">{{ filteredProperty.description }}</span>
           </mat-option>

@@ -15,7 +15,7 @@
 
 @if (namespaces) {
   <mat-dialog-content>
-    @for (namespace of namespaces | keyvalue; track namespace) {
+    @for (namespace of namespaces | keyvalue; track namespace.value) {
       <div class="namespace">
         <p class="namespace__name">
           @if (!isNamespaceMigrated(namespace.value)) {

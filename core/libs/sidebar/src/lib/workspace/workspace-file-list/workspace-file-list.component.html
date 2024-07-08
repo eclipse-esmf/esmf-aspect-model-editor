@@ -29,7 +29,7 @@
 </div>
 
 <div class="namespaces">
-  @for (namespace of sortNamespaces(namespaces | keyvalue); track namespace) {
+  @for (namespace of sortNamespaces(namespaces | keyvalue); track namespace.value) {
     @if (searched[namespace.key]?.length) {
       <div (click)="folded[namespace.key] = !folded[namespace.key]" class="namespace">
         <mat-icon [matTooltip]="folded[namespace.key] ? ('TOOLTIPS.UNFOLD' | translate) : ('TOOLTIPS.FOLD' | translate)">

@@ -15,7 +15,7 @@
   <mat-label for="dataType">defaultValue</mat-label>
   <input matInput [formControl]="getControl('defaultValue')" data-cy="defaultValue" [matAutocomplete]="auto" />
   <mat-autocomplete #auto="matAutocomplete">
-    @for (entityValue of entityValues; track entityValue) {
+    @for (entityValue of entityValues; track entityValue.aspectModelUrn) {
       <mat-option [value]="entityValue.name">
         {{ entityValue.name }}
       </mat-option>

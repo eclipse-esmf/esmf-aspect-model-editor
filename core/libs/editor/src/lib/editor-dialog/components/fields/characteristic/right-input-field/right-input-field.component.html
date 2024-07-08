@@ -39,7 +39,7 @@
             }
           </mat-option>
         }
-        @for (right of filteredCharacteristicTypes; track right) {
+        @for (right of filteredCharacteristicTypes; track right.aspectModelUrn) {
           <mat-option [value]="right.name" (onSelectionChange)="onSelectionChange('right', right)">
             <div class="result">
               <div class="ellipsis">

@@ -18,7 +18,7 @@
     <p>
       {{ 'SAMM_MIGRATION.MIGRATION_STATUS_DIALOG.MIGRATION_ERROR' | translate: translationParams }}
     </p>
-    @for (namespace of filteredErrorFiles | keyvalue; track namespace) {
+    @for (namespace of filteredErrorFiles | keyvalue; track namespace.value) {
       <div class="status">
         <span class="namespace">{{ namespace.key }}</span>
         @for (file of values(namespace.value); track file) {

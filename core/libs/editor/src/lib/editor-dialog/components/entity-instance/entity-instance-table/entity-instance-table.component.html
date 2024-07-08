@@ -13,7 +13,7 @@
 
 @if (parentForm) {
   <div class="source" [formGroup]="entityValuePropertiesForm">
-    @for (source of sources; track source) {
+    @for (source of sources; track source.key) {
       <ng-container [formArrayName]="source.key.property.name">
         <mat-divider class="source__divider"></mat-divider>
         <div class="source__title">
@@ -30,7 +30,7 @@
           }
         </div>
 
-        @for (control of getFormArray(source.key.property.name).controls; track control; let i = $index) {
+        @for (control of getFormArray(source.key.property.name).controls; track control.value; let i = $index) {
           <div class="source__row" [formGroupName]="i">
             <!-- FormArray value column -->
             <div class="source__column source__column--value">
@@ -72,7 +72,7 @@
                             </span>
                           </mat-option>
                         }
-                        @for (entityValue of filteredEntityValues; track entityValue) {
+                        @for (entityValue of filteredEntityValues; track entityValue.aspectModelUrn) {
                           <mat-option
                             [value]="entityValue.name"
                             (onSelectionChange)="changeSelection(source.key.property.name, entityValue)"

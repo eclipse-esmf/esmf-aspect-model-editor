@@ -21,7 +21,7 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div class="elements" [class.max-height-200]="!isAspect">
-        @for (element of elements; track element) {
+        @for (element of elements; track element.aspectModelUrn) {
           <div class="model-element">
             @if (element | modelElementParser; as parsedElement) {
               <div class="model-element__name">

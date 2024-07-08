@@ -52,7 +52,7 @@
         <span>{{ see.value }}</span>
       </mat-option>
     }
-    @for (shape of shapes$ | async; track shape) {
+    @for (shape of shapes$ | async; track shape.aspectModelUrn) {
       <mat-option [value]="shape.aspectModelUrn" [attr.data-cy]="'option__' + shape.name" (click)="addElementToList(shape.name)">
         <span class="shape-name">{{ shape.name }}</span>
         <span class="shape-urn">{{ shape.aspectModelUrn }}</span>

@@ -21,7 +21,7 @@
     <input #search matInput placeholder="Search elements" />
   </mat-form-field>
   <section class="elements">
-    @for (element of elements; track element) {
+    @for (element of elements; track element?.model?.aspectModelUrn) {
       @if (isFiltered(element, search.value)) {
         <div [class.selected]="isSelected(element)" (click)="selectedElement = element" class="element">
           <span class="element-icon element-icon--big" [ngClass]="getClass(element.model)">{{ getFirstLetter(element.model) }}</span>

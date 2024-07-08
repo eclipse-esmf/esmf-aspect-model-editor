@@ -18,7 +18,7 @@
   (newSearch)="searchFilter = $event"
 ></ame-entity-instance-search-bar>
 
-@for (complexValue of complexValues | entityInstance: searchFilter; track trackValue($index, complexValue)) {
+@for (complexValue of complexValues | entityInstance: searchFilter; track complexValue.aspectModelUrn) {
   <mat-expansion-panel class="complex-value-items" expanded="true" [attr.data-cy]="complexValue.name">
     <mat-expansion-panel-header class="complex-value-header">
       <mat-panel-title class="complex-value-bar">

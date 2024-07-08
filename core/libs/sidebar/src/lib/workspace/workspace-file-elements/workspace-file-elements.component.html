@@ -46,7 +46,7 @@
           </div>
 
           <ng-container>
-            @for (element of elements[key].hidden ? searched[key].slice(0, 5) : searched[key]; track element) {
+            @for (element of elements[key].hidden ? searched[key].slice(0, 5) : searched[key]; track element.aspectModelUrn) {
               <ame-draggable-element
                 [class.disabled]="elementImported(element)"
                 [type]="key"
