@@ -14,8 +14,10 @@
 <mat-form-field [floatLabel]="getControl('upperBoundDefinition')?.disabled ? 'always' : 'auto'" appearance="fill">
   <mat-label for="upperBoundDefinition">upperBoundDefinition</mat-label>
   <mat-select [formControl]="getControl('upperBoundDefinition')" name="upperBoundDefinition">
-    <mat-option *ngFor="let upperBoundDefinition of upperBoundDefinitionList" [value]="upperBoundDefinition.value">
-      {{ upperBoundDefinition.value }}
-    </mat-option>
+    @for (upperBoundDefinition of upperBoundDefinitionList; track upperBoundDefinition) {
+      <mat-option [value]="upperBoundDefinition.value">
+        {{ upperBoundDefinition.value }}
+      </mat-option>
+    }
   </mat-select>
 </mat-form-field>

@@ -13,14 +13,19 @@
 
 <form [formGroup]="form">
   <h2 mat-dialog-title>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.TITLE' | translate }}</h2>
+  <button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
 
   <mat-dialog-content>
-    <ng-container *ngIf="!isGenerating; else loader">
+    @if (!isGenerating) {
       <p>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.CONFIGURATION' | translate }}</p>
       <mat-form-field appearance="fill">
         <mat-label>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.LANGUAGE' | translate }}</mat-label>
         <mat-select [formControl]="getControl('language')" data-cy="tbLanguageButton">
-          <mat-option *ngFor="let language of languages" [value]="language.tag">{{ language.name }}</mat-option>
+          @for (language of languages; track language) {
+            <mat-option [value]="language.tag">{{ language.name }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
 
@@ -51,9 +56,11 @@
             placeholder="/foo..., foo/... or mqtt://... "
             data-cy="tbChannelAddressInput"
           />
-          <mat-error *ngIf="getControl('channelAddress')?.errors?.pattern" data-cy="tbChannelAddressError">
-            {{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.CHANNEL_ADDRESS_ERROR' | translate }}
-          </mat-error>
+          @if (getControl('channelAddress')?.errors?.pattern) {
+            <mat-error data-cy="tbChannelAddressError">
+              {{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.CHANNEL_ADDRESS_ERROR' | translate }}
+            </mat-error>
+          }
         </mat-form-field>
       </section>
 
@@ -75,18 +82,16 @@
           {{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.WRITE_SEPARATE_FILES' | translate }}
         </mat-checkbox>
       </section>
-    </ng-container>
-
-    <ng-template #loader>
+    } @else {
       <div class="dialog__loading">
         <h3>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.GENERATING' | translate }}</h3>
         <mat-spinner></mat-spinner>
       </div>
-    </ng-template>
+    }
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-flat-button (click)="close()">{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.BUTTON.CANCEL' | translate }}</button>
+    <button mat-flat-button mat-dialog-close>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.BUTTON.CANCEL' | translate }}</button>
     <button
       (click)="generateAsyncApiSpec()"
       type="button"

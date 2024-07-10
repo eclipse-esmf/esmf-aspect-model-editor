@@ -13,21 +13,33 @@
 
 <h2 mat-dialog-title>{{ 'SAMM_MIGRATION.INCREASE_VERSION_DIALOG.TITLE' | translate }}</h2>
 
-<mat-dialog-content *ngIf="namespaces">
-  <div *ngFor="let namespace of namespaces | keyvalue" class="namespace">
-    <p class="namespace__name">
-      <mat-spinner *ngIf="!isNamespaceMigrated(namespace.value)" class="namespace__name__icon" diameter="21"></mat-spinner>
-      <mat-icon *ngIf="isNamespaceMigrated(namespace.value)" class="namespace__name__icon">check</mat-icon>
-      <span>{{ getNamespaceExplicitVersioning(namespace.key) }}</span>
-    </p>
-    <p *ngFor="let file of namespace.value" class="namespace__file">
-      <mat-icon [hidden]="!file.migrated" class="namespace__file__icon">check</mat-icon>
-      <span>{{ file.name }}</span>
-    </p>
-  </div>
-</mat-dialog-content>
+@if (namespaces) {
+  <mat-dialog-content>
+    @for (namespace of namespaces | keyvalue; track namespace.value) {
+      <div class="namespace">
+        <p class="namespace__name">
+          @if (!isNamespaceMigrated(namespace.value)) {
+            <mat-spinner class="namespace__name__icon" diameter="21"></mat-spinner>
+          }
+          @if (isNamespaceMigrated(namespace.value)) {
+            <mat-icon class="namespace__name__icon">check</mat-icon>
+          }
+          <span>{{ getNamespaceExplicitVersioning(namespace.key) }}</span>
+        </p>
+        @for (file of namespace.value; track file) {
+          <p class="namespace__file">
+            <mat-icon [hidden]="!file.migrated" class="namespace__file__icon">check</mat-icon>
+            <span>{{ file.name }}</span>
+          </p>
+        }
+      </div>
+    }
+  </mat-dialog-content>
+}
 
-<mat-dialog-content class="loading-namespaces" *ngIf="!namespaces">
-  <mat-spinner diameter="100"></mat-spinner>
-  <p>{{ 'SAMM_MIGRATION.INCREASE_VERSION_DIALOG.LOADING_NAMESPACES' | translate }}</p>
-</mat-dialog-content>
+@if (!namespaces) {
+  <mat-dialog-content class="loading-namespaces">
+    <mat-spinner diameter="100"></mat-spinner>
+    <p>{{ 'SAMM_MIGRATION.INCREASE_VERSION_DIALOG.LOADING_NAMESPACES' | translate }}</p>
+  </mat-dialog-content>
+}

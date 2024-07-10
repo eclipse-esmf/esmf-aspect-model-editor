@@ -12,14 +12,22 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
+import {MatIconModule} from '@angular/material/icon';
+import {LanguageTranslateModule} from '@ame/translation';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTableModule} from '@angular/material/table';
+import {CommonModule} from '@angular/common';
+import {MatMenuModule} from '@angular/material/menu';
 
 @Component({
+  standalone: true,
   selector: 'ame-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss'],
+  imports: [CommonModule, MatIconModule, LanguageTranslateModule, MatDialogModule, MatButtonModule, MatTableModule, MatMenuModule],
 })
 export class NotificationsComponent implements OnInit {
   currentItem = null;
@@ -38,17 +46,13 @@ export class NotificationsComponent implements OnInit {
     });
   }
 
-  onClose(): void {
-    this.dialogRef.close();
-  }
-
   goTo(urn: string): void {
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: {urn},
       queryParamsHandling: 'merge',
     });
-    this.onClose();
+    this.dialogRef.close();
   }
 
   getTypeIcon(type: NotificationType): string {

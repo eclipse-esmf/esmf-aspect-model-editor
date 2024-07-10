@@ -26,7 +26,9 @@ module.exports = defineConfig({
   videosFolder: 'apps/ame-e2e/cypress/videos',
   screenshotsFolder: 'apps/ame-e2e/cypress/screenshots',
   chromeWebSecurity: false,
-  defaultCommandTimeout: 60000,
+  defaultCommandTimeout: 10000,
+  pageLoadTimeout: 60000,
+  responseTimeout: 60000,
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.

@@ -11,36 +11,30 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field
-  *ngIf="metaModelElement?.referenceUnit || !metaModelElement.isPredefined()"
-  [floatLabel]="unitDisplayControl?.disabled ? 'always' : 'auto'"
-  appearance="fill"
->
-  <mat-label for="referenceUnit">referenceUnit</mat-label>
-  <input #unit [matAutocomplete]="auto" matInput name="referenceUnit" [formControl]="unitDisplayControl" data-cy="referenceUnit" />
-  <button
-    *ngIf="unitDisplayControl?.disabled && !metaModelElement?.isExternalReference() && !metaModelElement.isPredefined()"
-    (click)="unlockUnit()"
-    data-cy="clear-unit-button"
-    matSuffix
-    mat-icon-button
-    tabindex="-1"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
+@if (metaModelElement?.referenceUnit || !metaModelElement.isPredefined()) {
+  <mat-form-field [floatLabel]="unitDisplayControl?.disabled ? 'always' : 'auto'" appearance="fill">
+    <mat-label for="referenceUnit">referenceUnit</mat-label>
+    <input #unit [matAutocomplete]="auto" matInput name="referenceUnit" [formControl]="unitDisplayControl" data-cy="referenceUnit" />
+    @if (unitDisplayControl?.disabled && !metaModelElement?.isExternalReference() && !metaModelElement.isPredefined()) {
+      <button (click)="unlockUnit()" data-cy="clear-unit-button" matSuffix mat-icon-button tabindex="-1">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
 
-  <mat-autocomplete #auto="matAutocomplete">
-    <ng-container #predefinedUnits *ngIf="filteredPredefinedUnits$ | async as filteredPredefinedUnits">
-      <mat-optgroup label="Predefined Units" *ngIf="filteredPredefinedUnits?.length">
-        <mat-option
-          *ngFor="let unit of filteredPredefinedUnits"
-          [title]="unit.name"
-          [value]="unit.name"
-          (onSelectionChange)="onPredefinedUnitChange(unit, $event)"
-        >
-          {{ unit.name }}
-        </mat-option>
-      </mat-optgroup>
-    </ng-container>
-  </mat-autocomplete>
-</mat-form-field>
+    <mat-autocomplete #auto="matAutocomplete">
+      @if (filteredPredefinedUnits$ | async; as filteredPredefinedUnits) {
+        <ng-container #predefinedUnits>
+          @if (filteredPredefinedUnits?.length) {
+            <mat-optgroup label="Predefined Units">
+              @for (unit of filteredPredefinedUnits; track unit) {
+                <mat-option [title]="unit.name" [value]="unit.name" (onSelectionChange)="onPredefinedUnitChange(unit, $event)">
+                  {{ unit.name }}
+                </mat-option>
+              }
+            </mat-optgroup>
+          }
+        </ng-container>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+}

@@ -11,41 +11,43 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field
-  *ngIf="!hasComplexValues"
-  [floatLabel]="getControl('values')?.disabled ? 'always' : 'auto'"
-  appearance="fill"
-  subscriptSizing="dynamic"
->
-  <mat-label for="values">values</mat-label>
-  <mat-chip-grid #chipList [formControl]="getControl('chipList')">
-    <mat-chip-row *ngFor="let value of enumValues" [removable]="removable" (removed)="remove(value); onEnumChange()">
-      {{ value['name'] }}
-      <mat-icon matChipRemove data-cy="chipIcon">close</mat-icon>
-    </mat-chip-row>
-    <input
-      matInput
-      class="enumeration-value-input"
-      name="values"
-      [formControl]="getControl('values')"
-      [matChipInputFor]="chipList"
-      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      [matChipInputAddOnBlur]="addOnBlur"
-      (matChipInputTokenEnd)="add($event)"
-      (paste)="paste($event)"
-      (keyup)="onEnumChange()"
-      placeholder="add value, hit enter"
-      data-cy="values"
-    />
-  </mat-chip-grid>
-  <mat-error *ngIf="getControl('values')?.errors?.required">This field is required</mat-error>
-</mat-form-field>
+@if (!hasComplexValues) {
+  <mat-form-field [floatLabel]="getControl('values')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
+    <mat-label for="values">values</mat-label>
+    <mat-chip-grid #chipList [formControl]="getControl('chipList')">
+      @for (value of enumValues; track value) {
+        <mat-chip-row [removable]="removable" (removed)="remove(value); onEnumChange()">
+          {{ value['name'] }}
+          <mat-icon matChipRemove data-cy="chipIcon">close</mat-icon>
+        </mat-chip-row>
+      }
+      <input
+        matInput
+        class="enumeration-value-input"
+        name="values"
+        [formControl]="getControl('values')"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="addOnBlur"
+        (matChipInputTokenEnd)="add($event)"
+        (paste)="paste($event)"
+        (keyup)="onEnumChange()"
+        placeholder="add value, hit enter"
+        data-cy="values"
+      />
+    </mat-chip-grid>
+    @if (getControl('values')?.errors?.required) {
+      <mat-error>This field is required</mat-error>
+    }
+  </mat-form-field>
+}
 
-<ame-entity-instance-view
-  class="entity-values"
-  *ngIf="hasComplexValues"
-  [complexValues]="enumEntityValues"
-  [enumeration]="metaModelElement"
-  [parentForm]="parentForm"
-  (complexValueChange)="enumValueChange($event)"
-></ame-entity-instance-view>
+@if (hasComplexValues) {
+  <ame-entity-instance-view
+    class="entity-values"
+    [complexValues]="enumEntityValues"
+    [enumeration]="metaModelElement"
+    [parentForm]="parentForm"
+    (complexValueChange)="enumValueChange($event)"
+  ></ame-entity-instance-view>
+}

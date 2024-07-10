@@ -40,7 +40,9 @@
           <mat-form-field class="setting-item__value" appearance="fill">
             <mat-label for="autoSaveTime">{{ 'SETTINGS_DIALOG.CONFIGURATION.WAITING_PERIOD' | translate }}</mat-label>
             <input formControlName="saveTimerSeconds" matInput type="number" data-cy="autoSaveTime" />
-            <mat-error *ngIf="form.get('saveTimerSeconds').hasError('min')">The time must be at least 60 second</mat-error>
+            @if (form.get('saveTimerSeconds').hasError('min')) {
+              <mat-error>The time must be at least 60 second</mat-error>
+            }
           </mat-form-field>
         </div>
       </div>
@@ -62,7 +64,9 @@
           <mat-form-field class="setting-item__value" appearance="fill">
             <mat-label for="autoValidateTime">{{ 'SETTINGS_DIALOG.CONFIGURATION.WAITING_PERIOD' | translate }} </mat-label>
             <input formControlName="validationTimerSeconds" matInput type="number" data-cy="autoValidateTime" />
-            <mat-error *ngIf="form.get('validationTimerSeconds').hasError('min')">The time must be at least 60 second</mat-error>
+            @if (form.get('validationTimerSeconds').hasError('min')) {
+              <mat-error>The time must be at least 60 second</mat-error>
+            }
           </mat-form-field>
         </div>
       </div>

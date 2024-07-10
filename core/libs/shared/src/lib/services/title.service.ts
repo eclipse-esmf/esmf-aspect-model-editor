@@ -17,7 +17,7 @@ import {Title} from '@angular/platform-browser';
 @Injectable({providedIn: 'root'})
 export class TitleService extends Title {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateTitle(urn: string, _type: 'Aspect' | 'Shared') {
+  updateTitle(urn: string) {
     if (!urn) {
       return;
     }

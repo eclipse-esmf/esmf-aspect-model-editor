@@ -15,10 +15,16 @@ import {Component, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {NAMESPACES_SESSION} from '../../../shared';
 import {NamespacesSessionInterface} from '../../../shared/models';
+import {MatButton} from '@angular/material/button';
+import {MatButtonToggleGroup, MatButtonToggle} from '@angular/material/button-toggle';
+import {CdkScrollable} from '@angular/cdk/scrolling';
+import {MatDialogTitle, MatDialogContent, MatDialogActions} from '@angular/material/dialog';
 
 @Component({
   templateUrl: './file-conflict.component.html',
   styleUrls: ['./file-conflict.component.scss'],
+  standalone: true,
+  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatButtonToggleGroup, MatButtonToggle, MatDialogActions, MatButton],
 })
 export class FileConflictComponent {
   public namespacesToReplace: string[] = [];

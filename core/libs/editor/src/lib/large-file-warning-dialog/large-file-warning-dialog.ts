@@ -12,11 +12,14 @@
  */
 
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {NamespacesCacheService} from '@ame/cache';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
+  standalone: true,
   templateUrl: './large-file-warning-dialog.html',
+  imports: [MatDialogModule, MatButtonModule],
 })
 export class LargeFileWarningComponent {
   public elementsCount: number;

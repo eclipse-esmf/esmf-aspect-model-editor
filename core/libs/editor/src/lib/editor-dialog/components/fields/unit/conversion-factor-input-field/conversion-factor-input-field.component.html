@@ -11,9 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div *ngIf="metaModelElement?.conversionFactor || !metaModelElement?.isPredefined()">
-  <mat-form-field [floatLabel]="getControl('conversionFactor')?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="conversionFactor">conversionFactor</mat-label>
-    <input [formControl]="getControl('conversionFactor')" matInput name="conversionFactor" />
-  </mat-form-field>
-</div>
+@if (metaModelElement?.conversionFactor || !metaModelElement?.isPredefined()) {
+  <div>
+    <mat-form-field [floatLabel]="getControl('conversionFactor')?.disabled ? 'always' : 'auto'" appearance="fill">
+      <mat-label for="conversionFactor">conversionFactor</mat-label>
+      <input [formControl]="getControl('conversionFactor')" matInput name="conversionFactor" />
+    </mat-form-field>
+  </div>
+}

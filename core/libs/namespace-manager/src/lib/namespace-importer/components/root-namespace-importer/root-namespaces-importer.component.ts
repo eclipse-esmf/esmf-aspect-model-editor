@@ -12,6 +12,7 @@
  */
 
 import {Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
   template: '<router-outlet name="import-namespaces"></router-outlet>',
@@ -25,5 +26,7 @@ import {Component} from '@angular/core';
       }
     `,
   ],
+  standalone: true,
+  imports: [RouterOutlet],
 })
 export class RootNamespacesImporterComponent {}

@@ -14,14 +14,33 @@
 import {ModelApiService} from '@ame/api';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {Component} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {finalize, first, tap} from 'rxjs';
 import {saveAs} from 'file-saver';
-import {MatDialogRef} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {LanguageTranslateModule} from '@ame/translation';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatButtonModule} from '@angular/material/button';
+import {MatSelectModule} from '@angular/material/select';
+import {MatOptionModule} from '@angular/material/core';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
+  standalone: true,
   templateUrl: 'aasx-generation-modal.component.html',
   styleUrls: ['aasx-generation-modal.component.scss'],
+  imports: [
+    MatDialogModule,
+    LanguageTranslateModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatIcon,
+  ],
 })
 export class AASXGenerationModalComponent {
   control = new FormControl('aasx');

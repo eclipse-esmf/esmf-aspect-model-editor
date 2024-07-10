@@ -19,41 +19,37 @@
 ></ame-constraint-name-dropdown-field>
 <ame-base-input [previousData]="previousData || {}" [parentForm]="parentForm"></ame-base-input>
 
-<ng-container *ngIf="selectedConstraint === 'EncodingConstraint'">
-  <ame-encoding-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-encoding-input-field>
-</ng-container>
-
-<ng-container *ngIf="selectedConstraint === 'FixedPointConstraint'">
-  <ame-scale-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-scale-input-field>
-  <ame-integer-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-integer-input-field>
-</ng-container>
-
-<ng-container *ngIf="selectedConstraint === 'LanguageConstraint'">
-  <ame-language-code-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-language-code-input-field>
-</ng-container>
-
-<ng-container *ngIf="selectedConstraint === 'LengthConstraint'">
-  <ame-min-length-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-min-length-input-field>
-  <ame-max-length-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-max-length-input-field>
-</ng-container>
-
-<ng-container *ngIf="selectedConstraint === 'LocaleConstraint'">
-  <ame-locale-code-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-locale-code-input-field>
-</ng-container>
-
-<ng-container *ngIf="selectedConstraint === 'RangeConstraint'">
-  <ame-min-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-min-value-input-field>
-  <ame-max-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-max-value-input-field>
-  <ame-upper-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-upper-bound-input-field>
-  <ame-lower-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-lower-bound-input-field>
-</ng-container>
-
-<ng-container *ngIf="selectedConstraint === 'RegularExpressionConstraint'">
-  <ame-regular-expression-value-input-field
-    [previousData]="previousData || {}"
-    [parentForm]="parentForm"
-  ></ame-regular-expression-value-input-field>
-</ng-container>
+@switch (selectedConstraint) {
+  @case ('EncodingConstraint') {
+    <ame-encoding-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-encoding-input-field>
+  }
+  @case ('FixedPointConstraint') {
+    <ame-scale-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-scale-input-field>
+    <ame-integer-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-integer-input-field>
+  }
+  @case ('LanguageConstraint') {
+    <ame-language-code-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-language-code-input-field>
+  }
+  @case ('LengthConstraint') {
+    <ame-min-length-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-min-length-input-field>
+    <ame-max-length-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-max-length-input-field>
+  }
+  @case ('LocaleConstraint') {
+    <ame-locale-code-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-locale-code-input-field>
+  }
+  @case ('RangeConstraint') {
+    <ame-min-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-min-value-input-field>
+    <ame-max-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-max-value-input-field>
+    <ame-upper-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-upper-bound-input-field>
+    <ame-lower-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-lower-bound-input-field>
+  }
+  @case ('RegularExpressionConstraint') {
+    <ame-regular-expression-value-input-field
+      [previousData]="previousData || {}"
+      [parentForm]="parentForm"
+    ></ame-regular-expression-value-input-field>
+  }
+}
 
 <ame-element-list
   [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.INCOMING_EDGES' | translate"

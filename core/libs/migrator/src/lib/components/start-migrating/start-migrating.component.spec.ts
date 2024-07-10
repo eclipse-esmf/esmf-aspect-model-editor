@@ -42,7 +42,6 @@ describe('StartMigratingComponent', () => {
         TranslateModule.forRoot(),
         LanguageTranslateModule,
       ],
-      declarations: [StartMigratingComponent],
       providers: [
         {
           provide: APP_CONFIG,

@@ -14,9 +14,15 @@
 import {Component} from '@angular/core';
 import {FileHandlingService} from '../../services';
 import {first} from 'rxjs';
-import {MatDialogRef} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {LanguageTranslateModule} from '@ame/translation';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
+  standalone: true,
   templateUrl: './text-model-loader-modal.component.html',
   styles: [
     `
@@ -32,6 +38,7 @@ import {MatDialogRef} from '@angular/material/dialog';
       }
     `,
   ],
+  imports: [LanguageTranslateModule, MatDialogModule, MatFormFieldModule, MatButtonModule, MatInputModule, MatIcon],
 })
 export class TextModelLoaderModalComponent {
   constructor(

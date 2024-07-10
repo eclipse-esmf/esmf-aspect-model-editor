@@ -15,12 +15,29 @@ import {ModelApiService} from '@ame/api';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModel} from '@ame/rdf/utils';
 import {Component, Inject} from '@angular/core';
-import {AbstractControl, FormControl, Validators} from '@angular/forms';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {AbstractControl, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {LanguageTranslateModule} from '@ame/translation';
+import {MatButtonModule} from '@angular/material/button';
+
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 
 @Component({
+  standalone: true,
   templateUrl: './rename-model.component.html',
   styles: ['.input-suffix { padding-right: 5px;}'],
+  imports: [
+    MatIconModule,
+    MatDialogModule,
+    LanguageTranslateModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatDialogActions,
+    MatButtonModule,
+    MatFormFieldModule,
+  ],
 })
 export class RenameModelComponent {
   public fileNameControl: FormControl;

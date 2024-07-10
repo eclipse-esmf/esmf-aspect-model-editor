@@ -24,9 +24,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatExpansionModule} from '@angular/material/expansion';
-import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
-import {RenameModelComponent} from '../rename-model/rename-model.component';
-import {EntityInstancePipe} from './pipes';
 import {
   AbstractEntityComponent,
   AbstractPropertyComponent,
@@ -92,8 +89,6 @@ import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {CounterPipe} from '../../../../shared/src/lib/pipes/counter.pipe';
-import {SaveModelDialogComponent} from '../save-model-dialog/save-model-dialog.component';
-import {LargeFileWarningComponent} from '../large-file-warning-dialog/large-file-warning-dialog';
 import {SharedSettingsTitleComponent} from './components/shape-settings/shared-settings-title/shared-settings-title.component';
 import {LanguageTranslateModule} from '@ame/translation';
 import {ElementIconComponent} from '../../../../shared/src/lib/components/element/element.component';
@@ -106,6 +101,7 @@ import {
   EntityInstanceTableComponent,
   EntityInstanceViewComponent,
 } from './components/entity-instance';
+import {EntityInstancePipe} from './pipes';
 
 @NgModule({
   providers: [EditorModelService],
@@ -130,20 +126,19 @@ import {
     LanguageTranslateModule,
     ElementIconComponent,
     MatDividerModule,
+    ModelElementParserPipe,
+    EntityInstancePipe,
   ],
   declarations: [
     AspectComponent,
     AbstractPropertyComponent,
     AbstractEntityComponent,
     CharacteristicComponent,
-    ConfirmDialogComponent,
-    RenameModelComponent,
     ConstraintComponent,
     ShapeSettingsComponent,
     EntityComponent,
     EntityInstanceModalComponent,
     EntityInstanceModalTableComponent,
-    EntityInstancePipe,
     EntityInstanceSearchBarComponent,
     EntityInstanceTableComponent,
     EntityInstanceViewComponent,
@@ -198,12 +193,9 @@ import {
     StructuredValuePropertiesComponent,
     EntityExtendsFieldComponent,
     ElementListComponent,
-    ModelElementParserPipe,
     LocateElementComponent,
-    SaveModelDialogComponent,
-    LargeFileWarningComponent,
     SharedSettingsTitleComponent,
   ],
-  exports: [ShapeSettingsComponent, ModelElementParserPipe],
+  exports: [ShapeSettingsComponent],
 })
 export class EditorDialogModule {}

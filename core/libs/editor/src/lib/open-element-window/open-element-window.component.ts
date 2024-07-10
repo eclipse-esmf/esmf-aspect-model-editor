@@ -14,12 +14,14 @@ import {ModelApiService} from '@ame/api';
 import {RdfService} from '@ame/rdf/services';
 import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
 import {DialogRef} from '@angular/cdk/dialog';
-import {Component, Inject, OnInit, inject} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {Component, Inject, inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
 import {NamedNode} from 'n3';
 import {catchError, of, switchMap, tap} from 'rxjs';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
+  standalone: true,
   templateUrl: 'open-element-window.component.html',
   styles: [
     `
@@ -38,6 +40,7 @@ import {catchError, of, switchMap, tap} from 'rxjs';
       }
     `,
   ],
+  imports: [MatDialogModule, MatProgressSpinnerModule],
 })
 export class OpenElementWindowComponent implements OnInit {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
@@ -55,7 +58,12 @@ export class OpenElementWindowComponent implements OnInit {
     this.modelApiService
       .getAspectMetaModel(`${namespace}:${this.elementInfo.file}`)
       .pipe(
-        switchMap((model: string) => this.rdfService.parseModel({fileName: this.elementInfo.file, aspectMetaModel: model})),
+        switchMap((model: string) =>
+          this.rdfService.parseModel({
+            fileName: this.elementInfo.file,
+            aspectMetaModel: model,
+          }),
+        ),
         tap(rdfModel => {
           const quads = rdfModel.store.getQuads(new NamedNode(this.elementInfo.urn), null, null, null);
           if (quads.length) {
@@ -74,7 +82,10 @@ export class OpenElementWindowComponent implements OnInit {
           this.dialogRef.close();
         }),
         catchError(error => {
-          this.notificationService.error({title: 'Could not open file', message: `${this.elementInfo.file} could not be opened.`});
+          this.notificationService.error({
+            title: 'Could not open file',
+            message: `${this.elementInfo.file} could not be opened.`,
+          });
           this.dialogRef.close();
           return of(error);
         }),

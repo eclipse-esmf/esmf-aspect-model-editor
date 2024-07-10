@@ -11,32 +11,36 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h3>StructuredValue Elements</h3>
-<mat-table [dataSource]="dataSource">
-  <ng-container matColumnDef="regex">
-    <mat-header-cell *matHeaderCellDef>Capture Group</mat-header-cell>
-    <mat-cell *matCellDef="let group">
-      <span [attr.data-cy]="'regex-group-' + group.regex">{{ group.regex }}</span>
-    </mat-cell>
-  </ng-container>
+<div class="container">
+  <h3>StructuredValue Elements</h3>
+  <mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="regex">
+      <mat-header-cell *matHeaderCellDef>Capture Group</mat-header-cell>
+      <mat-cell *matCellDef="let group">
+        <span [attr.data-cy]="'regex-group-' + group.regex">{{ group.regex }}</span>
+      </mat-cell>
+    </ng-container>
 
-  <ng-container matColumnDef="property">
-    <mat-header-cell *matHeaderCellDef>Property</mat-header-cell>
-    <mat-cell *matCellDef="let group">
-      <ame-structured-value-property-field
-        [fieldControl]="getControl(getKey(group.data))"
-        [overwrittenProperty]="group.property"
-        [attr.data-cy]="'property-' + group.regex"
-        class="property-field"
-      ></ame-structured-value-property-field>
-    </mat-cell>
-  </ng-container>
+    <ng-container matColumnDef="property">
+      <mat-header-cell *matHeaderCellDef>Property</mat-header-cell>
+      <mat-cell *matCellDef="let group">
+        <ame-structured-value-property-field
+          [fieldControl]="getControl(getKey(group.data))"
+          [overwrittenProperty]="group.property"
+          [attr.data-cy]="'property-' + group.regex"
+          class="property-field"
+        ></ame-structured-value-property-field>
+      </mat-cell>
+    </ng-container>
 
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-</mat-table>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
 
-<div class="dialog-actions">
-  <button (click)="closeModal()" type="button" mat-button data-cy="propertiesCancelButton">Cancel</button>
-  <button [disabled]="form.invalid" (click)="closeModal(true)" mat-raised-button data-cy="propertiesSaveButton">Save</button>
+  <div class="dialog-actions">
+    <button (click)="closeModal()" type="button" mat-button data-cy="propertiesCancelButton">Cancel</button>
+    <button [disabled]="form.invalid" (click)="closeModal(true)" mat-flat-button color="primary" data-cy="propertiesSaveButton">
+      Save
+    </button>
+  </div>
 </div>

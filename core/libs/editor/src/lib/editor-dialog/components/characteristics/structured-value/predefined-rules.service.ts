@@ -16,88 +16,88 @@ import {DefaultCharacteristic, DefaultProperty, DefaultScalar, OverWrittenProper
 import {RdfService} from '@ame/rdf/services';
 import {simpleDataTypes} from '../../../../../../../shared/src/lib/constants/xsd-datatypes';
 
-export const predefinedRules = {
-  '([\\w\\.-]+)@([\\w\\.-]+\\.\\w{2,4})': {
-    name: 'Email Address',
-    elements: [
-      {
-        label: 'username',
-        property: true,
-        characteristic: {type: simpleDataTypes?.string, name: 'UsernameCharacteristic'},
-      },
-      {
-        label: '@',
-        property: false,
-      },
-      {
-        label: 'host',
-        property: true,
-        characteristic: {type: simpleDataTypes?.string, name: 'HostCharacteristic'},
-      },
-    ],
-  },
-  '(\\d{4})-(\\d{2})-(\\d{2})': {
-    name: 'ISO 8601 Date',
-    elements: [
-      {
-        label: 'year',
-        property: true,
-        characteristic: {type: simpleDataTypes?.int, name: 'YearCharacteristic'},
-      },
-      {
-        label: '-',
-        property: false,
-      },
-      {
-        label: 'month',
-        property: true,
-        characteristic: {type: simpleDataTypes?.int, name: 'MonthCharacteristic'},
-      },
-      {
-        label: '-',
-        property: false,
-      },
-      {
-        label: 'day',
-        property: true,
-        characteristic: {type: simpleDataTypes?.int, name: 'DayCharacteristic'},
-      },
-    ],
-  },
-  '0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})': {
-    name: 'Hex-encoded color',
-    elements: [
-      {
-        label: '0x',
-        property: false,
-      },
-      {
-        label: 'red',
-        property: true,
-        characteristic: {type: simpleDataTypes?.string, name: 'RedCharacteristic'},
-      },
-      {
-        label: 'green',
-        property: true,
-        characteristic: {type: simpleDataTypes?.string, name: 'GreenCharacteristic'},
-      },
-      {
-        label: 'blue',
-        property: true,
-        characteristic: {type: simpleDataTypes?.string, name: 'BlueCharacteristic'},
-      },
-    ],
-  },
-};
-
 @Injectable({
   providedIn: 'root',
 })
 export class PredefinedRulesService {
+  rules = {
+    '([\\w\\.-]+)@([\\w\\.-]+\\.\\w{2,4})': {
+      name: 'Email Address',
+      elements: [
+        {
+          label: 'username',
+          property: true,
+          characteristic: {type: simpleDataTypes?.string, name: 'UsernameCharacteristic'},
+        },
+        {
+          label: '@',
+          property: false,
+        },
+        {
+          label: 'host',
+          property: true,
+          characteristic: {type: simpleDataTypes?.string, name: 'HostCharacteristic'},
+        },
+      ],
+    },
+    '(\\d{4})-(\\d{2})-(\\d{2})': {
+      name: 'ISO 8601 Date',
+      elements: [
+        {
+          label: 'year',
+          property: true,
+          characteristic: {type: simpleDataTypes?.int, name: 'YearCharacteristic'},
+        },
+        {
+          label: '-',
+          property: false,
+        },
+        {
+          label: 'month',
+          property: true,
+          characteristic: {type: simpleDataTypes?.int, name: 'MonthCharacteristic'},
+        },
+        {
+          label: '-',
+          property: false,
+        },
+        {
+          label: 'day',
+          property: true,
+          characteristic: {type: simpleDataTypes?.int, name: 'DayCharacteristic'},
+        },
+      ],
+    },
+    '0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})': {
+      name: 'Hex-encoded color',
+      elements: [
+        {
+          label: '0x',
+          property: false,
+        },
+        {
+          label: 'red',
+          property: true,
+          characteristic: {type: simpleDataTypes?.string, name: 'RedCharacteristic'},
+        },
+        {
+          label: 'green',
+          property: true,
+          characteristic: {type: simpleDataTypes?.string, name: 'GreenCharacteristic'},
+        },
+        {
+          label: 'blue',
+          property: true,
+          characteristic: {type: simpleDataTypes?.string, name: 'BlueCharacteristic'},
+        },
+      ],
+    },
+  };
+
   constructor(private rdfService: RdfService) {}
 
   getRule(rule: string) {
-    const predefinedRule = predefinedRules[rule];
+    const predefinedRule = this.rules[rule];
     if (!predefinedRule) {
       return null;
     }

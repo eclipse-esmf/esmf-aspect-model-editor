@@ -11,4 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './namespace-importer-router.module';
+export * from './namespace-importer-router';

@@ -29,15 +29,19 @@
         name="entityValueName"
         data-cy="entityValueName"
       />
-      <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('required')">{{
-        'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_DEFINE' | translate
-      }}</mat-error>
-      <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('checkShapeName')">
-        {{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_SELECT_DIFFERENT_NAME_NAMESPACE' | translate }}
-      </mat-error>
-      <mat-error class="entity-form-field__error" *ngIf="entityValueName.hasError('whitespace')">
-        {{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.NO_CONTAIN_WHITESPACES' | translate }}
-      </mat-error>
+      @if (entityValueName.hasError('required')) {
+        <mat-error class="entity-form-field__error">{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_DEFINE' | translate }}</mat-error>
+      }
+      @if (entityValueName.hasError('checkShapeName')) {
+        <mat-error class="entity-form-field__error">
+          {{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_SELECT_DIFFERENT_NAME_NAMESPACE' | translate }}
+        </mat-error>
+      }
+      @if (entityValueName.hasError('whitespace')) {
+        <mat-error class="entity-form-field__error">
+          {{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.NO_CONTAIN_WHITESPACES' | translate }}
+        </mat-error>
+      }
     </mat-form-field>
 
     <ame-entity-instance-modal-table

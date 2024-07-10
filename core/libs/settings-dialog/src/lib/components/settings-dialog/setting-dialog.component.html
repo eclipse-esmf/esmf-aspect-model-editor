@@ -62,21 +62,21 @@
     <div class="settings__divider"></div>
 
     <div class="settings__content">
-      <ng-container *ngIf="selectedNodeType === NodeNames.AUTOMATED_WORKFLOW || selectedNodeType === NodeNames.CONFIGURATION">
+      @if (selectedNodeType === NodeNames.AUTOMATED_WORKFLOW || selectedNodeType === NodeNames.CONFIGURATION) {
         <ame-automated-workflow-config></ame-automated-workflow-config>
-      </ng-container>
-      <ng-container *ngIf="selectedNodeType === NodeNames.EDITOR">
+      }
+      @if (selectedNodeType === NodeNames.EDITOR) {
         <ame-editor-configuration></ame-editor-configuration>
-      </ng-container>
-      <ng-container *ngIf="selectedNodeType === NodeNames.LANGUAGES">
+      }
+      @if (selectedNodeType === NodeNames.LANGUAGES) {
         <ame-language-settings></ame-language-settings>
-      </ng-container>
-      <ng-container *ngIf="selectedNodeType === NodeNames.NAMESPACES">
+      }
+      @if (selectedNodeType === NodeNames.NAMESPACES) {
         <ame-namespace></ame-namespace>
-      </ng-container>
-      <ng-container *ngIf="selectedNodeType === NodeNames.COPYRIGHT">
+      }
+      @if (selectedNodeType === NodeNames.COPYRIGHT) {
         <ame-copyright></ame-copyright>
-      </ng-container>
+      }
     </div>
   </div>
 </mat-dialog-content>

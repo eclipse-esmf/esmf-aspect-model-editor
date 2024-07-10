@@ -11,13 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 <ame-values-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-values-input-field>
-<ame-default-value-entity-input-field
-  [previousData]="previousData || {}"
-  *ngIf="hasEntityType"
-  [parentForm]="parentForm"
-></ame-default-value-entity-input-field>
-<ame-default-value-input-field
-  [previousData]="previousData || {}"
-  *ngIf="!hasEntityType"
-  [parentForm]="parentForm"
-></ame-default-value-input-field>
+@if (hasEntityType) {
+  <ame-default-value-entity-input-field
+    [previousData]="previousData || {}"
+    [parentForm]="parentForm"
+  ></ame-default-value-entity-input-field>
+} @else {
+  <ame-default-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-default-value-input-field>
+}

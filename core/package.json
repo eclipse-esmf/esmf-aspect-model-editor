@@ -144,8 +144,7 @@
     "prettier:libs": "prettier --config ./.prettierrc --write \"./libs/**/*{.ts,.js,.json,.html,.scss}\"",
     "prettier:env": "prettier --config ./.prettierrc --write \"./environments/**/*{.ts,.js,.json,.html,.scss}\"",
     "prettier:all": "prettier --config ./.prettierrc --write \"./**/*{.ts,.js,.json,.html,.scss}\"",
-    "analyse": "webpack-bundle-analyzer dist/ame/stats.json",
-    "doc:app": "compodoc -p tsconfig.app.json -t --hideGenerator -d \\\"dist/docs/app\\\"",
+    "doc:app": "compodoc -p tsconfig.json -t --hideGenerator -d dist/docs/app",
     "start:mac": "electron . --dev",
     "start:linux": "electron . --dev",
     "start:win": ".\\node_modules\\electron\\dist\\electron.exe . --dev",
@@ -276,7 +275,7 @@
     "@typescript-eslint/experimental-utils": "^5.29.0",
     "@typescript-eslint/parser": "7.9.0",
     "coverage-istanbul-loader": "^3.0.5",
-    "cypress": "^13.12.0",
+    "cypress": "^13.13.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-real-events": "^1.13.0",
     "electron": "28.2.1",
@@ -312,7 +311,6 @@
     "ts-node": "^10.2.1",
     "typescript": "~5.4.5",
     "webpack": "^5.52.0",
-    "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.8.0"
   },
   "engines": {

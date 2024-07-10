@@ -55,7 +55,7 @@ export class AspectModelService extends BaseModelService {
 
     this.rdfService.currentRdfModel.absoluteAspectModelFileName = `${metaModelElement.aspectModelUrn}.ttl`;
     this.aspectRenderer.update({cell});
-    this.titleService.updateTitle(`${metaModelElement?.aspectModelUrn.replace('urn:samm:', '')}.ttl`, 'Aspect');
+    this.titleService.updateTitle(`${metaModelElement?.aspectModelUrn.replace('urn:samm:', '')}.ttl`);
     this.sidebarStateService.workspace.refresh();
   }
 

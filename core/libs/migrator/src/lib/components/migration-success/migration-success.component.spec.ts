@@ -29,7 +29,6 @@ describe('MigrationSuccessComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule, MatButtonModule, MatIconModule, TranslateModule.forRoot(), LanguageTranslateModule],
-      declarations: [MigrationSuccessComponent],
       providers: [
         {
           provide: MigratorService,

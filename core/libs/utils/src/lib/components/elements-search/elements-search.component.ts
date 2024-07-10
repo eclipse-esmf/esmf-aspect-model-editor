@@ -13,7 +13,6 @@ import {Component, inject} from '@angular/core';
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CommonModule} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -22,9 +21,17 @@ import {MatIconModule} from '@angular/material/icon';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {BaseMetaModelElement} from '@ame/meta-model';
 import {startWith, throttleTime} from 'rxjs';
-import {ElectronSignals, ElectronSignalsService, SearchService, mxCellSearchOption, sammElements} from '@ame/shared';
+import {
+  ElectronSignals,
+  ElectronSignalsService,
+  SearchService,
+  mxCellSearchOption,
+  sammElements,
+  ElementType,
+  ElementInfo,
+} from '@ame/shared';
 import {ElementIconComponent} from '../../../../../shared/src/lib/components/element/element.component';
-import {ConfirmDialogService, EditorDialogModule, ShapeSettingsService} from '@ame/editor';
+import {ConfirmDialogService, ModelElementParserPipe, ShapeSettingsService} from '@ame/editor';
 import {SearchesStateService} from '../../search-state.service';
 import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
@@ -36,16 +43,15 @@ import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-di
   templateUrl: './elements-search.component.html',
   styleUrls: ['./elements-search.component.scss'],
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
     MatAutocompleteModule,
     MatFormFieldModule,
     MatIconModule,
-    EditorDialogModule,
     LanguageTranslateModule,
     ElementIconComponent,
+    ModelElementParserPipe,
   ],
 })
 export class ElementsSearchComponent {
@@ -100,6 +106,20 @@ export class ElementsSearchComponent {
 
   closeSearch() {
     this.searchesStateService.elementsSearch.close();
+  }
+
+  // TODO workaround for modelElementParser pipe because it does  not work in the template
+  transform(element: BaseMetaModelElement) {
+    const [type, elementData] = this.getElementType(element);
+    return {
+      element,
+      symbol: elementData?.symbol,
+      type,
+    };
+  }
+
+  private getElementType(element: BaseMetaModelElement): [ElementType, ElementInfo[ElementType]] {
+    return Object.entries(sammElements).find(([, value]) => element instanceof value.class) || (['', null] as any);
   }
 
   protected readonly sammElements = sammElements;

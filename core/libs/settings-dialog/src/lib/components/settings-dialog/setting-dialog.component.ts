@@ -242,12 +242,7 @@ export class SettingDialogComponent {
   }
 
   private updateTitleIfNeeded(): void {
-    const title = this.titleService.getTitle().split(' | ');
-
-    if (title.length > 1) {
-      const type = title[1].includes('Aspect') ? 'Aspect' : 'Shared';
-      this.titleService.updateTitle(this.modelService.getLoadedAspectModel().rdfModel.absoluteAspectModelFileName, type);
-    }
+    this.titleService.updateTitle(this.modelService.getLoadedAspectModel().rdfModel.absoluteAspectModelFileName);
   }
 
   openConfirmBox(): void {

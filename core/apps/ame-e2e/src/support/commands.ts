@@ -289,7 +289,7 @@ declare global {
   }
 }
 
-Cypress.Commands.add('visitDefault', () => cy.visit('?e2e=true'));
+Cypress.Commands.add('visitDefault', () => cy.visit('?e2e=true').wait(2000));
 
 Cypress.Commands.add('getAspect', () => cy.window().then(win => win['angular.modelService'].loadedAspect as Aspect));
 
@@ -535,7 +535,7 @@ Cypress.Commands.add('saveAspectModelToWorkspace', () => {
 Cypress.Commands.add('openGenerationOpenApiSpec', () => {
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=null&ymlProperties=&jsonProperties=',
+    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=/resource/%7BresourceId%7D&ymlProperties=&jsonProperties=',
     {fixture: 'AspectDefault-open-api.json'},
   );
 

@@ -18,6 +18,8 @@
   <p>{{ data.content || ('LOADING_SCREEN_DIALOG.GENERAL_WAIT_MESSAGE' | translate) }}</p>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end" *ngIf="data.hasCloseButton">
-  <button mat-button data-cy="close-loading-modal" (click)="close()">Close</button>
-</mat-dialog-actions>
+@if (data.hasCloseButton) {
+  <mat-dialog-actions align="end">
+    <button mat-button data-cy="close-loading-modal" (click)="close()">Close</button>
+  </mat-dialog-actions>
+}

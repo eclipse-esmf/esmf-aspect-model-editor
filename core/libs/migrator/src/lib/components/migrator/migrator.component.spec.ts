@@ -22,7 +22,6 @@ describe('MigratorComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [MigratorComponent],
       imports: [RouterTestingModule],
     });
   });

@@ -316,6 +316,7 @@
     "NO_ASPECT_TITLE": "在生成工件之前加载或创建一个Aspect Model"
   },
   "PREVIEW_DIALOG": {
+    "CANCEL": "取消",
     "RESET_CONTENT": "重置内容",
     "COPY_TO_CLIPBOARD": "复制到剪切板",
     "DOWNLOAD_FILE": "下载文件"

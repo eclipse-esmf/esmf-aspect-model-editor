@@ -11,19 +11,20 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field
-  *ngFor="let locale of metaModelElement?.getAllLocalesPreferredNames()"
-  [floatLabel]="getControl('preferredName' + locale)?.disabled ? 'always' : 'auto'"
-  [matTooltip]="isInherited(locale) ? 'This was extended from ' + elementExtends.extendedElement.name : ''"
-  [matTooltipPosition]="'left'"
-  appearance="fill"
->
-  <mat-label for="preferredName">preferredName({{ locale }})</mat-label>
-  <input
-    matInput
-    class="ellipsis"
-    [formControl]="getControl('preferredName' + locale)"
-    name="preferredName{{ locale }}"
-    data-cy="preferredName"
-  />
-</mat-form-field>
+@for (locale of metaModelElement?.getAllLocalesPreferredNames(); track locale) {
+  <mat-form-field
+    [floatLabel]="getControl('preferredName' + locale)?.disabled ? 'always' : 'auto'"
+    [matTooltip]="isInherited(locale) ? 'This was extended from ' + elementExtends.extendedElement.name : ''"
+    [matTooltipPosition]="'left'"
+    appearance="fill"
+  >
+    <mat-label for="preferredName">preferredName({{ locale }})</mat-label>
+    <input
+      matInput
+      class="ellipsis"
+      [formControl]="getControl('preferredName' + locale)"
+      name="preferredName{{ locale }}"
+      data-cy="preferredName"
+    />
+  </mat-form-field>
+}

@@ -12,8 +12,8 @@
  */
 
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import * as locale from 'locale-codes';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {EditorDialogValidators} from '../../../editor-dialog';
@@ -22,8 +22,19 @@ import {map, Subscription} from 'rxjs';
 import {saveAs} from 'file-saver';
 import {EditorService} from '../../../editor.service';
 import {ModelService} from '@ame/rdf/services';
-import {LanguageTranslationService} from '@ame/translation';
+import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
 import {NotificationsService} from '@ame/shared';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {CommonModule} from '@angular/common';
+import {MatOptionModule} from '@angular/material/core';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 export interface OpenApi {
   language: string;
@@ -41,9 +52,26 @@ export interface OpenApi {
 }
 
 @Component({
+  standalone: true,
   selector: 'ame-generate-open-api',
   templateUrl: './generate-open-api.component.html',
   styleUrls: ['./generate-open-api.component.scss'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    LanguageTranslateModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatButtonModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
+  ],
 })
 export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   @ViewChild('dropArea') dropArea: ElementRef;
@@ -267,9 +295,5 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
 
   getControlValue(path: string): string | boolean {
     return this.getControl(path).value;
-  }
-
-  close(): void {
-    this.dialogRef.close();
   }
 }

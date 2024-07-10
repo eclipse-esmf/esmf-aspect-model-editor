@@ -11,9 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'ame-migrator',
   template: '<router-outlet name="migrator"></router-outlet>',
+  standalone: true,
+  imports: [RouterOutlet],
 })
 export class MigratorComponent {}

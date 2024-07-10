@@ -26,7 +26,6 @@ describe('ThemeSwitcherComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ThemeSwitcherComponent],
       imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [

@@ -83,7 +83,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Collection').click({force: true}))
-      .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
+      .then(() => cy.get('[data-cy="clear-dataType-button"]').click({force: true}))
       .then(() =>
         cy
           .get(FIELD_elementCharacteristic)

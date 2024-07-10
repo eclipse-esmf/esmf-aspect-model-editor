@@ -11,23 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {EditorCanvasComponent} from './components/editor-canvas/editor-canvas.component';
-import {LoadingComponent} from './components/loading/loading.component';
+import {Routes} from '@angular/router';
 
-const routes: Routes = [
+export const APP_ROUTES: Routes = [
   {
     path: '',
-    component: LoadingComponent,
+    loadComponent: () => import('./components/loading/loading.component').then(mod => mod.LoadingComponent),
   },
   {
     path: 'editor',
-    component: EditorCanvasComponent,
+    loadComponent: () => import('./components/editor-canvas/editor-canvas.component').then(mod => mod.EditorCanvasComponent),
     children: [
       {
         path: 'select/:urn',
-        component: EditorCanvasComponent,
+        loadComponent: () => import('./components/editor-canvas/editor-canvas.component').then(mod => mod.EditorCanvasComponent),
       },
     ],
   },
@@ -37,9 +34,3 @@ const routes: Routes = [
     pathMatch: 'full',
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}

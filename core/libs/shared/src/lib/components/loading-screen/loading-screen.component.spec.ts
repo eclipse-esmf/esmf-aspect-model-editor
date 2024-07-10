@@ -30,7 +30,6 @@ describe('LoadingScreenComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LoadingScreenComponent],
       imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule, TranslateModule.forRoot(), LanguageTranslateModule],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [

@@ -27,7 +27,7 @@ import {environment} from '../../../../../../environments/environment';
 const NAMESPACES_SESSION_NAME = 'NAMESPACES_SESSION';
 export let NAMESPACES_SESSION: InjectionToken<NamespacesSession>;
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class NamespacesManagerService {
   public session = new NamespacesSession();
 

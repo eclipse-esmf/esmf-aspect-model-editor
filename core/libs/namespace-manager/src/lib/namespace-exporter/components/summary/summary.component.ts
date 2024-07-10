@@ -14,14 +14,30 @@
 import {ModelApiService} from '@ame/api';
 import {NotificationsService} from '@ame/shared';
 import {Component, inject} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
+import {MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {NAMESPACES_SESSION, WorkspaceSummaryComponent} from '../../../shared';
 import {MissingElement, NamespacesSessionInterface} from '../../../shared/models';
 import {LanguageTranslationService} from '@ame/translation';
+import {TranslateModule} from '@ngx-translate/core';
+import {MatButton} from '@angular/material/button';
+import {ClipboardCopyButtonComponent} from '../../../shared/components/clipboard-copy-button/clipboard-copy-button.component';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 
 @Component({
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.scss'],
+  standalone: true,
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    MatDialogActions,
+    ClipboardCopyButtonComponent,
+    MatButton,
+    MatDialogClose,
+    TranslateModule,
+    WorkspaceSummaryComponent,
+  ],
 })
 export class ExportSummaryComponent {
   private readonly packageName = 'namespaces.zip';

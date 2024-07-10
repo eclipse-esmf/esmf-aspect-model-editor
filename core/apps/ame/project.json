@@ -6,13 +6,13 @@
   "prefix": "ame",
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@angular-devkit/build-angular:browser-esbuild",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/ame",
         "index": "apps/ame/src/index.html",
         "main": "apps/ame/src/main.ts",
-        "polyfills": "apps/ame/src/polyfills.ts",
+        "polyfills": ["apps/ame/src/polyfills.ts"],
         "tsConfig": "apps/ame/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -64,9 +64,7 @@
           }
         },
         "development": {
-          "buildOptimizer": false,
           "optimization": false,
-          "vendorChunk": true,
           "extractLicenses": true,
           "sourceMap": true,
           "namedChunks": true
@@ -75,7 +73,7 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:dev-server",
       "configurations": {
         "production": {
           "buildTarget": "ame:build:production"

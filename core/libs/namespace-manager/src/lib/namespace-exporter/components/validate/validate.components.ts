@@ -15,11 +15,16 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {NAMESPACES_SESSION} from '../../../shared';
 import {NamespacesSessionInterface} from '../../../shared/models';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {CdkScrollable} from '@angular/cdk/scrolling';
+import {MatDialogTitle, MatDialogContent} from '@angular/material/dialog';
 
 @Component({
   selector: 'ame-export-validate',
   templateUrl: './validate.components.html',
   styleUrls: [`validate.components.scss`],
+  standalone: true,
+  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatProgressSpinner],
 })
 export class ExportValidateComponent implements OnInit {
   constructor(

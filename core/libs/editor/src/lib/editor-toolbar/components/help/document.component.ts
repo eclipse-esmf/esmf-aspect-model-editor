@@ -13,19 +13,22 @@
 
 import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
 import {Component, Inject} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {LanguageTranslateModule} from '@ame/translation';
 
 @Component({
+  standalone: true,
   selector: 'ame-document',
   templateUrl: './document.component.html',
   styleUrls: ['./document.component.scss'],
+  imports: [MatButtonModule, MatIconModule, MatDialogModule, LanguageTranslateModule],
 })
 export class DocumentComponent {
   AMEDocumentationLink = 'https://eclipse-esmf.github.io/ame-guide/introduction.html';
-  SAMMDocumentationLink = 'https://eclipse-esmf.github.io/samm-specification/2.1.0/index.html';
 
   constructor(
-    private dialogRef: MatDialogRef<DocumentComponent>,
     @Inject(APP_CONFIG) public config: AppConfig,
     private browserService: BrowserService,
   ) {}
@@ -38,9 +41,5 @@ export class DocumentComponent {
     const {shell} = window.require('electron');
     event.preventDefault();
     shell.openExternal((event.target as HTMLAnchorElement).href);
-  }
-
-  onClose(): void {
-    this.dialogRef.close();
   }
 }

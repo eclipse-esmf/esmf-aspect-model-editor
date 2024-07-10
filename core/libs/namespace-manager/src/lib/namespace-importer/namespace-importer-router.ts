@@ -11,20 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {ErrorComponent} from '../shared/components';
+import {Routes} from '@angular/router';
+import {ErrorComponent} from '../shared';
 import {FileConflictComponent, ImportSummaryComponent, ImportValidateComponent} from './components';
 
-const routes: Routes = [
+export const NAMESPACE_IMPORT_ROUTES: Routes = [
   {path: '', component: ImportValidateComponent, outlet: 'import-namespaces'},
   {path: 'conflict', component: FileConflictComponent, outlet: 'import-namespaces'},
   {path: 'summary', component: ImportSummaryComponent, outlet: 'import-namespaces'},
   {path: 'error', component: ErrorComponent, outlet: 'import-namespaces'},
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class NamespaceImporterRouterModule {}
