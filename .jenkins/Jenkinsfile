@@ -59,8 +59,8 @@ pipeline {
         script {
           sh "mkdir -p signed_dir"
           sh "curl -o signed_dir/aspect-model-editor-v${env.version}-win.exe -F file=@unpack_win_dir/aspect-model-editor-v${env.version}-win.exe https://cbi.eclipse.org/authenticode/sign"
-          sh "zip -r aspect-model-editor-v${env.version}-win.zip signed_dir"
-          sh "ls -a signed_dir"
+          sh "cd signed_dir"
+          sh "zip -r ../aspect-model-editor-v${env.version}-win.zip ."
         }
       }
     }
