@@ -45,7 +45,7 @@ If you want to run the aspect model editor from repositories, please ensure to c
 # enter the core directory where the package.json is located
 cd core
 
-npm install
+npm install --legacy-peer-deps
 npm run start
 ```
 
