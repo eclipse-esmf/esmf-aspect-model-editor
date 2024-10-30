@@ -257,7 +257,7 @@
     "@babel/preset-typescript": "^7.17.12",
     "@compodoc/compodoc": "^1.1.25",
     "@cypress/webpack-preprocessor": "^6.0.0",
-    "@nx/angular": "18.3.5",
+    "@nx/angular": "19.1.0",
     "@nx/cypress": "18.3.5",
     "@nx/eslint": "18.3.5",
     "@nx/eslint-plugin": "18.3.5",
