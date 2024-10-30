@@ -257,7 +257,7 @@
     "@babel/preset-typescript": "^7.17.12",
     "@compodoc/compodoc": "^1.1.25",
     "@cypress/webpack-preprocessor": "^6.0.0",
-    "@nx/angular": "18.3.5",
+    "@nx/angular": "19.1.0",
     "@nx/cypress": "18.3.5",
     "@nx/eslint": "18.3.5",
     "@nx/eslint-plugin": "18.3.5",
@@ -312,6 +312,12 @@
     "typescript": "~5.4.5",
     "webpack": "^5.52.0",
     "webpack-cli": "^4.8.0"
+  },
+  "optionalDependencies": {
+    "@nx/nx-darwin-arm64": "18.3.5",
+    "@nx/nx-darwin-x64": "18.3.5",
+    "@nx/nx-linux-x64-gnu": "18.3.5",
+    "@nx/nx-win32-x64-msvc": "18.3.5"
   },
   "engines": {
     "node": ">=14.0.0"

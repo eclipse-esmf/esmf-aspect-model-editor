@@ -296,9 +296,9 @@ export class cyHelp {
 
     if (selectMultipleShapes) {
       if (Cypress.platform !== 'darwin') {
-        cy.get('body').type('{ctrl}', {release: false});
+        cy.get('body').type('{ctrl}', {release: false, force: true});
       } else {
-        cy.get('body').type('{meta}', {release: false});
+        cy.get('body').type('{meta}', {release: false, force: true});
       }
     }
 
@@ -307,13 +307,13 @@ export class cyHelp {
         .getHTMLCell(name)
         .first()
         .click({force: true})
-        .then(() => cy.get('body').type('{ctrl}'));
+        .then(() => cy.get('body').type('{ctrl}', {force: true}));
     } else {
       return cy
         .getHTMLCell(name)
         .first()
         .click({force: true})
-        .then(() => cy.get('body').type('{meta}'));
+        .then(() => cy.get('body').type('{meta}', {force: true}));
     }
   }
 
