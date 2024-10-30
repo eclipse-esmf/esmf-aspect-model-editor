@@ -165,8 +165,13 @@ jobs:
           }
         shell: pwsh
 
+      - name: Clear npm cache
+        run: npm cache clean --force
+
       - name: Install node modules
-        run: npm install
+        run: |
+          npm install
+          npm rebuild nx --update-binary
         working-directory: core
 
       - name: Set app version (Unix)

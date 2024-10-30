@@ -42,8 +42,13 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
+      - name: Clear npm cache
+        run: npm cache clean --force
+
       - name: Install node modules (Dev)
-        run: npm install --legacy-peer-deps # When @nx/angular plugin is updated, this flag can be removed
+        run: |
+          npm install
+          npm rebuild nx --update-binary
         working-directory: core
 
       - name: Identifying and reporting lint patterns
