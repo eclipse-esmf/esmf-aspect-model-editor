@@ -313,6 +313,12 @@
     "webpack": "^5.52.0",
     "webpack-cli": "^4.8.0"
   },
+  "optionalDependencies": {
+    "@nx/nx-darwin-arm64": "18.3.5",
+    "@nx/nx-darwin-x64": "18.3.5",
+    "@nx/nx-linux-x64-gnu": "18.3.5",
+    "@nx/nx-win32-x64-msvc": "18.3.5"
+  },
   "engines": {
     "node": ">=14.0.0"
   },

@@ -47,7 +47,7 @@ jobs:
 
       - name: Install node modules (Dev)
         run: |
-          npm install
+          npm ci --include=optional
           npm rebuild nx --update-binary
         working-directory: core
 

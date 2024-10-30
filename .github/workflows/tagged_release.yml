@@ -170,7 +170,7 @@ jobs:
 
       - name: Install node modules
         run: |
-          npm install
+          npm ci --include=optional
           npm rebuild nx --update-binary
         working-directory: core
 
