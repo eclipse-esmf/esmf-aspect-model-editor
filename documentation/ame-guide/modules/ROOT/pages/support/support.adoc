@@ -40,7 +40,9 @@ This action will hide the developer tools, allowing you to resume your work in t
 
 image::show-developer-tools.png[Developer Tools,width=65%]
 
-For general questions on semantic data structuring and the role of the Aspect Model Editor, discuss within the working groups of the https://www.eclipse.org/forums/index.php/f/617/[Eclipse Community Forums^,opts=nofollow].
+For general questions on semantic data structuring and the role of the Aspect
+Model Editor, feel free to join the
+https://chat.eclipse.org/#/room/#eclipse-semantic-modeling-framework:matrix.eclipse.org[ESMF Chat^,opts=nofollow].
 
 ++++
 <style>
