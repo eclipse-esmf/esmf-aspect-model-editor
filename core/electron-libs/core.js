@@ -52,8 +52,8 @@ async function cleanUpProcesses() {
 function startService() {
   createSplashWindow();
 
-  if (inDevMode()) {
-    global.backendPort = 9091;
+  if (!inDevMode()) {
+    global.backendPort = 9090;
     setTimeout(function () {
       splashWindow.close();
       windowsManager.createWindow();
@@ -71,11 +71,14 @@ function startService() {
 
       if (processes.length === 0) {
         global.backendPort = port;
-        const process = spawn(path.join(rootPath, `ame-backend-${projectVersion}-${platformData.extension}`), [`-Dserver.port=${port}`]);
+        const process = spawn(path.join(rootPath, `ame-backend-${projectVersion}-${platformData.extension}`), [
+          `-Dmicronaut.server.port=${port}`,
+        ]);
 
         process.stdout.on('data', data => {
-          if (data.includes(`Tomcat started on port(s): ${port}`)) {
-            console.log(`Tomcat is now started on port ${port}`);
+          console.log(data.toString());
+          if (data.includes(`Server Running`)) {
+            console.log(`AME Server Running`);
             splashWindow.close();
             windowsManager.createWindow();
           }

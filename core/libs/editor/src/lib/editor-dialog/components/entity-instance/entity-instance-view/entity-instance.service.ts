@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
-import {ConfirmDialogService} from '@ame/editor';
-import {NamespacesCacheService} from '@ame/cache';
-import {NotificationsService} from '@ame/shared';
+import {CacheUtils, LoadedFilesService} from '@ame/cache';
+import {ConfirmDialogService, EntityInstanceUtil} from '@ame/editor';
 import {MxGraphHelper} from '@ame/mx-graph';
+import {NotificationsService, config} from '@ame/shared';
+import {Injectable} from '@angular/core';
+import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultProperty, Entity, Value} from '@esmf/aspect-model-loader';
 import {ConfirmDialogEnum} from '../../../../models/confirm-dialog.enum';
 
 @Injectable({
@@ -24,28 +24,28 @@ import {ConfirmDialogEnum} from '../../../../models/confirm-dialog.enum';
 })
 export class EntityInstanceService {
   get currentCachedFile() {
-    return this.namespacesCacheService.currentCachedFile;
+    return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
   constructor(
-    private namespacesCacheService: NamespacesCacheService,
     private confirmDialogService: ConfirmDialogService,
     private notifications: NotificationsService,
+    private loadedFiles: LoadedFilesService,
   ) {}
 
   onPropertyRemove(property: DefaultProperty, acceptCallback: Function) {
-    const entityValues = this.currentCachedFile
-      .getCachedEntityValues()
-      .filter(({properties}) => properties.some(({key}) => key.property.name === property.name));
+    const entityValues = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance).filter(eInstance => {
+      eInstance.getTuples().some(([propertyUrn]) => property.aspectModelUrn === propertyUrn);
+    });
 
     if (!entityValues.length) {
       acceptCallback?.();
       return;
     }
 
-    const title = `Remove ${property.name} from ${entityValues[0].entity.name}?`;
+    const title = `Remove ${property.name} from ${entityValues[0].type.name}?`;
     const phrases = [
-      `${entityValues[0].entity.name} has ${entityValues.length} instances.`,
+      `${entityValues[0].type.name} has ${entityValues.length} instances.`,
       `If you remove the property ${property.name} from this entity all the entity instances will lose this property!`,
       'Do you want to continue?',
     ];
@@ -53,32 +53,49 @@ export class EntityInstanceService {
     this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(confirm => {
       if (confirm !== ConfirmDialogEnum.cancel) {
         for (const entityValue of entityValues) {
-          entityValue.removeProperty(property);
+          entityValue.getAssertion(property.aspectModelUrn).forEach(value => entityValue.removeAssertion(property.aspectModelUrn, value));
         }
         acceptCallback?.();
       }
     });
   }
 
-  onNewProperty(property: OverWrittenProperty<DefaultProperty>, entity: DefaultEntity) {
-    const entityValues = this.currentCachedFile.getCachedEntityValues().filter(entityValue => entityValue.entity.name === entity.name);
+  onNewProperty(property: DefaultProperty, entity: Entity) {
+    const entityValues = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance).filter(
+      entityValue => entityValue.type.name === entity.name,
+    );
+
     if (!entityValues.length) {
       return;
     }
 
+    // TODO see if the entity instances should be created on a deeper level
     for (const entityValue of entityValues) {
-      entityValue.addProperty(property);
-      MxGraphHelper.establishRelation(entityValue, property.property);
+      const shouldBeEntityInstance = property.characteristic?.dataType instanceof DefaultEntity;
+      const newValue = shouldBeEntityInstance
+        ? new DefaultEntityInstance({
+            name: `${property.name}Value`,
+            aspectModelUrn: `${this.loadedFiles.currentLoadedFile.namespace}#${property.name}Value`,
+            metaModelVersion: config.currentSammVersion,
+            type: property.characteristic?.dataType as DefaultEntity,
+          })
+        : new Value('', property.characteristic?.dataType, EntityInstanceUtil.isDefaultPropertyWithLangString(property) ? '' : undefined);
+      entityValue.setAssertion(property.aspectModelUrn, newValue);
+
+      MxGraphHelper.establishRelation(entityValue, entity);
     }
 
+    MxGraphHelper.establishRelation(entity, property);
     this.notifications.warning({
-      title: `Property ${property.property.name} was added to ${entity.name} instances. Make sure to add a value to them!`,
+      title: `Property ${property.name} was added to ${entity.name} instances. Make sure to add a value to them!`,
       timeout: 5000,
     });
   }
 
   onEntityRemove(entity: DefaultEntity, acceptCallback: Function) {
-    const entityValues = this.currentCachedFile.getCachedEntityValues().filter(entityValue => entityValue.entity.name === entity.name);
+    const entityValues = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance).filter(
+      entityValue => entityValue.type.name === entity.name,
+    );
 
     if (!entityValues.length) {
       acceptCallback?.();
@@ -102,9 +119,8 @@ export class EntityInstanceService {
   }
 
   onEntityDisconnect(characteristic: DefaultEnumeration, entity: DefaultEntity, acceptCallback: Function) {
-    const entityValues = this.currentCachedFile
-      .getCachedEntityValues()
-      .filter(entityValue => entityValue.entity.name === entity.name)
+    const entityValues = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance)
+      .filter(entityValue => entityValue.type.name === entity.name)
       .filter(entityValue => entityValue.parents.some(parent => parent.aspectModelUrn === characteristic.aspectModelUrn));
 
     if (!entityValues.length) {
@@ -135,7 +151,7 @@ export class EntityInstanceService {
   }
 
   private removeEntityValuesFromCharacteristic(characteristic: DefaultEnumeration) {
-    if (characteristic.isExternalReference()) {
+    if (this.loadedFiles.isElementExtern(characteristic)) {
       return;
     }
 

@@ -11,17 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {CommonModule} from '@angular/common';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {beforeEach, describe, expect, it} from '@jest/globals';
-import {AlertComponent} from './alert.component';
-import {CommonModule} from '@angular/common';
+import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatButtonModule} from '@angular/material/button';
+import {beforeEach, describe, expect, it} from '@jest/globals';
 import {TranslateModule} from '@ngx-translate/core';
-import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
 import {provideMockObject} from '../../../../../../jest-helpers';
+import {AlertComponent} from './alert.component';
 
 describe('AlertComponent', () => {
   let component: AlertComponent;

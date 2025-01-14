@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, inject} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
-import {BaseModelService} from './base-model-service';
-import {BaseMetaModelElement, DefaultOperation, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
-import {ModelInfo, MxGraphAttributeService, MxGraphHelper, MxGraphService, OperationRenderService} from '@ame/mx-graph';
 import {ShapeConnectorService} from '@ame/connection';
 import {FiltersService} from '@ame/loader-filters';
+import {ModelInfo, MxGraphAttributeService, MxGraphHelper, MxGraphService, OperationRenderService} from '@ame/mx-graph';
+import {Injectable, inject} from '@angular/core';
+import {DefaultOperation, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class OperationModelService extends BaseModelService {
@@ -32,7 +32,7 @@ export class OperationModelService extends BaseModelService {
     super();
   }
 
-  isApplicable(metaModelElement: BaseMetaModelElement): boolean {
+  isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultOperation;
   }
 
@@ -50,10 +50,8 @@ export class OperationModelService extends BaseModelService {
     this.removeOutputDependency(cell, modelElement.output, modelElement.input);
     if (output) {
       this.addOutputProperties(cell, output);
-      modelElement.output = {property: output, keys: {}};
-    } else {
-      modelElement.output = output;
     }
+    modelElement.output = output;
 
     this.operationRender.update({cell});
   }
@@ -63,41 +61,41 @@ export class OperationModelService extends BaseModelService {
     this.mxGraphService.removeCells([cell]);
   }
 
-  private removeInputDependency(cell: mxgraph.mxCell, input: Array<OverWrittenProperty>, output: OverWrittenProperty) {
+  private removeInputDependency(cell: mxgraph.mxCell, input: Array<DefaultProperty>, output: DefaultProperty) {
     const operation = MxGraphHelper.getModelElement<DefaultOperation>(cell);
     this.mxGraphAttributeService.graph.getOutgoingEdges(cell).forEach(edge => {
       const modelElement = MxGraphHelper.getModelElement(edge.target);
-      const inputProperty = input.find(value => value.property.aspectModelUrn === modelElement.aspectModelUrn);
+      const inputProperty = input.find(value => value.aspectModelUrn === modelElement.aspectModelUrn);
       if (
         modelElement instanceof DefaultProperty &&
-        operation.output?.property.aspectModelUrn !== modelElement.aspectModelUrn &&
-        output?.property?.aspectModelUrn !== modelElement.aspectModelUrn &&
+        operation.output?.aspectModelUrn !== modelElement.aspectModelUrn &&
+        output?.aspectModelUrn !== modelElement.aspectModelUrn &&
         inputProperty
       ) {
         this.mxGraphService.removeCells([cell.removeEdge(edge, true)]);
-        MxGraphHelper.removeRelation(operation, inputProperty.property);
+        MxGraphHelper.removeRelation(operation, inputProperty);
       }
     });
   }
 
-  private removeOutputDependency(cell: mxgraph.mxCell, output: OverWrittenProperty, input: Array<OverWrittenProperty>) {
+  private removeOutputDependency(cell: mxgraph.mxCell, output: DefaultProperty, input: Array<DefaultProperty>) {
     const operation = MxGraphHelper.getModelElement<DefaultOperation>(cell);
     this.mxGraphAttributeService.graph.getOutgoingEdges(cell).forEach(edge => {
       const modelElement = MxGraphHelper.getModelElement(edge.target);
       if (
         modelElement instanceof DefaultProperty &&
-        output?.property?.aspectModelUrn === modelElement.aspectModelUrn &&
-        !input.find(value => value.property.aspectModelUrn === modelElement.aspectModelUrn)
+        output?.aspectModelUrn === modelElement.aspectModelUrn &&
+        !input.find(value => value.aspectModelUrn === modelElement.aspectModelUrn)
       ) {
         this.mxGraphService.removeCells([cell.removeEdge(edge, true)]);
-        MxGraphHelper.removeRelation(operation, output.property);
+        MxGraphHelper.removeRelation(operation, output);
       }
     });
   }
 
   private addInputProperties(cell: mxgraph.mxCell, input: Array<DefaultProperty>) {
     input.forEach(property => {
-      const cachedProperty = this.namespacesCacheService.resolveCachedElement(property);
+      const cachedProperty = this.currentCachedFile.resolveInstance(property);
       const operation = MxGraphHelper.getModelElement(cell);
       const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedProperty);
       const propertyCell = resolvedCell
@@ -108,7 +106,7 @@ export class OperationModelService extends BaseModelService {
   }
 
   private addOutputProperties(cell: mxgraph.mxCell, property: DefaultProperty) {
-    const cachedProperty = this.namespacesCacheService.resolveCachedElement(property);
+    const cachedProperty = this.currentCachedFile.resolveInstance(property);
     const operation = MxGraphHelper.getModelElement(cell);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedProperty);
     const propertyCell = resolvedCell

@@ -13,7 +13,7 @@
 
 <mat-form-field [floatLabel]="getControl('maxValue')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="maxValue">maxValue</mat-label>
-  <input matInput type="number" name="maxValue" [formControl]="getControl('maxValue')" data-cy="maxValue" pattern="^[0-9]\d*$" />
+  <input [formControl]="getControl('maxValue')" matInput type="number" name="maxValue" data-cy="maxValue" pattern="^[0-9]\d*$" />
   @if (getControl('maxValue').errors?.pattern) {
     <mat-error>Please provide a non-negative integer</mat-error>
   }

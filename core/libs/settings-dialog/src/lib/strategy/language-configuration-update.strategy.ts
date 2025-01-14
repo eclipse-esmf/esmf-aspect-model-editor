@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FormArray, FormGroup} from '@angular/forms';
 import {Settings} from '@ame/settings-dialog';
-import {SettingsUpdateStrategy} from './settings-update.strategy';
+import {ElectronTunnelService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {Injectable} from '@angular/core';
-import {ElectronTunnelService} from '@ame/shared';
+import {FormArray, FormGroup} from '@angular/forms';
+import {SettingsUpdateStrategy} from './settings-update.strategy';
 
 @Injectable({
   providedIn: 'root',

@@ -16,40 +16,32 @@
 <mat-dialog-content class="namespaces">
   <p>{{ 'EXPORT_NAMESPACE_DIALOG.INFO_CONTENT' | translate }}</p>
   <section class="namespace-list">
-    <h4 class="column-title">Namespaces</h4>
-
-    @for (item of namespacesDependencies | keyvalue; track item) {
-      <mat-checkbox
-        [value]="item.key"
-        [checked]="item.value.checked"
-        [disabled]="item.value.disabled"
-        (change)="toggleNamespace($event, item.key)"
-        class="namespace"
-        data-cy="enNamespaceList"
-      >
-        <div class="checkbox-info">
-          <span class="namespace">{{ item.key }}</span>
-          @if (item.value.dependencies.length) {
-            <span class="dependencies"
-              >Dependencies: <strong>{{ item.value.dependencies.join(', ') }}</strong></span
-            >
-          }
-        </div>
-        @if (item.value.dependencies.length) {
-          <mat-icon
-            matTooltip="This namespace has elements from other namespaces. If selected, the dependencies will be automatically selected."
-            matTooltipPosition="right"
-            >info_outline</mat-icon
-          >
-        }
-      </mat-checkbox>
+    @if (extracting) {
+      <section class="extracting">
+        <mat-spinner class="extracting__spinner"></mat-spinner>
+        <p class="extracting__message">Loading namespaces...</p>
+      </section>
+    } @else {
+      <h4 class="column-title">Namespaces</h4>
     }
+
+    <mat-radio-group class="files" [(ngModel)]="selectedKey" aria-label="Select an option">
+      @for (entry of entries | keyvalue; track entry.key) {
+        <mat-radio-button class="namespace" value="{{ $any(entry.key) }}">
+          <div class="checkbox-info">
+            <span class="model">File: {{ $any(entry.value).model }}</span>
+            <span class="namespace">Namespace: {{ $any(entry.value).namespace }}</span>
+            <span class="version">Version: {{ $any(entry.value).version }}</span>
+          </div>
+        </mat-radio-button>
+      }
+    </mat-radio-group>
   </section>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-flat-button mat-dialog-close>{{ 'EXPORT_NAMESPACE_DIALOG.CANCEL' | translate }}</button>
-  <button [disabled]="!selectedNamespaces.length" (click)="validate()" mat-flat-button color="primary">
+  <button (click)="export()" mat-flat-button color="primary">
     {{ 'EXPORT_NAMESPACE_DIALOG.NEXT' | translate }}
   </button>
 </mat-dialog-actions>

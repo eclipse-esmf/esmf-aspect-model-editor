@@ -14,8 +14,8 @@
 
 /// <reference types="Cypress" />
 
-import {SELECTOR_workspaceBtn} from '../../support/constants';
 import {setUpDynamicModellingInterceptors, setUpStaticModellingInterceptors} from '../../support/api-mocks';
+import {SELECTOR_workspaceBtn} from '../../support/constants';
 
 describe('Elements count', () => {
   describe('Movement model', () => {

@@ -12,31 +12,27 @@
  */
 
 import {EntityInstanceService} from '@ame/editor';
-import {DefaultAbstractEntity, DefaultProperty} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {Injectable} from '@angular/core';
-import {MultiShapeConnector} from '../models';
+import {DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {MultiShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AbstractEntityPropertyConnectionHandler implements MultiShapeConnector<DefaultAbstractEntity, DefaultProperty> {
+export class AbstractEntityPropertyConnectionHandler implements MultiShapeConnector<DefaultEntity, DefaultProperty> {
   constructor(
     private mxGraphService: MxGraphService,
     private entityInstanceService: EntityInstanceService,
   ) {}
 
-  public connect(
-    parentMetaModel: DefaultAbstractEntity,
-    childMetaModel: DefaultProperty,
-    parentCell: mxgraph.mxCell,
-    childCell: mxgraph.mxCell,
-  ) {
-    if (!parentMetaModel.properties.find(({property}) => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
-      const overWrittenProperty = {property: childMetaModel, keys: {}};
-      parentMetaModel.properties.push(overWrittenProperty);
-      this.entityInstanceService.onNewProperty(overWrittenProperty, parentMetaModel);
+  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
+    if (!parentMetaModel.isAbstractEntity()) return;
+
+    if (!parentMetaModel.properties.find(property => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
+      parentMetaModel.properties.push(childMetaModel);
+      this.entityInstanceService.onNewProperty(childMetaModel, parentMetaModel);
     }
     this.mxGraphService.assignToParent(childCell, parentCell);
   }

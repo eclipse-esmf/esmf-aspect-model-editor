@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {CacheUtils} from '@ame/cache';
+import {RdfService} from '@ame/rdf/services';
+import {NotificationsService} from '@ame/shared';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {map, Observable} from 'rxjs';
-import {InputFieldComponent} from '../../input-field.component';
-import {Characteristic, DefaultCharacteristic, DefaultEither} from '@ame/meta-model';
-import {NamespacesCacheService} from '@ame/cache';
+import {Characteristic, DefaultCharacteristic, DefaultEither} from '@esmf/aspect-model-loader';
+import {Observable, map} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
-import {NotificationsService} from '@ame/shared';
-import {RdfService} from '@ame/rdf/services';
+import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-left-input-field',
@@ -33,7 +33,6 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
   leftCharacteristicControl: FormControl;
 
   constructor(
-    public namespacesCacheService: NamespacesCacheService,
     private notificationsService: NotificationsService,
     private validators: EditorDialogValidators,
     public rdfService: RdfService,
@@ -65,7 +64,7 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement.isExternalReference(),
+          disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement),
         },
         {
           validators: [
@@ -81,7 +80,7 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
       'leftCharacteristic',
       new FormControl({
         value: eitherLeft,
-        disabled: this.metaModelElement?.isExternalReference(),
+        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       }),
     );
 
@@ -102,12 +101,12 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
       return; // happens on reset form
     }
 
-    let defaultCharacteristic = this.currentCachedFile
-      .getCachedCharacteristics()
-      .find(characteristic => characteristic.aspectModelUrn === newValue.urn);
+    let defaultCharacteristic = CacheUtils.getCachedElements(this.currentCachedFile, DefaultCharacteristic).find(
+      characteristic => characteristic.aspectModelUrn === newValue.urn,
+    );
 
     if (!defaultCharacteristic) {
-      defaultCharacteristic = this.namespacesCacheService.findElementOnExtReference<Characteristic>(newValue.urn);
+      defaultCharacteristic = this.loadedFiles.findElementOnExtReferences<Characteristic>(newValue.urn);
     }
 
     this.parentForm.setControl('leftCharacteristic', new FormControl(defaultCharacteristic));
@@ -136,7 +135,12 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
       return;
     }
 
-    const newCharacteristic = new DefaultCharacteristic(this.metaModelElement.metaModelVersion, urn, characteristicName, null);
+    const newCharacteristic = new DefaultCharacteristic({
+      metaModelVersion: this.metaModelElement.metaModelVersion,
+      aspectModelUrn: urn,
+      name: characteristicName,
+      dataType: null,
+    });
     this.parentForm.setControl('leftCharacteristic', new FormControl(newCharacteristic));
 
     this.leftControl.patchValue(characteristicName);

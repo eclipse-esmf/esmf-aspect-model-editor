@@ -35,8 +35,6 @@ const {
   REQUEST_EDIT_ELEMENT,
   SIGNAL_REFRESH_WORKSPACE,
   REQUEST_REFRESH_WORKSPACE,
-  REQUEST_UNLOCK_FILE,
-  REQUEST_LOCK_FILE,
   RESPONSE_LOCKED_FILES,
   REQUEST_ADD_LOCK,
   REQUEST_REMOVE_LOCK,
@@ -76,20 +74,9 @@ class WindowsManager {
       const windowInfo = this.state.activeWindows.find(windowInfo => windowInfo.id === windowId);
 
       if (!windowInfo) return;
-      if (windowInfo.options?.fromWorkspace) {
-        // Request unlock old file if is from workspace
-        console.log(`Unlocking ${windowInfo.options?.namespace} - ${windowInfo.options?.namespace}`);
-        windowInfo.window.webContents.send(REQUEST_UNLOCK_FILE, windowInfo.options?.namespace, windowInfo.options?.file);
-      }
 
       windowInfo.options = options;
       console.log(`UPDATED: \x1b[36m${windowId}\x1b[0m with \x1b[36m${options.namespace} | ${options.file}\x1b[0m`);
-
-      if (windowInfo.options?.fromWorkspace) {
-        console.log(`locking ${windowInfo.options?.namespace} - ${windowInfo.options?.namespace}`);
-        // Request lock file if it is from workspace
-        windowInfo.window.webContents.send(REQUEST_LOCK_FILE, windowInfo.options?.namespace, windowInfo.options?.file);
-      }
 
       ipcMain.emit(SIGNAL_REFRESH_WORKSPACE);
     });

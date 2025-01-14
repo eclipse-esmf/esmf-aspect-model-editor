@@ -11,25 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AfterViewInit, Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {first} from 'rxjs/operators';
-import {Observable} from 'rxjs';
-import {MxGraphService, MxGraphShapeSelectorService} from '@ame/mx-graph';
-import {ConfigurationService, Settings} from '@ame/settings-dialog';
-import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/bar-item.component';
-import {BindingsService, NotificationsService} from '@ame/shared';
-import {EditorService} from '../editor.service';
 import {ShapeConnectorService} from '@ame/connection';
-import {FileHandlingService} from './services';
-import {MatDialog} from '@angular/material/dialog';
-import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
-import {ModelService} from '@ame/rdf/services';
 import {FiltersService} from '@ame/loader-filters';
-import {ShapeSettingsService} from '../editor-dialog';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import {MxGraphService, MxGraphShapeSelectorService} from '@ame/mx-graph';
+import {ModelService} from '@ame/rdf/services';
+import {ConfigurationService, Settings} from '@ame/settings-dialog';
+import {BindingsService, NotificationsService} from '@ame/shared';
 import {LanguageTranslateModule} from '@ame/translation';
-import {MatIconModule} from '@angular/material/icon';
 import {AsyncPipe, CommonModule} from '@angular/common';
+import {AfterViewInit, Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {Observable} from 'rxjs';
+import {first} from 'rxjs/operators';
+import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/bar-item.component';
+import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
+import {ShapeSettingsService} from '../editor-dialog';
+import {EditorService} from '../editor.service';
+import {FileHandlingService} from './services';
 
 @Component({
   standalone: true,

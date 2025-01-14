@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {AlertOptions} from '@ame/shared';
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {AlertOptions} from '@ame/shared';
 
 import {MatButtonModule} from '@angular/material/button';
 

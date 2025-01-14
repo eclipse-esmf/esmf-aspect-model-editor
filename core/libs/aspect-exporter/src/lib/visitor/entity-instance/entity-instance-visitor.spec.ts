@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {TestBed} from '@angular/core/testing';
-import {DataFactory, Quad, Store} from 'n3';
-import {describe, expect, it} from '@jest/globals';
 import {EntityInstanceVisitor} from '@ame/aspect-exporter';
-import {Samm} from '@ame/vocabulary';
 import {ModelService, RdfService} from '@ame/rdf/services';
+import {TestBed} from '@angular/core/testing';
+import {Samm} from '@esmf/aspect-model-loader';
+import {describe, expect, it} from '@jest/globals';
+import {DataFactory, Quad, Store} from 'n3';
 import {provideMockObject} from '../../../../../../jest-helpers';
 
 class MockSamm {

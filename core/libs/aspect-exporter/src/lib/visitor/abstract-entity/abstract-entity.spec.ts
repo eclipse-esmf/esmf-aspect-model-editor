@@ -11,17 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultAbstractEntity, DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
-import {Samm} from '@ame/vocabulary';
 import {TestBed} from '@angular/core/testing';
+import {DefaultEntity, DefaultProperty, Samm} from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
+import {MockProviders} from 'ng-mocks';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AbstractEntityVisitor} from './abstract-entity';
-import {MockProviders} from 'ng-mocks';
 
 describe('Abstract Entity Visitor', () => {
   let service: AbstractEntityVisitor;
@@ -32,8 +31,13 @@ describe('Abstract Entity Visitor', () => {
     hasNamespace: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
   };
-  const property: OverWrittenProperty = {property: new DefaultProperty('', '', '', null), keys: {}};
-  const entity = new DefaultAbstractEntity('1', 'samm#abstractEntity1', 'abstractEntity1', [property]);
+  const property: DefaultProperty = new DefaultProperty({name: '', metaModelVersion: '', aspectModelUrn: '', characteristic: null});
+  const entity = new DefaultEntity({
+    metaModelVersion: '1',
+    aspectModelUrn: 'samm#abstractEntity1',
+    name: 'abstractEntity1',
+    properties: [property],
+  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({

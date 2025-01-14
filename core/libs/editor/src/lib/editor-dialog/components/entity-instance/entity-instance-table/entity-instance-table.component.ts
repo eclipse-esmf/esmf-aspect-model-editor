@@ -11,6 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DataType, EditorDialogValidators, EntityInstanceUtil, FormFieldHelper} from '@ame/editor';
+import {isDataTypeLangString} from '@ame/shared';
 import {ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
 import {
   AbstractControl,
@@ -22,22 +24,20 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {
-  BaseMetaModelElement,
   Characteristic,
-  DefaultAbstractProperty,
   DefaultCollection,
   DefaultEntityInstance,
   DefaultProperty,
   EntityInstanceProperty,
-  OverWrittenProperty,
-} from '@ame/meta-model';
-import {DataType, EditorDialogValidators, EntityInstanceUtil, FormFieldHelper} from '@ame/editor';
-import {InputFieldComponent} from '../../fields';
-import {map, Observable, of, startWith, Subscription} from 'rxjs';
+  NamedElement,
+  PropertyPayload,
+  Value,
+} from '@esmf/aspect-model-loader';
 import * as locale from 'locale-codes';
-import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
-import {isDataTypeLangString} from '@ame/shared';
+import {Observable, Subscription, map, of, startWith} from 'rxjs';
+import {InputFieldComponent} from '../../fields';
 
 @Component({
   selector: 'ame-entity-instance-table',
@@ -52,7 +52,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
   protected readonly dataType = DataType;
 
   propertiesForm: FormGroup;
-  sources: EntityInstanceProperty[] = [];
+  sources: EntityInstanceProperty<DefaultProperty>[] = [];
   subscriptions = new Subscription();
 
   filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
@@ -60,10 +60,6 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
 
   get entityValuePropertiesForm(): FormGroup {
     return this.parentForm.get('entityValueProperties') as FormGroup;
-  }
-
-  getFormArray(value: string): FormArray {
-    return this.entityValuePropertiesForm.get(value) as FormArray;
   }
 
   constructor(
@@ -75,65 +71,72 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
 
   ngOnInit(): void {
     this.subscription.add(
-      this.getMetaModelData().subscribe((metaModelElement: BaseMetaModelElement) => {
+      this.getMetaModelData().subscribe((metaModelElement: NamedElement) => {
         this.propertiesForm = new FormGroup({});
         this.metaModelElement = metaModelElement as DefaultEntityInstance;
         this.parentForm.setControl('entityValueProperties', this.propertiesForm);
 
-        const {properties, entity} = this.metaModelElement;
+        const {assertions: properties, type: entity} = this.metaModelElement;
 
-        if (!properties.length && entity.allProperties.length) {
-          for (const property of entity.allProperties) {
-            this.metaModelElement.addProperty(property);
+        if (!properties.size && entity.properties.length) {
+          for (const property of entity.properties) {
+            !this.metaModelElement.getAssertion(property.aspectModelUrn).length &&
+              this.metaModelElement.setAssertion(property.aspectModelUrn, new Value('', property.characteristic?.dataType));
           }
         }
 
-        this.metaModelElement.properties.forEach(entityValueProperty => {
-          const property = entityValueProperty.key.property;
-          const validators = this.getValidators(entityValueProperty);
-          const {value, language} = entityValueProperty;
+        this.metaModelElement.getTuples().forEach(([propertyUrn, value]) => {
+          const property = this.loadedFiles.getElement<DefaultProperty>(propertyUrn);
+          const validators = this.getValidators([propertyUrn, value]);
 
-          this.initializeFormControl(property, validators, value, language);
+          this.initializeFormControl(property, validators, value instanceof DefaultEntityInstance ? value : value.value, value.language);
         });
 
-        this.sources = this.metaModelElement?.entity?.allProperties.map(prop => this.createEntityValueProp(prop));
+        this.sources = this.metaModelElement?.type?.properties.map(prop => this.createEntityValueProp(prop));
       }),
     );
   }
 
-  private createEntityValueProp(prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): EntityInstanceProperty {
-    const property = prop.property as DefaultProperty;
+  getFormArray(value: string): FormArray {
+    return this.entityValuePropertiesForm.get(value) as FormArray;
+  }
+
+  getPropertyPayload(propertyUrn: string): PropertyPayload {
+    return this.metaModelElement.type.propertiesPayload[propertyUrn];
+  }
+
+  private createEntityValueProp(property: DefaultProperty): EntityInstanceProperty<DefaultProperty> {
     const propertyControl = this.propertiesForm.get(property.name);
 
     if (!propertyControl) {
       const propertiesFormArray = EntityInstanceUtil.getDisplayControl(this.propertiesForm, property.name);
-      const valueControl = this.createFormControl(prop);
-      this.subscribeToEntityValueChanges(valueControl, prop.property as DefaultProperty);
+      const valueControl = this.createFormControl(property);
+      this.subscribeToEntityValueChanges(valueControl, property);
 
       const group = new UntypedFormGroup({value: valueControl});
       propertiesFormArray.push(group);
 
-      if (EntityInstanceUtil.isDefaultPropertyWithLangString(prop)) {
-        const languageControl = this.createFormControl(prop);
+      if (EntityInstanceUtil.isDefaultPropertyWithLangString(property)) {
+        const languageControl = this.createFormControl(property);
         this.subscribeToLangValueChanges(languageControl, property);
         group.addControl('language', languageControl);
       }
     }
 
-    return {
-      key: prop as OverWrittenProperty,
-      value: '',
-      language: EntityInstanceUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined,
-      optional: prop.keys.optional,
-    };
+    return [
+      property,
+      new Value('', property.characteristic?.dataType, EntityInstanceUtil.isDefaultPropertyWithLangString(property) ? '' : undefined),
+    ];
   }
 
-  private createFormControl(prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): FormControl {
-    return new FormControl('', prop.keys.optional ? null : EditorDialogValidators.requiredObject);
+  private createFormControl(prop: DefaultProperty): FormControl {
+    const propertyPayload = this.metaModelElement.type.propertiesPayload[prop.aspectModelUrn];
+    return new FormControl('', propertyPayload?.optional ? null : EditorDialogValidators.requiredObject);
   }
 
-  private getValidators(entityValueProperty: EntityInstanceProperty): (control: AbstractControl) => ValidationErrors | null {
-    return entityValueProperty.key.keys.optional ? null : Validators.required;
+  private getValidators([propertyUrn]: EntityInstanceProperty): (control: AbstractControl) => ValidationErrors | null {
+    const propertyPayload = this.metaModelElement.type.propertiesPayload[propertyUrn];
+    return propertyPayload?.optional ? null : Validators.required;
   }
 
   private initializeFormControl(
@@ -179,7 +182,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     validators: ValidationErrors | null,
     property: DefaultProperty,
   ): void {
-    if ((propertyLanguage || propertyLanguage === '') && isDataTypeLangString(property)) {
+    if ((propertyLanguage || propertyLanguage === '') && isDataTypeLangString(property.characteristic.dataType)) {
       const languageControl = new FormControl(
         {
           value: propertyLanguage,
@@ -231,7 +234,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     this.changeDetector.detectChanges();
   }
 
-  changeLanguageSelection(ev: EntityInstanceProperty, propertyValue: string, index: number): void {
+  changeLanguageSelection(ev: EntityInstanceProperty<DefaultProperty>, propertyValue: string, index: number): void {
     EntityInstanceUtil.changeLanguageSelection(this.propertiesForm, ev, propertyValue, index);
     this.closeAllAutocompletePanels();
     this.changeDetector.detectChanges();
@@ -248,15 +251,17 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     this.changeDetector.detectChanges();
   }
 
-  addLanguage(entityValueProp: EntityInstanceProperty): void {
-    const fieldValidators = entityValueProp.optional ? null : EditorDialogValidators.requiredObject;
-    const languagesFormArray = this.propertiesForm.get(entityValueProp.key.property.name) as FormArray;
+  addLanguage([property]: EntityInstanceProperty<DefaultProperty>): void {
+    const propertyPayload = this.metaModelElement.type.propertiesPayload[property.aspectModelUrn];
+
+    const fieldValidators = propertyPayload?.optional ? null : EditorDialogValidators.requiredObject;
+    const languagesFormArray = this.propertiesForm.get(property.name) as FormArray;
 
     const languageInputControl = new FormControl('', fieldValidators);
 
     this.subscriptions.add(
       languageInputControl.valueChanges.subscribe(value => {
-        this.changeLanguageInput(entityValueProp.key.property.name, value);
+        this.changeLanguageInput(property.name, value);
       }),
     );
 
@@ -268,8 +273,8 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     languagesFormArray.push(languageFormGroup);
   }
 
-  removeLanguage(entityValueProp: EntityInstanceProperty, index: number): void {
-    const languagesFormArray = this.propertiesForm.get(entityValueProp.key.property.name) as FormArray;
+  removeLanguage([property]: EntityInstanceProperty<DefaultProperty>, index: number): void {
+    const languagesFormArray = this.propertiesForm.get(property.name) as FormArray;
     languagesFormArray.removeAt(index);
   }
 

@@ -11,15 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {ModelService} from '@ame/rdf/services';
+import {RdfModelUtil} from '@ame/rdf/utils';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Directive, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {EditorModelService} from '../../editor-model.service';
-import {tap} from 'rxjs/operators';
+import {DefaultCharacteristic, DefaultConstraint, NamedElement} from '@esmf/aspect-model-loader';
 import {Subscription} from 'rxjs';
-import {BaseMetaModelElement, DefaultCharacteristic, DefaultConstraint} from '@ame/meta-model';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {RdfModelUtil} from '@ame/rdf/utils';
-import {ModelService} from '@ame/rdf/services';
+import {tap} from 'rxjs/operators';
+import {EditorModelService} from '../../editor-model.service';
 import {PreviousFormDataSnapshot} from '../../interfaces';
 
 @Directive()
@@ -31,7 +32,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   public subscription: Subscription = new Subscription();
   public selectedMetaModelElement: T;
   public metaModelClassName: string;
-  public get originalCharacteristic(): BaseMetaModelElement {
+  public get originalCharacteristic(): NamedElement {
     return this.editorModelService.originalMetaModel;
   }
 
@@ -43,10 +44,11 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
     public editorModelService: EditorModelService,
     public modelService: ModelService,
     public languageSettings: SammLanguageSettingsService,
+    public loadedFilesService: LoadedFilesService,
   ) {}
 
   protected setPreviousData() {
-    if (this.metaModelElement instanceof DefaultCharacteristic && this.metaModelElement.isPredefined()) {
+    if (this.metaModelElement instanceof DefaultCharacteristic && this.metaModelElement.isPredefined) {
       return;
     }
 
@@ -83,7 +85,12 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   }
 
   public setMetaModelClassName(): void {
-    if (RdfModelUtil.isCharacteristicInstance(this.selectedMetaModelElement.aspectModelUrn, this.modelService.currentRdfModel.SAMMC())) {
+    if (
+      RdfModelUtil.isCharacteristicInstance(
+        this.selectedMetaModelElement.aspectModelUrn,
+        this.loadedFilesService.currentLoadedFile.rdfModel.sammC,
+      )
+    ) {
       this.metaModelClassName = this.selectedMetaModelElement.aspectModelUrn.split('#')[1].replace('Default', '');
     } else {
       this.metaModelClassName = this.selectedMetaModelElement.className.replace('Default', '');
@@ -94,16 +101,16 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
     if (this.languageSettings.getSammLanguageCodes()) {
       this.languageSettings.getSammLanguageCodes().forEach(languageCode => {
         if (!metaModelElement.getPreferredName(languageCode) && !metaModelElement.getDescription(languageCode)) {
-          metaModelElement.addPreferredName(languageCode, '');
-          metaModelElement.addDescription(languageCode, '');
+          metaModelElement.preferredNames.set(languageCode, '');
+          metaModelElement.descriptions.set(languageCode, '');
         }
       });
     }
   }
 
   public updateFields(modelElement: T) {
-    this.metaModelElement.metaModelVersion = this.modelService.currentRdfModel.getMetaModelVersion();
-    this.editorModelService._updateMetaModelElement(this.metaModelElement);
+    this.metaModelElement.metaModelVersion = this.loadedFilesService.currentLoadedFile.rdfModel.getMetaModelVersion();
+    this.editorModelService.updateMetaModelElement(this.metaModelElement);
     this.parentForm.get('changedMetaModel').setValue(modelElement);
   }
 

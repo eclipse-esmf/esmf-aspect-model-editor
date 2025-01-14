@@ -11,17 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {TestBed} from '@angular/core/testing';
-import {DefaultAspect, DefaultProperty} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
+import {RdfService} from '@ame/rdf/services';
+import {TestBed} from '@angular/core/testing';
+import {DefaultAspect, DefaultProperty, Samm} from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
+import {MockProviders} from 'ng-mocks';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AspectVisitor} from './aspect-visitor';
-import {RdfService} from '@ame/rdf/services';
-import {Samm} from '@ame/vocabulary';
-import {MockProviders} from 'ng-mocks';
 
 describe('Aspect Visitor', () => {
   let service: AspectVisitor;
@@ -32,7 +31,7 @@ describe('Aspect Visitor', () => {
     hasNamespace: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
   };
-  const aspect = new DefaultAspect('1', 'samm#aspect', 'aspect1', null);
+  const aspect = new DefaultAspect({metaModelVersion: '1', aspectModelUrn: 'samm#aspect', name: 'aspect1'});
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -78,8 +77,8 @@ describe('Aspect Visitor', () => {
     expect(service.rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.operations);
     expect(service.rdfListService.createEmpty).toHaveBeenCalledWith(aspect, ListProperties.events);
 
-    const property = new DefaultProperty('2', 'samm#property', 'property1', null);
-    aspect.properties = [{property, keys: {}}];
+    const property = new DefaultProperty({metaModelVersion: '2', aspectModelUrn: 'samm#property', name: 'property1'});
+    aspect.properties = [property];
 
     service.visit(aspect);
 

@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {SettingDialogComponent} from '@ame/settings-dialog';
 import {DocumentComponent} from '@ame/editor';
+import {SettingDialogComponent} from '@ame/settings-dialog';
+import {Injectable} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {NotificationsComponent} from '../components/notifications/notifications.component';
 

@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ModelInfo} from '@ame/mx-graph';
 import {
-  BaseMetaModelElement,
-  DefaultAbstractEntity,
-  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -31,47 +29,52 @@ import {
   DefaultStructuredValue,
   DefaultTrait,
   DefaultUnit,
-} from '@ame/meta-model';
-import {ModelInfo} from '@ame/mx-graph';
+  NamedElement,
+} from '@esmf/aspect-model-loader';
 
 export class ShapeConnectorUtil {
-  static isEntityPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+  static isEntityPropertyConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
     return parentModel instanceof DefaultEntity && childModel instanceof DefaultProperty;
   }
 
-  static isEntityEntityConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+  static isEntityEntityConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
     return parentModel instanceof DefaultEntity && childModel instanceof DefaultEntity;
   }
 
-  static isEntityAbstractEntityConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultEntity && childModel instanceof DefaultAbstractEntity;
+  static isEntityAbstractEntityConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return parentModel instanceof DefaultEntity && childModel instanceof DefaultEntity && childModel.isAbstractEntity();
   }
 
-  static isAbstractEntityAbstractEntityConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultAbstractEntity && childModel instanceof DefaultAbstractEntity;
+  static isAbstractEntityAbstractEntityConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return (
+      parentModel instanceof DefaultEntity &&
+      parentModel.isAbstractEntity() &&
+      childModel instanceof DefaultEntity &&
+      childModel.isAbstractEntity()
+    );
   }
 
-  static isAbstractEntityPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultAbstractEntity && childModel instanceof DefaultProperty;
+  static isAbstractEntityPropertyConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return parentModel instanceof DefaultEntity && parentModel.isAbstractEntity() && childModel instanceof DefaultProperty;
   }
 
-  static isCharacteristicEntityConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+  static isCharacteristicEntityConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
     return parentModel instanceof DefaultCharacteristic && childModel instanceof DefaultEntity;
   }
 
-  static isPropertyStructuredValueConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+  static isPropertyStructuredValueConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
     return parentModel instanceof DefaultProperty && childModel instanceof DefaultStructuredValue;
   }
 
-  static isPropertyCharacteristicConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+  static isPropertyCharacteristicConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
     return parentModel instanceof DefaultProperty && childModel instanceof DefaultCharacteristic;
   }
 
-  static isTraitConstraintConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+  static isTraitConstraintConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
     return parentModel instanceof DefaultTrait && childModel instanceof DefaultConstraint;
   }
 
-  static isTraitCharacteristicConnectionValid(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+  static isTraitCharacteristicConnectionValid(parentModel: NamedElement, childModel: NamedElement): boolean {
     return (
       parentModel instanceof DefaultTrait &&
       childModel instanceof DefaultCharacteristic &&
@@ -81,95 +84,86 @@ export class ShapeConnectorUtil {
     );
   }
 
-  static isAspectPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+  static isAspectPropertyConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
     return parentModel instanceof DefaultAspect && (childModel instanceof DefaultProperty || childModel instanceof DefaultOperation);
   }
 
-  static isPropertyPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+  static isPropertyPropertyConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
     return parentModel instanceof DefaultProperty && childModel instanceof DefaultProperty;
   }
 
-  static isPropertyAbstractPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultProperty && childModel instanceof DefaultAbstractProperty;
+  static isPropertyAbstractPropertyConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return parentModel instanceof DefaultProperty && childModel instanceof DefaultProperty && childModel.isAbstract;
   }
 
-  static isAbstractEntityAbstractPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultAbstractEntity && childModel instanceof DefaultAbstractProperty;
-  }
-
-  static isAbstractPropertyAbstractPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultAbstractProperty && childModel instanceof DefaultAbstractProperty;
-  }
-
-  static isAspectEventConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultAspect && childModel instanceof DefaultEvent;
-  }
-
-  static isEventPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultEvent && childModel instanceof DefaultProperty;
-  }
-
-  static isEitherCharacteristicLeftConnection(
-    parentModel: BaseMetaModelElement,
-    childModel: BaseMetaModelElement,
-    modelInfo: ModelInfo,
-  ): boolean {
-    return parentModel instanceof DefaultEither && childModel instanceof DefaultCharacteristic && modelInfo === ModelInfo.IS_EITHER_LEFT;
-  }
-
-  static isEitherCharacteristicRightConnection(
-    parentModel: BaseMetaModelElement,
-    childModel: BaseMetaModelElement,
-    modelInfo: ModelInfo,
-  ): boolean {
-    return parentModel instanceof DefaultEither && childModel instanceof DefaultCharacteristic && modelInfo === ModelInfo.IS_EITHER_RIGHT;
-  }
-
-  static isOperationPropertyInputConnection(
-    parentModel: BaseMetaModelElement,
-    childModel: BaseMetaModelElement,
-    modelInfo: ModelInfo,
-  ): boolean {
-    return this.isOperationPropertyConnection(parentModel, childModel) && modelInfo === ModelInfo.IS_OPERATION_INPUT;
-  }
-
-  static isOperationPropertyOutputConnection(
-    parentModel: BaseMetaModelElement,
-    childModel: BaseMetaModelElement,
-    modelInfo: ModelInfo,
-  ): boolean {
-    return this.isOperationPropertyConnection(parentModel, childModel) && modelInfo === ModelInfo.IS_OPERATION_OUTPUT;
-  }
-
-  static isOperationPropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultOperation && childModel instanceof DefaultProperty;
-  }
-
-  static isPropertyOperationConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultProperty && childModel instanceof DefaultOperation;
-  }
-
-  static isCharacteristicCollectionConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultCharacteristic && childModel instanceof DefaultCollection;
-  }
-
-  static isCollectionCharacteristicConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return parentModel instanceof DefaultCollection && childModel instanceof DefaultCharacteristic;
-  }
-
-  static isCharacteristicUnitConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
-    return (parentModel instanceof DefaultQuantifiable || parentModel instanceof DefaultMeasurement) && childModel instanceof DefaultUnit;
-  }
-
-  static isEnumerationEntityValueConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+  static isAbstractEntityAbstractPropertyConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
     return (
-      parentModel instanceof DefaultEnumeration &&
-      childModel instanceof DefaultEntityInstance &&
-      parentModel.dataType?.getUrn() === childModel.entity?.getUrn()
+      parentModel instanceof DefaultEntity &&
+      parentModel.isAbstractEntity() &&
+      childModel instanceof DefaultProperty &&
+      childModel.isAbstract
     );
   }
 
-  static isStructuredValuePropertyConnection(parentModel: BaseMetaModelElement, childModel: BaseMetaModelElement): boolean {
+  static isAbstractPropertyAbstractPropertyConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return (
+      parentModel instanceof DefaultProperty && parentModel.isAbstract && childModel instanceof DefaultProperty && childModel.isAbstract
+    );
+  }
+
+  static isAspectEventConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return parentModel instanceof DefaultAspect && childModel instanceof DefaultEvent;
+  }
+
+  static isEventPropertyConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return parentModel instanceof DefaultEvent && childModel instanceof DefaultProperty;
+  }
+
+  static isEitherCharacteristicLeftConnection(parentModel: NamedElement, childModel: NamedElement, modelInfo: ModelInfo): boolean {
+    return parentModel instanceof DefaultEither && childModel instanceof DefaultCharacteristic && modelInfo === ModelInfo.IS_EITHER_LEFT;
+  }
+
+  static isEitherCharacteristicRightConnection(parentModel: NamedElement, childModel: NamedElement, modelInfo: ModelInfo): boolean {
+    return parentModel instanceof DefaultEither && childModel instanceof DefaultCharacteristic && modelInfo === ModelInfo.IS_EITHER_RIGHT;
+  }
+
+  static isOperationPropertyInputConnection(parentModel: NamedElement, childModel: NamedElement, modelInfo: ModelInfo): boolean {
+    return this.isOperationPropertyConnection(parentModel, childModel) && modelInfo === ModelInfo.IS_OPERATION_INPUT;
+  }
+
+  static isOperationPropertyOutputConnection(parentModel: NamedElement, childModel: NamedElement, modelInfo: ModelInfo): boolean {
+    return this.isOperationPropertyConnection(parentModel, childModel) && modelInfo === ModelInfo.IS_OPERATION_OUTPUT;
+  }
+
+  static isOperationPropertyConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return parentModel instanceof DefaultOperation && childModel instanceof DefaultProperty;
+  }
+
+  static isPropertyOperationConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return parentModel instanceof DefaultProperty && childModel instanceof DefaultOperation;
+  }
+
+  static isCharacteristicCollectionConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return parentModel instanceof DefaultCharacteristic && childModel instanceof DefaultCollection;
+  }
+
+  static isCollectionCharacteristicConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return parentModel instanceof DefaultCollection && childModel instanceof DefaultCharacteristic;
+  }
+
+  static isCharacteristicUnitConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return (parentModel instanceof DefaultQuantifiable || parentModel instanceof DefaultMeasurement) && childModel instanceof DefaultUnit;
+  }
+
+  static isEnumerationEntityValueConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return (
+      parentModel instanceof DefaultEnumeration &&
+      childModel instanceof DefaultEntityInstance &&
+      parentModel.dataType?.getUrn() === childModel.type?.getUrn()
+    );
+  }
+
+  static isStructuredValuePropertyConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
     return parentModel instanceof DefaultStructuredValue && childModel instanceof DefaultProperty;
   }
 }

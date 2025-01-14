@@ -13,7 +13,7 @@
 
 <mat-form-field [floatLabel]="getControl('minValue')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="minValue">minValue</mat-label>
-  <input matInput type="number" name="minValue" [formControl]="getControl('minValue')" data-cy="minValue" pattern="^[0-9]\d*$" />
+  <input [formControl]="getControl('minValue')" matInput type="number" name="minValue" data-cy="minValue" pattern="^[0-9]\d*$" />
   @if (getControl('minValue').errors?.pattern) {
     <mat-error>Please provide a non-negative integer</mat-error>
   }

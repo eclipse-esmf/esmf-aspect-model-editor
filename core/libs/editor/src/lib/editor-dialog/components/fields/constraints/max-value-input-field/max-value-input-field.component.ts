@@ -10,12 +10,12 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, DefaultRangeConstraint, DefaultTrait, Type} from '@ame/meta-model';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {DataTypeService} from '@ame/shared';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {DefaultRangeConstraint, DefaultTrait, NamedElement, Type} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -39,7 +39,7 @@ export class MaxValueInputFieldComponent extends InputFieldComponent<DefaultRang
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe((modelElement: BaseMetaModelElement) => {
+    this.subscription = this.getMetaModelData().subscribe((modelElement: NamedElement) => {
       if (modelElement instanceof DefaultRangeConstraint) {
         this.metaModelElement = modelElement;
       }
@@ -64,7 +64,7 @@ export class MaxValueInputFieldComponent extends InputFieldComponent<DefaultRang
       this.fieldName,
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
-        disabled: this.metaModelElement.isExternalReference(),
+        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       }),
     );
   }

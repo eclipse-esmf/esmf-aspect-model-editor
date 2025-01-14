@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './system-configuration/automated-workflow/automated-workflow.component';
-export * from './system-configuration/editor-configuration/editor-configuration.component';
-export * from './system-configuration/header-copyright/header-copyright.component';
 export * from './model-configuration/language-settings/language-settings.component';
 export * from './model-configuration/namespace-settings/namespace-settings.component';
 export * from './settings-dialog/setting-dialog.component';
+export * from './system-configuration/automated-workflow/automated-workflow.component';
+export * from './system-configuration/editor-configuration/editor-configuration.component';
+export * from './system-configuration/header-copyright/header-copyright.component';

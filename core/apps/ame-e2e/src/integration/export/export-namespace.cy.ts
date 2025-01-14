@@ -13,8 +13,8 @@
 
 /// <reference types="Cypress" />
 
-import {SELECTOR_enNamespaceList} from '../../support/constants';
 import {setUpDynamicModellingInterceptors, setUpStaticModellingInterceptors} from '../../support/api-mocks';
+import {SELECTOR_enNamespaceList} from '../../support/constants';
 
 describe('Export namespace', () => {
   it('should have all namespaces ready for export from the very start', () => {

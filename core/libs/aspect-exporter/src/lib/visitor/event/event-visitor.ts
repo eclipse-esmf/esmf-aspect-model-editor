@@ -11,25 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ListProperties, RdfListService, RdfNodeService} from '@ame/aspect-exporter';
+import {LoadedFilesService} from '@ame/cache';
+import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
 import {Injectable} from '@angular/core';
+import {DefaultEvent} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {BaseVisitor} from '../base-visitor';
-import {ListProperties, RdfListService, RdfNodeService} from '@ame/aspect-exporter';
-import {DefaultEvent} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
 
 @Injectable()
 export class EventVisitor extends BaseVisitor<DefaultEvent> {
   private get store(): Store {
-    return this.rdfNodeService.modelService.currentRdfModel.store;
+    return this.loadedFiles.currentLoadedFile?.rdfModel?.store;
   }
 
   constructor(
     private rdfNodeService: RdfNodeService,
-    rdfService: RdfService,
+    loadedFiles: LoadedFilesService,
     public rdfListService: RdfListService,
   ) {
-    super(rdfService);
+    super(loadedFiles);
   }
 
   visit(event: DefaultEvent): DefaultEvent {
@@ -44,21 +45,21 @@ export class EventVisitor extends BaseVisitor<DefaultEvent> {
 
   private addProperties(event: DefaultEvent) {
     this.rdfNodeService.update(event, {
-      preferredName: event.getAllLocalesPreferredNames().map(language => ({
+      preferredName: getPreferredNamesLocales(event).map(language => ({
         language,
         value: event.getPreferredName(language),
       })),
-      description: event.getAllLocalesDescriptions().map(language => ({
+      description: getDescriptionsLocales(event).map(language => ({
         language,
         value: event.getDescription(language),
       })),
-      see: event.getSeeReferences() || [],
+      see: event.getSee() || [],
     });
 
-    if (event.parameters?.length) {
-      this.rdfListService.push(event, ...event.parameters);
-      for (const param of event.parameters) {
-        this.setPrefix(param.property.aspectModelUrn);
+    if (event.properties?.length) {
+      this.rdfListService.push(event, ...event.properties);
+      for (const param of event.properties) {
+        this.setPrefix(param.aspectModelUrn);
       }
     } else {
       this.rdfListService.createEmpty(event, ListProperties.parameters);

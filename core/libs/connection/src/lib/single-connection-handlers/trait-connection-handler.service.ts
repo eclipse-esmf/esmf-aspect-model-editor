@@ -12,11 +12,14 @@
  */
 
 import {FiltersService} from '@ame/loader-filters';
-import {DefaultTrait, ModelElementNamingService, DefaultCharacteristic, DefaultConstraint} from '@ame/meta-model';
-import {MxGraphService, MxGraphHelper} from '@ame/mx-graph';
+import {ModelElementNamingService} from '@ame/meta-model';
+import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {ElementCreatorService} from '@ame/shared';
+import {useUpdater} from '@ame/utils';
 import {Injectable} from '@angular/core';
-import {SingleShapeConnector} from '../models';
+import {DefaultCharacteristic, DefaultConstraint, DefaultTrait} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {SingleShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -26,16 +29,20 @@ export class TraitConnectionHandler implements SingleShapeConnector<DefaultTrait
     private mxGraphService: MxGraphService,
     private modelElementNamingService: ModelElementNamingService,
     private filtersService: FiltersService,
+    private elementCreator: ElementCreatorService,
   ) {}
 
   public connect(trait: DefaultTrait, source: mxgraph.mxCell) {
     const defaultElement =
-      trait.getBaseCharacteristic() == null ? DefaultCharacteristic.createInstance() : DefaultConstraint.createInstance();
+      trait.getBaseCharacteristic() == null
+        ? this.elementCreator.createEmptyElement(DefaultCharacteristic)
+        : this.elementCreator.createEmptyElement(DefaultConstraint);
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultElement);
     const child = this.mxGraphService.renderModelElement(
       this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
     );
-    trait.update(defaultElement);
+
+    useUpdater(trait).update(defaultElement);
     this.mxGraphService.assignToParent(child, source);
     this.mxGraphService.moveCells([child], source.getGeometry().x + 30, source.getGeometry().y + 60);
     this.mxGraphService.formatCell(child);

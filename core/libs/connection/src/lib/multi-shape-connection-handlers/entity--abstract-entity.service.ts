@@ -12,23 +12,23 @@
  */
 
 import {FiltersService} from '@ame/loader-filters';
-import {DefaultAbstractEntity, DefaultEntity} from '@ame/meta-model';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
+import {LanguageTranslationService} from '@ame/translation';
 import {Injectable} from '@angular/core';
+import {DefaultEntity} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
 import {EntityInheritanceConnector, MultiShapeConnector} from '../models';
 import {EntityPropertyConnectionHandler} from './entity--property.service';
 import {PropertyAbstractPropertyConnectionHandler} from './property--abstract-property.service';
-import {LanguageTranslationService} from '@ame/translation';
-import {mxgraph} from 'mxgraph-factory';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EntityAbstractEntityConnectionHandler
   extends EntityInheritanceConnector
-  implements MultiShapeConnector<DefaultAbstractEntity, DefaultEntity>
+  implements MultiShapeConnector<DefaultEntity, DefaultEntity>
 {
   constructor(
     protected mxGraphService: MxGraphService,
@@ -52,12 +52,7 @@ export class EntityAbstractEntityConnectionHandler
     );
   }
 
-  public connect(
-    parentMetaModel: DefaultEntity,
-    childMetaModel: DefaultAbstractEntity,
-    parent: mxgraph.mxCell,
-    child: mxgraph.mxCell,
-  ): void {
+  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultEntity, parent: mxgraph.mxCell, child: mxgraph.mxCell): void {
     if (MxGraphHelper.isEntityCycleInheritance(child, parentMetaModel, this.mxGraphService.graph)) {
       this.notificationService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,

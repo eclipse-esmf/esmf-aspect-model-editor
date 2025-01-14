@@ -11,14 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
 import {SelectionModel} from '@angular/cdk/collections';
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {filter} from 'rxjs/operators';
-import {EntityInstanceModalComponent} from '..';
-import {DefaultEntityInstance, DefaultEnumeration, EntityInstanceProperty} from '@ame/meta-model';
+import {Component, effect, inject, input, OnDestroy, OnInit, output, signal} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
+import {DefaultEntityInstance, DefaultEnumeration, EntityInstanceProperty, Value} from '@esmf/aspect-model-loader';
+import {filter} from 'rxjs/operators';
 import {DataType, FormFieldHelper} from '../../../../helpers/form-field.helper';
+import {EntityInstanceModalComponent} from '../entity-instance-modal/entity-instance-modal.component';
+
+interface MappedAssertion {
+  property: {urn: string; name: string};
+  value: Value;
+}
 
 @Component({
   selector: 'ame-entity-instance-view',
@@ -26,63 +32,55 @@ import {DataType, FormFieldHelper} from '../../../../helpers/form-field.helper';
   styleUrls: ['./entity-instance-view.component.scss'],
 })
 export class EntityInstanceViewComponent implements OnInit, OnDestroy {
-  private _complexValues: DefaultEntityInstance[];
-  private _enumeration: DefaultEnumeration;
-
+  readonly displayedColumns = ['key', 'value'];
   protected readonly formFieldHelper = FormFieldHelper;
   protected readonly dataType = DataType;
+  protected complexValues = signal<DefaultEntityInstance[]>([]);
 
   public searchFilter: string;
   public selection: SelectionModel<EntityInstanceProperty> = new SelectionModel<EntityInstanceProperty>();
+  public tuples: Record<string, MappedAssertion[]> = {};
 
-  readonly displayedColumns = ['key', 'value'];
+  public complexValueChange = output<DefaultEntityInstance[]>();
+  public parentForm = input<FormGroup>();
+  public enumeration = input<DefaultEnumeration>();
+  public instances = input([], {
+    transform: (values: DefaultEntityInstance[]) =>
+      values?.length > 0 && values.some(val => val instanceof DefaultEntityInstance) ? this.checkInnerComplexValues(values) : [],
+    alias: 'complexValues',
+  });
 
-  @Input() public parentForm: FormGroup;
+  public loadedFiles = inject(LoadedFilesService);
 
-  @Input()
-  public set complexValues(newValues: DefaultEntityInstance[]) {
-    if (newValues?.length > 0 && newValues.some(val => val instanceof DefaultEntityInstance)) {
-      newValues = this.checkInnerComplexValues(newValues);
-    } else {
-      newValues = [];
-    }
-    this._complexValues = newValues;
-    // keep the original entity references
-    this._complexValues.forEach((complexValue: DefaultEntityInstance) => {
-      complexValue.entity = newValues.find(newValue => newValue.aspectModelUrn === complexValue.aspectModelUrn).entity;
+  constructor(private matDialog: MatDialog) {
+    effect(() => {
+      for (const entityInstance of this.complexValues()) {
+        this.tuples[entityInstance.aspectModelUrn] = [
+          ...entityInstance.getTuples().map(([propertyUrn, value]) => ({
+            property: {
+              urn: propertyUrn,
+              name: propertyUrn.split('#')?.[1] || '',
+            },
+            value,
+          })),
+        ];
+      }
     });
   }
 
-  public get complexValues(): DefaultEntityInstance[] {
-    return this._complexValues;
-  }
-
-  @Input()
-  public set enumeration(value: DefaultEnumeration) {
-    this._enumeration = value;
-  }
-
-  public get enumeration(): DefaultEnumeration {
-    return this._enumeration;
-  }
-
-  @Output() complexValueChange = new EventEmitter<DefaultEntityInstance[]>();
-
-  constructor(private matDialog: MatDialog) {}
-
   ngOnInit() {
-    this.parentForm.setControl('deletedEntityValues', new FormControl([]));
-    this.parentForm.setControl('newEntityValues', new FormControl([]));
+    this.complexValues.set(this.instances());
+    this.parentForm().setControl('deletedEntityValues', new FormControl([]));
+    this.parentForm().setControl('newEntityValues', new FormControl([]));
   }
 
   ngOnDestroy() {
-    this.parentForm.removeControl('deletedEntityValues');
-    this.parentForm.removeControl('newEntityValues');
-    this.complexValues = [];
+    this.parentForm().removeControl('deletedEntityValues');
+    this.parentForm().removeControl('newEntityValues');
   }
 
-  trackProperty(_index: number, item: EntityInstanceProperty): string {
-    return `${item?.key.property.name}`;
+  trackProperty(_index: number, {property}: MappedAssertion): string {
+    return `${property.name}`;
   }
 
   trackValue(_index: number, item: DefaultEntityInstance): string {
@@ -93,8 +91,9 @@ export class EntityInstanceViewComponent implements OnInit, OnDestroy {
     const config = {
       data: {
         metaModel: this.enumeration,
-        dataType: this.parentForm.get('newDataType')?.value || this.parentForm.get('dataTypeEntity')?.value || this.enumeration.dataType,
-        complexValues: this.complexValues,
+        dataType:
+          this.parentForm().get('newDataType')?.value || this.parentForm().get('dataTypeEntity')?.value || this.enumeration().dataType,
+        complexValues: this.instances(),
       },
       minWidth: '700px',
     };
@@ -106,33 +105,31 @@ export class EntityInstanceViewComponent implements OnInit, OnDestroy {
         if (!entityValueConfig) {
           return;
         }
-        this.complexValues.push(entityValueConfig.entityValue);
-        this.complexValueChange.emit(this.complexValues);
-        const previousNewEntityValues = this.parentForm.get('newEntityValues').value;
-        this.parentForm.get('newEntityValues').setValue([...previousNewEntityValues, entityValueConfig['newEntityValues']]);
+        this.complexValues.update(values => [...values, entityValueConfig.entityValue]);
+        this.complexValueChange.emit(this.complexValues());
+        const previousNewEntityValues = this.parentForm().get('newEntityValues').value;
+        this.parentForm()
+          .get('newEntityValues')
+          .setValue([...previousNewEntityValues, entityValueConfig['newEntityValues']]);
       });
   }
 
   onDelete(item: DefaultEntityInstance, event: Event): void {
     event.stopPropagation();
+    const parentForm = this.parentForm();
     const filterEv = (ev: DefaultEntityInstance) => ev.aspectModelUrn !== item.aspectModelUrn;
-    this.complexValues = this._complexValues.filter(filterEv);
-    if (this.parentForm.get('newEntityValues').value.includes(item)) {
+    this.complexValues.update(values => values.filter(filterEv));
+    if (parentForm.get('newEntityValues').value.includes(item)) {
       // new value, no need to delete from model
-      this.parentForm.get('newEntityValues').setValue(this.parentForm.get('newEntityValues').value.filter(filterEv));
+      parentForm.get('newEntityValues').setValue(parentForm.get('newEntityValues').value.filter(filterEv));
     } else {
       // existing value
-      this.parentForm.get('deletedEntityValues').setValue([...this.parentForm.get('deletedEntityValues').value, item]);
+      parentForm.get('deletedEntityValues').setValue([...parentForm.get('deletedEntityValues').value, item]);
     }
-    this.complexValueChange.emit([...this.complexValues]);
+    this.complexValueChange.emit([...this.complexValues()]);
   }
 
   private checkInnerComplexValues(newValue: DefaultEntityInstance[]) {
-    newValue.forEach(value =>
-      value?.properties.forEach(innerVal => {
-        innerVal.isComplex = innerVal.value instanceof DefaultEntityInstance;
-      }),
-    );
     return newValue.filter(value => value instanceof DefaultEntityInstance);
   }
 }

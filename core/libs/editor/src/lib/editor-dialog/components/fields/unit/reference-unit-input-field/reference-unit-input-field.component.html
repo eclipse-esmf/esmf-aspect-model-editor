@@ -11,11 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-@if (metaModelElement?.referenceUnit || !metaModelElement.isPredefined()) {
+@if (metaModelElement?.referenceUnit || !metaModelElement.isPredefined) {
   <mat-form-field [floatLabel]="unitDisplayControl?.disabled ? 'always' : 'auto'" appearance="fill">
     <mat-label for="referenceUnit">referenceUnit</mat-label>
-    <input #unit [matAutocomplete]="auto" matInput name="referenceUnit" [formControl]="unitDisplayControl" data-cy="referenceUnit" />
-    @if (unitDisplayControl?.disabled && !metaModelElement?.isExternalReference() && !metaModelElement.isPredefined()) {
+    <input #unit [matAutocomplete]="auto" [formControl]="unitDisplayControl" matInput name="referenceUnit" data-cy="referenceUnit" />
+    @if (unitDisplayControl?.disabled && !loadedFiles.isElementExtern(metaModelElement) && !metaModelElement.isPredefined) {
       <button (click)="unlockUnit()" data-cy="clear-unit-button" matSuffix mat-icon-button tabindex="-1">
         <mat-icon>close</mat-icon>
       </button>

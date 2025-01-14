@@ -11,14 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {Component, Injector, OnInit, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, CanExtend, DefaultProperty} from '@ame/meta-model';
+import {MatChipGrid} from '@angular/material/chips';
+import {DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
+import {Observable, map} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {map, Observable} from 'rxjs';
-import {MatChipGrid} from '@angular/material/chips';
 
 interface SeeElement {
   name?: string;
@@ -30,11 +30,11 @@ interface SeeElement {
   templateUrl: './see-input-field.component.html',
   styleUrls: ['./see-input-field.component.scss', '../../field.scss'],
 })
-export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
+export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
   @ViewChild('see', {static: true}) seeInput;
   @ViewChild('chipList', {static: true, read: MatChipGrid}) chipList: MatChipGrid;
 
-  public shapes$: Observable<BaseMetaModelElement[]>;
+  public shapes$: Observable<NamedElement[]>;
   public searchControl = new FormControl('', {
     validators: [EditorDialogValidators.seeURI],
     updateOn: 'change',
@@ -45,9 +45,9 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
   get isInherited(): boolean {
     const control = this.parentForm.get(this.fieldName);
     return (
-      this.metaModelElement instanceof CanExtend &&
-      this.metaModelElement.extendedSee &&
-      control.value === this.metaModelElement.extendedSee?.join(',')
+      this.metaModelElement instanceof HasExtends &&
+      this.metaModelElement.extends_?.see &&
+      control.value === this.metaModelElement.extends_?.see?.join(',')
     );
   }
 
@@ -73,8 +73,8 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
   getCurrentValue() {
     return (
       this.previousData?.[this.fieldName] ||
-      this.metaModelElement?.getSeeReferences()?.join(',') ||
-      (this.metaModelElement as CanExtend)?.extendedSee?.join(',') ||
+      this.metaModelElement?.see?.join(',') ||
+      (this.metaModelElement as HasExtends)?.extends_?.see?.join(',') ||
       ''
     );
   }
@@ -99,7 +99,7 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
   }
 
   private isDisabled() {
-    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extendedElement;
+    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extends_;
   }
 
   private setSeeControl() {
@@ -108,7 +108,8 @@ export class SeeInputFieldComponent extends InputFieldComponent<BaseMetaModelEle
       new FormControl(
         {
           value: this.decodeUriComponent(this.getCurrentValue()),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
+          disabled:
+            this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
         },
         {
           validators: [EditorDialogValidators.seeURI],

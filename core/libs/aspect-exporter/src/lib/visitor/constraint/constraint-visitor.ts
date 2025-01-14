@@ -12,6 +12,10 @@
  */
 
 import {Injectable} from '@angular/core';
+
+import {LoadedFilesService} from '@ame/cache';
+import {MxGraphService} from '@ame/mx-graph';
+import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
 import {
   DefaultConstraint,
   DefaultEncodingConstraint,
@@ -22,27 +26,25 @@ import {
   DefaultRangeConstraint,
   DefaultRegularExpressionConstraint,
   DefaultTrait,
-  Type,
-} from '@ame/meta-model';
-import {MxGraphService} from '@ame/mx-graph';
-import {RdfService} from '@ame/rdf/services';
-import {SammC} from '@ame/vocabulary';
-import {DataFactory, NamedNode, Store} from 'n3';
+  SammC,
+} from '@esmf/aspect-model-loader';
+import {ComplexType} from 'libs/aspect-model-loader/src/lib/aspect-meta-model/complex-type';
+import {Store} from 'n3';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {BaseVisitor} from '../base-visitor';
 
 @Injectable()
 export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
   private get store(): Store {
-    return this.rdfNodeService.modelService.currentRdfModel.store;
+    return this.loadedFilesService.currentLoadedFile.rdfModel.store;
   }
 
   private get sammC(): SammC {
-    return this.rdfNodeService.modelService.currentRdfModel.SAMMC();
+    return this.loadedFilesService.currentLoadedFile.rdfModel.sammC;
   }
 
   private readonly constraintCallbacks = {
-    DefaultRangeConstraint: (constraint: DefaultRangeConstraint, characteristicType: Type) =>
+    DefaultRangeConstraint: (constraint: DefaultRangeConstraint, characteristicType: ComplexType) =>
       this.updateRange(constraint, characteristicType),
     DefaultFixedPointConstraint: (constraint: DefaultFixedPointConstraint) => this.updateFixedPoint(constraint),
     DefaultLengthConstraint: (constraint: DefaultLengthConstraint) => this.updateLength(constraint),
@@ -55,14 +57,14 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
   constructor(
     public rdfNodeService: RdfNodeService,
     public mxGraphService: MxGraphService,
-    rdfService: RdfService,
+    private loadedFilesService: LoadedFilesService,
+    loadedFiles: LoadedFilesService,
   ) {
-    super(rdfService);
+    super(loadedFiles);
   }
 
   visit(constraint: DefaultConstraint): DefaultConstraint {
     this.setPrefix(constraint.aspectModelUrn);
-    this.updateParents(constraint);
     this.updateProperties(constraint);
 
     const defaultTrait: DefaultTrait = constraint.parents.find(e => e instanceof DefaultTrait) as DefaultTrait;
@@ -77,19 +79,19 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
 
   private updateProperties(constraint: DefaultConstraint) {
     this.rdfNodeService.update(constraint, {
-      preferredName: constraint.getAllLocalesPreferredNames()?.map(language => ({
+      preferredName: getPreferredNamesLocales(constraint)?.map(language => ({
         language,
         value: constraint.getPreferredName(language),
       })),
-      description: constraint.getAllLocalesDescriptions()?.map(language => ({
+      description: getDescriptionsLocales(constraint)?.map(language => ({
         language,
         value: constraint.getDescription(language),
       })),
-      see: constraint.getSeeReferences() || [],
+      see: constraint.getSee() || [],
     });
   }
 
-  private updateRange(constraint: DefaultRangeConstraint, characteristicType: Type) {
+  private updateRange(constraint: DefaultRangeConstraint, characteristicType: ComplexType) {
     this.rdfNodeService.update(constraint, {
       characteristicType: characteristicType,
       minValue: constraint.minValue,
@@ -131,26 +133,5 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
 
   private updateLocale(constraint: DefaultLocaleConstraint) {
     this.rdfNodeService.update(constraint, {localeCode: constraint.localeCode});
-  }
-
-  private updateParents(constraint: DefaultConstraint) {
-    constraint.parents?.forEach(parent => {
-      this.replaceConstraints(
-        DataFactory.namedNode(parent.aspectModelUrn),
-        this.sammC.ConstraintProperty(),
-        DataFactory.namedNode(constraint.aspectModelUrn),
-        DataFactory.namedNode(constraint.aspectModelUrn),
-      );
-    });
-  }
-
-  private replaceConstraints(subject: NamedNode, predicate: NamedNode, oldObject: NamedNode, newObject: NamedNode) {
-    const existingQuads = this.store.getQuads(subject, predicate, oldObject, null);
-    if (!existingQuads?.length) {
-      this.store.addQuad(DataFactory.triple(subject, predicate, newObject));
-      return;
-    }
-    this.store.removeQuads(existingQuads);
-    existingQuads.forEach(quad => this.store.addQuad(DataFactory.triple(quad.subject, quad.predicate, newObject)));
   }
 }

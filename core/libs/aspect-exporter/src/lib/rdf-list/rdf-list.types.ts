@@ -11,12 +11,22 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Aspect, Entity, Enumeration, Event, Operation, OverWrittenProperty, StructuredValue, Unit} from '@ame/meta-model';
+import {
+  Aspect,
+  DefaultProperty,
+  Entity,
+  Enumeration,
+  Event,
+  Operation,
+  PropertyPayload,
+  StructuredValue,
+  Trait,
+  Unit,
+} from '@esmf/aspect-model-loader';
 import {BlankNode, NamedNode, Quad_Object} from 'n3';
 
-// For now ListElementType is any because
 export type ListElementType = any;
-export type SourceElementType = Aspect | Operation | Enumeration | StructuredValue | Entity | Unit | Event;
+export type SourceElementType = Aspect | Operation | Enumeration | StructuredValue | Entity | Unit | Event | Trait;
 export enum ListProperties {
   properties = 'properties',
   abstractProperties = 'abstractProperties',
@@ -71,12 +81,13 @@ export interface EmptyRdfList {
   emptyList(source: Unit, property: ListProperties.quantityKinds): void;
 }
 
-export interface OverWrittenListElement {
-  metaModelElement: OverWrittenProperty;
+export interface PropertyListElement {
+  metaModelElement: DefaultProperty;
+  propertyPayload: PropertyPayload;
   blankNode: BlankNode;
 }
 
 export interface ResolvedListElements {
   listElements: Quad_Object[];
-  overWrittenListElements: OverWrittenListElement[];
+  overWrittenListElements: PropertyListElement[];
 }

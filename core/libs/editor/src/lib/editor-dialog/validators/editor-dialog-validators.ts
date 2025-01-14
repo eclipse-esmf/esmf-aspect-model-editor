@@ -11,19 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {LoadedFilesService} from '@ame/cache';
+import {inject, Injectable} from '@angular/core';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
-import {NamespacesCacheService} from '@ame/cache';
-import {BaseMetaModelElement} from '@ame/meta-model';
+import {CacheStrategy, NamedElement} from '@esmf/aspect-model-loader';
 import {RFC2141} from 'urn-lib';
-import {RdfService} from '@ame/rdf/services';
 
 @Injectable({providedIn: 'root'})
 export class EditorDialogValidators {
-  constructor(
-    private namespaceCacheService: NamespacesCacheService,
-    private rdfService: RdfService,
-  ) {}
+  private loadedFileService = inject(LoadedFilesService);
+
+  constructor(private loadedFiles: LoadedFilesService) {}
 
   static namingLowerCase(control: AbstractControl) {
     if (!control?.value) {
@@ -70,7 +68,7 @@ export class EditorDialogValidators {
       : null;
   }
 
-  duplicateName(metaModelElement: BaseMetaModelElement, haveTheSameName = true): ValidatorFn {
+  duplicateName(metaModelElement: NamedElement, haveTheSameName = true): ValidatorFn {
     return (control: AbstractControl) => {
       if (!control?.value) {
         return null;
@@ -83,22 +81,16 @@ export class EditorDialogValidators {
       const [primaryNamespace] = metaModelElement.aspectModelUrn.split('#');
       const aspectModelUrn = `${primaryNamespace}#${control.value}`;
 
-      let foundExternalElement: BaseMetaModelElement;
-      for (const rdfModel of this.rdfService.externalRdfModels) {
-        if (
-          (this.rdfService.currentRdfModel.originalAbsoluteFileName || this.rdfService.currentRdfModel.absoluteAspectModelFileName) ===
-          rdfModel.absoluteAspectModelFileName
-        ) {
+      let foundExternalElement: NamedElement;
+      for (const file of Object.values(this.loadedFileService.files)) {
+        if (!file.rendered && this.loadedFileService.currentLoadedFile.absoluteName === file.absoluteName) {
           continue;
         }
 
-        const [namespace] = aspectModelUrn.split('#');
-        const files = this.namespaceCacheService
-          .getFiles(namespace)
-          .filter(file => file.fileName !== this.namespaceCacheService.currentCachedFile.fileName);
+        const files = this.loadedFileService.filesAsList.filter(file => !file.rendered);
 
         for (const file of files) {
-          foundExternalElement = file.getEitherElement(aspectModelUrn);
+          foundExternalElement = file.cachedFile.get(aspectModelUrn);
 
           if (foundExternalElement) {
             break;
@@ -113,8 +105,7 @@ export class EditorDialogValidators {
         };
       }
 
-      const modelElementDefinedInCurrentCachedFile =
-        this.namespaceCacheService.currentCachedFile.getEitherElement<BaseMetaModelElement>(aspectModelUrn);
+      const modelElementDefinedInCurrentCachedFile = this.loadedFileService.currentLoadedFile.cachedFile.get<NamedElement>(aspectModelUrn);
 
       return modelElementDefinedInCurrentCachedFile &&
         (!haveTheSameName || modelElementDefinedInCurrentCachedFile.name !== metaModelElement.name)
@@ -126,7 +117,7 @@ export class EditorDialogValidators {
     };
   }
 
-  duplicateNameWithDifferentType(metaModelElement: BaseMetaModelElement, modelType: Function): ValidatorFn {
+  duplicateNameWithDifferentType(metaModelElement: NamedElement, modelType: Function): ValidatorFn {
     return (control: AbstractControl) => {
       const duplicateNameValidation = this.duplicateName(metaModelElement, false)(control);
 
@@ -150,13 +141,13 @@ export class EditorDialogValidators {
     return isWhitespace ? {whitespace: true} : null;
   }
 
-  static duplicateNameString(namespacesCacheService: NamespacesCacheService, namespace: string) {
+  static duplicateNameString(currentCachedFile: CacheStrategy, namespace: string) {
     return (control: AbstractControl) => {
       if (!control?.value) {
         return null;
       }
       const aspectModelUrn = `${namespace}#${control.value}`;
-      return namespacesCacheService.currentCachedFile.getElement<BaseMetaModelElement>(aspectModelUrn)
+      return currentCachedFile.get<NamedElement>(aspectModelUrn)
         ? {
             checkShapeName: true,
           }

@@ -15,7 +15,7 @@
   <mat-chip-grid #chipList [formControl]="chipControl" [errorStateMatcher]="hasErrors()">
     @for (input of inputValues; track input) {
       <mat-chip-row [removable]="removable" (removed)="remove(input)">
-        @if (!input.aspectModelUrn.includes(rdfService.currentRdfModel.getAspectModelUrn())) {
+        @if (!input.aspectModelUrn.includes(currentRdfModel.getAspectModelUrn())) {
           <span>ext: </span>
         }
         {{ input['name'] }}
@@ -25,13 +25,13 @@
       </mat-chip-row>
     }
     <input
+      class="enumeration-value-input"
       #searchInput
       [formControl]="searchControl"
       [matAutocomplete]="auto"
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       matInput
-      class="enumeration-value-input"
       name="inputValues"
       spellcheck="false"
       placeholder="Add value, click option"

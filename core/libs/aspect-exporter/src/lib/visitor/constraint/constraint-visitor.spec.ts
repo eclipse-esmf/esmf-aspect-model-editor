@@ -12,8 +12,12 @@
  */
 
 import {TestBed} from '@angular/core/testing';
+
+import {RdfNodeService} from '@ame/aspect-exporter';
+import {BoundDefinition} from '@ame/meta-model';
+import {MxGraphService} from '@ame/mx-graph';
+import {RdfService} from '@ame/rdf/services';
 import {
-  BoundDefinition,
   DefaultConstraint,
   DefaultEncodingConstraint,
   DefaultFixedPointConstraint,
@@ -22,16 +26,13 @@ import {
   DefaultLocaleConstraint,
   DefaultRangeConstraint,
   DefaultRegularExpressionConstraint,
-} from '@ame/meta-model';
-import {MxGraphService} from '@ame/mx-graph';
-import {RdfService} from '@ame/rdf/services';
+  Samm,
+} from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
-import {RdfListService} from '../../rdf-list';
-import {RdfNodeService} from '@ame/aspect-exporter';
-import {ConstraintVisitor} from './constraint-visitor';
-import {Samm} from '@ame/vocabulary';
 import {MockProviders} from 'ng-mocks';
+import {RdfListService} from '../../rdf-list';
+import {ConstraintVisitor} from './constraint-visitor';
 
 describe('Constraint Visitor', () => {
   let service: ConstraintVisitor;
@@ -43,27 +44,54 @@ describe('Constraint Visitor', () => {
     hasNamespace: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
   };
-  const constraint = new DefaultConstraint('1', 'samm#constraint1', 'constraint1');
-  const rangeConstraint = new DefaultRangeConstraint(
-    '1',
-    'samm#rangeConstraint',
-    'rangeConstraint',
-    BoundDefinition.AT_MOST,
-    BoundDefinition.AT_LEAST,
-    0,
-    100,
-  );
-  const fixedPointConstraint = new DefaultFixedPointConstraint('1', 'samm#fixedPointConstraint', 'fixedPointConstraint', 1, 2);
-  const lengthConstraint = new DefaultLengthConstraint('1', 'samm#lengthConstraint', 'lengthConstraint', 100, 200);
-  const languageConstraint = new DefaultLanguageConstraint('1', 'samm#languageConstraint', 'languageConstraint', 'en');
-  const encodingConstraint = new DefaultEncodingConstraint('1', 'samm#encodingConstraint', 'encodingConstraint', 'encodingValue');
-  const regularExpressionConstraint = new DefaultRegularExpressionConstraint(
-    '1',
-    'samm#regularExpressionConstraint',
-    'regularExpressionConstraint',
-    'regularExpressionValue',
-  );
-  const localeConstraint = new DefaultLocaleConstraint('1', 'samm#localeConstraint', 'localeConstraint', 'en');
+  const constraint = new DefaultConstraint({metaModelVersion: '1', aspectModelUrn: 'samm#constraint1', name: 'constraint1'});
+  const rangeConstraint = new DefaultRangeConstraint({
+    metaModelVersion: '1',
+    aspectModelUrn: 'samm#rangeConstraint',
+    name: 'rangeConstraint',
+    upperBoundDefinition: BoundDefinition.AT_MOST,
+    lowerBoundDefinition: BoundDefinition.AT_LEAST,
+    minValue: 0,
+    maxValue: 100,
+  });
+  const fixedPointConstraint = new DefaultFixedPointConstraint({
+    metaModelVersion: '1',
+    aspectModelUrn: 'samm#fixedPointConstraint',
+    name: 'fixedPointConstraint',
+    scale: 1,
+    integer: 2,
+  });
+  const lengthConstraint = new DefaultLengthConstraint({
+    metaModelVersion: '1',
+    aspectModelUrn: 'samm#lengthConstraint',
+    name: 'lengthConstraint',
+    minValue: 100,
+    maxValue: 200,
+  });
+  const languageConstraint = new DefaultLanguageConstraint({
+    metaModelVersion: '1',
+    aspectModelUrn: 'samm#languageConstraint',
+    name: 'languageConstraint',
+    languageCode: 'en',
+  });
+  const encodingConstraint = new DefaultEncodingConstraint({
+    metaModelVersion: '1',
+    aspectModelUrn: 'samm#encodingConstraint',
+    name: 'encodingConstraint',
+    value: 'encodingValue',
+  });
+  const regularExpressionConstraint = new DefaultRegularExpressionConstraint({
+    metaModelVersion: '1',
+    aspectModelUrn: 'samm#regularExpressionConstraint',
+    name: 'regularExpressionConstraint',
+    value: 'regularExpressionValue',
+  });
+  const localeConstraint = new DefaultLocaleConstraint({
+    metaModelVersion: '1',
+    aspectModelUrn: 'samm#localeConstraint',
+    name: 'localeConstraint',
+    localeCode: 'en',
+  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({

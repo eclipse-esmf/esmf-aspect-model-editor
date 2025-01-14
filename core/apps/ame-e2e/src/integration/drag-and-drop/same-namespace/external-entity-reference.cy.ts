@@ -13,13 +13,13 @@
 
 /// <reference types="Cypress" />
 
-import {cyHelp} from '../../../support/helpers';
 import {
   SELECTOR_ecEntity,
   SELECTOR_openNamespacesButton,
   SELECTOR_searchElementsInp,
   SELECTOR_workspaceBtn,
 } from '../../../support/constants';
+import {cyHelp} from '../../../support/helpers';
 import {checkAspectAndChildrenEntity, connectElements} from '../../../support/utils';
 
 describe('Test drag and drop', () => {

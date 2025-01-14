@@ -13,29 +13,30 @@ import {Component, inject} from '@angular/core';
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
+import {LoadedFilesService} from '@ame/cache';
+import {ConfirmDialogService, ShapeSettingsService} from '@ame/editor';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {BaseMetaModelElement} from '@ame/meta-model';
-import {startWith, throttleTime} from 'rxjs';
 import {
   ElectronSignals,
   ElectronSignalsService,
+  ElementInfo,
+  ElementType,
   SearchService,
   mxCellSearchOption,
   sammElements,
-  ElementType,
-  ElementInfo,
 } from '@ame/shared';
-import {ElementIconComponent} from '../../../../../shared/src/lib/components/element/element.component';
-import {ConfirmDialogService, ModelElementParserPipe, ShapeSettingsService} from '@ame/editor';
-import {SearchesStateService} from '../../search-state.service';
-import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {startWith, throttleTime} from 'rxjs';
 import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-dialog.enum';
+import {ElementIconComponent} from '../../../../../shared/src/lib/components/element/element.component';
+import {SearchesStateService} from '../../search-state.service';
 
 @Component({
   standalone: true,
@@ -51,13 +52,12 @@ import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-di
     MatIconModule,
     LanguageTranslateModule,
     ElementIconComponent,
-    ModelElementParserPipe,
   ],
 })
 export class ElementsSearchComponent {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   public searchControl = new FormControl('');
-  public elements: BaseMetaModelElement[] = [];
+  public elements: NamedElement[] = [];
 
   constructor(
     private mxGraphService: MxGraphService,
@@ -66,6 +66,7 @@ export class ElementsSearchComponent {
     private confirmDialogService: ConfirmDialogService,
     private searchService: SearchService,
     private translate: LanguageTranslationService,
+    public loadedFiles: LoadedFilesService,
   ) {
     this.searchControl.valueChanges.pipe(startWith(''), throttleTime(150)).subscribe(value => {
       this.elements = this.searchService
@@ -74,8 +75,8 @@ export class ElementsSearchComponent {
     });
   }
 
-  openElement(element: BaseMetaModelElement) {
-    if (element.isExternalReference() && !element.isPredefined()) {
+  openElement(element: NamedElement) {
+    if (this.loadedFiles.isElementExtern(element) && !element.isPredefined) {
       this.confirmDialogService
         .open({
           phrases: [this.translate.translateService.instant('CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.PHRASE1', {elementName: element.name})],
@@ -86,10 +87,11 @@ export class ElementsSearchComponent {
         .subscribe(confirm => {
           confirm !== ConfirmDialogEnum.cancel
             ? this.electronSignalsService.call('openWindow', {
-                file: element.fileName,
+                file: this.loadedFiles.getFileFromElement(element),
                 namespace: element.aspectModelUrn.replace('urn:samm:', '').split('#')[0],
                 editElement: element.aspectModelUrn,
                 fromWorkspace: true,
+                aspectModelUrn: element.aspectModelUrn,
               })
             : null;
         });
@@ -109,7 +111,7 @@ export class ElementsSearchComponent {
   }
 
   // TODO workaround for modelElementParser pipe because it does  not work in the template
-  transform(element: BaseMetaModelElement) {
+  transform(element: NamedElement) {
     const [type, elementData] = this.getElementType(element);
     return {
       element,
@@ -118,7 +120,7 @@ export class ElementsSearchComponent {
     };
   }
 
-  private getElementType(element: BaseMetaModelElement): [ElementType, ElementInfo[ElementType]] {
+  private getElementType(element: NamedElement): [ElementType, ElementInfo[ElementType]] {
     return Object.entries(sammElements).find(([, value]) => element instanceof value.class) || (['', null] as any);
   }
 

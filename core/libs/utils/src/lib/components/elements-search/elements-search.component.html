@@ -21,7 +21,7 @@
     @for (element of elements; track element) {
       @if (transform(element)) {
         <mat-option class="list-option" (click)="openElement(element)">
-          <div [class.has-external-element]="element.isExternalReference() && !element.isPredefined()">
+          <div [class.has-external-element]="loadedFiles.isElementExtern(element) && !element.isPredefined">
             <ame-element
               [type]="sammElements[transform(element).type]"
               [name]="transform(element).element.name"
@@ -31,7 +31,7 @@
               size="medium"
             ></ame-element>
             <div class="align-self-center">
-              @if (element.isExternalReference() && !element.isPredefined()) {
+              @if (loadedFiles.isElementExtern(element) && !element.isPredefined) {
                 <mat-icon class="open-icon">open_in_new</mat-icon>
               }
             </div>

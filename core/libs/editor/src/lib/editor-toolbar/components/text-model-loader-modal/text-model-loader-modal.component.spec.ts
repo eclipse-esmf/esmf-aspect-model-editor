@@ -1,14 +1,14 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
-import {TextModelLoaderModalComponent} from './text-model-loader-modal.component';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {MockProviders} from 'ng-mocks';
 import {of} from 'rxjs';
 import {FileHandlingService} from '../../services';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {MockProviders} from 'ng-mocks';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {TextModelLoaderModalComponent} from './text-model-loader-modal.component';
 
 describe('TextModelLoaderModalComponent', () => {
   let component: TextModelLoaderModalComponent;

@@ -18,9 +18,9 @@
 </mat-dialog-content>
 
 <mat-dialog-actions class="actions" align="end">
-  <button [disabled]="disabledButton" mat-button (click)="close(false)">{{ 'SAVE_MODAL_DIALOG.CONTINUE_BUTTON' | translate }}</button>
-  <button [disabled]="disabledButton" mat-flat-button (click)="close(true)">{{ 'SAVE_MODAL_DIALOG.DISCARD_BUTTON' | translate }}</button>
-  <button [disabled]="disabledButton" mat-flat-button color="primary" (click)="saveModel()">
+  <button [disabled]="disabledButton" (click)="close(false)" mat-button>{{ 'SAVE_MODAL_DIALOG.CONTINUE_BUTTON' | translate }}</button>
+  <button [disabled]="disabledButton" (click)="close(true)" mat-flat-button>{{ 'SAVE_MODAL_DIALOG.DISCARD_BUTTON' | translate }}</button>
+  <button [disabled]="disabledButton" (click)="saveModel()" mat-flat-button color="primary">
     {{ 'SAVE_MODAL_DIALOG.SAVE_BUTTON' | translate }}
   </button>
 </mat-dialog-actions>

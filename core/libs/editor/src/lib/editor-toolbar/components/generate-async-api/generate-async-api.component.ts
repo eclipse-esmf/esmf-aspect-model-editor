@@ -11,27 +11,28 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {finalize, map, Subscription} from 'rxjs';
-import {EditorService} from '../../../editor.service';
 import {ModelService} from '@ame/rdf/services';
-import * as locale from 'locale-codes';
-import {first} from 'rxjs/operators';
-import {saveAs} from 'file-saver';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {LanguageTranslateModule} from '@ame/translation';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatOptionModule} from '@angular/material/core';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
-import {MatOptionModule} from '@angular/material/core';
+import {saveAs} from 'file-saver';
+import * as locale from 'locale-codes';
+import {Subscription, finalize, map} from 'rxjs';
+import {first} from 'rxjs/operators';
+import {EditorService} from '../../../editor.service';
 
+import {LoadedFilesService} from '@ame/cache';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatInputModule} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 export interface AsyncApi {
   language: string;
@@ -81,6 +82,7 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
     private languageService: SammLanguageSettingsService,
     private modelService: ModelService,
     private editorService: EditorService,
+    private loadedFilesService: LoadedFilesService,
   ) {}
 
   ngOnInit(): void {
@@ -108,7 +110,7 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
     const asyncApiSpec = this.form.value as AsyncApi;
     this.subscriptions.add(
       this.editorService
-        .generateAsyncApiSpec(this.modelService.currentRdfModel, asyncApiSpec)
+        .generateAsyncApiSpec(this.loadedFilesService.currentLoadedFile?.rdfModel, asyncApiSpec)
         .pipe(
           first(),
           map(data => this.handleGeneratedSpec(data, asyncApiSpec)),
@@ -124,7 +126,7 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
   private handleGeneratedSpec(data: any, spec: AsyncApi): void {
     const fileType = spec.output === 'yaml' ? 'text/yaml' : 'application/json;charset=utf-8';
     const fileData = spec.output === 'yaml' ? data : JSON.stringify(data, null, 2);
-    const aspectName = this.modelService.currentRdfModel.aspectModelFileName.slice(0, -4);
+    const aspectName = this.loadedFilesService.currentLoadedFile.name.slice(0, -4);
     const formattedAspectName = `${aspectName}-async-api`;
     const fileName = `${formattedAspectName}.${spec.writeSeparateFiles ? 'zip' : spec.output}`;
     saveAs(new Blob([fileData], {type: fileType}), fileName);

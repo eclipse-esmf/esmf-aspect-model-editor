@@ -11,14 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultStructuredValue, DefaultProperty} from '@ame/meta-model';
-import {MxGraphService, MxGraphAttributeService, MxGraphHelper} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
-import {MultiShapeConnector} from '../models';
-import {mxgraph} from 'mxgraph-factory';
-import {NamespacesCacheService} from '@ame/cache';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
+import {Injectable} from '@angular/core';
+import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {MultiShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +28,6 @@ export class StructuredValueCharacteristicPropertyConnectionHandler
   constructor(
     private mxGraphService: MxGraphService,
     private mxGraphAttributeService: MxGraphAttributeService,
-    private namespacesCacheService: NamespacesCacheService,
     private sammLangService: SammLanguageSettingsService,
     private notificationsService: NotificationsService,
   ) {}
@@ -61,19 +59,18 @@ export class StructuredValueCharacteristicPropertyConnectionHandler
   private isPropertyElementIncluded(childMetaModel: DefaultProperty, parentMetaModel: DefaultStructuredValue): boolean {
     return parentMetaModel.elements.some(el => {
       if (typeof el !== 'object') return false;
-      return el.property.aspectModelUrn === childMetaModel.aspectModelUrn;
+      return el.aspectModelUrn === childMetaModel.aspectModelUrn;
     });
   }
 
   private addPropertyElement(childMetaModel: DefaultProperty, parentMetaModel: DefaultStructuredValue): void {
-    const element = {property: childMetaModel, keys: {}};
     const isStartsWithDelimiter = typeof parentMetaModel.elements[0] === 'string';
     const isEndsWithDelimiter = typeof parentMetaModel.elements[parentMetaModel.elements.length - 1] === 'string';
 
     isStartsWithDelimiter
-      ? parentMetaModel.elements.unshift(element)
+      ? parentMetaModel.elements.unshift(childMetaModel)
       : isEndsWithDelimiter
-        ? parentMetaModel.elements.push(element)
+        ? parentMetaModel.elements.push(childMetaModel)
         : undefined;
   }
 }

@@ -11,11 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="selectedMetaModelElement?.isExternalReference() ? 'always' : 'auto'" appearance="fill">
+<mat-form-field [floatLabel]="loadedFilesService.isElementExtern(selectedMetaModelElement) ? 'always' : 'auto'" appearance="fill">
   <mat-label for="constraintName">Constraint class</mat-label>
   <mat-select
     #constraintName
-    [disabled]="selectedMetaModelElement?.isExternalReference()"
+    [disabled]="loadedFilesService.isElementExtern(selectedMetaModelElement)"
     [ngModel]="metaModelClassName"
     (ngModelChange)="onConstraintChange($event)"
     name="constraintName"

@@ -12,7 +12,7 @@
  */
 
 import {NamespacesManagerService} from '@ame/namespace-manager';
-import {Component, Input} from '@angular/core';
+import {Component, input} from '@angular/core';
 
 @Component({
   selector: 'ame-workspace-empty',
@@ -20,11 +20,10 @@ import {Component, Input} from '@angular/core';
   styleUrls: ['./workspace-empty.component.scss'],
 })
 export class WorkspaceEmptyComponent {
-  @Input() loading = false;
+  loading = input(false);
+  file: File | null = null;
 
   constructor(private namespacesManagerService: NamespacesManagerService) {}
-
-  file: File | null = null;
 
   onFileInput(files: FileList | null): void {
     if (files) {

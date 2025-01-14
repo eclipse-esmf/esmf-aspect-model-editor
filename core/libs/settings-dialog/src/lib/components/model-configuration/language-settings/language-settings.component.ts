@@ -10,13 +10,13 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {LanguageTranslationService} from '@ame/translation';
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
 import * as locale from 'locale-codes';
-import {map, Observable, startWith} from 'rxjs';
-import {SettingsFormService} from '../../../services';
-import {LanguageTranslationService} from '@ame/translation';
+import {Observable, map, startWith} from 'rxjs';
 import {Langcode} from '../../../model';
+import {SettingsFormService} from '../../../services';
 
 @Component({
   selector: 'ame-language-settings',

@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultOperation, DefaultProperty} from '@ame/meta-model';
-import {MxGraphService, MxGraphAttributeService} from '@ame/mx-graph';
+import {MxGraphAttributeService, MxGraphService} from '@ame/mx-graph';
 import {Injectable} from '@angular/core';
-import {MultiShapeConnectorWithProperty} from '../models';
+import {DefaultOperation, DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {MultiShapeConnectorWithProperty} from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +27,7 @@ export class OperationPropertyOutputConnectionHandler implements MultiShapeConne
   ) {}
 
   public connect(parentMetaModel: DefaultOperation, childMetaModel: DefaultProperty, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
-    parentMetaModel.output = {property: childMetaModel, keys: {}};
+    parentMetaModel.output = childMetaModel;
     this.mxGraphService.assignToParent(child, parent);
   }
 }

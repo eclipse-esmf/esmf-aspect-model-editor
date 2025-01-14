@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-@if (metaModelElement?.conversionFactor || !metaModelElement?.isPredefined()) {
+@if (metaModelElement?.conversionFactor || !metaModelElement?.isPredefined) {
   <div>
     <mat-form-field [floatLabel]="getControl('numericConversionFactor')?.disabled ? 'always' : 'auto'" appearance="fill">
       <mat-label for="numericConversionFactor">numericConversionFactor</mat-label>

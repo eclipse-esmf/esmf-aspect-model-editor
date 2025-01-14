@@ -11,6 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './rdf-node.service';
 export * from './enums/property.enum';
 export * from './interfaces';
+export * from './rdf-node.service';

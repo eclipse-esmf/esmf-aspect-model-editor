@@ -14,7 +14,7 @@
 <mat-form-field [floatLabel]="getControl('dataType')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="dataType">dataType</mat-label>
   <input #dataType [matAutocomplete]="auto" [formControl]="getControl('dataType')" matInput name="dataType" data-cy="dataType" />
-  @if (!frozen && dataTypeControl?.disabled && !metaModelElement?.isExternalReference()) {
+  @if (!frozen && dataTypeControl?.disabled && loadedFiles.isElementInCurrentFile(metaModelElement)) {
     <button (click)="unlockDataType()" data-cy="clear-dataType-button" matSuffix mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
     </button>
@@ -27,7 +27,7 @@
     <mat-error>Please select a different name as this one is of different type in the same namespace</mat-error>
   }
 
-  <mat-autocomplete #auto="matAutocomplete" class="characteristic-datatype-autocomplete">
+  <mat-autocomplete class="characteristic-datatype-autocomplete" #auto="matAutocomplete">
     @if (!entitiesDisabled && filteredEntityTypes$ | async; as filteredEntityTypes) {
       <mat-optgroup label="Entities">
         @if (!isAlreadyDefined(filteredEntityTypes, dataType.value) && !getControl('dataType')?.errors) {

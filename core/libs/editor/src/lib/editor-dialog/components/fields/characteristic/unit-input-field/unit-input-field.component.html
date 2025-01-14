@@ -13,8 +13,8 @@
 
 <mat-form-field [floatLabel]="getControl('unit')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="unit">unit</mat-label>
-  <input #unit [matAutocomplete]="auto" matInput name="unit" [formControl]="unitDisplayControl" data-cy="unit" />
-  @if (unitDisplayControl?.disabled && !metaModelElement?.isExternalReference()) {
+  <input #unit [matAutocomplete]="auto" [formControl]="unitDisplayControl" matInput name="unit" data-cy="unit" />
+  @if (unitDisplayControl?.disabled && !loadedFiles.isElementExtern(metaModelElement)) {
     <button (click)="unlockUnit()" data-cy="clear-unit-button" matSuffix mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
     </button>
@@ -53,7 +53,7 @@
       <ng-container #predefinedUnits>
         @if (filteredPredefinedUnits?.length) {
           <mat-optgroup label="Predefined Units">
-            @for (unit of filteredPredefinedUnits; track unit.aspectModelUrn) {
+            @for (unit of filteredPredefinedUnits; track unit.name) {
               <mat-option
                 [value]="unit.name"
                 [title]="unit.name"

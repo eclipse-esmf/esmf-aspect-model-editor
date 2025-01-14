@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component} from '@angular/core';
-import {FileHandlingService} from '../../services';
-import {first} from 'rxjs';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {LanguageTranslateModule} from '@ame/translation';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MatInputModule} from '@angular/material/input';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {first} from 'rxjs';
+import {FileHandlingService} from '../../services';
 
 @Component({
   standalone: true,

@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FormGroup} from '@angular/forms';
 import {Settings} from '@ame/settings-dialog';
+import {FormGroup} from '@angular/forms';
 
 export interface SettingsUpdateStrategy {
   updateSettings(form: FormGroup, settings: Settings): void;

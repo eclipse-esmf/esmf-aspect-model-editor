@@ -25,10 +25,10 @@
       <mat-header-cell *matHeaderCellDef>Property</mat-header-cell>
       <mat-cell *matCellDef="let group">
         <ame-structured-value-property-field
-          [fieldControl]="getControl(getKey(group.data))"
-          [overwrittenProperty]="group.property"
-          [attr.data-cy]="'property-' + group.regex"
           class="property-field"
+          [fieldControl]="getControl(getKey(group.data))"
+          [defaultProperty]="group.property"
+          [attr.data-cy]="'property-' + group.regex"
         ></ame-structured-value-property-field>
       </mat-cell>
     </ng-container>

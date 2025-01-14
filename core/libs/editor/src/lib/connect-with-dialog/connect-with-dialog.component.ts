@@ -11,21 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from '@ame/meta-model';
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {mxgraph} from 'mxgraph-factory';
-import {CommonModule} from '@angular/common';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatButtonModule} from '@angular/material/button';
-import {MatInputModule} from '@angular/material/input';
 import {ModelElementParserPipe} from '@ame/editor';
+import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {CommonModule} from '@angular/common';
+import {Component, Inject} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
 
 interface Element {
   cell: mxgraph.mxCell;
-  model: BaseMetaModelElement;
+  model: NamedElement;
 }
 
 @Component({
@@ -38,7 +38,7 @@ interface Element {
 export class ConnectWithDialogComponent {
   public elements: Element[];
   public selectedElement: Element;
-  public connectWithModel: BaseMetaModelElement;
+  public connectWithModel: NamedElement;
 
   private elementParser = new ModelElementParserPipe();
 
@@ -53,11 +53,11 @@ export class ConnectWithDialogComponent {
     });
   }
 
-  getClass(element: BaseMetaModelElement) {
+  getClass(element: NamedElement) {
     return this.elementParser.transform(element).type;
   }
 
-  getFirstLetter(element: BaseMetaModelElement) {
+  getFirstLetter(element: NamedElement) {
     return this.elementParser.transform(element).symbol;
   }
 

@@ -16,16 +16,17 @@
  * https://github.com/jgraph/mxgraph/blob/master/javascript/examples/extendcanvas.html
  */
 
-import {Inject, Injectable, NgZone} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
-import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
-import {MxGraphAttributeService} from './mx-graph-attribute.service';
-import {MxGraphHelper, ShapeAttribute} from '../helpers';
-import {mxConstants, mxEditor, mxLayoutManager, mxOutline, mxPoint, mxRectangle, mxStackLayout, mxUtils} from '../providers';
-import {DefaultAbstractProperty, DefaultEntity, DefaultEntityInstance, DefaultProperty, DefaultTrait} from '@ame/meta-model';
+import {LoadedFilesService} from '@ame/cache';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {APP_CONFIG, AppConfig, AssetsPath, BindingsService, BrowserService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
+import {Inject, Injectable, NgZone} from '@angular/core';
+import {DefaultEntity, DefaultEntityInstance, DefaultProperty, DefaultTrait} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {MxGraphHelper, ShapeAttribute} from '../helpers';
+import {mxConstants, mxEditor, mxLayoutManager, mxOutline, mxPoint, mxRectangle, mxStackLayout, mxUtils} from '../providers';
+import {MxGraphAttributeService} from './mx-graph-attribute.service';
+import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
 
 @Injectable()
 export class MxGraphSetupService {
@@ -47,6 +48,7 @@ export class MxGraphSetupService {
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private translate: LanguageTranslationService,
+    private loadedFiles: LoadedFilesService,
     private ngZone: NgZone,
   ) {}
 
@@ -312,18 +314,22 @@ export class MxGraphSetupService {
       return true;
     }
 
+    const target = MxGraphHelper.getModelElement(cell.target);
+    const source = MxGraphHelper.getModelElement(cell.source);
+
     if (
       !this.configurationService.getSettings().showEntityValueEntityEdge &&
-      MxGraphHelper.getModelElement(cell.source) instanceof DefaultEntityInstance &&
-      MxGraphHelper.getModelElement(cell.target) instanceof DefaultEntity
+      source instanceof DefaultEntityInstance &&
+      target instanceof DefaultEntity
     ) {
       return false;
     }
 
     if (
       !this.configurationService.getSettings().showAbstractPropertyConnection &&
-      MxGraphHelper.getModelElement(cell.source) instanceof DefaultProperty &&
-      MxGraphHelper.getModelElement(cell.target) instanceof DefaultAbstractProperty
+      source instanceof DefaultProperty &&
+      target instanceof DefaultProperty &&
+      target.isAbstract
     ) {
       return false;
     }
@@ -345,7 +351,7 @@ export class MxGraphSetupService {
       const modelElement = MxGraphHelper.getModelElement(cell);
 
       menu.addItem(
-        `${this.translate.language.EDITOR_CANVAS.GRAPH_SETUP.OPEN_IN} ${modelElement.isExternalReference() ? 'new Window' : 'detail view'}`,
+        `${this.translate.language.EDITOR_CANVAS.GRAPH_SETUP.OPEN_IN} ${this.loadedFiles.isElementExtern(modelElement) ? 'new Window' : 'detail view'}`,
         this.resolveAssetsIcon(AssetsPath.OpenIcon),
         () => {
           this.bindingsService.fireAction('editElement');

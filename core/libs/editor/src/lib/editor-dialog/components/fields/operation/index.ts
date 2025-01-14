@@ -11,5 +11,5 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './output-input-field/output-input-field.component';
 export * from './input-chiplist-field/input-chiplist-field.component';
+export * from './output-input-field/output-input-field.component';

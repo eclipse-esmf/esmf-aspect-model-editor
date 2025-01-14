@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './filters';
-export * from './models';
-export * from './filters.service';
 export * from './active-filter.session';
+export * from './filters';
+export * from './filters.service';
+export * from './models';

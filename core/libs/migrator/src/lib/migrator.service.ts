@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {MigratorApiService, ModelApiService} from '@ame/api';
+import {NotificationsService} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Router} from '@angular/router';
-import {catchError, forkJoin, map, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
+import {Observable, catchError, forkJoin, map, mergeMap, of, switchMap, tap} from 'rxjs';
 import {MigratorComponent} from './components';
-import {NotificationsService} from '@ame/shared';
 
 const prefixesToMigrate = {
   'meta-model': 'samm',
@@ -76,7 +76,7 @@ export class MigratorService {
           const newSammFile = this.detectBammAndReplaceWithSamm(file.aspectMetaModel);
           if (file.aspectMetaModel !== newSammFile) {
             file.aspectMetaModel = newSammFile;
-            return acc.concat([this.modelApiService.saveModel(newSammFile, file.fileName)]);
+            return acc.concat([this.modelApiService.saveModel(newSammFile, file.aspectMetaModel, file.fileName)]);
           }
           return acc;
         }, []);

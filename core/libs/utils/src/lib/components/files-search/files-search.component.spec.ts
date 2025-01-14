@@ -1,20 +1,20 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {FormsModule} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {MockProvider} from 'ng-mocks';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {FilesSearchComponent} from './files-search.component';
-import {SearchesStateService} from '../../search-state.service';
-import {SidebarStateService} from '@ame/sidebar';
-import {ModelSavingTrackerService, NotificationsService, SearchService} from '@ame/shared';
 import {FileHandlingService, SaveModelDialogService} from '@ame/editor';
+import {MxGraphService} from '@ame/mx-graph';
+import {ModelSavingTrackerService, NotificationsService, SearchService} from '@ame/shared';
+import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {HttpClientModule} from '@angular/common/http';
-import {MxGraphService} from '@ame/mx-graph';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {FormsModule} from '@angular/forms';
+import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
 import {By} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {MockProvider} from 'ng-mocks';
+import {SearchesStateService} from '../../search-state.service';
+import {FilesSearchComponent} from './files-search.component';
 
 describe('Files search', () => {
   let component: FilesSearchComponent;

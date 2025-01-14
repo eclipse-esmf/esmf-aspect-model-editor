@@ -12,12 +12,12 @@
  */
 
 export * from './app-config.interface';
+export * from './electron-signals.model';
 export * from './element.model';
+export * from './file-content.model';
 export * from './known-version';
 export * from './namespace.model';
+export * from './notification.model';
 export * from './search-config';
 export * from './settings';
-export * from './file-content.model';
-export * from './notification.model';
 export * from './startup-options';
-export * from './electron-signals.model';

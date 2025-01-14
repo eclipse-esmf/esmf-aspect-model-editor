@@ -12,17 +12,17 @@
  */
 
 import {ModelApiService} from '@ame/api';
-import {RdfService} from '@ame/rdf/services';
-import {RdfModel} from '@ame/rdf/utils';
+import {LanguageTranslateModule} from '@ame/translation';
 import {Component, Inject} from '@angular/core';
 import {AbstractControl, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {LanguageTranslateModule} from '@ame/translation';
-import {MatButtonModule} from '@angular/material/button';
 
+import {LoadedFilesService} from '@ame/cache';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {RdfModel} from '@esmf/aspect-model-loader';
 
 @Component({
   standalone: true,
@@ -45,10 +45,10 @@ export class RenameModelComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {namespaces: string; rdfModel: RdfModel},
     private dialogRef: MatDialogRef<RenameModelComponent>,
-    private rdfService: RdfService,
+    private loadedFiles: LoadedFilesService,
     private modelApiService: ModelApiService,
   ) {
-    const rdfModel = this.rdfService.currentRdfModel;
+    const rdfModel = this.loadedFiles.currentLoadedFile.rdfModel;
     this.modelApiService.getNamespacesAppendWithFiles().subscribe(namespaces => {
       namespaces = namespaces.map(namespace => namespace.toLowerCase());
       this.fileNameControl = new FormControl('', [

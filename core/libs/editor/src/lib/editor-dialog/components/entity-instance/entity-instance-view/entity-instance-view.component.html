@@ -12,19 +12,19 @@
   -->
 
 <ame-entity-instance-search-bar
-  [count]="(complexValues | entityInstance: searchFilter)?.length"
-  [disableAddNewEntityValue]="enumeration?.isExternalReference()"
+  [count]="(complexValues() | entityInstance: searchFilter)?.length"
+  [disableAddNewEntityValue]="loadedFiles.isElementExtern(enumeration())"
   (add)="onNew()"
   (newSearch)="searchFilter = $event"
 ></ame-entity-instance-search-bar>
 
-@for (complexValue of complexValues | entityInstance: searchFilter; track complexValue.aspectModelUrn) {
-  <mat-expansion-panel class="complex-value-items" expanded="true" [attr.data-cy]="complexValue.name">
+@for (complexValue of complexValues() | entityInstance: searchFilter; track complexValue.aspectModelUrn) {
+  <mat-expansion-panel class="complex-value-items" [attr.data-cy]="complexValue.name" expanded="true">
     <mat-expansion-panel-header class="complex-value-header">
       <mat-panel-title class="complex-value-bar">
         <span class="value-name">{{ complexValue.name }}</span>
         <div class="complex-value-toolbox">
-          @if (!enumeration?.isExternalReference()) {
+          @if (loadedFiles.isElementInCurrentFile(enumeration())) {
             <mat-icon
               (click)="onDelete(complexValue, $event)"
               matTooltip="Delete complex value {{ complexValue.name }}"
@@ -36,20 +36,20 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-action-row class="complex-value-table">
-      @if (complexValue.properties?.length) {
-        <mat-table [dataSource]="complexValue.properties" [trackBy]="trackProperty" class="table-values">
+      @if (tuples[complexValue.aspectModelUrn]?.length) {
+        <mat-table class="table-values" [dataSource]="tuples[complexValue.aspectModelUrn]" [trackBy]="trackProperty">
           <!-- Property Name Column -->
           <ng-container matColumnDef="key">
             <mat-header-cell *matHeaderCellDef>{{ 'ENTITY_VALUE.PROPERTY' | translate }}</mat-header-cell>
             <mat-cell *matCellDef="let element">
               <span
                 class="property-key"
-                matTooltip="{{ element.key.property.name }}{{ element.value.language ? '(' + element.value.language + ')' : '' }}"
+                matTooltip="{{ element.property.name }}{{ element.value.language ? '(' + element.value.language + ')' : '' }}"
               >
                 <span class="property-key__field">
-                  {{ element.key.property.name }}
-                  @if (element.language) {
-                    ({{ element.language }})
+                  {{ element.property.name }}
+                  @if (element.value.language) {
+                    ({{ element.value.language }})
                   }
                 </span>
               </span>
@@ -60,15 +60,11 @@
           <ng-container matColumnDef="value">
             <mat-header-cell *matHeaderCellDef>{{ 'ENTITY_VALUE.VALUE' | translate }}</mat-header-cell>
             <mat-cell *matCellDef="let element">
-              @switch (formFieldHelper.getDataType(element.key.property)) {
-                @case (dataType.DEFAULT) {
-                  {{ element.value }}
-                }
-
-                @case (dataType.COMPLEX) {
-                  <mat-icon class="material-icons complex-value-icon" matTooltip="Complex Data type">view_module</mat-icon>
-                  {{ element.value.name }}
-                }
+              @if (element.value.type?.isComplex) {
+                <mat-icon class="material-icons complex-value-icon" matTooltip="Complex Data type">view_module</mat-icon>
+                {{ element.value.name }}
+              } @else {
+                {{ element.value.value }}
               }
             </mat-cell>
           </ng-container>
@@ -80,8 +76,7 @@
             (click)="selection.toggle(row)"
           ></mat-row>
         </mat-table>
-      }
-      @if (!complexValue.properties?.length) {
+      } @else {
         <div class="empty-state">
           <p>No data</p>
         </div>
@@ -90,9 +85,9 @@
   </mat-expansion-panel>
 }
 
-@if (complexValues?.length === 0) {
+@if (complexValues()?.length === 0) {
   <div class="text--center">No entity values</div>
 }
-@if ((complexValues | entityInstance: searchFilter)?.length === 0) {
+@if ((complexValues() | entityInstance: searchFilter)?.length === 0) {
   <div class="text--center">Entity values are filtered out.</div>
 }

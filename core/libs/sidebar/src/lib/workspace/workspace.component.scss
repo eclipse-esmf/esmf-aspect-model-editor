@@ -11,10 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+$first-column-width: 450px;
+
 :host {
   display: flex;
   flex-direction: column;
-  width: 350px;
+  width: $first-column-width;
   height: 100%;
   background-color: #f3f3f3;
   padding: 16px;
@@ -29,7 +31,7 @@
 .column-two {
   position: absolute;
   top: 0;
-  left: 350px;
+  left: $first-column-width;
   z-index: 1;
 }
 

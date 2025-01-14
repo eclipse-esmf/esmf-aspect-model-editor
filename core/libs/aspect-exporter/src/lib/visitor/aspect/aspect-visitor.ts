@@ -11,9 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
 import {Injectable} from '@angular/core';
-import {DefaultAspect} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
+import {DefaultAspect} from '@esmf/aspect-model-loader';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
@@ -23,35 +24,34 @@ export class AspectVisitor extends BaseVisitor<DefaultAspect> {
   constructor(
     public rdfNodeService: RdfNodeService,
     public rdfListService: RdfListService,
-    rdfService: RdfService,
+    loadedFiles: LoadedFilesService,
   ) {
-    super(rdfService);
+    super(loadedFiles);
   }
 
   visit(aspect: DefaultAspect): DefaultAspect {
     this.setPrefix(aspect.aspectModelUrn);
-    aspect.aspectModelUrn = `${aspect.aspectModelUrn.split('#')[0]}#${aspect.name}`;
     this.updateProperties(aspect);
     return aspect;
   }
 
   private updateProperties(aspect: DefaultAspect) {
     this.rdfNodeService.update(aspect, {
-      preferredName: aspect.getAllLocalesPreferredNames().map(language => ({
+      preferredName: getPreferredNamesLocales(aspect).map(language => ({
         language,
         value: aspect.getPreferredName(language),
       })),
-      description: aspect.getAllLocalesDescriptions().map(language => ({
+      description: getDescriptionsLocales(aspect).map(language => ({
         language,
         value: aspect.getDescription(language),
       })),
-      see: aspect.getSeeReferences() || [],
+      see: aspect.getSee() || [],
     });
 
     if (aspect.properties?.length) {
       this.rdfListService.push(aspect, ...aspect.properties);
       for (const property of aspect.properties) {
-        this.setPrefix(property.property.aspectModelUrn);
+        this.setPrefix(property.aspectModelUrn);
       }
     } else {
       this.rdfListService.createEmpty(aspect, ListProperties.properties);

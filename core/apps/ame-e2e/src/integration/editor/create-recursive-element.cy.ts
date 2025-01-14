@@ -12,8 +12,8 @@
  */
 
 /// <reference types="Cypress" />
-import {cyHelp} from '../../support/helpers';
 import {FIELD_characteristicName, SELECTOR_tbDeleteButton} from '../../support/constants';
+import {cyHelp} from '../../support/helpers';
 
 describe('Test create recursive element', () => {
   function checkIfAspectHasCharacteristic(aspect) {

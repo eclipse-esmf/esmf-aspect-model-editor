@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement, DefaultAbstractEntity, DefaultAbstractProperty, DefaultEntity, DefaultProperty} from '@ame/meta-model';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
+import {LanguageTranslationService} from '@ame/translation';
+import {DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {InheritanceConnector} from './inheritance-connector';
-import {LanguageTranslationService} from '@ame/translation';
 import mxCell = mxgraph.mxCell;
 
 export class PropertyInheritanceConnector extends InheritanceConnector {
@@ -31,10 +31,10 @@ export class PropertyInheritanceConnector extends InheritanceConnector {
     super(mxGraphService, mxGraphAttributeService, sammLangService, notificationsService, translate);
   }
 
-  public connect(parentMetaModel: BaseMetaModelElement, childMetaModel: BaseMetaModelElement, parentCell: mxCell, childCell: mxCell) {
+  public connect(parentMetaModel: NamedElement, childMetaModel: NamedElement, parentCell: mxCell, childCell: mxCell) {
     if (
       parentMetaModel instanceof DefaultProperty &&
-      (childMetaModel instanceof DefaultAbstractProperty || childMetaModel instanceof DefaultProperty)
+      ((childMetaModel instanceof DefaultProperty && childMetaModel.isAbstract) || childMetaModel instanceof DefaultProperty)
     ) {
       parentMetaModel.name = `[${childMetaModel.name}]`;
       parentMetaModel.preferredNames.clear();
@@ -46,13 +46,11 @@ export class PropertyInheritanceConnector extends InheritanceConnector {
     super.connect(parentMetaModel, childMetaModel, parentCell, childCell);
   }
 
-  isInheritedElement(element: BaseMetaModelElement): boolean {
-    return element instanceof DefaultProperty || element instanceof DefaultAbstractProperty;
+  isInheritedElement(element: NamedElement): boolean {
+    return element instanceof DefaultProperty || (element instanceof DefaultEntity && element.isAbstractEntity());
   }
 
   protected hasEntityParent(cell: mxgraph.mxCell) {
-    return !this.mxGraphService
-      .resolveParents(cell)
-      ?.some(cell => [DefaultAbstractEntity, DefaultEntity].some(c => MxGraphHelper.getModelElement(cell) instanceof c));
+    return !this.mxGraphService.resolveParents(cell)?.some(cell => MxGraphHelper.getModelElement(cell) instanceof DefaultEntity);
   }
 }

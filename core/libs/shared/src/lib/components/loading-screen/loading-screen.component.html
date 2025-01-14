@@ -20,6 +20,6 @@
 
 @if (data.hasCloseButton) {
   <mat-dialog-actions align="end">
-    <button mat-button data-cy="close-loading-modal" (click)="close()">Close</button>
+    <button (click)="close()" mat-button data-cy="close-loading-modal">Close</button>
   </mat-dialog-actions>
 }

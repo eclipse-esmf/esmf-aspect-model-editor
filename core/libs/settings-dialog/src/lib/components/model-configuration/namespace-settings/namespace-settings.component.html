@@ -25,7 +25,7 @@
   <div class="namespace-fields">
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.VALUE' | translate }}</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="aspectUri" data-cy="namespaceTabValueInput" />
+      <input class="form-control" matInput spellcheck="false" formControlName="aspectUri" data-cy="namespaceTabValueInput" />
       @if (form.get('aspectUri').errors?.required) {
         <mat-error>Namespace is required</mat-error>
       }
@@ -36,7 +36,7 @@
 
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.VERSION' | translate }}</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="aspectVersion" data-cy="namespaceTabVersionInput" />
+      <input class="form-control" matInput spellcheck="false" formControlName="aspectVersion" data-cy="namespaceTabVersionInput" />
       @if (form.get('aspectVersion').errors?.required) {
         <mat-error>Version is required</mat-error>
       }
@@ -47,12 +47,12 @@
 
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.NAME' | translate }}</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="aspectName" data-cy="namespaceTabFileNameInput" />
+      <input class="form-control" matInput spellcheck="false" formControlName="aspectName" data-cy="namespaceTabFileNameInput" />
     </mat-form-field>
 
     <mat-form-field class="namespace-setting-field">
       <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.SAMM_VERSION' | translate }}</mat-label>
-      <input matInput spellcheck="false" class="form-control" formControlName="sammVersion" data-cy="namespaceTabSammVersionInput" />
+      <input class="form-control" matInput spellcheck="false" formControlName="sammVersion" data-cy="namespaceTabSammVersionInput" />
     </mat-form-field>
   </div>
 </form>
@@ -67,21 +67,21 @@
     <table [dataSource]="predefinedNamespaces" mat-table>
       <caption></caption>
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef id="name">{{ 'SETTINGS_DIALOG.NAMESPACES.NAME' | translate }}</th>
-        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        <th id="name" *matHeaderCellDef mat-header-cell>{{ 'SETTINGS_DIALOG.NAMESPACES.NAME' | translate }}</th>
+        <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
       </ng-container>
 
       <ng-container matColumnDef="value">
-        <th mat-header-cell *matHeaderCellDef id="value">{{ 'SETTINGS_DIALOG.NAMESPACES.VALUE' | translate }}</th>
-        <td mat-cell *matCellDef="let element">{{ element.value }}</td>
+        <th id="value" *matHeaderCellDef mat-header-cell>{{ 'SETTINGS_DIALOG.NAMESPACES.VALUE' | translate }}</th>
+        <td *matCellDef="let element" mat-cell>{{ element.value }}</td>
       </ng-container>
 
       <ng-container matColumnDef="version">
-        <th mat-header-cell *matHeaderCellDef id="version">{{ 'SETTINGS_DIALOG.NAMESPACES.VERSION' | translate }}</th>
-        <td mat-cell *matCellDef="let element">{{ element.version }}</td>
+        <th id="version" *matHeaderCellDef mat-header-cell>{{ 'SETTINGS_DIALOG.NAMESPACES.VERSION' | translate }}</th>
+        <td *matCellDef="let element" mat-cell>{{ element.version }}</td>
       </ng-container>
-      <tr mat-header-row *matHeaderRowDef="columns"></tr>
-      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+      <tr *matHeaderRowDef="columns" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: columns" mat-row></tr>
     </table>
   </mat-expansion-panel>
 </mat-accordion>

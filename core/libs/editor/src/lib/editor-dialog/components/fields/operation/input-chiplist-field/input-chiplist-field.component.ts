@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {InputFieldComponent} from '../../input-field.component';
-import {DefaultOperation, DefaultProperty, Property} from '@ame/meta-model';
-import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {CacheUtils} from '@ame/cache';
 import {ENTER} from '@angular/cdk/keycodes';
-import {EditorDialogValidators} from '../../../../validators';
-import {RdfService} from '@ame/rdf/services';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {FormControl} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
+import {DefaultOperation, DefaultProperty, Property, RdfModel} from '@esmf/aspect-model-loader';
+import {Observable} from 'rxjs';
+import {EditorDialogValidators} from '../../../../validators';
+import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-input-chiplist-field',
@@ -37,10 +37,11 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
   public chipControl = new FormControl();
   public searchControl: FormControl<string>;
 
-  constructor(
-    public rdfService: RdfService,
-    private validators: EditorDialogValidators,
-  ) {
+  get currentRdfModel(): RdfModel {
+    return this.loadedFiles.currentLoadedFile.rdfModel;
+  }
+
+  constructor(private validators: EditorDialogValidators) {
     super();
   }
 
@@ -62,7 +63,7 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
   }
 
   setInputControl() {
-    const inputValueList = this.metaModelElement?.input.map(value => value.property);
+    const inputValueList = this.metaModelElement?.input;
 
     if (inputValueList) {
       this.inputValues.push(...inputValueList);
@@ -71,7 +72,7 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
     this.searchControl = new FormControl(
       {
         value: '',
-        disabled: this.metaModelElement.isExternalReference(),
+        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       },
       [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
     );
@@ -80,11 +81,11 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
       'inputChipList',
       new FormControl({
         value: this.inputValues,
-        disabled: this.metaModelElement?.isExternalReference(),
+        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       }),
     );
 
-    if (this.metaModelElement?.isExternalReference()) this.chipControl.disable();
+    if (this.loadedFiles.isElementExtern(this.metaModelElement)) this.chipControl.disable();
 
     this.filteredPropertyTypes$ = this.initFilteredPropertyTypes(this.searchControl);
   }
@@ -94,9 +95,11 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
       return;
     }
 
-    let property = this.currentCachedFile.getCachedProperties().find(p => p.aspectModelUrn === newValue.urn);
+    let property = CacheUtils.getCachedElements(this.currentCachedFile, DefaultProperty)
+      .filter(p => !p.isAbstract)
+      .find(p => p.aspectModelUrn === newValue.urn);
     if (!property) {
-      property = this.namespacesCacheService.findElementOnExtReference<Property>(newValue.urn);
+      property = this.loadedFiles.findElementOnExtReferences<Property>(newValue.urn);
     }
 
     this.addProperty(property);
@@ -108,7 +111,11 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
     }
 
     const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${propertyName}`;
-    const newProperty = new DefaultProperty(this.metaModelElement.metaModelVersion, urn, propertyName, null);
+    const newProperty = new DefaultProperty({
+      metaModelVersion: this.metaModelElement.metaModelVersion,
+      aspectModelUrn: urn,
+      name: propertyName,
+    });
     this.addProperty(newProperty);
   }
 

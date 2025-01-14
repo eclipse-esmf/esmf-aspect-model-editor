@@ -11,15 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {mxgraph} from 'mxgraph-factory';
+import {LoadedFilesService} from '@ame/cache';
 import {Injectable} from '@angular/core';
+import {DefaultConstraint, DefaultTrait} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
 import {MxGraphAttributeService} from '.';
 import {MxGraphHelper} from '../helpers';
-import {DefaultConstraint, DefaultTrait} from '@ame/meta-model';
 
 @Injectable()
 export class MxGraphShapeSelectorService {
-  constructor(private mxGraphAttributeService: MxGraphAttributeService) {}
+  constructor(
+    private mxGraphAttributeService: MxGraphAttributeService,
+    private loadedFiles: LoadedFilesService,
+  ) {}
   /**
    * @returns array of selected cells
    */
@@ -44,7 +48,7 @@ export class MxGraphShapeSelectorService {
     selectedElementCells.forEach((cell: mxgraph.mxCell) => {
       withExternalSelectedElementCells.push(cell);
       const modelElement = MxGraphHelper.getModelElement(cell);
-      if (modelElement?.isExternalReference()) {
+      if (this.loadedFiles.isElementExtern(modelElement)) {
         withExternalSelectedElementCells = [
           ...withExternalSelectedElementCells,
           ...this.getExternalUpperReferenceCells(cell, tempCurrentSelection),
@@ -108,7 +112,7 @@ export class MxGraphShapeSelectorService {
     incomingEdges.forEach((edge: mxgraph.mxCell) => {
       const source = edge.source;
       const sourceModelElement = MxGraphHelper.getModelElement(source);
-      if (sourceModelElement.isExternalReference() && !currentSelection.includes(source)) {
+      if (this.loadedFiles.isElementExtern(sourceModelElement) && !currentSelection.includes(source)) {
         upperCells.push(source);
         currentSelection.push(source);
         upperCells = [...upperCells, ...this.getExternalUpperReferenceCells(source, currentSelection)];
@@ -119,7 +123,7 @@ export class MxGraphShapeSelectorService {
       outgoingEdges.forEach((edge: mxgraph.mxCell) => {
         const target = edge.target;
         const targetModelElement = MxGraphHelper.getModelElement(target);
-        if (targetModelElement.isExternalReference() && targetModelElement instanceof DefaultConstraint) {
+        if (this.loadedFiles.isElementExtern(targetModelElement) && targetModelElement instanceof DefaultConstraint) {
           upperCells.push(target);
           currentSelection.push(cell);
         }

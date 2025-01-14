@@ -11,34 +11,34 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FormGroup} from '@angular/forms';
+import {LoadedFilesService} from '@ame/cache';
 import {Settings} from '@ame/settings-dialog';
-import {SettingsUpdateStrategy} from './settings-update.strategy';
-import {Injectable} from '@angular/core';
-import {RdfService} from '@ame/rdf/services';
-import {RdfModelUtil} from '@ame/rdf/utils';
 import {TitleService} from '@ame/shared';
+import {inject, Injectable} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+import {SettingsUpdateStrategy} from './settings-update.strategy';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NamespaceConfigurationUpdateStrategy implements SettingsUpdateStrategy {
-  constructor(
-    private rdfService: RdfService,
-    private titleService: TitleService,
-  ) {}
+  private loadedFilesService = inject(LoadedFilesService);
+
+  constructor(private titleService: TitleService) {}
 
   updateSettings(form: FormGroup, settings: Settings): void {
     const namespaceConfiguration = form.get('namespaceConfiguration');
     if (!namespaceConfiguration) return;
 
+    const currentFile = this.loadedFilesService.currentLoadedFile;
+    this.loadedFilesService.updateAbsoluteName(
+      currentFile.absoluteName,
+      `${namespaceConfiguration.get('aspectUri')?.value}:${namespaceConfiguration.get('aspectVersion')?.value}:${namespaceConfiguration.get('aspectName')?.value}.ttl`,
+    );
+
     settings.namespace = namespaceConfiguration.get('aspectUri')?.value;
     settings.version = namespaceConfiguration.get('aspectVersion')?.value;
 
-    const [namespace, version] = RdfModelUtil.splitRdfIntoChunks(this.rdfService.currentRdfModel.absoluteAspectModelFileName);
-    this.rdfService.currentRdfModel.originalAbsoluteFileName = `${namespace}:${version}:${namespaceConfiguration.get('aspectName')?.value}.ttl`;
-    this.rdfService.currentRdfModel.absoluteAspectModelFileName = `${namespace}:${version}:${namespaceConfiguration.get('aspectName')?.value}.ttl`;
-
-    this.titleService.updateTitle(this.rdfService.currentRdfModel.absoluteAspectModelFileName);
+    this.titleService.updateTitle(currentFile.absoluteName);
   }
 }

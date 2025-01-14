@@ -14,15 +14,15 @@
 <div class="search">
   <mat-form-field appearance="outline">
     <mat-icon matPrefix>search</mat-icon>
-    <input (keyup)="search($event)" matInput [placeholder]="'SIDEBAR.ACTIONS.SEARCH_FILE' | translate" />
+    <input [placeholder]="'SIDEBAR.ACTIONS.SEARCH_FILE' | translate" (keyup)="search($event)" matInput />
   </mat-form-field>
 
   <button
-    (click)="toggleFold()"
+    class="sort"
     [matTooltip]="foldedStatus ? ('TOOLTIPS.UNFOLD_NAMESPACES' | translate) : ('TOOLTIPS.FOLD_NAMESPACES' | translate)"
+    (click)="toggleFold()"
     matTooltipPosition="right"
     mat-mini-fab
-    class="sort"
   >
     <mat-icon>{{ foldedStatus ? 'unfold_more' : 'unfold_less' }}</mat-icon>
   </button>
@@ -31,7 +31,7 @@
 <div class="namespaces">
   @for (namespace of sortNamespaces(namespaces | keyvalue); track namespace.value) {
     @if (searched[namespace.key]?.length) {
-      <div (click)="folded[namespace.key] = !folded[namespace.key]" class="namespace">
+      <div class="namespace" (click)="folded[namespace.key] = !folded[namespace.key]">
         <mat-icon [matTooltip]="folded[namespace.key] ? ('TOOLTIPS.UNFOLD' | translate) : ('TOOLTIPS.FOLD' | translate)">
           {{ folded[namespace.key] ? 'folder' : 'folder_open' }}
         </mat-icon>
@@ -41,6 +41,7 @@
     @if (!folded[namespace.key] || searchString) {
       @for (file of searched[namespace.key]; track file) {
         <div
+          class="file"
           [class.selected]="selection.isSelected(namespace.key, file.name)"
           [class.outdated]="file.outdated"
           [class.locked]="file.locked"
@@ -48,8 +49,8 @@
           [matTooltip]="isCurrentFile(namespace.key, file)"
           (click)="selectFile(namespace.key, file)"
           (dblclick)="prepare(namespace.key, file); loadInNewWindow()"
+          matTooltipClass="tooltip-width"
           matTooltipPosition="right"
-          class="file"
         >
           <div class="content">
             <mat-icon
@@ -89,7 +90,7 @@
     >
       {{ 'SIDEBAR.FILE_MENU.FIND_ELEMENTS' | translate }}
     </button>
-    <button mat-menu-item (click)="copyNamespace()" data-cy="fileMenuCopyToClipboardButton">
+    <button (click)="copyNamespace()" mat-menu-item data-cy="fileMenuCopyToClipboardButton">
       {{ 'SIDEBAR.FILE_MENU.COPY_FILE_PATH' | translate }}
     </button>
     <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-cy="fileMenuDeleteButton">

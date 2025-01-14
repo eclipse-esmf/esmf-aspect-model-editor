@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {ShapeConnectorService} from '@ame/connection';
 import {
   ModelInfo,
   MxGraphAttributeService,
@@ -20,9 +20,9 @@ import {
   MxGraphShapeOverlayService,
   TraitRenderService,
 } from '@ame/mx-graph';
+import {Injectable} from '@angular/core';
+import {DefaultCharacteristic, DefaultEither, DefaultEntity, DefaultProperty, DefaultTrait, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
-import {ShapeConnectorService} from '@ame/connection';
-import {BaseMetaModelElement, DefaultCharacteristic, DefaultEither, DefaultEntity, DefaultProperty, DefaultTrait} from '@ame/meta-model';
 import {BaseModelService} from './base-model-service';
 
 interface EitherInformation {
@@ -48,7 +48,7 @@ export class TraitModelService extends BaseModelService {
     this.traitRendererService.update({cell});
   }
 
-  isApplicable(metaModelElement: BaseMetaModelElement): boolean {
+  isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultTrait;
   }
 
@@ -87,7 +87,7 @@ export class TraitModelService extends BaseModelService {
   private getSourceTargetPairForReconnect(cell: mxgraph.mxCell) {
     const sourceTargetPair = new Map();
     const elementModel = MxGraphHelper.getModelElement(cell);
-    if (!elementModel.isExternalReference()) {
+    if (this.loadedFilesService.isElementInCurrentFile(elementModel)) {
       const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
       const outgoingEdges = this.mxGraphAttributeService.graph.getOutgoingEdges(cell);
 

@@ -14,6 +14,7 @@
 
 /// <reference types="Cypress" />
 
+import 'cypress-real-events';
 import {
   BUTTON_renameModelConfirm,
   FIELD_descriptionen,
@@ -36,7 +37,6 @@ import {
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
-import 'cypress-real-events';
 
 describe('Test editing Aspect', () => {
   it('can add new aspect model', () => {

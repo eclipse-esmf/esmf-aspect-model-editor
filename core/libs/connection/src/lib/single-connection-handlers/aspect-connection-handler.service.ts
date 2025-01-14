@@ -12,11 +12,13 @@
  */
 
 import {FiltersService} from '@ame/loader-filters';
-import {Aspect, ModelElementNamingService, DefaultProperty} from '@ame/meta-model';
+import {ModelElementNamingService} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
+import {ElementCreatorService} from '@ame/shared';
 import {Injectable} from '@angular/core';
-import {SingleShapeConnector} from '../models';
+import {Aspect, DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {SingleShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -26,13 +28,14 @@ export class AspectConnectionHandler implements SingleShapeConnector<Aspect> {
     private mxGraphService: MxGraphService,
     private modelElementNamingService: ModelElementNamingService,
     private filtersService: FiltersService,
+    private elementCreator: ElementCreatorService,
   ) {}
 
   public connect(aspect: Aspect, source: mxgraph.mxCell) {
-    const defaultProperty = DefaultProperty.createInstance();
+    const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty);
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultProperty);
     const child = this.mxGraphService.renderModelElement(this.filtersService.createNode(metaModelElement, {parent: aspect}));
-    aspect.properties.push({property: defaultProperty, keys: {}});
+    aspect.properties.push(defaultProperty);
     this.mxGraphService.assignToParent(child, source);
     this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();

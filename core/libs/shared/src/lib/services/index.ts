@@ -11,15 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+export * from './alert.service';
 export * from './bindings.service';
 export * from './browser.service';
 export * from './data-type.service';
-export * from './log.service';
-export * from './search.service';
-export * from './notifications.service';
-export * from './electron-tunnel.service';
-export * from './model-saving-tracker.service';
-export * from './title.service';
 export * from './electron-signals.service';
-export * from './alert.service';
+export * from './electron-tunnel.service';
 export * from './loading-screen.service';
+export * from './model-saving-tracker.service';
+export * from './notifications.service';
+export * from './search.service';
+export * from './title.service';

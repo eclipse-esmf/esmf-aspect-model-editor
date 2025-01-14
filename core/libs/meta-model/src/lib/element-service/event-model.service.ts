@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {BaseModelService} from './base-model-service';
-import {BaseMetaModelElement, DefaultEvent} from '@ame/meta-model';
-import {mxgraph} from 'mxgraph-factory';
 import {EventRenderService, MxGraphService} from '@ame/mx-graph';
+import {Injectable} from '@angular/core';
+import {DefaultEvent, NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class EventModelService extends BaseModelService {
@@ -26,7 +26,7 @@ export class EventModelService extends BaseModelService {
     super();
   }
 
-  isApplicable(metaModelElement: BaseMetaModelElement): boolean {
+  isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultEvent;
   }
 

@@ -10,13 +10,12 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Injectable} from '@angular/core';
-import {PredefinedRemove} from './predefined-remove.type';
-import {mxgraph} from 'mxgraph-factory';
-import {BaseMetaModelElement} from '../../aspect-meta-model';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {Injectable} from '@angular/core';
+import {NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
 import {ModelRootService} from '../model-root.service';
-import {PredefinedEntities, PredefinedProperties} from '@ame/vocabulary';
+import {PredefinedRemove} from './predefined-remove.type';
 
 @Injectable({
   providedIn: 'root',
@@ -41,29 +40,29 @@ export class FileResourceRemoveService implements PredefinedRemove {
       return this.delete(this.mxGraphService.resolveParents(cell)?.[0]);
     }
 
-    if ([PredefinedProperties.resource, PredefinedProperties.mimeType].includes(modelElement.name as PredefinedProperties)) {
+    if ([PredefinedPropertiesEnum.resource, PredefinedPropertiesEnum.mimeType].includes(modelElement.name as PredefinedPropertiesEnum)) {
       const parent = this.mxGraphService
         .resolveParents(cell)
-        .find(p => MxGraphHelper.getModelElement(p).name === PredefinedEntities.FileResource);
+        .find(p => MxGraphHelper.getModelElement(p).name === PredefinedEntitiesEnum.FileResource);
       return this.removeTree(parent);
     }
 
-    if (modelElement.name === PredefinedEntities.FileResource) {
+    if (modelElement.name === PredefinedEntitiesEnum.FileResource) {
       return this.removeTree(cell);
     }
 
     return false;
   }
 
-  decouple(edge: mxgraph.mxCell, source: BaseMetaModelElement): boolean {
-    if ([PredefinedProperties.resource, PredefinedProperties.mimeType].includes(source.name as PredefinedProperties)) {
+  decouple(edge: mxgraph.mxCell, source: NamedElement): boolean {
+    if ([PredefinedPropertiesEnum.resource, PredefinedPropertiesEnum.mimeType].includes(source.name as PredefinedPropertiesEnum)) {
       const parent = this.mxGraphService
         .resolveParents(edge.source)
-        .find(p => MxGraphHelper.getModelElement(p).name === PredefinedEntities.FileResource);
+        .find(p => MxGraphHelper.getModelElement(p).name === PredefinedEntitiesEnum.FileResource);
       return this.removeTree(parent);
     }
 
-    if (source.name === PredefinedEntities.FileResource) {
+    if (source.name === PredefinedEntitiesEnum.FileResource) {
       return this.removeTree(edge.source);
     }
 

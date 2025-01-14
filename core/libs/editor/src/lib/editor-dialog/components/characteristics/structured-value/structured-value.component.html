@@ -15,7 +15,7 @@
 <mat-form-field appearance="fill">
   <mat-label for="deconstructionRule">Deconstruction rule name</mat-label>
   <mat-select [value]="selectedRule || ''" data-cy="deconstruction-rule-select">
-    <mat-option value="--custom-rule--" (click)="customRuleActive = true; setCustomRule()">Custom Rule</mat-option>
+    <mat-option (click)="customRuleActive = true; setCustomRule()" value="--custom-rule--">Custom Rule</mat-option>
     @for (predefinedRule of predefinedRules; track predefinedRule) {
       <mat-option [value]="predefinedRule.regex" (click)="customRuleActive = false; selectPredefinedRule(predefinedRule)">
         {{ predefinedRule.name }}
@@ -27,7 +27,7 @@
 <!-- Input field -->
 <mat-form-field appearance="fill">
   <mat-label for="deconstructionRule">deconstructionRule</mat-label>
-  <input [formControl]="getControl('deconstructionRule')" class="deconstruction-rule-input" data-cy="deconstruction-rule-input" matInput />
+  <input class="deconstruction-rule-input" [formControl]="getControl('deconstructionRule')" data-cy="deconstruction-rule-input" matInput />
   @if (getControl('deconstructionRule').errors?.required) {
     <mat-error>Rule definition is required</mat-error>
   }
@@ -43,7 +43,7 @@
       <mat-icon>format_list_bulleted</mat-icon>
       <span>Elements</span>
     </p>
-    <button mat-button color="primary" (click)="openModal()" data-cy="elements-modal-button">Open elements table</button>
+    <button (click)="openModal()" mat-button color="primary" data-cy="elements-modal-button">Open elements table</button>
   </div>
 
   @if (hasGroupsError) {

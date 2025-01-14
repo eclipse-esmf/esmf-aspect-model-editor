@@ -10,13 +10,12 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {MxGraphService} from '@ame/mx-graph';
+import {DataTypeService} from '@ame/shared';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, DefaultConstraint} from '@ame/meta-model';
-import {MxGraphService} from '@ame/mx-graph';
+import {DefaultConstraint, NamedElement, Samm, SammC} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
-import {DataTypeService} from '@ame/shared';
-import {Samm, SammC} from '@ame/vocabulary';
 
 @Component({
   selector: 'ame-upper-bound-input-field',
@@ -35,7 +34,7 @@ export class UpperBoundInputFieldComponent extends InputFieldComponent<DefaultCo
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe((modelElement: BaseMetaModelElement) => {
+    this.subscription = this.getMetaModelData().subscribe((modelElement: NamedElement) => {
       this.upperBoundDefinitionList = modelElement
         ? new SammC(new Samm(modelElement.metaModelVersion)).getUpperBoundDefinitionList()
         : null;
@@ -56,7 +55,7 @@ export class UpperBoundInputFieldComponent extends InputFieldComponent<DefaultCo
       this.fieldName,
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
-        disabled: this.metaModelElement.isExternalReference(),
+        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       }),
     );
   }

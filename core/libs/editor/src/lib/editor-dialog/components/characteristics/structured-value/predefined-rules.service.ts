@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
 import {Injectable} from '@angular/core';
-import {DefaultCharacteristic, DefaultProperty, DefaultScalar, OverWrittenProperty} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
+import {DefaultCharacteristic, DefaultProperty, DefaultScalar} from '@esmf/aspect-model-loader';
 import {simpleDataTypes} from '../../../../../../../shared/src/lib/constants/xsd-datatypes';
 
 @Injectable({
@@ -94,7 +94,7 @@ export class PredefinedRulesService {
     },
   };
 
-  constructor(private rdfService: RdfService) {}
+  constructor(private loadedFiles: LoadedFilesService) {}
 
   getRule(rule: string) {
     const predefinedRule = this.rules[rule];
@@ -108,18 +108,15 @@ export class PredefinedRulesService {
     };
   }
 
-  private createProperty(property): OverWrittenProperty {
-    const namespace = this.rdfService.currentRdfModel.getAspectModelUrn();
-    const version = this.rdfService.currentRdfModel.getMetaModelVersion();
-    return {
-      property: new DefaultProperty(
-        version,
-        namespace + property.label,
-        property.label,
-        this.createCharacteristic(property.characteristic),
-      ),
-      keys: {},
-    };
+  private createProperty(property): DefaultProperty {
+    const namespace = this.loadedFiles.currentLoadedFile.rdfModel.getAspectModelUrn();
+    const version = this.loadedFiles.currentLoadedFile.rdfModel.getMetaModelVersion();
+    return new DefaultProperty({
+      metaModelVersion: version,
+      aspectModelUrn: namespace + property.label,
+      name: property.label,
+      characteristic: this.createCharacteristic(property.characteristic),
+    });
   }
 
   private createCharacteristic(characteristic: any) {
@@ -127,13 +124,13 @@ export class PredefinedRulesService {
       return null;
     }
 
-    const namespace = this.rdfService.currentRdfModel.getAspectModelUrn();
-    const version = this.rdfService.currentRdfModel.getMetaModelVersion();
-    return new DefaultCharacteristic(
-      version,
-      namespace + characteristic.name,
-      characteristic.name,
-      new DefaultScalar(characteristic.type.isDefinedBy),
-    );
+    const namespace = this.loadedFiles.currentLoadedFile.rdfModel.getAspectModelUrn();
+    const version = this.loadedFiles.currentLoadedFile.rdfModel.getMetaModelVersion();
+    return new DefaultCharacteristic({
+      metaModelVersion: version,
+      aspectModelUrn: namespace + characteristic.name,
+      name: characteristic.name,
+      dataType: new DefaultScalar(characteristic.type.isDefinedBy),
+    });
   }
 }

@@ -11,19 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LanguageTranslateModule} from '@ame/translation';
+import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatExpansionModule} from '@angular/material/expansion';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {EditorModelService} from './editor-model.service';
-import {MatChipsModule} from '@angular/material/chips';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatExpansionModule} from '@angular/material/expansion';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTableModule} from '@angular/material/table';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {ElementIconComponent} from '../../../../shared/src/lib/components/element/element.component';
+import {CounterPipe} from '../../../../shared/src/lib/pipes/counter.pipe';
 import {
   AbstractEntityComponent,
   AbstractPropertyComponent,
@@ -84,15 +91,6 @@ import {
   UpperBoundInputFieldComponent,
   ValuesInputFieldComponent,
 } from './components';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {CommonModule} from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDialogModule} from '@angular/material/dialog';
-import {CounterPipe} from '../../../../shared/src/lib/pipes/counter.pipe';
-import {SharedSettingsTitleComponent} from './components/shape-settings/shared-settings-title/shared-settings-title.component';
-import {LanguageTranslateModule} from '@ame/translation';
-import {ElementIconComponent} from '../../../../shared/src/lib/components/element/element.component';
-import {MatDividerModule} from '@angular/material/divider';
 import {
   EntityInstanceComponent,
   EntityInstanceModalComponent,
@@ -101,6 +99,8 @@ import {
   EntityInstanceTableComponent,
   EntityInstanceViewComponent,
 } from './components/entity-instance';
+import {SharedSettingsTitleComponent} from './components/shape-settings/shared-settings-title/shared-settings-title.component';
+import {EditorModelService} from './editor-model.service';
 import {EntityInstancePipe} from './pipes';
 
 @NgModule({

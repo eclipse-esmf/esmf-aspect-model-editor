@@ -11,10 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {BaseMetaModelElement, BaseModelService, DefaultQuantifiable, DefaultUnit} from '@ame/meta-model';
+import {Injectable} from '@angular/core';
+import {DefaultQuantifiable, DefaultUnit, NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class QuantifiableModelService extends BaseModelService {
@@ -26,14 +27,14 @@ export class QuantifiableModelService extends BaseModelService {
     super();
   }
 
-  isApplicable(metaModelElement: BaseMetaModelElement): boolean {
+  isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultQuantifiable;
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement: DefaultQuantifiable = MxGraphHelper.getModelElement(cell);
     if (!form.unit) {
-      metaModelElement.unit = DefaultUnit.createInstance();
+      metaModelElement.unit = new DefaultUnit({name: '', aspectModelUrn: '', metaModelVersion: '', quantityKinds: []});
     } else {
       metaModelElement.unit = form.unit;
     }

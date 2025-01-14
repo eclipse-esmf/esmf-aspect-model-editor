@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LanguageTranslateModule} from '@ame/translation';
 import {DIALOG_DATA} from '@angular/cdk/dialog';
 import {Component, Inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
-import {LanguageTranslateModule} from '@ame/translation';
 
 @Component({
   templateUrl: './open-file-dialog.component.html',

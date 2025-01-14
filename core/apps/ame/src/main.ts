@@ -11,20 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {enableProdMode, importProvidersFrom} from '@angular/core';
-import {environment} from 'environments/environment';
-import {bootstrapApplication} from '@angular/platform-browser';
 import {AppComponent} from '@ame/app/app.component';
+import {APP_ROUTES} from '@ame/app/app.routes';
 import {DomainModelToRdfModule} from '@ame/aspect-exporter';
-import {MxGraphModule} from '@ame/mx-graph';
-import {ToastrModule} from 'ngx-toastr';
 import {MIGRATOR_ROUTES} from '@ame/migrator';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {HttpClient, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {MxGraphModule} from '@ame/mx-graph';
 import {APP_CONFIG, config, httpLoaderFactory} from '@ame/shared';
+import {HttpClient, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {enableProdMode, importProvidersFrom} from '@angular/core';
+import {bootstrapApplication} from '@angular/platform-browser';
 import {provideAnimations} from '@angular/platform-browser/animations';
 import {PreloadAllModules, provideRouter, withPreloading} from '@angular/router';
-import {APP_ROUTES} from '@ame/app/app.routes';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {environment} from 'environments/environment';
+import {ToastrModule} from 'ngx-toastr';
 import {NAMESPACE_EXPORT_ROUTES} from '../../../libs/namespace-manager/src/lib/namespace-exporter';
 import {NAMESPACE_IMPORT_ROUTES} from '../../../libs/namespace-manager/src/lib/namespace-importer';
 

@@ -11,10 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {PredefinedEntities, PredefinedProperties} from '@ame/vocabulary';
 import {Injectable} from '@angular/core';
+import {DefaultEntity, DefaultProperty, NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
-import {BaseMetaModelElement, DefaultAbstractEntity, DefaultAbstractProperty, DefaultProperty} from '../../aspect-meta-model';
 import {ModelRootService} from '../model-root.service';
 import {PredefinedRemove} from './predefined-remove.type';
 
@@ -30,14 +29,18 @@ export class TimeSeriesEntityRemoveService implements PredefinedRemove {
   public delete(cell: mxgraph.mxCell) {
     const modelElement = MxGraphHelper.getModelElement(cell);
 
-    if (modelElement instanceof DefaultAbstractEntity && modelElement.name === PredefinedEntities.TimeSeriesEntity) {
+    if (
+      modelElement instanceof DefaultEntity &&
+      modelElement.isAbstractEntity() &&
+      modelElement.name === PredefinedEntitiesEnum.TimeSeriesEntity
+    ) {
       this.handleTimeSeriesEntityTreeRemoval(cell);
       return true;
     }
 
     if (
-      (modelElement instanceof DefaultProperty && modelElement.name === PredefinedProperties.timestamp) ||
-      (modelElement instanceof DefaultAbstractProperty && modelElement.name === PredefinedProperties.value)
+      (modelElement instanceof DefaultProperty && modelElement.name === PredefinedPropertiesEnum.timestamp) ||
+      (modelElement instanceof DefaultProperty && modelElement.isAbstract && modelElement.name === PredefinedPropertiesEnum.value)
     ) {
       this.handleTimeSeriesEntityPropertiesRemoval(cell);
       return true;
@@ -45,7 +48,7 @@ export class TimeSeriesEntityRemoveService implements PredefinedRemove {
 
     const foundCell = this.mxGraphService.graph.getIncomingEdges(cell).find(e => {
       const model = MxGraphHelper.getModelElement(e.source);
-      return model instanceof DefaultProperty && model.name === PredefinedProperties.timestamp && model.isPredefined();
+      return model instanceof DefaultProperty && model.name === PredefinedPropertiesEnum.timestamp && model.isPredefined;
     })?.source;
 
     if (foundCell) {
@@ -56,17 +59,17 @@ export class TimeSeriesEntityRemoveService implements PredefinedRemove {
     return false;
   }
 
-  public decouple(edge: mxgraph.mxCell, source: BaseMetaModelElement) {
-    if (!source?.isPredefined()) {
+  public decouple(edge: mxgraph.mxCell, source: NamedElement) {
+    if (!source?.isPredefined) {
       return false;
     }
 
-    if (source instanceof DefaultAbstractEntity && source.name === PredefinedEntities.TimeSeriesEntity) {
+    if (source instanceof DefaultEntity && source.isAbstractEntity() && source.name === PredefinedEntitiesEnum.TimeSeriesEntity) {
       this.handleTimeSeriesEntityTreeRemoval(edge.source);
       return true;
     }
 
-    if (source instanceof DefaultProperty && source.name === PredefinedProperties.timestamp) {
+    if (source instanceof DefaultProperty && source.name === PredefinedPropertiesEnum.timestamp) {
       this.handleTimeSeriesEntityPropertiesRemoval(edge.source);
       return true;
     }
@@ -89,13 +92,14 @@ export class TimeSeriesEntityRemoveService implements PredefinedRemove {
 
       const dependentProperties = parentsEdges.filter(e => {
         const parentElement = MxGraphHelper.getModelElement(e.source);
-        return parentElement instanceof DefaultAbstractProperty || parentElement instanceof DefaultProperty;
+        return (parentElement instanceof DefaultProperty && parentElement.isAbstract) || parentElement instanceof DefaultProperty;
       });
 
       const hasAbstractEntityAsParent = parentsEdges.length - dependentProperties.length === 1;
       if (
-        modelElement instanceof DefaultAbstractProperty &&
-        modelElement.name === PredefinedProperties.value &&
+        modelElement instanceof DefaultProperty &&
+        modelElement.isAbstract &&
+        modelElement.name === PredefinedPropertiesEnum.value &&
         hasAbstractEntityAsParent &&
         dependentProperties.length > 1
       ) {
@@ -104,7 +108,7 @@ export class TimeSeriesEntityRemoveService implements PredefinedRemove {
 
       if (
         modelElement instanceof DefaultProperty &&
-        modelElement.name === PredefinedProperties.timestamp &&
+        modelElement.name === PredefinedPropertiesEnum.timestamp &&
         hasAbstractEntityAsParent &&
         dependentProperties?.length > 0
       ) {
@@ -126,7 +130,11 @@ export class TimeSeriesEntityRemoveService implements PredefinedRemove {
     const incomingEdges = this.mxGraphService.graph.getIncomingEdges(cell);
     const timeSeriesCell = incomingEdges.find(edge => {
       const modelElement = MxGraphHelper.getModelElement(edge.source);
-      return modelElement instanceof DefaultAbstractEntity && modelElement.name === PredefinedEntities.TimeSeriesEntity;
+      return (
+        modelElement instanceof DefaultEntity &&
+        modelElement.isAbstractEntity() &&
+        modelElement.name === PredefinedEntitiesEnum.TimeSeriesEntity
+      );
     })?.source;
 
     if (timeSeriesCell) {

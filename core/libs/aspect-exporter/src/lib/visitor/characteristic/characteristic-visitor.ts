@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
 import {Injectable} from '@angular/core';
 import {
-  CanExtend,
   DefaultCharacteristic,
   DefaultCode,
   DefaultCollection,
@@ -33,9 +33,9 @@ import {
   DefaultStructuredValue,
   DefaultTimeSeries,
   DefaultTrait,
-} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
-import {Samm, SammC} from '@ame/vocabulary';
+  Samm,
+  SammC,
+} from '@esmf/aspect-model-loader';
 import {DataFactory, Literal, NamedNode, Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
@@ -44,15 +44,15 @@ import {BaseVisitor} from '../base-visitor';
 @Injectable()
 export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
   private get store(): Store {
-    return this.rdfNodeService.modelService.currentRdfModel.store;
+    return this.loadedFilesService.currentLoadedFile.rdfModel.store;
   }
 
   private get samm(): Samm {
-    return this.rdfNodeService.modelService.currentRdfModel.SAMM();
+    return this.loadedFilesService.currentLoadedFile.rdfModel.samm;
   }
 
   private get sammC(): SammC {
-    return this.rdfNodeService.modelService.currentRdfModel.SAMMC();
+    return this.loadedFilesService.currentLoadedFile.rdfModel.sammC;
   }
 
   private readonly characteristicsCallback = {
@@ -76,16 +76,17 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
   constructor(
     private rdfNodeService: RdfNodeService,
     private rdfListService: RdfListService,
-    rdfService: RdfService,
+    private loadedFilesService: LoadedFilesService,
+    loadedFiles: LoadedFilesService,
   ) {
-    super(rdfService);
+    super(loadedFiles);
   }
 
   visit(characteristic: DefaultCharacteristic): DefaultCharacteristic {
     this.setPrefix(characteristic.aspectModelUrn);
     this.updateParents(characteristic);
 
-    if (characteristic.isPredefined()) {
+    if (characteristic.isPredefined) {
       return characteristic;
     }
 
@@ -111,6 +112,8 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     this.store.removeQuads(
       this.store.getQuads(DataFactory.namedNode(characteristic.aspectModelUrn), this.sammC.ConstraintProperty(), null, null),
     );
+
+    // this.rdfListService.push(characteristic, ...characteristic.constraints);
 
     for (const constraint of characteristic.constraints || []) {
       if (!constraint?.aspectModelUrn) {
@@ -234,15 +237,15 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
   // base functions
   private updateProperties(characteristic: DefaultCharacteristic) {
     this.rdfNodeService.update(characteristic, {
-      preferredName: characteristic.getAllLocalesPreferredNames()?.map(language => ({
+      preferredName: Array.from(characteristic.preferredNames.keys())?.map(language => ({
         language,
         value: characteristic.getPreferredName(language),
       })),
-      description: characteristic.getAllLocalesDescriptions()?.map(language => ({
+      description: Array.from(characteristic.descriptions.keys())?.map(language => ({
         language,
         value: characteristic.getDescription(language),
       })),
-      see: characteristic.getSeeReferences() || [],
+      see: characteristic.getSee() || [],
       dataType: characteristic.dataType?.getUrn(),
     });
 
@@ -288,26 +291,23 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
   }
 
   private updateParents(characteristic: DefaultCharacteristic): string {
-    const parents = characteristic.parents;
-
-    for (const parent of parents) {
+    for (const parent of characteristic.parents) {
       if (parent instanceof DefaultTrait || parent instanceof DefaultEither) {
         continue;
       }
 
-      if (parent instanceof CanExtend && parent.extendedElement) {
+      if (parent instanceof DefaultProperty && parent.getExtends()) {
         continue;
       }
 
-      if (characteristic.dataType?.isComplex() && parent instanceof DefaultProperty && !parent.isPredefined()) {
-        // remove exampleValue for complex datatype
-
+      if (characteristic.dataType?.isComplexType() && parent instanceof DefaultProperty && !parent.isPredefined) {
+        // removing exampleValue for complex datatype
         parent.exampleValue = null;
         this.rdfNodeService.update(parent, {exampleValue: null});
       }
 
       parent instanceof DefaultProperty &&
-        !parent.isPredefined() &&
+        !parent.isPredefined &&
         this.removeOldAndAddNewReference(
           DataFactory.namedNode(parent.aspectModelUrn),
           parent instanceof DefaultCollection ? this.sammC.ElementCharacteristicProperty() : this.samm.CharacteristicProperty(),

@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
-import {InputFieldComponent} from '../../input-field.component';
-import {DefaultProperty} from '@ame/meta-model';
-import {FormControl} from '@angular/forms';
 import {simpleDataTypes} from '@ame/shared';
+import {Component, OnInit} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {DefaultProperty} from '@esmf/aspect-model-loader';
+import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-example-value-input-field',
@@ -30,21 +30,21 @@ export class ExampleValueInputFieldComponent extends InputFieldComponent<Default
   }
 
   initForm() {
-    this.hasComplexDataType = this.metaModelElement.characteristic?.dataType?.isComplex();
+    this.hasComplexDataType = this.metaModelElement.characteristic?.dataType?.isComplexType();
     this.parentForm.setControl(
       'exampleValue',
       new FormControl({
         value: this.metaModelElement?.exampleValue || '',
         disabled:
-          this.metaModelElement.isExternalReference() ||
+          this.loadedFiles.isElementExtern(this.metaModelElement) ||
           this.hasComplexDataType ||
-          this.metaModelElement.isPredefined() ||
+          this.metaModelElement.isPredefined ||
           this.isExtending(),
       }),
     );
   }
 
   private isExtending() {
-    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extendedElement;
+    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extends_;
   }
 }

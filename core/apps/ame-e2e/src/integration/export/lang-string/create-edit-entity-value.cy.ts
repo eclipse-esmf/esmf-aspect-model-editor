@@ -13,7 +13,6 @@
 
 /// <reference types="Cypress" />
 
-import {assertRdf, openElementAndAssertValues} from '../../../support/utils';
 import {
   FIELD_characteristicName,
   FIELD_clearDataTypeBtn,
@@ -32,6 +31,7 @@ import {
   SELECTOR_entitySaveButton,
 } from '../../../support/constants';
 import {cyHelp} from '../../../support/helpers';
+import {assertRdf, openElementAndAssertValues} from '../../../support/utils';
 
 describe('Create and edit Entity value RDF lang string properties in edit view tests', () => {
   beforeEach(() => {

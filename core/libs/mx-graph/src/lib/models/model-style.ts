@@ -12,9 +12,6 @@
  */
 
 import {
-  BaseMetaModelElement,
-  DefaultAbstractEntity,
-  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -25,7 +22,8 @@ import {
   DefaultProperty,
   DefaultTrait,
   DefaultUnit,
-} from '@ame/meta-model';
+  NamedElement,
+} from '@esmf/aspect-model-loader';
 
 /**
  * This style class names will refer to src/assets/config/editor/config/stylesheet.xml
@@ -54,12 +52,12 @@ export enum EdgeStyles {
 }
 
 export class ModelStyleResolver {
-  static resolve(metaModelElement: BaseMetaModelElement): ModelStyle {
+  static resolve(metaModelElement: NamedElement): ModelStyle {
     if (metaModelElement instanceof DefaultAspect) {
       return ModelStyle.ASPECT;
-    } else if (metaModelElement instanceof DefaultProperty) {
+    } else if (metaModelElement instanceof DefaultProperty && !metaModelElement.isAbstract) {
       return ModelStyle.PROPERTY;
-    } else if (metaModelElement instanceof DefaultAbstractProperty) {
+    } else if (metaModelElement instanceof DefaultProperty && metaModelElement.isAbstract) {
       return ModelStyle.ABSTRACT_PROPERTY;
     } else if (metaModelElement instanceof DefaultOperation) {
       return ModelStyle.OPERATION;
@@ -69,7 +67,7 @@ export class ModelStyleResolver {
       return ModelStyle.TRAIT;
     } else if (metaModelElement instanceof DefaultCharacteristic) {
       return ModelStyle.CHARACTERISTIC;
-    } else if (metaModelElement instanceof DefaultAbstractEntity) {
+    } else if (metaModelElement instanceof DefaultEntity && metaModelElement.isAbstractEntity()) {
       return ModelStyle.ABSTRACT_ENTITY;
     } else if (metaModelElement instanceof DefaultEntity) {
       return ModelStyle.ENTITY;

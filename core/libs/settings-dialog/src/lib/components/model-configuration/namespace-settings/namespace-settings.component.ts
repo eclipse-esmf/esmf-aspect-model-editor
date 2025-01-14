@@ -13,7 +13,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {Samm} from '@ame/vocabulary';
+import {Samm} from '@esmf/aspect-model-loader';
 import {SettingsFormService} from '../../../services';
 
 @Component({

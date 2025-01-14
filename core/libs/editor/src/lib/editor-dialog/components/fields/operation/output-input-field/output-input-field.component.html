@@ -13,8 +13,8 @@
 
 <mat-form-field [floatLabel]="getControl('output')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="output">output</mat-label>
-  <input #output [matAutocomplete]="auto" spellcheck="false" matInput name="output" [formControl]="getControl('output')" data-cy="output" />
-  @if (outputControl?.disabled && !metaModelElement?.isExternalReference()) {
+  <input #output [matAutocomplete]="auto" [formControl]="getControl('output')" spellcheck="false" matInput name="output" data-cy="output" />
+  @if (outputControl?.disabled && !loadedFiles.isElementExtern(metaModelElement)) {
     <button (click)="unlockOutput()" data-cy="clear-output-button" matSuffix mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
     </button>
@@ -27,7 +27,7 @@
     <mat-error>Please select a different name as this one is of different type in the same namespace</mat-error>
   }
 
-  <mat-autocomplete #auto="matAutocomplete" class="characteristic-output-autocomplete">
+  <mat-autocomplete class="characteristic-output-autocomplete" #auto="matAutocomplete">
     @if (filteredPropertyTypes$ | async; as filteredPropertyTypes) {
       <mat-optgroup label="Property">
         @if (!isAlreadyDefined(filteredPropertyTypes, output.value) && !getControl('output').errors) {

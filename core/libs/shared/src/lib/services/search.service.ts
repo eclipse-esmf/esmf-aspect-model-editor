@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import Fuse from 'fuse.js';
 import {Injectable} from '@angular/core';
+import Fuse from 'fuse.js';
 
 @Injectable({providedIn: 'root'})
 export class SearchService {
