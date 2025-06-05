@@ -6,9 +6,10 @@ The workspace is a simple folder structure on your local machine.
 By default, the Aspect Model Editor file directory is located at following path:
 
 * `+C:\Users\<YOUR-USER-NAME>\aspect-model-editor+` (on Windows)
-* `+/Users/<YOUR-USER-NAME>/aspect-model-editor+` (on Mac or Linux)
+* `+/Users/<YOUR-USER-NAME>/aspect-model-editor+` (on MacOs )
+* `+/home/<YOUR-USER-NAME>/aspect-model-editor+` (on Linux)
 
-On your local file directory, you can manually add, edit, and delete the folder structure for all your Aspect Models.  
+On your local file directory, you can manually add, edit, and delete the folder structure for all your Aspect Models.
 
 Of course, this is also possible with the Aspect Model Editor. The same folder structure is displayed in the xref:getting-started/ui-overview.adoc#workspace-sidebar[Workspace sidebar].
 
