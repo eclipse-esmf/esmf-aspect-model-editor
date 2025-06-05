@@ -114,11 +114,11 @@ In case you have already an older version, uninstall it first and then install t
 
 == Install the Aspect Model Editor on Mac
 
-=== Step 1: Download the .app File ==
+=== Step 1: Download the .app File
 
 * Navigate to the released assets section and download the `.app` file.
 
-=== Step 2: Move the .app File to the Applications Folder ==
+=== Step 2: Move the .app File to the Applications Folder
 
 * Find the downloaded `.app` file on your computer.
 * Drag and drop it into your Applications folder.
