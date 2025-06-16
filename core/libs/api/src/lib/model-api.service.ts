@@ -146,11 +146,7 @@ export class ModelApiService {
   }
 
   getNamespacesStructure(): Observable<WorkspaceStructure> {
-    return this.http.get<WorkspaceStructure>(`${this.serviceUrl}${this.api.models}/namespaces`, {
-      params: {
-        shouldRefresh: true,
-      },
-    });
+    return this.http.get<WorkspaceStructure>(`${this.serviceUrl}${this.api.models}/namespaces`);
   }
 
   // TODO In the backend a defined object should be returned

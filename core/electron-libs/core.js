@@ -52,7 +52,7 @@ async function cleanUpProcesses() {
 function startService() {
   createSplashWindow();
 
-  if (!inDevMode()) {
+  if (inDevMode()) {
     global.backendPort = 9090;
     setTimeout(function () {
       splashWindow.close();
