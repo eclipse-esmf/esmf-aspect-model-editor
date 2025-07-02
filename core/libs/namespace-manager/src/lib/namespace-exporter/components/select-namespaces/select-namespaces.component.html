@@ -15,33 +15,42 @@
 
 <mat-dialog-content class="namespaces">
   <p>{{ 'EXPORT_NAMESPACE_DIALOG.INFO_CONTENT' | translate }}</p>
+
   <section class="namespace-list">
+    <!-- Loading state -->
     @if (extracting) {
       <section class="extracting">
         <mat-spinner class="extracting__spinner"></mat-spinner>
         <p class="extracting__message">Loading namespaces...</p>
       </section>
-    } @else {
-      <h4 class="column-title">Namespaces</h4>
     }
 
-    <mat-radio-group class="files" [(ngModel)]="selectedKey" aria-label="Select an option">
-      @for (entry of entries | keyvalue; track entry.key) {
-        <mat-radio-button class="namespace" value="{{ $any(entry.key) }}">
-          <div class="checkbox-info">
-            <span class="model">File: {{ $any(entry.value).model }}</span>
-            <span class="namespace">Namespace: {{ $any(entry.value).namespace }}</span>
-            <span class="version">Version: {{ $any(entry.value).version }}</span>
-          </div>
-        </mat-radio-button>
-      }
-    </mat-radio-group>
+    <!-- Success state -->
+    @if (!extracting && !error) {
+      <h4 class="column-title">Namespaces</h4>
+      <mat-radio-group class="files" [(ngModel)]="selectedKey" aria-label="Select an option">
+        @for (entry of entries | keyvalue; track entry.key) {
+          <mat-radio-button class="namespace" [value]="$any(entry.key)">
+            <div class="checkbox-info">
+              <span class="model"> File: {{ $any(entry.value).model }} </span>
+              <span class="namespace"> Namespace: {{ $any(entry.value).namespace }} </span>
+              <span class="version"> Version: {{ $any(entry.value).version }} </span>
+            </div>
+          </mat-radio-button>
+        }
+      </mat-radio-group>
+    }
+
+    <!-- Error state -->
+    @if (!extracting && error) {
+      <ame-workspace-error [error]="error"></ame-workspace-error>
+    }
   </section>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-flat-button mat-dialog-close>{{ 'EXPORT_NAMESPACE_DIALOG.CANCEL' | translate }}</button>
-  <button (click)="export()" mat-flat-button color="primary">
+  <button [disabled]="!selectedKey" (click)="export()" mat-flat-button color="primary">
     {{ 'EXPORT_NAMESPACE_DIALOG.NEXT' | translate }}
   </button>
 </mat-dialog-actions>

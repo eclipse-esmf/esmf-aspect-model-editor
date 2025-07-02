@@ -25,6 +25,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {WorkspaceErrorComponent} from '../../../../../../sidebar/src/lib/workspace/workspace-error/workspace-error.component';
 
 @Component({
   standalone: true,
@@ -42,6 +43,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatRadioGroup,
     MatRadioButton,
     FormsModule,
+    WorkspaceErrorComponent,
   ],
 })
 export class SelectNamespacesComponent implements OnInit {
@@ -54,6 +56,8 @@ export class SelectNamespacesComponent implements OnInit {
   extracting = false;
   selectedKey: string | null = null;
 
+  error: {code: number; message: string; path: string} = null;
+
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
     private dialogRef: MatDialogRef<SelectNamespacesComponent>,
@@ -61,9 +65,16 @@ export class SelectNamespacesComponent implements OnInit {
 
   ngOnInit(): void {
     this.extracting = true;
-    this.modelCheckerService.detectWorkspace().subscribe(values => {
-      this.entries = values;
-      this.extracting = false;
+    this.modelCheckerService.detectWorkspace().subscribe({
+      next: values => {
+        this.entries = values;
+        this.extracting = false;
+      },
+      error: err => {
+        this.entries = undefined;
+        this.extracting = false;
+        this.error = err?.error?.error;
+      },
     });
   }
 
