@@ -14,8 +14,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
-import {DefaultStructuredValue, OverWrittenProperty} from '@ame/meta-model';
-import {debounceTime, Subscription, take} from 'rxjs';
+import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader';
+import {Subscription, debounceTime, take} from 'rxjs';
 import {EditorDialogValidators} from '../../../validators';
 import {InputFieldComponent} from '../../fields';
 import {StructuredValueVanillaGroups} from './elements-input-field/model';
@@ -35,7 +35,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   public customRuleActive = true;
   public groups: StructuredValueVanillaGroups[] = [];
   public splitters: StructuredValueVanillaGroups[] = [];
-  public elements: (OverWrittenProperty | string)[] = [];
+  public elements: (DefaultProperty | string)[] = [];
   public predefinedRules: Array<{regex: string; name: string}>;
 
   private subscription$: Subscription;
@@ -92,7 +92,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
       new FormControl(
         {
           value: this.deconstructionRule || '',
-          disabled: !this.customRuleActive || this.metaModelElement?.isExternalReference(),
+          disabled: !this.customRuleActive || this.loadedFiles.isElementExtern(this.metaModelElement),
         },
         {validators: [Validators.required, EditorDialogValidators.regexValidator]},
       ),
@@ -101,7 +101,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
 
     this.parentForm.setControl(
       'elements',
-      new FormControl({value: [...this.elements], disabled: this.metaModelElement?.isExternalReference()}),
+      new FormControl({value: [...this.elements], disabled: this.loadedFiles.isElementExtern(this.metaModelElement)}),
     );
 
     this.rebuildElements();
@@ -135,7 +135,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
 
         for (const group of this.groups) {
           const key = `[${group.start}-${group.end}] -> ${group.text}`;
-          group.property = {property: value[key], keys: {}} as OverWrittenProperty;
+          group.property = value[key];
         }
 
         this.setElementsControllerValue();
@@ -213,7 +213,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   private syncData(allGroups: StructuredValueVanillaGroups[]) {
     for (let index = 0; index < allGroups.length; index++) {
       if (!allGroups[index].isSplitter) {
-        allGroups[index].property = this.elements[index] as OverWrittenProperty;
+        allGroups[index].property = this.elements[index] as DefaultProperty;
       }
     }
   }
@@ -318,7 +318,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
       const filtered = this.elements.filter(e => typeof e !== 'string');
       for (const index in this.groups) {
         if (this.groups[index] && filtered[index]) {
-          this.groups[index].property = filtered[index] as OverWrittenProperty;
+          this.groups[index].property = filtered[index] as DefaultProperty;
         }
       }
     }

@@ -14,8 +14,8 @@
 
 /// <reference types="Cypress" />
 
-import {cyHelp} from '../../support/helpers';
 import {SELECTOR_alertRightButton, SELECTOR_settingsButton, SettingsDialogSelectors} from '../../support/constants';
+import {cyHelp} from '../../support/helpers';
 
 describe('Test language settings', () => {
   it('can open settings dialog', () => {

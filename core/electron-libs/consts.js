@@ -29,7 +29,7 @@ const disabledIconsPath = `${iconsPath}${path.sep}disabled`;
 const enabledIconsPath = `${iconsPath}${path.sep}enabled`;
 
 const modelsPath = inDevMode()
-  ? path.join('.', 'apps', 'ame', 'src', 'assets', 'aspect-models', 'org.eclipse.examples', '1.0.0')
+  ? path.join('.', 'apps', 'ame', 'src', 'assets', 'aspect-models', 'com.examples', '1.0.0')
   : path.join(__dirname, '..', '..', '..', 'default-models');
 
 paths = {

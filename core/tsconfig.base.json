@@ -41,7 +41,8 @@
       "@ame/sidebar": ["libs/sidebar/src/index.ts"],
       "@ame/translation": ["libs/translation/src/index.ts"],
       "@ame/utils": ["libs/utils/src/index.ts"],
-      "@ame/vocabulary": ["libs/vocabulary/src/index.ts"]
+      "@ame/vocabulary": ["libs/vocabulary/src/index.ts"],
+      "@esmf/aspect-model-loader": ["libs/aspect-model-loader/src/index.ts"]
     },
     "typeRoots": ["node_modules/@types", "node_modules/@typed-mxgraph"],
     "types": ["node", "jest"],

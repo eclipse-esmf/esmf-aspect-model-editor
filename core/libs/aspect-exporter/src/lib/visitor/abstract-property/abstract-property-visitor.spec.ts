@@ -11,11 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultAbstractProperty} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
-import {RdfModel} from '@ame/rdf/utils';
-import {Samm} from '@ame/vocabulary';
 import {TestBed} from '@angular/core/testing';
+import {DefaultEntity, RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
 import {provideMockObject} from 'jest-helpers';
 import {Store} from 'n3';
@@ -29,7 +27,7 @@ describe('Property Visitor', () => {
   let modelService: jest.Mocked<ModelService>;
   let rdfModel: jest.Mocked<RdfModel>;
   let rdfService: jest.Mocked<RdfService>;
-  let abstractProperty: DefaultAbstractProperty;
+  let abstractProperty: DefaultEntity;
 
   beforeEach(() => {
     rdfModel = {
@@ -62,7 +60,12 @@ describe('Property Visitor', () => {
     });
 
     modelService = TestBed.inject(ModelService) as jest.Mocked<ModelService>;
-    abstractProperty = new DefaultAbstractProperty('1', 'samm#abstractProperty1', 'abstractProperty1', null);
+    abstractProperty = new DefaultEntity({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#abstractProperty1',
+      name: 'abstractProperty1',
+      isAbstract: true,
+    });
 
     rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
     rdfService.currentRdfModel = rdfModel;

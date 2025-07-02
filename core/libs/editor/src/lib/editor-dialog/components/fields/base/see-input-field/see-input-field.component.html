@@ -12,14 +12,14 @@
   -->
 
 <mat-form-field
+  [floatLabel]="searchControl?.disabled ? 'always' : 'auto'"
+  [matTooltip]="isInherited ? 'This was extended from ' + elementExtends.extends_?.name : ''"
+  [matTooltipPosition]="'left'"
   appearance="fill"
   subscriptSizing="dynamic"
-  [floatLabel]="searchControl?.disabled ? 'always' : 'auto'"
-  [matTooltip]="isInherited ? 'This was extended from ' + elementExtends.extendedElement.name : ''"
-  [matTooltipPosition]="'left'"
 >
   <mat-label for="see">see</mat-label>
-  <mat-chip-grid [formControl]="chipControl" #chipList>
+  <mat-chip-grid #chipList [formControl]="chipControl">
     @for (element of elements; track element.urn) {
       <mat-chip-row
         [matTooltip]="element.urn"
@@ -36,12 +36,12 @@
   </mat-chip-grid>
 
   <input
+    #see
     [formControl]="searchControl"
     [matAutocomplete]="auto"
     [matChipInputFor]="chipList"
-    #see
-    matInput
     [placeholder]="'EDITOR_CANVAS.SHAPE_SETTING.FIELD.SEE_INPUT.TYPE_TO_SEARCH' | translate"
+    matInput
     name="see"
     data-cy="see"
   />

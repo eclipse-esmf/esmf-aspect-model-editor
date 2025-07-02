@@ -13,7 +13,6 @@
 
 /// <reference types="Cypress" />
 
-import {assertRdf, loadModel, openElementAndAssertValues} from '../../../support/utils';
 import {
   FIELD_entityValueName,
   FIELD_propertyLanguageValue,
@@ -21,6 +20,7 @@ import {
   SELECTOR_editorSaveButton,
   SELECTOR_entitySaveButton,
 } from '../../../support/constants';
+import {assertRdf, loadModel, openElementAndAssertValues} from '../../../support/utils';
 
 describe('Loading and edit Entity value RDF lang string properties on modal tests', () => {
   beforeEach(() => {

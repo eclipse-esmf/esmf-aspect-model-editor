@@ -11,23 +11,27 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {DefaultAspect} from '@ame/meta-model';
+import {LoadedFilesService} from '@ame/cache';
 import {MxGraphHelper} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {Injectable} from '@angular/core';
+import {DefaultAspect} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {NamedNode} from 'n3';
 import {RendererUpdatePayload} from '../../models';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
-import {RdfService} from '@ame/rdf/services';
-import {NamedNode} from 'n3';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AspectRenderService extends BaseRenderService {
-  constructor(mxGraphService: MxGraphService, sammLangService: SammLanguageSettingsService, rdfService: RdfService) {
-    super(mxGraphService, sammLangService, rdfService);
+  constructor(
+    mxGraphService: MxGraphService,
+    sammLangService: SammLanguageSettingsService,
+    protected loadedFilesService: LoadedFilesService,
+  ) {
+    super(mxGraphService, sammLangService, loadedFilesService);
   }
 
   update({cell}: RendererUpdatePayload) {
@@ -41,7 +45,7 @@ export class AspectRenderService extends BaseRenderService {
 
   delete(cell: mxgraph.mxCell) {
     const modelElement = MxGraphHelper.getModelElement(cell);
-    const store = this.rdfService.currentRdfModel.store;
+    const store = this.loadedFilesService.currentLoadedFile.rdfModel.store;
 
     const aspectQuads = store.getQuads(new NamedNode(modelElement.aspectModelUrn), null, null, null);
     store.removeQuads(aspectQuads);

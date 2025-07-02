@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Type, Unit} from '@ame/meta-model';
+import {Type, Unit} from '@esmf/aspect-model-loader';
 import {LocaleInterface} from './locale.interface';
 
 export interface BasePropertiesInterface {

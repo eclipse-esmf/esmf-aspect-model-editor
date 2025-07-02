@@ -12,8 +12,8 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {SettingsFormService} from '../../../services';
 import {FormGroup} from '@angular/forms';
+import {SettingsFormService} from '../../../services';
 
 @Component({
   selector: 'ame-copyright',

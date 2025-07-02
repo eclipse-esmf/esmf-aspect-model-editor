@@ -12,15 +12,15 @@
  */
 import {MigratorApiService} from '@ame/api';
 import {APP_CONFIG, AppConfig} from '@ame/shared';
-import {Component, Inject, NgZone, inject} from '@angular/core';
-import {MatCheckboxChange, MatCheckbox} from '@angular/material/checkbox';
-import {Router} from '@angular/router';
-import {MigratorService} from '../../migrator.service';
-import {TranslateModule} from '@ngx-translate/core';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatButton} from '@angular/material/button';
 import {CdkScrollable} from '@angular/cdk/scrolling';
-import {MatDialogTitle, MatDialogContent, MatDialogActions} from '@angular/material/dialog';
+import {Component, Inject, NgZone, inject} from '@angular/core';
+import {MatButton} from '@angular/material/button';
+import {MatCheckbox, MatCheckboxChange} from '@angular/material/checkbox';
+import {MatDialogActions, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {Router} from '@angular/router';
+import {TranslateModule} from '@ngx-translate/core';
+import {MigratorService} from '../../migrator.service';
 
 @Component({
   selector: 'ame-start-migrating',

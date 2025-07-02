@@ -13,11 +13,9 @@
 
 import {Routes} from '@angular/router';
 import {ErrorComponent} from '../shared';
-import {ExportSummaryComponent, ExportValidateComponent, SelectNamespacesComponent} from './components';
+import {SelectNamespacesComponent} from './components';
 
 export const NAMESPACE_EXPORT_ROUTES: Routes = [
   {path: '', component: SelectNamespacesComponent, outlet: 'export-namespaces'},
-  {path: 'validate', component: ExportValidateComponent, outlet: 'export-namespaces'},
-  {path: 'summary', component: ExportSummaryComponent, outlet: 'export-namespaces'},
   {path: 'error', component: ErrorComponent, outlet: 'export-namespaces'},
 ];

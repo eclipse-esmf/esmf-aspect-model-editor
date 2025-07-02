@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-@if (loading) {
+@if (loading()) {
   <div class="loading">
     <mat-spinner></mat-spinner>
     <p>{{ 'SIDEBAR.EMPTY.LOADING_NAMESPACES' | translate }}</p>
@@ -19,8 +19,8 @@
 } @else {
   <p>{{ 'SIDEBAR.EMPTY.SAVE_MESSAGE' | translate }}</p>
   <p>{{ 'SIDEBAR.EMPTY.CALL_TO_ACTION' | translate }}</p>
-  <button mat-flat-button color="primary" (click)="fileInput.click()">
+  <button (click)="fileInput.click()" mat-flat-button color="primary">
     {{ 'SIDEBAR.EMPTY.IMPORT_BUTTON' | translate }}
   </button>
-  <input hidden type="file" #fileInput (change)="onFileInput(fileInput.files)" />
+  <input #fileInput (change)="onFileInput(fileInput.files)" hidden type="file" />
 }

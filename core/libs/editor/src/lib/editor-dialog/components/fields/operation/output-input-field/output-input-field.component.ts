@@ -11,13 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {CacheUtils} from '@ame/cache';
+import {RdfService} from '@ame/rdf/services';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {InputFieldComponent} from '../../input-field.component';
-import {DefaultOperation, DefaultProperty, Property} from '@ame/meta-model';
 import {FormControl} from '@angular/forms';
+import {DefaultOperation, DefaultProperty, Property} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
-import {RdfService} from '@ame/rdf/services';
+import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-output-input-field',
@@ -47,7 +48,7 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
   }
 
   setOutputControl() {
-    const property = this.metaModelElement?.output?.property;
+    const property = this.metaModelElement?.output;
     const value = property?.name ? property?.name : '';
 
     this.parentForm.setControl(
@@ -55,7 +56,7 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement.isExternalReference(),
+          disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement),
         },
         [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
       ),
@@ -66,7 +67,7 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
       'outputValue',
       new FormControl({
         value: property,
-        disabled: this.metaModelElement?.isExternalReference(),
+        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       }),
     );
 
@@ -85,10 +86,12 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
       return; // happens on reset form
     }
 
-    let property = this.currentCachedFile.getCachedProperties().find(property => property.aspectModelUrn === newValue.urn);
+    let property = CacheUtils.getCachedElements(this.currentCachedFile, DefaultProperty)
+      .filter(p => !p.isAbstract)
+      .find(property => property.aspectModelUrn === newValue.urn);
 
     if (!property) {
-      property = this.namespacesCacheService.findElementOnExtReference<Property>(newValue.urn);
+      property = this.loadedFiles.findElementOnExtReferences<Property>(newValue.urn);
     }
 
     this.parentForm.setControl('outputValue', new FormControl(property));
@@ -104,7 +107,11 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
     }
 
     const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${propertyName}`;
-    const newProperty = new DefaultProperty(this.metaModelElement.metaModelVersion, urn, propertyName, null);
+    const newProperty = new DefaultProperty({
+      metaModelVersion: this.metaModelElement.metaModelVersion,
+      aspectModelUrn: urn,
+      name: propertyName,
+    });
     this.parentForm.setControl('outputValue', new FormControl(newProperty));
 
     this.outputControl.patchValue(propertyName);

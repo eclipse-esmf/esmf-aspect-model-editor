@@ -1,6 +1,6 @@
-import {Component, inject} from '@angular/core';
 import {InformationHandlingService} from '@ame/editor';
 import {NotificationsService} from '@ame/shared';
+import {Component, inject} from '@angular/core';
 import {SidebarStateService} from '../sidebar-state.service';
 
 /*

@@ -11,16 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+export * from './abstract-property-model.service';
 export * from './aspect-model.service';
+export * from './base-model-service';
 export * from './characteristic-model.service';
 export * from './constraint-model.service';
 export * from './element-model.service';
 export * from './entity-model.service';
 export * from './entity-value-model.service';
-export * from './base-model-service';
-export * from './property-model.service';
+export * from './event-model.service';
 export * from './operation-model.service';
+export * from './property-model.service';
 export * from './trait-model.service';
 export * from './unit-model.service';
-export * from './event-model.service';
-export * from './abstract-property-model.service';

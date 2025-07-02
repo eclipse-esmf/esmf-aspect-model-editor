@@ -17,19 +17,19 @@
   <div class="element-info">
     @if (name) {
       <span
+        class="element-name"
         [matTooltip]="name"
         [matTooltipDisabled]="name.length < disabledTooltipNameLength"
         matTooltipPosition="right"
-        class="element-name"
         >{{ name }}</span
       >
     }
     @if (description) {
       <span
+        class="element-description"
         [matTooltip]="description"
         [matTooltipDisabled]="description.length < disabledTooltipDescriptionLength"
         matTooltipPosition="right"
-        class="element-description"
         >{{ description }}</span
       >
     }

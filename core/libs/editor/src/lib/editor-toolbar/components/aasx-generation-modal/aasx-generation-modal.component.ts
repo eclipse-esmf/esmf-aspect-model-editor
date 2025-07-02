@@ -12,19 +12,20 @@
  */
 
 import {ModelApiService} from '@ame/api';
+import {LoadedFilesService} from '@ame/cache';
 import {ModelService, RdfService} from '@ame/rdf/services';
+import {LanguageTranslateModule} from '@ame/translation';
 import {Component} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {finalize, first, tap} from 'rxjs';
-import {saveAs} from 'file-saver';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {LanguageTranslateModule} from '@ame/translation';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
-import {MatSelectModule} from '@angular/material/select';
 import {MatOptionModule} from '@angular/material/core';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSelectModule} from '@angular/material/select';
+import {saveAs} from 'file-saver';
+import {finalize, first, tap} from 'rxjs';
 
 @Component({
   standalone: true,
@@ -51,12 +52,13 @@ export class AASXGenerationModalComponent {
     private modelService: ModelService,
     private rdfService: RdfService,
     private dialogRef: MatDialogRef<AssignedNodesOptions>,
+    private loadedFilesService: LoadedFilesService,
   ) {}
 
   generate() {
     this.isGenerating = true;
-    const loadedAspectModel = this.modelService.getLoadedAspectModel();
-    const rdfModel = this.rdfService.serializeModel(loadedAspectModel.rdfModel);
+    const currentFile = this.loadedFilesService.currentLoadedFile;
+    const rdfModel = this.rdfService.serializeModel(currentFile.rdfModel);
     const assx = this.control.value === 'aasx' ? this.modelApiService.getAASX(rdfModel) : this.modelApiService.getAASasXML(rdfModel);
 
     assx
@@ -64,9 +66,8 @@ export class AASXGenerationModalComponent {
         first(),
         tap(content => {
           const file = new Blob([content], {type: this.control.value === 'aasx' ? 'text/aasx' : 'text/xml'});
-          let fileName = !loadedAspectModel.aspect ? this.modelService.currentCachedFile.fileName : `${loadedAspectModel.aspect.name}`;
 
-          fileName = `${fileName}${this.control.value === 'aasx' ? '.aasx' : '-aas.xml'}`;
+          const fileName = `${currentFile.name}${this.control.value === 'aasx' ? '.aasx' : '-aas.xml'}`;
           saveAs(file, fileName);
         }),
         finalize(() => {

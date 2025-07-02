@@ -11,14 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ChangeDetectorRef, Component, inject, NgZone, OnDestroy, OnInit} from '@angular/core';
-import {FileStatus, SidebarStateService} from '@ame/sidebar';
-import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
-import {ConfirmDialogService, EditorService, FileHandlingService} from '@ame/editor';
-import {RdfService} from '@ame/rdf/services';
 import {ModelApiService} from '@ame/api';
-import {Subscription, switchMap} from 'rxjs';
+import {LoadedFilesService} from '@ame/cache';
+import {ConfirmDialogService, FileHandlingService, ModelCheckerService, ModelSaverService} from '@ame/editor';
+import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
+import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
+import {ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, inject} from '@angular/core';
+import {Subscription, catchError, map, switchMap, throwError} from 'rxjs';
 import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-dialog.enum';
 
 @Component({
@@ -28,8 +28,9 @@ import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-di
 })
 export class WorkspaceFileListComponent implements OnInit, OnDestroy {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
-
+  private modelSaverService = inject(ModelSaverService);
   public sidebarService = inject(SidebarStateService);
+
   public menuSelection: {namespace: string; file: FileStatus} = null;
   public foldedStatus = false;
   public searched: Record<string, FileStatus[]> = {};
@@ -50,18 +51,25 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
   constructor(
     private notificationService: NotificationsService,
     private confirmDialogService: ConfirmDialogService,
-    private rdfService: RdfService,
-    private editorService: EditorService,
     private modelApiService: ModelApiService,
     private fileHandlingService: FileHandlingService,
     private changeDetector: ChangeDetectorRef,
     private translate: LanguageTranslationService,
+    private loadedFiles: LoadedFilesService,
+    private modelChecker: ModelCheckerService,
     private ngZone: NgZone,
   ) {}
 
   ngOnInit(): void {
     const sub = this.sidebarService.workspace.refreshSignal$
-      .pipe(switchMap(() => this.sidebarService.requestGetNamespaces()))
+      .pipe(
+        switchMap(() => this.modelChecker.detectWorkspaceErrors()),
+        map(files => this.sidebarService.updateWorkspace(files)),
+        catchError(error => {
+          console.log(error);
+          return throwError(() => error);
+        }),
+      )
       .subscribe(() => {
         for (const namespace in this.namespaces) {
           this.searched[namespace] = this.namespaces[namespace];
@@ -122,7 +130,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.sidebarService.selection.select(namespace, file.name);
+    this.sidebarService.selection.select(namespace, file);
     this.changeDetector.detectChanges();
   }
 
@@ -141,6 +149,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
       namespace,
       file: file.name,
       fromWorkspace: true,
+      aspectModelUrn: file.aspectModelUrn,
     });
 
     this.menuSelection = null;
@@ -175,10 +184,10 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
       })
       .subscribe(confirmed => {
         if (confirmed !== ConfirmDialogEnum.cancel) {
-          this.editorService.saveModel().subscribe();
+          this.modelSaverService.saveModel().subscribe();
         }
         // TODO improve this functionality
-        this.loadNamespaceFile(absoluteFileName);
+        this.fileHandlingService.loadNamespaceFile(absoluteFileName, file.aspectModelUrn);
       });
   }
 
@@ -195,12 +204,12 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
       })
       .subscribe(confirm => {
         if (confirm !== ConfirmDialogEnum.cancel) {
-          this.modelApiService.deleteFile(aspectModelFileName).subscribe(() => {
+          this.modelApiService.deleteFile(aspectModelFileName, this.menuSelection.file.aspectModelUrn).subscribe(() => {
             this.sidebarService.workspace.refresh();
             this.electronSignalsService.call('requestRefreshWorkspaces');
           });
           this.sidebarService.selection.reset();
-          this.editorService.removeAspectModelFileFromStore(aspectModelFileName);
+          this.loadedFiles.removeFile(aspectModelFileName);
         }
       });
   }
@@ -217,10 +226,6 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
     return namespaces.sort((n1, n2) => (n1.key >= n2.key ? 1 : -1));
   }
 
-  private loadNamespaceFile(absoluteFileName: string) {
-    this.fileHandlingService.loadNamespaceFile(absoluteFileName);
-  }
-
   public isCurrentFile(key: string, file: FileStatus): string {
     return this.ngZone.run(() => {
       if (file.outdated) {
@@ -228,7 +233,11 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
       }
 
       if (file.errored) {
-        return this.translate.language.TOOLTIPS.ERRORED_FILE;
+        return file.unknownSammVersion
+          ? 'Detected unknown SAMM version'
+          : file.missingDependencies.length
+            ? 'Missing dependencies ' + file.missingDependencies.join('\n')
+            : this.translate.language.TOOLTIPS.ERRORED_FILE;
       }
 
       if (file.loaded) {

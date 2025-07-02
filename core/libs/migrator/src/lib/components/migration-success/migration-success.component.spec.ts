@@ -17,10 +17,10 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MigratorService} from '../../migrator.service';
 
-import {MigrationSuccessComponent} from './migration-success.component';
-import {TranslateModule} from '@ngx-translate/core';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {TranslateModule} from '@ngx-translate/core';
 import {provideMockObject} from '../../../../../../jest-helpers';
+import {MigrationSuccessComponent} from './migration-success.component';
 
 describe('MigrationSuccessComponent', () => {
   let component: MigrationSuccessComponent;

@@ -12,7 +12,7 @@
   -->
 
 <h2 mat-dialog-title>{{ title }}</h2>
-<button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+<button class="close-button" (click)="onClose()" mat-icon-button tabindex="-1">
   <mat-icon>close</mat-icon>
 </button>
 
@@ -24,9 +24,9 @@
 
 <mat-dialog-actions align="end">
   <button mat-flat-button mat-dialog-close>{{ 'PREVIEW_DIALOG.CANCEL' | translate }}</button>
-  <button mat-raised-button (click)="reset()">{{ 'PREVIEW_DIALOG.RESET_CONTENT' | translate }}</button>
-  <button mat-raised-button (click)="onCopyToClipboard()">{{ 'PREVIEW_DIALOG.COPY_TO_CLIPBOARD' | translate }}</button>
-  <button mat-raised-button color="primary" (click)="onDownload()" data-cy="downloadFileButton">
+  <button (click)="reset()" mat-raised-button>{{ 'PREVIEW_DIALOG.RESET_CONTENT' | translate }}</button>
+  <button (click)="onCopyToClipboard()" mat-raised-button>{{ 'PREVIEW_DIALOG.COPY_TO_CLIPBOARD' | translate }}</button>
+  <button (click)="onDownload()" mat-raised-button color="primary" data-cy="downloadFileButton">
     {{ 'PREVIEW_DIALOG.DOWNLOAD_FILE' | translate }}
   </button>
 </mat-dialog-actions>

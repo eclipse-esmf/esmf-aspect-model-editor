@@ -22,9 +22,9 @@ import {provideMockObject} from 'jest-helpers';
 import {of} from 'rxjs';
 import {MigratorService} from '../../migrator.service';
 
-import {StartMigratingComponent} from './start-migrating.component';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
 import {TranslateModule} from '@ngx-translate/core';
+import {StartMigratingComponent} from './start-migrating.component';
 
 describe('StartMigratingComponent', () => {
   let component: StartMigratingComponent;

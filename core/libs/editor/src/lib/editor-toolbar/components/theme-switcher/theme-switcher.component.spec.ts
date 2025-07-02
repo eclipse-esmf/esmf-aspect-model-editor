@@ -11,14 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ThemeSwitcherComponent} from '@ame/editor';
-import {beforeEach, describe, expect, it} from '@jest/globals';
 import {CommonModule} from '@angular/common';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatButtonModule} from '@angular/material/button';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {beforeEach, describe, expect, it} from '@jest/globals';
 
 describe('ThemeSwitcherComponent', () => {
   let component: ThemeSwitcherComponent;

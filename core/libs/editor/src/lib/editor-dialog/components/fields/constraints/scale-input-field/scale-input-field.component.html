@@ -13,7 +13,7 @@
 
 <mat-form-field [floatLabel]="getControl('scale')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="scale">scale</mat-label>
-  <input matInput name="scale" data-cy="scale" type="number" pattern="^[1-9]\d*$" [formControl]="getControl('scale')" />
+  <input [formControl]="getControl('scale')" matInput name="scale" data-cy="scale" type="number" pattern="^[1-9]\d*$" />
   @if (getControl('scale').errors?.required) {
     <mat-error>Scale is required</mat-error>
   }

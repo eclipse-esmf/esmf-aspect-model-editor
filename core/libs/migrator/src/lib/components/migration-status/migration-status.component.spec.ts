@@ -12,6 +12,8 @@
  */
 
 import {EditorService} from '@ame/editor';
+import {MigratorService} from '@ame/migrator';
+import {ElectronTunnelService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -19,12 +21,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {RouterTestingModule} from '@angular/router/testing';
 import {provideMockObject} from 'jest-helpers';
 import {of} from 'rxjs';
-import {MigratorService} from '@ame/migrator';
-import {ElectronTunnelService} from '@ame/shared';
 
-import {MigrationStatusComponent} from './migration-status.component';
-import {TranslateModule} from '@ngx-translate/core';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {TranslateModule} from '@ngx-translate/core';
+import {MigrationStatusComponent} from './migration-status.component';
 
 describe('MigrationStatusComponent', () => {
   let component: MigrationStatusComponent;

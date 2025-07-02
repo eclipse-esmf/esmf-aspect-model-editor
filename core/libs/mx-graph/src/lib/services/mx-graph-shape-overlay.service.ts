@@ -11,15 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {ShapeConnectorService} from '@ame/connection';
+import {FiltersService, ModelTree} from '@ame/loader-filters';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {BrowserService} from '@ame/shared';
 import {Injectable, Injector} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
-import {MxGraphAttributeService, MxGraphShapeSelectorService} from '.';
-import {MxGraphHelper, MxGraphVisitorHelper, ShapeAttribute} from '../helpers';
-import {mxCellOverlay, mxConstants, mxEvent, mxImage} from '../providers';
 import {
-  BaseMetaModelElement,
-  DefaultAbstractEntity,
-  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -34,13 +32,13 @@ import {
   DefaultStructuredValue,
   DefaultTrait,
   DefaultUnit,
-} from '@ame/meta-model';
-import {BrowserService} from '@ame/shared';
-import {ShapeConnectorService} from '@ame/connection';
+  NamedElement,
+} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {MxGraphAttributeService, MxGraphShapeSelectorService} from '.';
+import {MxGraphHelper, MxGraphVisitorHelper, ShapeAttribute} from '../helpers';
 import {ModelInfo} from '../models';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {RdfService} from '@ame/rdf/services';
-import {FiltersService, ModelTree} from '@ame/loader-filters';
+import {mxCellOverlay, mxConstants, mxEvent, mxImage} from '../providers';
 
 @Injectable()
 export class MxGraphShapeOverlayService {
@@ -50,6 +48,7 @@ export class MxGraphShapeOverlayService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private filtersService: FiltersService,
     private sammLangService: SammLanguageSettingsService,
+    protected loadedFilesService: LoadedFilesService,
     private injector: Injector,
   ) {}
 
@@ -84,16 +83,16 @@ export class MxGraphShapeOverlayService {
   /**
    * Removes the connection of the specified cell and changes the internal model to reflect the change
    *
-   * @param baseMetaModelElement internal model
+   * @param element internal model
    * @param cell mx element
    */
-  removeOverlaysByConnection(baseMetaModelElement: BaseMetaModelElement, cell: mxgraph.mxCell): void {
-    if (baseMetaModelElement instanceof DefaultAspect) return;
-    if (baseMetaModelElement instanceof DefaultEnumeration) return;
+  removeOverlaysByConnection(element: NamedElement, cell: mxgraph.mxCell): void {
+    if (element instanceof DefaultAspect) return;
+    if (element instanceof DefaultEnumeration) return;
 
-    baseMetaModelElement instanceof DefaultProperty && baseMetaModelElement.characteristic
+    element instanceof DefaultProperty && element.characteristic
       ? this.removeOverlay(cell, MxGraphHelper.getNewShapeOverlayButton(cell))
-      : baseMetaModelElement instanceof DefaultCharacteristic && !(baseMetaModelElement instanceof DefaultEither)
+      : element instanceof DefaultCharacteristic && !(element instanceof DefaultEither)
         ? this.removeCharacteristicOverlays(cell)
         : undefined;
   }
@@ -164,11 +163,11 @@ export class MxGraphShapeOverlayService {
     const modelElement = MxGraphHelper.getModelElement(cell);
 
     if (!this.filtersService.currentFilter.hasOverlay(modelElement)) return;
-    if (modelElement?.isPredefined()) return;
+    if (modelElement?.isPredefined) return;
     if (cell.style === 'unit') return;
     if (cell.style === 'constraint') return;
     if (cell.style === 'entityValue') return;
-    if ([DefaultConstraint, DefaultEntityInstance, DefaultAbstractProperty, DefaultUnit].some(c => modelElement instanceof c)) return;
+    if ([DefaultConstraint, DefaultEntityInstance, DefaultUnit].some(c => modelElement instanceof c)) return;
 
     const elementOffset = 40;
 
@@ -225,7 +224,7 @@ export class MxGraphShapeOverlayService {
       return this.createConnectorElement('Property', cell, ModelInfo.IS_CHARACTERISTIC);
     }
 
-    if (modelElement instanceof DefaultAbstractEntity) {
+    if (modelElement instanceof DefaultEntity && modelElement.isAbstractEntity()) {
       return this.createConnectorElement('Abstract Property', cell, ModelInfo.IS_CHARACTERISTIC);
     }
 
@@ -275,7 +274,7 @@ export class MxGraphShapeOverlayService {
   /**
    * Checks and adds complex enumeration icon and + button for adding new entity value if special conditions are fulfilled.
    */
-  checkComplexEnumerationOverlays(modelElement: BaseMetaModelElement, cell: mxgraph.mxCell): void {
+  checkComplexEnumerationOverlays(modelElement: NamedElement, cell: mxgraph.mxCell): void {
     if (MxGraphHelper.isComplexEnumeration(modelElement)) {
       this.addComplexEnumerationShapeOverlay(cell);
       this.addBottomShapeOverlay(cell);
@@ -288,7 +287,7 @@ export class MxGraphShapeOverlayService {
    * @param modelElement internal model
    * @param cell mx element
    */
-  removeShapeActionIconsByLoading(modelElement: BaseMetaModelElement, cell: mxgraph.mxCell): void {
+  removeShapeActionIconsByLoading(modelElement: NamedElement, cell: mxgraph.mxCell): void {
     if (modelElement instanceof DefaultEntity) return;
 
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
@@ -322,7 +321,7 @@ export class MxGraphShapeOverlayService {
       }
     }
 
-    if (modelElement.isPredefined()) {
+    if (modelElement.isPredefined) {
       this.removeOverlay(incomingEdges[0]?.target, MxGraphHelper.getNewShapeOverlayButton(incomingEdges[0]?.target));
     }
   }
@@ -360,7 +359,7 @@ export class MxGraphShapeOverlayService {
   /**
    * Checks if we delete a trait and adds back the shape overlay for source characteristic
    */
-  checkAndAddTopShapeActionIcon(outgoingEdges: Array<mxgraph.mxCell>, modelElement: BaseMetaModelElement): void {
+  checkAndAddTopShapeActionIcon(outgoingEdges: Array<mxgraph.mxCell>, modelElement: NamedElement): void {
     if (!outgoingEdges.length) return;
     if (!(modelElement instanceof DefaultTrait)) return;
 
@@ -375,7 +374,7 @@ export class MxGraphShapeOverlayService {
     }
   }
 
-  checkAndAddShapeActionIcon(incomingEdges: Array<mxgraph.mxCell>, modelElement: BaseMetaModelElement): void {
+  checkAndAddShapeActionIcon(incomingEdges: Array<mxgraph.mxCell>, modelElement: NamedElement): void {
     if (!incomingEdges.length) return;
     if (!this.filtersService.currentFilter.hasOverlay(modelElement)) return;
 
@@ -400,7 +399,7 @@ export class MxGraphShapeOverlayService {
     }
   }
 
-  createShape(node: ModelTree<BaseMetaModelElement>, geometry?: mxgraph.mxGeometry, cellConfiguration?: ShapeAttribute[]): mxgraph.mxCell {
+  createShape(node: ModelTree<NamedElement>, geometry?: mxgraph.mxGeometry, cellConfiguration?: ShapeAttribute[]): mxgraph.mxCell {
     const graph = this.mxGraphAttributeService.graph;
     const element = document.createElement('model');
 
@@ -419,11 +418,9 @@ export class MxGraphShapeOverlayService {
       node.shape.mxGraphStyle,
     );
 
-    const rdfService = this.injector.get(RdfService);
-
     modelElementCell.setId(node.element.name);
     modelElementCell['configuration'] = {
-      baseProperties: MxGraphVisitorHelper.getModelInfo(node.element, rdfService.currentRdfModel),
+      baseProperties: MxGraphVisitorHelper.getModelInfo(node.element, this.loadedFilesService.currentLoadedFile),
       fields: cellConfiguration,
     };
     graph.foldingEnabled = false;

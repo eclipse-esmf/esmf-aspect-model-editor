@@ -11,27 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
-import {BaseMetaModelElement} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
+import {LoadedFilesService} from '@ame/cache';
+import {inject, Injectable} from '@angular/core';
+import {NamedElement} from '@esmf/aspect-model-loader';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModelElementNamingService {
-  constructor(
-    private namespacesCacheService: NamespacesCacheService,
-    private rdfService: RdfService,
-  ) {}
+  private loadedFiles = inject(LoadedFilesService);
+
   /**
    * Creates a new instance of the element and assigns it a default name
    *
-   * @param baseMetaModelElement element being created
+   * @param NamedElement element being created
    * @returns element being created
    */
-  resolveMetaModelElement(baseMetaModelElement: BaseMetaModelElement): BaseMetaModelElement {
-    return this.namespacesCacheService.currentCachedFile.resolveElement(this.resolveElementNaming(baseMetaModelElement));
+  resolveMetaModelElement<T extends NamedElement>(element: T): T {
+    for (const child of element.children) {
+      if (!child.aspectModelUrn) {
+        this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(this.resolveElementNaming(child));
+      }
+    }
+    return this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(this.resolveElementNaming(element));
   }
 
   /**
@@ -39,12 +41,12 @@ export class ModelElementNamingService {
    * If name exists an incremented index is added at the end.
    * If parentName is not null, it uses the formula "parentName" + "itemTypeName"
    *
-   * @param baseMetaModelElement element being created.
+   * @param element element being created.
    * @param parentName name of the parent element
    * @returns element with filled version,name,urn
    */
-  resolveElementNaming<T extends BaseMetaModelElement = BaseMetaModelElement>(baseMetaModelElement: T, parentName?: string): T {
-    const rdfModel = this.rdfService.currentRdfModel;
+  resolveElementNaming<T extends NamedElement = NamedElement>(element: T, parentName?: string): T {
+    const rdfModel = this.loadedFiles.currentLoadedFile.rdfModel;
     const elements = {};
 
     if (!rdfModel) {
@@ -52,7 +54,7 @@ export class ModelElementNamingService {
     }
 
     const mainAspectModelUrn = rdfModel.getAspectModelUrn();
-    for (const extRdfModel of this.rdfService.externalRdfModels) {
+    for (const extRdfModel of this.loadedFiles.externalFiles.map(f => f.rdfModel)) {
       if (!Object.values(extRdfModel.getPrefixes()).includes(mainAspectModelUrn)) {
         continue;
       }
@@ -63,17 +65,17 @@ export class ModelElementNamingService {
     }
 
     let counter = 1;
-    const name = baseMetaModelElement.name;
-    baseMetaModelElement.metaModelVersion = rdfModel.SAMM().version;
+    const name = element.name;
+    element.metaModelVersion = rdfModel.samm.version;
     const parentNamePrefix = parentName;
     do {
-      baseMetaModelElement.name = `${parentNamePrefix || ''}${name}${parentName ? '' : counter++}`;
+      element.name = `${parentNamePrefix || ''}${name}${parentName ? '' : counter++}`;
       parentName = undefined;
     } while (
-      elements[`${mainAspectModelUrn}${baseMetaModelElement.name}`] ||
-      this.namespacesCacheService.currentCachedFile.getElement<BaseMetaModelElement>(`${mainAspectModelUrn}${baseMetaModelElement.name}`)
+      elements[`${mainAspectModelUrn}${element.name}`] ||
+      this.loadedFiles.currentLoadedFile.cachedFile.get<NamedElement>(`${mainAspectModelUrn}${element.name}`)
     );
-    baseMetaModelElement.aspectModelUrn = `${mainAspectModelUrn}${baseMetaModelElement.name}`;
-    return baseMetaModelElement;
+    element.aspectModelUrn = `${mainAspectModelUrn}${element.name}`;
+    return element;
   }
 }

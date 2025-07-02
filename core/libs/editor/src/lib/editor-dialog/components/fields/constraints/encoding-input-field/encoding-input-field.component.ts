@@ -10,12 +10,11 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {RdfModelUtil} from '@ame/rdf/utils';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {BaseMetaModelElement, DefaultEncodingConstraint} from '@ame/meta-model';
+import {DefaultEncodingConstraint, NamedElement, Samm} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
-import {Samm} from '@ame/vocabulary';
-import {RdfModelUtil} from '@ame/rdf/utils';
 
 @Component({
   selector: 'ame-encoding-input-field',
@@ -35,7 +34,7 @@ export class EncodingInputFieldComponent extends InputFieldComponent<DefaultEnco
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe((modelElement: BaseMetaModelElement) => {
+    this.subscription = this.getMetaModelData().subscribe((modelElement: NamedElement) => {
       this.encodingList = modelElement ? new Samm(modelElement.metaModelVersion).getEncodingList() : null;
       if (modelElement instanceof DefaultEncodingConstraint) {
         this.metaModelElement = modelElement;
@@ -58,7 +57,7 @@ export class EncodingInputFieldComponent extends InputFieldComponent<DefaultEnco
       new FormControl(
         {
           value: RdfModelUtil.getValueWithoutUrnDefinition(this.getCurrentValue(this.fieldName)),
-          disabled: this.metaModelElement.isExternalReference(),
+          disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
         },
         Validators.required,
       ),

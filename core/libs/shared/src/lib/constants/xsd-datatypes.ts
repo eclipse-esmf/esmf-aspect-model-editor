@@ -11,11 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultProperty} from '@ame/meta-model';
-import {Samm} from '@ame/vocabulary';
+import {Samm, Type} from '@esmf/aspect-model-loader';
 
-export function isDataTypeLangString(property: DefaultProperty): boolean {
-  return property.characteristic?.dataType?.getUrn() === `${Samm.RDF_URI}#langString`;
+export function isDataTypeLangString(type: Type): boolean {
+  return type?.getUrn() === `${Samm.RDF_URI}#langString`;
 }
 
 export const simpleDataTypes = {

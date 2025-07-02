@@ -12,8 +12,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Settings} from '../model';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {Settings} from '../model';
 
 const DEFAULT_SETTINGS: Settings = {
   namespace: '',

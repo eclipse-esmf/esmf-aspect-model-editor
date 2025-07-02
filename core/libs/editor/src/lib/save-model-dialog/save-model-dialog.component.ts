@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, NgZone} from '@angular/core';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {EditorService} from '@ame/editor';
+import {ModelSaverService} from '@ame/editor';
 import {LanguageTranslateModule} from '@ame/translation';
+import {Component, NgZone, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   standalone: true,
@@ -24,13 +24,11 @@ import {MatButtonModule} from '@angular/material/button';
   imports: [MatDialogModule, LanguageTranslateModule, MatButtonModule],
 })
 export class SaveModelDialogComponent {
-  public disabledButton = false;
+  private modelSaverService = inject(ModelSaverService);
+  private matDialogRef: MatDialogRef<SaveModelDialogComponent> = inject(MatDialogRef);
+  private zone: NgZone = inject(NgZone);
 
-  constructor(
-    private matDialogRef: MatDialogRef<SaveModelDialogComponent>,
-    private editorService: EditorService,
-    private zone: NgZone,
-  ) {}
+  public disabledButton = false;
 
   close(destroyWindow: boolean) {
     this.matDialogRef.close(destroyWindow);
@@ -39,7 +37,7 @@ export class SaveModelDialogComponent {
   saveModel() {
     this.disabledButton = true;
     this.zone.run(() => {
-      this.editorService.saveModel().subscribe(() => {
+      this.modelSaverService.saveModel().subscribe(() => {
         this.disabledButton = false;
         this.matDialogRef.close(true);
       });

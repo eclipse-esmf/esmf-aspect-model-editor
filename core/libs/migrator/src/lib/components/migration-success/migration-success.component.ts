@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component} from '@angular/core';
-import {MigratorService} from '../../migrator.service';
-import {TranslateModule} from '@ngx-translate/core';
-import {MatButton} from '@angular/material/button';
-import {MatIcon} from '@angular/material/icon';
 import {CdkScrollable} from '@angular/cdk/scrolling';
-import {MatDialogTitle, MatDialogContent, MatDialogActions} from '@angular/material/dialog';
+import {Component} from '@angular/core';
+import {MatButton} from '@angular/material/button';
+import {MatDialogActions, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {MatIcon} from '@angular/material/icon';
+import {TranslateModule} from '@ngx-translate/core';
+import {MigratorService} from '../../migrator.service';
 
 @Component({
   selector: 'ame-migration-success',

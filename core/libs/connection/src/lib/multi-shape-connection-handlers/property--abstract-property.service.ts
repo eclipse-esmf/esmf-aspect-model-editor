@@ -11,21 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultAbstractProperty, DefaultProperty} from '@ame/meta-model';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
-import {Injectable} from '@angular/core';
-import {MultiShapeConnector, PropertyInheritanceConnector} from '../models';
-import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslationService} from '@ame/translation';
+import {Injectable} from '@angular/core';
+import {DefaultProperty} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {MultiShapeConnector, PropertyInheritanceConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PropertyAbstractPropertyConnectionHandler
   extends PropertyInheritanceConnector
-  implements MultiShapeConnector<DefaultProperty, DefaultAbstractProperty>
+  implements MultiShapeConnector<DefaultProperty, DefaultProperty>
 {
   constructor(
     protected mxGraphService: MxGraphService,
@@ -37,12 +37,9 @@ export class PropertyAbstractPropertyConnectionHandler
     super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, translate);
   }
 
-  public connect(
-    parentMetaModel: DefaultProperty,
-    childMetaModel: DefaultAbstractProperty,
-    parentCell: mxgraph.mxCell,
-    childCell: mxgraph.mxCell,
-  ) {
+  public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
+    if (!childMetaModel.isAbstract) return;
+
     if (this.hasEntityParent(parentCell)) {
       this.notificationsService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.MISSING_PARENT_ENTITY,

@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultAbstractProperty} from './default-abstract-property';
-import {DefaultProperty} from './default-property';
-import {OverWrittenProperty} from './overwritten-property';
+import {DefaultProperty} from '@esmf/aspect-model-loader';
 
 export interface HasProperties {
-  properties: Array<OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>>;
+  properties: Array<DefaultProperty>;
 }

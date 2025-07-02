@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './property';
-export * from './operation';
-export * from './aspect';
-export * from './characteristic';
-export * from './entity';
-export * from './constraint';
-export * from './cleanup-visitor';
-export * from './entity-instance';
-export * from './unit';
-export * from './event';
 export * from './abstract-entity';
 export * from './abstract-property';
+export * from './aspect';
+export * from './characteristic';
+export * from './cleanup-visitor';
+export * from './constraint';
+export * from './entity';
+export * from './entity-instance';
+export * from './event';
+export * from './operation';
+export * from './property';
+export * from './unit';

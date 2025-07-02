@@ -12,14 +12,12 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MetaModelElementInstantiator, UnitInstantiator} from '@ame/instantiator';
-import {MatOptionSelectionChange} from '@angular/material/core';
 import {FormControl, Validators} from '@angular/forms';
-import {DefaultDuration, DefaultMeasurement, DefaultQuantifiable, DefaultUnit, Unit} from '@ame/meta-model';
-import {ModelService, RdfService} from '@ame/rdf/services';
+import {MatOptionSelectionChange} from '@angular/material/core';
+import {DefaultDuration, DefaultMeasurement, DefaultQuantifiable, DefaultUnit, Unit} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
-import {InputFieldComponent} from '../../input-field.component';
 import {EditorDialogValidators} from '../../../../validators';
+import {InputFieldComponent} from '../../input-field.component';
 
 declare const sammUDefinition: any;
 
@@ -38,17 +36,9 @@ export class UnitInputFieldComponent
   filteredUnits$: Observable<Array<DefaultUnit>>;
   units: Array<Unit> = [];
   unitDisplayControl: FormControl;
-  private unitInstantiator: UnitInstantiator;
 
-  constructor(
-    private modelService: ModelService,
-    private rdfService: RdfService,
-    private validators: EditorDialogValidators,
-  ) {
+  constructor(private validators: EditorDialogValidators) {
     super();
-    this.unitInstantiator = new UnitInstantiator(
-      new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile),
-    );
     this.fieldName = 'unit';
   }
 
@@ -71,9 +61,10 @@ export class UnitInputFieldComponent
 
   onPredefinedUnitChange(predefinedUnit: Unit, event: MatOptionSelectionChange) {
     if (predefinedUnit && event.isUserInput) {
-      const newPredefinedUnit = this.unitInstantiator.getUnit(predefinedUnit?.name);
-      this.parentForm.get('unit').setValue(newPredefinedUnit);
-      this.unitDisplayControl.patchValue(newPredefinedUnit.name);
+      // TODO predefined unit creation
+      // const newPredefinedUnit = this.unitInstantiator.getUnit(predefinedUnit?.name);
+      // this.parentForm.get('unit').setValue(newPredefinedUnit);
+      // this.unitDisplayControl.patchValue(newPredefinedUnit.name);
       this.unitDisplayControl.disable();
     }
   }
@@ -97,7 +88,7 @@ export class UnitInputFieldComponent
       new FormControl(
         {
           value: unit,
-          disabled: this.metaModelElement?.isExternalReference(),
+          disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
         },
         this.unitRequired ? Validators.required : null,
       ),
@@ -110,7 +101,12 @@ export class UnitInputFieldComponent
 
   createNewUnit(unitName: string) {
     const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${unitName}`;
-    const newUnit = new DefaultUnit(this.metaModelElement.metaModelVersion, urn, unitName);
+    const newUnit = new DefaultUnit({
+      metaModelVersion: this.metaModelElement.metaModelVersion,
+      aspectModelUrn: urn,
+      name: unitName,
+      quantityKinds: [],
+    });
 
     // set the control of newDatatype
     this.unitDisplayControl.patchValue(unitName);
@@ -126,6 +122,8 @@ export class UnitInputFieldComponent
   }
 
   getPredefinedUnit(unitName: string) {
-    return this.unitInstantiator.createPredefinedUnit(unitName);
+    // TODO predefined unit creation
+    // return this.unitInstantiator.createPredefinedUnit(unitName);
+    return null;
   }
 }

@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Component, Input, inject} from '@angular/core';
-import {UpdatedProperties} from '../properties';
-import {EditorModelService} from '../../editor-model.service';
 import {FormControl, FormGroup} from '@angular/forms';
+import {EditorModelService} from '../../editor-model.service';
+import {UpdatedProperties} from '../properties';
 
 @Component({
   selector: 'ame-abstract-entity',

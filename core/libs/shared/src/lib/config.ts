@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
 import {AppConfig} from '@ame/shared';
+import {InjectionToken} from '@angular/core';
 import packageJson from '../../../../package.json';
 
 const defaultPort = '9091';
@@ -23,8 +23,8 @@ export const config: AppConfig = {
   ameVersion: packageJson?.version,
   editorConfiguration: 'assets/config/editor/config/editor.xml',
   assetLocation: 'assets',
-  minSammVersion: '1.0.0',
-  currentSammVersion: '2.1.0',
+  minSammVersion: '2.0.0',
+  currentSammVersion: '2.2.0',
   sdkVersion: '2.7.0',
   defaultPort: '9091',
   serviceUrl: `http://localhost:${defaultPort}`,

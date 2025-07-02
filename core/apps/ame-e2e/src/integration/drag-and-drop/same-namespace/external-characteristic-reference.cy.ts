@@ -13,13 +13,13 @@
 
 /// <reference types="Cypress" />
 
-import {cyHelp} from '../../../support/helpers';
 import {
   SELECTOR_ecCharacteristic,
   SELECTOR_openNamespacesButton,
   SELECTOR_searchElementsInp,
   SELECTOR_workspaceBtn,
 } from '../../../support/constants';
+import {cyHelp} from '../../../support/helpers';
 import {checkAspect, connectElements} from '../../../support/utils';
 
 describe('Test drag and drop ext characteristic', () => {

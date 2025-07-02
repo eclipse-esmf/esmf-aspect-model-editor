@@ -27,7 +27,6 @@ import {
   META_MODEL_minValue,
   META_MODEL_scale,
   META_MODEL_value,
-  SELECTOR_dataLayerContent,
   SELECTOR_editorCancelButton,
   SELECTOR_editorSaveButton,
 } from '../../support/constants';

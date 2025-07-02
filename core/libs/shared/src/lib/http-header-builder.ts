@@ -30,6 +30,12 @@ export class HttpHeaderBuilder {
     return this;
   }
 
+  withAspectModelUrn(urn: string): HttpHeaderBuilder {
+    this.httpHeaders = this.httpHeaders.append('aspect-model-urn', urn);
+    return this;
+  }
+
+  // TODO withUrn, withNamespace and withFileName can be removed
   withUrn(urn: string): HttpHeaderBuilder {
     this.httpHeaders = this.httpHeaders.append('Ame-Model-Urn', urn);
     return this;
@@ -40,8 +46,11 @@ export class HttpHeaderBuilder {
     return this;
   }
 
-  withFileName(file: string): HttpHeaderBuilder {
-    this.httpHeaders = this.httpHeaders.append('file-name', file);
+  withFileName(fileName: string): HttpHeaderBuilder {
+    if (fileName) {
+      this.httpHeaders = this.httpHeaders.append('file-name', fileName.endsWith('.ttl') ? fileName : fileName + '.ttl');
+    }
+
     return this;
   }
 

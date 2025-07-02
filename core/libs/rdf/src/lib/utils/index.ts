@@ -11,5 +11,5 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './rdf-model';
 export * from './rdf-model-util';
+export * from './rdf-samm-namespaces';

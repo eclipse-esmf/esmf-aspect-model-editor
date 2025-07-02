@@ -10,10 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-
 import {
-  DefaultAbstractEntity,
-  DefaultAbstractProperty,
   DefaultAspect,
   DefaultEntity,
   DefaultEnumeration,
@@ -22,8 +19,9 @@ import {
   DefaultProperty,
   DefaultStructuredValue,
   DefaultUnit,
-} from '@ame/meta-model';
-import {Samm, SammC} from '@ame/vocabulary';
+  Samm,
+  SammC,
+} from '@esmf/aspect-model-loader';
 import {ListProperties, Relations} from './rdf-list.types';
 
 export const getRelations = (samm: Samm, sammC: SammC): Relations[] => [
@@ -43,16 +41,16 @@ export const getRelations = (samm: Samm, sammC: SammC): Relations[] => [
     source: DefaultEntity,
     children: [
       {type: DefaultProperty, predicate: samm.PropertiesProperty()},
-      {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()},
+      {type: DefaultEntity, predicate: samm.PropertiesProperty()},
     ],
   },
-  {
-    source: DefaultAbstractEntity,
-    children: [
-      {type: DefaultProperty, predicate: samm.PropertiesProperty()},
-      {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()},
-    ],
-  },
+  // {
+  //   source: DefaultAbstractEntity,
+  //   children: [
+  //     {type: DefaultProperty, predicate: samm.PropertiesProperty()},
+  //     {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()},
+  //   ],
+  // },
   {
     source: DefaultEnumeration,
     children: [{predicate: sammC.ValuesProperty()}],

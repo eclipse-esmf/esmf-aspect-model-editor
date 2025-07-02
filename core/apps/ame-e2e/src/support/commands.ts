@@ -14,16 +14,16 @@
 
 /// <reference types="cypress" />
 
+import {FileHandlingService, GenerateHandlingService} from '@ame/editor';
+import {Aspect} from '@ame/meta-model';
 import {MxGraphAttributeService} from '@ame/mx-graph';
+import {NamespacesManagerService} from '@ame/namespace-manager';
 import {ModelService} from '@ame/rdf/services';
+import {SearchesStateService} from '@ame/utils';
+import 'cypress-file-upload';
 import {mxgraphFactory} from 'mxgraph-factory';
 import {FIELD_see, SELECTOR_editorSaveButton, SELECTOR_tbConnectButton} from './constants';
 import {cyHelp} from './helpers';
-import {FileHandlingService, GenerateHandlingService} from '@ame/editor';
-import {SearchesStateService} from '@ame/utils';
-import {NamespacesManagerService} from '@ame/namespace-manager';
-import {Aspect} from '@ame/meta-model';
-import 'cypress-file-upload';
 
 const {mxEventObject, mxEvent} = mxgraphFactory({});
 

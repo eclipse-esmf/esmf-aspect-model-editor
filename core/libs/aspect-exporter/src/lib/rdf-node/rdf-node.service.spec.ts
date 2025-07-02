@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {TestBed} from '@angular/core/testing';
-import {DataFactory, Quad, Store} from 'n3';
-import {RdfNodeService} from './rdf-node.service';
-import {describe, expect, it} from '@jest/globals';
-import {Samm, SammC, SammU} from '@ame/vocabulary';
 import {ModelService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
+import {TestBed} from '@angular/core/testing';
+import {Samm, SammC, SammU} from '@esmf/aspect-model-loader';
+import {describe, expect, it} from '@jest/globals';
+import {DataFactory, Quad, Store} from 'n3';
+import {RdfNodeService} from './rdf-node.service';
 
 class MockSamm {
   RdfType = jest.fn(() => DataFactory.namedNode('type'));

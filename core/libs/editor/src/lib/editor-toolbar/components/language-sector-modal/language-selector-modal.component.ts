@@ -12,13 +12,13 @@
  */
 
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {LanguageTranslateModule} from '@ame/translation';
 import {Component} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import * as locale from 'locale-codes';
-import {LanguageTranslateModule} from '@ame/translation';
-import {MatSelectModule} from '@angular/material/select';
 import {MatOptionModule} from '@angular/material/core';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatSelectModule} from '@angular/material/select';
+import * as locale from 'locale-codes';
 
 import {MatButtonModule} from '@angular/material/button';
 

@@ -11,17 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {RdfNodeService} from '@ame/aspect-exporter';
+import {MxGraphService} from '@ame/mx-graph';
+import {RdfService} from '@ame/rdf/services';
 import {TestBed} from '@angular/core/testing';
+import {DefaultProperty, Samm} from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
-import {MxGraphService} from '@ame/mx-graph';
-import {RdfListService} from '../../rdf-list';
-import {RdfNodeService} from '@ame/aspect-exporter';
-import {PropertyVisitor} from './property-visitor';
-import {RdfService} from '@ame/rdf/services';
-import {DefaultProperty} from '@ame/meta-model';
-import {Samm} from '@ame/vocabulary';
 import {MockProviders} from 'ng-mocks';
+import {RdfListService} from '../../rdf-list';
+import {PropertyVisitor} from './property-visitor';
 
 describe('Property Visitor', () => {
   let service: PropertyVisitor;
@@ -33,7 +32,7 @@ describe('Property Visitor', () => {
     hasNamespace: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
   };
-  const property = new DefaultProperty('1', 'samm#property1', 'property1', null);
+  const property = new DefaultProperty({metaModelVersion: '1', aspectModelUrn: 'samm#property1', name: 'property1', characteristic: null});
 
   beforeEach(() => {
     TestBed.configureTestingModule({

@@ -12,12 +12,12 @@
   -->
 
 <ame-bar-item
+  class="sidebar__workspace"
   [matTooltipShowDelay]="0"
   [matTooltipHideDelay]="0"
   [class.selected]="sidebarService.workspace.isOpened$ | async"
   [matTooltip]="'TOOLTIPS.WORKSPACE' | translate"
   (click)="sidebarService.workspace.toggle()"
-  class="sidebar__workspace"
   matTooltipPosition="right"
   data-cy="workspaceBtn"
 >
@@ -25,12 +25,12 @@
 </ame-bar-item>
 
 <ame-bar-item
+  class="sidebar__item sidebar__elements"
   [matTooltipShowDelay]="0"
   [matTooltipHideDelay]="0"
   [class.selected]="sidebarService.sammElements.isOpened$ | async"
   [matTooltip]="'TOOLTIPS.ELEMENTS' | translate"
   (click)="sidebarService.sammElements.toggle()"
-  class="sidebar__item sidebar__elements"
   matTooltipPosition="right"
   data-cy="elementsBtn"
 >
@@ -38,11 +38,11 @@
 </ame-bar-item>
 
 <ame-bar-item
+  class="sidebar__item sidebar__settings"
   [matTooltipShowDelay]="0"
   [matTooltipHideDelay]="0"
   [matTooltip]="'TOOLTIPS.SETTINGS' | translate"
   (click)="openSettingsDialog()"
-  class="sidebar__item sidebar__settings"
   matTooltipPosition="right"
   data-cy="settingsBtn"
 >
@@ -50,11 +50,11 @@
 </ame-bar-item>
 
 <ame-bar-item
+  class="sidebar__item sidebar__notifications"
   [matTooltipShowDelay]="0"
   [matTooltipHideDelay]="0"
   [matTooltip]="'TOOLTIPS.NOTIFICATIONS' | translate"
   (click)="openNotificationDialog()"
-  class="sidebar__item sidebar__notifications"
   matTooltipPosition="right"
   data-cy="notificationsBtn"
 >
@@ -62,11 +62,11 @@
 </ame-bar-item>
 
 <ame-bar-item
+  class="sidebar__item sidebar__help"
   [matTooltipShowDelay]="0"
   [matTooltipHideDelay]="0"
   [matTooltip]="'TOOLTIPS.HELP' | translate"
   (click)="openHelpDialog()"
-  class="sidebar__item sidebar__help"
   matTooltipPosition="right"
   data-cy="helpBtn"
 >

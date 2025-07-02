@@ -20,12 +20,12 @@
   <input
     #elementCharacteristic
     [matAutocomplete]="auto"
+    [formControl]="getControl('elementCharacteristicDisplay')"
     matInput
     name="elementCharacteristic"
-    [formControl]="getControl('elementCharacteristicDisplay')"
     data-cy="elementCharacteristic"
   />
-  @if (!frozen && elementCharacteristicDisplayControl?.disabled && !metaModelElement?.isExternalReference()) {
+  @if (!frozen && elementCharacteristicDisplayControl?.disabled && loadedFiles.isElementInCurrentFile(metaModelElement)) {
     <button (click)="unlockElementCharacteristic()" data-cy="clear-element-characteristic-button" matSuffix mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
     </button>
@@ -38,7 +38,7 @@
     <mat-error>Please select a different name as this one is of different type in the same namespace</mat-error>
   }
 
-  <mat-autocomplete #auto="matAutocomplete" class="element-characteristic">
+  <mat-autocomplete class="element-characteristic" #auto="matAutocomplete">
     @if (filteredCharacteristicTypes$ | async; as filteredCharacteristicTypes) {
       <div label="Characteristic">
         @if (

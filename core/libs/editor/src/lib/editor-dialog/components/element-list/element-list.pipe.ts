@@ -10,23 +10,32 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {BaseMetaModelElement} from '@ame/meta-model';
 import {ElementInfo, ElementType, sammElements} from '@ame/shared';
 import {Pipe, PipeTransform} from '@angular/core';
+import {DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 
 @Pipe({
   standalone: true,
   name: 'modelElementParser',
 })
 export class ModelElementParserPipe implements PipeTransform {
-  getElementType(element: BaseMetaModelElement): [ElementType, ElementInfo[ElementType]] {
-    return Object.entries(sammElements).find(([, value]) => element instanceof value.class) || (['', null] as any);
+  getElementType(element: NamedElement): [ElementType, ElementInfo[ElementType]] {
+    return (
+      Object.entries(sammElements).find(([key, value]) => {
+        const isAbstract =
+          (element instanceof DefaultProperty && element.isAbstract) || (element instanceof DefaultEntity && element.isAbstractEntity());
+        const isOfClass = element instanceof value.class;
+
+        return isAbstract ? key.includes('abstract') && isOfClass : isOfClass;
+      }) || (['', null] as any)
+    );
   }
 
-  transform(element: BaseMetaModelElement) {
+  transform(element: NamedElement) {
     const [type, elementData] = this.getElementType(element);
     return {
       element,
+      className: elementData.name,
       symbol: elementData?.symbol,
       type,
     };

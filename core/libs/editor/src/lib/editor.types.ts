@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultEntityInstance, DefaultEnumeration} from '@ame/meta-model';
+import {DefaultEntityInstance, DefaultEnumeration} from '@esmf/aspect-model-loader';
 
 export interface ILastSavedModel {
   rdf: string;

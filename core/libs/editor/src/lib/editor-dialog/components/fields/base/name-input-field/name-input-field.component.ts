@@ -14,8 +14,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {
-  BaseMetaModelElement,
-  DefaultAbstractEntity,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -23,17 +21,18 @@ import {
   DefaultEntityInstance,
   DefaultProperty,
   DefaultUnit,
-} from '@ame/meta-model';
+  NamedElement,
+} from '@esmf/aspect-model-loader';
+import {Subscription} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
-import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'ame-name-input-field',
   templateUrl: './name-input-field.component.html',
   styleUrls: ['../../field.scss'],
 })
-export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit, OnDestroy {
+export class NameInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit, OnDestroy {
   public fieldName = 'name';
   private nameSubscription = new Subscription();
 
@@ -51,7 +50,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
   }
 
   private isDisabled() {
-    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extendedElement;
+    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.getExtends();
   }
 
   private setNameControl() {
@@ -65,7 +64,8 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
       new FormControl(
         {
           value: this.getCurrentValue('name'),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
+          disabled:
+            this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
         },
         {
           validators: this.getNameValidators(),
@@ -103,7 +103,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
       nameValidators.push(this.isUpperCaseName() ? EditorDialogValidators.namingUpperCase : EditorDialogValidators.namingLowerCase);
     } else {
       nameValidators.push(EditorDialogValidators.noWhiteSpace);
-      EditorDialogValidators.duplicateNameString(this.namespacesCacheService, this.metaModelElement.aspectModelUrn.split('#')[0]);
+      EditorDialogValidators.duplicateNameString(this.currentCachedFile, this.metaModelElement.aspectModelUrn.split('#')[0]);
     }
 
     return nameValidators;
@@ -113,7 +113,7 @@ export class NameInputFieldComponent extends InputFieldComponent<BaseMetaModelEl
     return (
       this.metaModelElement instanceof DefaultAspect ||
       this.metaModelElement instanceof DefaultEntity ||
-      this.metaModelElement instanceof DefaultAbstractEntity ||
+      (this.metaModelElement instanceof DefaultEntity && this.metaModelElement.isAbstractEntity()) ||
       this.metaModelElement instanceof DefaultConstraint ||
       this.metaModelElement instanceof DefaultCharacteristic
     );

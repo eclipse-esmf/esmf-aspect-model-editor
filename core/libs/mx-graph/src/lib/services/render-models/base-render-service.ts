@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Base, DefaultAspect, DefaultEntity, DefaultProperty, OverWrittenPropertyKeys} from '@ame/meta-model';
+import {LoadedFilesService} from '@ame/cache';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {DefaultAspect, DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper, MxGraphVisitorHelper} from '../../helpers';
-import {MxGraphService} from '../mx-graph.service';
 import {RendererUpdatePayload} from '../../models';
-import {RdfService} from '@ame/rdf/services';
+import {MxGraphService} from '../mx-graph.service';
 
 export abstract class BaseRenderService {
   get graph(): mxgraph.mxGraph {
@@ -27,7 +27,7 @@ export abstract class BaseRenderService {
   constructor(
     protected mxGraphService: MxGraphService,
     protected sammLangService: SammLanguageSettingsService,
-    protected rdfService: RdfService,
+    protected loadedFilesService: LoadedFilesService,
   ) {}
   public abstract isApplicable(cell: mxgraph.mxCell): boolean;
 
@@ -38,7 +38,7 @@ export abstract class BaseRenderService {
     cell.setAttribute('name', modelElement.name);
 
     cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.sammLangService);
-    cell['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(modelElement, this.rdfService.currentRdfModel);
+    cell['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(modelElement, this.loadedFilesService.currentLoadedFile);
     this.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
 
     if (typeof callback === 'function') {
@@ -56,10 +56,6 @@ export abstract class BaseRenderService {
         return;
       }
 
-      const keys: OverWrittenPropertyKeys = modelElement.properties.find(
-        ({property: prop}) => prop.aspectModelUrn === property.aspectModelUrn,
-      ).keys;
-
       this.mxGraphService.removeCells([e]);
       MxGraphHelper.establishRelation(modelElement, property);
       this.graph.insertEdge(
@@ -68,12 +64,12 @@ export abstract class BaseRenderService {
         null,
         e.source,
         e.target,
-        keys.optional ? 'optionalPropertyEdge' : 'defaultEdge',
+        modelElement.propertiesPayload[property.aspectModelUrn]?.optional ? 'optionalPropertyEdge' : 'defaultEdge',
       );
     });
   }
 
-  protected inMxGraph(modelElement: Base) {
+  protected inMxGraph(modelElement: NamedElement): mxgraph.mxCell {
     return this.mxGraphService
       ?.getAllCells()
       ?.find(cell => MxGraphHelper.getModelElement(cell)?.aspectModelUrn === modelElement?.aspectModelUrn);
@@ -85,7 +81,10 @@ export abstract class BaseRenderService {
     for (const parent of parents) {
       const parentElementModel = MxGraphHelper.getModelElement(parent);
       parent['configuration'].fields = MxGraphVisitorHelper.getElementProperties(parentElementModel, this.sammLangService);
-      parent['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(parentElementModel, this.rdfService.currentRdfModel);
+      parent['configuration'].baseProperties = MxGraphVisitorHelper.getModelInfo(
+        parentElementModel,
+        this.loadedFilesService.currentLoadedFile,
+      );
       this.graph.labelChanged(parent, MxGraphHelper.createPropertiesLabel(parent));
     }
   }

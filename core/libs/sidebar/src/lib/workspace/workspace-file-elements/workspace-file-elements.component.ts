@@ -11,13 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
-import {SidebarStateService} from '@ame/sidebar';
-import {ElementType, sammElements} from '@ame/shared';
-import {EditorService} from '@ame/editor';
-import {filter} from 'rxjs';
-import {BaseMetaModelElement} from '@ame/meta-model';
+import {ModelApiService} from '@ame/api';
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {ModelLoaderService} from '@ame/editor';
 import {MxGraphService} from '@ame/mx-graph';
+import {ElementType, sammElements} from '@ame/shared';
+import {SidebarStateService} from '@ame/sidebar';
+import {ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {filter, first, switchMap} from 'rxjs';
 
 @Component({
   selector: 'ame-workspace-file-elements',
@@ -48,13 +50,15 @@ export class WorkspaceFileElementsComponent implements OnInit {
   private searchThrottle: NodeJS.Timeout;
 
   constructor(
-    private editorService: EditorService,
     private mxGraphService: MxGraphService,
     private changeDetector: ChangeDetectorRef,
+    private modelApiService: ModelApiService,
+    private modelLoaderService: ModelLoaderService,
+    private loadedFilesService: LoadedFilesService,
   ) {}
 
   ngOnInit(): void {
-    this.selection$.pipe(filter(Boolean)).subscribe(({namespace, file}) => {
+    this.selection$.pipe(filter(Boolean)).subscribe(({namespace, file, aspectModelUrn}) => {
       this.elements = {};
       this.searched = {};
 
@@ -68,15 +72,13 @@ export class WorkspaceFileElementsComponent implements OnInit {
         this.searched[element] = this.elements[element].elements;
       }
 
-      const cachedFile = this.editorService.loadExternalAspectModel(`${namespace}:${file}`);
-      const sections = Object.values(this.elements);
-      for (const element of cachedFile.getAllElements()) {
-        sections.find(e => element instanceof e.class)?.elements?.push?.(element);
-      }
+      if (this.loadedFilesService.getFile(`${namespace}:${file}`)) {
+        this.updateElements(this.loadedFilesService.getFile(`${namespace}:${file}`));
+      } else this.requestFile(`${namespace}:${file}`, aspectModelUrn);
     });
   }
 
-  public elementImported(element: BaseMetaModelElement): boolean {
+  public elementImported(element: NamedElement): boolean {
     if (element?.aspectModelUrn) {
       return !!this.mxGraphService.resolveCellByModelElement(element);
     }
@@ -98,7 +100,7 @@ export class WorkspaceFileElementsComponent implements OnInit {
       const searchString = target.value.toLowerCase();
       for (const key in this.elements) {
         this.searched[key] = searchString
-          ? this.elements[key].elements.filter((element: BaseMetaModelElement) => {
+          ? this.elements[key].elements.filter((element: NamedElement) => {
               // @TODO: Search for the language the application is set on
               return (
                 element.name.toLowerCase().includes(searchString) || element.getDescription('en')?.toLowerCase()?.includes(searchString)
@@ -108,6 +110,31 @@ export class WorkspaceFileElementsComponent implements OnInit {
       }
       this.changeDetector.detectChanges();
     }, 100);
+  }
+
+  private updateElements(file: NamespaceFile) {
+    const cachedFile = file.cachedFile;
+    const sections = Object.values(this.elements);
+    for (const element of cachedFile.getAllElements()) {
+      sections.find(e => element instanceof e.class && !element.isAnonymous())?.elements?.push?.(element);
+    }
+    this.changeDetector.detectChanges();
+  }
+
+  private requestFile(absoluteName: string, aspectModelUrn: string) {
+    this.modelApiService
+      .getAspectMetaModel(aspectModelUrn)
+      .pipe(
+        switchMap(content =>
+          this.modelLoaderService.loadSingleModel({
+            rdfAspectModel: content,
+            fromWorkspace: true,
+            namespaceFileName: absoluteName,
+          }),
+        ),
+        first(),
+      )
+      .subscribe({next: file => this.updateElements(file), error: e => console.log(e)});
   }
 
   protected readonly sammElements = sammElements;

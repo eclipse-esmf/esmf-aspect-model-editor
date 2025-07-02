@@ -40,7 +40,7 @@
 
         <mat-form-field appearance="fill">
           <mat-label>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.BASEURL' | translate }}</mat-label>
-          <input matInput [formControl]="getControl('baseUrl')" placeholder="https://example.com" data-cy="tbBaseUrlInput" />
+          <input [formControl]="getControl('baseUrl')" matInput placeholder="https://example.com" data-cy="tbBaseUrlInput" />
           @if (getControl('baseUrl')?.errors?.invalidUrl) {
             <mat-error data-cy="tbBaseUrlInputError">
               {{ 'GENERATE_OPENAPI_SPEC_DIALOG.PLEASE_ADD_VALID_URL' | translate }}
@@ -61,24 +61,24 @@
 
       <section>
         <mat-checkbox
-          [formControl]="getControl('includeQueryApi')"
           class="dialog__checkbox"
+          [formControl]="getControl('includeQueryApi')"
           [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.INCLUDE_QUERY_API_TOOLTIP' | translate"
         >
           {{ 'GENERATE_OPENAPI_SPEC_DIALOG.INCLUDE_QUERY_API' | translate }}
         </mat-checkbox>
 
         <mat-checkbox
-          [formControl]="getControl('useSemanticVersion')"
           class="dialog__checkbox"
+          [formControl]="getControl('useSemanticVersion')"
           [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION_TOOLTIP' | translate"
         >
           {{ 'GENERATE_OPENAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION' | translate }}
         </mat-checkbox>
 
         <mat-checkbox
-          [formControl]="activateResourcePath"
           class="dialog__checkbox"
+          [formControl]="activateResourcePath"
           [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ACTIVATE_RESOURCE_PATH' | translate"
           data-cy="activateResourcePathCheckbox"
         >
@@ -90,7 +90,7 @@
         <section>
           <mat-form-field appearance="fill">
             <mat-label data-cy="resourcePathTitle">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH' | translate }}</mat-label>
-            <input matInput [formControl]="getControl('resourcePath')" placeholder="/resource/{resourceId}" data-cy="resourcePathInput" />
+            <input [formControl]="getControl('resourcePath')" matInput placeholder="/resource/{resourceId}" data-cy="resourcePathInput" />
             @if (getControl('resourcePath')?.errors?.required) {
               <mat-error data-cy="resourcePathRequiredError">
                 {{ 'GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH_REQUIRED' | translate }}
@@ -117,7 +117,7 @@
                 {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOADED_FILE_TITLE' | translate: {output: output.value.toUpperCase()} }}:
               </h2>
               <span class="dialog__file-name">{{ uploadedFile.name }}</span>
-              <button mat-icon-button (click)="removeUploadedFile()">
+              <button (click)="removeUploadedFile()" mat-icon-button>
                 <mat-icon data-cy="removeUploadFile">remove_circle</mat-icon>
               </button>
             </div>
@@ -125,21 +125,21 @@
 
           @if (!uploadedFile) {
             <div
+              class="dialog__upload-content"
               #dropArea
               [ngClass]="file?.errors?.required ? 'dialog__border--error' : 'dialog__border--dashed'"
-              class="dialog__upload-content"
               data-cy="uploadContent"
             >
               <input
                 class="dialog__upload-input"
-                type="file"
+                #fileDropRef
                 [accept]="output.value === 'yaml' ? '.yml,.yaml' : '.json'"
                 (change)="onFileBrowseHandler($event)"
-                #fileDropRef
+                type="file"
                 data-cy="uploadContentFileInput"
               />
               <div>
-                <button mat-icon-button (click)="fileDropRef.click()" tabindex="0">
+                <button (click)="fileDropRef.click()" mat-icon-button tabindex="0">
                   <mat-icon>cloud_upload</mat-icon>
                 </button>
                 <p class="dialog__upload-text">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_DRAG_AND_DROP_TEXT' | translate }}</p>
@@ -177,28 +177,28 @@
         </mat-expansion-panel-header>
 
         <mat-checkbox
-          data-cy="includePost"
-          [formControl]="getControl('includePost')"
           class="dialog__checkbox"
+          [formControl]="getControl('includePost')"
           [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_POST_TOOLTIP' | translate"
+          data-cy="includePost"
         >
           {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_POST' | translate }}
         </mat-checkbox>
 
         <mat-checkbox
-          data-cy="includePut"
-          [formControl]="getControl('includePut')"
           class="dialog__checkbox"
+          [formControl]="getControl('includePut')"
           [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PUT_TOOLTIP' | translate"
+          data-cy="includePut"
         >
           {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PUT' | translate }}
         </mat-checkbox>
 
         <mat-checkbox
-          data-cy="includePatch"
-          [formControl]="getControl('includePatch')"
           class="dialog__checkbox"
+          [formControl]="getControl('includePatch')"
           [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PATCH_TOOLTIP' | translate"
+          data-cy="includePatch"
         >
           {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PATCH' | translate }}
         </mat-checkbox>
@@ -216,11 +216,11 @@
       {{ 'GENERATE_OPENAPI_SPEC_DIALOG.BUTTON.CANCEL' | translate }}
     </button>
     <button
+      [disabled]="!form.valid"
       (click)="generateOpenApiSpec()"
       type="button"
       mat-flat-button
       color="primary"
-      [disabled]="!form.valid"
       data-cy="tbGenerateOpenApiButton"
     >
       <span>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.BUTTON.GENERATE' | translate }}</span>

@@ -13,8 +13,8 @@
 
 import {EventEmitter, Injectable} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
-import {NotificationModel} from '../model';
 import {NotificationType} from '../enums';
+import {NotificationModel} from '../model';
 
 @Injectable({providedIn: 'root'})
 export class NotificationsService {

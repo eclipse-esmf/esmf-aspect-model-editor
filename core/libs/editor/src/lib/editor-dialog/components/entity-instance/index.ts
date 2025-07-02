@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+export * from './entity-instance-modal-table/entity-instance-modal-table.component';
 export * from './entity-instance-modal/entity-instance-modal.component';
 export * from './entity-instance-search-bar/entity-instance-search-bar.component';
 export * from './entity-instance-table/entity-instance-table.component';
 export * from './entity-instance-view/entity-instance-view.component';
 export * from './entity-instance-view/entity-instance.service';
-export * from './entity-instance-modal-table/entity-instance-modal-table.component';
 export * from './entity-instance.component';
 export * from './utils/EntityInstanceUtil';

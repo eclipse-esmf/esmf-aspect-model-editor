@@ -13,16 +13,13 @@
 
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {iif, Observable, of, throwError} from 'rxjs';
+import {Observable, iif, of, throwError} from 'rxjs';
 import {catchError, concatMap, delay, retryWhen} from 'rxjs/operators';
-import {LogService, NotificationsService} from './services';
+import {NotificationsService} from './services';
 
 @Injectable({providedIn: 'root'})
 export class HttpErrorInterceptor implements HttpInterceptor {
-  constructor(
-    private loggerService: LogService,
-    private notificationsService: NotificationsService,
-  ) {}
+  constructor(private notificationsService: NotificationsService) {}
 
   private isError400(error): boolean {
     return error instanceof HttpErrorResponse && error.status === 400;
@@ -49,7 +46,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         if (!this.isError400(error) && !this.isError422(error)) {
           const messageDetail = 'Please try again later. In case if it happens again, please contact us';
           this.notificationsService.error({title: error.statusText, message: messageDetail});
-          this.loggerService.logError(
+          console.error(
             `Oops! We're sorry! An error (${error.status} ${error.statusText}) happened we could not handle.  ${messageDetail}`,
           );
         }

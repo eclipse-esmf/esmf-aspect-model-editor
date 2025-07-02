@@ -10,13 +10,13 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {RdfModelUtil} from '@ame/rdf/utils';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {Observable, of} from 'rxjs';
+import {DefaultLanguageConstraint} from '@esmf/aspect-model-loader';
 import * as locale from 'locale-codes';
-import {DefaultLanguageConstraint} from '@ame/meta-model';
+import {Observable, of} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
-import {RdfModelUtil} from '@ame/rdf/utils';
 
 @Component({
   selector: 'ame-language-code-input-field',
@@ -70,7 +70,7 @@ export class LanguageCodeInputFieldComponent extends InputFieldComponent<Default
       new FormControl(
         {
           value: RdfModelUtil.getValueWithoutUrnDefinition(this.getCurrentValue(this.fieldName)),
-          disabled: this.metaModelElement.isExternalReference(),
+          disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
         },
         Validators.required,
       ),

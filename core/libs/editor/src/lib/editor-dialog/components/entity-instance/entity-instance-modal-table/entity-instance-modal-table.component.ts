@@ -11,25 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {DataType, EditorDialogValidators, FormFieldHelper} from '@ame/editor';
 import {ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, UntypedFormGroup} from '@angular/forms';
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {
+  CacheStrategy,
   Characteristic,
-  DefaultAbstractProperty,
   DefaultCollection,
   DefaultEntity,
   DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
   EntityInstanceProperty,
-  OverWrittenProperty,
-} from '@ame/meta-model';
-import {DataType, EditorDialogValidators, FormFieldHelper} from '@ame/editor';
-import {CachedFile, NamespacesCacheService} from '@ame/cache';
-import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
-import {map, Observable, of, startWith, Subscription} from 'rxjs';
+  PropertyPayload,
+  Value,
+} from '@esmf/aspect-model-loader';
 import * as locale from 'locale-codes';
-import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {Observable, Subscription, map, of, startWith} from 'rxjs';
+import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
 
 @Component({
   selector: 'ame-entity-instance-modal-table',
@@ -55,7 +56,7 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
   protected readonly formFieldHelper = FormFieldHelper;
   protected readonly dataType = DataType;
 
-  sources: EntityInstanceProperty[] = [];
+  sources: EntityInstanceProperty<DefaultProperty>[] = [];
 
   filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
   filteredLanguageValues$: {[key: string]: Observable<any[]>} = {};
@@ -66,13 +67,13 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
     return this.form.get('properties') as FormGroup;
   }
 
-  get currentCachedFile(): CachedFile {
-    return this.namespacesCacheService.currentCachedFile;
+  get currentCachedFile(): CacheStrategy {
+    return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
   constructor(
+    private loadedFiles: LoadedFilesService,
     private changeDetector: ChangeDetectorRef,
-    private namespacesCacheService: NamespacesCacheService,
     private fb: FormBuilder,
   ) {}
 
@@ -80,12 +81,12 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
     if ('entity' in changes && this.entity) {
       this.sources = this.buildEntityValueArray();
 
-      this.entity.allProperties.forEach((element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>) => {
-        const propertyName = (element.property as DefaultProperty).name;
+      this.entity.properties.forEach((property: DefaultProperty) => {
+        const propertyName = property.name;
 
-        this.filteredEntityValues$[propertyName] = of(this.getPropertyValues(element.property as DefaultProperty));
+        this.filteredEntityValues$[propertyName] = of(this.getPropertyValues(property));
 
-        if (EntityInstanceUtil.isDefaultPropertyWithLangString(element)) {
+        if (EntityInstanceUtil.isDefaultPropertyWithLangString(property)) {
           this.filteredLanguageValues$[propertyName] = of(locale.all.filter(lang => lang.tag));
         }
       });
@@ -96,16 +97,20 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
     return this.propertiesForm.get(value) as FormArray;
   }
 
-  private buildEntityValueArray(): EntityInstanceProperty[] {
-    return this.entity.allProperties.map(prop => this.createEntityValueProp(prop));
+  getPropertyPayload(propertyUrn: string): PropertyPayload {
+    return this.entity.propertiesPayload[propertyUrn];
   }
 
-  private createEntityValueProp(prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): EntityInstanceProperty {
+  private buildEntityValueArray(): EntityInstanceProperty<DefaultProperty>[] {
+    return this.entity.properties.map(prop => this.createEntityValueProp(prop));
+  }
+
+  private createEntityValueProp(prop: DefaultProperty): EntityInstanceProperty<DefaultProperty> {
     const valueControl = this.createFormControl(prop);
     this.subscribeToEntityValueChanges(valueControl, prop);
 
     const group = new UntypedFormGroup({value: valueControl});
-    this.addGroupToPropertiesForm(prop.property.name, group);
+    this.addGroupToPropertiesForm(prop.name, group);
 
     if (EntityInstanceUtil.isDefaultPropertyWithLangString(prop)) {
       const languageControl = this.createFormControl(prop);
@@ -113,24 +118,20 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
       group.addControl('language', languageControl);
     }
 
-    return {
-      key: prop as OverWrittenProperty,
-      value: '',
-      language: EntityInstanceUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined,
-      optional: prop.keys.optional,
-    };
+    return [prop, new Value('', prop.characteristic?.dataType, EntityInstanceUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined)];
   }
 
-  private createFormControl(prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): FormControl {
-    return new FormControl('', prop.keys.optional ? null : EditorDialogValidators.requiredObject);
+  private createFormControl(prop: DefaultProperty): FormControl {
+    const propertyPayload = this.entity.propertiesPayload[prop.aspectModelUrn];
+    return new FormControl('', propertyPayload?.optional ? null : EditorDialogValidators.requiredObject);
   }
 
-  private subscribeToEntityValueChanges(control: FormControl, prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): void {
-    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeEntityValueInput(prop.property as DefaultProperty, value)));
+  private subscribeToEntityValueChanges(control: FormControl, prop: DefaultProperty): void {
+    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeEntityValueInput(prop as DefaultProperty, value)));
   }
 
-  private subscribeToLangValueChanges(control: FormControl, prop: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): void {
-    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeLanguageInput(prop.property.name, value)));
+  private subscribeToLangValueChanges(control: FormControl, prop: DefaultProperty): void {
+    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeLanguageInput(prop.name, value)));
   }
 
   private addGroupToPropertiesForm(propertyName: string, group: UntypedFormGroup): void {
@@ -156,7 +157,7 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
     this.changeDetector.detectChanges();
   }
 
-  changeLanguageSelection(ev: EntityInstanceProperty, propertyValue: string, index: number): void {
+  changeLanguageSelection(ev: EntityInstanceProperty<DefaultProperty>, propertyValue: string, index: number): void {
     EntityInstanceUtil.changeLanguageSelection(this.propertiesForm, ev, propertyValue, index);
     this.closeAllAutocompletePanels();
     this.changeDetector.detectChanges();
@@ -173,15 +174,17 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
     this.changeDetector.detectChanges();
   }
 
-  addLanguage(entityValueProp: EntityInstanceProperty): void {
-    const fieldValidators = entityValueProp.optional ? null : EditorDialogValidators.requiredObject;
-    const languagesFormArray = this.propertiesForm.get(entityValueProp.key.property.name) as FormArray;
+  addLanguage([property]: EntityInstanceProperty<DefaultProperty>): void {
+    const propertyPayload = this.entity.propertiesPayload[property.aspectModelUrn];
+
+    const fieldValidators = propertyPayload?.optional ? null : EditorDialogValidators.requiredObject;
+    const languagesFormArray = this.propertiesForm.get(property.name) as FormArray;
 
     const languageInputControl = new FormControl('', fieldValidators);
 
     this.subscriptions.add(
       languageInputControl.valueChanges.subscribe(value => {
-        this.changeLanguageInput(entityValueProp.key.property.name, value);
+        this.changeLanguageInput(property.name, value);
       }),
     );
 
@@ -200,8 +203,8 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
     );
   }
 
-  removeLanguage(entityValueProp: EntityInstanceProperty, index: number): void {
-    const languagesFormArray = this.propertiesForm.get(entityValueProp.key.property.name) as FormArray;
+  removeLanguage([property]: EntityInstanceProperty<DefaultProperty>, index: number): void {
+    const languagesFormArray = this.propertiesForm.get(property.name) as FormArray;
     languagesFormArray.removeAt(index);
   }
 

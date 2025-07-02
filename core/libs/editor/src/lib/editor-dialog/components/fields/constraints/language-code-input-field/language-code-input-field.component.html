@@ -13,10 +13,10 @@
 
 <mat-form-field [floatLabel]="getControl('languageCode')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="languageCode">languageCode</mat-label>
-  <input matInput [formControl]="getControl('languageCode')" [matAutocomplete]="auto" name="languageCode" data-cy="languageCode" />
+  <input [formControl]="getControl('languageCode')" [matAutocomplete]="auto" matInput name="languageCode" data-cy="languageCode" />
   <mat-autocomplete #auto="matAutocomplete">
     @for (lang of filteredLanguages | async; track lang) {
-      <mat-option [value]="lang.tag" class="language-code">
+      <mat-option class="language-code" [value]="lang.tag">
         {{ lang.tag }}<br /><span class="option-description">{{ lang.name }}</span>
       </mat-option>
     }

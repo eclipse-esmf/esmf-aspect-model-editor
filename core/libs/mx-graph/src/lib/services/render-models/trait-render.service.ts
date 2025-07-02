@@ -11,21 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {DefaultTrait} from '@ame/meta-model';
+import {LoadedFilesService} from '@ame/cache';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {Injectable} from '@angular/core';
+import {DefaultTrait} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
-import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TraitRenderService extends BaseRenderService {
-  constructor(mxGraphService: MxGraphService, sammLangService: SammLanguageSettingsService, rdfService: RdfService) {
-    super(mxGraphService, sammLangService, rdfService);
+  constructor(
+    mxGraphService: MxGraphService,
+    sammLangService: SammLanguageSettingsService,
+    protected loadedFilesService: LoadedFilesService,
+  ) {
+    super(mxGraphService, sammLangService, loadedFilesService);
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {

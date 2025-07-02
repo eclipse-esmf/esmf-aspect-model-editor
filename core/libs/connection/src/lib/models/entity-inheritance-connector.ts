@@ -12,14 +12,14 @@
  */
 
 import {FiltersService} from '@ame/loader-filters';
-import {DefaultEntity, DefaultAbstractEntity, DefaultAbstractProperty, DefaultProperty, BaseMetaModelElement} from '@ame/meta-model';
-import {MxGraphService, MxGraphAttributeService} from '@ame/mx-graph';
+import {MxGraphAttributeService, MxGraphService} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
-import {mxgraph} from 'mxgraph-factory';
-import {InheritanceConnector} from './inheritance-connector';
-import {EntityPropertyConnectionHandler, PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers';
 import {LanguageTranslationService} from '@ame/translation';
+import {DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {EntityPropertyConnectionHandler, PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers';
+import {InheritanceConnector} from './inheritance-connector';
 
 export class EntityInheritanceConnector extends InheritanceConnector {
   constructor(
@@ -35,40 +35,34 @@ export class EntityInheritanceConnector extends InheritanceConnector {
     super(mxGraphService, mxGraphAttributeService, sammLangService, notificationsService, translate);
   }
 
-  connectWithAbstract(
-    parentMetaModel: DefaultEntity,
-    childMetaModel: DefaultAbstractEntity | DefaultEntity,
-    parent: mxgraph.mxCell,
-    child: mxgraph.mxCell,
-  ) {
-    if (parentMetaModel.extendedElement?.aspectModelUrn === childMetaModel.aspectModelUrn) {
+  connectWithAbstract(parentMetaModel: DefaultEntity, childMetaModel: DefaultEntity, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
+    if (parentMetaModel.getExtends()?.aspectModelUrn === childMetaModel.aspectModelUrn) {
       return;
     }
 
-    const abstractProperties = childMetaModel.allProperties
-      .map(({property}) => property)
-      .filter(
-        abstractProperty =>
-          abstractProperty instanceof DefaultAbstractProperty &&
-          !childMetaModel.allProperties?.some(({property: p}) => p.extendedElement?.aspectModelUrn === abstractProperty.aspectModelUrn),
-      );
+    if (!childMetaModel.isAbstractEntity()) {
+      return;
+    }
+
+    const abstractProperties = childMetaModel.properties.filter(
+      abstractProperty =>
+        abstractProperty.isAbstract &&
+        !childMetaModel.properties?.some(p => p.getExtends()?.aspectModelUrn === abstractProperty.aspectModelUrn),
+    );
 
     const newProperties = abstractProperties.map(abstractProperty => {
-      const property = DefaultProperty.createInstance();
-      property.metaModelVersion = abstractProperty.metaModelVersion;
       const [namespace, name] = abstractProperty.aspectModelUrn.split('#');
+      const property = new DefaultProperty({
+        name: `[${name}]`,
+        aspectModelUrn: '',
+        metaModelVersion: abstractProperty.metaModelVersion,
+        extends_: abstractProperty,
+      });
       property.aspectModelUrn = `${namespace}#[${name}]`;
-      property.extendedElement = abstractProperty;
       return property;
     });
 
-    parentMetaModel.properties = [
-      ...parentMetaModel.properties,
-      ...newProperties.map(property => ({
-        property,
-        keys: {},
-      })),
-    ];
+    parentMetaModel.properties = [...parentMetaModel.properties, ...newProperties];
 
     for (let i = 0; i < newProperties.length; i++) {
       const propertyCell = this.mxGraphService.renderModelElement(
@@ -89,7 +83,7 @@ export class EntityInheritanceConnector extends InheritanceConnector {
     this.mxGraphService.formatShapes();
   }
 
-  isInheritedElement(element: BaseMetaModelElement): boolean {
-    return element instanceof DefaultEntity || element instanceof DefaultAbstractEntity;
+  isInheritedElement(element: NamedElement): boolean {
+    return element instanceof DefaultEntity || (element instanceof DefaultEntity && element.isAbstractEntity());
   }
 }

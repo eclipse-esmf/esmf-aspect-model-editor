@@ -12,14 +12,13 @@
  */
 
 import {MigratorApiService} from '@ame/api';
-import {Component, NgZone, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {catchError, of} from 'rxjs';
-import {MatDialogTitle, MatDialogContent} from '@angular/material/dialog';
-import {LanguageTranslateModule} from '@ame/translation';
-import {TranslateModule} from '@ngx-translate/core';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {CdkScrollable} from '@angular/cdk/scrolling';
+import {Component, NgZone, OnInit} from '@angular/core';
+import {MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {Router} from '@angular/router';
+import {TranslateModule} from '@ngx-translate/core';
+import {catchError, of} from 'rxjs';
 
 @Component({
   selector: 'ame-loading-migrating',

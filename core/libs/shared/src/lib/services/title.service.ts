@@ -16,21 +16,13 @@ import {Title} from '@angular/platform-browser';
 
 @Injectable({providedIn: 'root'})
 export class TitleService extends Title {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateTitle(urn: string) {
-    if (!urn) {
+  updateTitle(absoluteName: string) {
+    if (!absoluteName) {
       return;
     }
 
-    let [namespace, modelName] = urn.split('#');
-
-    if (!modelName) {
-      const sections = urn.split(':');
-      modelName = sections.pop();
-      namespace = sections.join(':');
-    }
-
-    const title = `${modelName} - ${namespace} | Aspect Model Editor`;
+    const [namespace, version, modelName] = absoluteName.split(':');
+    const title = `${modelName} - ${namespace}:${version} | Aspect Model Editor`;
     this.setTitle(title);
   }
 }

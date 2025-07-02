@@ -11,25 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
+import {LoadedFilesService} from '@ame/cache';
+import {NamedElement} from '@esmf/aspect-model-loader';
 import {DataFactory} from 'n3';
 
 export abstract class BaseVisitor<T> {
-  constructor(protected rdfService: RdfService) {}
+  constructor(protected loadedFiles: LoadedFilesService) {}
 
-  abstract visit(element: BaseMetaModelElement): T;
+  abstract visit(element: NamedElement): T;
 
   protected setPrefix(aspectModelUrn: string) {
     const namespace = `${aspectModelUrn.split('#')[0]}#`;
-    if (this.rdfService.currentRdfModel.hasNamespace(namespace)) {
+    if (this.loadedFiles.currentLoadedFile.rdfModel.hasDependency(namespace)) {
       return;
     }
 
-    const externalRdfModel = this.rdfService.externalRdfModels.find(
-      rdfModel => rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null).length > 0,
+    const externalFile = this.loadedFiles.externalFiles.find(
+      file => file.rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null).length > 0,
     );
-    const alias = externalRdfModel?.getAliasByNamespace(namespace);
-    this.rdfService.currentRdfModel.addPrefix(alias, namespace);
+    const alias = externalFile.rdfModel?.getAliasByDependency(namespace);
+    this.loadedFiles.currentLoadedFile.rdfModel.addPrefix(alias, namespace);
   }
 }

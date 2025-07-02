@@ -12,21 +12,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from '@ame/meta-model';
-import {MxGraphAttributeService} from '@ame/mx-graph';
-import {mxgraph, mxgraphFactory} from 'mxgraph-factory';
-import {
-  FIELD_name,
-  SELECTOR_editorSaveButton,
-  SELECTOR_namespaceTabValueInput,
-  SELECTOR_namespaceTabVersionInput,
-  SELECTOR_overrideNamespace,
-  SELECTOR_settingsButton,
-  SettingsDialogSelectors,
-  SIDEBAR_CLOSE_BUTTON,
-} from './constants';
 import {FileHandlingService} from '@ame/editor';
+import {MxGraphAttributeService} from '@ame/mx-graph';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph, mxgraphFactory} from 'mxgraph-factory';
 import {finalize} from 'rxjs/operators';
+import {FIELD_name, SELECTOR_editorSaveButton, SIDEBAR_CLOSE_BUTTON} from './constants';
 
 const {mxConstants} = mxgraphFactory({});
 
@@ -359,10 +350,10 @@ export class cyHelp {
 
   /**
    * Asserts that multilanguage values for a given model element and language tag are null.
-   * @param {BaseMetaModelElement} modelElement - The model element to check.
+   * @param {NamedElement} modelElement - The model element to check.
    * @param {string} langTag - The language tag for which to check the values.
    */
-  static assertNullMultiLanguageValues(modelElement: BaseMetaModelElement, langTag: string): void {
+  static assertNullMultiLanguageValues(modelElement: NamedElement, langTag: string): void {
     assert.isNull(modelElement.getDescription(langTag) || null);
     assert.isNull(modelElement.getDescription(langTag.toLowerCase()) || null);
     assert.isNull(modelElement.getPreferredName(langTag) || null);
@@ -371,10 +362,10 @@ export class cyHelp {
 
   /**
    * Asserts that multilanguage values for a given model element and language tag are not null.
-   * @param {BaseMetaModelElement} modelElement - The model element to check.
+   * @param {NamedElement} modelElement - The model element to check.
    * @param {string} langTag - The language tag for which to check the values.
    */
-  static assertNotNullMultiLanguageValues(modelElement: BaseMetaModelElement, langTag: string) {
+  static assertNotNullMultiLanguageValues(modelElement: NamedElement, langTag: string) {
     assert.isNotNull(modelElement.getDescription(langTag));
     assert.isNotNull(modelElement.getPreferredName(langTag));
   }

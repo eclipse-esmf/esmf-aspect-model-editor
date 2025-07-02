@@ -11,20 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxEvent, mxUtils} from '@ame/mx-graph';
+import {BindingsService} from '@ame/shared';
 import {Injectable, NgZone} from '@angular/core';
-import {BaseMetaModelElement} from '@ame/meta-model';
-import {mxEvent, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxUtils} from '@ame/mx-graph';
-import {BindingsService, NotificationsService} from '@ame/shared';
-import {EditorService} from '../../editor.service';
-import {ShapeSettingsStateService} from './shape-settings-state.service';
-import {OpenReferencedElementService} from '../../open-element-window/open-element-window.service';
+import {NamedElement} from '@esmf/aspect-model-loader';
 import {BehaviorSubject} from 'rxjs';
-import {NamespacesCacheService} from '@ame/cache';
-import {LanguageTranslationService} from '@ame/translation';
+import {EditorService} from '../../editor.service';
+import {OpenReferencedElementService} from '../../open-element-window/open-element-window.service';
+import {ShapeSettingsStateService} from './shape-settings-state.service';
 
 @Injectable({providedIn: 'root'})
 export class ShapeSettingsService {
-  public modelElement: BaseMetaModelElement = null;
+  public modelElement: NamedElement = null;
 
   private selectedCellsSubject = new BehaviorSubject([]);
   public selectedCells$ = this.selectedCellsSubject.asObservable();
@@ -33,13 +32,11 @@ export class ShapeSettingsService {
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphService: MxGraphService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private notificationsService: NotificationsService,
     private bindingsService: BindingsService,
     private editorService: EditorService,
     private shapeSettingsStateService: ShapeSettingsStateService,
     private openReferencedElementService: OpenReferencedElementService,
-    private namespaceCacheService: NamespacesCacheService,
-    private translate: LanguageTranslationService,
+    public loadedFiles: LoadedFilesService,
     private ngZone: NgZone,
   ) {}
 
@@ -105,7 +102,7 @@ export class ShapeSettingsService {
     }
 
     this.modelElement = MxGraphHelper.getModelElement(selectedElement);
-    if (this.modelElement.isExternalReference() && !this.modelElement.isPredefined()) {
+    if (this.loadedFiles.isElementExtern(this.modelElement) && !this.modelElement.isPredefined) {
       this.openReferencedElementService.openReferencedElement(this.modelElement);
       return;
     }
@@ -113,22 +110,8 @@ export class ShapeSettingsService {
     this.shapeSettingsStateService.openShapeSettings();
   }
 
-  editModel(elementModel: BaseMetaModelElement) {
+  editModel(elementModel: NamedElement) {
     this.shapeSettingsStateService.openShapeSettings();
     this.modelElement = elementModel;
-  }
-
-  editModelByUrn(elementUrn: string) {
-    const element = this.namespaceCacheService.currentCachedFile.getElement<BaseMetaModelElement>(elementUrn);
-    if (!element) {
-      this.notificationsService.error({
-        title: this.translate.language.EDITOR_CANVAS.SHAPE_SETTING.NOTIFICATION.EDIT_VIEW_UNAVAILABLE,
-        message: this.translate.language.EDITOR_CANVAS.SHAPE_SETTING.NOTIFICATION.EDIT_VIEW_UNAVAILABLE_MESSAGE,
-      });
-
-      return;
-    }
-
-    this.editModel(element);
   }
 }

@@ -13,14 +13,14 @@
 
 <mat-form-field [floatLabel]="getControl('left')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="left">left</mat-label>
-  <input #left [matAutocomplete]="auto" matInput name="left" [formControl]="getControl('left')" data-cy="left" />
-  @if (leftControl?.disabled && !metaModelElement?.isExternalReference()) {
+  <input #left [matAutocomplete]="auto" [formControl]="getControl('left')" matInput name="left" data-cy="left" />
+  @if (leftControl?.disabled && !loadedFiles.isElementExtern(metaModelElement)) {
     <button (click)="unlockLeft()" data-cy="clear-left-button" matSuffix mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
     </button>
   }
 
-  <mat-autocomplete #auto="matAutocomplete" class="left">
+  <mat-autocomplete class="left" #auto="matAutocomplete">
     @if (filteredCharacteristicTypes$ | async; as filteredCharacteristicTypes) {
       <div>
         @if (!isAlreadyDefined(filteredCharacteristicTypes, left.value) && !getControl('left')?.errors?.foundModel) {

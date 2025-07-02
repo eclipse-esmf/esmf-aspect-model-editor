@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {RdfNodeService} from '@ame/aspect-exporter';
+import {RdfService} from '@ame/rdf/services';
 import {TestBed} from '@angular/core/testing';
+import {DefaultOperation} from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
 import {RdfListService} from '../../rdf-list';
-import {RdfNodeService} from '@ame/aspect-exporter';
 import {OperationVisitor} from './operation-visitor';
-import {DefaultOperation} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
 
 describe('Operation Visitor', () => {
   let service: OperationVisitor;
@@ -49,7 +49,13 @@ describe('Operation Visitor', () => {
     });
 
     rdfNodeService = TestBed.inject(RdfNodeService);
-    operation = new DefaultOperation('1', 'samm#operation1', 'operation1', [], null);
+    operation = new DefaultOperation({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#operation1',
+      name: 'operation1',
+      input: [],
+      output: null,
+    });
     service = TestBed.inject(OperationVisitor);
   });
 

@@ -12,5 +12,5 @@
  */
 
 export * from './model.service';
-export * from './rdf.service';
 export * from './rdf-serializer.service';
+export * from './rdf.service';
