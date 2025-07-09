@@ -36,6 +36,10 @@ class MockRDFModel {
   SAMM = jest.fn((): Samm => new MockSamm() as any as Samm);
 }
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('Entity instance visitor', () => {
   let mockedRdfModel: MockRDFModel;
   let service: EntityInstanceVisitor;

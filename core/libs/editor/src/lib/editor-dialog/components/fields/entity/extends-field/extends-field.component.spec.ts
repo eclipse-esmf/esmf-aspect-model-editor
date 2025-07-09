@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {NotificationsService, SearchService} from '@ame/shared';
@@ -26,8 +27,8 @@ import {provideMockObject} from '../../../../../../../../../jest-helpers';
 import {EditorModelService} from '../../../../editor-model.service';
 import {EntityExtendsFieldComponent} from './extends-field.component';
 
-jest.mock('../../../../../../../../instantiator/src/lib/meta-model-element-instantiator');
-jest.mock('../../../../../../../../instantiator/src/lib/instantiators/samm-e-predefined-entity-instantiator', () => {
+jest.mock('@ame/instantiator');
+jest.mock('@ame/instantiator', () => {
   class PredefinedEntityInstantiator {
     entityInstances = {};
   }
@@ -39,6 +40,10 @@ jest.mock('../../../../../../../../instantiator/src/lib/instantiators/samm-e-pre
 
 jest.mock('../../../../../../../../shared/src/lib/constants/xsd-datatypes.ts', () => ({}));
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('EntityExtendsFieldComponent', () => {
   let component: EntityExtendsFieldComponent;
   let fixture: ComponentFixture<EntityExtendsFieldComponent>;
@@ -49,6 +54,7 @@ describe('EntityExtendsFieldComponent', () => {
       imports: [MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule, MatInputModule, BrowserAnimationsModule],
       declarations: [EntityExtendsFieldComponent],
       providers: [
+        LoadedFilesService,
         {
           provide: NotificationsService,
           useValue: provideMockObject(NotificationsService),

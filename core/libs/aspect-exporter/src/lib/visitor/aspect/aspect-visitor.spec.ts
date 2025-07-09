@@ -22,6 +22,10 @@ import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AspectVisitor} from './aspect-visitor';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('Aspect Visitor', () => {
   let service: AspectVisitor;
 

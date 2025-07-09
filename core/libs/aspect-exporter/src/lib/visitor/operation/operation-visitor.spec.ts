@@ -19,6 +19,10 @@ import {describe, expect, it} from '@jest/globals';
 import {RdfListService} from '../../rdf-list';
 import {OperationVisitor} from './operation-visitor';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('Operation Visitor', () => {
   let service: OperationVisitor;
   let rdfNodeService: RdfNodeService;

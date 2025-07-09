@@ -61,6 +61,10 @@ class MockRDFModel {
 
 jest.mock('../../../../rdf/src/lib/utils/rdf-model-util');
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('RDF Helper', () => {
   let rdfModel: RdfModel;
   let service: RdfListService;

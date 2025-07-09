@@ -52,6 +52,15 @@ const cells: Cell[] = [
   },
 ];
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+  ModelElementParserPipe: class {
+    transform(value: any) {
+      return value;
+    }
+  },
+}));
+
 describe('RdfNodeService', () => {
   let component: ConnectWithDialogComponent;
   let fixture: ComponentFixture<ConnectWithDialogComponent>;

@@ -11,61 +11,84 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {
+  DefaultAspect,
+  DefaultCharacteristic,
+  DefaultCollection,
+  DefaultConstraint,
+  DefaultEntity,
+  DefaultProperty,
+  DefaultTrait,
+} from '@esmf/aspect-model-loader';
 import {describe} from '@jest/globals';
+import {
+  AspectProps,
+  CharacteristicProps,
+  CollectionProps,
+  ConstraintProps,
+  EntityProps,
+  PropertyProps,
+  TraitProps,
+} from '../../../aspect-model-loader/src/lib/shared/props';
+import {ShapeConnectorUtil} from './shape-connector-util';
 
-// TODO fix this test
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('Test Shape connector util', () => {
-  // test('should be parent: Entity child: Property', () => {
-  //   const parentModel = DefaultEntity.createInstance();
-  //   const childModel = DefaultProperty.createInstance();
-  //   expect(ShapeConnectorUtil.isEntityPropertyConnection(parentModel, childModel)).toBeTruthy();
-  // });
-  // test('should be parent: Characteristic child: Entity', () => {
-  //   const parentModel = DefaultCharacteristic.createInstance();
-  //   const childModel = DefaultEntity.createInstance();
-  //   expect(ShapeConnectorUtil.isCharacteristicEntityConnection(parentModel, childModel)).toBeTruthy();
-  // });
-  // test('should be parent: Property child: Characteristic', () => {
-  //   const parentModel = DefaultProperty.createInstance();
-  //   const childModel = DefaultCharacteristic.createInstance();
-  //   expect(ShapeConnectorUtil.isPropertyCharacteristicConnection(parentModel, childModel)).toBeTruthy();
-  // });
-  // test('should be parent: Trait child: Constraint', () => {
-  //   const parentModel = DefaultTrait.createInstance();
-  //   const childModel = DefaultConstraint.createInstance();
-  //   expect(ShapeConnectorUtil.isTraitConstraintConnection(parentModel, childModel)).toBeTruthy();
-  // });
-  // describe('isTraitCharacteristicConnectionValid', () => {
-  //   test('should be parent: Trait child: Characteristic', () => {
-  //     const parentModel = DefaultTrait.createInstance();
-  //     const childModel = DefaultCharacteristic.createInstance();
-  //     expect(ShapeConnectorUtil.isTraitCharacteristicConnectionValid(parentModel, childModel)).toBeTruthy();
-  //   });
-  //   test('parent trait has baseCharacteristic', () => {
-  //     const parentModel = DefaultTrait.createInstance();
-  //     const childModel = DefaultCharacteristic.createInstance();
-  //     parentModel.baseCharacteristic = {} as DefaultCharacteristic;
-  //     expect(ShapeConnectorUtil.isTraitCharacteristicConnectionValid(parentModel, childModel)).toBeFalsy();
-  //   });
-  //   test('should be parent: Trait child: Trait', () => {
-  //     const parentModel = DefaultTrait.createInstance();
-  //     const childModel = DefaultTrait.createInstance();
-  //     expect(ShapeConnectorUtil.isTraitCharacteristicConnectionValid(parentModel, childModel)).toBeFalsy();
-  //   });
-  // });
-  // test('should be parent: Aspect child: Property', () => {
-  //   const parentModel = new DefaultAspect(null, null, null);
-  //   const childModel = DefaultProperty.createInstance();
-  //   expect(ShapeConnectorUtil.isAspectPropertyConnection(parentModel, childModel)).toBeTruthy();
-  // });
-  // test('should be parent: Characteristic child: Collection', () => {
-  //   const parentModel = DefaultCharacteristic.createInstance();
-  //   const childModel = DefaultCollection.createInstance();
-  //   expect(ShapeConnectorUtil.isCharacteristicCollectionConnection(parentModel, childModel)).toBeTruthy();
-  // });
-  // test('should be parent: Collection child: Characteristic', () => {
-  //   const parentModel = DefaultCollection.createInstance();
-  //   const childModel = DefaultCharacteristic.createInstance();
-  //   expect(ShapeConnectorUtil.isCollectionCharacteristicConnection(parentModel, childModel)).toBeTruthy();
-  // });
+  test('should be parent: Entity child: Property', () => {
+    const parentModel = new DefaultEntity({} as EntityProps);
+    const childModel = new DefaultProperty({} as PropertyProps);
+    expect(ShapeConnectorUtil.isEntityPropertyConnection(parentModel, childModel)).toBeTruthy();
+  });
+  test('should be parent: Characteristic child: Entity', () => {
+    const parentModel = new DefaultCharacteristic({} as CharacteristicProps);
+    const childModel = new DefaultEntity({} as EntityProps);
+    expect(ShapeConnectorUtil.isCharacteristicEntityConnection(parentModel, childModel)).toBeTruthy();
+  });
+  test('should be parent: Property child: Characteristic', () => {
+    const parentModel = new DefaultProperty({} as PropertyProps);
+    const childModel = new DefaultCharacteristic({} as CharacteristicProps);
+    expect(ShapeConnectorUtil.isPropertyCharacteristicConnection(parentModel, childModel)).toBeTruthy();
+  });
+  test('should be parent: Trait child: Constraint', () => {
+    const parentModel = new DefaultTrait({} as TraitProps);
+    const childModel = new DefaultConstraint({} as ConstraintProps);
+    expect(ShapeConnectorUtil.isTraitConstraintConnection(parentModel, childModel)).toBeTruthy();
+  });
+
+  describe('isTraitCharacteristicConnectionValid', () => {
+    test('should be parent: Trait child: Characteristic', () => {
+      const parentModel = new DefaultTrait({} as TraitProps);
+      const childModel = new DefaultCharacteristic({} as CharacteristicProps);
+      expect(ShapeConnectorUtil.isTraitCharacteristicConnectionValid(parentModel, childModel)).toBeTruthy();
+    });
+    test('parent trait has baseCharacteristic', () => {
+      const parentModel = new DefaultTrait({} as TraitProps);
+      const childModel = new DefaultCharacteristic({} as CharacteristicProps);
+      parentModel.baseCharacteristic = {} as DefaultCharacteristic;
+      expect(ShapeConnectorUtil.isTraitCharacteristicConnectionValid(parentModel, childModel)).toBeFalsy();
+    });
+    test('should be parent: Trait child: Trait', () => {
+      const parentModel = new DefaultTrait({} as TraitProps);
+      const childModel = new DefaultTrait({} as TraitProps);
+      expect(ShapeConnectorUtil.isTraitCharacteristicConnectionValid(parentModel, childModel)).toBeFalsy();
+    });
+  });
+  test('should be parent: Aspect child: Property', () => {
+    const parentModel = new DefaultAspect({} as AspectProps);
+    const childModel = new DefaultProperty({} as PropertyProps);
+    expect(ShapeConnectorUtil.isAspectPropertyConnection(parentModel, childModel)).toBeTruthy();
+  });
+  test('should be parent: Characteristic child: Collection', () => {
+    const parentModel = new DefaultCharacteristic({} as CharacteristicProps);
+    const childModel = new DefaultCollection({} as CollectionProps);
+    expect(ShapeConnectorUtil.isCharacteristicCollectionConnection(parentModel, childModel)).toBeTruthy();
+  });
+  test('should be parent: Collection child: Characteristic', () => {
+    const parentModel = new DefaultCollection({} as CollectionProps);
+    const childModel = new DefaultCharacteristic({} as CharacteristicProps);
+    expect(ShapeConnectorUtil.isCollectionCharacteristicConnection(parentModel, childModel)).toBeTruthy();
+  });
 });

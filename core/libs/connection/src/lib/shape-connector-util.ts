@@ -80,7 +80,7 @@ export class ShapeConnectorUtil {
       childModel instanceof DefaultCharacteristic &&
       !(childModel instanceof DefaultTrait) &&
       !(childModel instanceof DefaultEither) &&
-      parentModel.getBaseCharacteristic() === null
+      (parentModel.getBaseCharacteristic() === null || parentModel.getBaseCharacteristic() === undefined)
     );
   }
 

@@ -24,6 +24,10 @@ import {beforeEach, describe, expect, it} from '@jest/globals';
 import {TranslateModule} from '@ngx-translate/core';
 import {provideMockObject} from '../../../../../../jest-helpers';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('LoadingScreenComponent', () => {
   let component: LoadingScreenComponent;
   let fixture: ComponentFixture<LoadingScreenComponent>;

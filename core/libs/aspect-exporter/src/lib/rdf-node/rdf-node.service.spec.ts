@@ -31,6 +31,10 @@ class MockRDFModel {
   SAMMU = jest.fn((): SammU => new MockSamm() as any as SammU);
 }
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('RdfNodeService', () => {
   let service: RdfNodeService;
   let rdfModel: MockRDFModel;

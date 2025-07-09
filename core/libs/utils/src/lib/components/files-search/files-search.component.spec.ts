@@ -16,6 +16,10 @@ import {MockProvider} from 'ng-mocks';
 import {SearchesStateService} from '../../search-state.service';
 import {FilesSearchComponent} from './files-search.component';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('Files search', () => {
   let component: FilesSearchComponent;
   let fixture: ComponentFixture<FilesSearchComponent>;

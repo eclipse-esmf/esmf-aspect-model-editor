@@ -49,13 +49,10 @@ import {
   TraitConnectionHandler,
   TraitWithCharacteristicOrConstraintConnectionHandler,
 } from '@ame/connection';
-import {TestBed} from '@angular/core/testing';
-import {describe, expect} from '@jest/globals';
-
-import {EntityInstanceService} from '@ame/editor';
 import {MxGraphAttributeService, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
 import {LanguageTranslateModule} from '@ame/translation';
+import {TestBed} from '@angular/core/testing';
 import {
   DefaultAspect,
   DefaultCharacteristic,
@@ -65,8 +62,19 @@ import {
   DefaultProperty,
   DefaultTrait,
 } from '@esmf/aspect-model-loader';
+import {describe, expect} from '@jest/globals';
 import {TranslateModule} from '@ngx-translate/core';
 import {provideMockObject} from 'jest-helpers/utils';
+
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
+jest.mock('@ame/loader-filters', () => ({
+  ModelFilter: {
+    DEFAULT: 'mock-default',
+  },
+}));
 
 describe('Test Shape connector service', () => {
   let service: ShapeConnectorService;
@@ -104,10 +112,6 @@ describe('Test Shape connector service', () => {
         {
           provide: MxGraphAttributeService,
           useValue: provideMockObject(MxGraphAttributeService),
-        },
-        {
-          provide: EntityInstanceService,
-          useValue: provideMockObject(EntityInstanceService),
         },
         {
           provide: AspectConnectionHandler,

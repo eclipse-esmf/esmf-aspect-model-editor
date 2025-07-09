@@ -23,6 +23,10 @@ import {TranslateModule} from '@ngx-translate/core';
 import {provideMockObject} from '../../../../../../jest-helpers';
 import {AlertComponent} from './alert.component';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('AlertComponent', () => {
   let component: AlertComponent;
   let fixture: ComponentFixture<AlertComponent>;

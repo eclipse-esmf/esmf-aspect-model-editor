@@ -22,6 +22,10 @@ import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AbstractEntityVisitor} from './abstract-entity';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('Abstract Entity Visitor', () => {
   let service: AbstractEntityVisitor;
 

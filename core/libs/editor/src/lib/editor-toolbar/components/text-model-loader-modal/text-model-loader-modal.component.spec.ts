@@ -10,6 +10,10 @@ import {of} from 'rxjs';
 import {FileHandlingService} from '../../services';
 import {TextModelLoaderModalComponent} from './text-model-loader-modal.component';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('TextModelLoaderModalComponent', () => {
   let component: TextModelLoaderModalComponent;
   let fixture: ComponentFixture<TextModelLoaderModalComponent>;

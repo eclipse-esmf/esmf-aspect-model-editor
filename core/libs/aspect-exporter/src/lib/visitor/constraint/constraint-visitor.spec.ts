@@ -34,6 +34,10 @@ import {MockProviders} from 'ng-mocks';
 import {RdfListService} from '../../rdf-list';
 import {ConstraintVisitor} from './constraint-visitor';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('Constraint Visitor', () => {
   let service: ConstraintVisitor;
 

@@ -22,6 +22,10 @@ import {MockProviders} from 'ng-mocks';
 import {RdfListService} from '../../rdf-list';
 import {EntityVisitor} from './entity-visitor';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('Entity Visitor', () => {
   let service: EntityVisitor;
 

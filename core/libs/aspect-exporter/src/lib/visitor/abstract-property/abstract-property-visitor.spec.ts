@@ -20,6 +20,10 @@ import {Store} from 'n3';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AbstractPropertyVisitor} from './abstract-property-visitor';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('Property Visitor', () => {
   let service: AbstractPropertyVisitor;
   let rdfNodeService: jest.Mocked<RdfNodeService>;

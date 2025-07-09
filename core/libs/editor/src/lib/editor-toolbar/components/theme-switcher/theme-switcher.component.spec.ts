@@ -20,6 +20,10 @@ import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {beforeEach, describe, expect, it} from '@jest/globals';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('ThemeSwitcherComponent', () => {
   let component: ThemeSwitcherComponent;
   let fixture: ComponentFixture<ThemeSwitcherComponent>;
