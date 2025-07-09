@@ -5,14 +5,10 @@
 To export a namespace, proceed as follows:
 
 . Open the xref:getting-started/ui-overview.adoc#menu-file[File menu] and select *Export Package*.
-. Select the available namespace.
+. Select one of the available namespaces to export.
 +
 image::select-namespace-export.png[width=65%]
-. Click *Validate*.
+. Click *Export*.
 +
-→ After validation is done, a summary dialog similar to the one for xref:namespace/import-package.adoc#import-package[import package] will be displayed. If the validation has files with errors, the namespace cannot be exported.
-. Click *Export*. +
-→ The chosen namespace will be exported.
+→ The selected namespace and all its internal references will be exported.
 . Save the zip file in local file directory.
-
-TIP: To export multiple namespaces at once just check multiple boxes at step 2.
