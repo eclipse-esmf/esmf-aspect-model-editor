@@ -35,7 +35,7 @@ import {assertRdf, openElementAndAssertValues} from '../../../support/utils';
 
 describe('Create and edit Entity value RDF lang string properties in edit view tests', () => {
   beforeEach(() => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
   });
 

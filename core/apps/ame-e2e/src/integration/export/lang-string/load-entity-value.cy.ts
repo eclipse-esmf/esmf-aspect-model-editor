@@ -17,7 +17,7 @@ import {assertRdf, loadModel, openElementAndAssertValues} from '../../../support
 
 describe('Loading Entity value with lang string properties', () => {
   beforeEach(() => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
   });
 

@@ -25,15 +25,15 @@ import {checkRelationParentChild, connectElements} from '../../../support/utils'
 describe('Test drag and drop ext properties', () => {
   const fileName = 'external-property-reference.txt';
   it('can add Property from external reference with same namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.examples.aspect:1.0.0': [fileName],
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.examples.aspect:1.0.0', 'file-name': fileName},
       },
       {

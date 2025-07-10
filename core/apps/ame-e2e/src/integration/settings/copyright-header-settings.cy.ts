@@ -45,7 +45,7 @@ describe('Test language settings', () => {
   });
 
   it.skip('check Aspect Model includes copyright header', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', req => {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/format', req => {
       req.reply({
         statusCode: 200,
         body: req.body,

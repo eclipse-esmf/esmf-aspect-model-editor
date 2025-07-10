@@ -28,10 +28,10 @@ interface InterceptorConfigNamespaceFile {
 }
 
 export function setUpStaticModellingInterceptors(): void {
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}).as('validateModel');
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', {}).as('formatModel');
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models', {});
-  cy.intercept('DELETE', 'http://localhost:9091/ame/api/models', {});
+  cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'}).as('validateModel');
+  cy.intercept('POST', 'http://localhost:9090/ame/api/models/format', {}).as('formatModel');
+  cy.intercept('POST', 'http://localhost:9090/ame/api/models', {});
+  cy.intercept('DELETE', 'http://localhost:9090/ame/api/models', {});
 }
 
 export function setUpDynamicModellingInterceptors(namespacesConfig: InterceptorConfigNamespaces): void {
@@ -40,7 +40,7 @@ export function setUpDynamicModellingInterceptors(namespacesConfig: InterceptorC
   // Set up namespaces structure to return
   cy.intercept(
     'GET',
-    'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true',
+    'http://localhost:9090/ame/api/models/namespaces',
     values.reduce(
       (acc, value) => ({
         ...acc,
@@ -57,7 +57,7 @@ export function setUpDynamicModellingInterceptors(namespacesConfig: InterceptorC
       cy.intercept(
         {
           method: 'GET',
-          url: 'http://localhost:9091/ame/api/models',
+          url: 'http://localhost:9090/ame/api/models',
           headers: {namespace: value.name, 'file-name': file.name},
         },
         file.response,

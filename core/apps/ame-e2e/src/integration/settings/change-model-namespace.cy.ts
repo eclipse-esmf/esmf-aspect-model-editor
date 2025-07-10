@@ -44,21 +44,21 @@ describe('Test namespace settings dialog', () => {
 
   describe('Test changing model namespace version', () => {
     it('should change namespace and version and save aspect model', () => {
-      cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {});
+      cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
 
       cy.visitDefault();
       cy.fixture('/change-namespace/aspect-workspace-one')
         .as('rdfString')
         .then(rdfString => cy.loadModel(rdfString));
 
-      cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
         'org.eclipse.examples.one:1.0.0': ['AspectDefault.ttl'],
       });
 
       cy.intercept(
         {
           method: 'POST',
-          url: 'http://localhost:9091/ame/api/models',
+          url: 'http://localhost:9090/ame/api/models',
           headers: {namespace: 'org.eclipse.examples.one:1.0.0', 'file-name': 'AspectDefault.ttl'},
         },
         {
@@ -68,7 +68,7 @@ describe('Test namespace settings dialog', () => {
 
       cy.saveAspectModelToWorkspace().then(() => cy.get(SELECTOR_workspaceBtn).click());
 
-      cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
         'org.eclipse.examples.one:1.0.0': ['AspectDefault.ttl'],
         'org.eclipse.examples.two:2.0.0': ['AspectDefault.ttl'],
       });
@@ -76,7 +76,7 @@ describe('Test namespace settings dialog', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: 'http://localhost:9091/ame/api/models',
+          url: 'http://localhost:9090/ame/api/models',
           headers: {namespace: 'org.eclipse.examples.two:2.0.0', 'file-name': 'AspectDefault.ttl'},
         },
         {
@@ -101,7 +101,7 @@ describe('Test namespace settings dialog', () => {
     });
 
     it('should change name of aspect element and save to workspace', () => {
-      cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+      cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
         'org.eclipse.examples.one:1.0.0': ['AspectDefault.ttl'],
         'org.eclipse.examples.two:2.0.0': ['AspectDefault.ttl', 'NewName.ttl'],
       });
@@ -109,7 +109,7 @@ describe('Test namespace settings dialog', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: 'http://localhost:9091/ame/api/models',
+          url: 'http://localhost:9090/ame/api/models',
           headers: {namespace: 'org.eclipse.examples.one:1.0.0', 'file-name': 'AspectDefault.ttl'},
         },
         {
@@ -120,7 +120,7 @@ describe('Test namespace settings dialog', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: 'http://localhost:9091/ame/api/models',
+          url: 'http://localhost:9090/ame/api/models',
           headers: {namespace: 'org.eclipse.examples.two:2.0.0', 'file-name': 'AspectDefault.ttl'},
         },
         {
@@ -131,7 +131,7 @@ describe('Test namespace settings dialog', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: 'http://localhost:9091/ame/api/models',
+          url: 'http://localhost:9090/ame/api/models',
           headers: {namespace: 'org.eclipse.examples.two:2.0.0', 'file-name': 'NewName.ttl'},
         },
         {

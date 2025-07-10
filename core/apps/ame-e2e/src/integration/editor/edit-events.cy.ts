@@ -18,7 +18,7 @@ import {cyHelp} from '../../support/helpers';
 
 describe('Test edit Events', () => {
   it('can load events', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
     cy.fixture('model-with-events')
       .as('rdfString')

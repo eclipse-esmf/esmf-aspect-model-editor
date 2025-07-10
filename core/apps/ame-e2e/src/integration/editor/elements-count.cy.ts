@@ -20,7 +20,7 @@ import {SELECTOR_workspaceBtn} from '../../support/constants';
 describe('Elements count', () => {
   describe('Movement model', () => {
     it('should display elements count for incoming & outgoing edges', () => {
-      cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       cy.visitDefault();
       cy.fixture('/default-models/movement.txt')
         .then(rdfString => cy.loadModel(rdfString))
@@ -100,7 +100,7 @@ describe('Elements count', () => {
     });
 
     it.skip('should display elements count in sidebar', () => {
-      cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       const namespacesConfig = {
         aspectDefault: {
           name: 'org.eclipse.examples.aspect:1.0.0',
@@ -143,7 +143,7 @@ describe('Elements count', () => {
 
   describe('Enumeration instances model', () => {
     it('should display elements count for incoming & outgoing edges', () => {
-      cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       cy.visitDefault();
       cy.fixture('/enumeration-instances.txt')
         .then(rdfString => cy.loadModel(rdfString))
@@ -179,7 +179,7 @@ describe('Elements count', () => {
     });
 
     it.skip('should display elements count in sidebar', () => {
-      cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       const namespacesConfig = {
         aspectDefault: {
           name: 'org.eclipse.examples.aspect:1.0.0',

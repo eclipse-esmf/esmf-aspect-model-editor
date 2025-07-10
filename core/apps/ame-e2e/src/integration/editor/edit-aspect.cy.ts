@@ -212,7 +212,7 @@ describe('Test editing Aspect', () => {
   });
 
   it('can delete existing aspect', () => {
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
     });
     cy.shapeExists('NewAspect')

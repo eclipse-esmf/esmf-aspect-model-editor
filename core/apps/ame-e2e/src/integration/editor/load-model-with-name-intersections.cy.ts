@@ -17,7 +17,7 @@
 describe('Test models with intersected names', () => {
   describe('PredefinedAndCustomCharacteristicsSameName', () => {
     it('should load "PredefinedAndCustomCharacteristicsSameName" model', () => {
-      cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       cy.visitDefault();
       cy.fixture('predefined-and-custom-characteristics-same-name')
         .as('rdfString')
