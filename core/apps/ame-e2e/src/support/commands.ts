@@ -33,9 +33,9 @@ declare global {
     interface Chainable {
       /**
        * Custom command to start modelling by creating a default model.
-       * @returns {Cypress.Chainable} A chainable Cypress object.
+       * @param ownNamespaceInterceptor Optional flag to determine if the namespace interceptor should be used.       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
-      startModelling(): Chainable;
+      startModelling(ownNamespaceInterceptor?: boolean): Chainable;
 
       /**
        * Custom command to start modelling by creating a default invalid model.
@@ -508,12 +508,14 @@ Cypress.Commands.add('startModellingInvalidModel', () => {
   });
 });
 
-Cypress.Commands.add('startModelling', () => {
+Cypress.Commands.add('startModelling', (ownNamespaceInterceptor = false) => {
   cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
   cy.intercept('POST', 'http://localhost:9090/ame/api/models/format', () => {});
 
-  // TODO we have to move this somewhere else, because it is not needed for every test
-  cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+  if (!ownNamespaceInterceptor) {
+    // TODO we have to move this somewhere else, because it is not needed for every test
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+  }
 
   return cy.fixture('/default-models/aspect-default.txt', 'utf-8').then(model => cyHelp.loadModel(model));
 });

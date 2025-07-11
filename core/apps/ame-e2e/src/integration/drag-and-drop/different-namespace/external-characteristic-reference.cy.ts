@@ -58,7 +58,7 @@ describe('Test drag and drop ext characteristic', () => {
 
     cy.visitDefault().then(() =>
       cy
-        .startModelling()
+        .startModelling(true)
         .then(() => cyHelp.checkAspectDefaultExists())
         .then(() => cy.get(SELECTOR_workspaceBtn).click())
         .then(() => cy.get(SELECTOR_openNamespacesButton).contains(fileName).click({force: true}))
