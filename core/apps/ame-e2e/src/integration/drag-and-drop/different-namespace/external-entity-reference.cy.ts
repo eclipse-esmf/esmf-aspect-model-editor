@@ -24,17 +24,31 @@ import {checkAspectAndChildrenEntity, connectElements} from '../../../support/ut
 
 describe('Test drag and drop', () => {
   it('can add Entity from external reference with different namespace', () => {
-    const fileName = 'external-entity-reference.txt';
+    const fileName = 'external-entity-reference.ttl';
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
-      'org.eclipse.different:1.0.0': [fileName],
+      statusCode: 200,
+      body: {
+        'org.eclipse.different': [
+          {
+            version: '1.0.0',
+            models: [
+              {
+                model: fileName,
+                aspectModelUrn: 'urn:samm:org.eclipse.different:1.0.0#ExternalEntity',
+                existing: true,
+              },
+            ],
+          },
+        ],
+      },
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9090/ame/api/models',
-        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': fileName},
+        headers: {'Aspect-Model-Urn': 'urn:samm:org.eclipse.different:1.0.0#ExternalEntity'},
       },
       {
         fixture: `/external-reference/different-namespace/without-childrens/${fileName}`,

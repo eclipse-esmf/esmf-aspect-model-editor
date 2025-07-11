@@ -291,7 +291,7 @@ declare global {
 
 Cypress.Commands.add('visitDefault', () => cy.visit('/editor?e2e=true').wait(2000));
 
-Cypress.Commands.add('getAspect', () => cy.window().then(win => win['angular.modelService'].loadedAspect as Aspect));
+Cypress.Commands.add('getAspect', () => cy.window().then(win => win['angular.LoadedFilesService'].currentLoadedFile.aspect as Aspect));
 
 Cypress.Commands.add('getEditorService', () => cy.window().then(win => win['angular.editorService']));
 Cypress.Commands.add('getMxgraphService', () => cy.window().then(win => win['angular.mxGraphService']));
@@ -467,7 +467,7 @@ Cypress.Commands.add('getUpdatedRDF', () =>
     const modelService: ModelService = win['angular.modelService'];
     return new Promise(resolve => {
       modelService.synchronizeModelToRdf().subscribe(() => {
-        const modelContent = resolve(win['angular.loadedFilesService'].currentLoadedFile().rdfModel);
+        const modelContent = win['angular.LoadedFilesService'].currentLoadedFile.rdfModel;
         resolve(win['angular.rdfService'].serializeModel(modelContent));
       });
     });
@@ -511,6 +511,9 @@ Cypress.Commands.add('startModellingInvalidModel', () => {
 Cypress.Commands.add('startModelling', () => {
   cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
   cy.intercept('POST', 'http://localhost:9090/ame/api/models/format', () => {});
+
+  // TODO we have to move this somewhere else, because it is not needed for every test
+  cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
 
   return cy.fixture('/default-models/aspect-default.txt', 'utf-8').then(model => cyHelp.loadModel(model));
 });

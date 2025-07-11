@@ -18,7 +18,6 @@ import {cyHelp} from '../../support/helpers';
 
 describe('Test collapse/expand model', () => {
   it('should collapse the entire model', () => {
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_tbCollapseToggle).click({force: true}).wait(500))

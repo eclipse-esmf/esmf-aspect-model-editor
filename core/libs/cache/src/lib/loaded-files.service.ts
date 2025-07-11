@@ -13,6 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {Aspect, CacheStrategy, DefaultAspect, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
+import {environment} from '../../../../environments/environment';
 
 export interface LoadedFilePayload {
   rdfModel: RdfModel;
@@ -117,7 +118,9 @@ export class LoadedFilesService {
   }
 
   constructor() {
-    window['loadedFiles'] = this;
+    if (!environment.production) {
+      window['angular.LoadedFilesService'] = this;
+    }
   }
 
   isElementInCurrentFile(element: NamedElement): boolean {

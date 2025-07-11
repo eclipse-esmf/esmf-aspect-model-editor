@@ -23,18 +23,32 @@ import {cyHelp} from '../../../support/helpers';
 import {checkRelationParentChild, connectElements} from '../../../support/utils';
 
 describe('Test drag and drop ext properties', () => {
-  const fileName = 'external-property-reference.txt';
+  const fileName = 'external-property-reference.ttl';
   it('can add Property from external reference with same namespace', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
-      'org.eclipse.examples.aspect:1.0.0': [fileName],
+      statusCode: 200,
+      body: {
+        'org.eclipse.examples.aspect': [
+          {
+            version: '1.0.0',
+            models: [
+              {
+                model: fileName,
+                aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#externalProperty',
+                existing: true,
+              },
+            ],
+          },
+        ],
+      },
     });
 
     cy.intercept(
       {
         method: 'GET',
         url: 'http://localhost:9090/ame/api/models',
-        headers: {namespace: 'org.eclipse.examples.aspect:1.0.0', 'file-name': fileName},
+        headers: {'Aspect-Model-Urn': 'urn:samm:org.eclipse.examples.aspect:1.0.0#externalProperty'},
       },
       {
         fixture: `/external-reference/same-namespace/without-childrens/${fileName}`,

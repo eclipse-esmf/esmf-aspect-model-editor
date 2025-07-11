@@ -62,7 +62,6 @@ describe('Constraint', () => {
   for (const field of fields) {
     describe(`${field.name} Field`, () => {
       it('should create and rename Constraint', () => {
-        cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
         cy.visitDefault();
         cy.startModelling()
           .then(() => cy.shapeExists('AspectDefault'))
