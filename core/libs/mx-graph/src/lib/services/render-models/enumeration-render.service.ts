@@ -11,9 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, inject} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/cache';
 import {ShapeConnectorService} from '@ame/connection';
+import {FiltersService} from '@ame/loader-filters';
+import {MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {Injectable, inject} from '@angular/core';
 import {
   DefaultCharacteristic,
   DefaultEither,
@@ -21,17 +24,13 @@ import {
   DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
-} from '@ame/meta-model';
-import {MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 import {EntityValueRenderService} from './entity-value-render.service';
 import {UnitRenderService} from './unit-render.service';
-import {RdfService} from '@ame/rdf/services';
-import {FiltersService} from '@ame/loader-filters';
 
 interface EnumerationForm {
   chipList: DefaultEntityInstance[];
@@ -49,14 +48,13 @@ export class EnumerationRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     sammLangService: SammLanguageSettingsService,
-    rdfService: RdfService,
+    protected loadedFilesService: LoadedFilesService,
     private shapeConnectorService: ShapeConnectorService,
     private entityValueRenderer: EntityValueRenderService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private unitRendererService: UnitRenderService,
-    private namespaceCacheService: NamespacesCacheService,
   ) {
-    super(mxGraphService, sammLangService, rdfService);
+    super(mxGraphService, sammLangService, loadedFilesService);
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {
@@ -122,8 +120,8 @@ export class EnumerationRenderService extends BaseRenderService {
           return edge;
         }
 
-        if (!modelElement.isExternalReference()) {
-          this.namespaceCacheService.currentCachedFile.removeElement(modelElement.aspectModelUrn);
+        if (!this.loadedFilesService.isElementExtern(modelElement)) {
+          this.loadedFilesService.currentLoadedFile.cachedFile.removeElement(modelElement.aspectModelUrn);
         }
         return edge.target;
       }),
@@ -132,7 +130,7 @@ export class EnumerationRenderService extends BaseRenderService {
 
   private hasSameEntityAsEnumeration(childModelElement: DefaultEntityInstance, modelElement: DefaultEnumeration) {
     return (
-      childModelElement.entity.aspectModelUrn === modelElement.dataType?.getUrn() ||
+      childModelElement.type.aspectModelUrn === modelElement.dataType?.getUrn() ||
       (childModelElement.parents.some(parent => parent.aspectModelUrn === modelElement.aspectModelUrn) &&
         childModelElement.parents.length > 1)
     );
@@ -142,7 +140,7 @@ export class EnumerationRenderService extends BaseRenderService {
     const modelElement = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
     if (!(modelElement instanceof DefaultEither)) {
       this.mxGraphShapeOverlayService.removeOverlay(cell);
-      if (modelElement?.isPredefined()) {
+      if (modelElement?.isPredefined) {
         this.mxGraphShapeOverlayService.addTopShapeOverlay(cell);
       } else {
         this.mxGraphShapeOverlayService.addTopShapeOverlay(cell);

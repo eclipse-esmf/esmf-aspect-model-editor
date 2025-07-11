@@ -15,7 +15,7 @@
 
 describe('Test load aspect model with anonymous elements', () => {
   it('load aspect model with anonymous elements', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
     cy.fixture('anonymous-elements')
       .as('rdfString')

@@ -11,18 +11,18 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-@for (locale of metaModelElement?.getAllLocalesPreferredNames(); track locale) {
+@for (locale of getPreferredNamesLocales(); track locale) {
   <mat-form-field
     [floatLabel]="getControl('preferredName' + locale)?.disabled ? 'always' : 'auto'"
-    [matTooltip]="isInherited(locale) ? 'This was extended from ' + elementExtends.extendedElement.name : ''"
+    [matTooltip]="isInherited(locale) ? 'This was extended from ' + elementExtends.extends_.name : ''"
     [matTooltipPosition]="'left'"
     appearance="fill"
   >
     <mat-label for="preferredName">preferredName({{ locale }})</mat-label>
     <input
-      matInput
       class="ellipsis"
       [formControl]="getControl('preferredName' + locale)"
+      matInput
       name="preferredName{{ locale }}"
       data-cy="preferredName"
     />

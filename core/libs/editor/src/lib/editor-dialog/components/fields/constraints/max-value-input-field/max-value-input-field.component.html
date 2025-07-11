@@ -14,10 +14,10 @@
 <mat-form-field [floatLabel]="getControl('maxValue')?.disabled ? 'always' : 'auto'" appearance="fill">
   <mat-label for="maxValue">maxValue</mat-label>
   <input
-    matInput
-    name="maxValue"
     [formControl]="getControl('maxValue')"
     [placeholder]="getPlaceholder(getValueWithoutUrnDefinition(rangeConstraintDataType?.getUrn()))"
+    matInput
+    name="maxValue"
     data-cy="maxValue"
   />
 </mat-form-field>

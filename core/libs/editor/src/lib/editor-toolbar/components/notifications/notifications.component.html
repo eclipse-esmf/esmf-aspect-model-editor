@@ -21,10 +21,10 @@
     <span>{{ 'NOTIFICATIONS_TABLE_DIALOG.CLEAR_TABLE' | translate }}</span>
   </button>
 
-  <table [dataSource]="notificationsService.getNotifications()" mat-table class="mat-elevation-z2 notifications-table">
+  <table class="mat-elevation-z2 notifications-table" [dataSource]="notificationsService.getNotifications()" mat-table>
     <ng-container matColumnDef="expand">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element">
+      <th *matHeaderCellDef mat-header-cell></th>
+      <td *matCellDef="let element" mat-cell>
         @if (!element.expanded && element.description) {
           <mat-icon (click)="element.expanded = !element.expanded">expand_more</mat-icon>
         }
@@ -35,8 +35,8 @@
     </ng-container>
 
     <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef>{{ 'NOTIFICATIONS_TABLE_DIALOG.DATE' | translate }}</th>
-      <td mat-cell *matCellDef="let element">
+      <th *matHeaderCellDef mat-header-cell>{{ 'NOTIFICATIONS_TABLE_DIALOG.DATE' | translate }}</th>
+      <td *matCellDef="let element" mat-cell>
         <div class="date-time">
           <div>{{ element.formattedDate }} {{ element.formattedTime }}</div>
         </div>
@@ -44,15 +44,15 @@
     </ng-container>
 
     <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef>{{ 'NOTIFICATIONS_TABLE_DIALOG.TYPE' | translate }}</th>
-      <td mat-cell *matCellDef="let element">
+      <th *matHeaderCellDef mat-header-cell>{{ 'NOTIFICATIONS_TABLE_DIALOG.TYPE' | translate }}</th>
+      <td *matCellDef="let element" mat-cell>
         <mat-icon [ngClass]="[getTypeIcon(element.type)]">{{ getTypeIcon(element.type) }}</mat-icon>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="message">
-      <th mat-header-cell *matHeaderCellDef>{{ 'NOTIFICATIONS_TABLE_DIALOG.MESSAGE' | translate }}</th>
-      <td mat-cell *matCellDef="let element">
+      <th *matHeaderCellDef mat-header-cell>{{ 'NOTIFICATIONS_TABLE_DIALOG.MESSAGE' | translate }}</th>
+      <td *matCellDef="let element" mat-cell>
         <div class="message-title">
           {{ element.title }}
         </div>
@@ -65,9 +65,9 @@
     </ng-container>
 
     <ng-container matColumnDef="options">
-      <th mat-header-cell *matHeaderCellDef>{{ 'NOTIFICATIONS_TABLE_DIALOG.OPTIONS' | translate }}</th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-icon-button (click)="currentItem = element" [matMenuTriggerFor]="menu">
+      <th *matHeaderCellDef mat-header-cell>{{ 'NOTIFICATIONS_TABLE_DIALOG.OPTIONS' | translate }}</th>
+      <td *matCellDef="let element" mat-cell>
+        <button [matMenuTriggerFor]="menu" (click)="currentItem = element" mat-icon-button>
           <mat-icon>more_vertical</mat-icon>
         </button>
       </td>
@@ -77,16 +77,16 @@
       <td class="mat-cell no-notif-msg" colspan="9999">{{ 'NOTIFICATIONS_TABLE_DIALOG.NO_NOTIFICATIONS' | translate }}</td>
     </tr>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
   </table>
 </mat-dialog-content>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="goTo(currentItem?.link)" [disabled]="!currentItem?.link">
+  <button [disabled]="!currentItem?.link" (click)="goTo(currentItem?.link)" mat-menu-item>
     <mat-icon>arrow_circle_right</mat-icon>{{ 'NOTIFICATIONS_TABLE_DIALOG.GO' | translate }}
   </button>
-  <button mat-menu-item (click)="clearNotification(currentItem)">
+  <button (click)="clearNotification(currentItem)" mat-menu-item>
     <mat-icon>delete</mat-icon>{{ 'NOTIFICATIONS_TABLE_DIALOG.CLEAR' | translate }}
   </button>
 </mat-menu>

@@ -13,7 +13,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {DefaultUnit} from '@ame/meta-model';
+import {DefaultUnit} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -30,7 +30,7 @@ export class NumericConversionFactorInputFieldComponent extends InputFieldCompon
       'numericConversionFactor',
       new FormControl({
         value: this.metaModelElement?.numericConversionFactor,
-        disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
+        disabled: this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement),
       }),
     );
   }

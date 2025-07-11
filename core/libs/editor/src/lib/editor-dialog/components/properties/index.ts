@@ -11,6 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './property.component';
-export * from './properties-modal/properties-modal.component';
 export * from './properties-button/properties-button.component';
+export * from './properties-modal/properties-modal.component';
+export * from './property.component';

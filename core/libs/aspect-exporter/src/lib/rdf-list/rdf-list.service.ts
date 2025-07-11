@@ -11,11 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {RdfModel} from '@ame/rdf/utils';
+import {LoadedFilesService} from '@ame/cache';
 import {simpleDataTypes} from '@ame/shared';
-import {Samm} from '@ame/vocabulary';
+import {Injectable} from '@angular/core';
+import {RdfModel, Samm} from '@esmf/aspect-model-loader';
+import {environment} from 'environments/environment';
 import {BlankNode, DataFactory, NamedNode, Quad, Quad_Object, Store, Triple, Util} from 'n3';
+import {RdfNodeService} from '../rdf-node';
 import {RdfListHelper} from './rdf-list-helper';
 import {RdfListConstants} from './rdf-list.constants';
 import {
@@ -24,20 +26,17 @@ import {
   ListElement,
   ListElementType,
   ListProperties,
-  OverWrittenListElement,
+  PropertyListElement,
   SourceElementType,
   StoreListReferences,
 } from './rdf-list.types';
-import {RdfNodeService} from '../rdf-node';
-import {ModelService} from '@ame/rdf/services';
-import {environment} from 'environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   private get rdfModel(): RdfModel {
-    return this.modelService.currentRdfModel;
+    return this.loadedFiles.currentLoadedFile?.rdfModel;
   }
 
   private get store(): Store {
@@ -45,12 +44,12 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   }
 
   private get samm(): Samm {
-    return this.rdfModel.SAMM();
+    return this.rdfModel.samm;
   }
 
   constructor(
     private nodeService: RdfNodeService,
-    private modelService: ModelService,
+    private loadedFiles: LoadedFilesService,
   ) {
     if (!environment.production) {
       window['angular.rdfListService'] = this;
@@ -76,7 +75,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
 
     this.remove(source, ...elements);
     this.recreateList(list, [...listElements.map(({node}) => node), ...elementsToBeAdded.listElements]);
-    this.createOverWrittenElements(elementsToBeAdded.overWrittenListElements);
+    this.createPropertyList(elementsToBeAdded.overWrittenListElements);
     return this;
   }
 
@@ -146,12 +145,12 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     this.emptyList(source, property);
     this.createNewList(
       DataFactory.namedNode(source.aspectModelUrn),
-      RdfListConstants.getPredicateByKey(property, this.samm, this.rdfModel.SAMMC()),
+      RdfListConstants.getPredicateByKey(property, this.samm, this.rdfModel.sammC),
     );
   }
 
   emptyList(source: SourceElementType, property: ListProperties) {
-    const predicate = RdfListConstants.getPredicateByKey(property, this.samm, this.rdfModel.SAMMC());
+    const predicate = RdfListConstants.getPredicateByKey(property, this.samm, this.rdfModel.sammC);
     const subject = DataFactory.namedNode(source.aspectModelUrn);
     const list = this.store.getQuads(subject, predicate, null, null)?.[0]?.object;
 
@@ -173,44 +172,40 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     return quads;
   }
 
-  private createOverWrittenElements(elements: OverWrittenListElement[]) {
+  private createPropertyList(elements: PropertyListElement[]) {
     for (const element of elements) {
-      const model = element.metaModelElement?.property;
-      if (model?.extendedElement) {
+      const {metaModelElement: model, propertyPayload} = element;
+      if (model?.extends_) {
         this.nodeService.updateBlankNode(element.blankNode, model, {
-          extends: model?.extendedElement?.aspectModelUrn,
+          extends: model?.extends_?.aspectModelUrn,
           characteristic: model.characteristic?.aspectModelUrn,
         });
         continue;
       }
 
-      this.store.addQuad(
-        element.blankNode,
-        this.samm.PropertyProperty(),
-        DataFactory.namedNode(element.metaModelElement.property.aspectModelUrn),
-      );
+      this.store.addQuad(element.blankNode, this.samm.property(), DataFactory.namedNode(element.metaModelElement.aspectModelUrn));
 
-      if (element.metaModelElement.keys.optional) {
+      if (propertyPayload?.optional) {
         this.store.addQuad(
           element.blankNode,
           this.samm.OptionalProperty(),
-          DataFactory.literal(`${element.metaModelElement.keys.optional}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy)),
+          DataFactory.literal(`${propertyPayload?.optional}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy)),
         );
       }
 
-      if (element.metaModelElement.keys.notInPayload) {
+      if (propertyPayload?.notInPayload) {
         this.store.addQuad(
           element.blankNode,
           this.samm.NotInPayloadProperty(),
-          DataFactory.literal(`${element.metaModelElement.keys.notInPayload}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy)),
+          DataFactory.literal(`${propertyPayload?.notInPayload}`, DataFactory.namedNode(simpleDataTypes.boolean.isDefinedBy)),
         );
       }
 
-      if (element.metaModelElement.keys.payloadName) {
+      if (propertyPayload?.payloadName) {
         this.store.addQuad(
           element.blankNode,
-          this.samm.payloadNameProperty(),
-          DataFactory.literal(`${element.metaModelElement.keys.payloadName}`, DataFactory.namedNode(simpleDataTypes.string.isDefinedBy)),
+          this.samm.PayloadNameProperty(),
+          DataFactory.literal(`${propertyPayload?.payloadName}`, DataFactory.namedNode(simpleDataTypes.string.isDefinedBy)),
         );
       }
     }
@@ -229,7 +224,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
 
         const resolvedQuad = this.rdfModel
           .resolveBlankNodes(quad.object.value)
-          .filter(quad => this.samm.isPropertyProperty(quad.predicate.value))[0];
+          .filter(quad => this.samm.property().equals(DataFactory.namedNode(quad.predicate.value)))[0];
         listElement.push({node: resolvedQuad.object});
       }
 
@@ -242,7 +237,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   }
 
   private getFilteredElements(source: SourceElementType, elements: ListElementType[]): StoreListReferences {
-    const relations = RdfListConstants.getRelations(this.samm, this.rdfModel.SAMMC());
+    const relations = RdfListConstants.getRelations(this.samm, this.rdfModel.sammC);
     const children = relations.find(({source: sourceType}) => source instanceof sourceType).children;
     const types = children.map(child => child.type).filter(type => type);
 
@@ -274,7 +269,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   }
 
   private resolvePredicate(source: SourceElementType, element: ListElementType) {
-    const relations = RdfListConstants.getRelations(this.samm, this.rdfModel.SAMMC());
+    const relations = RdfListConstants.getRelations(this.samm, this.rdfModel.sammC);
     for (const {source: sourceType, children} of relations) {
       if (!(source instanceof sourceType)) {
         continue;

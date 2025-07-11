@@ -13,28 +13,42 @@
 
 /// <reference types="Cypress" />
 
-import {cyHelp} from '../../../support/helpers';
 import {
   SELECTOR_ecEntity,
   SELECTOR_openNamespacesButton,
   SELECTOR_searchElementsInp,
   SELECTOR_workspaceBtn,
 } from '../../../support/constants';
+import {cyHelp} from '../../../support/helpers';
 import {checkAspectAndChildrenEntity, connectElements} from '../../../support/utils';
 
 describe('Test drag and drop', () => {
   it('can add Entity from external reference with different namespace', () => {
-    const fileName = 'external-entity-reference.txt';
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.different:1.0.0': [fileName],
+    const fileName = 'external-entity-reference.ttl';
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+      statusCode: 200,
+      body: {
+        'org.eclipse.different': [
+          {
+            version: '1.0.0',
+            models: [
+              {
+                model: fileName,
+                aspectModelUrn: 'urn:samm:org.eclipse.different:1.0.0#ExternalEntity',
+                existing: true,
+              },
+            ],
+          },
+        ],
+      },
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': fileName},
+        url: 'http://localhost:9090/ame/api/models',
+        headers: {'Aspect-Model-Urn': 'urn:samm:org.eclipse.different:1.0.0#ExternalEntity'},
       },
       {
         fixture: `/external-reference/different-namespace/without-childrens/${fileName}`,
@@ -43,7 +57,7 @@ describe('Test drag and drop', () => {
 
     cy.visitDefault().then(() =>
       cy
-        .startModelling()
+        .startModelling(true)
         .then(() => cyHelp.checkAspectDefaultExists())
         .then(() => cy.get(SELECTOR_workspaceBtn).click())
         .then(() => cy.get(SELECTOR_openNamespacesButton).contains(fileName).click({force: true}))

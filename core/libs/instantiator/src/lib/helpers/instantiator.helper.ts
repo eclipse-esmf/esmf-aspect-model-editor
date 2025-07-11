@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from '@ame/meta-model';
+import {NamedElement} from '@esmf/aspect-model-loader';
 
-export function syncElementWithChildren(element: BaseMetaModelElement) {
+export function syncElementWithChildren(element: NamedElement) {
   element.children.forEach(child => child.parents.push(element));
 }

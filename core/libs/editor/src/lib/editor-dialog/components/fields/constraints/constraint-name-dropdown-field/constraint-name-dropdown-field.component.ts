@@ -11,10 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {ModelService} from '@ame/rdf/services';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
 import {
-  BaseMetaModelElement,
   Constraint,
   DefaultConstraint,
   DefaultEncodingConstraint,
@@ -24,9 +25,8 @@ import {
   DefaultLocaleConstraint,
   DefaultRangeConstraint,
   DefaultRegularExpressionConstraint,
-} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+  NamedElement,
+} from '@esmf/aspect-model-loader';
 import {EditorModelService} from '../../../../editor-model.service';
 import {DropdownFieldComponent} from '../../dropdown-field.component';
 
@@ -43,10 +43,10 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
   constructor(
     public editorModelService: EditorModelService,
     public modelService: ModelService,
-    public namespacesCacheService: NamespacesCacheService,
     public languageSettings: SammLanguageSettingsService,
+    public loadedFilesService: LoadedFilesService,
   ) {
-    super(editorModelService, modelService, languageSettings);
+    super(editorModelService, modelService, languageSettings, loadedFilesService);
   }
 
   ngOnInit(): void {
@@ -90,26 +90,40 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
   }
 
   private setMetaModelElementAspectUrn(modelElement: Constraint) {
-    this.metaModelElement.aspectModelUrn = `${this.modelService.currentRdfModel.getAspectModelUrn()}${modelElement.name}`;
+    this.metaModelElement.aspectModelUrn = `${this.loadedFilesService.currentLoadedFile?.rdfModel?.getAspectModelUrn()}${modelElement.name}`;
   }
 
   private initConstraintList(): void {
     if (this.listConstraints.size <= 0) {
-      this.listConstraints.set('Constraint', DefaultConstraint.createInstance);
-      this.listConstraints.set('EncodingConstraint', DefaultEncodingConstraint.createInstance);
-      this.listConstraints.set('FixedPointConstraint', DefaultFixedPointConstraint.createInstance);
-      this.listConstraints.set('LanguageConstraint', DefaultLanguageConstraint.createInstance);
-      this.listConstraints.set('LengthConstraint', DefaultLengthConstraint.createInstance);
-      this.listConstraints.set('LocaleConstraint', DefaultLocaleConstraint.createInstance);
-      this.listConstraints.set('RangeConstraint', DefaultRangeConstraint.createInstance);
-      this.listConstraints.set('RegularExpressionConstraint', DefaultRegularExpressionConstraint.createInstance);
+      this.listConstraints.set(
+        'EncodingConstraint',
+        () => new DefaultEncodingConstraint({name: '', aspectModelUrn: '', metaModelVersion: '', value: ''}),
+      );
+      this.listConstraints.set(
+        'FixedPointConstraint',
+        () => new DefaultFixedPointConstraint({name: '', aspectModelUrn: '', metaModelVersion: '', scale: 0, integer: 0}),
+      );
+      this.listConstraints.set(
+        'LanguageConstraint',
+        () => new DefaultLanguageConstraint({name: '', aspectModelUrn: '', metaModelVersion: '', languageCode: ''}),
+      );
+      this.listConstraints.set('LengthConstraint', () => new DefaultLengthConstraint({name: '', aspectModelUrn: '', metaModelVersion: ''}));
+      this.listConstraints.set(
+        'LocaleConstraint',
+        () => new DefaultLocaleConstraint({name: '', aspectModelUrn: '', metaModelVersion: '', localeCode: ''}),
+      );
+      this.listConstraints.set('RangeConstraint', () => new DefaultRangeConstraint({name: '', aspectModelUrn: '', metaModelVersion: ''}));
+      this.listConstraints.set(
+        'RegularExpressionConstraint',
+        () => new DefaultRegularExpressionConstraint({name: '', aspectModelUrn: '', metaModelVersion: '', value: ''}),
+      );
       this.listConstraintNames = [...this.listConstraints.keys()];
     }
   }
 
-  private migrateCommonAttributes(oldMetaModelElement: BaseMetaModelElement) {
+  private migrateCommonAttributes(oldMetaModelElement: NamedElement) {
     Object.keys(oldMetaModelElement).forEach(oldKey => {
-      if (Object.keys(this.metaModelElement).find(key => key === oldKey) && oldKey !== 'aspectModelUrn' && oldKey !== 'name') {
+      if (!['aspectModelUrn', 'name', 'className'].includes(oldKey) && Object.keys(this.metaModelElement).find(key => key === oldKey)) {
         this.metaModelElement[oldKey] = oldMetaModelElement[oldKey];
       }
     });

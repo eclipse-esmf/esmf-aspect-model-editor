@@ -12,17 +12,17 @@
  */
 
 import {ModelApiService} from '@ame/api';
-import {EditorService, FileInfo, FileTypes, FileUploadService} from '@ame/editor';
+import {FileInfo, FileTypes, FileUploadService, ModelLoaderService} from '@ame/editor';
+import {SidebarStateService} from '@ame/sidebar';
+import {createFile} from '@ame/utils';
 import {Injectable, InjectionToken} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
-import {catchError, first, Observable, of, switchMap, tap} from 'rxjs';
+import {Observable, catchError, first, of, switchMap, tap} from 'rxjs';
+import {environment} from '../../../../../../environments/environment';
 import {RootExportNamespacesComponent} from '../../namespace-exporter/components';
 import {RootNamespacesImporterComponent} from '../../namespace-importer/components';
 import {NamespacesSession} from '../models';
-import {createFile} from '@ame/utils';
-import {SidebarStateService} from '@ame/sidebar';
-import {environment} from '../../../../../../environments/environment';
 
 const NAMESPACES_SESSION_NAME = 'NAMESPACES_SESSION';
 export let NAMESPACES_SESSION: InjectionToken<NamespacesSession>;
@@ -35,9 +35,9 @@ export class NamespacesManagerService {
     private modelApiService: ModelApiService,
     private matDialog: MatDialog,
     private router: Router,
-    private editorService: EditorService,
     private fileUploadService: FileUploadService,
     private sidebarService: SidebarStateService,
+    private modelLoader: ModelLoaderService,
   ) {
     if (!environment.production) {
       window['angular.namespacesManagerService'] = this;
@@ -65,13 +65,13 @@ export class NamespacesManagerService {
     return this.session.modalRef.afterOpened().pipe(
       tap(() =>
         this.setOnClose(() => {
-          this.editorService.loadExternalModels().subscribe(() => this.sidebarService.workspace.refresh());
+          this.sidebarService.workspace.refresh();
           this.router.navigate([{outlets: {'import-namespaces': null}}]);
         }),
       ),
-      switchMap(() => this.modelApiService.uploadZip(zip)),
+      switchMap(() => this.modelApiService.validateImportPackage(zip)),
       tap(result => {
-        this.session.parseResponse(result);
+        this.session.parseResponse(zip, result);
         this.session.state.validating$.next(false);
       }),
       catchError(e => of(this.session.state.validating$.error(e))),
@@ -90,17 +90,6 @@ export class NamespacesManagerService {
         const cb = () => this.router.navigate([{outlets: {'export-namespaces': null}}]);
         this.setOnClose(cb);
       }),
-    );
-  }
-
-  validateExport(files: {namespace: string; files: string[]}[]) {
-    this.session.state.validating$.next(true);
-    return this.modelApiService.validateFilesForExport(files).pipe(
-      tap(result => {
-        this.session.parseResponse(result);
-        this.session.state.validating$.next(false);
-      }),
-      catchError(err => of(this.session.state.validating$.error(err))),
     );
   }
 

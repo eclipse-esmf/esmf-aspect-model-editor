@@ -14,7 +14,7 @@
 <div>
   <h3>{{ 'SETTINGS_DIALOG.SUB_NODE.COPYRIGHT' | translate }}</h3>
   <form [formGroup]="form">
-    <textarea formControlName="copyright" (keyup)="onTextChange()" data-cy="copyright"></textarea>
+    <textarea (keyup)="onTextChange()" formControlName="copyright" data-cy="copyright"></textarea>
     @if (copyrightControl.errors?.startsWithoutHash) {
       <mat-error>All lines must begin with a #</mat-error>
     }

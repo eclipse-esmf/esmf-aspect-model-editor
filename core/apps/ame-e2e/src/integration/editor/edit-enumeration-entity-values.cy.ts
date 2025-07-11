@@ -41,7 +41,7 @@ import {cyHelp} from '../../support/helpers';
 
 describe('Test enumeration entity instance', () => {
   it('should create nested entity instances', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
     cy.startModelling()
       .wait(500)
@@ -260,7 +260,7 @@ describe('Test enumeration entity instance', () => {
 
   it('import new model with entity instances', () => {
     cy.visitDefault();
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.fixture('entity-values-enumeration')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
@@ -432,7 +432,7 @@ describe('Test enumeration entity instance', () => {
 
   it('delete all entity instance one by one', () => {
     cy.visitDefault();
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.fixture('entity-values-enumeration')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
@@ -557,7 +557,7 @@ describe('Test enumeration entity instance', () => {
     cy.startModelling()
       .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
-      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
+      .then(() => cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_clearDataTypeBtn).click({force: true}))
       .then(() =>
@@ -578,7 +578,7 @@ describe('Test enumeration entity instance', () => {
     cy.startModelling()
       .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
-      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
+      .then(() => cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
       .then(() => cy.get(FIELD_clearDataTypeBtn).click({force: true}))
@@ -604,7 +604,7 @@ describe('Test enumeration entity instance', () => {
     cy.startModelling()
       .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
-      .then(() => cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
+      .then(() => cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'}))
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
       .then(() => cy.clickAddShapePlusIcon('Entity1'))

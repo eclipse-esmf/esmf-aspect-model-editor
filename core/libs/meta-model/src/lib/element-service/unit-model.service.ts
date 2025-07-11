@@ -14,17 +14,16 @@
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 
-import {BaseModelService} from './base-model-service';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService, UnitRenderService} from '@ame/mx-graph';
-import {BaseMetaModelElement, DefaultQuantityKind, DefaultUnit} from '@ame/meta-model';
-import {SammU} from '@ame/vocabulary';
+import {DefaultQuantityKind, DefaultUnit, NamedElement, SammU} from '@esmf/aspect-model-loader';
+import {BaseModelService} from './base-model-service';
 
 declare const sammUDefinition: any;
 
 @Injectable({providedIn: 'root'})
 export class UnitModelService extends BaseModelService {
   private get sammU(): SammU {
-    return this.modelService.currentRdfModel.SAMMU();
+    return this.loadedFile?.rdfModel.sammU;
   }
 
   constructor(
@@ -36,7 +35,7 @@ export class UnitModelService extends BaseModelService {
     super();
   }
 
-  isApplicable(metaModelElement: BaseMetaModelElement): boolean {
+  isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultUnit;
   }
 
@@ -54,7 +53,12 @@ export class UnitModelService extends BaseModelService {
     modelElement.quantityKinds = form.quantityKindsChipList.map(qk => {
       const urn = `${this.sammU.getNamespace()}${qk}`;
       const quantityKind = sammUDefinition.quantityKinds[qk];
-      return new DefaultQuantityKind(modelElement.metaModelVersion, urn, qk, quantityKind.label);
+      return new DefaultQuantityKind({
+        metaModelVersion: modelElement.metaModelVersion,
+        aspectModelUrn: urn,
+        name: qk,
+        label: quantityKind.label,
+      });
     });
 
     this.unitRenderer.update({cell, form});

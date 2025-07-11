@@ -12,7 +12,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DefaultEntityInstance} from '@ame/meta-model';
+import {DefaultEntityInstance} from '@esmf/aspect-model-loader';
 
 @Pipe({
   standalone: true,
@@ -23,9 +23,11 @@ export class EntityInstancePipe implements PipeTransform {
     if (!value || value.length === 0) {
       return null;
     }
+
     if (!search) {
       return value;
     }
+
     return value.filter(val => val.name.includes(search));
   }
 }

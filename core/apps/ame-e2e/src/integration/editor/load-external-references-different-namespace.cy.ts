@@ -16,15 +16,15 @@
 
 describe('Test drag and drop', () => {
   it('Loading property element with there children from external file with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
@@ -72,15 +72,15 @@ describe('Test drag and drop', () => {
   });
 
   it('Loading model with "Entity" -> "Property (external, with children, different namespace)" relations', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
@@ -122,15 +122,15 @@ describe('Test drag and drop', () => {
   });
 
   it('Loading operation element with there children from external file with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.different:1.0.0': ['external-operation-reference-with-children.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {
           namespace: 'org.eclipse.different:1.0.0',
           'file-name': 'external-operation-reference-with-children.txt',
@@ -200,15 +200,15 @@ describe('Test drag and drop', () => {
   });
 
   it('Loading characteristic element with there children from external file with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.different:1.0.0': ['external-characteristic-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
       },
       {
@@ -257,15 +257,15 @@ describe('Test drag and drop', () => {
   });
 
   it('Loading entity element with there children from external file with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.different:1.0.0': ['external-entity-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
@@ -313,15 +313,15 @@ describe('Test drag and drop', () => {
   });
 
   it('Loading unit element from external file with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.different:1.0.0': ['external-unit-reference.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-unit-reference.txt'},
       },
       {
@@ -359,8 +359,8 @@ describe('Test drag and drop', () => {
   });
 
   it('Loading different elements from several external files with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.different:1.0.0': [
         'external-entity-reference.txt',
         'external-characteristic-reference.txt',
@@ -374,7 +374,7 @@ describe('Test drag and drop', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
@@ -385,7 +385,7 @@ describe('Test drag and drop', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
       },
       {
@@ -396,7 +396,7 @@ describe('Test drag and drop', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
@@ -407,7 +407,7 @@ describe('Test drag and drop', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-operation-reference.txt'},
       },
       {
@@ -418,7 +418,7 @@ describe('Test drag and drop', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-trait-reference.txt'},
       },
       {
@@ -429,7 +429,7 @@ describe('Test drag and drop', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-constraint-reference.txt'},
       },
       {

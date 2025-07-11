@@ -14,8 +14,8 @@
 import {ENTER} from '@angular/cdk/keycodes';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {DefaultQuantityKind, DefaultUnit} from '@ame/meta-model';
-import {map, Observable} from 'rxjs';
+import {DefaultQuantityKind, DefaultUnit} from '@esmf/aspect-model-loader';
+import {Observable, map} from 'rxjs';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {LoadedFilesService} from '@ame/cache';
 import {
   AASXGenerationModalComponent,
   EditorService,
@@ -21,22 +21,26 @@ import {
   GenerateOpenApiComponent,
   LanguageSelectorModalComponent,
 } from '@ame/editor';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {finalize, first} from 'rxjs/operators';
-import {LoadingScreenOptions, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {ModelService} from '@ame/rdf/services';
-import {catchError, map, Observable, switchMap, throwError} from 'rxjs';
-import {PreviewDialogComponent} from '../../preview-dialog';
-import {NamespacesCacheService} from '@ame/cache';
+import {LoadingScreenOptions, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
+import {Injectable} from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {Observable, catchError, map, switchMap, throwError} from 'rxjs';
+import {finalize, first} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
+import {PreviewDialogComponent} from '../../preview-dialog';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GenerateHandlingService {
   private get currentCachedFile() {
-    return this.namespaceCacheService.currentCachedFile;
+    return this.currentFile.cachedFile;
+  }
+
+  private get currentFile() {
+    return this.loadedFilesService.currentLoadedFile;
   }
 
   constructor(
@@ -45,9 +49,9 @@ export class GenerateHandlingService {
     private modelService: ModelService,
     private notificationsService: NotificationsService,
     private loadingScreenService: LoadingScreenService,
-    private namespaceCacheService: NamespacesCacheService,
     private translate: LanguageTranslationService,
     private fileHandlingService: FileHandlingService,
+    private loadedFilesService: LoadedFilesService,
   ) {
     if (!environment.production) {
       window['angular.generateHandlingService'] = this;
@@ -99,7 +103,7 @@ export class GenerateHandlingService {
     };
 
     this.loadingScreenService.open(loadingScreenOptions);
-    return this.editorService.generateJsonSample(this.modelService.currentRdfModel).pipe(
+    return this.editorService.generateJsonSample(this.loadedFilesService.currentLoadedFile?.rdfModel).pipe(
       first(),
       catchError(() => {
         this.notificationsService.error({
@@ -113,7 +117,9 @@ export class GenerateHandlingService {
         this.openPreview(
           this.translate.language.GENERATE_HANDLING.JSON_PAYLOAD_PREVIEW,
           this.formatStringToJson(data),
-          !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-sample.json`,
+          !this.loadedFilesService?.currentLoadedFile?.aspect
+            ? this.currentFile.name
+            : `${this.loadedFilesService?.currentLoadedFile?.aspect.name}-sample.json`,
         );
       }),
       finalize(() => this.loadingScreenService.close()),
@@ -140,7 +146,7 @@ export class GenerateHandlingService {
       .pipe(
         first(),
         switchMap((language: string) =>
-          this.editorService.generateJsonSchema(this.modelService.currentRdfModel, language).pipe(
+          this.editorService.generateJsonSchema(this.loadedFilesService.currentLoadedFile?.rdfModel, language).pipe(
             first(),
             catchError(() => {
               this.notificationsService.error({
@@ -155,7 +161,9 @@ export class GenerateHandlingService {
               this.openPreview(
                 this.translate.language.GENERATE_HANDLING.JSON_SCHEMA_PREVIEW,
                 this.formatStringToJson(data),
-                !this.modelService.loadedAspect ? this.currentCachedFile.fileName : `${this.modelService.loadedAspect.name}-schema.json`,
+                !this.loadedFilesService?.currentLoadedFile?.aspect
+                  ? this.currentFile.name
+                  : `${this.loadedFilesService?.currentLoadedFile?.aspect.name}-schema.json`,
               );
             }),
           ),
@@ -168,7 +176,7 @@ export class GenerateHandlingService {
       .synchronizeModelToRdf()
       .pipe(finalize(() => subscription$.unsubscribe()))
       .subscribe((): void => {
-        if (!this.modelService.getLoadedAspectModel().aspect) {
+        if (!this.loadedFilesService?.currentLoadedFile?.aspect) {
           this.notificationsService.info({
             title: this.translate.language.GENERATE_HANDLING.NO_ASPECT_TITLE,
             timeout: 5000,

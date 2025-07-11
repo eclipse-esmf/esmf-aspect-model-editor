@@ -12,16 +12,16 @@
  */
 
 import {FiltersService} from '@ame/loader-filters';
-import {DefaultEntity} from '@ame/meta-model';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
+import {LanguageTranslationService} from '@ame/translation';
 import {Injectable} from '@angular/core';
+import {DefaultEntity} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
 import {EntityInheritanceConnector, MultiShapeConnector} from '../models';
 import {EntityPropertyConnectionHandler} from './entity--property.service';
 import {PropertyAbstractPropertyConnectionHandler} from './property--abstract-property.service';
-import {mxgraph} from 'mxgraph-factory';
-import {LanguageTranslationService} from '@ame/translation';
 
 @Injectable({
   providedIn: 'root',

@@ -10,16 +10,16 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Component, Inject, ViewChild} from '@angular/core';
-import {CdkTextareaAutosize} from '@angular/cdk/text-field';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {saveAs} from 'file-saver';
-import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
 import {LanguageTranslateModule} from '@ame/translation';
+import {CdkTextareaAutosize} from '@angular/cdk/text-field';
+import {Component, Inject, ViewChild} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {saveAs} from 'file-saver';
 
 interface PreviewDialogOptions {
   title?: string;

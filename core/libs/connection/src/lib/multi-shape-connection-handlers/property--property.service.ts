@@ -11,14 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultProperty} from '@ame/meta-model';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
-import {Injectable} from '@angular/core';
-import {MultiShapeConnector, PropertyInheritanceConnector} from '../models';
-import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslationService} from '@ame/translation';
+import {Injectable} from '@angular/core';
+import {DefaultProperty} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {MultiShapeConnector, PropertyInheritanceConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +38,7 @@ export class PropertyPropertyConnectionHandler
   }
 
   public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
-    if (parentMetaModel.isPredefined()) {
+    if (parentMetaModel.isPredefined) {
       this.notificationsService.warning({title: this.translate.language.NOTIFICATION_SERVICE.CHILD_FOR_PREDEFINED_ELEMENT_ERROR});
       return;
     }
@@ -60,7 +60,7 @@ export class PropertyPropertyConnectionHandler
       return;
     }
 
-    if (childMetaModel.extendedElement) {
+    if (childMetaModel.getExtends()) {
       this.notificationService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.ILLEGAL_OPERATION_MESSAGE,
         message: this.translate.language.NOTIFICATION_SERVICE.PROPERTY_EXTENSION_CONFLICT,

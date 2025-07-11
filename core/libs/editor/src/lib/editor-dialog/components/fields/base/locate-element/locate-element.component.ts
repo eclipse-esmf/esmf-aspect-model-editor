@@ -11,20 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnDestroy} from '@angular/core';
-import {EditorModelService} from '../../../../editor-model.service';
 import {MxGraphService} from '@ame/mx-graph';
-import {BaseMetaModelElement} from '@ame/meta-model';
+import {Component, OnDestroy} from '@angular/core';
+import {NamedElement} from '@esmf/aspect-model-loader';
 import {Subscription} from 'rxjs';
+import {EditorModelService} from '../../../../editor-model.service';
 
 @Component({
   selector: 'ame-locate-element',
   template: `@if (element) {
     <button
-      mat-icon-button
       [matTooltip]="'EDITOR_CANVAS.SHAPE_SETTING.LOCATE_ELEMENT' | translate"
-      matTooltipPosition="above"
       (click)="locate()"
+      mat-icon-button
+      matTooltipPosition="above"
     >
       <mat-icon>gps_fixed</mat-icon>
     </button>
@@ -38,7 +38,7 @@ import {Subscription} from 'rxjs';
   ],
 })
 export class LocateElementComponent implements OnDestroy {
-  public element: BaseMetaModelElement;
+  public element: NamedElement;
   private subscription = new Subscription();
 
   constructor(

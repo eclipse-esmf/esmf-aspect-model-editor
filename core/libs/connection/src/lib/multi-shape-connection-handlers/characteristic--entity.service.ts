@@ -11,29 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamespacesCacheService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/cache';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {NotificationsService} from '@ame/shared';
+import {Injectable} from '@angular/core';
 import {
   DefaultCharacteristic,
   DefaultEntity,
+  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
-  DefaultUnit,
-  DefaultEntityInstance,
   DefaultStructuredValue,
-} from '@ame/meta-model';
-import {MxGraphService, MxGraphAttributeService, MxGraphShapeOverlayService, MxGraphHelper} from '@ame/mx-graph';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {Injectable} from '@angular/core';
-import {MultiShapeConnector} from '../models';
+  DefaultUnit,
+} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
-import {NotificationsService} from '@ame/shared';
+import {MultiShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CharacteristicEntityConnectionHandler implements MultiShapeConnector<DefaultCharacteristic, DefaultEntity> {
   get currentCachedFile() {
-    return this.namespacesCacheService.currentCachedFile;
+    return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
   constructor(
@@ -41,8 +41,8 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private sammLangService: SammLanguageSettingsService,
-    private namespacesCacheService: NamespacesCacheService,
     private notificationsService: NotificationsService,
+    private loadedFiles: LoadedFilesService,
   ) {}
 
   connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultEntity, parent: mxgraph.mxCell, child: mxgraph.mxCell): void {
@@ -61,9 +61,10 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
     // Add icon when you simply connect an enumeration with an entity.
     if (parentMetaModel instanceof DefaultEnumeration) {
       // TODO: User should be informed if he wants to change the entity, otherwise, all the values will be deleted.
-      if (!parentMetaModel.createdFromEditor) {
-        parentMetaModel.values = [];
-      }
+      // TODO: This should be done in the future.
+      // if (!parentMetaModel.createdFromEditor) {
+      //   parentMetaModel.values = [];
+      // }
       this.mxGraphShapeOverlayService.removeOverlay(parent, MxGraphHelper.getRightOverlayButton(parent));
       this.mxGraphShapeOverlayService.addComplexEnumerationShapeOverlay(parent);
       this.mxGraphShapeOverlayService.addBottomShapeOverlay(parent);
@@ -73,7 +74,7 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
       MxGraphHelper.updateLabel(parent, this.mxGraphAttributeService.graph, this.sammLangService);
     }
 
-    if (parentMetaModel.dataType?.isComplex()) {
+    if (parentMetaModel.dataType?.isComplexType()) {
       this.updateChildPropertiesLabels(parent);
     }
 

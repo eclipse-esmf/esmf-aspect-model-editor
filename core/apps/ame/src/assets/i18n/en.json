@@ -185,16 +185,12 @@
   },
   "EXPORT_NAMESPACE_DIALOG": {
     "TITLE": "Export namespace(s) to package",
-    "INFO_CONTENT": "Please select the namespace(s) that you would like to export as an Aspect Model Package (zip).",
+    "INFO_CONTENT": "Please select the file that you would like to export as an Aspect Model Package (zip). All the dependencies of that file will be included into the Aspect Model Package (zip).",
     "CANCEL": "Cancel",
-    "NEXT": "Next"
+    "NEXT": "Export"
   },
   "VALIDATION_RESULT_DIALOG": {
     "TITLE": "Validation result",
-    "HAVE_VALIDATED": "Namespaces have been validated and ",
-    "CAN_BE_EXPORTED": "can be exported",
-    "CAN_NOT_EXPORTED": "Namespaces can not be exported due to ",
-    "MISSING_FILES": "missing files",
     "DISMISS_BUTTON": "Dismiss",
     "EXPORT": "Export",
     "CLIP_BUTTON": {
@@ -413,7 +409,8 @@
     "CONSTRAINT": "A limitation applied to a Characteristic",
     "TRAIT": "Encapsulates multiple limitations to Characteristics",
     "OPERATION": "An Operation represents an action that can be triggered on the Aspect",
-    "EVENT": "A definition of an Event supported by the Aspect"
+    "EVENT": "A definition of an Event supported by the Aspect",
+    "ENTITY_INSTANCE": "An instance of an Entity"
   },
   "EDITOR_CANVAS": {
     "FITTING_PROGRESS": "Fit the complete model on the current view",

@@ -11,16 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {ActivatedRoute, Router} from '@angular/router';
-import {NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
-import {MatIconModule} from '@angular/material/icon';
+import {NotificationModel, NotificationType, NotificationsService} from '@ame/shared';
 import {LanguageTranslateModule} from '@ame/translation';
-import {MatButtonModule} from '@angular/material/button';
-import {MatTableModule} from '@angular/material/table';
 import {CommonModule} from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatTableModule} from '@angular/material/table';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   standalone: true,

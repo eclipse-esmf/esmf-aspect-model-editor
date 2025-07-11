@@ -11,12 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {EdgeStyles, MxGraphHelper} from '@ame/mx-graph';
 import {ShapeGeometry, basicShapeGeometry, circleShapeGeometry, smallBasicShapeGeometry} from '@ame/shared';
-import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
 import {
-  BaseMetaModelElement,
-  DefaultAbstractEntity,
-  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -27,8 +25,9 @@ import {
   DefaultProperty,
   DefaultTrait,
   DefaultUnit,
-} from '@ame/meta-model';
-import {EdgeStyles, MxGraphHelper} from '@ame/mx-graph';
+  NamedElement,
+} from '@esmf/aspect-model-loader';
+import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
 
 const abstractRelations = {
   DefaultAbstractEntity: ['DefaultAbstractEntity'],
@@ -59,8 +58,6 @@ export class DefaultFilter implements FilterLoader {
   cache = {};
   filterType: ModelFilter = ModelFilter.DEFAULT;
   visibleElements = [
-    DefaultAbstractEntity,
-    DefaultAbstractProperty,
     DefaultAspect,
     DefaultCharacteristic,
     DefaultConstraint,
@@ -73,16 +70,18 @@ export class DefaultFilter implements FilterLoader {
     DefaultUnit,
   ];
 
-  filter(rootElements: BaseMetaModelElement[]): ModelTree<BaseMetaModelElement>[] {
+  constructor(public loadedFiles: LoadedFilesService) {}
+
+  filter(rootElements: NamedElement[]): ModelTree<NamedElement>[] {
     return rootElements.map(element => this.generateTree(element));
   }
 
-  generateTree(element: BaseMetaModelElement, options?: ModelTreeOptions): ModelTree<BaseMetaModelElement> {
+  generateTree(element: NamedElement, options?: ModelTreeOptions): ModelTree<NamedElement> {
     if (!element) {
       return null;
     }
 
-    const elementTree: ModelTree<BaseMetaModelElement> = {
+    const elementTree: ModelTree<NamedElement> = {
       element,
       fromParentArrow: this.getArrowStyle(element, options?.parent),
       children: new ChildrenArray(),
@@ -91,7 +90,7 @@ export class DefaultFilter implements FilterLoader {
     };
 
     for (const child of element.children) {
-      if (child.isExternalReference() && element.isExternalReference()) {
+      if (this.loadedFiles.isElementExtern(child) && this.loadedFiles.isElementExtern(element)) {
         continue;
       }
 
@@ -105,7 +104,7 @@ export class DefaultFilter implements FilterLoader {
     return elementTree;
   }
 
-  getArrowStyle(element: BaseMetaModelElement, parent: BaseMetaModelElement): ArrowStyle {
+  getArrowStyle(element: NamedElement, parent: NamedElement): ArrowStyle {
     if (!parent || !element) {
       return null;
     }
@@ -114,14 +113,14 @@ export class DefaultFilter implements FilterLoader {
       ? EdgeStyles.entityValueEntityEdge
       : MxGraphHelper.isOptionalProperty(element as DefaultProperty, parent)
         ? EdgeStyles.optionalPropertyEdge
-        : element instanceof DefaultAbstractProperty && parent instanceof DefaultProperty
+        : element instanceof DefaultProperty && element.isAbstract && parent instanceof DefaultProperty
           ? EdgeStyles.abstractPropertyEdge
           : abstractRelations[parent?.className]?.includes(element?.className)
             ? EdgeStyles.abstractElementEdge
             : EdgeStyles.defaultEdge;
   }
 
-  getShapeGeometry(element: BaseMetaModelElement): ShapeGeometry {
+  getShapeGeometry(element: NamedElement): ShapeGeometry {
     if (element instanceof DefaultTrait) {
       return circleShapeGeometry;
     }
@@ -133,12 +132,12 @@ export class DefaultFilter implements FilterLoader {
     return basicShapeGeometry;
   }
 
-  getMxGraphStyle(element: BaseMetaModelElement): string {
+  getMxGraphStyle(element: NamedElement): string {
     if (element instanceof DefaultAspect) {
       return ModelStyle.ASPECT;
-    } else if (element instanceof DefaultProperty) {
+    } else if (element instanceof DefaultProperty && !element.isAbstract) {
       return ModelStyle.PROPERTY;
-    } else if (element instanceof DefaultAbstractProperty) {
+    } else if (element instanceof DefaultProperty && element.isAbstract) {
       return ModelStyle.ABSTRACT_PROPERTY;
     } else if (element instanceof DefaultOperation) {
       return ModelStyle.OPERATION;
@@ -148,7 +147,7 @@ export class DefaultFilter implements FilterLoader {
       return ModelStyle.TRAIT;
     } else if (element instanceof DefaultCharacteristic) {
       return ModelStyle.CHARACTERISTIC;
-    } else if (element instanceof DefaultAbstractEntity) {
+    } else if (element instanceof DefaultEntity && element.isAbstractEntity()) {
       return ModelStyle.ABSTRACT_ENTITY;
     } else if (element instanceof DefaultEntity) {
       return ModelStyle.ENTITY;

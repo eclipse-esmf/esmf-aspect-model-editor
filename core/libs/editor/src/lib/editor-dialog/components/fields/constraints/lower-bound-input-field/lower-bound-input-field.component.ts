@@ -10,12 +10,11 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, DefaultConstraint} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {DataTypeService} from '@ame/shared';
-import {Samm, SammC} from '@ame/vocabulary';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {DefaultConstraint, NamedElement, Samm, SammC} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -35,7 +34,7 @@ export class LowerBoundInputFieldComponent extends InputFieldComponent<DefaultCo
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe((modelElement: BaseMetaModelElement) => {
+    this.subscription = this.getMetaModelData().subscribe((modelElement: NamedElement) => {
       this.lowerBoundDefinitionList = modelElement
         ? new SammC(new Samm(modelElement.metaModelVersion)).getLowerBoundDefinitionList()
         : null;
@@ -56,7 +55,7 @@ export class LowerBoundInputFieldComponent extends InputFieldComponent<DefaultCo
       this.fieldName,
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
-        disabled: this.metaModelElement.isExternalReference(),
+        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       }),
     );
   }

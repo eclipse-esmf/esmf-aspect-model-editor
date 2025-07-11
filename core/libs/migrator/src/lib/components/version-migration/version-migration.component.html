@@ -28,7 +28,7 @@
         </p>
         @for (file of namespace.value; track file) {
           <p class="namespace__file">
-            <mat-icon [hidden]="!file.migrated" class="namespace__file__icon">check</mat-icon>
+            <mat-icon class="namespace__file__icon" [hidden]="!file.migrated">check</mat-icon>
             <span>{{ file.name }}</span>
           </p>
         }

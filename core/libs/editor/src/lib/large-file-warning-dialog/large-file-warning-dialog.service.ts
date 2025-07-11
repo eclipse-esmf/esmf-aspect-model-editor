@@ -13,8 +13,8 @@
 
 import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {LargeFileWarningComponent} from './large-file-warning-dialog';
 import {Observable, of} from 'rxjs';
+import {LargeFileWarningComponent} from './large-file-warning-dialog';
 
 @Injectable({providedIn: 'root'})
 export class LargeFileWarningService {

@@ -13,8 +13,8 @@
 
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {SettingsFormService} from '../../../services';
 import {finalize} from 'rxjs';
+import {SettingsFormService} from '../../../services';
 
 export const automatedWorkflowControlName = 'automatedWorkflow';
 

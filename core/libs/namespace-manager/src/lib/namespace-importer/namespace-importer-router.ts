@@ -13,11 +13,10 @@
 
 import {Routes} from '@angular/router';
 import {ErrorComponent} from '../shared';
-import {FileConflictComponent, ImportSummaryComponent, ImportValidateComponent} from './components';
+import {ImportComponent, ImportValidateComponent} from './components';
 
 export const NAMESPACE_IMPORT_ROUTES: Routes = [
   {path: '', component: ImportValidateComponent, outlet: 'import-namespaces'},
-  {path: 'conflict', component: FileConflictComponent, outlet: 'import-namespaces'},
-  {path: 'summary', component: ImportSummaryComponent, outlet: 'import-namespaces'},
+  {path: 'import', component: ImportComponent, outlet: 'import-namespaces'},
   {path: 'error', component: ErrorComponent, outlet: 'import-namespaces'},
 ];

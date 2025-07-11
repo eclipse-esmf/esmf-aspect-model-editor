@@ -26,20 +26,31 @@ import {checkAspectAndChildrenConstraint} from '../../../support/utils';
 
 describe('Test drag and drop ext constraint', () => {
   it('can add Constraint from external reference with same namespace', () => {
-    const fileName = 'external-constraint-reference.txt';
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.examples.aspect:1.0.0': [fileName],
+    const fileName = 'external-constraint-reference.ttl';
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+      statusCode: 200,
+      body: {
+        'org.eclipse.examples.aspect': [
+          {
+            version: '1.0.0',
+            models: [
+              {
+                model: fileName,
+                aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#ExternalConstraint',
+                existing: true,
+              },
+            ],
+          },
+        ],
+      },
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
-        headers: {
-          namespace: 'org.eclipse.examples.aspect:1.0.0',
-          'file-name': fileName,
-        },
+        url: 'http://localhost:9090/ame/api/models',
+        headers: {'Aspect-Model-Urn': 'urn:samm:org.eclipse.examples.aspect:1.0.0#ExternalConstraint'},
       },
       {
         fixture: `/external-reference/same-namespace/without-childrens/${fileName}`,
@@ -48,7 +59,7 @@ describe('Test drag and drop ext constraint', () => {
 
     cy.visitDefault().then(() =>
       cy
-        .startModelling()
+        .startModelling(true)
         .then(() => cyHelp.checkAspectDefaultExists())
         .then(() => cy.get(SELECTOR_workspaceBtn).click())
         .then(() => cy.get(SELECTOR_openNamespacesButton).contains(fileName).click({force: true}))

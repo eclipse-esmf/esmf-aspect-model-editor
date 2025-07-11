@@ -438,10 +438,6 @@ export interface NotificationDialog {
 }
 export interface ValidationResultDialog {
   TITLE: string;
-  HAVE_VALIDATED: string;
-  CAN_BE_EXPORTED: string;
-  CAN_NOT_EXPORTED: string;
-  MISSING_FILES: string;
   DISMISS_BUTTON: string;
   EXPORT: string;
   CLIP_BUTTON: ClipButton;

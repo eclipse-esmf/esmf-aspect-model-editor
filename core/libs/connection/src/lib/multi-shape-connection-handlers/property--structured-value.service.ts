@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultProperty, DefaultStructuredValue} from '@ame/meta-model';
-import {Injectable} from '@angular/core';
-import {MultiShapeConnector} from '../models';
-import {mxgraph} from 'mxgraph-factory';
-import {NotificationsService} from '@ame/shared';
-import {PropertyCharacteristicConnectionHandler} from './property--characteristic.service';
 import {MxGraphHelper} from '@ame/mx-graph';
+import {NotificationsService} from '@ame/shared';
+import {Injectable} from '@angular/core';
+import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {MultiShapeConnector} from '../models';
+import {PropertyCharacteristicConnectionHandler} from './property--characteristic.service';
 
 @Injectable({
   providedIn: 'root',

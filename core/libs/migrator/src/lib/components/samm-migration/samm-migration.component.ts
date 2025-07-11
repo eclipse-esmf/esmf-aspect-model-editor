@@ -11,14 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {map} from 'rxjs';
-import {TranslateModule} from '@ngx-translate/core';
-import {AsyncPipe} from '@angular/common';
-import {MatProgressBar} from '@angular/material/progress-bar';
 import {CdkScrollable} from '@angular/cdk/scrolling';
-import {MatDialogTitle, MatDialogContent} from '@angular/material/dialog';
+import {AsyncPipe} from '@angular/common';
+import {Component} from '@angular/core';
+import {MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {MatProgressBar} from '@angular/material/progress-bar';
+import {ActivatedRoute} from '@angular/router';
+import {TranslateModule} from '@ngx-translate/core';
+import {map} from 'rxjs';
 
 @Component({
   templateUrl: './samm-migration.component.html',

@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {LoadingScreenOptions} from '@ame/shared';
 import {LanguageTranslateModule} from '@ame/translation';
+import {Component, Inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({

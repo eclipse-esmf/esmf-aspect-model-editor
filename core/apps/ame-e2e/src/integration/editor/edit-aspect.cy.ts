@@ -14,6 +14,7 @@
 
 /// <reference types="Cypress" />
 
+import 'cypress-real-events';
 import {
   BUTTON_renameModelConfirm,
   FIELD_descriptionen,
@@ -36,7 +37,6 @@ import {
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
-import 'cypress-real-events';
 
 describe('Test editing Aspect', () => {
   it('can add new aspect model', () => {
@@ -212,7 +212,7 @@ describe('Test editing Aspect', () => {
   });
 
   it('can delete existing aspect', () => {
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
     });
     cy.shapeExists('NewAspect')

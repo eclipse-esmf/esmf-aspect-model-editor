@@ -23,49 +23,49 @@ export function connectElements(parent: string, child: string, expected: boolean
 export function checkAspectAndChildrenEntity(aspect) {
   expect(aspect.name).to.equal('AspectDefault');
   expect(aspect.properties).to.be.length(1);
-  expect(aspect.properties[0].property.name).to.equal('property1');
-  expect(aspect.properties[0].property.characteristic.name).to.equal('Characteristic1');
-  expect(aspect.properties[0].property.characteristic.dataType.name).to.equal('ExternalEntity');
+  expect(aspect.properties[0].name).to.equal('property1');
+  expect(aspect.properties[0].characteristic.name).to.equal('Characteristic1');
+  expect(aspect.properties[0].characteristic.dataType.name).to.equal('ExternalEntity');
 }
 
 export function checkAspectAndChildrenConstraint(aspect) {
   expect(aspect.name).to.equal('AspectDefault');
   expect(aspect.properties).to.be.length(1);
-  expect(aspect.properties[0].property.name).to.equal('property1');
-  expect(aspect.properties[0].property.characteristic.name).to.equal('Trait1');
-  expect(aspect.properties[0].property.characteristic.baseCharacteristic.name).to.equal('Characteristic1');
-  expect(aspect.properties[0].property.characteristic.constraints[0].name).to.equal('ExternalConstraint');
+  expect(aspect.properties[0].name).to.equal('property1');
+  expect(aspect.properties[0].characteristic.name).to.equal('Trait1');
+  expect(aspect.properties[0].characteristic.baseCharacteristic.name).to.equal('Characteristic1');
+  expect(aspect.properties[0].characteristic.constraints[0].name).to.equal('ExternalConstraint');
 }
 
 export function checkAspect(aspect) {
   expect(aspect.name).to.equal('AspectDefault');
   expect(aspect.properties).to.be.length(1);
-  expect(aspect.properties[0].property.name).to.equal('property1');
-  expect(aspect.properties[0].property.characteristic.name).to.equal('ExternalCharacteristic');
+  expect(aspect.properties[0].name).to.equal('property1');
+  expect(aspect.properties[0].characteristic.name).to.equal('ExternalCharacteristic');
 }
 
 export function checkRelationParentChild(parentModel, parent: string, child: string) {
   expect(parentModel.name).to.equal(parent);
   expect(parentModel.properties).to.be.length(2);
-  expect(parentModel.properties[1].property.name).to.equal(child);
+  expect(parentModel.properties[1].name).to.equal(child);
 }
 
 export function checkAspectTree(aspect) {
   expect(aspect.name).to.equal('AspectDefault');
   expect(aspect.properties).to.be.length(2);
-  expect(aspect.properties[0].property.name).to.equal('property1');
-  expect(aspect.properties[0].property.characteristic.name).to.equal('Characteristic1');
-  expect(aspect.properties[1].property.name).to.equal('externalPropertyWithChildren');
-  expect(aspect.properties[1].property.characteristic.name).to.equal('ChildrenCharacteristic1');
+  expect(aspect.properties[0].name).to.equal('property1');
+  expect(aspect.properties[0].characteristic.name).to.equal('Characteristic1');
+  expect(aspect.properties[1].name).to.equal('externalPropertyWithChildren');
+  expect(aspect.properties[1].characteristic.name).to.equal('ChildrenCharacteristic1');
 
-  const entity = aspect.properties[1].property.characteristic.dataType;
+  const entity = aspect.properties[1].characteristic.dataType;
   expect(entity.name).to.equal('ChildrenEntity1');
   expect(entity.properties).to.be.length(2);
-  expect(entity.properties[0].property.name).to.equal('childrenProperty1');
-  expect(entity.properties[1].property.name).to.equal('childrenProperty2');
-  expect(entity.properties[0].property.characteristic.name).to.equal('ChildrenCharacteristic2');
-  expect(entity.properties[0].property.characteristic.dataType.name).to.equal('ChildrenEntity2');
-  expect(entity.properties[1].property.characteristic.name).to.equal('Boolean');
+  expect(entity.properties[0].name).to.equal('childrenProperty1');
+  expect(entity.properties[1].name).to.equal('childrenProperty2');
+  expect(entity.properties[0].characteristic.name).to.equal('ChildrenCharacteristic2');
+  expect(entity.properties[0].characteristic.dataType.name).to.equal('ChildrenEntity2');
+  expect(entity.properties[1].characteristic.name).to.equal('Boolean');
 }
 
 export const dragExternalReferenceWithChildren = (selector: string, x: number, y: number) => {

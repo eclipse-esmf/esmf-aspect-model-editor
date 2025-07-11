@@ -14,7 +14,7 @@
 <div [formGroup]="parentForm">
   <mat-form-field [floatLabel]="getControl('value')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
     <mat-label for="value">value</mat-label>
-    <input matInput name="value" [formControl]="getControl('value')" data-cy="value" />
+    <input [formControl]="getControl('value')" matInput name="value" data-cy="value" />
     @if (getControl('value').errors?.required) {
       <mat-error>Value is required</mat-error>
     }

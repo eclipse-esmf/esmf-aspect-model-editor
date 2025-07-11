@@ -12,7 +12,7 @@
  */
 
 import {Observable} from 'rxjs';
-import {StartupPayload, StartupData} from './startup-options';
+import {StartupData, StartupPayload} from './startup-options';
 
 export type LockUnlockPayload = Omit<StartupPayload, 'fromWorkspace' | 'editElement'>;
 

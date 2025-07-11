@@ -11,19 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
-import {
-  BaseMetaModelElement,
-  DefaultAbstractProperty,
-  DefaultEntityInstance,
-  DefaultProperty,
-  Entity,
-  EntityInstanceProperty,
-  OverWrittenProperty,
-} from '@ame/meta-model';
-import {BaseModelService} from './base-model-service';
+import {CacheUtils} from '@ame/cache';
 import {EntityValueRenderService, MxGraphHelper} from '@ame/mx-graph';
+import {Injectable} from '@angular/core';
+import {DefaultEntity, DefaultEntityInstance, DefaultProperty, Entity, NamedElement, Value} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class EntityValueModelService extends BaseModelService {
@@ -31,15 +24,15 @@ export class EntityValueModelService extends BaseModelService {
     super();
   }
 
-  isApplicable(metaModelElement: BaseMetaModelElement): boolean {
+  isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultEntityInstance;
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}): void {
     const modelElement = MxGraphHelper.getModelElement<DefaultEntityInstance>(cell);
     // update name
-    const aspectModelUrn = this.modelService.currentRdfModel.getAspectModelUrn();
-    this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
+    const aspectModelUrn = this.loadedFile?.rdfModel?.getAspectModelUrn();
+    this.currentCachedFile.updateElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
     modelElement.name = form.name;
     modelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 
@@ -61,43 +54,34 @@ export class EntityValueModelService extends BaseModelService {
     this.entityValueRenderService.delete(cell);
   }
 
-  private updatePropertiesEntityValues(metaModelElement: DefaultEntityInstance, form: {[key: string]: any}): void {
+  private updatePropertiesEntityValues(entityInstance: DefaultEntityInstance, form: {[key: string]: any}): void {
     const {entityValueProperties} = form;
-    metaModelElement.properties = [];
 
+    entityInstance.assertions = new Map();
     Object.keys(entityValueProperties).forEach(key => {
-      const property = this.findPropertyInEntities(this.currentCachedFile.getCachedEntities(), key);
-
+      const property = this.findPropertyInEntities(CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntity), key);
       if (!property) return;
 
-      const propertyValues = entityValueProperties[key].map(({value, language}) => ({
-        key: property,
-        value,
-        language,
-      }));
-
-      metaModelElement.properties.push(...propertyValues);
+      entityValueProperties[key].map(({value, language}) => {
+        entityInstance.removeAssertionLanguage(property.aspectModelUrn, language);
+        entityInstance.setAssertion(property.aspectModelUrn, new Value(value, property.characteristic?.dataType, language));
+      });
     });
   }
 
-  private findPropertyInEntities(
-    entities: Array<Entity>,
-    propertyName: string,
-  ): OverWrittenProperty<DefaultProperty | DefaultAbstractProperty> {
+  private findPropertyInEntities(entities: Array<Entity>, propertyName: string): DefaultProperty {
     for (const entity of entities) {
-      const property = entity.properties.find(prop => prop.property.name === propertyName);
-      if (property) {
-        return property;
-      }
+      const property = entity.properties.find(prop => prop.name === propertyName);
+      if (property) return property;
     }
 
     return null;
   }
 
   private removeObsoleteEntityValues(metaModelElement: DefaultEntityInstance): void {
-    metaModelElement.properties.forEach((property: EntityInstanceProperty) => {
-      if (property.value instanceof DefaultEntityInstance && !property.value.parents?.length) {
-        this.deleteEntityValue(property.value, metaModelElement);
+    metaModelElement.getTuples().forEach(([, value]) => {
+      if (value instanceof DefaultEntityInstance) {
+        this.deleteEntityValue(value, metaModelElement);
       }
     });
   }

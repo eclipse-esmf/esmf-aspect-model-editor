@@ -18,8 +18,8 @@ import {cyHelp} from '../../support/helpers';
 
 describe('Test load external reference with cross references', () => {
   it('Loading different elements from cross referenced file one way', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.digitaltwin:1.0.0': [
         'external-entity-reference.txt',
         'external-characteristic-reference.txt',
@@ -38,7 +38,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
@@ -49,7 +49,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
       },
       {
@@ -60,7 +60,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
@@ -71,7 +71,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-operation-reference.txt'},
       },
       {
@@ -83,7 +83,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
@@ -94,7 +94,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
       },
       {
@@ -105,7 +105,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
@@ -116,7 +116,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-operation-reference.txt'},
       },
       {
@@ -182,8 +182,8 @@ describe('Test load external reference with cross references', () => {
   });
 
   it('Loading different elements from cross referenced file mixing', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.digitaltwin:1.0.0': [
         'external-entity-reference.txt',
         'external-property-reference.txt',
@@ -196,7 +196,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-entity-reference.txt'},
       },
       {
@@ -207,7 +207,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-property-reference.txt'},
       },
       {
@@ -218,7 +218,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.digitaltwin:1.0.0', 'file-name': 'external-operation-reference.txt'},
       },
       {
@@ -230,7 +230,7 @@ describe('Test load external reference with cross references', () => {
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.different:1.0.0', 'file-name': 'external-characteristic-reference.txt'},
       },
       {

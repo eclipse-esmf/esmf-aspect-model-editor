@@ -12,11 +12,13 @@
  */
 
 import {FiltersService} from '@ame/loader-filters';
-import {Property, ModelElementNamingService, DefaultCharacteristic} from '@ame/meta-model';
-import {MxGraphService, MxGraphShapeOverlayService, MxGraphHelper} from '@ame/mx-graph';
+import {ModelElementNamingService} from '@ame/meta-model';
+import {MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {ElementCreatorService} from '@ame/shared';
 import {Injectable} from '@angular/core';
-import {SingleShapeConnector} from '../models';
+import {DefaultCharacteristic, Property} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {SingleShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +29,7 @@ export class PropertyConnectionHandler implements SingleShapeConnector<Property>
     private modelElementNamingService: ModelElementNamingService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private filtersService: FiltersService,
+    private elementCreator: ElementCreatorService,
   ) {}
 
   public connect(property: Property, source: mxgraph.mxCell) {
@@ -34,7 +37,7 @@ export class PropertyConnectionHandler implements SingleShapeConnector<Property>
       return;
     }
 
-    property.characteristic = DefaultCharacteristic.createInstance();
+    property.characteristic = this.elementCreator.createEmptyElement(DefaultCharacteristic);
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(property.characteristic);
     const child = this.mxGraphService.renderModelElement(
       this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),

@@ -11,30 +11,31 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import * as locale from 'locale-codes';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {EditorDialogValidators} from '../../../editor-dialog';
-import {finalize, first} from 'rxjs/operators';
-import {map, Subscription} from 'rxjs';
-import {saveAs} from 'file-saver';
-import {EditorService} from '../../../editor.service';
+import {LoadedFilesService} from '@ame/cache';
 import {ModelService} from '@ame/rdf/services';
-import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import {MatInputModule} from '@angular/material/input';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
+import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
 import {CommonModule} from '@angular/common';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatOptionModule} from '@angular/material/core';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {saveAs} from 'file-saver';
+import * as locale from 'locale-codes';
+import {Subscription, map} from 'rxjs';
+import {finalize, first} from 'rxjs/operators';
+import {EditorDialogValidators} from '../../../editor-dialog';
+import {EditorService} from '../../../editor.service';
 
 export interface OpenApi {
   language: string;
@@ -75,6 +76,8 @@ export interface OpenApi {
 })
 export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   @ViewChild('dropArea') dropArea: ElementRef;
+
+  private loadedFilesService = inject(LoadedFilesService);
 
   form: FormGroup;
   languages: locale.ILocale[];
@@ -249,7 +252,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     const openApiSpec = this.form.value as OpenApi;
     this.subscriptions.add(
       this.editorService
-        .generateOpenApiSpec(this.modelService.currentRdfModel, openApiSpec)
+        .generateOpenApiSpec(this.loadedFilesService.currentLoadedFile?.rdfModel, openApiSpec)
         .pipe(
           first(),
           map(data => this.handleGeneratedSpec(data, openApiSpec)),
@@ -266,7 +269,7 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     const fileType = spec.output === 'yaml' ? 'text/yaml' : 'application/json;charset=utf-8';
     const fileData = spec.output === 'yaml' ? data : JSON.stringify(data, null, 2);
 
-    const aspectName = this.modelService.currentRdfModel.aspectModelFileName.slice(0, -4);
+    const aspectName = this.loadedFilesService.currentLoadedFile.name.slice(0, -4);
     const fileName = `${aspectName}-open-api.${spec.output}`;
     saveAs(new Blob([fileData], {type: fileType}), fileName);
   }

@@ -14,10 +14,10 @@
 <mat-form-field [floatLabel]="getControl('minValue')?.disabled ? 'always' : 'auto'" appearance="fill">
   <mat-label for="minValue">minValue</mat-label>
   <input
-    matInput
-    name="minValue"
     [formControl]="getControl('minValue')"
     [placeholder]="getPlaceholder(getValueWithoutUrnDefinition(rangeConstraintDataType?.getUrn()))"
+    matInput
+    name="minValue"
     data-cy="minValue"
   />
 </mat-form-field>

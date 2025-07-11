@@ -11,5 +11,5 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './element-list.pipe';
 export * from './element-list.component';
+export * from './element-list.pipe';

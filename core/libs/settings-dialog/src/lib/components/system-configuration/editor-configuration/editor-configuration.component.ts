@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
-import {MatSlideToggleChange} from '@angular/material/slide-toggle';
 import {ThemeService} from '@ame/mx-graph';
-import {Settings} from '../../../model';
+import {Component, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {MatSlideToggleChange} from '@angular/material/slide-toggle';
+import {Settings} from '../../../model';
 import {SettingsFormService} from '../../../services';
 
 export const editorConfigurationControlName = 'editorConfiguration';

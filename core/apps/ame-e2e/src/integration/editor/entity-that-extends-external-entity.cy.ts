@@ -17,7 +17,7 @@ import {SELECTOR_notificationsBtn, SELECTOR_notificationsDialogCloseButton} from
 
 describe('Test loading aspect with extended external Entity', () => {
   it('should display an error that external reference is not included in the namespace file structure', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
     cy.fixture('/external-reference/same-namespace/model-with-extended-entity.txt')
       .then(rdfString => cy.loadModel(rdfString))
@@ -38,15 +38,15 @@ describe('Test loading aspect with extended external Entity', () => {
   });
 
   it('should load a model with an entity that extends an external entity in same namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.examples:1.0.0': ['example.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {
           namespace: 'org.eclipse.examples:1.0.0',
           'file-name': 'example.txt',
@@ -78,15 +78,15 @@ describe('Test loading aspect with extended external Entity', () => {
   });
 
   it('should load a model with an entity that extends an external entity in different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.different:1.0.0': ['example.txt'],
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {
           namespace: 'org.eclipse.different:1.0.0',
           'file-name': 'example.txt',

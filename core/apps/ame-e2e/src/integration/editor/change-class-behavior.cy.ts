@@ -26,7 +26,6 @@ import {
 } from '../../support/constants';
 
 const constraintClassTypes = [
-  'Constraint',
   'EncodingConstraint',
   'FixedPointConstraint',
   'LanguageConstraint',
@@ -63,13 +62,12 @@ describe('Constraint', () => {
   for (const field of fields) {
     describe(`${field.name} Field`, () => {
       it('should create and rename Constraint', () => {
-        cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {});
         cy.visitDefault();
         cy.startModelling()
           .then(() => cy.shapeExists('AspectDefault'))
           .then(() => cy.get(SELECTOR_elementBtn).click())
           .then(() => cy.dragElement(SELECTOR_ecConstraint, 350, 300))
-          .then(() => cy.dbClickShape('Constraint1'))
+          .then(() => cy.dbClickShape('EncodingConstraint1'))
           .then(() => cy.get(field.selector).clear({force: true}).type(field.value, {force: true}));
       });
 
@@ -90,7 +88,7 @@ describe('Characteristic', () => {
   for (const field of fields) {
     describe(`${field.name} Field`, () => {
       it('should create and rename Characteristic', () => {
-        cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {});
+        cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
         cy.visitDefault();
         cy.startModelling()
           .then(() => cy.shapeExists('AspectDefault'))

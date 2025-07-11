@@ -12,19 +12,18 @@
  */
 
 import {Component, Inject, OnInit} from '@angular/core';
+import {MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {Router} from '@angular/router';
 import {NAMESPACES_SESSION} from '../../../shared';
 import {NamespacesSessionInterface} from '../../../shared/models';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {CdkScrollable} from '@angular/cdk/scrolling';
-import {MatDialogTitle, MatDialogContent} from '@angular/material/dialog';
 
 @Component({
   selector: 'ame-import-validate',
   templateUrl: './validate.components.html',
   styleUrls: [`validate.components.scss`],
   standalone: true,
-  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatProgressSpinner],
+  imports: [MatDialogTitle, MatDialogContent, MatProgressSpinner],
 })
 export class ImportValidateComponent implements OnInit {
   constructor(
@@ -39,11 +38,7 @@ export class ImportValidateComponent implements OnInit {
           return;
         }
 
-        if (this.importSession.conflictFiles.replace.length) {
-          this.router.navigate([{outlets: {'import-namespaces': 'conflict'}}]);
-        } else {
-          this.router.navigate([{outlets: {'import-namespaces': 'summary'}}]);
-        }
+        this.router.navigate([{outlets: {'import-namespaces': 'import'}}]);
       },
       error: () => this.router.navigate([{outlets: {'import-namespaces': 'error'}}]),
     });

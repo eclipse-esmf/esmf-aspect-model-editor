@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './shape-connectors.interface';
-export * from './inheritance-connector';
 export * from './entity-inheritance-connector';
+export * from './inheritance-connector';
 export * from './property-inheritance-connector';
+export * from './shape-connectors.interface';

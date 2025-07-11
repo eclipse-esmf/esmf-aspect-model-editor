@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {ListProperties, RdfListService} from '../../rdf-list';
-import {BaseVisitor} from '../base-visitor';
-import {DefaultCharacteristic, DefaultEntity} from '@ame/meta-model';
+import {LoadedFilesService} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
-import {RdfNodeService} from '../../rdf-node';
-import {RdfService} from '@ame/rdf/services';
+import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
+import {Injectable} from '@angular/core';
+import {DefaultCharacteristic, DefaultEntity, Samm} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
-import {Samm} from '@ame/vocabulary';
+import {ListProperties, RdfListService} from '../../rdf-list';
+import {RdfNodeService} from '../../rdf-node';
+import {BaseVisitor} from '../base-visitor';
 
 @Injectable()
 export class EntityVisitor extends BaseVisitor<DefaultEntity> {
@@ -30,18 +30,19 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
     public rdfNodeService: RdfNodeService,
     public graphService: MxGraphService,
     public rdfListService: RdfListService,
-    public rdfService: RdfService,
+    public loadedFiles: LoadedFilesService,
   ) {
-    super(rdfService);
+    super(loadedFiles);
   }
 
   visit(entity: DefaultEntity): DefaultEntity {
-    if (entity.isPredefined()) {
+    if (entity.isPredefined) {
       return null;
     }
 
-    this.store = this.rdfService.currentRdfModel.store;
-    this.samm = this.rdfService.currentRdfModel.samm;
+    this.store = this.loadedFiles.currentLoadedFile.rdfModel.store;
+    this.samm = this.loadedFiles.currentLoadedFile.rdfModel.samm;
+
     this.setPrefix(entity.aspectModelUrn);
     const newAspectModelUrn = `${entity.aspectModelUrn.split('#')[0]}#${entity.name}`;
     this.updateParents(entity);
@@ -53,21 +54,21 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
 
   private updateProperties(entity: DefaultEntity) {
     this.rdfNodeService.update(entity, {
-      preferredName: entity.getAllLocalesPreferredNames()?.map(language => ({
+      preferredName: getPreferredNamesLocales(entity)?.map(language => ({
         language,
         value: entity.getPreferredName(language),
       })),
-      description: entity.getAllLocalesDescriptions()?.map(language => ({
+      description: getDescriptionsLocales(entity)?.map(language => ({
         language,
         value: entity.getDescription(language),
       })),
-      see: entity.getSeeReferences() || [],
+      see: entity.getSee() || [],
     });
 
     if (entity.properties?.length) {
       this.rdfListService.push(entity, ...entity.properties);
       for (const property of entity.properties) {
-        !property.property?.extendedElement && this.setPrefix(property.property.aspectModelUrn);
+        !property?.extends_ && this.setPrefix(property.aspectModelUrn);
       }
     } else {
       this.rdfListService.createEmpty(entity, ListProperties.properties);
@@ -75,21 +76,19 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
   }
 
   private updateParents(entity: DefaultEntity) {
-    const parents = entity.parents.filter(metaModelElement => metaModelElement instanceof DefaultCharacteristic);
-
-    for (const parent of parents) {
-      this.rdfNodeService.update(parent, {dataType: entity.aspectModelUrn});
+    for (const parent of entity.parents || []) {
+      parent instanceof DefaultCharacteristic && this.rdfNodeService.update(parent, {dataType: entity.aspectModelUrn});
     }
   }
 
   private updateExtends(entity: DefaultEntity) {
-    if (entity.extendedElement?.aspectModelUrn) {
+    if (entity.getExtends()?.aspectModelUrn) {
       this.store.addQuad(
         DataFactory.namedNode(entity.aspectModelUrn),
-        this.samm.ExtendsProperty(),
-        DataFactory.namedNode(entity.extendedElement.aspectModelUrn),
+        this.samm.Extends(),
+        DataFactory.namedNode(entity.getExtends().aspectModelUrn),
       );
-      this.setPrefix(entity.extendedElement.aspectModelUrn);
+      this.setPrefix(entity.getExtends().aspectModelUrn);
     }
   }
 }

@@ -17,6 +17,10 @@ import {describe, expect, it} from '@jest/globals';
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
 import {provideMockObject} from '../../../../jest-helpers';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('DomainModelToRdfService', () => {
   let service: DomainModelToRdfService;
 

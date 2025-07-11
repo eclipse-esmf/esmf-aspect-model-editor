@@ -33,19 +33,19 @@
     <!-- Aspect Model Language Selection -->
     <section class="aspect-model-selection">
       <h3>Aspect Model</h3>
-      <div formArrayName="aspectModel" class="language-scroll">
+      <div class="language-scroll" formArrayName="aspectModel">
         @for (aspectModelFormGroup of aspectModelFormArray.controls; track aspectModelFormGroup; let i = $index) {
           <div class="row" [formGroupName]="i">
             <mat-form-field>
               <input
-                matInput
                 [matAutocomplete]="auto"
+                matInput
                 formControlName="language"
                 placeholder="{{ 'SETTINGS_DIALOG.LANGUAGES.SELECT_LANGUAGE' | translate }}"
                 data-cy="langCode"
               />
               @if (aspectModelFormArray.controls.length > 1) {
-                <button (click)="removeLanguage(i)" matSuffix mat-icon-button class="delete-icon">
+                <button class="delete-icon" (click)="removeLanguage(i)" matSuffix mat-icon-button>
                   <mat-icon>delete</mat-icon>
                 </button>
               }
@@ -68,7 +68,7 @@
 
     <!-- Add Language Button -->
     <div class="add-language-box">
-      <button mat-flat-button (click)="addLanguage()" class="add-language-box__button" data-cy="addLang">
+      <button class="add-language-box__button" (click)="addLanguage()" mat-flat-button data-cy="addLang">
         <mat-icon>add</mat-icon>
         {{ 'SETTINGS_DIALOG.LANGUAGES.ADD_LANGUAGE' | translate }}
       </button>

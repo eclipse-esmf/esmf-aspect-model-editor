@@ -10,9 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {PredefinedEntities, PredefinedProperties} from '@ame/vocabulary';
 import {Injectable, Injector, ProviderToken} from '@angular/core';
-import {BaseMetaModelElement} from '../aspect-meta-model';
+import {NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
 import {AbstractEntityModelService} from './abstract-entity-model.service';
 import {AbstractPropertyModelService} from './abstract-property-model.service';
 import {AspectModelService} from './aspect-model.service';
@@ -23,10 +22,10 @@ import {EntityModelService} from './entity-model.service';
 import {EntityValueModelService} from './entity-value-model.service';
 import {EventModelService} from './event-model.service';
 import {OperationModelService} from './operation-model.service';
+import {FileResourceRemoveService, Point3dRemoveService, PredefinedRemove, TimeSeriesEntityRemoveService} from './predefined-elements';
 import {PropertyModelService} from './property-model.service';
 import {TraitModelService} from './trait-model.service';
 import {UnitModelService} from './unit-model.service';
-import {FileResourceRemoveService, Point3dRemoveService, PredefinedRemove, TimeSeriesEntityRemoveService} from './predefined-elements';
 
 @Injectable({
   providedIn: 'root',
@@ -35,23 +34,23 @@ export class ModelRootService {
   private readonly predefinedModels: {[key: string]: ProviderToken<PredefinedRemove>} = {};
   constructor(private injector: Injector) {
     this.predefinedModels = {
-      [PredefinedEntities.TimeSeriesEntity]: TimeSeriesEntityRemoveService,
-      [PredefinedProperties.value]: TimeSeriesEntityRemoveService,
-      [PredefinedProperties.timestamp]: TimeSeriesEntityRemoveService,
+      [PredefinedEntitiesEnum.TimeSeriesEntity]: TimeSeriesEntityRemoveService,
+      [PredefinedPropertiesEnum.value]: TimeSeriesEntityRemoveService,
+      [PredefinedPropertiesEnum.timestamp]: TimeSeriesEntityRemoveService,
       ['Timestamp']: TimeSeriesEntityRemoveService,
-      [PredefinedProperties.x]: Point3dRemoveService,
-      [PredefinedProperties.y]: Point3dRemoveService,
-      [PredefinedProperties.z]: Point3dRemoveService,
-      [PredefinedEntities.Point3d]: Point3dRemoveService,
-      [PredefinedProperties.resource]: FileResourceRemoveService,
-      [PredefinedProperties.mimeType]: FileResourceRemoveService,
-      [PredefinedEntities.FileResource]: FileResourceRemoveService,
+      [PredefinedPropertiesEnum.x]: Point3dRemoveService,
+      [PredefinedPropertiesEnum.y]: Point3dRemoveService,
+      [PredefinedPropertiesEnum.z]: Point3dRemoveService,
+      [PredefinedEntitiesEnum.Point3d]: Point3dRemoveService,
+      [PredefinedPropertiesEnum.resource]: FileResourceRemoveService,
+      [PredefinedPropertiesEnum.mimeType]: FileResourceRemoveService,
+      [PredefinedEntitiesEnum.FileResource]: FileResourceRemoveService,
       ['ResourcePath']: FileResourceRemoveService,
       ['MimeType']: FileResourceRemoveService,
     };
   }
 
-  public getElementModelService(modelElement: BaseMetaModelElement): BaseModelService {
+  public getElementModelService(modelElement: NamedElement): BaseModelService {
     // Order is important
     const elementServices: any[] = [
       AbstractEntityModelService,
@@ -78,11 +77,11 @@ export class ModelRootService {
     return null;
   }
 
-  public isPredefined(modelElement: BaseMetaModelElement) {
-    return (modelElement as any)?.isPredefined?.() && this.predefinedModels[modelElement.name];
+  public isPredefined(modelElement: NamedElement) {
+    return modelElement?.isPredefined && this.predefinedModels[modelElement.name];
   }
 
-  public getPredefinedService(modelElement: BaseMetaModelElement) {
+  public getPredefinedService(modelElement: NamedElement) {
     if (!this.isPredefined(modelElement)) {
       return null;
     }

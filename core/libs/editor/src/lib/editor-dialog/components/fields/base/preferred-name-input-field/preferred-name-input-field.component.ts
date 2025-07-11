@@ -13,14 +13,14 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, CanExtend, DefaultCharacteristic, DefaultProperty} from '@ame/meta-model';
+import {DefaultCharacteristic, DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-preferred-name-input-field',
   templateUrl: './preferred-name-input-field.component.html',
 })
-export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
+export class PreferredNameInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
   public fieldName = 'preferredName';
 
   ngOnInit(): void {
@@ -28,15 +28,15 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMe
   }
 
   getCurrentValue(key: string, locale: string) {
-    if (this.metaModelElement instanceof DefaultCharacteristic && this.metaModelElement.isPredefined()) {
+    if (this.metaModelElement instanceof DefaultCharacteristic && this.metaModelElement.isPredefined) {
       return this.metaModelElement?.getPreferredName(locale) || '';
     }
 
-    if (this.metaModelElement instanceof CanExtend) {
+    if (this.metaModelElement instanceof HasExtends) {
       return (
         this.previousData?.[key] ||
         this.metaModelElement?.getPreferredName(locale) ||
-        this.metaModelElement.extendedPreferredName?.get(locale) ||
+        this.metaModelElement.extends_.preferredNames?.get(locale) ||
         ''
       );
     }
@@ -47,28 +47,36 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMe
   isInherited(locale: string): boolean {
     const control = this.parentForm.get(this.fieldName + locale);
     return (
-      this.metaModelElement instanceof CanExtend &&
-      this.metaModelElement.extendedPreferredName?.get(locale) &&
-      control.value === this.metaModelElement.extendedPreferredName?.get(locale)
+      this.metaModelElement instanceof HasExtends &&
+      this.metaModelElement.extends_?.preferredNames?.get(locale) &&
+      control.value === this.metaModelElement.extends_?.preferredNames?.get(locale)
     );
   }
 
+  getPreferredNamesLocales(): string[] {
+    return Array.from(this.metaModelElement?.preferredNames?.keys());
+  }
+
+  getDescriptionsLocales(): string[] {
+    return Array.from(this.metaModelElement?.preferredNames?.keys());
+  }
+
   private isDisabled() {
-    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extendedElement;
+    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extends_;
   }
 
   private setPreferredNameNameControls() {
-    const allLocalesPreferredNames = this.metaModelElement?.getAllLocalesPreferredNames();
+    const allLocalesPreferredNames = Array.from(this.metaModelElement?.preferredNames?.keys());
 
     if (!allLocalesPreferredNames.length) {
-      this.metaModelElement.addPreferredName('en', '');
+      this.metaModelElement.preferredNames.set('en', '');
     }
 
-    this.metaModelElement?.getAllLocalesPreferredNames()?.forEach(locale => {
+    Array.from(this.metaModelElement?.preferredNames?.keys())?.forEach(locale => {
       const key = `preferredName${locale}`;
       const control = this.parentForm.get(key);
       const previousDisabled = control?.disabled;
-      const isNowPredefined = (this.metaModelElement as DefaultCharacteristic)?.isPredefined?.();
+      const isNowPredefined = this.metaModelElement?.isPredefined;
 
       if (previousDisabled && !isNowPredefined) {
         control?.patchValue(this.getCurrentValue(key, locale));
@@ -80,7 +88,8 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<BaseMe
         key,
         new FormControl({
           value: this.getCurrentValue(key, locale),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
+          disabled:
+            this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
         }),
       );
     });

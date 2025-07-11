@@ -12,11 +12,11 @@
  */
 
 import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
-import {Component, Inject} from '@angular/core';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
 import {LanguageTranslateModule} from '@ame/translation';
+import {Component, Inject} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   standalone: true,

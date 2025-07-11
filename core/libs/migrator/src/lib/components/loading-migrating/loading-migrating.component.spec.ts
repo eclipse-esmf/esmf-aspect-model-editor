@@ -11,17 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
-import {MatDialogModule} from '@angular/material/dialog';
-import {RouterTestingModule} from '@angular/router/testing';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MigratorApiService} from '@ame/api';
-import {LoadingMigratingComponent} from './loading-migrating.component';
-import {provideMockObject} from '../../../../../../jest-helpers';
-import {of} from 'rxjs';
-import {Router} from '@angular/router';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {Router} from '@angular/router';
+import {RouterTestingModule} from '@angular/router/testing';
 import {TranslateModule} from '@ngx-translate/core';
+import {of} from 'rxjs';
+import {provideMockObject} from '../../../../../../jest-helpers';
+import {LoadingMigratingComponent} from './loading-migrating.component';
 
 describe('LoadingMigratingComponent', () => {
   let fixture: ComponentFixture<LoadingMigratingComponent>;

@@ -12,11 +12,11 @@
  */
 
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {DialogOptions} from './confirm-dialog.service';
-import {ConfirmDialogEnum} from '../models/confirm-dialog.enum';
-import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {ConfirmDialogEnum} from '../models/confirm-dialog.enum';
+import {DialogOptions} from './confirm-dialog.service';
 
 @Component({
   standalone: true,

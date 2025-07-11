@@ -12,10 +12,10 @@
  */
 
 import {Component, Input, inject} from '@angular/core';
-import {DefaultEvent} from '@ame/meta-model';
+import {FormGroup} from '@angular/forms';
+import {DefaultEvent} from '@esmf/aspect-model-loader';
 import {ModelElementEditorComponent} from '..';
 import {EditorModelService} from '../../editor-model.service';
-import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'ame-event',

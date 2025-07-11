@@ -11,11 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="selectedMetaModelElement?.isExternalReference() ? 'always' : 'auto'" appearance="fill">
+<mat-form-field [floatLabel]="this.loadedFilesService.isElementExtern(selectedMetaModelElement) ? 'always' : 'auto'" appearance="fill">
   <mat-label for="characteristicName">Characteristic class</mat-label>
   <mat-select
-    [disabled]="selectedMetaModelElement?.isExternalReference()"
     #characteristicName
+    [disabled]="this.loadedFilesService.isElementExtern(selectedMetaModelElement)"
     [ngModel]="metaModelClassName"
     (ngModelChange)="onCharacteristicChange($event)"
     name="characteristicName"

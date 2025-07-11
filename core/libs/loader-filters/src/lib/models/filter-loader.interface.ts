@@ -11,17 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from '@ame/meta-model';
 import {ShapeGeometry} from '@ame/shared';
+import {NamedElement} from '@esmf/aspect-model-loader';
 
 /**
  * Generates class type which implements an interface
  */
-export type ClassReference<T = BaseMetaModelElement, Args extends any[] = any[]> = new (...args: Args) => T;
+export type ClassReference<T = NamedElement, Args extends any[] = any[]> = new (...args: Args) => T;
 
 export type ArrowStyle = 'entityValueEntityEdge' | 'optionalPropertyEdge' | 'abstractPropertyEdge' | 'abstractElementEdge' | 'defaultEdge';
 
-export class ChildrenArray<T extends ModelTree<BaseMetaModelElement>> extends Array<ModelTree<BaseMetaModelElement>> {
+export class ChildrenArray<T extends ModelTree<NamedElement>> extends Array<ModelTree<NamedElement>> {
   push(...items: T[]): number {
     let pushed = 0;
     for (const item of items) {
@@ -36,7 +36,7 @@ export class ChildrenArray<T extends ModelTree<BaseMetaModelElement>> extends Ar
   }
 }
 
-export interface ModelTree<T extends BaseMetaModelElement> {
+export interface ModelTree<T extends NamedElement> {
   /**
    * The meta model element which will be rendered
    */
@@ -55,7 +55,7 @@ export interface ModelTree<T extends BaseMetaModelElement> {
   /**
    * ModelTree structures which represents the element's children
    */
-  children?: ChildrenArray<ModelTree<BaseMetaModelElement>>;
+  children?: ChildrenArray<ModelTree<NamedElement>>;
   /**
    * Identifier for used filtering
    */
@@ -66,15 +66,15 @@ export type ModelTreeOptions = Partial<{
   /**
    * Parent from the filtered structure
    */
-  parent: BaseMetaModelElement;
+  parent: NamedElement;
   /**
    * Parent node from the filtered structure
    */
-  parentNode: ModelTree<BaseMetaModelElement>;
+  parentNode: ModelTree<NamedElement>;
   /**
    * Any class in this list will not be considered for the next filter loop
    */
-  notAllowed: ClassReference<BaseMetaModelElement>[];
+  notAllowed: ClassReference<NamedElement>[];
 }>;
 
 export enum ModelFilter {
@@ -82,7 +82,7 @@ export enum ModelFilter {
   PROPERTIES = 'properties',
 }
 
-export interface FilterLoader<T extends BaseMetaModelElement = BaseMetaModelElement> {
+export interface FilterLoader<T extends NamedElement = NamedElement> {
   cache: {[key: string]: boolean};
   filterType: ModelFilter;
   visibleElements: ClassReference<T>[];

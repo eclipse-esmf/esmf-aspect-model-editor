@@ -24,10 +24,10 @@
   <div class="search">
     <mat-form-field appearance="outline">
       <mat-icon matPrefix>search</mat-icon>
-      <input (keyup)="search($event)" matInput [placeholder]="'SIDEBAR.ACTIONS.SEARCH_ELEMENTS' | translate" data-cy="searchElements" />
+      <input [placeholder]="'SIDEBAR.ACTIONS.SEARCH_ELEMENTS' | translate" (keyup)="search($event)" matInput data-cy="searchElements" />
     </mat-form-field>
 
-    <button [matMenuTriggerFor]="filter" mat-mini-fab class="filter">
+    <button class="filter" [matMenuTriggerFor]="filter" mat-mini-fab>
       <mat-icon>filter_list</mat-icon>
     </button>
   </div>
@@ -35,11 +35,11 @@
   <div class="elements">
     @for (key of elementsOrder; track key) {
       @if (searched[key].length && elements[key].displayed) {
-        <div [class.expanded]="!elements[key].hidden" class="elements__section">
+        <div class="elements__section" [class.expanded]="!elements[key].hidden">
           <div class="elements__header">
             <h3 class="elements__title">{{ elements[key].plural }} ({{ searched[key].length }})</h3>
             @if (searched[key].length > 4) {
-              <span (click)="elements[key].hidden = !elements[key].hidden" class="show-elements">{{
+              <span class="show-elements" (click)="elements[key].hidden = !elements[key].hidden">{{
                 elements[key].hidden ? ('SIDEBAR.ACTIONS.SHOW_ALL' | translate) : ('SIDEBAR.ACTIONS.SHOW_LESS' | translate)
               }}</span>
             }
@@ -48,10 +48,10 @@
           <ng-container>
             @for (element of elements[key].hidden ? searched[key].slice(0, 5) : searched[key]; track element.aspectModelUrn) {
               <ame-draggable-element
+                class="element"
                 [class.disabled]="elementImported(element)"
                 [type]="key"
                 [urn]="element.aspectModelUrn"
-                class="element"
                 [matTooltip]="'SIDEBAR.DRAG_INTO_VIEW' | translate"
               >
                 <!-- TODO: Language to be replaced with language translation key  -->
@@ -64,14 +64,14 @@
     }
   </div>
 
-  <mat-menu #filter class="filter-menu">
+  <mat-menu class="filter-menu" #filter>
     @for (key of elementsOrder; track key) {
       @if (searched[key].length) {
         <mat-checkbox
+          class="mat-menu-item"
           [checked]="elements[key].displayed"
           (click)="toggleFilter($event, key)"
           labelPosition="before"
-          class="mat-menu-item"
           >{{ elements[key].plural }}</mat-checkbox
         >
       }

@@ -12,7 +12,7 @@ Every element created in the editor can be modified.
 
 NOTE: Elements that are references from models in another namespace, can only be edited when working in the namespace they belong to.
 
-The naming conventions for Aspect Model elements are defined in the https://eclipse-esmf.github.io/samm-specification/2.1.0/modeling-guidelines.html#naming-rules[Naming Rules (SAMM 2.1.0)^,opts=nofollow].
+The naming conventions for Aspect Model elements are defined in the https://eclipse-esmf.github.io/samm-specification/2.2.0/modeling-guidelines.html#naming-rules[Naming Rules (SAMM 2.2.0)^,opts=nofollow].
 The Aspect Model Editor guides you to follow all these SAMM naming conventions for your Aspect Models.
 
 [[work-with-workspace-sidebar]]

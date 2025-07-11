@@ -13,7 +13,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {DefaultEntityInstance, DefaultState, EntityInstance} from '@ame/meta-model';
+import {DefaultEntityInstance, DefaultState, EntityInstance} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -45,7 +45,7 @@ export class DefaultValueEntityInputFieldComponent extends InputFieldComponent<D
       this.fieldName,
       new FormControl({
         value: defaultValueString || this.metaModelElement?.defaultValue?.['name'] || '',
-        disabled: this.metaModelElement?.isExternalReference(),
+        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       }),
     );
 

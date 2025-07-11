@@ -23,7 +23,7 @@
   <section class="elements">
     @for (element of elements; track element?.model?.aspectModelUrn) {
       @if (isFiltered(element, search.value)) {
-        <div [class.selected]="isSelected(element)" (click)="selectedElement = element" class="element">
+        <div class="element" [class.selected]="isSelected(element)" (click)="selectedElement = element">
           <span class="element-icon element-icon--big" [ngClass]="getClass(element.model)">{{ getFirstLetter(element.model) }}</span>
           <div class="element-content">
             <span class="element-name">{{ element.model.name }}</span>

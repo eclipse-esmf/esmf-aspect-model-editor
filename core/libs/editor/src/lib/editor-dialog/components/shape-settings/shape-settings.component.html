@@ -14,12 +14,9 @@
 <div class="shape-settings__header">
   <div class="column-container">
     <h3 class="shape-settings__header-title">
-      <ame-shared-settings-title
-        [metaModelElementInput]="metaModelElement"
-        [metaModelClassNameInput]="metaModelClassName"
-      ></ame-shared-settings-title>
+      <ame-shared-settings-title [metaModelElementInput]="metaModelElement"></ame-shared-settings-title>
     </h3>
-    @if (metaModelElement?.isExternalReference()) {
+    @if (loadedFilesService.isElementExtern(metaModelElement)) {
       <p class="shape-settings__header-description">
         {{ metaModelElement?.aspectModelUrn?.split('#')[0] }}
       </p>
@@ -28,7 +25,7 @@
 
   <div class="actions">
     <ame-locate-element></ame-locate-element>
-    <button mat-icon-button tabindex="-1" (click)="onClose()">
+    <button (click)="onClose()" mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -88,7 +85,7 @@
   }
   @if (metaModelDialogService.isSaveButtonEnabled()) {
     <button
-      [disabled]="!formGroup.valid || metaModelElement?.isExternalReference()"
+      [disabled]="!formGroup.valid || loadedFilesService.isElementExtern(metaModelElement)"
       (click)="onSave()"
       mat-flat-button
       color="primary"

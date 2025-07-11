@@ -11,7 +11,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-@if (metaModelElement?.symbol || !metaModelElement?.isPredefined()) {
+@if (metaModelElement?.symbol || !metaModelElement?.isPredefined) {
   <div>
     <mat-form-field [floatLabel]="getControl('symbol')?.disabled ? 'always' : 'auto'" appearance="fill">
       <mat-label for="symbol">symbol</mat-label>

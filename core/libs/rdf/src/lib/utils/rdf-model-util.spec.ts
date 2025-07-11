@@ -11,8 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, expect} from '@jest/globals';
-import {RdfModelUtil} from './rdf-model-util';
 import {
   DefaultAspect,
   DefaultCharacteristic,
@@ -25,11 +23,12 @@ import {
   DefaultProperty,
   DefaultRangeConstraint,
   DefaultState,
+  RdfModel,
   Type,
-} from '@ame/meta-model';
-import {RdfModel} from './rdf-model';
-import {Samm, SammC} from '@ame/vocabulary';
+} from '@esmf/aspect-model-loader';
+import {describe, expect} from '@jest/globals';
 import {NamedNode} from 'n3';
+import {RdfModelUtil} from './rdf-model-util';
 
 jest.mock('./rdf-model', () => ({
   RdfModel: jest.fn().mockImplementation(() => ({
@@ -70,19 +69,11 @@ describe('Test RDF Model Util', () => {
   });
 
   describe('resolveAccurateType', () => {
-    const expectedElementUrn = 'baseMetaModelElementUrn';
+    const expectedElementUrn = 'NamedNodeUrn';
     const rdfModel = new RdfModel(null, null, null);
 
     test('should return DefaultLengthConstraint urn', () => {
-      const metaModelElement = DefaultLengthConstraint.createInstance();
-      const samm: Samm = <Samm>{};
-      const sammC: SammC = <SammC>{
-        isMinValueProperty: value => !!value,
-        isMaxValueProperty: value => !!value,
-      };
-
-      rdfModel.SAMM = () => samm;
-      rdfModel.SAMMC = () => sammC;
+      const metaModelElement = new DefaultLengthConstraint({name: '', aspectModelUrn: '', metaModelVersion: ''});
 
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
@@ -91,15 +82,7 @@ describe('Test RDF Model Util', () => {
     });
 
     test('should return DefaultFixedPointConstraint urn', () => {
-      const metaModelElement = DefaultFixedPointConstraint.createInstance();
-      const samm: Samm = <Samm>{};
-      const sammC: SammC = <any>{
-        isScaleValueProperty: () => true,
-        isIntegerValueProperty: () => true,
-      };
-
-      rdfModel.SAMM = () => samm;
-      rdfModel.SAMMC = () => sammC;
+      const metaModelElement = new DefaultFixedPointConstraint({name: '', aspectModelUrn: '', metaModelVersion: '', scale: 0, integer: 0});
 
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
@@ -108,14 +91,7 @@ describe('Test RDF Model Util', () => {
     });
 
     test('should return DefaultProperty urn', () => {
-      const metaModelElement = DefaultProperty.createInstance();
-      const samm: Samm = <any>{
-        isExampleValueProperty: () => true,
-      };
-      const sammC: SammC = <SammC>{};
-
-      rdfModel.SAMM = () => samm;
-      rdfModel.SAMMC = () => sammC;
+      const metaModelElement = new DefaultProperty({name: '', aspectModelUrn: '', metaModelVersion: ''});
 
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
@@ -124,15 +100,7 @@ describe('Test RDF Model Util', () => {
     });
 
     test('should return DefaultRangeConstraint urn', () => {
-      const metaModelElement = DefaultRangeConstraint.createInstance();
-      const samm: Samm = <Samm>{};
-      const sammC: SammC = <SammC>{
-        isMinValueProperty: value => !!value,
-        isMaxValueProperty: value => !!value,
-      };
-
-      rdfModel.SAMM = () => samm;
-      rdfModel.SAMMC = () => sammC;
+      const metaModelElement = new DefaultRangeConstraint({name: '', aspectModelUrn: '', metaModelVersion: ''});
 
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
@@ -141,14 +109,7 @@ describe('Test RDF Model Util', () => {
     });
 
     test('should return DefaultEnumeration urn', () => {
-      const metaModelElement = DefaultEnumeration.createInstance();
-      const samm: Samm = <Samm>{};
-      const sammC: SammC = <any>{
-        isValuesProperty: () => true,
-      };
-
-      rdfModel.SAMM = () => samm;
-      rdfModel.SAMMC = () => sammC;
+      const metaModelElement = new DefaultEnumeration({name: '', aspectModelUrn: '', metaModelVersion: '', values: []});
 
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
@@ -157,15 +118,7 @@ describe('Test RDF Model Util', () => {
     });
 
     test('should return DefaultState urn', () => {
-      const metaModelElement = DefaultState.createInstance();
-      const samm: Samm = <Samm>{};
-      const sammC: SammC = <any>{
-        isValuesProperty: () => false,
-        isDefaultValueProperty: () => true,
-      };
-
-      rdfModel.SAMM = () => samm;
-      rdfModel.SAMMC = () => sammC;
+      const metaModelElement = new DefaultState({name: '', aspectModelUrn: '', metaModelVersion: '', values: [], defaultValue: null});
 
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
@@ -174,15 +127,7 @@ describe('Test RDF Model Util', () => {
     });
 
     test('should return NULL', () => {
-      const metaModelElement = DefaultState.createInstance();
-      const samm: Samm = <Samm>{};
-      const sammC: SammC = <any>{
-        isValuesProperty: () => false,
-        isDefaultValueProperty: () => false,
-      };
-
-      rdfModel.SAMM = () => samm;
-      rdfModel.SAMMC = () => sammC;
+      const metaModelElement = new DefaultState({name: '', aspectModelUrn: '', metaModelVersion: '', values: [], defaultValue: null});
 
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(null);
 
@@ -199,11 +144,6 @@ describe('Test RDF Model Util', () => {
       const propertiesProperty: NamedNode = <NamedNode>{
         id: 'propertiesPropertyNode',
       };
-      const samm: Samm = <Samm>{
-        PropertiesProperty: () => propertiesProperty,
-      };
-
-      rdfModel.SAMM = () => samm;
 
       expect(RdfModelUtil.resolvePredicate(child, parent, rdfModel)).toBe(propertiesProperty);
     });
@@ -214,11 +154,6 @@ describe('Test RDF Model Util', () => {
       const operationsProperty: NamedNode = <NamedNode>{
         id: 'operationsPropertyNode',
       };
-      const samm: Samm = <Samm>{
-        OperationsProperty: () => operationsProperty,
-      };
-
-      rdfModel.SAMM = () => samm;
 
       expect(RdfModelUtil.resolvePredicate(child, parent, rdfModel)).toBe(operationsProperty);
     });
@@ -229,11 +164,6 @@ describe('Test RDF Model Util', () => {
       const characteristicProperty: NamedNode = <NamedNode>{
         id: 'characteristicPropertyNode',
       };
-      const samm: Samm = <Samm>{
-        CharacteristicProperty: () => characteristicProperty,
-      };
-
-      rdfModel.SAMM = () => samm;
 
       expect(RdfModelUtil.resolvePredicate(child, parent, rdfModel)).toBe(characteristicProperty);
     });
@@ -244,11 +174,6 @@ describe('Test RDF Model Util', () => {
       const dataTypeProperty: NamedNode = <NamedNode>{
         id: 'dataTypePropertyNode',
       };
-      const samm: Samm = <Samm>{
-        DataTypeProperty: () => dataTypeProperty,
-      };
-
-      rdfModel.SAMM = () => samm;
 
       expect(RdfModelUtil.resolvePredicate(child, parent, rdfModel)).toBe(dataTypeProperty);
     });
@@ -259,11 +184,6 @@ describe('Test RDF Model Util', () => {
       const propertiesProperty: NamedNode = <NamedNode>{
         id: 'propertiesPropertyNode',
       };
-      const samm: Samm = <Samm>{
-        PropertiesProperty: () => propertiesProperty,
-      };
-
-      rdfModel.SAMM = () => samm;
 
       expect(RdfModelUtil.resolvePredicate(child, parent, rdfModel)).toBe(propertiesProperty);
     });
@@ -279,11 +199,6 @@ describe('Test RDF Model Util', () => {
       const rightProperty: NamedNode = <NamedNode>{
         id: 'rightPropertyNode',
       };
-      const sammC: SammC = <SammC>{
-        EitherRightProperty: () => rightProperty,
-      };
-
-      rdfModel.SAMMC = () => sammC;
 
       expect(RdfModelUtil.resolvePredicate(child, parent, rdfModel)).toBe(rightProperty);
     });
@@ -300,11 +215,6 @@ describe('Test RDF Model Util', () => {
       const leftProperty: NamedNode = <NamedNode>{
         id: 'leftPropertyNode',
       };
-      const sammC: SammC = <SammC>{
-        EitherLeftProperty: () => leftProperty,
-      };
-
-      rdfModel.SAMMC = () => sammC;
 
       expect(RdfModelUtil.resolvePredicate(child, parent, rdfModel)).toBe(leftProperty);
     });

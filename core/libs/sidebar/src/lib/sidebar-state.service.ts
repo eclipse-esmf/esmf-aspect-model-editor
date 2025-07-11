@@ -11,14 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {RdfService} from '@ame/rdf/services';
-import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, catchError, map, of, Subscription, throwError} from 'rxjs';
-import {ModelApiService} from '@ame/api';
-import {APP_CONFIG, AppConfig, BrowserService, ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
-import {ExporterHelper} from '@ame/migrator';
+import {LoadedFilesService} from '@ame/cache';
+import {BrowserService, ElectronSignals, ElectronSignalsService} from '@ame/shared';
+import {Injectable, inject} from '@angular/core';
+import {BehaviorSubject, Subscription, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
-import {NamespacesCacheService} from '@ame/cache';
 
 class SidebarState {
   private opened$ = new BehaviorSubject(false);
@@ -47,7 +44,7 @@ class SidebarStateWithRefresh extends SidebarState {
 }
 
 class Selection {
-  #selection$ = new BehaviorSubject<{namespace: string; file: string}>(null);
+  #selection$ = new BehaviorSubject<{namespace: string; file: string; aspectModelUrn: string}>(null);
   public selection$ = this.#selection$.asObservable();
 
   constructor(
@@ -55,11 +52,11 @@ class Selection {
     public file?: string,
   ) {}
 
-  public select(namespace: string, file: string) {
+  public select(namespace: string, file: FileStatus) {
     if (namespace && file) {
       this.namespace = namespace;
-      this.file = file;
-      this.#selection$.next({namespace, file});
+      this.file = file.name;
+      this.#selection$.next({namespace, file: file.name, aspectModelUrn: file.aspectModelUrn});
     }
   }
 
@@ -80,13 +77,16 @@ export class FileStatus {
   public outdated: boolean;
   public errored: boolean;
   public sammVersion: string;
+  public dependencies: string[];
+  public missingDependencies: string[];
+  public unknownSammVersion: boolean;
+  public aspectModelUrn: string;
 
   constructor(public name: string) {}
 }
 
 class NamespacesManager {
-  public namespacesCacheService: NamespacesCacheService = inject(NamespacesCacheService);
-
+  private loadedFilesService = inject(LoadedFilesService);
   public namespaces: {[key: string]: FileStatus[]} = {};
   public hasOutdatedFiles = false;
 
@@ -94,8 +94,11 @@ class NamespacesManager {
     return Object.keys(this.namespaces);
   }
 
-  setFile(namespace: string, file: string) {
-    const fileStatus = new FileStatus(file);
+  public get currentFile() {
+    return this.loadedFilesService.currentLoadedFile;
+  }
+
+  setFile(namespace: string, fileStatus: FileStatus) {
     if (this.namespaces[namespace]) {
       this.namespaces[namespace].push(fileStatus);
     } else {
@@ -112,7 +115,7 @@ class NamespacesManager {
   lockFiles(files: {namespace: string; file: string}[]) {
     for (const namespace of this.namespacesKeys) {
       for (const fileStatus of this.namespaces[namespace]) {
-        if (fileStatus.name !== this.namespacesCacheService.currentCachedFile?.fileName) {
+        if (fileStatus.name !== this.currentFile.name) {
           fileStatus.locked = files.some(file => file.namespace === namespace && file.file === fileStatus.name);
         }
       }
@@ -127,8 +130,7 @@ class NamespacesManager {
 @Injectable({providedIn: 'root'})
 export class SidebarStateService {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
-  private namespacesCacheService: NamespacesCacheService = inject(NamespacesCacheService);
-  private config: AppConfig = inject(APP_CONFIG);
+  private loadedFilesService = inject(LoadedFilesService);
 
   public sammElements = new SidebarState();
   public workspace = new SidebarStateWithRefresh();
@@ -136,56 +138,40 @@ export class SidebarStateService {
   public selection = new Selection();
   public namespacesState = new NamespacesManager();
 
-  constructor(
-    private rdfService: RdfService,
-    private modelApiService: ModelApiService,
-    private notificationService: NotificationsService,
-    private browserService: BrowserService,
-  ) {
+  constructor(private browserService: BrowserService) {
     this.manageSidebars();
     requestAnimationFrame(() => {
       this.getLockedFiles();
     });
   }
 
-  public isCurrentFileLoaded() {
-    const currentRdfModel = this.rdfService.currentRdfModel;
-    return Boolean(currentRdfModel?.originalAbsoluteFileName || currentRdfModel?.absoluteAspectModelFileName);
+  public isCurrentFileLoaded(): boolean {
+    return !!this.loadedFilesService.currentLoadedFile;
   }
 
   public isCurrentFile(namespace: string, fileName: string): boolean {
-    const currentFileName = this.namespacesCacheService.currentCachedFile?.fileName;
-    const currentNamespace = this.rdfService.currentRdfModel.getAspectModelUrn().replace('urn:samm:', '').replace('#', '');
+    if (this.isCurrentFileLoaded()) {
+      const {namespace: currentNamespace, name} = this.loadedFilesService.currentLoadedFile;
+      return currentNamespace === namespace && name === fileName;
+    }
 
-    return `${currentNamespace}:${currentFileName}` === `${namespace}:${fileName}`;
+    return false;
   }
 
-  public requestGetNamespaces() {
-    return this.modelApiService.getNamespacesAppendWithFiles().pipe(
-      map((namespaces: string[]) => {
-        this.namespacesState.clear();
-        let hasOutdatedFiles = false;
-        for (const fullFile of namespaces) {
-          const [namespace, version, file] = fullFile.split(':');
-          const versionedNamespace = `${namespace}:${version}`;
-          const fileStatus = this.namespacesState.setFile(versionedNamespace, file);
-          this.setFileStatuses(fileStatus, versionedNamespace);
-          hasOutdatedFiles ||= fileStatus.outdated;
-        }
+  public updateWorkspace(files: Record<string, FileStatus>) {
+    this.namespacesState.clear();
+    let hasOutdatedFiles = false;
 
-        this.namespacesState.hasOutdatedFiles = hasOutdatedFiles;
-        this.getLockedFiles(true);
-        return this.namespacesState.namespaces;
-      }),
-      catchError(err =>
-        throwError(() =>
-          this.notificationService.error({
-            title: 'Could not retrieve the namespaces!',
-            message: !err.status ? 'Please try to close and reopen the application.' : '',
-          }),
-        ),
-      ),
-    );
+    for (const absoluteName in files) {
+      const fileStatus = files[absoluteName];
+      const [namespace, version] = absoluteName.split(':');
+      this.namespacesState.setFile(`${namespace}:${version}`, fileStatus);
+      hasOutdatedFiles ||= fileStatus.outdated;
+    }
+    this.namespacesState.hasOutdatedFiles = hasOutdatedFiles;
+    this.getLockedFiles(true);
+
+    return this.namespacesState.namespaces;
   }
 
   private getLockedFiles(takeOne?: boolean): Subscription {
@@ -205,21 +191,6 @@ export class SidebarStateService {
     }
 
     return subscription;
-  }
-
-  private setFileStatuses(file: FileStatus, namespace: string) {
-    if (!file) {
-      return;
-    }
-
-    const rdfModel = this.rdfService.externalRdfModels.find(rdf => rdf.absoluteAspectModelFileName === `${namespace}:${file.name}`);
-
-    file.loaded = this.isCurrentFile(namespace, file.name);
-
-    if (rdfModel?.samm) {
-      file.sammVersion = rdfModel?.samm.version;
-      file.outdated = ExporterHelper.isVersionOutdated(rdfModel?.samm.version, this.config.currentSammVersion);
-    }
   }
 
   private manageSidebars() {

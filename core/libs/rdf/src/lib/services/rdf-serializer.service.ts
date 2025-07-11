@@ -10,11 +10,14 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {RdfModel} from '@ame/rdf/utils';
-import {DataFactory, Quad, Util, Writer} from 'n3';
-import {Samm} from '@ame/vocabulary';
 import {LanguageTranslationService} from '@ame/translation';
+import {Injectable} from '@angular/core';
+import {RdfModel, RdfModelUtil, Samm} from '@esmf/aspect-model-loader';
+import {DataFactory, Quad, Util, Writer} from 'n3';
 
+@Injectable({
+  providedIn: 'root',
+})
 export class RdfSerializerService {
   private _namedNode = DataFactory.namedNode;
 
@@ -60,7 +63,7 @@ export class RdfSerializerService {
 
   private processQuad(quad: Quad, rdfModel: RdfModel, writer: Writer, processedQuads: Set<Quad>): void {
     if (Util.isBlankNode(quad.object)) {
-      this.writeBlankNodes(quad, rdfModel, writer, rdfModel.SAMMC().getMetaModelNames(false));
+      this.writeBlankNodes(quad, rdfModel, writer, rdfModel.sammC.getMetaModelNames(false));
     } else if (Util.isBlankNode(quad.subject)) {
       const resolvedQuads = rdfModel.resolveBlankNodes(quad.subject.value).map(resolvedQuad => {
         processedQuads.add(resolvedQuad);
@@ -76,11 +79,11 @@ export class RdfSerializerService {
   private handleNonBlankNodes(quad: Quad, rdfModel: RdfModel, writer: Writer): void {
     if (quad.object.value.startsWith(Samm.XSD_URI)) {
       writer.addQuad(this.createQuadWithReplacedNamespace(quad, `${Samm.XSD_URI}#`, 'xsd:'));
-    } else if (quad.object.id.includes(`${Samm.RDF_URI}#langString`) && rdfModel.SAMM().isExampleValueProperty(quad.predicate.value)) {
+    } else if (quad.object.id.includes(`${Samm.RDF_URI}#langString`) && rdfModel.samm.isExampleValueProperty(quad.predicate.value)) {
       writer.addQuad(this.createLangStringQuad(quad));
-    } else if (quad.object.value.startsWith(rdfModel.SAMM().getNamespace())) {
-      writer.addQuad(this.createQuadWithReplacedNamespace(quad, rdfModel.SAMM().getNamespace(), `${rdfModel.SAMM().getAlias()}:`));
-    } else if (quad.object.value === rdfModel.SAMM().RdfNil().value) {
+    } else if (quad.object.value.startsWith(rdfModel.samm.getNamespace())) {
+      writer.addQuad(this.createQuadWithReplacedNamespace(quad, rdfModel.samm.getNamespace(), `${rdfModel.samm.getAlias()}:`));
+    } else if (quad.object.value === rdfModel.samm.RdfNil().value) {
       writer.addQuad(this._namedNode(quad.subject.value), this._namedNode(quad.predicate.value), writer.list([]));
     } else {
       writer.addQuad(quad);
@@ -101,7 +104,7 @@ export class RdfSerializerService {
   }
 
   private writeBlankNodes(quad: Quad, rdfModel: RdfModel, writer: Writer, metaModelNames: string[]): void {
-    const blankNodes = rdfModel.resolveRecursiveBlankNodes(quad.object.value, writer);
+    const blankNodes = RdfModelUtil.resolveRecursiveBlankNodes(rdfModel, quad.object.value, writer);
     const isBlankNode = blankNodes.some(({object}) => metaModelNames.includes(object.value));
 
     if (isBlankNode) {

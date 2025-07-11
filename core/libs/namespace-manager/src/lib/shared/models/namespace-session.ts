@@ -15,20 +15,11 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {BehaviorSubject} from 'rxjs';
 import {RootExportNamespacesComponent} from '../../namespace-exporter/components';
 import {RootNamespacesImporterComponent} from '../../namespace-importer/components';
-import {MissingElement} from './missing-element.interface';
-import {ValidFile} from './valid-files.interface';
-import {Violation} from './violation';
 
 export interface NamespacesSessionInterface {
   modalRef: MatDialogRef<RootNamespacesImporterComponent | RootExportNamespacesComponent>;
-  missingElements: MissingElement[];
-  invalidFiles: string[];
-  violations: Violation[];
-  files: string[];
-  conflictFiles: {
-    replace: string[];
-    keep: string[];
-  };
+  file: File;
+  workspaceFiles: Array<{model: string}>;
   state: {
     validating$: BehaviorSubject<boolean>;
     importing$: BehaviorSubject<boolean>;
@@ -37,58 +28,16 @@ export interface NamespacesSessionInterface {
 
 export class NamespacesSession implements NamespacesSessionInterface {
   public modalRef: MatDialogRef<RootNamespacesImporterComponent>;
-  public missingElements: MissingElement[] = [];
-  public invalidFiles: string[] = [];
-  public violations: Violation[] = [];
-  public files: string[] = [];
-
-  public conflictFiles = {
-    replace: [],
-    keep: [],
-  };
+  public file: File = undefined;
+  public workspaceFiles: Array<{model: string}> = [];
 
   public state = {
     validating$: new BehaviorSubject(false),
     importing$: new BehaviorSubject(false),
   };
 
-  public parseResponse(validationResult: any) {
-    this.missingElements = validationResult.missingElements || [];
-    this.invalidFiles = validationResult.invalidFiles || [];
-    this.processValidFiles(validationResult.validFiles);
-  }
-
-  private processValidFiles(files: ValidFile[]) {
-    this.files = files.map(({fileName, namespace}) => `${namespace}:${fileName}`);
-
-    const {replace, keep} = files.reduce(
-      (acc, validation) => {
-        const file = validation.fileName;
-        const namespace = validation.namespace;
-
-        (validation.fileAlreadyDefined ? acc.replace : acc.keep).add(namespace);
-
-        const violationErrors = validation?.violationReport?.violationErrors || [];
-
-        let violation = this.violations.find(violation => violation.key === namespace);
-        if (!violation) {
-          this.violations.push({key: namespace, value: []});
-          violation = this.violations[this.violations.length - 1];
-        }
-        violation.value.push({
-          file: file,
-          violationError: violationErrors,
-        });
-
-        return acc;
-      },
-      {
-        replace: new Set(),
-        keep: new Set(),
-      },
-    );
-
-    this.conflictFiles.keep = Array.from(keep);
-    this.conflictFiles.replace = Array.from(replace);
+  public parseResponse(file: File, validationResult: Array<{model: string}>) {
+    this.file = file;
+    this.workspaceFiles = validationResult || [];
   }
 }

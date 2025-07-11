@@ -11,20 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {CacheUtils} from '@ame/cache';
+import {isDataTypeLangString} from '@ame/shared';
+import {extractNamespace} from '@ame/utils';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {
-  DefaultAbstractProperty,
+  CacheStrategy,
+  Characteristic,
   DefaultEntity,
   DefaultEntityInstance,
   DefaultProperty,
   DefaultTrait,
   Entity,
   EntityInstanceProperty,
-  OverWrittenProperty,
-} from '@ame/meta-model';
-import {CachedFile} from '@ame/cache';
-import {extractNamespace} from '@ame/utils';
-import {isDataTypeLangString} from '@ame/shared';
+  Value,
+} from '@esmf/aspect-model-loader';
 
 export class EntityInstanceUtil {
   /**
@@ -51,8 +52,8 @@ export class EntityInstanceUtil {
    * @param {DefaultProperty} property - The property to match against the cached values.
    * @returns {DefaultEntityValue[]} An array of entity values that match the given property.
    */
-  static existingEntityValues = (currentCachedFile: CachedFile, property: DefaultProperty) => {
-    return currentCachedFile.getCachedEntityValues().filter(value => this.entityValueFilter(value, property));
+  static existingEntityValues = (currentCachedFile: CacheStrategy, property: DefaultProperty) => {
+    return CacheUtils.getCachedElements(currentCachedFile, DefaultEntityInstance).filter(value => this.entityValueFilter(value, property));
   };
 
   /**
@@ -69,7 +70,7 @@ export class EntityInstanceUtil {
     const characteristic =
       property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property?.characteristic;
 
-    return entityValue.entity.aspectModelUrn === characteristic?.dataType?.['aspectModelUrn'];
+    return entityValue.type.aspectModelUrn === characteristic?.dataType?.getUrn?.();
   };
 
   /**
@@ -84,7 +85,7 @@ export class EntityInstanceUtil {
   static showCreateNewEntityOption(
     entityValueName: string,
     entityValues: DefaultEntityInstance[],
-    currentCachedFile: CachedFile,
+    currentCachedFile: CacheStrategy,
     form: FormGroup,
     entity: Entity | DefaultEntityInstance,
   ): boolean {
@@ -109,11 +110,11 @@ export class EntityInstanceUtil {
   private static isEntityValueAvailable(
     entityValueName: string,
     namespace: string,
-    currentCachedFile: CachedFile,
+    currentCachedFile: CacheStrategy,
     form: FormGroup,
   ): boolean {
     return (
-      !currentCachedFile.getElement(`${namespace}#${entityValueName}`) &&
+      !currentCachedFile.get(`${namespace}#${entityValueName}`) &&
       !form.get('newEntityValues')?.value?.some(ev => ev.name === entityValueName)
     );
   }
@@ -146,8 +147,13 @@ export class EntityInstanceUtil {
    * @param {string} propertyValue - The value to set for the language control.
    * @param {number} index - The index of the control within the FormArray that should be updated.
    */
-  static changeLanguageSelection(propertiesForm: FormGroup, ev: EntityInstanceProperty, propertyValue: string, index: number): void {
-    const propertiesFormArray = propertiesForm.get(ev.key.property.name) as FormArray;
+  static changeLanguageSelection(
+    propertiesForm: FormGroup,
+    [property]: EntityInstanceProperty<DefaultProperty>,
+    propertyValue: string,
+    index: number,
+  ): void {
+    const propertiesFormArray = propertiesForm.get(property.name) as FormArray;
     const languageControl = propertiesFormArray.at(index).get('language');
     languageControl.setValue(propertyValue);
     languageControl.disable();
@@ -174,16 +180,17 @@ export class EntityInstanceUtil {
    * @param {any} entityValueName - The name of the new entity value.
    */
   static createNewEntityValue(form: FormGroup, property: any, entityValueName: any) {
-    const characteristic =
+    const characteristic: Characteristic =
       property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
     const urn = `${property.aspectModelUrn.split('#')?.[0]}#${entityValueName}`;
-    const newEntityValue = new DefaultEntityInstance(
-      property.metaModelVersion,
-      entityValueName,
-      urn,
-      characteristic?.dataType as DefaultEntity,
-      (characteristic?.dataType?.['properties'] as OverWrittenProperty[]) || [],
-    );
+    const newEntityValue = new DefaultEntityInstance({
+      metaModelVersion: property.metaModelVersion,
+      name: entityValueName,
+      aspectModelUrn: urn,
+      type: characteristic?.dataType as DefaultEntity,
+      // TODO check a deeper creation for assertions (entityInstance -> entityInstance)
+      assertions: new Map((characteristic?.dataType as DefaultEntity)?.properties.map(p => [p.aspectModelUrn, new Value('')])),
+    });
 
     const newEntityValues = form.get('newEntityValues');
     if (newEntityValues?.value) {
@@ -194,7 +201,7 @@ export class EntityInstanceUtil {
 
     const propertiesForm = form.get('properties');
     const entityValuePropertiesForm = form.get('entityValueProperties');
-    const formGroup = propertiesForm ? propertiesForm : entityValuePropertiesForm;
+    const formGroup = propertiesForm || entityValuePropertiesForm;
 
     if (formGroup) {
       const propertyForm = formGroup.get(property.name);
@@ -209,10 +216,10 @@ export class EntityInstanceUtil {
 
   /**
    * Checks if a given property is a default property with a language string.
-   * @param {OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>} element - The property to check.
+   * @param {DefaultProperty} property - The property to check.
    * @returns {boolean} True if the property is a default property with a language string, false otherwise.
    */
-  static isDefaultPropertyWithLangString(element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>): boolean {
-    return element.property instanceof DefaultProperty && isDataTypeLangString(element.property);
+  static isDefaultPropertyWithLangString(property: DefaultProperty): boolean {
+    return property instanceof DefaultProperty && isDataTypeLangString(property.characteristic?.dataType);
   }
 }

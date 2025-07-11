@@ -14,11 +14,11 @@
 <div class="settings__header">
   <h2 mat-dialog-title>{{ 'SETTINGS_DIALOG.TITLE' | translate }}</h2>
   <button
-    mat-icon-button
     class="settings__close-button"
     [mat-dialog-close]="true"
-    tabindex="-1"
     (click)="onClose()"
+    mat-icon-button
+    tabindex="-1"
     data-cy="settingsModalCloseButton"
   >
     <mat-icon>close</mat-icon>
@@ -27,14 +27,14 @@
 
 <mat-dialog-content class="settings__dialog-content">
   <div class="settings__split-layout">
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="settings__tree">
+    <mat-tree class="settings__tree" [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node
         class="settings__tree-node"
         *matTreeNodeDef="let node"
+        [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type, 'settings__node-name--error': isNodeInvalid(node)}"
+        (click)="onNodeSelected(node.type)"
         matTreeNodePadding
         matTreeNodePaddingIndent="15"
-        (click)="onNodeSelected(node.type)"
-        [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type, 'settings__node-name--error': isNodeInvalid(node)}"
       >
         <li class="settings__node settings__node-without-icon">
           <span class="settings__node-name settings__node-name--aligned">{{ node.name | translate }}</span>
@@ -44,12 +44,12 @@
       <mat-tree-node
         class="settings__tree-node"
         *matTreeNodeDef="let node; when: hasChild"
-        matTreeNodePadding
-        (click)="onNodeSelected(node.type)"
         [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type}"
+        (click)="onNodeSelected(node.type)"
+        matTreeNodePadding
       >
         <li class="settings__node">
-          <button mat-icon-button matTreeNodeToggle class="settings__toggle-button">
+          <button class="settings__toggle-button" mat-icon-button matTreeNodeToggle>
             <mat-icon class="settings__icon">
               {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
             </mat-icon>
@@ -83,17 +83,17 @@
 
 <mat-dialog-actions class="dialog-actions" align="end">
   <div>
-    <button mat-raised-button (click)="onCancel()" data-cy="settingsDialogCancelButton">
+    <button (click)="onCancel()" mat-raised-button data-cy="settingsDialogCancelButton">
       {{ 'SETTINGS_DIALOG.CANCEL' | translate }}
     </button>
   </div>
   <div matTooltip="{{ settingsForm.invalid ? ('SETTINGS_DIALOG.ERROR_MESSAGE' | translate) : '' }}">
-    <button mat-raised-button (click)="applySettings()" [disabled]="settingsForm.invalid" data-cy="settingsDialogApplyButton">
+    <button [disabled]="settingsForm.invalid" (click)="applySettings()" mat-raised-button data-cy="settingsDialogApplyButton">
       {{ 'SETTINGS_DIALOG.APPLY' | translate }}
     </button>
   </div>
   <div matTooltip="{{ settingsForm.invalid ? ('SETTINGS_DIALOG.ERROR_MESSAGE' | translate) : '' }}">
-    <button mat-raised-button color="primary" (click)="onOk()" [disabled]="settingsForm.invalid" data-cy="settingsDialogOkButton">
+    <button [disabled]="settingsForm.invalid" (click)="onOk()" mat-raised-button color="primary" data-cy="settingsDialogOkButton">
       {{ 'SETTINGS_DIALOG.OK' | translate }}
     </button>
   </div>

@@ -13,31 +13,45 @@
 
 /// <reference types="Cypress" />
 
-import {cyHelp} from '../../../support/helpers';
 import {
   SELECTOR_ecCharacteristic,
   SELECTOR_openNamespacesButton,
   SELECTOR_searchElementsInp,
   SELECTOR_workspaceBtn,
 } from '../../../support/constants';
+import {cyHelp} from '../../../support/helpers';
 import {checkAspect, connectElements} from '../../../support/utils';
 
 describe('Test drag and drop ext characteristic', () => {
   it('can add Characteristic from external reference with same namespace', () => {
-    const fileName = 'external-characteristic-reference.txt';
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    const fileName = 'external-characteristic-reference.ttl';
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.examples.aspect:1.0.0': [fileName],
+    });
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+      statusCode: 200,
+      body: {
+        'org.eclipse.examples.aspect': [
+          {
+            version: '1.0.0',
+            models: [
+              {
+                model: fileName,
+                aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#ExternalCharacteristic',
+                existing: true,
+              },
+            ],
+          },
+        ],
+      },
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
-        headers: {
-          namespace: 'org.eclipse.examples.aspect:1.0.0',
-          'file-name': fileName,
-        },
+        url: 'http://localhost:9090/ame/api/models',
+        headers: {'Aspect-Model-Urn': 'urn:samm:org.eclipse.examples.aspect:1.0.0#ExternalCharacteristic'},
       },
       {
         fixture: `/external-reference/same-namespace/without-childrens/${fileName}`,
@@ -46,7 +60,7 @@ describe('Test drag and drop ext characteristic', () => {
 
     cy.visitDefault().then(() =>
       cy
-        .startModelling()
+        .startModelling(true)
         .then(() => cyHelp.checkAspectDefaultExists())
         .then(() => cy.get(SELECTOR_workspaceBtn).click())
         .then(() => cy.get(SELECTOR_openNamespacesButton).contains(fileName).click({force: true}))

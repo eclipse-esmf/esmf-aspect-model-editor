@@ -75,15 +75,15 @@ describe('Test edit property', () => {
   it('should get error on renaming first property same as property from same namespace', () => {
     const fileNameOne = 'external-property-reference.txt';
 
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
       'org.eclipse.examples.aspect:1.0.0': [fileNameOne],
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
+        url: 'http://localhost:9090/ame/api/models',
         headers: {namespace: 'org.eclipse.examples.aspect:1.0.0', 'file-name': fileNameOne},
       },
       {
@@ -310,7 +310,7 @@ describe('Test edit property', () => {
   });
 
   it('should not allow to put 2 properties with the same name', () => {
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
 
     cy.visitDefault();
     cy.startModelling()

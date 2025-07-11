@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './information-handling.service';
 export * from './file-handling.service';
-export * from './generate-handling.service';
 export * from './file-upload.service';
+export * from './generate-handling.service';
+export * from './information-handling.service';

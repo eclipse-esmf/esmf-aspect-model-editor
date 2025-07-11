@@ -16,13 +16,13 @@
     <h2>{{ 'SIDEBAR.WORKSPACE.TITLE' | translate }}</h2>
 
     <button
+      class="refresh"
       [class.loading]="loading"
       [class.disabled]="loading"
       [matTooltip]="loading ? ('SIDEBAR.WORKSPACE.REFRESHING' | translate) : ('SIDEBAR.WORKSPACE.REFRESH' | translate)"
       [disabled]="loading"
       (click)="sidebarService.workspace.refresh()"
       mat-mini-fab
-      class="refresh"
     >
       <mat-icon>refresh</mat-icon>
     </button>
@@ -32,8 +32,9 @@
     <mat-icon>close</mat-icon>
   </button>
 </div>
-
-@if (namespacesKeys.length === 0) {
+@if (error) {
+  <ame-workspace-error [error]="error"></ame-workspace-error>
+} @else if (namespacesKeys.length === 0) {
   <ame-workspace-empty [loading]="loading"></ame-workspace-empty>
 } @else {
   <ame-workspace-file-list class="list"></ame-workspace-file-list>

@@ -12,5 +12,5 @@
  */
 
 export * from './language-translate.module';
-export * from './services/language-translation.service';
 export * from './models/language.interface';
+export * from './services/language-translation.service';

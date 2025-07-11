@@ -51,8 +51,8 @@
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
         [disabled]="isModelEmpty"
-        (click)="onToggleExpand()"
         [matTooltip]="'TOOLBAR.COLLAPSE_ALL' | translate"
+        (click)="onToggleExpand()"
         data-cy="collapseExpandToggle"
       >
         <mat-icon class="material-icons rotate-45">unfold_less</mat-icon>
@@ -85,8 +85,8 @@
       [matTooltipShowDelay]="0"
       [matTooltipHideDelay]="0"
       [disabled]="isModelEmpty"
-      (click)="validateFile()"
       [matTooltip]="'TOOLBAR.VALIDATE' | translate"
+      (click)="validateFile()"
       data-cy="tbValidateButton"
     >
       <mat-icon class="material-icons">task</mat-icon>
@@ -94,10 +94,10 @@
   </div>
 
   <div class="menu-items__group">
-    <ame-bar-item [disabled]="isModelEmpty" (click)="zoomIn()" [matTooltip]="'EDITOR_CANVAS.ZOOM_IN_PROGRESS' | translate">
+    <ame-bar-item [disabled]="isModelEmpty" [matTooltip]="'EDITOR_CANVAS.ZOOM_IN_PROGRESS' | translate" (click)="zoomIn()">
       <mat-icon>zoom_in</mat-icon>
     </ame-bar-item>
-    <ame-bar-item [disabled]="isModelEmpty" (click)="zoomOut()" [matTooltip]="'EDITOR_CANVAS.ZOOM_OUT_PROGRESS' | translate">
+    <ame-bar-item [disabled]="isModelEmpty" [matTooltip]="'EDITOR_CANVAS.ZOOM_OUT_PROGRESS' | translate" (click)="zoomOut()">
       <mat-icon>zoom_out</mat-icon>
     </ame-bar-item>
   </div>

@@ -12,9 +12,9 @@
  */
 
 import {ThemeService} from '@ame/mx-graph';
+import {CommonModule} from '@angular/common';
 import {Component, HostListener} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
-import {CommonModule} from '@angular/common';
 
 @Component({
   standalone: true,

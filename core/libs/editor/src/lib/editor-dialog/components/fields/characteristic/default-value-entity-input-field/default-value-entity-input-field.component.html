@@ -13,7 +13,7 @@
 
 <mat-form-field [floatLabel]="getControl('defaultValue')?.disabled ? 'always' : 'auto'" appearance="fill">
   <mat-label for="dataType">defaultValue</mat-label>
-  <input matInput [formControl]="getControl('defaultValue')" data-cy="defaultValue" [matAutocomplete]="auto" />
+  <input [formControl]="getControl('defaultValue')" [matAutocomplete]="auto" matInput data-cy="defaultValue" />
   <mat-autocomplete #auto="matAutocomplete">
     @for (entityValue of entityValues; track entityValue.aspectModelUrn) {
       <mat-option [value]="entityValue.name">

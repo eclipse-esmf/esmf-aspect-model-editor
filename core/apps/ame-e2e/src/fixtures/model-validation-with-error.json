@@ -2,7 +2,7 @@
   "violationErrors": [
     {
       "message": "Mandatory property samm:characteristic is missing on :property1.",
-      "focusNode": "urn:samm:org.eclipse.examples:1.0.0#property1",
+      "focusNode": "urn:samm:com.examples:1.0.0#property1",
       "fix": [],
       "errorCode": "ERR_MIN_COUNT"
     }

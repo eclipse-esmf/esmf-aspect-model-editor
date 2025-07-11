@@ -13,7 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
-import {finalize, Observable, switchMap, tap} from 'rxjs';
+import {Observable, finalize, switchMap, tap} from 'rxjs';
 import {Translation} from '../models/language.interface';
 
 @Injectable({

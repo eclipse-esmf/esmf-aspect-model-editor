@@ -11,6 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+export * from './langcode';
 export * from './namespace-configuration';
 export * from './settings';
-export * from './langcode';

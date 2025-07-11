@@ -11,24 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {NotificationsService, SearchService} from '@ame/shared';
-import {provideMockObject} from '../../../../../../../../../jest-helpers';
-import {EditorModelService} from '../../../../editor-model.service';
-import {NamespacesCacheService} from '@ame/cache';
-import {RdfService} from '@ame/rdf/services';
+import {LoadedFilesService} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
-import {EntityExtendsFieldComponent} from './extends-field.component';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {of} from 'rxjs';
-import {DefaultEntity} from '@ame/meta-model';
+import {RdfService} from '@ame/rdf/services';
+import {NotificationsService, SearchService} from '@ame/shared';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {DefaultEntity} from '@esmf/aspect-model-loader';
+import {of} from 'rxjs';
+import {provideMockObject} from '../../../../../../../../../jest-helpers';
+import {EditorModelService} from '../../../../editor-model.service';
+import {EntityExtendsFieldComponent} from './extends-field.component';
 
-jest.mock('../../../../../../../../instantiator/src/lib/meta-model-element-instantiator');
-jest.mock('../../../../../../../../instantiator/src/lib/instantiators/samm-e-predefined-entity-instantiator', () => {
+jest.mock('@ame/instantiator');
+jest.mock('@ame/instantiator', () => {
   class PredefinedEntityInstantiator {
     entityInstances = {};
   }
@@ -40,6 +40,10 @@ jest.mock('../../../../../../../../instantiator/src/lib/instantiators/samm-e-pre
 
 jest.mock('../../../../../../../../shared/src/lib/constants/xsd-datatypes.ts', () => ({}));
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('EntityExtendsFieldComponent', () => {
   let component: EntityExtendsFieldComponent;
   let fixture: ComponentFixture<EntityExtendsFieldComponent>;
@@ -50,6 +54,7 @@ describe('EntityExtendsFieldComponent', () => {
       imports: [MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule, MatInputModule, BrowserAnimationsModule],
       declarations: [EntityExtendsFieldComponent],
       providers: [
+        LoadedFilesService,
         {
           provide: NotificationsService,
           useValue: provideMockObject(NotificationsService),
@@ -57,10 +62,6 @@ describe('EntityExtendsFieldComponent', () => {
         {
           provide: EditorModelService,
           useValue: provideMockObject(EditorModelService),
-        },
-        {
-          provide: NamespacesCacheService,
-          useValue: provideMockObject(NamespacesCacheService),
         },
         {
           provide: RdfService,
@@ -78,7 +79,7 @@ describe('EntityExtendsFieldComponent', () => {
     });
 
     editorModelService = TestBed.inject(EditorModelService);
-    editorModelService.getMetaModelElement = jest.fn(() => of(new DefaultEntity('', '', '')));
+    editorModelService.getMetaModelElement = jest.fn(() => of(new DefaultEntity({metaModelVersion: '', aspectModelUrn: '', name: ''})));
 
     fixture = TestBed.createComponent(EntityExtendsFieldComponent);
     component = fixture.componentInstance;
