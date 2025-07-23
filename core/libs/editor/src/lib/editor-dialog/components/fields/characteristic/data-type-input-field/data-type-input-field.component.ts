@@ -75,10 +75,10 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
 
   getCurrentValue() {
     return !this.metaModelElement.isPredefined
-      ? (this.previousData?.['dataType'] ??
+      ? this.previousData?.['dataType'] ??
           this.previousData?.['newDataType'] ??
           this.previousData?.[this.fieldName] ??
-          this.metaModelElement?.dataType)
+          this.metaModelElement?.dataType
       : this.metaModelElement?.dataType;
   }
 

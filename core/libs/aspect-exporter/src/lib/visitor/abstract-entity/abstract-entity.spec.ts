@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
-import {RdfService} from '@ame/rdf/services';
 import {TestBed} from '@angular/core/testing';
-import {DefaultEntity, DefaultProperty, Samm} from '@esmf/aspect-model-loader';
+import {DefaultEntity, DefaultProperty, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
-import {MockProviders} from 'ng-mocks';
+import {MockProvider, MockProviders} from 'ng-mocks';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AbstractEntityVisitor} from './abstract-entity';
@@ -29,12 +29,12 @@ jest.mock('@ame/editor', () => ({
 describe('Abstract Entity Visitor', () => {
   let service: AbstractEntityVisitor;
 
-  const rdfModel = {
+  const rdfModel: RdfModel = {
     store: new Store(),
-    SAMM: jest.fn(() => new Samm('')),
-    hasNamespace: jest.fn(() => false),
+    samm: new Samm(''),
+    hasDependency: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
-  };
+  } as any;
   const property: DefaultProperty = new DefaultProperty({name: '', metaModelVersion: '', aspectModelUrn: '', characteristic: null});
   const entity = new DefaultEntity({
     metaModelVersion: '1',
@@ -48,25 +48,16 @@ describe('Abstract Entity Visitor', () => {
       providers: [
         AbstractEntityVisitor,
         MockProviders(MxGraphService),
-        {
-          provide: RdfListService,
-          useValue: {
-            push: jest.fn(),
-          },
-        },
-        {
-          provide: RdfNodeService,
-          useValue: {
-            update: jest.fn(),
-          },
-        },
-        {
-          provide: RdfService,
-          useValue: {
-            currentRdfModel: rdfModel,
-            externalRdfModels: [],
-          },
-        },
+        MockProvider(RdfListService, {
+          push: jest.fn(),
+        }),
+        MockProvider(RdfNodeService, {
+          update: jest.fn(),
+        }),
+        MockProvider(LoadedFilesService, {
+          currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),
+          externalFiles: [],
+        }),
       ],
     });
 

@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
-import {RdfService} from '@ame/rdf/services';
 import {TestBed} from '@angular/core/testing';
-import {DefaultAspect, DefaultProperty, Samm} from '@esmf/aspect-model-loader';
+import {DefaultAspect, DefaultProperty, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
-import {MockProviders} from 'ng-mocks';
+import {MockProvider, MockProviders} from 'ng-mocks';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AspectVisitor} from './aspect-visitor';
@@ -29,12 +29,13 @@ jest.mock('@ame/editor', () => ({
 describe('Aspect Visitor', () => {
   let service: AspectVisitor;
 
-  const rdfModel = {
+  const rdfModel: RdfModel = {
     store: new Store(),
-    SAMM: jest.fn(() => new Samm('')),
-    hasNamespace: jest.fn(() => false),
+    samm: new Samm(''),
+    hasDependency: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
-  };
+  } as any;
+
   const aspect = new DefaultAspect({metaModelVersion: '1', aspectModelUrn: 'samm#aspect', name: 'aspect1'});
 
   beforeEach(() => {
@@ -42,26 +43,18 @@ describe('Aspect Visitor', () => {
       providers: [
         AspectVisitor,
         MockProviders(MxGraphService),
-        {
-          provide: RdfListService,
-          useValue: {
-            push: jest.fn(),
-            createEmpty: jest.fn(),
-          },
-        },
-        {
-          provide: RdfNodeService,
-          useValue: {
-            update: jest.fn(),
-          },
-        },
-        {
-          provide: RdfService,
-          useValue: {
-            currentRdfModel: rdfModel,
-            externalRdfModels: [],
-          },
-        },
+        MockProvider(MxGraphService),
+        MockProvider(RdfListService, {
+          push: jest.fn(),
+          createEmpty: jest.fn(),
+        }),
+        MockProvider(RdfNodeService, {
+          update: jest.fn(),
+        }),
+        MockProvider(LoadedFilesService, {
+          currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),
+          externalFiles: [],
+        }),
       ],
     });
 
@@ -86,12 +79,13 @@ describe('Aspect Visitor', () => {
 
     service.visit(aspect);
 
-    expect(service.rdfListService.push).toHaveBeenCalledWith(aspect, {property, keys: {}});
+    expect(service.rdfListService.push).toHaveBeenCalledWith(aspect, property);
   });
 
   it('should update aspect name', () => {
     service.visit(aspect);
     aspect.name = 'aspect2';
+
     service.visit(aspect);
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(aspect, {
       preferredName: [],

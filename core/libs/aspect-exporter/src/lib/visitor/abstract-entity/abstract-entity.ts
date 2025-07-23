@@ -38,6 +38,8 @@ export class AbstractEntityVisitor extends BaseVisitor<DefaultEntity> {
       return null;
     }
 
+    if (!this.loadedFiles.currentLoadedFile) return null;
+
     this.store = this.loadedFiles.currentLoadedFile.rdfModel.store;
     this.samm = this.loadedFiles.currentLoadedFile.rdfModel.samm;
     this.setPrefix(abstractEntity.aspectModelUrn);

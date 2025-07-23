@@ -29,7 +29,7 @@ export abstract class BaseVisitor<T> {
     const externalFile = this.loadedFiles.externalFiles.find(
       file => file.rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null).length > 0,
     );
-    const alias = externalFile.rdfModel?.getAliasByDependency(namespace);
-    this.loadedFiles.currentLoadedFile.rdfModel.addPrefix(alias, namespace);
+    const alias = externalFile?.rdfModel?.getAliasByDependency(namespace);
+    if (alias) this.loadedFiles.currentLoadedFile.rdfModel.addPrefix(alias, namespace);
   }
 }

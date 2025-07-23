@@ -19,7 +19,7 @@ export type LangString = string;
 
 export abstract class NamedElement extends ModelElement {
   abstract className: string;
-  name: string;
+  _name: string;
   isPredefined: boolean;
   anonymous: boolean;
   aspectModelUrn: string;
@@ -28,6 +28,15 @@ export abstract class NamedElement extends ModelElement {
   descriptions: Map<LangString, string> = new Map();
   see: string[] = [];
   parents: ElementSet = new ElementSet();
+
+  set name(value: string) {
+    this._name = value;
+    const [namespace] = this.aspectModelUrn.split('#');
+    this.aspectModelUrn = `${namespace}#${value}`;
+  }
+  get name() {
+    return this._name;
+  }
 
   constructor(props: NamedElementProps) {
     super(props);

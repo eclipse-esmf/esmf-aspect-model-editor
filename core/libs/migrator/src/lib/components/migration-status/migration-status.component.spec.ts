@@ -14,50 +14,29 @@
 import {EditorService} from '@ame/editor';
 import {MigratorService} from '@ame/migrator';
 import {ElectronTunnelService} from '@ame/shared';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatIconModule} from '@angular/material/icon';
-import {RouterTestingModule} from '@angular/router/testing';
-import {provideMockObject} from 'jest-helpers';
-import {of} from 'rxjs';
-
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {provideRouter} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
+import {MockModule, MockProvider} from 'ng-mocks';
 import {MigrationStatusComponent} from './migration-status.component';
 
 describe('MigrationStatusComponent', () => {
   let component: MigrationStatusComponent;
   let fixture: ComponentFixture<MigrationStatusComponent>;
-  let editorService: EditorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatDialogModule, MatIconModule, MatButtonModule, TranslateModule.forRoot(), LanguageTranslateModule],
+      imports: [MigrationStatusComponent, MockModule(TranslateModule), MockModule(LanguageTranslateModule)],
       providers: [
-        {
-          provide: MigratorService,
-          useValue: provideMockObject(MigratorService),
-        },
-        {
-          provide: ElectronTunnelService,
-          useValue: provideMockObject(ElectronTunnelService),
-        },
-        {
-          provide: EditorService,
-          useValue: {
-            settings: {},
-          },
-        },
-        {
-          provide: LanguageTranslationService,
-          useValue: provideMockObject(LanguageTranslationService),
-        },
+        provideRouter([]),
+        MockProvider(MigratorService),
+        MockProvider(ElectronTunnelService),
+        MockProvider(EditorService, {settings: {}} as any),
+        MockProvider(LanguageTranslationService),
       ],
     });
 
-    editorService = TestBed.inject(EditorService);
-    editorService.loadExternalModels = jest.fn(() => of([]));
     history.pushState({data: null}, '');
 
     fixture = TestBed.createComponent(MigrationStatusComponent);

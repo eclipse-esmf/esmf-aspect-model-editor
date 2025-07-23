@@ -11,12 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelService} from '@ame/rdf/services';
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {TestBed} from '@angular/core/testing';
-import {Samm, SammC, SammU} from '@esmf/aspect-model-loader';
+import {ModelElementCache, RdfModel, Samm, SammC, SammU} from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
 import {DataFactory, Quad, Store} from 'n3';
+import {MockProvider} from 'ng-mocks';
 import {RdfNodeService} from './rdf-node.service';
 
 class MockSamm {
@@ -26,9 +27,9 @@ class MockSamm {
 
 class MockRDFModel {
   store = new Store();
-  SAMM = jest.fn((): Samm => new MockSamm() as any as Samm);
-  SAMMC = jest.fn((): SammC => new MockSamm() as any as SammC);
-  SAMMU = jest.fn((): SammU => new MockSamm() as any as SammU);
+  samm = new Samm('');
+  sammC = new SammC(this.samm);
+  sammU = new SammU(this.samm);
 }
 
 jest.mock('@ame/editor', () => ({
@@ -47,14 +48,9 @@ describe('RdfNodeService', () => {
     rdfModel = new MockRDFModel();
     TestBed.configureTestingModule({
       providers: [
-        {
-          provide: ModelService,
-          useValue: {
-            get currentRdfModel() {
-              return rdfModel;
-            },
-          },
-        },
+        MockProvider(LoadedFilesService, {
+          currentLoadedFile: new NamespaceFile(rdfModel as RdfModel, new ModelElementCache(), null),
+        }),
       ],
     });
     service = TestBed.inject(RdfNodeService);
@@ -77,24 +73,24 @@ describe('RdfNodeService', () => {
       expect(quads2.length).toBe(6);
 
       // check type for mockModelElement1
-      checkQuad(quads1[0], 'aspectModelUrn1', 'type', 'elementType');
+      checkQuad(quads1[0], 'aspectModelUrn1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'elementType');
 
       // check optional property for mockModelElement1
-      checkQuad(quads1[1], 'aspectModelUrn1', 'optional', 'true');
+      checkQuad(quads1[1], 'aspectModelUrn1', 'urn:samm:org.eclipse.esmf.samm:meta-model:#optional', 'true');
 
       // check type property for mockModelElement2
-      checkQuad(quads2[0], 'aspectModelUrn2', 'type', 'elementType');
+      checkQuad(quads2[0], 'aspectModelUrn2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'elementType');
 
       // check description property (localized) for mockModelElement2
-      checkQuad(quads2[1], 'aspectModelUrn2', 'description', 'testDescriptionEn');
-      checkQuad(quads2[2], 'aspectModelUrn2', 'description', 'testDescriptionRo');
+      checkQuad(quads2[1], 'aspectModelUrn2', 'urn:samm:org.eclipse.esmf.samm:meta-model:#description', 'testDescriptionEn');
+      checkQuad(quads2[2], 'aspectModelUrn2', 'urn:samm:org.eclipse.esmf.samm:meta-model:#description', 'testDescriptionRo');
 
       // check name property for mockModelElement2
-      checkQuad(quads2[3], 'aspectModelUrn2', 'name', 'testName');
+      checkQuad(quads2[3], 'aspectModelUrn2', 'urn:samm:org.eclipse.esmf.samm:meta-model:#name', 'testName');
 
       // check see property (array) for mockModelElement2
-      checkQuad(quads2[4], 'aspectModelUrn2', 'see', 'see1');
-      checkQuad(quads2[5], 'aspectModelUrn2', 'see', 'see2');
+      checkQuad(quads2[4], 'aspectModelUrn2', 'urn:samm:org.eclipse.esmf.samm:meta-model:#see', 'see1');
+      checkQuad(quads2[5], 'aspectModelUrn2', 'urn:samm:org.eclipse.esmf.samm:meta-model:#see', 'see2');
     });
 
     it('should update quads for model elements', () => {
@@ -107,10 +103,10 @@ describe('RdfNodeService', () => {
       expect(quads.length).toBe(2);
 
       // type
-      checkQuad(quads[0], 'aspectModelUrn1', 'type', 'elementType');
+      checkQuad(quads[0], 'aspectModelUrn1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'elementType');
 
       // example value
-      checkQuad(quads[1], 'aspectModelUrn1', 'exampleValue', 'testExampleValue');
+      checkQuad(quads[1], 'aspectModelUrn1', 'urn:samm:org.eclipse.esmf.samm:meta-model:#exampleValue', 'testExampleValue');
     });
   });
 });

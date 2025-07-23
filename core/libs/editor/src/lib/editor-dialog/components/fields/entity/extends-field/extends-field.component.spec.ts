@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {NotificationsService, SearchService} from '@ame/shared';
@@ -21,27 +21,19 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DefaultEntity} from '@esmf/aspect-model-loader';
+import {DefaultEntity, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
+import {Store} from 'n3';
+import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
-import {provideMockObject} from '../../../../../../../../../jest-helpers';
 import {EditorModelService} from '../../../../editor-model.service';
 import {EntityExtendsFieldComponent} from './extends-field.component';
 
-jest.mock('@ame/instantiator');
-jest.mock('@ame/instantiator', () => {
-  class PredefinedEntityInstantiator {
-    entityInstances = {};
-  }
-
-  return {
-    PredefinedEntityInstantiator,
-  };
-});
-
 jest.mock('../../../../../../../../shared/src/lib/constants/xsd-datatypes.ts', () => ({}));
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
+jest.mock('@esmf/aspect-model-loader', () => ({
+  ...jest.requireActual('@esmf/aspect-model-loader'),
+  useLoader: jest.fn(() => ({
+    getAllPredefinedEntities: jest.fn(() => ({})),
+  })),
 }));
 
 describe('EntityExtendsFieldComponent', () => {
@@ -49,32 +41,26 @@ describe('EntityExtendsFieldComponent', () => {
   let fixture: ComponentFixture<EntityExtendsFieldComponent>;
   let editorModelService: EditorModelService;
 
+  const rdfModel: RdfModel = {
+    store: new Store(),
+    samm: new Samm(''),
+    hasDependency: jest.fn(() => false),
+    addPrefix: jest.fn(() => {}),
+  } as any;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule, MatInputModule, BrowserAnimationsModule],
       declarations: [EntityExtendsFieldComponent],
       providers: [
-        LoadedFilesService,
-        {
-          provide: NotificationsService,
-          useValue: provideMockObject(NotificationsService),
-        },
-        {
-          provide: EditorModelService,
-          useValue: provideMockObject(EditorModelService),
-        },
-        {
-          provide: RdfService,
-          useValue: provideMockObject(RdfService),
-        },
-        {
-          provide: SearchService,
-          useValue: provideMockObject(SearchService),
-        },
-        {
-          provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
-        },
+        MockProvider(LoadedFilesService, {
+          currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),
+        }),
+        MockProvider(NotificationsService),
+        MockProvider(EditorModelService),
+        MockProvider(RdfService),
+        MockProvider(SearchService),
+        MockProvider(MxGraphService),
       ],
     });
 

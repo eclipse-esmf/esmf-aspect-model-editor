@@ -162,7 +162,7 @@ export class RdfModelUtil {
     return `${namespace}${modelElement.className.replace('Default', '')}`;
   }
 
-  static resolvePredicate(child: NamedNode, parent: NamedNode, rdfModel: RdfModel): NamedNode {
+  static resolvePredicate(child: NamedElement, parent: NamedElement, rdfModel: RdfModel): NamedNode {
     if (parent instanceof DefaultAspect) {
       if (child instanceof DefaultProperty) {
         return rdfModel.samm.PropertiesProperty();

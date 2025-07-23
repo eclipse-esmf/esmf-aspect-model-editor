@@ -1,9 +1,10 @@
-import {FileHandlingService, SaveModelDialogService} from '@ame/editor';
-import {MxGraphService} from '@ame/mx-graph';
+import {FileHandlingService, ModelCheckerService, SaveModelDialogService} from '@ame/editor';
+import {MxGraphAttributeService, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {ModelSavingTrackerService, NotificationsService, SearchService} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
-import {HttpClientModule} from '@angular/common/http';
+import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -12,13 +13,10 @@ import {MatInputModule} from '@angular/material/input';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {MockProvider} from 'ng-mocks';
+import {MockModule, MockProvider} from 'ng-mocks';
+import {of} from 'rxjs';
 import {SearchesStateService} from '../../search-state.service';
 import {FilesSearchComponent} from './files-search.component';
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
 
 describe('Files search', () => {
   let component: FilesSearchComponent;
@@ -27,27 +25,37 @@ describe('Files search', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
+        FilesSearchComponent,
         FormsModule,
         MatFormFieldModule,
         MatInputModule,
         MatDialogModule,
         BrowserAnimationsModule,
-        TranslateModule.forRoot(),
-        HttpClientModule,
+        MockModule(TranslateModule),
       ],
       providers: [
         MockProvider(MatDialogRef),
         MockProvider(MxGraphService),
         MockProvider(NotificationsService),
         MockProvider(FileHandlingService),
-        TranslateService,
-        SearchesStateService,
-        SidebarStateService,
-        MatDialog,
-        ModelSavingTrackerService,
-        SaveModelDialogService,
-        SearchService,
-        LanguageTranslationService,
+        MockProvider(SaveModelDialogService),
+        MockProvider(MxGraphShapeOverlayService),
+        MockProvider(MxGraphAttributeService),
+        MockProvider(ModelCheckerService, {
+          detectWorkspaceErrors: jest.fn(() => of({})),
+        }),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        MockProvider(TranslateService),
+        MockProvider(SearchesStateService),
+        MockProvider(SidebarStateService, {
+          namespacesState: {namespaces: []} as any,
+          updateWorkspace: jest.fn(() => of({})) as any,
+        }),
+        MockProvider(MatDialog),
+        MockProvider(ModelSavingTrackerService),
+        MockProvider(SearchService),
+        MockProvider(LanguageTranslationService),
       ],
     }).compileComponents();
   });
@@ -82,7 +90,7 @@ describe('Files search', () => {
   };
 
   it('should parse files correctly', () => {
-    component.parseFiles(namespaces);
+    component.parseFiles(namespaces as any);
 
     expect(component.searchableFiles).toEqual([
       {file: 'AspectDefault.ttl', namespace: 'org.eclipse.examples:1.0.0'},

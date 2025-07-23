@@ -14,8 +14,8 @@
 import {Component, Input, inject} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {DefaultEvent} from '@esmf/aspect-model-loader';
-import {ModelElementEditorComponent} from '..';
 import {EditorModelService} from '../../editor-model.service';
+import {ModelElementEditorComponent} from '../model-element-editor-component';
 
 @Component({
   selector: 'ame-event',

@@ -85,7 +85,7 @@ export class FileStatus {
   constructor(public name: string) {}
 }
 
-class NamespacesManager {
+export class NamespacesManager {
   private loadedFilesService = inject(LoadedFilesService);
   public namespaces: {[key: string]: FileStatus[]} = {};
   public hasOutdatedFiles = false;

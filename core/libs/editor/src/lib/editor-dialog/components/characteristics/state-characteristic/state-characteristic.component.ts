@@ -12,8 +12,8 @@
  */
 import {Component, Input} from '@angular/core';
 import {DefaultEntity, DefaultState} from '@esmf/aspect-model-loader';
-import {ModelElementEditorComponent} from '../..';
 import {PreviousFormDataSnapshot} from '../../../interfaces';
+import {ModelElementEditorComponent} from '../../model-element-editor-component';
 
 @Component({
   selector: 'ame-state-characteristic',

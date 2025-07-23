@@ -12,10 +12,13 @@
  */
 
 import {RdfNodeService} from '@ame/aspect-exporter';
-import {RdfService} from '@ame/rdf/services';
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {MxGraphService} from '@ame/mx-graph';
 import {TestBed} from '@angular/core/testing';
-import {DefaultOperation} from '@esmf/aspect-model-loader';
+import {DefaultOperation, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
+import {Store} from 'n3';
+import {MockProvider, MockProviders} from 'ng-mocks';
 import {RdfListService} from '../../rdf-list';
 import {OperationVisitor} from './operation-visitor';
 
@@ -28,27 +31,31 @@ describe('Operation Visitor', () => {
   let rdfNodeService: RdfNodeService;
   let operation: DefaultOperation;
 
+  const rdfModel: RdfModel = {
+    store: new Store(),
+    samm: new Samm(''),
+    sammC: {ConstraintProperty: () => 'constraintProperty'} as any,
+    hasDependency: jest.fn(() => false),
+    addPrefix: jest.fn(() => {}),
+  } as any;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         OperationVisitor,
-        {
-          provide: RdfNodeService,
-          useValue: {update: jest.fn()},
-        },
-        {
-          provide: RdfService,
-          useValue: {
-            currentRdfModel: {hasNamespace: jest.fn(() => true)},
-            externalRdfModels: [],
-          },
-        },
-        {
-          provide: RdfListService,
-          useValue: {
-            createEmpty: jest.fn(),
-          },
-        },
+        MockProviders(MxGraphService),
+        MockProvider(MxGraphService),
+        MockProvider(RdfListService, {
+          push: jest.fn(),
+          createEmpty: jest.fn(),
+        }),
+        MockProvider(RdfNodeService, {
+          update: jest.fn(),
+        }),
+        MockProvider(LoadedFilesService, {
+          currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),
+          externalFiles: [],
+        }),
       ],
     });
 

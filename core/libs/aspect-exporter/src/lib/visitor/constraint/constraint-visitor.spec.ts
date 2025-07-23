@@ -14,9 +14,9 @@
 import {TestBed} from '@angular/core/testing';
 
 import {RdfNodeService} from '@ame/aspect-exporter';
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {BoundDefinition} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
-import {RdfService} from '@ame/rdf/services';
 import {
   DefaultConstraint,
   DefaultEncodingConstraint,
@@ -26,11 +26,13 @@ import {
   DefaultLocaleConstraint,
   DefaultRangeConstraint,
   DefaultRegularExpressionConstraint,
+  ModelElementCache,
+  RdfModel,
   Samm,
 } from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
-import {MockProviders} from 'ng-mocks';
+import {MockProvider, MockProviders} from 'ng-mocks';
 import {RdfListService} from '../../rdf-list';
 import {ConstraintVisitor} from './constraint-visitor';
 
@@ -41,13 +43,13 @@ jest.mock('@ame/editor', () => ({
 describe('Constraint Visitor', () => {
   let service: ConstraintVisitor;
 
-  const rdfModel = {
+  const rdfModel: RdfModel = {
     store: new Store(),
-    SAMM: jest.fn(() => new Samm('')),
-    SAMMC: jest.fn(() => ({ConstraintProperty: () => 'constraintProperty'}) as any),
-    hasNamespace: jest.fn(() => false),
+    samm: new Samm(''),
+    hasDependency: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
-  };
+  } as any;
+
   const constraint = new DefaultConstraint({metaModelVersion: '1', aspectModelUrn: 'samm#constraint1', name: 'constraint1'});
   const rangeConstraint = new DefaultRangeConstraint({
     metaModelVersion: '1',
@@ -102,25 +104,19 @@ describe('Constraint Visitor', () => {
       providers: [
         ConstraintVisitor,
         MockProviders(MxGraphService),
-        {
-          provide: RdfListService,
-          useValue: {
-            push: jest.fn(),
-          },
-        },
-        {
-          provide: RdfNodeService,
-          useValue: {
-            update: jest.fn(),
-          },
-        },
-        {
-          provide: RdfService,
-          useValue: {
-            currentRdfModel: rdfModel,
-            externalRdfModels: [],
-          },
-        },
+        MockProviders(MxGraphService),
+        MockProvider(MxGraphService),
+        MockProvider(RdfListService, {
+          push: jest.fn(),
+          createEmpty: jest.fn(),
+        }),
+        MockProvider(RdfNodeService, {
+          update: jest.fn(),
+        }),
+        MockProvider(LoadedFilesService, {
+          currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),
+          externalFiles: [],
+        }),
       ],
     });
 

@@ -12,7 +12,6 @@
  */
 import {MigratorApiService, ModelApiService} from '@ame/api';
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {ModelLoaderService} from '@ame/editor';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService} from '@ame/shared';
@@ -56,25 +55,23 @@ export class VersionMigrationComponent implements OnInit {
     private rdfService: RdfService,
     private modelApiService: ModelApiService,
     private migratorApiService: MigratorApiService,
-    private modelLoader: ModelLoaderService,
     private router: Router,
     private ngZone: NgZone,
     private loadedFilesService: LoadedFilesService,
   ) {}
 
   ngOnInit(): void {
-    this.prepareNamespaces(this.migratorApiService.rdfModelsToMigrate)
-      .pipe(
-        switchMap(() => this.rewriteStores()),
-        switchMap((modelsTobeDeleted: any[]) => this.rewriteAndDeleteModels(modelsTobeDeleted)),
-      )
+    this.prepareNamespaces(this.migratorApiService.rdfModelsToMigrate);
+
+    this.rewriteStores()
+      .pipe(switchMap((modelsTobeDeleted: any[]) => this.rewriteAndDeleteModels(modelsTobeDeleted)))
       .subscribe({
         complete: () => this.navigateToMigrationSuccess(),
         error: err => console.error('Error when migration to new version', err),
       });
   }
 
-  prepareNamespaces(absoluteNames: string[]): any {
+  prepareNamespaces(absoluteNames: string[] = []): any {
     this.namespaces = {};
     absoluteNames.forEach(absoluteName => {
       const [namespace, version, file] = RdfModelUtil.splitRdfIntoChunks(absoluteName);

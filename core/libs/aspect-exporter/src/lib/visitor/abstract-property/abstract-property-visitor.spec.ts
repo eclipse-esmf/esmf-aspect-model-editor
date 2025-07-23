@@ -11,12 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelService, RdfService} from '@ame/rdf/services';
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {MxGraphService} from '@ame/mx-graph';
+import {ModelService} from '@ame/rdf/services';
 import {TestBed} from '@angular/core/testing';
-import {DefaultEntity, RdfModel, Samm} from '@esmf/aspect-model-loader';
+import {DefaultProperty, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {describe, expect, it} from '@jest/globals';
-import {provideMockObject} from 'jest-helpers';
 import {Store} from 'n3';
+import {MockProvider} from 'ng-mocks';
+import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AbstractPropertyVisitor} from './abstract-property-visitor';
 
@@ -29,51 +32,39 @@ describe('Property Visitor', () => {
   let rdfNodeService: jest.Mocked<RdfNodeService>;
 
   let modelService: jest.Mocked<ModelService>;
-  let rdfModel: jest.Mocked<RdfModel>;
-  let rdfService: jest.Mocked<RdfService>;
-  let abstractProperty: DefaultEntity;
+  let abstractProperty: DefaultProperty;
 
   beforeEach(() => {
-    rdfModel = {
+    const rdfModel: RdfModel = {
       store: new Store(),
-      SAMM: jest.fn(() => new Samm('')),
-      hasNamespace: jest.fn(() => false),
+      samm: new Samm(''),
+      hasDependency: jest.fn(() => false),
       addPrefix: jest.fn(() => {}),
     } as any;
 
     TestBed.configureTestingModule({
       providers: [
         AbstractPropertyVisitor,
-        {
-          provide: RdfNodeService,
-          useValue: provideMockObject(RdfNodeService),
-        },
-        {
-          provide: RdfService,
-          useValue: provideMockObject(RdfService),
-        },
-        {
-          provide: ModelService,
-          useValue: {
-            get currentRdfModel() {
-              return rdfModel;
-            },
-          },
-        },
+        MockProvider(MxGraphService),
+        MockProvider(RdfListService, {
+          push: jest.fn(),
+        }),
+        MockProvider(RdfNodeService, {
+          update: jest.fn(),
+        }),
+        MockProvider(LoadedFilesService, {
+          currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),
+          externalFiles: [],
+        }),
       ],
     });
 
-    modelService = TestBed.inject(ModelService) as jest.Mocked<ModelService>;
-    abstractProperty = new DefaultEntity({
+    abstractProperty = new DefaultProperty({
       metaModelVersion: '1',
       aspectModelUrn: 'samm#abstractProperty1',
       name: 'abstractProperty1',
       isAbstract: true,
     });
-
-    rdfService = TestBed.inject(RdfService) as jest.Mocked<RdfService>;
-    rdfService.currentRdfModel = rdfModel;
-    rdfService.externalRdfModels = [];
 
     rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
     rdfNodeService.modelService = modelService;

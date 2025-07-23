@@ -12,12 +12,10 @@
  */
 
 import {MxGraphService} from '@ame/mx-graph';
-import {CommonModule} from '@angular/common';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultAspect, DefaultCharacteristic, DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {provideMockObject} from 'jest-helpers';
 import {mxgraph} from 'mxgraph-factory';
@@ -27,39 +25,40 @@ type Cell = Partial<mxgraph.mxCell & {getMetaModelElement: () => {element: Named
 
 const cell: Cell = {
   getMetaModelElement: () =>
-    new DefaultAspect({name: 'aspect', aspectModelUrn: 'aspect', metaModelVersion: 'aspect', properties: [], events: []}) as any,
+    new DefaultAspect({name: 'aspect', aspectModelUrn: 'urn#aspect', metaModelVersion: 'aspect', properties: [], events: []}) as any,
   style: 'aspect',
 };
+
 const cells: Cell[] = [
   {
     style: 'property',
     getMetaModelElement: () =>
       ({
-        element: new DefaultProperty({name: 'property', aspectModelUrn: 'property', metaModelVersion: 'property', characteristic: null}),
+        element: new DefaultProperty({
+          name: 'property',
+          aspectModelUrn: 'urn#property',
+          metaModelVersion: 'property',
+          characteristic: null,
+        }),
       }) as any,
   },
   {
     style: 'characteristic',
     getMetaModelElement: () =>
       ({
-        element: new DefaultCharacteristic({name: 'characteristic', aspectModelUrn: 'characteristic', metaModelVersion: 'characteristic'}),
+        element: new DefaultCharacteristic({
+          name: 'characteristic',
+          aspectModelUrn: 'urn#characteristic',
+          metaModelVersion: 'characteristic',
+        }),
       }) as any,
   },
   {
     style: 'entity',
     getMetaModelElement: () =>
-      ({element: new DefaultEntity({name: 'entity', aspectModelUrn: 'entity', metaModelVersion: 'entity', properties: []})}) as any,
+      ({element: new DefaultEntity({name: 'entity', aspectModelUrn: 'urn#entity', metaModelVersion: 'entity', properties: []})}) as any,
   },
 ];
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-  ModelElementParserPipe: class {
-    transform(value: any) {
-      return value;
-    }
-  },
-}));
 
 describe('RdfNodeService', () => {
   let component: ConnectWithDialogComponent;
@@ -69,7 +68,7 @@ describe('RdfNodeService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CommonModule, BrowserAnimationsModule, MatDialogModule, MatFormFieldModule, MatInputModule],
+      imports: [ConnectWithDialogComponent, MatFormFieldModule, MatInputModule],
       providers: [
         {
           provide: MxGraphService,
@@ -93,7 +92,6 @@ describe('RdfNodeService', () => {
 
     fixture = TestBed.createComponent(ConnectWithDialogComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   describe('getClass', () => {

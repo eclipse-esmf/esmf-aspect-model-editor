@@ -12,11 +12,10 @@
  */
 
 import {NamespaceStatus} from '@ame/api';
-import {ModelLoaderService} from '@ame/editor';
-import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService} from '@ame/shared';
+import {APP_CONFIG, AppConfig} from '@ame/shared';
 import {CdkScrollable} from '@angular/cdk/scrolling';
 import {KeyValuePipe} from '@angular/common';
-import {Component, Inject, NgZone, OnInit, inject} from '@angular/core';
+import {Component, Inject, NgZone, OnInit} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatDialogActions, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
@@ -45,8 +44,6 @@ interface ErrorFileItem {
   imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatIcon, MatDialogActions, MatButton, KeyValuePipe, TranslateModule],
 })
 export class MigrationStatusComponent implements OnInit {
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
-
   public migrationStatus: NamespaceStatus[] = [];
   public filteredErrorFiles = {};
   public hasErrors = false;
@@ -62,7 +59,6 @@ export class MigrationStatusComponent implements OnInit {
 
   constructor(
     public migratorService: MigratorService,
-    private modelLoader: ModelLoaderService,
     private router: Router,
     private ngZone: NgZone,
     @Inject(APP_CONFIG) public config: AppConfig,
