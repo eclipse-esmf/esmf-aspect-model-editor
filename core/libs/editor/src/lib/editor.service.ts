@@ -236,7 +236,9 @@ export class EditorService {
           newInstance = this.elementCreator.createEmptyElement(DefaultAspect);
           break;
         default:
-          newInstance = this.elementCreator.createEmptyElement(sammElements[elementType].class, elementType.includes('abstract'));
+          newInstance = this.elementCreator.createEmptyElement(sammElements[elementType].class, {
+            isAbstract: elementType.includes('abstract'),
+          });
       }
 
       if (newInstance instanceof DefaultAspect) {
@@ -286,10 +288,9 @@ export class EditorService {
           return;
         }
 
-        const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(aspectInstance);
-        this.loadedFilesService.updateFileNaming(this.currentLoadedFile, {aspect: metaModelElement, name: `${metaModelElement.name}.ttl`});
+        this.loadedFilesService.updateFileNaming(this.currentLoadedFile, {aspect: aspectInstance, name: `${aspectInstance.name}.ttl`});
 
-        metaModelElement
+        aspectInstance
           ? this.mxGraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
               shapeAttributes: [],
               geometry,
@@ -300,24 +301,36 @@ export class EditorService {
   }
 
   deleteSelectedElements() {
-    const result = [];
+    const result: mxgraph.mxCell[] = [];
     const selectedCells = this.mxGraphShapeSelectorService.getSelectedCells();
 
     result.push(...selectedCells);
 
-    this.deleteElements(result);
+    const externElements = result.filter((cell: mxgraph.mxCell) => {
+      const element = MxGraphHelper.getModelElement(cell);
+      if (!element) {
+        return false;
+      }
+      return this.loadedFilesService.isElementExtern(element);
+    });
 
-    if (result.some((cell: mxgraph.mxCell) => this.loadedFilesService.isElementExtern(MxGraphHelper.getModelElement(cell)))) {
-      result.forEach((element: any) => {
-        this.deletePrefixForExternalNamespaceReference(element);
-      });
-    }
+    externElements.forEach(element => this.deletePrefixForExternalNamespaceReference(element));
+    this.deleteElements(result);
   }
 
-  private deletePrefixForExternalNamespaceReference(element: any) {
+  private deletePrefixForExternalNamespaceReference(cell: mxgraph.mxCell) {
+    if (!cell || cell.isVertex()) {
+      return;
+    }
+
+    const element = MxGraphHelper.getModelElement(cell);
+    if (!element || !element.aspectModelUrn) {
+      return;
+    }
+
     const rdfModel = this.loadedFilesService.currentLoadedFile?.rdfModel;
 
-    const aspectModelUrnToBeRemoved = MxGraphHelper.getModelElement(element).aspectModelUrn;
+    const aspectModelUrnToBeRemoved = MxGraphHelper.getModelElement(cell).aspectModelUrn;
     const urnToBeChecked = aspectModelUrnToBeRemoved.substring(0, aspectModelUrnToBeRemoved.indexOf('#'));
 
     const nodeNames = rdfModel.store.getObjects(null, null, null).map((el: any) => el.id);

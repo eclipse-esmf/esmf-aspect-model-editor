@@ -14,7 +14,7 @@
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
@@ -25,12 +25,10 @@ import {MultiShapeConnector} from '../models';
 export class StructuredValueCharacteristicPropertyConnectionHandler
   implements MultiShapeConnector<DefaultStructuredValue, DefaultProperty>
 {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private sammLangService: SammLanguageSettingsService,
-    private notificationsService: NotificationsService,
-  ) {}
+  private mxGraphService = inject(MxGraphService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private sammLangService = inject(SammLanguageSettingsService);
+  private notificationsService = inject(NotificationsService);
 
   connect(parentMetaModel: DefaultStructuredValue, childMetaModel: DefaultProperty, first: mxgraph.mxCell, second: mxgraph.mxCell): void {
     const isRecursiveConnection = MxGraphHelper.isChildOf(childMetaModel, parentMetaModel);

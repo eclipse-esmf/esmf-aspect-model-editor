@@ -13,7 +13,7 @@
 
 import {MxGraphHelper} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
@@ -23,10 +23,8 @@ import {PropertyCharacteristicConnectionHandler} from './property--characteristi
   providedIn: 'root',
 })
 export class PropertyStructuredValueConnectionHandler implements MultiShapeConnector<DefaultProperty, DefaultStructuredValue> {
-  constructor(
-    private notificationsService: NotificationsService,
-    private propertyCharacteristicConnectionHandler: PropertyCharacteristicConnectionHandler,
-  ) {}
+  private notificationsService = inject(NotificationsService);
+  private propertyCharacteristicConnectionHandler = inject(PropertyCharacteristicConnectionHandler);
 
   connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultStructuredValue, parent: mxgraph.mxCell, child: mxgraph.mxCell): void {
     const isRecursiveConnection = MxGraphHelper.isChildOf(childMetaModel, parentMetaModel);

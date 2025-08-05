@@ -11,11 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {MxGraphHelper} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector, PropertyInheritanceConnector} from '../models';
@@ -27,15 +25,7 @@ export class PropertyPropertyConnectionHandler
   extends PropertyInheritanceConnector
   implements MultiShapeConnector<DefaultProperty, DefaultProperty>
 {
-  constructor(
-    protected mxGraphService: MxGraphService,
-    protected mxGraphAttributeService: MxGraphAttributeService,
-    protected sammLangService: SammLanguageSettingsService,
-    protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService,
-  ) {
-    super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, translate);
-  }
+  private notificationService = inject(NotificationsService);
 
   public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
     if (parentMetaModel.isPredefined) {

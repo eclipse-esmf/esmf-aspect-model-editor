@@ -12,28 +12,18 @@
  */
 
 import {FiltersService} from '@ame/loader-filters';
-import {MxGraphAttributeService, MxGraphService} from '@ame/mx-graph';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
-import {DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
+import {ElementCreatorService} from '@ame/shared';
+import {inject} from '@angular/core';
+import {DefaultCharacteristic, DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {EntityPropertyConnectionHandler, PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers';
 import {InheritanceConnector} from './inheritance-connector';
 
 export class EntityInheritanceConnector extends InheritanceConnector {
-  constructor(
-    protected mxGraphService: MxGraphService,
-    protected mxGraphAttributeService: MxGraphAttributeService,
-    protected sammLangService: SammLanguageSettingsService,
-    protected notificationsService: NotificationsService,
-    protected filtersService: FiltersService,
-    protected translate: LanguageTranslationService,
-    protected propertyAbstractPropertyConnector?: PropertyAbstractPropertyConnectionHandler,
-    protected entityPropertyConnector?: EntityPropertyConnectionHandler,
-  ) {
-    super(mxGraphService, mxGraphAttributeService, sammLangService, notificationsService, translate);
-  }
+  protected filtersService = inject(FiltersService);
+  protected propertyAbstractPropertyConnector? = inject(PropertyAbstractPropertyConnectionHandler);
+  protected entityPropertyConnector = inject(EntityPropertyConnectionHandler);
+  protected elementCreator = inject(ElementCreatorService);
 
   connectWithAbstract(parentMetaModel: DefaultEntity, childMetaModel: DefaultEntity, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
     if (parentMetaModel.getExtends()?.aspectModelUrn === childMetaModel.aspectModelUrn) {
@@ -57,17 +47,17 @@ export class EntityInheritanceConnector extends InheritanceConnector {
         aspectModelUrn: '',
         metaModelVersion: abstractProperty.metaModelVersion,
         extends_: abstractProperty,
+        characteristic: this.elementCreator.createEmptyElement(DefaultCharacteristic),
       });
       property.aspectModelUrn = `${namespace}#[${name}]`;
+      property.characteristic.parents.push(property);
       return property;
     });
 
     parentMetaModel.properties = [...parentMetaModel.properties, ...newProperties];
 
     for (let i = 0; i < newProperties.length; i++) {
-      const propertyCell = this.mxGraphService.renderModelElement(
-        this.filtersService.createNode(newProperties[i], {parent: parentMetaModel}),
-      );
+      const propertyCell = this.renderTree(newProperties[i], parent);
       this.entityPropertyConnector.connect(parentMetaModel, newProperties[i], parent, propertyCell);
 
       this.propertyAbstractPropertyConnector.connect(

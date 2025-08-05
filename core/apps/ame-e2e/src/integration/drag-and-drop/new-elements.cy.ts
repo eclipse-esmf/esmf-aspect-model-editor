@@ -36,9 +36,9 @@ describe('Test drag and drop', () => {
 
   it('can add new Trait', () => cy.dragElement(SELECTOR_ecTrait, 350, 300).then(() => cy.clickShape('Trait1')));
 
-  it('can add new Characteristic', () => cy.dragElement(SELECTOR_ecCharacteristic, 350, 300).then(() => cy.clickShape('Characteristic3')));
+  it('can add new Characteristic', () => cy.dragElement(SELECTOR_ecCharacteristic, 350, 300).then(() => cy.clickShape('Characteristic4')));
 
-  it('can add new Constraint', () => cy.dragElement(SELECTOR_ecConstraint, 350, 300).then(() => cy.clickShape('EncodingConstraint1')));
+  it('can add new Constraint', () => cy.dragElement(SELECTOR_ecConstraint, 350, 300).then(() => cy.clickShape('EncodingConstraint2')));
 
   it('can add new Entity', () => cy.dragElement(SELECTOR_ecEntity, 350, 300).then(() => cy.clickShape('Entity1')));
 
@@ -57,17 +57,8 @@ describe('Test drag and drop', () => {
       .then(() => cyHelp.hasAddShapeOverlay('EncodingConstraint1').then(hasAddOverlay => expect(hasAddOverlay).to.equal(false)))
       .then(() => cyHelp.hasAddShapeOverlay('Trait1').then(hasAddOverlay => expect(hasAddOverlay).to.equal(true)))
 
-      .then(() => cy.clickConnectShapes('Trait1', 'EncodingConstraint1'))
-      .then(() => cyHelp.hasAddShapeOverlay('EncodingConstraint1').then(hasAddOverlay => expect(hasAddOverlay).to.equal(false)))
-      .then(() => cyHelp.hasAddShapeOverlay('Trait1').then(hasAddOverlay => expect(hasAddOverlay).to.equal(true)))
-
-      .then(() => cy.clickConnectShapes('Trait1', 'Characteristic1'))
-      .then(() => cyHelp.hasAddShapeOverlay('EncodingConstraint1').then(hasAddOverlay => expect(hasAddOverlay).equal(false)))
-      .then(() => cyHelp.hasAddShapeOverlay('Characteristic1').then(hasAddOverlay => expect(hasAddOverlay).to.equal(true)))
-      .then(() => cyHelp.hasAddShapeOverlay('Trait1').then(hasAddOverlay => expect(hasAddOverlay).to.equal(true)))
-
       .then(() => cy.clickConnectShapes('Characteristic1', 'Entity1'))
-      .then(() => cy.clickConnectShapes('Characteristic4', 'Entity1'))
+      .then(() => cy.clickConnectShapes('Characteristic3', 'Entity1'))
       .then(() => cyHelp.hasAddShapeOverlay('Characteristic1').then(hasAddOverlay => expect(hasAddOverlay).equal(false)))
       .then(() => cyHelp.hasAddShapeOverlay('Entity1').then(hasAddOverlay => expect(hasAddOverlay).to.equal(true)))
 

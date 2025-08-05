@@ -11,38 +11,34 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/loader-filters';
-import {ModelElementNamingService} from '@ame/meta-model';
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {ElementCreatorService} from '@ame/shared';
+import {MxGraphHelper} from '@ame/mx-graph';
 import {useUpdater} from '@ame/utils';
 import {Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultConstraint, DefaultTrait} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TraitConnectionHandler implements SingleShapeConnector<DefaultTrait> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private modelElementNamingService: ModelElementNamingService,
-    private filtersService: FiltersService,
-    private elementCreator: ElementCreatorService,
-  ) {}
+export class TraitConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<DefaultTrait> {
+  constructor() {
+    super();
+  }
 
   public connect(trait: DefaultTrait, source: mxgraph.mxCell) {
     const defaultElement =
       trait.getBaseCharacteristic() == null
         ? this.elementCreator.createEmptyElement(DefaultCharacteristic)
         : this.elementCreator.createEmptyElement(DefaultConstraint);
-    const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultElement);
     const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
+      this.filtersService.createNode(defaultElement, {parent: MxGraphHelper.getModelElement(source)}),
     );
 
     useUpdater(trait).update(defaultElement);
+    this.refreshPropertiesLabel(child, defaultElement);
+
     this.mxGraphService.assignToParent(child, source);
     this.mxGraphService.moveCells([child], source.getGeometry().x + 30, source.getGeometry().y + 60);
     this.mxGraphService.formatCell(child);

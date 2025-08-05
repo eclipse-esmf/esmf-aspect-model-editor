@@ -13,7 +13,7 @@
 
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {basicShapeGeometry} from '@ame/shared';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {DefaultCharacteristic, DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
@@ -22,10 +22,8 @@ import {MultiShapeConnector} from '../models';
   providedIn: 'root',
 })
 export class PropertyCharacteristicConnectionHandler implements MultiShapeConnector<DefaultProperty, DefaultCharacteristic> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-  ) {}
+  private mxGraphService = inject(MxGraphService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
 
   public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultCharacteristic, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
     this.mxGraphAttributeService.graph.getOutgoingEdges(parent).forEach((outEdge: mxgraph.mxCell) => {

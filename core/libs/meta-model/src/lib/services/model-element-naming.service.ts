@@ -46,14 +46,14 @@ export class ModelElementNamingService {
    * @returns element with filled version,name,urn
    */
   resolveElementNaming<T extends NamedElement = NamedElement>(element: T, parentName?: string): T {
-    const rdfModel = this.loadedFiles.currentLoadedFile.rdfModel;
+    const {rdfModel, namespace} = this.loadedFiles.currentLoadedFile;
     const elements = {};
 
     if (!rdfModel) {
       return null;
     }
 
-    const mainAspectModelUrn = rdfModel.getAspectModelUrn();
+    const mainAspectModelUrn = `urn:samm:${namespace}#`;
     for (const extRdfModel of this.loadedFiles.externalFiles.map(f => f.rdfModel)) {
       if (!Object.values(extRdfModel.getPrefixes()).includes(mainAspectModelUrn)) {
         continue;

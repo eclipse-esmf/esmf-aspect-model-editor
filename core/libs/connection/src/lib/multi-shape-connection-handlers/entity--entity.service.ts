@@ -11,43 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/loader-filters';
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {MxGraphHelper} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {DefaultEntity} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {EntityInheritanceConnector, MultiShapeConnector} from '../models';
-import {EntityPropertyConnectionHandler} from './entity--property.service';
-import {PropertyAbstractPropertyConnectionHandler} from './property--abstract-property.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EntityEntityConnectionHandler extends EntityInheritanceConnector implements MultiShapeConnector<DefaultEntity, DefaultEntity> {
-  constructor(
-    protected mxGraphService: MxGraphService,
-    protected mxGraphAttributeService: MxGraphAttributeService,
-    protected sammLangService: SammLanguageSettingsService,
-    protected propertyAbstractPropertyConnector: PropertyAbstractPropertyConnectionHandler,
-    protected entityPropertyConnector: EntityPropertyConnectionHandler,
-    protected filtersService: FiltersService,
-    protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService,
-  ) {
-    super(
-      mxGraphService,
-      mxGraphAttributeService,
-      sammLangService,
-      notificationService,
-      filtersService,
-      translate,
-      propertyAbstractPropertyConnector,
-      entityPropertyConnector,
-    );
-  }
+  private notificationService = inject(NotificationsService);
 
   public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultEntity, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
     if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {

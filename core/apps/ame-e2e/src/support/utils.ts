@@ -33,8 +33,9 @@ export function checkAspectAndChildrenConstraint(aspect) {
   expect(aspect.properties).to.be.length(1);
   expect(aspect.properties[0].name).to.equal('property1');
   expect(aspect.properties[0].characteristic.name).to.equal('Trait1');
-  expect(aspect.properties[0].characteristic.baseCharacteristic.name).to.equal('Characteristic1');
-  expect(aspect.properties[0].characteristic.constraints[0].name).to.equal('ExternalConstraint');
+  expect(aspect.properties[0].characteristic.baseCharacteristic.name).to.equal('Characteristic2');
+  expect(aspect.properties[0].characteristic.constraints[0].name).to.equal('EncodingConstraint1');
+  expect(aspect.properties[0].characteristic.constraints[1].name).to.equal('ExternalConstraint');
 }
 
 export function checkAspect(aspect) {

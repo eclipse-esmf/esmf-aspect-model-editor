@@ -12,7 +12,7 @@
  */
 
 import {MxGraphService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultAspect, DefaultOperation, DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
@@ -21,7 +21,7 @@ import {MultiShapeConnector} from '../models';
   providedIn: 'root',
 })
 export class AspectPropertyConnectionHandler implements MultiShapeConnector<DefaultAspect, DefaultProperty | DefaultOperation> {
-  constructor(private mxGraphService: MxGraphService) {}
+  private mxGraphService = inject(MxGraphService);
 
   public connect(
     parentMetaModel: DefaultAspect,

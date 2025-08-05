@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
 import {ModelElementNamingService} from '@ame/meta-model';
 import {inject, Injectable} from '@angular/core';
 import {
@@ -62,31 +63,43 @@ const characteristics: {new (...x: any[]): NamedElement}[] = [
   DefaultTimeSeries,
 ];
 
+type ElementConfig = Partial<{
+  isAbstract: boolean;
+  baseCharacteristic: DefaultCharacteristic;
+}>;
+
 @Injectable({providedIn: 'root'})
 export class ElementCreatorService {
   private modelElementNamingService = inject(ModelElementNamingService);
+  private loadedFiles = inject(LoadedFilesService);
 
-  createEmptyElement<T>(elementClass: {new (...x: any[]): T}, isAbstract = false): T {
+  get currentFile() {
+    return this.loadedFiles.currentLoadedFile;
+  }
+
+  createEmptyElement<T>(elementClass: {new (...x: any[]): T}, elementConfig: ElementConfig = {}): T {
     let element: any;
+    const namespace = this.currentFile.namespace;
+
     switch (true) {
       case elementClass === DefaultAspect:
-        element = new DefaultAspect({name: 'Aspect', metaModelVersion: config.currentSammVersion, aspectModelUrn: ''});
+        element = new DefaultAspect({name: 'Aspect', metaModelVersion: config.currentSammVersion, aspectModelUrn: `${namespace}#Aspect`});
         break;
       case elementClass === DefaultProperty:
         element = new DefaultProperty({
-          name: isAbstract ? 'abstractProperty' : 'property',
+          name: elementConfig.isAbstract ? 'abstractProperty' : 'property',
           metaModelVersion: config.currentSammVersion,
-          aspectModelUrn: '',
-          isAbstract,
-          characteristic: isAbstract ? null : this.createEmptyElement(DefaultCharacteristic),
+          aspectModelUrn: `${namespace}#${elementConfig.isAbstract ? 'abstractProperty' : 'property'}`,
+          isAbstract: elementConfig.isAbstract,
+          characteristic: elementConfig.isAbstract ? null : this.createEmptyElement(DefaultCharacteristic),
         });
-        !isAbstract && element.characteristic.parents.push(element);
+        if (!elementConfig.isAbstract) element.characteristic.parents.push(element);
         break;
       case characteristics.includes(elementClass as any):
         element = new elementClass({
           name: 'Characteristic',
           metaModelVersion: config.currentSammVersion,
-          aspectModelUrn: '',
+          aspectModelUrn: `${namespace}#Characteristic`,
           dataType: new DefaultScalar({
             urn: new XsdDataTypes(config.currentSammVersion).getDataType('string').isDefinedBy,
             metaModelVersion: config.currentSammVersion,
@@ -95,33 +108,43 @@ export class ElementCreatorService {
         break;
       case elementClass === DefaultEntity:
         element = new DefaultEntity({
-          name: isAbstract ? 'AbstractEntity' : 'Entity',
+          name: elementConfig.isAbstract ? 'AbstractEntity' : 'Entity',
           metaModelVersion: config.currentSammVersion,
-          aspectModelUrn: '',
-          isAbstract,
+          aspectModelUrn: `${namespace}#${elementConfig.isAbstract ? 'AbstractEntity' : 'Entity'}`,
+          isAbstract: elementConfig.isAbstract,
         });
         break;
       case elementClass === DefaultUnit:
-        element = new DefaultUnit({name: 'unit', metaModelVersion: config.currentSammVersion, aspectModelUrn: '', quantityKinds: []});
+        element = new DefaultUnit({
+          name: 'unit',
+          metaModelVersion: config.currentSammVersion,
+          aspectModelUrn: `${namespace}#unit`,
+          quantityKinds: [],
+        });
         break;
       case elementClass === DefaultConstraint:
         element = new DefaultEncodingConstraint({
           name: 'EncodingConstraint',
           metaModelVersion: config.currentSammVersion,
-          aspectModelUrn: '',
+          aspectModelUrn: `${namespace}#EncodingConstraint`,
           value: 'UTF-8',
         });
         break;
       case (elementClass as any) === DefaultTrait:
-        element = new DefaultTrait({name: 'Trait', metaModelVersion: config.currentSammVersion, aspectModelUrn: ''});
-        (element as DefaultTrait).baseCharacteristic = this.createEmptyElement(DefaultCharacteristic);
+        element = new DefaultTrait({name: 'Trait', metaModelVersion: config.currentSammVersion, aspectModelUrn: `${namespace}#Trait`});
+        (element as DefaultTrait).baseCharacteristic = elementConfig.baseCharacteristic || this.createEmptyElement(DefaultCharacteristic);
         (element as DefaultTrait).constraints.push(this.createEmptyElement(DefaultConstraint));
         break;
       case elementClass === DefaultOperation:
-        element = new DefaultOperation({name: 'operation', metaModelVersion: config.currentSammVersion, aspectModelUrn: '', input: null});
+        element = new DefaultOperation({
+          name: 'operation',
+          metaModelVersion: config.currentSammVersion,
+          aspectModelUrn: `${namespace}#operation`,
+          input: null,
+        });
         break;
       case elementClass === DefaultEvent:
-        element = new DefaultEvent({name: 'event', metaModelVersion: config.currentSammVersion, aspectModelUrn: ''});
+        element = new DefaultEvent({name: 'event', metaModelVersion: config.currentSammVersion, aspectModelUrn: `${namespace}#event`});
         break;
       default:
         element = null;
@@ -129,61 +152,3 @@ export class ElementCreatorService {
     return this.modelElementNamingService.resolveMetaModelElement(element) as T;
   }
 }
-
-// export function createEmptyElement<T>(elementClass: {new (...x: any[]): T}, isAbstract = false): T {
-//   let element: any;
-//   switch (true) {
-//     case elementClass === DefaultAspect:
-//       element = new DefaultAspect({name: 'Aspect', metaModelVersion: config.currentSammVersion, aspectModelUrn: ''});
-//       break;
-//     case elementClass === DefaultProperty:
-//       element = new DefaultProperty({
-//         name: isAbstract ? 'abstractProperty' : 'property',
-//         metaModelVersion: config.currentSammVersion,
-//         aspectModelUrn: '',
-//         isAbstract,
-//         characteristic: createEmptyElement(DefaultCharacteristic),
-//       });
-//       element.characteristic.parents.push(element);
-//       break;
-//     case characteristics.includes(elementClass as any):
-//       element = new elementClass({
-//         name: 'Characteristic',
-//         metaModelVersion: config.currentSammVersion,
-//         aspectModelUrn: '',
-//         dataType: new DefaultScalar({
-//           urn: new XsdDataTypes(config.currentSammVersion).getDataType('string').isDefinedBy,
-//           metaModelVersion: config.currentSammVersion,
-//         }),
-//       });
-//       break;
-//     case elementClass === DefaultEntity:
-//       element = new DefaultEntity({
-//         name: isAbstract ? 'AbstractEntity' : 'Entity',
-//         metaModelVersion: config.currentSammVersion,
-//         aspectModelUrn: '',
-//         isAbstract,
-//       });
-//       break;
-//     case elementClass === DefaultUnit:
-//       element = new DefaultUnit({name: 'unit', metaModelVersion: config.currentSammVersion, aspectModelUrn: '', quantityKinds: []});
-//       break;
-//     case elementClass === DefaultConstraint:
-//       element = new DefaultConstraint({name: 'Constraint', metaModelVersion: config.currentSammVersion, aspectModelUrn: ''});
-//       break;
-//     case (elementClass as any) === DefaultTrait:
-//       element = new DefaultTrait({name: 'Trait', metaModelVersion: config.currentSammVersion, aspectModelUrn: ''});
-//       (element as DefaultTrait).baseCharacteristic = createEmptyElement(DefaultCharacteristic);
-//       (element as DefaultTrait).constraints.push(createEmptyElement(DefaultConstraint));
-//       break;
-//     case elementClass === DefaultOperation:
-//       element = new DefaultOperation({name: 'operation', metaModelVersion: config.currentSammVersion, aspectModelUrn: '', input: null});
-//       break;
-//     case elementClass === DefaultEvent:
-//       element = new DefaultEvent({name: 'event', metaModelVersion: config.currentSammVersion, aspectModelUrn: ''});
-//       break;
-//     default:
-//       element = null;
-//   }
-//   return element as T;
-// }

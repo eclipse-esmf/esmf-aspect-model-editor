@@ -30,6 +30,6 @@ export abstract class BaseVisitor<T> {
       file => file.rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null).length > 0,
     );
     const alias = externalFile?.rdfModel?.getAliasByDependency(namespace);
-    if (alias) this.loadedFiles.currentLoadedFile.rdfModel.addPrefix(alias, namespace);
+    this.loadedFiles.currentLoadedFile.rdfModel.addPrefix(alias, namespace);
   }
 }

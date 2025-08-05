@@ -12,7 +12,7 @@
  */
 
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {DefaultCharacteristic, DefaultEither} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
@@ -21,10 +21,8 @@ import {MultiShapeConnector} from '../models';
   providedIn: 'root',
 })
 export class EitherCharacteristicLeftConnectionHandler implements MultiShapeConnector<DefaultEither, DefaultCharacteristic> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-  ) {}
+  private mxGraphService = inject(MxGraphService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
 
   public connect(parentMetaModel: DefaultEither, childMetaModel: DefaultCharacteristic, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
     parentMetaModel.left = childMetaModel;

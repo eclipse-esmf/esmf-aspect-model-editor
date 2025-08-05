@@ -15,7 +15,7 @@ import {LoadedFilesService} from '@ame/cache';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {
   DefaultCharacteristic,
   DefaultEntity,
@@ -32,18 +32,16 @@ import {MultiShapeConnector} from '../models';
   providedIn: 'root',
 })
 export class CharacteristicEntityConnectionHandler implements MultiShapeConnector<DefaultCharacteristic, DefaultEntity> {
+  private mxGraphService = inject(MxGraphService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private sammLangService = inject(SammLanguageSettingsService);
+  private notificationsService = inject(NotificationsService);
+  private loadedFiles = inject(LoadedFilesService);
+
   get currentCachedFile() {
     return this.loadedFiles.currentLoadedFile.cachedFile;
   }
-
-  constructor(
-    private mxGraphService: MxGraphService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private sammLangService: SammLanguageSettingsService,
-    private notificationsService: NotificationsService,
-    private loadedFiles: LoadedFilesService,
-  ) {}
 
   connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultEntity, parent: mxgraph.mxCell, child: mxgraph.mxCell): void {
     if (parentMetaModel instanceof DefaultStructuredValue) {

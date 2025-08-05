@@ -12,33 +12,28 @@
  */
 
 import {EntityInstanceService} from '@ame/editor';
-import {FiltersService} from '@ame/loader-filters';
-import {MxGraphHelper, MxGraphRenderer, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {ElementCreatorService} from '@ame/shared';
+import {MxGraphHelper} from '@ame/mx-graph';
 import {Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntity, DefaultProperty, Entity} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 import {EntityPropertyConnectionHandler, PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AbstractEntityConnectionHandler implements SingleShapeConnector<Entity> {
+export class AbstractEntityConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Entity> {
   constructor(
-    private mxGraphService: MxGraphService,
     private entityInstanceService: EntityInstanceService,
     private propertyAbstractPropertyConnector: PropertyAbstractPropertyConnectionHandler,
     private entityPropertyConnector: EntityPropertyConnectionHandler,
-    private filtersService: FiltersService,
-    private elementCreator: ElementCreatorService,
-    private mxGraphShapeOverlay: MxGraphShapeOverlayService,
-    private sammLangService: SammLanguageSettingsService,
-  ) {}
+  ) {
+    super();
+  }
 
   public connect(abstractEntity: DefaultEntity, source: mxgraph.mxCell) {
-    const abstractProperty = this.elementCreator.createEmptyElement(DefaultProperty, true);
+    const abstractProperty = this.elementCreator.createEmptyElement(DefaultProperty, {isAbstract: true});
     const abstractPropertyCell = this.mxGraphService.renderModelElement(
       this.filtersService.createNode(abstractProperty, {parent: MxGraphHelper.getModelElement(source)}),
     );
@@ -53,7 +48,7 @@ export class AbstractEntityConnectionHandler implements SingleShapeConnector<Ent
       .map(edge => edge.source)
       .filter(cell => MxGraphHelper.getModelElement(cell) instanceof DefaultEntity);
 
-    const mxRenderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlay, this.sammLangService, null);
+    this.refreshPropertiesLabel(abstractPropertyCell, abstractProperty);
 
     if (entities.length) {
       const [namespace, name] = abstractProperty.aspectModelUrn.split('#');
@@ -63,9 +58,9 @@ export class AbstractEntityConnectionHandler implements SingleShapeConnector<Ent
         metaModelVersion: abstractProperty.metaModelVersion,
         characteristic: this.elementCreator.createEmptyElement(DefaultCharacteristic),
       });
-      const newPropertyCell = mxRenderer.render(this.filtersService.createNode(newProperty), source);
 
-      // const newPropertyCell = this.mxGraphService.renderModelElement(this.filtersService.createNode(newProperty));
+      newProperty.characteristic.parents.push(newProperty);
+      const newPropertyCell = this.renderTree(newProperty, source);
 
       for (const entity of entities) {
         const entityModel = MxGraphHelper.getModelElement<DefaultEntity>(entity);

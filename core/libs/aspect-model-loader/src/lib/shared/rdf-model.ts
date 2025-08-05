@@ -93,6 +93,41 @@ export class RdfModel {
   }
 
   public addPrefix(alias: string, namespace: string): void {
+    if (alias === '' && !this.prefixes[alias]) {
+      this.prefixes[alias] = namespace;
+      return;
+    }
+
+    const inPrefixes = Object.values(this.prefixes).some(value => value === namespace);
+    if ((alias === '' || alias === undefined) && !inPrefixes) {
+      const matched = namespace.match(/[a-zA-Z]+/gi); //NOSONAR
+      if (matched.length) {
+        let newAlias = `ext-${matched[matched.length - 1]}`;
+        if (this.prefixes[newAlias]) {
+          let count = 2;
+          newAlias = `ext-${matched[matched.length - 1]}${count}`;
+          while (this.prefixes[newAlias]) {
+            count++;
+          }
+        }
+        this.prefixes[newAlias] = namespace;
+        return;
+      }
+    }
+
+    if (inPrefixes) {
+      return;
+    }
+
+    if (this.prefixes[alias]) {
+      let count = 1;
+      while (this.prefixes[`${alias}${count}`]) {
+        count++;
+      }
+      this.prefixes[`${alias}${count}`] = namespace;
+      return;
+    }
+
     this.prefixes[alias] = namespace;
   }
 

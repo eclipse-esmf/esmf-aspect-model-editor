@@ -12,35 +12,28 @@
  */
 
 import {EntityInstanceService} from '@ame/editor';
-import {FiltersService} from '@ame/loader-filters';
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
-import {DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
+import {MxGraphHelper} from '@ame/mx-graph';
+import {Injectable, inject} from '@angular/core';
+import {DefaultCharacteristic, DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {MultiShapeConnector} from '../models';
-import {EntityPropertyConnectionHandler} from './entity--property.service';
-import {PropertyAbstractPropertyConnectionHandler} from './property--abstract-property.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AbstractEntityAbstractPropertyConnectionHandler implements MultiShapeConnector<DefaultEntity, DefaultProperty> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private entityInstanceService: EntityInstanceService,
-    private propertyAbstractPropertyConnector: PropertyAbstractPropertyConnectionHandler,
-    private entityPropertyConnector: EntityPropertyConnectionHandler,
-    private filtersService: FiltersService,
-  ) {}
+export class AbstractEntityAbstractPropertyConnectionHandler
+  extends BaseConnectionHandler
+  implements MultiShapeConnector<DefaultEntity, DefaultProperty>
+{
+  private entityInstanceService = inject(EntityInstanceService);
 
   public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
     if (!parentMetaModel.isAbstractEntity() || !childMetaModel.isAbstract) return;
 
     if (!parentMetaModel.properties.find(property => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
-      const overWrittenProperty = {property: childMetaModel, keys: {}};
-      parentMetaModel.properties.push(overWrittenProperty as any);
-      parentMetaModel.children.push(childMetaModel);
-      this.entityInstanceService.onNewProperty(overWrittenProperty as any, parentMetaModel);
+      parentMetaModel.properties.push(childMetaModel);
+      this.entityInstanceService.onNewProperty(childMetaModel, parentMetaModel);
     }
 
     const grandParents = this.mxGraphService.graph
@@ -65,6 +58,7 @@ export class AbstractEntityAbstractPropertyConnectionHandler implements MultiSha
         aspectModelUrn: `${namespace}#[${name}]`,
         metaModelVersion: childMetaModel.metaModelVersion,
         extends_: childMetaModel,
+        characteristic: this.elementCreator.createEmptyElement(DefaultCharacteristic),
       });
 
       MxGraphHelper.establishRelation(property, childMetaModel);
@@ -73,11 +67,7 @@ export class AbstractEntityAbstractPropertyConnectionHandler implements MultiSha
       grandParentElement.properties.push(property);
       MxGraphHelper.establishRelation(grandParentElement, property);
 
-      const propertyCell = this.mxGraphService.renderModelElement(this.filtersService.createNode(property, {parent: grandParentElement}));
-
-      // connecting the elements
-      this.entityPropertyConnector.connect(grandParentElement, property, grandParent, propertyCell);
-      this.propertyAbstractPropertyConnector.connect(property, childMetaModel, propertyCell, childCell);
+      this.renderTree(property, grandParent);
     }
 
     this.mxGraphService.assignToParent(childCell, parentCell);

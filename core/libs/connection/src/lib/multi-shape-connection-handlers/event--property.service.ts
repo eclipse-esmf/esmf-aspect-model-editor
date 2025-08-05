@@ -12,7 +12,7 @@
  */
 
 import {MxGraphService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEvent, DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
@@ -21,7 +21,7 @@ import {MultiShapeConnector} from '../models';
   providedIn: 'root',
 })
 export class EventPropertyConnectionHandler implements MultiShapeConnector<DefaultEvent, DefaultProperty> {
-  constructor(private mxGraphService: MxGraphService) {}
+  private mxGraphService = inject(MxGraphService);
 
   public connect(parentMetaModel: DefaultEvent, childMetaModel: DefaultProperty, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
     if (!parentMetaModel.properties.find(param => param.aspectModelUrn === childMetaModel.aspectModelUrn)) {

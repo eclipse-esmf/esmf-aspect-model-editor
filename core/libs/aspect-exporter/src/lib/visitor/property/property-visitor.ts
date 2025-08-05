@@ -33,7 +33,7 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
   }
 
   visit(property: DefaultProperty): DefaultProperty {
-    if (property.getExtends() || property.isPredefined) {
+    if (property.getExtends() || property.isPredefined || this.loadedFiles.isElementExtern(property)) {
       return null;
     }
 

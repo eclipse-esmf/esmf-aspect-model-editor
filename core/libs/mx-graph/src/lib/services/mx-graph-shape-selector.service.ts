@@ -48,6 +48,9 @@ export class MxGraphShapeSelectorService {
     selectedElementCells.forEach((cell: mxgraph.mxCell) => {
       withExternalSelectedElementCells.push(cell);
       const modelElement = MxGraphHelper.getModelElement(cell);
+      if (!modelElement) {
+        return;
+      }
       if (this.loadedFiles.isElementExtern(modelElement)) {
         withExternalSelectedElementCells = [
           ...withExternalSelectedElementCells,

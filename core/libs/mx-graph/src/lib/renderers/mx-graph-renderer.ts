@@ -170,7 +170,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     return cell;
   }
 
-  renderCharacteristic(node: ModelTree<DefaultCharacteristic>, parent: mxCell, geometry: ShapeConfiguration['geometry'] = {}): mxCell {
+  renderCharacteristic(node: ModelTree<DefaultCharacteristic>, parentCell: mxCell, geometry: ShapeConfiguration['geometry'] = {}): mxCell {
     const characteristic = node.element;
     const cell =
       this.shapes.get(characteristic.aspectModelUrn) ||
@@ -178,15 +178,19 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
         shapeAttributes: MxGraphVisitorHelper.getCharacteristicProperties(characteristic, this.sammLangService),
         geometry,
       });
-    this.connectIsolatedElement(parent, cell);
+    this.connectIsolatedElement(parentCell, cell);
 
-    const parentCell = MxGraphHelper.getModelElement(parent);
-    if (parentCell instanceof DefaultProperty && parentCell.isAbstract) {
+    const parent = MxGraphHelper.getModelElement(parentCell);
+    if (parent instanceof DefaultProperty && parentCell.isAbstract) {
       return cell;
     }
 
+    if (parent instanceof DefaultProperty) {
+      node.element.parents.push(parent);
+    }
+
     if (characteristic.parents.length > 0) {
-      this.assignToParent(cell, parent, node);
+      this.assignToParent(cell, parentCell, node);
     }
     return cell;
   }
@@ -251,6 +255,8 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     switch (true) {
       case node.element instanceof DefaultOperation:
         return this.renderOperation(node, parent, geometry);
+      case node.element instanceof DefaultEntity && node.element.isAbstractEntity():
+        return this.renderAbstractEntity(node, parent, geometry);
       case node.element instanceof DefaultEntity:
         return this.renderEntity(node, parent, geometry);
       case node.element instanceof DefaultEntityInstance:
@@ -259,14 +265,12 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
         return this.renderUnit(node, parent, geometry);
       case node.element instanceof DefaultQuantityKind:
         return this.renderQuantityKind(node, parent, geometry);
-      case node.element instanceof DefaultProperty:
-        return this.renderProperty(node, parent, geometry);
       case node.element instanceof DefaultProperty && node.element.isAbstract:
         return this.renderAbstractProperty(node, parent, geometry);
+      case node.element instanceof DefaultProperty:
+        return this.renderProperty(node, parent, geometry);
       case node.element instanceof DefaultCharacteristic:
         return this.renderCharacteristic(node, parent, geometry);
-      case node.element instanceof DefaultEntity && node.element.isAbstractEntity():
-        return this.renderAbstractEntity(node, parent, geometry);
       case node.element instanceof DefaultAspect:
         return this.renderAspect(node, parent, geometry);
       case node.element instanceof DefaultConstraint:

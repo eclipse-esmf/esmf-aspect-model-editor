@@ -11,26 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {MxGraphHelper} from '@ame/mx-graph';
 import {DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {InheritanceConnector} from './inheritance-connector';
 import mxCell = mxgraph.mxCell;
 
 export class PropertyInheritanceConnector extends InheritanceConnector {
-  constructor(
-    protected mxGraphService: MxGraphService,
-    protected mxGraphAttributeService: MxGraphAttributeService,
-    protected sammLangService: SammLanguageSettingsService,
-    protected notificationsService: NotificationsService,
-    protected translate: LanguageTranslationService,
-  ) {
-    super(mxGraphService, mxGraphAttributeService, sammLangService, notificationsService, translate);
-  }
-
   public connect(parentMetaModel: NamedElement, childMetaModel: NamedElement, parentCell: mxCell, childCell: mxCell) {
     if (
       parentMetaModel instanceof DefaultProperty &&

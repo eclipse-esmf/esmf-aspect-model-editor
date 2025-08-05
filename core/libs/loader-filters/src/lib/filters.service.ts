@@ -83,7 +83,9 @@ export class FiltersService {
   }
 
   updateNodeTree<T extends NamedElement = NamedElement>(node: ModelTree<T>, options?: ModelTreeOptions): ModelTree<T> {
-    return this.currentFilter.generateTree(node.element, options);
+    const generatedNode = this.currentFilter.generateTree(node.element, options);
+    this.currentFilter.cache = {};
+    return generatedNode;
   }
 
   renderByFilter(filter: ModelFilter) {

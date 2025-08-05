@@ -91,7 +91,7 @@ export class ElementModelService {
     }
 
     const elementModel = MxGraphHelper.getModelElement(cell);
-    if (this.modelRootService.isPredefined(elementModel)) {
+    if (elementModel.isPredefined) {
       const service = this.modelRootService.getPredefinedService(elementModel);
       if (service?.delete && service?.delete?.(cell)) {
         return;

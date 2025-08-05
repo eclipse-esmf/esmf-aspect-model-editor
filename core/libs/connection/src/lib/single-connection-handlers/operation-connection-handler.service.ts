@@ -11,26 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/loader-filters';
-import {ModelElementNamingService} from '@ame/meta-model';
-import {ModelInfo, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {ElementCreatorService, NotificationsService} from '@ame/shared';
+import {ModelInfo} from '@ame/mx-graph';
+import {NotificationsService} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {DefaultProperty, Operation} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
-export class OperationConnectionHandler implements SingleShapeConnector<Operation> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private modelElementNamingService: ModelElementNamingService,
-    private notificationsService: NotificationsService,
-    private filtersService: FiltersService,
-    private elementCreator: ElementCreatorService,
-  ) {}
+export class OperationConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Operation> {
+  constructor(private notificationsService: NotificationsService) {
+    super();
+  }
 
   public connect(operation: Operation, source: mxgraph.mxCell, modelInfo: ModelInfo) {
     const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty);
@@ -45,10 +40,8 @@ export class OperationConnectionHandler implements SingleShapeConnector<Operatio
       operation.input.push(defaultProperty);
     }
 
-    const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultProperty);
-    const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
-    );
+    const child = this.renderTree(defaultProperty, source);
+    this.refreshPropertiesLabel(child, defaultProperty);
     this.mxGraphService.assignToParent(child, source);
     this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();

@@ -15,18 +15,18 @@ import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHe
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
+import {inject} from '@angular/core';
 import {DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {BaseConnectionHandler} from '../base-connection-handler.service';
 import mxCell = mxgraph.mxCell;
 
-export abstract class InheritanceConnector {
-  constructor(
-    protected mxGraphService: MxGraphService,
-    protected mxGraphAttributeService: MxGraphAttributeService,
-    protected sammLangService: SammLanguageSettingsService,
-    protected notificationsService: NotificationsService,
-    protected translate: LanguageTranslationService,
-  ) {}
+export abstract class InheritanceConnector extends BaseConnectionHandler {
+  protected mxGraphService = inject(MxGraphService);
+  protected mxGraphAttributeService = inject(MxGraphAttributeService);
+  protected sammLangService = inject(SammLanguageSettingsService);
+  protected notificationsService = inject(NotificationsService);
+  protected translate = inject(LanguageTranslationService);
 
   public connect(parentMetaModel: NamedElement, childMetaModel: NamedElement, parentCell: mxCell, childCell: mxCell) {
     if (parentMetaModel?.isPredefined) {

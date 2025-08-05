@@ -12,7 +12,7 @@
  */
 
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {DefaultCharacteristic, DefaultQuantifiable, DefaultUnit} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
@@ -21,7 +21,7 @@ import {MultiShapeConnector} from '../models';
   providedIn: 'root',
 })
 export class CharacteristicUnitConnectionHandler implements MultiShapeConnector<DefaultCharacteristic, DefaultUnit> {
-  constructor(private mxGraphService: MxGraphService) {}
+  private mxGraphService = inject(MxGraphService);
 
   public connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultUnit, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
     if (!(parentMetaModel instanceof DefaultQuantifiable)) {
