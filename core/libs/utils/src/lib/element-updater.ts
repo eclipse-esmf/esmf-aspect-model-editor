@@ -38,9 +38,8 @@ interface ElementUpdater {
 
 const characteristic = (element: DefaultCharacteristic): ElementUpdater => ({
   update: (toUpdate: NamedElement) =>
-    toUpdate instanceof DefaultEntity || (toUpdate instanceof DefaultScalar && (element.dataType = toUpdate)),
-  delete: (toRemove: NamedElement) =>
-    toRemove instanceof DefaultEntity || (toRemove instanceof DefaultScalar && (element.dataType = toRemove)),
+    (toUpdate instanceof DefaultEntity || toUpdate instanceof DefaultScalar) && (element.dataType = toUpdate),
+  delete: (toRemove: NamedElement) => (toRemove instanceof DefaultEntity || toRemove instanceof DefaultScalar) && (element.dataType = null),
 });
 
 const abstractEntity = (abstractEntity: DefaultEntity): ElementUpdater => ({

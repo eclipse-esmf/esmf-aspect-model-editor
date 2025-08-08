@@ -13,8 +13,8 @@
 
 import {CacheUtils} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
-import {NotificationsService} from '@ame/shared';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ElementCreatorService, NotificationsService} from '@ame/shared';
+import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Characteristic, DefaultCharacteristic, DefaultCollection} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
@@ -27,6 +27,8 @@ import {InputFieldComponent} from '../../input-field.component';
   styleUrls: ['../../field.scss'],
 })
 export class ElementCharacteristicInputFieldComponent extends InputFieldComponent<DefaultCollection> implements OnInit, OnDestroy {
+  private elementCreator = inject(ElementCreatorService);
+
   filteredCharacteristicTypes$: Observable<any[]>;
 
   elementCharacteristicDisplayControl: FormControl;
@@ -129,10 +131,10 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
       return;
     }
 
-    const newCharacteristic = new DefaultCharacteristic({
-      metaModelVersion: this.metaModelElement.metaModelVersion,
+    const newCharacteristic = this.elementCreator.createEmptyElement(DefaultCharacteristic, {
+      resolveNaming: false,
+      cached: false,
       aspectModelUrn: urn,
-      name: characteristicName,
     });
     this.parentForm.get('elementCharacteristic').setValue(newCharacteristic);
 

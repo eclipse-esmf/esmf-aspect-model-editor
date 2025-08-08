@@ -209,10 +209,13 @@ export class CharacteristicRenderService extends BaseRenderService {
       return;
     }
 
-    const edgesToRemove = cell.edges?.filter(
-      edge => MxGraphHelper.getModelElement(edge.target).aspectModelUrn !== modelElement.aspectModelUrn,
-    );
-    this.mxGraphService.removeCells(edgesToRemove || []);
+    const predefinedElements: mxgraph.mxCell[] = [];
+    const edgesToRemove = cell.edges?.filter(edge => {
+      const element = MxGraphHelper.getModelElement(edge.target);
+      if (element.isPredefined) predefinedElements.push(edge.target);
+      return element.aspectModelUrn !== modelElement.aspectModelUrn;
+    });
+    this.mxGraphService.removeCells((edgesToRemove || []).concat(predefinedElements));
   }
 
   private removeCharacteristicTargetShape(cell: mxgraph.mxCell) {

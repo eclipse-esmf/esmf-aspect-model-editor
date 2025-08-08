@@ -14,7 +14,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {MatOptionSelectionChange} from '@angular/material/core';
-import {DefaultDuration, DefaultMeasurement, DefaultQuantifiable, DefaultUnit, Unit} from '@esmf/aspect-model-loader';
+import {DefaultDuration, DefaultMeasurement, DefaultQuantifiable, DefaultUnit, Unit, useLoader} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -61,10 +61,14 @@ export class UnitInputFieldComponent
 
   onPredefinedUnitChange(predefinedUnit: Unit, event: MatOptionSelectionChange) {
     if (predefinedUnit && event.isUserInput) {
-      // TODO predefined unit creation
-      // const newPredefinedUnit = this.unitInstantiator.getUnit(predefinedUnit?.name);
-      // this.parentForm.get('unit').setValue(newPredefinedUnit);
-      // this.unitDisplayControl.patchValue(newPredefinedUnit.name);
+      const {createUnit} = useLoader({
+        rdfModel: this.loadedFiles.currentLoadedFile.rdfModel,
+        cache: this.loadedFiles.currentLoadedFile.cachedFile,
+      });
+
+      const newPredefinedUnit = createUnit(predefinedUnit.name);
+      this.parentForm.get('unit').setValue(newPredefinedUnit);
+      this.unitDisplayControl.patchValue(newPredefinedUnit.name);
       this.unitDisplayControl.disable();
     }
   }
@@ -122,8 +126,11 @@ export class UnitInputFieldComponent
   }
 
   getPredefinedUnit(unitName: string) {
-    // TODO predefined unit creation
-    // return this.unitInstantiator.createPredefinedUnit(unitName);
-    return null;
+    const {createUnit} = useLoader({
+      rdfModel: this.loadedFiles.currentLoadedFile.rdfModel,
+      cache: this.loadedFiles.currentLoadedFile.cachedFile,
+    });
+
+    return createUnit(unitName);
   }
 }

@@ -66,6 +66,9 @@ const characteristics: {new (...x: any[]): NamedElement}[] = [
 type ElementConfig = Partial<{
   isAbstract: boolean;
   baseCharacteristic: DefaultCharacteristic;
+  resolveNaming: boolean;
+  cached: boolean;
+  aspectModelUrn: string;
 }>;
 
 @Injectable({providedIn: 'root'})
@@ -79,27 +82,37 @@ export class ElementCreatorService {
 
   createEmptyElement<T>(elementClass: {new (...x: any[]): T}, elementConfig: ElementConfig = {}): T {
     let element: any;
-    const namespace = this.currentFile.namespace;
+    const namespace = `urn:samm:${this.currentFile.namespace}`;
+    const name = elementConfig.aspectModelUrn ? elementConfig.aspectModelUrn.split('#')[1] || '' : '';
+
+    elementConfig.resolveNaming ??= true;
+    elementConfig.cached ??= true;
 
     switch (true) {
       case elementClass === DefaultAspect:
-        element = new DefaultAspect({name: 'Aspect', metaModelVersion: config.currentSammVersion, aspectModelUrn: `${namespace}#Aspect`});
+        element = new DefaultAspect({
+          name: name || 'Aspect',
+          metaModelVersion: config.currentSammVersion,
+          aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#Aspect`,
+        });
         break;
       case elementClass === DefaultProperty:
         element = new DefaultProperty({
-          name: elementConfig.isAbstract ? 'abstractProperty' : 'property',
+          name: name || (elementConfig.isAbstract ? 'abstractProperty' : 'property'),
           metaModelVersion: config.currentSammVersion,
-          aspectModelUrn: `${namespace}#${elementConfig.isAbstract ? 'abstractProperty' : 'property'}`,
-          isAbstract: elementConfig.isAbstract,
-          characteristic: elementConfig.isAbstract ? null : this.createEmptyElement(DefaultCharacteristic),
+          aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#${elementConfig.isAbstract ? 'abstractProperty' : 'property'}`,
+          isAbstract: Boolean(elementConfig.isAbstract),
+          characteristic: elementConfig.isAbstract
+            ? null
+            : this.createEmptyElement(DefaultCharacteristic, {resolveNaming: true, cached: elementConfig.cached}),
         });
         if (!elementConfig.isAbstract) element.characteristic.parents.push(element);
         break;
       case characteristics.includes(elementClass as any):
         element = new elementClass({
-          name: 'Characteristic',
+          name: name || 'Characteristic',
           metaModelVersion: config.currentSammVersion,
-          aspectModelUrn: `${namespace}#Characteristic`,
+          aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#Characteristic`,
           dataType: new DefaultScalar({
             urn: new XsdDataTypes(config.currentSammVersion).getDataType('string').isDefinedBy,
             metaModelVersion: config.currentSammVersion,
@@ -108,47 +121,60 @@ export class ElementCreatorService {
         break;
       case elementClass === DefaultEntity:
         element = new DefaultEntity({
-          name: elementConfig.isAbstract ? 'AbstractEntity' : 'Entity',
+          name: name || (elementConfig.isAbstract ? 'AbstractEntity' : 'Entity'),
           metaModelVersion: config.currentSammVersion,
-          aspectModelUrn: `${namespace}#${elementConfig.isAbstract ? 'AbstractEntity' : 'Entity'}`,
+          aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#${elementConfig.isAbstract ? 'AbstractEntity' : 'Entity'}`,
           isAbstract: elementConfig.isAbstract,
         });
         break;
       case elementClass === DefaultUnit:
         element = new DefaultUnit({
-          name: 'unit',
+          name: name || 'unit',
           metaModelVersion: config.currentSammVersion,
-          aspectModelUrn: `${namespace}#unit`,
+          aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#unit`,
           quantityKinds: [],
         });
         break;
       case elementClass === DefaultConstraint:
         element = new DefaultEncodingConstraint({
-          name: 'EncodingConstraint',
+          name: name || 'EncodingConstraint',
           metaModelVersion: config.currentSammVersion,
-          aspectModelUrn: `${namespace}#EncodingConstraint`,
+          aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#EncodingConstraint`,
           value: 'UTF-8',
         });
         break;
       case (elementClass as any) === DefaultTrait:
-        element = new DefaultTrait({name: 'Trait', metaModelVersion: config.currentSammVersion, aspectModelUrn: `${namespace}#Trait`});
+        element = new DefaultTrait({
+          name: name || 'Trait',
+          metaModelVersion: config.currentSammVersion,
+          aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#Trait`,
+        });
         (element as DefaultTrait).baseCharacteristic = elementConfig.baseCharacteristic || this.createEmptyElement(DefaultCharacteristic);
         (element as DefaultTrait).constraints.push(this.createEmptyElement(DefaultConstraint));
         break;
       case elementClass === DefaultOperation:
         element = new DefaultOperation({
-          name: 'operation',
+          name: name || 'operation',
           metaModelVersion: config.currentSammVersion,
-          aspectModelUrn: `${namespace}#operation`,
+          aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#operation`,
           input: null,
         });
         break;
       case elementClass === DefaultEvent:
-        element = new DefaultEvent({name: 'event', metaModelVersion: config.currentSammVersion, aspectModelUrn: `${namespace}#event`});
+        element = new DefaultEvent({
+          name: name || 'event',
+          metaModelVersion: config.currentSammVersion,
+          aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#event`,
+        });
         break;
       default:
         element = null;
     }
-    return this.modelElementNamingService.resolveMetaModelElement(element) as T;
+
+    if (elementConfig.resolveNaming) {
+      return this.modelElementNamingService.resolveMetaModelElement(element, elementConfig.cached) as T;
+    } else if (elementConfig.cached) {
+      return this.currentFile.cachedFile.resolveInstance(element);
+    } else return element;
   }
 }

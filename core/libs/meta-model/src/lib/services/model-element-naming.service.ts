@@ -27,13 +27,16 @@ export class ModelElementNamingService {
    * @param NamedElement element being created
    * @returns element being created
    */
-  resolveMetaModelElement<T extends NamedElement>(element: T): T {
+  resolveMetaModelElement<T extends NamedElement>(element: T, cached?: boolean): T {
     for (const child of element.children) {
       if (!child.aspectModelUrn) {
-        this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(this.resolveElementNaming(child));
+        if (cached) this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(this.resolveElementNaming(child));
+        else this.resolveElementNaming(child);
       }
     }
-    return this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(this.resolveElementNaming(element));
+    return cached
+      ? this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(this.resolveElementNaming(element))
+      : this.resolveElementNaming(element);
   }
 
   /**

@@ -75,18 +75,20 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 15, 20]" showFirstLastButtons aria-label="Select page of properties"> </mat-paginator>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button (click)="closeModal()" type="button" mat-flat-button data-cy="propertiesCancelButton">
-    {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.CANCEL' | translate }}
-  </button>
-  <button
-    [disabled]="form.invalid || form.disabled"
-    (click)="saveChanges()"
-    mat-flat-button
-    type="submit"
-    color="primary"
-    data-cy="propertiesSaveButton"
-  >
-    {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.SAVE' | translate }}
-  </button>
-</mat-dialog-actions>
+@if (form) {
+  <mat-dialog-actions align="end">
+    <button (click)="closeModal()" type="button" mat-flat-button data-cy="propertiesCancelButton">
+      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.CANCEL' | translate }}
+    </button>
+    <button
+      [disabled]="form.invalid || form.disabled"
+      (click)="saveChanges()"
+      mat-flat-button
+      type="submit"
+      color="primary"
+      data-cy="propertiesSaveButton"
+    >
+      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.SAVE' | translate }}
+    </button>
+  </mat-dialog-actions>
+}

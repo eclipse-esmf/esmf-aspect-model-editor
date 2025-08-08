@@ -17,6 +17,11 @@ mat-form-field {
   mat-error {
     padding-top: 0.5rem;
   }
+
+  mat-hint {
+    font-size: 14px;
+    opacity: 0.75;
+  }
 }
 
 .ellipsis {

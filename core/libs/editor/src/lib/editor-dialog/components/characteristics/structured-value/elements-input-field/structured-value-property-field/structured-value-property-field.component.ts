@@ -13,9 +13,11 @@
 
 import {CacheUtils, LoadedFilesService} from '@ame/cache';
 import {EditorDialogValidators} from '@ame/editor';
+import {ModelElementNamingService} from '@ame/meta-model';
+import {ElementCreatorService} from '@ame/shared';
 import {Component, Input, OnInit, inject} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {DefaultProperty, RdfModel} from '@esmf/aspect-model-loader';
+import {DefaultCharacteristic, DefaultProperty, RdfModel} from '@esmf/aspect-model-loader';
 import {Observable, debounceTime, map, startWith} from 'rxjs';
 
 @Component({
@@ -27,6 +29,8 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
   @Input() public defaultProperty: DefaultProperty = null;
   @Input() public fieldControl: FormControl;
 
+  private elementCreator = inject(ElementCreatorService);
+  private modelElementNamingService = inject(ModelElementNamingService);
   public loadedFiles = inject(LoadedFilesService);
 
   public filteredProperties$: Observable<any>;
@@ -44,7 +48,9 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
     this.control = new FormControl(
       {
         value: this.defaultProperty?.name || '',
-        disabled: !!this.defaultProperty?.name || this.loadedFiles.isElementExtern(this.defaultProperty),
+        disabled:
+          this.defaultProperty instanceof DefaultProperty &&
+          (!!this.defaultProperty?.aspectModelUrn || this.loadedFiles.isElementExtern(this.defaultProperty)),
       },
       [Validators.required, EditorDialogValidators.namingLowerCase],
     );
@@ -67,9 +73,20 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
   }
 
   createNewProperty(name: string) {
-    const namespace = this.currentRdfModel.getAspectModelUrn();
-    const version = this.currentRdfModel.getMetaModelVersion();
-    const newProperty = new DefaultProperty({metaModelVersion: version, aspectModelUrn: namespace + name, name});
+    const namespace = `urn:samm:${this.loadedFiles.currentLoadedFile.namespace}#`;
+    const version = this.loadedFiles.currentLoadedFile.namespace.split(':')?.[1] || this.currentRdfModel.getMetaModelVersion();
+    const characteristic = this.elementCreator.createEmptyElement(DefaultCharacteristic, {
+      resolveNaming: true,
+      cached: false,
+      aspectModelUrn: `${namespace}Characteristic${name}`,
+    });
+
+    const newProperty = new DefaultProperty({
+      metaModelVersion: version,
+      aspectModelUrn: namespace + name,
+      name,
+      characteristic,
+    });
     this.fieldControl.setValue(newProperty);
     this.control.disable();
   }

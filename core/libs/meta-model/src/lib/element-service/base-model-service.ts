@@ -16,6 +16,7 @@ import {LoadedFilesService} from '@ame/cache';
 import {EditorService} from '@ame/editor';
 import {MxGraphHelper} from '@ame/mx-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
+import {useUpdater} from '@ame/utils';
 import {inject} from '@angular/core';
 import {DefaultAspect, DefaultEntityInstance, DefaultEnumeration, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
@@ -69,18 +70,17 @@ export abstract class BaseModelService {
 
   delete(cell: mxgraph.mxCell) {
     // Add common operations
-    const modeElement = MxGraphHelper.getModelElement(cell);
+    const modelElement = MxGraphHelper.getModelElement(cell);
     for (const edge of (cell.edges?.length && cell.edges) || []) {
       const sourceNode = MxGraphHelper.getModelElement<NamedElement>(edge.source);
       if (sourceNode && !(sourceNode instanceof DefaultEnumeration) && this.loadedFilesService.isElementInCurrentFile(sourceNode)) {
-        this.currentCachedFile.removeElement(modeElement.aspectModelUrn);
-        // TODO make functionality for delete
-        // sourceNode.delete(modeElement);
+        this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
+        useUpdater(sourceNode).delete(modelElement);
       }
     }
 
-    if (this.loadedFilesService.isElementInCurrentFile(modeElement)) {
-      this.currentCachedFile.removeElement(modeElement.aspectModelUrn);
+    if (this.loadedFilesService.isElementInCurrentFile(modelElement)) {
+      this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
     }
   }
 

@@ -152,11 +152,11 @@ export class CharacteristicModelService extends BaseModelService {
     if (form.elements) {
       metaModelElement.elements = form.elements;
       form.elements.forEach(element => {
-        if (typeof element !== 'string' && element?.property instanceof DefaultProperty) {
-          this.currentCachedFile.resolveInstance(element.property);
+        if (typeof element !== 'string' && element instanceof DefaultProperty) {
+          this.currentCachedFile.resolveInstance(element);
           MxGraphHelper.establishRelation(metaModelElement, element);
-          if (element.property.characteristic) {
-            this.currentCachedFile.resolveInstance(element.property.characteristic);
+          if (element.characteristic) {
+            this.currentCachedFile.resolveInstance(element.characteristic);
           }
         }
       });

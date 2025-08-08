@@ -95,15 +95,15 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
           disabled: status.inherited || status.disabled,
         }),
         optional: this.formBuilder.control({
-          value: status.propertyPayload.optional || false,
+          value: status.propertyPayload?.optional || false,
           disabled: status.inherited || status.disabled,
         }),
         notInPayload: this.formBuilder.control({
-          value: status.propertyPayload.notInPayload || false,
+          value: status.propertyPayload?.notInPayload || false,
           disabled: status.inherited || status.disabled,
         }),
         payloadName: this.formBuilder.control({
-          value: status.propertyPayload.payloadName || '',
+          value: status.propertyPayload?.payloadName || '',
           disabled: status.inherited || status.disabled,
         }),
       });
