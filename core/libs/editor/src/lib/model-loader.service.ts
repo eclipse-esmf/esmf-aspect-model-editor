@@ -48,6 +48,7 @@ export class ModelLoaderService {
    * Loads a model with it's dependencies and renders it
    */
   renderModel(payload: LoadModelPayload) {
+    this.settings.copyrightHeader = RdfModelUtil.extractCommentsFromRdfContent(payload.rdfAspectModel);
     this.loadedFilesService.removeAll();
 
     return this.loadSingleModel(payload, true).pipe(
@@ -67,6 +68,8 @@ export class ModelLoaderService {
           this.titleService.updateTitle(this.loadedFilesService.currentLoadedFile?.absoluteName);
         }
       }),
+      switchMap(() => this.loadFilesInSequence(this.loadedFilesService.currentLoadedFile.namespaceFiles)),
+      tap(() => (this.loadedFilesService.currentLoadedFile.namespaceFiles = {})),
     );
   }
 
@@ -76,7 +79,6 @@ export class ModelLoaderService {
    * @param absoluteFileName
    */
   loadSingleModel(payload: LoadModelPayload, render = false) {
-    this.settings.copyrightHeader = RdfModelUtil.extractCommentsFromRdfContent(payload.rdfAspectModel);
     const currentFileKey = payload.namespaceFileName || 'current';
 
     const migrate$ = this.parseRdfModel([payload.rdfAspectModel]).pipe(
@@ -95,6 +97,7 @@ export class ModelLoaderService {
       }),
       // loading in sequence all RdfModels for the current file and dependencies
       switchMap(files => this.loadRdfModelFromFiles(files, payload)),
+      // Filter dependencies to only load the directly used ones
       map(({files, rdfModels}) => ({files, rdfModels: this.filterDependencies(files, rdfModels, currentFileKey, payload.fromWorkspace)})),
       // loading the model with all namespace dependencies
       switchMap(({files, rdfModels}) =>
@@ -107,6 +110,7 @@ export class ModelLoaderService {
             loadedFile.rdfModel = rdfModels[currentFileKey];
             // registering all loaded files
             const currentFile = this.registerFiles(rdfModels, loadedFile, payload, render);
+            currentFile.namespaceFiles = files;
             // loading all isolated elements
             this.instantiatorService.instantiateRemainingElements(rdfModels[currentFileKey], loadedFile.cachedElements);
             // filtering and registering the elements by their location in files
@@ -156,16 +160,26 @@ export class ModelLoaderService {
     );
   }
 
+  /**
+   * Filters the only dependencies the file is using and the files from the same namespace and version
+   *
+   * @param files all absolute names from workspace
+   * @param rdfModels a list of deep dependencies of the loading file
+   * @param currentFile absolute name of loading file
+   * @param fromWorkspace signals if model is loading from workspace
+   * @returns a map of RdfModels
+   */
   private filterDependencies(
     files: Record<string, string>,
     rdfModels: Record<string, RdfModel>,
     currentFile: string,
     fromWorkspace: boolean,
-  ) {
+  ): Record<string, RdfModel> {
     const current = rdfModels[currentFile];
     if (!current) return rdfModels;
 
     const aspect = this.getAspectUrn(current);
+    const versionedNamespace: string = current.getPrefixes()['']?.replace('#', '')?.replace('urn:samm:', '');
 
     const objects = current.store.getObjects(null, null, null);
     const toRemove = [];
@@ -178,7 +192,9 @@ export class ModelLoaderService {
         throw new Error('Same aspect found in workspace file ' + key);
       }
 
-      const isDependency = objects.some(object => rdfModels[key].store.getQuads(object, null, null, null).length);
+      // Check if it is dependency or in the same versioned namespace
+      const isDependency =
+        key.startsWith(versionedNamespace) || objects.some(object => rdfModels[key].store.getQuads(object, null, null, null).length);
 
       if (!isDependency) {
         toRemove.push(key);
@@ -271,6 +287,16 @@ export class ModelLoaderService {
     );
   }
 
+  private loadFilesInSequence(files: Record<string, string>) {
+    const entries = Object.entries(files);
+    let queue = of<NamespaceFile>(null);
+    for (const [key, model] of entries) {
+      queue = queue.pipe(switchMap(() => this.loadSingleModel({namespaceFileName: key, rdfAspectModel: model, fromWorkspace: true})));
+    }
+
+    return queue;
+  }
+
   /**
    * Loads the rdf models of the current model and its dependencies
    */
@@ -303,15 +329,18 @@ export class ModelLoaderService {
         currentFile && (currentFile.rendered = false);
       }
 
-      const file = this.loadedFilesService.addFile({
-        rdfModel,
-        sharedRdfModel: isCurrentFile ? loadedFile.rdfModel : null,
-        cachedFile: isCurrentFile ? loadedFile.cachedElements : new ModelElementCache(),
-        aspect: isCurrentFile ? loadedFile.aspect : null,
-        absoluteName: isCurrentFile ? payload.namespaceFileName || '' : key,
-        rendered: isCurrentFile && render,
-        fromWorkspace: payload.fromWorkspace,
-      });
+      const file = this.loadedFilesService.addFile(
+        {
+          rdfModel,
+          sharedRdfModel: isCurrentFile ? loadedFile.rdfModel : null,
+          cachedFile: isCurrentFile ? loadedFile.cachedElements : new ModelElementCache(),
+          aspect: isCurrentFile ? loadedFile.aspect : null,
+          absoluteName: isCurrentFile ? payload.namespaceFileName || '' : key,
+          rendered: isCurrentFile && render,
+          fromWorkspace: payload.fromWorkspace,
+        },
+        isCurrentFile,
+      );
 
       if (isCurrentFile) currentNamespaceFile = file;
     }

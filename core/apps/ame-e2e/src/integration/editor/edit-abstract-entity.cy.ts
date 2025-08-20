@@ -327,8 +327,15 @@ describe('Create and Edit Abstract Entity', () => {
     it('should export', () => {
       cy.then(() => cy.getUpdatedRDF()).then(rdf => {
         expect(rdf).to.contain(':Entity1 a samm:Entity;');
-        expect(rdf).to.contain('samm:properties ([ samm:extends :abstractProperty1 ] [ samm:extends :abstractProperty2 ]);');
-        expect(rdf).to.contain('samm:extends :AbstractEntity1.');
+        expect(rdf).to.contain(`[
+  samm:characteristic :Characteristic2;
+  samm:extends :abstractProperty1
+]`);
+        expect(rdf).to.contain(`[
+  samm:characteristic :Characteristic3;
+  samm:extends :abstractProperty2
+]`);
+        expect(rdf).to.contain('samm:extends :AbstractEntity1');
         expect(rdf).to.contain(':AbstractEntity1 a samm:AbstractEntity;');
         expect(rdf).to.contain('samm:properties (:abstractProperty1 :abstractProperty2);');
         expect(rdf).to.contain('samm:preferredName "Preferred Name 1"@en;');

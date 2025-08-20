@@ -47,7 +47,7 @@
           </mat-option>
         }
         @for (dataType of filteredEntityTypes; track dataType) {
-          <mat-option [value]="dataType.name" (onSelectionChange)="onSelectionChange('dataType', dataType, $event)">
+          <mat-option [value]="dataType.name" (onSelectionChange)="onSelectionChange('dataType', dataType.entity, $event)">
             <div class="ellipsis">
               <span>{{ dataType.name }}</span>
               @if (dataType.description) {

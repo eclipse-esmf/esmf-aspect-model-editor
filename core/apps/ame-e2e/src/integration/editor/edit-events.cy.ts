@@ -19,6 +19,10 @@ import {cyHelp} from '../../support/helpers';
 describe('Test edit Events', () => {
   it('can load events', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+      statusCode: 200,
+      body: {},
+    });
     cy.visitDefault();
     cy.fixture('model-with-events')
       .as('rdfString')
@@ -30,21 +34,21 @@ describe('Test edit Events', () => {
             expect(aspect.events).to.have.lengthOf(2);
             expect(aspect.events[0].name).to.equal('SeatMoving');
             expect(aspect.events[1].name).to.equal('PassengerPresent');
-            expect(aspect.events[0].parameters).to.have.lengthOf(4);
-            expect(aspect.events[1].parameters).to.have.lengthOf(3);
-            expect(aspect.events[0].parameters[0].property.name).to.equal('status');
-            expect(aspect.events[0].parameters[1].property.name).to.equal('row');
-            expect(aspect.events[0].parameters[2].property.name).to.equal('index');
-            expect(aspect.events[0].parameters[3].property.name).to.equal('component');
-            expect(aspect.events[1].parameters[0].property.name).to.equal('status');
-            expect(aspect.events[1].parameters[1].property.name).to.equal('row');
-            expect(aspect.events[1].parameters[2].property.name).to.equal('index');
+            expect(aspect.events[0].properties).to.have.lengthOf(4);
+            expect(aspect.events[1].properties).to.have.lengthOf(3);
+            expect(aspect.events[0].properties[0].name).to.equal('status');
+            expect(aspect.events[0].properties[1].name).to.equal('row');
+            expect(aspect.events[0].properties[2].name).to.equal('index');
+            expect(aspect.events[0].properties[3].name).to.equal('component');
+            expect(aspect.events[1].properties[0].name).to.equal('status');
+            expect(aspect.events[1].properties[1].name).to.equal('row');
+            expect(aspect.events[1].properties[2].name).to.equal('index');
           });
         });
       });
   });
 
-  it('can add parameters', () => {
+  it('can add properties', () => {
     cy.visitDefault();
     cy.startModelling()
       .then(() => cy.get(SELECTOR_elementBtn).click())
@@ -59,8 +63,8 @@ describe('Test edit Events', () => {
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.events[0].name).to.equal('event1');
-          expect(aspect.events[0].parameters[0].property.name).to.equal('property2');
-          expect(aspect.events[0].parameters[1].property.name).to.equal('property3');
+          expect(aspect.events[0].properties[0].name).to.equal('property2');
+          expect(aspect.events[0].properties[1].name).to.equal('property3');
         }),
       )
       .then(() =>
@@ -84,9 +88,9 @@ describe('Test edit Events', () => {
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.events[0].name).to.equal('newEvent');
-          expect(aspect.events[0].parameters).to.have.length(2);
-          expect(aspect.events[0].parameters[0].property.name).to.equal('property2');
-          expect(aspect.events[0].parameters[1].property.name).to.equal('property3');
+          expect(aspect.events[0].properties).to.have.length(2);
+          expect(aspect.events[0].properties[0].name).to.equal('property2');
+          expect(aspect.events[0].properties[1].name).to.equal('property3');
         }),
       )
       .then(() =>
@@ -109,8 +113,8 @@ describe('Test edit Events', () => {
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.events[0].name).to.equal('newEvent');
-          expect(aspect.events[0].parameters).to.have.length(1);
-          expect(aspect.events[0].parameters[0].property.name).to.equal('property3');
+          expect(aspect.events[0].properties).to.have.length(1);
+          expect(aspect.events[0].properties[0].name).to.equal('property3');
         }),
       )
       .then(() =>

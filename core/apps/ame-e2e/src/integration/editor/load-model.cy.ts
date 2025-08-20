@@ -34,6 +34,7 @@ import {cyHelp} from '../../support/helpers';
 
 describe('Test load different characteristics', () => {
   it('can load characteristic classes', () => {
+    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
     cy.fixture('all-characteristic')
@@ -45,38 +46,38 @@ describe('Test load different characteristics', () => {
             expect(aspect.name).to.equal('AspectWithAllCharacteristic');
             expect(aspect.properties).to.have.lengthOf(9);
 
-            expect(aspect.properties[0].property.name).to.equal('testCodeProperty');
-            expect(aspect.properties[0].property.characteristic.name).to.equal('TestCode');
+            expect(aspect.properties[0].name).to.equal('testCodeProperty');
+            expect(aspect.properties[0].characteristic.name).to.equal('TestCode');
 
-            expect(aspect.properties[1].property.name).to.equal('testCollectiontProperty');
-            expect(aspect.properties[1].property.characteristic.name).to.equal('TestCollection');
+            expect(aspect.properties[1].name).to.equal('testCollectiontProperty');
+            expect(aspect.properties[1].characteristic.name).to.equal('TestCollection');
 
-            expect(aspect.properties[2].property.name).to.equal('testDurationProperty');
-            expect(aspect.properties[2].property.characteristic.name).to.equal('TestDuration');
-            expect(aspect.properties[2].property.characteristic.unit.name).to.equal('kilosecond');
+            expect(aspect.properties[2].name).to.equal('testDurationProperty');
+            expect(aspect.properties[2].characteristic.name).to.equal('TestDuration');
+            expect(aspect.properties[2].characteristic.unit.name).to.equal('kilosecond');
 
-            expect(aspect.properties[3].property.name).to.equal('testEnumerationProperty');
-            expect(aspect.properties[3].property.characteristic.name).to.equal('TestEnumeration');
-            expect(aspect.properties[3].property.characteristic.values).to.have.lengthOf(3);
-            expect(aspect.properties[3].property.characteristic.values[0]).to.equal('1');
-            expect(aspect.properties[3].property.characteristic.values[1]).to.equal('2');
-            expect(aspect.properties[3].property.characteristic.values[2]).to.equal('3');
+            expect(aspect.properties[3].name).to.equal('testEnumerationProperty');
+            expect(aspect.properties[3].characteristic.name).to.equal('TestEnumeration');
+            expect(aspect.properties[3].characteristic.values).to.have.lengthOf(3);
+            expect(aspect.properties[3].characteristic.values[0].value).to.equal(1);
+            expect(aspect.properties[3].characteristic.values[1].value).to.equal(2);
+            expect(aspect.properties[3].characteristic.values[2].value).to.equal(3);
 
-            expect(aspect.properties[4].property.name).to.equal('testListProperty');
-            expect(aspect.properties[4].property.characteristic.name).to.equal('TestList');
+            expect(aspect.properties[4].name).to.equal('testListProperty');
+            expect(aspect.properties[4].characteristic.name).to.equal('TestList');
 
-            expect(aspect.properties[5].property.name).to.equal('testMeasurementProperty');
-            expect(aspect.properties[5].property.characteristic.name).to.equal('TestMeasurement');
-            expect(aspect.properties[5].property.characteristic.unit.name).to.equal('kelvin');
+            expect(aspect.properties[5].name).to.equal('testMeasurementProperty');
+            expect(aspect.properties[5].characteristic.name).to.equal('TestMeasurement');
+            expect(aspect.properties[5].characteristic.unit.name).to.equal('kelvin');
 
-            expect(aspect.properties[6].property.name).to.equal('testQuantifiableProperty');
-            expect(aspect.properties[6].property.characteristic.name).to.equal('TestQuantifiable');
+            expect(aspect.properties[6].name).to.equal('testQuantifiableProperty');
+            expect(aspect.properties[6].characteristic.name).to.equal('TestQuantifiable');
 
-            expect(aspect.properties[7].property.name).to.equal('testSetProperty');
-            expect(aspect.properties[7].property.characteristic.name).to.equal('TestSet');
+            expect(aspect.properties[7].name).to.equal('testSetProperty');
+            expect(aspect.properties[7].characteristic.name).to.equal('TestSet');
 
-            expect(aspect.properties[8].property.name).to.equal('testSortedSetProperty');
-            expect(aspect.properties[8].property.characteristic.name).to.equal('TestSortedSet');
+            expect(aspect.properties[8].name).to.equal('testSortedSetProperty');
+            expect(aspect.properties[8].characteristic.name).to.equal('TestSortedSet');
           });
         });
       });
@@ -85,7 +86,7 @@ describe('Test load different characteristics', () => {
   context('TestCode', () => {
     it('can add LengthConstraint', () => {
       cy.clickAddTraitPlusIcon('TestCode')
-        .then(() => cy.dbClickShape('Constraint1'))
+        .then(() => cy.dbClickShape('EncodingConstraint1'))
         .then(() => {
           cy.get(FIELD_constraintName).click({force: true}).get('mat-option').contains('LengthConstraint').click({force: true});
           cy.get('[data-cy="minValue"]').type('1', {force: true}).click({force: true});
@@ -94,11 +95,11 @@ describe('Test load different characteristics', () => {
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('samm-c:constraint :Constraint1');
+          expect(rdf).to.contain('samm-c:constraint :EncodingConstraint1');
           expect(rdf).to.contain('Constraint1 a samm-c:LengthConstraint');
           expect(rdf).to.contain('samm-c:minValue "1"^^xsd:nonNegativeInteger');
           expect(rdf).to.contain('samm-c:maxValue "10"^^xsd:nonNegativeInteger');
-          cy.clickShape('Constraint1');
+          cy.clickShape('EncodingConstraint1');
         });
     });
   });
@@ -131,7 +132,7 @@ describe('Test load different characteristics', () => {
 
     it('can add FixedPointConstraint', () => {
       cy.clickAddTraitPlusIcon('TestMeasurement')
-        .then(() => cy.dbClickShape('Constraint2'))
+        .then(() => cy.dbClickShape('EncodingConstraint2'))
         .then(() => {
           cy.get(FIELD_constraintName)
             .click({force: true})
@@ -146,15 +147,15 @@ describe('Test load different characteristics', () => {
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('samm-c:constraint :Constraint2');
-          expect(rdf).to.contain('Constraint2 a samm-c:FixedPointConstraint');
+          expect(rdf).to.contain('samm-c:constraint :EncodingConstraint2');
+          expect(rdf).to.contain('EncodingConstraint2 a samm-c:FixedPointConstraint');
           expect(rdf).to.contain('samm-c:integer "1"^^xsd:positiveInteger');
           expect(rdf).to.contain('samm-c:scale "1"^^xsd:positiveInteger');
         });
     });
 
     it('can not enter incorrect value for scale', () => {
-      cy.dbClickShape('Constraint2')
+      cy.dbClickShape('EncodingConstraint2')
         .then(() => cy.get('[data-cy="scale"]').clear({force: true}).type('-1', {force: true}))
         .then(() => cy.get('[data-cy="integer"]').click({force: true}))
         .then(() => cyHelp.forceChangeDetection())
@@ -166,7 +167,7 @@ describe('Test load different characteristics', () => {
     });
 
     it('can not enter incorrect value for integer', () => {
-      cy.dbClickShape('Constraint2')
+      cy.dbClickShape('EncodingConstraint2')
         .then(() => cy.get('[data-cy="integer"]').clear({force: true}).type('-1', {force: true}))
         .then(() => cy.get('[data-cy="scale"]').click({force: true}))
         .then(() => cyHelp.forceChangeDetection())
@@ -178,13 +179,13 @@ describe('Test load different characteristics', () => {
     });
 
     it('can modify scale', () => {
-      cy.dbClickShape('Constraint2')
+      cy.dbClickShape('EncodingConstraint2')
         .then(() => cy.get('[data-cy="scale"]').clear({force: true}).type('10', {force: true}).click({force: true}))
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain('samm-c:scale "10"^^xsd:positiveInteger');
-          const label = cyHelp.getShapeLabelByKey('Constraint2', META_MODEL_scale);
+          const label = cyHelp.getShapeLabelByKey('EncodingConstraint2', META_MODEL_scale);
           label.should('exist');
           label.should('contain.text', `${META_MODEL_scale} = 10`);
         });
@@ -194,7 +195,7 @@ describe('Test load different characteristics', () => {
   context('TestQuantifiable', () => {
     it('can add EncodingConstraint', () => {
       cy.clickAddTraitPlusIcon('TestQuantifiable')
-        .then(() => cy.dbClickShape('Constraint3'))
+        .then(() => cy.dbClickShape('EncodingConstraint3'))
         .then(() => {
           cy.get(FIELD_constraintName).click({force: true});
           cy.get('mat-option').contains('EncodingConstraint').click({force: true});
@@ -202,13 +203,13 @@ describe('Test load different characteristics', () => {
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('samm-c:constraint :Constraint3');
-          expect(rdf).to.contain('Constraint3 a samm-c:EncodingConstraint');
-          expect(rdf).to.contain('samm:value samm:US-ASCII');
+          expect(rdf).to.contain('samm-c:constraint :EncodingConstraint3');
+          expect(rdf).to.contain('EncodingConstraint3 a samm-c:EncodingConstraint');
+          expect(rdf).to.contain('samm:value samm:UTF-8');
 
-          const label = cyHelp.getShapeLabelByKey('Constraint3', META_MODEL_value);
+          const label = cyHelp.getShapeLabelByKey('EncodingConstraint3', META_MODEL_value);
           label.should('exist');
-          label.should('contain.text', `${META_MODEL_value} = US-ASCII`);
+          label.should('contain.text', `${META_MODEL_value} = UTF-8`);
         });
     });
   });
@@ -216,20 +217,20 @@ describe('Test load different characteristics', () => {
   context('TestSet', () => {
     it('can add RegularExpressionConstraint', () => {
       cy.clickAddTraitPlusIcon('TestSet')
-        .then(() => cy.dbClickShape('Constraint4'))
+        .then(() => cy.dbClickShape('EncodingConstraint4'))
         .then(() => {
           cy.get(FIELD_constraintName).click({force: true});
           cy.get('mat-option').contains('RegularExpressionConstraint').click({force: true});
         })
-        .then(() => cy.get('[data-cy="value"]').type('*', {force: true}))
+        .then(() => cy.get('[data-cy="value"]').clear({force: true}).type('*', {force: true}))
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('samm-c:constraint :Constraint4');
-          expect(rdf).to.contain('Constraint4 a samm-c:RegularExpressionConstraint');
+          expect(rdf).to.contain('samm-c:constraint :EncodingConstraint4');
+          expect(rdf).to.contain('EncodingConstraint4 a samm-c:RegularExpressionConstraint');
           expect(rdf).to.contain('samm:value "*"');
 
-          const label = cyHelp.getShapeLabelByKey('Constraint4', META_MODEL_value);
+          const label = cyHelp.getShapeLabelByKey('EncodingConstraint4', META_MODEL_value);
           label.should('exist');
           label.should('contain.text', `${META_MODEL_value} = *`);
         });
@@ -239,7 +240,7 @@ describe('Test load different characteristics', () => {
   context('TestSortedSet', () => {
     it('can add RangeConstraint', () => {
       cy.clickAddTraitPlusIcon('TestSortedSet')
-        .then(() => cy.dbClickShape('Constraint5'))
+        .then(() => cy.dbClickShape('EncodingConstraint5'))
         .then(() => {
           cy.get(FIELD_constraintName).click({force: true});
           cy.get('mat-option').contains('RangeConstraint').click({force: true});
@@ -249,14 +250,14 @@ describe('Test load different characteristics', () => {
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('samm-c:constraint :Constraint5');
-          expect(rdf).to.contain('Constraint5 a samm-c:RangeConstraint');
+          expect(rdf).to.contain('samm-c:constraint :EncodingConstraint5');
+          expect(rdf).to.contain('EncodingConstraint5 a samm-c:RangeConstraint');
           expect(rdf).to.contain('samm:value "*"');
-          const minValue = cyHelp.getShapeLabelByKey('Constraint5', META_MODEL_minValue);
+          const minValue = cyHelp.getShapeLabelByKey('EncodingConstraint5', META_MODEL_minValue);
           minValue.should('exist');
           minValue.should('contain.text', `${META_MODEL_minValue} = 1`);
 
-          const maxValue = cyHelp.getShapeLabelByKey('Constraint5', META_MODEL_maxValue);
+          const maxValue = cyHelp.getShapeLabelByKey('EncodingConstraint5', META_MODEL_maxValue);
           maxValue.should('exist');
           maxValue.should('contain.text', `${META_MODEL_maxValue} = 100`);
         });
@@ -266,7 +267,7 @@ describe('Test load different characteristics', () => {
   context('TestCollection', () => {
     it('can add LocaleConstraint', () => {
       cy.clickAddTraitPlusIcon('TestCollection')
-        .then(() => cy.dbClickShape('Constraint6'))
+        .then(() => cy.dbClickShape('EncodingConstraint6'))
         .then(() => {
           cy.get(FIELD_constraintName).click({force: true});
           cy.get('mat-option').contains('LocaleConstraint').click({force: true});
@@ -280,11 +281,11 @@ describe('Test load different characteristics', () => {
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('samm-c:constraint :Constraint6');
-          expect(rdf).to.contain('Constraint6 a samm-c:LocaleConstraint');
+          expect(rdf).to.contain('samm-c:constraint :EncodingConstraint6');
+          expect(rdf).to.contain('EncodingConstraint6 a samm-c:LocaleConstraint');
           expect(rdf).to.contain('samm-c:localeCode "de-DE"');
 
-          const minValue = cyHelp.getShapeLabelByKey('Constraint6', META_MODEL_localeCode);
+          const minValue = cyHelp.getShapeLabelByKey('EncodingConstraint6', META_MODEL_localeCode);
           minValue.should('exist');
           minValue.should('contain.text', `${META_MODEL_localeCode} = de-DE`);
         });
@@ -294,7 +295,7 @@ describe('Test load different characteristics', () => {
   context('TestDuration', () => {
     it('can add LanguageConstraint', () => {
       cy.clickAddTraitPlusIcon('TestDuration')
-        .then(() => cy.dbClickShape('Constraint7'))
+        .then(() => cy.dbClickShape('EncodingConstraint7'))
         .then(() => {
           cy.get(FIELD_constraintName).click({force: true});
           cy.get('mat-option').contains('LanguageConstraint').click({force: true});
@@ -308,11 +309,11 @@ describe('Test load different characteristics', () => {
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
-          expect(rdf).to.contain('samm-c:constraint :Constraint7');
-          expect(rdf).to.contain('Constraint7 a samm-c:LanguageConstraint');
+          expect(rdf).to.contain('samm-c:constraint :EncodingConstraint7');
+          expect(rdf).to.contain('EncodingConstraint7 a samm-c:LanguageConstraint');
           expect(rdf).to.contain('samm-c:languageCode "en"');
 
-          const minValue = cyHelp.getShapeLabelByKey('Constraint7', META_MODEL_languageCode);
+          const minValue = cyHelp.getShapeLabelByKey('EncodingConstraint7', META_MODEL_languageCode);
           minValue.should('exist');
           minValue.should('contain.text', `${META_MODEL_languageCode} = en`);
         });

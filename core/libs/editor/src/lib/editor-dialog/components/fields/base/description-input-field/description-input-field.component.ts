@@ -59,10 +59,11 @@ export class DescriptionInputFieldComponent extends InputFieldComponent<NamedEle
 
   isInherited(locale: string): boolean {
     const control = this.parentForm.get('description' + locale);
+    const extending = this.metaModelElement as HasExtends;
     return (
-      this.metaModelElement instanceof HasExtends &&
-      this.metaModelElement.getExtends()?.getDescription(locale) &&
-      control.value === this.metaModelElement.getExtends()?.getDescription(locale)
+      extending.extends_ &&
+      extending.getExtends()?.getDescription(locale) &&
+      control.value === extending.getExtends()?.getDescription(locale)
     );
   }
 

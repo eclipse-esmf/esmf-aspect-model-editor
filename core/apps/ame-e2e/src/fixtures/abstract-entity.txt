@@ -34,10 +34,18 @@
     samm:extends :AbstractEntity1.
 
 :property2 a samm:Property;
-    samm:extends :abstractProperty2.
+    samm:extends :abstractProperty2;
+    samm:characteristic :Characteristic2.
+
+:Characteristic2 a samm:Characteristic;
+    samm:dataType xsd:string.
 
 :property3 a samm:Property;
-    samm:extends :abstractProperty1.
+    samm:extends :abstractProperty1;
+    samm:characteristic :Characteristic3.
+
+:Characteristic3 a samm:Characteristic;
+    samm:dataType xsd:string.
 
 :AbstractEntity1 a samm:AbstractEntity;
     samm:preferredName "Preferred Name 1"@en;

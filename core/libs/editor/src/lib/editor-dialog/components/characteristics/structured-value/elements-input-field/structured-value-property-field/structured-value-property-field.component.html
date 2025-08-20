@@ -14,7 +14,7 @@
 <mat-form-field>
   <mat-label for="left">Property</mat-label>
   <input #property [matAutocomplete]="auto" [formControl]="control" matInput name="property-element" data-cy="property-element" />
-  @if (control?.disabled && loadedFiles.isElementExtern(defaultProperty)) {
+  @if (control?.disabled) {
     <button (click)="unlock()" data-cy="clear-property-button" matSuffix mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
     </button>

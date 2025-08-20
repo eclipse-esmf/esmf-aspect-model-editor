@@ -10,6 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {LoadedFilesService} from '@ame/cache';
 import {config, simpleDataTypes} from '@ame/shared';
 import {getDeepLookupDataType} from '@ame/utils';
 import {
@@ -259,27 +260,39 @@ export class RdfModelUtil {
     return !!rdfModel.findAnyProperty(quad).find(quadProperty => samm.Entity().equals(quadProperty.subject));
   }
 
-  static isEntityValue(elementType: string, rdfModel: RdfModel): boolean {
-    const quads = rdfModel.store.getQuads(DataFactory.namedNode(elementType), null, rdfModel.samm.Entity(), null);
+  static isEntityInstance(elementType: string, loadedFilesService: LoadedFilesService): boolean {
+    const rdfModel = loadedFilesService.currentLoadedFile.rdfModel;
+    const quads = rdfModel.store.getQuads(DataFactory.namedNode(elementType), rdfModel.samm.RdfType(), null, null);
 
-    if (quads.length) {
-      return true;
+    if (!quads.length) return false;
+
+    const entityQuads = rdfModel.store.getQuads(quads[0].object, rdfModel.samm.RdfType(), rdfModel.samm.Entity(), null);
+    if (!entityQuads.length) {
+      return loadedFilesService.filesAsList.some(
+        file => file.rdfModel.store.getQuads(quads[0].object, rdfModel.samm.RdfType(), rdfModel.samm.Entity(), null)?.length > 0,
+      );
     }
 
-    // @todo recreate functionality
-    // const externalRdfModel = metaModelElementInstantiator.getRdfModelByElement(DataFactory.namedNode(elementType));
-    // quads = externalRdfModel?.store.getQuads(DataFactory.namedNode(elementType), null, metaModelElementInstantiator.samm.Entity(), null);
-
-    return !!quads?.length;
+    return true;
   }
 
   static resolveExternalNamespaces(rdfModel: RdfModel, selfExclude = true) {
     const sammNamespaces = getSammNamespaces();
-    const prefixes = Object.values(rdfModel.getPrefixes());
+
+    // Extracting all namespaces since the prefixes are not all returned by the rdfModel.getPrefixes()
+    const values: string[] = Object.values<string>(rdfModel.store['_entities']).reduce((acc: string[], item: string) => {
+      // skipping the blank nodes and other non-like urns
+      if (!item.startsWith('urn:samm:') || !item.includes('#')) {
+        return acc;
+      }
+
+      return [...acc, item.split('#')[0] + '#'];
+    }, []);
+
+    const prefixes = Array.from(new Set(values)).filter(item => !sammNamespaces.includes(item));
 
     const checkItself = (prefix: string) => (selfExclude ? prefix != rdfModel.getPrefixes()[''] : true);
-
-    return prefixes.filter(prefix => checkItself(prefix) && !sammNamespaces.includes(prefix));
+    return prefixes.filter(prefix => checkItself(prefix));
   }
 
   static getUrnFromFileName(fileName: string): string {

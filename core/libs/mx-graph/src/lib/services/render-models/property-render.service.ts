@@ -52,6 +52,8 @@ export class PropertyRenderService extends BaseRenderService {
       return;
     }
 
+    if (!metaModelElement.extends_) return;
+
     const extendsElement = metaModelElement.extends_;
     const cachedEntity = this.loadedFilesService.currentLoadedFile.cachedFile.resolveInstance(extendsElement);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);

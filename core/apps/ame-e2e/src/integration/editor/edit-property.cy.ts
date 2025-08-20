@@ -73,7 +73,7 @@ describe('Test edit property', () => {
   });
 
   it('should get error on renaming first property same as property from same namespace', () => {
-    const fileNameOne = 'external-property-reference.txt';
+    const fileNameOne = 'external-property-reference.ttl';
 
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
@@ -172,8 +172,8 @@ describe('Test edit property', () => {
       )
       .then(() =>
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.getSeeReferences()).to.have.length(3);
-          expect(aspect.properties[0].property.getSeeReferences()[2]).to.equal('http://www.seeC.de');
+          expect(aspect.properties[0].see).to.have.length(3);
+          expect(aspect.properties[0].see[2]).to.equal('http://www.seeC.de');
         }),
       );
     cy.dbClickShape('property1')
@@ -184,8 +184,8 @@ describe('Test edit property', () => {
       .then(rdf => expect(rdf).to.contain('samm:see <http://www.seeA.de>, <http://www.seeC.de>'))
       .then(() =>
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.getSeeReferences()).to.have.length(2);
-          expect(aspect.properties[0].property.getSeeReferences()[1]).to.equal('http://www.seeC.de');
+          expect(aspect.properties[0].see).to.have.length(2);
+          expect(aspect.properties[0].see[1]).to.equal('http://www.seeC.de');
         }),
       );
   });
@@ -205,8 +205,8 @@ describe('Test edit property', () => {
       .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>, <urn:irdi:iec:0112/2///62683#ACC011#001>'))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties[0].property.getSeeReferences()).to.have.length(2);
-        expect(aspect.properties[0].property.getSeeReferences()[1]).to.equal('urn:irdi:iec:0112/2///62683#ACC011#001');
+        expect(aspect.properties[0].see).to.have.length(2);
+        expect(aspect.properties[0].see[1]).to.equal('urn:irdi:iec:0112/2///62683#ACC011#001');
       });
 
     cy.dbClickShape('property1')
@@ -218,8 +218,8 @@ describe('Test edit property', () => {
       .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>'))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties[0].property.getSeeReferences()).to.have.length(1);
-        expect(aspect.properties[0].property.getSeeReferences()[0]).to.equal('urn:irdi:eclass:0173-1#02-AAO677');
+        expect(aspect.properties[0].see).to.have.length(1);
+        expect(aspect.properties[0].see[0]).to.equal('urn:irdi:eclass:0173-1#02-AAO677');
       });
   });
 
@@ -357,7 +357,7 @@ describe('Test edit property', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain('samm:properties (:b :a)');
-        expect(rdf).to.contain(':a a samm:Property.');
+        expect(rdf).to.contain(':a a samm:Property');
         expect(rdf).to.contain(':b a samm:Property');
       });
   });
@@ -380,7 +380,7 @@ describe('Test edit property', () => {
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain(':property1 a samm:Property.');
+        expect(rdf).to.contain(':property1 a samm:Property');
         expect(rdf).to.contain(':Characteristic1 a samm:Characteristic;\n' + '    samm:dataType xsd:string.\n');
         expect(rdf).to.contain(
           ':NewAspect a samm:Aspect;\n' +
@@ -416,8 +416,8 @@ describe('Test edit property', () => {
         expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic :Characteristic1.');
         expect(rdf).to.contain(':Characteristic1 a samm:Characteristic;\n' + '    samm:dataType :Entity1.');
         expect(rdf).to.contain(':Entity1 a samm:Entity;\n' + '    samm:properties (:newProperty :property2).');
-        expect(rdf).to.contain(':property2 a samm:Property.\n');
-        expect(rdf).to.contain(':newProperty a samm:Property.\n');
+        expect(rdf).to.contain(':property2 a samm:Property');
+        expect(rdf).to.contain(':newProperty a samm:Property');
       });
   });
 
@@ -451,8 +451,8 @@ describe('Test edit property', () => {
         expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic :Characteristic1.');
         expect(rdf).to.contain(':Characteristic1 a samm:Characteristic;\n' + '    samm:dataType :NewEntity.');
         expect(rdf).to.contain(':NewEntity a samm:Entity;\n' + '    samm:properties (:newProperty :property2).');
-        expect(rdf).to.contain(':property2 a samm:Property.\n');
-        expect(rdf).to.contain(':newProperty a samm:Property.\n');
+        expect(rdf).to.contain(':property2 a samm:Property');
+        expect(rdf).to.contain(':newProperty a samm:Property');
       });
   });
 
@@ -495,10 +495,10 @@ describe('Test edit property', () => {
             '    samm:operations ();\n' +
             '    samm:events ().\n',
         );
-        expect(rdf).to.contain(':property3 a samm:Property.\n');
+        expect(rdf).to.contain(':property3 a samm:Property');
         expect(rdf).to.contain(':NewEntity a samm:Entity;\n' + '    samm:properties (:newProperty :property2).');
-        expect(rdf).to.contain(':property2 a samm:Property.\n');
-        expect(rdf).to.contain(':newProperty a samm:Property.\n');
+        expect(rdf).to.contain(':property2 a samm:Property');
+        expect(rdf).to.contain(':newProperty a samm:Property');
       });
   });
 

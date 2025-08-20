@@ -90,7 +90,7 @@ export class DomainModelToRdfService {
   private updateRdfStore() {
     this.cleanupVisitorService.removeStoreElements();
 
-    const rootElements = this.currentCachedFile.getAllElements().filter(e => !e.parents.length);
+    const rootElements = this.currentCachedFile.getAllElements().filter(e => !Array.from(e.parents).filter(Boolean).length);
     for (const element of rootElements) {
       this.visitLayer(element);
     }
@@ -121,8 +121,6 @@ export class DomainModelToRdfService {
       return this.aspectVisitorService;
     } else if (metaModelElement instanceof DefaultProperty) {
       return this.propertyVisitorService;
-      // } else if (metaModelElement instanceof DefaultAbstractProperty) {
-      //   return this.abstractPropertyVisitorService;
     } else if (metaModelElement instanceof DefaultOperation) {
       return this.operationVisitorService;
     } else if (metaModelElement instanceof DefaultConstraint) {
@@ -131,8 +129,6 @@ export class DomainModelToRdfService {
       return this.characteristicVisitorService;
     } else if (metaModelElement instanceof DefaultEntity) {
       return this.entityVisitorService;
-      // } else if (metaModelElement instanceof DefaultAbstractEntity) {
-      //   return this.abstractEntityVisitorService;
     } else if (metaModelElement instanceof DefaultEntityInstance) {
       return this.entityInstanceVisitor;
     } else if (metaModelElement instanceof DefaultEvent) {

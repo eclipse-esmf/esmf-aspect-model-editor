@@ -43,7 +43,7 @@ export class Point3dRemoveService implements PredefinedRemove {
       return this.removeTree(parent);
     }
 
-    if (modelElement.name === PredefinedEntitiesEnum.Point3d) {
+    if (modelElement.name === PredefinedEntitiesEnum.Point3d && modelElement.isPredefined) {
       return this.removeTree(cell);
     }
 

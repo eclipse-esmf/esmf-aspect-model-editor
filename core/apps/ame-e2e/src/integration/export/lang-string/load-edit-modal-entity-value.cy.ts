@@ -24,6 +24,7 @@ import {assertRdf, loadModel, openElementAndAssertValues} from '../../../support
 
 describe('Loading and edit Entity value RDF lang string properties on modal tests', () => {
   beforeEach(() => {
+    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
   });
@@ -93,7 +94,7 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
         rdfAssertions: [
           ':Complaint10 a :Mode;',
           ':modeCode "10"^^xsd:positiveInteger;',
-          ':modeDescription ("Test"@de "Test"@en);',
+          ':modeDescription "Test"@de, "Test"@en;',
           ':ModeDescription a samm-c:Collection;',
           'ModeValue a samm:Characteristic',
           ':modeValue "Test"@de',
@@ -103,7 +104,7 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
         rdfAssertions: [
           ':Complaint20 a :Mode;',
           ':modeCode "20"^^xsd:positiveInteger;',
-          ':modeDescription ("Test"@de "Test"@en);',
+          ':modeDescription "Test"@de, "Test"@en;',
           ':ModeDescription a samm-c:Collection;',
           'ModeValue a samm:Characteristic',
           ':modeValue "Test"@de',
@@ -119,7 +120,7 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
             rdfAssertions: [
               ':Complaint30 a :Mode;',
               ':modeCode "30"^^xsd:positiveInteger;',
-              ':modeDescription ("DescriptionOne"@de "DescriptionThree"@en);',
+              ':modeDescription "DescriptionOne"@de, "DescriptionThree"@en;',
               ':ModeDescription a samm-c:Collection;',
               'ModeValue a samm:Characteristic',
               ':modeValue "Value"@en',
@@ -209,9 +210,9 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
           ':Complaint10 a :Mode;',
           ':modeCode "10"^^xsd:positiveInteger;',
           ':ModeDescription a samm-c:Collection;',
-          ':modeDescription ("Test"@de "Test"@en);',
+          ':modeDescription "Test"@de, "Test"@en;',
           ':ModeValue a samm-c:Collection',
-          ':modeValue ("Test"@de "Test"@en)',
+          ':modeValue "Test"@de, "Test"@en',
         ],
       },
       {
@@ -219,9 +220,9 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
           ':Complaint20 a :Mode;',
           ':modeCode "20"^^xsd:positiveInteger;',
           ':ModeDescription a samm-c:Collection;',
-          ':modeDescription ("Test"@de "Test"@en);',
+          ':modeDescription "Test"@de, "Test"@en;',
           ':ModeValue a samm-c:Collection',
-          ':modeValue ("Test"@de "Test"@en)',
+          ':modeValue "Test"@de, "Test"@en',
         ],
       },
     ]);
@@ -234,9 +235,9 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
             rdfAssertions: [
               ':Complaint30 a :Mode;',
               ':ModeDescription a samm-c:Collection;',
-              ':modeDescription ("DescriptionOne"@de "DescriptionThree"@en);',
+              ':modeDescription "DescriptionOne"@de, "DescriptionThree"@en;',
               ':ModeValue a samm-c:Collection',
-              ':modeValue ("ValueOne"@en "ValueThree"@de)',
+              ':modeValue "ValueOne"@en, "ValueThree"@de',
             ],
           },
         ]),

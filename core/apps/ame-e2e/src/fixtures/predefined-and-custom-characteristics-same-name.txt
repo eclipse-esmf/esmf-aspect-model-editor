@@ -132,10 +132,12 @@
     samm:preferredName "Test Quantifiable"@en ;
     samm:description "This is a test Quantifiable"@en ;
     samm:see <https://www.eclipse.org> ;
+     samm:dataType xsd:string ;
     samm-c:unit unit:curie .
 
 :WithPredefinedUnitReference a samm-c:Quantifiable ;
     samm:preferredName "Test Quantifiable"@en ;
     samm:description "This is a test Quantifiable"@en ;
     samm:see <https://www.eclipse.org> ;
+     samm:dataType xsd:string ;
     samm-c:unit unit:baud .

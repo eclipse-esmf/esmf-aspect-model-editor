@@ -12,6 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
+import {config} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultProperty, DefaultScalar} from '@esmf/aspect-model-loader';
 import {simpleDataTypes} from '../../../../../../../shared/src/lib/constants/xsd-datatypes';
@@ -130,7 +131,7 @@ export class PredefinedRulesService {
       metaModelVersion: version,
       aspectModelUrn: namespace + characteristic.name,
       name: characteristic.name,
-      dataType: new DefaultScalar(characteristic.type.isDefinedBy),
+      dataType: new DefaultScalar({urn: characteristic.type.isDefinedBy, metaModelVersion: config.currentSammVersion}),
     });
   }
 }

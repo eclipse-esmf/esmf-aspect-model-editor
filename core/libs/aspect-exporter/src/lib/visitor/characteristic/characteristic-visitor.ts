@@ -294,7 +294,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
         continue;
       }
 
-      if (parent instanceof DefaultProperty && parent.getExtends()) {
+      if ((parent instanceof DefaultProperty && parent.getExtends()) || this.loadedFiles.isElementExtern(parent)) {
         continue;
       }
 

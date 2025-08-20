@@ -32,7 +32,7 @@ describe('Time Series Entity', () => {
       .then(() => createPoint3dEntity())
 
       .then(() => cy.clickShape('Entity1'))
-      .then(() => cy.getCellLabel('Entity1', 'preferredName').should('eq', 'Inherited\npreferredName = Point 3D @en'))
+      .then(() => cy.getCellLabel('Entity1', 'preferredName').should('eq', 'Inherited\npreferredName = Three Dimensional Position @en'))
       .then(() =>
         cy
           .getCellLabel('Entity1', 'description')
@@ -40,7 +40,7 @@ describe('Time Series Entity', () => {
       )
 
       .then(() => cy.clickShape('Point3d'))
-      .then(() => cy.getCellLabel('Point3d', 'preferredName').should('eq', 'preferredName = Point 3D @en'))
+      .then(() => cy.getCellLabel('Point3d', 'preferredName').should('eq', 'preferredName = Three Dimensional Position @en'))
       .then(() =>
         cy.getCellLabel('Point3d', 'description').should('eq', 'description = Defines a position in a three dimensional space. @en'),
       )
@@ -48,29 +48,29 @@ describe('Time Series Entity', () => {
       .then(() => cy.clickShape('[x]'))
       .then(() => cy.getCellLabel('[x]', 'extends').should('eq', 'extends = x'))
       .then(() => cy.getCellLabel('[x]', 'preferredName').should('eq', 'Inherited\npreferredName = X @en'))
-      .then(() => cy.getCellLabel('[x]', 'description').should('eq', 'Inherited\ndescription = The position along the X axis @en'))
+      .then(() => cy.getCellLabel('[x]', 'description').should('eq', 'Inherited\ndescription = The position along the X axis. @en'))
 
       .then(() => cy.clickShape('x'))
       .then(() => cy.getCellLabel('x', 'preferredName').should('eq', 'preferredName = X @en'))
-      .then(() => cy.getCellLabel('x', 'description').should('eq', 'description = The position along the X axis @en'))
+      .then(() => cy.getCellLabel('x', 'description').should('eq', 'description = The position along the X axis. @en'))
 
       .then(() => cy.clickShape('[y]'))
       .then(() => cy.getCellLabel('[y]', 'extends').should('eq', 'extends = y'))
       .then(() => cy.getCellLabel('[y]', 'preferredName').should('eq', 'Inherited\npreferredName = Y @en'))
-      .then(() => cy.getCellLabel('[y]', 'description').should('eq', 'Inherited\ndescription = The position along the Y axis @en'))
+      .then(() => cy.getCellLabel('[y]', 'description').should('eq', 'Inherited\ndescription = The position along the Y axis. @en'))
 
       .then(() => cy.clickShape('y'))
       .then(() => cy.getCellLabel('y', 'preferredName').should('eq', 'preferredName = Y @en'))
-      .then(() => cy.getCellLabel('y', 'description').should('eq', 'description = The position along the Y axis @en'))
+      .then(() => cy.getCellLabel('y', 'description').should('eq', 'description = The position along the Y axis. @en'))
 
       .then(() => cy.clickShape('[z]'))
       .then(() => cy.getCellLabel('[z]', 'extends').should('eq', 'extends = z'))
       .then(() => cy.getCellLabel('[z]', 'preferredName').should('eq', 'Inherited\npreferredName = Z @en'))
-      .then(() => cy.getCellLabel('[z]', 'description').should('eq', 'Inherited\ndescription = The position along the Z axis @en'))
+      .then(() => cy.getCellLabel('[z]', 'description').should('eq', 'Inherited\ndescription = The position along the Z axis. @en'))
 
       .then(() => cy.clickShape('z'))
       .then(() => cy.getCellLabel('z', 'preferredName').should('eq', 'preferredName = Z @en'))
-      .then(() => cy.getCellLabel('z', 'description').should('eq', 'description = The position along the Z axis @en'));
+      .then(() => cy.getCellLabel('z', 'description').should('eq', 'description = The position along the Z axis. @en'));
   });
 
   it('should remove Point3d tree by removing Point3d', () => {

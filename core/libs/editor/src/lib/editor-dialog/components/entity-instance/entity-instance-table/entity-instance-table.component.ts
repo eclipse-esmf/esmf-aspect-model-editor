@@ -173,7 +173,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     validators: ValidationErrors | null,
   ): FormControl {
     const isEntityValue = propertyValue instanceof DefaultEntityInstance;
-    return new FormControl({value: propertyValue, disabled: isEntityValue}, validators);
+    return new FormControl({value: isEntityValue ? propertyValue.name : propertyValue, disabled: isEntityValue}, validators);
   }
 
   private addLanguageControl(

@@ -146,9 +146,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     });
     this.connectIsolatedElement(parent, cell);
 
-    if (property.parents.length > 0) {
-      this.assignToParent(cell, parent, node);
-    }
+    this.assignToParent(cell, parent, node);
     return cell;
   }
 
@@ -164,9 +162,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     });
     this.connectIsolatedElement(parent, cell);
 
-    if (abstractProperty.parents.length > 0) {
-      this.assignToParent(cell, parent, node);
-    }
+    this.assignToParent(cell, parent, node);
     return cell;
   }
 
@@ -189,9 +185,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
       node.element.parents.push(parent);
     }
 
-    if (characteristic.parents.length > 0) {
-      this.assignToParent(cell, parentCell, node);
-    }
+    this.assignToParent(cell, parentCell, node);
     return cell;
   }
 
@@ -213,9 +207,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
 
     this.connectIsolatedElement(parent, cell);
 
-    if (abstractEntity.parents.length > 0) {
-      this.assignToParent(cell, parent, node);
-    }
+    this.assignToParent(cell, parent, node);
     return cell;
   }
 
@@ -234,9 +226,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     MxGraphHelper.setElementNode(cell, node);
     this.connectIsolatedElement(context, cell);
 
-    if (node.element.parents.length > 0) {
-      this.assignToParent(cell, context, node);
-    }
+    this.assignToParent(cell, context, node);
     return cell;
   }
 
@@ -245,9 +235,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     const cell = this.createMxCell(node, {shapeAttributes: MxGraphVisitorHelper.getEventProperties(event, this.sammLangService), geometry});
     this.connectIsolatedElement(parent, cell);
 
-    if (event.parents.length > 0) {
-      this.assignToParent(cell, parent, node);
-    }
+    this.assignToParent(cell, parent, node);
     return cell;
   }
 

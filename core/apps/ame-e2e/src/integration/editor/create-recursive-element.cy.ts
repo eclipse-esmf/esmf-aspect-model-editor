@@ -17,8 +17,8 @@ import {cyHelp} from '../../support/helpers';
 
 describe('Test create recursive element', () => {
   function checkIfAspectHasCharacteristic(aspect) {
-    expect(aspect.properties[0].property.characteristic.dataType.properties[0].property.characteristic.name).to.equal('Characteristic1');
-    expect(aspect.properties[0].property.characteristic.dataType.properties[1].property.characteristic.name).to.equal('Characteristic1');
+    expect(aspect.properties[0].characteristic.dataType.properties[0].characteristic.name).to.equal('Characteristic1');
+    expect(aspect.properties[0].characteristic.dataType.properties[1].characteristic.name).to.equal('Characteristic1');
   }
 
   it('can add new element', () => {
@@ -62,9 +62,9 @@ describe('Test create recursive element', () => {
           assert.isNotNull(shape);
         });
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.characteristic.dataType.name).to.equal('NewEntity');
-          expect(aspect.properties[0].property.characteristic.dataType.properties[0].property.name).to.equal('newProperty2');
-          expect(aspect.properties[0].property.characteristic.dataType.properties[1].property.name).to.equal('newProperty3');
+          expect(aspect.properties[0].characteristic.dataType.name).to.equal('NewEntity');
+          expect(aspect.properties[0].characteristic.dataType.properties[0].name).to.equal('newProperty2');
+          expect(aspect.properties[0].characteristic.dataType.properties[1].name).to.equal('newProperty3');
         });
         cyHelp.hasAddShapeOverlay('newProperty2').then(addShapeIcon => expect(addShapeIcon).to.be.false);
         cyHelp.hasAddShapeOverlay('newProperty3').then(addShapeIcon => expect(addShapeIcon).to.be.false);
@@ -80,13 +80,9 @@ describe('Test create recursive element', () => {
         expect(rdf).to.contain(':newProperty2 a samm:Property;\n' + '    samm:characteristic :NewCharacteristic.');
         expect(rdf).to.contain(':newProperty3 a samm:Property;\n' + '    samm:characteristic :NewCharacteristic.');
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.characteristic.name).to.equal('NewCharacteristic');
-          expect(aspect.properties[0].property.characteristic.dataType.properties[0].property.characteristic.name).to.equal(
-            'NewCharacteristic',
-          );
-          expect(aspect.properties[0].property.characteristic.dataType.properties[1].property.characteristic.name).to.equal(
-            'NewCharacteristic',
-          );
+          expect(aspect.properties[0].characteristic.name).to.equal('NewCharacteristic');
+          expect(aspect.properties[0].characteristic.dataType.properties[0].characteristic.name).to.equal('NewCharacteristic');
+          expect(aspect.properties[0].characteristic.dataType.properties[1].characteristic.name).to.equal('NewCharacteristic');
         });
         cyHelp.hasAddShapeOverlay('newProperty2').then(addShapeIcon => expect(addShapeIcon).to.be.false);
         cyHelp.hasAddShapeOverlay('newProperty3').then(addShapeIcon => expect(addShapeIcon).to.be.false);
@@ -121,15 +117,15 @@ describe('Test create recursive element', () => {
       .then(() => cy.clickAddTraitPlusIcon('NewCharacteristic'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic :Property1Trait.');
-        expect(rdf).to.contain(':newProperty2 a samm:Property;\n' + '    samm:characteristic :Property1Trait.');
-        expect(rdf).to.contain(':newProperty3 a samm:Property;\n' + '    samm:characteristic :Property1Trait.');
+        expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic :Trait1.');
+        expect(rdf).to.contain(':newProperty2 a samm:Property;\n' + '    samm:characteristic :Trait1.');
+        expect(rdf).to.contain(':newProperty3 a samm:Property;\n' + '    samm:characteristic :Trait1.');
         expect(rdf).to.contain(
-          ':Property1Trait a samm-c:Trait;\n' +
+          ':Trait1 a samm-c:Trait;\n' +
             '    samm-c:baseCharacteristic :NewCharacteristic;\n' +
-            '    samm-c:constraint :Constraint1.',
+            '    samm-c:constraint :EncodingConstraint1.',
         );
-        expect(rdf).to.contain(':Constraint1 a samm:Constraint.\n');
+        expect(rdf).to.contain(':EncodingConstraint1 a samm-c:EncodingConstraint;\n');
         expect(rdf).to.contain(':NewCharacteristic a samm:Characteristic;\n' + '    samm:dataType :NewEntity.');
         cyHelp.hasAddShapeOverlay('newProperty2').then(addShapeIcon => expect(addShapeIcon).to.be.false);
         cyHelp.hasAddShapeOverlay('newProperty3').then(addShapeIcon => expect(addShapeIcon).to.be.false);
@@ -137,8 +133,8 @@ describe('Test create recursive element', () => {
   });
 
   it('delete characteristic constraint with recursive properties', () => {
-    cy.shapeExists('Constraint1')
-      .then(() => cy.clickShape('Constraint1'))
+    cy.shapeExists('EncodingConstraint1')
+      .then(() => cy.clickShape('EncodingConstraint1'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {

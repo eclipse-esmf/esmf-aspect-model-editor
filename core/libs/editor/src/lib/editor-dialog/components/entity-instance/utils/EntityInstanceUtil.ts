@@ -24,7 +24,6 @@ import {
   DefaultTrait,
   Entity,
   EntityInstanceProperty,
-  Value,
 } from '@esmf/aspect-model-loader';
 
 export class EntityInstanceUtil {
@@ -132,7 +131,7 @@ export class EntityInstanceUtil {
    *  represents the updated entity value that should be reflected in the UI.
    */
   static changeSelection(propertiesForm: FormGroup, controlName: string, ev: DefaultEntityInstance): void {
-    (propertiesForm.get(controlName) as FormArray).at(0).get('value').setValue(ev);
+    (propertiesForm.get(controlName) as FormArray).at(0).get('value').setValue(ev.name);
     propertiesForm.get(controlName).disable();
   }
 
@@ -176,21 +175,42 @@ export class EntityInstanceUtil {
   /**
    * Creates a new entity value and updates the form controls accordingly.
    * @param {FormGroup} form - The form containing the entity value properties.
-   * @param {any} property - The property for which to create a new entity value.
-   * @param {any} entityValueName - The name of the new entity value.
+   * @param {DefaultProperty} property - The property for which to create a new entity value.
+   * @param {string} entityValueName - The name of the new entity value.
    */
-  static createNewEntityValue(form: FormGroup, property: any, entityValueName: any) {
+  static createNewEntityValue(form: FormGroup, property: DefaultProperty, entityValueName: string) {
     const characteristic: Characteristic =
       property?.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
     const urn = `${property.aspectModelUrn.split('#')?.[0]}#${entityValueName}`;
+    const dataType = characteristic?.dataType as DefaultEntity;
+
     const newEntityValue = new DefaultEntityInstance({
       metaModelVersion: property.metaModelVersion,
       name: entityValueName,
       aspectModelUrn: urn,
-      type: characteristic?.dataType as DefaultEntity,
-      // TODO check a deeper creation for assertions (entityInstance -> entityInstance)
-      assertions: new Map((characteristic?.dataType as DefaultEntity)?.properties.map(p => [p.aspectModelUrn, new Value('')])),
+      type: dataType,
+      assertions: new Map(),
     });
+
+    for (const prop of dataType?.properties || []) {
+      if (prop.isAbstract) continue;
+
+      newEntityValue.assertions.set(prop.aspectModelUrn, []);
+    }
+
+    const propertiesForm = form.get('properties') as FormGroup;
+    const entityValuePropertiesForm = form.get('entityValueProperties') as FormGroup;
+    const formGroup: FormGroup = propertiesForm || entityValuePropertiesForm;
+
+    if (formGroup) {
+      const propertyForm = formGroup.get(property.name);
+      if (propertyForm instanceof FormArray) {
+        propertyForm.at(0).get('value').patchValue(newEntityValue.name);
+      } else {
+        propertyForm.patchValue(newEntityValue.name);
+      }
+      EntityInstanceUtil.getDisplayControl(formGroup as FormGroup, property.name).disable();
+    }
 
     const newEntityValues = form.get('newEntityValues');
     if (newEntityValues?.value) {
@@ -199,18 +219,14 @@ export class EntityInstanceUtil {
       form.setControl('newEntityValues', new FormControl([newEntityValue]));
     }
 
-    const propertiesForm = form.get('properties');
-    const entityValuePropertiesForm = form.get('entityValueProperties');
-    const formGroup = propertiesForm || entityValuePropertiesForm;
-
     if (formGroup) {
-      const propertyForm = formGroup.get(property.name);
-      if (propertyForm instanceof FormArray) {
-        propertyForm.at(0).get('value').patchValue(newEntityValue);
-      } else {
-        propertyForm.patchValue(newEntityValue);
-      }
-      EntityInstanceUtil.getDisplayControl(formGroup as FormGroup, property.name).disable();
+      const actualEntities = Object.values(formGroup.controls)
+        .map(formArray => formArray.value)
+        .flat()
+        .map(e => e.value);
+
+      const newEntityInstances = form.get('newEntityValues');
+      newEntityInstances?.setValue([...newEntityInstances.value.filter((ev: DefaultEntityInstance) => actualEntities.includes(ev.name))]);
     }
   }
 

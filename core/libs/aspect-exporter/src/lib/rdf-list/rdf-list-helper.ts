@@ -11,15 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-  DefaultAspect,
-  DefaultEntity,
-  DefaultProperty,
-  DefaultStructuredValue,
-  PropertyPayload,
-  PropertyUrn,
-  Type,
-} from '@esmf/aspect-model-loader';
+import {DefaultAspect, DefaultEntity, DefaultProperty, PropertyPayload, PropertyUrn, Type} from '@esmf/aspect-model-loader';
 import {ScalarValue} from 'libs/aspect-model-loader/src/lib/aspect-meta-model/scalar-value';
 import {DataFactory} from 'n3';
 import {ListElement, ListElementType, PropertyListElement, ResolvedListElements, SourceElementType} from '.';
@@ -57,12 +49,11 @@ export class RdfListHelper {
         return DataFactory.namedNode(metaModelElement?.value);
       }
 
-      return DataFactory.literal(
-        metaModelElement.value || metaModelElement,
-        metaModelElement.type && !(source instanceof DefaultStructuredValue)
-          ? DataFactory.namedNode(metaModelElement.type.getUrn())
-          : undefined,
-      );
+      if (metaModelElement instanceof ScalarValue) {
+        return DataFactory.literal(`${metaModelElement.value}`, DataFactory.namedNode(source.dataType.urn));
+      }
+
+      return DataFactory.literal(metaModelElement, DataFactory.namedNode(source.dataType.urn));
     });
 
     return {

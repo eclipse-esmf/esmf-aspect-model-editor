@@ -48,16 +48,20 @@ export class RenameModelComponent {
     private loadedFiles: LoadedFilesService,
     private modelApiService: ModelApiService,
   ) {
-    const rdfModel = this.loadedFiles.currentLoadedFile.rdfModel;
-    this.modelApiService.getNamespacesAppendWithFiles().subscribe(namespaces => {
-      namespaces = namespaces.map(namespace => namespace.toLowerCase());
+    this.modelApiService.getWorkspaceAspectModelUrns().subscribe(files => {
+      const namespaces: Record<string, boolean> = {};
+      for (const {aspectModelUrn, fileName} of files) {
+        const [namespace] = aspectModelUrn.replace('urn:samm:', '').split('#');
+        namespaces[`${namespace}:${fileName}`] = true;
+      }
+
       this.fileNameControl = new FormControl('', [
         Validators.required,
         // eslint-disable-next-line no-useless-escape
         Validators.pattern('[0-9a-zA-Z_. -]+'),
         (control: AbstractControl) => {
-          const searchTerm = `${rdfModel.getAspectModelUrn().replace('urn:samm:', '').replace('#', ':')}${control.value}.ttl`.toLowerCase();
-          return namespaces.includes(searchTerm) ? {sameFile: true} : null;
+          const searchTerm = `${this.loadedFiles.currentLoadedFile.namespace}:${control.value}.ttl`.toLowerCase();
+          return namespaces[searchTerm] ? {sameFile: true} : null;
         },
       ]);
       this.fileNameControl.markAsTouched();

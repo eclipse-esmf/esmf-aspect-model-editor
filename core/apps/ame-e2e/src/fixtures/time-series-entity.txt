@@ -30,5 +30,8 @@
     samm:dataType :Entity1.
 
 :Entity1 a samm:Entity;
-    samm:properties ([samm:extends samm-e:value]);
+    samm:properties ([samm:extends samm-e:value; samm:characteristic :Characteristic2]);
     samm:extends samm-e:TimeSeriesEntity.
+
+:Characteristic2 a samm:Characteristic;
+   samm:dataType xsd:string.

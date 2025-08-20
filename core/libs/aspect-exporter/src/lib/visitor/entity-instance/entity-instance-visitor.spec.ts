@@ -128,9 +128,9 @@ describe('Entity instance visitor', () => {
 
     expect(allQuads.length).toBe(3);
     checkQuad(allQuads[0], 'entityValueUrn1#entityValue1', 'property1Urn#property1', '123');
-    expect(allQuads[0].object.id).toBe('"123"');
+    expect(allQuads[0].object.id).toBe('"123"^^http://www.w3.org/1999/02/22-rdf-syntax-ns#langString');
     checkQuad(allQuads[1], 'entityValueUrn1#entityValue1', 'property2Urn#property2', '456');
-    expect(allQuads[1].object.id).toBe('"456"');
+    expect(allQuads[1].object.id).toBe('"456"^^http://www.w3.org/1999/02/22-rdf-syntax-ns#langString');
     checkQuad(allQuads[2], 'entityValueUrn1#entityValue1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'entityUrn1#entity');
   });
 });

@@ -17,7 +17,7 @@ import {MxGraphAttributeService} from '@ame/mx-graph';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph, mxgraphFactory} from 'mxgraph-factory';
 import {finalize} from 'rxjs/operators';
-import {FIELD_name, SELECTOR_editorSaveButton, SIDEBAR_CLOSE_BUTTON} from './constants';
+import {FIELD_name, SELECTOR_editorSaveButton, SELECTOR_propertiesCancelButton, SIDEBAR_CLOSE_BUTTON} from './constants';
 
 const {mxConstants} = mxgraphFactory({});
 
@@ -72,6 +72,10 @@ export class cyHelp {
    */
   public static clickSaveButton(): Cypress.Chainable {
     return this.forceChangeDetection().then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}));
+  }
+
+  public static clickPropertiesCancelButton(): Cypress.Chainable {
+    return this.forceChangeDetection().then(() => cy.get(SELECTOR_propertiesCancelButton).focus().click({force: true}));
   }
 
   /**
@@ -262,7 +266,7 @@ export class cyHelp {
       cy.shapeExists(`property${number}`).then(() => {
         cy.getAspect().then(aspect => {
           expect(aspect.properties).to.have.length(number);
-          expect(aspect.properties[number - 1].property.name).to.be.equal(`property${number}`);
+          expect(aspect.properties[number - 1].name).to.be.equal(`property${number}`);
         });
         cy.getUpdatedRDF().then(rdf => {
           let propertiesRDFList = '';

@@ -18,5 +18,5 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix : <urn:samm:org.eclipse.different:1.0.0#> .
 
-:EncodingConstraint1 a samm-c:EncodingConstraint ;
+:ExternalConstraint a samm-c:EncodingConstraint ;
    samm:value samm:UTF-8 .

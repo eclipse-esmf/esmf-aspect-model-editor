@@ -64,9 +64,7 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
     const {getAllPredefinedEntities} = useLoader({rdfModel: this.currentFile.rdfModel});
     const predefinedEntities = getAllPredefinedEntities();
     this.predefinedEntities = Object.values(predefinedEntities)
-      .map(value => {
-        const entity = value;
-
+      .map(entity => {
         return {
           name: entity.name,
           description: entity.getDescription('en') || '',
@@ -75,7 +73,6 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
           entity,
         };
       })
-      .filter(({entity}) => (entity as DefaultEntity).isAbstractEntity())
       .sort(({name: a}, {name: b}) => (a > b ? 1 : -1));
   }
 

@@ -90,7 +90,7 @@ export class EntityInstanceViewComponent implements OnInit, OnDestroy {
   onNew(): void {
     const config = {
       data: {
-        metaModel: this.enumeration,
+        metaModel: this.enumeration(),
         dataType:
           this.parentForm().get('newDataType')?.value || this.parentForm().get('dataTypeEntity')?.value || this.enumeration().dataType,
         complexValues: this.instances(),

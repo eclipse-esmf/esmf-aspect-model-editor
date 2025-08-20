@@ -69,7 +69,6 @@ describe('Test drag and drop ext constraint', () => {
         .then(() => cy.get(SELECTOR_elementBtn).click())
         .then(() => cy.dragElement(SELECTOR_ecTrait, 1100, 300))
         .then(() => cy.clickConnectShapes('property1', 'Trait1'))
-        .then(() => cy.clickConnectShapes('Trait1', 'Characteristic1'))
         .then(() => cy.clickConnectShapes('Trait1', 'ExternalConstraint'))
         .then(() => cyHelp.hasAddShapeOverlay('Trait1').then(hasAddOverlay => expect(hasAddOverlay).equal(true)))
         .then(() => cy.getAspect())
@@ -81,9 +80,9 @@ describe('Test drag and drop ext constraint', () => {
           expect(rdf).to.contain('samm:properties (:property1)');
           expect(rdf).to.contain(':property1 a samm:Property');
           expect(rdf).to.contain('samm:characteristic :Trait1');
-          expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic1');
-          expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-          expect(rdf).to.contain('samm-c:constraint ext-different:ExternalConstraint');
+          expect(rdf).to.contain('samm-c:baseCharacteristic :Characteristic2');
+          expect(rdf).to.contain(':Characteristic2 a samm:Characteristic');
+          expect(rdf).to.contain('samm-c:constraint :EncodingConstraint1, ext-different:ExternalConstraint');
           expect(rdf).not.contain(':ExternalConstraint a samm:EncodingConstraint');
         }),
     );

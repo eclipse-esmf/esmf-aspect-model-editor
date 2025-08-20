@@ -60,7 +60,7 @@
           <ng-container matColumnDef="value">
             <mat-header-cell *matHeaderCellDef>{{ 'ENTITY_VALUE.VALUE' | translate }}</mat-header-cell>
             <mat-cell *matCellDef="let element">
-              @if (element.value.type?.isComplex) {
+              @if (element.value.type?.isComplexType()) {
                 <mat-icon class="material-icons complex-value-icon" matTooltip="Complex Data type">view_module</mat-icon>
                 {{ element.value.name }}
               } @else {

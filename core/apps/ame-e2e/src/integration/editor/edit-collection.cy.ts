@@ -192,7 +192,7 @@ describe('Test editing different Collections', () => {
       .then(() => cy.clickShape(characteristic))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties[0].property.characteristic.name).to.be.equal(characteristic);
+        expect(aspect.properties[0].characteristic.name).to.be.equal(characteristic);
       });
   };
 
@@ -214,7 +214,7 @@ describe('Test editing different Collections', () => {
       .then(rdf => expect(rdf).to.contain('samm-c:elementCharacteristic :Characteristic2'))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties[0].property.characteristic.elementCharacteristic.name).to.equal('Characteristic2');
+        expect(aspect.properties[0].characteristic.elementCharacteristic.name).to.equal('Characteristic2');
       });
   };
 
@@ -241,18 +241,18 @@ describe('Test editing different Collections', () => {
       .then(() => cy.dbClickShape(characteristic))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain(':Property1Trait a samm-c:Trait');
+        expect(rdf).to.contain(':Trait1 a samm-c:Trait');
         expect(rdf).to.contain(`samm-c:baseCharacteristic :${characteristic}`);
-        expect(rdf).to.contain('samm-c:constraint :Constraint1');
-        expect(rdf).to.contain('samm:characteristic :Property1Trait');
-        expect(rdf).to.contain('Constraint1 a samm:Constraint');
+        expect(rdf).to.contain('samm-c:constraint :EncodingConstraint1');
+        expect(rdf).to.contain('samm:characteristic :Trait1');
+        expect(rdf).to.contain(':EncodingConstraint1 a samm-c:EncodingConstraint');
       })
-      .then(() => cy.clickShape('Constraint1'))
+      .then(() => cy.clickShape('EncodingConstraint1'))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties[0].property.characteristic.name).to.equal('Property1Trait');
-        expect(aspect.properties[0].property.characteristic.baseCharacteristic.name).to.equal(characteristic);
-        expect(aspect.properties[0].property.characteristic.constraints[0].name).to.equal('Constraint1');
+        expect(aspect.properties[0].characteristic.name).to.equal('Trait1');
+        expect(aspect.properties[0].characteristic.baseCharacteristic.name).to.equal(characteristic);
+        expect(aspect.properties[0].characteristic.constraints[0].name).to.equal('EncodingConstraint1');
       });
   };
 

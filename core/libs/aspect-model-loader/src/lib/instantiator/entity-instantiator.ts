@@ -17,6 +17,7 @@ import {ComplexType} from '../aspect-meta-model/complex-type';
 import {DefaultEntity} from '../aspect-meta-model/default-entity';
 import {BaseInitProps} from '../shared/base-init-props';
 import {basePropertiesFactory} from './meta-model-element-instantiator';
+import {predefinedEntitiesFactory} from './predefined-entity-instantiator';
 import {propertyFactory} from './property-instantiator';
 
 export function entityFactory(initProps: BaseInitProps) {
@@ -56,8 +57,14 @@ export function entityFactory(initProps: BaseInitProps) {
       }
 
       if (samm.isExtends(quad.predicate.value)) {
-        const extendsEntityQuads = store.getQuads(quad.object, null, null, null);
-        if (extendsEntityQuads && extendsEntityQuads.length > 0) {
+        const extendsEntityQuads = store.getQuads(quad.object.value, null, null, null);
+        const predefinedEntities = predefinedEntitiesFactory(initProps).getAllPredefinedEntities();
+        const predefinedEntity = Object.values(predefinedEntities).find(e => e.aspectModelUrn === quad.object.value);
+
+        if (predefinedEntity) {
+          entity.extends_ = predefinedEntity;
+          predefinedEntity.parents.push(entity);
+        } else if (extendsEntityQuads && extendsEntityQuads.length > 0) {
           entity.extends_ = entityFactory(initProps)(
             extendsEntityQuads,
             extendsEntityQuads.some(q => samm.isAbstractEntity(q.object.value)),

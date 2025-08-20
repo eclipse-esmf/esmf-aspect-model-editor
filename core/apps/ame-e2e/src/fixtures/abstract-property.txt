@@ -18,7 +18,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix : <urn:samm:org.eclipse:1.0.0#> .
 
-:AspectWithAbstractProperties a samm:Aspect ;
+:AspectWithAbstractProperties a samm:Entity ;
   samm:properties ( [ samm:extends :abstractProperty1; samm:characteristic :Characteristic1] [samm:extends :abstractProperty2; samm:characteristic :Characteristic1]) ;
   samm:operations ( ) .
 

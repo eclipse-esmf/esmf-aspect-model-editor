@@ -20,7 +20,7 @@ import {Type} from '../type';
 export class DefaultScalar extends Type {
   override className: string;
   override get children(): ElementSet<NamedElement> {
-    throw new Error('Method not implemented.');
+    return new ElementSet<NamedElement>();
   }
 
   constructor(props: ScalarProps) {

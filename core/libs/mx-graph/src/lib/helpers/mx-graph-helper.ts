@@ -376,7 +376,8 @@ export class MxGraphHelper {
 
     if (isSmallShape) {
       title.classList.add('simple');
-      if (modelElement instanceof HasExtends && cell.collapsed) {
+      const extending = modelElement as HasExtends;
+      if (extending.extends_ && cell.collapsed) {
         div.removeChild(title);
       }
       return div;

@@ -20,14 +20,20 @@ import {propertyFactory} from './property-instantiator';
 export function operationFactory(initProps: BaseInitProps) {
   return (quad: Quad): DefaultOperation => {
     const rdfModel = initProps.rdfModel;
-    const {samm} = rdfModel;
+    const {samm, store} = rdfModel;
     const modelElementCache = initProps.cache;
+
+    quad =
+      [
+        ...(store.getQuads(quad.subject, samm.RdfType(), samm.Operation(), null) || []),
+        ...(store.getQuads(quad.object, samm.RdfType(), samm.Operation(), null) || []),
+      ]?.[0] || quad;
 
     if (modelElementCache.get(quad.subject.value)) {
       return modelElementCache.get(quad.subject.value);
     }
 
-    const quads = rdfModel.findAnyProperty(quad);
+    const quads = store.getQuads(quad.subject, null, null, null) || [];
     const baseProperties = basePropertiesFactory(initProps)(quad.subject);
     const operation = new DefaultOperation({
       ...baseProperties,

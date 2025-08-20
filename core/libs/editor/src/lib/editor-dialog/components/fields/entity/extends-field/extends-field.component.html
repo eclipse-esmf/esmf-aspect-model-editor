@@ -26,9 +26,9 @@
           <mat-option [attr.data-cy]="element.name" [value]="element.name" (click)="onSelectionChange(element)">
             <div class="result">
               <div class="ellipsis">
-                {{ element.name }}
+                {{ element.name }}<br />
                 @if (element.description) {
-                  <span class="option-description" [title]="element.description">- {{ element.description }}</span>
+                  <span class="option-description" [title]="element.description"> {{ element.description }}</span>
                 }
                 @if (element.namespace) {
                   <p class="namespace-prefix" [title]="element.namespace">

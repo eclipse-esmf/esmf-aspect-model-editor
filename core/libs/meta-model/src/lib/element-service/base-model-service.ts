@@ -46,7 +46,6 @@ export abstract class BaseModelService {
     // Add common operations
 
     // update name
-    const aspect: DefaultAspect = Object.assign({}, this.loadedFile.aspect);
     const aspectModelUrn = this.loadedFile.rdfModel.getAspectModelUrn();
 
     this.currentCachedFile.updateElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
@@ -54,8 +53,8 @@ export abstract class BaseModelService {
     modelElement.name = form.name;
     modelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 
-    if (aspect && modelElement instanceof DefaultAspect) {
-      this.loadedFilesService.currentLoadedFile.aspect = aspect;
+    if (modelElement instanceof DefaultAspect) {
+      this.loadedFilesService.currentLoadedFile.aspect = modelElement;
     }
 
     // update descriptions (multiple locales)
@@ -86,11 +85,12 @@ export abstract class BaseModelService {
 
   protected updateSee(modelElement: NamedElement, form: {[key: string]: any}) {
     const newSeeValue = form.see instanceof Array ? form.see : form.see?.split(',');
-    if (modelElement instanceof HasExtends) {
-      if (newSeeValue?.join(',') !== modelElement.extends_?.see?.join(',')) {
-        modelElement.see = form.see ? newSeeValue : null;
+    const extending = modelElement as HasExtends;
+    if (extending.extends_) {
+      if (newSeeValue?.join(',') !== extending.extends_?.see?.join(',')) {
+        extending.see = form.see ? newSeeValue : null;
       } else {
-        modelElement.see = [];
+        extending.see = [];
       }
     } else {
       modelElement.see = form.see ? newSeeValue : null;
@@ -98,17 +98,18 @@ export abstract class BaseModelService {
   }
 
   protected updateDescriptionWithLocales(modelElement: NamedElement, form: {[key: string]: any}) {
+    const extending = modelElement as HasExtends;
     Object.keys(form).forEach(key => {
       if (!key.startsWith('description')) {
         return;
       }
 
       const locale = key.replace('description', '');
-      if (modelElement instanceof HasExtends) {
-        if (form[key] !== modelElement.extends_?.descriptions?.get(locale)) {
-          modelElement.descriptions.set(locale, form[key]);
+      if (extending.extends_) {
+        if (form[key] !== extending.extends_?.descriptions?.get(locale)) {
+          extending.descriptions.set(locale, form[key]);
         } else {
-          modelElement.descriptions.set(locale, '');
+          extending.descriptions.set(locale, '');
         }
       } else {
         modelElement.descriptions.set(locale, form[key]);
@@ -117,16 +118,17 @@ export abstract class BaseModelService {
   }
 
   protected updatePreferredWithLocales(modelElement: NamedElement, form: {[key: string]: any}) {
+    const extending = modelElement as HasExtends;
     Object.keys(form).forEach(key => {
       if (!key.startsWith('preferredName')) {
         return;
       }
       const locale = key.replace('preferredName', '');
-      if (modelElement instanceof HasExtends) {
-        if (form[key] !== modelElement.extends_?.preferredNames?.get(locale)) {
-          modelElement.preferredNames.set(locale, form[key]);
+      if (extending.extends_) {
+        if (form[key] !== extending.extends_?.preferredNames?.get(locale)) {
+          extending.preferredNames.set(locale, form[key]);
         } else {
-          modelElement.preferredNames.set(locale, '');
+          extending.preferredNames.set(locale, '');
         }
       } else {
         modelElement.preferredNames.set(locale, form[key]);

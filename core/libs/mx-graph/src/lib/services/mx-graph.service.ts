@@ -16,7 +16,7 @@ import {FILTER_ATTRIBUTES, FilterAttributesService, ModelTree} from '@ame/loader
 import {ConfigurationService} from '@ame/settings-dialog';
 import {NotificationsService, overlayGeometry} from '@ame/shared';
 import {Inject, Injectable} from '@angular/core';
-import {DefaultCharacteristic, DefaultEntityInstance, EntityInstance, NamedElement} from '@esmf/aspect-model-loader';
+import {DefaultCharacteristic, DefaultEntityInstance, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
 import {environment} from 'environments/environment';
 import {mxgraph} from 'mxgraph-factory';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
@@ -200,6 +200,9 @@ export class MxGraphService {
     }
 
     selectedModelElement.parents.forEach(enumeration => {
+      if (!(enumeration instanceof DefaultEnumeration)) {
+        return;
+      }
       const entityValueIndex = enumeration.values.indexOf(selectedModelElement);
       if (entityValueIndex >= 0) {
         enumeration.values.splice(entityValueIndex, 1);
@@ -207,7 +210,7 @@ export class MxGraphService {
     });
 
     // update all parent entity values
-    const allEntityValues: EntityInstance[] = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance);
+    const allEntityValues: DefaultEntityInstance[] = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance);
 
     allEntityValues.forEach(entityValue => {
       entityValue.getTuples().forEach(([propertyUrn, value]) => {
@@ -219,7 +222,10 @@ export class MxGraphService {
 
     this.currentCachedFile.removeElement(selectedModelElement.aspectModelUrn);
     // delete all lower entity values that don't belong to an enumeration
-    const lowerEntityValuesToDelete = MxGraphCharacteristicHelper.getChildEntityValuesToDelete(selectedModelElement, []);
+    const lowerEntityValuesToDelete = MxGraphCharacteristicHelper.getChildEntityValuesToDelete(
+      selectedModelElement,
+      allEntityValues.filter(ev => ev.parents.some(p => p instanceof DefaultEnumeration)),
+    );
     lowerEntityValuesToDelete.forEach(entityValue => {
       this.currentCachedFile.removeElement(entityValue.aspectModelUrn);
       this.removeCells([this.resolveCellByModelElement(entityValue)]);
@@ -485,7 +491,7 @@ export class MxGraphService {
 
   removeCells(cells: Array<mxgraph.mxCell>, includeEdges = true): void {
     for (const cell of cells) {
-      if (cell.isEdge()) {
+      if (cell?.isEdge?.()) {
         if (cell.source && cell.target) {
           const parent = MxGraphHelper.getModelElement(cell.source);
           const child = MxGraphHelper.getModelElement(cell.target);

@@ -52,14 +52,9 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
       .then(() => cy.clickAddShapePlusIcon('NewEntity'))
       .then(() => cy.clickAddShapePlusIcon('NewEntity'))
       .then(() => cy.clickAddShapePlusIcon('NewEntity'))
-      .then(() => cy.clickAddShapePlusIcon('property2'))
-      .then(() => cy.clickAddShapePlusIcon('property3'))
-      .then(() => cy.clickAddShapePlusIcon('property4'))
       .then(() => cy.clickAddShapePlusIcon('Characteristic2'))
-      .then(() => cy.dbClickShape('Characteristic3'))
-      .then(() => cy.get(FIELD_dataType).clear().type('string').get(FIELD_dataTypeOption).eq(1).click())
-      .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('Characteristic4'))
+      .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
       .then(() => cy.get(FIELD_dataType).clear().type('langString').get(FIELD_dataTypeOption).eq(0).click())
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('Characteristic1'))
@@ -107,7 +102,7 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
     assertRdf([
       {
         rdfAssertions: [
-          ':ev5 a :Entity1.',
+          ':ev5 a :Entity1;',
           ':ev1 a :NewEntity;',
           ':property2 :ev5;',
           ':property3 "ev6";',
@@ -133,16 +128,15 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
       .then(() => cy.clickAddShapePlusIcon('NewEntity'))
       .then(() => cy.clickAddShapePlusIcon('NewEntity'))
       .then(() => cy.clickAddShapePlusIcon('NewEntity'))
-      .then(() => cy.clickAddShapePlusIcon('property2'))
-      .then(() => cy.clickAddShapePlusIcon('property3'))
-      .then(() => cy.clickAddShapePlusIcon('property4'))
       .then(() => cy.clickAddShapePlusIcon('Characteristic2'))
       .then(() => cy.dbClickShape('Characteristic3'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Collection').click({force: true}))
+      .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
       .then(() => cy.get(FIELD_dataType).clear().type('langString').get(FIELD_dataTypeOption).eq(0).click())
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('Characteristic4'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Collection').click({force: true}))
+      .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
       .then(() => cy.get(FIELD_dataType).clear().type('langString').get(FIELD_dataTypeOption).eq(0).click())
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.dbClickShape('Characteristic1'))
@@ -217,11 +211,11 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
     assertRdf([
       {
         rdfAssertions: [
-          ':ev5 a :Entity1.',
+          ':ev5 a :Entity1;',
           ':ev1 a :NewEntity;',
           ':property2 :ev5;',
-          ':property3 ("ev6"@de "ev7"@en);',
-          ':property4 ("ev8"@de "ev9"@en).',
+          ':property3 "ev6"@de, "ev7"@en;',
+          ':property4 "ev8"@de, "ev9"@en.',
           ':Characteristic2 a samm:Characteristic;',
           ':Characteristic3 a samm-c:Collection;',
           ':Characteristic4 a samm-c:Collection;',
@@ -260,11 +254,11 @@ describe('Create and edit Entity value RDF lang string properties in edit view t
     assertRdf([
       {
         rdfAssertions: [
-          ':ev5 a :Entity1.',
+          ':ev5 a :Entity1;',
           ':new a :NewEntity;',
           ':property2 :ev5;',
-          ':property3 ("ev6"@de "ev7"@en);',
-          ':property4 ("ev8"@de "ev9"@en "ev10"@bm).',
+          ':property3 "ev6"@de, "ev7"@en;',
+          ':property4 "ev8"@de, "ev9"@en, "ev10"@bm.',
           ':Characteristic2 a samm:Characteristic;',
           ':Characteristic3 a samm-c:Collection;',
           ':Characteristic4 a samm-c:Collection;',

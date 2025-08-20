@@ -32,13 +32,10 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<NamedE
       return this.metaModelElement?.getPreferredName(locale) || '';
     }
 
-    if (this.metaModelElement instanceof HasExtends) {
-      return (
-        this.previousData?.[key] ||
-        this.metaModelElement?.getPreferredName(locale) ||
-        this.metaModelElement.extends_.preferredNames?.get(locale) ||
-        ''
-      );
+    const extending = this.metaModelElement as HasExtends;
+
+    if ((extending as HasExtends)?.extends_) {
+      return this.previousData?.[key] || extending?.getPreferredName(locale) || extending.extends_.preferredNames?.get(locale) || '';
     }
 
     return this.previousData?.[key] || this.metaModelElement?.getPreferredName(locale) || '';
@@ -46,10 +43,11 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<NamedE
 
   isInherited(locale: string): boolean {
     const control = this.parentForm.get(this.fieldName + locale);
+    const extending = this.metaModelElement as HasExtends;
     return (
-      this.metaModelElement instanceof HasExtends &&
-      this.metaModelElement.extends_?.preferredNames?.get(locale) &&
-      control.value === this.metaModelElement.extends_?.preferredNames?.get(locale)
+      extending.extends_ &&
+      extending.extends_?.preferredNames?.get(locale) &&
+      control.value === extending.extends_?.preferredNames?.get(locale)
     );
   }
 

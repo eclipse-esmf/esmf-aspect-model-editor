@@ -36,6 +36,7 @@
     samm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
     samm:characteristic :Characteristic3.
 :Characteristic1 a samm:Characteristic;
+    samm:dataType xsd:string;
     samm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
     samm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
 :Property1Trait a samm-c:Trait;
@@ -46,21 +47,29 @@
     samm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
     samm:dataType :Entity1.
 :Characteristic3 a samm:Characteristic;
+    samm:dataType xsd:string;
     samm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
     samm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
-:Constraint1 a samm:Constraint;
+:Constraint1 a samm-c:EncodingConstraint;
     samm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
-    samm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
+    samm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
+    samm:value samm:US-ASCII.
 :Entity1 a samm:Entity;
     samm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
     samm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
     samm:properties (:property4 :property5 :property6).
 :property4 a samm:Property;
     samm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
-    samm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
+    samm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
+    samm:characteristic :Characteristic4.
 :property5 a samm:Property;
     samm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
-    samm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
+    samm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
+    samm:characteristic :Characteristic4.
 :property6 a samm:Property;
     samm:preferredName "name en"@en, "name de"@de-DE, "name us"@en-US;
-    samm:description "description en"@en, "description de"@de-DE, "description us"@en-US.
+    samm:description "description en"@en, "description de"@de-DE, "description us"@en-US;
+    samm:characteristic :Characteristic4.
+
+:Characteristic4 a samm:Characteristic;
+    samm:dataType xsd:string.

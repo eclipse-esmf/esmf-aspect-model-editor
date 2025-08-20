@@ -45,7 +45,7 @@ export class OperationModelService extends BaseModelService {
 
     this.removeInputDependency(cell, modelElement.input, output);
     this.addInputProperties(cell, inputList);
-    modelElement.input = inputList.map(input => ({property: input, keys: {}}));
+    modelElement.input = inputList;
 
     this.removeOutputDependency(cell, modelElement.output, modelElement.input);
     if (output) {

@@ -92,7 +92,7 @@ export class EnumerationRenderService extends BaseRenderService {
   private handleEntityDataType(cell: mxgraph.mxCell, dataType: DefaultEntity) {
     if (dataType instanceof DefaultEntity) {
       const entityCell = this.mxGraphService.resolveCellByModelElement(dataType);
-      this.shapeConnectorService.connectShapes(MxGraphHelper.getModelElement(cell), dataType, cell, entityCell);
+      this.mxGraphService.assignToParent(entityCell, cell);
     }
   }
 

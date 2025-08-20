@@ -19,6 +19,8 @@ import {cyHelp} from '../../support/helpers';
 
 describe('Test language settings', () => {
   it('can open settings dialog', () => {
+    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+
     cy.visitDefault();
     cy.wait(1000);
     cy.startModelling();
@@ -31,6 +33,8 @@ describe('Test language settings', () => {
   });
 
   it('can add new language', () => {
+    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+
     cy.get(SELECTOR_settingsButton)
       .click()
       .wait(1000)
@@ -54,6 +58,8 @@ describe('Test language settings', () => {
   });
 
   it('can delete and remove all multi language information in the loaded model', () => {
+    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
     cy.fixture('multi-language-model')
@@ -80,12 +86,12 @@ describe('Test language settings', () => {
                   cyHelp.assertNotNullMultiLanguageValues(aspect, 'en');
                   cyHelp.assertNullMultiLanguageValues(aspect, 'en-US');
                   cyHelp.assertNullMultiLanguageValues(aspect, 'de-DE');
-                  cyHelp.assertNotNullMultiLanguageValues(aspect.properties[0].property, 'en');
-                  cyHelp.assertNullMultiLanguageValues(aspect.properties[0].property, 'en-US');
-                  cyHelp.assertNullMultiLanguageValues(aspect.properties[0].property, 'de-DE');
-                  cyHelp.assertNotNullMultiLanguageValues(aspect.properties[0].property.characteristic, 'en');
-                  cyHelp.assertNullMultiLanguageValues(aspect.properties[0].property.characteristic, 'en-US');
-                  cyHelp.assertNullMultiLanguageValues(aspect.properties[0].property.characteristic, 'de-DE');
+                  cyHelp.assertNotNullMultiLanguageValues(aspect.properties[0], 'en');
+                  cyHelp.assertNullMultiLanguageValues(aspect.properties[0], 'en-US');
+                  cyHelp.assertNullMultiLanguageValues(aspect.properties[0], 'de-DE');
+                  cyHelp.assertNotNullMultiLanguageValues(aspect.properties[0].characteristic, 'en');
+                  cyHelp.assertNullMultiLanguageValues(aspect.properties[0].characteristic, 'en-US');
+                  cyHelp.assertNullMultiLanguageValues(aspect.properties[0].characteristic, 'de-DE');
                 });
               });
             });

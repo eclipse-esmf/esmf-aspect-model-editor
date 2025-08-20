@@ -45,7 +45,8 @@ export function predefinedEntitiesFactory(initProps: BaseInitProps) {
     rdfModel: {sammE, samm},
   } = initProps;
 
-  const {createTimestampCharacteristic} = predefinedCharacteristicFactory(initProps);
+  const {createTimestampCharacteristic, createResourcePathCharacteristic, createMimeTypeCharacteristic} =
+    predefinedCharacteristicFactory(initProps);
 
   function createTimeSeriesEntity(): Entity {
     const entity = new DefaultEntity({
@@ -81,7 +82,7 @@ export function predefinedEntitiesFactory(initProps: BaseInitProps) {
       isPredefined: true,
     });
     value.preferredNames.set('en', 'Value');
-    value.descriptions.set('en', 'Any value.');
+    value.descriptions.set('en', 'The value recorded at the given point in time');
 
     entity.properties.push(timestamp, value);
 
@@ -92,9 +93,10 @@ export function predefinedEntitiesFactory(initProps: BaseInitProps) {
     const entity = new DefaultEntity({
       metaModelVersion: samm.version,
       aspectModelUrn: sammE.getAspectModelUrn('Point3d'),
-      name: 'ThreeDimensionalPosition',
+      name: 'Point3d',
       properties: [],
       isPredefined: true,
+      isAbstract: true,
     });
     entity.preferredNames.set('en', 'Three Dimensional Position');
     entity.descriptions.set('en', 'Defines a position in a three dimensional space.');
@@ -146,23 +148,23 @@ export function predefinedEntitiesFactory(initProps: BaseInitProps) {
       isPredefined: true,
     });
     entity.preferredNames.set('en', 'File Resource');
-    entity.descriptions.set('en', 'A file in a specific format');
+    entity.descriptions.set('en', 'A file in a specific format.');
 
     const resource = new DefaultProperty({
       metaModelVersion: samm.version,
       aspectModelUrn: sammE.getAspectModelUrn('resource'),
       name: 'resource',
-      characteristic: createTimestampCharacteristic(),
+      characteristic: createResourcePathCharacteristic(),
       isPredefined: true,
     });
     resource.preferredNames.set('en', 'Resource');
-    resource.descriptions.set('en', 'Location of a resource.');
+    resource.descriptions.set('en', 'The location of the resource.');
 
     const mimeType = new DefaultProperty({
       metaModelVersion: samm.version,
       aspectModelUrn: sammE.getAspectModelUrn('mimeType'),
       name: 'mimeType',
-      characteristic: createTimestampCharacteristic(),
+      characteristic: createMimeTypeCharacteristic(),
       isPredefined: true,
     });
     mimeType.preferredNames.set('en', 'MIME Type');

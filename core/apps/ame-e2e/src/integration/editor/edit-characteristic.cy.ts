@@ -41,6 +41,7 @@ import {
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
+import {assertRdf} from '../../support/utils';
 
 describe('Test editing Characteristic', () => {
   it('can add new', () => {
@@ -51,7 +52,7 @@ describe('Test editing Characteristic', () => {
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.properties).to.have.length(1);
-        expect(aspect.properties[0].property.characteristic.name).to.equal('Characteristic1');
+        expect(aspect.properties[0].characteristic.name).to.equal('Characteristic1');
       });
   });
 
@@ -85,9 +86,7 @@ describe('Test editing Characteristic', () => {
         cy
           .getAspect()
           .then(aspect =>
-            expect(aspect.properties[0].property.characteristic.getDescription('en')).to.equal(
-              'New description for the new created characteristic',
-            ),
+            expect(aspect.properties[0].characteristic.getDescription('en')).to.equal('New description for the new created characteristic'),
           ),
       );
   });
@@ -127,8 +126,8 @@ describe('Test editing Characteristic', () => {
 
       .then(() =>
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.characteristic.getSeeReferences()).to.have.length(3);
-          expect(aspect.properties[0].property.characteristic.getSeeReferences()[2]).to.equal('http://www.see3.de');
+          expect(aspect.properties[0].characteristic.see).to.have.length(3);
+          expect(aspect.properties[0].characteristic.see[2]).to.equal('http://www.see3.de');
         }),
       );
 
@@ -142,8 +141,8 @@ describe('Test editing Characteristic', () => {
       .then(rdf => expect(rdf).to.contain('samm:see <http://www.see1.de>, <http://www.see3.de>'))
       .then(() =>
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.characteristic.getSeeReferences()).to.have.length(2);
-          expect(aspect.properties[0].property.characteristic.getSeeReferences()[1]).to.equal('http://www.see3.de');
+          expect(aspect.properties[0].characteristic.see).to.have.length(2);
+          expect(aspect.properties[0].characteristic.see[1]).to.equal('http://www.see3.de');
         }),
       );
   });
@@ -163,8 +162,8 @@ describe('Test editing Characteristic', () => {
       .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>, <urn:irdi:iec:0112/2///62683#ACC011#001>'))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties[0].property.characteristic.getSeeReferences()).to.have.length(2);
-        expect(aspect.properties[0].property.characteristic.getSeeReferences()[1]).to.equal('urn:irdi:iec:0112/2///62683#ACC011#001');
+        expect(aspect.properties[0].characteristic.see).to.have.length(2);
+        expect(aspect.properties[0].characteristic.see[1]).to.equal('urn:irdi:iec:0112/2///62683#ACC011#001');
       });
 
     cy.dbClickShape('Characteristic1')
@@ -176,8 +175,8 @@ describe('Test editing Characteristic', () => {
       .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>'))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties[0].property.characteristic.getSeeReferences()).to.have.length(1);
-        expect(aspect.properties[0].property.characteristic.getSeeReferences()[0]).to.equal('urn:irdi:eclass:0173-1#02-AAO677');
+        expect(aspect.properties[0].characteristic.see).to.have.length(1);
+        expect(aspect.properties[0].characteristic.see[0]).to.equal('urn:irdi:eclass:0173-1#02-AAO677');
       });
   });
 
@@ -193,7 +192,7 @@ describe('Test editing Characteristic', () => {
       .then(() => cy.getUpdatedRDF())
       .then(rdf => expect(rdf).to.contain('samm:preferredName "new-preferredName"@en'))
       .then(() => cy.getAspect())
-      .then(aspect => expect(aspect.properties[0].property.characteristic.getPreferredName('en')).to.equal('new-preferredName'));
+      .then(aspect => expect(aspect.properties[0].characteristic.getPreferredName('en')).to.equal('new-preferredName'));
   });
 
   it('should check incoming and outgoing edges', () => {
@@ -223,7 +222,7 @@ describe('Test editing Characteristic', () => {
         expect(rdf).to.contain('NewCharacteristic a samm:Characteristic');
       })
       .then(() => cy.getAspect())
-      .then(aspect => expect(aspect.properties[0].property.characteristic.name).to.equal('NewCharacteristic'));
+      .then(aspect => expect(aspect.properties[0].characteristic.name).to.equal('NewCharacteristic'));
   });
 
   it('should validate name field', () => {
@@ -246,7 +245,7 @@ describe('Test editing Characteristic', () => {
       )
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getAspect())
-      .then(aspect => expect(aspect.properties[0].property.characteristic.unit.name).to.be.equal('ampere'));
+      .then(aspect => expect(aspect.properties[0].characteristic.unit.name).to.be.equal('ampere'));
   });
 
   it('can change to class Code', () => {
@@ -266,7 +265,7 @@ describe('Test editing Characteristic', () => {
         );
       })
       .then(() => cy.getAspect())
-      .then(aspect => expect(aspect.properties[0].property.characteristic.name).to.be.equal('NewCharacteristic'));
+      .then(aspect => expect(aspect.properties[0].characteristic.name).to.be.equal('NewCharacteristic'));
   });
 
   it('can change to class Enumeration', () => {
@@ -289,7 +288,7 @@ describe('Test editing Characteristic', () => {
         );
       })
       .then(() => cy.getAspect())
-      .then(aspect => expect(aspect.properties[0].property.characteristic.name).to.be.equal('NewCharacteristic'));
+      .then(aspect => expect(aspect.properties[0].characteristic.name).to.be.equal('NewCharacteristic'));
 
     cy.wait(1000);
     cy.dbClickShape('NewCharacteristic')
@@ -337,12 +336,11 @@ describe('Test editing Characteristic', () => {
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
       .then(() => cy.shapeExists('property2'))
-      .then(() => cy.clickAddShapePlusIcon('property2'))
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
-        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic.\n');
-        expect(rdf).to.contain(':NewCharacteristic a samm:Characteristic.\n');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+        expect(rdf).to.contain(':NewCharacteristic a samm:Characteristic');
       });
   });
 
@@ -350,22 +348,25 @@ describe('Test editing Characteristic', () => {
     cy.shapeExists('AspectDefault')
       .then(() => cy.dbClickShape('AspectDefault'))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('NewAspect', {force: true}))
-      .then(() => cyHelp.clickSaveButton())
-      .then(() => cy.getUpdatedRDF())
-      .then(rdf =>
-        expect(rdf).to.contain(
-          ':property1 a samm:Property;\n' +
-            '    samm:characteristic :NewCharacteristic.\n' +
-            ':Characteristic1 a samm:Characteristic.\n' +
-            ':NewCharacteristic a samm:Characteristic.\n' +
-            ':property2 a samm:Property;\n' +
-            '    samm:characteristic :Characteristic1.\n' +
-            ':NewAspect a samm:Aspect;\n' +
-            '    samm:properties (:property1 :property2);\n' +
-            '    samm:operations ();\n' +
-            '    samm:events ().',
-        ),
-      );
+      .then(() => cyHelp.clickSaveButton());
+
+    assertRdf([
+      {
+        rdfAssertions: [
+          ':property1 a samm:Property;',
+          'samm:characteristic :NewCharacteristic.',
+          ':Characteristic1 a samm:Characteristic;',
+          'samm:dataType xsd:string.',
+          ':NewCharacteristic a samm:Characteristic;',
+          ':property2 a samm:Property;',
+          'samm:characteristic :Characteristic1.',
+          ':NewAspect a samm:Aspect;',
+          'samm:properties (:property1 :property2);',
+          'samm:operations ();',
+          'samm:events ().',
+        ],
+      },
+    ]);
   });
 });
 
@@ -417,7 +418,7 @@ describe('Structured Value Characteristic', () => {
         )
         .then(() => cy.get(`[data-cy="property-${groups[index]}"] [data-cy="property-element"]`).eq(placeNumber).should('not.be.enabled'));
     }
-    return cy.then(() => cy.get('[data-cy="propertiesSaveButton"]').click());
+    return cy.then(() => cyHelp.clickPropertiesCancelButton());
   }
 
   function checkGeneratedGroups(groups: string[]) {
@@ -510,23 +511,17 @@ describe('Structured Value Characteristic', () => {
     });
 
     it('should create characteristics without add shape button', () => {
-      cy.clickAddShapePlusIcon('group1Property')
-        .then(() => cy.clickAddShapePlusIcon('group2Property'))
-        .then(() => cy.clickAddShapePlusIcon('group3Property'))
+      cy.shapeExists('Characteristicgroup1Property1')
+        .then(() => cyHelp.hasAddShapeOverlay('Characteristicgroup1Property1').then(addShapeIcon => expect(addShapeIcon).to.be.false))
         .then(() =>
           cy
-            .shapeExists('Characteristic2')
-            .then(() => cyHelp.hasAddShapeOverlay('Characteristic2').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
+            .shapeExists('Characteristicgroup2Property1')
+            .then(() => cyHelp.hasAddShapeOverlay('Characteristicgroup2Property1').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
         )
         .then(() =>
           cy
-            .shapeExists('Characteristic3')
-            .then(() => cyHelp.hasAddShapeOverlay('Characteristic3').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
-        )
-        .then(() =>
-          cy
-            .shapeExists('Characteristic4')
-            .then(() => cyHelp.hasAddShapeOverlay('Characteristic4').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
+            .shapeExists('Characteristicgroup3Property1')
+            .then(() => cyHelp.hasAddShapeOverlay('Characteristicgroup3Property1').then(addShapeIcon => expect(addShapeIcon).to.be.false)),
         );
     });
 

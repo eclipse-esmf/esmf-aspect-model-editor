@@ -18,6 +18,7 @@ import {assertRdf, loadModel, openElementAndAssertValues} from '../../../support
 describe('Loading Entity value with lang string properties', () => {
   beforeEach(() => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
     cy.visitDefault();
   });
 
@@ -51,7 +52,7 @@ describe('Loading Entity value with lang string properties', () => {
         rdfAssertions: [
           ':Complaint10 a :Mode;',
           ':modeCode "10"^^xsd:positiveInteger;',
-          ':modeDescription ("Test"@de "Test"@en);',
+          ':modeDescription "Test"@de, "Test"@en;',
           ':ModeDescription a samm-c:Collection;',
           'ModeValue a samm:Characteristic',
           ':modeValue "Test"@de',
@@ -61,7 +62,7 @@ describe('Loading Entity value with lang string properties', () => {
         rdfAssertions: [
           ':Complaint20 a :Mode;',
           ':modeCode "20"^^xsd:positiveInteger;',
-          ':modeDescription ("Test"@de "Test"@en);',
+          ':modeDescription "Test"@de, "Test"@en;',
           ':ModeDescription a samm-c:Collection;',
           'ModeValue a samm:Characteristic',
           ':modeValue "Test"@de',
@@ -103,9 +104,9 @@ describe('Loading Entity value with lang string properties', () => {
           ':Complaint10 a :Mode;',
           ':modeCode "10"^^xsd:positiveInteger;',
           ':ModeDescription a samm-c:Collection;',
-          ':modeDescription ("Test"@de "Test"@en);',
+          ':modeDescription "Test"@de, "Test"@en;',
           ':ModeValue a samm-c:Collection',
-          ':modeValue ("Test"@de "Test"@en)',
+          ':modeValue "Test"@de, "Test"@en',
         ],
       },
       {
@@ -113,9 +114,9 @@ describe('Loading Entity value with lang string properties', () => {
           ':Complaint20 a :Mode;',
           ':modeCode "20"^^xsd:positiveInteger;',
           ':ModeDescription a samm-c:Collection;',
-          ':modeDescription ("Test"@de "Test"@en);',
+          ':modeDescription "Test"@de, "Test"@en;',
           ':ModeValue a samm-c:Collection',
-          ':modeValue ("Test"@de "Test"@en)',
+          ':modeValue "Test"@de, "Test"@en',
         ],
       },
     ]);

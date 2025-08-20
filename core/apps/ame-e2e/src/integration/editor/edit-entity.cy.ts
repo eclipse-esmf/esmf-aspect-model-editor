@@ -37,8 +37,8 @@ describe('Test editing Entity', () => {
       .then(() => cy.shapeExists('Entity1'))
       .then(() => {
         cy.getAspect().then(aspect => {
-          assert.isNotNull(aspect.properties[0].property.characteristic.dataType);
-          expect(aspect.properties[0].property.characteristic.dataType.name).to.be.equal('Entity1');
+          assert.isNotNull(aspect.properties[0].characteristic.dataType);
+          expect(aspect.properties[0].characteristic.dataType.name).to.be.equal('Entity1');
         });
       });
   });
@@ -49,9 +49,9 @@ describe('Test editing Entity', () => {
       .then(() => cy.shapeExists('property2'))
       .then(() => cy.getAspect())
       .then(aspect => {
-        const entity = aspect.properties[0].property.characteristic.dataType;
+        const entity = aspect.properties[0].characteristic.dataType;
         expect(entity.properties).to.have.length(1);
-        expect(entity.properties[0].property.name).to.be.equal('property2');
+        expect(entity.properties[0].name).to.be.equal('property2');
       });
     cy.getUpdatedRDF().then(rdf => {
       expect(rdf).to.contain('samm:properties (:property2)');
@@ -60,9 +60,9 @@ describe('Test editing Entity', () => {
     cy.clickAddShapePlusIcon('Entity1').then(() => {
       cy.shapeExists('property3').then(() => {
         cy.getAspect().then(aspect => {
-          const entity = aspect.properties[0].property.characteristic.dataType;
+          const entity = aspect.properties[0].characteristic.dataType;
           expect(entity.properties).to.have.length(2);
-          expect(entity.properties[1].property.name).to.be.equal('property3');
+          expect(entity.properties[1].name).to.be.equal('property3');
         });
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain(':property3 a samm:Property');
@@ -123,7 +123,7 @@ describe('Test editing Entity', () => {
             assert.isNotNull(shape);
           });
           cy.getAspect().then(aspect => {
-            expect(aspect.properties[0].property.characteristic.dataType.name).to.equal('NewEntity');
+            expect(aspect.properties[0].characteristic.dataType.name).to.equal('NewEntity');
           });
         });
       });
@@ -189,7 +189,7 @@ describe('Test editing Entity', () => {
         cy
           .getAspect()
           .then(aspect =>
-            expect(aspect.properties[0].property.characteristic.dataType.getDescription('en')).to.equal('New description for the entity'),
+            expect(aspect.properties[0].characteristic.dataType.getDescription('en')).to.equal('New description for the entity'),
           ),
       );
   });
@@ -203,9 +203,7 @@ describe('Test editing Entity', () => {
         expect(rdf).to.contain(':NewEntity a samm:Entity');
         expect(rdf).to.contain('samm:properties (:newProperty2 :property3)');
         cy.clickShape('NewEntity').then(shape => assert.isNotNull(shape));
-        cy.getAspect().then(aspect =>
-          expect(aspect.properties[0].property.characteristic.dataType.properties[0].property.name).to.equal('newProperty2'),
-        );
+        cy.getAspect().then(aspect => expect(aspect.properties[0].characteristic.dataType.properties[0].name).to.equal('newProperty2'));
       });
   });
 
@@ -222,13 +220,13 @@ describe('Test editing Entity', () => {
           assert.isNotNull(shape);
         });
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.characteristic.dataType.name).to.equal('NewEntity1');
+          expect(aspect.properties[0].characteristic.dataType.name).to.equal('NewEntity1');
         });
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.characteristic.dataType.properties[0].property.name).to.equal('newProperty2');
+          expect(aspect.properties[0].characteristic.dataType.properties[0].name).to.equal('newProperty2');
         });
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.characteristic.dataType.properties[1].property.name).to.equal('newProperty3');
+          expect(aspect.properties[0].characteristic.dataType.properties[1].name).to.equal('newProperty3');
         });
       });
   });
@@ -238,9 +236,21 @@ describe('Test editing Entity', () => {
       .then(() => cy.clickShape('NewEntity1'))
       .then(() => cy.get(SELECTOR_tbDeleteButton))
       .click({force: true})
+      .then(() => cy.clickShape('newProperty2'))
+      .then(() => cy.get(SELECTOR_tbDeleteButton))
+      .click({force: true})
+      .then(() => cy.clickShape('newProperty3'))
+      .then(() => cy.get(SELECTOR_tbDeleteButton))
+      .click({force: true})
+      .then(() => cy.clickShape('Characteristic2'))
+      .then(() => cy.get(SELECTOR_tbDeleteButton))
+      .click({force: true})
+      .then(() => cy.clickShape('Characteristic3'))
+      .then(() => cy.get(SELECTOR_tbDeleteButton))
+      .click({force: true})
       .then(() => {
         cy.getAspect().then(aspect => {
-          assert.isNull(aspect.properties[0].property.characteristic.dataType);
+          assert.isNull(aspect.properties[0].characteristic.dataType);
         });
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).not.contain('NewEntity1');
@@ -258,9 +268,8 @@ describe('Test editing Entity', () => {
       .then(() => cyHelp.renameElement('Entity1', 'NewEntity'))
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
       .then(() => cy.shapeExists('property4'))
-      .then(() => cy.clickAddShapePlusIcon('property4'))
-      .then(() => cy.shapeExists('Characteristic2'))
-      .then(() => cy.clickAddShapePlusIcon('Characteristic2'))
+      .then(() => cy.shapeExists('Characteristic4'))
+      .then(() => cy.clickAddShapePlusIcon('Characteristic4'))
       .then(() => cy.shapeExists('Entity1'))
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
       .then(() => cy.shapeExists('property5'))
@@ -279,30 +288,38 @@ describe('Test editing Entity', () => {
       .then(() => cyHelp.renameElement('AspectDefault', 'NewAspect'))
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(
-            ':property1 a samm:Property;\n' +
-              '    samm:characteristic :Characteristic1.\n' +
-              ':Characteristic1 a samm:Characteristic;\n' +
-              '    samm:dataType :NewEntity.\n' +
-              ':Entity1 a samm:Entity;\n' +
-              '    samm:properties (:property5 :property6).\n' +
-              ':property2 a samm:Property.\n' +
-              ':property3 a samm:Property.\n' +
-              ':NewEntity a samm:Entity;\n' +
-              '    samm:properties (:property2 :property3).\n' +
-              ':newProperty2 a samm:Property.\n' +
-              ':newProperty3 a samm:Property.\n' +
-              ':property4 a samm:Property;\n' +
-              '    samm:characteristic :Characteristic2.\n' +
-              ':Characteristic2 a samm:Characteristic;\n' +
-              '    samm:dataType :Entity1.\n' +
-              ':property5 a samm:Property.\n' +
-              ':property6 a samm:Property.\n' +
-              ':NewAspect a samm:Aspect;\n' +
-              '    samm:properties (:property1 :property4);\n' +
-              '    samm:operations ();\n' +
-              '    samm:events ().',
-          );
+          expect(rdf).to.contain(`:property1 a samm:Property;`);
+          expect(rdf).to.contain(`samm:characteristic :Characteristic1.`);
+          expect(rdf).to.contain(`:Characteristic1 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType :NewEntity.`);
+          expect(rdf).to.contain(`:property4 a samm:Property;`);
+          expect(rdf).to.contain(`samm:characteristic :Characteristic4.`);
+          expect(rdf).to.contain(`:NewEntity a samm:Entity;`);
+          expect(rdf).to.contain(`samm:properties (:property2 :property3).`);
+          expect(rdf).to.contain(`:property2 a samm:Property;`);
+          expect(rdf).to.contain(`samm:characteristic :Characteristic2.`);
+          expect(rdf).to.contain(`:property3 a samm:Property;`);
+          expect(rdf).to.contain(`samm:characteristic :Characteristic3.`);
+          expect(rdf).to.contain(`:Characteristic2 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType xsd:string.`);
+          expect(rdf).to.contain(`:Characteristic3 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType xsd:string.`);
+          expect(rdf).to.contain(`:Characteristic4 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType :Entity1.`);
+          expect(rdf).to.contain(`:Entity1 a samm:Entity;`);
+          expect(rdf).to.contain(`samm:properties (:property5 :property6).`);
+          expect(rdf).to.contain(`:property5 a samm:Property;`);
+          expect(rdf).to.contain(`samm:characteristic :Characteristic5.`);
+          expect(rdf).to.contain(`:property6 a samm:Property;`);
+          expect(rdf).to.contain(`samm:characteristic :Characteristic6.`);
+          expect(rdf).to.contain(`:Characteristic5 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType xsd:string.`);
+          expect(rdf).to.contain(`:Characteristic6 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType xsd:string.`);
+          expect(rdf).to.contain(`:NewAspect a samm:Aspect;`);
+          expect(rdf).to.contain(`samm:properties (:property1 :property4);`);
+          expect(rdf).to.contain(`samm:operations ();`);
+          expect(rdf).to.contain(`samm:events ().`);
         });
       });
   });
@@ -326,26 +343,30 @@ describe('Test editing Entity', () => {
       .click({force: true})
       .then(() => {
         cy.getUpdatedRDF().then(rdf => {
-          expect(rdf).to.contain(
-            ':property1 a samm:Property;\n' +
-              '    samm:characteristic :Characteristic1.\n' +
-              ':Characteristic1 a samm:Characteristic;\n' +
-              '    samm:dataType :NewEntity.\n' +
-              ':Entity1 a samm:Entity;\n' +
-              '    samm:properties ().\n' +
-              ':NewEntity a samm:Entity;\n' +
-              '    samm:properties ().\n' +
-              ':newProperty2 a samm:Property.\n' +
-              ':newProperty3 a samm:Property.\n' +
-              ':property4 a samm:Property;\n' +
-              '    samm:characteristic :Characteristic2.\n' +
-              ':Characteristic2 a samm:Characteristic;\n' +
-              '    samm:dataType :Entity1.\n' +
-              ':NewAspect a samm:Aspect;\n' +
-              '    samm:properties (:property1 :property4);\n' +
-              '    samm:operations ();\n' +
-              '    samm:events ().',
-          );
+          expect(rdf).to.contain(`:property1 a samm:Property;`);
+          expect(rdf).to.contain(`samm:characteristic :Characteristic1.`);
+          expect(rdf).to.contain(`:Characteristic1 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType :NewEntity.`);
+          expect(rdf).to.contain(`:property4 a samm:Property;`);
+          expect(rdf).to.contain(`samm:characteristic :Characteristic4.`);
+          expect(rdf).to.contain(`:NewEntity a samm:Entity;`);
+          expect(rdf).to.contain(`samm:properties ().`);
+          expect(rdf).to.contain(`:Characteristic2 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType xsd:string.`);
+          expect(rdf).to.contain(`:Characteristic3 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType xsd:string.`);
+          expect(rdf).to.contain(`:Characteristic4 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType :Entity1.`);
+          expect(rdf).to.contain(`:Entity1 a samm:Entity;`);
+          expect(rdf).to.contain(`samm:properties ().`);
+          expect(rdf).to.contain(`:Characteristic5 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType xsd:string.`);
+          expect(rdf).to.contain(`:Characteristic6 a samm:Characteristic;`);
+          expect(rdf).to.contain(`samm:dataType xsd:string.`);
+          expect(rdf).to.contain(`:NewAspect a samm:Aspect;`);
+          expect(rdf).to.contain(`samm:properties (:property1 :property4);`);
+          expect(rdf).to.contain(`samm:operations ();`);
+          expect(rdf).to.contain(`samm:events ().`);
         });
       });
   });

@@ -40,6 +40,8 @@ export class NamespaceFile {
   rendered = false;
   sharedRdfModel: RdfModel;
   fromWorkspace: boolean;
+  /** Used in the rendering process. DO NOT USE TO GET THE WORKSPACE STRUCTURE */
+  namespaceFiles: Record<string, string> = {};
 
   get namespace() {
     return (this._namespace || this.aspect?.namespace || this.rdfModel.getPrefixes()['']).replace('#', '').replace('urn:samm:', '') || '';
@@ -140,12 +142,16 @@ export class LoadedFilesService {
     );
   }
 
-  addFile(fileInfo: LoadedFilePayload): NamespaceFile {
+  addFile(fileInfo: LoadedFilePayload, force = false): NamespaceFile {
     const newFile = new NamespaceFile(fileInfo.rdfModel, fileInfo.cachedFile, fileInfo.aspect);
     if (fileInfo.absoluteName) {
       const [namespace, version, name] = fileInfo.absoluteName.split(':');
       if (namespace && version) newFile.namespace = `${namespace}:${version}`;
       if (name) newFile.name = name;
+    }
+
+    if (this.files[newFile.absoluteName] && !force) {
+      return newFile;
     }
 
     newFile.rendered = Boolean(fileInfo.rendered);

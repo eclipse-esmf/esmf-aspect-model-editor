@@ -44,11 +44,8 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
 
   get isInherited(): boolean {
     const control = this.parentForm.get(this.fieldName);
-    return (
-      this.metaModelElement instanceof HasExtends &&
-      this.metaModelElement.extends_?.see &&
-      control.value === this.metaModelElement.extends_?.see?.join(',')
-    );
+    const extending = this.metaModelElement as HasExtends;
+    return extending.extends_ && extending.extends_?.see && control.value === extending.extends_?.see?.join(',');
   }
 
   get modelElements() {

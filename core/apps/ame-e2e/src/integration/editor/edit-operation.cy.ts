@@ -41,10 +41,10 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('operation1');
           expect(aspect.operations[0].input).to.have.length(3);
-          expect(aspect.operations[0].input[0].property.name).to.equal('property2');
-          expect(aspect.operations[0].input[1].property.name).to.equal('property3');
-          expect(aspect.operations[0].input[2].property.name).to.equal('property4');
-          expect(aspect.operations[0].output.property.name).to.equal('property5');
+          expect(aspect.operations[0].input[0].name).to.equal('property2');
+          expect(aspect.operations[0].input[1].name).to.equal('property3');
+          expect(aspect.operations[0].input[2].name).to.equal('property4');
+          expect(aspect.operations[0].output.name).to.equal('property5');
         }),
       )
       .then(() =>
@@ -72,10 +72,10 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(3);
-          expect(aspect.operations[0].input[0].property.name).to.equal('property2');
-          expect(aspect.operations[0].input[1].property.name).to.equal('property3');
-          expect(aspect.operations[0].input[2].property.name).to.equal('property4');
-          expect(aspect.operations[0].output.property.name).to.equal('property5');
+          expect(aspect.operations[0].input[0].name).to.equal('property2');
+          expect(aspect.operations[0].input[1].name).to.equal('property3');
+          expect(aspect.operations[0].input[2].name).to.equal('property4');
+          expect(aspect.operations[0].output.name).to.equal('property5');
         }),
       )
       .then(() =>
@@ -104,8 +104,8 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(1);
-          expect(aspect.operations[0].input[0].property.name).to.equal('property3');
-          expect(aspect.operations[0].output.property.name).to.equal('property5');
+          expect(aspect.operations[0].input[0].name).to.equal('property3');
+          expect(aspect.operations[0].output.name).to.equal('property5');
         }),
       )
       .then(() =>
@@ -132,7 +132,7 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(1);
-          expect(aspect.operations[0].input[0].property.name).to.equal('property3');
+          expect(aspect.operations[0].input[0].name).to.equal('property3');
           expect(aspect.operations[0].output).to.be.null;
         }),
       )
@@ -185,10 +185,10 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(3);
-          expect(aspect.operations[0].input[0].property.name).to.equal('property3');
-          expect(aspect.operations[0].input[1].property.name).to.equal('addInputProperty1');
-          expect(aspect.operations[0].input[2].property.name).to.equal('addInputProperty2');
-          expect(aspect.operations[0].output.property.name).to.equals('addOutputProperty1');
+          expect(aspect.operations[0].input[0].name).to.equal('property3');
+          expect(aspect.operations[0].input[1].name).to.equal('addInputProperty1');
+          expect(aspect.operations[0].input[2].name).to.equal('addInputProperty2');
+          expect(aspect.operations[0].output.name).to.equals('addOutputProperty1');
         }),
       )
       .then(() =>
@@ -217,8 +217,8 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(1);
-          expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
-          expect(aspect.operations[0].output.property.name).to.equals('addOutputProperty1');
+          expect(aspect.operations[0].input[0].name).to.equal('addInputProperty1');
+          expect(aspect.operations[0].output.name).to.equals('addOutputProperty1');
         }),
       )
       .then(() =>
@@ -255,8 +255,8 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(1);
-          expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
-          expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty1');
+          expect(aspect.operations[0].input[0].name).to.equal('addInputProperty1');
+          expect(aspect.operations[0].output.name).to.equals('addNewOutputProperty1');
         }),
       )
       .then(() =>
@@ -303,9 +303,9 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(2);
-          expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
-          expect(aspect.operations[0].input[1].property.name).to.equal('addNewOutputProperty1');
-          expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty2');
+          expect(aspect.operations[0].input[0].name).to.equal('addInputProperty1');
+          expect(aspect.operations[0].input[1].name).to.equal('addNewOutputProperty1');
+          expect(aspect.operations[0].output.name).to.equals('addNewOutputProperty2');
         }),
       )
       .then(() =>
@@ -341,8 +341,8 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(1);
-          expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
-          expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty1');
+          expect(aspect.operations[0].input[0].name).to.equal('addInputProperty1');
+          expect(aspect.operations[0].output.name).to.equals('addNewOutputProperty1');
         }),
       )
       .then(() =>
@@ -380,9 +380,9 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(2);
-          expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
-          expect(aspect.operations[0].input[1].property.name).to.equal('addNewOutputProperty1');
-          expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty1');
+          expect(aspect.operations[0].input[0].name).to.equal('addInputProperty1');
+          expect(aspect.operations[0].input[1].name).to.equal('addNewOutputProperty1');
+          expect(aspect.operations[0].output.name).to.equals('addNewOutputProperty1');
         }),
       )
       .then(() =>
@@ -416,9 +416,9 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(2);
-          expect(aspect.operations[0].input[0].property.name).to.equal('addInputProperty1');
-          expect(aspect.operations[0].input[1].property.name).to.equal('addNewOutputProperty1');
-          expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty2');
+          expect(aspect.operations[0].input[0].name).to.equal('addInputProperty1');
+          expect(aspect.operations[0].input[1].name).to.equal('addNewOutputProperty1');
+          expect(aspect.operations[0].output.name).to.equals('addNewOutputProperty2');
         }),
       )
       .then(() =>
@@ -448,7 +448,7 @@ describe('Test edit operation', () => {
           expect(aspect.name).to.equal('AspectDefault');
           expect(aspect.operations[0].name).to.equal('newOperation');
           expect(aspect.operations[0].input).to.have.length(0);
-          expect(aspect.operations[0].output.property.name).to.equals('addNewOutputProperty2');
+          expect(aspect.operations[0].output.name).to.equals('addNewOutputProperty2');
         }),
       )
       .then(() =>

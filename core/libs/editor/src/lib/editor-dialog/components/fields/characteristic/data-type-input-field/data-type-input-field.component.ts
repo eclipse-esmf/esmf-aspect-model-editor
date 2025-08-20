@@ -25,6 +25,7 @@ import {
   DefaultScalar,
   DefaultStructuredValue,
   Entity,
+  Type,
 } from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -115,7 +116,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     this.filteredEntityTypes$ = this.initFilteredEntities(this.dataTypeControl, this.entitiesDisabled);
   }
 
-  onSelectionChange(fieldPath: string, newValue: DefaultScalar, event: MatOptionSelectionChange) {
+  onSelectionChange(fieldPath: string, newValue: Type, event: MatOptionSelectionChange) {
     if (fieldPath !== 'dataType' || !event.isUserInput) {
       return;
     }

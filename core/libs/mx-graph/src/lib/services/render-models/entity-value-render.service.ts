@@ -114,7 +114,8 @@ export class EntityValueRenderService extends BaseRenderService {
   }
 
   private connectEntityValueWithChildren(modelElement: DefaultEntityInstance) {
-    for (const property of modelElement.assertions.values() || []) {
+    const entityInstances = Array.from(modelElement.assertions.values()).flat();
+    for (const property of entityInstances) {
       if (!(property instanceof DefaultEntityInstance)) {
         continue;
       }

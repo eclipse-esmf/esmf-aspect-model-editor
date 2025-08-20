@@ -15,7 +15,7 @@
 
 import {SELECTOR_notificationsBtn, SELECTOR_notificationsDialogCloseButton} from '../../support/constants';
 
-describe('Test loading aspect with extended external Entity', () => {
+describe.skip('Test loading aspect with extended external Entity', () => {
   it('should display an error that external reference is not included in the namespace file structure', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();

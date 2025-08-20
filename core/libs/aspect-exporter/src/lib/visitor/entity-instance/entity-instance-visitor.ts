@@ -13,7 +13,7 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {Injectable} from '@angular/core';
-import {DefaultEntityInstance, Value} from '@esmf/aspect-model-loader';
+import {DefaultEntityInstance, DefaultProperty, Value} from '@esmf/aspect-model-loader';
 import {DataFactory} from 'n3';
 import {BaseVisitor} from '../base-visitor';
 
@@ -46,16 +46,19 @@ export class EntityInstanceVisitor extends BaseVisitor<DefaultEntityInstance> {
     const rdfModel = this.loadedFilesService.currentLoadedFile.rdfModel;
 
     const tuples = entityValue.getTuples();
-    tuples.map(([property, value]) => {
+    tuples.map(([propertyUrn, value]) => {
       this.handleExternalReference(value);
+
+      const property = this.loadedFiles.currentLoadedFile.cachedFile.get<DefaultProperty>(propertyUrn);
+      const dataType = property?.characteristic?.dataType;
 
       const object = value.language
         ? DataFactory.literal(`${value.value}`, value.language)
         : value instanceof DefaultEntityInstance
           ? DataFactory.namedNode(value.aspectModelUrn)
-          : DataFactory.literal(value?.value?.toString(), value.type ? DataFactory.namedNode(value.type?.getUrn()) : undefined);
+          : DataFactory.literal(value?.value?.toString(), dataType ? DataFactory.namedNode(dataType?.getUrn()) : undefined);
 
-      rdfModel.store.addQuad(DataFactory.namedNode(aspectModelUrn), DataFactory.namedNode(property), object);
+      rdfModel.store.addQuad(DataFactory.namedNode(aspectModelUrn), DataFactory.namedNode(propertyUrn), object);
     });
   }
 

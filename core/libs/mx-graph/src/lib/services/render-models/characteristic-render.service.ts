@@ -212,7 +212,7 @@ export class CharacteristicRenderService extends BaseRenderService {
     const predefinedElements: mxgraph.mxCell[] = [];
     const edgesToRemove = cell.edges?.filter(edge => {
       const element = MxGraphHelper.getModelElement(edge.target);
-      if (element.isPredefined) predefinedElements.push(edge.target);
+      if (element.isPredefined && element.aspectModelUrn !== modelElement.aspectModelUrn) predefinedElements.push(edge.target);
       return element.aspectModelUrn !== modelElement.aspectModelUrn;
     });
     this.mxGraphService.removeCells((edgesToRemove || []).concat(predefinedElements));

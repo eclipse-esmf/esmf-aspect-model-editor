@@ -37,8 +37,8 @@ describe('Test editing Unit', () => {
       .then(hasAddOverlay => expect(hasAddOverlay).equal(true))
       .then(() => {
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
-          expect(aspect.properties[0].property.characteristic.unit.name).to.equal('CustomUnit1');
+          expect(aspect.properties[0].characteristic.name).to.equal('Quantifiable1');
+          expect(aspect.properties[0].characteristic.unit.name).to.equal('CustomUnit1');
         });
       })
       .then(() => {
@@ -66,8 +66,8 @@ describe('Test editing Unit', () => {
       .then(() => cyHelp.clickSaveButton())
       .then(() => {
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
-          expect(aspect.properties[0].property.characteristic.unit.name).to.equal('CustomUnit2');
+          expect(aspect.properties[0].characteristic.name).to.equal('Quantifiable1');
+          expect(aspect.properties[0].characteristic.unit.name).to.equal('CustomUnit2');
         });
       })
       .then(() => {
@@ -89,8 +89,8 @@ describe('Test editing Unit', () => {
       .then(() => cyHelp.clickSaveButton())
       .then(() => {
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
-          expect(aspect.properties[0].property.characteristic.unit).to.be.null;
+          expect(aspect.properties[0].characteristic.name).to.equal('Quantifiable1');
+          expect(aspect.properties[0].characteristic.unit).to.be.null;
         });
       })
       .then(() => {
@@ -122,8 +122,8 @@ describe('Test editing Unit', () => {
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() =>
         cy.getAspect().then(aspect => {
-          expect(aspect.properties[0].property.characteristic.name).to.equal('Quantifiable1');
-          expect(aspect.properties[0].property.characteristic.unit).to.be.null;
+          expect(aspect.properties[0].characteristic.name).to.equal('Quantifiable1');
+          expect(aspect.properties[0].characteristic.unit).to.be.null;
         }),
       )
       .then(() =>
@@ -222,7 +222,7 @@ describe('Test editing Unit', () => {
         .click({force: true})
         .then(() => {
           cy.getAspect().then(aspect => {
-            assert.isNull(aspect.properties[0].property.characteristic);
+            assert.isNull(aspect.properties[0].characteristic);
           });
           cy.getUpdatedRDF().then(rdf => {
             expect(rdf).to.contain('CustomUnit1 a samm:Unit');

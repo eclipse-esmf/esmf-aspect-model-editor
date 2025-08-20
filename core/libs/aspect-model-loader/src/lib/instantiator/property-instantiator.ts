@@ -11,13 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamedNode, Quad, Quad_Subject} from 'n3';
+import {NamedNode, Quad, Quad_Subject, Util} from 'n3';
 import {Property} from '../aspect-meta-model';
 import {DefaultProperty} from '../aspect-meta-model/default-property';
 import {PropertyPayload} from '../aspect-meta-model/structure-element';
 import {BaseInitProps} from '../shared/base-init-props';
 import {allCharacteristicsFactory} from './characteristic';
 import {basePropertiesFactory} from './meta-model-element-instantiator';
+import {predefinedEntitiesFactory} from './predefined-entity-instantiator';
 
 export interface PropertyData {
   property: Property;
@@ -36,6 +37,16 @@ export function propertyFactory(initProps: BaseInitProps) {
         const cachedProperty = modelElementCache.get<Property>(value.object.value);
         if (cachedProperty) {
           return cachedProperty;
+        }
+
+        const predefinedEntities = predefinedEntitiesFactory(initProps).getAllPredefinedEntities();
+        let predefinedProperty: DefaultProperty;
+
+        for (const entity of Object.values(predefinedEntities)) {
+          predefinedProperty = entity.properties.find(p => p.aspectModelUrn === value.object.value);
+          if (predefinedProperty) {
+            return predefinedProperty;
+          }
         }
 
         const quadsAbstractProperty = store.getQuads(value.object, null, null, null);
@@ -70,10 +81,10 @@ export function propertyFactory(initProps: BaseInitProps) {
       ];
     } else if (samm.Extends().equals(quad.predicate)) {
       const [, name] = quad.object.value.split('#');
-      baseProperties.name = `${name}_property_${Math.floor(Math.random() * 5000)}`;
+      baseProperties.name = Util.isBlankNode(quad.subject) ? `[${name}]` : name;
       baseProperties.aspectModelUrn = `${baseProperties.aspectModelUrn.split('#')?.[0]}#${baseProperties.name}`;
       baseProperties.hasSyntheticName = true;
-      propertyQuads = rdfModel.store.getQuads(quad.subject, null, null, null);
+      propertyQuads = rdfModel.store.getQuads(Util.isBlankNode(quad.subject) ? quad.subject : quad.object, null, null, null);
     } else {
       propertyQuads = rdfModel.store.getQuads(quad.object, null, null, null);
     }

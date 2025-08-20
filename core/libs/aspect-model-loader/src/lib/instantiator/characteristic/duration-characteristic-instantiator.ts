@@ -30,7 +30,7 @@ export function durationCharacteristicFactory(initProps: BaseInitProps) {
 
       for (const propertyQuad of propertyQuads) {
         if (sammC.isUnitProperty(propertyQuad.predicate.value)) {
-          characteristic.unit = createUnit(quad.object.value);
+          characteristic.unit = createUnit(propertyQuad.object.value);
           if (characteristic.unit) {
             characteristic.unit.addParent(characteristic);
           }

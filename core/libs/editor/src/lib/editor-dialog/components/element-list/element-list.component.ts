@@ -38,8 +38,9 @@ export class ElementListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.elements = Array.from(this.elements).filter(e => e instanceof NamedElement);
     if (this.elements.length > 1) {
-      this.elements = this.elements.sort(this.compareByName).filter(e => e instanceof NamedElement);
+      this.elements = this.elements.sort(this.compareByName);
     }
   }
 

@@ -69,7 +69,10 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     const entity = this.data.metaModelElement as DefaultEntity;
     const extendedProperties: PropertyStatus[] = this.extendedProperties
-      .filter(property => !(property.isAbstract && this.data.metaModelElement instanceof DefaultEntity))
+      .filter(
+        property =>
+          !(property.isAbstract && this.data.metaModelElement instanceof DefaultEntity && !this.data.metaModelElement.isAbstractEntity()),
+      )
       .map(property => ({
         property,
         propertyPayload: this.data.propertiesPayload[property.aspectModelUrn] ?? entity.propertiesPayload?.[property.aspectModelUrn],

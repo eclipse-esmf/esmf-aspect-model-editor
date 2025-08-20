@@ -124,7 +124,7 @@ export class ModelElementCache implements CacheStrategy {
   }
 
   public resolveInstance<T extends NamedElement>(instance: T): T {
-    if (instance.isAnonymous()) {
+    if (instance && instance.isAnonymous()) {
       return instance;
     }
 

@@ -31,7 +31,7 @@ export class TimeSeriesEntityRemoveService implements PredefinedRemove {
 
     if (
       modelElement instanceof DefaultEntity &&
-      modelElement.isAbstractEntity() &&
+      modelElement.isPredefined &&
       modelElement.name === PredefinedEntitiesEnum.TimeSeriesEntity
     ) {
       this.handleTimeSeriesEntityTreeRemoval(cell);
@@ -131,9 +131,7 @@ export class TimeSeriesEntityRemoveService implements PredefinedRemove {
     const timeSeriesCell = incomingEdges.find(edge => {
       const modelElement = MxGraphHelper.getModelElement(edge.source);
       return (
-        modelElement instanceof DefaultEntity &&
-        modelElement.isAbstractEntity() &&
-        modelElement.name === PredefinedEntitiesEnum.TimeSeriesEntity
+        modelElement instanceof DefaultEntity && modelElement.isPredefined && modelElement.name === PredefinedEntitiesEnum.TimeSeriesEntity
       );
     })?.source;
 

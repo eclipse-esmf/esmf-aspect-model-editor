@@ -127,6 +127,15 @@ export class EntityInstanceModalComponent {
           const language = control.get('language').value;
           entityValue.setAssertion(propertyElement.aspectModelUrn, new Value(value, propertyElement.characteristic?.dataType, language));
         });
+      } else if (propertyElement.characteristic?.dataType instanceof DefaultEntity) {
+        const value = propertyArray.at(0).get('value').value;
+        const entityInstance = new DefaultEntityInstance({
+          name: value,
+          aspectModelUrn: this.getAspectModelUrnFromName(value),
+          metaModelVersion: config.currentSammVersion,
+          type: propertyElement.characteristic?.dataType as DefaultEntity,
+        });
+        entityValue.setAssertion(propertyElement.aspectModelUrn, entityInstance);
       } else {
         const value = propertyArray.at(0).get('value').value;
         entityValue.setAssertion(propertyElement.aspectModelUrn, new Value(value, propertyElement.characteristic?.dataType));

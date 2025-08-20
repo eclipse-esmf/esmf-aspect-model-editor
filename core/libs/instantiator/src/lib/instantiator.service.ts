@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {CacheStrategy, NamedElement, RdfModel, useLoader} from '@esmf/aspect-model-loader';
 import {NamedNode, Triple, Util} from 'n3';
 
@@ -20,6 +21,8 @@ import {NamedNode, Triple, Util} from 'n3';
   providedIn: 'root',
 })
 export class InstantiatorService {
+  private loadedFilesService = inject(LoadedFilesService);
+
   public instantiateRemainingElements(rdfModel: RdfModel, cache: CacheStrategy) {
     const uniqueSubjects: string[] = rdfModel.store
       .getSubjects(null, null, null)
@@ -86,7 +89,7 @@ export class InstantiatorService {
       return createEntity(rdfModel.store.getQuads(subject, null, null, null), true);
     }
 
-    if (RdfModelUtil.isEntityValue(subject, rdfModel)) {
+    if (RdfModelUtil.isEntityInstance(subject, this.loadedFilesService)) {
       return resolveEntityInstance(new Triple(null, null, new NamedNode(subject)));
     }
 

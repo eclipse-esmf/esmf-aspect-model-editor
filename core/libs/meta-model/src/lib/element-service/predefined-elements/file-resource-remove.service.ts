@@ -47,7 +47,7 @@ export class FileResourceRemoveService implements PredefinedRemove {
       return this.removeTree(parent);
     }
 
-    if (modelElement.name === PredefinedEntitiesEnum.FileResource) {
+    if (modelElement.name === PredefinedEntitiesEnum.FileResource && modelElement.isPredefined) {
       return this.removeTree(cell);
     }
 

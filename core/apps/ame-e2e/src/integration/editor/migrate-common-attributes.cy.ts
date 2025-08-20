@@ -178,12 +178,16 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
+      .then(() =>
+        cy.get(FIELD_dataType).clear({force: true}).type('string', {force: true}).get(FIELD_dataTypeOption).eq(1).click({force: true}),
+      )
       .then(() => cy.get(FIELD_values).type('1{enter}2{enter}a{enter}b{enter}3{enter}4{enter}', {force: true}))
       .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(
           ':Characteristic1 a samm-c:Enumeration;\n' +
+            '    samm:dataType xsd:string;\n' +
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
@@ -218,6 +222,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a samm-c:Duration;\n' +
+            '    samm:dataType xsd:string;\n' +
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
@@ -238,6 +243,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a samm-c:Measurement;\n' +
+            '    samm:dataType xsd:string;\n' +
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>;\n' +
@@ -255,6 +261,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a samm-c:SingleEntity;\n' +
+            '    samm:dataType xsd:string;\n' +
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>.',
@@ -273,6 +280,7 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(rdf =>
         expect(rdf).to.contain(
           ':Characteristic1 a samm-c:SingleEntity;\n' +
+            '    samm:dataType xsd:string;\n' +
             '    samm:preferredName "testPreferredName"@en;\n' +
             '    samm:description "testDescription"@en;\n' +
             '    samm:see <http://see.de>.',
