@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './validate/validate.components';
-export * from './file-conflict/file-conflict.component';
+export * from './import/import.component';
 export * from './root-namespace-importer/root-namespaces-importer.component';
-export * from './summary/summary.component';
+export * from './validate/validate.components';

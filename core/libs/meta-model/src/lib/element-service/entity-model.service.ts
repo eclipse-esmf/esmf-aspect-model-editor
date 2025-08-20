@@ -11,9 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
-import {BaseModelService} from './base-model-service';
 import {EntityInstanceService} from '@ame/editor';
 import {
   EntityRenderService,
@@ -23,16 +20,13 @@ import {
   MxGraphShapeOverlayService,
   MxGraphVisitorHelper,
 } from '@ame/mx-graph';
-import {
-  Base,
-  BaseMetaModelElement,
-  DefaultEntity,
-  DefaultEntityInstance,
-  DefaultEnumeration,
-  OverWrittenPropertyKeys,
-} from '@ame/meta-model';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {useUpdater} from '@ame/utils';
+import {Injectable} from '@angular/core';
+import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
 import {BaseEntityModelService} from './base-entity-model.service';
+import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class EntityModelService extends BaseModelService {
@@ -48,7 +42,7 @@ export class EntityModelService extends BaseModelService {
     super();
   }
 
-  isApplicable(metaModelElement: BaseMetaModelElement): boolean {
+  isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultEntity;
   }
 
@@ -56,27 +50,19 @@ export class EntityModelService extends BaseModelService {
     const modelElement = MxGraphHelper.getModelElement<DefaultEntity>(cell);
 
     if (form.editedProperties) {
-      for (const {property, keys} of modelElement.properties) {
-        const newKeys: OverWrittenPropertyKeys = form.editedProperties[property.aspectModelUrn];
+      for (const property of modelElement.properties) {
+        const newKeys = form.editedProperties[property.aspectModelUrn];
         if (!newKeys) {
           continue;
         }
-        keys.notInPayload = newKeys.notInPayload;
-        keys.optional = newKeys.optional;
-        keys.payloadName = newKeys.payloadName;
-      }
+        if (!modelElement.propertiesPayload[property.aspectModelUrn]) {
+          modelElement.propertiesPayload[property.aspectModelUrn] = {} as any;
+        }
 
-      this.namespacesCacheService.currentCachedFile
-        .getCachedEntityValues()
-        ?.filter((entityValue: DefaultEntityInstance) => entityValue.entity === modelElement)
-        ?.forEach((entityValue: DefaultEntityInstance) => {
-          for (const entityValueProperty of entityValue.properties) {
-            const property = modelElement.properties.find(prop => prop.property.name === entityValueProperty.key.property.name);
-            entityValueProperty.key.keys.optional = property.keys.optional;
-            entityValueProperty.key.keys.notInPayload = property.keys.notInPayload;
-            entityValueProperty.key.keys.payloadName = property.keys.payloadName;
-          }
-        });
+        modelElement.propertiesPayload[property.aspectModelUrn].notInPayload = newKeys.notInPayload;
+        modelElement.propertiesPayload[property.aspectModelUrn].optional = newKeys.optional;
+        modelElement.propertiesPayload[property.aspectModelUrn].payloadName = newKeys.payloadName;
+      }
     }
 
     super.update(cell, form);
@@ -101,10 +87,10 @@ export class EntityModelService extends BaseModelService {
 
       const entityValuesToDelete = [];
       for (const edge of cell.edges) {
-        const sourceModelElement = MxGraphHelper.getModelElement<Base>(edge.source);
-        if (sourceModelElement && !sourceModelElement.isExternalReference()) {
+        const sourceModelElement = MxGraphHelper.getModelElement<NamedElement>(edge.source);
+        if (sourceModelElement && this.loadedFilesService.isElementInCurrentFile(sourceModelElement)) {
           this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
-          sourceModelElement.delete(modelElement);
+          useUpdater(sourceModelElement).delete(modelElement);
         }
 
         if (sourceModelElement instanceof DefaultEnumeration) {
@@ -132,7 +118,7 @@ export class EntityModelService extends BaseModelService {
         continue;
       }
 
-      entity.extendedElement = null;
+      entity.extends_ = null;
       MxGraphHelper.removeRelation(entity, MxGraphHelper.getModelElement(cell));
       edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(entity, this.languageService);
       this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));

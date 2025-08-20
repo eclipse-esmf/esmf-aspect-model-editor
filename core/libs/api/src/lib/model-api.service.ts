@@ -11,14 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {catchError, map, mergeMap, retry, tap, timeout} from 'rxjs/operators';
-import {forkJoin, Observable, of, throwError} from 'rxjs';
-import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, LogService} from '@ame/shared';
-import {ModelValidatorService} from './model-validator.service';
 import {AsyncApi, OpenApi, ViolationError} from '@ame/editor';
+import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder} from '@ame/shared';
 import {removeCommentsFromTTL} from '@ame/utils';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {Injectable, inject} from '@angular/core';
+import {Observable, forkJoin, of, throwError} from 'rxjs';
+import {catchError, map, mergeMap, retry, tap, timeout} from 'rxjs/operators';
+import {ModelValidatorService} from './model-validator.service';
+import {WorkspaceStructure} from './models';
 
 export enum PREDEFINED_MODELS {
   SIMPLE_ASPECT = 'assets/aspect-models/org.eclipse.examples/1.0.0/SimpleAspect.ttl',
@@ -38,7 +39,6 @@ export class ModelApiService {
 
   constructor(
     private http: HttpClient,
-    private loggerService: LogService,
     private browserService: BrowserService,
     private modelValidatorService: ModelValidatorService,
   ) {
@@ -50,30 +50,6 @@ export class ModelApiService {
 
   getPredefinedModel(modelPath: PREDEFINED_MODELS): Observable<string> {
     return this.http.get(modelPath, {responseType: 'text'}).pipe(map((response: string) => removeCommentsFromTTL(response)));
-  }
-
-  lockFile(namespace: string, file: string): Observable<string> {
-    return this.http
-      .get<string>(`${this.serviceUrl}${this.api.fileHandling}/lock`, {
-        headers: new HttpHeaderBuilder().withTextContentType().withFileName(file).withNamespace(namespace).build(),
-        responseType: 'text' as 'json',
-      })
-      .pipe(
-        timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
-      );
-  }
-
-  unlockFile(namespace: string, file: string): Observable<string> {
-    return this.http
-      .get<string>(`${this.serviceUrl}${this.api.fileHandling}/unlock`, {
-        headers: new HttpHeaderBuilder().withTextContentType().withFileName(file).withNamespace(namespace).build(),
-        responseType: 'text' as 'json',
-      })
-      .pipe(
-        timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
-      );
   }
 
   loadLatest(): Observable<string> {
@@ -88,12 +64,17 @@ export class ModelApiService {
       );
   }
 
-  saveModel(rdfContent: string, absoluteModelName?: string): Observable<string> {
+  saveModel(rdfContent: string, aspectModelUrn: string, absoluteModelName?: string): Observable<string> {
     let headers: HttpHeaders;
     if (absoluteModelName) {
       const [namespace, version, file] = absoluteModelName.split(':');
-      headers = new HttpHeaderBuilder().withNamespace(`${namespace}:${version}`).withFileName(file).build();
+      headers = new HttpHeaderBuilder()
+        .withAspectModelUrn(aspectModelUrn)
+        .withNamespace(`${namespace}:${version}`)
+        .withFileName(file)
+        .build();
     }
+
     return this.http
       .post(`${this.serviceUrl}${this.api.models}`, rdfContent, {
         headers,
@@ -121,15 +102,18 @@ export class ModelApiService {
       );
   }
 
-  uploadZip(file: File): Observable<any> {
+  validateImportPackage(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('zipFile', file);
 
-    return this.http.post(`${this.serviceUrl}${this.api.package}/validate-import-zip`, formData);
+    return this.http.post(`${this.serviceUrl}${this.api.package}/validate-package`, formData);
   }
 
-  replaceFiles(files: {namespace: string; files: string[]}[]): Observable<any> {
-    return this.http.post(`${this.serviceUrl}${this.api.package}/import`, files);
+  importPackage(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('zipFile', file);
+
+    return this.http.post(`${this.serviceUrl}${this.api.package}/import`, formData);
   }
 
   saveLatest(rdfContent: string): Observable<string> {
@@ -143,11 +127,16 @@ export class ModelApiService {
       );
   }
 
-  deleteFile(absoluteModelName: string): Observable<string> {
+  deleteFile(absoluteModelName: string, aspectModelUrn: string): Observable<string> {
     const [namespace, version, file] = absoluteModelName.split(':');
     return this.http
       .delete<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withNamespace(`${namespace}:${version}`).withFileName(file).build(),
+        headers: new HttpHeaderBuilder()
+          // .withContentTypeRdfTurtle()
+          .withAspectModelUrn(aspectModelUrn)
+          .withNamespace(`${namespace}:${version}`)
+          .withFileName(file)
+          .build(),
       })
       .pipe(
         timeout(this.requestTimeout),
@@ -156,21 +145,40 @@ export class ModelApiService {
       );
   }
 
-  getNamespacesStructure(): Observable<any> {
-    return this.http.get<Map<string, Array<string>>>(`${this.serviceUrl}${this.api.models}/namespaces`, {
-      params: {
-        shouldRefresh: true,
-      },
-    });
+  getNamespacesStructure(): Observable<WorkspaceStructure> {
+    return this.http.get<WorkspaceStructure>(`${this.serviceUrl}${this.api.models}/namespaces`);
   }
 
   // TODO In the backend a defined object should be returned
+  /**
+   * @deprecated this function will be removed in the next versions
+   */
   getNamespacesAppendWithFiles(): Observable<string[]> {
     return this.getNamespacesStructure().pipe(
       timeout(this.requestTimeout),
       map(data => {
         return Object.keys(data).reduce<string[]>(
-          (fileNames, namespace) => [...fileNames, ...data[namespace].map((fileName: string) => `${namespace}:${fileName}`)],
+          (fileNames, namespace) => [
+            ...fileNames,
+            ...data[namespace].map(({version, models}) => models.map(model => `${namespace}:${version}:${model.model}`)).flat(),
+          ],
+          [],
+        );
+      }),
+    );
+  }
+
+  getWorkspaceAspectModelUrns(): Observable<{aspectModelUrn: string; fileName: string; namespace: string}[]> {
+    return this.getNamespacesStructure().pipe(
+      timeout(this.requestTimeout),
+      map(data => {
+        return Object.keys(data).reduce<{aspectModelUrn: string; fileName: string; namespace: string}[]>(
+          (fileNames, namespace) => [
+            ...fileNames,
+            ...data[namespace]
+              .map(({models}) => models.map(model => ({aspectModelUrn: model.aspectModelUrn, fileName: model.model, namespace})))
+              .flat(),
+          ],
           [],
         );
       }),
@@ -178,12 +186,12 @@ export class ModelApiService {
   }
 
   getAllNamespacesFilesContent(): Observable<FileContentModel[]> {
-    return this.getNamespacesAppendWithFiles().pipe(
-      map(aspectModelFileNames =>
-        aspectModelFileNames.reduce<any[]>(
-          (files, absoluteFileName) => [
+    return this.getWorkspaceAspectModelUrns().pipe(
+      map(aspectModelUrns =>
+        aspectModelUrns.reduce<any[]>(
+          (files, file) => [
             ...files,
-            this.getAspectMetaModel(absoluteFileName).pipe(map(aspectMetaModel => new FileContentModel(absoluteFileName, aspectMetaModel))),
+            this.getAspectMetaModel(file.aspectModelUrn).pipe(map(aspectMetaModel => new FileContentModel(file.fileName, aspectMetaModel))),
           ],
           [],
         ),
@@ -193,27 +201,27 @@ export class ModelApiService {
     );
   }
 
-  validateFilesForExport(files: {namespace: string; files: string[]}[]): Observable<any> {
-    return this.http.post(`${this.serviceUrl}${this.api.package}/validate-models-for-export`, files);
-  }
-
-  getExportZipFile(): Observable<any> {
-    return this.http.get(`${this.serviceUrl}${this.api.package}/export-zip`, {
-      responseType: 'blob' as 'json',
-    });
-  }
-
-  getAspectMetaModel(absoluteModelName: string): Observable<string> {
-    const [namespace, version, file] = absoluteModelName.split(':');
+  getAspectMetaModel(aspectModelUrn: string): Observable<string> {
     return this.http
       .get<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withNamespace(`${namespace}:${version}`).withFileName(file).build(),
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withAspectModelUrn(aspectModelUrn).build(),
         responseType: 'text' as 'json',
       })
       .pipe(
         timeout(this.requestTimeout),
         catchError(res => throwError(() => res)),
       );
+  }
+
+  validateFilesForExport(files: {namespace: string; files: string[]}[]): Observable<any> {
+    return this.http.post(`${this.serviceUrl}${this.api.package}/validate-models-for-export`, files);
+  }
+
+  getExportZipFile(aspectModelUrn: string): Observable<any> {
+    return this.http.get(`${this.serviceUrl}${this.api.package}/export`, {
+      headers: new HttpHeaderBuilder().withAspectModelUrn(aspectModelUrn).build(),
+      responseType: 'blob' as 'json',
+    });
   }
 
   generateJsonSample(rdfContent: string): Observable<string> {
@@ -375,7 +383,7 @@ export class ModelApiService {
 
         fs.writeFile(printFilePath, documentation, err => {
           if (err) {
-            this.loggerService.logError('Write error:  ' + err.message);
+            console.error('Write error:  ' + err.message);
           } else {
             electronBrowserWindow.loadFile(printFilePath);
             electronBrowserWindow.reload();

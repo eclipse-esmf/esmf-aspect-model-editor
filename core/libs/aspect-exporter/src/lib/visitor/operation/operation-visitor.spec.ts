@@ -11,45 +11,62 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {TestBed} from '@angular/core/testing';
-import {describe, expect, it} from '@jest/globals';
-import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '@ame/aspect-exporter';
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {MxGraphService} from '@ame/mx-graph';
+import {TestBed} from '@angular/core/testing';
+import {DefaultOperation, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
+import {describe, expect, it} from '@jest/globals';
+import {Store} from 'n3';
+import {MockProvider, MockProviders} from 'ng-mocks';
+import {RdfListService} from '../../rdf-list';
 import {OperationVisitor} from './operation-visitor';
-import {DefaultOperation} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
+
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
 
 describe('Operation Visitor', () => {
   let service: OperationVisitor;
   let rdfNodeService: RdfNodeService;
   let operation: DefaultOperation;
 
+  const rdfModel: RdfModel = {
+    store: new Store(),
+    samm: new Samm(''),
+    sammC: {ConstraintProperty: () => 'constraintProperty'} as any,
+    hasDependency: jest.fn(() => false),
+    addPrefix: jest.fn(() => {}),
+  } as any;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         OperationVisitor,
-        {
-          provide: RdfNodeService,
-          useValue: {update: jest.fn()},
-        },
-        {
-          provide: RdfService,
-          useValue: {
-            currentRdfModel: {hasNamespace: jest.fn(() => true)},
-            externalRdfModels: [],
-          },
-        },
-        {
-          provide: RdfListService,
-          useValue: {
-            createEmpty: jest.fn(),
-          },
-        },
+        MockProviders(MxGraphService),
+        MockProvider(MxGraphService),
+        MockProvider(RdfListService, {
+          push: jest.fn(),
+          createEmpty: jest.fn(),
+        }),
+        MockProvider(RdfNodeService, {
+          update: jest.fn(),
+        }),
+        MockProvider(LoadedFilesService, {
+          currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),
+          externalFiles: [],
+        }),
       ],
     });
 
     rdfNodeService = TestBed.inject(RdfNodeService);
-    operation = new DefaultOperation('1', 'samm#operation1', 'operation1', [], null);
+    operation = new DefaultOperation({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#operation1',
+      name: 'operation1',
+      input: [],
+      output: null,
+    });
     service = TestBed.inject(OperationVisitor);
   });
 

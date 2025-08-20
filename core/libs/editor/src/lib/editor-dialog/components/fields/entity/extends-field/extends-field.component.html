@@ -13,22 +13,22 @@
 <mat-form-field [floatLabel]="getControl('extendsValue')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="extendsValue">extends</mat-label>
   <input #extends [matAutocomplete]="auto" [formControl]="getControl('extendsValue')" matInput name="extendsValue" data-cy="extendsValue" />
-  @if (extendsValueControl?.disabled && !metaModelElement?.isExternalReference() && !metaModelElement.isPredefined()) {
+  @if (extendsValueControl?.disabled && !loadedFiles.isElementExtern(metaModelElement) && !metaModelElement.isPredefined) {
     <button (click)="unlockExtends()" data-cy="clear-extends-button" matSuffix mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
     </button>
   }
 
-  <mat-autocomplete #auto="matAutocomplete" class="extendsValue">
+  <mat-autocomplete class="extendsValue" #auto="matAutocomplete">
     <mat-optgroup label="Predefined Elements">
       @for (element of predefinedEntities; track element) {
         @if (element.name.includes(getControl('extendsValue').value)) {
           <mat-option [attr.data-cy]="element.name" [value]="element.name" (click)="onSelectionChange(element)">
             <div class="result">
               <div class="ellipsis">
-                {{ element.name }}
+                {{ element.name }}<br />
                 @if (element.description) {
-                  <span class="option-description" [title]="element.description">- {{ element.description }}</span>
+                  <span class="option-description" [title]="element.description"> {{ element.description }}</span>
                 }
                 @if (element.namespace) {
                   <p class="namespace-prefix" [title]="element.namespace">

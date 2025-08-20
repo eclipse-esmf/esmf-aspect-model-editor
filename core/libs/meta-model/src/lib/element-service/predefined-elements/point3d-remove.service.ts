@@ -11,10 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {PredefinedEntities, PredefinedProperties} from '@ame/vocabulary';
 import {Injectable} from '@angular/core';
+import {NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
-import {BaseMetaModelElement} from '../../aspect-meta-model';
 import {ModelRootService} from '../model-root.service';
 import {PredefinedRemove} from './predefined-remove.type';
 
@@ -33,26 +32,30 @@ export class Point3dRemoveService implements PredefinedRemove {
       return false;
     }
 
-    if ([PredefinedProperties.x, PredefinedProperties.y, PredefinedProperties.z].includes(modelElement.name as PredefinedProperties)) {
+    if (
+      [PredefinedPropertiesEnum.x, PredefinedPropertiesEnum.y, PredefinedPropertiesEnum.z].includes(
+        modelElement.name as PredefinedPropertiesEnum,
+      )
+    ) {
       const parent = this.mxGraphService
         .resolveParents(cell)
-        .find(p => MxGraphHelper.getModelElement(p).name === PredefinedEntities.Point3d);
+        .find(p => MxGraphHelper.getModelElement(p).name === PredefinedEntitiesEnum.Point3d);
       return this.removeTree(parent);
     }
 
-    if (modelElement.name === PredefinedEntities.Point3d) {
+    if (modelElement.name === PredefinedEntitiesEnum.Point3d && modelElement.isPredefined) {
       return this.removeTree(cell);
     }
 
     return false;
   }
 
-  decouple(edge: mxgraph.mxCell, source: BaseMetaModelElement): boolean {
+  decouple(edge: mxgraph.mxCell, source: NamedElement): boolean {
     if (!this.modelRootService.isPredefined(source)) {
       return false;
     }
 
-    if (source.name === PredefinedEntities.Point3d) {
+    if (source.name === PredefinedEntitiesEnum.Point3d) {
       return this.removeTree(edge.source);
     }
 

@@ -10,12 +10,12 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {CharacteristicClassType} from '@ame/editor';
 import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {EditorModelService} from '../../editor-model.service';
 import {PreviousFormDataSnapshot} from '../../interfaces';
-import {FormGroup} from '@angular/forms';
-import {CharacteristicClassType} from '@ame/editor';
 
 @Component({
   selector: 'ame-characteristic',

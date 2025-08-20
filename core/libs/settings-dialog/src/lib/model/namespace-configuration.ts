@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {RdfModel} from '@ame/rdf/utils';
+import {RdfModel} from '@esmf/aspect-model-loader';
 
 export interface NamespaceConfiguration {
   oldNamespace: string;

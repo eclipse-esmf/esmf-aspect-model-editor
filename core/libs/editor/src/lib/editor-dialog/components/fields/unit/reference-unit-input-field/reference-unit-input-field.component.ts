@@ -11,14 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ModelService} from '@ame/rdf/services';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {DefaultDuration, DefaultUnit, Unit} from '@ame/meta-model';
-import {InputFieldComponent} from '../../input-field.component';
-import {Observable} from 'rxjs';
-import {MetaModelElementInstantiator, UnitInstantiator} from '@ame/instantiator';
-import {ModelService} from '@ame/rdf/services';
 import {MatOptionSelectionChange} from '@angular/material/core';
+import {DefaultDuration, DefaultUnit, Unit} from '@esmf/aspect-model-loader';
+import {Observable} from 'rxjs';
+import {InputFieldComponent} from '../../input-field.component';
 
 declare const sammUDefinition: any;
 
@@ -27,8 +26,6 @@ declare const sammUDefinition: any;
   templateUrl: './reference-unit-input-field.component.html',
 })
 export class ReferenceUnitInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit, OnDestroy {
-  private unitInstantiator: UnitInstantiator;
-
   public filteredPredefinedUnits$: Observable<Array<any>>;
   public filteredUnits$: Observable<Array<DefaultUnit>>;
   public units: Array<Unit> = [];
@@ -37,9 +34,9 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
 
   constructor(private modelService: ModelService) {
     super();
-    this.unitInstantiator = new UnitInstantiator(
-      new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile),
-    );
+    // this.unitInstantiator = new UnitInstantiator(
+    //   new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile),
+    // );
   }
 
   ngOnInit(): void {
@@ -62,14 +59,14 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
 
     this.unitDisplayControl = new FormControl({
       value: referenceUnit?.name,
-      disabled: !!referenceUnit || this.metaModelElement.isExternalReference(),
+      disabled: !!referenceUnit || this.loadedFiles.isElementExtern(this.metaModelElement),
     });
 
     this.parentForm.setControl(
       'referenceUnit',
       new FormControl({
         value: this.metaModelElement?.referenceUnit,
-        disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference(),
+        disabled: this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement),
       }),
     );
 
@@ -88,9 +85,10 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
 
   onPredefinedUnitChange(predefinedUnit: Unit, event: MatOptionSelectionChange) {
     if (predefinedUnit && event.isUserInput) {
-      const newPredefinedUnit = this.unitInstantiator.getUnit(predefinedUnit?.name);
-      this.referenceUnitControl.setValue(newPredefinedUnit);
-      this.unitDisplayControl.patchValue(newPredefinedUnit.name);
+      // TODO call a predefined unit function to create the unit
+      // const newPredefinedUnit = this.unitInstantiator.getUnit(predefinedUnit?.name);
+      // this.referenceUnitControl.setValue(newPredefinedUnit);
+      // this.unitDisplayControl.patchValue(newPredefinedUnit.name);
       this.unitDisplayControl.disable();
     }
   }

@@ -11,29 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {getPreferredNamesLocales} from '@ame/utils';
 import {Injectable} from '@angular/core';
+import {DefaultUnit, Samm} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
-import {BaseVisitor} from '../base-visitor';
 import {RdfNodeService} from '../../rdf-node';
-import {DefaultUnit} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
-import {Samm} from '@ame/vocabulary';
+import {BaseVisitor} from '../base-visitor';
 
 @Injectable()
 export class UnitVisitor extends BaseVisitor<DefaultUnit> {
   private get store(): Store {
-    return this.rdfNodeService.modelService.currentRdfModel.store;
+    return this.loadedFilesService.currentLoadedFile.rdfModel.store;
   }
 
   private get samm(): Samm {
-    return this.rdfNodeService.modelService.currentRdfModel.SAMM();
+    return this.loadedFilesService.currentLoadedFile.rdfModel.samm;
   }
 
   constructor(
     private rdfNodeService: RdfNodeService,
-    rdfService: RdfService,
+    private loadedFilesService: LoadedFilesService,
   ) {
-    super(rdfService);
+    super(loadedFilesService);
   }
 
   visit(unit: DefaultUnit): DefaultUnit {
@@ -47,19 +47,19 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
   }
 
   private addProperties(unit: DefaultUnit) {
-    if (unit.isPredefined()) {
+    if (unit.isPredefined) {
       return;
     }
 
     this.rdfNodeService.update(unit, {
-      preferredName: unit.getAllLocalesPreferredNames().map(language => ({
+      preferredName: getPreferredNamesLocales(unit).map(language => ({
         language,
         value: unit.getPreferredName(language),
       })),
       symbol: unit.symbol,
       commonCode: unit.code,
       conversionFactor: unit.conversionFactor,
-      numericConversionFactor: unit.numericConversionFactor,
+      // numericConversionFactor: unit.numericConversionFactor,
     });
 
     // update reference unit

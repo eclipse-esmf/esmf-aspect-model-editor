@@ -17,7 +17,8 @@
 describe('Test models with intersected names', () => {
   describe('PredefinedAndCustomCharacteristicsSameName', () => {
     it('should load "PredefinedAndCustomCharacteristicsSameName" model', () => {
-      cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+      cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       cy.visitDefault();
       cy.fixture('predefined-and-custom-characteristics-same-name')
         .as('rdfString')
@@ -188,7 +189,6 @@ describe('Test models with intersected names', () => {
           {label: 'code = CUR'},
           {label: 'symbol = Ci'},
           {label: 'conversionFactor = 3.7 × 10¹⁰ Bq'},
-          {label: 'numericConversionFactor = undefined'},
           {label: 'referenceUnit = becquerel'},
         ],
       };

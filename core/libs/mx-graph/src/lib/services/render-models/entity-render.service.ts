@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {DefaultEntity} from '@ame/meta-model';
+import {LoadedFilesService} from '@ame/cache';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {Injectable} from '@angular/core';
+import {DefaultEntity} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {MxGraphService} from '../mx-graph.service';
-import {BaseRenderService} from './base-render-service';
 import {BaseEntityRendererService} from './base-entity-renderer.service';
-import {RdfService} from '@ame/rdf/services';
+import {BaseRenderService} from './base-render-service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,10 +28,10 @@ export class EntityRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     sammLangService: SammLanguageSettingsService,
-    rdfService: RdfService,
+    protected loadedFilesService: LoadedFilesService,
     private baseEntityRenderer: BaseEntityRendererService,
   ) {
-    super(mxGraphService, sammLangService, rdfService);
+    super(mxGraphService, sammLangService, loadedFilesService);
   }
 
   update({cell}) {

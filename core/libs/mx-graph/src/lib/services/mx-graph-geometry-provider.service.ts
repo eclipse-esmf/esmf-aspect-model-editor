@@ -11,19 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {BaseMetaModelElement} from '@ame/meta-model';
+import {ModelTree} from '@ame/loader-filters';
 import {circleShapeGeometry, smallBasicShapeGeometry} from '@ame/shared';
+import {Injectable} from '@angular/core';
+import {NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {mxGeometry} from '../providers';
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
-import {ModelTree} from '@ame/loader-filters';
 
 @Injectable()
 export class MxGraphGeometryProviderService {
   constructor(private mxGraphAttributeService: MxGraphAttributeService) {}
 
-  public createGeometry(node: ModelTree<BaseMetaModelElement>, x?: number, y?: number): mxgraph.mxGeometry {
+  public createGeometry(node: ModelTree<NamedElement>, x?: number, y?: number): mxgraph.mxGeometry {
     return this.mxGraphAttributeService.inCollapsedMode
       ? new mxGeometry(x, y, node.shape.collapsedWidth, node.shape.collapsedHeight)
       : new mxGeometry(x, y, node.shape.expandedWith, node.shape.expandedHeight);

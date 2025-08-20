@@ -11,21 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultProperty, DefaultCharacteristic, DefaultAbstractProperty} from '@ame/meta-model';
-import {MxGraphService, MxGraphAttributeService, MxGraphHelper} from '@ame/mx-graph';
+import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {basicShapeGeometry} from '@ame/shared';
-import {Injectable} from '@angular/core';
-import {MultiShapeConnector} from '../models';
+import {Injectable, inject} from '@angular/core';
+import {DefaultCharacteristic, DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {MultiShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PropertyCharacteristicConnectionHandler implements MultiShapeConnector<DefaultProperty, DefaultCharacteristic> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-  ) {}
+  private mxGraphService = inject(MxGraphService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
 
   public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultCharacteristic, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
     this.mxGraphAttributeService.graph.getOutgoingEdges(parent).forEach((outEdge: mxgraph.mxCell) => {
@@ -34,8 +32,8 @@ export class PropertyCharacteristicConnectionHandler implements MultiShapeConnec
         outEdge.target.geometry.translate(basicShapeGeometry.expandedWith, 0);
       }
 
-      const targetModel = MxGraphHelper.getModelElement(outEdge.target);
-      if (targetModel instanceof DefaultProperty || targetModel instanceof DefaultAbstractProperty) {
+      const targetModel = MxGraphHelper.getModelElement<DefaultProperty>(outEdge.target);
+      if (targetModel instanceof DefaultProperty) {
         return;
       }
 

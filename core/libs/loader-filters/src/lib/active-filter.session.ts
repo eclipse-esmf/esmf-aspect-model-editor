@@ -12,8 +12,8 @@
  */
 
 import {InjectionToken} from '@angular/core';
-import {ModelFilter} from './models';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {ModelFilter} from './models';
 
 export const FILTER_ATTRIBUTES_TOKEN = 'FILTER_ATTRIBUTES_TOKEN';
 export interface FilterAttributesService {

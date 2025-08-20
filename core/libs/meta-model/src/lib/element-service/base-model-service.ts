@@ -11,39 +11,32 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-  Base,
-  BaseMetaModelElement,
-  CanExtend,
-  DefaultAspect,
-  DefaultEntityInstance,
-  DefaultEnumeration,
-  EntityInstanceProperty,
-} from '@ame/meta-model';
-import {mxgraph} from 'mxgraph-factory';
-import {NamespacesCacheService} from '@ame/cache';
+import {ModelApiService} from '@ame/api';
+import {LoadedFilesService} from '@ame/cache';
+import {EditorService} from '@ame/editor';
 import {MxGraphHelper} from '@ame/mx-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
-import {EditorService} from '@ame/editor';
-import {ModelApiService} from '@ame/api';
+import {useUpdater} from '@ame/utils';
 import {inject} from '@angular/core';
+import {DefaultAspect, DefaultEntityInstance, DefaultEnumeration, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
 
 export abstract class BaseModelService {
   protected rdfService: RdfService = inject(RdfService);
-  protected namespacesCacheService: NamespacesCacheService = inject(NamespacesCacheService);
   protected modelService: ModelService = inject(ModelService);
   protected editorService: EditorService = inject(EditorService);
   protected modelApiService: ModelApiService = inject(ModelApiService);
+  protected loadedFilesService: LoadedFilesService = inject(LoadedFilesService);
 
   get currentCachedFile() {
-    return this.namespacesCacheService.currentCachedFile;
+    return this.loadedFile.cachedFile;
   }
 
-  get currentRdfModel() {
-    return this.rdfService.currentRdfModel;
+  get loadedFile() {
+    return this.loadedFilesService.currentLoadedFile;
   }
 
-  abstract isApplicable(metaModelElement: BaseMetaModelElement): boolean;
+  abstract isApplicable(metaModelElement: NamedElement): boolean;
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const modelElement = MxGraphHelper.getModelElement(cell);
@@ -53,16 +46,15 @@ export abstract class BaseModelService {
     // Add common operations
 
     // update name
-    const aspect = Object.assign({}, this.modelService?.loadedAspect);
-    const aspectModelUrn = this.modelService.currentRdfModel.getAspectModelUrn();
+    const aspectModelUrn = this.loadedFile.rdfModel.getAspectModelUrn();
 
-    this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
+    this.currentCachedFile.updateElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
 
     modelElement.name = form.name;
     modelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 
-    if (aspect && modelElement instanceof DefaultAspect) {
-      this.currentRdfModel.setAspect(modelElement.aspectModelUrn);
+    if (modelElement instanceof DefaultAspect) {
+      this.loadedFilesService.currentLoadedFile.aspect = modelElement;
     }
 
     // update descriptions (multiple locales)
@@ -77,88 +69,88 @@ export abstract class BaseModelService {
 
   delete(cell: mxgraph.mxCell) {
     // Add common operations
-    const modeElement = MxGraphHelper.getModelElement(cell);
+    const modelElement = MxGraphHelper.getModelElement(cell);
     for (const edge of (cell.edges?.length && cell.edges) || []) {
-      const sourceNode = MxGraphHelper.getModelElement<Base>(edge.source);
-      if (sourceNode && !(sourceNode instanceof DefaultEnumeration) && !sourceNode.isExternalReference()) {
-        this.currentCachedFile.removeElement(modeElement.aspectModelUrn);
-        sourceNode.delete(modeElement);
+      const sourceNode = MxGraphHelper.getModelElement<NamedElement>(edge.source);
+      if (sourceNode && !(sourceNode instanceof DefaultEnumeration) && this.loadedFilesService.isElementInCurrentFile(sourceNode)) {
+        this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
+        useUpdater(sourceNode).delete(modelElement);
       }
     }
 
-    if (!modeElement.isExternalReference()) {
-      this.currentCachedFile.removeElement(modeElement.aspectModelUrn);
+    if (this.loadedFilesService.isElementInCurrentFile(modelElement)) {
+      this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
     }
   }
 
-  protected updateSee(modelElement: BaseMetaModelElement, form: {[key: string]: any}) {
+  protected updateSee(modelElement: NamedElement, form: {[key: string]: any}) {
     const newSeeValue = form.see instanceof Array ? form.see : form.see?.split(',');
-    if (modelElement instanceof CanExtend) {
-      if (newSeeValue?.join(',') !== modelElement.extendedSee?.join(',')) {
-        modelElement.setSeeReferences(form.see ? newSeeValue : null);
+    const extending = modelElement as HasExtends;
+    if (extending.extends_) {
+      if (newSeeValue?.join(',') !== extending.extends_?.see?.join(',')) {
+        extending.see = form.see ? newSeeValue : null;
       } else {
-        modelElement.setSeeReferences([]);
+        extending.see = [];
       }
     } else {
-      modelElement.setSeeReferences(form.see ? newSeeValue : null);
+      modelElement.see = form.see ? newSeeValue : null;
     }
   }
 
-  protected updateDescriptionWithLocales(modelElement: BaseMetaModelElement, form: {[key: string]: any}) {
+  protected updateDescriptionWithLocales(modelElement: NamedElement, form: {[key: string]: any}) {
+    const extending = modelElement as HasExtends;
     Object.keys(form).forEach(key => {
       if (!key.startsWith('description')) {
         return;
       }
 
       const locale = key.replace('description', '');
-      if (modelElement instanceof CanExtend) {
-        if (form[key] !== modelElement.extendedDescription?.get(locale)) {
-          modelElement.addDescription(locale, form[key]);
+      if (extending.extends_) {
+        if (form[key] !== extending.extends_?.descriptions?.get(locale)) {
+          extending.descriptions.set(locale, form[key]);
         } else {
-          modelElement.addDescription(locale, '');
+          extending.descriptions.set(locale, '');
         }
       } else {
-        modelElement.addDescription(locale, form[key]);
+        modelElement.descriptions.set(locale, form[key]);
       }
     });
   }
 
-  protected updatePreferredWithLocales(modelElement: BaseMetaModelElement, form: {[key: string]: any}) {
+  protected updatePreferredWithLocales(modelElement: NamedElement, form: {[key: string]: any}) {
+    const extending = modelElement as HasExtends;
     Object.keys(form).forEach(key => {
       if (!key.startsWith('preferredName')) {
         return;
       }
       const locale = key.replace('preferredName', '');
-      if (modelElement instanceof CanExtend) {
-        if (form[key] !== modelElement.extendedPreferredName?.get(locale)) {
-          modelElement.addPreferredName(locale, form[key]);
+      if (extending.extends_) {
+        if (form[key] !== extending.extends_?.preferredNames?.get(locale)) {
+          extending.preferredNames.set(locale, form[key]);
         } else {
-          modelElement.addPreferredName(locale, '');
+          extending.preferredNames.set(locale, '');
         }
       } else {
-        modelElement.addPreferredName(locale, form[key]);
+        modelElement.preferredNames.set(locale, form[key]);
       }
     });
   }
 
-  protected addNewEntityValues(newEntityValues: DefaultEntityInstance[], parent: BaseMetaModelElement) {
+  protected addNewEntityValues(newEntityValues: DefaultEntityInstance[], parent: NamedElement) {
     for (const entityValue of newEntityValues) {
       MxGraphHelper.establishRelation(parent, entityValue);
-      this.currentCachedFile.resolveElement(entityValue);
+      this.currentCachedFile.resolveInstance(entityValue);
     }
   }
 
-  protected deleteEntityValue(entityValue: DefaultEntityInstance, parent: BaseMetaModelElement) {
+  protected deleteEntityValue(entityValue: DefaultEntityInstance, parent: NamedElement) {
     MxGraphHelper.removeRelation(parent, entityValue);
     // delete the element
-    this.namespacesCacheService.currentCachedFile.removeElement(entityValue.aspectModelUrn);
+    this.loadedFile.cachedFile.removeElement(entityValue.aspectModelUrn);
     // now delete other underlying entity values that don't belong to an enumeration
-    entityValue.properties.forEach((property: EntityInstanceProperty) => {
-      if (property.value instanceof DefaultEntityInstance) {
-        // this is another complex value, check if it belongs to an enumeration
-        if (!property.value.parents?.length) {
-          this.deleteEntityValue(property.value, entityValue);
-        }
+    entityValue.getTuples().forEach(([, value]) => {
+      if (value instanceof DefaultEntityInstance) {
+        this.deleteEntityValue(value, entityValue);
       }
     });
   }

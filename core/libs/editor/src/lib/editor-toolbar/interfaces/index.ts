@@ -11,6 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './violation-error';
 export * from './detail-violation-info';
 export * from './file-upload-options';
+export * from './violation-error';

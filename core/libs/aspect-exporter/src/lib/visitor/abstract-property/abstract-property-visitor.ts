@@ -11,27 +11,28 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
 import {Injectable, inject} from '@angular/core';
+import {DefaultProperty} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
-import {BaseVisitor} from '../base-visitor';
 import {RdfNodeService} from '../../rdf-node';
-import {DefaultAbstractProperty} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
+import {BaseVisitor} from '../base-visitor';
 
 @Injectable()
-export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty> {
+export class AbstractPropertyVisitor extends BaseVisitor<DefaultProperty> {
   private rdfNodeService = inject(RdfNodeService);
 
   private get store(): Store {
-    return this.rdfNodeService.modelService.currentRdfModel.store;
+    return this.loadedFiles.currentLoadedFile?.rdfModel?.store;
   }
 
-  constructor(rdfService: RdfService) {
-    super(rdfService);
+  constructor(loadedFiles: LoadedFilesService) {
+    super(loadedFiles);
   }
 
-  visit(abstractProperty: DefaultAbstractProperty): DefaultAbstractProperty {
-    if (abstractProperty.isPredefined()) {
+  visit(abstractProperty: DefaultProperty): DefaultProperty {
+    if (abstractProperty.isPredefined) {
       return null;
     }
 
@@ -45,31 +46,31 @@ export class AbstractPropertyVisitor extends BaseVisitor<DefaultAbstractProperty
     return abstractProperty;
   }
 
-  private addProperties(abstractProperty: DefaultAbstractProperty) {
+  private addProperties(abstractProperty: DefaultProperty) {
     this.rdfNodeService.update(abstractProperty, {
       exampleValue: abstractProperty.exampleValue,
-      preferredName: abstractProperty.getAllLocalesPreferredNames().map(language => ({
+      preferredName: getPreferredNamesLocales(abstractProperty).map(language => ({
         language,
         value: abstractProperty.getPreferredName(language),
       })),
-      description: abstractProperty.getAllLocalesDescriptions().map(language => ({
+      description: getDescriptionsLocales(abstractProperty).map(language => ({
         language,
         value: abstractProperty.getDescription(language),
       })),
-      see: abstractProperty.getSeeReferences() || [],
+      see: abstractProperty.getSee() || [],
     });
   }
 
-  private addExtends(abstractProperty: DefaultAbstractProperty) {
-    if (!abstractProperty.extendedElement) {
+  private addExtends(abstractProperty: DefaultProperty) {
+    if (!abstractProperty.getExtends()) {
       return;
     }
 
-    this.setPrefix(abstractProperty.extendedElement.aspectModelUrn);
+    this.setPrefix(abstractProperty.getExtends().aspectModelUrn);
     this.store.addQuad(
       DataFactory.namedNode(abstractProperty.aspectModelUrn),
-      this.rdfService.currentRdfModel.samm.ExtendsProperty(),
-      DataFactory.namedNode(abstractProperty.extendedElement.aspectModelUrn),
+      this.loadedFiles.currentLoadedFile.rdfModel.samm.Extends(),
+      DataFactory.namedNode(abstractProperty.getExtends().aspectModelUrn),
     );
   }
 

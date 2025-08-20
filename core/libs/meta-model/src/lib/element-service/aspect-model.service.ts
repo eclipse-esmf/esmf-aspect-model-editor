@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {BaseModelService} from './base-model-service';
-import {BaseMetaModelElement, DefaultAspect, OverWrittenPropertyKeys} from '@ame/meta-model';
-import {mxgraph} from 'mxgraph-factory';
 import {AspectRenderService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {TitleService} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
+import {Injectable} from '@angular/core';
+import {DefaultAspect, NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class AspectModelService extends BaseModelService {
@@ -30,32 +30,32 @@ export class AspectModelService extends BaseModelService {
     super();
   }
 
-  isApplicable(metaModelElement: BaseMetaModelElement): boolean {
+  isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultAspect;
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement = MxGraphHelper.getModelElement<DefaultAspect>(cell);
-    if (!this.rdfService.currentRdfModel.originalAbsoluteFileName && form.name !== metaModelElement.name) {
-      this.rdfService.currentRdfModel.originalAbsoluteFileName = this.rdfService.currentRdfModel.absoluteAspectModelFileName;
+    if (form.name && form.name !== metaModelElement.name) {
+      this.loadedFilesService.updateAbsoluteName(this.loadedFile.absoluteName, `${this.loadedFile.namespace}:${form.name}.ttl`);
     }
     super.update(cell, form);
 
-    const namespaceVersion = this.currentRdfModel.getAspectModelUrn().replace('urn:samm:', '').replace('#', '').split(':');
-    this.currentRdfModel.updateAbsoluteFileName(namespaceVersion[0], namespaceVersion[1]);
-
     if (form.editedProperties) {
-      for (const {property, keys} of metaModelElement.properties) {
-        const newKeys: OverWrittenPropertyKeys = form.editedProperties[property.aspectModelUrn];
-        keys.notInPayload = newKeys.notInPayload;
-        keys.optional = newKeys.optional;
-        keys.payloadName = newKeys.payloadName;
+      for (const property of metaModelElement.properties) {
+        const newKeys = form.editedProperties[property.aspectModelUrn];
+        if (!metaModelElement.propertiesPayload[property.aspectModelUrn]) {
+          metaModelElement.propertiesPayload[property.aspectModelUrn] = {} as any;
+        }
+
+        metaModelElement.propertiesPayload[property.aspectModelUrn].notInPayload = newKeys.notInPayload;
+        metaModelElement.propertiesPayload[property.aspectModelUrn].optional = newKeys.optional;
+        metaModelElement.propertiesPayload[property.aspectModelUrn].payloadName = newKeys.payloadName;
       }
     }
 
-    this.rdfService.currentRdfModel.absoluteAspectModelFileName = `${metaModelElement.aspectModelUrn}.ttl`;
     this.aspectRenderer.update({cell});
-    this.titleService.updateTitle(`${metaModelElement?.aspectModelUrn.replace('urn:samm:', '')}.ttl`);
+    this.titleService.updateTitle(this.loadedFile.absoluteName);
     this.sidebarStateService.workspace.refresh();
   }
 

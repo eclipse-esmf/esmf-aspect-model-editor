@@ -11,40 +11,32 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamespacesCacheService} from '@ame/cache';
-import {FiltersService} from '@ame/loader-filters';
-import {StructuredValue, ModelElementNamingService, DefaultProperty} from '@ame/meta-model';
-import {MxGraphService, MxGraphHelper} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {LoadedFilesService} from '@ame/cache';
+import {Injectable, inject} from '@angular/core';
+import {DefaultProperty, StructuredValue} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
-export class StructuredValueConnectionHandler implements SingleShapeConnector<StructuredValue> {
+export class StructuredValueConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<StructuredValue> {
+  private loadedFiles = inject(LoadedFilesService);
+
   get currentCachedFile() {
-    return this.namespacesCacheService.currentCachedFile;
+    return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
-  constructor(
-    private mxGraphService: MxGraphService,
-    private modelElementNamingService: ModelElementNamingService,
-    private namespacesCacheService: NamespacesCacheService,
-    private filtersService: FiltersService,
-  ) {}
-
   public connect(structuredValue: StructuredValue, source: mxgraph.mxCell) {
-    const property = DefaultProperty.createInstance();
-    structuredValue.elements.push({property, keys: {}});
+    const property = this.elementCreator.createEmptyElement(DefaultProperty);
+    structuredValue.elements.push(property);
     structuredValue.deconstructionRule = `${structuredValue.deconstructionRule}(regex)`;
-    const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(property);
-    const propertyCell = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
-    );
-    this.mxGraphService.graph.labelChanged(source, MxGraphHelper.createPropertiesLabel(source));
-    this.mxGraphService.assignToParent(propertyCell, source);
-    this.currentCachedFile.resolveElement(property);
+    const child = this.renderTree(property, source);
+
+    this.refreshPropertiesLabel(child, property);
+    this.mxGraphService.assignToParent(child, source);
+    this.currentCachedFile.resolveInstance(property);
 
     this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();

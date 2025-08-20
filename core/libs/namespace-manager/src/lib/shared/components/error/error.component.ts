@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {NotificationsService} from '@ame/shared';
+import {CdkScrollable} from '@angular/cdk/scrolling';
 import {Component, Inject} from '@angular/core';
+import {MatButton} from '@angular/material/button';
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {MatIcon} from '@angular/material/icon';
+import {first} from 'rxjs';
 import {NamespacesSessionInterface} from '../../models';
 import {NAMESPACES_SESSION} from '../../services';
-import {NotificationsService} from '@ame/shared';
-import {first} from 'rxjs';
-import {MatButton} from '@angular/material/button';
-import {MatIcon} from '@angular/material/icon';
-import {MatDialogContent, MatDialogTitle, MatDialogActions, MatDialogClose} from '@angular/material/dialog';
-import {CdkScrollable} from '@angular/cdk/scrolling';
 
 enum ERROR_TYPES {
   UNKNOWN,

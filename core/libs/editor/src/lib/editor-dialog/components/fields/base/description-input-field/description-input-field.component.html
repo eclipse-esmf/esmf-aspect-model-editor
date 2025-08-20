@@ -12,15 +12,15 @@
   -->
 
 <ng-container>
-  @for (locale of metaModelElement?.getAllLocalesDescriptions(); track locale) {
+  @for (locale of getDescriptionsLocales(); track locale) {
     <mat-form-field
       [floatLabel]="getControl('description' + locale)?.disabled ? 'always' : 'auto'"
-      [matTooltip]="isInherited(locale) ? 'This was extended from ' + elementExtends.extendedElement.name : ''"
+      [matTooltip]="isInherited(locale) ? 'This was extended from ' + elementExtends.extends_.name : ''"
       [matTooltipPosition]="'left'"
       appearance="fill"
     >
       <mat-label for="description">description({{ locale }})</mat-label>
-      <textarea matInput [formControl]="getControl('description' + locale)" name="description{{ locale }}" data-cy="description"></textarea>
+      <textarea [formControl]="getControl('description' + locale)" matInput name="description{{ locale }}" data-cy="description"></textarea>
     </mat-form-field>
   }
 </ng-container>

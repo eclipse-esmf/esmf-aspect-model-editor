@@ -11,38 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultAbstractProperty} from '@ame/meta-model';
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {MxGraphHelper} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
-import {Injectable} from '@angular/core';
-import {MultiShapeConnector, PropertyInheritanceConnector} from '../models';
+import {Injectable, inject} from '@angular/core';
+import {DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
-import {LanguageTranslationService} from '@ame/translation';
+import {MultiShapeConnector, PropertyInheritanceConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AbstractPropertyAbstractPropertyConnectionHandler
   extends PropertyInheritanceConnector
-  implements MultiShapeConnector<DefaultAbstractProperty, DefaultAbstractProperty>
+  implements MultiShapeConnector<DefaultProperty, DefaultProperty>
 {
-  constructor(
-    protected mxGraphService: MxGraphService,
-    protected mxGraphAttributeService: MxGraphAttributeService,
-    protected sammLangService: SammLanguageSettingsService,
-    protected translate: LanguageTranslationService,
-    private notificationService: NotificationsService,
-  ) {
-    super(mxGraphService, mxGraphAttributeService, sammLangService, notificationService, translate);
-  }
+  private notificationService = inject(NotificationsService);
 
-  public connect(
-    parentMetaModel: DefaultAbstractProperty,
-    childMetaModel: DefaultAbstractProperty,
-    parentCell: mxgraph.mxCell,
-    childCell: mxgraph.mxCell,
-  ) {
+  public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
+    if (!parentMetaModel.isAbstract || !childMetaModel.isAbstract) return;
+
     if (this.hasEntityParent(parentCell)) {
       this.notificationsService.warning({
         title: this.translate.language.NOTIFICATION_SERVICE.MISSING_PARENT_ENTITY,

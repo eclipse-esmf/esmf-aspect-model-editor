@@ -13,7 +13,7 @@
 
 <mat-form-field [floatLabel]="getControl('name')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="name">Name</mat-label>
-  <input [formControl]="getControl('name')" matInput class="ellipsis" name="name" data-cy="name" />
+  <input class="ellipsis" [formControl]="getControl('name')" matInput name="name" data-cy="name" />
   @if (getControl('name')?.errors?.required) {
     <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_DEFINE' | translate }} </mat-error>
   }

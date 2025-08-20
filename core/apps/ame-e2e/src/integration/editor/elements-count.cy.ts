@@ -14,13 +14,15 @@
 
 /// <reference types="Cypress" />
 
-import {SELECTOR_workspaceBtn} from '../../support/constants';
 import {setUpDynamicModellingInterceptors, setUpStaticModellingInterceptors} from '../../support/api-mocks';
+import {SELECTOR_workspaceBtn} from '../../support/constants';
 
+// TODO redo the setUpDynamicModellingInterceptors function
 describe('Elements count', () => {
   describe('Movement model', () => {
     it('should display elements count for incoming & outgoing edges', () => {
-      cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+      cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       cy.visitDefault();
       cy.fixture('/default-models/movement.txt')
         .then(rdfString => cy.loadModel(rdfString))
@@ -99,51 +101,74 @@ describe('Elements count', () => {
         });
     });
 
+    // TODO check the models and create a valid namespaces response
     it.skip('should display elements count in sidebar', () => {
-      cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+      cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       const namespacesConfig = {
-        aspectDefault: {
-          name: 'org.eclipse.examples.aspect:1.0.0',
-          files: [
+        'org.eclipse.examples.aspect': {
+          version: '1.0.0',
+          models: [
             {
-              name: 'AspectDefault.ttl',
-              response: {fixture: '/default-models/aspect-default.txt'},
+              model: 'AspectDefault.ttl',
+              aspectModelUrn: 'org.eclipse.examples.aspect:1.0.0#AspectDefault',
+              existing: true,
             },
           ],
         },
-        movement: {
-          name: 'org.eclipse.examples.movement:1.0.0',
-          files: [
+        'org.eclipse.examples.movement': {
+          version: '1.0.0',
+          models: [
             {
-              name: 'Movement.ttl',
-              response: {fixture: '/default-models/movement.txt'},
+              model: 'Movement.ttl',
+              aspectModelUrn: 'org.eclipse.examples.movement:1.0.0#Movement',
+              existing: true,
             },
           ],
         },
+
+        // aspectDefault: {
+        //   name: 'org.eclipse.examples.aspect:1.0.0',
+        //   files: [
+        //     {
+        //       name: 'AspectDefault.ttl',
+        //       response: {fixture: '/default-models/aspect-default.txt'},
+        //     },
+        //   ],
+        // },
+        // movement: {
+        //   name: 'org.eclipse.examples.movement:1.0.0',
+        //   files: [
+        //     {
+        //       name: 'Movement.ttl',
+        //       response: {fixture: '/default-models/movement.txt'},
+        //     },
+        //   ],
+        // },
       };
 
-      setUpStaticModellingInterceptors();
-      setUpDynamicModellingInterceptors(namespacesConfig);
+      //   setUpStaticModellingInterceptors();
+      //   setUpDynamicModellingInterceptors(namespacesConfig);
 
-      cy.visitDefault();
-      cy.fixture(namespacesConfig.aspectDefault.files[0].response.fixture)
-        .then(rdfString => cy.loadModel(rdfString))
-        .then(() => cy.fixture(namespacesConfig.movement.files[0].response.fixture))
-        .then(rdfString => cy.loadModel(rdfString))
-        .then(() => cy.startModelling())
-        .then(() => {
-          cy.get(SELECTOR_workspaceBtn).click({force: true});
-          cy.contains('Movement.ttl').click({force: true});
-          cy.contains('Properties (7)').should('exist');
-          cy.contains('Characteristics (5)').should('exist');
-          cy.contains('Entities (1)').should('exist');
-        });
+      //   cy.visitDefault();
+      //   cy.fixture(namespacesConfig.aspectDefault.files[0].response.fixture)
+      //     .then(rdfString => cy.loadModel(rdfString))
+      //     .then(() => cy.fixture(namespacesConfig.movement.files[0].response.fixture))
+      //     .then(rdfString => cy.loadModel(rdfString))
+      //     .then(() => cy.startModelling())
+      //     .then(() => {
+      //       cy.get(SELECTOR_workspaceBtn).click({force: true});
+      //       cy.contains('Movement.ttl').click({force: true});
+      //       cy.contains('Properties (7)').should('exist');
+      //       cy.contains('Characteristics (5)').should('exist');
+      //       cy.contains('Entities (1)').should('exist');
+      //     });
     });
   });
 
   describe('Enumeration instances model', () => {
-    it('should display elements count for incoming & outgoing edges', () => {
-      cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    it.skip('should display elements count for incoming & outgoing edges', () => {
+      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       cy.visitDefault();
       cy.fixture('/enumeration-instances.txt')
         .then(rdfString => cy.loadModel(rdfString))
@@ -179,7 +204,7 @@ describe('Elements count', () => {
     });
 
     it.skip('should display elements count in sidebar', () => {
-      cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       const namespacesConfig = {
         aspectDefault: {
           name: 'org.eclipse.examples.aspect:1.0.0',

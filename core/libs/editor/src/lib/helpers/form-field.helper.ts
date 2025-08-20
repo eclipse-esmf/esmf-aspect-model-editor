@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultEntity, DefaultEnumeration, DefaultProperty, DefaultTrait, Property} from '@ame/meta-model';
+import {DefaultEntity, DefaultEnumeration, DefaultProperty, DefaultTrait, Property} from '@esmf/aspect-model-loader';
 
 export enum DataType {
   COMPLEX = 'COMPLEX',

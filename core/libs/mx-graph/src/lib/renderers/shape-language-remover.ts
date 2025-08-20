@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from '@ame/meta-model';
-import {LogService} from '@ame/shared';
+import {NamedElement} from '@esmf/aspect-model-loader';
 import {MxGraphHelper} from '../helpers';
 import {MxGraphAttributeService, MxGraphService, MxGraphShapeSelectorService} from '../services';
 
@@ -21,11 +20,10 @@ export class ShapeLanguageRemover {
     private locals: Array<string>,
     private mxGraphService: MxGraphService,
     private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private logService: LogService,
     private mxGraphAttributeService: MxGraphAttributeService,
   ) {}
 
-  removeUnnecessaryLanguages(): BaseMetaModelElement {
+  removeUnnecessaryLanguages(): NamedElement {
     this.mxGraphAttributeService.graph.getChildCells(this.mxGraphAttributeService.graph.getDefaultParent()).forEach(mxCell => {
       const modelElement = MxGraphHelper.getModelElement(mxCell);
       if (!modelElement) {
@@ -38,16 +36,16 @@ export class ShapeLanguageRemover {
     return MxGraphHelper.getModelElement(this.mxGraphShapeSelectorService.getAspectCell());
   }
 
-  private removeLanguageInformation(element: BaseMetaModelElement) {
+  private removeLanguageInformation(element: NamedElement) {
     this.locals.forEach(locale => {
       if (element.getPreferredName(locale)) {
-        this.logService.logInfo(`Delete '${element.getPreferredName(locale)}@${locale}' from ${element.aspectModelUrn}`);
+        console.info(`Delete '${element.getPreferredName(locale)}@${locale}' from ${element.aspectModelUrn}`);
       }
       if (element.getDescription(locale)) {
-        this.logService.logInfo(`Delete '${element.getDescription(locale)}@${locale}' from ${element.aspectModelUrn}`);
+        console.info(`Delete '${element.getDescription(locale)}@${locale}' from ${element.aspectModelUrn}`);
       }
-      element.removePreferredName(locale);
-      element.removeDescription(locale);
+      element.preferredNames.delete(locale);
+      element.descriptions.delete(locale);
 
       const cell = this.mxGraphService.resolveCellByModelElement(element);
 

@@ -11,19 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
-import {
-  BaseMetaModelElement,
-  DefaultAbstractProperty,
-  DefaultEntityInstance,
-  DefaultProperty,
-  Entity,
-  EntityInstanceProperty,
-  OverWrittenProperty,
-} from '@ame/meta-model';
-import {BaseModelService} from './base-model-service';
 import {EntityValueRenderService, MxGraphHelper} from '@ame/mx-graph';
+import {Injectable} from '@angular/core';
+import {DefaultEntity, DefaultEntityInstance, NamedElement, Value} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class EntityValueModelService extends BaseModelService {
@@ -31,74 +23,86 @@ export class EntityValueModelService extends BaseModelService {
     super();
   }
 
-  isApplicable(metaModelElement: BaseMetaModelElement): boolean {
+  isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultEntityInstance;
   }
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}): void {
     const modelElement = MxGraphHelper.getModelElement<DefaultEntityInstance>(cell);
     // update name
-    const aspectModelUrn = this.modelService.currentRdfModel.getAspectModelUrn();
-    this.currentCachedFile.updateCachedElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
+    const aspectModelUrn = this.loadedFile?.rdfModel?.getAspectModelUrn();
+    this.currentCachedFile.updateElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
     modelElement.name = form.name;
     modelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
 
-    // in case some entity values are no longer assigned as property values to the current entity, remove them from the model
-    this.removeObsoleteEntityValues(modelElement);
+    this.updateEntityInstanceWithSimpleValues(modelElement, form);
+    this.removeUnusedEntityInstances(modelElement, form);
+    this.updateWithEntityInstances(modelElement, form);
 
-    const newEntityValues = form.newEntityValues;
-    // check if there are any new entity values to add to the cache service
-    if (newEntityValues) {
-      this.addNewEntityValues(newEntityValues, modelElement);
-    }
-
-    this.updatePropertiesEntityValues(modelElement, form);
     this.entityValueRenderService.update({cell, form});
+  }
+
+  private removeUnusedEntityInstances(entityInstance: DefaultEntityInstance, form: {[key: string]: any}): void {
+    const {entityValueProperties} = form;
+
+    // remove obsolete entity values
+    const properties = entityInstance.type?.properties || [];
+    for (const property of properties) {
+      if (!(property.characteristic?.dataType instanceof DefaultEntity)) continue;
+
+      const actualValues: DefaultEntityInstance[] = entityInstance.assertions.get(property.aspectModelUrn) || ([] as any);
+      const updatedValues = entityValueProperties[property.name] || [];
+      const filteredValues = actualValues.filter(entityInstance => updatedValues.some(({value}) => value === entityInstance.name));
+      entityInstance.assertions.set(property.aspectModelUrn, filteredValues);
+    }
+  }
+
+  private updateWithEntityInstances(entityInstance: DefaultEntityInstance, form: {[key: string]: any}): void {
+    const {newEntityValues, entityValueProperties} = form;
+    const properties = entityInstance.type?.properties || [];
+
+    for (const property of properties) {
+      if (!(property.characteristic?.dataType instanceof DefaultEntity)) continue;
+
+      const values = entityValueProperties[property.name] || [];
+      for (const {value} of values) {
+        // add new entity instance is it was created in the form
+        if (newEntityValues?.length) {
+          const entityInstance: DefaultEntityInstance = newEntityValues.find((ei: DefaultEntityInstance) => ei.name === value);
+          if (entityInstance) {
+            entityInstance.setAssertion(property.aspectModelUrn, entityInstance);
+            this.loadedFile.cachedFile.resolveInstance(entityInstance);
+          }
+        }
+
+        // add existing entity instance if it was selected in the form
+        const createdEntityInstances: DefaultEntityInstance[] = entityInstance.assertions.get(property.aspectModelUrn) || ([] as any);
+        if (!createdEntityInstances.some(ev => ev.name === value)) {
+          const cachedEntityInstance = this.loadedFile.cachedFile
+            .getByName<DefaultEntityInstance>(value)
+            .filter(ev => ev instanceof DefaultEntityInstance)[0];
+          if (cachedEntityInstance) entityInstance.setAssertion(property.aspectModelUrn, cachedEntityInstance);
+        }
+      }
+    }
+  }
+
+  private updateEntityInstanceWithSimpleValues(entityInstance: DefaultEntityInstance, form: {[key: string]: any}) {
+    const {entityValueProperties} = form;
+    const properties = entityInstance.type?.properties || [];
+    for (const property of properties) {
+      if (property.characteristic?.dataType instanceof DefaultEntity) continue;
+      entityInstance.assertions.set(property.aspectModelUrn, []);
+
+      const values = entityValueProperties[property.name] || [];
+      for (const {value, language} of values) {
+        entityInstance.setAssertion(property.aspectModelUrn, new Value(value, property.characteristic?.dataType, language));
+      }
+    }
   }
 
   delete(cell: mxgraph.mxCell): void {
     super.delete(cell);
     this.entityValueRenderService.delete(cell);
-  }
-
-  private updatePropertiesEntityValues(metaModelElement: DefaultEntityInstance, form: {[key: string]: any}): void {
-    const {entityValueProperties} = form;
-    metaModelElement.properties = [];
-
-    Object.keys(entityValueProperties).forEach(key => {
-      const property = this.findPropertyInEntities(this.currentCachedFile.getCachedEntities(), key);
-
-      if (!property) return;
-
-      const propertyValues = entityValueProperties[key].map(({value, language}) => ({
-        key: property,
-        value,
-        language,
-      }));
-
-      metaModelElement.properties.push(...propertyValues);
-    });
-  }
-
-  private findPropertyInEntities(
-    entities: Array<Entity>,
-    propertyName: string,
-  ): OverWrittenProperty<DefaultProperty | DefaultAbstractProperty> {
-    for (const entity of entities) {
-      const property = entity.properties.find(prop => prop.property.name === propertyName);
-      if (property) {
-        return property;
-      }
-    }
-
-    return null;
-  }
-
-  private removeObsoleteEntityValues(metaModelElement: DefaultEntityInstance): void {
-    metaModelElement.properties.forEach((property: EntityInstanceProperty) => {
-      if (property.value instanceof DefaultEntityInstance && !property.value.parents?.length) {
-        this.deleteEntityValue(property.value, metaModelElement);
-      }
-    });
   }
 }

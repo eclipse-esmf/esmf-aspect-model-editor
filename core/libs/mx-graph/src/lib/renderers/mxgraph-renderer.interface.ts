@@ -13,8 +13,6 @@
 
 import {ModelTree} from '@ame/loader-filters';
 import {
-  DefaultAbstractEntity,
-  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -25,15 +23,15 @@ import {
   DefaultProperty,
   DefaultQuantityKind,
   DefaultUnit,
-  BaseMetaModelElement,
-} from '@ame/meta-model';
+  NamedElement,
+} from '@esmf/aspect-model-loader';
 
 export interface ModelRenderer<T, U> {
-  render(elementTree: ModelTree<BaseMetaModelElement>, context: U): T;
+  render(elementTree: ModelTree<NamedElement>, context: U): T;
 
   renderProperty(property: ModelTree<DefaultProperty>, context: U): T;
 
-  renderAbstractProperty(abstractProperty: ModelTree<DefaultAbstractProperty>, context: U): T;
+  renderAbstractProperty(abstractProperty: ModelTree<DefaultProperty>, context: U): T;
 
   renderAspect(aspect: ModelTree<DefaultAspect>, context: U): T;
 
@@ -51,7 +49,7 @@ export interface ModelRenderer<T, U> {
 
   renderEntity(entity: ModelTree<DefaultEntity>, context: U): T;
 
-  renderAbstractEntity(abstractEntity: ModelTree<DefaultAbstractEntity>, context: U): T;
+  renderAbstractEntity(abstractEntity: ModelTree<DefaultEntity>, context: U): T;
 
   renderEntityValue(entityValue: ModelTree<DefaultEntityInstance>, context: U): T;
 }

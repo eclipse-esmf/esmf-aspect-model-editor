@@ -11,34 +11,53 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement, DefaultAspect, DefaultCharacteristic, DefaultEntity, DefaultProperty} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
-import {CommonModule} from '@angular/common';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {DefaultAspect, DefaultCharacteristic, DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {provideMockObject} from 'jest-helpers';
 import {mxgraph} from 'mxgraph-factory';
 import {ConnectWithDialogComponent} from './connect-with-dialog.component';
 
-type Cell = Partial<mxgraph.mxCell & {getMetaModelElement: () => {element: BaseMetaModelElement}}>;
+type Cell = Partial<mxgraph.mxCell & {getMetaModelElement: () => {element: NamedElement}}>;
 
 const cell: Cell = {
-  getMetaModelElement: () => new DefaultAspect('aspect', 'aspect', 'aspect', [], []) as any,
+  getMetaModelElement: () =>
+    new DefaultAspect({name: 'aspect', aspectModelUrn: 'urn#aspect', metaModelVersion: 'aspect', properties: [], events: []}) as any,
   style: 'aspect',
 };
+
 const cells: Cell[] = [
   {
     style: 'property',
-    getMetaModelElement: () => ({element: new DefaultProperty('property', 'property', 'property', null)}) as any,
+    getMetaModelElement: () =>
+      ({
+        element: new DefaultProperty({
+          name: 'property',
+          aspectModelUrn: 'urn#property',
+          metaModelVersion: 'property',
+          characteristic: null,
+        }),
+      }) as any,
   },
   {
     style: 'characteristic',
-    getMetaModelElement: () => ({element: new DefaultCharacteristic('characteristic', 'characteristic', 'characteristic')}) as any,
+    getMetaModelElement: () =>
+      ({
+        element: new DefaultCharacteristic({
+          name: 'characteristic',
+          aspectModelUrn: 'urn#characteristic',
+          metaModelVersion: 'characteristic',
+        }),
+      }) as any,
   },
-  {style: 'entity', getMetaModelElement: () => ({element: new DefaultEntity('entity', 'entity', 'entity', [])}) as any},
+  {
+    style: 'entity',
+    getMetaModelElement: () =>
+      ({element: new DefaultEntity({name: 'entity', aspectModelUrn: 'urn#entity', metaModelVersion: 'entity', properties: []})}) as any,
+  },
 ];
 
 describe('RdfNodeService', () => {
@@ -49,7 +68,7 @@ describe('RdfNodeService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CommonModule, BrowserAnimationsModule, MatDialogModule, MatFormFieldModule, MatInputModule],
+      imports: [ConnectWithDialogComponent, MatFormFieldModule, MatInputModule],
       providers: [
         {
           provide: MxGraphService,
@@ -73,7 +92,6 @@ describe('RdfNodeService', () => {
 
     fixture = TestBed.createComponent(ConnectWithDialogComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   describe('getClass', () => {
@@ -108,7 +126,7 @@ describe('RdfNodeService', () => {
     it('should return true', () => {
       const result = component.isFiltered(
         {
-          model: new DefaultProperty('property', 'property', 'property', null),
+          model: new DefaultProperty({name: 'property', aspectModelUrn: 'property', metaModelVersion: 'property', characteristic: null}),
           cell: {} as any,
         },
         'property',
@@ -119,7 +137,7 @@ describe('RdfNodeService', () => {
     it('should return true', () => {
       const result = component.isFiltered(
         {
-          model: new DefaultProperty('property', 'property', 'property', null),
+          model: new DefaultProperty({name: 'property', aspectModelUrn: 'property', metaModelVersion: 'property', characteristic: null}),
           cell: {} as any,
         },
         'aspect',
@@ -131,11 +149,16 @@ describe('RdfNodeService', () => {
   describe('isSelected', () => {
     it('should return false', () => {
       component.selectedElement = {
-        model: new DefaultProperty('property', 'property', 'property', null),
+        model: new DefaultProperty({name: 'property', aspectModelUrn: 'property', metaModelVersion: 'property', characteristic: null}),
         cell: {} as any,
       };
       const result = component.isSelected({
-        model: new DefaultProperty('non-property', 'non-property', 'non-property', null),
+        model: new DefaultProperty({
+          name: 'non-property',
+          aspectModelUrn: 'non-property',
+          metaModelVersion: 'non-property',
+          characteristic: null,
+        }),
         cell: {} as any,
       });
       expect(result).toBe(false);
@@ -143,7 +166,7 @@ describe('RdfNodeService', () => {
 
     it('should return true', () => {
       component.selectedElement = {
-        model: new DefaultProperty('property', 'property', 'property', null),
+        model: new DefaultProperty({name: 'property', aspectModelUrn: 'property', metaModelVersion: 'property', characteristic: null}),
         cell: {} as any,
       };
       const result = component.isSelected(component.selectedElement);
@@ -159,12 +182,12 @@ describe('RdfNodeService', () => {
 
     it('should call close', () => {
       component.selectedElement = {
-        model: new DefaultProperty('property', 'property', 'property', null),
+        model: new DefaultProperty({name: 'property', aspectModelUrn: 'property', metaModelVersion: 'property', characteristic: null}),
         cell: {} as any,
       };
       component.connect();
       expect(dialogRef.close).toHaveBeenCalledWith({
-        model: new DefaultProperty('property', 'property', 'property', null),
+        model: new DefaultProperty({name: 'property', aspectModelUrn: 'property', metaModelVersion: 'property', characteristic: null}),
         cell: {} as any,
       });
     });

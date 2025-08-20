@@ -41,8 +41,8 @@
         <mat-form-field appearance="fill">
           <mat-label>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.APPLICATION_ID' | translate }}</mat-label>
           <input
-            matInput
             [formControl]="getControl('applicationId')"
+            matInput
             placeholder="application:id or application.id"
             data-cy="tbApplicationIdInput"
           />
@@ -51,8 +51,8 @@
         <mat-form-field appearance="fill">
           <mat-label>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.CHANNEL_ADDRESS' | translate }}</mat-label>
           <input
-            matInput
             [formControl]="getControl('channelAddress')"
+            matInput
             placeholder="/foo..., foo/... or mqtt://... "
             data-cy="tbChannelAddressInput"
           />
@@ -66,16 +66,16 @@
 
       <section>
         <mat-checkbox
-          [formControl]="getControl('useSemanticVersion')"
           class="dialog__checkbox"
+          [formControl]="getControl('useSemanticVersion')"
           [matTooltip]="'GENERATE_ASYNCAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION_TOOLTIP' | translate"
         >
           {{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION' | translate }}
         </mat-checkbox>
 
         <mat-checkbox
-          [formControl]="getControl('writeSeparateFiles')"
           class="dialog__checkbox"
+          [formControl]="getControl('writeSeparateFiles')"
           [matTooltip]="'GENERATE_ASYNCAPI_SPEC_DIALOG.WRITE_SEPARATE_FILES_TOOLTIP' | translate"
           data-cy="writeSeparateFilesCheckbox"
         >
@@ -93,11 +93,11 @@
   <mat-dialog-actions align="end">
     <button mat-flat-button mat-dialog-close>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.BUTTON.CANCEL' | translate }}</button>
     <button
+      [disabled]="!form.valid"
       (click)="generateAsyncApiSpec()"
       type="button"
       mat-flat-button
       color="primary"
-      [disabled]="!form.valid"
       data-cy="tbGenerateAsyncApiButton"
     >
       <span>{{ 'GENERATE_ASYNCAPI_SPEC_DIALOG.BUTTON.GENERATE' | translate }}</span>

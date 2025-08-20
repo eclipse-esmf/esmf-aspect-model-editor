@@ -11,18 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {RdfService} from '@ame/rdf/services';
+import {RdfModelUtil} from '@ame/rdf/utils';
+import {DataTypeService, config} from '@ame/shared';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {map, startWith} from 'rxjs/operators';
-import {Observable} from 'rxjs';
-import {InputFieldComponent} from '../../input-field.component';
-import {DefaultCharacteristic, DefaultEither, DefaultEntity, DefaultScalar, DefaultStructuredValue, Entity} from '@ame/meta-model';
-import {DataTypeService} from '@ame/shared';
-import {RdfModelUtil} from '@ame/rdf/utils';
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {EditorDialogValidators} from '../../../../validators';
-import {RdfService} from '@ame/rdf/services';
 import {MatOptionSelectionChange} from '@angular/material/core';
+import {
+  DefaultCharacteristic,
+  DefaultEither,
+  DefaultEntity,
+  DefaultScalar,
+  DefaultStructuredValue,
+  Entity,
+  Type,
+} from '@esmf/aspect-model-loader';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {EditorDialogValidators} from '../../../../validators';
+import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-data-type-input-field',
@@ -67,11 +75,11 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
   }
 
   getCurrentValue() {
-    return !this.metaModelElement.isPredefined()
-      ? (this.previousData?.['dataType'] ??
+    return !this.metaModelElement.isPredefined
+      ? this.previousData?.['dataType'] ??
           this.previousData?.['newDataType'] ??
           this.previousData?.[this.fieldName] ??
-          this.metaModelElement?.dataType)
+          this.metaModelElement?.dataType
       : this.metaModelElement?.dataType;
   }
 
@@ -88,7 +96,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement?.isExternalReference() || this.isDisabled,
+          disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled,
         },
         [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)],
       ),
@@ -98,7 +106,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
       'dataTypeEntity',
       new FormControl({
         value: dataType,
-        disabled: this.metaModelElement?.isExternalReference(),
+        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       }),
     );
     this.dataTypeControl = this.parentForm.get('dataType') as FormControl;
@@ -108,7 +116,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     this.filteredEntityTypes$ = this.initFilteredEntities(this.dataTypeControl, this.entitiesDisabled);
   }
 
-  onSelectionChange(fieldPath: string, newValue: any, event: MatOptionSelectionChange) {
+  onSelectionChange(fieldPath: string, newValue: Type, event: MatOptionSelectionChange) {
     if (fieldPath !== 'dataType' || !event.isUserInput) {
       return;
     }
@@ -117,18 +125,15 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
       return; // happens on reset form
     }
 
-    if (newValue.complex) {
-      let entity = this.currentCachedFile.getElement(newValue.urn);
+    if (newValue.isComplexType()) {
+      let entity = this.currentCachedFile.get(newValue.urn);
 
       if (!entity) {
-        entity = this.namespacesCacheService.findElementOnExtReference<Entity>(newValue.urn);
+        entity = this.loadedFiles.findElementOnExtReferences<Entity>(newValue.urn);
       }
-
-      this.parentForm.get('dataTypeEntity').setValue(entity);
-    } else {
-      this.parentForm.get('dataTypeEntity').setValue(new DefaultScalar(newValue.urn));
     }
 
+    this.parentForm.get('dataTypeEntity').setValue(newValue);
     this.dataTypeControl.patchValue(newValue.name);
     this.dataTypeControl.disable();
   }
@@ -139,7 +144,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     }
 
     const urn = `${this.metaModelElement.aspectModelUrn.split('#')?.[0]}#${entityName}`;
-    const newEntity = new DefaultEntity(this.metaModelElement.metaModelVersion, urn, entityName);
+    const newEntity = new DefaultEntity({metaModelVersion: this.metaModelElement.metaModelVersion, aspectModelUrn: urn, name: entityName});
 
     // set the control of newDatatype
     const newDataTypeControl = this.parentForm.get('newDataType');
@@ -165,12 +170,11 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
   private initFilteredDataTypes() {
     const types = Object.keys(this.dataTypeService.getDataTypes()).map(key => {
       const type = this.dataTypeService.getDataType(key);
-      return {
-        name: key,
-        description: type.description || '',
+      return new DefaultScalar({
         urn: type.isDefinedBy,
-        complex: false,
-      };
+        descriptions: new Map([['en', type.description || '']]),
+        metaModelVersion: config.currentSammVersion,
+      });
     });
 
     this.filteredDataTypes$ = this.dataTypeControl?.valueChanges.pipe(

@@ -13,8 +13,8 @@
 
 import {MigratorService} from '@ame/migrator';
 import {Component, OnDestroy} from '@angular/core';
-import {SidebarStateService} from '../../sidebar-state.service';
 import {Subscription} from 'rxjs';
+import {SidebarStateService} from '../../sidebar-state.service';
 
 @Component({
   selector: 'ame-workspace-migrate',

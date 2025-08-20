@@ -13,17 +13,16 @@
 
 import {
   DefaultAspect,
+  DefaultCharacteristic,
+  DefaultConstraint,
+  DefaultEntity,
+  DefaultEntityInstance,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
-  DefaultAbstractProperty,
-  DefaultCharacteristic,
-  DefaultEntity,
-  DefaultAbstractEntity,
-  DefaultUnit,
-  DefaultConstraint,
   DefaultTrait,
-} from '@ame/meta-model';
+  DefaultUnit,
+} from '@esmf/aspect-model-loader';
 
 export type ElementType =
   | 'aspect'
@@ -36,7 +35,8 @@ export type ElementType =
   | 'abstract-entity'
   | 'unit'
   | 'trait'
-  | 'constraint';
+  | 'constraint'
+  | 'entityInstance';
 
 export type ElementNames =
   | 'Aspect'
@@ -49,9 +49,10 @@ export type ElementNames =
   | 'Abstract Entity'
   | 'Constraint'
   | 'Trait'
-  | 'Unit';
+  | 'Unit'
+  | 'Entity Instance';
 
-export type ElementSymbols = 'A' | 'Ev' | 'O' | 'P' | 'AP' | 'C' | 'Co' | 'E' | 'AE' | 'T' | 'U';
+export type ElementSymbols = 'A' | 'Ev' | 'O' | 'P' | 'AP' | 'C' | 'Co' | 'E' | 'AE' | 'T' | 'U' | 'e';
 
 export type ElementInfo = {
   [K in ElementType]: {
@@ -97,14 +98,7 @@ export const sammElements: ElementInfo = {
     symbol: 'AP',
     plural: 'Abstract Properties',
     description: 'ELEMENT_MODEL_DESCRIPTION.ABSTRACT_PROPERTY',
-    class: DefaultAbstractProperty,
-  },
-  characteristic: {
-    name: 'Characteristic',
-    symbol: 'C',
-    plural: 'Characteristics',
-    description: 'ELEMENT_MODEL_DESCRIPTION.CHARACTERISTIC',
-    class: DefaultCharacteristic,
+    class: DefaultProperty,
   },
   entity: {
     name: 'Entity',
@@ -118,7 +112,7 @@ export const sammElements: ElementInfo = {
     symbol: 'AE',
     plural: 'Abstract Entities',
     description: 'ELEMENT_MODEL_DESCRIPTION.ABSTRACT_ENTITY',
-    class: DefaultAbstractEntity,
+    class: DefaultEntity,
   },
   unit: {
     name: 'Unit',
@@ -140,5 +134,19 @@ export const sammElements: ElementInfo = {
     plural: 'Traits',
     description: 'ELEMENT_MODEL_DESCRIPTION.TRAIT',
     class: DefaultTrait,
+  },
+  characteristic: {
+    name: 'Characteristic',
+    symbol: 'C',
+    plural: 'Characteristics',
+    description: 'ELEMENT_MODEL_DESCRIPTION.CHARACTERISTIC',
+    class: DefaultCharacteristic,
+  },
+  entityInstance: {
+    name: 'Entity Instance',
+    symbol: 'e',
+    plural: 'Entity Instances',
+    description: 'ELEMENT_MODEL_DESCRIPTION.ENTITY_INSTANCE',
+    class: DefaultEntityInstance,
   },
 };

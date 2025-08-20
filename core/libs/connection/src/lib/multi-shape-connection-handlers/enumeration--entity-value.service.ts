@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultEnumeration, DefaultEntityInstance} from '@ame/meta-model';
-import {MxGraphService, MxGraphHelper} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {Injectable, inject} from '@angular/core';
+import {DefaultEntityInstance, DefaultEnumeration} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
@@ -21,7 +21,7 @@ import {MultiShapeConnector} from '../models';
   providedIn: 'root',
 })
 export class EnumerationEntityValueConnectionHandler implements MultiShapeConnector<DefaultEnumeration, DefaultEntityInstance> {
-  constructor(private mxGraphService: MxGraphService) {}
+  private mxGraphService = inject(MxGraphService);
 
   connect(parentMetaModel: DefaultEnumeration, childMetaModel: DefaultEntityInstance, parent: mxgraph.mxCell, child: mxgraph.mxCell): void {
     childMetaModel.addParent(parentMetaModel);

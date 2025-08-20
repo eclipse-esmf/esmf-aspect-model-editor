@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Component, Input} from '@angular/core';
-import {DefaultEntity, DefaultState} from '@ame/meta-model';
-import {ModelElementEditorComponent} from '../..';
+import {DefaultEntity, DefaultState} from '@esmf/aspect-model-loader';
 import {PreviousFormDataSnapshot} from '../../../interfaces';
+import {ModelElementEditorComponent} from '../../model-element-editor-component';
 
 @Component({
   selector: 'ame-state-characteristic',

@@ -11,21 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from '@ame/meta-model';
-import {Injectable} from '@angular/core';
+import {LoadedFilesService} from '@ame/cache';
+import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
+import {NamedElement} from '@esmf/aspect-model-loader';
 import {OpenElementWindowComponent} from './open-element-window.component';
 
 @Injectable({providedIn: 'root'})
 export class OpenReferencedElementService {
+  private loadedFiles = inject(LoadedFilesService);
   constructor(private matDialog: MatDialog) {}
 
-  openReferencedElement(element: BaseMetaModelElement) {
+  openReferencedElement(element: NamedElement) {
     if (!element) {
       // error notification
       return;
     }
 
-    this.matDialog.open(OpenElementWindowComponent, {data: {file: element.fileName, urn: element.aspectModelUrn}});
+    this.matDialog.open(OpenElementWindowComponent, {
+      data: {file: this.loadedFiles.getFileFromElement(element), urn: element.aspectModelUrn},
+    });
   }
 }

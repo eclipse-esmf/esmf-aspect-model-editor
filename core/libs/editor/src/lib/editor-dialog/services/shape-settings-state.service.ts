@@ -33,6 +33,6 @@ export class ShapeSettingsStateService {
   closeShapeSettings() {
     this.isShapeSettingOpened = false;
     this.onSettingsOpened$.next(this.isShapeSettingOpened);
-    this.editorModelService._updateMetaModelElement(null);
+    this.editorModelService.updateMetaModelElement(null);
   }
 }

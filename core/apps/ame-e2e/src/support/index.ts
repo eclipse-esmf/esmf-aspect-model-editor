@@ -26,12 +26,12 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import './constants';
 import 'cypress-real-events';
+import './constants';
 
+import './api-mocks';
 import './commands';
 import './helpers';
-import './api-mocks';
 import './utils';
 
 before(function before() {

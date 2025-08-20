@@ -11,20 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {config} from '@ame/shared';
 import {Component, Inject} from '@angular/core';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultProperty, Value} from '@esmf/aspect-model-loader';
 import {EditorModelService} from '../../../editor-model.service';
 import {EditorDialogValidators} from '../../../validators';
-import {
-  DefaultAbstractProperty,
-  DefaultEntity,
-  DefaultEntityInstance,
-  DefaultEnumeration,
-  DefaultProperty,
-  OverWrittenProperty,
-} from '@ame/meta-model';
-import {NamespacesCacheService} from '@ame/cache';
 import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
 
 export interface NewEntityInstanceDialogOptions {
@@ -58,7 +52,7 @@ export class EntityInstanceModalComponent {
     @Inject(MAT_DIALOG_DATA) private data: NewEntityInstanceDialogOptions,
     private dialogRef: MatDialogRef<EntityInstanceModalComponent>,
     private editorModelService: EditorModelService,
-    private namespacesCacheService: NamespacesCacheService,
+    private loadedFilesService: LoadedFilesService,
   ) {
     this.complexValues = data.complexValues;
     this.enumeration = data.metaModel as DefaultEnumeration;
@@ -67,7 +61,10 @@ export class EntityInstanceModalComponent {
     this.entityValueName = new FormControl('', [
       Validators.required,
       EditorDialogValidators.noWhiteSpace,
-      EditorDialogValidators.duplicateNameString(this.namespacesCacheService, this.entity.aspectModelUrn.split('#')[0]),
+      EditorDialogValidators.duplicateNameString(
+        this.loadedFilesService.currentLoadedFile.cachedFile,
+        this.entity.aspectModelUrn.split('#')[0],
+      ),
     ]);
     this.buildForm();
   }
@@ -79,9 +76,7 @@ export class EntityInstanceModalComponent {
       newEntityValues: new FormControl([]),
     });
 
-    this.entity.allProperties.forEach((element: OverWrittenProperty<DefaultProperty | DefaultAbstractProperty>) =>
-      this.propertiesForm.setControl(element.property.name, new FormArray([])),
-    );
+    this.entity.properties.forEach((element: DefaultProperty) => this.propertiesForm.setControl(element.name, new FormArray([])));
   }
 
   onSave(): void {
@@ -112,27 +107,38 @@ export class EntityInstanceModalComponent {
   }
 
   private createNewEntityValue(): DefaultEntityInstance {
-    const entityValue = DefaultEntityInstance.createInstance();
+    const entityValue = new DefaultEntityInstance({
+      name: this.entityValueName.value,
+      aspectModelUrn: this.getAspectModelUrnFromName(this.entityValueName.value),
+      metaModelVersion: config.currentSammVersion,
+      type: this.entity,
+    });
 
-    entityValue.name = this.entityValueName.value;
-    entityValue.aspectModelUrn = this.getAspectModelUrnFromName(this.entityValueName.value);
-    entityValue.entity = this.entity;
     entityValue.addParent(this.enumeration);
 
     const propertiesForm = this.form.get('properties');
 
-    this.entity.allProperties.forEach(propertyElement => {
-      const propertyArray = propertiesForm.get(propertyElement.property.name) as FormArray;
+    this.entity.properties.forEach(propertyElement => {
+      const propertyArray = propertiesForm.get(propertyElement.name) as FormArray;
 
       if (EntityInstanceUtil.isDefaultPropertyWithLangString(propertyElement)) {
         propertyArray.controls.forEach(control => {
           const value = control.get('value').value;
           const language = control.get('language').value;
-          entityValue.addProperty(propertyElement, value, language);
+          entityValue.setAssertion(propertyElement.aspectModelUrn, new Value(value, propertyElement.characteristic?.dataType, language));
         });
+      } else if (propertyElement.characteristic?.dataType instanceof DefaultEntity) {
+        const value = propertyArray.at(0).get('value').value;
+        const entityInstance = new DefaultEntityInstance({
+          name: value,
+          aspectModelUrn: this.getAspectModelUrnFromName(value),
+          metaModelVersion: config.currentSammVersion,
+          type: propertyElement.characteristic?.dataType as DefaultEntity,
+        });
+        entityValue.setAssertion(propertyElement.aspectModelUrn, entityInstance);
       } else {
         const value = propertyArray.at(0).get('value').value;
-        entityValue.addProperty(propertyElement, value);
+        entityValue.setAssertion(propertyElement.aspectModelUrn, new Value(value, propertyElement.characteristic?.dataType));
       }
     });
 

@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, expect} from '@jest/globals';
 import {
   DefaultAspect,
   DefaultCharacteristic,
@@ -20,79 +19,76 @@ import {
   DefaultEntity,
   DefaultProperty,
   DefaultTrait,
-} from '@ame/meta-model';
+} from '@esmf/aspect-model-loader';
+import {describe} from '@jest/globals';
+import {
+  AspectProps,
+  CharacteristicProps,
+  CollectionProps,
+  ConstraintProps,
+  EntityProps,
+  PropertyProps,
+  TraitProps,
+} from '../../../aspect-model-loader/src/lib/shared/props';
 import {ShapeConnectorUtil} from './shape-connector-util';
+
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
 
 describe('Test Shape connector util', () => {
   test('should be parent: Entity child: Property', () => {
-    const parentModel = DefaultEntity.createInstance();
-    const childModel = DefaultProperty.createInstance();
-
+    const parentModel = new DefaultEntity({aspectModelUrn: 'urn#parent'} as EntityProps);
+    const childModel = new DefaultProperty({aspectModelUrn: 'urn#'} as PropertyProps);
     expect(ShapeConnectorUtil.isEntityPropertyConnection(parentModel, childModel)).toBeTruthy();
   });
-
   test('should be parent: Characteristic child: Entity', () => {
-    const parentModel = DefaultCharacteristic.createInstance();
-    const childModel = DefaultEntity.createInstance();
-
+    const parentModel = new DefaultCharacteristic({aspectModelUrn: 'urn#parent'} as CharacteristicProps);
+    const childModel = new DefaultEntity({aspectModelUrn: 'urn#child'} as EntityProps);
     expect(ShapeConnectorUtil.isCharacteristicEntityConnection(parentModel, childModel)).toBeTruthy();
   });
-
   test('should be parent: Property child: Characteristic', () => {
-    const parentModel = DefaultProperty.createInstance();
-    const childModel = DefaultCharacteristic.createInstance();
-
+    const parentModel = new DefaultProperty({aspectModelUrn: 'urn#parent'} as PropertyProps);
+    const childModel = new DefaultCharacteristic({aspectModelUrn: 'urn#child'} as CharacteristicProps);
     expect(ShapeConnectorUtil.isPropertyCharacteristicConnection(parentModel, childModel)).toBeTruthy();
   });
-
   test('should be parent: Trait child: Constraint', () => {
-    const parentModel = DefaultTrait.createInstance();
-    const childModel = DefaultConstraint.createInstance();
-
+    const parentModel = new DefaultTrait({aspectModelUrn: 'urn#parent'} as TraitProps);
+    const childModel = new DefaultConstraint({aspectModelUrn: 'urn#child'} as ConstraintProps);
     expect(ShapeConnectorUtil.isTraitConstraintConnection(parentModel, childModel)).toBeTruthy();
   });
 
   describe('isTraitCharacteristicConnectionValid', () => {
     test('should be parent: Trait child: Characteristic', () => {
-      const parentModel = DefaultTrait.createInstance();
-      const childModel = DefaultCharacteristic.createInstance();
-
+      const parentModel = new DefaultTrait({aspectModelUrn: 'urn#parent'} as TraitProps);
+      const childModel = new DefaultCharacteristic({aspectModelUrn: 'urn#child'} as CharacteristicProps);
       expect(ShapeConnectorUtil.isTraitCharacteristicConnectionValid(parentModel, childModel)).toBeTruthy();
     });
-
     test('parent trait has baseCharacteristic', () => {
-      const parentModel = DefaultTrait.createInstance();
-      const childModel = DefaultCharacteristic.createInstance();
+      const parentModel = new DefaultTrait({aspectModelUrn: 'urn#parent'} as TraitProps);
+      const childModel = new DefaultCharacteristic({aspectModelUrn: 'urn#child'} as CharacteristicProps);
       parentModel.baseCharacteristic = {} as DefaultCharacteristic;
-
       expect(ShapeConnectorUtil.isTraitCharacteristicConnectionValid(parentModel, childModel)).toBeFalsy();
     });
-
     test('should be parent: Trait child: Trait', () => {
-      const parentModel = DefaultTrait.createInstance();
-      const childModel = DefaultTrait.createInstance();
-
+      const parentModel = new DefaultTrait({aspectModelUrn: 'urn#parent'} as TraitProps);
+      const childModel = new DefaultTrait({aspectModelUrn: 'urn#child'} as TraitProps);
       expect(ShapeConnectorUtil.isTraitCharacteristicConnectionValid(parentModel, childModel)).toBeFalsy();
     });
   });
-
   test('should be parent: Aspect child: Property', () => {
-    const parentModel = new DefaultAspect(null, null, null);
-    const childModel = DefaultProperty.createInstance();
-
+    const parentModel = new DefaultAspect({aspectModelUrn: 'urn#parent'} as AspectProps);
+    const childModel = new DefaultProperty({aspectModelUrn: 'urn#child'} as PropertyProps);
     expect(ShapeConnectorUtil.isAspectPropertyConnection(parentModel, childModel)).toBeTruthy();
   });
   test('should be parent: Characteristic child: Collection', () => {
-    const parentModel = DefaultCharacteristic.createInstance();
-    const childModel = DefaultCollection.createInstance();
-
+    const parentModel = new DefaultCharacteristic({aspectModelUrn: 'urn#parent'} as CharacteristicProps);
+    const childModel = new DefaultCollection({aspectModelUrn: 'urn#child'} as CollectionProps);
     expect(ShapeConnectorUtil.isCharacteristicCollectionConnection(parentModel, childModel)).toBeTruthy();
   });
-
   test('should be parent: Collection child: Characteristic', () => {
-    const parentModel = DefaultCollection.createInstance();
-    const childModel = DefaultCharacteristic.createInstance();
-
+    const parentModel = new DefaultCollection({aspectModelUrn: 'urn#parent'} as CollectionProps);
+    const childModel = new DefaultCharacteristic({aspectModelUrn: 'urn#child'} as CharacteristicProps);
     expect(ShapeConnectorUtil.isCollectionCharacteristicConnection(parentModel, childModel)).toBeTruthy();
   });
 });

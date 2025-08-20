@@ -12,21 +12,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from '@ame/meta-model';
-import {MxGraphAttributeService} from '@ame/mx-graph';
-import {mxgraph, mxgraphFactory} from 'mxgraph-factory';
-import {
-  FIELD_name,
-  SELECTOR_editorSaveButton,
-  SELECTOR_namespaceTabValueInput,
-  SELECTOR_namespaceTabVersionInput,
-  SELECTOR_overrideNamespace,
-  SELECTOR_settingsButton,
-  SettingsDialogSelectors,
-  SIDEBAR_CLOSE_BUTTON,
-} from './constants';
 import {FileHandlingService} from '@ame/editor';
+import {MxGraphAttributeService} from '@ame/mx-graph';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph, mxgraphFactory} from 'mxgraph-factory';
 import {finalize} from 'rxjs/operators';
+import {FIELD_name, SELECTOR_editorSaveButton, SELECTOR_propertiesCancelButton, SIDEBAR_CLOSE_BUTTON} from './constants';
 
 const {mxConstants} = mxgraphFactory({});
 
@@ -81,6 +72,10 @@ export class cyHelp {
    */
   public static clickSaveButton(): Cypress.Chainable {
     return this.forceChangeDetection().then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}));
+  }
+
+  public static clickPropertiesCancelButton(): Cypress.Chainable {
+    return this.forceChangeDetection().then(() => cy.get(SELECTOR_propertiesCancelButton).focus().click({force: true}));
   }
 
   /**
@@ -271,7 +266,7 @@ export class cyHelp {
       cy.shapeExists(`property${number}`).then(() => {
         cy.getAspect().then(aspect => {
           expect(aspect.properties).to.have.length(number);
-          expect(aspect.properties[number - 1].property.name).to.be.equal(`property${number}`);
+          expect(aspect.properties[number - 1].name).to.be.equal(`property${number}`);
         });
         cy.getUpdatedRDF().then(rdf => {
           let propertiesRDFList = '';
@@ -359,10 +354,10 @@ export class cyHelp {
 
   /**
    * Asserts that multilanguage values for a given model element and language tag are null.
-   * @param {BaseMetaModelElement} modelElement - The model element to check.
+   * @param {NamedElement} modelElement - The model element to check.
    * @param {string} langTag - The language tag for which to check the values.
    */
-  static assertNullMultiLanguageValues(modelElement: BaseMetaModelElement, langTag: string): void {
+  static assertNullMultiLanguageValues(modelElement: NamedElement, langTag: string): void {
     assert.isNull(modelElement.getDescription(langTag) || null);
     assert.isNull(modelElement.getDescription(langTag.toLowerCase()) || null);
     assert.isNull(modelElement.getPreferredName(langTag) || null);
@@ -371,10 +366,10 @@ export class cyHelp {
 
   /**
    * Asserts that multilanguage values for a given model element and language tag are not null.
-   * @param {BaseMetaModelElement} modelElement - The model element to check.
+   * @param {NamedElement} modelElement - The model element to check.
    * @param {string} langTag - The language tag for which to check the values.
    */
-  static assertNotNullMultiLanguageValues(modelElement: BaseMetaModelElement, langTag: string) {
+  static assertNotNullMultiLanguageValues(modelElement: NamedElement, langTag: string) {
     assert.isNotNull(modelElement.getDescription(langTag));
     assert.isNotNull(modelElement.getPreferredName(langTag));
   }

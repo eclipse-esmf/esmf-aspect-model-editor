@@ -12,8 +12,8 @@
  */
 import {AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy, inject} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {PreviousFormDataSnapshot} from '../../interfaces';
 import {EditorModelService} from '../../editor-model.service';
+import {PreviousFormDataSnapshot} from '../../interfaces';
 
 @Component({
   selector: 'ame-constraint',

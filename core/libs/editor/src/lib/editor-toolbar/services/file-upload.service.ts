@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {Injectable} from '@angular/core';
 import {fromEvent, Observable, switchMap} from 'rxjs';
 import {finalize, first} from 'rxjs/operators';
-import {Injectable} from '@angular/core';
 
 export enum FileTypes {
   TTL = '.ttl',

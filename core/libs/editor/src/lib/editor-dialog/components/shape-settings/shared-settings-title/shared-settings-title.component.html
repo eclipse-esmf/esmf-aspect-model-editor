@@ -13,9 +13,9 @@
 
 @if (metaModelElement | modelElementParser; as parsedElement) {
   <ame-element
-    [type]="sammElements[parsedElement.type]"
-    [name]="elementName + ' (' + metaModelClassName + ')'"
     class="inline"
+    [type]="sammElements[parsedElement.type]"
+    [name]="elementName + ' (' + parsedElement.className + ')'"
     size="medium"
   ></ame-element>
 }

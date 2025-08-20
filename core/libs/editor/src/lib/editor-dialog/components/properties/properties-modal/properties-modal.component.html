@@ -11,18 +11,18 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<button class="close-button" mat-icon-button tabindex="-1" (click)="closeModal()">
+<button class="close-button" (click)="closeModal()" mat-icon-button tabindex="-1">
   <mat-icon>close</mat-icon>
 </button>
 
-<h2 mat-dialog-title>{{ data.name }} {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_CONFIGURATION' | translate }}</h2>
+<h2 mat-dialog-title>{{ data.metaModelElement.name }} {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_CONFIGURATION' | translate }}</h2>
 
 <mat-dialog-content class="dialog-content">
   @if (form) {
     <mat-table [dataSource]="dataSource" [formGroup]="form">
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.NAME' | translate }}</mat-header-cell>
-        <mat-cell [ngClass]="{inherited: overwritten.inherited, disabled: overwritten.disabled}" *matCellDef="let overwritten">
+        <mat-cell *matCellDef="let overwritten" [ngClass]="{inherited: overwritten.inherited, disabled: overwritten.disabled}">
           <span>{{ overwritten.property.name }}</span>
           @if (overwritten.inherited) {
             <span>Inherited</span>
@@ -48,7 +48,7 @@
 
       <ng-container matColumnDef="optional">
         <mat-header-cell *matHeaderCellDef>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.OPTIONAL' | translate }}</mat-header-cell>
-        <mat-cell [class.hidden]="overwritten.abstract" *matCellDef="let overwritten">
+        <mat-cell *matCellDef="let overwritten" [class.hidden]="overwritten.abstract">
           <mat-checkbox
             [formControl]="getControl([overwritten.property.aspectModelUrn, 'optional'])"
             name="{{ overwritten.property.name }}_optional"
@@ -75,18 +75,20 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 15, 20]" showFirstLastButtons aria-label="Select page of properties"> </mat-paginator>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button type="button" mat-flat-button data-cy="propertiesCancelButton" (click)="closeModal()">
-    {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.CANCEL' | translate }}
-  </button>
-  <button
-    [disabled]="form.invalid || form.disabled"
-    mat-flat-button
-    type="submit"
-    color="primary"
-    data-cy="propertiesSaveButton"
-    (click)="saveChanges()"
-  >
-    {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.SAVE' | translate }}
-  </button>
-</mat-dialog-actions>
+@if (form) {
+  <mat-dialog-actions align="end">
+    <button (click)="closeModal()" type="button" mat-flat-button data-cy="propertiesCancelButton">
+      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.CANCEL' | translate }}
+    </button>
+    <button
+      [disabled]="form.invalid || form.disabled"
+      (click)="saveChanges()"
+      mat-flat-button
+      type="submit"
+      color="primary"
+      data-cy="propertiesSaveButton"
+    >
+      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.SAVE' | translate }}
+    </button>
+  </mat-dialog-actions>
+}

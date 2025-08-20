@@ -11,12 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {MxGraphAttributeService} from '@ame/mx-graph';
+import {ModelService} from '@ame/rdf/services';
 import {Injectable, inject} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
 import {
-  BaseMetaModelElement,
-  DefaultAbstractEntity,
-  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -26,14 +25,11 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultUnit,
-} from '@ame/meta-model';
-import {MxGraphAttributeService} from '@ame/mx-graph';
-import {ModelService} from '@ame/rdf/services';
+  NamedElement,
+} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {filter, tap} from 'rxjs/operators';
 import {
-  AbstractEntityVisitor,
-  AbstractPropertyVisitor,
   AspectVisitor,
   CharacteristicVisitor,
   CleanupVisitor,
@@ -49,14 +45,14 @@ import {
 @Injectable()
 export class DomainModelToRdfService {
   private mxGraphAttributeService = inject(MxGraphAttributeService);
-  private namespacesCacheService = inject(NamespacesCacheService);
+  private loadedFiles = inject(LoadedFilesService);
 
   get graph(): mxgraph.mxGraph {
     return this.mxGraphAttributeService.graph;
   }
 
   get currentCachedFile() {
-    return this.namespacesCacheService.currentCachedFile;
+    return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
   private working = false;
@@ -68,8 +64,6 @@ export class DomainModelToRdfService {
     private characteristicVisitorService: CharacteristicVisitor,
     private constraintVisitorService: ConstraintVisitor,
     private entityVisitorService: EntityVisitor,
-    private abstractEntityVisitorService: AbstractEntityVisitor,
-    private abstractPropertyVisitorService: AbstractPropertyVisitor,
     private entityInstanceVisitor: EntityInstanceVisitor,
     private eventVisitorService: EventVisitor,
     private unitVisitorService: UnitVisitor,
@@ -96,13 +90,13 @@ export class DomainModelToRdfService {
   private updateRdfStore() {
     this.cleanupVisitorService.removeStoreElements();
 
-    const rootElements = this.namespacesCacheService.currentCachedFile.getAllElements().filter(e => !e.parents.length);
+    const rootElements = this.currentCachedFile.getAllElements().filter(e => !Array.from(e.parents).filter(Boolean).length);
     for (const element of rootElements) {
       this.visitLayer(element);
     }
   }
 
-  private visitLayer(element: BaseMetaModelElement, visited = {}) {
+  private visitLayer(element: NamedElement, visited = {}) {
     if (visited[element.aspectModelUrn]) {
       return;
     }
@@ -114,21 +108,19 @@ export class DomainModelToRdfService {
     }
   }
 
-  private exportElement(element: BaseMetaModelElement) {
-    if (element?.isExternalReference()) {
+  private exportElement(element: NamedElement) {
+    if (this.loadedFiles.isElementExtern(element)) {
       return;
     }
 
     this.getVisitorService(element)?.visit(element as any);
   }
 
-  private getVisitorService(metaModelElement: BaseMetaModelElement) {
+  private getVisitorService(metaModelElement: NamedElement) {
     if (metaModelElement instanceof DefaultAspect) {
       return this.aspectVisitorService;
     } else if (metaModelElement instanceof DefaultProperty) {
       return this.propertyVisitorService;
-    } else if (metaModelElement instanceof DefaultAbstractProperty) {
-      return this.abstractPropertyVisitorService;
     } else if (metaModelElement instanceof DefaultOperation) {
       return this.operationVisitorService;
     } else if (metaModelElement instanceof DefaultConstraint) {
@@ -137,8 +129,6 @@ export class DomainModelToRdfService {
       return this.characteristicVisitorService;
     } else if (metaModelElement instanceof DefaultEntity) {
       return this.entityVisitorService;
-    } else if (metaModelElement instanceof DefaultAbstractEntity) {
-      return this.abstractEntityVisitorService;
     } else if (metaModelElement instanceof DefaultEntityInstance) {
       return this.entityInstanceVisitor;
     } else if (metaModelElement instanceof DefaultEvent) {

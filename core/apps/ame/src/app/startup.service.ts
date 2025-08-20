@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorService, FileHandlingService} from '@ame/editor';
+import {EditorService, FileHandlingService, ModelLoaderService} from '@ame/editor';
 import {MigratorService} from '@ame/migrator';
 import {MxGraphService} from '@ame/mx-graph';
 import {
@@ -22,11 +22,11 @@ import {
   ModelSavingTrackerService,
   StartupPayload,
 } from '@ame/shared';
-import {inject, Injectable, NgZone} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
-import {filter, Observable, of, sample, switchMap, take, tap} from 'rxjs';
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
+import {Injectable, NgZone, inject} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
+import {Observable, filter, of, sample, switchMap, take, tap} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class StartupService {
@@ -44,6 +44,7 @@ export class StartupService {
     private mxGraphService: MxGraphService,
     private translate: LanguageTranslationService,
     private ngZone: NgZone,
+    private modelLoaderService: ModelLoaderService,
   ) {}
 
   listenForLoading() {
@@ -79,12 +80,15 @@ export class StartupService {
         content: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_LOADING_WAIT,
       }),
     );
+
     return this.electronSignalsService.call('requestWindowData').pipe(
-      tap(data => (options = data.options)),
+      tap(data => {
+        options = data.options;
+      }),
       switchMap(() =>
         this.ngZone.run(() =>
           model
-            ? this.editorService.loadNewAspectModel({
+            ? this.modelLoaderService.renderModel({
                 rdfAspectModel: model,
                 namespaceFileName: options ? `${options.namespace}:${options.file}` : '',
                 fromWorkspace: options?.fromWorkspace,

@@ -12,7 +12,7 @@
  */
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {DefaultLengthConstraint} from '@ame/meta-model';
+import {DefaultLengthConstraint} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -48,7 +48,7 @@ export class MaxLengthInputFieldComponent extends InputFieldComponent<DefaultLen
       this.fieldName,
       new FormControl({
         value: this.getCurrentValue(this.fieldName),
-        disabled: this.metaModelElement.isExternalReference(),
+        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       }),
     );
   }

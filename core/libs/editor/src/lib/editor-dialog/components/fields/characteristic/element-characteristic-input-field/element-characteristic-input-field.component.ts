@@ -11,14 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {InputFieldComponent} from '../../input-field.component';
-import {Characteristic, DefaultCharacteristic, DefaultCollection} from '@ame/meta-model';
-import {NotificationsService} from '@ame/shared';
-import {EditorDialogValidators} from '../../../../validators';
+import {CacheUtils} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
+import {ElementCreatorService, NotificationsService} from '@ame/shared';
+import {Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {Characteristic, DefaultCharacteristic, DefaultCollection} from '@esmf/aspect-model-loader';
+import {Observable} from 'rxjs';
+import {EditorDialogValidators} from '../../../../validators';
+import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-element-characteristic-input-field',
@@ -26,6 +27,8 @@ import {RdfService} from '@ame/rdf/services';
   styleUrls: ['../../field.scss'],
 })
 export class ElementCharacteristicInputFieldComponent extends InputFieldComponent<DefaultCollection> implements OnInit, OnDestroy {
+  private elementCreator = inject(ElementCreatorService);
+
   filteredCharacteristicTypes$: Observable<any[]>;
 
   elementCharacteristicDisplayControl: FormControl;
@@ -68,7 +71,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
       new FormControl(
         {
           value,
-          disabled: !!value || this.metaModelElement.isExternalReference() || this.isDisabled,
+          disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled,
         },
         [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic)],
       ),
@@ -78,7 +81,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
       'elementCharacteristic',
       new FormControl({
         value: elementCharacteristic,
-        disabled: this.metaModelElement?.isExternalReference() || this.isDisabled,
+        disabled: this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled,
       }),
     );
 
@@ -100,12 +103,12 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
       return; // happens on reset form
     }
 
-    let defaultCharacteristic = this.currentCachedFile
-      .getCachedCharacteristics()
-      .find(characteristic => characteristic.aspectModelUrn === newValue.urn);
+    let defaultCharacteristic = CacheUtils.getCachedElements(this.currentCachedFile, DefaultCharacteristic).find(
+      characteristic => characteristic.aspectModelUrn === newValue.urn,
+    );
 
     if (!defaultCharacteristic) {
-      defaultCharacteristic = this.namespacesCacheService.findElementOnExtReference<Characteristic>(newValue.urn);
+      defaultCharacteristic = this.loadedFiles.findElementOnExtReferences<Characteristic>(newValue.urn);
     }
 
     this.parentForm.get('elementCharacteristic').setValue(defaultCharacteristic);
@@ -128,7 +131,11 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
       return;
     }
 
-    const newCharacteristic = new DefaultCharacteristic(this.metaModelElement.metaModelVersion, urn, characteristicName, null);
+    const newCharacteristic = this.elementCreator.createEmptyElement(DefaultCharacteristic, {
+      resolveNaming: false,
+      cached: false,
+      aspectModelUrn: urn,
+    });
     this.parentForm.get('elementCharacteristic').setValue(newCharacteristic);
 
     this.elementCharacteristicDisplayControl.patchValue(characteristicName);

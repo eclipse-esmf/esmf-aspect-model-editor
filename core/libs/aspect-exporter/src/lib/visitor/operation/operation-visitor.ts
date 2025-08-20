@@ -11,25 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ListProperties, RdfListService, RdfNodeService} from '@ame/aspect-exporter';
+import {LoadedFilesService} from '@ame/cache';
+import {getPreferredNamesLocales} from '@ame/utils';
 import {Injectable} from '@angular/core';
+import {DefaultOperation} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {BaseVisitor} from '../base-visitor';
-import {ListProperties, RdfListService, RdfNodeService} from '@ame/aspect-exporter';
-import {DefaultOperation} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
 
 @Injectable()
 export class OperationVisitor extends BaseVisitor<DefaultOperation> {
   private get store(): Store {
-    return this.rdfNodeService.modelService.currentRdfModel.store;
+    return this.loadedFiles.currentLoadedFile?.rdfModel?.store;
   }
 
   constructor(
     private rdfNodeService: RdfNodeService,
-    rdfService: RdfService,
     public rdfListService: RdfListService,
+    loadedFiles: LoadedFilesService,
   ) {
-    super(rdfService);
+    super(loadedFiles);
   }
 
   visit(operation: DefaultOperation): DefaultOperation {
@@ -44,33 +45,33 @@ export class OperationVisitor extends BaseVisitor<DefaultOperation> {
 
   private addProperties(operation: DefaultOperation) {
     this.rdfNodeService.update(operation, {
-      preferredName: operation.getAllLocalesPreferredNames().map(language => ({
+      preferredName: getPreferredNamesLocales(operation).map(language => ({
         language,
         value: operation.getPreferredName(language),
       })),
-      description: operation.getAllLocalesDescriptions().map(language => ({
+      description: getPreferredNamesLocales(operation).map(language => ({
         language,
         value: operation.getDescription(language),
       })),
-      see: operation.getSeeReferences() || [],
+      see: operation.getSee() || [],
     });
 
     if (operation.input?.length) {
       this.rdfListService.push(operation, ...operation.input);
       for (const input of operation.input) {
-        this.setPrefix(input.property.aspectModelUrn);
+        this.setPrefix(input.aspectModelUrn);
       }
     } else {
       this.rdfListService.createEmpty(operation, ListProperties.input);
     }
 
     if (operation.output) {
-      const property = operation.output.property;
+      const property = operation.output;
 
       this.setPrefix(property.aspectModelUrn);
       this.store.addQuad(
         DataFactory.namedNode(operation.aspectModelUrn),
-        this.rdfService.currentRdfModel.samm.OutputProperty(),
+        this.loadedFiles.currentLoadedFile.rdfModel.samm.OutputProperty(),
         DataFactory.namedNode(property.aspectModelUrn),
       );
     }

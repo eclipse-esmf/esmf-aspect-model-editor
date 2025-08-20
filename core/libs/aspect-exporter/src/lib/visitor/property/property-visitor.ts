@@ -11,28 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
 import {Injectable} from '@angular/core';
+import {DefaultProperty} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
-import {BaseVisitor} from '../base-visitor';
 import {RdfNodeService} from '../../rdf-node';
-import {DefaultProperty} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
+import {BaseVisitor} from '../base-visitor';
 
 @Injectable()
 export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
   private get store(): Store {
-    return this.rdfNodeService.modelService.currentRdfModel.store;
+    return this.loadedFiles.currentLoadedFile?.rdfModel?.store;
   }
 
   constructor(
     public rdfNodeService: RdfNodeService,
-    rdfService: RdfService,
+    loadedFiles: LoadedFilesService,
   ) {
-    super(rdfService);
+    super(loadedFiles);
   }
 
   visit(property: DefaultProperty): DefaultProperty {
-    if (property.extendedElement || property.isPredefined()) {
+    if (property.getExtends() || property.isPredefined || this.loadedFiles.isElementExtern(property)) {
       return null;
     }
 
@@ -46,15 +47,15 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
   private addProperties(property: DefaultProperty) {
     this.rdfNodeService.update(property, {
       exampleValue: property.exampleValue,
-      preferredName: property.getAllLocalesPreferredNames().map(language => ({
+      preferredName: getPreferredNamesLocales(property).map(language => ({
         language,
         value: property.getPreferredName(language),
       })),
-      description: property.getAllLocalesDescriptions().map(language => ({
+      description: getDescriptionsLocales(property).map(language => ({
         language,
         value: property.getDescription(language),
       })),
-      see: property.getSeeReferences() || [],
+      see: property.getSee() || [],
     });
   }
 
@@ -66,21 +67,21 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
     this.setPrefix(property.characteristic.aspectModelUrn);
     this.store.addQuad(
       DataFactory.namedNode(property.aspectModelUrn),
-      this.rdfService.currentRdfModel.samm.CharacteristicProperty(),
+      this.loadedFiles.currentLoadedFile.rdfModel.samm.CharacteristicProperty(),
       DataFactory.namedNode(property.characteristic.aspectModelUrn),
     );
   }
 
   private addExtends(property: DefaultProperty) {
-    if (!property.extendedElement) {
+    if (!property.getExtends()) {
       return;
     }
 
-    this.setPrefix(property.extendedElement.aspectModelUrn);
+    this.setPrefix(property.getExtends().aspectModelUrn);
     this.store.addQuad(
       DataFactory.namedNode(property.aspectModelUrn),
-      this.rdfService.currentRdfModel.samm.ExtendsProperty(),
-      DataFactory.namedNode(property.extendedElement.aspectModelUrn),
+      this.loadedFiles.currentLoadedFile.rdfModel.samm.Extends(),
+      DataFactory.namedNode(property.getExtends().aspectModelUrn),
     );
   }
 }

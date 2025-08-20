@@ -14,6 +14,7 @@
 
 /// <reference types="Cypress" />
 
+import 'cypress-real-events';
 import {
   BUTTON_renameModelConfirm,
   FIELD_descriptionen,
@@ -36,7 +37,6 @@ import {
   SELECTOR_tbDeleteButton,
 } from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
-import 'cypress-real-events';
 
 describe('Test editing Aspect', () => {
   it('can add new aspect model', () => {
@@ -134,8 +134,8 @@ describe('Test editing Aspect', () => {
       )
       .then(() =>
         cy.getAspect().then(aspect => {
-          expect(aspect.getSeeReferences()).to.have.length(3);
-          expect(aspect.getSeeReferences()[2]).to.equal('http://www.seeC.de');
+          expect(aspect.see).to.have.length(3);
+          expect(aspect.see[2]).to.equal('http://www.seeC.de');
         }),
       );
     cy.dbClickShape('NewAspect')
@@ -146,8 +146,8 @@ describe('Test editing Aspect', () => {
       .then(rdf => expect(rdf).to.contain('samm:see <http://www.seeA.de>, <http://www.seeC.de>'))
       .then(() =>
         cy.getAspect().then(aspect => {
-          expect(aspect.getSeeReferences()).to.have.length(2);
-          expect(aspect.getSeeReferences()[1]).to.equal('http://www.seeC.de');
+          expect(aspect.see).to.have.length(2);
+          expect(aspect.see[1]).to.equal('http://www.seeC.de');
         }),
       );
   });
@@ -167,8 +167,8 @@ describe('Test editing Aspect', () => {
       .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>, <urn:irdi:iec:0112/2///62683#ACC011#001>'))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.getSeeReferences()).to.have.length(2);
-        expect(aspect.getSeeReferences()[1]).to.equal('urn:irdi:iec:0112/2///62683#ACC011#001');
+        expect(aspect.see).to.have.length(2);
+        expect(aspect.see[1]).to.equal('urn:irdi:iec:0112/2///62683#ACC011#001');
       });
 
     cy.dbClickShape('NewAspect')
@@ -180,8 +180,8 @@ describe('Test editing Aspect', () => {
       .then(rdf => expect(rdf).to.contain('samm:see <urn:irdi:eclass:0173-1#02-AAO677>'))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.getSeeReferences()).to.have.length(1);
-        expect(aspect.getSeeReferences()[0]).to.equal('urn:irdi:eclass:0173-1#02-AAO677');
+        expect(aspect.see).to.have.length(1);
+        expect(aspect.see[0]).to.equal('urn:irdi:eclass:0173-1#02-AAO677');
       });
   });
 
@@ -212,8 +212,19 @@ describe('Test editing Aspect', () => {
   });
 
   it('can delete existing aspect', () => {
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+      'org.eclipse.different': [
+        {
+          version: '1.0.0',
+          models: [
+            {
+              model: 'external-property-reference.txt',
+              aspectModelUrn: 'urn:samm:org.eclipse.different:1.0.0#ChildrenEntity2',
+              existing: true,
+            },
+          ],
+        },
+      ],
     });
     cy.shapeExists('NewAspect')
       .then(() => cy.clickShape('NewAspect'))

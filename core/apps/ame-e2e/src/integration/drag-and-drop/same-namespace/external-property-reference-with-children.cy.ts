@@ -13,28 +13,42 @@
 
 /// <reference types="Cypress" />
 
-import {cyHelp} from '../../../support/helpers';
 import {
   SELECTOR_ecProperty,
   SELECTOR_openNamespacesButton,
   SELECTOR_searchElementsInp,
   SELECTOR_workspaceBtn,
 } from '../../../support/constants';
+import {cyHelp} from '../../../support/helpers';
 import {checkAspectTree, connectElements, dragExternalReferenceWithChildren} from '../../../support/utils';
 
 describe('Test drag and drop ext properties', () => {
-  const fileName = 'external-property-reference.txt';
+  const fileName = 'external-property-reference.ttl';
   it("can add Property with children's from external reference same namespace", () => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9091/ame/api/models/namespaces?shouldRefresh=true', {
-      'org.eclipse.examples.aspect:1.0.0': [fileName],
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+      statusCode: 200,
+      body: {
+        'org.eclipse.examples.aspect': [
+          {
+            version: '1.0.0',
+            models: [
+              {
+                model: fileName,
+                aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#externalPropertyWithChildren',
+                existing: true,
+              },
+            ],
+          },
+        ],
+      },
     });
 
     cy.intercept(
       {
         method: 'GET',
-        url: 'http://localhost:9091/ame/api/models',
-        headers: {namespace: 'org.eclipse.examples.aspect:1.0.0', 'file-name': fileName},
+        url: 'http://localhost:9090/ame/api/models',
+        headers: {'Aspect-Model-Urn': 'urn:samm:org.eclipse.examples.aspect:1.0.0#externalPropertyWithChildren'},
       },
       {
         fixture: `/external-reference/same-namespace/with-childrens/${fileName}`,
@@ -43,7 +57,7 @@ describe('Test drag and drop ext properties', () => {
 
     cy.visitDefault().then(() =>
       cy
-        .startModelling()
+        .startModelling(true)
         .then(() => cyHelp.checkAspectDefaultExists())
         .then(() => cy.get(SELECTOR_workspaceBtn).click())
         .then(() => cy.get(SELECTOR_openNamespacesButton).contains(fileName).click({force: true}))

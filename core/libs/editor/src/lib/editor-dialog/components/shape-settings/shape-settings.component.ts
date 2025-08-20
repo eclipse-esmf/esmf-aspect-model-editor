@@ -11,16 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {BaseMetaModelElement, Characteristic, DefaultCharacteristic, DefaultConstraint, Unit} from '@ame/meta-model';
-import {EditorModelService} from '../../editor-model.service';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {LogService} from '@ame/shared';
-import {ModelService} from '@ame/rdf/services';
-import {RdfModelUtil} from '@ame/rdf/utils';
+import {DefaultCharacteristic, DefaultConstraint, NamedElement, Unit} from '@esmf/aspect-model-loader';
 import {Subscription} from 'rxjs';
-import {LanguageTranslationService} from '@ame/translation';
+import {EditorModelService} from '../../editor-model.service';
 
 @Component({
   selector: 'ame-shape-settings',
@@ -29,9 +26,9 @@ import {LanguageTranslationService} from '@ame/translation';
 })
 export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   public metaModelClassName: string;
-  public metaModelElement: BaseMetaModelElement;
-  public selectedMetaModelElement: BaseMetaModelElement;
-  public tmpCharacteristic: Characteristic;
+  public metaModelElement: NamedElement;
+  public selectedMetaModelElement: NamedElement;
+  public tmpCharacteristic: DefaultCharacteristic | DefaultConstraint;
   public units: Unit[] = [];
   public formGroup: FormGroup = new FormGroup({
     changedMetaModel: new FormControl(null),
@@ -40,7 +37,7 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   private subscription = new Subscription();
 
   @Input() isOpened = false;
-  @Input() modelElement: BaseMetaModelElement = null;
+  @Input() modelElement: NamedElement = null;
 
   @Output() save = new EventEmitter<FormGroup>();
   @Output() afterClose = new EventEmitter();
@@ -54,11 +51,9 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     public metaModelDialogService: EditorModelService,
-    private modelService: ModelService,
-    private loggerService: LogService,
+    public loadedFilesService: LoadedFilesService,
     private languageSettings: SammLanguageSettingsService,
     private changeDetector: ChangeDetectorRef,
-    private translate: LanguageTranslationService,
   ) {}
 
   ngOnChanges(): void {
@@ -99,31 +94,26 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
     return types.includes(this.metaModelElement.className);
   }
 
-  onEdit(selectedModelElement: BaseMetaModelElement) {
+  onEdit(selectedModelElement: NamedElement) {
     if (selectedModelElement) {
       this.metaModelElement = selectedModelElement;
       this.selectedMetaModelElement = selectedModelElement;
       this.addLanguageSettings(selectedModelElement);
-      this.metaModelDialogService._updateMetaModelElement(this.metaModelElement);
+      this.metaModelDialogService.updateMetaModelElement(this.metaModelElement);
       if (this.metaModelElement instanceof DefaultCharacteristic || this.metaModelElement instanceof DefaultConstraint) {
         this.tmpCharacteristic = this.metaModelElement;
       }
-      if (RdfModelUtil.isCharacteristicInstance(selectedModelElement.aspectModelUrn, this.modelService.currentRdfModel.SAMMC())) {
-        this.metaModelClassName = selectedModelElement.aspectModelUrn.split('#')[1].replace('Default', '');
-      } else {
-        this.metaModelClassName = selectedModelElement.className.replace('Default', '');
-      }
     } else {
-      this.loggerService.logWarn('Selected element is null. The dialog will not shown.');
+      console.warn('Selected element is null. The dialog will not shown.');
     }
   }
 
-  addLanguageSettings(metaModelElement: BaseMetaModelElement) {
+  addLanguageSettings(metaModelElement: NamedElement) {
     if (this.languageSettings.getSammLanguageCodes()) {
       this.languageSettings.getSammLanguageCodes().forEach(languageCode => {
         if (!metaModelElement.getPreferredName(languageCode) && !metaModelElement.getDescription(languageCode)) {
-          metaModelElement.addPreferredName(languageCode, '');
-          metaModelElement.addDescription(languageCode, '');
+          metaModelElement.preferredNames.set(languageCode, '');
+          metaModelElement.descriptions.set(languageCode, '');
         }
       });
     }

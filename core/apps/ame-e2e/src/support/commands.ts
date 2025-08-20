@@ -14,16 +14,16 @@
 
 /// <reference types="cypress" />
 
+import {FileHandlingService, GenerateHandlingService} from '@ame/editor';
 import {MxGraphAttributeService} from '@ame/mx-graph';
+import {NamespacesManagerService} from '@ame/namespace-manager';
 import {ModelService} from '@ame/rdf/services';
+import {SearchesStateService} from '@ame/utils';
+import {Aspect} from '@esmf/aspect-model-loader';
+import 'cypress-file-upload';
 import {mxgraphFactory} from 'mxgraph-factory';
 import {FIELD_see, SELECTOR_editorSaveButton, SELECTOR_tbConnectButton} from './constants';
 import {cyHelp} from './helpers';
-import {FileHandlingService, GenerateHandlingService} from '@ame/editor';
-import {SearchesStateService} from '@ame/utils';
-import {NamespacesManagerService} from '@ame/namespace-manager';
-import {Aspect} from '@ame/meta-model';
-import 'cypress-file-upload';
 
 const {mxEventObject, mxEvent} = mxgraphFactory({});
 
@@ -33,9 +33,9 @@ declare global {
     interface Chainable {
       /**
        * Custom command to start modelling by creating a default model.
-       * @returns {Cypress.Chainable} A chainable Cypress object.
+       * @param ownNamespaceInterceptor Optional flag to determine if the namespace interceptor should be used.       * @returns {Cypress.Chainable} A chainable Cypress object.
        */
-      startModelling(): Chainable;
+      startModelling(ownNamespaceInterceptor?: boolean): Chainable;
 
       /**
        * Custom command to start modelling by creating a default invalid model.
@@ -289,9 +289,9 @@ declare global {
   }
 }
 
-Cypress.Commands.add('visitDefault', () => cy.visit('?e2e=true').wait(2000));
+Cypress.Commands.add('visitDefault', () => cy.visit('/editor?e2e=true').wait(2000));
 
-Cypress.Commands.add('getAspect', () => cy.window().then(win => win['angular.modelService'].loadedAspect as Aspect));
+Cypress.Commands.add('getAspect', () => cy.window().then(win => win['angular.LoadedFilesService'].currentLoadedFile.aspect as Aspect));
 
 Cypress.Commands.add('getEditorService', () => cy.window().then(win => win['angular.editorService']));
 Cypress.Commands.add('getMxgraphService', () => cy.window().then(win => win['angular.mxGraphService']));
@@ -467,7 +467,7 @@ Cypress.Commands.add('getUpdatedRDF', () =>
     const modelService: ModelService = win['angular.modelService'];
     return new Promise(resolve => {
       modelService.synchronizeModelToRdf().subscribe(() => {
-        const modelContent = modelService.currentRdfModel;
+        const modelContent = win['angular.LoadedFilesService'].currentLoadedFile.rdfModel;
         resolve(win['angular.rdfService'].serializeModel(modelContent));
       });
     });
@@ -497,34 +497,39 @@ Cypress.Commands.add('shapesConnected', (sourceShapeName: string, targetShapeNam
 );
 
 Cypress.Commands.add('startModellingInvalidModel', () => {
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+  cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+  cy.intercept('POST', 'http://localhost:9090/ame/api/models/format', () => {});
 
   return cy.fixture('/invalid-file.txt', 'utf-8').then(model => {
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-with-error.json'});
-    cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-with-error.json'});
+    cy.intercept('POST', 'http://localhost:9090/ame/api/models/format', () => {});
 
     return cyHelp.loadModel(model);
   });
 });
 
-Cypress.Commands.add('startModelling', () => {
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+Cypress.Commands.add('startModelling', (ownNamespaceInterceptor = false) => {
+  cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+  cy.intercept('POST', 'http://localhost:9090/ame/api/models/format', () => {});
+
+  if (!ownNamespaceInterceptor) {
+    // TODO we have to move this somewhere else, because it is not needed for every test
+    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+  }
 
   return cy.fixture('/default-models/aspect-default.txt', 'utf-8').then(model => cyHelp.loadModel(model));
 });
 
 Cypress.Commands.add('loadModel', (rdfString: string) => {
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', () => {});
+  cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+  cy.intercept('POST', 'http://localhost:9090/ame/api/models/format', () => {});
 
   return cyHelp.loadModel(rdfString);
 });
 
 Cypress.Commands.add('saveAspectModelToWorkspace', () => {
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-  cy.intercept('POST', 'http://localhost:9091/ame/api/models/format', {fixture: '/default-models/aspect-default.txt'});
+  cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+  cy.intercept('POST', 'http://localhost:9090/ame/api/models/format', {fixture: '/default-models/aspect-default.txt'});
 
   return cy.window().then(win => {
     const fileHandlingService: FileHandlingService = win['angular.fileHandlingService'];
@@ -535,25 +540,25 @@ Cypress.Commands.add('saveAspectModelToWorkspace', () => {
 Cypress.Commands.add('openGenerationOpenApiSpec', () => {
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=/resource/%7BresourceId%7D&ymlProperties=&jsonProperties=',
+    'http://localhost:9090/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=/resource/%7BresourceId%7D&ymlProperties=&jsonProperties=',
     {fixture: 'AspectDefault-open-api.json'},
   );
 
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=null&ymlProperties=&jsonProperties=',
+    'http://localhost:9090/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=null&ymlProperties=&jsonProperties=',
     {fixture: 'AspectDefault-open-api.yaml'},
   );
 
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=/resource/%7BresourceId%7D&ymlProperties=&jsonProperties=%7B%0A%20%20%22key%22:%20%22value%22%0A%7D',
+    'http://localhost:9090/ame/api/generate/open-api-spec?language=en&output=json&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=/resource/%7BresourceId%7D&ymlProperties=&jsonProperties=%7B%0A%20%20%22key%22:%20%22value%22%0A%7D',
     {fixture: 'AspectDefault-open-api.json'},
   );
 
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=/resource/%7BresourceId%7D&ymlProperties=resourceId:%0A%20%20name:%20resourceId%0A%20%20in:%20path%0A%20%20description:%20An%20example%20resource%20Id.%0A%20%20required:%20true%0A%20%20schema:%0A%20%20%20%20type:%20string%0A&jsonProperties=',
+    'http://localhost:9090/ame/api/generate/open-api-spec?language=en&output=yaml&baseUrl=https://example.com&includeQueryApi=false&useSemanticVersion=false&pagingOption=NO_PAGING&includePost=false&includePut=false&includePatch=false&resourcePath=/resource/%7BresourceId%7D&ymlProperties=resourceId:%0A%20%20name:%20resourceId%0A%20%20in:%20path%0A%20%20description:%20An%20example%20resource%20Id.%0A%20%20required:%20true%0A%20%20schema:%0A%20%20%20%20type:%20string%0A&jsonProperties=',
     {fixture: 'AspectDefault-open-api.yaml'},
   );
 
@@ -566,19 +571,19 @@ Cypress.Commands.add('openGenerationOpenApiSpec', () => {
 Cypress.Commands.add('openGenerationAsyncApiSpec', () => {
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=json&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=false',
+    'http://localhost:9090/ame/api/generate/async-api-spec?language=en&output=json&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=false',
     {fixture: 'AspectDefault-open-api.json'},
   );
 
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=yaml&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=false',
+    'http://localhost:9090/ame/api/generate/async-api-spec?language=en&output=yaml&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=false',
     {fixture: 'AspectDefault-open-api.json'},
   );
 
   cy.intercept(
     'POST',
-    'http://localhost:9091/ame/api/generate/async-api-spec?language=en&output=json&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=true',
+    'http://localhost:9090/ame/api/generate/async-api-spec?language=en&output=json&applicationId=application:id&channelAddress=foo/bar&useSemanticVersion=false&writeSeparateFiles=true',
     {fixture: 'AspectDefault-open-api.json'},
   );
 
@@ -589,7 +594,7 @@ Cypress.Commands.add('openGenerationAsyncApiSpec', () => {
 });
 
 Cypress.Commands.add('openGenerationDocumentation', () => {
-  cy.intercept('POST', 'http://localhost:9091/ame/api/generate/documentation?language=en', {fixture: 'valid-documentation.html'});
+  cy.intercept('POST', 'http://localhost:9090/ame/api/generate/documentation?language=en', {fixture: 'valid-documentation.html'});
 
   return cy.window().then(win => {
     const generateHandlingService: GenerateHandlingService = win['angular.generateHandlingService'];
@@ -598,7 +603,7 @@ Cypress.Commands.add('openGenerationDocumentation', () => {
 });
 
 Cypress.Commands.add('openGenerationJsonSample', () => {
-  cy.intercept('POST', 'http://localhost:9091/ame/api/generate/json-sample', {fixture: 'valid-json.json'});
+  cy.intercept('POST', 'http://localhost:9090/ame/api/generate/json-sample', {fixture: 'valid-json.json'});
 
   return cy.window().then(win => {
     const generateHandlingService: GenerateHandlingService = win['angular.generateHandlingService'];
@@ -607,7 +612,7 @@ Cypress.Commands.add('openGenerationJsonSample', () => {
 });
 
 Cypress.Commands.add('openGenerationJsonSchema', () => {
-  cy.intercept('POST', 'http://localhost:9091/ame/api/generate/json-schema?language=en', {fixture: 'valid-json.json'});
+  cy.intercept('POST', 'http://localhost:9090/ame/api/generate/json-schema?language=en', {fixture: 'valid-json.json'});
 
   return cy.window().then(win => {
     const generateHandlingService: GenerateHandlingService = win['angular.generateHandlingService'];

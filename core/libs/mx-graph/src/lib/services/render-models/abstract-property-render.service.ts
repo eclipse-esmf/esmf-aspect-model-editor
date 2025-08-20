@@ -11,18 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable, inject} from '@angular/core';
-import {DefaultAbstractProperty} from '@ame/meta-model';
+import {LoadedFilesService} from '@ame/cache';
+import {ShapeConnectorService} from '@ame/connection';
+import {FiltersService} from '@ame/loader-filters';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {Injectable, inject} from '@angular/core';
+import {DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {RendererUpdatePayload} from '../../models';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
-import {NamespacesCacheService} from '@ame/cache';
-import {ShapeConnectorService} from '@ame/connection';
-import {RdfService} from '@ame/rdf/services';
-import {FiltersService} from '@ame/loader-filters';
 
 @Injectable({
   providedIn: 'root',
@@ -33,11 +32,10 @@ export class AbstractPropertyRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     sammLangService: SammLanguageSettingsService,
-    rdfService: RdfService,
-    private namespacesCacheService: NamespacesCacheService,
+    protected loadedFilesService: LoadedFilesService,
     private shapeConnectorService: ShapeConnectorService,
   ) {
-    super(mxGraphService, sammLangService, rdfService);
+    super(mxGraphService, sammLangService, loadedFilesService);
   }
 
   update({cell, callback}: RendererUpdatePayload) {
@@ -48,17 +46,18 @@ export class AbstractPropertyRenderService extends BaseRenderService {
   }
 
   isApplicable(cell: mxgraph.mxCell): boolean {
-    return MxGraphHelper.getModelElement(cell) instanceof DefaultAbstractProperty;
+    const element = MxGraphHelper.getModelElement(cell);
+    return element instanceof DefaultProperty && element.isAbstract;
   }
 
   private handleExtendsElement(cell: mxgraph.mxCell) {
-    const metaModelElement = MxGraphHelper.getModelElement<DefaultAbstractProperty>(cell);
-    if (!metaModelElement.extendedElement) {
+    const metaModelElement = MxGraphHelper.getModelElement<DefaultProperty>(cell);
+    if (!metaModelElement.extends_) {
       return;
     }
 
-    const extendsElement = metaModelElement.extendedElement as DefaultAbstractProperty;
-    const cachedEntity = this.namespacesCacheService.resolveCachedElement(extendsElement);
+    const extendsElement = metaModelElement.extends_ as DefaultProperty;
+    const cachedEntity = this.loadedFilesService.currentLoadedFile.cachedFile.resolveInstance(extendsElement);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
     const entityCell = resolvedCell
       ? resolvedCell

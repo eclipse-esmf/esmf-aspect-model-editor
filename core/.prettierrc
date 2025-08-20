@@ -5,5 +5,14 @@
   "tabWidth": 2,
   "semi": true,
   "bracketSpacing": false,
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "plugins": ["prettier-plugin-organize-attributes", "prettier-plugin-organize-imports"],
+  "overrides": [
+    {
+      "files": ["*.yml", ".yaml"],
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ]
 }

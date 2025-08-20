@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Input, OnChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {Component, Input, OnChanges} from '@angular/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({

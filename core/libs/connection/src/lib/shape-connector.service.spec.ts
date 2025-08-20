@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, expect} from '@jest/globals';
 import {
   AbstractEntityAbstractEntityConnectionHandler,
   AbstractEntityAbstractPropertyConnectionHandler,
@@ -50,10 +49,11 @@ import {
   TraitConnectionHandler,
   TraitWithCharacteristicOrConstraintConnectionHandler,
 } from '@ame/connection';
+import {MxGraphAttributeService, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {NotificationsService} from '@ame/shared';
+import {LanguageTranslateModule} from '@ame/translation';
 import {TestBed} from '@angular/core/testing';
 import {
-  DefaultAbstractEntity,
-  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultCollection,
@@ -61,17 +61,19 @@ import {
   DefaultEntity,
   DefaultProperty,
   DefaultTrait,
-} from '@ame/meta-model';
-import {provideMockObject} from 'jest-helpers/utils';
-import {LogService, NotificationsService} from '@ame/shared';
-import {MxGraphAttributeService, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {EntityInstanceService} from '@ame/editor';
+} from '@esmf/aspect-model-loader';
+import {describe, expect} from '@jest/globals';
 import {TranslateModule} from '@ngx-translate/core';
-import {LanguageTranslateModule} from '@ame/translation';
+import {provideMockObject} from 'jest-helpers/utils';
+
+jest.mock('@ame/loader-filters', () => ({
+  ModelFilter: {
+    DEFAULT: 'mock-default',
+  },
+}));
 
 describe('Test Shape connector service', () => {
   let service: ShapeConnectorService;
-  let logService: jest.Mocked<LogService>;
   let notificationsService: jest.Mocked<NotificationsService>;
   let aspectConnectionHandler: jest.Mocked<AspectConnectionHandler>;
   let propertyConnectionHandler: jest.Mocked<PropertyConnectionHandler>;
@@ -92,10 +94,6 @@ describe('Test Shape connector service', () => {
       providers: [
         ShapeConnectorService,
         {
-          provide: LogService,
-          useValue: provideMockObject(LogService),
-        },
-        {
           provide: MxGraphShapeOverlayService,
           useValue: provideMockObject(MxGraphShapeOverlayService),
         },
@@ -110,10 +108,6 @@ describe('Test Shape connector service', () => {
         {
           provide: MxGraphAttributeService,
           useValue: provideMockObject(MxGraphAttributeService),
-        },
-        {
-          provide: EntityInstanceService,
-          useValue: provideMockObject(EntityInstanceService),
         },
         {
           provide: AspectConnectionHandler,
@@ -258,7 +252,6 @@ describe('Test Shape connector service', () => {
       ],
     });
 
-    logService = TestBed.inject(LogService) as jest.Mocked<LogService>;
     notificationsService = TestBed.inject(NotificationsService) as jest.Mocked<NotificationsService>;
     aspectConnectionHandler = TestBed.inject(AspectConnectionHandler) as jest.Mocked<AspectConnectionHandler>;
     aspectPropertyConnectionHandler = TestBed.inject(AspectPropertyConnectionHandler) as jest.Mocked<AspectPropertyConnectionHandler>;
@@ -286,7 +279,7 @@ describe('Test Shape connector service', () => {
 
   describe('createAndConnectShape', () => {
     test('should connect DefaultAspect', () => {
-      const element = new DefaultAspect(null, null, null);
+      const element = new DefaultAspect({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
 
       service.createAndConnectShape(element, null);
 
@@ -294,7 +287,7 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect DefaultProperty', () => {
-      const element = DefaultProperty.createInstance();
+      const element = new DefaultProperty({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
 
       service.createAndConnectShape(element, null);
 
@@ -302,7 +295,7 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect DefaultTrait', () => {
-      const element = new DefaultTrait(null, null, null);
+      const element = new DefaultTrait({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
 
       service.createAndConnectShape(element, null);
 
@@ -310,7 +303,7 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect DefaultCharacteristic', () => {
-      const element = new DefaultCharacteristic(null, null, null);
+      const element = new DefaultCharacteristic({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
 
       service.createAndConnectShape(element, null);
 
@@ -318,7 +311,7 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect DefaultEntity', () => {
-      const element = new DefaultEntity(null, null, null);
+      const element = new DefaultEntity({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
 
       service.createAndConnectShape(element, null);
 
@@ -326,31 +319,25 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect DefaultAbstractEntity', () => {
-      const element = new DefaultAbstractEntity(null, null, null);
+      const element = new DefaultEntity({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null, isAbstract: true});
 
       service.createAndConnectShape(element, null);
 
       expect(abstractEntityConnectionHandler.connect).toHaveBeenCalled();
     });
-
-    test('should only log in case of no metaModel', () => {
-      service.createAndConnectShape(null, null);
-
-      expect(logService.logInfo).toHaveBeenCalled();
-    });
   });
   describe('connectShapes', () => {
     test('should connect aspect with property', () => {
-      const parentModel = new DefaultAspect(null, null, null);
-      const childModel = DefaultProperty.createInstance();
+      const parentModel = new DefaultAspect({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
       expect(aspectPropertyConnectionHandler.connect).toHaveBeenCalled();
     });
     test('should connect trait with constraint', () => {
-      const parentModel = DefaultTrait.createInstance();
-      const childModel = DefaultConstraint.createInstance();
+      const parentModel = new DefaultTrait({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultConstraint({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
@@ -358,34 +345,34 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect trait with characteristic', () => {
-      const parentModel = DefaultTrait.createInstance();
-      const childModel = DefaultCharacteristic.createInstance();
+      const parentModel = new DefaultTrait({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultCharacteristic({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
       expect(traitWithCharacteristicOrConstraintConnectionHandler.connect).toHaveBeenCalled();
     });
     test('should not connect trait with characteristic if trait has already a base characteristic', () => {
-      const parentModel = DefaultTrait.createInstance();
-      const childModel = DefaultCharacteristic.createInstance();
+      const parentModel = new DefaultTrait({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultCharacteristic({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
-      parentModel.baseCharacteristic = DefaultCharacteristic.createInstance();
+      parentModel.baseCharacteristic = new DefaultCharacteristic({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
       expect(notificationsService.warning).toHaveBeenCalled();
     });
     test('should not connect trait with trait', () => {
-      const parentModel = DefaultTrait.createInstance();
-      const childModel = DefaultTrait.createInstance();
+      const parentModel = new DefaultTrait({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultTrait({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
       expect(notificationsService.warning).toHaveBeenCalled();
     });
     test('should connect property with characteristic', () => {
-      const parentModel = DefaultProperty.createInstance();
-      const childModel = DefaultCharacteristic.createInstance();
+      const parentModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultCharacteristic({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
@@ -393,8 +380,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect characteristic with entity', () => {
-      const parentModel = DefaultCharacteristic.createInstance();
-      const childModel = DefaultEntity.createInstance();
+      const parentModel = new DefaultCharacteristic({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultEntity({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
@@ -402,8 +389,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect entity with property', () => {
-      const parentModel = DefaultEntity.createInstance();
-      const childModel = DefaultProperty.createInstance();
+      const parentModel = new DefaultEntity({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
@@ -411,8 +398,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect collection with characteristic', () => {
-      const parentModel = DefaultCollection.createInstance();
-      const childModel = DefaultCharacteristic.createInstance();
+      const parentModel = new DefaultCollection({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultCharacteristic({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
@@ -420,8 +407,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect Property with Property', () => {
-      const parentModel = DefaultProperty.createInstance();
-      const childModel = DefaultProperty.createInstance();
+      const parentModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
       const propertyPropertyConnectionHandler = TestBed.inject(PropertyPropertyConnectionHandler);
 
       service.connectShapes(parentModel, childModel, null, null);
@@ -430,8 +417,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect Property with AbstractProperty', () => {
-      const parentModel = DefaultProperty.createInstance();
-      const childModel = DefaultAbstractProperty.createInstance();
+      const parentModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null, isAbstract: true});
       const propertyAbstractPropertyConnectionHandler = TestBed.inject(PropertyAbstractPropertyConnectionHandler);
 
       service.connectShapes(parentModel, childModel, null, null);
@@ -440,8 +427,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect Property with AbstractEntity', () => {
-      const parentModel = DefaultAbstractEntity.createInstance();
-      const childModel = DefaultProperty.createInstance();
+      const parentModel = new DefaultEntity({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null, isAbstract: true});
+      const childModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
       const connector = TestBed.inject(AbstractEntityPropertyConnectionHandler);
 
       service.connectShapes(parentModel, childModel, null, null);
@@ -450,8 +437,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect AbstractProperty with AbstractEntity', () => {
-      const parentModel = DefaultAbstractEntity.createInstance();
-      const childModel = DefaultAbstractProperty.createInstance();
+      const parentModel = new DefaultEntity({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null, isAbstract: true});
+      const childModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null, isAbstract: true});
       const connector = TestBed.inject(AbstractEntityAbstractPropertyConnectionHandler);
 
       service.connectShapes(parentModel, childModel, null, null);
@@ -459,9 +446,9 @@ describe('Test Shape connector service', () => {
       expect(connector.connect).toHaveBeenCalled();
     });
 
-    test('should connect AbstractProperty with AbstractEntity', () => {
-      const parentModel = DefaultAbstractProperty.createInstance();
-      const childModel = DefaultAbstractProperty.createInstance();
+    test('should connect AbstractProperty with AbstractProperty', () => {
+      const parentModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null, isAbstract: true});
+      const childModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null, isAbstract: true});
       const connector = TestBed.inject(AbstractPropertyAbstractPropertyConnectionHandler);
 
       service.connectShapes(parentModel, childModel, null, null);
@@ -470,8 +457,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect AbstractEntity with AbstractEntity', () => {
-      const parentModel = DefaultAbstractEntity.createInstance();
-      const childModel = DefaultAbstractEntity.createInstance();
+      const parentModel = new DefaultEntity({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null, isAbstract: true});
+      const childModel = new DefaultEntity({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null, isAbstract: true});
       const connector = TestBed.inject(AbstractEntityAbstractEntityConnectionHandler);
 
       service.connectShapes(parentModel, childModel, null, null);
@@ -480,8 +467,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should connect Entity with AbstractEntity', () => {
-      const parentModel = DefaultEntity.createInstance();
-      const childModel = DefaultAbstractEntity.createInstance();
+      const parentModel = new DefaultEntity({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultEntity({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null, isAbstract: true});
       const connector = TestBed.inject(EntityAbstractEntityConnectionHandler);
 
       service.connectShapes(parentModel, childModel, null, null);
@@ -490,8 +477,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should not connect characteristic with collection', () => {
-      const parentModel = DefaultCharacteristic.createInstance();
-      const childModel = DefaultCollection.createInstance();
+      const parentModel = new DefaultCharacteristic({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultCollection({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
@@ -499,8 +486,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should not connect aspect with characteristic', () => {
-      const parentModel = new DefaultAspect(null, null, null);
-      const childModel = DefaultCharacteristic.createInstance();
+      const parentModel = new DefaultAspect({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultCharacteristic({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
@@ -508,8 +495,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should not connect property with constraint', () => {
-      const parentModel = DefaultProperty.createInstance();
-      const childModel = DefaultConstraint.createInstance();
+      const parentModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultConstraint({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
@@ -517,8 +504,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should not connect property with entity', () => {
-      const parentModel = DefaultProperty.createInstance();
-      const childModel = DefaultEntity.createInstance();
+      const parentModel = new DefaultProperty({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultEntity({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 
@@ -526,8 +513,8 @@ describe('Test Shape connector service', () => {
     });
 
     test('should not connect Trait with Aspect', () => {
-      const parentModel = DefaultTrait.createInstance();
-      const childModel = new DefaultAspect(null, null, null);
+      const parentModel = new DefaultTrait({name: null, aspectModelUrn: 'urn#model', metaModelVersion: null});
+      const childModel = new DefaultAspect({name: null, aspectModelUrn: 'urn#child', metaModelVersion: null});
 
       service.connectShapes(parentModel, childModel, null, null);
 

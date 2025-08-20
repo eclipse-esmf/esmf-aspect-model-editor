@@ -11,23 +11,23 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {debounceTime, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {fromEvent, Observable, Subject} from 'rxjs';
-import {mxgraph} from 'mxgraph-factory';
-import {BaseMetaModelElement, ElementModelService} from '@ame/meta-model';
-import {MxGraphService} from '@ame/mx-graph';
-import {LogService} from '@ame/shared';
+import {LoadedFilesService} from '@ame/cache';
 import {EditorDialogModule, EditorService, EditorToolbarComponent, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
-import {ModelService} from '@ame/rdf/services';
-import {FormGroup} from '@angular/forms';
-import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
+import {ElementModelService} from '@ame/meta-model';
+import {MxGraphService} from '@ame/mx-graph';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {ElementsSearchComponent, FilesSearchComponent, SearchesStateService} from '@ame/utils';
 import {SidebarModule} from '@ame/sidebar';
+import {ElementsSearchComponent, FilesSearchComponent, SearchesStateService} from '@ame/utils';
+import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
 import {AsyncPipe, CommonModule} from '@angular/common';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
+import {ActivatedRoute, Router} from '@angular/router';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {Observable, Subject, fromEvent} from 'rxjs';
+import {debounceTime, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 
 const SIDEBAR_MIN_WIDTH = 480;
 const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
@@ -70,7 +70,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
     return this.shapeSettingsStateService.selectedShapeForUpdate;
   }
 
-  get modelElement(): BaseMetaModelElement {
+  get modelElement(): NamedElement {
     return this.shapeSettingsService.modelElement;
   }
 
@@ -84,8 +84,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
     private mxGraphService: MxGraphService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private modelService: ModelService,
-    private logService: LogService,
+    private loadedFiles: LoadedFilesService,
     private elementModelService: ElementModelService,
     private changeDetector: ChangeDetectorRef,
     private editorService: EditorService,
@@ -152,7 +151,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   closeShapeSettings() {
-    if (!this.modelService.currentRdfModel) {
+    if (!this.loadedFiles.currentLoadedFile?.rdfModel) {
       return;
     }
 
@@ -163,7 +162,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   onSave(formData: FormGroup) {
     this.selectedShapeForUpdate
       ? this.elementModelService.updateElement(this.selectedShapeForUpdate, formData)
-      : this.logService.logInfo('Skip shape update because nothing is selected.');
+      : console.info('Skip shape update because nothing is selected.');
 
     this.resetSelectedShapeForUpdate();
   }

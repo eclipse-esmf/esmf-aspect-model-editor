@@ -11,12 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {inject, Injectable, NgZone} from '@angular/core';
-import {IpcRenderer} from 'electron';
-import {BehaviorSubject, catchError, distinctUntilChanged, map, Observable, of, switchMap, take, tap} from 'rxjs';
-import {ElectronSignals, LockUnlockPayload, StartupData, StartupPayload} from '../model';
-import {NotificationsService} from './notifications.service';
-import {ModelSavingTrackerService} from './model-saving-tracker.service';
+import {ModelApiService} from '@ame/api';
+import {LoadedFilesService} from '@ame/cache';
+import {ShapeConnectorService} from '@ame/connection';
 import {
   EditorService,
   FileHandlingService,
@@ -26,28 +23,36 @@ import {
   ShapeSettingsService,
   TextModelLoaderModalComponent,
 } from '@ame/editor';
+import {FiltersService, ModelFilter} from '@ame/loader-filters';
 import {MxGraphService} from '@ame/mx-graph';
-import {NamespacesCacheService} from '@ame/cache';
-import {BaseMetaModelElement} from '@ame/meta-model';
-import {ElectronSignalsService} from './electron-signals.service';
-import {ElectronEvents} from '../enums';
-import {ModelApiService} from '@ame/api';
 import {NamespacesManagerService} from '@ame/namespace-manager';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {FiltersService, ModelFilter} from '@ame/loader-filters';
-import {ShapeConnectorService} from '@ame/connection';
 import {SidebarStateService} from '@ame/sidebar';
-import {MatDialog} from '@angular/material/dialog';
-import {SearchesStateService} from '@ame/utils';
 import {LanguageTranslationService} from '@ame/translation';
+import {SearchesStateService} from '@ame/utils';
+import {Injectable, NgZone, inject} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {IpcRenderer} from 'electron';
+import {BehaviorSubject, Observable, catchError, distinctUntilChanged, map, of, switchMap, tap} from 'rxjs';
+import {ElectronEvents} from '../enums';
+import {ElectronSignals, LockUnlockPayload, StartupData, StartupPayload} from '../model';
+import {ElectronSignalsService} from './electron-signals.service';
+import {ModelSavingTrackerService} from './model-saving-tracker.service';
+import {NotificationsService} from './notifications.service';
 
 @Injectable({providedIn: 'root'})
 export class ElectronTunnelService {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+  private loadedFiles: LoadedFilesService = inject(LoadedFilesService);
   private lockedFiles$ = new BehaviorSubject<LockUnlockPayload[]>([]);
 
   public ipcRenderer: IpcRenderer = window.require?.('electron').ipcRenderer;
   public startUpData$ = new BehaviorSubject<{isFirstWindow: boolean; model: string}>(null);
+
+  public get currentFile() {
+    return this.loadedFiles.currentLoadedFile;
+  }
 
   constructor(
     private notificationsService: NotificationsService,
@@ -55,7 +60,6 @@ export class ElectronTunnelService {
     private saveModelDialogService: SaveModelDialogService,
     private mxGraphService: MxGraphService,
     private shapeSettingsService: ShapeSettingsService,
-    private namespaceCacheService: NamespacesCacheService,
     private namespacesManagerService: NamespacesManagerService,
     private sidebarService: SidebarStateService,
     private modelApiService: ModelApiService,
@@ -241,6 +245,7 @@ export class ElectronTunnelService {
                     this.electronSignalsService.call('unlockFile', {
                       namespace: options?.namespace,
                       file: options?.file,
+                      aspectModelUrn: options.aspectModelUrn,
                     }),
                   ),
                   map(() => close),
@@ -275,7 +280,7 @@ export class ElectronTunnelService {
         return;
       }
 
-      const element = this.namespaceCacheService.currentCachedFile.getElement<BaseMetaModelElement>(modelUrn);
+      const element = this.currentFile.cachedFile.get<NamedElement>(modelUrn);
       if (element) {
         this.shapeSettingsService.editModel(element);
         requestAnimationFrame(() => {
@@ -306,26 +311,25 @@ export class ElectronTunnelService {
       return;
     }
 
-    this.electronSignalsService.addListener('lockFile', ({namespace, file}) => {
-      return this.modelApiService.lockFile(namespace, file).pipe(
-        take(1),
-        tap(() => this.electronSignalsService.call('addLock', {namespace, file})),
-      );
+    // this.electronSignalsService.addListener('lockFile', ({namespace, file}) => {
+    //   if (file === 'empty.ttl') {
+    //     return of();
+    //   }
+
+    //   return this.electronSignalsService.call('addLock', {namespace, file});
+    // });
+
+    // this.electronSignalsService.addListener('unlockFile', ({namespace, file}) => {
+    //   return this.electronSignalsService.call('removeLock', {namespace, file});
+    // });
+
+    this.ipcRenderer.on(ElectronEvents.REQUEST_LOCK_FILE, (_: unknown, namespace: string, file: string, aspectModelUrn: string) => {
+      if (file === 'empty.ttl') return;
+      this.electronSignalsService.call('lockFile', {namespace, file, aspectModelUrn}).subscribe();
     });
 
-    this.electronSignalsService.addListener('unlockFile', ({namespace, file}) => {
-      return this.modelApiService.unlockFile(namespace, file).pipe(
-        take(1),
-        tap(() => this.electronSignalsService.call('removeLock', {namespace, file})),
-      );
-    });
-
-    this.ipcRenderer.on(ElectronEvents.REQUEST_LOCK_FILE, (_: unknown, namespace: string, file: string) => {
-      this.electronSignalsService.call('lockFile', {namespace, file}).subscribe();
-    });
-
-    this.ipcRenderer.on(ElectronEvents.REQUEST_UNLOCK_FILE, (_: unknown, namespace: string, file: string) => {
-      this.electronSignalsService.call('unlockFile', {namespace, file}).subscribe();
+    this.ipcRenderer.on(ElectronEvents.REQUEST_UNLOCK_FILE, (_: unknown, namespace: string, file: string, aspectModelUrn: string) => {
+      this.electronSignalsService.call('unlockFile', {namespace, file, aspectModelUrn}).subscribe();
     });
 
     this.electronSignalsService.addListener('addLock', ({namespace, file}) => {

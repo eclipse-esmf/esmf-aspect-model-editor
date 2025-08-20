@@ -11,12 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from '@ame/meta-model';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {LanguageTranslationService} from '@ame/translation';
-import {finalize} from 'rxjs';
-import {LangChangeEvent} from '@ngx-translate/core';
+import {LoadedFilesService} from '@ame/cache';
 import {sammElements} from '@ame/shared';
+import {LanguageTranslationService} from '@ame/translation';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {LangChangeEvent} from '@ngx-translate/core';
+import {finalize} from 'rxjs';
 
 @Component({
   selector: 'ame-shared-settings-title',
@@ -25,16 +26,11 @@ import {sammElements} from '@ame/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SharedSettingsTitleComponent implements OnInit {
-  public metaModelElement: BaseMetaModelElement;
+  public metaModelElement: NamedElement;
   public metaModelClassName: string;
 
-  @Input() set metaModelElementInput(value: BaseMetaModelElement) {
+  @Input() set metaModelElementInput(value: NamedElement) {
     this.metaModelElement = value;
-    this.elementName = this.getTitle();
-  }
-
-  @Input() set metaModelClassNameInput(value: string) {
-    this.metaModelClassName = value;
     this.elementName = this.getTitle();
   }
 
@@ -43,6 +39,7 @@ export class SharedSettingsTitleComponent implements OnInit {
   constructor(
     private cd: ChangeDetectorRef,
     private translate: LanguageTranslationService,
+    public loadedFilesService: LoadedFilesService,
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +61,7 @@ export class SharedSettingsTitleComponent implements OnInit {
     } else {
       let name = `${this.metaModelElement.getPreferredName('en') || this.metaModelElement.name}`;
       name = name.length > 150 ? `${name.substring(0, 100)}...` : name;
-      return this.metaModelElement.isExternalReference()
+      return this.loadedFilesService.isElementExtern(this.metaModelElement)
         ? name
         : this.translate.translateService.instant('EDITOR_CANVAS.SHAPE_SETTING.EDIT', {value: 'element'});
     }

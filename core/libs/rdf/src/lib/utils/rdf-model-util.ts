@@ -10,9 +10,10 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {LoadedFilesService} from '@ame/cache';
+import {config, simpleDataTypes} from '@ame/shared';
+import {getDeepLookupDataType} from '@ame/utils';
 import {
-  BaseMetaModelElement,
-  DefaultAbstractProperty,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultConstraint,
@@ -29,13 +30,16 @@ import {
   DefaultScalar,
   DefaultState,
   DefaultUnit,
+  NamedElement,
+  RdfModel,
+  Samm,
+  SammC,
+  SammU,
   Type,
-} from '@ame/meta-model';
+  Value,
+} from '@esmf/aspect-model-loader';
 import {DataFactory, NamedNode, Quad, Util} from 'n3';
-import {simpleDataTypes} from '@ame/shared';
-import {MetaModelElementInstantiator} from '@ame/instantiator';
-import {RdfModel} from './rdf-model';
-import {Samm, SammC, SammE, SammU} from '@ame/vocabulary';
+import {getSammNamespaces} from './rdf-samm-namespaces';
 
 declare const sammUDefinition: any;
 
@@ -52,7 +56,7 @@ export class RdfModelUtil {
     return urn && urn.includes(sammU.getNamespace());
   }
 
-  static getValueWithoutUrnDefinition(value: any): string {
+  static getValueWithoutUrnDefinition(value: Value | string): string {
     if (!value) {
       return '';
     }
@@ -61,30 +65,36 @@ export class RdfModelUtil {
       return value.name;
     }
 
+    if (value instanceof Value) {
+      return `${value.value}`;
+    }
+
     if (`${value}`.startsWith('urn:samm') || `${value}`.startsWith(Samm.XSD_URI) || `${value}`.startsWith(Samm.RDF_URI)) {
       return `${value}`.split('#').pop();
     }
     return `${value}`;
   }
 
-  static getValuesWithoutUrnDefinition(values: Array<DefaultEntityInstance | string | number | boolean>): string {
+  static getValuesWithoutUrnDefinition(values: Array<Value | string>): string {
     return values.map(value => this.getValueWithoutUrnDefinition(value)).join(', ');
   }
 
   static resolveAccurateType(
-    metaModelElement: BaseMetaModelElement,
+    metaModelElement: NamedElement,
     predicateUrn: string,
     rdfModel: RdfModel,
     characteristicType: Type,
   ): NamedNode {
-    const samm = rdfModel.SAMM();
-    const sammC = rdfModel.SAMMC();
+    const samm = rdfModel.samm;
+    const sammC = rdfModel.sammC;
+    const metaModelVersion = config.currentSammVersion;
 
     if (
       metaModelElement instanceof DefaultLengthConstraint &&
       (sammC.isMinValueProperty(predicateUrn) || sammC.isMaxValueProperty(predicateUrn))
     ) {
-      return this.getDataType(new DefaultScalar(simpleDataTypes?.nonNegativeInteger?.isDefinedBy));
+      const definition = simpleDataTypes?.nonNegativeInteger;
+      return this.getDataType(new DefaultScalar({urn: definition?.isDefinedBy, scalar: true, metaModelVersion}));
     } else if (
       metaModelElement instanceof DefaultRangeConstraint &&
       (sammC.isMinValueProperty(predicateUrn) || sammC.isMaxValueProperty(predicateUrn))
@@ -92,80 +102,91 @@ export class RdfModelUtil {
       if (characteristicType) {
         return this.getDataType(characteristicType);
       }
-      return this.getDataType(new DefaultScalar(simpleDataTypes?.string?.isDefinedBy));
+      return this.getDataType(new DefaultScalar({urn: simpleDataTypes?.string?.isDefinedBy, scalar: true, metaModelVersion}));
     } else if (
       metaModelElement instanceof DefaultFixedPointConstraint &&
       (sammC.isScaleValueProperty(predicateUrn) || sammC.isIntegerValueProperty(predicateUrn))
     ) {
-      return this.getDataType(new DefaultScalar(simpleDataTypes?.positiveInteger?.isDefinedBy));
+      return this.getDataType(
+        new DefaultScalar({
+          urn: simpleDataTypes?.positiveInteger?.isDefinedBy,
+          scalar: true,
+          metaModelVersion,
+        }),
+      );
     } else if (metaModelElement instanceof DefaultProperty && samm.isExampleValueProperty(predicateUrn)) {
-      return this.getDataType(metaModelElement?.getDeepLookUpDataType());
+      return this.getDataType(getDeepLookupDataType(metaModelElement?.characteristic));
     } else if (metaModelElement instanceof DefaultEnumeration && sammC.isValuesProperty(predicateUrn)) {
       return this.getDataType(metaModelElement.dataType);
     } else if (metaModelElement instanceof DefaultState && sammC.isDefaultValueProperty(predicateUrn)) {
       return this.getDataType(metaModelElement.dataType);
     } else if (metaModelElement instanceof DefaultUnit && samm.isNumericConversionFactorProperty(predicateUrn)) {
-      return this.getDataType(new DefaultScalar(simpleDataTypes?.double?.isDefinedBy));
+      return this.getDataType(
+        new DefaultScalar({
+          urn: simpleDataTypes?.double?.isDefinedBy,
+          scalar: true,
+          metaModelVersion,
+        }),
+      );
     }
 
     return null;
   }
 
-  static getFullQualifiedModelName(modelElement: BaseMetaModelElement) {
+  static getFullQualifiedModelName(modelElement: NamedElement): string {
     const samm = new Samm(modelElement.metaModelVersion);
     const sammC = new SammC(samm);
-    const sammE = new SammE(samm);
     const sammU = new SammU(samm);
     let namespace: string;
     if (
       modelElement.className === 'DefaultCharacteristic' ||
       modelElement.className === 'DefaultConstraint' ||
-      modelElement.className === 'DefaultEntity' ||
-      modelElement.className === 'DefaultAbstractEntity' ||
       modelElement.className === 'DefaultEvent' ||
-      modelElement instanceof DefaultAbstractProperty ||
-      modelElement instanceof DefaultProperty ||
       modelElement instanceof DefaultOperation ||
       modelElement instanceof DefaultEvent ||
       modelElement instanceof DefaultAspect
     ) {
+      namespace = samm.getNamespace();
+    } else if (modelElement instanceof DefaultProperty) {
+      if (modelElement.isAbstract) return samm.AbstractProperty().value;
       namespace = samm.getNamespace();
     } else if (modelElement instanceof DefaultCharacteristic || modelElement instanceof DefaultConstraint) {
       namespace = sammC.getNamespace();
     } else if (modelElement instanceof DefaultUnit) {
       namespace = modelElement.name in sammUDefinition.units ? sammU.getNamespace() : samm.getNamespace();
     } else if (modelElement instanceof DefaultEntity) {
-      namespace = sammE.getNamespace();
+      if (modelElement.isAbstractEntity()) return samm.AbstractEntity().value;
+      namespace = samm.getNamespace();
     } else {
       namespace = ':';
     }
     return `${namespace}${modelElement.className.replace('Default', '')}`;
   }
 
-  static resolvePredicate(child: BaseMetaModelElement, parent: BaseMetaModelElement, rdfModel: RdfModel): NamedNode {
+  static resolvePredicate(child: NamedElement, parent: NamedElement, rdfModel: RdfModel): NamedNode {
     if (parent instanceof DefaultAspect) {
       if (child instanceof DefaultProperty) {
-        return rdfModel.SAMM().PropertiesProperty();
+        return rdfModel.samm.PropertiesProperty();
       }
       if (child instanceof DefaultOperation) {
-        return rdfModel.SAMM().OperationsProperty();
+        return rdfModel.samm.OperationsProperty();
       }
     }
     if (parent instanceof DefaultEither && child instanceof DefaultCharacteristic) {
       if (parent.right && parent.right.aspectModelUrn === child.aspectModelUrn) {
-        return rdfModel.SAMMC().EitherRightProperty();
+        return rdfModel.sammC.EitherRightProperty();
       } else if (parent.left && parent.left.aspectModelUrn === child.aspectModelUrn) {
-        return rdfModel.SAMMC().EitherLeftProperty();
+        return rdfModel.sammC.EitherLeftProperty();
       }
     }
     if (parent instanceof DefaultProperty && child instanceof DefaultCharacteristic) {
-      return rdfModel.SAMM().CharacteristicProperty();
+      return rdfModel.samm.CharacteristicProperty();
     }
     if (parent instanceof DefaultCharacteristic && child instanceof DefaultEntity) {
-      return rdfModel.SAMM().DataTypeProperty();
+      return rdfModel.samm.DataTypeProperty();
     }
     if (parent instanceof DefaultEntity && child instanceof DefaultProperty) {
-      return rdfModel.SAMM().PropertiesProperty();
+      return rdfModel.samm.PropertiesProperty();
     }
 
     return null;
@@ -176,7 +197,7 @@ export class RdfModelUtil {
   }
 
   static getEffectiveType(quad: Quad, rdfModel: RdfModel): Quad {
-    const samm = rdfModel.SAMM();
+    const samm = rdfModel.samm;
 
     if (Util.isBlankNode(quad.subject)) {
       let resolvedQuad: Array<Quad>;
@@ -231,7 +252,7 @@ export class RdfModelUtil {
   }
 
   static isEntity(quad: Quad, rdfModel: RdfModel): boolean {
-    const samm = rdfModel.SAMM();
+    const samm = rdfModel.samm;
     if (samm.Entity().equals(quad.object)) {
       return true;
     }
@@ -239,22 +260,39 @@ export class RdfModelUtil {
     return !!rdfModel.findAnyProperty(quad).find(quadProperty => samm.Entity().equals(quadProperty.subject));
   }
 
-  static isEntityValue(elementType: string, metaModelElementInstantiator: MetaModelElementInstantiator): boolean {
-    let quads = metaModelElementInstantiator.rdfModel.store.getQuads(
-      DataFactory.namedNode(elementType),
-      null,
-      metaModelElementInstantiator.samm.Entity(),
-      null,
-    );
+  static isEntityInstance(elementType: string, loadedFilesService: LoadedFilesService): boolean {
+    const rdfModel = loadedFilesService.currentLoadedFile.rdfModel;
+    const quads = rdfModel.store.getQuads(DataFactory.namedNode(elementType), rdfModel.samm.RdfType(), null, null);
 
-    if (quads.length) {
-      return true;
+    if (!quads.length) return false;
+
+    const entityQuads = rdfModel.store.getQuads(quads[0].object, rdfModel.samm.RdfType(), rdfModel.samm.Entity(), null);
+    if (!entityQuads.length) {
+      return loadedFilesService.filesAsList.some(
+        file => file.rdfModel.store.getQuads(quads[0].object, rdfModel.samm.RdfType(), rdfModel.samm.Entity(), null)?.length > 0,
+      );
     }
 
-    const externalRdfModel = metaModelElementInstantiator.getRdfModelByElement(DataFactory.namedNode(elementType));
-    quads = externalRdfModel?.store.getQuads(DataFactory.namedNode(elementType), null, metaModelElementInstantiator.samm.Entity(), null);
+    return true;
+  }
 
-    return !!quads?.length;
+  static resolveExternalNamespaces(rdfModel: RdfModel, selfExclude = true) {
+    const sammNamespaces = getSammNamespaces();
+
+    // Extracting all namespaces since the prefixes are not all returned by the rdfModel.getPrefixes()
+    const values: string[] = Object.values<string>(rdfModel.store['_entities']).reduce((acc: string[], item: string) => {
+      // skipping the blank nodes and other non-like urns
+      if (!item.startsWith('urn:samm:') || !item.includes('#')) {
+        return acc;
+      }
+
+      return [...acc, item.split('#')[0] + '#'];
+    }, []);
+
+    const prefixes = Array.from(new Set(values)).filter(item => !sammNamespaces.includes(item));
+
+    const checkItself = (prefix: string) => (selfExclude ? prefix != rdfModel.getPrefixes()[''] : true);
+    return prefixes.filter(prefix => checkItself(prefix));
   }
 
   static getUrnFromFileName(fileName: string): string {

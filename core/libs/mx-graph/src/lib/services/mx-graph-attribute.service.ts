@@ -12,8 +12,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
 import {environment} from 'environments/environment';
+import {mxgraph} from 'mxgraph-factory';
 
 @Injectable()
 export class MxGraphAttributeService {

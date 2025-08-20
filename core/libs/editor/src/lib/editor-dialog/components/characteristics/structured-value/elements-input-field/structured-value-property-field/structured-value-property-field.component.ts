@@ -11,13 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {CacheUtils, LoadedFilesService} from '@ame/cache';
+import {EditorDialogValidators} from '@ame/editor';
+import {ModelElementNamingService} from '@ame/meta-model';
+import {ElementCreatorService} from '@ame/shared';
 import {Component, Input, OnInit, inject} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {NamespacesCacheService} from '@ame/cache';
-import {EditorDialogValidators} from '@ame/editor';
-import {DefaultProperty, OverWrittenProperty} from '@ame/meta-model';
-import {RdfService} from '@ame/rdf/services';
-import {debounceTime, map, Observable, startWith} from 'rxjs';
+import {DefaultCharacteristic, DefaultProperty, RdfModel} from '@esmf/aspect-model-loader';
+import {Observable, debounceTime, map, startWith} from 'rxjs';
 
 @Component({
   selector: 'ame-structured-value-property-field',
@@ -25,31 +26,38 @@ import {debounceTime, map, Observable, startWith} from 'rxjs';
   styleUrls: ['./structured-value-property-field.component.scss'],
 })
 export class StructuredValuePropertyFieldComponent implements OnInit {
-  @Input() public overwrittenProperty: OverWrittenProperty = null;
+  @Input() public defaultProperty: DefaultProperty = null;
   @Input() public fieldControl: FormControl;
+
+  private elementCreator = inject(ElementCreatorService);
+  private modelElementNamingService = inject(ModelElementNamingService);
+  public loadedFiles = inject(LoadedFilesService);
 
   public filteredProperties$: Observable<any>;
   public control: FormControl;
 
-  private namespaceCacheService = inject(NamespacesCacheService);
   get currentCacheFile() {
-    return this.namespaceCacheService.currentCachedFile;
+    return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
-  constructor(private rdfService: RdfService) {}
+  get currentRdfModel(): RdfModel {
+    return this.loadedFiles.currentLoadedFile.rdfModel;
+  }
 
   ngOnInit() {
     this.control = new FormControl(
       {
-        value: this.overwrittenProperty?.property?.name || '',
-        disabled: !!this.overwrittenProperty?.property?.name || this.overwrittenProperty?.property?.isExternalReference(),
+        value: this.defaultProperty?.name || '',
+        disabled:
+          this.defaultProperty instanceof DefaultProperty &&
+          (!!this.defaultProperty?.aspectModelUrn || this.loadedFiles.isElementExtern(this.defaultProperty)),
       },
       [Validators.required, EditorDialogValidators.namingLowerCase],
     );
     this.filteredProperties$ = this.control.valueChanges.pipe(
       startWith([]),
       debounceTime(250),
-      map(value => this.currentCacheFile.getCachedProperties().filter(property => property.name.includes(value))),
+      map(value => CacheUtils.getCachedElements(this.currentCacheFile, DefaultProperty).filter(property => property.name.includes(value))),
     );
   }
 
@@ -57,7 +65,7 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
     this.control.enable();
     this.control.patchValue('');
     this.fieldControl.setValue('');
-    this.overwrittenProperty = null;
+    this.defaultProperty = null;
   }
 
   isLowerCase(value: string) {
@@ -65,9 +73,20 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
   }
 
   createNewProperty(name: string) {
-    const namespace = this.rdfService.currentRdfModel.getAspectModelUrn();
-    const version = this.rdfService.currentRdfModel.getMetaModelVersion();
-    const newProperty = new DefaultProperty(version, namespace + name, name, null, false);
+    const namespace = `urn:samm:${this.loadedFiles.currentLoadedFile.namespace}#`;
+    const version = this.loadedFiles.currentLoadedFile.namespace.split(':')?.[1] || this.currentRdfModel.getMetaModelVersion();
+    const characteristic = this.elementCreator.createEmptyElement(DefaultCharacteristic, {
+      resolveNaming: true,
+      cached: false,
+      aspectModelUrn: `${namespace}Characteristic${name}`,
+    });
+
+    const newProperty = new DefaultProperty({
+      metaModelVersion: version,
+      aspectModelUrn: namespace + name,
+      name,
+      characteristic,
+    });
     this.fieldControl.setValue(newProperty);
     this.control.disable();
   }

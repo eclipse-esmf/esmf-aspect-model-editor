@@ -11,17 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
-import {DefaultAbstractProperty, DefaultProperty} from '@ame/meta-model';
+import {LoadedFilesService} from '@ame/cache';
+import {ShapeConnectorService} from '@ame/connection';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {Injectable} from '@angular/core';
+import {DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {RendererUpdatePayload} from '../../models';
 import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
-import {NamespacesCacheService} from '@ame/cache';
-import {ShapeConnectorService} from '@ame/connection';
-import {RdfService} from '@ame/rdf/services';
 
 @Injectable({
   providedIn: 'root',
@@ -30,11 +29,10 @@ export class PropertyRenderService extends BaseRenderService {
   constructor(
     mxGraphService: MxGraphService,
     sammLangService: SammLanguageSettingsService,
-    rdfService: RdfService,
-    private namespacesCacheService: NamespacesCacheService,
+    protected loadedFilesService: LoadedFilesService,
     private shapeConnectorService: ShapeConnectorService,
   ) {
-    super(mxGraphService, sammLangService, rdfService);
+    super(mxGraphService, sammLangService, loadedFilesService);
   }
 
   update({cell, callback}: RendererUpdatePayload) {
@@ -50,12 +48,14 @@ export class PropertyRenderService extends BaseRenderService {
   private handleExtendsElement(cell: mxgraph.mxCell) {
     const node = MxGraphHelper.getElementNode<DefaultProperty>(cell);
     const metaModelElement = node.element;
-    if (!metaModelElement.extendedElement) {
+    if (!metaModelElement.exampleValue) {
       return;
     }
 
-    const extendsElement = metaModelElement.extendedElement as DefaultAbstractProperty;
-    const cachedEntity = this.namespacesCacheService.resolveCachedElement(extendsElement);
+    if (!metaModelElement.extends_) return;
+
+    const extendsElement = metaModelElement.extends_;
+    const cachedEntity = this.loadedFilesService.currentLoadedFile.cachedFile.resolveInstance(extendsElement);
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
     const entityCell = resolvedCell
       ? resolvedCell

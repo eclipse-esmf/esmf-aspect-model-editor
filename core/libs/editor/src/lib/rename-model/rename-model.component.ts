@@ -12,17 +12,17 @@
  */
 
 import {ModelApiService} from '@ame/api';
-import {RdfService} from '@ame/rdf/services';
-import {RdfModel} from '@ame/rdf/utils';
+import {LanguageTranslateModule} from '@ame/translation';
 import {Component, Inject} from '@angular/core';
 import {AbstractControl, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {LanguageTranslateModule} from '@ame/translation';
-import {MatButtonModule} from '@angular/material/button';
 
+import {LoadedFilesService} from '@ame/cache';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {RdfModel} from '@esmf/aspect-model-loader';
 
 @Component({
   standalone: true,
@@ -45,19 +45,23 @@ export class RenameModelComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: {namespaces: string; rdfModel: RdfModel},
     private dialogRef: MatDialogRef<RenameModelComponent>,
-    private rdfService: RdfService,
+    private loadedFiles: LoadedFilesService,
     private modelApiService: ModelApiService,
   ) {
-    const rdfModel = this.rdfService.currentRdfModel;
-    this.modelApiService.getNamespacesAppendWithFiles().subscribe(namespaces => {
-      namespaces = namespaces.map(namespace => namespace.toLowerCase());
+    this.modelApiService.getWorkspaceAspectModelUrns().subscribe(files => {
+      const namespaces: Record<string, boolean> = {};
+      for (const {aspectModelUrn, fileName} of files) {
+        const [namespace] = aspectModelUrn.replace('urn:samm:', '').split('#');
+        namespaces[`${namespace}:${fileName}`] = true;
+      }
+
       this.fileNameControl = new FormControl('', [
         Validators.required,
         // eslint-disable-next-line no-useless-escape
         Validators.pattern('[0-9a-zA-Z_. -]+'),
         (control: AbstractControl) => {
-          const searchTerm = `${rdfModel.getAspectModelUrn().replace('urn:samm:', '').replace('#', ':')}${control.value}.ttl`.toLowerCase();
-          return namespaces.includes(searchTerm) ? {sameFile: true} : null;
+          const searchTerm = `${this.loadedFiles.currentLoadedFile.namespace}:${control.value}.ttl`.toLowerCase();
+          return namespaces[searchTerm] ? {sameFile: true} : null;
         },
       ]);
       this.fileNameControl.markAsTouched();

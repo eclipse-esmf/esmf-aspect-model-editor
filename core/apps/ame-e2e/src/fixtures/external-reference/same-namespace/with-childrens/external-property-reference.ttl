@@ -1,0 +1,40 @@
+# Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+#
+# See the AUTHORS file(s) distributed with this work for
+# additional information regarding authorship.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.2.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.2.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:org.eclipse.examples.aspect:1.0.0#> .
+
+:externalPropertyWithChildren a samm:Property;
+    samm:characteristic :ChildrenCharacteristic1.
+
+:ChildrenCharacteristic1 a samm:Characteristic;
+    samm:dataType :ChildrenEntity1.
+
+:ChildrenEntity1 a samm:Entity;
+    samm:properties (:childrenProperty1 :childrenProperty2).
+
+:childrenProperty1 a samm:Property;
+    samm:characteristic :ChildrenCharacteristic2.
+
+:childrenProperty2 a samm:Property;
+    samm:characteristic samm-c:Boolean.
+
+:ChildrenCharacteristic2 a samm:Characteristic;
+    samm:dataType :ChildrenEntity2.
+
+:ChildrenEntity2 a samm:Entity;
+    samm:properties ().

@@ -11,31 +11,34 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/loader-filters';
-import {DefaultTrait, ModelElementNamingService, DefaultCharacteristic, DefaultConstraint} from '@ame/meta-model';
-import {MxGraphService, MxGraphHelper} from '@ame/mx-graph';
+import {MxGraphHelper} from '@ame/mx-graph';
+import {useUpdater} from '@ame/utils';
 import {Injectable} from '@angular/core';
-import {SingleShapeConnector} from '../models';
+import {DefaultCharacteristic, DefaultConstraint, DefaultTrait} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {BaseConnectionHandler} from '../base-connection-handler.service';
+import {SingleShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TraitConnectionHandler implements SingleShapeConnector<DefaultTrait> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private modelElementNamingService: ModelElementNamingService,
-    private filtersService: FiltersService,
-  ) {}
+export class TraitConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<DefaultTrait> {
+  constructor() {
+    super();
+  }
 
   public connect(trait: DefaultTrait, source: mxgraph.mxCell) {
     const defaultElement =
-      trait.getBaseCharacteristic() == null ? DefaultCharacteristic.createInstance() : DefaultConstraint.createInstance();
-    const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultElement);
+      trait.getBaseCharacteristic() == null
+        ? this.elementCreator.createEmptyElement(DefaultCharacteristic)
+        : this.elementCreator.createEmptyElement(DefaultConstraint);
     const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
+      this.filtersService.createNode(defaultElement, {parent: MxGraphHelper.getModelElement(source)}),
     );
-    trait.update(defaultElement);
+
+    useUpdater(trait).update(defaultElement);
+    this.refreshPropertiesLabel(child, defaultElement);
+
     this.mxGraphService.assignToParent(child, source);
     this.mxGraphService.moveCells([child], source.getGeometry().x + 30, source.getGeometry().y + 60);
     this.mxGraphService.formatCell(child);

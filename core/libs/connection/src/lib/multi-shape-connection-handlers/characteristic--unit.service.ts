@@ -11,17 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultCharacteristic, DefaultUnit, DefaultQuantifiable} from '@ame/meta-model';
-import {MxGraphService, MxGraphHelper} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
-import {MultiShapeConnector} from '../models';
+import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {Injectable, inject} from '@angular/core';
+import {DefaultCharacteristic, DefaultQuantifiable, DefaultUnit} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {MultiShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CharacteristicUnitConnectionHandler implements MultiShapeConnector<DefaultCharacteristic, DefaultUnit> {
-  constructor(private mxGraphService: MxGraphService) {}
+  private mxGraphService = inject(MxGraphService);
 
   public connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultUnit, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
     if (!(parentMetaModel instanceof DefaultQuantifiable)) {
@@ -36,7 +36,7 @@ export class CharacteristicUnitConnectionHandler implements MultiShapeConnector<
       const unit = MxGraphHelper.getModelElement<DefaultUnit>(obsoleteEdge.target);
       MxGraphHelper.removeRelation(parentMetaModel, unit);
 
-      if (unit.isPredefined()) {
+      if (unit.isPredefined) {
         this.mxGraphService.removeCells([obsoleteEdge.target], true);
       } else {
         this.mxGraphService.removeCells([obsoleteEdge]);

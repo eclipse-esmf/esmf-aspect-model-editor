@@ -13,5 +13,5 @@
 
 <mat-form-field [floatLabel]="getControl('defaultValue')?.disabled ? 'always' : 'auto'" appearance="fill">
   <mat-label for="defaultValue">defaultValue</mat-label>
-  <input matInput name="defaultValue" [formControl]="getControl('defaultValue')" data-cy="defaultValue" />
+  <input [formControl]="getControl('defaultValue')" matInput name="defaultValue" data-cy="defaultValue" />
 </mat-form-field>

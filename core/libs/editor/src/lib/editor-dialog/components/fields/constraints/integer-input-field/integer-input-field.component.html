@@ -13,7 +13,7 @@
 
 <mat-form-field [floatLabel]="getControl('integer')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label>integer</mat-label>
-  <input matInput name="integer" [formControl]="getControl('integer')" data-cy="integer" type="number" pattern="^[1-9]\d*$" />
+  <input [formControl]="getControl('integer')" matInput name="integer" data-cy="integer" type="number" pattern="^[1-9]\d*$" />
   @if (getControl('integer').errors?.required) {
     <mat-error>Integer is required</mat-error>
   }

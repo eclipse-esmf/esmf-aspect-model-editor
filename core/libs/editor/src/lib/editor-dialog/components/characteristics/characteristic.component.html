@@ -16,30 +16,27 @@
     [previousDataSnapshot]="previousData"
     (selectedCharacteristic)="onClassChange($event)"
     (previousData)="onPreviousDataChange($event)"
-  ></ame-characteristic-name-dropdown-field>
+  />
 
-  <ame-base-input [previousData]="previousData || {}" [parentForm]="parentForm"></ame-base-input>
+  <ame-base-input [previousData]="previousData || {}" [parentForm]="parentForm" />
   @if (selectedCharacteristic !== characteristicClassType.Either) {
-    <ame-data-type-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-data-type-input-field>
+    <ame-data-type-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
   }
 
   @if (isElementCharacteristicAllowed()) {
-    <ame-element-characteristic-input-field
-      [previousData]="previousData || {}"
-      [parentForm]="parentForm"
-    ></ame-element-characteristic-input-field>
+    <ame-element-characteristic-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
   }
 
   @if (selectedCharacteristic === characteristicClassType.Enumeration) {
-    <ame-values-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-values-input-field>
+    <ame-values-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
   }
 
   @if (isUnitAllowed()) {
-    <ame-unit-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-unit-input-field>
+    <ame-unit-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
   }
 
   @if (selectedCharacteristic === characteristicClassType.State) {
-    <ame-state-characteristic [previousData]="previousData || {}" [parentForm]="parentForm"></ame-state-characteristic>
+    <ame-state-characteristic [previousData]="previousData || {}" [parentForm]="parentForm" />
   }
 
   @if (selectedCharacteristic === characteristicClassType.StructuredValue) {
@@ -47,17 +44,17 @@
   }
 
   @if (selectedCharacteristic === characteristicClassType.Either) {
-    <ame-left-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-left-input-field>
-    <ame-right-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-right-input-field>
+    <ame-left-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
+    <ame-right-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
   }
 
   <ame-element-list
     [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.INCOMING_EDGES' | translate"
-    iconRotation="rotate270"
     [elements]="(element$ | async)?.parents"
-  ></ame-element-list>
+    iconRotation="rotate270"
+  />
   <ame-element-list
     [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.OUTGOING_EDGES' | translate"
     [elements]="(element$ | async)?.children"
-  ></ame-element-list>
+  />
 }

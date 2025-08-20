@@ -10,10 +10,13 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-
+import {LoadedFilesService} from '@ame/cache';
+import {filterRelations, ModelFilter, ModelTree} from '@ame/loader-filters';
+import {RdfModelUtil} from '@ame/rdf/utils';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {basicShapeGeometry, ModelCompactTreeLayout, ModelHierarchicalLayout} from '@ame/shared';
+import {Injector} from '@angular/core';
 import {
-  BaseMetaModelElement,
-  CanExtend,
   DefaultAspect,
   DefaultCharacteristic,
   DefaultEither,
@@ -24,25 +27,25 @@ import {
   DefaultProperty,
   DefaultStructuredValue,
   DefaultTrait,
-} from '@ame/meta-model';
-import {RdfModelUtil} from '@ame/rdf/utils';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {basicShapeGeometry, ModelCompactTreeLayout, ModelHierarchicalLayout} from '@ame/shared';
+  ElementSet,
+  HasExtends,
+  NamedElement,
+} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {ModelBaseProperties} from '../models';
 import {mxCompactTreeLayout, mxConstants, mxHierarchicalLayout} from '../providers';
 import {MxGraphVisitorHelper, ShapeAttribute} from './mx-graph-visitor-helper';
-import {ModelFilter, ModelTree, filterRelations} from '@ame/loader-filters';
 
 export class MxGraphHelper {
   static filterMode: ModelFilter = ModelFilter.DEFAULT;
+  static injector: Injector;
 
   /**
    * Gets the node element for a cell
    *
    * @param cell mx element
    */
-  static getElementNode<U extends BaseMetaModelElement = BaseMetaModelElement>(cell: mxgraph.mxCell): ModelTree<U> {
+  static getElementNode<U extends NamedElement = NamedElement>(cell: mxgraph.mxCell): ModelTree<U> {
     if (typeof cell?.['getMetaModelElement'] === 'function') {
       return (<any>cell).getMetaModelElement();
     }
@@ -54,7 +57,7 @@ export class MxGraphHelper {
    *
    * @param cell mx element
    */
-  static getModelElement<U extends BaseMetaModelElement = BaseMetaModelElement>(cell: mxgraph.mxCell): U {
+  static getModelElement<U extends NamedElement = NamedElement>(cell: mxgraph.mxCell): U {
     const node = this.getElementNode<U>(cell);
     return node ? node.element : null;
   }
@@ -62,36 +65,35 @@ export class MxGraphHelper {
   /**
    * Checks if child (a property) is either an optional, notInPayload or has a payloadName
    *
-   * @param child BaseMetaModelElement
-   * @param parent BaseMetaModelElement
+   * @param child NamedElement
+   * @param parent NamedElement
    */
-  static isOptionalProperty(child: DefaultProperty, parent: BaseMetaModelElement) {
+  static isOptionalProperty(child: DefaultProperty, parent: NamedElement) {
     if (!(parent instanceof DefaultAspect || parent instanceof DefaultEntity) || !(child instanceof DefaultProperty)) {
       return false;
     }
 
-    const {keys} = parent.properties?.find(({property}) => property.aspectModelUrn === child.aspectModelUrn) || {};
-    return !!keys && keys.optional;
+    return parent.propertiesPayload[child.aspectModelUrn]?.optional;
   }
 
   /**
    * Checks if metaModel is characteristic and predefined.
    */
-  static isMetaModelPredefined(metaModel: BaseMetaModelElement): boolean {
-    return metaModel instanceof DefaultCharacteristic && metaModel.isPredefined();
+  static isMetaModelPredefined(metaModel: NamedElement): boolean {
+    return metaModel instanceof DefaultCharacteristic && metaModel.isPredefined;
   }
 
   /**
    * Checks if metaModel is characteristic and not predefined.
    */
-  static isMetaModelNotPredefined(metaModel: BaseMetaModelElement): boolean {
-    return metaModel instanceof DefaultCharacteristic && !metaModel.isPredefined();
+  static isMetaModelNotPredefined(metaModel: NamedElement): boolean {
+    return metaModel instanceof DefaultCharacteristic && !metaModel.isPredefined;
   }
 
   /**
    *Checks if metaModel is a complex enumeration.
    */
-  static isComplexEnumeration(metaModelElement: BaseMetaModelElement): boolean {
+  static isComplexEnumeration(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultEnumeration && metaModelElement.dataType instanceof DefaultEntity;
   }
 
@@ -127,8 +129,8 @@ export class MxGraphHelper {
    * @param cell mx element
    * @param metaModelObject internal model
    */
-  static setElementNode(cell: mxgraph.mxCell, node: ModelTree<BaseMetaModelElement>) {
-    cell['getMetaModelElement'] = (): ModelTree<BaseMetaModelElement> => node;
+  static setElementNode(cell: mxgraph.mxCell, node: ModelTree<NamedElement>) {
+    cell['getMetaModelElement'] = (): ModelTree<NamedElement> => node;
   }
 
   /**
@@ -155,7 +157,7 @@ export class MxGraphHelper {
    * @param parent parent for child
    * @param child child for parent
    */
-  static establishRelation(parent: BaseMetaModelElement, child: BaseMetaModelElement) {
+  static establishRelation(parent: NamedElement, child: NamedElement) {
     const hasRelation = filterRelations.some(relation => {
       if (!(parent instanceof relation.from)) {
         return false;
@@ -181,24 +183,27 @@ export class MxGraphHelper {
    * @param parent parent for child
    * @param child child for parent
    */
-  static removeRelation(parent: BaseMetaModelElement, child: BaseMetaModelElement) {
+  static removeRelation(parent: NamedElement, child: NamedElement) {
+    const loadedFiles = this.injector ? this.injector.get(LoadedFilesService) : null;
     const isRemovable = this.isRemovable(parent, child);
-    if (!isRemovable || (parent.isExternalReference() && child.isPredefined())) {
+    if (!isRemovable || (loadedFiles?.isElementExtern(parent) && child.isPredefined)) {
       return;
     }
 
-    parent.children = parent.children.filter(c => c.aspectModelUrn !== child.aspectModelUrn);
-    child.parents = child.parents.filter(p => p.aspectModelUrn !== parent.aspectModelUrn);
+    child.parents = new ElementSet(...child.parents.filter(p => p.aspectModelUrn !== parent.aspectModelUrn));
   }
 
-  private static isRemovable(element: BaseMetaModelElement, elementToRemove: BaseMetaModelElement) {
+  private static isRemovable(element: NamedElement, elementToRemove: NamedElement) {
+    const loadedFiles = this.injector ? this.injector.get(LoadedFilesService) : null;
     const elementNamespace = element.aspectModelUrn.split('#')[0];
     const toRemoveNamespace = elementToRemove.aspectModelUrn.split('#')[0];
 
-    return elementNamespace !== toRemoveNamespace || !(element.isExternalReference() || elementToRemove.isExternalReference());
+    return (
+      elementNamespace !== toRemoveNamespace || !(loadedFiles?.isElementExtern(element) || loadedFiles?.isElementExtern(elementToRemove))
+    );
   }
 
-  static isEntityCycleInheritance(child: mxgraph.mxCell, parent: BaseMetaModelElement, graph: mxgraph.mxGraph): boolean {
+  static isEntityCycleInheritance(child: mxgraph.mxCell, parent: NamedElement, graph: mxgraph.mxGraph): boolean {
     const nextGeneration = graph.getOutgoingEdges(child)?.map(edge => edge.target) || [];
 
     for (const cell of nextGeneration) {
@@ -264,12 +269,12 @@ export class MxGraphHelper {
     const targetModelElement = MxGraphHelper.getModelElement(cell.target);
 
     if (sourceModelElement instanceof DefaultOperation) {
-      const isInput = sourceModelElement?.input?.some(overwrittenProp => overwrittenProp?.property === targetModelElement);
+      const isInput = sourceModelElement?.input?.some(overwrittenProp => overwrittenProp === targetModelElement);
       const p = document.createElement('p');
       p.className += ' edge-label operation';
-      if (targetModelElement === sourceModelElement?.output?.property && isInput) {
+      if (targetModelElement === sourceModelElement?.output && isInput) {
         p.innerText = 'input-output';
-      } else if (targetModelElement === sourceModelElement?.output?.property) {
+      } else if (targetModelElement === sourceModelElement?.output) {
         p.innerText = 'output';
       } else if (isInput) {
         p.innerText = 'input';
@@ -305,8 +310,10 @@ export class MxGraphHelper {
       if (!hasEnumeration) {
         return null;
       }
-      const overwrittenProp = sourceModelElement.properties.find(prop => prop.property === targetModelElement);
-      if (overwrittenProp.keys.notInPayload) {
+
+      const propertyPayload = sourceModelElement.propertiesPayload[targetModelElement.aspectModelUrn];
+
+      if (propertyPayload.notInPayload) {
         const p = document.createElement('p');
         p.className += ' edge-label property';
         p.innerText = 'not in payload';
@@ -334,11 +341,8 @@ export class MxGraphHelper {
     title.title = isSmallShape ? '' : modelElement.name;
 
     title.innerText = modelElement.name?.length > 24 ? modelElement.name?.substring(0, 21) + '...' : modelElement.name;
-    if (cell.collapsed) {
-      const isEntityInstance = modelElement instanceof DefaultEntityInstance;
-      if (isEntityInstance) {
-        title.innerText = this.formatSmallName(modelElement.name);
-      }
+    if (cell.collapsed && modelElement instanceof DefaultEntityInstance) {
+      title.innerText = this.formatSmallName(modelElement.name);
     }
 
     title.classList.add('element-name');
@@ -372,7 +376,8 @@ export class MxGraphHelper {
 
     if (isSmallShape) {
       title.classList.add('simple');
-      if (modelElement instanceof CanExtend && cell.collapsed) {
+      const extending = modelElement as HasExtends;
+      if (extending.extends_ && cell.collapsed) {
         div.removeChild(title);
       }
       return div;
@@ -485,13 +490,13 @@ export class MxGraphHelper {
     graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
   }
 
-  static getNamespaceFromElement(element: BaseMetaModelElement) {
+  static getNamespaceFromElement(element: NamedElement) {
     const [namespace] = element?.aspectModelUrn.split('#') || ['', ''];
     const splitted = namespace.split(':');
     return [splitted.pop(), splitted.pop()];
   }
 
-  static isChildOf(parent: BaseMetaModelElement, child: BaseMetaModelElement) {
+  static isChildOf(parent: NamedElement, child: NamedElement) {
     return parent.children.some(el => el.aspectModelUrn === child.aspectModelUrn);
   }
 }

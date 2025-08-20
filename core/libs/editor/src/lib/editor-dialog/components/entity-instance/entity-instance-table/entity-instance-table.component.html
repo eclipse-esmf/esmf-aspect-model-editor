@@ -13,35 +13,35 @@
 
 @if (parentForm) {
   <div class="source" [formGroup]="entityValuePropertiesForm">
-    @for (source of sources; track source.key) {
-      <ng-container [formArrayName]="source.key.property.name">
+    @for (source of sources; track source) {
+      <ng-container [formArrayName]="source[0]?.name">
         <mat-divider class="source__divider"></mat-divider>
         <div class="source__title">
           <!-- FormArray property column -->
-          @if (formFieldHelper.isComplexProperty(source.key.property)) {
+          @if (formFieldHelper.isComplexProperty(source[0])) {
             <!-- Has Complex dataType -->
             <mat-icon class="material-icons complex-value-icon">view_module</mat-icon>
           }
 
-          {{ source.key.property.name }}
+          {{ source[0]?.name }}
 
-          @if (!source.optional) {
+          @if (!getPropertyPayload(source[0].aspectModelUrn)?.optional) {
             <span class="source__required-indicator">*</span>
           }
         </div>
 
-        @for (control of getFormArray(source.key.property.name).controls; track control.value; let i = $index) {
+        @for (control of getFormArray(source[0]?.name).controls; track control.value; let i = $index) {
           <div class="source__row" [formGroupName]="i">
             <!-- FormArray value column -->
             <div class="source__column source__column--value">
-              @if (formFieldHelper.isComplexProperty(source.key.property)) {
+              @if (formFieldHelper.isComplexProperty(source[0])) {
                 <!-- complex property type -->
-                <mat-form-field appearance="fill" class="source__input">
+                <mat-form-field class="source__input" appearance="fill">
                   <mat-label>{{ 'ENTITY_VALUE.ENTITY_VALUE' | translate }}</mat-label>
-                  <input #entityValueInput matInput formControlName="value" [matAutocomplete]="auto" data-cy="propertyValueComplex" />
-                  @if (EntityValueUtil.getDisplayControl(propertiesForm, source.key.property.name).disabled) {
+                  <input #entityValueInput [matAutocomplete]="auto" matInput formControlName="value" data-cy="propertyValueComplex" />
+                  @if (EntityValueUtil.getDisplayControl(propertiesForm, source[0]?.name).disabled) {
                     <button
-                      (click)="EntityValueUtil.unlockValue(propertiesForm, source.key.property.name, 0, 'value')"
+                      (click)="EntityValueUtil.unlockValue(propertiesForm, source[0]?.name, 0, 'value')"
                       data-cy="clear-entityValue-button"
                       matSuffix
                       mat-icon-button
@@ -51,8 +51,8 @@
                     </button>
                   }
 
-                  <mat-autocomplete #auto="matAutocomplete" class="characteristic-entity-value-autocomplete">
-                    @if (filteredEntityValues$[source.key.property?.name] | async; as filteredEntityValues) {
+                  <mat-autocomplete class="characteristic-entity-value-autocomplete" #auto="matAutocomplete">
+                    @if (filteredEntityValues$[source[0]?.name] | async; as filteredEntityValues) {
                       <mat-optgroup label="Entity Values">
                         @if (
                           EntityValueUtil.showCreateNewEntityOption(
@@ -63,20 +63,14 @@
                             metaModelElement
                           )
                         ) {
-                          <mat-option
-                            [value]="entityValueInput.value"
-                            (click)="createNewEntityValue(source.key.property, entityValueInput.value)"
-                          >
+                          <mat-option [value]="entityValueInput.value" (click)="createNewEntityValue(source[0], entityValueInput.value)">
                             <span>
                               + Create: <strong>{{ entityValueInput.value }}</strong>
                             </span>
                           </mat-option>
                         }
                         @for (entityValue of filteredEntityValues; track entityValue.aspectModelUrn) {
-                          <mat-option
-                            [value]="entityValue.name"
-                            (onSelectionChange)="changeSelection(source.key.property.name, entityValue)"
-                          >
+                          <mat-option [value]="entityValue.name" (onSelectionChange)="changeSelection(source[0]?.name, entityValue)">
                             {{ entityValue.name }}
                           </mat-option>
                         }
@@ -86,7 +80,7 @@
                 </mat-form-field>
               } @else {
                 <!-- non complex property type -->
-                <mat-form-field appearance="fill" class="source__input">
+                <mat-form-field class="source__input" appearance="fill">
                   <mat-label>{{ 'ENTITY_VALUE.VALUE' | translate }}</mat-label>
                   <input matInput type="text" formControlName="value" data-cy="propertyValueNotComplex" />
                   @if (control.get('value').errors?.required) {
@@ -97,25 +91,25 @@
             </div>
 
             <!-- FormArray for languages column -->
-            @if (source.language !== undefined) {
+            @if (source[1].language !== undefined) {
               <div
                 class="source__column source__column--language"
-                [ngClass]="isCharacteristicCollectionType(source.key.property?.characteristic) ? 'source__column--language-with-icon' : ''"
+                [ngClass]="isCharacteristicCollectionType(source[0]?.characteristic) ? 'source__column--language-with-icon' : ''"
               >
                 <ng-container>
                   <mat-form-field
-                    appearance="fill"
                     [ngClass]="
-                      EntityValueUtil.getDisplayControl(propertiesForm, source.key.property.name).at(i)?.get('language')?.disabled
+                      EntityValueUtil.getDisplayControl(propertiesForm, source[0]?.name).at(i)?.get('language')?.disabled
                         ? 'source__input-with-icon'
                         : 'source__input'
                     "
+                    appearance="fill"
                   >
                     <mat-label>{{ 'ENTITY_VALUE.LANGUAGE' | translate }}</mat-label>
-                    <input matInput formControlName="language" [matAutocomplete]="auto" data-cy="propertyLanguageValue" />
-                    @if (EntityValueUtil.getDisplayControl(propertiesForm, source.key.property.name).at(i)?.get('language')?.disabled) {
+                    <input [matAutocomplete]="auto" matInput formControlName="language" data-cy="propertyLanguageValue" />
+                    @if (EntityValueUtil.getDisplayControl(propertiesForm, source[0]?.name).at(i)?.get('language')?.disabled) {
                       <button
-                        (click)="EntityValueUtil.unlockValue(propertiesForm, source.key.property.name, i, 'language')"
+                        (click)="EntityValueUtil.unlockValue(propertiesForm, source[0]?.name, i, 'language')"
                         data-cy="clear-language-button"
                         matSuffix
                         mat-icon-button
@@ -123,8 +117,8 @@
                         <mat-icon>close</mat-icon>
                       </button>
                     }
-                    <mat-autocomplete #auto="matAutocomplete" class="characteristic-entity-value-autocomplete">
-                      @if (filteredLanguageValues$[source.key.property?.name] | async; as filteredLanguageValues$) {
+                    <mat-autocomplete class="characteristic-entity-value-autocomplete" #auto="matAutocomplete">
+                      @if (filteredLanguageValues$[source[0]?.name] | async; as filteredLanguageValues$) {
                         @for (language of filteredLanguageValues$; track language) {
                           <mat-option [value]="language.tag" (onSelectionChange)="changeLanguageSelection(source, language.tag, i)">
                             {{ language.tag }}
@@ -132,32 +126,32 @@
                         }
                       }
                     </mat-autocomplete>
-                    @if (control.get('language').errors?.required) {
+                    @if (control.get('language')?.errors?.required) {
                       <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.LANGUAGE.PLEASE_DEFINE' | translate }} </mat-error>
                     }
                   </mat-form-field>
                 </ng-container>
               </div>
 
-              @if (isCharacteristicCollectionType(source.key.property?.characteristic)) {
+              @if (isCharacteristicCollectionType(source[0]?.characteristic)) {
                 <div class="source__column source__column--icon">
                   @if (i) {
                     <button
+                      [attr.data-cy]="source[0]?.name + 'Remove'"
+                      (click)="removeLanguage(source, i)"
                       mat-mini-fab
                       color="primary"
                       aria-label="Delete added language"
-                      (click)="removeLanguage(source, i)"
-                      [attr.data-cy]="source.key.property.name + 'Remove'"
                     >
                       <mat-icon>delete</mat-icon>
                     </button>
                   } @else {
                     <button
+                      [attr.data-cy]="source[0]?.name + 'Add'"
+                      (click)="addLanguage(source)"
                       mat-mini-fab
                       color="primary"
                       aria-label="Add new language"
-                      (click)="addLanguage(source)"
-                      [attr.data-cy]="source.key.property.name + 'Add'"
                     >
                       <mat-icon>add</mat-icon>
                     </button>

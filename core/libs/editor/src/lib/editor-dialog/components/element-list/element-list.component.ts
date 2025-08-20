@@ -10,12 +10,13 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Component, Input, OnInit} from '@angular/core';
-import {BaseMetaModelElement} from '@ame/meta-model';
+import {LoadedFilesService} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
-import {ShapeSettingsService, ShapeSettingsStateService} from '../../services';
-import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
 import {sammElements} from '@ame/shared';
+import {Component, Input, OnInit} from '@angular/core';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
+import {ShapeSettingsService, ShapeSettingsStateService} from '../../services';
 
 @Component({
   selector: 'ame-element-list',
@@ -25,7 +26,7 @@ import {sammElements} from '@ame/shared';
 export class ElementListComponent implements OnInit {
   @Input() public label = '';
   @Input() public iconRotation: 'rotate0' | 'rotate90' | 'rotate270' = 'rotate90';
-  @Input() public elements: BaseMetaModelElement[] = [];
+  @Input() public elements: NamedElement[] = [];
   @Input() public isAspect? = false;
 
   constructor(
@@ -33,15 +34,17 @@ export class ElementListComponent implements OnInit {
     private shapeSettingsService: ShapeSettingsService,
     private shapeSettingsStateService: ShapeSettingsStateService,
     private openReferencedElementService: OpenReferencedElementService,
+    public loadedFiles: LoadedFilesService,
   ) {}
 
   ngOnInit() {
+    this.elements = Array.from(this.elements).filter(e => e instanceof NamedElement);
     if (this.elements.length > 1) {
-      this.elements.sort(this.compareByName);
+      this.elements = this.elements.sort(this.compareByName);
     }
   }
 
-  openElementModel(elementModel: BaseMetaModelElement) {
+  openElementModel(elementModel: NamedElement) {
     const cell = this.mxGraphService.resolveCellByModelElement(elementModel);
     this.shapeSettingsService.editModel(elementModel);
     if (cell) {
@@ -50,15 +53,15 @@ export class ElementListComponent implements OnInit {
     }
   }
 
-  navigateToCell(elementModel: BaseMetaModelElement) {
+  navigateToCell(elementModel: NamedElement) {
     this.mxGraphService.navigateToCellByUrn(elementModel.aspectModelUrn);
   }
 
-  cellExists(elementModel: BaseMetaModelElement): boolean {
+  cellExists(elementModel: NamedElement): boolean {
     return !!this.mxGraphService.resolveCellByModelElement(elementModel);
   }
 
-  openReferencedElement(element: BaseMetaModelElement) {
+  openReferencedElement(element: NamedElement) {
     this.openReferencedElementService.openReferencedElement(element);
   }
 

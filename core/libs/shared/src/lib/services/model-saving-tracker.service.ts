@@ -11,9 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelService, RdfService} from '@ame/rdf/services';
+import {LoadedFilesService} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
-import {inject, Injectable} from '@angular/core';
+import {ModelService, RdfService} from '@ame/rdf/services';
+import {Injectable, inject} from '@angular/core';
 import {map, take} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
@@ -21,13 +22,14 @@ export class ModelSavingTrackerService {
   private modelService = inject(ModelService);
   private rdfService = inject(RdfService);
   private mxGraphService = inject(MxGraphService);
+  private loadedFilesService = inject(LoadedFilesService);
   private savedModel: string;
   private firstLoad: boolean;
 
   private get currentModel$() {
     return this.modelService.synchronizeModelToRdf().pipe(
       take(1),
-      map(() => this.rdfService.serializeModel(this.rdfService.currentRdfModel)),
+      map(() => this.rdfService.serializeModel(this.loadedFilesService.currentLoadedFile.rdfModel)),
     );
   }
 

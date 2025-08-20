@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ShapeConnectorService} from '@ame/connection';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
-import {ShapeConnectorService} from '@ame/connection';
-import {Injectable} from '@angular/core';
-import {CanExtend, DefaultAbstractEntity, DefaultEntity} from '../aspect-meta-model';
 import {LanguageTranslationService} from '@ame/translation';
+import {Injectable} from '@angular/core';
+import {DefaultEntity} from '@esmf/aspect-model-loader';
 
 @Injectable({
   providedIn: 'root',
@@ -29,8 +29,8 @@ export class BaseEntityModelService {
     private translate: LanguageTranslationService,
   ) {}
 
-  checkExtendedElement(metaModelElement: CanExtend, extendedElement: CanExtend) {
-    if (extendedElement && ![DefaultEntity, DefaultAbstractEntity].some(c => extendedElement instanceof c)) {
+  checkExtendedElement(metaModelElement: DefaultEntity, extendedElement: DefaultEntity) {
+    if (!(extendedElement instanceof DefaultEntity)) {
       return;
     }
 
@@ -45,7 +45,12 @@ export class BaseEntityModelService {
       return;
     }
 
-    if (extendedElement && extendedElement instanceof DefaultAbstractEntity && !extendedElement.predefined) {
+    if (
+      extendedElement &&
+      extendedElement instanceof DefaultEntity &&
+      extendedElement.isAbstractEntity() &&
+      !extendedElement.isPredefined
+    ) {
       this.shapeConnectorService.connectShapes(
         metaModelElement,
         extendedElement,
@@ -54,6 +59,6 @@ export class BaseEntityModelService {
       );
     }
 
-    metaModelElement.extendedElement = extendedElement;
+    metaModelElement.extends_ = extendedElement;
   }
 }

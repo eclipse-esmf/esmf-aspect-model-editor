@@ -12,8 +12,8 @@
  */
 
 export * from './missing-element.interface';
-export * from './valid-files.interface';
 export * from './namespace-session';
 export * from './tree-structure';
+export * from './valid-files.interface';
 export * from './violation';
 export * from './violation-report';

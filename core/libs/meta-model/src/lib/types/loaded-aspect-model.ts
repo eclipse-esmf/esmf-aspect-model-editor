@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {RdfModel} from '@ame/rdf/utils';
-import {Aspect} from '../aspect-meta-model';
+import {Aspect, RdfModel} from '@esmf/aspect-model-loader';
 
 export interface LoadedAspectModel {
   rdfModel: RdfModel;

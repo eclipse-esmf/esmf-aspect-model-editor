@@ -12,32 +12,30 @@
  */
 
 import {
-  BaseMetaModelElement,
   DefaultAspect,
-  DefaultProperty,
-  DefaultOperation,
-  DefaultEvent,
   DefaultCharacteristic,
-  DefaultTrait,
-  DefaultAbstractProperty,
-  DefaultConstraint,
   DefaultCollection,
-  DefaultStructuredValue,
+  DefaultConstraint,
   DefaultEither,
   DefaultEntity,
   DefaultEntityInstance,
+  DefaultEvent,
+  DefaultOperation,
+  DefaultProperty,
+  DefaultStructuredValue,
+  DefaultTrait,
   DefaultUnit,
-  DefaultAbstractEntity,
-} from '@ame/meta-model';
+  NamedElement,
+} from '@esmf/aspect-model-loader';
 import {ClassReference, ModelFilter} from './filter-loader.interface';
 
 export class FilterRelation {
   constructor(
-    public from: ClassReference<BaseMetaModelElement>,
-    public to: ClassReference<BaseMetaModelElement>[],
+    public from: ClassReference<NamedElement>,
+    public to: ClassReference<NamedElement>[],
     public exceptInFilter: {
-      [ModelFilter.DEFAULT]?: ClassReference<BaseMetaModelElement>[];
-      [ModelFilter.PROPERTIES]?: ClassReference<BaseMetaModelElement>[];
+      [ModelFilter.DEFAULT]?: ClassReference<NamedElement>[];
+      [ModelFilter.PROPERTIES]?: ClassReference<NamedElement>[];
     } = {},
   ) {
     if (!this.exceptInFilter[ModelFilter.DEFAULT]) {
@@ -49,17 +47,17 @@ export class FilterRelation {
     }
   }
 
-  isExceptions(element: BaseMetaModelElement, filterMode: ModelFilter) {
+  isExceptions(element: NamedElement, filterMode: ModelFilter) {
     return this.exceptInFilter[filterMode].some(c => element instanceof c);
   }
 }
 
 export const filterRelations = [
   new FilterRelation(DefaultAspect, [DefaultProperty, DefaultOperation, DefaultEvent]),
-  new FilterRelation(DefaultProperty, [DefaultCharacteristic, DefaultTrait, DefaultAbstractProperty, DefaultProperty], {
+  new FilterRelation(DefaultProperty, [DefaultCharacteristic, DefaultTrait, DefaultProperty], {
     [ModelFilter.PROPERTIES]: [DefaultProperty],
   }),
-  new FilterRelation(DefaultAbstractProperty, [DefaultAbstractProperty]),
+  // new FilterRelation(DefaultAbstractProperty, [DefaultAbstractProperty]),
   new FilterRelation(DefaultTrait, [DefaultConstraint, DefaultCharacteristic], {
     [ModelFilter.PROPERTIES]: [DefaultProperty],
   }),
@@ -67,10 +65,10 @@ export const filterRelations = [
   new FilterRelation(DefaultStructuredValue, [DefaultProperty]),
   new FilterRelation(DefaultEither, [DefaultCharacteristic]),
   new FilterRelation(DefaultCharacteristic, [DefaultEntity, DefaultEntityInstance, DefaultUnit]),
-  new FilterRelation(DefaultEntity, [DefaultProperty, DefaultEntity, DefaultAbstractEntity]),
+  new FilterRelation(DefaultEntity, [DefaultProperty, DefaultEntity]),
   new FilterRelation(DefaultEntityInstance, [DefaultEntityInstance, DefaultEntity]),
   new FilterRelation(DefaultEvent, [DefaultProperty]),
   new FilterRelation(DefaultOperation, [DefaultProperty]),
   new FilterRelation(DefaultUnit, [DefaultUnit]),
-  new FilterRelation(DefaultAbstractEntity, [DefaultAbstractEntity, DefaultProperty, DefaultAbstractProperty]),
+  new FilterRelation(DefaultEntity, [DefaultEntity, DefaultProperty]),
 ];

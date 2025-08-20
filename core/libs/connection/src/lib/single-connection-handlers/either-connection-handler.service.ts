@@ -11,27 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/loader-filters';
-import {DefaultEither, ModelElementNamingService, DefaultCharacteristic} from '@ame/meta-model';
-import {MxGraphService, ModelInfo, MxGraphHelper} from '@ame/mx-graph';
+import {ModelInfo} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
 import {Injectable} from '@angular/core';
-import {SingleShapeConnector} from '../models';
+import {DefaultCharacteristic, DefaultEither} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {BaseConnectionHandler} from '../base-connection-handler.service';
+import {SingleShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
-export class EitherConnectionHandler implements SingleShapeConnector<DefaultEither> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private modelElementNamingService: ModelElementNamingService,
-    private notificationsService: NotificationsService,
-    private filtersService: FiltersService,
-  ) {}
+export class EitherConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<DefaultEither> {
+  constructor(private notificationsService: NotificationsService) {
+    super();
+  }
 
   public connect(either: DefaultEither, source: mxgraph.mxCell, modelInfo: ModelInfo) {
-    const defaultCharacteristic = DefaultCharacteristic.createInstance();
+    const defaultCharacteristic = this.elementCreator.createEmptyElement(DefaultCharacteristic);
 
     if (ModelInfo.IS_EITHER_LEFT === modelInfo) {
       if (either.left) {
@@ -47,10 +44,8 @@ export class EitherConnectionHandler implements SingleShapeConnector<DefaultEith
       either.right = defaultCharacteristic;
     }
 
-    const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultCharacteristic);
-    const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
-    );
+    const child = this.renderTree(defaultCharacteristic, source);
+    this.refreshPropertiesLabel(child, defaultCharacteristic);
     this.mxGraphService.assignToParent(child, source);
     this.mxGraphService.formatCell(source);
     this.mxGraphService.formatShapes();

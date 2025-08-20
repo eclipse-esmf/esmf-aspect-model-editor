@@ -187,14 +187,10 @@
     "TITLE": "导出namespace(s) 到包",
     "INFO_CONTENT": "请选择你想要作为Aspect Model Package导出的namespace.",
     "CANCEL": "取消",
-    "NEXT": "下一步"
+    "NEXT": "导出"
   },
   "VALIDATION_RESULT_DIALOG": {
     "TITLE": "校验结果",
-    "HAVE_VALIDATED": "Namespaces可以被校验并且",
-    "CAN_BE_EXPORTED": "可以被导出",
-    "CAN_NOT_EXPORTED": "Namespaces不可以导出因为 ",
-    "MISSING_FILES": "丢失的文件",
     "DISMISS_BUTTON": "取消",
     "EXPORT": "导出",
     "CLIP_BUTTON": {

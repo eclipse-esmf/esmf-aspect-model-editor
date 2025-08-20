@@ -39,7 +39,7 @@ describe('Test collapse/expand model', () => {
         cyHelp.testShapeInExpandMode('property1');
         cyHelp.testShapeInExpandMode('Characteristic1');
         cyHelp.testShapeInExpandMode('Entity1');
-        cyHelp.testShapeInExpandMode('Constraint1');
+        cyHelp.testShapeInExpandMode('EncodingConstraint1');
       });
   });
 

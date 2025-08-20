@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {CacheUtils} from '@ame/cache';
+import {DataTypeService} from '@ame/shared';
+import {ENTER} from '@angular/cdk/keycodes';
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {MatChipInputEvent, MatChipGrid} from '@angular/material/chips';
+import {MatChipGrid, MatChipInputEvent} from '@angular/material/chips';
+import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
 import {debounceTime} from 'rxjs/operators';
-import {ENTER} from '@angular/cdk/keycodes';
 import {InputFieldComponent} from '../../input-field.component';
-import {BaseMetaModelElement, DefaultEntity, DefaultEntityInstance, DefaultEnumeration} from '@ame/meta-model';
-import {DataTypeService} from '@ame/shared';
-import {NamespacesCacheService} from '@ame/cache';
 
 @Component({
   selector: 'ame-values-input-field',
@@ -41,15 +41,8 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
     return this.enumValues as DefaultEntityInstance[];
   }
 
-  constructor(
-    public namespacesCacheService: NamespacesCacheService,
-    private dataTypeService: DataTypeService,
-  ) {
+  constructor(private dataTypeService: DataTypeService) {
     super();
-  }
-
-  get currentCachedFile() {
-    return this.namespacesCacheService.currentCachedFile;
   }
 
   ngOnInit(): void {
@@ -117,10 +110,10 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
   }
 
   initForm() {
-    this.parentForm.setControl('values', new FormControl({value: '', disabled: this.metaModelElement?.isExternalReference()}));
+    this.parentForm.setControl('values', new FormControl({value: '', disabled: this.loadedFiles.isElementExtern(this.metaModelElement)}));
     this.parentForm.setControl(
       'chipList',
-      new FormControl({value: this.enumValues, disabled: this.metaModelElement?.isExternalReference()}, Validators.required),
+      new FormControl({value: this.enumValues, disabled: this.loadedFiles.isElementExtern(this.metaModelElement)}, Validators.required),
     );
 
     if (this.parentForm.get('dataTypeEntity').value instanceof DefaultEntity) {
@@ -152,14 +145,16 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
     this.parentForm.get('values').setValue([]);
     this.enumValueChange([]);
 
-    this.currentCachedFile.getCachedEntities().forEach(entity => {
-      if (entity.name === dataType) {
-        this.hasComplexValues = true;
-      }
-    });
+    CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntity)
+      .filter(e => !e.isAbstractEntity())
+      .forEach(entity => {
+        if (entity.name === dataType) {
+          this.hasComplexValues = true;
+        }
+      });
   }
 
-  private handleNextModelElement(modelElement: BaseMetaModelElement): void {
+  private handleNextModelElement(modelElement: NamedElement): void {
     this.enumValues = [];
     if (!(modelElement instanceof DefaultEnumeration)) {
       return;
@@ -173,6 +168,6 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
 
     this.enumValues = currentValues.some(val => val instanceof DefaultEntityInstance)
       ? currentValues
-      : (currentValues.map(value => (typeof value === 'string' ? {name: value} : value)) as any[]);
+      : (currentValues.map(value => (typeof value === 'string' ? {name: value} : value?.value || value)) as any[]);
   }
 }

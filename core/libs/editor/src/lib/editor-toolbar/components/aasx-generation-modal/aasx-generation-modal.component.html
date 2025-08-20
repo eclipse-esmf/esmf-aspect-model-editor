@@ -33,8 +33,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-flat-button mat-dialog-close [disabled]="isGenerating">{{ 'GENERATE_AASX_DIALOG.CANCEL' | translate }}</button>
-  <button mat-flat-button color="primary" [disabled]="isGenerating" (click)="generate()">
+  <button [disabled]="isGenerating" mat-flat-button mat-dialog-close>{{ 'GENERATE_AASX_DIALOG.CANCEL' | translate }}</button>
+  <button [disabled]="isGenerating" (click)="generate()" mat-flat-button color="primary">
     {{ 'GENERATE_AASX_DIALOG.GENERATE' | translate }}
   </button>
 </mat-dialog-actions>

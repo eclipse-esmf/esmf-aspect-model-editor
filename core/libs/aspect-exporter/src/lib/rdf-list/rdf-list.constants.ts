@@ -12,8 +12,6 @@
  */
 
 import {
-  DefaultAbstractEntity,
-  DefaultAbstractProperty,
   DefaultAspect,
   DefaultEntity,
   DefaultEnumeration,
@@ -22,10 +20,11 @@ import {
   DefaultProperty,
   DefaultStructuredValue,
   DefaultUnit,
-} from '@ame/meta-model';
-import {Samm, SammC} from '@ame/vocabulary';
-import {ListProperties, Relations} from './rdf-list.types';
+  Samm,
+  SammC,
+} from '@esmf/aspect-model-loader';
 import {NamedNode} from 'n3';
+import {ListProperties, Relations} from './rdf-list.types';
 
 export class RdfListConstants {
   static getRelations(samm: Samm, sammC: SammC): Relations[] {
@@ -46,16 +45,16 @@ export class RdfListConstants {
         source: DefaultEntity,
         children: [
           {type: DefaultProperty, predicate: samm.PropertiesProperty()},
-          {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()},
+          {type: DefaultEntity, predicate: samm.PropertiesProperty()},
         ],
       },
-      {
-        source: DefaultAbstractEntity,
-        children: [
-          {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()},
-          {type: DefaultProperty, predicate: samm.PropertiesProperty()},
-        ],
-      },
+      // {
+      //   source: DefaultAbstractEntity,
+      //   children: [
+      //     {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()},
+      //     {type: DefaultProperty, predicate: samm.PropertiesProperty()},
+      //   ],
+      // },
       {
         source: DefaultEnumeration,
         children: [{predicate: sammC.ValuesProperty()}],

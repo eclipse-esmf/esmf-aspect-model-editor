@@ -11,31 +11,34 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamespacesCacheService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/cache';
 import {FiltersService} from '@ame/loader-filters';
+import {ModelElementNamingService} from '@ame/meta-model';
 import {
-  Characteristic,
-  ModelElementNamingService,
-  DefaultEnumeration,
-  DefaultEntity,
-  DefaultEntityInstance,
-  DefaultProperty,
-  DefaultTrait,
-  DefaultCollection,
-  DefaultEither,
-  DefaultConstraint,
-} from '@ame/meta-model';
-import {
-  MxGraphService,
-  MxGraphAttributeService,
-  MxGraphShapeOverlayService,
   ModelInfo,
+  MxGraphAttributeService,
   MxGraphHelper,
+  MxGraphRenderer,
+  MxGraphService,
+  MxGraphShapeOverlayService,
   MxGraphVisitorHelper,
 } from '@ame/mx-graph';
-import {RdfModelUtil} from '@ame/rdf/utils';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {ElementCreatorService, config} from '@ame/shared';
+import {useUpdater} from '@ame/utils';
 import {Injectable} from '@angular/core';
+import {
+  Characteristic,
+  DefaultCollection,
+  DefaultConstraint,
+  DefaultEither,
+  DefaultEntity,
+  DefaultEntityInstance,
+  DefaultEnumeration,
+  DefaultProperty,
+  DefaultTrait,
+} from '@esmf/aspect-model-loader';
+import {ScalarValue} from 'libs/aspect-model-loader/src/lib/aspect-meta-model/scalar-value';
 import {mxgraph} from 'mxgraph-factory';
 import {SingleShapeConnector} from '../models';
 
@@ -44,17 +47,18 @@ import {SingleShapeConnector} from '../models';
 })
 export class CharacteristicConnectionHandler implements SingleShapeConnector<Characteristic> {
   get currentCachedFile() {
-    return this.namespacesCacheService.currentCachedFile;
+    return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
   constructor(
     private mxGraphService: MxGraphService,
     private modelElementNamingService: ModelElementNamingService,
-    private namespacesCacheService: NamespacesCacheService,
     private mxGraphAttributeService: MxGraphAttributeService,
     private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
     private sammLangService: SammLanguageSettingsService,
     private filtersService: FiltersService,
+    private loadedFiles: LoadedFilesService,
+    private elementCreator: ElementCreatorService,
   ) {}
 
   public connect(characteristic: Characteristic, source: mxgraph.mxCell, modelInfo: ModelInfo) {
@@ -86,15 +90,14 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(source);
 
     // add trait
-    const defaultTrait: DefaultTrait = this.modelElementNamingService.resolveElementNaming(
-      DefaultTrait.createInstance(),
-      RdfModelUtil.capitalizeFirstLetter((incomingEdges.length ? incomingEdges[0].source.id : source.id)?.replace(/[[\]]/g, '')),
-    );
+    const defaultTrait: DefaultTrait = this.elementCreator.createEmptyElement(DefaultTrait, {baseCharacteristic: currentMetaModel});
 
-    const traitShape = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(this.currentCachedFile.resolveElement(defaultTrait), {
+    const mxRenderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlayService, this.sammLangService, null);
+    const traitShape = mxRenderer.render(
+      this.filtersService.createNode(this.currentCachedFile.resolveInstance(defaultTrait), {
         parent: MxGraphHelper.getModelElement(source),
       }),
+      null,
     );
 
     if (incomingEdges.length) {
@@ -114,7 +117,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
           return;
         }
 
-        sourceElementModel.delete(currentMetaModel);
+        useUpdater(sourceElementModel).delete(currentMetaModel);
         MxGraphHelper.removeRelation(sourceElementModel, currentMetaModel);
         this.mxGraphService.removeCells([source.removeEdge(edge, false)]);
 
@@ -123,12 +126,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
         this.mxGraphService.assignToParent(source, traitShape);
         this.mxGraphService.formatCell(edgeSource);
       });
-    } else {
-      defaultTrait.baseCharacteristic = currentMetaModel;
-      this.mxGraphService.assignToParent(source, traitShape);
     }
-
-    this.addConstraint(defaultTrait, traitShape);
 
     const traitWithProperty = traitShape.edges?.some(edge => MxGraphHelper.getModelElement(edge.source) instanceof DefaultProperty);
     if (!traitWithProperty) {
@@ -144,10 +142,9 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
    * @param source mxgraph shape from which the plus button was clicked
    */
   private createEntity(characteristic: Characteristic, source: mxgraph.mxCell) {
-    const defaultEntity = DefaultEntity.createInstance();
+    const defaultEntity = this.elementCreator.createEmptyElement(DefaultEntity);
     characteristic.dataType = defaultEntity;
 
-    const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(defaultEntity);
     const selectedParentIncomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(source);
     selectedParentIncomingEdges.forEach(edge => {
       const edgeSource = edge.source;
@@ -162,7 +159,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     });
 
     const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(metaModelElement, {parent: MxGraphHelper.getModelElement(source)}),
+      this.filtersService.createNode(defaultEntity, {parent: MxGraphHelper.getModelElement(source)}),
     );
 
     this.mxGraphService.assignToParent(child, source);
@@ -186,11 +183,17 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
    * @returns a cell and model element for newly created Entity Value
    */
   private createEntityValue(characteristic: DefaultEnumeration, source: mxgraph.mxCell): [mxgraph.mxCell, DefaultEntityInstance] {
-    const entityValue = DefaultEntityInstance.createInstance();
+    const entityValue = new DefaultEntityInstance({
+      name: 'entityInstance',
+      metaModelVersion: config.currentSammVersion,
+      aspectModelUrn: `${this.loadedFiles.currentLoadedFile.namespace}#entityInstance`,
+    });
     const characteristicDataType = characteristic.dataType as DefaultEntity;
 
-    entityValue.entity = characteristicDataType;
-    characteristicDataType.properties.forEach(overWrittenProperty => entityValue.addProperty(overWrittenProperty));
+    entityValue.type = characteristicDataType;
+    characteristicDataType.properties.forEach(property =>
+      entityValue.setAssertion(property.aspectModelUrn, new ScalarValue({value: '', type: property.characteristic?.dataType})),
+    );
     entityValue.parents.push(characteristic);
     characteristic.values.push(entityValue);
     const metaModelElement = this.modelElementNamingService.resolveMetaModelElement(entityValue);
@@ -213,12 +216,12 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
 
     // connect: EntityValue - Enumeration
     this.mxGraphService.assignToParent(entityValueCell, source);
-    const entityCell = this.mxGraphService.resolveCellByModelElement(entityValue.entity);
+    const entityCell = this.mxGraphService.resolveCellByModelElement(entityValue.type);
 
     // connect: Entity - EntityValue
     this.mxGraphService.assignToParent(entityCell, entityValueCell);
     this.mxGraphService.graph.labelChanged(source, MxGraphHelper.createPropertiesLabel(source));
-    this.currentCachedFile.resolveElement(entityValue);
+    this.currentCachedFile.resolveInstance(entityValue);
     this.mxGraphService.formatShapes();
   }
 
@@ -230,14 +233,14 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
    * @param traitShape trait object
    */
   private addConstraint(defaultTrait: DefaultTrait, traitShape: mxgraph.mxCell) {
-    const defaultConstraint = this.modelElementNamingService.resolveElementNaming(DefaultConstraint.createInstance());
+    const defaultConstraint = this.elementCreator.createEmptyElement(DefaultConstraint);
     const constraintShape = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(this.currentCachedFile.resolveElement(defaultConstraint), {
+      this.filtersService.createNode(this.currentCachedFile.resolveInstance(defaultConstraint), {
         parent: MxGraphHelper.getModelElement(traitShape),
       }),
     );
 
-    defaultTrait.update(defaultConstraint);
+    useUpdater(defaultTrait).update(defaultConstraint);
     this.mxGraphService.assignToParent(constraintShape, traitShape);
   }
 }

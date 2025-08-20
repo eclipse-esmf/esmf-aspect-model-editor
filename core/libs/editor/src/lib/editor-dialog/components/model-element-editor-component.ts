@@ -10,16 +10,16 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Directive, inject, OnDestroy} from '@angular/core';
-import {tap} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
-import {EditorModelService} from '../editor-model.service';
-import {FormControl, FormGroup} from '@angular/forms';
-import {BaseMetaModelElement} from '@ame/meta-model';
 import {RdfModelUtil} from '@ame/rdf/utils';
+import {Directive, inject, OnDestroy} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {Subscription} from 'rxjs';
+import {tap} from 'rxjs/operators';
+import {EditorModelService} from '../editor-model.service';
 
 @Directive()
-export abstract class ModelElementEditorComponent<T extends BaseMetaModelElement> implements OnDestroy {
+export abstract class ModelElementEditorComponent<T extends NamedElement> implements OnDestroy {
   public metaModelDialogService = inject(EditorModelService);
   public metaModelElement: T;
   public subscription: Subscription;

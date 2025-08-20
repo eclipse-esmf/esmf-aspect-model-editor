@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {OverWrittenProperty} from '@ame/meta-model';
+import {DefaultProperty} from '@esmf/aspect-model-loader';
 
 export interface StructuredValueVanillaGroups {
   start: number;
   end: number;
   text: string;
-  property?: OverWrittenProperty;
+  property?: DefaultProperty;
   isSplitter?: boolean;
 }

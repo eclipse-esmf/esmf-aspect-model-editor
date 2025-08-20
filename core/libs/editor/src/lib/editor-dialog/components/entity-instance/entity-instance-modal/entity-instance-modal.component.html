@@ -13,7 +13,7 @@
 
 <h3 mat-dialog-title>{{ title }}</h3>
 
-<button class="close-button" mat-icon-button tabindex="-1" (click)="onClose()">
+<button class="close-button" (click)="onClose()" mat-icon-button tabindex="-1">
   <mat-icon>close</mat-icon>
 </button>
 
@@ -44,16 +44,11 @@
       }
     </mat-form-field>
 
-    <ame-entity-instance-modal-table
-      [form]="form"
-      [entity]="entity"
-      [entityValue]="entityValue"
-      [enumeration]="enumeration"
-    ></ame-entity-instance-modal-table>
+    <ame-entity-instance-modal-table [form]="form" [entity]="entity" [entityValue]="entityValue" [enumeration]="enumeration" />
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end" class="sticky-dialog-actions">
-    <button type="button" mat-raised-button (click)="onClose()" data-cy="entityCancelButton">
+  <mat-dialog-actions class="sticky-dialog-actions" align="end">
+    <button (click)="onClose()" type="button" mat-raised-button data-cy="entityCancelButton">
       {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.CANCEL' | translate }}
     </button>
     <button [disabled]="form.invalid" mat-raised-button color="primary" type="submit" data-cy="entitySaveButton">

@@ -11,30 +11,33 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {BaseMetaModelElement} from '@ame/meta-model';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
-import {mxgraph} from 'mxgraph-factory';
 import {LanguageTranslationService} from '@ame/translation';
+import {inject} from '@angular/core';
+import {DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
+import {BaseConnectionHandler} from '../base-connection-handler.service';
 import mxCell = mxgraph.mxCell;
 
-export abstract class InheritanceConnector {
-  constructor(
-    protected mxGraphService: MxGraphService,
-    protected mxGraphAttributeService: MxGraphAttributeService,
-    protected sammLangService: SammLanguageSettingsService,
-    protected notificationsService: NotificationsService,
-    protected translate: LanguageTranslationService,
-  ) {}
+export abstract class InheritanceConnector extends BaseConnectionHandler {
+  protected mxGraphService = inject(MxGraphService);
+  protected mxGraphAttributeService = inject(MxGraphAttributeService);
+  protected sammLangService = inject(SammLanguageSettingsService);
+  protected notificationsService = inject(NotificationsService);
+  protected translate = inject(LanguageTranslationService);
 
-  public connect(parentMetaModel: BaseMetaModelElement, childMetaModel: BaseMetaModelElement, parentCell: mxCell, childCell: mxCell) {
-    if (parentMetaModel?.isPredefined()) {
+  public connect(parentMetaModel: NamedElement, childMetaModel: NamedElement, parentCell: mxCell, childCell: mxCell) {
+    if (parentMetaModel?.isPredefined) {
       this.notificationsService.warning({title: this.translate.language.NOTIFICATION_SERVICE.CHILD_FOR_PREDEFINED_ELEMENT_ERROR});
       return;
     }
 
-    (parentMetaModel as any).extendedElement = childMetaModel;
+    if (parentMetaModel instanceof DefaultProperty || parentMetaModel instanceof DefaultEntity) {
+      (parentMetaModel.extends_ as any) = childMetaModel;
+    }
+
     this.checkAndRemoveExtendElement(parentCell);
     this.mxGraphService.assignToParent(childCell, parentCell);
     parentCell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(parentMetaModel, this.sammLangService);
@@ -52,5 +55,5 @@ export abstract class InheritanceConnector {
     });
   }
 
-  abstract isInheritedElement(element: BaseMetaModelElement): boolean;
+  abstract isInheritedElement(element: NamedElement): boolean;
 }

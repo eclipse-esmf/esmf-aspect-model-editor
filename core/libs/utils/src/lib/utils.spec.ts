@@ -14,6 +14,10 @@
 import {readFile} from '@ame/utils';
 import {lastValueFrom} from 'rxjs';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('utils', () => {
   it('should return parsed file content', async () => {
     const fileContent = 'foo';

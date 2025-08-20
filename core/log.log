@@ -1,0 +1,10 @@
+
+> start
+> ng serve
+
+
+> nx run ame:serve:development
+
+[37mApplication bundle generation failed. [10.255 seconds][39m
+[37m[39m
+[37mWatch mode enabled. Watching for file changes...[39m

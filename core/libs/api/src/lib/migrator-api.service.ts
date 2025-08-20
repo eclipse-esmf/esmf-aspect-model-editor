@@ -11,21 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorService} from '@ame/editor';
+import {ModelLoaderService} from '@ame/editor';
 import {ExporterHelper} from '@ame/migrator';
-import {RdfModel} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
 import {HttpClient} from '@angular/common/http';
-import {inject, Injectable} from '@angular/core';
-import {map, Observable, switchMap} from 'rxjs';
+import {Injectable, inject} from '@angular/core';
+import {Observable, map, switchMap} from 'rxjs';
 import {ModelApiService} from './model-api.service';
 
 export interface NamespaceStatus {
   namespace: string;
-  files: FileStatus[];
+  files: MigratedFileStatus[];
 }
 
-export interface FileStatus {
+export interface MigratedFileStatus {
   name: string;
   success: boolean;
   message?: string;
@@ -40,13 +39,13 @@ export class MigratorApiService {
   private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
 
-  public rdfModelsToMigrate = [];
+  public rdfModelsToMigrate: string[] = [];
 
   constructor(
     private http: HttpClient,
     private browserService: BrowserService,
     private modelApiService: ModelApiService,
-    private editorService: EditorService,
+    private modelLoader: ModelLoaderService,
   ) {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
@@ -56,11 +55,10 @@ export class MigratorApiService {
 
   public hasFilesToMigrate(): Observable<boolean> {
     this.rdfModelsToMigrate = [];
-
-    return this.editorService.loadExternalModels().pipe(
-      map((rdfModels: RdfModel[]) => {
-        this.rdfModelsToMigrate = rdfModels.filter(rdfModel =>
-          ExporterHelper.isVersionOutdated(rdfModel?.samm.version, this.config.currentSammVersion),
+    return this.modelLoader.getRdfModelsFromWorkspace().pipe(
+      map(rdfModels => {
+        this.rdfModelsToMigrate = Object.keys(rdfModels).filter(absoluteName =>
+          ExporterHelper.isVersionOutdated(rdfModels[absoluteName].samm.version, this.config.currentSammVersion),
         );
 
         return this.rdfModelsToMigrate.length > 0;

@@ -18,12 +18,12 @@
 </mat-form-field>
 
 <button
+  class="add-button"
   [disabled]="disableAddNewEntityValue"
   [matTooltip]="'Add a complex value'"
   (click)="add.emit()"
   mat-fab
   color="accent"
-  class="add-button"
   data-cy="addNewEntityValueButton"
 >
   <mat-icon>add</mat-icon>

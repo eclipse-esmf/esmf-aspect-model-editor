@@ -11,21 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultEvent, DefaultProperty} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
-import {MultiShapeConnector} from '../models';
+import {inject, Injectable} from '@angular/core';
+import {DefaultEvent, DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {MultiShapeConnector} from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventPropertyConnectionHandler implements MultiShapeConnector<DefaultEvent, DefaultProperty> {
-  constructor(private mxGraphService: MxGraphService) {}
+  private mxGraphService = inject(MxGraphService);
 
   public connect(parentMetaModel: DefaultEvent, childMetaModel: DefaultProperty, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
-    if (!parentMetaModel.parameters.find(param => param.property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
-      parentMetaModel.parameters.push({property: childMetaModel, keys: {}});
+    if (!parentMetaModel.properties.find(param => param.aspectModelUrn === childMetaModel.aspectModelUrn)) {
+      parentMetaModel.properties.push(childMetaModel);
     }
     this.mxGraphService.assignToParent(child, parent);
   }

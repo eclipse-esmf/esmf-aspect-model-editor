@@ -13,7 +13,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {BaseMetaModelElement, CanExtend, DefaultCharacteristic, DefaultProperty} from '@ame/meta-model';
+import {DefaultCharacteristic, DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -28,26 +28,28 @@ import {InputFieldComponent} from '../../input-field.component';
     `,
   ],
 })
-export class DescriptionInputFieldComponent extends InputFieldComponent<BaseMetaModelElement> implements OnInit {
+export class DescriptionInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
   constructor(public metaModelDialogService: EditorModelService) {
     super();
     this.fieldName = 'description';
   }
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => this.setDescriptionControls());
+    this.subscription = this.getMetaModelData().subscribe(() => {
+      this.setDescriptionControls();
+    });
   }
 
   getCurrentValue(key: string, locale: string) {
-    if (this.metaModelElement instanceof DefaultCharacteristic && this.metaModelElement.isPredefined()) {
+    if (this.metaModelElement instanceof DefaultCharacteristic && this.metaModelElement.isPredefined) {
       return this.metaModelElement?.[key] || '';
     }
 
-    if (this.metaModelElement instanceof CanExtend) {
+    if (this.metaModelElement['extends_']) {
       return (
         this.previousData?.[key] ||
         this.metaModelElement?.getDescription(locale) ||
-        this.metaModelElement.extendedDescription?.get(locale) ||
+        this.metaModelElement['extends_']?.getDescription(locale) ||
         ''
       );
     }
@@ -57,30 +59,39 @@ export class DescriptionInputFieldComponent extends InputFieldComponent<BaseMeta
 
   isInherited(locale: string): boolean {
     const control = this.parentForm.get('description' + locale);
+    const extending = this.metaModelElement as HasExtends;
     return (
-      this.metaModelElement instanceof CanExtend &&
-      this.metaModelElement.extendedDescription?.get(locale) &&
-      control.value === this.metaModelElement.extendedDescription?.get(locale)
+      extending.extends_ &&
+      extending.getExtends()?.getDescription(locale) &&
+      control.value === extending.getExtends()?.getDescription(locale)
     );
   }
 
+  getPreferredNamesLocales(): string[] {
+    return Array.from(this.metaModelElement?.preferredNames?.keys());
+  }
+
+  getDescriptionsLocales(): string[] {
+    return Array.from(this.metaModelElement?.descriptions?.keys());
+  }
+
   private isDisabled() {
-    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extendedElement;
+    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.extends_;
   }
 
   private setDescriptionControls() {
-    const allLocalesDescriptions = this.metaModelElement?.getAllLocalesDescriptions();
+    const allLocalesDescriptions = [...this.metaModelElement.descriptions.keys()];
 
     if (!allLocalesDescriptions.length) {
-      this.metaModelElement.addDescription('en', '');
+      this.metaModelElement.descriptions.set('en', '');
     }
 
-    this.metaModelElement?.getAllLocalesDescriptions().forEach(locale => {
+    [...this.metaModelElement.descriptions.keys()].forEach(locale => {
       const key = `description${locale}`;
 
       const control = this.parentForm.get(key);
       const previousDisabled = control?.disabled;
-      const isNowPredefined = (this.metaModelElement as DefaultCharacteristic)?.isPredefined?.();
+      const isNowPredefined = (this.metaModelElement as DefaultCharacteristic)?.isPredefined;
 
       if (previousDisabled && !isNowPredefined) {
         control?.patchValue(this.getCurrentValue(key, locale));
@@ -91,7 +102,8 @@ export class DescriptionInputFieldComponent extends InputFieldComponent<BaseMeta
         key,
         new FormControl({
           value: this.getCurrentValue(key, locale) || this.metaModelElement?.getDescription(locale),
-          disabled: this.metaModelDialogService.isReadOnly() || this.metaModelElement?.isExternalReference() || this.isDisabled(),
+          disabled:
+            this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
         }),
       );
     });

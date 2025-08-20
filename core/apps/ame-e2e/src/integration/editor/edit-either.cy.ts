@@ -65,8 +65,8 @@ describe('Test editing Either', () => {
       .then(hasAddLeftAndRightShapeOverlay => expect(hasAddLeftAndRightShapeOverlay).equal(true))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties[0].property.characteristic.name).to.equal('Either1');
-        const either = aspect.properties[0].property.characteristic;
+        expect(aspect.properties[0].characteristic.name).to.equal('Either1');
+        const either = aspect.properties[0].characteristic;
         expect(either.left.name).to.equal('LeftCharacteristic');
         expect(either.right.name).to.equal('RightCharacteristic');
       })
@@ -109,12 +109,10 @@ describe('Test editing Either', () => {
       })
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties[0].property.characteristic.getPreferredName('en')).to.equal('new-preferredName');
-        expect(aspect.properties[0].property.characteristic.getDescription('en')).to.equal(
-          'New description for the new created characteristic',
-        );
-        expect(aspect.properties[0].property.characteristic.getSeeReferences()).to.have.length(3);
-        expect(aspect.properties[0].property.characteristic.getSeeReferences()[2]).to.equal('http://www.see3.de');
+        expect(aspect.properties[0].characteristic.getPreferredName('en')).to.equal('new-preferredName');
+        expect(aspect.properties[0].characteristic.getDescription('en')).to.equal('New description for the new created characteristic');
+        expect(aspect.properties[0].characteristic.see).to.have.length(3);
+        expect(aspect.properties[0].characteristic.see[2]).to.equal('http://www.see3.de');
       });
   });
 
@@ -145,8 +143,8 @@ describe('Test editing Either', () => {
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties[0].property.characteristic.name).to.equal('Either1');
-        const either = aspect.properties[0].property.characteristic;
+        expect(aspect.properties[0].characteristic.name).to.equal('Either1');
+        const either = aspect.properties[0].characteristic;
         expect(either.left.name).to.equal('NewLeftCharacteristic');
         expect(either.right.name).to.equal('NewRightCharacteristic');
       })
@@ -175,8 +173,8 @@ describe('Test editing Either', () => {
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties[0].property.characteristic.name).to.equal('Either1');
-        const either = aspect.properties[0].property.characteristic;
+        expect(aspect.properties[0].characteristic.name).to.equal('Either1');
+        const either = aspect.properties[0].characteristic;
         expect(either.left).to.be.null;
         expect(either.right).to.be.null;
       })
@@ -282,7 +280,13 @@ describe('Test editing Either', () => {
           expect(rdf).to.contain('samm:description "New description for the new created characteristic"@en');
           expect(rdf).to.contain('samm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
 
-          expect(rdf).not.contain('samm:dataType');
+          let noOfDataTypes = 0;
+          let startPosition = 0;
+          while ((startPosition = (rdf as string).indexOf('samm:dataType', startPosition + 1)) >= 0) {
+            noOfDataTypes++;
+          }
+
+          expect(noOfDataTypes).to.eq(2);
           expect(rdf).not.contain('samm-c:left :LeftCharacteristic');
           expect(rdf).not.contain('samm-c:right :RightCharacteristic');
         });
@@ -294,7 +298,7 @@ describe('Test editing Either', () => {
       .then(() => cy.clickShape('Either1'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() => cy.getAspect())
-      .then(aspect => assert.isNull(aspect.properties[0].property.characteristic))
+      .then(aspect => assert.isNull(aspect.properties[0].characteristic))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain('Characteristic1 a samm:Characteristic');

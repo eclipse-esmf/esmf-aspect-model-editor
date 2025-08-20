@@ -11,11 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
+import {CharacteristicClassType} from '@ame/editor';
+import {ModelElementNamingService} from '@ame/meta-model';
+import {ModelService} from '@ame/rdf/services';
+import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {ElementCreatorService} from '@ame/shared';
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {NamespacesCacheService} from '@ame/cache';
-import {MetaModelElementInstantiator, PredefinedCharacteristicInstantiator, UnitInstantiator} from '@ame/instantiator';
 import {
-  BaseMetaModelElement,
   Characteristic,
   DefaultCharacteristic,
   DefaultCode,
@@ -32,15 +35,13 @@ import {
   DefaultState,
   DefaultStructuredValue,
   DefaultTimeSeries,
-  ModelElementNamingService,
+  NamedElement,
   Unit,
-} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+  useLoader,
+} from '@esmf/aspect-model-loader';
 import {DataFactory} from 'n3';
 import {EditorModelService} from '../../../../editor-model.service';
 import {DropdownFieldComponent} from '../../dropdown-field.component';
-import {CharacteristicClassType} from '@ame/editor';
 
 @Component({
   selector: 'ame-characteristic-name-dropdown-field',
@@ -49,8 +50,6 @@ import {CharacteristicClassType} from '@ame/editor';
 export class CharacteristicNameDropdownFieldComponent extends DropdownFieldComponent<DefaultCharacteristic> implements OnInit {
   public listCharacteristics: Map<string, Function> = new Map();
   public listCharacteristicGroup: Map<string, Array<string>> = new Map();
-  public defaultCharacteristicInstantiator: PredefinedCharacteristicInstantiator;
-  public unitInstantiator: UnitInstantiator;
   public units: Array<Unit> = [];
 
   @Output() selectedCharacteristic = new EventEmitter<CharacteristicClassType>();
@@ -59,10 +58,11 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
     public editorModelService: EditorModelService,
     public modelService: ModelService,
     public languageSettings: SammLanguageSettingsService,
-    private namespacesCacheService: NamespacesCacheService,
+    public loadedFilesService: LoadedFilesService,
     private modelElementNamingService: ModelElementNamingService,
+    private elementCreator: ElementCreatorService,
   ) {
-    super(editorModelService, modelService, languageSettings);
+    super(editorModelService, modelService, languageSettings, loadedFilesService);
   }
 
   ngOnInit(): void {
@@ -84,23 +84,18 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
 
     const oldMetaModelElement = this.metaModelElement;
     this.metaModelElement = newCharacteristicType;
-    if (!this.unitInstantiator) {
-      this.unitInstantiator = new UnitInstantiator(
-        new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.namespacesCacheService.currentCachedFile),
-      );
-    }
 
-    if (newCharacteristicType?.isPredefined()) {
+    if (newCharacteristicType?.isPredefined) {
       this.metaModelElement.name = newCharacteristicType.name;
     } else {
       const oldCharacteristic = oldMetaModelElement;
       const selectedCharacteristic = this.selectedMetaModelElement;
 
-      if (oldCharacteristic.isPredefined() && !selectedCharacteristic.isPredefined()) {
+      if (oldCharacteristic.isPredefined && !selectedCharacteristic.isPredefined) {
         this.metaModelElement.name = this.selectedMetaModelElement.name;
-      } else if (oldCharacteristic.isPredefined() && selectedCharacteristic.isPredefined()) {
+      } else if (oldCharacteristic.isPredefined && selectedCharacteristic.isPredefined) {
         this.metaModelElement = this.modelElementNamingService.resolveElementNaming(newCharacteristicType) as DefaultCharacteristic;
-        if (this.originalCharacteristic && !this.originalCharacteristic.isPredefined()) {
+        if (this.originalCharacteristic && !this.originalCharacteristic.isPredefined) {
           this.metaModelElement.name = this.originalCharacteristic.name;
           this.metaModelElement.aspectModelUrn = this.originalCharacteristic.aspectModelUrn;
         }
@@ -111,9 +106,9 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
     }
     this.addLanguageSettings(this.metaModelElement);
     this.setMetaModelElementAspectUrn(newCharacteristicType);
-    this.updateFields(newCharacteristicType);
 
     this.selectedCharacteristic.emit(characteristic as CharacteristicClassType);
+    this.updateFields(newCharacteristicType);
   }
 
   private initListCharacteristics(): void {
@@ -125,53 +120,64 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
 
   private createCharacteristicClassesList() {
     const characteristicList = [...this.listCharacteristics.keys()];
-    this.listCharacteristics.set(CharacteristicClassType.Characteristic, DefaultCharacteristic.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.Code, DefaultCode.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.Collection, DefaultCollection.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.Duration, DefaultDuration.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.Either, DefaultEither.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.Enumeration, DefaultEnumeration.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.List, DefaultList.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.Measurement, DefaultMeasurement.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.Quantifiable, DefaultQuantifiable.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.Set, DefaultSet.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.SortedSet, DefaultSortedSet.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.SingleEntity, DefaultSingleEntity.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.State, DefaultState.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.StructuredValue, DefaultStructuredValue.createInstance);
-    this.listCharacteristics.set(CharacteristicClassType.TimeSeries, DefaultTimeSeries.createInstance);
+    this.listCharacteristics.set(CharacteristicClassType.Characteristic, () => this.createEmptyElement(DefaultCharacteristic));
+    this.listCharacteristics.set(CharacteristicClassType.Code, () => this.createEmptyElement(DefaultCode));
+    this.listCharacteristics.set(CharacteristicClassType.Collection, () => this.createEmptyElement(DefaultCollection));
+    this.listCharacteristics.set(CharacteristicClassType.Duration, () => this.createEmptyElement(DefaultDuration));
+    this.listCharacteristics.set(CharacteristicClassType.Either, () => this.createEmptyElement(DefaultEither));
+    this.listCharacteristics.set(CharacteristicClassType.Enumeration, () => this.createEmptyElement(DefaultEnumeration));
+    this.listCharacteristics.set(CharacteristicClassType.List, () => this.createEmptyElement(DefaultList));
+    this.listCharacteristics.set(CharacteristicClassType.Measurement, () => this.createEmptyElement(DefaultMeasurement));
+    this.listCharacteristics.set(CharacteristicClassType.Quantifiable, () => this.createEmptyElement(DefaultQuantifiable));
+    this.listCharacteristics.set(CharacteristicClassType.Set, () => this.createEmptyElement(DefaultSet));
+    this.listCharacteristics.set(CharacteristicClassType.SortedSet, () => this.createEmptyElement(DefaultSortedSet));
+    this.listCharacteristics.set(CharacteristicClassType.SingleEntity, () => this.createEmptyElement(DefaultSingleEntity));
+    this.listCharacteristics.set(CharacteristicClassType.State, () => this.createEmptyElement(DefaultState));
+    this.listCharacteristics.set(CharacteristicClassType.StructuredValue, () => this.createEmptyElement(DefaultStructuredValue));
+    this.listCharacteristics.set(CharacteristicClassType.TimeSeries, () => this.createEmptyElement(DefaultTimeSeries));
     return [...this.listCharacteristics.keys()].filter(value => !characteristicList.includes(value));
+  }
+
+  private createEmptyElement<T>(elementClass: {new (...x: any[]): T}): T {
+    const element = this.elementCreator.createEmptyElement(elementClass);
+    this.loadedFilesService.currentLoadedFile.cachedFile.removeElement((element as NamedElement).aspectModelUrn);
+    (element as DefaultCharacteristic).aspectModelUrn = this.metaModelElement.aspectModelUrn;
+    return element;
   }
 
   private createCharacteristicInstancesList() {
     const instanceList = [...this.listCharacteristics.keys()];
-    this.listCharacteristics.set('Boolean', () => this.createDefaultCharacteristic('Boolean'));
-    this.listCharacteristics.set('Language', () => this.createDefaultCharacteristic('Language'));
-    this.listCharacteristics.set('Locale', () => this.createDefaultCharacteristic('Locale'));
-    this.listCharacteristics.set('MultiLanguageText', () => this.createDefaultCharacteristic('MultiLanguageText'));
-    this.listCharacteristics.set('MimeType', () => this.createDefaultCharacteristic('MimeType'));
-    this.listCharacteristics.set('ResourcePath', () => this.createDefaultCharacteristic('ResourcePath'));
-    this.listCharacteristics.set('Text', () => this.createDefaultCharacteristic('Text'));
-    this.listCharacteristics.set('Timestamp', () => this.createDefaultCharacteristic('Timestamp'));
-    this.listCharacteristics.set('UnitReference', () => this.createDefaultCharacteristic('UnitReference'));
+    this.listCharacteristics.set('Boolean', () => this.createPredefinedCharacteristic('Boolean'));
+    this.listCharacteristics.set('Language', () => this.createPredefinedCharacteristic('Language'));
+    this.listCharacteristics.set('Locale', () => this.createPredefinedCharacteristic('Locale'));
+    this.listCharacteristics.set('MultiLanguageText', () => this.createPredefinedCharacteristic('MultiLanguageText'));
+    this.listCharacteristics.set('MimeType', () => this.createPredefinedCharacteristic('MimeType'));
+    this.listCharacteristics.set('ResourcePath', () => this.createPredefinedCharacteristic('ResourcePath'));
+    this.listCharacteristics.set('Text', () => this.createPredefinedCharacteristic('Text'));
+    this.listCharacteristics.set('Timestamp', () => this.createPredefinedCharacteristic('Timestamp'));
+    this.listCharacteristics.set('UnitReference', () => this.createPredefinedCharacteristic('UnitReference'));
     return [...this.listCharacteristics.keys()].filter(value => !instanceList.includes(value));
   }
 
-  private createDefaultCharacteristic(characteristicName: string): Characteristic {
-    const sammC = this.modelService.currentRdfModel.SAMMC();
-    if (!this.defaultCharacteristicInstantiator) {
-      this.defaultCharacteristicInstantiator = new PredefinedCharacteristicInstantiator(
-        new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.namespacesCacheService.currentCachedFile),
-      );
-    }
-    return this.defaultCharacteristicInstantiator.createCharacteristic(
-      DataFactory.namedNode(`${sammC.getNamespace()}${characteristicName}`),
+  private createPredefinedCharacteristic(characteristicName: string): Characteristic {
+    const rdfModel = this.loadedFilesService.currentLoadedFile.rdfModel;
+    const cache = this.loadedFilesService.currentLoadedFile.cachedFile;
+    const {createDefaultCharacteristic} = useLoader({rdfModel, cache});
+    return createDefaultCharacteristic(
+      DataFactory.quad(null, null, DataFactory.namedNode(`${rdfModel.sammC.getUri()}#${characteristicName}`)),
     );
   }
 
-  private migrateCommonAttributes(oldMetaModelElement: BaseMetaModelElement) {
+  private migrateCommonAttributes(oldMetaModelElement: NamedElement) {
+    const modelKeys = Object.keys(this.metaModelElement);
+    const skipKeys = ['aspectModelUrn', 'name', 'className'];
+    const {createUnit} = useLoader({
+      rdfModel: this.loadedFilesService.currentLoadedFile.rdfModel,
+      cache: this.loadedFilesService.currentLoadedFile.cachedFile,
+    });
+
     Object.keys(oldMetaModelElement).forEach(oldKey => {
-      if (Object.keys(this.metaModelElement).find(key => key === oldKey) && oldKey !== 'aspectModelUrn' && oldKey !== 'name') {
+      if (modelKeys.includes(oldKey) && !skipKeys.includes(oldKey)) {
         if (oldKey === 'unit' && this.metaModelElement instanceof DefaultDuration) {
           const matchedUnit = this.units.find(
             unit =>
@@ -180,7 +186,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
               unit.name.toLowerCase().indexOf(oldMetaModelElement[oldKey].name.toLowerCase()) >= 0,
           );
           if (matchedUnit) {
-            this.metaModelElement[oldKey] = this.unitInstantiator.getUnit(matchedUnit.name);
+            this.metaModelElement[oldKey] = createUnit(matchedUnit.name);
           }
         } else {
           this.metaModelElement[oldKey] = oldMetaModelElement[oldKey];
@@ -189,14 +195,15 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
     });
   }
 
-  private setMetaModelElementAspectUrn(modelElement: BaseMetaModelElement) {
-    if (
-      this.defaultCharacteristicInstantiator &&
-      this.defaultCharacteristicInstantiator.getSupportedCharacteristicNames().includes(modelElement.aspectModelUrn)
-    ) {
-      this.metaModelElement.aspectModelUrn = modelElement.aspectModelUrn;
-    } else {
-      this.metaModelElement.aspectModelUrn = `${this.modelService.currentRdfModel.getAspectModelUrn()}${modelElement.name}`;
+  private setMetaModelElementAspectUrn(modelElement: NamedElement) {
+    const currentRdfModel = this.loadedFilesService.currentLoadedFile.rdfModel;
+    const {getSupportedCharacteristicNames} = useLoader({
+      rdfModel: currentRdfModel,
+      cache: this.loadedFilesService.currentLoadedFile.cachedFile,
+    });
+
+    if (getSupportedCharacteristicNames()?.includes(modelElement.name)) {
+      this.metaModelElement.aspectModelUrn = `${currentRdfModel.getAspectModelUrn()}${modelElement.name}`;
     }
   }
 
@@ -204,7 +211,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
     const modelElementType = createInstanceFunction();
     if (modelElementType.aspectModelUrn === this.selectedMetaModelElement.aspectModelUrn) {
       this.metaModelElement = this.selectedMetaModelElement;
-      return;
+      return modelElementType;
     }
     return modelElementType;
   }

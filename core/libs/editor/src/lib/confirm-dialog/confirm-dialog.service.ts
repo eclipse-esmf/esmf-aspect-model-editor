@@ -13,10 +13,10 @@
 
 import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {first} from 'rxjs/operators';
-import {ConfirmDialogComponent} from './confirm-dialog.component';
 import {Observable} from 'rxjs';
+import {first} from 'rxjs/operators';
 import {ConfirmDialogEnum} from '../models/confirm-dialog.enum';
+import {ConfirmDialogComponent} from './confirm-dialog.component';
 
 export interface DialogOptions {
   phrases: string[];

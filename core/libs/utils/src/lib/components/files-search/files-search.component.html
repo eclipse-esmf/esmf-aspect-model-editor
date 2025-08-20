@@ -14,12 +14,12 @@
 <div class="background" (click)="closeSearch()"></div>
 <mat-form-field class="search">
   <mat-label>{{ 'SEARCHES.FILES.LABEL' | translate }}</mat-label>
-  <input [matAutocomplete]="auto" [formControl]="searchControl" type="text" matInput />
+  <input [matAutocomplete]="auto" [formControl]="searchControl" type="text" matInput autofocus />
   <mat-icon [class.rotate]="loading" matSuffix>{{ loading ? 'refresh' : 'description' }}</mat-icon>
 
   <mat-autocomplete class="search-autocomplete" #auto="matAutocomplete">
     @for (entry of searchableFiles; track entry) {
-      <mat-option (click)="openFile(entry)" class="list-option">
+      <mat-option class="list-option" (click)="openFile(entry)">
         <mat-icon>description</mat-icon>
         <div class="file-element">
           <span>{{ entry.file }}</span>

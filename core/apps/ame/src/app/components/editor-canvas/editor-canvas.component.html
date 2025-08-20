@@ -18,12 +18,12 @@
 <ame-sidebar class="sidebar"></ame-sidebar>
 
 @if (isShapeSettingsOpened$ | async; as isOpened) {
-  <section [style.width.px]="sidebarWidth" class="info-section" cdkDragLockAxis="x" cdkDrag>
+  <section class="info-section" [style.width.px]="sidebarWidth" cdkDragLockAxis="x" cdkDrag>
     <div
+      class="info-section__gutter"
       [cdkDragFreeDragPosition]="sidebarDragPosition"
       (cdkDragEnded)="onDragEnded($event)"
       data-cy="info-section-drag"
-      class="info-section__gutter"
       cdkDrag
       cdkDragHandle
       cdkDragLockAxis="x"
@@ -45,7 +45,7 @@
   <ame-files-search></ame-files-search>
 }
 
-<div #graph id="graph"></div>
+<div id="graph" #graph></div>
 
 @if (isModelEmpty) {
   <div class="empty-model">
@@ -56,7 +56,7 @@
   </div>
 }
 
-<div [class.hidden]="(isMapVisible$ | async) === false" id="outline" class="map-graph">
+<div class="map-graph" id="outline" [class.hidden]="(isMapVisible$ | async) === false">
   <div class="map" (click)="toggleMap()">
     <mat-icon>map</mat-icon>
   </div>

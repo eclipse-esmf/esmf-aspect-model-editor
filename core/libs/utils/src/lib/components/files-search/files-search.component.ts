@@ -13,11 +13,7 @@
 
 import {Component, inject} from '@angular/core';
 
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
+import {FileHandlingService, ModelCheckerService, SaveModelDialogService} from '@ame/editor';
 import {
   ElectronSignals,
   ElectronSignalsService,
@@ -26,13 +22,17 @@ import {
   SearchService,
   filesSearchOption,
 } from '@ame/shared';
-import {FileHandlingService, SaveModelDialogService} from '@ame/editor';
-import {SearchesStateService} from '../../search-state.service';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
-import {Observable, filter, first, of, startWith, switchMap, tap, throttleTime} from 'rxjs';
-import {OpenFileDialogComponent} from '../open-file-dialog/open-file-dialog.component';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {Observable, filter, first, map, of, startWith, switchMap, tap, throttleTime} from 'rxjs';
+import {SearchesStateService} from '../../search-state.service';
+import {OpenFileDialogComponent} from '../open-file-dialog/open-file-dialog.component';
 
 @Component({
   selector: 'ame-files-search',
@@ -46,7 +46,6 @@ import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translat
     MatAutocompleteModule,
     MatFormFieldModule,
     MatIconModule,
-    OpenFileDialogComponent,
     MatDialogModule,
     LanguageTranslateModule,
   ],
@@ -71,30 +70,35 @@ export class FilesSearchComponent {
     private fileHandlingService: FileHandlingService,
     private searchService: SearchService,
     private translate: LanguageTranslationService,
+    private modelChecker: ModelCheckerService,
   ) {
-    this.loading = true;
     this.parseFiles(this.namespaces);
-    this.sidebarStateService.requestGetNamespaces().subscribe(namespaces => {
-      this.parseFiles(namespaces);
-      this.loading = false;
-    });
 
-    this.searchControl.valueChanges.pipe(startWith(''), throttleTime(150)).subscribe(value => {
-      this.searchableFiles = value === '' ? this.files : this.searchService.search(value, this.files, filesSearchOption);
-      console.log(this.searchableFiles);
-    });
+    if (!Object.keys(this.namespaces).length) {
+      this.loading = true;
+      this.modelChecker
+        .detectWorkspaceErrors()
+        .pipe(map(files => this.sidebarStateService.updateWorkspace(files)))
+        .subscribe(namespaces => {
+          this.parseFiles(namespaces);
+          this.loading = false;
+        });
+
+      this.searchControl.valueChanges.pipe(startWith(''), throttleTime(150)).subscribe(value => {
+        this.searchableFiles = value === '' ? this.files : this.searchService.search(value, this.files, filesSearchOption);
+      });
+    }
   }
 
-  openFile({file, namespace}) {
+  openFile({file, namespace, aspectModelUrn}) {
     this.matDialog
       .open(OpenFileDialogComponent, {data: {file, namespace}})
       .afterClosed()
       .pipe(
         filter(result => result),
-        switchMap(result => (result === 'open-in' ? this.loadModel(file, namespace) : this.openWindow(file, namespace))),
+        switchMap(result => (result === 'open-in' ? this.loadModel(file, namespace, aspectModelUrn) : this.openWindow(file, namespace))),
       )
-
-      .subscribe(console.log);
+      .subscribe();
     this.searchControl.patchValue('');
     this.closeSearch();
   }
@@ -105,7 +109,7 @@ export class FilesSearchComponent {
 
   parseFiles(namespaces: Record<string, FileStatus[]>) {
     this.files = Object.entries(namespaces).reduce((acc: any, [namespace, files]) => {
-      acc.push(...files.map(({name: file}) => ({file, namespace})));
+      acc.push(...files.map(file => ({file: file.name, namespace, aspectModelUrn: file.aspectModelUrn})));
       return acc;
     }, []);
     this.searchableFiles = this.files;
@@ -118,18 +122,15 @@ export class FilesSearchComponent {
     );
   }
 
-  private loadModel(file: string, namespace: string) {
-    const status = this.checkFile(file, namespace);
-    if (status) {
-      return of(status);
-    }
-
-    return this.checkUnsavedChanges().pipe(switchMap(() => of(this.fileHandlingService.loadNamespaceFile(`${namespace}:${file}`))));
+  private loadModel(file: string, namespace: string, aspectModelUrn: string) {
+    return this.checkUnsavedChanges().pipe(
+      switchMap(() => of(this.fileHandlingService.loadNamespaceFile(`${namespace}:${file}`, aspectModelUrn))),
+    );
   }
 
   private openWindow(file: string, namespace: string) {
     const status = this.checkFile(file, namespace);
-    if (status) {
+    if (!(status instanceof FileStatus)) {
       return of(status);
     }
 
@@ -139,6 +140,7 @@ export class FilesSearchComponent {
           namespace,
           file,
           fromWorkspace: true,
+          aspectModelUrn: status.aspectModelUrn,
         }),
       ),
     );
@@ -158,6 +160,6 @@ export class FilesSearchComponent {
       return 'invalid-file';
     }
 
-    return null;
+    return fileStatus;
   }
 }

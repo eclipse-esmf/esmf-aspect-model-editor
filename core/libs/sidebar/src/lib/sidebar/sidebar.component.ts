@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Subscription} from 'rxjs';
 import {SidebarStateService} from '@ame/sidebar';
 import {ChangeDetectorRef, Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'ame-sidebar',

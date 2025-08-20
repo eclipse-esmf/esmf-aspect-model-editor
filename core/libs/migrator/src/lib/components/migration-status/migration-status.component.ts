@@ -11,19 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Inject, inject, NgZone, OnInit} from '@angular/core';
 import {NamespaceStatus} from '@ame/api';
-import {MigratorService} from '../../migrator.service';
-import {Router} from '@angular/router';
-import {EditorService} from '@ame/editor';
-import {RdfModel} from '@ame/rdf/utils';
-import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService} from '@ame/shared';
-import {TranslateModule} from '@ngx-translate/core';
-import {KeyValuePipe} from '@angular/common';
-import {MatButton} from '@angular/material/button';
-import {MatIcon} from '@angular/material/icon';
+import {APP_CONFIG, AppConfig} from '@ame/shared';
 import {CdkScrollable} from '@angular/cdk/scrolling';
-import {MatDialogTitle, MatDialogContent, MatDialogActions} from '@angular/material/dialog';
+import {KeyValuePipe} from '@angular/common';
+import {Component, Inject, NgZone, OnInit} from '@angular/core';
+import {MatButton} from '@angular/material/button';
+import {MatDialogActions, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {MatIcon} from '@angular/material/icon';
+import {Router} from '@angular/router';
+import {RdfModel} from '@esmf/aspect-model-loader';
+import {TranslateModule} from '@ngx-translate/core';
+import {MigratorService} from '../../migrator.service';
 
 interface CompatibleAmeSammVersions {
   sammVersion: string;
@@ -45,8 +44,6 @@ interface ErrorFileItem {
   imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatIcon, MatDialogActions, MatButton, KeyValuePipe, TranslateModule],
 })
 export class MigrationStatusComponent implements OnInit {
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
-
   public migrationStatus: NamespaceStatus[] = [];
   public filteredErrorFiles = {};
   public hasErrors = false;
@@ -62,7 +59,6 @@ export class MigrationStatusComponent implements OnInit {
 
   constructor(
     public migratorService: MigratorService,
-    private editorService: EditorService,
     private router: Router,
     private ngZone: NgZone,
     @Inject(APP_CONFIG) public config: AppConfig,
@@ -72,15 +68,17 @@ export class MigrationStatusComponent implements OnInit {
     this.migrationStatus = history.state.data?.namespaces || [];
     this.hasErrors = this.migrationStatus.length <= 0;
 
-    this.editorService.loadExternalModels().subscribe(rdfModels => {
-      const erroredModels = rdfModels.filter(rdfModel => rdfModel?.hasErrors);
-      this.hasErrors ||= erroredModels.length > 0;
-      this.setFilesWithError(erroredModels);
+    // @todo !important check this functionality
+    // this.modelLoader.loadWorkspaceModels().subscribe(files => {
+    //   const rdfModels = files.map(({rdfModel}) => rdfModel);
+    //   const erroredModels = rdfModels.filter(rdfModel => rdfModel); //?.hasErrors);
+    //   this.hasErrors ||= erroredModels.length > 0;
+    //   this.setFilesWithError(erroredModels);
 
-      if (!this.migratorService.increaseNamespaceVersion) {
-        this.electronSignalsService.call('requestRefreshWorkspaces');
-      }
-    });
+    //   if (!this.migratorService.increaseNamespaceVersion) {
+    //     this.electronSignalsService.call('requestRefreshWorkspaces');
+    //   }
+    // });
   }
 
   increaseVersion() {
@@ -109,15 +107,16 @@ export class MigrationStatusComponent implements OnInit {
           }
           continue;
         }
+        // @TODO rdfModel should be NamespaceFile
+        const hasErroredRdfModel = false; // remove after todo
+        // const hasErroredRdfModel = rdfModels.some(rdfModel => {
+        //   if (rdfModel.aspectModelFileName !== fileStatus.name) {
+        //     return false;
+        //   }
 
-        const hasErroredRdfModel = rdfModels.some(rdfModel => {
-          if (rdfModel.aspectModelFileName !== fileStatus.name) {
-            return false;
-          }
-
-          const [namespace] = rdfModel.aspectUrn.split('#');
-          return namespace.endsWith(status.namespace);
-        });
+        //   const [namespace] = rdfModel.aspectUrn.split('#');
+        //   return namespace.endsWith(status.namespace);
+        // });
 
         if (hasErroredRdfModel) {
           if (!this.filteredErrorFiles[status.namespace]) {
@@ -160,10 +159,10 @@ export class MigrationStatusComponent implements OnInit {
 
   private getAmeVersion(sammVersion: string): string | undefined {
     switch (sammVersion) {
-      case '2.0.0':
-        return '4.5.2';
       case '2.1.0':
         return '5.1.0';
+      case '2.2.0':
+        return '6.0.0';
       default:
         return undefined;
     }

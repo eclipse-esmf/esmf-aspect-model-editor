@@ -17,14 +17,12 @@
     <mat-chip-grid #chipList [formControl]="getControl('chipList')">
       @for (value of enumValues; track value) {
         <mat-chip-row [removable]="removable" (removed)="remove(value); onEnumChange()">
-          {{ value['name'] }}
+          {{ value?.['name'] || value }}
           <mat-icon matChipRemove data-cy="chipIcon">close</mat-icon>
         </mat-chip-row>
       }
       <input
-        matInput
         class="enumeration-value-input"
-        name="values"
         [formControl]="getControl('values')"
         [matChipInputFor]="chipList"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -32,6 +30,8 @@
         (matChipInputTokenEnd)="add($event)"
         (paste)="paste($event)"
         (keyup)="onEnumChange()"
+        matInput
+        name="values"
         placeholder="add value, hit enter"
         data-cy="values"
       />

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultEntityInstance} from '../aspect-meta-model';
+import {DefaultEntityInstance} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 
 export interface SearchResult {

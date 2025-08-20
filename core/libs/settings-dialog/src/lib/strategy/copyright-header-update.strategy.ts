@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FormGroup} from '@angular/forms';
 import {Settings} from '@ame/settings-dialog';
-import {SettingsUpdateStrategy} from './settings-update.strategy';
 import {Injectable} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+import {SettingsUpdateStrategy} from './settings-update.strategy';
 
 @Injectable({
   providedIn: 'root',

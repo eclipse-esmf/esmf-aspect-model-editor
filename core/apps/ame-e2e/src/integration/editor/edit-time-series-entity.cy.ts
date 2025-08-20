@@ -58,13 +58,11 @@ describe('Time Series Entity', () => {
       .then(() =>
         cy
           .getCellLabel('[value]', 'description')
-          .should('eq', 'Inherited\ndescription = The value that was recorded and is part of a time series. @en'),
+          .should('eq', 'Inherited\ndescription = The value recorded at the given point in time @en'),
       )
       .then(() => cy.clickShape('value'))
       .then(() => cy.getCellLabel('value', 'preferredName').should('eq', 'preferredName = Value @en'))
-      .then(() =>
-        cy.getCellLabel('value', 'description').should('eq', 'description = The value that was recorded and is part of a time series. @en'),
-      )
+      .then(() => cy.getCellLabel('value', 'description').should('eq', 'description = The value recorded at the given point in time @en'))
       .then(() => cy.clickShape('timestamp'))
       .then(() => cy.getCellLabel('timestamp', 'preferredName').should('eq', 'preferredName = Timestamp @en'))
       .then(() =>
@@ -131,7 +129,10 @@ describe('Time Series Entity', () => {
   it('should export', () => {
     createTimeSeriesEntity();
     cy.then(() => cy.getUpdatedRDF()).then(rdf => {
-      expect(rdf).to.contain(`[ samm:extends samm-e:value ]`);
+      expect(rdf).to.contain(`[
+  samm:characteristic :Characteristic6;
+  samm:extends samm-e:value
+]`);
       expect(rdf).to.contain(`samm:extends samm-e:TimeSeriesEntity`);
     });
   });
@@ -171,14 +172,12 @@ describe('Time Series Entity', () => {
       .then(() =>
         cy
           .getCellLabel('[value]', 'description')
-          .should('eq', 'Inherited\ndescription = The value that was recorded and is part of a time series. @en'),
+          .should('eq', 'Inherited\ndescription = The value recorded at the given point in time @en'),
       )
 
       .then(() => cy.clickShape('value'))
       .then(() => cy.getCellLabel('value', 'preferredName').should('eq', 'preferredName = Value @en'))
-      .then(() =>
-        cy.getCellLabel('value', 'description').should('eq', 'description = The value that was recorded and is part of a time series. @en'),
-      )
+      .then(() => cy.getCellLabel('value', 'description').should('eq', 'description = The value recorded at the given point in time @en'))
 
       .then(() => cy.clickShape('timestamp'))
       .then(() => cy.getCellLabel('timestamp', 'preferredName').should('eq', 'preferredName = Timestamp @en'))

@@ -11,23 +11,23 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {CacheUtils, LoadedFilesService} from '@ame/cache';
+import {FILTER_ATTRIBUTES, FilterAttributesService, ModelTree} from '@ame/loader-filters';
+import {ConfigurationService} from '@ame/settings-dialog';
+import {NotificationsService, overlayGeometry} from '@ame/shared';
 import {Inject, Injectable} from '@angular/core';
+import {DefaultCharacteristic, DefaultEntityInstance, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
+import {environment} from 'environments/environment';
 import {mxgraph} from 'mxgraph-factory';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {MxGraphShapeOverlayService} from './mx-graph-shape-overlay.service';
-import {MxGraphAttributeService} from './mx-graph-attribute.service';
-import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
-import {environment} from 'environments/environment';
 import {MxGraphGeometryProviderService, MxGraphSetupService} from '.';
 import {MxGraphCharacteristicHelper, MxGraphHelper} from '../helpers';
-import {mxCell, mxConstants, mxUtils} from '../providers';
-import {BaseMetaModelElement, DefaultCharacteristic, DefaultEntityInstance} from '@ame/meta-model';
-import {ConfigurationService} from '@ame/settings-dialog';
-import {overlayGeometry, NotificationsService} from '@ame/shared';
-import {NamespacesCacheService} from '@ame/cache';
-import {ThemeService} from '../themes/theme.service';
 import {ShapeConfiguration} from '../models';
-import {FILTER_ATTRIBUTES, FilterAttributesService, ModelTree} from '@ame/loader-filters';
+import {mxCell, mxConstants, mxUtils} from '../providers';
+import {ThemeService} from '../themes/theme.service';
+import {MxGraphAttributeService} from './mx-graph-attribute.service';
+import {MxGraphShapeOverlayService} from './mx-graph-shape-overlay.service';
+import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
 
 export interface Coordinates {
   x: number;
@@ -49,12 +49,12 @@ export class MxGraphService {
   public graphInitialized$ = new BehaviorSubject(false);
 
   get currentCachedFile() {
-    return this.namespacesCacheService.currentCachedFile;
+    return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
   constructor(
     @Inject(FILTER_ATTRIBUTES) private filterAttributes: FilterAttributesService,
-    private namespacesCacheService: NamespacesCacheService,
+    private loadedFiles: LoadedFilesService,
     private configurationService: ConfigurationService,
     private graphSetupService: MxGraphSetupService,
     private mxGraphGeometryProviderService: MxGraphGeometryProviderService,
@@ -137,39 +137,39 @@ export class MxGraphService {
    * @param metaModelElement
    * @returns the cell that you want to resolve
    */
-  resolveCellByModelElement(metaModelElement: BaseMetaModelElement): mxgraph.mxCell {
-    if (metaModelElement instanceof DefaultCharacteristic && metaModelElement.isPredefined()) {
+  resolveCellByModelElement(metaModelElement: NamedElement): mxgraph.mxCell {
+    if (metaModelElement instanceof DefaultCharacteristic && metaModelElement.isPredefined) {
       return null;
     }
 
     return this.graph.getChildVertices(this.graph.getDefaultParent()).find(cell => {
       const metaModel = MxGraphHelper.getModelElement(cell);
-      return metaModel?.aspectModelUrn === metaModelElement.aspectModelUrn;
+      return metaModel && metaModelElement && metaModel?.aspectModelUrn === metaModelElement?.aspectModelUrn;
     });
   }
 
   /**
    * Modifies certain model Element with a new cell configuration.
    *
-   * @param {ModelTree<BaseMetaModelElement>} node - The node representing the model element to render.
+   * @param {ModelTree<NamedElement>} node - The node representing the model element to render.
    * @param {ShapeConfiguration} [configuration] - Optional configuration to customize shape rendering.
    *
    * @returns {mxgraph.mxCell} - The rendered shape cell in the graph.
    *
    * @throws {Error} - If there are issues in shape creation or overlay operations.
    */
-  renderModelElement(node: ModelTree<BaseMetaModelElement>, configuration?: ShapeConfiguration): mxgraph.mxCell {
+  renderModelElement(node: ModelTree<NamedElement>, configuration?: ShapeConfiguration): mxgraph.mxCell {
     const geometry = this.mxGraphGeometryProviderService.createGeometry(
       node,
-      (configuration && configuration.geometry.x) || this.nextCellCoordinates?.x || 0,
-      (configuration && configuration.geometry.y) || this.nextCellCoordinates?.y || 0,
+      (configuration && configuration?.geometry?.x) || this.nextCellCoordinates?.x || 0,
+      (configuration && configuration?.geometry?.y) || this.nextCellCoordinates?.y || 0,
     );
 
     this.nextCellCoordinates = null;
     let cellStyle = node.shape.mxGraphStyle || '';
 
     cellStyle = this.themeService.generateThemeStyle(cellStyle);
-    if (node.element.isExternalReference()) {
+    if (this.loadedFiles.isElementExtern(node.element)) {
       cellStyle = mxUtils.setStyle(cellStyle, mxConstants.STYLE_FILL_OPACITY, 80);
     }
 
@@ -179,7 +179,7 @@ export class MxGraphService {
 
     this.mxGraphShapeOverlayService.checkComplexEnumerationOverlays(node.element, modelShape);
 
-    if (!node.element.isExternalReference()) {
+    if (this.loadedFiles.isElementInCurrentFile(node.element)) {
       this.mxGraphShapeOverlayService.addBottomShapeOverlay(modelShape);
       this.mxGraphShapeOverlayService.addTopShapeOverlay(modelShape);
     }
@@ -195,11 +195,14 @@ export class MxGraphService {
    * @param selectedModelElement - EntityValue meta model which will be deleted
    */
   public updateEnumerationsWithEntityValue(selectedModelElement: DefaultEntityInstance): void {
-    if (selectedModelElement.isExternalReference()) {
+    if (this.loadedFiles.isElementExtern(selectedModelElement)) {
       return;
     }
 
     selectedModelElement.parents.forEach(enumeration => {
+      if (!(enumeration instanceof DefaultEnumeration)) {
+        return;
+      }
       const entityValueIndex = enumeration.values.indexOf(selectedModelElement);
       if (entityValueIndex >= 0) {
         enumeration.values.splice(entityValueIndex, 1);
@@ -207,18 +210,22 @@ export class MxGraphService {
     });
 
     // update all parent entity values
-    const allEntityValues = this.currentCachedFile.getCachedEntityValues();
+    const allEntityValues: DefaultEntityInstance[] = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance);
+
     allEntityValues.forEach(entityValue => {
-      entityValue.properties.forEach(prop => {
-        if (prop.value?.['aspectModelUrn'] === selectedModelElement.aspectModelUrn) {
-          prop.value = undefined;
+      entityValue.getTuples().forEach(([propertyUrn, value]) => {
+        if (value instanceof DefaultEntityInstance && value.aspectModelUrn === selectedModelElement.aspectModelUrn) {
+          entityValue.removeAssertion(propertyUrn, value);
         }
       });
     });
 
     this.currentCachedFile.removeElement(selectedModelElement.aspectModelUrn);
     // delete all lower entity values that don't belong to an enumeration
-    const lowerEntityValuesToDelete = MxGraphCharacteristicHelper.getChildEntityValuesToDelete(selectedModelElement, []);
+    const lowerEntityValuesToDelete = MxGraphCharacteristicHelper.getChildEntityValuesToDelete(
+      selectedModelElement,
+      allEntityValues.filter(ev => ev.parents.some(p => p instanceof DefaultEnumeration)),
+    );
     lowerEntityValuesToDelete.forEach(entityValue => {
       this.currentCachedFile.removeElement(entityValue.aspectModelUrn);
       this.removeCells([this.resolveCellByModelElement(entityValue)]);
@@ -407,8 +414,8 @@ export class MxGraphService {
     }
   }
 
-  formatCell(cell: mxgraph.mxCell) {
-    if (this.configurationService.getSettings().autoFormatEnabled) {
+  formatCell(cell: mxgraph.mxCell, force = false) {
+    if (!force && this.configurationService.getSettings().autoFormatEnabled) {
       // don't apply cell formatting in case auto format is enabled
       return;
     }
@@ -484,24 +491,24 @@ export class MxGraphService {
 
   removeCells(cells: Array<mxgraph.mxCell>, includeEdges = true): void {
     for (const cell of cells) {
-      if (cell.isEdge()) {
+      if (cell?.isEdge?.()) {
         if (cell.source && cell.target) {
           const parent = MxGraphHelper.getModelElement(cell.source);
           const child = MxGraphHelper.getModelElement(cell.target);
-          if (!parent.isExternalReference()) MxGraphHelper.removeRelation(parent, child);
+          if (this.loadedFiles.isElementInCurrentFile(parent)) MxGraphHelper.removeRelation(parent, child);
         }
         continue;
       }
 
       const modelElement = MxGraphHelper.getModelElement(cell);
-      if (modelElement.isExternalReference()) continue;
+      if (this.loadedFiles.isElementExtern(modelElement)) continue;
 
       for (const child of modelElement.children) {
         MxGraphHelper.removeRelation(modelElement, child);
       }
 
       for (const parent of modelElement.parents) {
-        if (!parent.isExternalReference()) MxGraphHelper.removeRelation(parent, modelElement);
+        if (this.loadedFiles.isElementInCurrentFile(parent)) MxGraphHelper.removeRelation(parent, modelElement);
       }
     }
     this.graph.removeCells(cells, includeEdges);
@@ -529,17 +536,15 @@ export class MxGraphService {
    * @param deletedEntityValue - EntityValueProperty.value that needs to be cleared.
    */
   public updateEntityValuesWithReference(deletedEntityValue: DefaultEntityInstance): void {
-    if (deletedEntityValue.isExternalReference()) {
+    if (this.loadedFiles.isElementExtern(deletedEntityValue)) {
       return;
     }
 
-    this.currentCachedFile.getCachedEntityValues().forEach(entityValue =>
-      entityValue.properties.forEach(entityValueToUpdate => {
-        if (
-          entityValueToUpdate.value instanceof DefaultEntityInstance &&
-          entityValueToUpdate.value.aspectModelUrn === deletedEntityValue.aspectModelUrn
-        )
-          entityValueToUpdate.value = '';
+    CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance).forEach(entityValue =>
+      entityValue.getTuples().forEach(([propertyUrn, value]) => {
+        if (value instanceof DefaultEntityInstance && value.aspectModelUrn === deletedEntityValue.aspectModelUrn) {
+          entityValue.removeAssertion(propertyUrn, value);
+        }
       }),
     );
   }

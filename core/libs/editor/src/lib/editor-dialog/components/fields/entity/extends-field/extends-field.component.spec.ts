@@ -11,74 +11,61 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {NotificationsService, SearchService} from '@ame/shared';
-import {provideMockObject} from '../../../../../../../../../jest-helpers';
-import {EditorModelService} from '../../../../editor-model.service';
-import {NamespacesCacheService} from '@ame/cache';
-import {RdfService} from '@ame/rdf/services';
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
-import {EntityExtendsFieldComponent} from './extends-field.component';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {of} from 'rxjs';
-import {DefaultEntity} from '@ame/meta-model';
+import {RdfService} from '@ame/rdf/services';
+import {NotificationsService, SearchService} from '@ame/shared';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-
-jest.mock('../../../../../../../../instantiator/src/lib/meta-model-element-instantiator');
-jest.mock('../../../../../../../../instantiator/src/lib/instantiators/samm-e-predefined-entity-instantiator', () => {
-  class PredefinedEntityInstantiator {
-    entityInstances = {};
-  }
-
-  return {
-    PredefinedEntityInstantiator,
-  };
-});
+import {DefaultEntity, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
+import {Store} from 'n3';
+import {MockProvider} from 'ng-mocks';
+import {of} from 'rxjs';
+import {EditorModelService} from '../../../../editor-model.service';
+import {EntityExtendsFieldComponent} from './extends-field.component';
 
 jest.mock('../../../../../../../../shared/src/lib/constants/xsd-datatypes.ts', () => ({}));
+jest.mock('@esmf/aspect-model-loader', () => ({
+  ...jest.requireActual('@esmf/aspect-model-loader'),
+  useLoader: jest.fn(() => ({
+    getAllPredefinedEntities: jest.fn(() => ({})),
+  })),
+}));
 
 describe('EntityExtendsFieldComponent', () => {
   let component: EntityExtendsFieldComponent;
   let fixture: ComponentFixture<EntityExtendsFieldComponent>;
   let editorModelService: EditorModelService;
 
+  const rdfModel: RdfModel = {
+    store: new Store(),
+    samm: new Samm(''),
+    hasDependency: jest.fn(() => false),
+    addPrefix: jest.fn(() => {}),
+  } as any;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule, MatInputModule, BrowserAnimationsModule],
       declarations: [EntityExtendsFieldComponent],
       providers: [
-        {
-          provide: NotificationsService,
-          useValue: provideMockObject(NotificationsService),
-        },
-        {
-          provide: EditorModelService,
-          useValue: provideMockObject(EditorModelService),
-        },
-        {
-          provide: NamespacesCacheService,
-          useValue: provideMockObject(NamespacesCacheService),
-        },
-        {
-          provide: RdfService,
-          useValue: provideMockObject(RdfService),
-        },
-        {
-          provide: SearchService,
-          useValue: provideMockObject(SearchService),
-        },
-        {
-          provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
-        },
+        MockProvider(LoadedFilesService, {
+          currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),
+        }),
+        MockProvider(NotificationsService),
+        MockProvider(EditorModelService),
+        MockProvider(RdfService),
+        MockProvider(SearchService),
+        MockProvider(MxGraphService),
       ],
     });
 
     editorModelService = TestBed.inject(EditorModelService);
-    editorModelService.getMetaModelElement = jest.fn(() => of(new DefaultEntity('', '', '')));
+    editorModelService.getMetaModelElement = jest.fn(() => of(new DefaultEntity({metaModelVersion: '', aspectModelUrn: '', name: ''})));
 
     fixture = TestBed.createComponent(EntityExtendsFieldComponent);
     component = fixture.componentInstance;

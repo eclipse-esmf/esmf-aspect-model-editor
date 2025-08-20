@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {CacheUtils} from '@ame/cache';
+import {FiltersService} from '@ame/loader-filters';
 import {
   CharacteristicRenderService,
   EnumerationRenderService,
@@ -21,11 +22,12 @@ import {
   MxGraphShapeOverlayService,
 } from '@ame/mx-graph';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {mxgraph} from 'mxgraph-factory';
+import {useUpdater} from '@ame/utils';
+import {Injectable} from '@angular/core';
 import {
-  Base,
-  BaseMetaModelElement,
+  DefaultCharacteristic,
   DefaultCollection,
+  DefaultEntity,
   DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
@@ -34,11 +36,10 @@ import {
   DefaultState,
   DefaultStructuredValue,
   DefaultUnit,
-} from '../aspect-meta-model';
-import {DefaultCharacteristic} from '../aspect-meta-model/default-characteristic';
-import {DefaultEntity} from '../aspect-meta-model/default-entity';
+  NamedElement,
+} from '@esmf/aspect-model-loader';
+import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
-import {FiltersService} from '@ame/loader-filters';
 
 @Injectable({providedIn: 'root'})
 export class CharacteristicModelService extends BaseModelService {
@@ -53,7 +54,7 @@ export class CharacteristicModelService extends BaseModelService {
     super();
   }
 
-  isApplicable(metaModelElement: BaseMetaModelElement): boolean {
+  isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultCharacteristic;
   }
 
@@ -104,7 +105,7 @@ export class CharacteristicModelService extends BaseModelService {
   private removePredefinedUnit(edges: Array<mxgraph.mxCell>) {
     edges.forEach(edge => {
       const metaModelElement = MxGraphHelper.getModelElement(edge.target);
-      if (metaModelElement instanceof DefaultUnit && metaModelElement.isPredefined()) {
+      if (metaModelElement instanceof DefaultUnit && metaModelElement.isPredefined) {
         this.mxGraphService.removeCells([edge.target]);
       }
     });
@@ -117,7 +118,7 @@ export class CharacteristicModelService extends BaseModelService {
       const originalModelElement = metaModelElement;
       metaModelElement = form.changedMetaModel;
 
-      if (!metaModelElement.isPredefined()) {
+      if (!metaModelElement.isPredefined) {
         cell = this.mxGraphService.resolveCellByModelElement(metaModelElement);
       }
 
@@ -125,7 +126,7 @@ export class CharacteristicModelService extends BaseModelService {
         this.removeUnusedEntityValues(metaModelElement);
       }
 
-      if (RdfModelUtil.isCharacteristicInstance(form.changedMetaModel.aspectModelUrn, this.modelService.currentRdfModel.SAMMC())) {
+      if (RdfModelUtil.isCharacteristicInstance(form.changedMetaModel.aspectModelUrn, this.loadedFile?.rdfModel?.sammC)) {
         // in case this is a predefined characteristic, no need to update anything
         const children = [...(originalModelElement.children || [])];
         for (const child of children) {
@@ -151,24 +152,24 @@ export class CharacteristicModelService extends BaseModelService {
     if (form.elements) {
       metaModelElement.elements = form.elements;
       form.elements.forEach(element => {
-        if (typeof element !== 'string' && element?.property instanceof DefaultProperty) {
-          this.namespacesCacheService.currentCachedFile.resolveElement(element.property);
+        if (typeof element !== 'string' && element instanceof DefaultProperty) {
+          this.currentCachedFile.resolveInstance(element);
           MxGraphHelper.establishRelation(metaModelElement, element);
-          if (element.property.characteristic) {
-            this.namespacesCacheService.currentCachedFile.resolveElement(element.property.characteristic);
+          if (element.characteristic) {
+            this.currentCachedFile.resolveInstance(element.characteristic);
           }
         }
       });
     }
   }
 
-  private removeUnusedEntityValues(metaModelElement: BaseMetaModelElement) {
-    const unusedEntityValues = this.namespacesCacheService.currentCachedFile
-      .getCachedEntityValues()
-      .filter(ev => ev.parents?.length <= 1 && ev.parents?.some(parent => parent.aspectModelUrn === metaModelElement.aspectModelUrn));
+  private removeUnusedEntityValues(metaModelElement: NamedElement) {
+    const unusedEntityValues = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance).filter(
+      ev => ev.parents?.length <= 1 && ev.parents?.some(parent => parent.aspectModelUrn === metaModelElement.aspectModelUrn),
+    );
 
     for (const ev of unusedEntityValues) {
-      this.namespacesCacheService.currentCachedFile.removeElement(ev.aspectModelUrn);
+      this.currentCachedFile.removeElement(ev.aspectModelUrn);
     }
   }
 
@@ -182,13 +183,13 @@ export class CharacteristicModelService extends BaseModelService {
     });
   }
 
-  private updateParentModel(cell: mxgraph.mxCell, value: any, oldModel?: BaseMetaModelElement) {
+  private updateParentModel(cell: mxgraph.mxCell, value: any, oldModel?: NamedElement) {
     this.mxGraphAttributeService.graph.getIncomingEdges(cell).forEach(edgeToParent => {
-      const modelElementParent = MxGraphHelper.getModelElement<Base>(edgeToParent.source);
+      const modelElementParent = MxGraphHelper.getModelElement<NamedElement>(edgeToParent.source);
       if (modelElementParent) {
         MxGraphHelper.removeRelation(modelElementParent, oldModel);
         MxGraphHelper.establishRelation(modelElementParent, value);
-        modelElementParent.update(value);
+        useUpdater(modelElementParent).update(value);
       }
     });
   }
@@ -201,17 +202,18 @@ export class CharacteristicModelService extends BaseModelService {
       return;
     }
     this.currentCachedFile.removeElement(oldValue?.aspectModelUrn);
-    if (!newValue?.isPredefined()) {
-      this.currentCachedFile.resolveElement(newValue);
+    if (!newValue?.isPredefined) {
+      this.currentCachedFile.resolveInstance(newValue);
     }
   }
 
-  private updateFields(metaModelElement: DefaultCharacteristic, form: {[key: string]: any}, originalModelElement?: BaseMetaModelElement) {
+  private updateFields(metaModelElement: DefaultCharacteristic, form: {[key: string]: any}, originalModelElement?: NamedElement) {
     if (metaModelElement instanceof DefaultQuantifiable) {
       this.handleQuantifiableUnit(metaModelElement, form, originalModelElement as DefaultQuantifiable);
     } else if (metaModelElement instanceof DefaultEnumeration && metaModelElement.dataType instanceof DefaultEntity) {
       // complex enumeration
-      metaModelElement.createdFromEditor = true;
+      // TODO get a way to signal is made in editor
+      // metaModelElement.createdFromEditor = true;
       this.updateComplexEnumeration(metaModelElement, form);
     } else if (metaModelElement instanceof DefaultEnumeration) {
       // simple enumeration
@@ -219,7 +221,7 @@ export class CharacteristicModelService extends BaseModelService {
     } else if (metaModelElement instanceof DefaultCollection) {
       metaModelElement.elementCharacteristic = form.elementCharacteristic;
       if (form.elementCharacteristic) {
-        this.namespacesCacheService.resolveCachedElement(form.elementCharacteristic);
+        this.currentCachedFile.resolveInstance(form.elementCharacteristic);
         MxGraphHelper.establishRelation(metaModelElement, form.elementCharacteristic);
       }
     }
@@ -248,16 +250,17 @@ export class CharacteristicModelService extends BaseModelService {
       MxGraphHelper.establishRelation(metaModelElement, form.unit);
     }
 
-    if (form.unit && !form.unit?.isPredefined()) {
-      this.currentCachedFile.resolveElement(form.unit);
+    if (form.unit && !form.unit?.isPredefined) {
+      this.currentCachedFile.resolveInstance(form.unit);
     }
   }
 
   private updateDatatype(metaModelElement: DefaultCharacteristic, form: {[key: string]: any}) {
     if (form.newDataType) {
       metaModelElement.dataType = form.newDataType;
-      metaModelElement.createdFromEditor = true;
-      this.namespacesCacheService.resolveCachedElement(form.newDataType);
+      // TODO get a way to signal is made in editor
+      // metaModelElement.createdFromEditor = true;
+      this.currentCachedFile.resolveInstance(form.newDataType);
     }
 
     if (form.scalarDataType) {
