@@ -282,7 +282,7 @@
     "cypress": "^13.13.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-real-events": "^1.13.0",
-    "electron": "28.2.1",
+    "electron": "38.0.0",
     "electron-builder": "^24.13.3",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
