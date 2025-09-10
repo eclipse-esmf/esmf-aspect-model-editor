@@ -362,8 +362,8 @@ export class FileHandlingService {
       switchMap((file: File) =>
         forkJoin({
           content: readFile(file),
-          path: of(file.path),
-          name: of(file.path.split('/').pop()),
+          path: of(file.webkitRelativePath),
+          name: of(file.webkitRelativePath.split('/').pop()),
         }),
       ),
     );
