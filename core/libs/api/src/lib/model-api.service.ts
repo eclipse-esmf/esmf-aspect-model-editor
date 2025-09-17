@@ -102,13 +102,6 @@ export class ModelApiService {
       );
   }
 
-  validateImportPackage(file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('zipFile', file);
-
-    return this.http.post(`${this.serviceUrl}${this.api.package}/validate-package`, formData);
-  }
-
   importPackage(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('zipFile', file);

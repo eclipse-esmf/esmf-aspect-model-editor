@@ -13,10 +13,9 @@
 
 import {Routes} from '@angular/router';
 import {ErrorComponent} from '../shared';
-import {ImportComponent, ImportValidateComponent} from './components';
+import {ImportComponent} from './components';
 
 export const NAMESPACE_IMPORT_ROUTES: Routes = [
-  {path: '', component: ImportValidateComponent, outlet: 'import-namespaces'},
-  {path: 'import', component: ImportComponent, outlet: 'import-namespaces'},
+  {path: '', component: ImportComponent, outlet: 'import-namespaces'},
   {path: 'error', component: ErrorComponent, outlet: 'import-namespaces'},
 ];

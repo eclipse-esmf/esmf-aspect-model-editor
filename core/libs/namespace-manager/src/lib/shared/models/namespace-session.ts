@@ -36,8 +36,7 @@ export class NamespacesSession implements NamespacesSessionInterface {
     importing$: new BehaviorSubject(false),
   };
 
-  public parseResponse(file: File, validationResult: Array<{model: string}>) {
+  public parseResponse(file: File) {
     this.file = file;
-    this.workspaceFiles = validationResult || [];
   }
 }

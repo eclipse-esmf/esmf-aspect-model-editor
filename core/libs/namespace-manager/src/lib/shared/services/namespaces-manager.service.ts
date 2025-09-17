@@ -60,6 +60,7 @@ export class NamespacesManagerService {
   importNamespaces(zip: File) {
     this.setInjectionTokens();
     this.session.state.validating$.next(true);
+    this.session.parseResponse(zip);
     this.session.modalRef = this.matDialog.open(RootNamespacesImporterComponent, {disableClose: true});
 
     return this.session.modalRef.afterOpened().pipe(
@@ -69,11 +70,6 @@ export class NamespacesManagerService {
           this.router.navigate([{outlets: {'import-namespaces': null}}]);
         }),
       ),
-      switchMap(() => this.modelApiService.validateImportPackage(zip)),
-      tap(result => {
-        this.session.parseResponse(zip, result);
-        this.session.state.validating$.next(false);
-      }),
       catchError(e => of(this.session.state.validating$.error(e))),
     );
   }

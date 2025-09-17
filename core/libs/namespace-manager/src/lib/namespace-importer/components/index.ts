@@ -13,4 +13,3 @@
 
 export * from './import/import.component';
 export * from './root-namespace-importer/root-namespaces-importer.component';
-export * from './validate/validate.components';

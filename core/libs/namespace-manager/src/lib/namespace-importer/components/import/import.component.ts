@@ -36,11 +36,7 @@ export class ImportComponent {
     private dialogRef: MatDialogRef<ImportComponent>,
     @Inject(NAMESPACES_SESSION) private importSession: NamespacesSessionInterface,
   ) {
-    this.workspaceFiles = this.importSession.workspaceFiles;
-
-    if (!this.workspaceFiles.length) {
-      this.importFiles();
-    }
+    this.importFiles();
   }
 
   cancel() {

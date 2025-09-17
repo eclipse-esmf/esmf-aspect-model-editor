@@ -370,12 +370,11 @@ export class ModelLoaderService {
     }
 
     if (elementsInWorkspace.length) {
-      const message = elementsInWorkspace.reduce((acc, el) => {
-        acc += `${el.element} in file: ${el.file}. \n`;
-        return acc;
-      }, 'Elements found in workspace: \n');
+      const message = elementsInWorkspace.map(el => `${el.element} in file: ${el.file}. \n`).join('\n');
 
-      this.notificationsService.warning({title: 'Elements found in workspace. Using them instead.', message});
+      const version = RdfModelUtil.getNamespaceVersionFromRdf(payload.namespaceFileName);
+      const fileName = RdfModelUtil.getFileNameFromRdf(payload.namespaceFileName);
+      this.notificationsService.warning({title: `Aspect Model ${fileName} (v${version}) has newer element versions`, message});
     }
   }
 
