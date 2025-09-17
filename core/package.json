@@ -25,7 +25,7 @@
           ]
         },
         {
-          "from": "./apps/ame/src/assets/aspect-models/org.eclipse.examples/1.0.0/",
+          "from": "./apps/ame/src/assets/aspect-models/com.examples/1.0.0/",
           "to": "default-models/",
           "filter": [
             "**/*"
@@ -64,7 +64,7 @@
           ]
         },
         {
-          "from": "./apps/ame/src/assets/aspect-models/org.eclipse.examples/1.0.0/",
+          "from": "./apps/ame/src/assets/aspect-models/com.examples/1.0.0/",
           "to": "default-models/",
           "filter": [
             "**/*"
@@ -103,7 +103,7 @@
           ]
         },
         {
-          "from": "./apps/ame/src/assets/aspect-models/org.eclipse.examples/1.0.0/",
+          "from": "./apps/ame/src/assets/aspect-models/com.examples/1.0.0/",
           "to": "default-models/",
           "filter": [
             "**/*"
