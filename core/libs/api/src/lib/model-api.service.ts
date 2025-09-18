@@ -12,6 +12,7 @@
  */
 
 import {AsyncApi, OpenApi, ViolationError} from '@ame/editor';
+import {RdfModelUtil} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder} from '@ame/shared';
 import {removeCommentsFromTTL} from '@ame/utils';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
@@ -67,12 +68,8 @@ export class ModelApiService {
   saveModel(rdfContent: string, aspectModelUrn: string, absoluteModelName?: string): Observable<string> {
     let headers: HttpHeaders;
     if (absoluteModelName) {
-      const [namespace, version, file] = absoluteModelName.split(':');
-      headers = new HttpHeaderBuilder()
-        .withAspectModelUrn(aspectModelUrn)
-        .withNamespace(`${namespace}:${version}`)
-        .withFileName(file)
-        .build();
+      const file = RdfModelUtil.getFileNameFromRdf(absoluteModelName);
+      headers = new HttpHeaderBuilder().withAspectModelUrn(aspectModelUrn).withFileName(file).build();
     }
 
     return this.http
@@ -120,16 +117,10 @@ export class ModelApiService {
       );
   }
 
-  deleteFile(absoluteModelName: string, aspectModelUrn: string): Observable<string> {
-    const [namespace, version, file] = absoluteModelName.split(':');
+  deleteFile(aspectModelUrn: string): Observable<string> {
     return this.http
       .delete<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder()
-          // .withContentTypeRdfTurtle()
-          .withAspectModelUrn(aspectModelUrn)
-          .withNamespace(`${namespace}:${version}`)
-          .withFileName(file)
-          .build(),
+        headers: new HttpHeaderBuilder().withAspectModelUrn(aspectModelUrn).build(),
       })
       .pipe(
         timeout(this.requestTimeout),

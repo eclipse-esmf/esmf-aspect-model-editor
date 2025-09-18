@@ -350,13 +350,13 @@ export class ModelLoaderService {
 
   private moveElementsToTheirCacheFile(rdfModels: Record<string, RdfModel>, loadedFile: any, payload: LoadModelPayload) {
     const rdfModelsEntries = Object.entries(rdfModels).filter(([key]) => key !== 'current' && key !== payload.namespaceFileName);
-    const elementsInWorkspace = [];
+    // const elementsInWorkspace = [];
     for (const urn of loadedFile.cachedElements.getKeys()) {
       const namedNode = new NamedNode(urn);
       const [key, rdfModel] = rdfModelsEntries.find(([, rdfModel]) => rdfModel.store.countQuads(namedNode, null, null, null) > 0) || [];
 
       if (key && key !== 'current' && key !== payload.namespaceFileName && rdfModel) {
-        elementsInWorkspace.push({file: key, element: urn});
+        // elementsInWorkspace.push({file: key, element: urn});
         const element: NamedElement = loadedFile.cachedElements.get(urn);
         if (element instanceof DefaultAspect) {
           this.notificationsService.warning({title: `Aspect "${urn}" found in workspace`});
@@ -369,13 +369,14 @@ export class ModelLoaderService {
       }
     }
 
-    if (elementsInWorkspace.length) {
-      const message = elementsInWorkspace.map(el => `${el.element} in file: ${el.file}. \n`).join('\n');
-
-      const version = RdfModelUtil.getNamespaceVersionFromRdf(payload.namespaceFileName);
-      const fileName = RdfModelUtil.getFileNameFromRdf(payload.namespaceFileName);
-      this.notificationsService.warning({title: `Aspect Model ${fileName} (v${version}) has newer element versions`, message});
-    }
+    // TODO Check this - No benifit for now ...
+    // if (elementsInWorkspace.length) {
+    //   const message = elementsInWorkspace.map(el => `${el.element} in file: ${el.file}. \n`).join('\n');
+    //
+    //   const version = RdfModelUtil.getNamespaceVersionFromRdf(payload.namespaceFileName);
+    //   const fileName = RdfModelUtil.getFileNameFromRdf(payload.namespaceFileName);
+    //   this.notificationsService.warning({title: `Aspect Model ${fileName} (v${version}) has newer element versions`, message});
+    // }
   }
 
   private migrateAspectModel(oldSammVersion: string, rdfAspectModel: string): Observable<string> {

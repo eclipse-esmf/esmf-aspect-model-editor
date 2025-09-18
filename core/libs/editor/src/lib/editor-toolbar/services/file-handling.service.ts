@@ -150,7 +150,7 @@ export class FileHandlingService {
       finalize(() => {
         this.modelSaveTracker.updateSavedModel(true);
         this.loadingScreenService.close();
-        if (this.loadedFilesService.currentLoadedFile?.rdfModel) {
+        if (this.currentLoadedFile?.rdfModel) {
           this.shapeSettingsStateService.closeShapeSettings();
         }
         this.sidebarService.workspace.close();
@@ -205,8 +205,8 @@ export class FileHandlingService {
     this.loadedFilesService.removeAll();
     let fileStatus: FileStatus;
 
-    if (this.loadedFilesService.currentLoadedFile) {
-      const [namespace, version, file] = this.loadedFilesService.currentLoadedFile.absoluteName;
+    if (this.currentLoadedFile) {
+      const [namespace, version, file] = this.currentLoadedFile.absoluteName;
       const namespaceVersion = `${namespace}:${version}`;
       fileStatus = this.sidebarService.namespacesState.getFile(namespaceVersion, file);
 
@@ -242,7 +242,7 @@ export class FileHandlingService {
   }
 
   copyToClipboard(): Observable<any> {
-    if (!this.loadedFilesService.currentLoadedFile?.rdfModel) {
+    if (!this.currentLoadedFile?.rdfModel) {
       return throwError(() => {
         console.error('No Rdf model available. ');
         return 'No Rdf model available. ';
@@ -250,7 +250,7 @@ export class FileHandlingService {
     }
 
     return this.modelService.synchronizeModelToRdf().pipe(
-      map(() => this.rdfService.serializeModel(this.loadedFilesService.currentLoadedFile?.rdfModel)),
+      map(() => this.rdfService.serializeModel(this.currentLoadedFile?.rdfModel)),
       switchMap(serializedModel => this.modelApiService.formatModel(serializedModel)),
       switchMap(formattedModel => {
         const header = this.configurationService.getSettings().copyrightHeader.join('\n');
@@ -276,7 +276,7 @@ export class FileHandlingService {
   }
 
   exportAsAspectModelFile(): Observable<string> {
-    if (!this.loadedFilesService.currentLoadedFile?.rdfModel) {
+    if (!this.currentLoadedFile?.rdfModel) {
       return throwError(() => {
         console.error('No Rdf model available. ');
         return 'No Rdf model available. ';
@@ -290,9 +290,9 @@ export class FileHandlingService {
     });
 
     return this.modelService.synchronizeModelToRdf().pipe(
-      map(() => this.loadedFilesService.currentLoadedFile.absoluteName || 'undefined.ttl'),
+      map(() => this.currentLoadedFile.absoluteName || 'undefined.ttl'),
       switchMap(fileName => {
-        const rdfModelTtl = this.rdfService.serializeModel(this.loadedFilesService.currentLoadedFile?.rdfModel);
+        const rdfModelTtl = this.rdfService.serializeModel(this.currentLoadedFile?.rdfModel);
         return this.modelApiService.formatModel(rdfModelTtl).pipe(
           tap(formattedModel => {
             const header = this.configurationService.getSettings().copyrightHeader.join('\n');
@@ -468,7 +468,7 @@ export class FileHandlingService {
   }
 
   onValidateFile() {
-    if (!this.loadedFilesService.currentLoadedFile.cachedFile.getKeys().length) {
+    if (!this.currentLoadedFile.cachedFile.getKeys().length) {
       this.notificationsService.info({
         title: this.translate.language.NOTIFICATION_DIALOG?.NO_ASPECT_TITLE,
         timeout: 5000,
@@ -516,7 +516,7 @@ export class FileHandlingService {
   }
 
   private getModelLoaderState(): Observable<ModelLoaderState> {
-    const currentFile = this.loadedFilesService.currentLoadedFile;
+    const currentFile = this.currentLoadedFile;
     const response: ModelLoaderState = {
       originalModelName: currentFile.originalAbsoluteName,
       newModelName: currentFile.absoluteName,
@@ -610,7 +610,7 @@ export class FileHandlingService {
   }
 
   public updateAffectedQuads(originalModelName: string, originalNamespace: string, newNamespace: string): RdfModel[] {
-    const subjects = this.loadedFilesService.currentLoadedFile.rdfModel.store.getSubjects(null, null, null);
+    const subjects = this.currentLoadedFile.rdfModel.store.getSubjects(null, null, null);
     const models: RdfModel[] = Object.values(this.loadedFilesService.files)
       .filter(model => model.absoluteName !== originalModelName)
       .map(file => file.rdfModel);

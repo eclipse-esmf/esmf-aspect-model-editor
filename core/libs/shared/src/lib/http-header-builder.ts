@@ -35,17 +35,6 @@ export class HttpHeaderBuilder {
     return this;
   }
 
-  // TODO withUrn, withNamespace and withFileName can be removed
-  withUrn(urn: string): HttpHeaderBuilder {
-    this.httpHeaders = this.httpHeaders.append('Ame-Model-Urn', urn);
-    return this;
-  }
-
-  withNamespace(namespace: string): HttpHeaderBuilder {
-    this.httpHeaders = this.httpHeaders.append('namespace', namespace);
-    return this;
-  }
-
   withFileName(fileName: string): HttpHeaderBuilder {
     if (fileName) {
       this.httpHeaders = this.httpHeaders.append('file-name', fileName.endsWith('.ttl') ? fileName : fileName + '.ttl');

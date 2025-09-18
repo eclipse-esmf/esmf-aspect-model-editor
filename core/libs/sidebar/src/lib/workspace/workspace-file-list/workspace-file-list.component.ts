@@ -204,7 +204,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
       })
       .subscribe(confirm => {
         if (confirm !== ConfirmDialogEnum.cancel) {
-          this.modelApiService.deleteFile(aspectModelFileName, this.menuSelection.file.aspectModelUrn).subscribe(() => {
+          this.modelApiService.deleteFile(this.menuSelection.file.aspectModelUrn).subscribe(() => {
             this.sidebarService.workspace.refresh();
             this.electronSignalsService.call('requestRefreshWorkspaces');
           });
