@@ -101,7 +101,7 @@ export class WorkspaceFileElementsComponent implements OnInit {
       for (const key in this.elements) {
         this.searched[key] = searchString
           ? this.elements[key].elements.filter((element: NamedElement) => {
-              // @TODO: Search for the language the application is set on
+              // @TODO Search for the language the application is set on
               return (
                 element.name.toLowerCase().includes(searchString) || element.getDescription('en')?.toLowerCase()?.includes(searchString)
               );

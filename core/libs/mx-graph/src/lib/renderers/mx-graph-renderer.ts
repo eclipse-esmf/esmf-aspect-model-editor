@@ -57,7 +57,7 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     if (wasVisited) {
       // In case the element was visited -> don't visit its lower attributes since they were already visited previously
       // This avoids duplication of samm-c elements
-      // TODO: Might need further investigation
+      // TODO Might need further investigation
       return item;
     }
 

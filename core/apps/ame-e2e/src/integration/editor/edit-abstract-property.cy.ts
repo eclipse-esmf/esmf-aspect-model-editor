@@ -125,7 +125,7 @@ describe('Create and Edit Abstract Property', () => {
   });
 
   // skipped because the entry file is wrong
-  // TODO: fix the entry file
+  // TODO fix the entry file
   describe.skip('Abstract Property import', () => {
     it('should import', () => {
       cy.visitDefault();

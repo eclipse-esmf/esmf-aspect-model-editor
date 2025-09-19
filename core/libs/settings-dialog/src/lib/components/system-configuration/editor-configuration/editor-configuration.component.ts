@@ -38,7 +38,7 @@ export class EditorConfigurationComponent implements OnInit {
     this.form = this.formService.getForm().get('editorConfiguration') as FormGroup;
   }
 
-  // TODO activate when clarified
+  // TODO this should be activated after clarified the colors
   themeChange(toggle: MatSlideToggleChange) {
     const theme = toggle.checked ? 'dark' : 'light';
     this.themeService.applyTheme(theme);

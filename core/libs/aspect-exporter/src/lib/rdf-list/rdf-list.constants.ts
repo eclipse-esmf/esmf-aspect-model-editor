@@ -47,7 +47,7 @@ export class RdfListConstants {
           {type: DefaultEntity, predicate: samm.PropertiesProperty()},
         ],
       },
-      // TODO: Why we commented this out?
+      // TODO Why we commented this out?
       // {
       //   source: DefaultAbstractEntity,
       //   children: [

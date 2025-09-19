@@ -65,7 +65,7 @@ jest.mock('@ame/editor', () => ({
 }));
 
 // test aren't working as expected but works with real data
-// TODO: to check if the functionality works on every scenario
+// TODO to check if the functionality works on every scenario
 describe.skip('RDF Helper', () => {
   const rdfModel = new MockRDFModel() as any;
   let service: RdfListService;

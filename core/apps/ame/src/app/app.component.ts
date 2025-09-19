@@ -72,12 +72,12 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    // TODO: In case of no service opened, display a error page
+    // TODO In case of no service opened, display a error page
     if (!this.electronTunnelService.ipcRenderer) {
       this.migratorService.startMigrating().subscribe(() => {
         this.fileHandlingService.createEmptyModel();
         this.sidebarService.workspace.refresh();
-        // TODO: Check this navigation
+        // TODO Check this navigation
         //this.router.navigate([{outlets: {migrator: null, 'export-namespaces': null, 'import-namespaces': null}}]);
       });
     } else {

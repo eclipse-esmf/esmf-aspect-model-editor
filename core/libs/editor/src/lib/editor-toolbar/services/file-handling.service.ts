@@ -380,7 +380,7 @@ export class FileHandlingService {
     return this.importFiles(file).pipe(
       tap(() => this.notificationsService.success({title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_SUCCESS})),
       catchError(httpError => {
-        // @TODO: Temporary check until file blockage is fixed
+        // @TODO Temporary check until file blockage is fixed
         !httpError.error?.error?.message?.includes('packages-to-import')
           ? this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_ERROR})
           : this.notificationsService.success({title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_SUCCESS});
@@ -577,7 +577,7 @@ export class FileHandlingService {
       }),
     );
   }
-  // TODO: MOVE THESE 3 FUNCTION TO A MORE RELATED SERVICE
+  // TODO MOVE THESE 3 FUNCTION TO A MORE RELATED SERVICE
 
   updateQuads(query: QuadComponents, replacement: QuadComponents, rdfModel: RdfModel): number {
     const quads: Quad[] = this.getQuads(query, rdfModel);

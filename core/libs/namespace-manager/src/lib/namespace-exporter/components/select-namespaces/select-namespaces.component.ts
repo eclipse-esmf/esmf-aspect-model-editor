@@ -26,7 +26,6 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {finalize} from 'rxjs';
-import {WorkspaceErrorComponent} from '../../../../../../sidebar/src/lib/workspace/workspace-error/workspace-error.component';
 
 @Component({
   standalone: true,
@@ -44,7 +43,6 @@ import {WorkspaceErrorComponent} from '../../../../../../sidebar/src/lib/workspa
     MatRadioGroup,
     MatRadioButton,
     FormsModule,
-    WorkspaceErrorComponent,
   ],
 })
 export class SelectNamespacesComponent implements OnInit {

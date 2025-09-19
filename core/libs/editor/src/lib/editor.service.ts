@@ -129,7 +129,7 @@ export class EditorService {
       null,
     );
 
-    // TODO: Check this when refactoring editor service
+    // TODO Check this when refactoring editor service
     // enforce parent domain object will be updated if an cell e.g. unit will be deleted
     this.mxGraphAttributeService.graph.addListener(
       mxEvent.CELLS_REMOVED,

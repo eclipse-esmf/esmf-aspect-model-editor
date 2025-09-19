@@ -29,10 +29,10 @@ the [Git branching guidance](https://docs.microsoft.com/en-us/azure/devops/repos
 
 More specifically the repository has the following branches:
 
- name of branch                    | description                                                      
------------------------------------|------------------------------------------------------------------
- `main`                            | Contains the latest state of the repository                      
- `v{version_number}-RC{rc_number}` | A "release candidate": A version that freezes major features and 
+| name of branch                    | description                                                      |
+|-----------------------------------|------------------------------------------------------------------|
+| `main`                            | Contains the latest state of the repository                      |
+| `v{version_number}-RC{rc_number}` | A "release candidate": A version that freezes major features and |
 
 can be considered a pre-release of the next full release.
 `v{version_number}` | A full release of the respective version.
@@ -50,10 +50,10 @@ We use the `Issues` feature of GitHub for tracking all types of work in the repo
 
 We distinguish between the following types of issues;
 
- Issue Types  | Description                                                                             
---------------|-----------------------------------------------------------------------------------------
- `Bug Report` | This `Issue` is dedicated to reporting a problem.                                       
- `Task`       | This `Issue` is used for describing and proposing a new work item (e.g., a new feature) 
+| Issue Types  | Description                                                                             |
+|--------------|-----------------------------------------------------------------------------------------|
+| `Bug Report` | This `Issue` is dedicated to reporting a problem.                                       |
+| `Task`       | This `Issue` is used for describing and proposing a new work item (e.g., a new feature) |
 
 If there are issues that link to the same topic, the creator of the issue shall mention those other tasks in the
 description. To group tasks that can belong together, one could further create an issue mentioning and describing

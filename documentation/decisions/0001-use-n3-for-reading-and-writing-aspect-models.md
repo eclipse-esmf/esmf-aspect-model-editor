@@ -9,7 +9,7 @@ _A graph necessitates resolving the following elements:_
 * Blank Nodes: Refer to new graph links that need resolution.
 * rdf:rest and rdf:first: These are utilized for crafting descriptions of lists and similar structures.
 * rdf:nil: Represents an empty list or similar structure.
-The purpose of this design decision is to determine the most suitable converter capable of addressing these issues efficiently and operating stably without requiring further modifications.
+  The purpose of this design decision is to determine the most suitable converter capable of addressing these issues efficiently and operating stably without requiring further modifications.
 
 ## Considered Options
 
