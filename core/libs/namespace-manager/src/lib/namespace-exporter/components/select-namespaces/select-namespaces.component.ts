@@ -56,8 +56,6 @@ export class SelectNamespacesComponent implements OnInit {
   extracting = false;
   selectedKey: string | null = null;
 
-  error: {code: number; message: string; path: string} = null;
-
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
     private dialogRef: MatDialogRef<SelectNamespacesComponent>,
@@ -65,15 +63,17 @@ export class SelectNamespacesComponent implements OnInit {
 
   ngOnInit(): void {
     this.extracting = true;
-    this.modelCheckerService.detectWorkspace().subscribe({
+    this.modelCheckerService.detectWorkspace(true).subscribe({
       next: values => {
         this.entries = values;
         this.extracting = false;
       },
       error: err => {
-        this.entries = undefined;
-        this.extracting = false;
-        this.error = err?.error?.error;
+        this.notificationService.error({
+          title: 'Error detecting namespaces',
+          message: 'There is a problem to detect the workspace namespaces: ' + (err?.message || err),
+        });
+        this.dialogRef.close();
       },
     });
   }

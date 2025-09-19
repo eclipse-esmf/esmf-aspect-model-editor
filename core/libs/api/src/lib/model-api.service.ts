@@ -129,27 +129,9 @@ export class ModelApiService {
       );
   }
 
-  getNamespacesStructure(): Observable<WorkspaceStructure> {
-    return this.http.get<WorkspaceStructure>(`${this.serviceUrl}${this.api.models}/namespaces`);
-  }
-
-  // TODO In the backend a defined object should be returned
-  /**
-   * @deprecated this function will be removed in the next versions
-   */
-  getNamespacesAppendWithFiles(): Observable<string[]> {
-    return this.getNamespacesStructure().pipe(
-      timeout(this.requestTimeout),
-      map(data => {
-        return Object.keys(data).reduce<string[]>(
-          (fileNames, namespace) => [
-            ...fileNames,
-            ...data[namespace].map(({version, models}) => models.map(model => `${namespace}:${version}:${model.model}`)).flat(),
-          ],
-          [],
-        );
-      }),
-    );
+  getNamespacesStructure(onlyAspectModel?: boolean): Observable<WorkspaceStructure> {
+    const params = onlyAspectModel ? {onlyAspectModels: 'true'} : {onlyAspectModels: 'false'};
+    return this.http.get<WorkspaceStructure>(`${this.serviceUrl}${this.api.models}/namespaces`, {params});
   }
 
   getWorkspaceAspectModelUrns(): Observable<{aspectModelUrn: string; fileName: string; namespace: string}[]> {

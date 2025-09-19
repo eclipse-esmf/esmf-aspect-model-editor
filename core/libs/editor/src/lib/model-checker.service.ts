@@ -80,8 +80,8 @@ export class ModelCheckerService {
    *
    * @returns all namespaces and their file information
    */
-  detectWorkspace() {
-    return this.modelApiService.getNamespacesStructure().pipe(
+  detectWorkspace(onlyAspectModels?: boolean) {
+    return this.modelApiService.getNamespacesStructure(onlyAspectModels).pipe(
       map(structure => {
         const requests = {};
         for (const namespace in structure) {

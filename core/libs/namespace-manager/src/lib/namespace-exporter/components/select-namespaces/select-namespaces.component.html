@@ -23,10 +23,7 @@
         <mat-spinner class="extracting__spinner"></mat-spinner>
         <p class="extracting__message">Loading namespaces...</p>
       </section>
-    }
-
-    <!-- Success state -->
-    @if (!extracting && !error) {
+    } @else if (!extracting) {
       <h4 class="column-title">Namespaces</h4>
       <mat-radio-group class="files" [(ngModel)]="selectedKey" aria-label="Select an option">
         @for (entry of entries | keyvalue; track entry.key) {
@@ -39,11 +36,6 @@
           </mat-radio-button>
         }
       </mat-radio-group>
-    }
-
-    <!-- Error state -->
-    @if (!extracting && error) {
-      <ame-workspace-error [error]="error"></ame-workspace-error>
     }
   </section>
 </mat-dialog-content>

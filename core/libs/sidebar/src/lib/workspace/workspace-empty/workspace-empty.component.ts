@@ -12,7 +12,8 @@
  */
 
 import {NamespacesManagerService} from '@ame/namespace-manager';
-import {Component, input} from '@angular/core';
+import {ElectronSignalsService} from '@ame/shared';
+import {Component, inject, input} from '@angular/core';
 
 @Component({
   selector: 'ame-workspace-empty',
@@ -20,6 +21,8 @@ import {Component, input} from '@angular/core';
   styleUrls: ['./workspace-empty.component.scss'],
 })
 export class WorkspaceEmptyComponent {
+  private electronSignalsService = inject(ElectronSignalsService);
+
   loading = input(false);
   file: File | null = null;
 
@@ -28,7 +31,9 @@ export class WorkspaceEmptyComponent {
   onFileInput(files: FileList | null): void {
     if (files) {
       this.file = files.item(0);
-      this.namespacesManagerService.importNamespaces(this.file).subscribe();
+      this.namespacesManagerService
+        .importNamespaces(this.file)
+        .subscribe(() => this.electronSignalsService.call('requestRefreshWorkspaces'));
     }
   }
 }

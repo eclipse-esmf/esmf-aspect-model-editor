@@ -68,7 +68,8 @@ export class StartupService {
       )
       .subscribe(() => {
         this.sidebarService.workspace.refresh();
-        this.router.navigate([{outlets: {migrator: null, 'export-namespaces': null, 'import-namespaces': null}}]);
+        // TODO: Check this navigation
+        // this.router.navigate([{outlets: {migrator: null, 'export-namespaces': null, 'import-namespaces': null}}]);
       });
   }
 

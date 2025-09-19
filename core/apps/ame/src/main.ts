@@ -25,8 +25,6 @@ import {PreloadAllModules, provideRouter, withPreloading} from '@angular/router'
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {environment} from 'environments/environment';
 import {ToastrModule} from 'ngx-toastr';
-import {NAMESPACE_EXPORT_ROUTES} from '../../../libs/namespace-manager/src/lib/namespace-exporter';
-import {NAMESPACE_IMPORT_ROUTES} from '../../../libs/namespace-manager/src/lib/namespace-importer';
 
 if (environment.production) {
   enableProdMode();
@@ -53,10 +51,7 @@ const bootstrap = () =>
       ),
       provideAnimations(),
       {provide: APP_CONFIG, useValue: config},
-      provideRouter(
-        [...APP_ROUTES, ...MIGRATOR_ROUTES, ...NAMESPACE_EXPORT_ROUTES, ...NAMESPACE_IMPORT_ROUTES],
-        withPreloading(PreloadAllModules),
-      ),
+      provideRouter([...APP_ROUTES, ...MIGRATOR_ROUTES], withPreloading(PreloadAllModules)),
       provideHttpClient(withInterceptorsFromDi()),
     ],
   });
