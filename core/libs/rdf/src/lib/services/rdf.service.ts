@@ -13,7 +13,7 @@
 
 import {ModelApiService} from '@ame/api';
 import {NamespaceFile} from '@ame/cache';
-import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
+import {APP_CONFIG, AppConfig} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {Inject, Injectable} from '@angular/core';
 import {RdfModel} from '@esmf/aspect-model-loader';
@@ -32,7 +32,6 @@ export class RdfService {
   constructor(
     private modelApiService: ModelApiService,
     private translation: LanguageTranslationService,
-    private browserService: BrowserService,
     @Inject(APP_CONFIG) public config: AppConfig,
   ) {
     if (!environment.production) {
@@ -44,15 +43,6 @@ export class RdfService {
 
   serializeModel(rdfModel: RdfModel): string {
     return this._rdfSerializer.serializeModel(rdfModel);
-  }
-
-  parseFileName(fileName: string, urn: string): string {
-    if (this.browserService.isStartedAsElectronApp() && window.require) {
-      const path = window.require('path');
-      fileName = fileName.includes(path.sep) ? `${urn.replace('#', ':')}${path.basename(fileName)}` : fileName;
-    }
-
-    return fileName.charAt(0) === '/' ? fileName.substring(1) : fileName;
   }
 
   isSameModelContent(absoluteFileName: string, fileContent: string, fileToCompare: NamespaceFile): Observable<boolean> {

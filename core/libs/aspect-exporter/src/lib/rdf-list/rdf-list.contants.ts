@@ -22,7 +22,7 @@ import {
   Samm,
   SammC,
 } from '@esmf/aspect-model-loader';
-import {ListProperties, Relations} from './rdf-list.types';
+import {Relations} from './rdf-list.types';
 
 export const getRelations = (samm: Samm, sammC: SammC): Relations[] => [
   {
@@ -44,6 +44,7 @@ export const getRelations = (samm: Samm, sammC: SammC): Relations[] => [
       {type: DefaultEntity, predicate: samm.PropertiesProperty()},
     ],
   },
+  // TODO: Why we commented this out?
   // {
   //   source: DefaultAbstractEntity,
   //   children: [
@@ -68,19 +69,3 @@ export const getRelations = (samm: Samm, sammC: SammC): Relations[] => [
     children: [{type: DefaultProperty, predicate: samm.ParametersProperty()}],
   },
 ];
-
-export const getPredicateByKey = (key: ListProperties, samm: Samm, sammC: SammC) => {
-  const predicates = {
-    [ListProperties.elements]: sammC.ElementsProperty(),
-    [ListProperties.values]: sammC.ValuesProperty(),
-    [ListProperties.operations]: samm.OperationsProperty(),
-    [ListProperties.properties]: samm.PropertiesProperty(),
-    [ListProperties.abstractProperties]: samm.PropertiesProperty(),
-    [ListProperties.input]: samm.InputProperty(),
-    [ListProperties.quantityKinds]: samm.QuantityKindsProperty(),
-    [ListProperties.events]: samm.EventsProperty(),
-    [ListProperties.parameters]: samm.ParametersProperty(),
-  };
-
-  return predicates[key];
-};

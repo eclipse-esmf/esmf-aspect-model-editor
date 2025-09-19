@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CdkScrollable} from '@angular/cdk/scrolling';
 import {Component} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatDialogActions, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
@@ -24,7 +23,7 @@ import {MigratorService} from '../../migrator.service';
   templateUrl: './migration-success.component.html',
   styleUrls: ['./migration-success.component.scss'],
   standalone: true,
-  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatIcon, MatDialogActions, MatButton, TranslateModule],
+  imports: [MatDialogTitle, MatDialogContent, MatIcon, MatDialogActions, MatButton, TranslateModule],
 })
 export class MigrationSuccessComponent {
   constructor(private migratorService: MigratorService) {}

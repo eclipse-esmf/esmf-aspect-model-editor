@@ -15,7 +15,6 @@ import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, ElectronSignals, ElectronSignalsService} from '@ame/shared';
-import {CdkScrollable} from '@angular/cdk/scrolling';
 import {KeyValuePipe} from '@angular/common';
 import {Component, NgZone, OnInit, inject} from '@angular/core';
 import {MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
@@ -42,7 +41,7 @@ export const defaultNamespaces = (sammVersion: string) => [
   templateUrl: './version-migration.component.html',
   styleUrls: ['./version-migration.component.scss'],
   standalone: true,
-  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatProgressSpinner, MatIcon, KeyValuePipe, TranslateModule],
+  imports: [MatDialogTitle, MatDialogContent, MatProgressSpinner, MatIcon, KeyValuePipe, TranslateModule],
 })
 export class VersionMigrationComponent implements OnInit {
   public namespaces: {[namespace: string]: {name: string; migrated: boolean}[]};
@@ -191,7 +190,7 @@ export class VersionMigrationComponent implements OnInit {
   }
 
   private deleteModels(models: any[]): Observable<any> {
-    // @TODO check this functionality
+    // @TODO: check this functionality
     debugger;
     return from(models).pipe(concatMap(model => this.modelApiService.deleteAspectModel('')));
   }

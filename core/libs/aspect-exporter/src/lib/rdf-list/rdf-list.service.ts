@@ -145,12 +145,12 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     this.emptyList(source, property);
     this.createNewList(
       DataFactory.namedNode(source.aspectModelUrn),
-      RdfListConstants.getPredicateByKey(property, this.samm, this.rdfModel.sammC),
+      RdfListHelper.getPredicateByKey(property, this.samm, this.rdfModel.sammC),
     );
   }
 
   emptyList(source: SourceElementType, property: ListProperties) {
-    const predicate = RdfListConstants.getPredicateByKey(property, this.samm, this.rdfModel.sammC);
+    const predicate = RdfListHelper.getPredicateByKey(property, this.samm, this.rdfModel.sammC);
     const subject = DataFactory.namedNode(source.aspectModelUrn);
     const list = this.store.getQuads(subject, predicate, null, null)?.[0]?.object;
 

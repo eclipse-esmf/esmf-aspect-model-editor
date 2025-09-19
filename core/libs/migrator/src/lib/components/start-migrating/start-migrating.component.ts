@@ -12,7 +12,6 @@
  */
 import {MigratorApiService} from '@ame/api';
 import {APP_CONFIG, AppConfig} from '@ame/shared';
-import {CdkScrollable} from '@angular/cdk/scrolling';
 import {Component, Inject, NgZone, inject} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatCheckbox, MatCheckboxChange} from '@angular/material/checkbox';
@@ -27,7 +26,7 @@ import {MigratorService} from '../../migrator.service';
   templateUrl: './start-migrating.component.html',
   styleUrls: ['./start-migrating.component.scss'],
   standalone: true,
-  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatCheckbox, MatDialogActions, MatButton, MatProgressSpinner, TranslateModule],
+  imports: [MatDialogTitle, MatDialogContent, MatCheckbox, MatDialogActions, MatButton, MatProgressSpinner, TranslateModule],
 })
 export class StartMigratingComponent {
   public migrateLoading = false;

@@ -13,7 +13,6 @@
 
 import {NamespaceStatus} from '@ame/api';
 import {APP_CONFIG, AppConfig} from '@ame/shared';
-import {CdkScrollable} from '@angular/cdk/scrolling';
 import {KeyValuePipe} from '@angular/common';
 import {Component, Inject, NgZone, OnInit} from '@angular/core';
 import {MatButton} from '@angular/material/button';
@@ -41,7 +40,7 @@ interface ErrorFileItem {
   templateUrl: './migration-status.component.html',
   styleUrls: ['./migration-status.component.scss'],
   standalone: true,
-  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatIcon, MatDialogActions, MatButton, KeyValuePipe, TranslateModule],
+  imports: [MatDialogTitle, MatDialogContent, MatIcon, MatDialogActions, MatButton, KeyValuePipe, TranslateModule],
 })
 export class MigrationStatusComponent implements OnInit {
   public migrationStatus: NamespaceStatus[] = [];

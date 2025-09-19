@@ -12,7 +12,6 @@
  */
 
 import {MigratorApiService} from '@ame/api';
-import {CdkScrollable} from '@angular/cdk/scrolling';
 import {Component, NgZone, OnInit} from '@angular/core';
 import {MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
@@ -25,7 +24,7 @@ import {catchError, of} from 'rxjs';
   templateUrl: './loading-migrating.component.html',
   styleUrls: ['./loading-migrating.component.scss'],
   standalone: true,
-  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatProgressSpinner, TranslateModule],
+  imports: [MatDialogTitle, MatDialogContent, MatProgressSpinner, TranslateModule],
 })
 export class LoadingMigratingComponent implements OnInit {
   constructor(

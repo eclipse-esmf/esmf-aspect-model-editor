@@ -14,7 +14,6 @@
 import {LoadedFilesService} from '@ame/cache';
 import {SaveValidateErrorsCodes} from '@ame/shared';
 import {Injectable} from '@angular/core';
-import {Aspect, Samm} from '@esmf/aspect-model-loader';
 import {environment} from 'environments/environment';
 import {Observable, Observer, Subject, throwError} from 'rxjs';
 
@@ -36,17 +35,6 @@ export class ModelService {
 
   removeAspect() {
     this.loadedFilesService.currentLoadedFile.aspect = null;
-  }
-
-  addAspect(aspect: Aspect) {
-    this.loadedFilesService.currentLoadedFile.aspect = aspect;
-  }
-
-  getSammVersion(aspectModel: string) {
-    const partialSammUri = `<${Samm.BASE_URI}meta-model:`;
-    const startVersionIndex = aspectModel.indexOf(partialSammUri);
-    const endVersionIndex = aspectModel.indexOf('#', startVersionIndex);
-    return aspectModel.slice(startVersionIndex + partialSammUri.length, endVersionIndex);
   }
 
   finishStoreUpdate(observer: Observer<void>) {

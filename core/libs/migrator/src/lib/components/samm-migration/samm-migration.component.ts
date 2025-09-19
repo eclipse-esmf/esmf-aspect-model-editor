@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CdkScrollable} from '@angular/cdk/scrolling';
 import {AsyncPipe} from '@angular/common';
 import {Component} from '@angular/core';
 import {MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
@@ -24,7 +23,7 @@ import {map} from 'rxjs';
   templateUrl: './samm-migration.component.html',
   styleUrls: ['./samm-migration.component.scss'],
   standalone: true,
-  imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatProgressBar, AsyncPipe, TranslateModule],
+  imports: [MatDialogTitle, MatDialogContent, MatProgressBar, AsyncPipe, TranslateModule],
 })
 export class SammMigrationComponent {
   public get status$() {

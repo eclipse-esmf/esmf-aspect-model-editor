@@ -23,8 +23,7 @@ import {
   Samm,
   SammC,
 } from '@esmf/aspect-model-loader';
-import {NamedNode} from 'n3';
-import {ListProperties, Relations} from './rdf-list.types';
+import {Relations} from './rdf-list.types';
 
 export class RdfListConstants {
   static getRelations(samm: Samm, sammC: SammC): Relations[] {
@@ -48,6 +47,7 @@ export class RdfListConstants {
           {type: DefaultEntity, predicate: samm.PropertiesProperty()},
         ],
       },
+      // TODO: Why we commented this out?
       // {
       //   source: DefaultAbstractEntity,
       //   children: [
@@ -72,21 +72,5 @@ export class RdfListConstants {
         children: [{type: DefaultProperty, predicate: samm.ParametersProperty()}],
       },
     ];
-  }
-
-  static getPredicateByKey(key: ListProperties, samm: Samm, sammC: SammC): NamedNode<string> {
-    const predicates = {
-      [ListProperties.elements]: sammC.ElementsProperty(),
-      [ListProperties.values]: sammC.ValuesProperty(),
-      [ListProperties.operations]: samm.OperationsProperty(),
-      [ListProperties.properties]: samm.PropertiesProperty(),
-      [ListProperties.abstractProperties]: samm.PropertiesProperty(),
-      [ListProperties.input]: samm.InputProperty(),
-      [ListProperties.quantityKinds]: samm.QuantityKindsProperty(),
-      [ListProperties.events]: samm.EventsProperty(),
-      [ListProperties.parameters]: samm.ParametersProperty(),
-    };
-
-    return predicates[key];
   }
 }
