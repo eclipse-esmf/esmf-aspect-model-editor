@@ -193,6 +193,6 @@ export class VersionMigrationComponent implements OnInit {
   private deleteModels(models: any[]): Observable<any> {
     // @TODO check this functionality
     debugger;
-    return from(models).pipe(concatMap(model => this.modelApiService.deleteFile('')));
+    return from(models).pipe(concatMap(model => this.modelApiService.deleteAspectModel('')));
   }
 }

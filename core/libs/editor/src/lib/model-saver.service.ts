@@ -94,7 +94,7 @@ export class ModelSaverService {
       return throwError(() => ({code: SaveValidateErrorsCodes.emptyModel}));
     }
 
-    return this.modelApiService.formatModel(rdfContent).pipe(
+    return this.modelApiService.fetchFormatedAspectModel(rdfContent).pipe(
       switchMap(content => {
         if (!content) {
           return throwError(() => ({code: SaveValidateErrorsCodes.emptyModel}));
@@ -103,7 +103,7 @@ export class ModelSaverService {
         const copyright = this.settings.copyrightHeader.join('\n');
         const contentWithCopyright = `${copyright}\n${content}`;
 
-        return this.modelApiService.saveModel(
+        return this.modelApiService.saveAspectModel(
           contentWithCopyright,
           this.currentFile?.getAnyAspectModelUrn(),
           this.currentFile?.absoluteName || '',

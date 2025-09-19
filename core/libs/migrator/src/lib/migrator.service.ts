@@ -70,13 +70,13 @@ export class MigratorService {
     this.router.navigate([{outlets: {migrator: 'samm-migration'}}]);
     const dialog$ = this.openDialog();
 
-    return this.modelApiService.getAllNamespacesFilesContent().pipe(
+    return this.modelApiService.fetchAllNamespaceFilesContent().pipe(
       map(files => {
         return files.reduce((acc, file) => {
           const newSammFile = this.detectBammAndReplaceWithSamm(file.aspectMetaModel);
           if (file.aspectMetaModel !== newSammFile) {
             file.aspectMetaModel = newSammFile;
-            return acc.concat([this.modelApiService.saveModel(newSammFile, file.aspectMetaModel, file.fileName)]);
+            return acc.concat([this.modelApiService.saveAspectModel(newSammFile, file.aspectMetaModel, file.fileName)]);
           }
           return acc;
         }, []);

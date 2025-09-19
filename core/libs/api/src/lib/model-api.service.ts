@@ -14,18 +14,12 @@
 import {AsyncApi, OpenApi, ViolationError} from '@ame/editor';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder} from '@ame/shared';
-import {removeCommentsFromTTL} from '@ame/utils';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
 import {Observable, forkJoin, of, throwError} from 'rxjs';
 import {catchError, map, mergeMap, retry, tap, timeout} from 'rxjs/operators';
 import {ModelValidatorService} from './model-validator.service';
 import {WorkspaceStructure} from './models';
-
-export enum PREDEFINED_MODELS {
-  SIMPLE_ASPECT = 'assets/aspect-models/org.eclipse.examples/1.0.0/SimpleAspect.ttl',
-  MOVEMENT = 'assets/aspect-models/org.eclipse.examples/1.0.0/Movement.ttl',
-}
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +30,6 @@ export class ModelApiService {
   private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
   private requestTimeout = 60000;
-  private readonly LATEST_FILENAME = 'latest.ttl';
 
   constructor(
     private http: HttpClient,
@@ -49,14 +42,10 @@ export class ModelApiService {
     }
   }
 
-  getPredefinedModel(modelPath: PREDEFINED_MODELS): Observable<string> {
-    return this.http.get(modelPath, {responseType: 'text'}).pipe(map((response: string) => removeCommentsFromTTL(response)));
-  }
-
-  loadLatest(): Observable<string> {
+  fetchAspectMetaModel(aspectModelUrn: string): Observable<string> {
     return this.http
       .get<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withFileName(this.LATEST_FILENAME).build(),
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withAspectModelUrn(aspectModelUrn).build(),
         responseType: 'text' as 'json',
       })
       .pipe(
@@ -65,7 +54,7 @@ export class ModelApiService {
       );
   }
 
-  saveModel(rdfContent: string, aspectModelUrn: string, absoluteModelName?: string): Observable<string> {
+  saveAspectModel(rdfContent: string, aspectModelUrn: string, absoluteModelName?: string): Observable<string> {
     let headers: HttpHeaders;
     if (absoluteModelName) {
       const file = RdfModelUtil.getFileNameFromRdf(absoluteModelName);
@@ -83,7 +72,20 @@ export class ModelApiService {
       );
   }
 
-  formatModel(rdfContent: string): Observable<string> {
+  validate(rdfContent: string, showNotifications = true): Observable<Array<ViolationError>> {
+    return this.http
+      .post<Array<ViolationError>>(`${this.serviceUrl}${this.api.models}/validate`, rdfContent, {
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        map((data: any) => data.violationErrors),
+        tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors)),
+        catchError(res => throwError(() => res)),
+      );
+  }
+
+  fetchFormatedAspectModel(rdfContent: string): Observable<string> {
     const headers = new HttpHeaderBuilder().withContentTypeRdfTurtle().build();
     return this.http
       .post(`${this.serviceUrl}${this.api.models}/format`, rdfContent, {
@@ -106,18 +108,7 @@ export class ModelApiService {
     return this.http.post(`${this.serviceUrl}${this.api.package}/import`, formData);
   }
 
-  saveLatest(rdfContent: string): Observable<string> {
-    return this.http
-      .post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withFileName(this.LATEST_FILENAME).build(),
-      })
-      .pipe(
-        timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
-      );
-  }
-
-  deleteFile(aspectModelUrn: string): Observable<string> {
+  deleteAspectModel(aspectModelUrn: string): Observable<string> {
     return this.http
       .delete<string>(`${this.serviceUrl}${this.api.models}`, {
         headers: new HttpHeaderBuilder().withAspectModelUrn(aspectModelUrn).build(),
@@ -129,13 +120,13 @@ export class ModelApiService {
       );
   }
 
-  getNamespacesStructure(onlyAspectModel?: boolean): Observable<WorkspaceStructure> {
+  loadNamespacesStructure(onlyAspectModel?: boolean): Observable<WorkspaceStructure> {
     const params = onlyAspectModel ? {onlyAspectModels: 'true'} : {onlyAspectModels: 'false'};
     return this.http.get<WorkspaceStructure>(`${this.serviceUrl}${this.api.models}/namespaces`, {params});
   }
 
-  getWorkspaceAspectModelUrns(): Observable<{aspectModelUrn: string; fileName: string; namespace: string}[]> {
-    return this.getNamespacesStructure().pipe(
+  fetchAspectModelUrnsGroupedByNamespac(): Observable<{aspectModelUrn: string; fileName: string; namespace: string}[]> {
+    return this.loadNamespacesStructure().pipe(
       timeout(this.requestTimeout),
       map(data => {
         return Object.keys(data).reduce<{aspectModelUrn: string; fileName: string; namespace: string}[]>(
@@ -151,13 +142,15 @@ export class ModelApiService {
     );
   }
 
-  getAllNamespacesFilesContent(): Observable<FileContentModel[]> {
-    return this.getWorkspaceAspectModelUrns().pipe(
+  fetchAllNamespaceFilesContent(): Observable<FileContentModel[]> {
+    return this.fetchAspectModelUrnsGroupedByNamespac().pipe(
       map(aspectModelUrns =>
         aspectModelUrns.reduce<any[]>(
           (files, file) => [
             ...files,
-            this.getAspectMetaModel(file.aspectModelUrn).pipe(map(aspectMetaModel => new FileContentModel(file.fileName, aspectMetaModel))),
+            this.fetchAspectMetaModel(file.aspectModelUrn).pipe(
+              map(aspectMetaModel => new FileContentModel(file.fileName, aspectMetaModel)),
+            ),
           ],
           [],
         ),
@@ -167,23 +160,7 @@ export class ModelApiService {
     );
   }
 
-  getAspectMetaModel(aspectModelUrn: string): Observable<string> {
-    return this.http
-      .get<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withAspectModelUrn(aspectModelUrn).build(),
-        responseType: 'text' as 'json',
-      })
-      .pipe(
-        timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
-      );
-  }
-
-  validateFilesForExport(files: {namespace: string; files: string[]}[]): Observable<any> {
-    return this.http.post(`${this.serviceUrl}${this.api.package}/validate-models-for-export`, files);
-  }
-
-  getExportZipFile(aspectModelUrn: string): Observable<any> {
+  fetchExportPackage(aspectModelUrn: string): Observable<any> {
     return this.http.get(`${this.serviceUrl}${this.api.package}/export`, {
       headers: new HttpHeaderBuilder().withAspectModelUrn(aspectModelUrn).build(),
       responseType: 'blob' as 'json',
@@ -220,27 +197,6 @@ export class ModelApiService {
         responseType: 'text',
       })
       .pipe(timeout(this.requestTimeout));
-  }
-
-  /*
-   *This method will get all the errors and notify the user for those which are correctable.
-   */
-  validate(rdfContent: string, showNotifications = true): Observable<Array<ViolationError>> {
-    return this.getViolationError(rdfContent).pipe(
-      tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors)),
-    );
-  }
-
-  getViolationError(rdfContent: string): Observable<Array<ViolationError>> {
-    return this.http
-      .post<Array<ViolationError>>(`${this.serviceUrl}${this.api.models}/validate`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
-      })
-      .pipe(
-        timeout(this.requestTimeout),
-        map((data: any) => data.violationErrors),
-        catchError(res => throwError(() => res)),
-      );
   }
 
   generateOpenApiSpec(rdfContent: string, openApi: OpenApi): Observable<string> {
@@ -295,7 +251,7 @@ export class ModelApiService {
       );
   }
 
-  downloadDocumentation(rdfContent: string, language: string): Observable<string> {
+  generateDocumentation(rdfContent: string, language: string): Observable<string> {
     return this.http
       .post(`${this.serviceUrl}${this.api.generate}/documentation`, rdfContent, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
@@ -307,67 +263,17 @@ export class ModelApiService {
       .pipe(timeout(this.requestTimeout));
   }
 
-  getAASX(rdfContent: string): Observable<string> {
+  generateAASX(rdfContent: string): Observable<string> {
     return this.http.post(`${this.serviceUrl}${this.api.generate}/aasx`, rdfContent, {
       headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
       responseType: 'text',
     });
   }
 
-  getAASasXML(rdfContent: string): Observable<string> {
+  generatetAASasXML(rdfContent: string): Observable<string> {
     return this.http.post(`${this.serviceUrl}${this.api.generate}/aas-xml`, rdfContent, {
       headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
       responseType: 'text',
     });
-  }
-
-  openDocumentation(rdfContent: string, language: string): Observable<void> {
-    return this.downloadDocumentation(rdfContent, language).pipe(
-      map((documentation: string) => {
-        if (!this.browserService.isStartedAsElectronApp()) {
-          const tabRef = window.open('about:blank', '_blank');
-          tabRef.document.write(documentation);
-          tabRef.focus();
-          tabRef.document.close();
-          return;
-        }
-
-        const fs = window.require('fs');
-        const os = window.require('os');
-        const path = window.require('path');
-        const ameTmpDir = path.join(os.homedir(), '.ametmp');
-        const printFilePath = path.normalize(path.join(ameTmpDir, 'print.html'));
-        const BrowserWindow = window.require('@electron/remote').BrowserWindow;
-        const electronBrowserWindow = new BrowserWindow({
-          width: 1920,
-          height: 1080,
-        });
-
-        if (!fs.existsSync(ameTmpDir)) {
-          fs.mkdirSync(ameTmpDir);
-        }
-
-        fs.writeFile(printFilePath, documentation, err => {
-          if (err) {
-            console.error('Write error:  ' + err.message);
-          } else {
-            electronBrowserWindow.loadFile(printFilePath);
-            electronBrowserWindow.reload();
-            electronBrowserWindow.focus();
-          }
-        });
-      }),
-      catchError(response => {
-        if (response instanceof HttpErrorResponse) {
-          if (response.status === 422) {
-            return throwError(() => JSON.parse(response.error).error.message.split(': ')[1]);
-          } else if (response.status === 400) {
-            // TODO This should be removed as soon as the SDK has fixed the graphviz error.
-            return throwError(() => JSON.parse(response.error).error.message);
-          }
-        }
-        return throwError(() => 'Server error');
-      }),
-    );
   }
 }

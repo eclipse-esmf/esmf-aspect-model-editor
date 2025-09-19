@@ -58,7 +58,7 @@ export class OpenElementWindowComponent implements OnInit {
   ngOnInit() {
     const [namespace, elementName] = this.elementInfo.urn.replace('urn:samm:', '').split('#');
     this.modelApiService
-      .getAspectMetaModel(this.elementInfo.urn)
+      .fetchAspectMetaModel(this.elementInfo.urn)
       .pipe(
         switchMap((model: string) => this.modelLoaderService.parseRdfModel([model])),
         tap(rdfModel => {

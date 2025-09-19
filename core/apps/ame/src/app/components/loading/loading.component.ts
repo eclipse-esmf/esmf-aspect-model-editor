@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {ModelApiService, PREDEFINED_MODELS} from '@ame/api';
+import {ModelApiService} from '@ame/api';
 import {ElectronSignals, ElectronSignalsService, ElectronTunnelService} from '@ame/shared';
 import {NgOptimizedImage} from '@angular/common';
 import {AfterViewInit, Component, NgZone, OnDestroy, inject} from '@angular/core';
@@ -36,15 +36,6 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit(): void {
-    if (!this.electronTunnel.ipcRenderer) {
-      this.modelApiService.getPredefinedModel(PREDEFINED_MODELS.SIMPLE_ASPECT).subscribe(model => {
-        this.electronTunnel.startUpData$.next({isFirstWindow: true, model});
-        const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
-        this.ngZone.run(() => this.router.navigate(['/editor'], {queryParams}));
-      });
-      return;
-    }
-
     this.electronSignalsService.call('requestMaximizeWindow');
 
     const sub = forkJoin([this.electronSignalsService.call('isFirstWindow'), this.loadModelText()])
@@ -77,7 +68,7 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
           return of(null);
         }
 
-        return this.modelApiService.getAspectMetaModel(data.options.aspectModelUrn);
+        return this.modelApiService.fetchAspectMetaModel(data.options.aspectModelUrn);
       }),
     );
   }

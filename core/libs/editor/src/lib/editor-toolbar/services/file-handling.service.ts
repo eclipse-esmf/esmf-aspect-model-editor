@@ -160,7 +160,7 @@ export class FileHandlingService {
 
   loadNamespaceFile(absoluteFileName: string, aspectModelUrn: string) {
     const subscription = this.modelApiService
-      .getAspectMetaModel(aspectModelUrn)
+      .fetchAspectMetaModel(aspectModelUrn)
       .pipe(
         first(),
         tap(() => {
@@ -251,7 +251,7 @@ export class FileHandlingService {
 
     return this.modelService.synchronizeModelToRdf().pipe(
       map(() => this.rdfService.serializeModel(this.currentLoadedFile?.rdfModel)),
-      switchMap(serializedModel => this.modelApiService.formatModel(serializedModel)),
+      switchMap(serializedModel => this.modelApiService.fetchFormatedAspectModel(serializedModel)),
       switchMap(formattedModel => {
         const header = this.configurationService.getSettings().copyrightHeader.join('\n');
         return from(navigator.clipboard.writeText(header + '\n\n' + formattedModel));
@@ -293,7 +293,7 @@ export class FileHandlingService {
       map(() => this.currentLoadedFile.absoluteName || 'undefined.ttl'),
       switchMap(fileName => {
         const rdfModelTtl = this.rdfService.serializeModel(this.currentLoadedFile?.rdfModel);
-        return this.modelApiService.formatModel(rdfModelTtl).pipe(
+        return this.modelApiService.fetchFormatedAspectModel(rdfModelTtl).pipe(
           tap(formattedModel => {
             const header = this.configurationService.getSettings().copyrightHeader.join('\n');
             saveAs(new Blob([header + '\n\n' + formattedModel], {type: 'text/turtle;charset=utf-8'}), fileName);
@@ -402,7 +402,7 @@ export class FileHandlingService {
     let newModelContent: string;
     let newModelAbsoluteFileName: string;
 
-    return this.modelApiService.formatModel(migratedFile).pipe(
+    return this.modelApiService.fetchFormatedAspectModel(migratedFile).pipe(
       switchMap(formattedModel => {
         newModelContent = formattedModel;
         return this.modelApiService.validate(migratedFile, false);
@@ -415,7 +415,7 @@ export class FileHandlingService {
       }),
       tap(({absoluteName}) => (newModelAbsoluteFileName = absoluteName)),
       switchMap((file: NamespaceFile) => {
-        return this.modelApiService.saveModel(newModelContent, file.getAnyAspectModelUrn(), newModelAbsoluteFileName);
+        return this.modelApiService.saveAspectModel(newModelContent, file.getAnyAspectModelUrn(), newModelAbsoluteFileName);
       }),
       tap(() => {
         if (uploadOptions.showNotifications) {

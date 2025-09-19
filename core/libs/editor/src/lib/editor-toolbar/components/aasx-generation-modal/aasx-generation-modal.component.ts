@@ -59,7 +59,8 @@ export class AASXGenerationModalComponent {
     this.isGenerating = true;
     const currentFile = this.loadedFilesService.currentLoadedFile;
     const rdfModel = this.rdfService.serializeModel(currentFile.rdfModel);
-    const assx = this.control.value === 'aasx' ? this.modelApiService.getAASX(rdfModel) : this.modelApiService.getAASasXML(rdfModel);
+    const assx =
+      this.control.value === 'aasx' ? this.modelApiService.generateAASX(rdfModel) : this.modelApiService.generatetAASasXML(rdfModel);
 
     assx
       .pipe(

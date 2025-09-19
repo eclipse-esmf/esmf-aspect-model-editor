@@ -59,6 +59,6 @@ export class RdfService {
     if (fileToCompare.absoluteName !== absoluteFileName) return of(false);
 
     const serializedModel: string = this.serializeModel(fileToCompare.rdfModel);
-    return this.modelApiService.formatModel(serializedModel).pipe(map(formattedModel => formattedModel === fileContent));
+    return this.modelApiService.fetchFormatedAspectModel(serializedModel).pipe(map(formattedModel => formattedModel === fileContent));
   }
 }

@@ -145,7 +145,7 @@ export class ModelLoaderService {
   }
 
   getRdfModelsFromWorkspace() {
-    return this.modelApiService.getAllNamespacesFilesContent().pipe(
+    return this.modelApiService.fetchAllNamespaceFilesContent().pipe(
       switchMap(files =>
         forkJoin<[string, RdfModel][]>(
           files.map(file => this.parseRdfModel([file.aspectMetaModel]).pipe(map(rdfModel => [file.fileName, rdfModel]))),
@@ -221,7 +221,7 @@ export class ModelLoaderService {
     workspaceStructure: WorkspaceStructure = null,
     currentFile: string,
   ) {
-    return (workspaceStructure ? of(workspaceStructure) : this.modelApiService.getNamespacesStructure()).pipe(
+    return (workspaceStructure ? of(workspaceStructure) : this.modelApiService.loadNamespacesStructure()).pipe(
       switchMap(wStructure =>
         this.parseRdfModel([rdf]).pipe(
           switchMap(rdfModel => {
@@ -237,7 +237,7 @@ export class ModelLoaderService {
                 for (const model of file.models) {
                   const dependencyFile = `${dependency}:${model.model}`;
                   if (dependencyFile === currentFile) continue;
-                  acc[`${dependency}:${model.model}`] = this.modelApiService.getAspectMetaModel(model.aspectModelUrn);
+                  acc[`${dependency}:${model.model}`] = this.modelApiService.fetchAspectMetaModel(model.aspectModelUrn);
                 }
                 return acc;
               }, {});

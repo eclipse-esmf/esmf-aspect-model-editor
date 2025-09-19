@@ -218,7 +218,7 @@ export class ElectronTunnelService {
       return;
     }
 
-    this.ipcRenderer.send(ElectronEvents.SIGNAL_REFRESH_WORKSPACE, true);
+    this.ipcRenderer.send(ElectronEvents.SIGNAL_REFRESH_WORKSPACE);
   }
 
   private requestLockedFiles() {

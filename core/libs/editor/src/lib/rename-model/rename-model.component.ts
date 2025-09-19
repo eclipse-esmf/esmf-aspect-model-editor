@@ -48,7 +48,7 @@ export class RenameModelComponent {
     private loadedFiles: LoadedFilesService,
     private modelApiService: ModelApiService,
   ) {
-    this.modelApiService.getWorkspaceAspectModelUrns().subscribe(files => {
+    this.modelApiService.fetchAspectModelUrnsGroupedByNamespac().subscribe(files => {
       const namespaces: Record<string, boolean> = {};
       for (const {aspectModelUrn, fileName} of files) {
         const [namespace] = aspectModelUrn.replace('urn:samm:', '').split('#');

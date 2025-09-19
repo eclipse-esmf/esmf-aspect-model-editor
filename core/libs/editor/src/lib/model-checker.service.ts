@@ -27,7 +27,7 @@ export class ModelCheckerService {
     let namespacesStructure: WorkspaceStructure;
 
     const extractDependencies = (absoluteName: string, modelData: ModelData) =>
-      this.modelApiService.getAspectMetaModel(modelData.aspectModelUrn).pipe(
+      this.modelApiService.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(
         switchMap(rdf => this.modelLoader.parseRdfModel([rdf])),
         map(rdfModel => {
           const dependencies = RdfModelUtil.resolveExternalNamespaces(rdfModel)
@@ -57,7 +57,7 @@ export class ModelCheckerService {
         }),
       );
 
-    return this.modelApiService.getNamespacesStructure().pipe(
+    return this.modelApiService.loadNamespacesStructure().pipe(
       switchMap(structure => {
         namespacesStructure = structure;
         const requests = {};
@@ -81,7 +81,7 @@ export class ModelCheckerService {
    * @returns all namespaces and their file information
    */
   detectWorkspace(onlyAspectModels?: boolean) {
-    return this.modelApiService.getNamespacesStructure(onlyAspectModels).pipe(
+    return this.modelApiService.loadNamespacesStructure(onlyAspectModels).pipe(
       map(structure => {
         const requests = {};
         for (const namespace in structure) {

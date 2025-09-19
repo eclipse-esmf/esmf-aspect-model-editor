@@ -123,7 +123,7 @@ export class WorkspaceFileElementsComponent implements OnInit {
 
   private requestFile(absoluteName: string, aspectModelUrn: string) {
     this.modelApiService
-      .getAspectMetaModel(aspectModelUrn)
+      .fetchAspectMetaModel(aspectModelUrn)
       .pipe(
         switchMap(content =>
           this.modelLoaderService.loadSingleModel({

@@ -25,6 +25,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {finalize} from 'rxjs';
 import {WorkspaceErrorComponent} from '../../../../../../sidebar/src/lib/workspace/workspace-error/workspace-error.component';
 
 @Component({
@@ -63,23 +64,33 @@ export class SelectNamespacesComponent implements OnInit {
 
   ngOnInit(): void {
     this.extracting = true;
-    this.modelCheckerService.detectWorkspace(true).subscribe({
-      next: values => {
-        this.entries = values;
-        this.extracting = false;
-      },
-      error: err => {
-        this.notificationService.error({
-          title: 'Error detecting namespaces',
-          message: 'There is a problem to detect the workspace namespaces: ' + (err?.message || err),
-        });
-        this.dialogRef.close();
-      },
-    });
+    this.modelCheckerService
+      .detectWorkspace(true)
+      .pipe(finalize(() => (this.extracting = false)))
+      .subscribe({
+        next: values => {
+          if (values && Object.keys(values).length === 0) {
+            this.notificationService.info({
+              title: 'Nothing to export',
+              message: 'There are no namespaces available to export in the current workspace.',
+            });
+
+            this.dialogRef.close();
+          }
+          this.entries = values;
+        },
+        error: err => {
+          this.notificationService.error({
+            title: 'Error detecting namespaces',
+            message: 'There is a problem to detect the workspace namespaces: ' + (err?.message || err),
+          });
+          this.dialogRef.close();
+        },
+      });
   }
 
   export() {
-    this.modelApiService.getExportZipFile(this.selectedKey).subscribe({
+    this.modelApiService.fetchExportPackage(this.selectedKey).subscribe({
       next: response => {
         const url = URL.createObjectURL(response);
         this.downloadFile(url);
