@@ -20,6 +20,11 @@ export class HttpHeaderBuilder {
     this.httpHeaders = new HttpHeaders();
   }
 
+  withFileUri(uri: string): HttpHeaderBuilder {
+    this.httpHeaders = this.httpHeaders.append('uri', uri);
+    return this;
+  }
+
   withContentTypeRdfTurtle(): HttpHeaderBuilder {
     this.httpHeaders = this.httpHeaders.append('Content-Type', 'text/turtle');
     return this;
