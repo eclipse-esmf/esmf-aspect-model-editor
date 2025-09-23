@@ -233,7 +233,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
       }
 
       if (file.errored) {
-        return file.unknownSammVersion
+        return file.sammVersion === 'unknown'
           ? 'Detected unknown SAMM version'
           : file.missingDependencies.length
             ? 'Missing dependencies ' + file.missingDependencies.join('\n')

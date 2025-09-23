@@ -12,7 +12,8 @@
  */
 
 import {MigratorApiService} from '@ame/api';
-import {Component, NgZone, OnInit} from '@angular/core';
+import {MigratorService} from '@ame/migrator';
+import {Component, NgZone, OnInit, inject} from '@angular/core';
 import {MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {Router} from '@angular/router';
@@ -27,16 +28,15 @@ import {catchError, of} from 'rxjs';
   imports: [MatDialogTitle, MatDialogContent, MatProgressSpinner, TranslateModule],
 })
 export class LoadingMigratingComponent implements OnInit {
-  constructor(
-    private migratorApiService: MigratorApiService,
-    private router: Router,
-    private ngZone: NgZone,
-  ) {}
+  private router = inject(Router);
+  private ngZone = inject(NgZone);
+  private migratorService = inject(MigratorService);
+  private migratorApiService = inject(MigratorApiService);
 
   ngOnInit(): void {
     this.migratorApiService
-      .migrateWorkspace()
+      .migrateWorkspace(this.migratorService.increaseNamespaceVersion)
       .pipe(catchError(() => of(null)))
-      .subscribe(data => this.ngZone.run(() => this.router.navigate([{outlets: {migrator: 'status'}}], {state: {data}})));
+      .subscribe(data => this.ngZone.run(() => this.router.navigate([{outlets: {migrator: 'migration-result'}}], {state: {data}})));
   }
 }

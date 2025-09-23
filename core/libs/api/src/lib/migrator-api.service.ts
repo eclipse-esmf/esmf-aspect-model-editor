@@ -39,7 +39,7 @@ export class MigratorApiService {
   private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
 
-  public rdfModelsToMigrate: string[] = [];
+  public rdfModelsToMigrate = [];
 
   constructor(
     private http: HttpClient,
@@ -56,10 +56,10 @@ export class MigratorApiService {
   public hasFilesToMigrate(): Observable<boolean> {
     this.rdfModelsToMigrate = [];
     return this.modelLoader.getRdfModelsFromWorkspace().pipe(
-      map(rdfModels => {
-        this.rdfModelsToMigrate = Object.keys(rdfModels).filter(absoluteName =>
-          ExporterHelper.isVersionOutdated(rdfModels[absoluteName].samm.version, this.config.currentSammVersion),
-        );
+      map(namedRdfModel => {
+        this.rdfModelsToMigrate = namedRdfModel
+          .filter(model => ExporterHelper.isVersionOutdated(model.version, this.config.currentSammVersion))
+          .map(model => model.rdfModel);
 
         return this.rdfModelsToMigrate.length > 0;
       }),
@@ -70,8 +70,9 @@ export class MigratorApiService {
     return this.http.get<Array<NamespaceStatus>>(`${this.serviceUrl}${this.api.package}/backup-workspace`);
   }
 
-  public migrateWorkspace(): Observable<NamespaceStatus[]> {
-    return this.http.get<Array<NamespaceStatus>>(`${this.serviceUrl}${this.api.models}/migrate-workspace`);
+  public migrateWorkspace(setNewVersion: boolean): Observable<NamespaceStatus[]> {
+    const params = {setNewVersion: setNewVersion.toString()};
+    return this.http.get<Array<NamespaceStatus>>(`${this.serviceUrl}${this.api.models}/migrate-workspace`, {params});
   }
 
   public rewriteFile(payload: any): Observable<string> {

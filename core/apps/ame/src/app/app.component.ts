@@ -77,8 +77,6 @@ export class AppComponent implements OnInit {
       this.migratorService.startMigrating().subscribe(() => {
         this.fileHandlingService.createEmptyModel();
         this.sidebarService.workspace.refresh();
-        // TODO Check this navigation
-        //this.router.navigate([{outlets: {migrator: null, 'export-namespaces': null, 'import-namespaces': null}}]);
       });
     } else {
       this.startupService.listenForLoading();

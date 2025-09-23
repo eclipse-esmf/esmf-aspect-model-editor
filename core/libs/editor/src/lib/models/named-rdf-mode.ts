@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
@@ -11,28 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-:host {
-  display: flex;
-  flex-direction: column;
-  min-width: 350px;
-  max-width: 700px;
-  min-height: 250px;
-}
+import {RdfModel} from 'libs/aspect-model-loader/src/lib';
 
-.migration-success {
-  flex-grow: 1;
-  width: 100%;
-  height: 120px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  &-icon {
-    height: 100px;
-    width: 100px;
-    font-size: 100px;
-    line-height: 100px;
-    color: green;
-  }
+export interface NamedRdfModel {
+  name: string;
+  version: string;
+  rdfModel: RdfModel;
 }

@@ -20,11 +20,11 @@ import {MigratorService} from '../../migrator.service';
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
 import {TranslateModule} from '@ngx-translate/core';
 import {provideMockObject} from '../../../../../../jest-helpers';
-import {MigrationSuccessComponent} from './migration-success.component';
+import {MigrationResultComponent} from './migration-result.component';
 
 describe('MigrationSuccessComponent', () => {
-  let component: MigrationSuccessComponent;
-  let fixture: ComponentFixture<MigrationSuccessComponent>;
+  let component: MigrationResultComponent;
+  let fixture: ComponentFixture<MigrationResultComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -43,7 +43,7 @@ describe('MigrationSuccessComponent', () => {
       ],
     });
 
-    fixture = TestBed.createComponent(MigrationSuccessComponent);
+    fixture = TestBed.createComponent(MigrationResultComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

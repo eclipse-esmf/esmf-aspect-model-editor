@@ -132,12 +132,11 @@ export class FileHandlingService {
       hasCloseButton: true,
     };
     this.loadingScreenService.open(loadingScreenOptions);
-    const migratedModel = this.migratorService.bammToSamm(modelContent);
 
-    return this.modelApiService.validate(migratedModel).pipe(
+    return this.modelApiService.validate(modelContent).pipe(
       switchMap(validations => {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
-        return found ? throwError(() => found.message) : this.modelLoaderService.renderModel({rdfAspectModel: migratedModel});
+        return found ? throwError(() => found.message) : this.modelLoaderService.renderModel({rdfAspectModel: modelContent});
       }),
       catchError(error => {
         this.notificationsService.info({
@@ -398,14 +397,13 @@ export class FileHandlingService {
     };
     if (uploadOptions.showLoading) this.loadingScreenService.open(loadingOptions);
 
-    const migratedFile = this.migratorService.bammToSamm(fileContent);
     let newModelContent: string;
     let newModelAbsoluteFileName: string;
 
-    return this.modelApiService.fetchFormatedAspectModel(migratedFile).pipe(
+    return this.modelApiService.fetchFormatedAspectModel(fileContent).pipe(
       switchMap(formattedModel => {
         newModelContent = formattedModel;
-        return this.modelApiService.validate(migratedFile, false);
+        return this.modelApiService.validate(fileContent, false);
       }),
       switchMap(validations => {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');

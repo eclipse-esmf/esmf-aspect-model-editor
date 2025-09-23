@@ -19,7 +19,7 @@ import {Injectable, inject} from '@angular/core';
 import {Observable, forkJoin, of, throwError} from 'rxjs';
 import {catchError, map, mergeMap, retry, tap, timeout} from 'rxjs/operators';
 import {ModelValidatorService} from './model-validator.service';
-import {WorkspaceStructure} from './models';
+import {ModelData, WorkspaceStructure} from './models';
 
 @Injectable({
   providedIn: 'root',
@@ -123,40 +123,28 @@ export class ModelApiService {
 
   loadNamespacesStructure(onlyAspectModel?: boolean): Observable<WorkspaceStructure> {
     const params = onlyAspectModel ? {onlyAspectModels: 'true'} : {onlyAspectModels: 'false'};
-    return this.http.get<WorkspaceStructure>(`${this.serviceUrl}${this.api.models}/namespaces`, {params});
-  }
-
-  fetchAspectModelUrnsGroupedByNamespac(): Observable<{aspectModelUrn: string; fileName: string; namespace: string}[]> {
-    return this.loadNamespacesStructure().pipe(
+    return this.http.get<WorkspaceStructure>(`${this.serviceUrl}${this.api.models}/namespaces`, {params}).pipe(
       timeout(this.requestTimeout),
-      map(data => {
-        return Object.keys(data).reduce<{aspectModelUrn: string; fileName: string; namespace: string}[]>(
-          (fileNames, namespace) => [
-            ...fileNames,
-            ...data[namespace]
-              .map(({models}) => models.map(model => ({aspectModelUrn: model.aspectModelUrn, fileName: model.model, namespace})))
-              .flat(),
-          ],
-          [],
-        );
-      }),
+      catchError(res => throwError(() => res)),
     );
   }
 
   fetchAllNamespaceFilesContent(): Observable<FileContentModel[]> {
-    return this.fetchAspectModelUrnsGroupedByNamespac().pipe(
-      map(aspectModelUrns =>
-        aspectModelUrns.reduce<any[]>(
-          (files, file) => [
-            ...files,
-            this.fetchAspectMetaModel(file.aspectModelUrn).pipe(
-              map(aspectMetaModel => new FileContentModel(file.fileName, aspectMetaModel)),
+    return this.loadNamespacesStructure().pipe(
+      map((workspace: WorkspaceStructure): ModelData[] => {
+        return Object.values(workspace).flatMap(entries => entries.flatMap(entry => entry.models));
+      }),
+      map((modelDataList: ModelData[]) => {
+        return modelDataList.map(modelData =>
+          this.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(
+            map(
+              aspectMetaModel =>
+                new FileContentModel(modelData.model, modelData.aspectModelUrn, modelData.version, modelData.existing, aspectMetaModel),
             ),
-          ],
-          [],
-        ),
-      ),
-      mergeMap((files$: Observable<string>[]) => (files$.length ? forkJoin(files$) : of([]))),
+          ),
+        );
+      }),
+      mergeMap((files$: Observable<FileContentModel>[]) => (files$.length ? forkJoin(files$) : of([]))),
       catchError(() => of([])),
     );
   }

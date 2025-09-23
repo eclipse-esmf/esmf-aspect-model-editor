@@ -14,7 +14,7 @@
 import {ModelApiService} from '@ame/api';
 import {LanguageTranslateModule} from '@ame/translation';
 import {Component, Inject} from '@angular/core';
-import {AbstractControl, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
@@ -48,24 +48,24 @@ export class RenameModelComponent {
     private loadedFiles: LoadedFilesService,
     private modelApiService: ModelApiService,
   ) {
-    this.modelApiService.fetchAspectModelUrnsGroupedByNamespac().subscribe(files => {
-      const namespaces: Record<string, boolean> = {};
-      for (const {aspectModelUrn, fileName} of files) {
-        const [namespace] = aspectModelUrn.replace('urn:samm:', '').split('#');
-        namespaces[`${namespace}:${fileName}`] = true;
-      }
-
-      this.fileNameControl = new FormControl('', [
-        Validators.required,
-        // eslint-disable-next-line no-useless-escape
-        Validators.pattern('[0-9a-zA-Z_. -]+'),
-        (control: AbstractControl) => {
-          const searchTerm = `${this.loadedFiles.currentLoadedFile.namespace}:${control.value}.ttl`.toLowerCase();
-          return namespaces[searchTerm] ? {sameFile: true} : null;
-        },
-      ]);
-      this.fileNameControl.markAsTouched();
-    });
+    // this.modelApiService.fetchAspectModelUrnsGroupedByNamespace().subscribe(files => {
+    //   const namespaces: Record<string, boolean> = {};
+    //   for (const {aspectModelUrn, fileName} of files) {
+    //     const [namespace] = aspectModelUrn.replace('urn:samm:', '').split('#');
+    //     namespaces[`${namespace}:${fileName}`] = true;
+    //   }
+    //
+    //   this.fileNameControl = new FormControl('', [
+    //     Validators.required,
+    //     // eslint-disable-next-line no-useless-escape
+    //     Validators.pattern('[0-9a-zA-Z_. -]+'),
+    //     (control: AbstractControl) => {
+    //       const searchTerm = `${this.loadedFiles.currentLoadedFile.namespace}:${control.value}.ttl`.toLowerCase();
+    //       return namespaces[searchTerm] ? {sameFile: true} : null;
+    //     },
+    //   ]);
+    //   this.fileNameControl.markAsTouched();
+    // });
   }
 
   closeAndGiveResult(result: boolean) {

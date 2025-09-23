@@ -12,6 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
+import {RdfModelUtil} from '@ame/rdf/utils';
 import {BrowserService, ElectronSignals, ElectronSignalsService} from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
 import {BehaviorSubject, Subscription, of} from 'rxjs';
@@ -79,7 +80,6 @@ export class FileStatus {
   public sammVersion: string;
   public dependencies: string[];
   public missingDependencies: string[];
-  public unknownSammVersion: boolean;
   public aspectModelUrn: string;
 
   constructor(public name: string) {}
@@ -164,7 +164,8 @@ export class SidebarStateService {
 
     for (const absoluteName in files) {
       const fileStatus = files[absoluteName];
-      const [namespace, version] = absoluteName.split(':');
+
+      const [namespace, version] = RdfModelUtil.splitRdfIntoChunks(absoluteName);
       this.namespacesState.setFile(`${namespace}:${version}`, fileStatus);
       hasOutdatedFiles ||= fileStatus.outdated;
     }

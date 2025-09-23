@@ -26,7 +26,7 @@ export class ModelCheckerService {
   detectWorkspaceErrors(signal?: Subject<string>): Observable<Record<string, FileStatus>> {
     let namespacesStructure: WorkspaceStructure;
 
-    const extractDependencies = (absoluteName: string, modelData: ModelData) =>
+    const extractDependencies = (absoluteName: string, modelData: ModelData, modelVersion: string) =>
       this.modelApiService.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(
         switchMap(rdf => this.modelLoader.parseRdfModel([rdf])),
         map(rdfModel => {
@@ -45,10 +45,10 @@ export class ModelCheckerService {
 
           status.dependencies = dependencies;
           status.missingDependencies = missingDependencies;
-          status.unknownSammVersion = rdfModel.samm.version === 'unknown';
-          status.outdated = ExporterHelper.isVersionOutdated(rdfModel.samm.version, config.currentSammVersion);
+          status.sammVersion = modelVersion || 'unknown';
+          status.outdated = ExporterHelper.isVersionOutdated(modelVersion, config.currentSammVersion);
           status.loaded = currentFile?.absoluteName === absoluteName;
-          status.errored = status.unknownSammVersion || Boolean(status.missingDependencies.length);
+          status.errored = status.sammVersion === 'unknown' || Boolean(status.missingDependencies.length);
           status.aspectModelUrn = modelData.aspectModelUrn;
 
           signal?.next(absoluteName);
@@ -65,7 +65,7 @@ export class ModelCheckerService {
           for (const {version, models} of structure[namespace]) {
             for (const model of models) {
               const absoluteName = `${namespace}:${version}:${model.model}`;
-              requests[absoluteName] = extractDependencies(absoluteName, model);
+              requests[absoluteName] = extractDependencies(absoluteName, model, model.version);
             }
           }
         }

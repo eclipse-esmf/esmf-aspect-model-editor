@@ -26,6 +26,7 @@ import {Observable, catchError, first, forkJoin, map, of, switchMap, tap, throwE
 import {ModelRendererService} from './model-renderer.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
 import {LoadingCodeErrors} from './models/loading-errors';
+import {NamedRdfModel} from './models/named-rdf-mode';
 
 @Injectable({providedIn: 'root'})
 export class ModelLoaderService {
@@ -144,19 +145,14 @@ export class ModelLoaderService {
     );
   }
 
-  getRdfModelsFromWorkspace() {
+  getRdfModelsFromWorkspace(): Observable<NamedRdfModel[]> {
     return this.modelApiService.fetchAllNamespaceFilesContent().pipe(
       switchMap(files =>
-        forkJoin<[string, RdfModel][]>(
-          files.map(file => this.parseRdfModel([file.aspectMetaModel]).pipe(map(rdfModel => [file.fileName, rdfModel]))),
+        forkJoin<[string, string, RdfModel][]>(
+          files.map(file => this.parseRdfModel([file.aspectMetaModel]).pipe(map(rdfModel => [file.name, file.version, rdfModel]))),
         ),
       ),
-      map(result =>
-        result.reduce<Record<string, RdfModel>>((acc, [name, rdfModel]) => {
-          acc[name] = rdfModel;
-          return acc;
-        }, {}),
-      ),
+      map(result => result.map(([name, version, rdfModel]) => ({name, version, rdfModel}) as NamedRdfModel)),
     );
   }
 

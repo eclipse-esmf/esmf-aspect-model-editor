@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatDialogActions, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
@@ -19,14 +19,17 @@ import {TranslateModule} from '@ngx-translate/core';
 import {MigratorService} from '../../migrator.service';
 
 @Component({
-  selector: 'ame-migration-success',
-  templateUrl: './migration-success.component.html',
-  styleUrls: ['./migration-success.component.scss'],
+  selector: 'ame-migration-result',
+  templateUrl: './migration-result.component.html',
+  styleUrls: ['./migration-result.component.scss'],
   standalone: true,
   imports: [MatDialogTitle, MatDialogContent, MatIcon, MatDialogActions, MatButton, TranslateModule],
 })
-export class MigrationSuccessComponent {
-  constructor(private migratorService: MigratorService) {}
+export class MigrationResultComponent {
+  private migratorService = inject(MigratorService);
+
+  public success = history?.state.data.success;
+  public errors = history?.state.data.errors;
 
   closeModal() {
     this.migratorService.dialogRef.close();

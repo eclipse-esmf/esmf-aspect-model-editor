@@ -40,9 +40,10 @@
       "CANCEL": "Cancel",
       "MIGRATE": "Migrate"
     },
-    "MIGRATION_SUCCESS_DIALOG": {
-      "TITLE": "Version increasing was successful",
-      "CONTENT": "Version increasing finished with success",
+    "MIGRATION_DIALOG": {
+      "TITLE": "Migration",
+      "SUCCESS_CONTENT": "Migration completed successfully.",
+      "ERROR_CONTENT": "Migration failed. Please try again or contact for support.",
       "CLOSE": "Close"
     },
     "INCREASE_VERSION_DIALOG": {

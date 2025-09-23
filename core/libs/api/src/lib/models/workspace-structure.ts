@@ -14,6 +14,7 @@
 export interface ModelData {
   model: string;
   existing: boolean;
+  version: string;
   aspectModelUrn: string;
 }
 
