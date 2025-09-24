@@ -10,5 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+
+export * from './helper';
 export * from './sidebar-state.service';
 export * from './sidebar.module';

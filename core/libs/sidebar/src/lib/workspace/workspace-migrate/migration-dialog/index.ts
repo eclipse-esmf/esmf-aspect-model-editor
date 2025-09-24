@@ -10,4 +10,5 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import 'jest-preset-angular/setup-jest';
+
+export * from './migration-dialog.component';

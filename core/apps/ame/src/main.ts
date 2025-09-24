@@ -14,7 +14,6 @@
 import {AppComponent} from '@ame/app/app.component';
 import {APP_ROUTES} from '@ame/app/app.routes';
 import {DomainModelToRdfModule} from '@ame/aspect-exporter';
-import {MIGRATOR_ROUTES} from '@ame/migrator';
 import {MxGraphModule} from '@ame/mx-graph';
 import {APP_CONFIG, config, httpLoaderFactory} from '@ame/shared';
 import {HttpClient, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
@@ -51,7 +50,7 @@ const bootstrap = () =>
       ),
       provideAnimations(),
       {provide: APP_CONFIG, useValue: config},
-      provideRouter([...APP_ROUTES, ...MIGRATOR_ROUTES], withPreloading(PreloadAllModules)),
+      provideRouter(APP_ROUTES, withPreloading(PreloadAllModules)),
       provideHttpClient(withInterceptorsFromDi()),
     ],
   });

@@ -11,65 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorService, FileHandlingService, ModelLoaderService} from '@ame/editor';
-import {MigratorService} from '@ame/migrator';
-import {MxGraphService} from '@ame/mx-graph';
-import {
-  ElectronSignals,
-  ElectronSignalsService,
-  ElectronTunnelService,
-  LoadingScreenService,
-  ModelSavingTrackerService,
-  StartupPayload,
-} from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
+import {FileHandlingService, ModelLoaderService} from '@ame/editor';
+import {ElectronSignals, ElectronSignalsService, LoadingScreenService, ModelSavingTrackerService, StartupPayload} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {Injectable, NgZone, inject} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
-import {Observable, filter, of, sample, switchMap, take, tap} from 'rxjs';
+import {Observable, of, switchMap, tap} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class StartupService {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
 
   constructor(
-    private migratorService: MigratorService,
-    private sidebarService: SidebarStateService,
-    private router: Router,
-    private editorService: EditorService,
     private modelSaveTracker: ModelSavingTrackerService,
-    private electronTunnelService: ElectronTunnelService,
     private loadingScreenService: LoadingScreenService,
     private fileHandlingService: FileHandlingService,
-    private mxGraphService: MxGraphService,
     private translate: LanguageTranslationService,
     private ngZone: NgZone,
     private modelLoaderService: ModelLoaderService,
   ) {}
-
-  listenForLoading() {
-    this.router.events
-      .pipe(
-        filter(ev => ev instanceof NavigationEnd && ev.url.includes('/editor')),
-        switchMap(() => this.electronTunnelService.startUpData$.asObservable()),
-        sample(this.mxGraphService.graphInitialized$.pipe(filter(Boolean))),
-        filter(data => {
-          if (data?.model) {
-            return true;
-          } else {
-            this.fileHandlingService.createEmptyModel();
-            return false;
-          }
-        }),
-        take(1),
-        switchMap(({isFirstWindow, model}) =>
-          (isFirstWindow ? this.migratorService.startMigrating() : of(null)).pipe(switchMap(() => this.loadModel(model))),
-        ),
-      )
-      .subscribe(() => {
-        this.sidebarService.workspace.refresh();
-      });
-  }
 
   loadModel(model: string): Observable<any> {
     let options: StartupPayload;

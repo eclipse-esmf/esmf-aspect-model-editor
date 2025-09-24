@@ -12,17 +12,13 @@
  */
 
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
-import {FileHandlingService} from '@ame/editor';
-import {MigratorService} from '@ame/migrator';
 import {MxGraphHelper, ThemeService} from '@ame/mx-graph';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {BrowserService, ElectronTunnelService, TitleService} from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {SearchesStateService} from '@ame/utils';
 import {Component, HostListener, Injector, OnInit} from '@angular/core';
-import {Router, RouterOutlet} from '@angular/router';
-import {StartupService} from './startup.service';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'ame-root',
@@ -41,13 +37,8 @@ export class AppComponent implements OnInit {
     private electronTunnelService: ElectronTunnelService,
     private configurationService: ConfigurationService,
     private themeService: ThemeService,
-    private startupService: StartupService,
-    private migratorService: MigratorService,
-    private sidebarService: SidebarStateService,
-    private fileHandlingService: FileHandlingService,
     private translate: LanguageTranslationService,
     private searchesStateService: SearchesStateService,
-    private router: Router,
     private injector: Injector,
   ) {
     this.domainModelToRdf.listenForStoreUpdates();
@@ -70,16 +61,6 @@ export class AppComponent implements OnInit {
 
     if (window.location.search.includes('?e2e=true')) {
       return;
-    }
-
-    // TODO In case of no service opened, display a error page
-    if (!this.electronTunnelService.ipcRenderer) {
-      this.migratorService.startMigrating().subscribe(() => {
-        this.fileHandlingService.createEmptyModel();
-        this.sidebarService.workspace.refresh();
-      });
-    } else {
-      this.startupService.listenForLoading();
     }
   }
 

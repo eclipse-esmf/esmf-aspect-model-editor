@@ -12,8 +12,8 @@
  */
 
 import {ModelLoaderService} from '@ame/editor';
-import {ExporterHelper} from '@ame/migrator';
 import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
+import {ExporterHelper} from '@ame/sidebar';
 import {HttpClient} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
 import {Observable, map, switchMap} from 'rxjs';
@@ -60,9 +60,9 @@ export class MigratorApiService {
     return this.http.get<string>(`${this.serviceUrl}${this.api.package}/backup-workspace`);
   }
 
-  public migrateWorkspace(setNewVersion: boolean): Observable<MigrationStatus[]> {
+  public migrateWorkspace(setNewVersion: boolean): Observable<MigrationStatus> {
     const params = {setNewVersion: setNewVersion.toString()};
-    return this.http.get<MigrationStatus[]>(`${this.serviceUrl}${this.api.models}/migrate-workspace`, {params});
+    return this.http.get<MigrationStatus>(`${this.serviceUrl}${this.api.models}/migrate-workspace`, {params});
   }
 
   public rewriteFile(payload: any): Observable<string> {

@@ -24,7 +24,6 @@ import {
   ModelSaverService,
   ShapeSettingsStateService,
 } from '@ame/editor';
-import {MigratorService} from '@ame/migrator';
 import {MxGraphService} from '@ame/mx-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
@@ -104,7 +103,6 @@ export class FileHandlingService {
     private confirmDialogService: ConfirmDialogService,
     private notificationsService: NotificationsService,
     private loadingScreenService: LoadingScreenService,
-    private migratorService: MigratorService,
     private sidebarService: SidebarStateService,
     private translate: LanguageTranslationService,
     private electronSignalsService: ElectronSignalsService,

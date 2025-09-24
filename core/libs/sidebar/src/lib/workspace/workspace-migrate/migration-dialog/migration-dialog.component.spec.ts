@@ -11,24 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {MigratorApiService} from '@ame/api';
-import {APP_CONFIG} from '@ame/shared';
+import {APP_CONFIG, NotificationsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatDialogModule} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterTestingModule} from '@angular/router/testing';
 import {provideMockObject} from 'jest-helpers';
 import {of} from 'rxjs';
-import {MigratorService} from '../../migrator.service';
 
 import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
 import {TranslateModule} from '@ngx-translate/core';
-import {StartMigratingComponent} from './start-migrating.component';
+import {MockProvider} from 'ng-mocks';
+import {MigrationDialogComponent} from './migration-dialog.component';
 
-describe('StartMigratingComponent', () => {
-  let component: StartMigratingComponent;
-  let fixture: ComponentFixture<StartMigratingComponent>;
+describe('MigrationDialogComponent', () => {
+  let component: MigrationDialogComponent;
+  let fixture: ComponentFixture<MigrationDialogComponent>;
   let migratorApiService: MigratorApiService;
 
   beforeEach(() => {
@@ -41,8 +42,11 @@ describe('StartMigratingComponent', () => {
         MatProgressSpinnerModule,
         TranslateModule.forRoot(),
         LanguageTranslateModule,
+        NoopAnimationsModule,
       ],
       providers: [
+        MockProvider(NotificationsService),
+        MockProvider(MatDialogRef<MigrationDialogComponent>),
         {
           provide: APP_CONFIG,
           useValue: {
@@ -54,10 +58,6 @@ describe('StartMigratingComponent', () => {
           useValue: provideMockObject(MigratorApiService),
         },
         {
-          provide: MigratorService,
-          useValue: provideMockObject(MigratorService),
-        },
-        {
           provide: LanguageTranslationService,
           useValue: provideMockObject(LanguageTranslationService),
         },
@@ -67,7 +67,7 @@ describe('StartMigratingComponent', () => {
     migratorApiService = TestBed.inject(MigratorApiService);
     migratorApiService.createBackup = jest.fn(() => of());
 
-    fixture = TestBed.createComponent(StartMigratingComponent);
+    fixture = TestBed.createComponent(MigrationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

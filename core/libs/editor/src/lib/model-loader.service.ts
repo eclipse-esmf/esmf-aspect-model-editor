@@ -14,10 +14,10 @@
 import {ModelApiService, WorkspaceStructure} from '@ame/api';
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {InstantiatorService} from '@ame/instantiator';
-import {ExporterHelper} from '@ame/migrator';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {BrowserService, ElectronSignalsService, ModelSavingTrackerService, NotificationsService, TitleService, config} from '@ame/shared';
+import {ExporterHelper} from '@ame/sidebar';
 import {Injectable, inject} from '@angular/core';
 import {DefaultAspect, ModelElementCache, NamedElement, RdfModel, loadAspectModel} from '@esmf/aspect-model-loader';
 import {RdfLoader} from 'libs/aspect-model-loader/src/lib/shared/rdf-loader';

@@ -29,7 +29,7 @@
       "MIGRATION_NEEDED": "and needs to be migrated.",
       "MIGRATE_INSTRUCTION": "Click the Migrate button to proceed with the migration.",
       "VERSION_AUTO_UPGRADE": "Auto-increase namespace versions.",
-      "UPGRADE_EFFECT": "If selected, a new major version of all migrated namespaces will be created to indicate the SAMM version upgrade. Otherwise the existing namespaces will be overwritten (previous content will remain in a backup).",
+      "UPGRADE_EFFECT": "If selected, all migrated namespaces will be updated to a new major version to reflect the SAMM upgrade. If a new version already exists, you will see a warning and no changes will be made. Previous content will be saved as a backup.",
       "CANCEL": "Cancel",
       "MIGRATE": "Migrate"
     },
@@ -38,6 +38,7 @@
       "SUCCESS_CONTENT": "Migration completed successfully.",
       "ERROR_CONTENT": "Migration failed. Please try again or contact for support.",
       "WARNING_CONTENT": "Migration completed with warnings. Please review the details below.",
+      "MIGRATION_FAILED_TITLE": "Migration failed",
       "CLOSE": "Close"
     },
     "SIDEBAR": {

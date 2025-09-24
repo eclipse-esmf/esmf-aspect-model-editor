@@ -10,7 +10,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-
 :host {
   display: flex;
   flex-direction: column;
@@ -19,14 +18,32 @@
   max-height: 500px;
 }
 
-.migration {
+::ng-deep .mat-horizontal-stepper-header {
+  pointer-events: none !important;
+}
+
+h2[mat-dialog-title] {
+  margin-bottom: 0.5rem;
+}
+
+mat-dialog-content {
   width: 100%;
 
-  &-content {
+  .content {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+
+    mat-checkbox {
+      margin-top: 1.5rem;
+    }
+
+    &__version-description {
+      font-size: 13px;
+      margin-left: 1.5rem;
+      opacity: 0.8;
+    }
 
     &__icon {
       height: 100px;
@@ -47,6 +64,18 @@
       margin-bottom: 8px;
     }
   }
+}
+
+button:disabled {
+  line-height: 36px;
+  height: 36px;
+  min-width: 80px;
+}
+
+button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .mat-icon.mat-warn {

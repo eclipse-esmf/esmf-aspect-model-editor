@@ -11,7 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './loading-migrating/loading-migrating.component';
-export * from './migration-result/migration-result.component';
-export * from './migrator/migrator.component';
-export * from './start-migrating/start-migrating.component';
+export * from './migrator.helper';

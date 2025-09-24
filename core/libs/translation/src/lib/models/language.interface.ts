@@ -603,6 +603,7 @@ export interface MigrationDialog {
   SUCCESS_CONTENT: string;
   ERROR_CONTENT: string;
   WARNING_CONTENT: string;
+  MIGRATION_FAILED_TITLE: string;
   CLOSE: string;
 }
 export interface WorkspaceMigrationDialog {

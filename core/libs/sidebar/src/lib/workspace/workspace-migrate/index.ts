@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
@@ -11,17 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-:host {
-  min-width: 450px;
-  display: block;
-}
-
-.loader-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  mat-spinner {
-    margin: 4rem 0;
-  }
-}
+export * from './migration-dialog/migration-dialog.component';

@@ -1,9 +1,8 @@
 import {ModelApiService, ModelData, WorkspaceStructure} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
-import {ExporterHelper} from '@ame/migrator';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {config} from '@ame/shared';
-import {FileStatus} from '@ame/sidebar';
+import {ExporterHelper, FileStatus} from '@ame/sidebar';
 import {Injectable, inject} from '@angular/core';
 import {Samm} from '@esmf/aspect-model-loader';
 import {Observable, Subject, forkJoin, map, of, switchMap} from 'rxjs';

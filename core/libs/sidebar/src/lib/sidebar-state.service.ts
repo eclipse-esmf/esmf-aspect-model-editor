@@ -115,7 +115,7 @@ export class NamespacesManager {
   lockFiles(files: {namespace: string; file: string}[]) {
     for (const namespace of this.namespacesKeys) {
       for (const fileStatus of this.namespaces[namespace]) {
-        if (fileStatus.name !== this.currentFile.name) {
+        if (fileStatus.name !== this.currentFile?.name) {
           fileStatus.locked = files.some(file => file.namespace === namespace && file.file === fileStatus.name);
         }
       }
