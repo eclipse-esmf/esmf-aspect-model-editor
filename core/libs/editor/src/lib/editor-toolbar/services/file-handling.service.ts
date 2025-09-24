@@ -378,7 +378,7 @@ export class FileHandlingService {
       tap(() => this.notificationsService.success({title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_SUCCESS})),
       catchError(httpError => {
         // @TODO Temporary check until file blockage is fixed
-        !httpError.error?.error?.message?.includes('packages-to-import')
+        !httpError.error?.error?.message?.includes('import')
           ? this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_ERROR})
           : this.notificationsService.success({title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_SUCCESS});
 
