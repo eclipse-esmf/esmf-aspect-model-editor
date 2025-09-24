@@ -37,6 +37,8 @@ export class LoadingMigratingComponent implements OnInit {
     this.migratorApiService
       .migrateWorkspace(this.migratorService.increaseNamespaceVersion)
       .pipe(catchError(() => of(null)))
-      .subscribe(data => this.ngZone.run(() => this.router.navigate([{outlets: {migrator: 'migration-result'}}], {state: {data}})));
+      .subscribe(migrationStatus =>
+        this.ngZone.run(() => this.router.navigate([{outlets: {migrator: 'migration-result'}}], {state: {migrationStatus}})),
+      );
   }
 }

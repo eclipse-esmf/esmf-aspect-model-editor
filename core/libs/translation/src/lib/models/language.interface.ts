@@ -589,23 +589,20 @@ export interface SammMigration {
   CHECKED: string;
   MIGRATED: string;
   MIGRATE_WORKSPACE_DIALOG: MigrateWorkspaceDialog;
-  MIGRATION_STATUS_DIALOG: MigrationStatusDialog;
   WORKSPACE_MIGRATION_DIALOG: WorkspaceMigrationDialog;
-  MIGRATION_SUCCESS_DIALOG: MigrationSuccessDialog;
-  INCREASE_VERSION_DIALOG: IncreaseVersionDialog;
+  MIGRATION_DIALOG: MigrationDialog;
   SIDEBAR: Sidebar;
 }
 export interface Sidebar {
   MESSAGE: string;
   BUTTON: string;
 }
-export interface IncreaseVersionDialog {
+
+export interface MigrationDialog {
   TITLE: string;
-  LOADING_NAMESPACES: string;
-}
-export interface MigrationSuccessDialog {
-  TITLE: string;
-  CONTENT: string;
+  SUCCESS_CONTENT: string;
+  ERROR_CONTENT: string;
+  WARNING_CONTENT: string;
   CLOSE: string;
 }
 export interface WorkspaceMigrationDialog {
@@ -619,13 +616,6 @@ export interface WorkspaceMigrationDialog {
   ADD_LANGUAGE: string;
   SELECT_LANGUAGE: string;
   START_TYPE: string;
-}
-export interface MigrationStatusDialog {
-  TITLE: string;
-  ERROR: string;
-  SUCCESS: string;
-  CLOSE: string;
-  VERSION: string;
 }
 export interface MigrateWorkspaceDialog {
   MIGRATE_WORKSPACE: string;

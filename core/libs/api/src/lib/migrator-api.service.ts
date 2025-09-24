@@ -18,17 +18,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
 import {Observable, map, switchMap} from 'rxjs';
 import {ModelApiService} from './model-api.service';
-
-export interface NamespaceStatus {
-  namespace: string;
-  files: MigratedFileStatus[];
-}
-
-export interface MigratedFileStatus {
-  name: string;
-  success: boolean;
-  message?: string;
-}
+import {MigrationStatus} from './models';
 
 @Injectable({
   providedIn: 'root',
@@ -66,13 +56,13 @@ export class MigratorApiService {
     );
   }
 
-  public createBackup(): Observable<NamespaceStatus[]> {
-    return this.http.get<Array<NamespaceStatus>>(`${this.serviceUrl}${this.api.package}/backup-workspace`);
+  public createBackup(): Observable<string> {
+    return this.http.get<string>(`${this.serviceUrl}${this.api.package}/backup-workspace`);
   }
 
-  public migrateWorkspace(setNewVersion: boolean): Observable<NamespaceStatus[]> {
+  public migrateWorkspace(setNewVersion: boolean): Observable<MigrationStatus[]> {
     const params = {setNewVersion: setNewVersion.toString()};
-    return this.http.get<Array<NamespaceStatus>>(`${this.serviceUrl}${this.api.models}/migrate-workspace`, {params});
+    return this.http.get<MigrationStatus[]>(`${this.serviceUrl}${this.api.models}/migrate-workspace`, {params});
   }
 
   public rewriteFile(payload: any): Observable<string> {

@@ -23,13 +23,6 @@
       "MIGRATE_WORKSPACE": "Migrating Workspace...",
       "AWAITING_STATUS": "Please wait until all files are migrated"
     },
-    "MIGRATION_STATUS_DIALOG": {
-      "TITLE": "Migration Status",
-      "ERROR": "SAMM Version upgrade to {{version}} finished, but {{fileCount}} had to be skipped. Please fix {{fileCountMessage}} first (in a text editor, contacting us, or in a previous version of the editor that supports the original SAMM version that has to be temporarily installed). See below:",
-      "SUCCESS": "Migration finished with success",
-      "CLOSE": "Close",
-      "VERSION": "Increase Version"
-    },
     "WORKSPACE_MIGRATION_DIALOG": {
       "TITLE": "Migrate Workspace to SAMM",
       "FILE_VERSION_WARNING": "Your workspace has at least one file based on a SAMM version below",
@@ -44,11 +37,8 @@
       "TITLE": "Migration",
       "SUCCESS_CONTENT": "Migration completed successfully.",
       "ERROR_CONTENT": "Migration failed. Please try again or contact for support.",
+      "WARNING_CONTENT": "Migration completed with warnings. Please review the details below.",
       "CLOSE": "Close"
-    },
-    "INCREASE_VERSION_DIALOG": {
-      "TITLE": "Increasing Namespaces Versions",
-      "LOADING_NAMESPACES": "Loading Namespaces"
     },
     "SIDEBAR": {
       "MESSAGE": "Files with a lower SAMM version have been found.",

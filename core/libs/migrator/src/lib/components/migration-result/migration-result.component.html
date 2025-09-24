@@ -15,17 +15,39 @@
 
 @if (success) {
   <mat-dialog-content class="migration">
-    <mat-icon class="migration-icon">done</mat-icon>
-    <p>{{ 'SAMM_MIGRATION.MIGRATION_DIALOG.SUCCESS_CONTENT' | translate }}</p>
+    <div class="migration-content">
+      <mat-icon class="migration-content__icon">done</mat-icon>
+      <p>{{ 'SAMM_MIGRATION.MIGRATION_DIALOG.SUCCESS_CONTENT' | translate }}</p>
+    </div>
+    @if (errors.length) {
+      <mat-divider></mat-divider>
+      <div class="migration-content__banner">
+        <mat-icon>warning</mat-icon>
+        {{ 'SAMM_MIGRATION.MIGRATION_DIALOG.WARNING_CONTENT' | translate }}
+      </div>
+      <label>Migration Message:</label>
+      <ul>
+        @for (error of errors; track error) {
+          <li>{{ error }}</li>
+        }
+      </ul>
+    }
   </mat-dialog-content>
 } @else {
   <mat-dialog-content class="migration">
     <mat-icon class="migration-icon">error</mat-icon>
     <p>{{ 'SAMM_MIGRATION.MIGRATION_DIALOG.ERRORCONTENT' | translate }}</p>
     @if (errors.length) {
-      @for (error of errors; track error) {
-        <p>{{ error }}</p>
-      }
+      <mat-divider></mat-divider>
+      <div class="migration-content__banner">
+        <mat-icon>warning</mat-icon>
+        {{ 'SAMM_MIGRATION.MIGRATION_DIALOG.WARNING_CONTENT' | translate }}
+      </div>
+      <ul>
+        @for (error of errors; track error) {
+          <li>{{ error }}</li>
+        }
+      </ul>
     }
   </mat-dialog-content>
 }

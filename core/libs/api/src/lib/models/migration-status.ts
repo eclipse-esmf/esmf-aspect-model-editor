@@ -11,5 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './migration-status';
-export * from './workspace-structure';
+export interface MigrationStatus {
+  success: string;
+  errors: string[];
+}

@@ -14,6 +14,7 @@
 import {Component, inject} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatDialogActions, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
+import {MatDivider} from '@angular/material/divider';
 import {MatIcon} from '@angular/material/icon';
 import {TranslateModule} from '@ngx-translate/core';
 import {MigratorService} from '../../migrator.service';
@@ -23,13 +24,13 @@ import {MigratorService} from '../../migrator.service';
   templateUrl: './migration-result.component.html',
   styleUrls: ['./migration-result.component.scss'],
   standalone: true,
-  imports: [MatDialogTitle, MatDialogContent, MatIcon, MatDialogActions, MatButton, TranslateModule],
+  imports: [MatDialogTitle, MatDialogContent, MatIcon, MatDialogActions, MatButton, TranslateModule, MatDivider],
 })
 export class MigrationResultComponent {
   private migratorService = inject(MigratorService);
 
-  public success = history?.state.data.success;
-  public errors = history?.state.data.errors;
+  public success = history?.state.migrationStatus.success;
+  public errors = history?.state.migrationStatus.errors;
 
   closeModal() {
     this.migratorService.dialogRef.close();
