@@ -39,6 +39,9 @@
         @if (fileNameControl.getError('sameFile')) {
           <mat-error>{{ 'DECLARE_NAME_DIALOG.EXIST_ERROR' | translate }}</mat-error>
         }
+        @if (fileNameControl.getError('fileExists')) {
+          <mat-error>{{ 'DECLARE_NAME_DIALOG.ALREADY_DEFINED_ERROR' | translate }}</mat-error>
+        }
       </mat-form-field>
     </mat-dialog-content>
   }

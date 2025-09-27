@@ -84,6 +84,13 @@ export class RenameModelComponent {
         const searchTerm = `${this.loadedFiles.currentLoadedFile.namespace}:${control.value}.ttl`.toLowerCase();
         return namespaces[searchTerm] ? {sameFile: true} : null;
       },
+      (control: AbstractControl) => {
+        const fileName = control.value;
+        if (this.loadedFiles.files[`${this.loadedFiles.currentLoadedFile.originalNamespace}:${fileName}.ttl`]) {
+          return {fileExists: true};
+        }
+        return null;
+      },
     ]);
   }
 

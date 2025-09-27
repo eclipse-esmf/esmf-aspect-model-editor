@@ -143,6 +143,7 @@
     "REQUIRED_ERROR": "This field is required",
     "CHARACTERS_ERROR": "Allowed characters: alphanumeric, space, dot(.), minus(-) and underscore(_)",
     "EXIST_ERROR": "This file already exists in your namespace",
+    "ALREADY_DEFINED_ERROR": "Filename already exists in your namespace",
     "REMOVE_ASPECT": "Remove Aspect",
     "CANCEL": "Cancel"
   },

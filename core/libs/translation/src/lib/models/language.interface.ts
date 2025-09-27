@@ -488,6 +488,7 @@ export interface DeclareNameDialog {
   REQUIRED_ERROR: string;
   CHARACTERS_ERROR: string;
   EXIST_ERROR: string;
+  ALREADY_DEFINED_ERROR: string;
   REMOVE_ASPECT: string;
   CANCEL: string;
 }
