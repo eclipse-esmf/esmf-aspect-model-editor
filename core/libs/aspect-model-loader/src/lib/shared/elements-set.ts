@@ -39,7 +39,7 @@ export class ElementSet<T extends NamedElement = NamedElement> extends Array<T> 
   append(items: T[]): ElementSet<T> {
     const set = new ElementSet<T>();
     for (let i = 0; i < this.length; i++) {
-      set.push(this.at(i));
+      set.push(this[i]);
     }
 
     for (const item of items || []) {
