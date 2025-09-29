@@ -14,8 +14,14 @@
 import {CacheUtils} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
 import {ElementCreatorService, NotificationsService} from '@ame/shared';
+import {AsyncPipe} from '@angular/common';
 import {Component, OnDestroy, OnInit, inject} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
+import {MatIconButton} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatHint, MatInput, MatLabel} from '@angular/material/input';
 import {Characteristic, DefaultCharacteristic, DefaultCollection} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
@@ -25,9 +31,27 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-element-characteristic-input-field',
   templateUrl: './element-characteristic-input-field.component.html',
   styleUrls: ['../../field.scss'],
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatInput,
+    MatHint,
+    MatIconModule,
+    MatIconButton,
+    MatError,
+    MatAutocomplete,
+    MatOption,
+    AsyncPipe,
+  ],
 })
 export class ElementCharacteristicInputFieldComponent extends InputFieldComponent<DefaultCollection> implements OnInit, OnDestroy {
+  private notificationsService = inject(NotificationsService);
   private elementCreator = inject(ElementCreatorService);
+  private editorDialogValidators = inject(EditorDialogValidators);
+
+  public rdfService = inject(RdfService);
 
   filteredCharacteristicTypes$: Observable<any[]>;
 
@@ -35,19 +59,17 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
   elementCharacteristicControl: FormControl;
   isDisabled = false;
 
-  constructor(
-    private notificationsService: NotificationsService,
-    public rdfService: RdfService,
-    private validators: EditorDialogValidators,
-  ) {
+  constructor() {
     super();
     this.fieldName = 'elementCharacteristic';
   }
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => {
-      this.setElementCharacteristicControl();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.setElementCharacteristicControl();
+      });
 
     this.enableWhenEmpty(() => this.elementCharacteristicDisplayControl, 'dataTypeEntity');
   }
@@ -73,7 +95,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
           value,
           disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled,
         },
-        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic)],
+        [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic)],
       ),
     );
     this.getControl('elementCharacteristicDisplay').markAsTouched();

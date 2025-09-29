@@ -12,18 +12,16 @@
  */
 
 import {MxGraphService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultConstraint, DefaultTrait} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class TraitWithCharacteristicOrConstraintConnectionHandler
   implements MultiShapeConnector<DefaultTrait, DefaultCharacteristic | DefaultConstraint>
 {
-  constructor(private mxGraphService: MxGraphService) {}
+  private mxGraphService = inject(MxGraphService);
 
   public connect(parentMetaModel: DefaultTrait, childMetaModel: DefaultCharacteristic, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
     if (childMetaModel instanceof DefaultConstraint) {

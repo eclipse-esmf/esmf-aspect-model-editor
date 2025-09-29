@@ -14,7 +14,7 @@
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
-import {ElementModelService, ModelElementNamingService} from '@ame/meta-model';
+import {ElementModelService} from '@ame/meta-model';
 import {
   MxGraphAttributeService,
   MxGraphHelper,
@@ -52,14 +52,32 @@ import {AsyncApi, OpenApi, ViolationError} from './editor-toolbar';
 import {ModelSaverService} from './model-saver.service';
 import {ConfirmDialogEnum} from './models/confirm-dialog.enum';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EditorService {
   private filtersService: FiltersService = inject(FiltersService);
   private filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
   private configurationService: ConfigurationService = inject(ConfigurationService);
   private modelSaverService: ModelSaverService = inject(ModelSaverService);
+  private mxGraphService = inject(MxGraphService);
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private notificationsService = inject(NotificationsService);
+  private modelApiService = inject(ModelApiService);
+  private modelService = inject(ModelService);
+  private alertService = inject(AlertService);
+  private rdfService = inject(RdfService);
+  private sammLangService = inject(SammLanguageSettingsService);
+  private confirmDialogService = inject(ConfirmDialogService);
+  private elementModelService = inject(ElementModelService);
+  private titleService = inject(TitleService);
+  private shapeSettingsStateService = inject(ShapeSettingsStateService);
+  private loadingScreenService = inject(LoadingScreenService);
+  private translate = inject(LanguageTranslationService);
+  private injector = inject(Injector);
+  private ngZone = inject(NgZone);
+  private loadedFilesService = inject(LoadedFilesService);
+  private elementCreator = inject(ElementCreatorService);
 
   private validateModelSubscription$: Subscription;
   private isAllShapesExpandedSubject = new BehaviorSubject<boolean>(true);
@@ -79,29 +97,7 @@ export class EditorService {
     return this.loadedFilesService.currentLoadedFile;
   }
 
-  constructor(
-    private mxGraphService: MxGraphService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private notificationsService: NotificationsService,
-    private modelApiService: ModelApiService,
-    private modelService: ModelService,
-    private alertService: AlertService,
-    private rdfService: RdfService,
-    private sammLangService: SammLanguageSettingsService,
-    private modelElementNamingService: ModelElementNamingService,
-    private confirmDialogService: ConfirmDialogService,
-    private elementModelService: ElementModelService,
-    private titleService: TitleService,
-    private shapeSettingsStateService: ShapeSettingsStateService,
-    private loadingScreenService: LoadingScreenService,
-    private translate: LanguageTranslationService,
-    private injector: Injector,
-    private ngZone: NgZone,
-    private loadedFilesService: LoadedFilesService,
-    private elementCreator: ElementCreatorService,
-  ) {
+  constructor() {
     if (!environment.production) {
       window['angular.editorService'] = this;
     }
@@ -245,21 +241,21 @@ export class EditorService {
         this.createAspect(newInstance, {x, y});
         return;
       }
-      const renderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlayService, this.sammLangService, null);
+      const mxGraphRenderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlayService, this.sammLangService, null);
 
       const node = this.filtersService.createNode(newInstance);
       this.mxGraphService.setCoordinatesForNextCellRender(x, y);
-      const cell = renderer.render(node, null);
+      const cell = mxGraphRenderer.render(node, null);
       this.mxGraphService.formatCell(cell, true);
     } else {
       const element: NamedElement = this.loadedFilesService.findElementOnExtReferences(aspectModelUrn);
       if (!this.mxGraphService.resolveCellByModelElement(element)) {
-        const renderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlayService, this.sammLangService, null);
+        const mxGraphRenderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlayService, this.sammLangService, null);
 
         this.mxGraphService.setCoordinatesForNextCellRender(x, y);
 
         const filteredElements = this.filtersService.filter([element]);
-        const cell = renderer.render(filteredElements[0], null);
+        const cell = mxGraphRenderer.render(filteredElements[0], null);
 
         this.mxGraphService.formatCell(cell);
       } else {

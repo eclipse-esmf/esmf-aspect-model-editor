@@ -11,8 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {
   DefaultAspect,
   DefaultCharacteristic,
@@ -23,7 +25,7 @@ import {
   DefaultUnit,
   NamedElement,
 } from '@esmf/aspect-model-loader';
-import {Subscription} from 'rxjs';
+import {TranslatePipe} from '@ngx-translate/core';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -31,22 +33,21 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-name-input-field',
   templateUrl: './name-input-field.component.html',
   styleUrls: ['../../field.scss'],
+  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatInput, MatError, TranslatePipe],
 })
 export class NameInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit, OnDestroy {
-  public fieldName = 'name';
-  private nameSubscription = new Subscription();
+  private editorDialogValidators = inject(EditorDialogValidators);
 
-  constructor(private validators: EditorDialogValidators) {
-    super();
-  }
+  public fieldName = 'name';
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => this.setNameControl());
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.setNameControl());
   }
 
   ngOnDestroy() {
     super.ngOnDestroy();
-    this.nameSubscription.unsubscribe();
   }
 
   private isDisabled() {
@@ -74,17 +75,15 @@ export class NameInputFieldComponent extends InputFieldComponent<NamedElement> i
     );
     nameControl = this.parentForm.get('name');
 
-    this.nameSubscription.add(
-      nameControl.valueChanges.subscribe(() => {
-        const validation = this.validators.duplicateName(this.metaModelElement)(nameControl);
-        if (validation) {
-          nameControl.setErrors({
-            ...(nameControl.errors || {}),
-            ...(validation || {}),
-          });
-        }
-      }),
-    );
+    nameControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      const validation = this.editorDialogValidators.duplicateName(this.metaModelElement)(nameControl);
+      if (validation) {
+        nameControl.setErrors({
+          ...(nameControl.errors || {}),
+          ...(validation || {}),
+        });
+      }
+    });
     nameControl.markAsTouched();
   }
 

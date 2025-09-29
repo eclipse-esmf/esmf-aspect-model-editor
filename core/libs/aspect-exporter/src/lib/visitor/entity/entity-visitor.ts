@@ -12,36 +12,30 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {MxGraphService} from '@ame/mx-graph';
 import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntity, Samm} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class EntityVisitor extends BaseVisitor<DefaultEntity> {
+  public rdfNodeService = inject(RdfNodeService);
+  public rdfListService = inject(RdfListService);
+  public loadedFilesService = inject(LoadedFilesService);
+
   private store: Store;
   private samm: Samm;
-
-  constructor(
-    public rdfNodeService: RdfNodeService,
-    public graphService: MxGraphService,
-    public rdfListService: RdfListService,
-    public loadedFiles: LoadedFilesService,
-  ) {
-    super(loadedFiles);
-  }
 
   visit(entity: DefaultEntity): DefaultEntity {
     if (entity.isPredefined) {
       return null;
     }
 
-    this.store = this.loadedFiles.currentLoadedFile.rdfModel.store;
-    this.samm = this.loadedFiles.currentLoadedFile.rdfModel.samm;
+    this.store = this.loadedFilesService.currentLoadedFile.rdfModel.store;
+    this.samm = this.loadedFilesService.currentLoadedFile.rdfModel.samm;
 
     this.setPrefix(entity.aspectModelUrn);
     const newAspectModelUrn = `${entity.aspectModelUrn.split('#')[0]}#${entity.name}`;

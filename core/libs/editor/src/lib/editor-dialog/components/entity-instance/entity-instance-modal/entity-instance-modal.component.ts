@@ -13,12 +13,18 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {config} from '@ame/shared';
-import {Component, Inject} from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {NgClass} from '@angular/common';
+import {Component, inject} from '@angular/core';
+import {FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatButton, MatIconButton} from '@angular/material/button';
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultProperty, Value} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import {EditorModelService} from '../../../editor-model.service';
 import {EditorDialogValidators} from '../../../validators';
+import {EntityInstanceModalTableComponent} from '../entity-instance-modal-table/entity-instance-modal-table.component';
 import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
 
 export interface NewEntityInstanceDialogOptions {
@@ -30,8 +36,30 @@ export interface NewEntityInstanceDialogOptions {
 @Component({
   templateUrl: './entity-instance-modal.component.html',
   styleUrls: ['./entity-instance-modal.component.scss'],
+  imports: [
+    MatDialogTitle,
+    MatIconModule,
+    MatIconButton,
+    MatFormField,
+    MatDialogContent,
+    MatLabel,
+    ReactiveFormsModule,
+    NgClass,
+    MatInput,
+    MatError,
+    MatButton,
+    TranslatePipe,
+    EntityInstanceModalTableComponent,
+    MatDialogActions,
+  ],
 })
 export class EntityInstanceModalComponent {
+  private dialogRef = inject(MatDialogRef<EntityInstanceModalComponent>);
+  private editorModelService = inject(EditorModelService);
+  private loadedFilesService = inject(LoadedFilesService);
+
+  public data: NewEntityInstanceDialogOptions = inject(MAT_DIALOG_DATA);
+
   public title: string;
 
   public form: FormGroup;
@@ -48,14 +76,9 @@ export class EntityInstanceModalComponent {
     return this.form?.get('properties') as FormGroup;
   }
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) private data: NewEntityInstanceDialogOptions,
-    private dialogRef: MatDialogRef<EntityInstanceModalComponent>,
-    private editorModelService: EditorModelService,
-    private loadedFilesService: LoadedFilesService,
-  ) {
-    this.complexValues = data.complexValues;
-    this.enumeration = data.metaModel as DefaultEnumeration;
+  constructor() {
+    this.complexValues = this.data.complexValues;
+    this.enumeration = this.data.metaModel as DefaultEnumeration;
     this.entity = this.data.dataType;
     this.title = this.addTitle;
     this.entityValueName = new FormControl('', [

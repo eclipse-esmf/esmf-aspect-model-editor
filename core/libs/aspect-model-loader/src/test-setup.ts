@@ -5,4 +5,9 @@ globalThis.ngJest = {
     errorOnUnknownProperties: true,
   },
 };
-import 'jest-preset-angular/setup-jest';
+import {setupZoneTestEnv} from 'jest-preset-angular/setup-env/zone/index';
+
+setupZoneTestEnv({
+  errorOnUnknownElements: true,
+  errorOnUnknownProperties: true,
+});

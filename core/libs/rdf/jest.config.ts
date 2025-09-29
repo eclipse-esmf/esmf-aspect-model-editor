@@ -11,18 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const nxPreset = require('@nx/jest/preset');
-module.exports = {
-  ...nxPreset,
-  displayName: 'settings-dialog',
-  preset: '../../jest.preset.js',
+export default {
+  displayName: 'rdf',
+  preset: '../../jest.preset.cjs',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {},
-  coverageDirectory: '../../coverage/libs/settings-dialog',
+  coverageDirectory: '../../coverage/libs/rdf',
   transform: {
     '^.+.(ts|mjs|js|html)$': [
       'jest-preset-angular',
-      {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$',
+      },
     ],
   },
   transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],

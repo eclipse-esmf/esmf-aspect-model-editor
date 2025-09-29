@@ -12,11 +12,18 @@
  */
 
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {Component, Injector, OnInit, ViewChild} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MatChipGrid} from '@angular/material/chips';
+import {AsyncPipe} from '@angular/common';
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
+import {MatChipGrid, MatChipInput, MatChipRow} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
-import {Observable, map} from 'rxjs';
+import {TranslatePipe} from '@ngx-translate/core';
+import {map, Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -29,6 +36,23 @@ interface SeeElement {
   selector: 'ame-see-input-field',
   templateUrl: './see-input-field.component.html',
   styleUrls: ['./see-input-field.component.scss', '../../field.scss'],
+  imports: [
+    MatFormField,
+    MatTooltipModule,
+    MatLabel,
+    MatChipGrid,
+    ReactiveFormsModule,
+    MatChipRow,
+    MatIconModule,
+    MatAutocompleteTrigger,
+    MatChipInput,
+    MatInput,
+    MatAutocomplete,
+    AsyncPipe,
+    MatOption,
+    MatError,
+    TranslatePipe,
+  ],
 })
 export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
   @ViewChild('see', {static: true}) seeInput;
@@ -52,19 +76,20 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
     return this.mxGraphService.getAllCells().map(cell => MxGraphHelper.getModelElement(cell));
   }
 
-  constructor(private injector: Injector) {
+  constructor() {
     super();
     this.fieldName = 'see';
-    this.mxGraphService = this.injector.get(MxGraphService);
+    this.mxGraphService = inject(MxGraphService);
   }
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => this.setSeeControl());
-    this.subscription.add(
-      this.searchControl.statusChanges.subscribe(status => {
-        this.chipList.errorState = status === 'INVALID';
-      }),
-    );
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.setSeeControl());
+
+    this.searchControl.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(status => {
+      this.chipList.errorState = status === 'INVALID';
+    });
   }
 
   getCurrentValue() {

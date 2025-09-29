@@ -16,7 +16,7 @@ import {ShapeConnectorService} from '@ame/connection';
 import {FiltersService, ModelTree} from '@ame/loader-filters';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {BrowserService} from '@ame/shared';
-import {Injectable, Injector} from '@angular/core';
+import {inject, Injectable, Injector} from '@angular/core';
 import {
   DefaultAspect,
   DefaultCharacteristic,
@@ -40,17 +40,15 @@ import {MxGraphHelper, MxGraphVisitorHelper, ShapeAttribute} from '../helpers';
 import {ModelInfo} from '../models';
 import {mxCellOverlay, mxConstants, mxEvent, mxImage} from '../providers';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class MxGraphShapeOverlayService {
-  constructor(
-    private browserService: BrowserService,
-    private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private filtersService: FiltersService,
-    private sammLangService: SammLanguageSettingsService,
-    protected loadedFilesService: LoadedFilesService,
-    private injector: Injector,
-  ) {}
+  private injector = inject(Injector);
+  private browserService = inject(BrowserService);
+  private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private filtersService = inject(FiltersService);
+  private sammLangService = inject(SammLanguageSettingsService);
+  protected loadedFilesService = inject(LoadedFilesService);
 
   removeOverlay(cell: mxgraph.mxCell, overlay?: mxgraph.mxCellOverlay): void {
     const modelElement = MxGraphHelper.getModelElement(cell);

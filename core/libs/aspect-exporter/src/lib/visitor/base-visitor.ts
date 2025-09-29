@@ -12,24 +12,25 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
+import {inject} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {DataFactory} from 'n3';
 
 export abstract class BaseVisitor<T> {
-  constructor(protected loadedFiles: LoadedFilesService) {}
+  protected loadedFilesService = inject(LoadedFilesService);
 
   abstract visit(element: NamedElement): T;
 
   protected setPrefix(aspectModelUrn: string) {
     const namespace = `${aspectModelUrn.split('#')[0]}#`;
-    if (this.loadedFiles.currentLoadedFile.rdfModel.hasDependency(namespace)) {
+    if (this.loadedFilesService.currentLoadedFile.rdfModel.hasDependency(namespace)) {
       return;
     }
 
-    const externalFile = this.loadedFiles.externalFiles.find(
+    const externalFile = this.loadedFilesService.externalFiles.find(
       file => file.rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null).length > 0,
     );
     const alias = externalFile?.rdfModel?.getAliasByDependency(namespace);
-    this.loadedFiles.currentLoadedFile.rdfModel.addPrefix(alias, namespace);
+    this.loadedFilesService.currentLoadedFile.rdfModel.addPrefix(alias, namespace);
   }
 }

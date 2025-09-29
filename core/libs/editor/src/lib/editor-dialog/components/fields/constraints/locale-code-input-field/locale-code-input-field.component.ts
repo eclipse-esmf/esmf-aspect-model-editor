@@ -12,11 +12,16 @@
  */
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultLocaleConstraint} from '@esmf/aspect-model-loader';
 import * as locale from 'locale-codes';
 import {Observable, of} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
+
+import {AsyncPipe} from '@angular/common';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'ame-locale-code-input-field',
@@ -31,6 +36,7 @@ import {InputFieldComponent} from '../../input-field.component';
     `,
   ],
   styleUrls: ['../../field.scss'],
+  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatAutocompleteTrigger, MatInput, MatAutocomplete, MatOption, AsyncPipe, MatError],
 })
 export class LocaleCodeInputFieldComponent extends InputFieldComponent<DefaultLocaleConstraint> implements OnInit, OnDestroy {
   public filteredLanguages: Observable<Array<locale.ILocale>>;
@@ -54,9 +60,11 @@ export class LocaleCodeInputFieldComponent extends InputFieldComponent<DefaultLo
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe(() => {
-      this.initForm();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.initForm();
+      });
   }
 
   ngOnDestroy() {

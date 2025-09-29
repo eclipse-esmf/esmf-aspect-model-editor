@@ -12,16 +12,14 @@
  */
 
 import {EntityValueRenderService, MxGraphHelper} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEntity, DefaultEntityInstance, NamedElement, Value} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class EntityValueModelService extends BaseModelService {
-  constructor(private entityValueRenderService: EntityValueRenderService) {
-    super();
-  }
+  private entityValueRenderService = inject(EntityValueRenderService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultEntityInstance;

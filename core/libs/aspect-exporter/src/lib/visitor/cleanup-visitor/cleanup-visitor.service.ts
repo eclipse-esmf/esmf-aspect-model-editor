@@ -12,16 +12,16 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {Store} from 'n3';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class CleanupVisitor {
-  private get store(): Store {
-    return this.loadedFiles.currentLoadedFile?.rdfModel?.store;
-  }
+  public loadedFilesService = inject(LoadedFilesService);
 
-  constructor(private loadedFiles: LoadedFilesService) {}
+  private get store(): Store {
+    return this.loadedFilesService.currentLoadedFile?.rdfModel?.store;
+  }
 
   removeStoreElements() {
     this.store.removeQuads(this.store.getQuads(null, null, null, null));

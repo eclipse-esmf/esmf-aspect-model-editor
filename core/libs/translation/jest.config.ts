@@ -11,25 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const esModules = ['@angular', '@ngrx', '@agm', 'ngx-bootstrap'].join('|');
-
-module.exports = {
-  displayName: 'loader-filters',
-  preset: '../../jest.preset.js',
+export default {
+  displayName: 'translation',
+  preset: '../../jest.preset.cjs',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {},
-  coverageDirectory: '../../coverage/libs/loader-filters',
+  coverageDirectory: '../../coverage/libs/api',
   transform: {
-    '^.+\\.(ts|js|mjs|html|svg)$': [
+    '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
-      {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$',
+      },
     ],
-    '^.+\\.js$': 'babel-jest',
   },
+  transformIgnorePatterns: ['node_modules/?!(.*\\.mjs$|@ngneat)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
-  transformIgnorePatterns: [`<rootDir>/node_modules/(?!.*\\.mjs$|${esModules})`],
 };

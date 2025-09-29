@@ -19,16 +19,13 @@ import {DataFactory, Store} from 'n3';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class AbstractPropertyVisitor extends BaseVisitor<DefaultProperty> {
   private rdfNodeService = inject(RdfNodeService);
+  public loadedFiles = inject(LoadedFilesService);
 
   private get store(): Store {
     return this.loadedFiles.currentLoadedFile?.rdfModel?.store;
-  }
-
-  constructor(loadedFiles: LoadedFilesService) {
-    super(loadedFiles);
   }
 
   visit(abstractProperty: DefaultProperty): DefaultProperty {

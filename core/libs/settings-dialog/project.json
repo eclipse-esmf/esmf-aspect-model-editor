@@ -9,7 +9,8 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/settings-dialog"],
       "options": {
-        "jestConfig": "libs/settings-dialog/jest.config.js"
+        "jestConfig": "libs/settings-dialog/jest.config.ts",
+        "tsConfig": "libs/settings-dialog/tsconfig.spec.json"
       }
     },
     "lint": {

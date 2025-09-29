@@ -11,34 +11,33 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NotificationModel, NotificationType, NotificationsService} from '@ame/shared';
-import {LanguageTranslateModule} from '@ame/translation';
+import {NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
 import {CommonModule} from '@angular/common';
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTableModule} from '@angular/material/table';
 import {ActivatedRoute, Router} from '@angular/router';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'ame-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss'],
-  imports: [CommonModule, MatIconModule, LanguageTranslateModule, MatDialogModule, MatButtonModule, MatTableModule, MatMenuModule],
+  imports: [CommonModule, MatIconModule, TranslatePipe, MatDialogModule, MatButtonModule, MatTableModule, MatMenuModule],
 })
 export class NotificationsComponent implements OnInit {
+  private dialogRef = inject(MatDialogRef<NotificationsComponent>);
+  private activatedRoute = inject(ActivatedRoute);
+
+  public notificationsService = inject(NotificationsService);
+  public router = inject(Router);
+
   currentItem = null;
   displayedColumns: string[] = ['expand', 'date', 'type', 'message', 'options'];
-
-  constructor(
-    private dialogRef: MatDialogRef<NotificationsComponent>,
-    public notificationsService: NotificationsService,
-    public router: Router,
-    private activatedRoute: ActivatedRoute,
-  ) {}
 
   ngOnInit() {
     this.notificationsService.getNotifications().forEach(notification => {

@@ -13,18 +13,25 @@
 
 import {DataType, EditorDialogValidators, EntityInstanceUtil, FormFieldHelper} from '@ame/editor';
 import {isDataTypeLangString} from '@ame/shared';
-import {ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
+import {AsyncPipe, NgClass} from '@angular/common';
+import {ChangeDetectorRef, Component, inject, OnChanges, OnInit, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
+  ReactiveFormsModule,
   UntypedFormGroup,
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
+import {MatIconButton, MatMiniFabButton} from '@angular/material/button';
+import {MatDivider} from '@angular/material/divider';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {
   Characteristic,
   DefaultCollection,
@@ -35,17 +42,39 @@ import {
   PropertyPayload,
   Value,
 } from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import * as locale from 'locale-codes';
-import {Observable, Subscription, map, of, startWith} from 'rxjs';
+import {map, Observable, of, startWith} from 'rxjs';
 import {InputFieldComponent} from '../../fields';
 
 @Component({
   selector: 'ame-entity-instance-table',
   templateUrl: './entity-instance-table.component.html',
   styleUrls: ['./entity-instance-table.component.scss'],
+  imports: [
+    MatFormField,
+    MatLabel,
+    TranslatePipe,
+    MatAutocompleteTrigger,
+    MatInput,
+    ReactiveFormsModule,
+    MatIconButton,
+    MatIconModule,
+    MatAutocomplete,
+    MatOptgroup,
+    AsyncPipe,
+    MatOption,
+    MatError,
+    NgClass,
+    MatMiniFabButton,
+    MatDivider,
+  ],
 })
-export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEntityInstance> implements OnInit, OnChanges, OnDestroy {
+export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEntityInstance> implements OnInit, OnChanges {
   @ViewChildren(MatAutocompleteTrigger) autocompleteTriggers: QueryList<MatAutocompleteTrigger>;
+
+  private changeDetector = inject(ChangeDetectorRef);
+  private fb = inject(FormBuilder);
 
   protected readonly EntityValueUtil = EntityInstanceUtil;
   protected readonly formFieldHelper = FormFieldHelper;
@@ -53,7 +82,6 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
 
   propertiesForm: FormGroup;
   sources: EntityInstanceProperty<DefaultProperty>[] = [];
-  subscriptions = new Subscription();
 
   filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
   filteredLanguageValues$: {[key: string]: Observable<any[]>} = {};
@@ -62,16 +90,10 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
     return this.parentForm.get('entityValueProperties') as FormGroup;
   }
 
-  constructor(
-    private changeDetector: ChangeDetectorRef,
-    private fb: FormBuilder,
-  ) {
-    super();
-  }
-
   ngOnInit(): void {
-    this.subscription.add(
-      this.getMetaModelData().subscribe((metaModelElement: NamedElement) => {
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((metaModelElement: NamedElement) => {
         this.propertiesForm = new FormGroup({});
         this.metaModelElement = metaModelElement as DefaultEntityInstance;
         this.parentForm.setControl('entityValueProperties', this.propertiesForm);
@@ -93,8 +115,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
         });
 
         this.sources = this.metaModelElement?.type?.properties.map(prop => this.createEntityValueProp(prop));
-      }),
-    );
+      });
   }
 
   getFormArray(value: string): FormArray {
@@ -196,7 +217,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
   }
 
   private subscribeToEntityValueChanges(control: FormControl, property: DefaultProperty): void {
-    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeEntityValueInput(property, value)));
+    control.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => this.changeEntityValueInput(property, value));
   }
 
   private changeEntityValueInput(property: DefaultProperty, value: string): void {
@@ -206,7 +227,7 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
   }
 
   private subscribeToLangValueChanges(control: FormControl, property: DefaultProperty): void {
-    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeLanguageInput(property.name, value)));
+    control.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => this.changeLanguageInput(property.name, value));
   }
 
   private changeLanguageInput(name: string, value: string): void {
@@ -259,11 +280,9 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
 
     const languageInputControl = new FormControl('', fieldValidators);
 
-    this.subscriptions.add(
-      languageInputControl.valueChanges.subscribe(value => {
-        this.changeLanguageInput(property.name, value);
-      }),
-    );
+    languageInputControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+      this.changeLanguageInput(property.name, value);
+    });
 
     const languageFormGroup = this.fb.group({
       value: ['', fieldValidators],
@@ -280,9 +299,5 @@ export class EntityInstanceTableComponent extends InputFieldComponent<DefaultEnt
 
   isCharacteristicCollectionType(characteristic: Characteristic | undefined): boolean {
     return characteristic instanceof DefaultCollection;
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }

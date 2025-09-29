@@ -11,7 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultFixedPointConstraint} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -19,6 +21,7 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-scale-input-field',
   templateUrl: './scale-input-field.component.html',
   styleUrls: ['../../field.scss'],
+  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatError, MatInput],
 })
 export class ScaleInputFieldComponent extends InputFieldComponent<DefaultFixedPointConstraint> implements OnInit, OnDestroy {
   constructor() {
@@ -28,9 +31,11 @@ export class ScaleInputFieldComponent extends InputFieldComponent<DefaultFixedPo
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe(() => {
-      this.initForm();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.initForm();
+      });
   }
 
   ngOnDestroy() {

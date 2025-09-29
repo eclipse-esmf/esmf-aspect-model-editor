@@ -23,13 +23,14 @@ import {
   filesSearchOption,
 } from '@ame/shared';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
-import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {LanguageTranslationService} from '@ame/translation';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {TranslatePipe} from '@ngx-translate/core';
 import {Observable, filter, first, map, of, startWith, switchMap, tap, throttleTime} from 'rxjs';
 import {SearchesStateService} from '../../search-state.service';
 import {OpenFileDialogComponent} from '../open-file-dialog/open-file-dialog.component';
@@ -47,11 +48,22 @@ import {OpenFileDialogComponent} from '../open-file-dialog/open-file-dialog.comp
     MatFormFieldModule,
     MatIconModule,
     MatDialogModule,
-    LanguageTranslateModule,
+    TranslatePipe,
   ],
 })
 export class FilesSearchComponent {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+  private searchesStateService = inject(SearchesStateService);
+  private sidebarStateService = inject(SidebarStateService);
+  private matDialog = inject(MatDialog);
+  private notificationService = inject(NotificationsService);
+  private modelSavingTracker = inject(ModelSavingTrackerService);
+  private saveModelDialog = inject(SaveModelDialogService);
+  private fileHandlingService = inject(FileHandlingService);
+  private searchService = inject(SearchService);
+  private translate = inject(LanguageTranslationService);
+  private modelChecker = inject(ModelCheckerService);
+
   public searchControl = new FormControl('');
   public files: {file: string; namespace: string}[] = [];
   public loading = false;
@@ -60,18 +72,7 @@ export class FilesSearchComponent {
     return this.sidebarStateService.namespacesState.namespaces;
   }
 
-  constructor(
-    private searchesStateService: SearchesStateService,
-    private sidebarStateService: SidebarStateService,
-    private matDialog: MatDialog,
-    private notificationService: NotificationsService,
-    private modelSavingTracker: ModelSavingTrackerService,
-    private saveModelDialog: SaveModelDialogService,
-    private fileHandlingService: FileHandlingService,
-    private searchService: SearchService,
-    private translate: LanguageTranslationService,
-    private modelChecker: ModelCheckerService,
-  ) {
+  constructor() {
     this.parseFiles(this.namespaces);
 
     if (!Object.keys(this.namespaces).length) {

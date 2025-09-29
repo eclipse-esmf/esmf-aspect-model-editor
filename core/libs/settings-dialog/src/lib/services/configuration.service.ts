@@ -35,9 +35,7 @@ const DEFAULT_SETTINGS: Settings = {
   toolbarVisibility: true,
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ConfigurationService {
   private readonly SETTINGS_ITEM_KEY: string = 'settings';
   private settings: Settings;

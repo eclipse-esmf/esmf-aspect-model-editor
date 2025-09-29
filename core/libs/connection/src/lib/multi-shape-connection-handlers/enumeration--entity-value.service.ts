@@ -17,9 +17,7 @@ import {DefaultEntityInstance, DefaultEnumeration} from '@esmf/aspect-model-load
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EnumerationEntityValueConnectionHandler implements MultiShapeConnector<DefaultEnumeration, DefaultEntityInstance> {
   private mxGraphService = inject(MxGraphService);
 

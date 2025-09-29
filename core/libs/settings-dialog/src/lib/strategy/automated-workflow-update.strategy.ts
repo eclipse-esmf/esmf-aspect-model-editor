@@ -17,13 +17,10 @@ import {Injectable, inject} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class AutomatedWorkflowUpdateStrategy implements SettingsUpdateStrategy {
   private modelSaverService: ModelSaverService = inject(ModelSaverService);
-
-  constructor(private editorService: EditorService) {}
+  private editorService = inject(EditorService);
 
   updateSettings(form: FormGroup, settings: Settings): void {
     const automatedWorkflow = form.get('automatedWorkflow');

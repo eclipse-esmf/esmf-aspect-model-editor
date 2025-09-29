@@ -12,9 +12,13 @@
  */
 
 import {MxGraphService} from '@ame/mx-graph';
-import {Component, OnDestroy} from '@angular/core';
+import {Component, DestroyRef, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {MatIconButton} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {Subscription} from 'rxjs';
+import {TranslatePipe} from '@ngx-translate/core';
 import {EditorModelService} from '../../../../editor-model.service';
 
 @Component({
@@ -36,23 +40,23 @@ import {EditorModelService} from '../../../../editor-model.service';
       }
     `,
   ],
+  imports: [MatTooltipModule, MatIconModule, MatIconButton, TranslatePipe],
 })
-export class LocateElementComponent implements OnDestroy {
-  public element: NamedElement;
-  private subscription = new Subscription();
+export class LocateElementComponent {
+  public destroyRef = inject(DestroyRef);
+  public metaModelDialogService = inject(EditorModelService);
+  private mxgraphService = inject(MxGraphService);
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    private mxgraphService: MxGraphService,
-  ) {
-    this.subscription = this.metaModelDialogService.getMetaModelElement().subscribe(element => (this.element = element));
+  public element: NamedElement;
+
+  constructor() {
+    this.metaModelDialogService
+      .getMetaModelElement()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(element => (this.element = element));
   }
 
   locate() {
     if (this.element) this.mxgraphService.navigateToCellByUrn(this.element.aspectModelUrn);
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }

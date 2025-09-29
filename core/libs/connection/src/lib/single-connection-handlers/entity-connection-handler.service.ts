@@ -12,19 +12,15 @@
  */
 
 import {EntityInstanceService} from '@ame/editor';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, Entity} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EntityConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Entity> {
-  constructor(private entityInstanceService: EntityInstanceService) {
-    super();
-  }
+  private entityInstanceService = inject(EntityInstanceService);
 
   public connect(entity: Entity, source: mxgraph.mxCell) {
     const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty);

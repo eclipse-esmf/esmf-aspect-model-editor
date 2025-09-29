@@ -11,19 +11,22 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {Component, inject, OnInit} from '@angular/core';
+import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {MatError} from '@angular/material/input';
+import {TranslatePipe} from '@ngx-translate/core';
 import {SettingsFormService} from '../../../services';
 
 @Component({
   selector: 'ame-copyright',
   templateUrl: './header-copyright.component.html',
   styleUrls: ['./header-copyright.component.scss'],
+  imports: [ReactiveFormsModule, MatError, TranslatePipe],
 })
 export class HeaderCopyrightComponent implements OnInit {
-  form: FormGroup;
+  private formService = inject(SettingsFormService);
 
-  constructor(private formService: SettingsFormService) {}
+  public form: FormGroup;
 
   ngOnInit(): void {
     this.form = this.formService.getForm().get('copyrightHeaderConfiguration') as FormGroup;

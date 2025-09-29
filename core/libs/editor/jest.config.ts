@@ -13,23 +13,26 @@
 
 const esModules = ['@angular', '@ngrx', '@agm', 'ngx-bootstrap'].join('|');
 
-module.exports = {
-  displayName: 'utils',
-  preset: '../../jest.preset.js',
+export default {
+  displayName: 'editor',
+  preset: '../../jest.preset.cjs',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {},
-  coverageDirectory: '../../coverage/libs/utils',
+  coverageDirectory: '../../coverage/libs/editor',
   transform: {
     '^.+\\.(ts|js|mjs|html|svg)$': [
       'jest-preset-angular',
-      {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$',
+      },
     ],
     '^.+\\.js$': 'babel-jest',
   },
+  transformIgnorePatterns: ['node_modules/?!(.*\\.mjs$|@ngneat)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
-  transformIgnorePatterns: [`<rootDir>/node_modules/(?!.*\\.mjs$|${esModules})`],
 };

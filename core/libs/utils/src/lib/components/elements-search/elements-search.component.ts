@@ -25,13 +25,14 @@ import {
   mxCellSearchOption,
   sammElements,
 } from '@ame/shared';
-import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {LanguageTranslationService} from '@ame/translation';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {NamedElement} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import {mxgraph} from 'mxgraph-factory';
 import {startWith, throttleTime} from 'rxjs';
 import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-dialog.enum';
@@ -50,24 +51,25 @@ import {SearchesStateService} from '../../search-state.service';
     MatAutocompleteModule,
     MatFormFieldModule,
     MatIconModule,
-    LanguageTranslateModule,
     ElementIconComponent,
+    TranslatePipe,
   ],
 })
 export class ElementsSearchComponent {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+  private mxGraphService = inject(MxGraphService);
+  private shapeSettingsService = inject(ShapeSettingsService);
+  private searchesStateService = inject(SearchesStateService);
+  private confirmDialogService = inject(ConfirmDialogService);
+  private searchService = inject(SearchService);
+  private translate = inject(LanguageTranslationService);
+
+  public loadedFiles = inject(LoadedFilesService);
+
   public searchControl = new FormControl('');
   public elements: NamedElement[] = [];
 
-  constructor(
-    private mxGraphService: MxGraphService,
-    private shapeSettingsService: ShapeSettingsService,
-    private searchesStateService: SearchesStateService,
-    private confirmDialogService: ConfirmDialogService,
-    private searchService: SearchService,
-    private translate: LanguageTranslationService,
-    public loadedFiles: LoadedFilesService,
-  ) {
+  constructor() {
     this.searchControl.valueChanges.pipe(startWith(''), throttleTime(150)).subscribe(value => {
       this.elements = this.searchService
         .search<mxgraph.mxCell>(value, this.mxGraphService.getAllCells(), mxCellSearchOption)

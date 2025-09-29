@@ -42,10 +42,21 @@ import {
   UnitVisitor,
 } from './visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class DomainModelToRdfService {
   private mxGraphAttributeService = inject(MxGraphAttributeService);
   private loadedFiles = inject(LoadedFilesService);
+  private aspectVisitorService = inject(AspectVisitor);
+  private propertyVisitorService = inject(PropertyVisitor);
+  private operationVisitorService = inject(OperationVisitor);
+  private characteristicVisitorService = inject(CharacteristicVisitor);
+  private constraintVisitorService = inject(ConstraintVisitor);
+  private entityVisitorService = inject(EntityVisitor);
+  private entityInstanceVisitor = inject(EntityInstanceVisitor);
+  private eventVisitorService = inject(EventVisitor);
+  private unitVisitorService = inject(UnitVisitor);
+  private modelService = inject(ModelService);
+  private cleanupVisitorService = inject(CleanupVisitor);
 
   get graph(): mxgraph.mxGraph {
     return this.mxGraphAttributeService.graph;
@@ -56,20 +67,6 @@ export class DomainModelToRdfService {
   }
 
   private working = false;
-
-  constructor(
-    private aspectVisitorService: AspectVisitor,
-    private propertyVisitorService: PropertyVisitor,
-    private operationVisitorService: OperationVisitor,
-    private characteristicVisitorService: CharacteristicVisitor,
-    private constraintVisitorService: ConstraintVisitor,
-    private entityVisitorService: EntityVisitor,
-    private entityInstanceVisitor: EntityInstanceVisitor,
-    private eventVisitorService: EventVisitor,
-    private unitVisitorService: UnitVisitor,
-    private modelService: ModelService,
-    private cleanupVisitorService: CleanupVisitor,
-  ) {}
 
   listenForStoreUpdates() {
     this.modelService.visitorAnnouncer$

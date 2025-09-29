@@ -13,19 +13,15 @@
 
 import {FiltersService} from '@ame/loader-filters';
 import {EdgeStyles, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEntityInstance, DefaultEnumeration} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {SingleShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EntityValueConnectionHandler implements SingleShapeConnector<DefaultEntityInstance> {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private filtersService: FiltersService,
-  ) {}
+  private mxGraphService = inject(MxGraphService);
+  private filtersService = inject(FiltersService);
 
   public connect(entityValue: DefaultEntityInstance, source: mxgraph.mxCell) {
     const child = this.mxGraphService.renderModelElement(

@@ -12,26 +12,24 @@
  */
 
 import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
-import {LanguageTranslateModule} from '@ame/translation';
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'ame-document',
   templateUrl: './document.component.html',
   styleUrls: ['./document.component.scss'],
-  imports: [MatButtonModule, MatIconModule, MatDialogModule, LanguageTranslateModule],
+  imports: [MatButtonModule, MatIconModule, MatDialogModule, TranslatePipe],
 })
 export class DocumentComponent {
-  AMEDocumentationLink = 'https://eclipse-esmf.github.io/ame-guide/introduction.html';
+  private browserService = inject(BrowserService);
+  public config = inject(APP_CONFIG) as AppConfig;
 
-  constructor(
-    @Inject(APP_CONFIG) public config: AppConfig,
-    private browserService: BrowserService,
-  ) {}
+  AMEDocumentationLink = 'https://eclipse-esmf.github.io/ame-guide/introduction.html';
 
   openLink(event: MouseEvent) {
     if (!this.browserService.isStartedAsElectronApp() || !window.require) {

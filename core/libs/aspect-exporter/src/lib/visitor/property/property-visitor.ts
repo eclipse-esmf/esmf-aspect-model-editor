@@ -13,27 +13,25 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultProperty} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
+import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
-  private get store(): Store {
-    return this.loadedFiles.currentLoadedFile?.rdfModel?.store;
-  }
+  public rdfNodeService = inject(RdfNodeService);
+  public rdfListService = inject(RdfListService);
+  public loadedFilesService = inject(LoadedFilesService);
 
-  constructor(
-    public rdfNodeService: RdfNodeService,
-    loadedFiles: LoadedFilesService,
-  ) {
-    super(loadedFiles);
+  private get store(): Store {
+    return this.loadedFilesService.currentLoadedFile?.rdfModel?.store;
   }
 
   visit(property: DefaultProperty): DefaultProperty {
-    if (property.getExtends() || property.isPredefined || this.loadedFiles.isElementExtern(property)) {
+    if (property.getExtends() || property.isPredefined || this.loadedFilesService.isElementExtern(property)) {
       return null;
     }
 
@@ -67,7 +65,7 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
     this.setPrefix(property.characteristic.aspectModelUrn);
     this.store.addQuad(
       DataFactory.namedNode(property.aspectModelUrn),
-      this.loadedFiles.currentLoadedFile.rdfModel.samm.CharacteristicProperty(),
+      this.loadedFilesService.currentLoadedFile.rdfModel.samm.CharacteristicProperty(),
       DataFactory.namedNode(property.characteristic.aspectModelUrn),
     );
   }
@@ -80,7 +78,7 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
     this.setPrefix(property.getExtends().aspectModelUrn);
     this.store.addQuad(
       DataFactory.namedNode(property.aspectModelUrn),
-      this.loadedFiles.currentLoadedFile.rdfModel.samm.Extends(),
+      this.loadedFilesService.currentLoadedFile.rdfModel.samm.Extends(),
       DataFactory.namedNode(property.getExtends().aspectModelUrn),
     );
   }

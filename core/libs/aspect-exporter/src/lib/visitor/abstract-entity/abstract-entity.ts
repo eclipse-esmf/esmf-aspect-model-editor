@@ -13,25 +13,21 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEntity, Samm} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class AbstractEntityVisitor extends BaseVisitor<DefaultEntity> {
+  public rdfNodeService = inject(RdfNodeService);
+  public rdfListService = inject(RdfListService);
+  public loadedFiles = inject(LoadedFilesService);
+
   private store: Store;
   private samm: Samm;
-
-  constructor(
-    public rdfNodeService: RdfNodeService,
-    public rdfListService: RdfListService,
-    public loadedFiles: LoadedFilesService,
-  ) {
-    super(loadedFiles);
-  }
 
   visit(abstractEntity: DefaultEntity): DefaultEntity {
     if (abstractEntity.isPredefined) {

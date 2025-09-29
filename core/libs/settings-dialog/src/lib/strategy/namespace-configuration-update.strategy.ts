@@ -18,13 +18,10 @@ import {inject, Injectable} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class NamespaceConfigurationUpdateStrategy implements SettingsUpdateStrategy {
   private loadedFilesService = inject(LoadedFilesService);
-
-  constructor(private titleService: TitleService) {}
+  private titleService = inject(TitleService);
 
   updateSettings(form: FormGroup, settings: Settings): void {
     const namespaceConfiguration = form.get('namespaceConfiguration');

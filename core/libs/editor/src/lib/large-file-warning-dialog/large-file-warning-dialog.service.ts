@@ -11,14 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Observable, of} from 'rxjs';
 import {LargeFileWarningComponent} from './large-file-warning-dialog';
 
 @Injectable({providedIn: 'root'})
 export class LargeFileWarningService {
-  constructor(private matDialog: MatDialog) {}
+  private matDialog = inject(MatDialog);
 
   openDialog(elementsCount: number): Observable<'open' | 'cancel' | 'ignore'> {
     return elementsCount > 99 ? this.matDialog.open(LargeFileWarningComponent, {data: {elementsCount}}).afterClosed() : of('ignore');

@@ -12,7 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {Component, inject, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 
@@ -22,18 +22,18 @@ import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/
   imports: [MatDialogModule, MatButtonModule],
 })
 export class LargeFileWarningComponent {
-  private loadedFiles = inject(LoadedFilesService);
+  private loadedFilesService = inject(LoadedFilesService);
+  private dialogRef = inject(MatDialogRef<LargeFileWarningComponent>);
+  private data = inject<{elementsCount: number}>(MAT_DIALOG_DATA);
+
   public elementsCount: number;
 
-  constructor(
-    private dialogRef: MatDialogRef<LargeFileWarningComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: {elementsCount: number},
-  ) {
+  constructor() {
     this.elementsCount = this.data?.elementsCount || 0;
   }
 
   close(response: 'open' | 'cancel') {
-    if (response === 'cancel') this.loadedFiles.currentLoadedFile.cachedFile.reset();
+    if (response === 'cancel') this.loadedFilesService.currentLoadedFile.cachedFile.reset();
     this.dialogRef.close(response);
   }
 }

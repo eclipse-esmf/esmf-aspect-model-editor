@@ -13,14 +13,14 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {config} from '@ame/shared';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultProperty, DefaultScalar} from '@esmf/aspect-model-loader';
 import {simpleDataTypes} from '../../../../../../../shared/src/lib/constants/xsd-datatypes';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class PredefinedRulesService {
+  private loadedFilesService = inject(LoadedFilesService);
+
   rules = {
     '([\\w\\.-]+)@([\\w\\.-]+\\.\\w{2,4})': {
       name: 'Email Address',
@@ -95,8 +95,6 @@ export class PredefinedRulesService {
     },
   };
 
-  constructor(private loadedFiles: LoadedFilesService) {}
-
   getRule(rule: string) {
     const predefinedRule = this.rules[rule];
     if (!predefinedRule) {
@@ -110,8 +108,8 @@ export class PredefinedRulesService {
   }
 
   private createProperty(property): DefaultProperty {
-    const namespace = this.loadedFiles.currentLoadedFile.rdfModel.getAspectModelUrn();
-    const version = this.loadedFiles.currentLoadedFile.rdfModel.getMetaModelVersion();
+    const namespace = this.loadedFilesService.currentLoadedFile.rdfModel.getAspectModelUrn();
+    const version = this.loadedFilesService.currentLoadedFile.rdfModel.getMetaModelVersion();
     return new DefaultProperty({
       metaModelVersion: version,
       aspectModelUrn: namespace + property.label,
@@ -125,8 +123,8 @@ export class PredefinedRulesService {
       return null;
     }
 
-    const namespace = this.loadedFiles.currentLoadedFile.rdfModel.getAspectModelUrn();
-    const version = this.loadedFiles.currentLoadedFile.rdfModel.getMetaModelVersion();
+    const namespace = this.loadedFilesService.currentLoadedFile.rdfModel.getAspectModelUrn();
+    const version = this.loadedFilesService.currentLoadedFile.rdfModel.getMetaModelVersion();
     return new DefaultCharacteristic({
       metaModelVersion: version,
       aspectModelUrn: namespace + characteristic.name,

@@ -13,32 +13,28 @@
 
 import {ModelApiService} from '@ame/api';
 import {NamespaceFile} from '@ame/cache';
-import {APP_CONFIG, AppConfig} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
-import {Inject, Injectable} from '@angular/core';
+import {APP_CONFIG} from '@ame/shared';
+import {inject, Injectable} from '@angular/core';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import {environment} from 'environments/environment';
-import {Observable, map, of} from 'rxjs';
+import {map, Observable, of} from 'rxjs';
 import {RdfSerializerService} from './rdf-serializer.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class RdfService {
+  private modelApiService = inject(ModelApiService);
+  public config = inject(APP_CONFIG);
+
   private _rdfSerializer: RdfSerializerService;
 
   public externalRdfModels: Array<RdfModel> = [];
 
-  constructor(
-    private modelApiService: ModelApiService,
-    private translation: LanguageTranslationService,
-    @Inject(APP_CONFIG) public config: AppConfig,
-  ) {
+  constructor() {
     if (!environment.production) {
       window['angular.rdfService'] = this;
     }
 
-    this._rdfSerializer = new RdfSerializerService(this.translation);
+    this._rdfSerializer = new RdfSerializerService();
   }
 
   serializeModel(rdfModel: RdfModel): string {

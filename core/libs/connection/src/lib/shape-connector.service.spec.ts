@@ -51,7 +51,8 @@ import {
 } from '@ame/connection';
 import {MxGraphAttributeService, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
-import {LanguageTranslateModule} from '@ame/translation';
+import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
 import {
   DefaultAspect,
@@ -63,13 +64,17 @@ import {
   DefaultTrait,
 } from '@esmf/aspect-model-loader';
 import {describe, expect} from '@jest/globals';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateModule, TranslatePipe} from '@ngx-translate/core';
 import {provideMockObject} from 'jest-helpers/utils';
 
 jest.mock('@ame/loader-filters', () => ({
   ModelFilter: {
     DEFAULT: 'mock-default',
   },
+}));
+
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
 }));
 
 describe('Test Shape connector service', () => {
@@ -90,8 +95,10 @@ describe('Test Shape connector service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), LanguageTranslateModule],
+      imports: [TranslateModule.forRoot(), TranslatePipe],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         ShapeConnectorService,
         {
           provide: MxGraphShapeOverlayService,

@@ -12,14 +12,14 @@
  */
 
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable, iif, of, throwError} from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {iif, Observable, of, throwError} from 'rxjs';
 import {catchError, concatMap, delay, retryWhen} from 'rxjs/operators';
 import {NotificationsService} from './services';
 
 @Injectable({providedIn: 'root'})
 export class HttpErrorInterceptor implements HttpInterceptor {
-  constructor(private notificationsService: NotificationsService) {}
+  private notificationsService = inject(NotificationsService);
 
   private isError400(error): boolean {
     return error instanceof HttpErrorResponse && error.status === 400;

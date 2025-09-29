@@ -18,9 +18,7 @@ import {DefaultCharacteristic, DefaultProperty} from '@esmf/aspect-model-loader'
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class PropertyCharacteristicConnectionHandler implements MultiShapeConnector<DefaultProperty, DefaultCharacteristic> {
   private mxGraphService = inject(MxGraphService);
   private mxGraphAttributeService = inject(MxGraphAttributeService);

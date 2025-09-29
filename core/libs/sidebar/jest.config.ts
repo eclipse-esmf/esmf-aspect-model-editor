@@ -10,21 +10,26 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-const nxPreset = require('@nx/jest/preset');
-module.exports = {
-  ...nxPreset,
-  displayName: 'rdf',
-  preset: '../../jest.preset.js',
+
+const esModules = ['@angular', '@ngrx', '@agm', 'ngx-bootstrap'].join('|');
+
+export default {
+  displayName: 'sidebar',
+  preset: '../../jest.preset.cjs',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {},
-  coverageDirectory: '../../coverage/libs/rdf',
+  coverageDirectory: '../../coverage/libs/sidebar',
   transform: {
-    '^.+.(ts|mjs|js|html)$': [
+    '^.+\\.(ts|js|mjs|html|svg)$': [
       'jest-preset-angular',
-      {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$',
+      },
     ],
+    '^.+\\.js$': 'babel-jest',
   },
-  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
+  transformIgnorePatterns: ['node_modules/?!(.*\\.mjs$|@ngneat)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

@@ -12,19 +12,15 @@
  */
 
 import {EventRenderService, MxGraphService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEvent, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class EventModelService extends BaseModelService {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private aspectRenderer: EventRenderService,
-  ) {
-    super();
-  }
+  private mxGraphService = inject(MxGraphService);
+  private aspectRenderer = inject(EventRenderService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultEvent;

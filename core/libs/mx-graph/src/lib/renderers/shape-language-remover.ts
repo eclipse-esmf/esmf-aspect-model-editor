@@ -11,17 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {inject} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {MxGraphHelper} from '../helpers';
 import {MxGraphAttributeService, MxGraphService, MxGraphShapeSelectorService} from '../services';
 
 export class ShapeLanguageRemover {
-  constructor(
-    private locals: Array<string>,
-    private mxGraphService: MxGraphService,
-    private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-  ) {}
+  private mxGraphService = inject(MxGraphService);
+  private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private locals: Array<string>;
+
+  constructor(locals: Array<string>) {
+    this.locals = locals;
+  }
 
   removeUnnecessaryLanguages(): NamedElement {
     this.mxGraphAttributeService.graph.getChildCells(this.mxGraphAttributeService.graph.getDefaultParent()).forEach(mxCell => {

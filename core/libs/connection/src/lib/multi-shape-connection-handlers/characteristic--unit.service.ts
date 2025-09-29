@@ -17,9 +17,7 @@ import {DefaultCharacteristic, DefaultQuantifiable, DefaultUnit} from '@esmf/asp
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class CharacteristicUnitConnectionHandler implements MultiShapeConnector<DefaultCharacteristic, DefaultUnit> {
   private mxGraphService = inject(MxGraphService);
 

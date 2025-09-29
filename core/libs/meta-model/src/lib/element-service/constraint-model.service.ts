@@ -14,7 +14,7 @@
 import {FiltersService} from '@ame/loader-filters';
 import {ConstraintRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
 import {useUpdater} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {
   DefaultConstraint,
   DefaultEncodingConstraint,
@@ -32,15 +32,11 @@ import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class ConstraintModelService extends BaseModelService {
-  constructor(
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphService: MxGraphService,
-    private constraintRenderer: ConstraintRenderService,
-    private filtersService: FiltersService,
-  ) {
-    super();
-  }
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private mxGraphService = inject(MxGraphService);
+  private constraintRenderer = inject(ConstraintRenderService);
+  private filtersService = inject(FiltersService);
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     let metaModelElement = MxGraphHelper.getModelElement<DefaultConstraint>(cell);

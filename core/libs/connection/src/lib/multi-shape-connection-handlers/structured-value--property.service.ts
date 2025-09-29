@@ -19,9 +19,7 @@ import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class StructuredValueCharacteristicPropertyConnectionHandler
   implements MultiShapeConnector<DefaultStructuredValue, DefaultProperty>
 {

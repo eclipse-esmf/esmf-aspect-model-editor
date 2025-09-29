@@ -12,11 +12,17 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {MatFabButton} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'ame-entity-instance-search-bar',
   templateUrl: './entity-instance-search-bar.component.html',
   styleUrls: ['./entity-instance-search-bar.component.scss'],
+  imports: [MatFormField, MatLabel, MatInput, MatIconModule, MatTooltipModule, MatFabButton, TranslatePipe],
 })
 export class EntityInstanceSearchBarComponent {
   @Input() count: number;

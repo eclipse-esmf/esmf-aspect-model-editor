@@ -11,7 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultLengthConstraint} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -19,6 +21,7 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-min-length-input-field',
   templateUrl: './min-length-input-field.component.html',
   styleUrls: ['../../field.scss'],
+  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatInput, MatError],
 })
 export class MinLengthInputFieldComponent extends InputFieldComponent<DefaultLengthConstraint> implements OnInit, OnDestroy {
   constructor() {
@@ -32,9 +35,11 @@ export class MinLengthInputFieldComponent extends InputFieldComponent<DefaultLen
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe(() => {
-      this.initForm();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.initForm();
+      });
   }
 
   ngOnDestroy() {

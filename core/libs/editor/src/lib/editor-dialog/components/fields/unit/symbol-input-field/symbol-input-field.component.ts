@@ -12,22 +12,22 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultUnit} from '@esmf/aspect-model-loader';
-import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-symbol-input-field',
   templateUrl: './symbol-input-field.component.html',
+  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatInput],
 })
 export class SymbolInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
-  constructor(public metaModelDialogService: EditorModelService) {
-    super();
-  }
-
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => this.initSymbolControl());
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.initSymbolControl());
   }
 
   initSymbolControl() {

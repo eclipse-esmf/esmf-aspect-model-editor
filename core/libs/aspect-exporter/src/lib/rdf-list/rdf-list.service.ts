@@ -13,7 +13,7 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {simpleDataTypes} from '@ame/shared';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {environment} from 'environments/environment';
 import {BlankNode, DataFactory, NamedNode, Quad, Quad_Object, Store, Triple, Util} from 'n3';
@@ -31,12 +31,13 @@ import {
   StoreListReferences,
 } from './rdf-list.types';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
+  public rdfNodeService = inject(RdfNodeService);
+  public loadedFilesService = inject(LoadedFilesService);
+
   private get rdfModel(): RdfModel {
-    return this.loadedFiles.currentLoadedFile?.rdfModel;
+    return this.loadedFilesService.currentLoadedFile?.rdfModel;
   }
 
   private get store(): Store {
@@ -47,10 +48,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     return this.rdfModel.samm;
   }
 
-  constructor(
-    private nodeService: RdfNodeService,
-    private loadedFiles: LoadedFilesService,
-  ) {
+  constructor() {
     if (!environment.production) {
       window['angular.rdfListService'] = this;
     }
@@ -176,7 +174,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     for (const element of elements) {
       const {metaModelElement: model, propertyPayload} = element;
       if (model?.extends_) {
-        this.nodeService.updateBlankNode(element.blankNode, model, {
+        this.rdfNodeService.updateBlankNode(element.blankNode, model, {
           extends: model?.extends_?.aspectModelUrn,
           characteristic: model.characteristic?.aspectModelUrn,
         });

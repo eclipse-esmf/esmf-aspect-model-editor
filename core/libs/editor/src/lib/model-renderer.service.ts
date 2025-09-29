@@ -24,7 +24,8 @@ import {
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {LoadingScreenService, NotificationsService, ValidateStatus} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {Injectable, inject} from '@angular/core';
+import {DestroyRef, Injectable, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {Observable, catchError, delay, filter, first, switchMap, tap, throwError} from 'rxjs';
 import {ShapeSettingsService} from './editor-dialog';
@@ -32,9 +33,8 @@ import {LargeFileWarningService} from './large-file-warning-dialog/large-file-wa
 
 @Injectable({providedIn: 'root'})
 export class ModelRendererService {
+  private destroyRef = inject(DestroyRef);
   private mxGraphService = inject(MxGraphService);
-  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
-  private sammLangService = inject(SammLanguageSettingsService);
   private largeFileWarningService = inject(LargeFileWarningService);
   private loadingScreenService = inject(LoadingScreenService);
   private filtersService = inject(FiltersService);
@@ -44,6 +44,8 @@ export class ModelRendererService {
   private translate = inject(LanguageTranslationService);
   private loadedFilesService = inject(LoadedFilesService);
   private notificationsService = inject(NotificationsService);
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private sammLanguageSettingsService = inject(SammLanguageSettingsService);
 
   private get rdfModel() {
     return this.loadedFilesService.currentLoadedFile?.rdfModel;
@@ -60,7 +62,7 @@ export class ModelRendererService {
       const mxGraphRenderer = new MxGraphRenderer(
         this.mxGraphService,
         this.mxGraphShapeOverlayService,
-        this.sammLangService,
+        this.sammLanguageSettingsService,
         this.rdfModel,
       );
 
@@ -75,6 +77,7 @@ export class ModelRendererService {
 
   private prepareGraphUpdate(mxGraphRenderer: MxGraphRenderer, elements: NamedElement[], editElementUrn?: string) {
     return this.largeFileWarningService.openDialog(elements.length).pipe(
+      takeUntilDestroyed(this.destroyRef),
       first(),
       filter(response => response !== 'cancel'),
       tap(() => this.toggleLoadingScreen()),

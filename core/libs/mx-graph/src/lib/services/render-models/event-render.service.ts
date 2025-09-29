@@ -11,27 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Injectable} from '@angular/core';
 import {DefaultEvent} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
-import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EventRenderService extends BaseRenderService {
-  constructor(
-    mxGraphService: MxGraphService,
-    sammLangService: SammLanguageSettingsService,
-    protected loadedFilesService: LoadedFilesService,
-  ) {
-    super(mxGraphService, sammLangService, loadedFilesService);
-  }
-
   isApplicable(cell: mxgraph.mxCell): boolean {
     return MxGraphHelper.getModelElement(cell) instanceof DefaultEvent;
   }

@@ -22,7 +22,7 @@ import {
 } from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {useUpdater} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseEntityModelService} from './base-entity-model.service';
@@ -30,17 +30,13 @@ import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class AbstractEntityModelService extends BaseModelService {
-  constructor(
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private entityInstanceService: EntityInstanceService,
-    private mxGraphService: MxGraphService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private abstractEntityRenderer: AbstractEntityRenderService,
-    private baseEntityModel: BaseEntityModelService,
-    private languageService: SammLanguageSettingsService,
-  ) {
-    super();
-  }
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private entityInstanceService = inject(EntityInstanceService);
+  private mxGraphService = inject(MxGraphService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private abstractEntityRenderer = inject(AbstractEntityRenderService);
+  private baseEntityModel = inject(BaseEntityModelService);
+  private languageService = inject(SammLanguageSettingsService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultEntity && metaModelElement.isAbstractEntity();

@@ -36,7 +36,9 @@
               "Function": false
             }
           }
-        ]
+        ],
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
       }
     },
     {
@@ -45,7 +47,9 @@
       "rules": {
         "no-var": "error",
         "no-unused-vars": "error",
-        "no-undef": "error"
+        "no-undef": "error",
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
       }
     }
   ]

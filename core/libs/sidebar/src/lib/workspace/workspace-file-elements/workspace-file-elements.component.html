@@ -67,13 +67,9 @@
   <mat-menu class="filter-menu" #filter>
     @for (key of elementsOrder; track key) {
       @if (searched[key].length) {
-        <mat-checkbox
-          class="mat-menu-item"
-          [checked]="elements[key].displayed"
-          (click)="toggleFilter($event, key)"
-          labelPosition="before"
-          >{{ elements[key].plural }}</mat-checkbox
-        >
+        <mat-checkbox class="mat-menu-item" [checked]="elements[key].displayed" (click)="toggleFilter($event, key)" labelPosition="before"
+          >{{ elements[key].plural }}
+        </mat-checkbox>
       }
     }
   </mat-menu>

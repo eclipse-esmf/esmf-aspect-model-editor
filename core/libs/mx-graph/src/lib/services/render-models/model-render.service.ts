@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {
   CharacteristicRenderService,
@@ -27,22 +27,18 @@ import {BaseRenderService} from './base-render-service';
 import {EntityRenderService} from './entity-render.service';
 import {EntityValueRenderService} from './entity-value-render.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ModelRenderService {
-  constructor(
-    private aspectRenderService: AspectRenderService,
-    private characteristicRenderService: CharacteristicRenderService,
-    private entityRenderService: EntityRenderService,
-    private propertyRenderService: PropertyRenderService,
-    private traitRenderService: TraitRenderService,
-    private entityValueRenderService: EntityValueRenderService,
-    private enumerationRenderService: EnumerationRenderService,
-    private eventRenderService: EventRenderService,
-    private unitRenderService: UnitRenderService,
-    private constraintRenderService: ConstraintRenderService,
-  ) {}
+  private aspectRenderService = inject(AspectRenderService);
+  private characteristicRenderService = inject(CharacteristicRenderService);
+  private entityRenderService = inject(EntityRenderService);
+  private propertyRenderService = inject(PropertyRenderService);
+  private traitRenderService = inject(TraitRenderService);
+  private entityValueRenderService = inject(EntityValueRenderService);
+  private enumerationRenderService = inject(EnumerationRenderService);
+  private eventRenderService = inject(EventRenderService);
+  private unitRenderService = inject(UnitRenderService);
+  private constraintRenderService = inject(ConstraintRenderService);
 
   update(cell: mxgraph.mxCell) {
     this.getElementModelService(cell)?.update({cell});

@@ -3,15 +3,15 @@ import {LoadedFilesService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {config} from '@ame/shared';
 import {ExporterHelper, FileStatus} from '@ame/sidebar';
-import {Injectable, inject} from '@angular/core';
+import {DestroyRef, Injectable, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Samm} from '@esmf/aspect-model-loader';
 import {Observable, Subject, forkJoin, map, of, switchMap} from 'rxjs';
 import {ModelLoaderService} from './model-loader.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ModelCheckerService {
+  private destroyRef = inject(DestroyRef);
   private modelApiService = inject(ModelApiService);
   private loadedFilesService = inject(LoadedFilesService);
   private modelLoader = inject(ModelLoaderService);
@@ -27,6 +27,7 @@ export class ModelCheckerService {
 
     const extractDependencies = (absoluteName: string, modelData: ModelData, modelVersion: string) =>
       this.modelApiService.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(
+        takeUntilDestroyed(this.destroyRef),
         switchMap(rdf => this.modelLoader.parseRdfModel([rdf])),
         map(rdfModel => {
           const dependencies = RdfModelUtil.resolveExternalNamespaces(rdfModel)
@@ -57,6 +58,7 @@ export class ModelCheckerService {
       );
 
     return this.modelApiService.loadNamespacesStructure().pipe(
+      takeUntilDestroyed(this.destroyRef),
       switchMap(structure => {
         namespacesStructure = structure;
         const requests = {};
@@ -81,6 +83,7 @@ export class ModelCheckerService {
    */
   detectWorkspace(onlyAspectModels?: boolean) {
     return this.modelApiService.loadNamespacesStructure(onlyAspectModels).pipe(
+      takeUntilDestroyed(this.destroyRef),
       map(structure => {
         const requests = {};
         for (const namespace in structure) {

@@ -12,16 +12,37 @@
  */
 import {LoadedFilesService} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
-import {sammElements} from '@ame/shared';
-import {Component, Input, OnInit} from '@angular/core';
+import {CounterPipe, ElementIconComponent, sammElements} from '@ame/shared';
+import {NgClass} from '@angular/common';
+import {Component, inject, Input, OnInit} from '@angular/core';
+import {MatIconButton} from '@angular/material/button';
+import {MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {NamedElement} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
 import {ShapeSettingsService, ShapeSettingsStateService} from '../../services';
+import {ModelElementParserPipe} from './element-list.pipe';
 
 @Component({
   selector: 'ame-element-list',
   templateUrl: './element-list.component.html',
   styleUrls: ['element-list.component.scss'],
+  imports: [
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatIconModule,
+    NgClass,
+    CounterPipe,
+    ModelElementParserPipe,
+    ElementIconComponent,
+    MatTooltipModule,
+    MatIconButton,
+    TranslatePipe,
+  ],
 })
 export class ElementListComponent implements OnInit {
   @Input() public label = '';
@@ -29,13 +50,11 @@ export class ElementListComponent implements OnInit {
   @Input() public elements: NamedElement[] = [];
   @Input() public isAspect? = false;
 
-  constructor(
-    private mxGraphService: MxGraphService,
-    private shapeSettingsService: ShapeSettingsService,
-    private shapeSettingsStateService: ShapeSettingsStateService,
-    private openReferencedElementService: OpenReferencedElementService,
-    public loadedFiles: LoadedFilesService,
-  ) {}
+  private mxGraphService = inject(MxGraphService);
+  private shapeSettingsService = inject(ShapeSettingsService);
+  private shapeSettingsStateService = inject(ShapeSettingsStateService);
+  private openReferencedElementService = inject(OpenReferencedElementService);
+  public loadedFilesService = inject(LoadedFilesService);
 
   ngOnInit() {
     this.elements = Array.from(this.elements).filter(e => e instanceof NamedElement);

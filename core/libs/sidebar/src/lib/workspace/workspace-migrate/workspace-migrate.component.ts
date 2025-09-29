@@ -14,7 +14,9 @@
 import {MigratorApiService} from '@ame/api';
 import {Component, DestroyRef, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
+import {TranslatePipe} from '@ngx-translate/core';
 import {of, switchMap, tap} from 'rxjs';
 import {SidebarStateService} from '../../sidebar-state.service';
 import {MigrationDialogComponent} from './migration-dialog';
@@ -23,6 +25,7 @@ import {MigrationDialogComponent} from './migration-dialog';
   selector: 'ame-workspace-migrate',
   templateUrl: './workspace-migrate.component.html',
   styleUrls: ['./workspace-migrate.component.scss'],
+  imports: [MatButtonModule, TranslatePipe],
 })
 export class WorkspaceMigrateComponent {
   private dialog = inject(MatDialog);

@@ -17,9 +17,7 @@ import {DefaultAspect, DefaultEvent} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class AspectEventConnectionHandler implements MultiShapeConnector<DefaultAspect, DefaultEvent> {
   private mxGraphService = inject(MxGraphService);
 

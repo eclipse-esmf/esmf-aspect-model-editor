@@ -20,15 +20,12 @@ import {Observable, of, switchMap, tap} from 'rxjs';
 @Injectable({providedIn: 'root'})
 export class StartupService {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
-
-  constructor(
-    private modelSaveTracker: ModelSavingTrackerService,
-    private loadingScreenService: LoadingScreenService,
-    private fileHandlingService: FileHandlingService,
-    private translate: LanguageTranslationService,
-    private ngZone: NgZone,
-    private modelLoaderService: ModelLoaderService,
-  ) {}
+  private modelSaveTracker = inject(ModelSavingTrackerService);
+  private loadingScreenService = inject(LoadingScreenService);
+  private fileHandlingService = inject(FileHandlingService);
+  private translate = inject(LanguageTranslationService);
+  private ngZone = inject(NgZone);
+  private modelLoaderService = inject(ModelLoaderService);
 
   loadModel(model: string): Observable<any> {
     let options: StartupPayload;

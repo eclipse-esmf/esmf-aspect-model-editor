@@ -16,12 +16,8 @@ import {DefaultConstraint} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {SingleShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ConstraintConnectionHandler implements SingleShapeConnector<DefaultConstraint> {
-  constructor() {}
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public connect(_constraint: DefaultConstraint, _source: mxgraph.mxCell) {
     // This method is intentionally left empty as any type of constraint - child connection is not allowed

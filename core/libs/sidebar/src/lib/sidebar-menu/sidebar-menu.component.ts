@@ -1,8 +1,3 @@
-import {InformationHandlingService} from '@ame/editor';
-import {NotificationsService} from '@ame/shared';
-import {Component, inject} from '@angular/core';
-import {SidebarStateService} from '../sidebar-state.service';
-
 /*
  * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -15,16 +10,28 @@ import {SidebarStateService} from '../sidebar-state.service';
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+
+import {InformationHandlingService} from '@ame/editor';
+import {BarItemComponent, NotificationsService} from '@ame/shared';
+import {AsyncPipe} from '@angular/common';
+import {Component, inject} from '@angular/core';
+import {MatBadge} from '@angular/material/badge';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltip} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
+import {SidebarStateService} from '../sidebar-state.service';
+
 @Component({
   selector: 'ame-sidebar-menu',
   templateUrl: './sidebar-menu.component.html',
   styleUrls: ['./sidebar-menu.component.scss'],
+  imports: [BarItemComponent, MatTooltip, AsyncPipe, MatIconModule, MatBadge, TranslatePipe],
 })
 export class SidebarMenuComponent {
+  private informationService = inject(InformationHandlingService);
+
   public notificationService = inject(NotificationsService);
   public sidebarService = inject(SidebarStateService);
-
-  constructor(private informationService: InformationHandlingService) {}
 
   openSettingsDialog() {
     this.informationService.openSettingsDialog();

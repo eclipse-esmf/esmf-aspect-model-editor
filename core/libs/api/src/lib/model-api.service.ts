@@ -21,21 +21,19 @@ import {catchError, map, mergeMap, retry, tap, timeout} from 'rxjs/operators';
 import {ModelValidatorService} from './model-validator.service';
 import {ModelData, WorkspaceStructure} from './models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ModelApiService {
   private config: AppConfig = inject(APP_CONFIG);
+  private http = inject(HttpClient);
+  private browserService = inject(BrowserService);
+  private modelValidatorService = inject(ModelValidatorService);
+
   private defaultPort = this.config.defaultPort;
   private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
   private requestTimeout = 60000;
 
-  constructor(
-    private http: HttpClient,
-    private browserService: BrowserService,
-    private modelValidatorService: ModelValidatorService,
-  ) {
+  constructor() {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
       this.serviceUrl = this.serviceUrl.replace(this.defaultPort, remote.getGlobal('backendPort'));

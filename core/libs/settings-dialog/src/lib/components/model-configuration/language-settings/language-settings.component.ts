@@ -11,10 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {LanguageTranslationService} from '@ame/translation';
-import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
+import {AsyncPipe} from '@angular/common';
+import {Component, inject, OnInit} from '@angular/core';
+import {AbstractControl, FormArray, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatDivider} from '@angular/material/divider';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatOption, MatSelect} from '@angular/material/select';
+import {TranslatePipe} from '@ngx-translate/core';
 import * as locale from 'locale-codes';
-import {Observable, map, startWith} from 'rxjs';
+import {map, Observable, startWith} from 'rxjs';
 import {Langcode} from '../../../model';
 import {SettingsFormService} from '../../../services';
 
@@ -22,15 +30,30 @@ import {SettingsFormService} from '../../../services';
   selector: 'ame-language-settings',
   templateUrl: './language-settings.component.html',
   styleUrls: ['./language-settings.component.scss'],
+  imports: [
+    ReactiveFormsModule,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    MatDivider,
+    MatAutocompleteTrigger,
+    MatInput,
+    MatAutocomplete,
+    MatIconModule,
+    AsyncPipe,
+    MatIconButton,
+    MatError,
+    MatButton,
+    TranslatePipe,
+  ],
 })
 export class LanguageSettingsComponent implements OnInit {
-  form: FormGroup;
-  filteredOptions: Observable<Langcode[]>[] = [];
+  private translate = inject(LanguageTranslationService);
+  private formService = inject(SettingsFormService);
 
-  constructor(
-    private translate: LanguageTranslationService,
-    private formService: SettingsFormService,
-  ) {}
+  public form: FormGroup;
+  public filteredOptions: Observable<Langcode[]>[] = [];
 
   ngOnInit(): void {
     this.form = this.formService.getForm().get('languageConfiguration') as FormGroup;

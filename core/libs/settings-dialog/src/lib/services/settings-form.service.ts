@@ -37,10 +37,17 @@ function createRegexValidator(regex: RegExp, errorKey: string): ValidatorFn {
 export const namespaceValidator = (): ValidatorFn => createRegexValidator(/^[A-Za-z0-9]+([.-][A-Za-z0-9_]+)*$/, 'invalidPattern');
 
 export const versionFormatValidator = (): ValidatorFn => createRegexValidator(/^\d+\.\d+\.\d+(-[A-Za-z0-9]+)?$/, 'invalidVersionFormat');
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class SettingsFormService {
+  private formBuilder = inject(FormBuilder);
+  private configurationService = inject(ConfigurationService);
+  private translate = inject(LanguageTranslationService);
+  private sammLangService = inject(SammLanguageSettingsService);
+  private automatedWorkflowStrategy = inject(AutomatedWorkflowUpdateStrategy);
+  private editorConfigStrategy = inject(EditorConfigurationUpdateStrategy);
+  private languageConfigStrategy = inject(LanguageConfigurationUpdateStrategy);
+  private namespaceConfigStrategy = inject(NamespaceConfigurationUpdateStrategy);
+  private copyrightHeaderUpdateStrategy = inject(CopyrightHeaderUpdateStrategy);
   private loadedFilesService = inject(LoadedFilesService);
 
   private get currentLoadedFile(): NamespaceFile {
@@ -52,17 +59,7 @@ export class SettingsFormService {
   private strategies: Array<SettingsUpdateStrategy>;
   private languagesToBeRemove: Array<string> = [];
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private configurationService: ConfigurationService,
-    private translate: LanguageTranslationService,
-    private sammLangService: SammLanguageSettingsService,
-    private automatedWorkflowStrategy: AutomatedWorkflowUpdateStrategy,
-    private editorConfigStrategy: EditorConfigurationUpdateStrategy,
-    private languageConfigStrategy: LanguageConfigurationUpdateStrategy,
-    private namespaceConfigStrategy: NamespaceConfigurationUpdateStrategy,
-    private copyrightHeaderUpdateStrategy: CopyrightHeaderUpdateStrategy,
-  ) {
+  constructor() {
     this.strategies = [
       this.automatedWorkflowStrategy,
       this.editorConfigStrategy,

@@ -15,8 +15,13 @@ import {CacheUtils, LoadedFilesService} from '@ame/cache';
 import {EditorDialogValidators} from '@ame/editor';
 import {ModelElementNamingService} from '@ame/meta-model';
 import {ElementCreatorService} from '@ame/shared';
+import {AsyncPipe} from '@angular/common';
 import {Component, Input, OnInit, inject} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
+import {MatIconButton} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultCharacteristic, DefaultProperty, RdfModel} from '@esmf/aspect-model-loader';
 import {Observable, debounceTime, map, startWith} from 'rxjs';
 
@@ -24,6 +29,20 @@ import {Observable, debounceTime, map, startWith} from 'rxjs';
   selector: 'ame-structured-value-property-field',
   templateUrl: './structured-value-property-field.component.html',
   styleUrls: ['./structured-value-property-field.component.scss'],
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatInput,
+    MatIconButton,
+    MatIconModule,
+    MatAutocomplete,
+    AsyncPipe,
+    MatOptgroup,
+    MatOption,
+    MatError,
+  ],
 })
 export class StructuredValuePropertyFieldComponent implements OnInit {
   @Input() public defaultProperty: DefaultProperty = null;

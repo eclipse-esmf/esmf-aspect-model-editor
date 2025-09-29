@@ -11,15 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {DestroyRef, inject, Injectable} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
-import {Observable, finalize, switchMap, tap} from 'rxjs';
+import {Observable, switchMap, tap} from 'rxjs';
 import {Translation} from '../models/language.interface';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class LanguageTranslationService {
+  private destroyRef = inject(DestroyRef);
+  private translate = inject(TranslateService);
+  private http = inject(HttpClient);
+
   private readonly _supportedLanguages = [
     {code: 'en', language: 'ENGLISH'},
     {code: 'zh', language: 'CHINESE'},
@@ -35,26 +39,22 @@ export class LanguageTranslationService {
     return this.translate;
   }
 
-  constructor(private translate: TranslateService) {}
-
   initTranslationService(language: string): void {
     this.translate.addLangs(this._supportedLanguages.map(language => language.code));
     this.translate.use(language);
 
-    const onLangChangeSubscription$ = this.translate.onLangChange
+    this.translate.onLangChange
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         switchMap((event: LangChangeEvent) => this.getTranslation(event.lang)),
-        finalize(() => onLangChangeSubscription$.unsubscribe()),
       )
       .subscribe();
   }
 
   getTranslation(language: string): Observable<Translation> {
-    const getTranslateSubscription$ = this.translate.getTranslation(language).pipe(
+    return this.http.get<Translation>(`/assets/i18n/${language}.json`).pipe(
+      takeUntilDestroyed(this.destroyRef),
       tap((translation: Translation) => (this.language = translation)),
-      finalize(() => getTranslateSubscription$.unsubscribe()),
     );
-
-    return getTranslateSubscription$;
   }
 }

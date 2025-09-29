@@ -10,39 +10,40 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {MxGraphService} from '@ame/mx-graph';
-import {DataTypeService} from '@ame/shared';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatFormField, MatLabel} from '@angular/material/input';
+import {MatOption, MatSelect} from '@angular/material/select';
 import {DefaultConstraint, NamedElement, Samm, SammC} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-lower-bound-input-field',
   templateUrl: './lower-bound-input-field.component.html',
+  imports: [MatFormField, MatLabel, MatSelect, ReactiveFormsModule, MatOption],
 })
 export class LowerBoundInputFieldComponent extends InputFieldComponent<DefaultConstraint> implements OnInit, OnDestroy {
   public lowerBoundDefinitionList = [];
 
-  constructor(
-    public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService,
-  ) {
+  constructor() {
     super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'lowerBoundDefinition';
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe((modelElement: NamedElement) => {
-      this.lowerBoundDefinitionList = modelElement
-        ? new SammC(new Samm(modelElement.metaModelVersion)).getLowerBoundDefinitionList()
-        : null;
-      if (modelElement instanceof DefaultConstraint) {
-        this.metaModelElement = modelElement;
-      }
-      this.initForm();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((modelElement: NamedElement) => {
+        this.lowerBoundDefinitionList = modelElement
+          ? new SammC(new Samm(modelElement.metaModelVersion)).getLowerBoundDefinitionList()
+          : null;
+        if (modelElement instanceof DefaultConstraint) {
+          this.metaModelElement = modelElement;
+        }
+        this.initForm();
+      });
   }
 
   ngOnDestroy() {

@@ -12,12 +12,12 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {ModelService} from '@ame/rdf/services';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
-import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {LanguageTranslationService} from '@ame/translation';
 import {CommonModule} from '@angular/common';
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
+import {Component, DestroyRef, ElementRef, HostListener, OnInit, ViewChild, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -30,9 +30,10 @@ import {MatInputModule} from '@angular/material/input';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
 import {saveAs} from 'file-saver';
 import * as locale from 'locale-codes';
-import {Subscription, map} from 'rxjs';
+import {map} from 'rxjs';
 import {finalize, first} from 'rxjs/operators';
 import {EditorDialogValidators} from '../../../editor-dialog';
 import {EditorService} from '../../../editor.service';
@@ -61,7 +62,6 @@ export interface OpenApi {
     CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
-    LanguageTranslateModule,
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule,
@@ -72,10 +72,18 @@ export interface OpenApi {
     MatButtonModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
+    TranslatePipe,
   ],
 })
-export class GenerateOpenApiComponent implements OnInit, OnDestroy {
+export class GenerateOpenApiComponent implements OnInit {
   @ViewChild('dropArea') dropArea: ElementRef;
+
+  private destroyRef = inject(DestroyRef);
+  private dialogRef = inject(MatDialogRef<GenerateOpenApiComponent>);
+  private languageService = inject(SammLanguageSettingsService);
+  private editorService = inject(EditorService);
+  private notificationsService = inject(NotificationsService);
+  private translate = inject(LanguageTranslationService);
 
   private loadedFilesService = inject(LoadedFilesService);
 
@@ -84,7 +92,6 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   isGenerating = false;
   linkToSpecification = 'https://eclipse-esmf.github.io/ame-guide/generate/generate-openapi-doc.html';
   uploadedFile: File = undefined;
-  subscriptions = new Subscription();
 
   private resourcePathValidators = [
     Validators.required,
@@ -117,22 +124,9 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
     return this.form.get('jsonProperties') as FormControl;
   }
 
-  constructor(
-    private dialogRef: MatDialogRef<GenerateOpenApiComponent>,
-    private languageService: SammLanguageSettingsService,
-    private modelService: ModelService,
-    private editorService: EditorService,
-    private notificationsService: NotificationsService,
-    private translate: LanguageTranslationService,
-  ) {}
-
   ngOnInit(): void {
     this.initializeForm();
     this.setupFormListeners();
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 
   private initializeForm(): void {
@@ -156,32 +150,28 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   }
 
   private setupFormListeners(): void {
-    this.subscriptions.add(this.output?.valueChanges.subscribe(() => this.removeUploadedFile()));
+    this.output?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.removeUploadedFile());
 
-    this.subscriptions.add(
-      this.activateResourcePath?.valueChanges.subscribe(activateResourcePath => {
-        const resourcePathControl = this.form.get('resourcePath');
+    this.activateResourcePath?.valueChanges.subscribe(activateResourcePath => {
+      const resourcePathControl = this.form.get('resourcePath');
 
-        if (activateResourcePath) {
-          resourcePathControl?.setValue('/resource/{resourceId}');
-          resourcePathControl?.setValidators(this.resourcePathValidators);
-        } else {
-          resourcePathControl?.setValue('');
-          resourcePathControl?.setValidators(null);
-        }
+      if (activateResourcePath) {
+        resourcePathControl?.setValue('/resource/{resourceId}');
+        resourcePathControl?.setValidators(this.resourcePathValidators);
+      } else {
+        resourcePathControl?.setValue('');
+        resourcePathControl?.setValidators(null);
+      }
 
-        resourcePathControl?.updateValueAndValidity();
-      }),
-    );
+      resourcePathControl?.updateValueAndValidity();
+    });
 
-    this.subscriptions.add(
-      this.resourcePath?.valueChanges.subscribe(resourcePath => {
-        const fileControl = this.form.get('file');
-        const hasBrackets = /{.*}/.test(resourcePath);
-        hasBrackets ? fileControl?.setValidators(Validators.required) : fileControl?.setValidators(null);
-        fileControl?.updateValueAndValidity();
-      }),
-    );
+    this.resourcePath?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(resourcePath => {
+      const fileControl = this.form.get('file');
+      const hasBrackets = /{.*}/.test(resourcePath);
+      hasBrackets ? fileControl?.setValidators(Validators.required) : fileControl?.setValidators(null);
+      fileControl?.updateValueAndValidity();
+    });
   }
 
   @HostListener('dragover', ['$event'])
@@ -250,19 +240,18 @@ export class GenerateOpenApiComponent implements OnInit, OnDestroy {
   generateOpenApiSpec(): void {
     this.isGenerating = true;
     const openApiSpec = this.form.value as OpenApi;
-    this.subscriptions.add(
-      this.editorService
-        .generateOpenApiSpec(this.loadedFilesService.currentLoadedFile?.rdfModel, openApiSpec)
-        .pipe(
-          first(),
-          map(data => this.handleGeneratedSpec(data, openApiSpec)),
-          finalize(() => {
-            this.isGenerating = false;
-            this.dialogRef.close();
-          }),
-        )
-        .subscribe(),
-    );
+    this.editorService
+      .generateOpenApiSpec(this.loadedFilesService.currentLoadedFile?.rdfModel, openApiSpec)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        first(),
+        map(data => this.handleGeneratedSpec(data, openApiSpec)),
+        finalize(() => {
+          this.isGenerating = false;
+          this.dialogRef.close();
+        }),
+      )
+      .subscribe();
   }
 
   private handleGeneratedSpec(data: any, spec: OpenApi): void {

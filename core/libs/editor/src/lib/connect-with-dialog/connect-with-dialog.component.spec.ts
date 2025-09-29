@@ -19,7 +19,12 @@ import {MatInputModule} from '@angular/material/input';
 import {DefaultAspect, DefaultCharacteristic, DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {provideMockObject} from 'jest-helpers';
 import {mxgraph} from 'mxgraph-factory';
+import {ModelElementParserPipe} from '../editor-dialog';
 import {ConnectWithDialogComponent} from './connect-with-dialog.component';
+
+jest.mock('../editor-dialog/components/entity-instance/entity-instance-table/entity-instance-table.component', () => ({
+  EntityInstanceTableComponent: class {},
+}));
 
 type Cell = Partial<mxgraph.mxCell & {getMetaModelElement: () => {element: NamedElement}}>;
 
@@ -70,6 +75,7 @@ describe('RdfNodeService', () => {
     TestBed.configureTestingModule({
       imports: [ConnectWithDialogComponent, MatFormFieldModule, MatInputModule],
       providers: [
+        ModelElementParserPipe,
         {
           provide: MxGraphService,
           useValue: provideMockObject(MxGraphService),

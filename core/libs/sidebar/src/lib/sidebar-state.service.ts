@@ -131,6 +131,7 @@ export class NamespacesManager {
 export class SidebarStateService {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private loadedFilesService = inject(LoadedFilesService);
+  private browserService = inject(BrowserService);
 
   public sammElements = new SidebarState();
   public workspace = new SidebarStateWithRefresh();
@@ -138,7 +139,7 @@ export class SidebarStateService {
   public selection = new Selection();
   public namespacesState = new NamespacesManager();
 
-  constructor(private browserService: BrowserService) {
+  constructor() {
     this.manageSidebars();
     requestAnimationFrame(() => {
       this.getLockedFiles();

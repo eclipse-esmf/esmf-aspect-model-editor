@@ -12,8 +12,8 @@
  */
 
 import {EditorService} from '@ame/editor';
-import {ElementType, basicShapeGeometry, circleShapeGeometry} from '@ame/shared';
-import {AfterViewInit, Component, ElementRef, Input, Renderer2} from '@angular/core';
+import {basicShapeGeometry, circleShapeGeometry, ElementType} from '@ame/shared';
+import {AfterViewInit, Component, ElementRef, inject, Input, Renderer2} from '@angular/core';
 
 @Component({
   selector: 'ame-draggable-element',
@@ -24,11 +24,10 @@ export class DraggableElementComponent implements AfterViewInit {
   @Input() type: ElementType;
   @Input() urn?: string = '';
 
-  constructor(
-    public editorService: EditorService,
-    private elementRef: ElementRef<HTMLDivElement>,
-    private renderer: Renderer2,
-  ) {}
+  private elementRef = inject(ElementRef<HTMLDivElement>);
+  private renderer = inject(Renderer2);
+
+  public editorService = inject(EditorService);
 
   ngAfterViewInit(): void {
     this.elementRef.nativeElement.dataset.type = this.type;

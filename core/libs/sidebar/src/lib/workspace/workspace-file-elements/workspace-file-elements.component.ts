@@ -15,19 +15,49 @@ import {ModelApiService} from '@ame/api';
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {ModelLoaderService} from '@ame/editor';
 import {MxGraphService} from '@ame/mx-graph';
-import {ElementType, sammElements} from '@ame/shared';
+import {ElementIconComponent, ElementType, sammElements} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
+import {AsyncPipe} from '@angular/common';
 import {ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
+import {MatMiniFabButton} from '@angular/material/button';
+import {MatCheckbox} from '@angular/material/checkbox';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormField, MatInput} from '@angular/material/input';
+import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
+import {MatTooltip} from '@angular/material/tooltip';
 import {NamedElement} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import {filter, first, switchMap} from 'rxjs';
+import {DraggableElementComponent} from '../../draggable-element/draggable-element.component';
 
 @Component({
   selector: 'ame-workspace-file-elements',
   templateUrl: './workspace-file-elements.component.html',
   styleUrls: ['./workspace-file-elements.component.scss'],
+  imports: [
+    AsyncPipe,
+    MatMiniFabButton,
+    MatMenuTrigger,
+    MatInput,
+    DraggableElementComponent,
+    ElementIconComponent,
+    MatCheckbox,
+    MatMenu,
+    MatTooltip,
+    MatIconModule,
+    MatFormField,
+    TranslatePipe,
+  ],
 })
 export class WorkspaceFileElementsComponent implements OnInit {
+  private mxGraphService = inject(MxGraphService);
+  private changeDetector = inject(ChangeDetectorRef);
+  private modelApiService = inject(ModelApiService);
+  private modelLoaderService = inject(ModelLoaderService);
+  private loadedFilesService = inject(LoadedFilesService);
+
   public sidebarService = inject(SidebarStateService);
+
   public elements: Record<string, any> = {};
   public searched: Record<string, any[]> = {};
 
@@ -48,14 +78,6 @@ export class WorkspaceFileElementsComponent implements OnInit {
   }
 
   private searchThrottle: NodeJS.Timeout;
-
-  constructor(
-    private mxGraphService: MxGraphService,
-    private changeDetector: ChangeDetectorRef,
-    private modelApiService: ModelApiService,
-    private modelLoaderService: ModelLoaderService,
-    private loadedFilesService: LoadedFilesService,
-  ) {}
 
   ngOnInit(): void {
     this.selection$.pipe(filter(Boolean)).subscribe(({namespace, file, aspectModelUrn}) => {

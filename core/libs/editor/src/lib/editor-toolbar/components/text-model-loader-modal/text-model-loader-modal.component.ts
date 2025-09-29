@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LanguageTranslateModule} from '@ame/translation';
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {TranslatePipe} from '@ngx-translate/core';
 import {first} from 'rxjs';
 import {FileHandlingService} from '../../services';
 
@@ -38,13 +38,11 @@ import {FileHandlingService} from '../../services';
       }
     `,
   ],
-  imports: [LanguageTranslateModule, MatDialogModule, MatFormFieldModule, MatButtonModule, MatInputModule, MatIcon],
+  imports: [TranslatePipe, MatDialogModule, MatFormFieldModule, MatButtonModule, MatInputModule, MatIcon],
 })
 export class TextModelLoaderModalComponent {
-  constructor(
-    private fileHandlingService: FileHandlingService,
-    private matDialogRef: MatDialogRef<TextModelLoaderModalComponent>,
-  ) {}
+  private fileHandlingService = inject(FileHandlingService);
+  private matDialogRef = inject(MatDialogRef<TextModelLoaderModalComponent>);
 
   loadModel(modelText: string) {
     this.matDialogRef.close();

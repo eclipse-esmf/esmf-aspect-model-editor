@@ -14,15 +14,15 @@
 import {ShapeConnectorService} from '@ame/connection';
 import {FiltersService} from '@ame/loader-filters';
 import {MxGraphService, MxGraphShapeSelectorService} from '@ame/mx-graph';
-import {ModelService} from '@ame/rdf/services';
 import {ConfigurationService, Settings} from '@ame/settings-dialog';
 import {BindingsService, NotificationsService} from '@ame/shared';
-import {LanguageTranslateModule} from '@ame/translation';
 import {AsyncPipe, CommonModule} from '@angular/common';
-import {AfterViewInit, Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {AfterViewInit, Component, DestroyRef, OnDestroy, OnInit, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {first} from 'rxjs/operators';
 import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/bar-item.component';
@@ -36,9 +36,22 @@ import {FileHandlingService} from './services';
   selector: 'ame-editor-toolbar',
   templateUrl: './editor-toolbar.component.html',
   styleUrls: ['./editor-toolbar.component.scss'],
-  imports: [BarItemComponent, CommonModule, MatTooltipModule, LanguageTranslateModule, MatIconModule, AsyncPipe],
+  imports: [BarItemComponent, CommonModule, MatTooltipModule, TranslatePipe, MatIconModule, AsyncPipe],
 })
 export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy {
+  private destroyRef = inject(DestroyRef);
+  private fileHandlingService = inject(FileHandlingService);
+  private editorService = inject(EditorService);
+  private shapeConnectorService = inject(ShapeConnectorService);
+  private configurationService = inject(ConfigurationService);
+  private bindingsService = inject(BindingsService);
+  private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
+  private matDialog = inject(MatDialog);
+  private shapeSettingsService = inject(ShapeSettingsService);
+  private mxGraphService = inject(MxGraphService);
+
+  public notificationsService = inject(NotificationsService);
+
   public filtersService = inject(FiltersService);
   public isAllShapesExpanded$: Observable<boolean>;
   public settings$: Observable<Settings>;
@@ -52,20 +65,6 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   private checkChangesInterval: NodeJS.Timeout;
-
-  constructor(
-    public notificationsService: NotificationsService,
-    private fileHandlingService: FileHandlingService,
-    private editorService: EditorService,
-    private modelService: ModelService,
-    private shapeConnectorService: ShapeConnectorService,
-    private configurationService: ConfigurationService,
-    private bindingsService: BindingsService,
-    private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private matDialog: MatDialog,
-    private shapeSettingsService: ShapeSettingsService,
-    private mxGraphService: MxGraphService,
-  ) {}
 
   ngOnInit(): void {
     this.settings$ = this.configurationService.settings$;
@@ -121,7 +120,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
     this.matDialog
       .open(ConnectWithDialogComponent, {data: selectedCell})
       .afterClosed()
-      .pipe(first())
+      .pipe(takeUntilDestroyed(this.destroyRef), first())
       .subscribe(result => {
         if (result) {
           this.shapeConnectorService.connectSelectedElements([selectedCell, result.cell]);

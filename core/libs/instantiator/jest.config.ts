@@ -11,18 +11,22 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-module.exports = {
+export default {
   displayName: 'instantiator',
-  preset: '../../jest.preset.js',
+  preset: '../../jest.preset.cjs',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {},
   coverageDirectory: '../../coverage/libs/instantiator',
   transform: {
-    '^.+\\.(ts|js|html)$': [
+    '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
-      {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$',
+      },
     ],
   },
+  transformIgnorePatterns: ['node_modules/?!(.*\\.mjs$|@ngneat)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

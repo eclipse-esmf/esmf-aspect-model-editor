@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
 import {ShapeConnectorService} from '@ame/connection';
 import {FiltersService} from '@ame/loader-filters';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {useUpdater} from '@ame/utils';
 import {Injectable, inject} from '@angular/core';
 import {
@@ -35,27 +33,16 @@ import {mxgraph} from 'mxgraph-factory';
 import {MxGraphCharacteristicHelper, MxGraphHelper, MxGraphVisitorHelper} from '../../helpers';
 import {ModelInfo, RendererUpdatePayload} from '../../models';
 import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
-import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 import {UnitRenderService} from './unit-render.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class CharacteristicRenderService extends BaseRenderService {
   private metaModelElement: DefaultCharacteristic;
   private filtersService = inject(FiltersService);
-
-  constructor(
-    mxGraphService: MxGraphService,
-    sammLangService: SammLanguageSettingsService,
-    protected loadedFilesService: LoadedFilesService,
-    private shapeConnectorService: ShapeConnectorService,
-    private unitRendererService: UnitRenderService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-  ) {
-    super(mxGraphService, sammLangService, loadedFilesService);
-  }
+  private shapeConnectorService = inject(ShapeConnectorService);
+  private unitRendererService = inject(UnitRenderService);
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
 
   isApplicable(cell: mxgraph.mxCell): boolean {
     return MxGraphHelper.getModelElement(cell) instanceof DefaultCharacteristic;

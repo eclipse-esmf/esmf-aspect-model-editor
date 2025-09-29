@@ -24,9 +24,9 @@ import {
   MxGraphVisitorHelper,
 } from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {ElementCreatorService, config} from '@ame/shared';
+import {config, ElementCreatorService} from '@ame/shared';
 import {useUpdater} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {
   Characteristic,
   DefaultCollection,
@@ -42,24 +42,20 @@ import {ScalarValue} from 'libs/aspect-model-loader/src/lib/aspect-meta-model/sc
 import {mxgraph} from 'mxgraph-factory';
 import {SingleShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class CharacteristicConnectionHandler implements SingleShapeConnector<Characteristic> {
-  get currentCachedFile() {
-    return this.loadedFiles.currentLoadedFile.cachedFile;
-  }
+  private mxGraphService = inject(MxGraphService);
+  private modelElementNamingService = inject(ModelElementNamingService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private sammLangService = inject(SammLanguageSettingsService);
+  private filtersService = inject(FiltersService);
+  private loadedFilesService = inject(LoadedFilesService);
+  private elementCreator = inject(ElementCreatorService);
 
-  constructor(
-    private mxGraphService: MxGraphService,
-    private modelElementNamingService: ModelElementNamingService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private sammLangService: SammLanguageSettingsService,
-    private filtersService: FiltersService,
-    private loadedFiles: LoadedFilesService,
-    private elementCreator: ElementCreatorService,
-  ) {}
+  get currentCachedFile() {
+    return this.loadedFilesService.currentLoadedFile.cachedFile;
+  }
 
   public connect(characteristic: Characteristic, source: mxgraph.mxCell, modelInfo: ModelInfo) {
     if (
@@ -92,8 +88,8 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     // add trait
     const defaultTrait: DefaultTrait = this.elementCreator.createEmptyElement(DefaultTrait, {baseCharacteristic: currentMetaModel});
 
-    const mxRenderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlayService, this.sammLangService, null);
-    const traitShape = mxRenderer.render(
+    const mxGraphRenderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlayService, this.sammLangService, null);
+    const traitShape = mxGraphRenderer.render(
       this.filtersService.createNode(this.currentCachedFile.resolveInstance(defaultTrait), {
         parent: MxGraphHelper.getModelElement(source),
       }),
@@ -186,7 +182,7 @@ export class CharacteristicConnectionHandler implements SingleShapeConnector<Cha
     const entityValue = new DefaultEntityInstance({
       name: 'entityInstance',
       metaModelVersion: config.currentSammVersion,
-      aspectModelUrn: `${this.loadedFiles.currentLoadedFile.namespace}#entityInstance`,
+      aspectModelUrn: `${this.loadedFilesService.currentLoadedFile.namespace}#entityInstance`,
     });
     const characteristicDataType = characteristic.dataType as DefaultEntity;
 

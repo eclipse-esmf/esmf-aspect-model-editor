@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './lib/domain-model-to-rdf.module';
 export * from './lib/domain-model-to-rdf.service';
 export * from './lib/rdf-list';
 export * from './lib/rdf-node';

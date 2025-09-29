@@ -9,7 +9,8 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/sidebar"],
       "options": {
-        "jestConfig": "libs/sidebar/jest.config.js"
+        "jestConfig": "libs/sidebar/jest.config.ts",
+        "tsConfig": "libs/sidebar/tsconfig.spec.json"
       }
     },
     "lint": {

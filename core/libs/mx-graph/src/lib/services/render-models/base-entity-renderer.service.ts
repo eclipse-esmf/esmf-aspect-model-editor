@@ -23,19 +23,14 @@ import {MxGraphRenderer} from '../../renderers';
 import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
 import {MxGraphService} from '../mx-graph.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class BaseEntityRendererService {
   private filtersService = inject(FiltersService);
   private loadedFiles = inject(LoadedFilesService);
-
-  constructor(
-    private mxGraphService: MxGraphService,
-    private sammLangService: SammLanguageSettingsService,
-    private shapeConnectorService: ShapeConnectorService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-  ) {}
+  private mxGraphService = inject(MxGraphService);
+  private sammLangService = inject(SammLanguageSettingsService);
+  private shapeConnectorService = inject(ShapeConnectorService);
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
 
   public handleExtendsElement(cell: mxgraph.mxCell) {
     const metaModelElement = MxGraphHelper.getModelElement<DefaultEntity>(cell);
@@ -58,7 +53,7 @@ export class BaseEntityRendererService {
       this.cleanUpAbstractConnections(cell);
     }
 
-    const mxGraphSetupVisitor = new MxGraphRenderer(
+    const mxGraphRenderer = new MxGraphRenderer(
       this.mxGraphService,
       this.mxGraphShapeOverlayService,
       this.sammLangService,
@@ -74,7 +69,7 @@ export class BaseEntityRendererService {
       }
 
       const [filteredElement] = new DefaultFilter(this.loadedFiles).filter([extendsElement]);
-      mxGraphSetupVisitor.render(filteredElement, cell);
+      mxGraphRenderer.render(filteredElement, cell);
       predefinedCell = this.mxGraphService.resolveCellByModelElement(extendsElement);
 
       // setting to null to create the properties after abstract properties

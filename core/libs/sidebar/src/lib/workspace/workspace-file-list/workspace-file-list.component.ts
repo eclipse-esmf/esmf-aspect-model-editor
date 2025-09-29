@@ -17,19 +17,49 @@ import {ConfirmDialogService, FileHandlingService, ModelCheckerService, ModelSav
 import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
+import {KeyValuePipe} from '@angular/common';
 import {ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, inject} from '@angular/core';
+import {MatMiniFabButton} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormField, MatInput} from '@angular/material/input';
+import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {MatTooltip} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
 import {Subscription, catchError, map, switchMap, throwError} from 'rxjs';
 import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-dialog.enum';
+import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.component';
 
 @Component({
   selector: 'ame-workspace-file-list',
   templateUrl: './workspace-file-list.component.html',
   styleUrls: ['./workspace-file-list.component.scss'],
+  imports: [
+    MatFormField,
+    MatIconModule,
+    MatInput,
+    MatTooltip,
+    MatMiniFabButton,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    WorkspaceMigrateComponent,
+    TranslatePipe,
+    KeyValuePipe,
+  ],
 })
 export class WorkspaceFileListComponent implements OnInit, OnDestroy {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private modelSaverService = inject(ModelSaverService);
   public sidebarService = inject(SidebarStateService);
+  private notificationService = inject(NotificationsService);
+  private confirmDialogService = inject(ConfirmDialogService);
+  private modelApiService = inject(ModelApiService);
+  private fileHandlingService = inject(FileHandlingService);
+  private changeDetector = inject(ChangeDetectorRef);
+  private translate = inject(LanguageTranslationService);
+  private loadedFiles = inject(LoadedFilesService);
+  private modelChecker = inject(ModelCheckerService);
+  private ngZone = inject(NgZone);
 
   public menuSelection: {namespace: string; file: FileStatus} = null;
   public foldedStatus = false;
@@ -47,18 +77,6 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
 
   private searchThrottle: NodeJS.Timeout;
   private subscription = new Subscription();
-
-  constructor(
-    private notificationService: NotificationsService,
-    private confirmDialogService: ConfirmDialogService,
-    private modelApiService: ModelApiService,
-    private fileHandlingService: FileHandlingService,
-    private changeDetector: ChangeDetectorRef,
-    private translate: LanguageTranslationService,
-    private loadedFiles: LoadedFilesService,
-    private modelChecker: ModelCheckerService,
-    private ngZone: NgZone,
-  ) {}
 
   ngOnInit(): void {
     const sub = this.sidebarService.workspace.refreshSignal$

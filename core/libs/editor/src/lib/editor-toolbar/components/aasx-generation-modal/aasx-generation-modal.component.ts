@@ -13,9 +13,9 @@
 
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {LanguageTranslateModule} from '@ame/translation';
-import {Component} from '@angular/core';
+import {RdfService} from '@ame/rdf/services';
+import {Component, DestroyRef, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatOptionModule} from '@angular/material/core';
@@ -24,6 +24,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSelectModule} from '@angular/material/select';
+import {TranslatePipe} from '@ngx-translate/core';
 import {saveAs} from 'file-saver';
 import {finalize, first, tap} from 'rxjs';
 
@@ -33,7 +34,6 @@ import {finalize, first, tap} from 'rxjs';
   styleUrls: ['aasx-generation-modal.component.scss'],
   imports: [
     MatDialogModule,
-    LanguageTranslateModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
     MatButtonModule,
@@ -41,19 +41,18 @@ import {finalize, first, tap} from 'rxjs';
     MatSelectModule,
     MatOptionModule,
     MatIcon,
+    TranslatePipe,
   ],
 })
 export class AASXGenerationModalComponent {
+  private destroyRef = inject(DestroyRef);
+  private modelApiService = inject(ModelApiService);
+  private rdfService = inject(RdfService);
+  private dialogRef = inject(MatDialogRef<AssignedNodesOptions>);
+  private loadedFilesService = inject(LoadedFilesService);
+
   control = new FormControl('aasx');
   isGenerating = false;
-
-  constructor(
-    private modelApiService: ModelApiService,
-    private modelService: ModelService,
-    private rdfService: RdfService,
-    private dialogRef: MatDialogRef<AssignedNodesOptions>,
-    private loadedFilesService: LoadedFilesService,
-  ) {}
 
   generate() {
     this.isGenerating = true;
@@ -64,6 +63,7 @@ export class AASXGenerationModalComponent {
 
     assx
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         first(),
         tap(content => {
           const file = new Blob([content], {type: this.control.value === 'aasx' ? 'text/aasx' : 'text/xml'});

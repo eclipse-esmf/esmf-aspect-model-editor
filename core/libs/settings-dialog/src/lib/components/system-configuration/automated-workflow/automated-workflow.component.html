@@ -62,7 +62,7 @@
             </mat-icon>
           </div>
           <mat-form-field class="setting-item__value" appearance="fill">
-            <mat-label for="autoValidateTime">{{ 'SETTINGS_DIALOG.CONFIGURATION.WAITING_PERIOD' | translate }} </mat-label>
+            <mat-label for="autoValidateTime">{{ 'SETTINGS_DIALOG.CONFIGURATION.WAITING_PERIOD' | translate }}</mat-label>
             <input formControlName="validationTimerSeconds" matInput type="number" data-cy="autoValidateTime" />
             @if (form.get('validationTimerSeconds').hasError('min')) {
               <mat-error>The time must be at least 60 second</mat-error>

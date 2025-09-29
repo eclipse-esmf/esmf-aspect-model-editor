@@ -14,7 +14,6 @@
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {mxConstants} from '../providers';
-import {darkColors} from './dark-theme';
 import {lightColors} from './light-theme';
 
 @Injectable({providedIn: 'root'})
@@ -78,7 +77,8 @@ export class ThemeService {
   }
 
   setCssVars(theme: string) {
-    this.currentColors = theme === 'light' ? lightColors : darkColors;
+    // TODO add new themes here
+    this.currentColors = theme === 'light' ? lightColors : null;
     Object.entries(this.currentColors).forEach(([key, color]: any) => this.root.style.setProperty(`--ame-${key}`, color));
   }
 }

@@ -11,25 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {LoadedFilesService} from '@ame/cache';
-import {ModelService} from '@ame/rdf/services';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EditorModelService {
+  private loadedFiles = inject(LoadedFilesService);
+
   protected metaModelElement: NamedElement;
   protected dataChangedEventQueue = [];
   private metaModelElementSubject = new BehaviorSubject<NamedElement>(null);
   private saveButtonEnabled = true;
   public originalMetaModel: NamedElement;
 
-  constructor(
-    private modelService: ModelService,
-    private loadedFiles: LoadedFilesService,
-  ) {
+  constructor() {
     this.metaModelElementSubject.subscribe(newMetaModelElement => {
       if (this.originalMetaModel && !newMetaModelElement) {
         this.originalMetaModel = null;

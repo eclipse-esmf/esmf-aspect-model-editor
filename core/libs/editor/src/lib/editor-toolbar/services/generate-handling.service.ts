@@ -24,35 +24,31 @@ import {
 import {ModelService} from '@ame/rdf/services';
 import {LoadingScreenOptions, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {Injectable} from '@angular/core';
+import {DestroyRef, inject, Injectable} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Observable, catchError, map, switchMap, throwError} from 'rxjs';
+import {catchError, map, Observable, switchMap, throwError} from 'rxjs';
 import {finalize, first} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
 import {PreviewDialogComponent} from '../../preview-dialog';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class GenerateHandlingService {
-  private get currentCachedFile() {
-    return this.currentFile.cachedFile;
-  }
+  private destroyRef = inject(DestroyRef);
+  private matDialog = inject(MatDialog);
+  private editorService = inject(EditorService);
+  private modelService = inject(ModelService);
+  private notificationsService = inject(NotificationsService);
+  private loadingScreenService = inject(LoadingScreenService);
+  private translate = inject(LanguageTranslationService);
+  private fileHandlingService = inject(FileHandlingService);
+  private loadedFilesService = inject(LoadedFilesService);
 
   private get currentFile() {
     return this.loadedFilesService.currentLoadedFile;
   }
 
-  constructor(
-    private matDialog: MatDialog,
-    private editorService: EditorService,
-    private modelService: ModelService,
-    private notificationsService: NotificationsService,
-    private loadingScreenService: LoadingScreenService,
-    private translate: LanguageTranslationService,
-    private fileHandlingService: FileHandlingService,
-    private loadedFilesService: LoadedFilesService,
-  ) {
+  constructor() {
     if (!environment.production) {
       window['angular.generateHandlingService'] = this;
     }
@@ -91,7 +87,7 @@ export class GenerateHandlingService {
   }
 
   onGenerateJsonSample() {
-    const cb = () => this.generateJsonSample().pipe(first()).subscribe();
+    const cb = () => this.generateJsonSample().pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
     this.validateFile(cb);
   }
 
@@ -127,7 +123,7 @@ export class GenerateHandlingService {
   }
 
   onGenerateJsonSchema() {
-    const cb = () => this.generateJsonSchema().pipe(first()).subscribe();
+    const cb = () => this.generateJsonSchema().pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
     this.validateFile(cb);
   }
 
@@ -172,9 +168,9 @@ export class GenerateHandlingService {
   }
 
   validateFile(callback?: Function): void {
-    const subscription$ = this.modelService
+    this.modelService
       .synchronizeModelToRdf()
-      .pipe(finalize(() => subscription$.unsubscribe()))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((): void => {
         if (!this.loadedFilesService?.currentLoadedFile?.aspect) {
           this.notificationsService.info({
@@ -183,7 +179,7 @@ export class GenerateHandlingService {
           });
           return;
         }
-        this.fileHandlingService.validateFile(callback).pipe(first()).subscribe();
+        this.fileHandlingService.validateFile(callback).pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
       });
   }
 

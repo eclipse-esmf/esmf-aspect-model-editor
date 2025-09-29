@@ -42,7 +42,7 @@ export class BaseConnectionHandler {
 
   renderTree(modelElement: NamedElement, parent: mxgraph.mxCell): mxgraph.mxCell {
     const node = this.filtersService.createNode(modelElement, {parent: MxGraphHelper.getModelElement(parent)});
-    const mxRenderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlay, this.sammLangService, null);
-    return mxRenderer.render(node, parent);
+    const mxGraphRenderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlay, this.sammLangService, null);
+    return mxGraphRenderer.render(node, parent);
   }
 }

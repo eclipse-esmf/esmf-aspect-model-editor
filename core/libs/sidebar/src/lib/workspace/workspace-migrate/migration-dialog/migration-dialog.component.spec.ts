@@ -22,10 +22,14 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {provideMockObject} from 'jest-helpers';
 import {of} from 'rxjs';
 
-import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
-import {TranslateModule} from '@ngx-translate/core';
+import {LanguageTranslationService} from '@ame/translation';
+import {TranslateModule, TranslatePipe} from '@ngx-translate/core';
 import {MockProvider} from 'ng-mocks';
 import {MigrationDialogComponent} from './migration-dialog.component';
+
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
 
 describe('MigrationDialogComponent', () => {
   let component: MigrationDialogComponent;
@@ -41,7 +45,7 @@ describe('MigrationDialogComponent', () => {
         MatButtonModule,
         MatProgressSpinnerModule,
         TranslateModule.forRoot(),
-        LanguageTranslateModule,
+        TranslatePipe,
         NoopAnimationsModule,
       ],
       providers: [

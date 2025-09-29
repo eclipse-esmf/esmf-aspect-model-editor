@@ -12,12 +12,12 @@
  */
 
 import {ModelApiService} from '@ame/api';
-import {LanguageTranslateModule} from '@ame/translation';
 import {Component, inject, signal} from '@angular/core';
 import {AbstractControl, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {TranslatePipe} from '@ngx-translate/core';
 
 import {LoadedFilesService} from '@ame/cache';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -33,7 +33,7 @@ import {finalize} from 'rxjs/operators';
   imports: [
     MatIconModule,
     MatDialogModule,
-    LanguageTranslateModule,
+    TranslatePipe,
     ReactiveFormsModule,
     MatInputModule,
     MatDialogActions,

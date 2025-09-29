@@ -21,8 +21,6 @@ import {RFC2141} from 'urn-lib';
 export class EditorDialogValidators {
   private loadedFileService = inject(LoadedFilesService);
 
-  constructor(private loadedFiles: LoadedFilesService) {}
-
   static namingLowerCase(control: AbstractControl) {
     if (!control?.value) {
       return null;

@@ -36,9 +36,13 @@ import {MxGraphService, MxGraphShapeOverlayService} from '../services';
 import {ModelRenderer} from './mxgraph-renderer.interface';
 
 export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
-  visitedElements = []; // Keep track of already visited elements
-
   private shapes: Map<string, mxCell>;
+
+  public visitedElements = []; // Keep track of already visited elements
+
+  public set rdfModelValue(rdfModel: RdfModel) {
+    this.rdfModel = rdfModel;
+  }
 
   constructor(
     private mxGraphService: MxGraphService,

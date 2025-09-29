@@ -10,13 +10,13 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {ShapeConnectorUtil} from './shape-connector-util';
 
 import {LoadedFilesService} from '@ame/cache';
 import {ModelInfo, MxGraphAttributeService, MxGraphHelper, MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {NotificationsService, cellRelations} from '@ame/shared';
+import {cellRelations, NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {
   DefaultAspect,
@@ -74,52 +74,50 @@ import {
 } from './single-connection-handlers';
 import mxCell = mxgraph.mxCell;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ShapeConnectorService {
-  constructor(
-    private notificationsService: NotificationsService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private aspectConnectionHandler: AspectConnectionHandler,
-    private propertyConnectionHandler: PropertyConnectionHandler,
-    private operationConnectionHandler: OperationConnectionHandler,
-    private eitherConnectionHandler: EitherConnectionHandler,
-    private characteristicConnectionHandler: CharacteristicConnectionHandler,
-    private entityConnectionHandler: EntityConnectionHandler,
-    private abstractEntityConnectionHandler: AbstractEntityConnectionHandler,
-    private eventConnectionHandler: EventConnectionHandler,
-    private aspectPropertyConnectionHandler: AspectPropertyConnectionHandler,
-    private aspectEventConnectionHandler: AspectEventConnectionHandler,
-    private eventPropertyConnectionHandler: EventPropertyConnectionHandler,
-    private operationPropertyInputConnectionHandler: OperationPropertyInputConnectionHandler,
-    private operationPropertyOutputConnectionHandler: OperationPropertyOutputConnectionHandler,
-    private eitherCharacteristicLeftConnectionHandler: EitherCharacteristicLeftConnectionHandler,
-    private eitherCharacteristicRightConnectionHandler: EitherCharacteristicRightConnectionHandler,
-    private propertyCharacteristicConnectionHandler: PropertyCharacteristicConnectionHandler,
-    private characteristicEntityConnectionHandler: CharacteristicEntityConnectionHandler,
-    private traitWithCharacteristicOrConstraintConnectionHandler: TraitWithCharacteristicOrConstraintConnectionHandler,
-    private collectionCharacteristicConnectionHandler: CollectionCharacteristicConnectionHandler,
-    private entityPropertyConnectionHandler: EntityPropertyConnectionHandler,
-    private entityEntityConnectionHandler: EntityEntityConnectionHandler,
-    private abstractEntityAbstractEntityConnectionHandler: AbstractEntityAbstractEntityConnectionHandler,
-    private entityAbstractEntityConnectionHandler: EntityAbstractEntityConnectionHandler,
-    private abstractEntityPropertyConnectionHandler: AbstractEntityPropertyConnectionHandler,
-    private propertyPropertyConnectionHandler: PropertyPropertyConnectionHandler,
-    private propertyStructuredValueConnectionHandler: PropertyStructuredValueConnectionHandler,
-    private propertyAbstractPropertyConnectionHandler: PropertyAbstractPropertyConnectionHandler,
-    private abstractEntityAbstractPropertyConnectionHandler: AbstractEntityAbstractPropertyConnectionHandler,
-    private abstractPropertyAbstractPropertyConnectionHandler: AbstractPropertyAbstractPropertyConnectionHandler,
-    private traitConnectionHandler: TraitConnectionHandler,
-    private structuredValueConnectionHandler: StructuredValueConnectionHandler,
-    private entityValueConnectionHandler: EntityValueConnectionHandler,
-    private enumerationEntityValueConnectionHandler: EnumerationEntityValueConnectionHandler,
-    private characteristicUnitConnectionHandler: CharacteristicUnitConnectionHandler,
-    private structuredValuePropertyConnectionHandler: StructuredValueCharacteristicPropertyConnectionHandler,
-    private translate: LanguageTranslationService,
-    private loadedFiles: LoadedFilesService,
-  ) {
+  private notificationsService = inject(NotificationsService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private aspectConnectionHandler = inject(AspectConnectionHandler);
+  private propertyConnectionHandler = inject(PropertyConnectionHandler);
+  private operationConnectionHandler = inject(OperationConnectionHandler);
+  private eitherConnectionHandler = inject(EitherConnectionHandler);
+  private characteristicConnectionHandler = inject(CharacteristicConnectionHandler);
+  private entityConnectionHandler = inject(EntityConnectionHandler);
+  private abstractEntityConnectionHandler = inject(AbstractEntityConnectionHandler);
+  private eventConnectionHandler = inject(EventConnectionHandler);
+  private aspectPropertyConnectionHandler = inject(AspectPropertyConnectionHandler);
+  private aspectEventConnectionHandler = inject(AspectEventConnectionHandler);
+  private eventPropertyConnectionHandler = inject(EventPropertyConnectionHandler);
+  private operationPropertyInputConnectionHandler = inject(OperationPropertyInputConnectionHandler);
+  private operationPropertyOutputConnectionHandler = inject(OperationPropertyOutputConnectionHandler);
+  private eitherCharacteristicLeftConnectionHandler = inject(EitherCharacteristicLeftConnectionHandler);
+  private eitherCharacteristicRightConnectionHandler = inject(EitherCharacteristicRightConnectionHandler);
+  private propertyCharacteristicConnectionHandler = inject(PropertyCharacteristicConnectionHandler);
+  private characteristicEntityConnectionHandler = inject(CharacteristicEntityConnectionHandler);
+  private traitWithCharacteristicOrConstraintConnectionHandler = inject(TraitWithCharacteristicOrConstraintConnectionHandler);
+  private collectionCharacteristicConnectionHandler = inject(CollectionCharacteristicConnectionHandler);
+  private entityPropertyConnectionHandler = inject(EntityPropertyConnectionHandler);
+  private entityEntityConnectionHandler = inject(EntityEntityConnectionHandler);
+  private abstractEntityAbstractEntityConnectionHandler = inject(AbstractEntityAbstractEntityConnectionHandler);
+  private entityAbstractEntityConnectionHandler = inject(EntityAbstractEntityConnectionHandler);
+  private abstractEntityPropertyConnectionHandler = inject(AbstractEntityPropertyConnectionHandler);
+  private propertyPropertyConnectionHandler = inject(PropertyPropertyConnectionHandler);
+  private propertyStructuredValueConnectionHandler = inject(PropertyStructuredValueConnectionHandler);
+  private propertyAbstractPropertyConnectionHandler = inject(PropertyAbstractPropertyConnectionHandler);
+  private abstractEntityAbstractPropertyConnectionHandler = inject(AbstractEntityAbstractPropertyConnectionHandler);
+  private abstractPropertyAbstractPropertyConnectionHandler = inject(AbstractPropertyAbstractPropertyConnectionHandler);
+  private traitConnectionHandler = inject(TraitConnectionHandler);
+  private structuredValueConnectionHandler = inject(StructuredValueConnectionHandler);
+  private entityValueConnectionHandler = inject(EntityValueConnectionHandler);
+  private enumerationEntityValueConnectionHandler = inject(EnumerationEntityValueConnectionHandler);
+  private characteristicUnitConnectionHandler = inject(CharacteristicUnitConnectionHandler);
+  private structuredValuePropertyConnectionHandler = inject(StructuredValueCharacteristicPropertyConnectionHandler);
+  private translate = inject(LanguageTranslationService);
+  private loadedFilesService = inject(LoadedFilesService);
+
+  constructor() {
     if (!environment.production) {
       window['angular.shapeConnectorService'] = this;
     }
@@ -145,7 +143,7 @@ export class ShapeConnectorService {
       selectedCells.reverse();
     }
 
-    if (this.loadedFiles.isElementExtern(modelElements[0])) {
+    if (this.loadedFilesService.isElementExtern(modelElements[0])) {
       return this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.REFERNECE_CONNECTION_ERROR});
     }
 

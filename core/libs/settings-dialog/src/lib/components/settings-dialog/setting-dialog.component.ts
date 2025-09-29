@@ -14,14 +14,24 @@ import {LoadedFilesService} from '@ame/cache';
 import {MxGraphAttributeService, MxGraphService, MxGraphShapeSelectorService, ShapeLanguageRemover} from '@ame/mx-graph';
 import {AlertService, LoadingScreenService, TitleService} from '@ame/shared';
 import {FlatTreeControl} from '@angular/cdk/tree';
-import {Component} from '@angular/core';
+import {NgClass} from '@angular/common';
+import {Component, inject} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {MatDialogRef} from '@angular/material/dialog';
-import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
+import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltip} from '@angular/material/tooltip';
+import {MatTree, MatTreeFlatDataSource, MatTreeFlattener, MatTreeNode, MatTreeNodeDef, MatTreeNodeToggle} from '@angular/material/tree';
 import {RdfModel} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import * as locale from 'locale-codes';
 import {NamespaceConfiguration} from '../../model';
 import {SammLanguageSettingsService, SettingsFormService} from '../../services';
+import {LanguageSettingsComponent} from '../model-configuration/language-settings/language-settings.component';
+import {NamespaceSettingsComponent} from '../model-configuration/namespace-settings/namespace-settings.component';
+import {AutomatedWorkflowComponent} from '../system-configuration/automated-workflow/automated-workflow.component';
+import {EditorConfigurationComponent} from '../system-configuration/editor-configuration/editor-configuration.component';
+import {HeaderCopyrightComponent} from '../system-configuration/header-copyright/header-copyright.component';
 
 enum NodeNames {
   CONFIGURATION = 'System Configuration',
@@ -94,9 +104,41 @@ const TREE_DATA: ConfigurationNode[] = [
   selector: 'ame-setting-dialog',
   templateUrl: './setting-dialog.component.html',
   styleUrls: ['./setting-dialog.component.scss'],
+  imports: [
+    MatDialogTitle,
+    MatDialogClose,
+    MatIconButton,
+    MatIconModule,
+    MatDialogContent,
+    MatTree,
+    MatTreeNode,
+    MatTreeNodeDef,
+    NgClass,
+    AutomatedWorkflowComponent,
+    EditorConfigurationComponent,
+    LanguageSettingsComponent,
+    NamespaceSettingsComponent,
+    HeaderCopyrightComponent,
+    MatDialogActions,
+    MatButton,
+    MatTooltip,
+    MatTreeNodeToggle,
+    TranslatePipe,
+  ],
 })
 export class SettingDialogComponent {
-  readonly NodeNames = NodeNames;
+  private settingDialogComponentMatDialogRef = inject(MatDialogRef<SettingDialogComponent>);
+  private formService = inject(SettingsFormService);
+  private alertService = inject(AlertService);
+  private mxGraphService = inject(MxGraphService);
+  private sammLangService = inject(SammLanguageSettingsService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
+  private loadingScreen = inject(LoadingScreenService);
+  private titleService = inject(TitleService);
+  private loadedFilesService = inject(LoadedFilesService);
+
+  public readonly NodeNames = NodeNames;
 
   private _transformer = (node: ConfigurationNode, level: number): ConfigurationFlatNode => {
     return {
@@ -132,18 +174,7 @@ export class SettingDialogComponent {
     return this.loadedFilesService.currentLoadedFile;
   }
 
-  constructor(
-    private settingDialogComponentMatDialogRef: MatDialogRef<SettingDialogComponent>,
-    private formService: SettingsFormService,
-    private alertService: AlertService,
-    private mxGraphService: MxGraphService,
-    private sammLangService: SammLanguageSettingsService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private loadingScreen: LoadingScreenService,
-    private titleService: TitleService,
-    private loadedFilesService: LoadedFilesService,
-  ) {
+  constructor() {
     this.initializeComponent();
   }
 
@@ -275,12 +306,7 @@ export class SettingDialogComponent {
 
       try {
         this.mxGraphService.updateGraph((): void => {
-          new ShapeLanguageRemover(
-            this.formService.getLanguagesToBeRemove().map((entry: string) => entry),
-            this.mxGraphService,
-            this.mxGraphShapeSelectorService,
-            this.mxGraphAttributeService,
-          ).removeUnnecessaryLanguages();
+          new ShapeLanguageRemover(this.formService.getLanguagesToBeRemove().map((entry: string) => entry)).removeUnnecessaryLanguages();
         });
       } finally {
         this.sammLangService.setSammLanguageCodes(aspectModelLanguages);

@@ -20,23 +20,21 @@ import {Observable, map, switchMap} from 'rxjs';
 import {ModelApiService} from './model-api.service';
 import {MigrationStatus} from './models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class MigratorApiService {
   private config: AppConfig = inject(APP_CONFIG);
+  private http = inject(HttpClient);
+  private browserService = inject(BrowserService);
+  private modelApiService = inject(ModelApiService);
+  private modelLoader = inject(ModelLoaderService);
+
   private defaultPort = this.config.defaultPort;
   private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
 
   public rdfModelsToMigrate = [];
 
-  constructor(
-    private http: HttpClient,
-    private browserService: BrowserService,
-    private modelApiService: ModelApiService,
-    private modelLoader: ModelLoaderService,
-  ) {
+  constructor() {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
       this.serviceUrl = this.serviceUrl.replace(this.defaultPort, remote.getGlobal('backendPort'));

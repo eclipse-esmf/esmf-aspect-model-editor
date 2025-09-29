@@ -18,9 +18,7 @@ import {DefaultProperty} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector, PropertyInheritanceConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class PropertyAbstractPropertyConnectionHandler
   extends PropertyInheritanceConnector
   implements MultiShapeConnector<DefaultProperty, DefaultProperty>

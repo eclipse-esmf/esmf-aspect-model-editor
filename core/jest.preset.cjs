@@ -11,10 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NgModule} from '@angular/core';
-import {TranslateModule} from '@ngx-translate/core';
+const nxPreset = require('@nx/jest/preset').default;
 
-@NgModule({
-  exports: [TranslateModule],
-})
-export class LanguageTranslateModule {}
+module.exports = {...nxPreset};

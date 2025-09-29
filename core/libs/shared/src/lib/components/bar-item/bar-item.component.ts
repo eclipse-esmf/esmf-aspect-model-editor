@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, HostBinding, HostListener, Input} from '@angular/core';
+import {Component, HostBinding, HostListener, inject, Input} from '@angular/core';
 import {MatRipple} from '@angular/material/core';
 
 @Component({
@@ -26,7 +26,7 @@ export class BarItemComponent {
   @HostBinding('class.disabled')
   disabled = false;
 
-  constructor(private ripple: MatRipple) {}
+  private ripple = inject(MatRipple);
 
   @HostListener('mousedown', ['$event']) onmousedown(event) {
     this.ripple.launch(event.x, event.y);

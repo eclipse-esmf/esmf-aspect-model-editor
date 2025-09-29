@@ -52,8 +52,8 @@
           <mat-checkbox
             [formControl]="getControl([overwritten.property.aspectModelUrn, 'optional'])"
             name="{{ overwritten.property.name }}_optional"
-            >Optional</mat-checkbox
-          >
+            >Optional
+          </mat-checkbox>
         </mat-cell>
       </ng-container>
 
@@ -63,8 +63,8 @@
           <mat-checkbox
             [formControl]="getControl([overwritten.property.aspectModelUrn, 'notInPayload'])"
             name="{{ overwritten.property.name }}_notInPayload"
-            >Not In Payload</mat-checkbox
-          >
+            >Not In Payload
+          </mat-checkbox>
         </mat-cell>
       </ng-container>
 
@@ -72,7 +72,7 @@
       <mat-row *matRowDef="let row; columns: headers"></mat-row>
     </mat-table>
   }
-  <mat-paginator [pageSizeOptions]="[5, 10, 15, 20]" showFirstLastButtons aria-label="Select page of properties"> </mat-paginator>
+  <mat-paginator [pageSizeOptions]="[5, 10, 15, 20]" showFirstLastButtons aria-label="Select page of properties"></mat-paginator>
 </mat-dialog-content>
 
 @if (form) {

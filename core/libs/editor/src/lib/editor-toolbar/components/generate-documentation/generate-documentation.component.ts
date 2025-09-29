@@ -14,10 +14,10 @@
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {LanguageTranslateModule} from '@ame/translation';
-import {Component, inject} from '@angular/core';
+import {Component, DestroyRef, inject} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {TranslatePipe} from '@ngx-translate/core';
 import {saveAs} from 'file-saver';
 import * as locale from 'locale-codes';
 import {Observable, map, throwError} from 'rxjs';
@@ -26,6 +26,7 @@ import {EditorService} from '../../../editor.service';
 
 import {BrowserService} from '@ame/shared';
 import {HttpErrorResponse} from '@angular/common/http';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
 import {MatOptionModule} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -40,7 +41,7 @@ import {MatSelectModule} from '@angular/material/select';
   styleUrls: ['./generate-documentation.component.scss'],
   imports: [
     MatDialogModule,
-    LanguageTranslateModule,
+    TranslatePipe,
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule,
@@ -51,6 +52,13 @@ import {MatSelectModule} from '@angular/material/select';
   ],
 })
 export class GenerateDocumentationComponent {
+  private destroyRef = inject(DestroyRef);
+  private dialogRef = inject(MatDialogRef<GenerateDocumentationComponent>);
+  private languageService = inject(SammLanguageSettingsService);
+  private modelApiService = inject(ModelApiService);
+  private editorService = inject(EditorService);
+  private loadedFiles = inject(LoadedFilesService);
+
   private browserService = inject(BrowserService);
 
   public languages: locale.ILocale[] = [];
@@ -61,13 +69,7 @@ export class GenerateDocumentationComponent {
     return this.loadedFiles.currentLoadedFile;
   }
 
-  constructor(
-    private dialogRef: MatDialogRef<GenerateDocumentationComponent>,
-    private languageService: SammLanguageSettingsService,
-    private modelApiService: ModelApiService,
-    private editorService: EditorService,
-    private loadedFiles: LoadedFilesService,
-  ) {
+  constructor() {
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
     this.languageControl = new FormControl(this.languages[0].tag);
   }
@@ -77,6 +79,7 @@ export class GenerateDocumentationComponent {
 
     this.generateDocumentation(this.editorService.getSerializedModel(), this.languageControl.value)
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         first(),
         finalize(() => {
           this.isGenerating = false;
@@ -92,6 +95,7 @@ export class GenerateDocumentationComponent {
     this.modelApiService
       .generateDocumentation(this.editorService.getSerializedModel(), this.languageControl.value)
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         first(),
         map(data =>
           saveAs(

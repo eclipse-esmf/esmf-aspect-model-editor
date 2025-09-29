@@ -40,7 +40,8 @@ import {
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {decodeText, readFile} from '@ame/utils';
-import {Injectable, inject} from '@angular/core';
+import {DestroyRef, Injectable, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {saveAs} from 'file-saver';
 import {BlankNode, NamedNode, Quad, Quad_Graph, Quad_Object, Quad_Predicate, Quad_Subject, Store} from 'n3';
@@ -83,10 +84,24 @@ interface QuadComponents {
   graph?: Quad_Graph;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class FileHandlingService {
+  private destroyRef = inject(DestroyRef);
+  private editorService = inject(EditorService);
+  private modelService = inject(ModelService);
+  private rdfService = inject(RdfService);
+  private modelApiService = inject(ModelApiService);
+  private confirmDialogService = inject(ConfirmDialogService);
+  private notificationsService = inject(NotificationsService);
+  private loadingScreenService = inject(LoadingScreenService);
+  private sidebarService = inject(SidebarStateService);
+  private translate = inject(LanguageTranslationService);
+  private electronSignalsService = inject(ElectronSignalsService);
+  private configurationService = inject(ConfigurationService);
+  private modelSaveTracker = inject(ModelSavingTrackerService);
+  private fileUploadService = inject(FileUploadService);
+  private shapeSettingsStateService = inject(ShapeSettingsStateService);
+  private mxGraphService = inject(MxGraphService);
   private modelLoaderService = inject(ModelLoaderService);
   private loadedFilesService = inject(LoadedFilesService);
   private modelSaverService = inject(ModelSaverService);
@@ -95,30 +110,14 @@ export class FileHandlingService {
     return this.loadedFilesService.currentLoadedFile;
   }
 
-  constructor(
-    private editorService: EditorService,
-    private modelService: ModelService,
-    private rdfService: RdfService,
-    private modelApiService: ModelApiService,
-    private confirmDialogService: ConfirmDialogService,
-    private notificationsService: NotificationsService,
-    private loadingScreenService: LoadingScreenService,
-    private sidebarService: SidebarStateService,
-    private translate: LanguageTranslationService,
-    private electronSignalsService: ElectronSignalsService,
-    private configurationService: ConfigurationService,
-    private modelSaveTracker: ModelSavingTrackerService,
-    private fileUploadService: FileUploadService,
-    private shapeSettingsStateService: ShapeSettingsStateService,
-    private mxGraphService: MxGraphService,
-  ) {
+  constructor() {
     if (!environment.production) {
       window['angular.fileHandlingService'] = this;
     }
   }
 
   onLoadModel(fileInfo?: FileInfo) {
-    this.loadModel(decodeText(fileInfo.content)).pipe(first()).subscribe();
+    this.loadModel(decodeText(fileInfo.content)).pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
   }
 
   loadModel(modelContent: string): Observable<any> {
@@ -156,17 +155,15 @@ export class FileHandlingService {
   }
 
   loadNamespaceFile(absoluteFileName: string, aspectModelUrn: string) {
-    const subscription = this.modelApiService
+    this.modelApiService
       .fetchAspectMetaModel(aspectModelUrn)
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         first(),
         tap(() => {
           const loadingScreenOptions: LoadingScreenOptions = {
             title: this.translate.language.NOTIFICATION_DIALOG?.LOADING,
             hasCloseButton: true,
-            closeButtonAction: () => {
-              subscription.unsubscribe();
-            },
           };
           this.loadingScreenService.open(loadingScreenOptions);
         }),
@@ -269,7 +266,7 @@ export class FileHandlingService {
   }
 
   onExportAsAspectModelFile() {
-    this.exportAsAspectModelFile().pipe(first()).subscribe();
+    this.exportAsAspectModelFile().pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
   }
 
   exportAsAspectModelFile(): Observable<string> {
@@ -311,7 +308,7 @@ export class FileHandlingService {
   }
 
   onSaveAspectModelToWorkspace() {
-    this.saveAspectModelToWorkspace().pipe(first()).subscribe();
+    this.saveAspectModelToWorkspace().pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
   }
 
   saveAspectModelToWorkspace(): Observable<any> {
@@ -333,6 +330,7 @@ export class FileHandlingService {
   onAddFileToNamespace(fileInfo?: FileInfo): void {
     this.resolveModelFileContent(fileInfo)
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         switchMap(fileInfo => this.addFileToNamespace(fileInfo)),
         first(),
       )
@@ -471,7 +469,7 @@ export class FileHandlingService {
       });
       return;
     }
-    this.validateFile().pipe(first()).subscribe();
+    this.validateFile().pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
   }
 
   validateFile(callback?: Function) {

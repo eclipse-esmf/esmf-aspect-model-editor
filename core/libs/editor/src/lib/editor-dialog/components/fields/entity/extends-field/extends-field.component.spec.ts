@@ -29,11 +29,16 @@ import {EditorModelService} from '../../../../editor-model.service';
 import {EntityExtendsFieldComponent} from './extends-field.component';
 
 jest.mock('../../../../../../../../shared/src/lib/constants/xsd-datatypes.ts', () => ({}));
+
 jest.mock('@esmf/aspect-model-loader', () => ({
   ...jest.requireActual('@esmf/aspect-model-loader'),
   useLoader: jest.fn(() => ({
     getAllPredefinedEntities: jest.fn(() => ({})),
   })),
+}));
+
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
 }));
 
 describe('EntityExtendsFieldComponent', () => {
@@ -51,7 +56,6 @@ describe('EntityExtendsFieldComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule, MatInputModule, BrowserAnimationsModule],
-      declarations: [EntityExtendsFieldComponent],
       providers: [
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),

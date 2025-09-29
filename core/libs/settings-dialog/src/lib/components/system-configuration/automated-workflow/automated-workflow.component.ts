@@ -11,8 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {Component, inject, OnInit} from '@angular/core';
+import {AbstractControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
+import {MatTooltip} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
 import {finalize} from 'rxjs';
 import {SettingsFormService} from '../../../services';
 
@@ -22,11 +27,12 @@ export const automatedWorkflowControlName = 'automatedWorkflow';
   selector: 'ame-automated-workflow-config',
   templateUrl: './automated-workflow.component.html',
   styleUrls: ['./automated-workflow.component.scss'],
+  imports: [ReactiveFormsModule, MatSlideToggle, MatIconModule, MatTooltip, MatFormField, MatLabel, MatError, MatInput, TranslatePipe],
 })
 export class AutomatedWorkflowComponent implements OnInit {
-  form: FormGroup;
+  private formService = inject(SettingsFormService);
 
-  constructor(private formService: SettingsFormService) {}
+  public form: FormGroup;
 
   ngOnInit(): void {
     this.form = this.formService.getForm().get('automatedWorkflow') as FormGroup;

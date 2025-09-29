@@ -19,7 +19,7 @@ import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService, TitleService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {useUpdater} from '@ame/utils';
-import {Injectable, Injector, NgZone} from '@angular/core';
+import {inject, Injectable, Injector, NgZone} from '@angular/core';
 import {
   DefaultAspect,
   DefaultEntity,
@@ -35,21 +35,19 @@ import {ModelRootService} from './model-root.service';
 
 @Injectable({providedIn: 'root'})
 export class ElementModelService {
-  constructor(
-    private injector: Injector,
-    private titleService: TitleService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private mxGraphService: MxGraphService,
-    private entityInstanceService: EntityInstanceService,
-    private sammLangService: SammLanguageSettingsService,
-    private modelRootService: ModelRootService,
-    private modelService: ModelService,
-    private renameModelService: RenameModelDialogService,
-    private notificationService: NotificationsService,
-    private translate: LanguageTranslationService,
-    private loadedFilesService: LoadedFilesService,
-    private zone: NgZone,
-  ) {}
+  private injector = inject(Injector);
+  private titleService = inject(TitleService);
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private mxGraphService = inject(MxGraphService);
+  private entityInstanceService = inject(EntityInstanceService);
+  private sammLangService = inject(SammLanguageSettingsService);
+  private modelRootService = inject(ModelRootService);
+  private modelService = inject(ModelService);
+  private renameModelService = inject(RenameModelDialogService);
+  private notificationService = inject(NotificationsService);
+  private translate = inject(LanguageTranslationService);
+  private loadedFilesService = inject(LoadedFilesService);
+  private zone = inject(NgZone);
 
   get currentCachedFile() {
     return this.loadedFilesService.currentLoadedFile.cachedFile;

@@ -10,14 +10,19 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {AsyncPipe} from '@angular/common';
 import {Component, Input, inject} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
+import {TranslatePipe} from '@ngx-translate/core';
 import {EditorModelService} from '../../editor-model.service';
-import {UpdatedProperties} from '../properties';
+import {ElementListComponent} from '../element-list';
+import {BaseInputComponent, EntityExtendsFieldComponent} from '../fields';
+import {PropertiesButtonComponent, UpdatedProperties} from '../properties';
 
 @Component({
   selector: 'ame-entity',
   templateUrl: './entity.component.html',
+  imports: [BaseInputComponent, EntityExtendsFieldComponent, PropertiesButtonComponent, ElementListComponent, AsyncPipe, TranslatePipe],
 })
 export class EntityComponent {
   @Input() parentForm: FormGroup;

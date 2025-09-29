@@ -13,4 +13,3 @@
 
 export * from './helper';
 export * from './sidebar-state.service';
-export * from './sidebar.module';

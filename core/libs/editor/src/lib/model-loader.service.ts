@@ -18,7 +18,8 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {BrowserService, ElectronSignalsService, ModelSavingTrackerService, NotificationsService, TitleService, config} from '@ame/shared';
 import {ExporterHelper} from '@ame/sidebar';
-import {Injectable, inject} from '@angular/core';
+import {DestroyRef, Injectable, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DefaultAspect, ModelElementCache, NamedElement, RdfModel, loadAspectModel} from '@esmf/aspect-model-loader';
 import {RdfLoader} from 'libs/aspect-model-loader/src/lib/shared/rdf-loader';
 import {NamedNode} from 'n3';
@@ -30,6 +31,7 @@ import {NamedRdfModel} from './models/named-rdf-mode';
 
 @Injectable({providedIn: 'root'})
 export class ModelLoaderService {
+  private destroyRef = inject(DestroyRef);
   private loadedFilesService = inject(LoadedFilesService);
   private modelApiService = inject(ModelApiService);
   private notificationsService = inject(NotificationsService);
@@ -53,6 +55,7 @@ export class ModelLoaderService {
     this.loadedFilesService.removeAll();
 
     return this.loadSingleModel(payload, true).pipe(
+      takeUntilDestroyed(this.destroyRef),
       switchMap(() => this.modelRenderer.renderModel(payload.editElementUrn)),
       tap(() => {
         this.modelSavingTracker.updateSavedModel();
@@ -83,6 +86,7 @@ export class ModelLoaderService {
     const currentFileKey = payload.namespaceFileName || 'current';
 
     const migrate$ = this.parseRdfModel([payload.rdfAspectModel]).pipe(
+      takeUntilDestroyed(this.destroyRef),
       switchMap((rdfModel: RdfModel) =>
         ExporterHelper.isVersionOutdated(rdfModel.samm.version, config.currentSammVersion)
           ? this.migrateAspectModel(rdfModel.samm.version, payload.rdfAspectModel)
@@ -91,6 +95,7 @@ export class ModelLoaderService {
     );
 
     return (render ? migrate$ : of(payload.rdfAspectModel)).pipe(
+      takeUntilDestroyed(this.destroyRef),
       // getting dependencies from the current file and filter data from server
       switchMap((model: string) => {
         payload.rdfAspectModel = model;
@@ -106,6 +111,7 @@ export class ModelLoaderService {
           filesContent: [payload.rdfAspectModel, ...Object.values(files)],
           aspectModelUrn: this.getAspectUrn(rdfModels[currentFileKey]),
         }).pipe(
+          takeUntilDestroyed(this.destroyRef),
           // using switchMap to force an this functionality to run before any tap after this
           switchMap(loadedFile => {
             loadedFile.rdfModel = rdfModels[currentFileKey];
@@ -133,13 +139,15 @@ export class ModelLoaderService {
   }
 
   parseRdfModel(models: string[]) {
-    return new RdfLoader()
-      .loadModel(models)
-      .pipe(catchError(error => throwError(() => ({code: LoadingCodeErrors.PARSING_RDF_MODEL, error}))));
+    return new RdfLoader().loadModel(models).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      catchError(error => throwError(() => ({code: LoadingCodeErrors.PARSING_RDF_MODEL, error}))),
+    );
   }
 
   createRdfModelFromContent(rdfContent: string, absoluteFileName: string): Observable<NamespaceFile> {
     return this.parseRdfModel([rdfContent]).pipe(
+      takeUntilDestroyed(this.destroyRef),
       map(rdfModel => this.registerPartialFile(rdfModel, absoluteFileName)),
       catchError(error => throwError(() => ({code: LoadingCodeErrors.LOADING_SINGLE_FILE, error}))),
     );
@@ -147,9 +155,15 @@ export class ModelLoaderService {
 
   getRdfModelsFromWorkspace(): Observable<NamedRdfModel[]> {
     return this.modelApiService.fetchAllNamespaceFilesContent().pipe(
+      takeUntilDestroyed(this.destroyRef),
       switchMap(files =>
         forkJoin<[string, string, RdfModel][]>(
-          files.map(file => this.parseRdfModel([file.aspectMetaModel]).pipe(map(rdfModel => [file.name, file.version, rdfModel]))),
+          files.map(file =>
+            this.parseRdfModel([file.aspectMetaModel]).pipe(
+              takeUntilDestroyed(this.destroyRef),
+              map(rdfModel => [file.name, file.version, rdfModel]),
+            ),
+          ),
         ),
       ),
       map(result => result.map(([name, version, rdfModel]) => ({name, version, rdfModel}) as NamedRdfModel)),
@@ -218,6 +232,7 @@ export class ModelLoaderService {
     currentFile: string,
   ) {
     return (workspaceStructure ? of(workspaceStructure) : this.modelApiService.loadNamespacesStructure()).pipe(
+      takeUntilDestroyed(this.destroyRef),
       switchMap(wStructure =>
         this.parseRdfModel([rdf]).pipe(
           switchMap(rdfModel => {
@@ -271,8 +286,10 @@ export class ModelLoaderService {
   ): Observable<Record<string, RdfModel>> {
     const [fileName, fileContent] = files[index];
     return this.parseRdfModel([fileContent]).pipe(
+      takeUntilDestroyed(this.destroyRef),
       switchMap(rdfModel =>
         (++index < files.length ? this.loadRdfModelsInSequence(files, result, index) : of(null)).pipe(
+          takeUntilDestroyed(this.destroyRef),
           map(() => {
             result[fileName] = rdfModel;
             return result;
@@ -287,7 +304,10 @@ export class ModelLoaderService {
     const entries = Object.entries(files);
     let queue = of<NamespaceFile>(null);
     for (const [key, model] of entries) {
-      queue = queue.pipe(switchMap(() => this.loadSingleModel({namespaceFileName: key, rdfAspectModel: model, fromWorkspace: true})));
+      queue = queue.pipe(
+        takeUntilDestroyed(this.destroyRef),
+        switchMap(() => this.loadSingleModel({namespaceFileName: key, rdfAspectModel: model, fromWorkspace: true})),
+      );
     }
 
     return queue;
@@ -298,6 +318,7 @@ export class ModelLoaderService {
    */
   private loadRdfModelFromFiles(files: Record<string, string>, payload: LoadModelPayload) {
     return this.loadRdfModelsInSequence([[payload.namespaceFileName || 'current', payload.rdfAspectModel], ...Object.entries(files)]).pipe(
+      takeUntilDestroyed(this.destroyRef),
       map(rdfModels => ({rdfModels, files})),
     );
   }
@@ -382,6 +403,7 @@ export class ModelLoaderService {
     });
 
     return this.modelApiService.migrateAspectModel(rdfAspectModel).pipe(
+      takeUntilDestroyed(this.destroyRef),
       first(),
       tap(() =>
         this.notificationsService.info({

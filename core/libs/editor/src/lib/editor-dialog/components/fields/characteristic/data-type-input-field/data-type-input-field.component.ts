@@ -14,10 +14,16 @@
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {DataTypeService, config} from '@ame/shared';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MatOptionSelectionChange} from '@angular/material/core';
+import {config, DataTypeService} from '@ame/shared';
+import {AsyncPipe} from '@angular/common';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {MatIconButton} from '@angular/material/button';
+import {MatOptgroup, MatOption, MatOptionSelectionChange} from '@angular/material/core';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {
   DefaultCharacteristic,
   DefaultEither,
@@ -36,8 +42,28 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-data-type-input-field',
   templateUrl: './data-type-input-field.component.html',
   styleUrls: ['./data-type-input-field.component.scss', '../../field.scss'],
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatInput,
+    MatIconButton,
+    MatIconModule,
+    MatError,
+    MatAutocomplete,
+    AsyncPipe,
+    MatOptgroup,
+    MatOption,
+  ],
 })
 export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultCharacteristic> implements OnInit, OnDestroy {
+  private editorDialogValidators = inject(EditorDialogValidators);
+
+  public dataTypeService = inject(DataTypeService);
+  public mxGraphService = inject(MxGraphService);
+  public rdfService = inject(RdfService);
+
   public filteredDataTypes$: Observable<any[]>;
   public filteredEntityTypes$: Observable<any[]>;
 
@@ -50,21 +76,18 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
 
   public isDisabled = false;
 
-  constructor(
-    public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService,
-    public rdfService: RdfService,
-    private validators: EditorDialogValidators,
-  ) {
+  constructor() {
     super();
     this.fieldName = 'dataTypeEntity';
   }
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => {
-      this.setDataTypeControl();
-      this.entitiesDisabled = this.metaModelElement instanceof DefaultStructuredValue || this.hasStructuredValueAsGrandParent();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.setDataTypeControl();
+        this.entitiesDisabled = this.metaModelElement instanceof DefaultStructuredValue || this.hasStructuredValueAsGrandParent();
+      });
 
     this.enableWhenEmpty(() => this.dataTypeControl, 'elementCharacteristic');
   }
@@ -98,7 +121,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
           value,
           disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled,
         },
-        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)],
+        [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)],
       ),
     );
     this.getControl('dataType').markAsTouched();

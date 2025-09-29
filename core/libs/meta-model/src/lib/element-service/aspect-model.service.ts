@@ -14,21 +14,17 @@
 import {AspectRenderService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {TitleService} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultAspect, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class AspectModelService extends BaseModelService {
-  constructor(
-    private aspectRenderer: AspectRenderService,
-    private titleService: TitleService,
-    private mxGraphService: MxGraphService,
-    private sidebarStateService: SidebarStateService,
-  ) {
-    super();
-  }
+  private aspectRenderer = inject(AspectRenderService);
+  private titleService = inject(TitleService);
+  private mxGraphService = inject(MxGraphService);
+  private sidebarStateService = inject(SidebarStateService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultAspect;

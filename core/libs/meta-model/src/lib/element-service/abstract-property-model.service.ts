@@ -13,21 +13,17 @@
 
 import {AbstractPropertyRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class AbstractPropertyModelService extends BaseModelService {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private abstractPropertyRenderer: AbstractPropertyRenderService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private languageService: SammLanguageSettingsService,
-  ) {
-    super();
-  }
+  private mxGraphService = inject(MxGraphService);
+  private abstractPropertyRenderer = inject(AbstractPropertyRenderService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private languageService = inject(SammLanguageSettingsService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultProperty && metaModelElement.isAbstract;

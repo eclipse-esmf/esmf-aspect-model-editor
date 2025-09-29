@@ -9,7 +9,8 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/mx-graph"],
       "options": {
-        "jestConfig": "libs/mx-graph/jest.config.js"
+        "jestConfig": "libs/mx-graph/jest.config.ts",
+        "tsConfig": "libs/mx-graph/tsconfig.spec.json"
       }
     },
     "lint": {

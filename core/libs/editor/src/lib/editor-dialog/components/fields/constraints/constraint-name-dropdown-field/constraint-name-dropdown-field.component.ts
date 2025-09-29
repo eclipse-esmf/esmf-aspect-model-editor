@@ -11,10 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {ModelService} from '@ame/rdf/services';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, DestroyRef, EventEmitter, inject, OnInit, Output} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormsModule} from '@angular/forms';
+import {MatFormField, MatLabel} from '@angular/material/input';
+import {MatOption, MatSelect} from '@angular/material/select';
 import {
   Constraint,
   DefaultConstraint,
@@ -27,37 +28,30 @@ import {
   DefaultRegularExpressionConstraint,
   NamedElement,
 } from '@esmf/aspect-model-loader';
-import {EditorModelService} from '../../../../editor-model.service';
 import {DropdownFieldComponent} from '../../dropdown-field.component';
 
 @Component({
   selector: 'ame-constraint-name-dropdown-field',
   templateUrl: './constraint-name-dropdown-field.component.html',
+  imports: [MatFormField, MatLabel, MatSelect, FormsModule, MatOption],
 })
 export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent<DefaultConstraint> implements OnInit {
+  private destroyRef = inject(DestroyRef);
+
   public listConstraintNames: Array<string>;
   public listConstraints: Map<string, Function> = new Map();
 
   @Output() selectedConstraint = new EventEmitter<string>();
 
-  constructor(
-    public editorModelService: EditorModelService,
-    public modelService: ModelService,
-    public languageSettings: SammLanguageSettingsService,
-    public loadedFilesService: LoadedFilesService,
-  ) {
-    super(editorModelService, modelService, languageSettings, loadedFilesService);
-  }
-
   ngOnInit(): void {
     this.initConstraintList();
-    this.subscription.add(
-      this.getMetaModelData().subscribe(() => {
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
         this.selectedMetaModelElement = this.metaModelElement;
         this.setMetaModelClassName();
         this.selectedConstraint.emit(this.metaModelClassName);
-      }),
-    );
+      });
   }
 
   onConstraintChange(constraint: string) {

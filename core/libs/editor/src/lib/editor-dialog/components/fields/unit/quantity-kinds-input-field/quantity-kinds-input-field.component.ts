@@ -12,11 +12,16 @@
  */
 
 import {ENTER} from '@angular/cdk/keycodes';
+import {AsyncPipe} from '@angular/common';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
+import {MatChipGrid, MatChipInput, MatChipRow} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultQuantityKind, DefaultUnit} from '@esmf/aspect-model-loader';
 import {Observable, map} from 'rxjs';
-import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
 
 declare const sammUDefinition: any;
@@ -24,6 +29,21 @@ declare const sammUDefinition: any;
 @Component({
   selector: 'ame-quantity-kinds-input-field',
   templateUrl: './quantity-kinds-input-field.component.html',
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatChipGrid,
+    ReactiveFormsModule,
+    MatChipRow,
+    MatIconModule,
+    MatAutocompleteTrigger,
+    MatChipInput,
+    MatInput,
+    MatAutocomplete,
+    AsyncPipe,
+    MatOptgroup,
+    MatOption,
+  ],
 })
 export class QuantityKindsInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
   @ViewChild('input') inputValue: any;
@@ -40,16 +60,14 @@ export class QuantityKindsInputFieldComponent extends InputFieldComponent<Defaul
     return this.parentForm.get('quantityKindsChipList') as FormControl;
   }
 
-  constructor(public metaModelDialogService: EditorModelService) {
-    super();
-  }
-
   ngOnInit(): void {
     this.supportedQuantityKinds = Object.keys(sammUDefinition.quantityKinds);
-    this.subscription = this.getMetaModelData().subscribe(() => {
-      this.quantityKindValues = [];
-      this.setInputControl();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.quantityKindValues = [];
+        this.setInputControl();
+      });
   }
 
   setInputControl() {

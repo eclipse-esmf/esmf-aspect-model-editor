@@ -11,10 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ThemeService} from '@ame/mx-graph';
-import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {MatSlideToggleChange} from '@angular/material/slide-toggle';
+import {Component, inject, OnInit} from '@angular/core';
+import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
+import {MatTooltip} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
 import {Settings} from '../../../model';
 import {SettingsFormService} from '../../../services';
 
@@ -24,23 +26,15 @@ export const editorConfigurationControlName = 'editorConfiguration';
   selector: 'ame-editor-configuration',
   templateUrl: './editor-configuration.component.html',
   styleUrls: ['./editor-configuration.component.scss'],
+  imports: [ReactiveFormsModule, MatSlideToggle, MatTooltip, MatIconModule, TranslatePipe],
 })
 export class EditorConfigurationComponent implements OnInit {
-  form: FormGroup;
-  settings: Settings;
+  private formService = inject(SettingsFormService);
 
-  constructor(
-    private formService: SettingsFormService,
-    private themeService: ThemeService,
-  ) {}
+  public form: FormGroup;
+  public settings: Settings;
 
   ngOnInit(): void {
     this.form = this.formService.getForm().get('editorConfiguration') as FormGroup;
-  }
-
-  // TODO this should be activated after clarified the colors
-  themeChange(toggle: MatSlideToggleChange) {
-    const theme = toggle.checked ? 'dark' : 'light';
-    this.themeService.applyTheme(theme);
   }
 }

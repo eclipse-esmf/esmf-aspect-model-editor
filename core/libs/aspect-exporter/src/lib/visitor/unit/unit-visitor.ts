@@ -13,27 +13,23 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {getPreferredNamesLocales} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultUnit, Samm} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class UnitVisitor extends BaseVisitor<DefaultUnit> {
+  public rdfNodeService = inject(RdfNodeService);
+  public loadedFilesService = inject(LoadedFilesService);
+
   private get store(): Store {
     return this.loadedFilesService.currentLoadedFile.rdfModel.store;
   }
 
   private get samm(): Samm {
     return this.loadedFilesService.currentLoadedFile.rdfModel.samm;
-  }
-
-  constructor(
-    private rdfNodeService: RdfNodeService,
-    private loadedFilesService: LoadedFilesService,
-  ) {
-    super(loadedFilesService);
   }
 
   visit(unit: DefaultUnit): DefaultUnit {

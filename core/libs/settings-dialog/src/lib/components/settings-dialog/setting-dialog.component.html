@@ -33,7 +33,6 @@
         *matTreeNodeDef="let node"
         [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type, 'settings__node-name--error': isNodeInvalid(node)}"
         (click)="onNodeSelected(node.type)"
-        matTreeNodePadding
         matTreeNodePaddingIndent="15"
       >
         <li class="settings__node settings__node-without-icon">
@@ -46,7 +45,6 @@
         *matTreeNodeDef="let node; when: hasChild"
         [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type}"
         (click)="onNodeSelected(node.type)"
-        matTreeNodePadding
       >
         <li class="settings__node">
           <button class="settings__toggle-button" mat-icon-button matTreeNodeToggle>

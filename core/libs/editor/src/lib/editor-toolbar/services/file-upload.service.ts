@@ -20,9 +20,7 @@ export enum FileTypes {
   ZIP = '.zip',
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class FileUploadService {
   selectFile(acceptedTypes?: FileTypes[]): Observable<File> {
     const fileInput = this.createFileInput(acceptedTypes);

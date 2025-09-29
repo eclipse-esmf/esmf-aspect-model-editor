@@ -12,20 +12,27 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {sammElements} from '@ame/shared';
+import {ModelElementParserPipe} from '@ame/editor';
+import {ElementIconComponent, sammElements} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, Input, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {LangChangeEvent} from '@ngx-translate/core';
-import {finalize} from 'rxjs';
 
 @Component({
   selector: 'ame-shared-settings-title',
   templateUrl: './shared-settings-title.component.html',
   styleUrls: ['./shared-settings-title.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ElementIconComponent, ModelElementParserPipe],
 })
 export class SharedSettingsTitleComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
+  private cd = inject(ChangeDetectorRef);
+  private translate = inject(LanguageTranslationService);
+  private loadedFilesService = inject(LoadedFilesService);
+
   public metaModelElement: NamedElement;
   public metaModelClassName: string;
 
@@ -36,23 +43,15 @@ export class SharedSettingsTitleComponent implements OnInit {
 
   elementName: string;
 
-  constructor(
-    private cd: ChangeDetectorRef,
-    private translate: LanguageTranslationService,
-    public loadedFilesService: LoadedFilesService,
-  ) {}
-
   ngOnInit(): void {
     this.elementName = this.getTitle();
 
-    const onLangChange$ = this.translate.translateService.onLangChange
-      .pipe(finalize(() => onLangChange$.unsubscribe()))
-      .subscribe((event: LangChangeEvent) => {
-        this.translate.translateService.getTranslation(event.lang).subscribe(() => {
-          this.elementName = this.getTitle();
-          this.cd.detectChanges();
-        });
+    this.translate.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event: LangChangeEvent) => {
+      this.translate.translateService.get(event.lang).subscribe(() => {
+        this.elementName = this.getTitle();
+        this.cd.detectChanges();
       });
+    });
   }
 
   getTitle(): string {

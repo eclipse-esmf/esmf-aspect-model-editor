@@ -11,25 +11,51 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {MatButton} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {MatTableDataSource} from '@angular/material/table';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
+  MatTable,
+  MatTableDataSource,
+} from '@angular/material/table';
+import {StructuredValuePropertyFieldComponent} from '../structured-value-property-field/structured-value-property-field.component';
 
 @Component({
   selector: 'ame-structured-value-properties',
   templateUrl: './structured-value-properties.component.html',
   styleUrls: ['./structured-value-properties.component.scss'],
+  imports: [
+    MatTable,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatCell,
+    MatCellDef,
+    MatColumnDef,
+    StructuredValuePropertyFieldComponent,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRow,
+    MatRowDef,
+    MatButton,
+  ],
 })
 export class StructuredValuePropertiesComponent implements OnInit {
+  private data = inject(MAT_DIALOG_DATA);
+  private dialogRef = inject(MatDialogRef<StructuredValuePropertiesComponent>);
+
   public readonly displayedColumns = ['regex', 'property'];
   public dataSource: MatTableDataSource<any>;
   public form = new FormGroup({});
-
-  constructor(
-    @Inject(MAT_DIALOG_DATA) private data,
-    private dialogRef: MatDialogRef<StructuredValuePropertiesComponent>,
-  ) {}
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource(

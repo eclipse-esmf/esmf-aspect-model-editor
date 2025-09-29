@@ -12,18 +12,17 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultConstraint, DefaultTrait} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphAttributeService} from '.';
 import {MxGraphHelper} from '../helpers';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class MxGraphShapeSelectorService {
-  constructor(
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private loadedFiles: LoadedFilesService,
-  ) {}
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private loadedFiles = inject(LoadedFilesService);
+
   /**
    * @returns array of selected cells
    */

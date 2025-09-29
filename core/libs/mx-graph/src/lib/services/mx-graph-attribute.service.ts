@@ -15,7 +15,7 @@ import {Injectable} from '@angular/core';
 import {environment} from 'environments/environment';
 import {mxgraph} from 'mxgraph-factory';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class MxGraphAttributeService {
   private _inCollapsedMode = false;
   private _graph;

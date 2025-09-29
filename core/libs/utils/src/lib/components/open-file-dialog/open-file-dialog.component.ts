@@ -11,24 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LanguageTranslateModule} from '@ame/translation';
 import {DIALOG_DATA} from '@angular/cdk/dialog';
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   templateUrl: './open-file-dialog.component.html',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule, LanguageTranslateModule],
+  imports: [MatDialogModule, MatButtonModule, TranslatePipe],
   styles: [
     `
       :host {
-        --mdc-dialog-supporting-text-color: rgba(0, 0, 0, 0.8);
+        --mat-dialog-supporting-text-color: rgba(0, 0, 0, 0.8);
       }
     `,
   ],
 })
 export class OpenFileDialogComponent {
-  constructor(@Inject(DIALOG_DATA) public fileData: {file: string; namespace: string}) {}
+  public fileData = inject(DIALOG_DATA) as {file: string; namespace: string};
 }

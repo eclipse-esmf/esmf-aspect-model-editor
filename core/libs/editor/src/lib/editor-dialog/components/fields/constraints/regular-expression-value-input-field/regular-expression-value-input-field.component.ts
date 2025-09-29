@@ -11,7 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatError, MatFormField, MatLabel} from '@angular/material/input';
 import {DefaultRegularExpressionConstraint} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -19,6 +21,7 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-regular-expression-value-input-field',
   templateUrl: './regular-expression-value-input-field.component.html',
   styleUrls: ['../../field.scss'],
+  imports: [ReactiveFormsModule, MatFormField, MatLabel, MatError],
 })
 export class RegularExpressionValueInputFieldComponent
   extends InputFieldComponent<DefaultRegularExpressionConstraint>
@@ -35,7 +38,9 @@ export class RegularExpressionValueInputFieldComponent
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe(() => this.initForm());
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.initForm());
   }
 
   ngOnDestroy() {

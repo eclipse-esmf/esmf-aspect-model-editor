@@ -13,15 +13,14 @@
 
 import {AppComponent} from '@ame/app/app.component';
 import {APP_ROUTES} from '@ame/app/app.routes';
-import {DomainModelToRdfModule} from '@ame/aspect-exporter';
-import {MxGraphModule} from '@ame/mx-graph';
-import {APP_CONFIG, config, httpLoaderFactory} from '@ame/shared';
-import {HttpClient, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {APP_CONFIG, config} from '@ame/shared';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {enableProdMode, importProvidersFrom} from '@angular/core';
 import {bootstrapApplication} from '@angular/platform-browser';
-import {provideAnimations} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {PreloadAllModules, provideRouter, withPreloading} from '@angular/router';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateModule} from '@ngx-translate/core';
+import {provideTranslateHttpLoader} from '@ngx-translate/http-loader';
 import {environment} from 'environments/environment';
 import {ToastrModule} from 'ngx-toastr';
 
@@ -35,23 +34,17 @@ if (environment.production) {
 const bootstrap = () =>
   bootstrapApplication(AppComponent, {
     providers: [
-      importProvidersFrom(
-        ToastrModule.forRoot(),
-        DomainModelToRdfModule,
-        MxGraphModule,
-        TranslateModule.forRoot({
-          defaultLanguage: 'en',
-          loader: {
-            provide: TranslateLoader,
-            useFactory: httpLoaderFactory,
-            deps: [HttpClient],
-          },
-        }),
-      ),
-      provideAnimations(),
-      {provide: APP_CONFIG, useValue: config},
       provideRouter(APP_ROUTES, withPreloading(PreloadAllModules)),
       provideHttpClient(withInterceptorsFromDi()),
+      importProvidersFrom(BrowserAnimationsModule),
+      importProvidersFrom(
+        ToastrModule.forRoot(),
+        TranslateModule.forRoot({
+          fallbackLang: 'en',
+          loader: provideTranslateHttpLoader({prefix: './assets/i18n/', suffix: '.json'}),
+        }),
+      ),
+      {provide: APP_CONFIG, useValue: config},
     ],
   });
 

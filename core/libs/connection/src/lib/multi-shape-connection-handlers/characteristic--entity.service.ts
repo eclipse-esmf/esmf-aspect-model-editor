@@ -28,9 +28,7 @@ import {
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class CharacteristicEntityConnectionHandler implements MultiShapeConnector<DefaultCharacteristic, DefaultEntity> {
   private mxGraphService = inject(MxGraphService);
   private mxGraphAttributeService = inject(MxGraphAttributeService);

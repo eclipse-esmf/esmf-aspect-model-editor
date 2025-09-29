@@ -13,24 +13,18 @@
 
 import {EntityInstanceService} from '@ame/editor';
 import {MxGraphHelper} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntity, DefaultProperty, Entity} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 import {EntityPropertyConnectionHandler, PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class AbstractEntityConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Entity> {
-  constructor(
-    private entityInstanceService: EntityInstanceService,
-    private propertyAbstractPropertyConnector: PropertyAbstractPropertyConnectionHandler,
-    private entityPropertyConnector: EntityPropertyConnectionHandler,
-  ) {
-    super();
-  }
+  private entityInstanceService = inject(EntityInstanceService);
+  private propertyAbstractPropertyConnector = inject(PropertyAbstractPropertyConnectionHandler);
+  private entityPropertyConnector = inject(EntityPropertyConnectionHandler);
 
   public connect(abstractEntity: DefaultEntity, source: mxgraph.mxCell) {
     const abstractProperty = this.elementCreator.createEmptyElement(DefaultProperty, {isAbstract: true});

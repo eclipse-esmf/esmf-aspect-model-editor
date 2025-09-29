@@ -14,20 +14,16 @@
 import {LoadedFilesService} from '@ame/cache';
 import {ModelService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEncodingConstraint, NamedElement, RdfModel, Type} from '@esmf/aspect-model-loader';
 import {BlankNode, DataFactory, Quad} from 'n3';
 import {PropertyEnum} from './enums/property.enum';
 import {BasePropertiesInterface, LocaleInterface} from './interfaces';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class RdfNodeService {
-  constructor(
-    public modelService: ModelService,
-    private loadedFilesService: LoadedFilesService,
-  ) {}
+  public modelService = inject(ModelService);
+  public loadedFilesService = inject(LoadedFilesService);
 
   get rdfModel(): RdfModel {
     return this.loadedFilesService.currentLoadedFile.rdfModel;

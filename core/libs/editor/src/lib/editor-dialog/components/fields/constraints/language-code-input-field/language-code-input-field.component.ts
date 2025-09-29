@@ -11,8 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {RdfModelUtil} from '@ame/rdf/utils';
+import {AsyncPipe} from '@angular/common';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultLanguageConstraint} from '@esmf/aspect-model-loader';
 import * as locale from 'locale-codes';
 import {Observable, of} from 'rxjs';
@@ -31,6 +35,7 @@ import {InputFieldComponent} from '../../input-field.component';
     `,
   ],
   styleUrls: ['../../field.scss'],
+  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatAutocomplete, MatAutocompleteTrigger, MatInput, AsyncPipe, MatOption, MatError],
 })
 export class LanguageCodeInputFieldComponent extends InputFieldComponent<DefaultLanguageConstraint> implements OnInit, OnDestroy {
   public filteredLanguages: Observable<Array<locale.ILocale>>;
@@ -54,9 +59,11 @@ export class LanguageCodeInputFieldComponent extends InputFieldComponent<Default
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe(() => {
-      this.initForm();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.initForm();
+      });
   }
 
   ngOnDestroy() {

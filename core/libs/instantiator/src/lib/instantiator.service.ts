@@ -17,9 +17,7 @@ import {inject, Injectable} from '@angular/core';
 import {CacheStrategy, NamedElement, RdfModel, useLoader} from '@esmf/aspect-model-loader';
 import {NamedNode, Triple, Util} from 'n3';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class InstantiatorService {
   private loadedFilesService = inject(LoadedFilesService);
 

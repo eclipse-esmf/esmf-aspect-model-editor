@@ -17,9 +17,7 @@ import {DefaultCharacteristic, DefaultEither} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EitherCharacteristicRightConnectionHandler implements MultiShapeConnector<DefaultEither, DefaultCharacteristic> {
   private mxGraphService = inject(MxGraphService);
   private mxGraphAttributeService = inject(MxGraphAttributeService);

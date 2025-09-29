@@ -11,18 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-module.exports = {
-  displayName: 'meta-model',
-  preset: '../../jest.preset.js',
+const esModules = ['@angular', '@ngrx', '@agm', 'ngx-bootstrap'].join('|');
+
+export default {
+  displayName: 'aspect-exporter',
+  preset: '../../jest.preset.cjs',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {},
-  coverageDirectory: '../../coverage/libs/meta-model',
+  coverageDirectory: '../../coverage/libs/aspect-exporter',
   transform: {
-    '^.+\\.(ts|js|html)$': [
+    '^.+\\.(ts|js|mjs|html|svg)$': [
       'jest-preset-angular',
-      {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$',
+      },
     ],
+    '^.+\\.js$': 'babel-jest',
   },
+  transformIgnorePatterns: ['node_modules/?!(.*\\.mjs$|@ngneat)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

@@ -13,9 +13,15 @@
 
 import {CacheUtils} from '@ame/cache';
 import {ENTER} from '@angular/cdk/keycodes';
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {ErrorStateMatcher} from '@angular/material/core';
+import {AsyncPipe} from '@angular/common';
+import {Component, ElementRef, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {MatChipGrid, MatChipInput, MatChipRow} from '@angular/material/chips';
+import {ErrorStateMatcher, MatOptgroup, MatOption} from '@angular/material/core';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatLabel} from '@angular/material/input';
 import {DefaultOperation, DefaultProperty, Property, RdfModel} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
@@ -25,9 +31,26 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-input-chiplist-field',
   templateUrl: './input-chiplist-field.component.html',
   styleUrls: ['../../field.scss'],
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatChipGrid,
+    MatChipRow,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatAutocompleteTrigger,
+    MatChipInput,
+    MatAutocomplete,
+    AsyncPipe,
+    MatOptgroup,
+    MatOption,
+    MatError,
+  ],
 })
 export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
+
+  private editorDialogValidators = inject(EditorDialogValidators);
 
   readonly separatorKeysCodes: number[] = [ENTER];
 
@@ -41,15 +64,13 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
     return this.loadedFiles.currentLoadedFile.rdfModel;
   }
 
-  constructor(private validators: EditorDialogValidators) {
-    super();
-  }
-
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => {
-      this.inputValues = [];
-      this.setInputControl();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.inputValues = [];
+        this.setInputControl();
+      });
   }
 
   hasErrors(): ErrorStateMatcher {
@@ -74,7 +95,7 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
         value: '',
         disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       },
-      [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
+      [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
     );
 
     this.parentForm.setControl(

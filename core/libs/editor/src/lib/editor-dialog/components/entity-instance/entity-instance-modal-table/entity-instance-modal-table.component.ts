@@ -13,9 +13,15 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {DataType, EditorDialogValidators, FormFieldHelper} from '@ame/editor';
-import {ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, UntypedFormGroup} from '@angular/forms';
-import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {AsyncPipe, NgClass} from '@angular/common';
+import {ChangeDetectorRef, Component, DestroyRef, inject, Input, OnChanges, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, UntypedFormGroup} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
+import {MatIconButton, MatMiniFabButton} from '@angular/material/button';
+import {MatDivider} from '@angular/material/divider';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {
   CacheStrategy,
   Characteristic,
@@ -28,29 +34,46 @@ import {
   PropertyPayload,
   Value,
 } from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import * as locale from 'locale-codes';
-import {Observable, Subscription, map, of, startWith} from 'rxjs';
+import {map, Observable, of, startWith} from 'rxjs';
 import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
 
 @Component({
   selector: 'ame-entity-instance-modal-table',
   templateUrl: './entity-instance-modal-table.component.html',
   styleUrls: ['./entity-instance-modal-table.component.scss'],
+  imports: [
+    ReactiveFormsModule,
+    MatDivider,
+    MatIconModule,
+    MatFormField,
+    MatLabel,
+    MatAutocompleteTrigger,
+    MatInput,
+    MatIconButton,
+    MatOption,
+    MatError,
+    MatMiniFabButton,
+    TranslatePipe,
+    MatAutocomplete,
+    AsyncPipe,
+    MatOptgroup,
+    NgClass,
+  ],
 })
-export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
-  @Input()
-  form: FormGroup;
-
-  @Input()
-  entity: DefaultEntity;
-
-  @Input()
-  enumeration: DefaultEnumeration;
-
-  @Input()
-  entityValue: DefaultEntityInstance;
-
+export class EntityInstanceModalTableComponent implements OnChanges {
   @ViewChildren(MatAutocompleteTrigger) autocompleteTriggers: QueryList<MatAutocompleteTrigger>;
+
+  @Input() form: FormGroup;
+  @Input() entity: DefaultEntity;
+  @Input() enumeration: DefaultEnumeration;
+  @Input() entityValue: DefaultEntityInstance;
+
+  private destroyRef = inject(DestroyRef);
+  private loadedFiles = inject(LoadedFilesService);
+  private changeDetector = inject(ChangeDetectorRef);
+  private fb = inject(FormBuilder);
 
   protected readonly EntityInstanceUtil = EntityInstanceUtil;
   protected readonly formFieldHelper = FormFieldHelper;
@@ -61,8 +84,6 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
   filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
   filteredLanguageValues$: {[key: string]: Observable<any[]>} = {};
 
-  subscriptions = new Subscription();
-
   get propertiesForm(): FormGroup {
     return this.form.get('properties') as FormGroup;
   }
@@ -70,12 +91,6 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
   get currentCachedFile(): CacheStrategy {
     return this.loadedFiles.currentLoadedFile.cachedFile;
   }
-
-  constructor(
-    private loadedFiles: LoadedFilesService,
-    private changeDetector: ChangeDetectorRef,
-    private fb: FormBuilder,
-  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if ('entity' in changes && this.entity) {
@@ -127,11 +142,13 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
   }
 
   private subscribeToEntityValueChanges(control: FormControl, prop: DefaultProperty): void {
-    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeEntityValueInput(prop as DefaultProperty, value)));
+    control.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(value => this.changeEntityValueInput(prop as DefaultProperty, value));
   }
 
   private subscribeToLangValueChanges(control: FormControl, prop: DefaultProperty): void {
-    this.subscriptions.add(control.valueChanges.subscribe(value => this.changeLanguageInput(prop.name, value)));
+    control.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => this.changeLanguageInput(prop.name, value));
   }
 
   private addGroupToPropertiesForm(propertyName: string, group: UntypedFormGroup): void {
@@ -182,11 +199,9 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
 
     const languageInputControl = new FormControl('', fieldValidators);
 
-    this.subscriptions.add(
-      languageInputControl.valueChanges.subscribe(value => {
-        this.changeLanguageInput(property.name, value);
-      }),
-    );
+    languageInputControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+      this.changeLanguageInput(property.name, value);
+    });
 
     const languageFormGroup = this.fb.group({
       value: ['', fieldValidators],
@@ -210,9 +225,5 @@ export class EntityInstanceModalTableComponent implements OnChanges, OnDestroy {
 
   isCharacteristicCollectionType(characteristic: Characteristic | undefined): boolean {
     return characteristic instanceof DefaultCollection;
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 }

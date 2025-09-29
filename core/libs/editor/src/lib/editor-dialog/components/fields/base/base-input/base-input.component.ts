@@ -14,10 +14,15 @@
 import {Component, Input} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {PreviousFormDataSnapshot} from '../../../../interfaces';
+import {DescriptionInputFieldComponent} from '../description-input-field/description-input-field.component';
+import {NameInputFieldComponent} from '../name-input-field/name-input-field.component';
+import {PreferredNameInputFieldComponent} from '../preferred-name-input-field/preferred-name-input-field.component';
+import {SeeInputFieldComponent} from '../see-input-field/see-input-field.component';
 
 @Component({
   selector: 'ame-base-input',
   templateUrl: './base-input.component.html',
+  imports: [NameInputFieldComponent, PreferredNameInputFieldComponent, DescriptionInputFieldComponent, SeeInputFieldComponent],
 })
 export class BaseInputComponent {
   @Input() hideDescription = false;

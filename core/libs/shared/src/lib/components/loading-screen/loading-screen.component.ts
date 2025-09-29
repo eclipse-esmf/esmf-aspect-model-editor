@@ -12,24 +12,22 @@
  */
 
 import {LoadingScreenOptions} from '@ame/shared';
-import {LanguageTranslateModule} from '@ame/translation';
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   standalone: true,
   selector: 'ame-loading-screen',
   templateUrl: './loading-screen.component.html',
   styleUrls: ['./loading-screen.component.scss'],
-  imports: [MatProgressBarModule, MatDialogModule, LanguageTranslateModule, MatButtonModule],
+  imports: [MatProgressBarModule, MatDialogModule, TranslatePipe, MatButtonModule],
 })
 export class LoadingScreenComponent {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: LoadingScreenOptions,
-    private dialog: MatDialogRef<LoadingScreenComponent>,
-  ) {}
+  private dialog = inject(MatDialogRef<LoadingScreenComponent>);
+  public data = inject(MAT_DIALOG_DATA) as LoadingScreenOptions;
 
   close() {
     if (typeof this.data.closeButtonAction === 'function') {

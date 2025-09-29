@@ -20,7 +20,7 @@ import {OpenElementWindowComponent} from './open-element-window.component';
 @Injectable({providedIn: 'root'})
 export class OpenReferencedElementService {
   private loadedFiles = inject(LoadedFilesService);
-  constructor(private matDialog: MatDialog) {}
+  private matDialog = inject(MatDialog);
 
   openReferencedElement(element: NamedElement) {
     if (!element) {

@@ -11,29 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
 import {MxGraphHelper} from '@ame/mx-graph';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Injectable} from '@angular/core';
 import {DefaultAspect} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {NamedNode} from 'n3';
 import {RendererUpdatePayload} from '../../models';
-import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class AspectRenderService extends BaseRenderService {
-  constructor(
-    mxGraphService: MxGraphService,
-    sammLangService: SammLanguageSettingsService,
-    protected loadedFilesService: LoadedFilesService,
-  ) {
-    super(mxGraphService, sammLangService, loadedFilesService);
-  }
-
   update({cell}: RendererUpdatePayload) {
     super.update({
       cell,

@@ -41,20 +41,20 @@ export class DefaultAspectModelVisitor<T extends NamedElement, U> implements Mod
    */
   visit(element: NamedElement, context: U): T {
     const item: U = element.accept(<any>this, context);
-    this.getObjectKeys(element).forEach(attributeKey => {
-      const attributeValue: any = this.getValue(attributeKey, element);
-      if (this.skipProperties.find(prop => attributeKey === prop) == undefined) {
-        if (this.isPropertyInstanceDefinition(attributeValue)) {
-          return this.visit(attributeValue, item);
-        } else if (Array.isArray(attributeValue)) {
-          attributeValue.forEach(arrayElement => {
-            if (this.isPropertyInstanceDefinition(arrayElement)) {
-              return this.visit(arrayElement, item);
-            }
-          });
+    for (const attributeKey of this.getObjectKeys(element)) {
+      if (this.skipProperties.includes(attributeKey)) continue;
+      const attributeValue = this.getValue(attributeKey, element);
+
+      if (this.isPropertyInstanceDefinition(attributeValue)) {
+        this.visit(attributeValue, item);
+      } else if (Array.isArray(attributeValue)) {
+        for (const arrayElement of attributeValue) {
+          if (this.isPropertyInstanceDefinition(arrayElement)) {
+            this.visit(arrayElement, item);
+          }
         }
       }
-    });
+    }
     return null;
   }
 

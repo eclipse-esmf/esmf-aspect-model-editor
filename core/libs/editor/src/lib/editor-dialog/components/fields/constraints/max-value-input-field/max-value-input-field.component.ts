@@ -10,25 +10,27 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {MxGraphHelper} from '@ame/mx-graph';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {DataTypeService} from '@ame/shared';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultRangeConstraint, DefaultTrait, NamedElement, Type} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-max-value-input-field',
   templateUrl: './max-value-input-field.component.html',
+  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatInput],
 })
 export class MaxValueInputFieldComponent extends InputFieldComponent<DefaultRangeConstraint> implements OnInit, OnDestroy {
+  private dataTypeService = inject(DataTypeService);
+
   public rangeConstraintDataType: Type;
 
-  constructor(
-    public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService,
-  ) {
+  constructor() {
     super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'maxValue';
@@ -39,13 +41,15 @@ export class MaxValueInputFieldComponent extends InputFieldComponent<DefaultRang
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe((modelElement: NamedElement) => {
-      if (modelElement instanceof DefaultRangeConstraint) {
-        this.metaModelElement = modelElement;
-      }
-      this.rangeConstraintDataType = this.getCharacteristicTypeForConstraint(modelElement.name);
-      this.initForm();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((modelElement: NamedElement) => {
+        if (modelElement instanceof DefaultRangeConstraint) {
+          this.metaModelElement = modelElement;
+        }
+        this.rangeConstraintDataType = this.getCharacteristicTypeForConstraint(modelElement.name);
+        this.initForm();
+      });
   }
 
   ngOnDestroy() {

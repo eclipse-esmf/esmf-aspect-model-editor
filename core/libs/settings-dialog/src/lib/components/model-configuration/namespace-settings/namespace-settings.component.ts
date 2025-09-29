@@ -11,23 +11,64 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {Component, inject, OnInit} from '@angular/core';
+import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
+  MatTable,
+} from '@angular/material/table';
+import {MatTooltip} from '@angular/material/tooltip';
 import {Samm} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import {SettingsFormService} from '../../../services';
 
 @Component({
   selector: 'ame-namespace',
   templateUrl: './namespace-settings.component.html',
   styleUrls: ['./namespace-settings.component.scss'],
+  imports: [
+    ReactiveFormsModule,
+    MatIconModule,
+    MatTooltip,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatError,
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatHeaderRow,
+    MatRow,
+    TranslatePipe,
+  ],
 })
 export class NamespaceSettingsComponent implements OnInit {
-  form: FormGroup;
-  columns: string[] = ['name', 'value', 'version'];
-  panelOpenState = false;
-  predefinedNamespaces: Array<{name?: string; value?: string; version?: string}> = [];
+  private formService = inject(SettingsFormService);
 
-  constructor(private formService: SettingsFormService) {}
+  public form: FormGroup;
+  public columns: string[] = ['name', 'value', 'version'];
+  public panelOpenState = false;
+  public predefinedNamespaces: Array<{name?: string; value?: string; version?: string}> = [];
 
   ngOnInit(): void {
     this.form = this.formService.getForm().get('namespaceConfiguration') as FormGroup;

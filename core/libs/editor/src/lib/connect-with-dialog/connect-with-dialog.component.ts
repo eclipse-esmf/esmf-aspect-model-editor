@@ -14,7 +14,7 @@
 import {ModelElementParserPipe} from '@ame/editor';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {CommonModule} from '@angular/common';
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -36,18 +36,18 @@ interface Element {
   imports: [MatFormFieldModule, MatTooltipModule, CommonModule, MatButtonModule, MatDialogModule, MatInputModule],
 })
 export class ConnectWithDialogComponent {
+  private mxGraphService = inject(MxGraphService);
+  private dialogRef = inject(MatDialogRef<ConnectWithDialogComponent>);
+  private elementParser = inject(ModelElementParserPipe);
+
+  public connectWithCell = inject(MAT_DIALOG_DATA);
+
   public elements: Element[];
   public selectedElement: Element;
   public connectWithModel: NamedElement;
 
-  private elementParser = new ModelElementParserPipe();
-
-  constructor(
-    private mxGraphService: MxGraphService,
-    private dialogRef: MatDialogRef<ConnectWithDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public connectWithCell,
-  ) {
-    this.connectWithModel = MxGraphHelper.getModelElement(connectWithCell);
+  constructor() {
+    this.connectWithModel = MxGraphHelper.getModelElement(this.connectWithCell);
     this.elements = this.mxGraphService.getAllCells().map(e => {
       return {model: MxGraphHelper.getModelElement(e), cell: e};
     });

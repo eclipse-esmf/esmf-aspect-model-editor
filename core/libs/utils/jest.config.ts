@@ -11,18 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-module.exports = {
-  displayName: 'translation',
-  preset: '../../jest.preset.js',
+const esModules = ['@angular', '@ngrx', '@agm', 'ngx-bootstrap'].join('|');
+
+export default {
+  displayName: 'utils',
+  preset: '../../jest.preset.cjs',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {},
-  coverageDirectory: '../../coverage/libs/api',
+  coverageDirectory: '../../coverage/libs/utils',
   transform: {
-    '^.+\\.(ts|js|html)$': [
+    '^.+\\.(ts|js|mjs|html|svg)$': [
       'jest-preset-angular',
-      {isolatedModules: true, tsconfig: '<rootDir>/tsconfig.spec.json', stringifyContentPathRegex: '\\.(html|svg)$'},
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$',
+      },
     ],
+    '^.+\\.js$': 'babel-jest',
   },
+  transformIgnorePatterns: ['node_modules/?!(.*\\.mjs$|@ngneat)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',

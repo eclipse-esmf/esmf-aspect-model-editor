@@ -15,19 +15,15 @@ import {ShapeConnectorService} from '@ame/connection';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEntity} from '@esmf/aspect-model-loader';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class BaseEntityModelService {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private notificationService: NotificationsService,
-    private shapeConnectorService: ShapeConnectorService,
-    private translate: LanguageTranslationService,
-  ) {}
+  private notificationService = inject(NotificationsService);
+  private shapeConnectorService = inject(ShapeConnectorService);
+  private mxGraphService = inject(MxGraphService);
+  private translate = inject(LanguageTranslationService);
 
   checkExtendedElement(metaModelElement: DefaultEntity, extendedElement: DefaultEntity) {
     if (!(extendedElement instanceof DefaultEntity)) {

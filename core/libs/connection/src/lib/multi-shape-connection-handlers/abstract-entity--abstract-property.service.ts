@@ -19,9 +19,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {MultiShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class AbstractEntityAbstractPropertyConnectionHandler
   extends BaseConnectionHandler
   implements MultiShapeConnector<DefaultEntity, DefaultProperty>

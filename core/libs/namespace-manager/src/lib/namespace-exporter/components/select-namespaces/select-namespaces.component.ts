@@ -13,10 +13,10 @@
 
 import {ModelApiService} from '@ame/api';
 import {ModelCheckerService} from '@ame/editor';
-import {APP_CONFIG, AppConfig, NotificationsService} from '@ame/shared';
-import {LanguageTranslateModule, LanguageTranslationService} from '@ame/translation';
+import {APP_CONFIG, NotificationsService} from '@ame/shared';
+import {LanguageTranslationService} from '@ame/translation';
 import {KeyValuePipe} from '@angular/common';
-import {Component, Inject, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -25,6 +25,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
 import {finalize} from 'rxjs';
 
 @Component({
@@ -33,7 +34,6 @@ import {finalize} from 'rxjs';
   styleUrls: ['select-namespaces.component.scss'],
   imports: [
     MatDialogModule,
-    LanguageTranslateModule,
     MatCheckboxModule,
     KeyValuePipe,
     MatIconModule,
@@ -43,6 +43,7 @@ import {finalize} from 'rxjs';
     MatRadioGroup,
     MatRadioButton,
     FormsModule,
+    TranslatePipe,
   ],
 })
 export class SelectNamespacesComponent implements OnInit {
@@ -50,15 +51,13 @@ export class SelectNamespacesComponent implements OnInit {
   private modelCheckerService = inject(ModelCheckerService);
   private notificationService = inject(NotificationsService);
   private translate = inject(LanguageTranslationService);
+  private dialogRef = inject(MatDialogRef<SelectNamespacesComponent>);
 
-  entries = undefined;
-  extracting = false;
-  selectedKey: string | null = null;
+  public config = inject(APP_CONFIG);
 
-  constructor(
-    @Inject(APP_CONFIG) public config: AppConfig,
-    private dialogRef: MatDialogRef<SelectNamespacesComponent>,
-  ) {}
+  public entries = undefined;
+  public extracting = false;
+  public selectedKey: string | null = null;
 
   ngOnInit(): void {
     this.extracting = true;

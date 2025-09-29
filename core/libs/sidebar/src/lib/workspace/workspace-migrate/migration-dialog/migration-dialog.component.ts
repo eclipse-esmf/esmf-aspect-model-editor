@@ -13,7 +13,7 @@
 import {MigrationStatus, MigratorApiService} from '@ame/api';
 import {APP_CONFIG, AppConfig, NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {Component, Inject, inject, signal, viewChild} from '@angular/core';
+import {Component, inject, signal, viewChild} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatCheckbox, MatCheckboxChange} from '@angular/material/checkbox';
 import {MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
@@ -51,12 +51,12 @@ export class MigrationDialogComponent {
   private notificationsService = inject(NotificationsService);
   private translate = inject(LanguageTranslationService);
 
+  public config = inject(APP_CONFIG) as AppConfig;
+
   public loading = signal(false);
 
   public migrationStatus = signal<MigrationStatus>(undefined);
   public increaseNamespaceVersion = true;
-
-  constructor(@Inject(APP_CONFIG) public config: AppConfig) {}
 
   changeVersionCheck(event: MatCheckboxChange) {
     this.increaseNamespaceVersion = event.checked;

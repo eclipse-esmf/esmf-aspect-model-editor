@@ -14,10 +14,16 @@
 import {CacheUtils} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
 import {NotificationsService} from '@ame/shared';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {AsyncPipe} from '@angular/common';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
+import {MatIconButton} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {Characteristic, DefaultCharacteristic, DefaultEither} from '@esmf/aspect-model-loader';
-import {Observable, map} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -25,24 +31,39 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-left-input-field',
   templateUrl: './left-input-field.component.html',
   styleUrls: ['../../field.scss'],
+  imports: [
+    MatFormField,
+    MatLabel,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatInput,
+    MatIconModule,
+    MatIconButton,
+    AsyncPipe,
+    MatAutocomplete,
+    MatOption,
+    MatError,
+  ],
 })
 export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> implements OnInit, OnDestroy {
+  private notificationsService = inject(NotificationsService);
+  private validators = inject(EditorDialogValidators);
+  public rdfService = inject(RdfService);
+
   filteredCharacteristicTypes$: Observable<any[]>;
 
   leftControl: FormControl;
   leftCharacteristicControl: FormControl;
 
-  constructor(
-    private notificationsService: NotificationsService,
-    private validators: EditorDialogValidators,
-    public rdfService: RdfService,
-  ) {
+  constructor() {
     super();
     this.fieldName = 'leftCharacteristic';
   }
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => this.setLeftControl());
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.setLeftControl());
   }
 
   ngOnDestroy() {

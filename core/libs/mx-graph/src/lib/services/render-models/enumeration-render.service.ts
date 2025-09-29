@@ -11,11 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
 import {ShapeConnectorService} from '@ame/connection';
 import {FiltersService} from '@ame/loader-filters';
 import {MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Injectable, inject} from '@angular/core';
 import {
   DefaultCharacteristic,
@@ -27,7 +25,6 @@ import {
 } from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
-import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 import {EntityValueRenderService} from './entity-value-render.service';
 import {UnitRenderService} from './unit-render.service';
@@ -39,23 +36,13 @@ interface EnumerationForm {
   [key: string]: any;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EnumerationRenderService extends BaseRenderService {
   private filtersService = inject(FiltersService);
-
-  constructor(
-    mxGraphService: MxGraphService,
-    sammLangService: SammLanguageSettingsService,
-    protected loadedFilesService: LoadedFilesService,
-    private shapeConnectorService: ShapeConnectorService,
-    private entityValueRenderer: EntityValueRenderService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private unitRendererService: UnitRenderService,
-  ) {
-    super(mxGraphService, sammLangService, loadedFilesService);
-  }
+  private shapeConnectorService = inject(ShapeConnectorService);
+  private entityValueRenderer = inject(EntityValueRenderService);
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private unitRendererService = inject(UnitRenderService);
 
   isApplicable(cell: mxgraph.mxCell): boolean {
     return MxGraphHelper.getModelElement(cell) instanceof DefaultEnumeration;

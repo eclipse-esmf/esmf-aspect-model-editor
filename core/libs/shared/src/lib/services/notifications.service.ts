@@ -11,21 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EventEmitter, Injectable} from '@angular/core';
+import {EventEmitter, inject, Injectable} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
 import {NotificationType} from '../enums';
 import {NotificationModel} from '../model';
 
 @Injectable({providedIn: 'root'})
 export class NotificationsService {
+  private toastr = inject(ToastrService);
+
   private notifications: NotificationModel[] = [];
   private lastErrorDate: Date = null;
   private errorTimeout;
   private nbValidationErrors = 0;
 
   badgeText = new EventEmitter<string>();
-
-  constructor(private toastr: ToastrService) {}
 
   clearNotifications(notificationsToDelete?: NotificationModel[]) {
     if (!notificationsToDelete) {

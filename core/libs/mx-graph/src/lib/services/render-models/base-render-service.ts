@@ -13,6 +13,7 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {inject} from '@angular/core';
 import {DefaultAspect, DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper, MxGraphVisitorHelper} from '../../helpers';
@@ -20,15 +21,14 @@ import {RendererUpdatePayload} from '../../models';
 import {MxGraphService} from '../mx-graph.service';
 
 export abstract class BaseRenderService {
+  protected mxGraphService = inject(MxGraphService);
+  protected sammLangService = inject(SammLanguageSettingsService);
+  protected loadedFilesService = inject(LoadedFilesService);
+
   get graph(): mxgraph.mxGraph {
     return this.mxGraphService.graph;
   }
 
-  constructor(
-    protected mxGraphService: MxGraphService,
-    protected sammLangService: SammLanguageSettingsService,
-    protected loadedFilesService: LoadedFilesService,
-  ) {}
   public abstract isApplicable(cell: mxgraph.mxCell): boolean;
 
   public update({cell, callback}: RendererUpdatePayload) {

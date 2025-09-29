@@ -12,9 +12,13 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, DestroyRef, EventEmitter, inject, OnInit, Output} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {MatButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
 import {DefaultAspect, DefaultEntity, NamedElement, PropertyPayload} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import {first} from 'rxjs/operators';
 import {EditorModelService} from '../../../editor-model.service';
 import {PropertiesDialogData, PropertiesModalComponent} from '../properties-modal/properties-modal.component';
@@ -27,8 +31,14 @@ export interface UpdatedProperties {
   selector: 'ame-properties-button',
   templateUrl: './properties-button.component.html',
   styleUrls: ['./properties-button.component.scss'],
+  imports: [MatIconModule, TranslatePipe, MatButton],
 })
 export class PropertiesButtonComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
+  private matDialog = inject(MatDialog);
+  private metaModelDialogService = inject(EditorModelService);
+  private loadedFiles = inject(LoadedFilesService);
+
   @Output() overwrite = new EventEmitter();
 
   private propertiesPayload: typeof this.metaModelElement.propertiesPayload = {};
@@ -38,19 +48,16 @@ export class PropertiesButtonComponent implements OnInit {
     return this.metaModelElement?.isPredefined;
   }
 
-  constructor(
-    private matDialog: MatDialog,
-    private metaModelDialogService: EditorModelService,
-    private loadedFiles: LoadedFilesService,
-  ) {}
-
   ngOnInit(): void {
-    this.metaModelDialogService.getMetaModelElement().subscribe((metaModelElement: NamedElement) => {
-      if (metaModelElement instanceof DefaultEntity || metaModelElement instanceof DefaultAspect) {
-        this.metaModelElement = metaModelElement;
-        this.propertiesPayload = structuredClone(metaModelElement.propertiesPayload);
-      }
-    });
+    this.metaModelDialogService
+      .getMetaModelElement()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((metaModelElement: NamedElement) => {
+        if (metaModelElement instanceof DefaultEntity || metaModelElement instanceof DefaultAspect) {
+          this.metaModelElement = metaModelElement;
+          this.propertiesPayload = structuredClone(metaModelElement.propertiesPayload);
+        }
+      });
   }
 
   openPropertiesTable() {
@@ -65,7 +72,7 @@ export class PropertiesButtonComponent implements OnInit {
         autoFocus: false,
       })
       .afterClosed()
-      .pipe(first())
+      .pipe(takeUntilDestroyed(this.destroyRef), first())
       .subscribe((data: UpdatedProperties) => {
         if (!data) {
           return;

@@ -17,7 +17,7 @@ import {ConfigurationService} from '@ame/settings-dialog';
 import {BrowserService, ElectronTunnelService, TitleService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {SearchesStateService} from '@ame/utils';
-import {Component, HostListener, Injector, OnInit} from '@angular/core';
+import {Component, HostListener, inject, Injector, OnInit} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 
 @Component({
@@ -27,20 +27,20 @@ import {RouterOutlet} from '@angular/router';
   imports: [RouterOutlet],
 })
 export class AppComponent implements OnInit {
+  private titleService = inject(TitleService);
+  private domainModelToRdf = inject(DomainModelToRdfService);
+  private browserService = inject(BrowserService);
+  private electronTunnelService = inject(ElectronTunnelService);
+  private configurationService = inject(ConfigurationService);
+  private themeService = inject(ThemeService);
+  private translate = inject(LanguageTranslationService);
+  private searchesStateService = inject(SearchesStateService);
+  private injector = inject(Injector);
+
   private language = 'en';
   public title = 'Aspect Model Editor';
 
-  constructor(
-    private titleService: TitleService,
-    private domainModelToRdf: DomainModelToRdfService,
-    private browserService: BrowserService,
-    private electronTunnelService: ElectronTunnelService,
-    private configurationService: ConfigurationService,
-    private themeService: ThemeService,
-    private translate: LanguageTranslationService,
-    private searchesStateService: SearchesStateService,
-    private injector: Injector,
-  ) {
+  constructor() {
     this.domainModelToRdf.listenForStoreUpdates();
     MxGraphHelper.injector = this.injector;
   }
@@ -53,11 +53,11 @@ export class AppComponent implements OnInit {
     this.titleService.setTitle(this.title);
 
     if (this.browserService.isStartedAsElectronApp() || !window.require) {
-      this.setMenuTranslation();
+      //this.setMenuTranslation();
       this.setContextMenu();
     }
 
-    this.themeService.setCssVars(this.configurationService.getSettings()?.useSaturatedColors ? 'dark' : 'light');
+    this.themeService.setCssVars(this.configurationService.getSettings()?.useSaturatedColors ? '' : 'light');
 
     if (window.location.search.includes('?e2e=true')) {
       return;
