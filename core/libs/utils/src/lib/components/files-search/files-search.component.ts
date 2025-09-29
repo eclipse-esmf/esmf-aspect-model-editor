@@ -68,8 +68,9 @@ export class FilesSearchComponent {
   public files: {file: string; namespace: string}[] = [];
   public loading = false;
   public searchableFiles = [];
+
   public get namespaces() {
-    return this.sidebarStateService.namespacesState.namespaces;
+    return this.sidebarStateService.namespacesState.namespaces();
   }
 
   constructor() {
@@ -80,8 +81,8 @@ export class FilesSearchComponent {
       this.modelChecker
         .detectWorkspaceErrors()
         .pipe(map(files => this.sidebarStateService.updateWorkspace(files)))
-        .subscribe(namespaces => {
-          this.parseFiles(namespaces);
+        .subscribe(n => {
+          this.parseFiles(n);
           this.loading = false;
         });
 

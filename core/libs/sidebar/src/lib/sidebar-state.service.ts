@@ -14,60 +14,55 @@
 import {LoadedFilesService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {BrowserService, ElectronSignals, ElectronSignalsService} from '@ame/shared';
-import {Injectable, inject} from '@angular/core';
-import {BehaviorSubject, Subscription, of} from 'rxjs';
+import {DestroyRef, Injectable, computed, effect, inject, signal} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {Subscription, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 
 class SidebarState {
-  private opened$ = new BehaviorSubject(false);
-  public isOpened$ = this.opened$.asObservable();
+  readonly opened = signal(false);
+  readonly isOpened = computed(() => this.opened());
 
   close() {
-    this.opened$.next(false);
+    this.opened.set(false);
   }
-
   open() {
-    this.opened$.next(true);
+    this.opened.set(true);
   }
-
   toggle() {
-    this.opened$.next(!this.opened$.value);
+    this.opened.update(v => !v);
   }
 }
 
 class SidebarStateWithRefresh extends SidebarState {
-  private refresh$ = new BehaviorSubject(null);
-  public refreshSignal$ = this.refresh$.asObservable();
+  readonly refreshTick = signal(0);
 
   refresh() {
-    this.refresh$.next({});
+    this.refreshTick.update(n => n + 1);
   }
 }
 
 class Selection {
-  #selection$ = new BehaviorSubject<{namespace: string; file: string; aspectModelUrn: string}>(null);
-  public selection$ = this.#selection$.asObservable();
+  readonly selection = signal<{namespace: string; file: string; aspectModelUrn: string} | null>(null);
 
   constructor(
     public namespace?: string,
     public file?: string,
   ) {}
 
-  public select(namespace: string, file: FileStatus) {
+  select(namespace: string, file: FileStatus) {
     if (namespace && file) {
       this.namespace = namespace;
       this.file = file.name;
-      this.#selection$.next({namespace, file: file.name, aspectModelUrn: file.aspectModelUrn});
+      this.selection.set({namespace, file: file.name, aspectModelUrn: file.aspectModelUrn});
     }
   }
-
-  public reset() {
+  reset() {
     this.namespace = null;
     this.file = null;
-    this.#selection$.next(null);
+    this.selection.set(null);
   }
-
-  public isSelected(namespace: string, file: string) {
+  isSelected(namespace: string, file: string) {
     return this.namespace === namespace && this.file === file;
   }
 }
@@ -87,43 +82,41 @@ export class FileStatus {
 
 export class NamespacesManager {
   private loadedFilesService = inject(LoadedFilesService);
-  public namespaces: {[key: string]: FileStatus[]} = {};
-  public hasOutdatedFiles = false;
+  readonly namespaces = signal<{[key: string]: FileStatus[]}>({});
+  readonly hasOutdatedFiles = signal(false);
+  readonly namespacesKeys = computed(() => Object.keys(this.namespaces()));
 
-  public get namespacesKeys(): string[] {
-    return Object.keys(this.namespaces);
-  }
-
-  public get currentFile() {
+  get currentFile() {
     return this.loadedFilesService.currentLoadedFile;
   }
 
   setFile(namespace: string, fileStatus: FileStatus) {
-    if (this.namespaces[namespace]) {
-      this.namespaces[namespace].push(fileStatus);
-    } else {
-      this.namespaces[namespace] = [fileStatus];
-    }
-
+    this.namespaces.update(map => {
+      const arr = map[namespace] ? [...map[namespace], fileStatus] : [fileStatus];
+      return {...map, [namespace]: arr};
+    });
     return fileStatus;
   }
 
   getFile(namespace: string, file: string) {
-    return this.namespaces[namespace]?.find(fileStatus => fileStatus.name === file);
+    return this.namespaces()[namespace]?.find(fs => fs.name === file);
   }
 
   lockFiles(files: {namespace: string; file: string}[]) {
-    for (const namespace of this.namespacesKeys) {
-      for (const fileStatus of this.namespaces[namespace]) {
-        if (fileStatus.name !== this.currentFile?.name) {
-          fileStatus.locked = files.some(file => file.namespace === namespace && file.file === fileStatus.name);
-        }
+    const current = this.currentFile?.name;
+    this.namespaces.update(map => {
+      const next: typeof map = {};
+      for (const ns of Object.keys(map)) {
+        next[ns] = map[ns].map(fs =>
+          fs.name !== current ? {...fs, locked: files.some(f => f.namespace === ns && f.file === fs.name)} : fs,
+        );
       }
-    }
+      return next;
+    });
   }
 
   clear() {
-    this.namespaces = {};
+    this.namespaces.set({});
   }
 }
 
@@ -131,6 +124,7 @@ export class NamespacesManager {
 export class SidebarStateService {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private loadedFilesService = inject(LoadedFilesService);
+  private destroyRef = inject(DestroyRef);
   private browserService = inject(BrowserService);
 
   public sammElements = new SidebarState();
@@ -159,69 +153,62 @@ export class SidebarStateService {
     return false;
   }
 
-  public updateWorkspace(files: Record<string, FileStatus>) {
+  updateWorkspace(files: Record<string, FileStatus>) {
     this.namespacesState.clear();
-    let hasOutdatedFiles = false;
-
-    for (const absoluteName in files) {
-      const fileStatus = files[absoluteName];
-
-      const [namespace, version] = RdfModelUtil.splitRdfIntoChunks(absoluteName);
-      this.namespacesState.setFile(`${namespace}:${version}`, fileStatus);
-      hasOutdatedFiles ||= fileStatus.outdated;
+    let hasOutdated = false;
+    for (const absolute of Object.keys(files)) {
+      const fs = files[absolute];
+      const [namespace, version] = RdfModelUtil.splitRdfIntoChunks(absolute);
+      this.namespacesState.setFile(`${namespace}:${version}`, fs);
+      hasOutdated ||= fs.outdated;
     }
-    this.namespacesState.hasOutdatedFiles = hasOutdatedFiles;
+    this.namespacesState.hasOutdatedFiles.set(hasOutdated);
     this.getLockedFiles(true);
-
-    return this.namespacesState.namespaces;
+    return this.namespacesState.namespaces();
   }
 
-  private getLockedFiles(takeOne?: boolean): Subscription {
+  private getLockedFiles(takeOne?: boolean) {
     if (!environment.production && window.location.search.includes('?e2e=true')) {
-      return of({}).subscribe();
+      return of({}).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
-    let subscription: Subscription = new Subscription();
-    if (this.browserService.isStartedAsElectronApp() || window.require) {
-      subscription = this.electronSignalsService.call('lockedFiles').subscribe(files => {
-        this.namespacesState.lockFiles(files);
-
-        if (takeOne) {
-          subscription.unsubscribe();
-        }
-      });
+    if (this.browserService.isStartedAsElectronApp() || (window as any).require) {
+      return this.electronSignalsService
+        .call('lockedFiles')
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(files => {
+          this.namespacesState.lockFiles(files);
+          if (takeOne) this.destroyRef;
+        });
     }
 
-    return subscription;
+    return new Subscription();
   }
 
   private manageSidebars() {
-    this.sammElements.isOpened$.subscribe(state => {
-      if (!state) {
-        return;
-      }
-
-      this.workspace.close();
-      this.fileElements.close();
-    });
-
-    this.workspace.isOpened$.subscribe(state => {
-      if (!state) {
+    effect(() => {
+      if (this.sammElements.isOpened()) {
+        this.workspace.close();
         this.fileElements.close();
-        return;
-      }
-
-      this.sammElements.close();
-    });
-
-    this.fileElements.isOpened$.subscribe(opened => {
-      if (!opened) {
-        this.selection.reset();
       }
     });
 
-    this.selection.selection$.subscribe(selection => {
-      if (selection) this.fileElements.open();
+    effect(() => {
+      if (this.workspace.isOpened()) {
+        this.sammElements.close();
+      } else {
+        this.fileElements.close();
+      }
+    });
+
+    effect(() => {
+      const opened = this.fileElements.isOpened();
+      if (!opened) this.selection.reset();
+    });
+
+    effect(() => {
+      const sel = this.selection.selection();
+      if (sel) this.fileElements.open();
     });
   }
 }

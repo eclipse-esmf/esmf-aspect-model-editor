@@ -10,7 +10,7 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-@if (selection$ | async; as currentSelection) {
+@if (selection; as currentSelection) {
   <div class="header">
     <h2 [matTooltip]="currentSelection?.file" [matTooltipDisabled]="currentSelection?.file?.length < 28" matTooltipPosition="right">
       {{ currentSelection?.file }}

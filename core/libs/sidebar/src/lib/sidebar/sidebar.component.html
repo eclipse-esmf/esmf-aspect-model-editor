@@ -12,9 +12,9 @@
   -->
 
 <ame-sidebar-menu></ame-sidebar-menu>
-@if (sidebarService.sammElements.isOpened$ | async) {
+@if (sidebarService.sammElements.opened()) {
   <ame-sidebar-samm-elements class="column-one"></ame-sidebar-samm-elements>
 }
-@if (sidebarService.workspace.isOpened$ | async) {
+@if (sidebarService.workspace.opened()) {
   <ame-workspace class="column-one"></ame-workspace>
 }

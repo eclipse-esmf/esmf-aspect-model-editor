@@ -13,8 +13,7 @@
 
 import {ModelCheckerService} from '@ame/editor';
 import {SidebarStateService} from '@ame/sidebar';
-import {AsyncPipe} from '@angular/common';
-import {ChangeDetectorRef, Component, DestroyRef, OnInit, inject} from '@angular/core';
+import {ChangeDetectorRef, Component, DestroyRef, effect, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -37,12 +36,11 @@ import {WorkspaceFileListComponent} from './workspace-file-list/workspace-file-l
     WorkspaceErrorComponent,
     WorkspaceEmptyComponent,
     WorkspaceFileListComponent,
-    AsyncPipe,
     WorkspaceFileElementsComponent,
     TranslatePipe,
   ],
 })
-export class WorkspaceComponent implements OnInit {
+export class WorkspaceComponent {
   private destroyRef = inject(DestroyRef);
   private changeDetector = inject(ChangeDetectorRef);
   private modelChecker = inject(ModelCheckerService);
@@ -54,11 +52,13 @@ export class WorkspaceComponent implements OnInit {
   public error: {code: number; message: string; path: string} = null;
 
   public get namespacesKeys(): string[] {
-    return this.namespaces.namespacesKeys;
+    return this.namespaces.namespacesKeys();
   }
 
-  ngOnInit(): void {
-    this.sidebarService.workspace.refreshSignal$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+  constructor() {
+    effect(() => {
+      this.sidebarService.workspace.refreshTick();
+
       this.error = null;
       this.loading = true;
       this.changeDetector.detectChanges();

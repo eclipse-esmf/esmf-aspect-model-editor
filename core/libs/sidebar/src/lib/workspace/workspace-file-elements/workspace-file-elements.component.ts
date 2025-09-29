@@ -17,7 +17,6 @@ import {ModelLoaderService} from '@ame/editor';
 import {MxGraphService} from '@ame/mx-graph';
 import {ElementIconComponent, ElementType, sammElements} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
-import {AsyncPipe} from '@angular/common';
 import {ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatCheckbox} from '@angular/material/checkbox';
@@ -27,7 +26,7 @@ import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {TranslatePipe} from '@ngx-translate/core';
-import {filter, first, switchMap} from 'rxjs';
+import {first, switchMap} from 'rxjs';
 import {DraggableElementComponent} from '../../draggable-element/draggable-element.component';
 
 @Component({
@@ -35,7 +34,6 @@ import {DraggableElementComponent} from '../../draggable-element/draggable-eleme
   templateUrl: './workspace-file-elements.component.html',
   styleUrls: ['./workspace-file-elements.component.scss'],
   imports: [
-    AsyncPipe,
     MatMiniFabButton,
     MatMenuTrigger,
     MatInput,
@@ -73,14 +71,14 @@ export class WorkspaceFileElementsComponent implements OnInit {
     'operation',
     'event',
   ];
-  public get selection$() {
-    return this.sidebarService.selection.selection$;
+  public get selection() {
+    return this.sidebarService.selection.selection();
   }
 
   private searchThrottle: NodeJS.Timeout;
 
   ngOnInit(): void {
-    this.selection$.pipe(filter(Boolean)).subscribe(({namespace, file, aspectModelUrn}) => {
+    if (this.selection) {
       this.elements = {};
       this.searched = {};
 
@@ -94,10 +92,10 @@ export class WorkspaceFileElementsComponent implements OnInit {
         this.searched[element] = this.elements[element].elements;
       }
 
-      if (this.loadedFilesService.getFile(`${namespace}:${file}`)) {
-        this.updateElements(this.loadedFilesService.getFile(`${namespace}:${file}`));
-      } else this.requestFile(`${namespace}:${file}`, aspectModelUrn);
-    });
+      if (this.loadedFilesService.getFile(`${this.selection.namespace}:${this.selection.file}`)) {
+        this.updateElements(this.loadedFilesService.getFile(`${this.selection.namespace}:${this.selection.file}`));
+      } else this.requestFile(`${this.selection.namespace}:${this.selection.file}`, this.selection.aspectModelUrn);
+    }
   }
 
   public elementImported(element: NamedElement): boolean {

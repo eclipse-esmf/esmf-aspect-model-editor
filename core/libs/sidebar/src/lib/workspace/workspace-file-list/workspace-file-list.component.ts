@@ -18,14 +18,15 @@ import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@am
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {KeyValuePipe} from '@angular/common';
-import {ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, inject} from '@angular/core';
+import {ChangeDetectorRef, Component, DestroyRef, NgZone, effect, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormField, MatInput} from '@angular/material/input';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {TranslatePipe} from '@ngx-translate/core';
-import {Subscription, catchError, map, switchMap, throwError} from 'rxjs';
+import {catchError, map, throwError} from 'rxjs';
 import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-dialog.enum';
 import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.component';
 
@@ -47,7 +48,7 @@ import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.
     KeyValuePipe,
   ],
 })
-export class WorkspaceFileListComponent implements OnInit, OnDestroy {
+export class WorkspaceFileListComponent {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private modelSaverService = inject(ModelSaverService);
   public sidebarService = inject(SidebarStateService);
@@ -60,6 +61,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
   private loadedFiles = inject(LoadedFilesService);
   private modelChecker = inject(ModelCheckerService);
   private ngZone = inject(NgZone);
+  private destroyRef = inject(DestroyRef);
 
   public menuSelection: {namespace: string; file: FileStatus} = null;
   public foldedStatus = false;
@@ -68,7 +70,7 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
   public searchString = '';
 
   public get namespaces() {
-    return this.sidebarService.namespacesState.namespaces;
+    return this.sidebarService.namespacesState.namespaces();
   }
 
   public get selection() {
@@ -76,30 +78,28 @@ export class WorkspaceFileListComponent implements OnInit, OnDestroy {
   }
 
   private searchThrottle: NodeJS.Timeout;
-  private subscription = new Subscription();
 
-  ngOnInit(): void {
-    const sub = this.sidebarService.workspace.refreshSignal$
-      .pipe(
-        switchMap(() => this.modelChecker.detectWorkspaceErrors()),
-        map(files => this.sidebarService.updateWorkspace(files)),
-        catchError(error => {
-          console.log(error);
-          return throwError(() => error);
-        }),
-      )
-      .subscribe(() => {
-        for (const namespace in this.namespaces) {
-          this.searched[namespace] = this.namespaces[namespace];
-          this.folded[namespace] = this.foldedStatus;
-        }
-      });
+  constructor() {
+    effect(() => {
+      this.sidebarService.workspace.refreshTick();
 
-    this.subscription.add(sub);
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
+      this.modelChecker
+        .detectWorkspaceErrors()
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          map(files => this.sidebarService.updateWorkspace(files)),
+          catchError(error => {
+            console.log(error);
+            return throwError(() => error);
+          }),
+        )
+        .subscribe(() => {
+          for (const namespace in this.namespaces) {
+            this.searched[namespace] = this.namespaces[namespace];
+            this.folded[namespace] = this.foldedStatus;
+          }
+        });
+    });
   }
 
   public toggleFold() {

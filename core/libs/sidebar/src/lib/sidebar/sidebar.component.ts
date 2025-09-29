@@ -12,9 +12,7 @@
  */
 
 import {SidebarStateService} from '@ame/sidebar';
-import {AsyncPipe} from '@angular/common';
 import {ChangeDetectorRef, Component, DestroyRef, OnInit, inject} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {SidebarMenuComponent} from '../sidebar-menu/sidebar-menu.component';
 import {SidebarSAMMElementsComponent} from '../sidebar-samm-elements/sidebar-samm-elements.component';
 import {WorkspaceComponent} from '../workspace/workspace.component';
@@ -23,7 +21,7 @@ import {WorkspaceComponent} from '../workspace/workspace.component';
   selector: 'ame-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
-  imports: [SidebarMenuComponent, AsyncPipe, SidebarSAMMElementsComponent, WorkspaceComponent],
+  imports: [SidebarMenuComponent, SidebarSAMMElementsComponent, WorkspaceComponent],
 })
 export class SidebarComponent implements OnInit {
   public destroyRef = inject(DestroyRef);
@@ -31,10 +29,12 @@ export class SidebarComponent implements OnInit {
   private changeDetector = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
-    this.sidebarService.selection.selection$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+    const selection = this.sidebarService.selection.selection();
+
+    if (selection) {
       requestAnimationFrame(() => {
         this.changeDetector.detectChanges();
       });
-    });
+    }
   }
 }
