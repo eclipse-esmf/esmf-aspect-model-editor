@@ -114,7 +114,6 @@ export class ModelSaverService {
           );
 
         if (this.currentFile?.aspect && this.currentFile?.isNameChanged) {
-          debugger;
           return this.modelApiService.deleteAspectModel(this.currentFile?.originalAspectModelUrn).pipe(switchMap(saveModel));
         }
 
