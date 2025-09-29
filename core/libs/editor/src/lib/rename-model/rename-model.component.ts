@@ -44,7 +44,7 @@ import {finalize} from 'rxjs/operators';
 })
 export class RenameModelComponent {
   private dialogRef = inject(MatDialogRef<RenameModelComponent>);
-  private loadedFiles = inject(LoadedFilesService);
+  private loadedFilesService = inject(LoadedFilesService);
   private modelApiService = inject(ModelApiService);
 
   public data = inject(MAT_DIALOG_DATA) as {namespaces: string; rdfModel: RdfModel};
@@ -81,12 +81,12 @@ export class RenameModelComponent {
       Validators.required,
       Validators.pattern('[0-9a-zA-Z_. -]+'),
       (control: AbstractControl) => {
-        const searchTerm = `${this.loadedFiles.currentLoadedFile.namespace}:${control.value}.ttl`.toLowerCase();
+        const searchTerm = `${this.loadedFilesService.currentLoadedFile.namespace}:${control.value}.ttl`.toLowerCase();
         return namespaces[searchTerm] ? {sameFile: true} : null;
       },
       (control: AbstractControl) => {
         const fileName = control.value;
-        if (this.loadedFiles.files[`${this.loadedFiles.currentLoadedFile.originalNamespace}:${fileName}.ttl`]) {
+        if (this.loadedFilesService.files[`${this.loadedFilesService.currentLoadedFile.originalNamespace}:${fileName}.ttl`]) {
           return {fileExists: true};
         }
         return null;
@@ -95,6 +95,7 @@ export class RenameModelComponent {
   }
 
   closeAndGiveResult(result: boolean) {
+    this.loadedFilesService.currentLoadedFile.originalAspectModelUrn = this.loadedFilesService.currentLoadedFile.aspect.getAspectModelUrn();
     return this.dialogRef.close(
       result && {
         name: this.fileNameControl.value.endsWith('.ttl') ? this.fileNameControl.value : `${this.fileNameControl.value}.ttl`,

@@ -43,6 +43,8 @@ export function aspectFactory(initProps: BaseInitProps) {
   }
 
   return (aspectModelUrn?: string): Aspect => {
+    if (!aspectModelUrn) return null;
+
     let aspectQuad: Quad;
     try {
       aspectQuad = getAspectQuad(aspectModelUrn);
