@@ -106,11 +106,19 @@ export class ModelSaverService {
         const copyright = this.settings.copyrightHeader.join('\n');
         const contentWithCopyright = `${copyright}\n${content}`;
 
-        return this.modelApiService.saveAspectModel(
-          contentWithCopyright,
-          this.currentFile?.getAnyAspectModelUrn(),
-          this.currentFile?.absoluteName || '',
-        );
+        const saveModel = () =>
+          this.modelApiService.saveAspectModel(
+            contentWithCopyright,
+            this.currentFile?.getAnyAspectModelUrn(),
+            this.currentFile?.absoluteName || '',
+          );
+
+        if (this.currentFile?.aspect && this.currentFile?.isNameChanged) {
+          debugger;
+          return this.modelApiService.deleteAspectModel(this.currentFile?.originalAspectModelUrn).pipe(switchMap(saveModel));
+        }
+
+        return saveModel();
       }),
       map(() => this.currentFile?.rdfModel),
     );

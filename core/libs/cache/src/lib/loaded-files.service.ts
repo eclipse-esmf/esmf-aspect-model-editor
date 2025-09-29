@@ -37,6 +37,7 @@ export class NamespaceFile {
 
   originalName: string;
   originalNamespace: string;
+  originalAspectModelUrn: string;
   rendered = false;
   sharedRdfModel: RdfModel;
   fromWorkspace: boolean;
@@ -135,6 +136,8 @@ export class LoadedFilesService {
   }
 
   isElementExtern(element: NamedElement): boolean {
+    if (!element) return false;
+
     return (
       !element.isPredefined &&
       !this.isElementInCurrentFile(element) &&

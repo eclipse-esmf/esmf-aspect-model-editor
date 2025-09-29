@@ -32,6 +32,8 @@ export class ModelElementParserPipe implements PipeTransform {
   }
 
   transform(element: NamedElement) {
+    if (!element) return null;
+
     const [type, elementData] = this.getElementType(element);
     return {
       element,

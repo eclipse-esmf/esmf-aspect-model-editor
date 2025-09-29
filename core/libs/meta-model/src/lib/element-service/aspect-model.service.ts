@@ -33,6 +33,7 @@ export class AspectModelService extends BaseModelService {
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement = MxGraphHelper.getModelElement<DefaultAspect>(cell);
     if (form.name && form.name !== metaModelElement.name) {
+      this.loadedFilesService.currentLoadedFile.originalAspectModelUrn = metaModelElement.aspectModelUrn;
       this.loadedFilesService.updateAbsoluteName(this.loadedFile.absoluteName, `${this.loadedFile.namespace}:${form.name}.ttl`);
     }
     super.update(cell, form);
