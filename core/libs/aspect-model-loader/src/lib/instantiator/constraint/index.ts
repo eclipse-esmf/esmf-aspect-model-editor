@@ -85,8 +85,6 @@ export function allConstraintsFactory(initProps: BaseInitProps) {
       ? rdfModel.resolveBlankNodes(quad.object.value)
       : rdfModel.store.getQuads(quad.object, null, null, null);
 
-    debugger;
-    //TODO Should check and load external references also
     const elementDefinitionQuad = constraintQuads.find(q => rdfModel.samm.RdfType().equals(q.predicate));
     if (!elementDefinitionQuad) {
       return null;
