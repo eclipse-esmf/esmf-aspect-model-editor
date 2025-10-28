@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {StartupService} from '@ame/app/startup.service';
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
 import {MxGraphHelper, ThemeService} from '@ame/mx-graph';
 import {ConfigurationService} from '@ame/settings-dialog';
@@ -19,6 +20,7 @@ import {LanguageTranslationService} from '@ame/translation';
 import {SearchesStateService} from '@ame/utils';
 import {Component, HostListener, inject, Injector, OnInit} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
+import {take} from 'rxjs';
 
 @Component({
   selector: 'ame-root',
@@ -35,6 +37,7 @@ export class AppComponent implements OnInit {
   private themeService = inject(ThemeService);
   private translate = inject(LanguageTranslationService);
   private searchesStateService = inject(SearchesStateService);
+  private startupService = inject(StartupService);
   private injector = inject(Injector);
 
   private language = 'en';
@@ -62,6 +65,8 @@ export class AppComponent implements OnInit {
     if (window.location.search.includes('?e2e=true')) {
       return;
     }
+
+    this.startupService.listenForLoading().pipe(take(1)).subscribe();
   }
 
   @HostListener('window:keydown.control.f')

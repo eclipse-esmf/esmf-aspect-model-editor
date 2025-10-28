@@ -12,22 +12,47 @@
  */
 
 import {FileHandlingService, ModelLoaderService} from '@ame/editor';
-import {ElectronSignals, ElectronSignalsService, LoadingScreenService, ModelSavingTrackerService, StartupPayload} from '@ame/shared';
+import {MxGraphService} from '@ame/mx-graph';
+import {ElectronSignalsService, ElectronTunnelService, LoadingScreenService, ModelSavingTrackerService, StartupPayload} from '@ame/shared';
+import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
-import {Injectable, NgZone, inject} from '@angular/core';
-import {Observable, of, switchMap, tap} from 'rxjs';
+import {inject, Injectable, NgZone} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
+import {from, Observable, of, sample, switchMap, tap} from 'rxjs';
+import {filter} from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class StartupService {
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
-  private modelSaveTracker = inject(ModelSavingTrackerService);
-  private loadingScreenService = inject(LoadingScreenService);
-  private fileHandlingService = inject(FileHandlingService);
-  private translate = inject(LanguageTranslationService);
-  private ngZone = inject(NgZone);
+  private mxGraphService = inject(MxGraphService);
+  private electronSignalsService = inject(ElectronSignalsService);
+  private electronTunnelService = inject(ElectronTunnelService);
   private modelLoaderService = inject(ModelLoaderService);
+  private modelSaveTrackerService = inject(ModelSavingTrackerService);
+  private fileHandlingService = inject(FileHandlingService);
+  private loadingScreenService = inject(LoadingScreenService);
+  private sidebarStateService = inject(SidebarStateService);
+  private translate = inject(LanguageTranslationService);
+  private router = inject(Router);
+  private ngZone = inject(NgZone);
 
-  loadModel(model: string): Observable<any> {
+  listenForLoading() {
+    return this.router.events.pipe(
+      filter(ev => ev instanceof NavigationEnd && ev.url.includes('/editor')),
+      switchMap(() => this.electronTunnelService.startUpData$.asObservable()),
+      sample(this.mxGraphService.graphInitialized$.pipe(filter(Boolean))),
+      filter(data => {
+        if (data?.model) return true;
+
+        this.fileHandlingService.createEmptyModel();
+        return false;
+      }),
+      switchMap(({model}) => this.loadModel(model)),
+      tap(() => this.sidebarStateService.workspace.refresh()),
+      switchMap(() => from(this.router.navigate([]))),
+    );
+  }
+
+  private loadModel(model: string): Observable<any> {
     let options: StartupPayload;
     this.ngZone.run(() =>
       this.loadingScreenService.open({
@@ -53,7 +78,7 @@ export class StartupService {
         ),
       ),
       tap(() => {
-        this.modelSaveTracker.updateSavedModel();
+        this.modelSaveTrackerService.updateSavedModel();
         this.loadingScreenService.close();
       }),
     );
