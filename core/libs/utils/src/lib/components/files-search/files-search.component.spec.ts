@@ -5,6 +5,7 @@ import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {provideHttpClient} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
+import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -51,7 +52,7 @@ describe('Files search', () => {
         }),
         MockProvider(SearchesStateService),
         MockProvider(SidebarStateService, {
-          namespacesState: {namespaces: []} as any,
+          namespacesState: {namespaces: signal({})} as any,
           updateWorkspace: jest.fn(() => of({})) as any,
         }),
         MockProvider(MatDialog),

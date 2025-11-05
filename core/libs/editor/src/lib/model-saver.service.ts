@@ -106,15 +106,18 @@ export class ModelSaverService {
         const copyright = this.settings.copyrightHeader.join('\n');
         const contentWithCopyright = `${copyright}\n${content}`;
 
-        const saveModel = () =>
-          this.modelApiService.saveAspectModel(
-            contentWithCopyright,
-            this.currentFile?.getAnyAspectModelUrn(),
-            this.currentFile?.absoluteName || '',
-          );
+        const originalAspectModelUrn = this.currentFile?.originalAspectModelUrn;
+        const newAspectModelUrn = this.currentFile?.getAnyAspectModelUrn();
 
-        if (this.currentFile?.isNameChanged) {
-          return this.modelApiService.deleteAspectModel(this.currentFile?.originalAspectModelUrn).pipe(switchMap(saveModel));
+        const saveModel = () =>
+          this.modelApiService.saveAspectModel(contentWithCopyright, newAspectModelUrn, this.currentFile?.absoluteName || '');
+
+        if (this.currentFile) {
+          this.currentFile.originalAspectModelUrn = newAspectModelUrn;
+        }
+
+        if (this.currentFile?.isNameChanged || this.currentFile?.isNamespaceChanged) {
+          return this.modelApiService.deleteAspectModel(originalAspectModelUrn).pipe(switchMap(saveModel));
         }
 
         return saveModel();

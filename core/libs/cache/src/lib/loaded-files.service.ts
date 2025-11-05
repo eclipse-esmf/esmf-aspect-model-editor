@@ -23,6 +23,7 @@ export interface LoadedFilePayload {
   absoluteName: string;
   rendered?: boolean;
   fromWorkspace?: boolean;
+  aspectModelUrn?: string;
 }
 
 export interface UpdateFilePayload {
@@ -160,6 +161,7 @@ export class LoadedFilesService {
     newFile.rendered = Boolean(fileInfo.rendered);
     newFile.originalName = newFile.name;
     newFile.originalNamespace = newFile.namespace;
+    newFile.originalAspectModelUrn = fileInfo.aspectModelUrn;
     newFile.sharedRdfModel = fileInfo.sharedRdfModel;
     if (this.files[newFile.absoluteName] && this.files[newFile.absoluteName].fromWorkspace) {
       this.files[newFile.absoluteName + '_workspace_duplicate'] = this.files[newFile.absoluteName];

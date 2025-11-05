@@ -170,6 +170,7 @@ export class FileHandlingService {
         switchMap((rdfAspectModel: string) =>
           this.modelLoaderService.renderModel({
             rdfAspectModel,
+            aspectModelUrn,
             namespaceFileName: absoluteFileName,
             fromWorkspace: true,
           }),

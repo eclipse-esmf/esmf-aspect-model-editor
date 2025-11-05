@@ -150,6 +150,7 @@ export class WorkspaceFileElementsComponent implements OnInit {
             rdfAspectModel: content,
             fromWorkspace: true,
             namespaceFileName: absoluteName,
+            aspectModelUrn,
           }),
         ),
         first(),

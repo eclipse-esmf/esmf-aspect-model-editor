@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {LoadedFilesService} from '@ame/cache';
-import {MxGraphAttributeService, MxGraphService, MxGraphShapeSelectorService, ShapeLanguageRemover} from '@ame/mx-graph';
+import {MxGraphService, ShapeLanguageRemover} from '@ame/mx-graph';
 import {AlertService, LoadingScreenService, TitleService} from '@ame/shared';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {NgClass} from '@angular/common';
@@ -132,8 +132,7 @@ export class SettingDialogComponent {
   private alertService = inject(AlertService);
   private mxGraphService = inject(MxGraphService);
   private sammLangService = inject(SammLanguageSettingsService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
-  private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
+  private shapeLanguageRemover = inject(ShapeLanguageRemover);
   private loadingScreen = inject(LoadingScreenService);
   private titleService = inject(TitleService);
   private loadedFilesService = inject(LoadedFilesService);
@@ -306,7 +305,8 @@ export class SettingDialogComponent {
 
       try {
         this.mxGraphService.updateGraph((): void => {
-          new ShapeLanguageRemover(this.formService.getLanguagesToBeRemove().map((entry: string) => entry)).removeUnnecessaryLanguages();
+          const languagesToRemove = this.formService.getLanguagesToBeRemove().map((entry: string) => entry);
+          this.shapeLanguageRemover.removeUnnecessaryLanguages(languagesToRemove);
         });
       } finally {
         this.sammLangService.setSammLanguageCodes(aspectModelLanguages);

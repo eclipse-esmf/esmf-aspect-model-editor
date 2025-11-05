@@ -170,10 +170,11 @@ export class ElementModelService {
         }
 
         const loadedFile = this.loadedFilesService.currentLoadedFile;
+        const oldAbsoluteName = loadedFile.absoluteName;
         this.modelService.removeAspect();
         this.removeElementData(cell);
 
-        this.loadedFilesService.updateAbsoluteName(loadedFile.absoluteName, `${loadedFile.namespace}:${data.name}`);
+        this.loadedFilesService.updateAbsoluteName(oldAbsoluteName, `${loadedFile.namespace}:${data.name}`);
         this.titleService.updateTitle(loadedFile.absoluteName);
       });
     });

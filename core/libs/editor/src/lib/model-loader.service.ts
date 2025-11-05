@@ -48,7 +48,7 @@ export class ModelLoaderService {
   }
 
   /**
-   * Loads a model with it's dependencies and renders it
+   * Loads a model with its dependencies and renders it
    */
   renderModel(payload: LoadModelPayload) {
     this.settings.copyrightHeader = RdfModelUtil.extractCommentsFromRdfContent(payload.rdfAspectModel);
@@ -115,6 +115,12 @@ export class ModelLoaderService {
           // using switchMap to force an this functionality to run before any tap after this
           switchMap(loadedFile => {
             loadedFile.rdfModel = rdfModels[currentFileKey];
+
+            if (!payload.aspectModelUrn) {
+              payload.aspectModelUrn =
+                this.getAspectUrn(loadedFile.rdfModel) || loadedFile.rdfModel.store.getSubjects(null, null, null)[0].value;
+            }
+
             // registering all loaded files
             const currentFile = this.registerFiles(rdfModels, loadedFile, payload, render);
             currentFile.namespaceFiles = files;
@@ -355,6 +361,7 @@ export class ModelLoaderService {
           absoluteName: isCurrentFile ? payload.namespaceFileName || '' : key,
           rendered: isCurrentFile && render,
           fromWorkspace: payload.fromWorkspace,
+          aspectModelUrn: payload.aspectModelUrn,
         },
         isCurrentFile,
       );

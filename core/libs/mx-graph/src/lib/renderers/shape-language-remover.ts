@@ -11,36 +11,32 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {inject} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {MxGraphHelper} from '../helpers';
 import {MxGraphAttributeService, MxGraphService, MxGraphShapeSelectorService} from '../services';
 
+@Injectable({providedIn: 'root'})
 export class ShapeLanguageRemover {
   private mxGraphService = inject(MxGraphService);
   private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
   private mxGraphAttributeService = inject(MxGraphAttributeService);
-  private locals: Array<string>;
 
-  constructor(locals: Array<string>) {
-    this.locals = locals;
-  }
-
-  removeUnnecessaryLanguages(): NamedElement {
+  removeUnnecessaryLanguages(locales: string[]) {
     this.mxGraphAttributeService.graph.getChildCells(this.mxGraphAttributeService.graph.getDefaultParent()).forEach(mxCell => {
       const modelElement = MxGraphHelper.getModelElement(mxCell);
       if (!modelElement) {
         return;
       }
 
-      this.removeLanguageInformation(modelElement);
+      this.removeLanguageInformation(modelElement, locales);
     });
 
     return MxGraphHelper.getModelElement(this.mxGraphShapeSelectorService.getAspectCell());
   }
 
-  private removeLanguageInformation(element: NamedElement) {
-    this.locals.forEach(locale => {
+  private removeLanguageInformation(element: NamedElement, locales: string[]) {
+    locales.forEach(locale => {
       if (element.getPreferredName(locale)) {
         console.info(`Delete '${element.getPreferredName(locale)}@${locale}' from ${element.aspectModelUrn}`);
       }
