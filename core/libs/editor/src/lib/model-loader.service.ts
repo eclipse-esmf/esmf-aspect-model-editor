@@ -112,22 +112,25 @@ export class ModelLoaderService {
           aspectModelUrn: this.getAspectUrn(rdfModels[currentFileKey]),
         }).pipe(
           takeUntilDestroyed(this.destroyRef),
-          // using switchMap to force an this functionality to run before any tap after this
+          // using switchMap to force this functionality to run before any tap after this
           switchMap(loadedFile => {
-            loadedFile.rdfModel = rdfModels[currentFileKey];
-
             if (!payload.aspectModelUrn) {
               payload.aspectModelUrn =
                 this.getAspectUrn(loadedFile.rdfModel) || loadedFile.rdfModel.store.getSubjects(null, null, null)[0].value;
             }
 
+            const mergedFile = {...loadedFile, rdfModel: rdfModels[currentFileKey]};
             // registering all loaded files
-            const currentFile = this.registerFiles(rdfModels, loadedFile, payload, render);
+            const currentFile = this.registerFiles(rdfModels, mergedFile, payload, render);
             currentFile.namespaceFiles = files;
             // loading all isolated elements
-            this.instantiatorService.instantiateRemainingElements(rdfModels[currentFileKey], loadedFile.cachedElements);
+            this.instantiatorService.instantiateRemainingElements(
+              loadedFile.rdfModel,
+              rdfModels[currentFileKey],
+              loadedFile.cachedElements,
+            );
             // filtering and registering the elements by their location in files
-            this.moveElementsToTheirCacheFile(rdfModels, loadedFile, payload);
+            this.moveElementsToTheirCacheFile(rdfModels, mergedFile, payload);
 
             return of(
               render
