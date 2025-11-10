@@ -36,6 +36,7 @@ import {
   ModelSavingTrackerService,
   NotificationsService,
   SaveValidateErrorsCodes,
+  TitleService,
 } from '@ame/shared';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
@@ -105,6 +106,7 @@ export class FileHandlingService {
   private modelLoaderService = inject(ModelLoaderService);
   private loadedFilesService = inject(LoadedFilesService);
   private modelSaverService = inject(ModelSaverService);
+  private titleService = inject(TitleService);
 
   get currentLoadedFile() {
     return this.loadedFilesService.currentLoadedFile;
@@ -211,14 +213,16 @@ export class FileHandlingService {
       }
     }
 
-    const emptyNamespace = 'urn:samm:com.example:1.0.0';
-    const rdfModel = new RdfModel(new Store(), GeneralConfig.sammVersion, emptyNamespace);
+    const model = 'new-model.ttl';
+    const namespace = 'com.examples:1.0.0';
+    const absoluteName = `${namespace}:${model}`;
+    const rdfModel = new RdfModel(new Store(), GeneralConfig.sammVersion, `urn:samm:${namespace}`);
 
     this.loadedFilesService.addFile({
       rdfModel,
+      absoluteName,
       cachedFile: new ModelElementCache(),
       aspect: null,
-      absoluteName: 'com.example:1.0.0:empty.ttl',
       rendered: true,
       fromWorkspace: false,
     });
@@ -230,6 +234,7 @@ export class FileHandlingService {
     }
 
     this.modelSaveTracker.updateSavedModel(true);
+    this.titleService.updateTitle(absoluteName);
   }
 
   onCopyToClipboard() {
