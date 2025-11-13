@@ -19,8 +19,6 @@ import {
   ElementListComponent,
   LeftInputFieldComponent,
   RightInputFieldComponent,
-  StateCharacteristicComponent,
-  StructuredValueComponent,
   UnitInputFieldComponent,
   ValuesInputFieldComponent,
 } from '@ame/editor';
@@ -29,6 +27,8 @@ import {ChangeDetectorRef, Component, DestroyRef, Input, OnInit, inject} from '@
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormGroup} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
+import {StateCharacteristicComponent} from '../../components/characteristics/state-characteristic/state-characteristic.component';
+import {StructuredValueComponent} from '../../components/characteristics/structured-value/structured-value.component';
 import {EditorModelService} from '../../editor-model.service';
 import {PreviousFormDataSnapshot} from '../../interfaces';
 

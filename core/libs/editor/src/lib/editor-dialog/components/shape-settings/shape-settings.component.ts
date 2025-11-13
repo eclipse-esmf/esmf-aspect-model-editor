@@ -116,7 +116,6 @@ export class ShapeSettingsComponent implements OnInit, OnChanges {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(metaModelElement => {
         this.metaModelElement = metaModelElement;
-        this.formGroup == new FormGroup({});
         this.changeDetector.detectChanges();
       });
   }

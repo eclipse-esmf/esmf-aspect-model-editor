@@ -12,7 +12,8 @@
  */
 import {LoadedFilesService} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
-import {CounterPipe, ElementIconComponent, sammElements} from '@ame/shared';
+import {ElementIconComponent, sammElements} from '@ame/shared';
+import {CounterPipe} from '@ame/shared/pipes';
 import {NgClass} from '@angular/common';
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {MatIconButton} from '@angular/material/button';
