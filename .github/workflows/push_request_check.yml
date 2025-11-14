@@ -49,6 +49,7 @@ jobs:
         run: |
           npm ci --include=optional
           npm rebuild nx --update-binary
+          npx cypress install
         working-directory: core
 
       - name: Identifying and reporting lint patterns
