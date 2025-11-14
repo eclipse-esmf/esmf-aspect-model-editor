@@ -13,6 +13,7 @@
 
 /// <reference types="Cypress" />
 
+import {NAMESPACES_URL, SAMM_VERSION_ACTUAL} from '../../../support/api-mocks';
 import {
   SELECTOR_ecProperty,
   SELECTOR_openNamespacesButton,
@@ -26,7 +27,7 @@ describe('Test drag and drop ext properties', () => {
   const fileName = 'external-property-reference.ttl';
   it("can add Property with children's from external reference different namespace", () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       statusCode: 200,
       body: {
         'org.eclipse.different': [
@@ -36,6 +37,7 @@ describe('Test drag and drop ext properties', () => {
               {
                 model: fileName,
                 aspectModelUrn: 'urn:samm:org.eclipse.different:1.0.0#externalPropertyWithChildren',
+                version: SAMM_VERSION_ACTUAL,
                 existing: true,
               },
             ],

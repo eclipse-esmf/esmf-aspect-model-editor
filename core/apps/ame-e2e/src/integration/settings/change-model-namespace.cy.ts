@@ -13,6 +13,7 @@
  */
 
 /// <reference types="Cypress" />
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 import 'cypress-real-events';
 import {
@@ -45,14 +46,14 @@ describe('Test namespace settings dialog', () => {
   // Skip this test until further fixing
   describe.skip('Test changing model namespace version', () => {
     it('should change namespace and version and save aspect model', () => {
-      cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+      cy.intercept('GET', NAMESPACES_URL, {statusCode: 200, body: {}});
 
       cy.visitDefault();
       cy.fixture('/change-namespace/aspect-workspace-one')
         .as('rdfString')
         .then(rdfString => cy.loadModel(rdfString));
 
-      cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+      cy.intercept('GET', NAMESPACES_URL, {
         statusCode: 200,
         body: {
           'org.eclipse.examples.one': [
@@ -83,7 +84,7 @@ describe('Test namespace settings dialog', () => {
 
       cy.saveAspectModelToWorkspace().then(() => cy.get(SELECTOR_workspaceBtn).click());
 
-      cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+      cy.intercept('GET', NAMESPACES_URL, {
         statusCode: 200,
         body: {
           'org.eclipse.examples.one': [
@@ -141,7 +142,7 @@ describe('Test namespace settings dialog', () => {
     });
 
     it('should change name of aspect element and save to workspace', () => {
-      cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+      cy.intercept('GET', NAMESPACES_URL, {
         statusCode: 200,
         body: {
           'org.eclipse.examples.one': [

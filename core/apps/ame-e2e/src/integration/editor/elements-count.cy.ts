@@ -13,6 +13,7 @@
  */
 
 /// <reference types="Cypress" />
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 import {setUpDynamicModellingInterceptors, setUpStaticModellingInterceptors} from '../../support/api-mocks';
 import {SELECTOR_workspaceBtn} from '../../support/constants';
@@ -21,7 +22,7 @@ import {SELECTOR_workspaceBtn} from '../../support/constants';
 describe('Elements count', () => {
   describe('Movement model', () => {
     it('should display elements count for incoming & outgoing edges', () => {
-      cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+      cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
       cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       cy.visitDefault();
       cy.fixture('/default-models/movement.txt')
@@ -103,7 +104,7 @@ describe('Elements count', () => {
 
     // TODO check the models and create a valid namespaces response
     it.skip('should display elements count in sidebar', () => {
-      cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+      cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
       cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       const namespacesConfig = {
         'org.eclipse.examples.aspect': {

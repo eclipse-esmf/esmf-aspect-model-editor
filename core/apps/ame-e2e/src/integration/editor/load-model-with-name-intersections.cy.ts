@@ -13,11 +13,12 @@
  */
 
 /// <reference types="Cypress" />
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 describe('Test models with intersected names', () => {
   describe('PredefinedAndCustomCharacteristicsSameName', () => {
     it('should load "PredefinedAndCustomCharacteristicsSameName" model', () => {
-      cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+      cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
       cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
       cy.visitDefault();
       cy.fixture('predefined-and-custom-characteristics-same-name')

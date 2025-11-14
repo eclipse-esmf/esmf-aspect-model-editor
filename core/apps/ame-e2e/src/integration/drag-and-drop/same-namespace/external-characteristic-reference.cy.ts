@@ -13,6 +13,7 @@
 
 /// <reference types="Cypress" />
 
+import {NAMESPACES_URL, SAMM_VERSION_ACTUAL} from '../../../support/api-mocks';
 import {
   SELECTOR_ecCharacteristic,
   SELECTOR_openNamespacesButton,
@@ -26,10 +27,10 @@ describe('Test drag and drop ext characteristic', () => {
   it('can add Characteristic from external reference with same namespace', () => {
     const fileName = 'external-characteristic-reference.ttl';
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.examples.aspect:1.0.0': [fileName],
     });
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       statusCode: 200,
       body: {
         'org.eclipse.examples.aspect': [
@@ -39,6 +40,7 @@ describe('Test drag and drop ext characteristic', () => {
               {
                 model: fileName,
                 aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#ExternalCharacteristic',
+                version: SAMM_VERSION_ACTUAL,
                 existing: true,
               },
             ],

@@ -12,6 +12,7 @@
  */
 
 /// <reference types="Cypress" />
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 import {
   FIELD_characteristicName,
@@ -88,7 +89,7 @@ describe('Characteristic', () => {
   for (const field of fields) {
     describe(`${field.name} Field`, () => {
       it('should create and rename Characteristic', () => {
-        cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+        cy.intercept('GET', NAMESPACES_URL, {statusCode: 200, body: {}});
         cy.visitDefault();
         cy.startModelling()
           .then(() => cy.shapeExists('AspectDefault'))

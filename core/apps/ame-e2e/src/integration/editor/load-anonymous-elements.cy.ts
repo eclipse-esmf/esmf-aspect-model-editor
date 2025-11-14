@@ -12,10 +12,11 @@
  */
 
 /// <reference types="Cypress" />
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 describe('Test load aspect model with anonymous elements', () => {
   it('load aspect model with anonymous elements', () => {
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
     cy.fixture('anonymous-elements')

@@ -13,6 +13,7 @@
  */
 
 /// <reference types="Cypress" />
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 import {
   FIELD_constraintName,
@@ -34,7 +35,7 @@ import {cyHelp} from '../../support/helpers';
 
 describe('Test load different characteristics', () => {
   it('can load characteristic classes', () => {
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
     cy.fixture('all-characteristic')

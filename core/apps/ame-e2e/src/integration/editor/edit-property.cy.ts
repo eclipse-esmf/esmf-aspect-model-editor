@@ -13,6 +13,7 @@
  */
 
 /// <reference types="Cypress" />
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 import {
   FIELD_characteristicName,
@@ -76,7 +77,7 @@ describe('Test edit property', () => {
     const fileNameOne = 'external-property-reference.ttl';
 
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.examples.aspect:1.0.0': [fileNameOne],
     });
 
@@ -310,7 +311,7 @@ describe('Test edit property', () => {
   });
 
   it('should not allow to put 2 properties with the same name', () => {
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept('GET', NAMESPACES_URL, {statusCode: 200, body: {}});
 
     cy.visitDefault();
     cy.startModelling()

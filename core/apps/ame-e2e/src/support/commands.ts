@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/// <reference types="cypress" />
+/// <reference types="Cypress" />
 
 import {FileHandlingService, GenerateHandlingService} from '@ame/editor';
 import {MxGraphAttributeService} from '@ame/mx-graph';
@@ -22,6 +22,7 @@ import {SearchesStateService} from '@ame/utils';
 import {Aspect} from '@esmf/aspect-model-loader';
 import 'cypress-file-upload';
 import {mxgraphFactory} from 'mxgraph-factory';
+import {NAMESPACES_URL} from './api-mocks';
 import {FIELD_see, SELECTOR_editorSaveButton, SELECTOR_tbConnectButton} from './constants';
 import {cyHelp} from './helpers';
 
@@ -514,7 +515,7 @@ Cypress.Commands.add('startModelling', (ownNamespaceInterceptor = false) => {
 
   if (!ownNamespaceInterceptor) {
     // TODO we have to move this somewhere else, because it is not needed for every test
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept('GET', NAMESPACES_URL, {statusCode: 200, body: {}});
   }
 
   return cy.fixture('/default-models/aspect-default.txt', 'utf-8').then(model => cyHelp.loadModel(model));
@@ -630,7 +631,7 @@ Cypress.Commands.add('searchesStateService', () => {
 Cypress.Commands.add('namespacesManagerService', () => {
   return cy.window().then(win => {
     const namespacesManagerService: NamespacesManagerService = win['angular.namespacesManagerService'];
-    return namespacesManagerService.exportNamespaces().subscribe();
+    return namespacesManagerService.onExportNamespaces();
   });
 });
 

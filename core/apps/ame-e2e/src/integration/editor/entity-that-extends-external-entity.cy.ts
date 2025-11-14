@@ -12,6 +12,7 @@
  */
 
 /// <reference types="Cypress" />
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 import {SELECTOR_notificationsBtn, SELECTOR_notificationsDialogCloseButton} from '../../support/constants';
 
@@ -39,7 +40,7 @@ describe.skip('Test loading aspect with extended external Entity', () => {
 
   it('should load a model with an entity that extends an external entity in same namespace', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.examples:1.0.0': ['example.txt'],
     });
 
@@ -79,7 +80,7 @@ describe.skip('Test loading aspect with extended external Entity', () => {
 
   it('should load a model with an entity that extends an external entity in different namespace', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['example.txt'],
     });
 

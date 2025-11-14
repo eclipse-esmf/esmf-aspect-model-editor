@@ -13,6 +13,7 @@
 
 /// <reference types="Cypress" />
 
+import {NAMESPACES_URL, SAMM_VERSION_ACTUAL} from '../../../support/api-mocks';
 import {
   SELECTOR_ecConstraint,
   SELECTOR_ecTrait,
@@ -28,7 +29,7 @@ describe('Test drag and drop ext constraint', () => {
   it('can add Constraint from external reference with same namespace', () => {
     const fileName = 'external-constraint-reference.ttl';
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       statusCode: 200,
       body: {
         'org.eclipse.examples.aspect': [
@@ -38,6 +39,7 @@ describe('Test drag and drop ext constraint', () => {
               {
                 model: fileName,
                 aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#ExternalConstraint',
+                version: SAMM_VERSION_ACTUAL,
                 existing: true,
               },
             ],

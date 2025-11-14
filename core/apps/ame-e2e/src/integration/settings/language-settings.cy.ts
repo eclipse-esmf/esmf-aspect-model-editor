@@ -13,13 +13,14 @@
  */
 
 /// <reference types="Cypress" />
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 import {SELECTOR_alertRightButton, SELECTOR_settingsButton, SettingsDialogSelectors} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
 describe('Test language settings', () => {
   it('can open settings dialog', () => {
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
 
     cy.visitDefault();
     cy.wait(1000);
@@ -33,7 +34,7 @@ describe('Test language settings', () => {
   });
 
   it('can add new language', () => {
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
 
     cy.get(SELECTOR_settingsButton)
       .click()
@@ -58,7 +59,7 @@ describe('Test language settings', () => {
   });
 
   it('can delete and remove all multi language information in the loaded model', () => {
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
 
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();

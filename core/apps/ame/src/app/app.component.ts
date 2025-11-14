@@ -101,6 +101,7 @@ export class AppComponent implements OnInit {
   }
 
   setContextMenu(): void {
+    if (!window.require) return;
     const {Menu} = window.require('@electron/remote');
     const {shell} = window.require('electron');
 

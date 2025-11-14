@@ -13,12 +13,13 @@
  */
 
 /// <reference types="Cypress" />
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 // TODO redo all interceptors
 describe.skip('Test drag and drop', () => {
   it('Loading property element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
     });
 
@@ -74,7 +75,7 @@ describe.skip('Test drag and drop', () => {
 
   it('Loading model with "Entity" -> "Property (external, with children, different namespace)" relations', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
     });
 
@@ -124,7 +125,7 @@ describe.skip('Test drag and drop', () => {
 
   it('Loading operation element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-operation-reference-with-children.txt'],
     });
 
@@ -202,7 +203,7 @@ describe.skip('Test drag and drop', () => {
 
   it('Loading characteristic element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-characteristic-reference.txt'],
     });
 
@@ -259,7 +260,7 @@ describe.skip('Test drag and drop', () => {
 
   it('Loading entity element with there children from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-entity-reference.txt'],
     });
 
@@ -315,7 +316,7 @@ describe.skip('Test drag and drop', () => {
 
   it('Loading unit element from external file with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-unit-reference.txt'],
     });
 
@@ -361,7 +362,7 @@ describe.skip('Test drag and drop', () => {
 
   it('Loading different elements from several external files with different namespace', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': [
         'external-entity-reference.txt',
         'external-characteristic-reference.txt',
