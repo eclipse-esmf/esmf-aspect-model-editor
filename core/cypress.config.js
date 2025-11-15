@@ -30,11 +30,6 @@ module.exports = defineConfig({
   pageLoadTimeout: 60000,
   responseTimeout: 60000,
   e2e: {
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
-    setupNodeEvents(on, config) {
-      return require('apps/ame-e2e/src/plugins/index.js')(on, config);
-    },
     testIsolation: false,
     specPattern: [
       'apps/ame-e2e/src/integration/drag-and-drop/*.ts',

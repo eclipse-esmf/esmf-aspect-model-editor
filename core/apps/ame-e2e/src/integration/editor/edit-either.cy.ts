@@ -11,8 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/// <reference types="Cypress" />
-
 import {
   FIELD_characteristicName,
   FIELD_descriptionen,

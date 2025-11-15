@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout project
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Cache node modules
         uses: actions/cache@v3
@@ -36,7 +36,7 @@ jobs:
           chrome-version: stable
 
       - name: Setup NodeJs
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'

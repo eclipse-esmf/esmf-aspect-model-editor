@@ -44,7 +44,6 @@
       "@esmf/aspect-model-loader": ["libs/aspect-model-loader/src/index.ts"]
     },
     "typeRoots": ["node_modules/@types", "node_modules/@typed-mxgraph"],
-    "types": ["node", "jest"],
     "lib": ["es2018", "dom"]
   },
   "exclude": ["node_modules", "tmp"]

@@ -12,6 +12,7 @@
  */
 
 @use '@angular/material' as mat;
+@use 'sass:map';
 
 @include mat.elevation-classes();
 @include mat.app-background();
@@ -21,123 +22,65 @@ $ame-colors: (
   primary: var(--ame-primary),
   accent: var(--ame-accent),
   warn: var(--ame-error),
+  font: var(--ame-font),
 );
 
-$ame-primary-light: (
-  50: map-get($ame-colors, primary),
-  100: map-get($ame-colors, primary),
-  200: map-get($ame-colors, primary),
-  300: map-get($ame-colors, primary),
-  400: map-get($ame-colors, primary),
-  500: map-get($ame-colors, primary),
-  600: map-get($ame-colors, primary),
-  700: map-get($ame-colors, primary),
-  800: map-get($ame-colors, primary),
-  900: map-get($ame-colors, primary),
-  A100: map-get($ame-colors, primary),
-  A200: map-get($ame-colors, primary),
-  A400: map-get($ame-colors, primary),
-  A700: map-get($ame-colors, primary),
-  contrast: (
-    50: var(--ame-font),
-    100: var(--ame-font),
-    200: var(--ame-font),
-    300: var(--ame-font),
-    400: var(--ame-font),
-    500: var(--ame-font),
-    600: var(--ame-font),
-    700: var(--ame-font),
-    800: var(--ame-font),
-    900: var(--ame-font),
-    A100: var(--ame-font),
-    A200: var(--ame-font),
-    A400: var(--ame-font),
-    A700: var(--ame-font),
-  ),
-);
+@function ame-css-var-palette($color-var, $font-var: map.get($ame-colors, font)) {
+  @return (
+    50: $color-var,
+    100: $color-var,
+    200: $color-var,
+    300: $color-var,
+    400: $color-var,
+    500: $color-var,
+    600: $color-var,
+    700: $color-var,
+    800: $color-var,
+    900: $color-var,
+    A100: $color-var,
+    A200: $color-var,
+    A400: $color-var,
+    A700: $color-var,
+    contrast: (
+      50: $font-var,
+      100: $font-var,
+      200: $font-var,
+      300: $font-var,
+      400: $font-var,
+      500: $font-var,
+      600: $font-var,
+      700: $font-var,
+      800: $font-var,
+      900: $font-var,
+      A100: $font-var,
+      A200: $font-var,
+      A400: $font-var,
+      A700: $font-var,
+    )
+  );
+}
 
-$ame-accent-light: (
-  50: map-get($ame-colors, accent),
-  100: map-get($ame-colors, accent),
-  200: map-get($ame-colors, accent),
-  300: map-get($ame-colors, accent),
-  400: map-get($ame-colors, accent),
-  500: map-get($ame-colors, accent),
-  600: map-get($ame-colors, accent),
-  700: map-get($ame-colors, accent),
-  800: map-get($ame-colors, accent),
-  900: map-get($ame-colors, accent),
-  A100: map-get($ame-colors, accent),
-  A200: map-get($ame-colors, accent),
-  A400: map-get($ame-colors, accent),
-  A700: map-get($ame-colors, accent),
-  contrast: (
-    50: var(--ame-font),
-    100: var(--ame-font),
-    200: var(--ame-font),
-    300: var(--ame-font),
-    400: var(--ame-font),
-    500: var(--ame-font),
-    600: var(--ame-font),
-    700: var(--ame-font),
-    800: var(--ame-font),
-    900: var(--ame-font),
-    A100: var(--ame-font),
-    A200: var(--ame-font),
-    A400: var(--ame-font),
-    A700: var(--ame-font),
-  ),
-);
+$ame-primary-palette: ame-css-var-palette(map.get($ame-colors, primary));
+$ame-accent-palette: ame-css-var-palette(map.get($ame-colors, accent));
+$ame-warn-palette: ame-css-var-palette(map.get($ame-colors, warn), white);
 
-$ame-warn-light: (
-  50: map-get($ame-colors, warn),
-  100: map-get($ame-colors, warn),
-  200: map-get($ame-colors, warn),
-  300: map-get($ame-colors, warn),
-  400: map-get($ame-colors, warn),
-  500: map-get($ame-colors, warn),
-  600: map-get($ame-colors, warn),
-  700: map-get($ame-colors, warn),
-  800: map-get($ame-colors, warn),
-  900: map-get($ame-colors, warn),
-  A100: map-get($ame-colors, warn),
-  A200: map-get($ame-colors, warn),
-  A400: map-get($ame-colors, warn),
-  A700: map-get($ame-colors, warn),
-  contrast: (
-    50: white,
-    100: white,
-    200: white,
-    300: white,
-    400: white,
-    500: white,
-    600: white,
-    700: white,
-    800: white,
-    900: white,
-    A100: white,
-    A200: white,
-    A400: white,
-    A700: white,
-  ),
-);
-
-$ame-primary-light: mat.m2-define-palette(mat.$m2-indigo-palette);
-$ame-accent-light: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
-$ame-warn-light: mat.m2-define-palette(mat.$m2-red-palette);
+// Material palette objects
+$ame-primary: mat.m2-define-palette($ame-primary-palette);
+$ame-accent: mat.m2-define-palette($ame-accent-palette);
+$ame-warn: mat.m2-define-palette($ame-warn-palette);
 
 $ame-light-theme: mat.m2-define-light-theme(
   (
     color: (
-      primary: $ame-primary-light,
-      accent: $ame-accent-light,
-      warn: $ame-warn-light,
+      primary: $ame-primary,
+      accent: $ame-accent,
+      warn: $ame-warn,
     ),
   )
 );
 
 .mat-mdc-mini-fab.mat-accent {
-  --mat-fab-small-foreground-color: var(--ame-font) !important;
+  --mat-fab-small-foreground-color: map.get($ame-colors, font) !important;
 }
 
 .mat-badge-medium .mat-badge-content {

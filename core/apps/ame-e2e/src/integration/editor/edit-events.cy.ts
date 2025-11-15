@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/// <reference types="Cypress" />
+/// <reference types="cypress" />
+
 import {NAMESPACES_URL} from '../../support/api-mocks';
 
 import {FIELD_name, SELECTOR_ecEvent, SELECTOR_elementBtn, SELECTOR_tbDeleteButton} from '../../support/constants';

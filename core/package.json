@@ -144,7 +144,7 @@
     "prettier:libs": "prettier --config ./.prettierrc --write \"./libs/**/*{.ts,.js,.json,.html,.scss}\"",
     "prettier:env": "prettier --config ./.prettierrc --write \"./environments/**/*{.ts,.js,.json,.html,.scss}\"",
     "prettier:all": "prettier --config ./.prettierrc --write \"./**/*{.ts,.js,.json,.html,.scss}\"",
-    "doc:app": "compodoc -p tsconfig.json -t --hideGenerator -d dist/docs/app",
+    "doc:app": "compodoc -p apps/ame-e2e/tsconfig.json -t --hideGenerator -d dist/docs/app",
     "start:mac": "electron . --dev",
     "start:linux": "electron . --dev",
     "start:win": ".\\node_modules\\electron\\dist\\electron.exe . --dev",

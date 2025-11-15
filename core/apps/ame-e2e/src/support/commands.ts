@@ -12,8 +12,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/// <reference types="Cypress" />
-
 import {FileHandlingService, GenerateHandlingService} from '@ame/editor';
 import {MxGraphAttributeService} from '@ame/mx-graph';
 import {NamespacesManagerService} from '@ame/namespace-manager';

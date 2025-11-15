@@ -11,6 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+/// <reference types="cypress" />
+
 import {SELECTOR_settingsButton, SettingsDialogSelectors} from '../../support/constants';
 
 describe('Auto Validate', () => {

@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/// <reference types="Cypress" />
+/// <reference types="cypress" />
 
 import {GENERATION_downloadFileButton} from '../../support/constants';
 
