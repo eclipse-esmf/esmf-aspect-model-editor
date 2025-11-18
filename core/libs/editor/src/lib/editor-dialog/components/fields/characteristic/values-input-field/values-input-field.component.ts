@@ -17,9 +17,10 @@ import {ENTER} from '@angular/cdk/keycodes';
 import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatChipGrid, MatChipInput, MatChipInputEvent, MatChipRow} from '@angular/material/chips';
+import {MatChipGrid, MatChipInput, MatChipInputEvent, MatChipRow, MatChipsModule} from '@angular/material/chips';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
 import {debounceTime} from 'rxjs/operators';
 import {EntityInstanceViewComponent} from '../../../entity-instance';
@@ -30,7 +31,7 @@ import {InputFieldComponent} from '../../input-field.component';
   templateUrl: './values-input-field.component.html',
   styleUrls: ['./values-input-field.component.scss', '../../field.scss'],
   imports: [
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     MatChipGrid,
     ReactiveFormsModule,
@@ -40,6 +41,8 @@ import {InputFieldComponent} from '../../input-field.component';
     MatInput,
     EntityInstanceViewComponent,
     MatError,
+    MatChipsModule,
+    MatIconModule,
   ],
 })
 export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumeration> implements OnInit, OnDestroy {

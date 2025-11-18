@@ -17,9 +17,10 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
-import {MatChipGrid, MatChipInput, MatChipRow} from '@angular/material/chips';
+import {MatChipGrid, MatChipInput, MatChipRow, MatChipsModule} from '@angular/material/chips';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultQuantityKind, DefaultUnit} from '@esmf/aspect-model-loader';
 import {Observable, map} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
@@ -30,7 +31,7 @@ declare const sammUDefinition: any;
   selector: 'ame-quantity-kinds-input-field',
   templateUrl: './quantity-kinds-input-field.component.html',
   imports: [
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     MatChipGrid,
     ReactiveFormsModule,
@@ -43,6 +44,8 @@ declare const sammUDefinition: any;
     AsyncPipe,
     MatOptgroup,
     MatOption,
+    MatChipsModule,
+    MatIconModule,
   ],
 })
 export class QuantityKindsInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {

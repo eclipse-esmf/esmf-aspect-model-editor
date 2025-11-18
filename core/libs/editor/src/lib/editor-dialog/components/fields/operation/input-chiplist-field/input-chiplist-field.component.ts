@@ -18,10 +18,11 @@ import {Component, ElementRef, inject, OnDestroy, OnInit, ViewChild} from '@angu
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
-import {MatChipGrid, MatChipInput, MatChipRow} from '@angular/material/chips';
+import {MatChipGrid, MatChipInput, MatChipRow, MatChipsModule} from '@angular/material/chips';
 import {ErrorStateMatcher, MatOptgroup, MatOption} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatFormField, MatLabel} from '@angular/material/input';
+import {MatError, MatLabel} from '@angular/material/input';
 import {DefaultOperation, DefaultProperty, Property, RdfModel} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
@@ -32,7 +33,7 @@ import {InputFieldComponent} from '../../input-field.component';
   templateUrl: './input-chiplist-field.component.html',
   styleUrls: ['../../field.scss'],
   imports: [
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     MatChipGrid,
     MatChipRow,
@@ -45,6 +46,8 @@ import {InputFieldComponent} from '../../input-field.component';
     MatOptgroup,
     MatOption,
     MatError,
+    MatChipsModule,
+    MatIconModule,
   ],
 })
 export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {

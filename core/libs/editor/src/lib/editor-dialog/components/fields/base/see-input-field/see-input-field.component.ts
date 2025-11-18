@@ -17,9 +17,10 @@ import {Component, inject, OnInit, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
-import {MatChipGrid, MatChipInput, MatChipRow} from '@angular/material/chips';
+import {MatChipGrid, MatChipInput, MatChipRow, MatChipsModule} from '@angular/material/chips';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 import {TranslatePipe} from '@ngx-translate/core';
@@ -37,7 +38,7 @@ interface SeeElement {
   templateUrl: './see-input-field.component.html',
   styleUrls: ['./see-input-field.component.scss', '../../field.scss'],
   imports: [
-    MatFormField,
+    MatFormFieldModule,
     MatTooltipModule,
     MatLabel,
     MatChipGrid,
@@ -52,6 +53,8 @@ interface SeeElement {
     MatOption,
     MatError,
     TranslatePipe,
+    MatChipsModule,
+    MatIconModule,
   ],
 })
 export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
