@@ -17,7 +17,7 @@
   <mat-icon>close</mat-icon>
 </button>
 
-<form (submit)="onSave()">
+<form (ngSubmit)="onSave()">
   <mat-dialog-content>
     <mat-form-field class="entity-form-field" appearance="fill">
       <mat-label for="entityValueName">{{ 'ENTITY_VALUE.NAME' | translate }}</mat-label>

@@ -15,7 +15,7 @@ import {LoadedFilesService} from '@ame/cache';
 import {config} from '@ame/shared';
 import {NgClass} from '@angular/common';
 import {Component, inject} from '@angular/core';
-import {FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
@@ -51,6 +51,7 @@ export interface NewEntityInstanceDialogOptions {
     TranslatePipe,
     EntityInstanceModalTableComponent,
     MatDialogActions,
+    FormsModule,
   ],
 })
 export class EntityInstanceModalComponent {
