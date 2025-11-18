@@ -22,8 +22,9 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatIconButton} from '@angular/material/button';
 import {MatOptgroup, MatOption, MatOptionSelectionChange} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatInputModule, MatLabel} from '@angular/material/input';
 import {
   DefaultCharacteristic,
   DefaultEither,
@@ -43,11 +44,11 @@ import {InputFieldComponent} from '../../input-field.component';
   templateUrl: './data-type-input-field.component.html',
   styleUrls: ['./data-type-input-field.component.scss', '../../field.scss'],
   imports: [
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     MatAutocompleteTrigger,
     ReactiveFormsModule,
-    MatInput,
+    MatInputModule,
     MatIconButton,
     MatIconModule,
     MatError,
