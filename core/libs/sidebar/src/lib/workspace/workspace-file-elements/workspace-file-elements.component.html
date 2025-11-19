@@ -32,37 +32,48 @@
     </button>
   </div>
 
-  <div class="elements">
-    @for (key of elementsOrder; track key) {
-      @if (searched[key].length && elements[key].displayed) {
-        <div class="elements__section" [class.expanded]="!elements[key].hidden">
-          <div class="elements__header">
-            <h3 class="elements__title">{{ elements[key].plural }} ({{ searched[key].length }})</h3>
-            @if (searched[key].length > 4) {
-              <span class="show-elements" (click)="elements[key].hidden = !elements[key].hidden">{{
-                elements[key].hidden ? ('SIDEBAR.ACTIONS.SHOW_ALL' | translate) : ('SIDEBAR.ACTIONS.SHOW_LESS' | translate)
-              }}</span>
-            }
-          </div>
+  @if (loadingElements()) {
+    <div class="loading">
+      <mat-spinner></mat-spinner>
+      <p>Loading elements...</p>
+    </div>
+  } @else {
+    <div class="elements">
+      @for (key of elementsOrder; track key) {
+        @if (searched[key].length && elements[key].displayed) {
+          <div class="elements__section" [class.expanded]="!elements[key].hidden">
+            <div class="elements__header">
+              <h3 class="elements__title">{{ elements[key].plural }} ({{ searched[key].length }})</h3>
+              @if (searched[key].length > 4) {
+                <span class="show-elements" (click)="elements[key].hidden = !elements[key].hidden">{{
+                  elements[key].hidden ? ('SIDEBAR.ACTIONS.SHOW_ALL' | translate) : ('SIDEBAR.ACTIONS.SHOW_LESS' | translate)
+                }}</span>
+              }
+            </div>
 
-          <ng-container>
-            @for (element of elements[key].hidden ? searched[key].slice(0, 5) : searched[key]; track element.aspectModelUrn) {
-              <ame-draggable-element
-                class="element"
-                [class.disabled]="elementImported(element)"
-                [type]="key"
-                [urn]="element.aspectModelUrn"
-                [matTooltip]="'SIDEBAR.DRAG_INTO_VIEW' | translate"
-              >
-                <!-- TODO Language to be replaced with language translation key  -->
-                <ame-element [type]="sammElements[key]" [name]="element.name" [description]="element.descriptions.get('en')"></ame-element>
-              </ame-draggable-element>
-            }
-          </ng-container>
-        </div>
+            <ng-container>
+              @for (element of elements[key].hidden ? searched[key].slice(0, 5) : searched[key]; track element.aspectModelUrn) {
+                <ame-draggable-element
+                  class="element"
+                  [class.disabled]="elementImported(element)"
+                  [type]="key"
+                  [urn]="element.aspectModelUrn"
+                  [matTooltip]="'SIDEBAR.DRAG_INTO_VIEW' | translate"
+                >
+                  <!-- TODO Language to be replaced with language translation key  -->
+                  <ame-element
+                    [type]="sammElements[key]"
+                    [name]="element.name"
+                    [description]="element.descriptions.get('en')"
+                  ></ame-element>
+                </ame-draggable-element>
+              }
+            </ng-container>
+          </div>
+        }
       }
-    }
-  </div>
+    </div>
+  }
 
   <mat-menu class="filter-menu" #filter>
     @for (key of elementsOrder; track key) {

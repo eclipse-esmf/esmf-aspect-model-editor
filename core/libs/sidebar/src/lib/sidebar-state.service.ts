@@ -38,7 +38,7 @@ class SidebarStateWithRefresh extends SidebarState {
   readonly refreshTick = signal(0);
 
   refresh() {
-    this.refreshTick.update(n => n + 1);
+    this.refreshTick.update(n => (n + 1) % 10);
   }
 }
 

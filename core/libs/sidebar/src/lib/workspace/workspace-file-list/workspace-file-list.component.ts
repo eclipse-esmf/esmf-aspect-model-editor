@@ -13,20 +13,18 @@
 
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
-import {ConfirmDialogService, FileHandlingService, ModelCheckerService, ModelSaverService} from '@ame/editor';
+import {ConfirmDialogService, FileHandlingService, ModelSaverService} from '@ame/editor';
 import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {KeyValuePipe} from '@angular/common';
-import {ChangeDetectorRef, Component, DestroyRef, NgZone, effect, inject} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {ChangeDetectorRef, Component, NgZone, effect, inject} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormField, MatInput} from '@angular/material/input';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {TranslatePipe} from '@ngx-translate/core';
-import {catchError, map, throwError} from 'rxjs';
 import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-dialog.enum';
 import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.component';
 
@@ -59,9 +57,7 @@ export class WorkspaceFileListComponent {
   private changeDetector = inject(ChangeDetectorRef);
   private translate = inject(LanguageTranslationService);
   private loadedFiles = inject(LoadedFilesService);
-  private modelChecker = inject(ModelCheckerService);
   private ngZone = inject(NgZone);
-  private destroyRef = inject(DestroyRef);
 
   public menuSelection: {namespace: string; file: FileStatus} = null;
   public foldedStatus = false;
@@ -81,24 +77,12 @@ export class WorkspaceFileListComponent {
 
   constructor() {
     effect(() => {
-      this.sidebarService.workspace.refreshTick();
+      const namespaces = this.sidebarService.namespacesState.namespaces();
 
-      this.modelChecker
-        .detectWorkspaceErrors()
-        .pipe(
-          takeUntilDestroyed(this.destroyRef),
-          map(files => this.sidebarService.updateWorkspace(files)),
-          catchError(error => {
-            console.log(error);
-            return throwError(() => error);
-          }),
-        )
-        .subscribe(() => {
-          for (const namespace in this.namespaces) {
-            this.searched[namespace] = this.namespaces[namespace];
-            this.folded[namespace] = this.foldedStatus;
-          }
-        });
+      for (const namespace in namespaces) {
+        this.searched[namespace] = namespaces[namespace];
+        this.folded[namespace] = this.foldedStatus;
+      }
     });
   }
 
