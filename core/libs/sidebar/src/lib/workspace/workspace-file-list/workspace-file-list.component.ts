@@ -20,8 +20,9 @@ import {LanguageTranslationService} from '@ame/translation';
 import {KeyValuePipe} from '@angular/common';
 import {ChangeDetectorRef, Component, NgZone, effect, inject} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatFormField, MatInput} from '@angular/material/input';
+import {MatInput} from '@angular/material/input';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {TranslatePipe} from '@ngx-translate/core';
@@ -33,7 +34,7 @@ import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.
   templateUrl: './workspace-file-list.component.html',
   styleUrls: ['./workspace-file-list.component.scss'],
   imports: [
-    MatFormField,
+    MatFormFieldModule,
     MatIconModule,
     MatInput,
     MatTooltip,

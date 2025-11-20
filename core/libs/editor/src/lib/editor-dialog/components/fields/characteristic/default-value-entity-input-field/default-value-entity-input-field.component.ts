@@ -15,14 +15,15 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultEntityInstance, DefaultState, EntityInstance} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-default-value-entity-input-field',
   templateUrl: './default-value-entity-input-field.component.html',
-  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatAutocomplete, MatOption, MatAutocompleteTrigger, MatInput],
+  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatAutocomplete, MatOption, MatAutocompleteTrigger, MatInput],
 })
 export class DefaultValueEntityInputFieldComponent extends InputFieldComponent<DefaultState> implements OnInit, OnDestroy {
   entityValues: EntityInstance[];

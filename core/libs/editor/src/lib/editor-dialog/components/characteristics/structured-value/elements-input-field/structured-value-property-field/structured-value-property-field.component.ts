@@ -20,8 +20,9 @@ import {Component, Input, OnInit, inject} from '@angular/core';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
 import {MatIconButton} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultCharacteristic, DefaultProperty, RdfModel} from '@esmf/aspect-model-loader';
 import {Observable, debounceTime, map, startWith} from 'rxjs';
 
@@ -30,7 +31,7 @@ import {Observable, debounceTime, map, startWith} from 'rxjs';
   templateUrl: './structured-value-property-field.component.html',
   styleUrls: ['./structured-value-property-field.component.scss'],
   imports: [
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     MatAutocompleteTrigger,
     ReactiveFormsModule,

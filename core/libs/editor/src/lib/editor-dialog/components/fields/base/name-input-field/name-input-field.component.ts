@@ -14,7 +14,8 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {
   DefaultAspect,
   DefaultCharacteristic,
@@ -33,7 +34,7 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-name-input-field',
   templateUrl: './name-input-field.component.html',
   styleUrls: ['../../field.scss'],
-  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatInput, MatError, TranslatePipe],
+  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput, MatError, TranslatePipe],
 })
 export class NameInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit, OnDestroy {
   private editorDialogValidators = inject(EditorDialogValidators);

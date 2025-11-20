@@ -13,7 +13,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatError, MatFormField, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultRegularExpressionConstraint} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -21,7 +22,7 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-regular-expression-value-input-field',
   templateUrl: './regular-expression-value-input-field.component.html',
   styleUrls: ['../../field.scss'],
-  imports: [ReactiveFormsModule, MatFormField, MatLabel, MatError],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatLabel, MatError, MatInput],
 })
 export class RegularExpressionValueInputFieldComponent
   extends InputFieldComponent<DefaultRegularExpressionConstraint>

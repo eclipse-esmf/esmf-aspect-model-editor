@@ -14,8 +14,9 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {
   MatCell,
   MatCellDef,
@@ -41,7 +42,7 @@ import {SettingsFormService} from '../../../services';
     ReactiveFormsModule,
     MatIconModule,
     MatTooltip,
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     MatInput,
     MatError,

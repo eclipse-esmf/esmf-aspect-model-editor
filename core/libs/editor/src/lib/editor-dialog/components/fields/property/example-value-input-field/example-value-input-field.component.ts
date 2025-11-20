@@ -15,7 +15,8 @@ import {simpleDataTypes} from '@ame/shared';
 import {Component, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {MatTooltip} from '@angular/material/tooltip';
 import {DefaultProperty} from '@esmf/aspect-model-loader';
@@ -24,7 +25,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-example-value-input-field',
   templateUrl: './example-value-input-field.component.html',
-  imports: [MatFormField, MatLabel, MatSelect, ReactiveFormsModule, MatOption, MatTooltip, MatInput],
+  imports: [MatFormFieldModule, MatLabel, MatSelect, ReactiveFormsModule, MatOption, MatTooltip, MatInput],
 })
 export class ExampleValueInputFieldComponent extends InputFieldComponent<DefaultProperty> implements OnInit {
   public hasComplexDataType = false;

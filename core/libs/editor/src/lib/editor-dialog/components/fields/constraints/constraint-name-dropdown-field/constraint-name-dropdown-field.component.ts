@@ -14,7 +14,8 @@
 import {Component, DestroyRef, EventEmitter, inject, OnInit, Output} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
-import {MatFormField, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {
   Constraint,
@@ -33,7 +34,7 @@ import {DropdownFieldComponent} from '../../dropdown-field.component';
 @Component({
   selector: 'ame-constraint-name-dropdown-field',
   templateUrl: './constraint-name-dropdown-field.component.html',
-  imports: [MatFormField, MatLabel, MatSelect, FormsModule, MatOption],
+  imports: [MatFormFieldModule, MatLabel, MatSelect, FormsModule, MatOption],
 })
 export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent<DefaultConstraint> implements OnInit {
   private destroyRef = inject(DestroyRef);

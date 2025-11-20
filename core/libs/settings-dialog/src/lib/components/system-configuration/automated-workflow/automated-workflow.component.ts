@@ -13,8 +13,9 @@
 
 import {Component, inject, OnInit} from '@angular/core';
 import {AbstractControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {MatSlideToggle} from '@angular/material/slide-toggle';
 import {MatTooltip} from '@angular/material/tooltip';
 import {TranslatePipe} from '@ngx-translate/core';
@@ -27,7 +28,17 @@ export const automatedWorkflowControlName = 'automatedWorkflow';
   selector: 'ame-automated-workflow-config',
   templateUrl: './automated-workflow.component.html',
   styleUrls: ['./automated-workflow.component.scss'],
-  imports: [ReactiveFormsModule, MatSlideToggle, MatIconModule, MatTooltip, MatFormField, MatLabel, MatError, MatInput, TranslatePipe],
+  imports: [
+    ReactiveFormsModule,
+    MatSlideToggle,
+    MatIconModule,
+    MatTooltip,
+    MatFormFieldModule,
+    MatLabel,
+    MatError,
+    MatInput,
+    TranslatePipe,
+  ],
 })
 export class AutomatedWorkflowComponent implements OnInit {
   private formService = inject(SettingsFormService);

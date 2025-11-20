@@ -13,7 +13,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultFixedPointConstraint} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -21,7 +22,7 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-integer-input-field',
   templateUrl: './integer-input-field.component.html',
   styleUrls: ['../../field.scss'],
-  imports: [MatFormField, MatLabel, MatError, MatInput, ReactiveFormsModule],
+  imports: [MatFormFieldModule, MatLabel, MatError, MatInput, ReactiveFormsModule],
 })
 export class IntegerInputFieldComponent extends InputFieldComponent<DefaultFixedPointConstraint> implements OnInit, OnDestroy {
   constructor() {

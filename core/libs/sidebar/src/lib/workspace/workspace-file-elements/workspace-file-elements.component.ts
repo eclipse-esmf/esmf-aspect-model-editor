@@ -20,8 +20,9 @@ import {SidebarStateService} from '@ame/sidebar';
 import {ChangeDetectorRef, Component, effect, inject, signal} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatFormField, MatInput} from '@angular/material/input';
+import {MatInput} from '@angular/material/input';
 import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltip} from '@angular/material/tooltip';
@@ -44,7 +45,7 @@ import {DraggableElementComponent} from '../../draggable-element/draggable-eleme
     MatMenu,
     MatTooltip,
     MatIconModule,
-    MatFormField,
+    MatFormFieldModule,
     TranslatePipe,
     MatProgressSpinnerModule,
   ],

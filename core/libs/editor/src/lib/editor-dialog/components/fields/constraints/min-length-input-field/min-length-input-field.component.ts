@@ -13,7 +13,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultLengthConstraint} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -21,7 +22,7 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-min-length-input-field',
   templateUrl: './min-length-input-field.component.html',
   styleUrls: ['../../field.scss'],
-  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatInput, MatError],
+  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput, MatError],
 })
 export class MinLengthInputFieldComponent extends InputFieldComponent<DefaultLengthConstraint> implements OnInit, OnDestroy {
   constructor() {

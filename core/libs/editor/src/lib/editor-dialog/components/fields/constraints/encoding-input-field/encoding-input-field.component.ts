@@ -14,7 +14,8 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatFormField, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {DefaultEncodingConstraint, NamedElement, Samm} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
@@ -22,7 +23,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-encoding-input-field',
   templateUrl: './encoding-input-field.component.html',
-  imports: [MatFormField, MatLabel, MatSelect, MatOption, ReactiveFormsModule],
+  imports: [MatFormFieldModule, MatLabel, MatSelect, MatOption, ReactiveFormsModule],
 })
 export class EncodingInputFieldComponent extends InputFieldComponent<DefaultEncodingConstraint> implements OnInit, OnDestroy {
   public encodingList = [];

@@ -14,7 +14,8 @@
 import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {DefaultCharacteristic, DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 import {EditorModelService} from '../../../../editor-model.service';
@@ -30,7 +31,7 @@ import {InputFieldComponent} from '../../input-field.component';
       }
     `,
   ],
-  imports: [MatFormField, MatTooltipModule, MatLabel, ReactiveFormsModule, MatInput],
+  imports: [MatFormFieldModule, MatTooltipModule, MatLabel, ReactiveFormsModule, MatInput],
 })
 export class DescriptionInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
   public destroyRef = inject(DestroyRef);

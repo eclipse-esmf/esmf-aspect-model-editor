@@ -16,8 +16,9 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader';
 import {debounceTime, take} from 'rxjs';
@@ -33,7 +34,7 @@ const customRule = '--custom-rule--';
   selector: 'ame-structured-value',
   templateUrl: './structured-value.component.html',
   styleUrls: ['./structured-value.component.scss'],
-  imports: [MatFormField, MatLabel, MatSelect, MatOption, ReactiveFormsModule, MatError, MatInput, MatIconModule, MatButton],
+  imports: [MatFormFieldModule, MatLabel, MatSelect, MatOption, ReactiveFormsModule, MatError, MatInput, MatIconModule, MatButton],
 })
 export class StructuredValueComponent extends InputFieldComponent<DefaultStructuredValue> implements OnInit, OnDestroy {
   private predefinedRulesService = inject(PredefinedRulesService);

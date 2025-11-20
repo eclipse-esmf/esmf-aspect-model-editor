@@ -18,8 +18,9 @@ import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {MatPaginator} from '@angular/material/paginator';
 import {
   MatCell,
@@ -74,7 +75,7 @@ export interface PropertyStatus {
     MatHeaderCellDef,
     NgClass,
     ReactiveFormsModule,
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     MatInput,
     MatCheckbox,

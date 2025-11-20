@@ -14,14 +14,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultEntity, DefaultState} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-default-value-input-field',
   templateUrl: './default-value-input-field.component.html',
-  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatInput],
+  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput],
 })
 export class DefaultValueInputFieldComponent extends InputFieldComponent<DefaultState> implements OnInit, OnDestroy {
   constructor() {

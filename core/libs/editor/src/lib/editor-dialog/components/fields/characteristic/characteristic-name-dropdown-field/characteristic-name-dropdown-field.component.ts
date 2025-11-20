@@ -21,7 +21,8 @@ import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, EventEmitter, inject, OnInit, Output} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
-import {MatFormField, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatLabel} from '@angular/material/input';
 import {MatOptgroup, MatOption, MatSelect} from '@angular/material/select';
 import {
   Characteristic,
@@ -51,7 +52,7 @@ import {DropdownFieldComponent} from '../../dropdown-field.component';
 @Component({
   selector: 'ame-characteristic-name-dropdown-field',
   templateUrl: './characteristic-name-dropdown-field.component.html',
-  imports: [MatFormField, MatLabel, MatSelect, FormsModule, KeyValuePipe, MatOptgroup, MatOption],
+  imports: [MatFormFieldModule, MatLabel, MatSelect, FormsModule, KeyValuePipe, MatOptgroup, MatOption],
 })
 export class CharacteristicNameDropdownFieldComponent extends DropdownFieldComponent<DefaultCharacteristic> implements OnInit {
   private destroyRef = inject(DestroyRef);

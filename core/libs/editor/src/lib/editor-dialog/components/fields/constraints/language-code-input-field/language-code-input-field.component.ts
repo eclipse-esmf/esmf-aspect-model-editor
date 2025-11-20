@@ -16,7 +16,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultLanguageConstraint} from '@esmf/aspect-model-loader';
 import * as locale from 'locale-codes';
 import {Observable, of} from 'rxjs';
@@ -35,7 +36,17 @@ import {InputFieldComponent} from '../../input-field.component';
     `,
   ],
   styleUrls: ['../../field.scss'],
-  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatAutocomplete, MatAutocompleteTrigger, MatInput, AsyncPipe, MatOption, MatError],
+  imports: [
+    MatFormFieldModule,
+    MatLabel,
+    ReactiveFormsModule,
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatInput,
+    AsyncPipe,
+    MatOption,
+    MatError,
+  ],
 })
 export class LanguageCodeInputFieldComponent extends InputFieldComponent<DefaultLanguageConstraint> implements OnInit, OnDestroy {
   public filteredLanguages: Observable<Array<locale.ILocale>>;

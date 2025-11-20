@@ -14,7 +14,8 @@
 import {Component, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {DefaultCharacteristic, DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
@@ -22,7 +23,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-preferred-name-input-field',
   templateUrl: './preferred-name-input-field.component.html',
-  imports: [MatFormField, MatTooltipModule, MatLabel, ReactiveFormsModule, MatInput],
+  imports: [MatFormFieldModule, MatTooltipModule, MatLabel, ReactiveFormsModule, MatInput],
 })
 export class PreferredNameInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
   public fieldName = 'preferredName';

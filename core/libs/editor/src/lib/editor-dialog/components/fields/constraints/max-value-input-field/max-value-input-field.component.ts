@@ -16,14 +16,15 @@ import {DataTypeService} from '@ame/shared';
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultRangeConstraint, DefaultTrait, NamedElement, Type} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-max-value-input-field',
   templateUrl: './max-value-input-field.component.html',
-  imports: [MatFormField, MatLabel, ReactiveFormsModule, MatInput],
+  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput],
 })
 export class MaxValueInputFieldComponent extends InputFieldComponent<DefaultRangeConstraint> implements OnInit, OnDestroy {
   private dataTypeService = inject(DataTypeService);

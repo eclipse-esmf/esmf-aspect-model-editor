@@ -13,7 +13,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatFormField, MatLabel} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {DefaultConstraint, NamedElement, Samm, SammC} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
@@ -21,7 +22,7 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-lower-bound-input-field',
   templateUrl: './lower-bound-input-field.component.html',
-  imports: [MatFormField, MatLabel, MatSelect, ReactiveFormsModule, MatOption],
+  imports: [MatFormFieldModule, MatLabel, MatSelect, ReactiveFormsModule, MatOption],
 })
 export class LowerBoundInputFieldComponent extends InputFieldComponent<DefaultConstraint> implements OnInit, OnDestroy {
   public lowerBoundDefinitionList = [];
