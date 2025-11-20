@@ -201,6 +201,10 @@ jobs:
         run: npm run build:win:prod
         working-directory: core
 
+      - name: Install NSIS on Windows
+        if: matrix.os == 'windows-latest'
+        run: choco install nsis -y
+
       - name: Create Windows installer
         if: matrix.os == 'windows-latest'
         uses: joncloud/makensis-action@v5.0
