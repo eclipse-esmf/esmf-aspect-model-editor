@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
     this.titleService.setTitle(this.title);
 
     if (this.browserService.isStartedAsElectronApp() || !window.require) {
-      //this.setMenuTranslation();
+      this.setMenuTranslation();
       this.setContextMenu();
     }
 
