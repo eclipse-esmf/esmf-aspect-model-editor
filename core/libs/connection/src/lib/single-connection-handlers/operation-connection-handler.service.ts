@@ -13,19 +13,15 @@
 
 import {ModelInfo} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, Operation} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class OperationConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Operation> {
-  constructor(private notificationsService: NotificationsService) {
-    super();
-  }
+  private notificationsService = inject(NotificationsService);
 
   public connect(operation: Operation, source: mxgraph.mxCell, modelInfo: ModelInfo) {
     const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty);

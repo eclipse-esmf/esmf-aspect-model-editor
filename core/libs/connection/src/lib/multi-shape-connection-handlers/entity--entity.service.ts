@@ -18,9 +18,7 @@ import {DefaultEntity} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {EntityInheritanceConnector, MultiShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EntityEntityConnectionHandler extends EntityInheritanceConnector implements MultiShapeConnector<DefaultEntity, DefaultEntity> {
   private notificationService = inject(NotificationsService);
 

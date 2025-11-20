@@ -11,19 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 import {BehaviorSubject} from 'rxjs';
 import {EditorModelService} from '../editor-model.service';
 
 @Injectable({providedIn: 'root'})
 export class ShapeSettingsStateService {
+  private editorModelService = inject(EditorModelService);
+
   public selectedShapeForUpdate: mxgraph.mxCell | null;
   public isShapeSettingOpened = false;
 
   onSettingsOpened$ = new BehaviorSubject(this.isShapeSettingOpened);
-
-  constructor(private editorModelService: EditorModelService) {}
 
   openShapeSettings() {
     this.isShapeSettingOpened = true;

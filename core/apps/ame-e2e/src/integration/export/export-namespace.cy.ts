@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/// <reference types="Cypress" />
+/// <reference types="cypress" />
 
 import {setUpDynamicModellingInterceptors, setUpStaticModellingInterceptors} from '../../support/api-mocks';
 import {SELECTOR_enNamespaceList} from '../../support/constants';

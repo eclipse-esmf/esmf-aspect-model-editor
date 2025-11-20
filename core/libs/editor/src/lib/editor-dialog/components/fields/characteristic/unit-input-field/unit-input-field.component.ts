@@ -11,10 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
-import {MatOptionSelectionChange} from '@angular/material/core';
+import {AsyncPipe} from '@angular/common';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {MatIconButton} from '@angular/material/button';
+import {MatOptgroup, MatOption, MatOptionSelectionChange} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultDuration, DefaultMeasurement, DefaultQuantifiable, DefaultUnit, Unit, useLoader} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -25,11 +33,28 @@ declare const sammUDefinition: any;
   selector: 'ame-unit-input-field',
   templateUrl: './unit-input-field.component.html',
   styleUrls: ['../../field.scss'],
+  imports: [
+    MatFormFieldModule,
+    MatLabel,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatInput,
+    MatIconModule,
+    MatIconButton,
+    MatError,
+    MatAutocomplete,
+    AsyncPipe,
+    MatOptgroup,
+    MatOption,
+    TranslatePipe,
+  ],
 })
 export class UnitInputFieldComponent
   extends InputFieldComponent<DefaultQuantifiable | DefaultDuration | DefaultMeasurement>
   implements OnInit, OnDestroy
 {
+  private editorDialogValidators = inject(EditorDialogValidators);
+
   unitRequired = false;
 
   filteredPredefinedUnits$: Observable<Array<any>>;
@@ -37,20 +62,22 @@ export class UnitInputFieldComponent
   units: Array<Unit> = [];
   unitDisplayControl: FormControl;
 
-  constructor(private validators: EditorDialogValidators) {
+  constructor() {
     super();
     this.fieldName = 'unit';
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe(metaModelElement => {
-      this.units = metaModelElement ? Object.keys(sammUDefinition.units).map(key => sammUDefinition.units[key]) : null;
-      if (this.metaModelElement instanceof DefaultDuration) {
-        this.units = this.units.filter(unit => unit.quantityKinds && unit.quantityKinds.includes('time'));
-      }
-      this.unitRequired = metaModelElement instanceof DefaultDuration || metaModelElement instanceof DefaultMeasurement;
-      this.initUnitFormControl();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(metaModelElement => {
+        this.units = metaModelElement ? Object.keys(sammUDefinition.units).map(key => sammUDefinition.units[key]) : null;
+        if (this.metaModelElement instanceof DefaultDuration) {
+          this.units = this.units.filter(unit => unit.quantityKinds && unit.quantityKinds.includes('time'));
+        }
+        this.unitRequired = metaModelElement instanceof DefaultDuration || metaModelElement instanceof DefaultMeasurement;
+        this.initUnitFormControl();
+      });
   }
 
   ngOnDestroy() {
@@ -83,7 +110,7 @@ export class UnitInputFieldComponent
     const unit = this.getCurrentValue(this.fieldName);
     const unitName = unit instanceof DefaultUnit ? unit.name : unit;
     this.unitDisplayControl = new FormControl({value: unitName, disabled: !!unit}, [
-      this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultUnit),
+      this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultUnit),
       ...(this.unitRequired ? [Validators.required] : []),
     ]);
 

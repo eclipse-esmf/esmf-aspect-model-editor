@@ -17,9 +17,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EventConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<DefaultEvent> {
   public connect(event: DefaultEvent, source: mxgraph.mxCell) {
     const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty);

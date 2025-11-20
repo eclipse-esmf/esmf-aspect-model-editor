@@ -12,23 +12,31 @@
  */
 
 import {NamespacesManagerService} from '@ame/namespace-manager';
-import {Component, input} from '@angular/core';
+import {ElectronSignalsService} from '@ame/shared';
+import {Component, inject, input} from '@angular/core';
+import {MatButton} from '@angular/material/button';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'ame-workspace-empty',
   templateUrl: './workspace-empty.component.html',
   styleUrls: ['./workspace-empty.component.scss'],
+  imports: [MatProgressSpinner, MatButton, TranslatePipe],
 })
 export class WorkspaceEmptyComponent {
+  private namespacesManagerService = inject(NamespacesManagerService);
+  private electronSignalsService = inject(ElectronSignalsService);
+
   loading = input(false);
   file: File | null = null;
-
-  constructor(private namespacesManagerService: NamespacesManagerService) {}
 
   onFileInput(files: FileList | null): void {
     if (files) {
       this.file = files.item(0);
-      this.namespacesManagerService.importNamespaces(this.file).subscribe();
+      this.namespacesManagerService
+        .importNamespaces(this.file)
+        .subscribe(() => this.electronSignalsService.call('requestRefreshWorkspaces'));
     }
   }
 }

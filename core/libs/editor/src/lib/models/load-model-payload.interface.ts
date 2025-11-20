@@ -17,4 +17,5 @@ export interface LoadModelPayload {
   isDefault?: boolean;
   fromWorkspace?: boolean;
   editElementUrn?: string;
+  aspectModelUrn?: string;
 }

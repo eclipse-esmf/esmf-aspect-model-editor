@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {ShapeConnectorService} from '@ame/connection';
 import {
@@ -45,6 +44,24 @@ import {NotificationsService} from './notifications.service';
 export class ElectronTunnelService {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private loadedFiles: LoadedFilesService = inject(LoadedFilesService);
+  private notificationsService = inject(NotificationsService);
+  private modelSavingTracker = inject(ModelSavingTrackerService);
+  private saveModelDialogService = inject(SaveModelDialogService);
+  private mxGraphService = inject(MxGraphService);
+  private shapeSettingsService = inject(ShapeSettingsService);
+  private namespacesManagerService = inject(NamespacesManagerService);
+  private sidebarService = inject(SidebarStateService);
+  private fileHandlingService = inject(FileHandlingService);
+  private generateHandlingService = inject(GenerateHandlingService);
+  private configurationService = inject(ConfigurationService);
+  private editorService = inject(EditorService);
+  private filtersService = inject(FiltersService);
+  private shapeConnectorService = inject(ShapeConnectorService);
+  private matDialog = inject(MatDialog);
+  private searchesStateService = inject(SearchesStateService);
+  private translate = inject(LanguageTranslationService);
+  private ngZone = inject(NgZone);
+
   private lockedFiles$ = new BehaviorSubject<LockUnlockPayload[]>([]);
 
   public ipcRenderer: IpcRenderer = window.require?.('electron').ipcRenderer;
@@ -53,27 +70,6 @@ export class ElectronTunnelService {
   public get currentFile() {
     return this.loadedFiles.currentLoadedFile;
   }
-
-  constructor(
-    private notificationsService: NotificationsService,
-    private modelSavingTracker: ModelSavingTrackerService,
-    private saveModelDialogService: SaveModelDialogService,
-    private mxGraphService: MxGraphService,
-    private shapeSettingsService: ShapeSettingsService,
-    private namespacesManagerService: NamespacesManagerService,
-    private sidebarService: SidebarStateService,
-    private modelApiService: ModelApiService,
-    private fileHandlingService: FileHandlingService,
-    private generateHandlingService: GenerateHandlingService,
-    private configurationService: ConfigurationService,
-    private editorService: EditorService,
-    private filtersService: FiltersService,
-    private shapeConnectorService: ShapeConnectorService,
-    private matDialog: MatDialog,
-    private searchesStateService: SearchesStateService,
-    private translate: LanguageTranslationService,
-    private ngZone: NgZone,
-  ) {}
 
   sendTranslationsToElectron(language: string): void {
     this.translate.getTranslation(language).subscribe(translation => {
@@ -218,7 +214,7 @@ export class ElectronTunnelService {
       return;
     }
 
-    this.ipcRenderer.send(ElectronEvents.SIGNAL_REFRESH_WORKSPACE, true);
+    this.ipcRenderer.send(ElectronEvents.SIGNAL_REFRESH_WORKSPACE);
   }
 
   private requestLockedFiles() {

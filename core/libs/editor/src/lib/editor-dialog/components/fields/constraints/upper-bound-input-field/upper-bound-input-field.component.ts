@@ -10,39 +10,41 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {MxGraphService} from '@ame/mx-graph';
-import {DataTypeService} from '@ame/shared';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatLabel} from '@angular/material/input';
+import {MatOption, MatSelect} from '@angular/material/select';
 import {DefaultConstraint, NamedElement, Samm, SammC} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-upper-bound-input-field',
   templateUrl: './upper-bound-input-field.component.html',
+  imports: [MatFormFieldModule, MatLabel, MatSelect, ReactiveFormsModule, MatOption],
 })
 export class UpperBoundInputFieldComponent extends InputFieldComponent<DefaultConstraint> implements OnInit, OnDestroy {
   public upperBoundDefinitionList = [];
 
-  constructor(
-    public dataTypeService: DataTypeService,
-    public mxGraphService: MxGraphService,
-  ) {
+  constructor() {
     super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'upperBoundDefinition';
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe((modelElement: NamedElement) => {
-      this.upperBoundDefinitionList = modelElement
-        ? new SammC(new Samm(modelElement.metaModelVersion)).getUpperBoundDefinitionList()
-        : null;
-      if (modelElement instanceof DefaultConstraint) {
-        this.metaModelElement = modelElement;
-      }
-      this.initForm();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((modelElement: NamedElement) => {
+        this.upperBoundDefinitionList = modelElement
+          ? new SammC(new Samm(modelElement.metaModelVersion)).getUpperBoundDefinitionList()
+          : null;
+        if (modelElement instanceof DefaultConstraint) {
+          this.metaModelElement = modelElement;
+        }
+        this.initForm();
+      });
   }
 
   ngOnDestroy() {

@@ -14,20 +14,41 @@
 import {CacheUtils} from '@ame/cache';
 import {DataTypeService} from '@ame/shared';
 import {ENTER} from '@angular/cdk/keycodes';
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
-import {MatChipGrid, MatChipInputEvent} from '@angular/material/chips';
+import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatChipGrid, MatChipInput, MatChipInputEvent, MatChipRow, MatChipsModule} from '@angular/material/chips';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
 import {debounceTime} from 'rxjs/operators';
+import {EntityInstanceViewComponent} from '../../../entity-instance';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-values-input-field',
   templateUrl: './values-input-field.component.html',
   styleUrls: ['./values-input-field.component.scss', '../../field.scss'],
+  imports: [
+    MatFormFieldModule,
+    MatLabel,
+    MatChipGrid,
+    ReactiveFormsModule,
+    MatChipRow,
+    MatIconModule,
+    MatChipInput,
+    MatInput,
+    EntityInstanceViewComponent,
+    MatError,
+    MatChipsModule,
+    MatIconModule,
+  ],
 })
 export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumeration> implements OnInit, OnDestroy {
   @ViewChild('chipList') chipList: MatChipGrid;
+
+  private dataTypeService = inject(DataTypeService);
 
   readonly separatorKeysCodes: number[] = [ENTER];
 
@@ -41,15 +62,13 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
     return this.enumValues as DefaultEntityInstance[];
   }
 
-  constructor(private dataTypeService: DataTypeService) {
-    super();
-  }
-
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => {
-      this.handleNextModelElement(this.metaModelElement);
-      this.initForm();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.handleNextModelElement(this.metaModelElement);
+        this.initForm();
+      });
   }
 
   ngOnDestroy() {

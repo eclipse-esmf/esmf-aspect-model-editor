@@ -20,6 +20,11 @@ export class HttpHeaderBuilder {
     this.httpHeaders = new HttpHeaders();
   }
 
+  withFileUri(uri: string): HttpHeaderBuilder {
+    this.httpHeaders = this.httpHeaders.append('uri', uri);
+    return this;
+  }
+
   withContentTypeRdfTurtle(): HttpHeaderBuilder {
     this.httpHeaders = this.httpHeaders.append('Content-Type', 'text/turtle');
     return this;
@@ -32,17 +37,6 @@ export class HttpHeaderBuilder {
 
   withAspectModelUrn(urn: string): HttpHeaderBuilder {
     this.httpHeaders = this.httpHeaders.append('aspect-model-urn', urn);
-    return this;
-  }
-
-  // TODO withUrn, withNamespace and withFileName can be removed
-  withUrn(urn: string): HttpHeaderBuilder {
-    this.httpHeaders = this.httpHeaders.append('Ame-Model-Urn', urn);
-    return this;
-  }
-
-  withNamespace(namespace: string): HttpHeaderBuilder {
-    this.httpHeaders = this.httpHeaders.append('namespace', namespace);
     return this;
   }
 

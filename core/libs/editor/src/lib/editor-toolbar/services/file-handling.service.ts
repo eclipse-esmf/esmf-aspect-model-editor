@@ -24,7 +24,6 @@ import {
   ModelSaverService,
   ShapeSettingsStateService,
 } from '@ame/editor';
-import {MigratorService} from '@ame/migrator';
 import {MxGraphService} from '@ame/mx-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
@@ -37,11 +36,13 @@ import {
   ModelSavingTrackerService,
   NotificationsService,
   SaveValidateErrorsCodes,
+  TitleService,
 } from '@ame/shared';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {decodeText, readFile} from '@ame/utils';
-import {Injectable, inject} from '@angular/core';
+import {DestroyRef, Injectable, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {saveAs} from 'file-saver';
 import {BlankNode, NamedNode, Quad, Quad_Graph, Quad_Object, Quad_Predicate, Quad_Subject, Store} from 'n3';
@@ -84,43 +85,41 @@ interface QuadComponents {
   graph?: Quad_Graph;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class FileHandlingService {
+  private destroyRef = inject(DestroyRef);
+  private editorService = inject(EditorService);
+  private modelService = inject(ModelService);
+  private rdfService = inject(RdfService);
+  private modelApiService = inject(ModelApiService);
+  private confirmDialogService = inject(ConfirmDialogService);
+  private notificationsService = inject(NotificationsService);
+  private loadingScreenService = inject(LoadingScreenService);
+  private sidebarService = inject(SidebarStateService);
+  private translate = inject(LanguageTranslationService);
+  private electronSignalsService = inject(ElectronSignalsService);
+  private configurationService = inject(ConfigurationService);
+  private modelSaveTracker = inject(ModelSavingTrackerService);
+  private fileUploadService = inject(FileUploadService);
+  private shapeSettingsStateService = inject(ShapeSettingsStateService);
+  private mxGraphService = inject(MxGraphService);
   private modelLoaderService = inject(ModelLoaderService);
   private loadedFilesService = inject(LoadedFilesService);
   private modelSaverService = inject(ModelSaverService);
+  private titleService = inject(TitleService);
 
   get currentLoadedFile() {
     return this.loadedFilesService.currentLoadedFile;
   }
 
-  constructor(
-    private editorService: EditorService,
-    private modelService: ModelService,
-    private rdfService: RdfService,
-    private modelApiService: ModelApiService,
-    private confirmDialogService: ConfirmDialogService,
-    private notificationsService: NotificationsService,
-    private loadingScreenService: LoadingScreenService,
-    private migratorService: MigratorService,
-    private sidebarService: SidebarStateService,
-    private translate: LanguageTranslationService,
-    private electronSignalsService: ElectronSignalsService,
-    private configurationService: ConfigurationService,
-    private modelSaveTracker: ModelSavingTrackerService,
-    private fileUploadService: FileUploadService,
-    private shapeSettingsStateService: ShapeSettingsStateService,
-    private mxGraphService: MxGraphService,
-  ) {
+  constructor() {
     if (!environment.production) {
       window['angular.fileHandlingService'] = this;
     }
   }
 
   onLoadModel(fileInfo?: FileInfo) {
-    this.loadModel(decodeText(fileInfo.content)).pipe(first()).subscribe();
+    this.loadModel(decodeText(fileInfo.content)).pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
   }
 
   loadModel(modelContent: string): Observable<any> {
@@ -132,12 +131,11 @@ export class FileHandlingService {
       hasCloseButton: true,
     };
     this.loadingScreenService.open(loadingScreenOptions);
-    const migratedModel = this.migratorService.bammToSamm(modelContent);
 
-    return this.modelApiService.validate(migratedModel).pipe(
+    return this.modelApiService.validate(modelContent).pipe(
       switchMap(validations => {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
-        return found ? throwError(() => found.message) : this.modelLoaderService.renderModel({rdfAspectModel: migratedModel});
+        return found ? throwError(() => found.message) : this.modelLoaderService.renderModel({rdfAspectModel: modelContent});
       }),
       catchError(error => {
         this.notificationsService.info({
@@ -150,7 +148,7 @@ export class FileHandlingService {
       finalize(() => {
         this.modelSaveTracker.updateSavedModel(true);
         this.loadingScreenService.close();
-        if (this.loadedFilesService.currentLoadedFile?.rdfModel) {
+        if (this.currentLoadedFile?.rdfModel) {
           this.shapeSettingsStateService.closeShapeSettings();
         }
         this.sidebarService.workspace.close();
@@ -159,23 +157,22 @@ export class FileHandlingService {
   }
 
   loadNamespaceFile(absoluteFileName: string, aspectModelUrn: string) {
-    const subscription = this.modelApiService
-      .getAspectMetaModel(aspectModelUrn)
+    this.modelApiService
+      .fetchAspectMetaModel(aspectModelUrn)
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         first(),
         tap(() => {
           const loadingScreenOptions: LoadingScreenOptions = {
             title: this.translate.language.NOTIFICATION_DIALOG?.LOADING,
             hasCloseButton: true,
-            closeButtonAction: () => {
-              subscription.unsubscribe();
-            },
           };
           this.loadingScreenService.open(loadingScreenOptions);
         }),
         switchMap((rdfAspectModel: string) =>
           this.modelLoaderService.renderModel({
             rdfAspectModel,
+            aspectModelUrn,
             namespaceFileName: absoluteFileName,
             fromWorkspace: true,
           }),
@@ -205,8 +202,8 @@ export class FileHandlingService {
     this.loadedFilesService.removeAll();
     let fileStatus: FileStatus;
 
-    if (this.loadedFilesService.currentLoadedFile) {
-      const [namespace, version, file] = this.loadedFilesService.currentLoadedFile.absoluteName;
+    if (this.currentLoadedFile) {
+      const [namespace, version, file] = this.currentLoadedFile.absoluteName;
       const namespaceVersion = `${namespace}:${version}`;
       fileStatus = this.sidebarService.namespacesState.getFile(namespaceVersion, file);
 
@@ -216,14 +213,16 @@ export class FileHandlingService {
       }
     }
 
-    const emptyNamespace = 'urn:samm:com.example:1.0.0';
-    const rdfModel = new RdfModel(new Store(), GeneralConfig.sammVersion, emptyNamespace);
+    const model = 'new-model.ttl';
+    const namespace = 'com.examples:1.0.0';
+    const absoluteName = `${namespace}:${model}`;
+    const rdfModel = new RdfModel(new Store(), GeneralConfig.sammVersion, `urn:samm:${namespace}`);
 
     this.loadedFilesService.addFile({
       rdfModel,
+      absoluteName,
       cachedFile: new ModelElementCache(),
       aspect: null,
-      absoluteName: 'com.example:1.0.0:empty.ttl',
       rendered: true,
       fromWorkspace: false,
     });
@@ -235,6 +234,7 @@ export class FileHandlingService {
     }
 
     this.modelSaveTracker.updateSavedModel(true);
+    this.titleService.updateTitle(absoluteName);
   }
 
   onCopyToClipboard() {
@@ -242,7 +242,7 @@ export class FileHandlingService {
   }
 
   copyToClipboard(): Observable<any> {
-    if (!this.loadedFilesService.currentLoadedFile?.rdfModel) {
+    if (!this.currentLoadedFile?.rdfModel) {
       return throwError(() => {
         console.error('No Rdf model available. ');
         return 'No Rdf model available. ';
@@ -250,8 +250,8 @@ export class FileHandlingService {
     }
 
     return this.modelService.synchronizeModelToRdf().pipe(
-      map(() => this.rdfService.serializeModel(this.loadedFilesService.currentLoadedFile?.rdfModel)),
-      switchMap(serializedModel => this.modelApiService.formatModel(serializedModel)),
+      map(() => this.rdfService.serializeModel(this.currentLoadedFile?.rdfModel)),
+      switchMap(serializedModel => this.modelApiService.fetchFormatedAspectModel(serializedModel)),
       switchMap(formattedModel => {
         const header = this.configurationService.getSettings().copyrightHeader.join('\n');
         return from(navigator.clipboard.writeText(header + '\n\n' + formattedModel));
@@ -272,11 +272,11 @@ export class FileHandlingService {
   }
 
   onExportAsAspectModelFile() {
-    this.exportAsAspectModelFile().pipe(first()).subscribe();
+    this.exportAsAspectModelFile().pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
   }
 
   exportAsAspectModelFile(): Observable<string> {
-    if (!this.loadedFilesService.currentLoadedFile?.rdfModel) {
+    if (!this.currentLoadedFile?.rdfModel) {
       return throwError(() => {
         console.error('No Rdf model available. ');
         return 'No Rdf model available. ';
@@ -290,10 +290,10 @@ export class FileHandlingService {
     });
 
     return this.modelService.synchronizeModelToRdf().pipe(
-      map(() => this.loadedFilesService.currentLoadedFile.absoluteName || 'undefined.ttl'),
+      map(() => this.currentLoadedFile.absoluteName || 'undefined.ttl'),
       switchMap(fileName => {
-        const rdfModelTtl = this.rdfService.serializeModel(this.loadedFilesService.currentLoadedFile?.rdfModel);
-        return this.modelApiService.formatModel(rdfModelTtl).pipe(
+        const rdfModelTtl = this.rdfService.serializeModel(this.currentLoadedFile?.rdfModel);
+        return this.modelApiService.fetchFormatedAspectModel(rdfModelTtl).pipe(
           tap(formattedModel => {
             const header = this.configurationService.getSettings().copyrightHeader.join('\n');
             saveAs(new Blob([header + '\n\n' + formattedModel], {type: 'text/turtle;charset=utf-8'}), fileName);
@@ -314,7 +314,7 @@ export class FileHandlingService {
   }
 
   onSaveAspectModelToWorkspace() {
-    this.saveAspectModelToWorkspace().pipe(first()).subscribe();
+    this.saveAspectModelToWorkspace().pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
   }
 
   saveAspectModelToWorkspace(): Observable<any> {
@@ -336,6 +336,7 @@ export class FileHandlingService {
   onAddFileToNamespace(fileInfo?: FileInfo): void {
     this.resolveModelFileContent(fileInfo)
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         switchMap(fileInfo => this.addFileToNamespace(fileInfo)),
         first(),
       )
@@ -362,8 +363,8 @@ export class FileHandlingService {
       switchMap((file: File) =>
         forkJoin({
           content: readFile(file),
-          path: of(file.path),
-          name: of(file.path.split('/').pop()),
+          path: of(file.webkitRelativePath),
+          name: of(file.webkitRelativePath.split('/').pop()),
         }),
       ),
     );
@@ -380,8 +381,8 @@ export class FileHandlingService {
     return this.importFiles(file).pipe(
       tap(() => this.notificationsService.success({title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_SUCCESS})),
       catchError(httpError => {
-        // @TODO: Temporary check until file blockage is fixed
-        !httpError.error?.error?.message?.includes('packages-to-import')
+        // @TODO Temporary check until file blockage is fixed
+        !httpError.error?.error?.message?.includes('import')
           ? this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_ERROR})
           : this.notificationsService.success({title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_SUCCESS});
 
@@ -398,14 +399,13 @@ export class FileHandlingService {
     };
     if (uploadOptions.showLoading) this.loadingScreenService.open(loadingOptions);
 
-    const migratedFile = this.migratorService.bammToSamm(fileContent);
     let newModelContent: string;
     let newModelAbsoluteFileName: string;
 
-    return this.modelApiService.formatModel(migratedFile).pipe(
+    return this.modelApiService.fetchFormatedAspectModel(fileContent).pipe(
       switchMap(formattedModel => {
         newModelContent = formattedModel;
-        return this.modelApiService.validate(migratedFile, false);
+        return this.modelApiService.validate(fileContent, false);
       }),
       switchMap(validations => {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
@@ -415,7 +415,7 @@ export class FileHandlingService {
       }),
       tap(({absoluteName}) => (newModelAbsoluteFileName = absoluteName)),
       switchMap((file: NamespaceFile) => {
-        return this.modelApiService.saveModel(newModelContent, file.getAnyAspectModelUrn(), newModelAbsoluteFileName);
+        return this.modelApiService.saveAspectModel(newModelContent, file.getAnyAspectModelUrn(), newModelAbsoluteFileName);
       }),
       tap(() => {
         if (uploadOptions.showNotifications) {
@@ -468,14 +468,14 @@ export class FileHandlingService {
   }
 
   onValidateFile() {
-    if (!this.loadedFilesService.currentLoadedFile.cachedFile.getKeys().length) {
+    if (!this.currentLoadedFile.cachedFile.getKeys().length) {
       this.notificationsService.info({
         title: this.translate.language.NOTIFICATION_DIALOG?.NO_ASPECT_TITLE,
         timeout: 5000,
       });
       return;
     }
-    this.validateFile().pipe(first()).subscribe();
+    this.validateFile().pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
   }
 
   validateFile(callback?: Function) {
@@ -516,7 +516,7 @@ export class FileHandlingService {
   }
 
   private getModelLoaderState(): Observable<ModelLoaderState> {
-    const currentFile = this.loadedFilesService.currentLoadedFile;
+    const currentFile = this.currentLoadedFile;
     const response: ModelLoaderState = {
       originalModelName: currentFile.originalAbsoluteName,
       newModelName: currentFile.absoluteName,
@@ -577,7 +577,7 @@ export class FileHandlingService {
       }),
     );
   }
-  // TODO: MOVE THESE 3 FUNCTION TO A MORE RELATED SERVICE
+  // TODO MOVE THESE 3 FUNCTION TO A MORE RELATED SERVICE
 
   updateQuads(query: QuadComponents, replacement: QuadComponents, rdfModel: RdfModel): number {
     const quads: Quad[] = this.getQuads(query, rdfModel);
@@ -610,7 +610,7 @@ export class FileHandlingService {
   }
 
   public updateAffectedQuads(originalModelName: string, originalNamespace: string, newNamespace: string): RdfModel[] {
-    const subjects = this.loadedFilesService.currentLoadedFile.rdfModel.store.getSubjects(null, null, null);
+    const subjects = this.currentLoadedFile.rdfModel.store.getSubjects(null, null, null);
     const models: RdfModel[] = Object.values(this.loadedFilesService.files)
       .filter(model => model.absoluteName !== originalModelName)
       .map(file => file.rdfModel);

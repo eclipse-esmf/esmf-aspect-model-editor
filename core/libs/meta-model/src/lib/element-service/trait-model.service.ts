@@ -20,7 +20,7 @@ import {
   MxGraphShapeOverlayService,
   TraitRenderService,
 } from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultEither, DefaultEntity, DefaultProperty, DefaultTrait, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
@@ -33,15 +33,11 @@ interface EitherInformation {
 
 @Injectable({providedIn: 'root'})
 export class TraitModelService extends BaseModelService {
-  constructor(
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private mxGraphService: MxGraphService,
-    private shapeConnectorService: ShapeConnectorService,
-    private traitRendererService: TraitRenderService,
-  ) {
-    super();
-  }
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private mxGraphService = inject(MxGraphService);
+  private shapeConnectorService = inject(ShapeConnectorService);
+  private traitRendererService = inject(TraitRenderService);
 
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     super.update(cell, form);

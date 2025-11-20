@@ -11,29 +11,42 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MigratorService} from '@ame/migrator';
-import {Component, OnDestroy} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {MigratorApiService} from '@ame/api';
+import {Component, DestroyRef, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
+import {TranslatePipe} from '@ngx-translate/core';
+import {of, switchMap, tap} from 'rxjs';
 import {SidebarStateService} from '../../sidebar-state.service';
+import {MigrationDialogComponent} from './migration-dialog';
 
 @Component({
   selector: 'ame-workspace-migrate',
   templateUrl: './workspace-migrate.component.html',
   styleUrls: ['./workspace-migrate.component.scss'],
+  imports: [MatButtonModule, TranslatePipe],
 })
-export class WorkspaceMigrateComponent implements OnDestroy {
-  private subscription = new Subscription();
-
-  constructor(
-    private migratorService: MigratorService,
-    private sidebarService: SidebarStateService,
-  ) {}
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
+export class WorkspaceMigrateComponent {
+  private dialog = inject(MatDialog);
+  private destroRef = inject(DestroyRef);
+  private migratorApiService = inject(MigratorApiService);
+  private sidebarService = inject(SidebarStateService);
 
   migrate() {
-    this.subscription.add(this.migratorService.startMigrating().subscribe(() => this.sidebarService.workspace.refresh()));
+    return this.migratorApiService
+      .hasFilesToMigrate()
+      .pipe(
+        takeUntilDestroyed(this.destroRef),
+        switchMap(hasFiles =>
+          hasFiles
+            ? this.dialog
+                .open(MigrationDialogComponent, {disableClose: true})
+                .afterClosed()
+                .pipe(tap(() => this.sidebarService.workspace.refresh()))
+            : of({}),
+        ),
+      )
+      .subscribe();
   }
 }

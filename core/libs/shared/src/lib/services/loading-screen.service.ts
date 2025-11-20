@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {LoadingScreenComponent} from '../components';
 
@@ -24,9 +24,9 @@ export type LoadingScreenOptions = Omit<MatDialogConfig, 'data'> & {
 
 @Injectable({providedIn: 'root'})
 export class LoadingScreenService {
-  public dialog: MatDialogRef<LoadingScreenComponent>;
+  private matDialog = inject(MatDialog);
 
-  constructor(private matDialog: MatDialog) {}
+  public dialog: MatDialogRef<LoadingScreenComponent>;
 
   open(options: LoadingScreenOptions): MatDialogRef<LoadingScreenComponent> {
     this.dialog = this.matDialog.open(LoadingScreenComponent, {

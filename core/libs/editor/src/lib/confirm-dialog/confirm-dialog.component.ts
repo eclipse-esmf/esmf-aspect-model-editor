@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
@@ -25,12 +25,10 @@ import {DialogOptions} from './confirm-dialog.service';
   imports: [MatDialogModule, MatIconModule, MatButtonModule],
 })
 export class ConfirmDialogComponent {
-  protected readonly confirmDialogEnum = ConfirmDialogEnum;
+  private dialogRef = inject(MatDialogRef<ConfirmDialogComponent>);
+  public data: DialogOptions = inject(MAT_DIALOG_DATA);
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DialogOptions,
-    private dialogRef: MatDialogRef<ConfirmDialogComponent>,
-  ) {}
+  public readonly confirmDialogEnum = ConfirmDialogEnum;
 
   closeAndGiveResult(result: ConfirmDialogEnum) {
     this.dialogRef.close(result);

@@ -15,22 +15,18 @@ import {EntityInstanceService} from '@ame/editor';
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper, PropertyRenderService} from '@ame/mx-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {useUpdater} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, DefaultStructuredValue, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class PropertyModelService extends BaseModelService {
-  constructor(
-    private entityInstanceService: EntityInstanceService,
-    private mxGraphService: MxGraphService,
-    private sammLangService: SammLanguageSettingsService,
-    private propertyRenderer: PropertyRenderService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-  ) {
-    super();
-  }
+  private entityInstanceService = inject(EntityInstanceService);
+  private mxGraphService = inject(MxGraphService);
+  private sammLangService = inject(SammLanguageSettingsService);
+  private propertyRenderer = inject(PropertyRenderService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultProperty;

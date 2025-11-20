@@ -12,50 +12,38 @@
  */
 
 import {AsyncApi, OpenApi, ViolationError} from '@ame/editor';
+import {RdfModelUtil} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder} from '@ame/shared';
-import {removeCommentsFromTTL} from '@ame/utils';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
 import {Observable, forkJoin, of, throwError} from 'rxjs';
 import {catchError, map, mergeMap, retry, tap, timeout} from 'rxjs/operators';
 import {ModelValidatorService} from './model-validator.service';
-import {WorkspaceStructure} from './models';
+import {ModelData, WorkspaceStructure} from './models';
 
-export enum PREDEFINED_MODELS {
-  SIMPLE_ASPECT = 'assets/aspect-models/org.eclipse.examples/1.0.0/SimpleAspect.ttl',
-  MOVEMENT = 'assets/aspect-models/org.eclipse.examples/1.0.0/Movement.ttl',
-}
-
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ModelApiService {
   private config: AppConfig = inject(APP_CONFIG);
+  private http = inject(HttpClient);
+  private browserService = inject(BrowserService);
+  private modelValidatorService = inject(ModelValidatorService);
+
   private defaultPort = this.config.defaultPort;
   private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
   private requestTimeout = 60000;
-  private readonly LATEST_FILENAME = 'latest.ttl';
 
-  constructor(
-    private http: HttpClient,
-    private browserService: BrowserService,
-    private modelValidatorService: ModelValidatorService,
-  ) {
+  constructor() {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
       this.serviceUrl = this.serviceUrl.replace(this.defaultPort, remote.getGlobal('backendPort'));
     }
   }
 
-  getPredefinedModel(modelPath: PREDEFINED_MODELS): Observable<string> {
-    return this.http.get(modelPath, {responseType: 'text'}).pipe(map((response: string) => removeCommentsFromTTL(response)));
-  }
-
-  loadLatest(): Observable<string> {
+  fetchAspectMetaModel(aspectModelUrn: string): Observable<string> {
     return this.http
       .get<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withFileName(this.LATEST_FILENAME).build(),
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withAspectModelUrn(aspectModelUrn).build(),
         responseType: 'text' as 'json',
       })
       .pipe(
@@ -64,15 +52,11 @@ export class ModelApiService {
       );
   }
 
-  saveModel(rdfContent: string, aspectModelUrn: string, absoluteModelName?: string): Observable<string> {
+  saveAspectModel(rdfContent: string, aspectModelUrn: string, absoluteModelName?: string): Observable<string> {
     let headers: HttpHeaders;
     if (absoluteModelName) {
-      const [namespace, version, file] = absoluteModelName.split(':');
-      headers = new HttpHeaderBuilder()
-        .withAspectModelUrn(aspectModelUrn)
-        .withNamespace(`${namespace}:${version}`)
-        .withFileName(file)
-        .build();
+      const file = RdfModelUtil.getFileNameFromRdf(absoluteModelName);
+      headers = new HttpHeaderBuilder().withAspectModelUrn(aspectModelUrn).withFileName(file).build();
     }
 
     return this.http
@@ -86,11 +70,25 @@ export class ModelApiService {
       );
   }
 
-  formatModel(rdfContent: string): Observable<string> {
-    const headers = new HttpHeaderBuilder().withContentTypeRdfTurtle().build();
+  validate(rdfContent: string, showNotifications = true): Observable<Array<ViolationError>> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
-      .post(`${this.serviceUrl}${this.api.models}/format`, rdfContent, {
-        headers,
+      .post<Array<ViolationError>>(`${this.serviceUrl}${this.api.models}/validate`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(uri.toString()).build(),
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        map((data: any) => data.violationErrors),
+        tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors)),
+        catchError(res => throwError(() => res)),
+      );
+  }
+
+  fetchFormatedAspectModel(rdfContent: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
+    return this.http
+      .post(`${this.serviceUrl}${this.api.models}/format`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(uri.toString()).build(),
         responseType: 'text',
       })
       .pipe(
@@ -102,13 +100,6 @@ export class ModelApiService {
       );
   }
 
-  validateImportPackage(file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('zipFile', file);
-
-    return this.http.post(`${this.serviceUrl}${this.api.package}/validate-package`, formData);
-  }
-
   importPackage(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('zipFile', file);
@@ -116,27 +107,10 @@ export class ModelApiService {
     return this.http.post(`${this.serviceUrl}${this.api.package}/import`, formData);
   }
 
-  saveLatest(rdfContent: string): Observable<string> {
-    return this.http
-      .post<string>(`${this.serviceUrl}${this.api.models}`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withFileName(this.LATEST_FILENAME).build(),
-      })
-      .pipe(
-        timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
-      );
-  }
-
-  deleteFile(absoluteModelName: string, aspectModelUrn: string): Observable<string> {
-    const [namespace, version, file] = absoluteModelName.split(':');
+  deleteAspectModel(aspectModelUrn: string): Observable<string> {
     return this.http
       .delete<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder()
-          // .withContentTypeRdfTurtle()
-          .withAspectModelUrn(aspectModelUrn)
-          .withNamespace(`${namespace}:${version}`)
-          .withFileName(file)
-          .build(),
+        headers: new HttpHeaderBuilder().withAspectModelUrn(aspectModelUrn).build(),
       })
       .pipe(
         timeout(this.requestTimeout),
@@ -145,79 +119,35 @@ export class ModelApiService {
       );
   }
 
-  getNamespacesStructure(): Observable<WorkspaceStructure> {
-    return this.http.get<WorkspaceStructure>(`${this.serviceUrl}${this.api.models}/namespaces`);
-  }
-
-  // TODO In the backend a defined object should be returned
-  /**
-   * @deprecated this function will be removed in the next versions
-   */
-  getNamespacesAppendWithFiles(): Observable<string[]> {
-    return this.getNamespacesStructure().pipe(
+  loadNamespacesStructure(onlyAspectModel?: boolean): Observable<WorkspaceStructure> {
+    const params = onlyAspectModel ? {onlyAspectModels: 'true'} : {onlyAspectModels: 'false'};
+    return this.http.get<WorkspaceStructure>(`${this.serviceUrl}${this.api.models}/namespaces`, {params}).pipe(
       timeout(this.requestTimeout),
-      map(data => {
-        return Object.keys(data).reduce<string[]>(
-          (fileNames, namespace) => [
-            ...fileNames,
-            ...data[namespace].map(({version, models}) => models.map(model => `${namespace}:${version}:${model.model}`)).flat(),
-          ],
-          [],
-        );
-      }),
+      catchError(res => throwError(() => res)),
     );
   }
 
-  getWorkspaceAspectModelUrns(): Observable<{aspectModelUrn: string; fileName: string; namespace: string}[]> {
-    return this.getNamespacesStructure().pipe(
-      timeout(this.requestTimeout),
-      map(data => {
-        return Object.keys(data).reduce<{aspectModelUrn: string; fileName: string; namespace: string}[]>(
-          (fileNames, namespace) => [
-            ...fileNames,
-            ...data[namespace]
-              .map(({models}) => models.map(model => ({aspectModelUrn: model.aspectModelUrn, fileName: model.model, namespace})))
-              .flat(),
-          ],
-          [],
+  fetchAllNamespaceFilesContent(): Observable<FileContentModel[]> {
+    return this.loadNamespacesStructure().pipe(
+      map((workspace: WorkspaceStructure): ModelData[] => {
+        return Object.values(workspace).flatMap(entries => entries.flatMap(entry => entry.models));
+      }),
+      map((modelDataList: ModelData[]) => {
+        return modelDataList.map(modelData =>
+          this.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(
+            map(
+              aspectMetaModel =>
+                new FileContentModel(modelData.model, modelData.aspectModelUrn, modelData.version, modelData.existing, aspectMetaModel),
+            ),
+          ),
         );
       }),
-    );
-  }
-
-  getAllNamespacesFilesContent(): Observable<FileContentModel[]> {
-    return this.getWorkspaceAspectModelUrns().pipe(
-      map(aspectModelUrns =>
-        aspectModelUrns.reduce<any[]>(
-          (files, file) => [
-            ...files,
-            this.getAspectMetaModel(file.aspectModelUrn).pipe(map(aspectMetaModel => new FileContentModel(file.fileName, aspectMetaModel))),
-          ],
-          [],
-        ),
-      ),
-      mergeMap((files$: Observable<string>[]) => (files$.length ? forkJoin(files$) : of([]))),
+      mergeMap((files$: Observable<FileContentModel>[]) => (files$.length ? forkJoin(files$) : of([]))),
       catchError(() => of([])),
     );
   }
 
-  getAspectMetaModel(aspectModelUrn: string): Observable<string> {
-    return this.http
-      .get<string>(`${this.serviceUrl}${this.api.models}`, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withAspectModelUrn(aspectModelUrn).build(),
-        responseType: 'text' as 'json',
-      })
-      .pipe(
-        timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
-      );
-  }
-
-  validateFilesForExport(files: {namespace: string; files: string[]}[]): Observable<any> {
-    return this.http.post(`${this.serviceUrl}${this.api.package}/validate-models-for-export`, files);
-  }
-
-  getExportZipFile(aspectModelUrn: string): Observable<any> {
+  fetchExportPackage(aspectModelUrn: string): Observable<any> {
     return this.http.get(`${this.serviceUrl}${this.api.package}/export`, {
       headers: new HttpHeaderBuilder().withAspectModelUrn(aspectModelUrn).build(),
       responseType: 'blob' as 'json',
@@ -225,9 +155,10 @@ export class ModelApiService {
   }
 
   generateJsonSample(rdfContent: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
-      .post<string>(`${this.serviceUrl}${this.api.generate}/json-sample`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+      .post<string>(`${this.serviceUrl}${this.api.generate}/json-sample`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(uri).build(),
       })
       .pipe(
         timeout(this.requestTimeout),
@@ -236,9 +167,10 @@ export class ModelApiService {
   }
 
   generateJsonSchema(rdfContent: string, language: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
-      .post<string>(`${this.serviceUrl}${this.api.generate}/json-schema`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+      .post<string>(`${this.serviceUrl}${this.api.generate}/json-schema`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(uri).build(),
         params: {language},
       })
       .pipe(
@@ -248,39 +180,20 @@ export class ModelApiService {
   }
 
   migrateAspectModel(rdfContent: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
-      .post(`${this.serviceUrl}${this.api.models}/migrate`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+      .post(`${this.serviceUrl}${this.api.models}/migrate`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(uri).build(),
         responseType: 'text',
       })
       .pipe(timeout(this.requestTimeout));
   }
 
-  /*
-   *This method will get all the errors and notify the user for those which are correctable.
-   */
-  validate(rdfContent: string, showNotifications = true): Observable<Array<ViolationError>> {
-    return this.getViolationError(rdfContent).pipe(
-      tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors)),
-    );
-  }
-
-  getViolationError(rdfContent: string): Observable<Array<ViolationError>> {
-    return this.http
-      .post<Array<ViolationError>>(`${this.serviceUrl}${this.api.models}/validate`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
-      })
-      .pipe(
-        timeout(this.requestTimeout),
-        map((data: any) => data.violationErrors),
-        catchError(res => throwError(() => res)),
-      );
-  }
-
   generateOpenApiSpec(rdfContent: string, openApi: OpenApi): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
-      .post<string>(`${this.serviceUrl}${this.api.generate}/open-api-spec`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+      .post<string>(`${this.serviceUrl}${this.api.generate}/open-api-spec`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(uri).build(),
         params: {
           language: openApi.language,
           output: openApi.output,
@@ -307,9 +220,10 @@ export class ModelApiService {
   }
 
   generateAsyncApiSpec(rdfContent: string, asyncApi: AsyncApi): Observable<any> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
-      .post<string>(`${this.serviceUrl}${this.api.generate}/async-api-spec`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+      .post<string>(`${this.serviceUrl}${this.api.generate}/async-api-spec`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(uri).build(),
         params: {
           language: asyncApi.language,
           output: asyncApi.output,
@@ -329,10 +243,11 @@ export class ModelApiService {
       );
   }
 
-  downloadDocumentation(rdfContent: string, language: string): Observable<string> {
+  generateDocumentation(rdfContent: string, language: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
-      .post(`${this.serviceUrl}${this.api.generate}/documentation`, rdfContent, {
-        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+      .post(`${this.serviceUrl}${this.api.generate}/documentation`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(uri).build(),
         params: {
           language: language,
         },
@@ -341,67 +256,27 @@ export class ModelApiService {
       .pipe(timeout(this.requestTimeout));
   }
 
-  getAASX(rdfContent: string): Observable<string> {
-    return this.http.post(`${this.serviceUrl}${this.api.generate}/aasx`, rdfContent, {
-      headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+  generateAASX(rdfContent: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
+    return this.http.post(`${this.serviceUrl}${this.api.generate}/aasx`, formData, {
+      headers: new HttpHeaderBuilder().withFileUri(uri).build(),
       responseType: 'text',
     });
   }
 
-  getAASasXML(rdfContent: string): Observable<string> {
-    return this.http.post(`${this.serviceUrl}${this.api.generate}/aas-xml`, rdfContent, {
-      headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().build(),
+  generatetAASasXML(rdfContent: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
+    return this.http.post(`${this.serviceUrl}${this.api.generate}/aas-xml`, formData, {
+      headers: new HttpHeaderBuilder().withFileUri(uri).build(),
       responseType: 'text',
     });
   }
 
-  openDocumentation(rdfContent: string, language: string): Observable<void> {
-    return this.downloadDocumentation(rdfContent, language).pipe(
-      map((documentation: string) => {
-        if (!this.browserService.isStartedAsElectronApp()) {
-          const tabRef = window.open('about:blank', '_blank');
-          tabRef.document.write(documentation);
-          tabRef.focus();
-          tabRef.document.close();
-          return;
-        }
-
-        const fs = window.require('fs');
-        const os = window.require('os');
-        const path = window.require('path');
-        const ameTmpDir = path.join(os.homedir(), '.ametmp');
-        const printFilePath = path.normalize(path.join(ameTmpDir, 'print.html'));
-        const BrowserWindow = window.require('@electron/remote').BrowserWindow;
-        const electronBrowserWindow = new BrowserWindow({
-          width: 1920,
-          height: 1080,
-        });
-
-        if (!fs.existsSync(ameTmpDir)) {
-          fs.mkdirSync(ameTmpDir);
-        }
-
-        fs.writeFile(printFilePath, documentation, err => {
-          if (err) {
-            console.error('Write error:  ' + err.message);
-          } else {
-            electronBrowserWindow.loadFile(printFilePath);
-            electronBrowserWindow.reload();
-            electronBrowserWindow.focus();
-          }
-        });
-      }),
-      catchError(response => {
-        if (response instanceof HttpErrorResponse) {
-          if (response.status === 422) {
-            return throwError(() => JSON.parse(response.error).error.message.split(': ')[1]);
-          } else if (response.status === 400) {
-            // TODO This should be removed as soon as the SDK has fixed the graphviz error.
-            return throwError(() => JSON.parse(response.error).error.message);
-          }
-        }
-        return throwError(() => 'Server error');
-      }),
-    );
+  private createAspectModelFormData(rdfContent: string): {formData: FormData; uri: string} {
+    const aspectModel = new File([new Blob([rdfContent], {type: 'text/turtle'})], '', {type: 'text/turtle'});
+    const uri = URL.createObjectURL(aspectModel);
+    const formData = new FormData();
+    formData.append('aspectModel', aspectModel);
+    return {formData, uri};
   }
 }

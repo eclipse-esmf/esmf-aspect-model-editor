@@ -23,13 +23,6 @@
       "MIGRATE_WORKSPACE": "迁移Workspace...",
       "AWAITING_STATUS": "请等待直到所有文件迁移完毕"
     },
-    "MIGRATION_STATUS_DIALOG": {
-      "TITLE": "迁移状态",
-      "ERROR": "迁移已完成，但出现错误。您可以在下面看到有错误的文件。请在以前版本的 AME 编辑器中打开它们并修复错误",
-      "SUCCESS": "迁移成功",
-      "CLOSE": "关闭",
-      "VERSION": "迁移版本"
-    },
     "WORKSPACE_MIGRATION_DIALOG": {
       "TITLE": "迁移Workspace至SAMM",
       "FILE_VERSION_WARNING": "您的workspace至少有一个 SAMM 版本下的文件",
@@ -44,10 +37,6 @@
       "TITLE": "版本增加成功",
       "CONTENT": "版本升级成功完成",
       "CLOSE": "关闭"
-    },
-    "INCREASE_VERSION_DIALOG": {
-      "TITLE": "增加Namespaces版本",
-      "LOADING_NAMESPACES": "加载Namespaces"
     },
     "SIDEBAR": {
       "MESSAGE": "找到了具有较低SAMM版本的文件。",

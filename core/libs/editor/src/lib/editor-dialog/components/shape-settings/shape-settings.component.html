@@ -34,44 +34,31 @@
 <div class="shape-settings__content">
   @if (metaModelElement) {
     <form [formGroup]="formGroup" novalidate>
-      @switch (true) {
-        <!-- the same view can be shown in more than one case -->
-        @case (isOfType(['DefaultAspect'])) {
-          <ame-aspect [parentForm]="formGroup"></ame-aspect>
-        }
-        @case (isCharacteristic() && !isOfType(['DefaultTrait'])) {
-          <ame-characteristic [parentForm]="formGroup"></ame-characteristic>
-        }
-        @case (isConstraint()) {
-          <ame-constraint [parentForm]="formGroup"></ame-constraint>
-        }
-        @case (isOfType(['DefaultProperty'])) {
-          <ame-property [parentForm]="formGroup"></ame-property>
-        }
-        @case (isOfType(['DefaultAbstractProperty'])) {
-          <ame-abstract-property [parentForm]="formGroup"></ame-abstract-property>
-        }
-        @case (isOfType(['DefaultOperation'])) {
-          <ame-operation [parentForm]="formGroup"></ame-operation>
-        }
-        @case (isOfType(['DefaultAbstractEntity'])) {
-          <ame-abstract-entity [parentForm]="formGroup"></ame-abstract-entity>
-        }
-        @case (isOfType(['DefaultEntity'])) {
-          <ame-entity [parentForm]="formGroup"></ame-entity>
-        }
-        @case (isOfType(['DefaultUnit'])) {
-          <ame-unit [parentForm]="formGroup"></ame-unit>
-        }
-        @case (isOfType(['DefaultTrait'])) {
-          <ame-trait-characteristic [parentForm]="formGroup"></ame-trait-characteristic>
-        }
-        @case (isOfType(['DefaultEntityInstance'])) {
-          <ame-entity-instance [parentForm]="formGroup"></ame-entity-instance>
-        }
-        @case (isOfType(['DefaultEvent'])) {
-          <ame-event [parentForm]="formGroup"></ame-event>
-        }
+      <!-- the same view can be shown in more than one case -->
+      @if (isOfType(['DefaultAspect'])) {
+        <ame-aspect [parentForm]="formGroup"></ame-aspect>
+      } @else if (isCharacteristic() && !isOfType(['DefaultTrait'])) {
+        <ame-characteristic [parentForm]="formGroup"></ame-characteristic>
+      } @else if (isConstraint()) {
+        <ame-constraint [parentForm]="formGroup"></ame-constraint>
+      } @else if (isOfType(['DefaultProperty'])) {
+        <ame-property [parentForm]="formGroup"></ame-property>
+      } @else if (isOfType(['DefaultAbstractProperty'])) {
+        <ame-abstract-property [parentForm]="formGroup"></ame-abstract-property>
+      } @else if (isOfType(['DefaultOperation'])) {
+        <ame-operation [parentForm]="formGroup"></ame-operation>
+      } @else if (isOfType(['DefaultAbstractEntity'])) {
+        <ame-abstract-entity [parentForm]="formGroup"></ame-abstract-entity>
+      } @else if (isOfType(['DefaultEntity'])) {
+        <ame-entity [parentForm]="formGroup"></ame-entity>
+      } @else if (isOfType(['DefaultUnit'])) {
+        <ame-unit [parentForm]="formGroup"></ame-unit>
+      } @else if (isOfType(['DefaultTrait'])) {
+        <ame-trait-characteristic [parentForm]="formGroup"></ame-trait-characteristic>
+      } @else if (isOfType(['DefaultEntityInstance'])) {
+        <ame-entity-instance [parentForm]="formGroup"></ame-entity-instance>
+      } @else if (isOfType(['DefaultEvent'])) {
+        <ame-event [parentForm]="formGroup"></ame-event>
       }
     </form>
   }

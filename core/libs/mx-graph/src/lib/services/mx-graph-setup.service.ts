@@ -18,9 +18,9 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {APP_CONFIG, AppConfig, AssetsPath, BindingsService, BrowserService} from '@ame/shared';
+import {APP_CONFIG, AssetsPath, BindingsService, BrowserService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {Inject, Injectable, NgZone} from '@angular/core';
+import {inject, Injectable, NgZone} from '@angular/core';
 import {DefaultEntity, DefaultEntityInstance, DefaultProperty, DefaultTrait} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper, ShapeAttribute} from '../helpers';
@@ -28,8 +28,18 @@ import {mxConstants, mxEditor, mxLayoutManager, mxOutline, mxPoint, mxRectangle,
 import {MxGraphAttributeService} from './mx-graph-attribute.service';
 import {MxGraphShapeSelectorService} from './mx-graph-shape-selector.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class MxGraphSetupService {
+  private appConfig = inject(APP_CONFIG);
+  private configurationService = inject(ConfigurationService);
+  private bindingsService = inject(BindingsService);
+  private browserService = inject(BrowserService);
+  private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private translate = inject(LanguageTranslationService);
+  private loadedFiles = inject(LoadedFilesService);
+  private ngZone = inject(NgZone);
+
   private scrollTileSize: mxgraph.mxRectangle;
   private graph: mxgraph.mxGraph;
   private graphSizeDidChange: Function;
@@ -39,18 +49,6 @@ export class MxGraphSetupService {
     x0: 0,
     y0: 0,
   };
-
-  constructor(
-    @Inject(APP_CONFIG) private appConfig: AppConfig,
-    private configurationService: ConfigurationService,
-    private bindingsService: BindingsService,
-    private browserService: BrowserService,
-    private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private translate: LanguageTranslationService,
-    private loadedFiles: LoadedFilesService,
-    private ngZone: NgZone,
-  ) {}
 
   setUp() {
     this.ngZone.runOutsideAngular(() => {

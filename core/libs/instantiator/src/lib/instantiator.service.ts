@@ -17,14 +17,12 @@ import {inject, Injectable} from '@angular/core';
 import {CacheStrategy, NamedElement, RdfModel, useLoader} from '@esmf/aspect-model-loader';
 import {NamedNode, Triple, Util} from 'n3';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class InstantiatorService {
   private loadedFilesService = inject(LoadedFilesService);
 
-  public instantiateRemainingElements(rdfModel: RdfModel, cache: CacheStrategy) {
-    const uniqueSubjects: string[] = rdfModel.store
+  public instantiateRemainingElements(mergedRdfModel: RdfModel, currentRdfModel: RdfModel, cache: CacheStrategy) {
+    const uniqueSubjects: string[] = currentRdfModel.store
       .getSubjects(null, null, null)
       .reduce(
         (subjects, subject) => (!Util.isBlankNode(subject) && !cache.get(subject.value) ? [...subjects, subject.value] : subjects),
@@ -32,7 +30,7 @@ export class InstantiatorService {
       );
 
     for (const subject of uniqueSubjects) {
-      const element = this.instantiateElement(rdfModel, cache, subject);
+      const element = this.instantiateElement(mergedRdfModel, cache, subject);
       if (element) cache.resolveInstance(element);
     }
   }

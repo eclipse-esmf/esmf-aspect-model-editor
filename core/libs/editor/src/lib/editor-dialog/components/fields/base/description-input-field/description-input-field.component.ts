@@ -11,8 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInput, MatLabel} from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {DefaultCharacteristic, DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 import {EditorModelService} from '../../../../editor-model.service';
 import {InputFieldComponent} from '../../input-field.component';
@@ -27,17 +31,23 @@ import {InputFieldComponent} from '../../input-field.component';
       }
     `,
   ],
+  imports: [MatFormFieldModule, MatTooltipModule, MatLabel, ReactiveFormsModule, MatInput],
 })
 export class DescriptionInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
-  constructor(public metaModelDialogService: EditorModelService) {
+  public destroyRef = inject(DestroyRef);
+  public metaModelDialogService = inject(EditorModelService);
+
+  constructor() {
     super();
     this.fieldName = 'description';
   }
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => {
-      this.setDescriptionControls();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.setDescriptionControls();
+      });
   }
 
   getCurrentValue(key: string, locale: string) {

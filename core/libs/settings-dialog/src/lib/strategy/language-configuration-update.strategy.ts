@@ -14,18 +14,14 @@
 import {Settings} from '@ame/settings-dialog';
 import {ElectronTunnelService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {FormArray, FormGroup} from '@angular/forms';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrategy {
-  constructor(
-    private translate: LanguageTranslationService,
-    private electronTunnelService: ElectronTunnelService,
-  ) {}
+  private translate = inject(LanguageTranslationService);
+  private electronTunnelService = inject(ElectronTunnelService);
 
   updateSettings(form: FormGroup, settings: Settings): void {
     const languageConfiguration = form.get('languageConfiguration');

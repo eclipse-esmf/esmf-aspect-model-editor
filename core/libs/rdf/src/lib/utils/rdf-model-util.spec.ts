@@ -30,6 +30,10 @@ import {describe, expect} from '@jest/globals';
 import {Store} from 'n3';
 import {RdfModelUtil} from './rdf-model-util';
 
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 describe('Test RDF Model Util', () => {
   describe('getDataType', () => {
     test('should return Urn', () => {
@@ -70,7 +74,7 @@ describe('Test RDF Model Util', () => {
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
-      expect(RdfModelUtil.getDataType).toBeCalled();
+      expect(RdfModelUtil.getDataType).toHaveBeenCalled();
     });
 
     test('should return DefaultFixedPointConstraint urn', () => {
@@ -80,7 +84,7 @@ describe('Test RDF Model Util', () => {
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
-      expect(RdfModelUtil.getDataType).toBeCalled();
+      expect(RdfModelUtil.getDataType).toHaveBeenCalled();
     });
 
     test('should return DefaultProperty urn', () => {
@@ -90,7 +94,7 @@ describe('Test RDF Model Util', () => {
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
-      expect(RdfModelUtil.getDataType).toBeCalled();
+      expect(RdfModelUtil.getDataType).toHaveBeenCalled();
     });
 
     test('should return DefaultRangeConstraint urn', () => {
@@ -100,7 +104,7 @@ describe('Test RDF Model Util', () => {
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
-      expect(RdfModelUtil.getDataType).toBeCalled();
+      expect(RdfModelUtil.getDataType).toHaveBeenCalled();
     });
 
     test('should return DefaultEnumeration urn', () => {
@@ -110,7 +114,7 @@ describe('Test RDF Model Util', () => {
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
-      expect(RdfModelUtil.getDataType).toBeCalled();
+      expect(RdfModelUtil.getDataType).toHaveBeenCalled();
     });
 
     test('should return DefaultState urn', () => {
@@ -120,7 +124,7 @@ describe('Test RDF Model Util', () => {
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
-      expect(RdfModelUtil.getDataType).toBeCalled();
+      expect(RdfModelUtil.getDataType).toHaveBeenCalled();
     });
 
     test('should return NULL', () => {
@@ -130,7 +134,7 @@ describe('Test RDF Model Util', () => {
       RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(null);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(null);
-      expect(RdfModelUtil.getDataType).toBeCalledTimes(0);
+      expect(RdfModelUtil.getDataType).toHaveBeenCalledTimes(0);
     });
   });
 

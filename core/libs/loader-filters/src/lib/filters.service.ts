@@ -17,10 +17,10 @@ import {MxGraphAttributeService, MxGraphHelper, MxGraphRenderer, MxGraphService,
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {LoadingScreenService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {Inject, Injectable, Injector} from '@angular/core';
+import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {switchMap} from 'rxjs';
-import {FILTER_ATTRIBUTES, FilterAttributesService} from './active-filter.session';
+import {FILTER_ATTRIBUTES} from './active-filter.session';
 import {DefaultFilter} from './filters/default-filter';
 import {PropertiesFilterLoader} from './filters/properties-filter';
 import {FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from './models';
@@ -37,6 +37,11 @@ export type FilteredTrees = {
 
 @Injectable({providedIn: 'root'})
 export class FiltersService {
+  private injector = inject(Injector);
+  private loadingScreen = inject(LoadingScreenService);
+  private translate = inject(LanguageTranslationService);
+  private filterAttributesService = inject(FILTER_ATTRIBUTES);
+
   private filtersMethods = {
     [ModelFilter.DEFAULT]: () => this.selectDefaultFilter(),
     [ModelFilter.PROPERTIES]: () => this.selectPropertiesFilter(),
@@ -44,18 +49,13 @@ export class FiltersService {
   public filteredTree: Partial<FilteredTrees> = {};
   public currentFilter: FilterLoader<any>;
 
-  constructor(
-    private injector: Injector,
-    private loadingScreen: LoadingScreenService,
-    private translate: LanguageTranslationService,
-    @Inject(FILTER_ATTRIBUTES) private filterAttributesService: FilterAttributesService,
-  ) {
+  constructor() {
     window['_filter'] = this;
     this.selectDefaultFilter();
   }
 
   selectDefaultFilter() {
-    this.currentFilter = new DefaultFilter(this.injector.get(LoadedFilesService));
+    this.currentFilter = new DefaultFilter(inject(LoadedFilesService));
     this.filterAttributesService.activeFilter = ModelFilter.DEFAULT;
   }
 
@@ -89,8 +89,8 @@ export class FiltersService {
   }
 
   renderByFilter(filter: ModelFilter) {
-    const mxGraphService = this.injector.get(MxGraphService);
-    const editorService = this.injector.get(EditorService);
+    const mxGraphService = inject(MxGraphService);
+    const editorService = inject(EditorService);
     let selectedCell = mxGraphService.graph.selectionModel.cells?.[0];
     const selectedModelElement = selectedCell && MxGraphHelper.getModelElement(selectedCell);
 
@@ -105,15 +105,15 @@ export class FiltersService {
           MxGraphHelper.filterMode = filter;
           this.filterAttributesService.isFiltering = true;
           this.filtersMethods[filter]?.();
-          const loadedFiles = this.injector.get(LoadedFilesService);
+          const loadedFilesService = inject(LoadedFilesService);
           const mxGraphRenderer = new MxGraphRenderer(
             mxGraphService,
-            this.injector.get(MxGraphShapeOverlayService),
-            this.injector.get(SammLanguageSettingsService),
-            this.injector.get(LoadedFilesService)?.currentLoadedFile?.rdfModel,
+            inject(MxGraphShapeOverlayService),
+            inject(SammLanguageSettingsService),
+            inject(LoadedFilesService)?.currentLoadedFile?.rdfModel,
           );
 
-          const cachedFile = loadedFiles.currentLoadedFile.cachedFile;
+          const cachedFile = loadedFilesService.currentLoadedFile.cachedFile;
           const rootElements = cachedFile.getKeys().reduce((acc, e) => {
             if (cachedFile.get<NamedElement>(e).parents.length <= 0) {
               acc.push(cachedFile.get<NamedElement>(e));

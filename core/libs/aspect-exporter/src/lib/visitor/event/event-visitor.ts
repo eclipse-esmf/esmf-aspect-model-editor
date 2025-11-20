@@ -14,23 +14,19 @@
 import {ListProperties, RdfListService, RdfNodeService} from '@ame/aspect-exporter';
 import {LoadedFilesService} from '@ame/cache';
 import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEvent} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {BaseVisitor} from '../base-visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class EventVisitor extends BaseVisitor<DefaultEvent> {
-  private get store(): Store {
-    return this.loadedFiles.currentLoadedFile?.rdfModel?.store;
-  }
+  public rdfNodeService = inject(RdfNodeService);
+  public rdfListService = inject(RdfListService);
+  public loadedFilesService = inject(LoadedFilesService);
 
-  constructor(
-    private rdfNodeService: RdfNodeService,
-    loadedFiles: LoadedFilesService,
-    public rdfListService: RdfListService,
-  ) {
-    super(loadedFiles);
+  private get store(): Store {
+    return this.loadedFilesService.currentLoadedFile?.rdfModel?.store;
   }
 
   visit(event: DefaultEvent): DefaultEvent {

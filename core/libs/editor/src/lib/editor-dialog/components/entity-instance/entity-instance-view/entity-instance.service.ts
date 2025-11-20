@@ -15,23 +15,19 @@ import {CacheUtils, LoadedFilesService} from '@ame/cache';
 import {ConfirmDialogService, EntityInstanceUtil} from '@ame/editor';
 import {MxGraphHelper} from '@ame/mx-graph';
 import {NotificationsService, config} from '@ame/shared';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultProperty, Entity, Value} from '@esmf/aspect-model-loader';
 import {ConfirmDialogEnum} from '../../../../models/confirm-dialog.enum';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EntityInstanceService {
-  get currentCachedFile() {
-    return this.loadedFiles.currentLoadedFile.cachedFile;
-  }
+  private confirmDialogService = inject(ConfirmDialogService);
+  private notifications = inject(NotificationsService);
+  private loadedFilesService = inject(LoadedFilesService);
 
-  constructor(
-    private confirmDialogService: ConfirmDialogService,
-    private notifications: NotificationsService,
-    private loadedFiles: LoadedFilesService,
-  ) {}
+  get currentCachedFile() {
+    return this.loadedFilesService.currentLoadedFile.cachedFile;
+  }
 
   onPropertyRemove(property: DefaultProperty, acceptCallback: Function) {
     const entityValues = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance).filter(eInstance => {
@@ -75,7 +71,7 @@ export class EntityInstanceService {
       const newValue = shouldBeEntityInstance
         ? new DefaultEntityInstance({
             name: `${property.name}Value`,
-            aspectModelUrn: `${this.loadedFiles.currentLoadedFile.namespace}#${property.name}Value`,
+            aspectModelUrn: `${this.loadedFilesService.currentLoadedFile.namespace}#${property.name}Value`,
             metaModelVersion: config.currentSammVersion,
             type: property.characteristic?.dataType as DefaultEntity,
           })
@@ -151,7 +147,7 @@ export class EntityInstanceService {
   }
 
   private removeEntityValuesFromCharacteristic(characteristic: DefaultEnumeration) {
-    if (this.loadedFiles.isElementExtern(characteristic)) {
+    if (this.loadedFilesService.isElementExtern(characteristic)) {
       return;
     }
 

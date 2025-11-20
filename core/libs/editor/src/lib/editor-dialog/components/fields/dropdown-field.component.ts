@@ -15,21 +15,24 @@ import {LoadedFilesService} from '@ame/cache';
 import {ModelService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {Directive, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {Directive, EventEmitter, inject, Input, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {DefaultCharacteristic, DefaultConstraint, NamedElement} from '@esmf/aspect-model-loader';
-import {Subscription} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {EditorModelService} from '../../editor-model.service';
 import {PreviousFormDataSnapshot} from '../../interfaces';
 
 @Directive()
-export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | DefaultConstraint> implements OnDestroy {
+export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | DefaultConstraint> {
   @Input() parentForm: FormGroup;
   @Input() previousDataSnapshot: PreviousFormDataSnapshot = {};
 
+  public editorModelService = inject(EditorModelService);
+  public modelService = inject(ModelService);
+  public languageSettings = inject(SammLanguageSettingsService);
+  public loadedFilesService = inject(LoadedFilesService);
+
   public metaModelElement: T;
-  public subscription: Subscription = new Subscription();
   public selectedMetaModelElement: T;
   public metaModelClassName: string;
   public get originalCharacteristic(): NamedElement {
@@ -39,13 +42,6 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   protected _previousData: PreviousFormDataSnapshot = {};
 
   @Output() previousData = new EventEmitter<PreviousFormDataSnapshot>();
-
-  protected constructor(
-    public editorModelService: EditorModelService,
-    public modelService: ModelService,
-    public languageSettings: SammLanguageSettingsService,
-    public loadedFilesService: LoadedFilesService,
-  ) {}
 
   protected setPreviousData() {
     if (this.metaModelElement instanceof DefaultCharacteristic && this.metaModelElement.isPredefined) {
@@ -112,9 +108,5 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
     this.metaModelElement.metaModelVersion = this.loadedFilesService.currentLoadedFile.rdfModel.getMetaModelVersion();
     this.editorModelService.updateMetaModelElement(this.metaModelElement);
     this.parentForm.get('changedMetaModel').setValue(modelElement);
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }

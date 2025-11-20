@@ -12,9 +12,9 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxEvent, mxUtils} from '@ame/mx-graph';
+import {mxEvent, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxUtils} from '@ame/mx-graph';
 import {BindingsService} from '@ame/shared';
-import {Injectable, NgZone} from '@angular/core';
+import {inject, Injectable, NgZone} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {BehaviorSubject} from 'rxjs';
 import {EditorService} from '../../editor.service';
@@ -23,22 +23,20 @@ import {ShapeSettingsStateService} from './shape-settings-state.service';
 
 @Injectable({providedIn: 'root'})
 export class ShapeSettingsService {
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private mxGraphService = inject(MxGraphService);
+  private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
+  private bindingsService = inject(BindingsService);
+  private editorService = inject(EditorService);
+  private shapeSettingsStateService = inject(ShapeSettingsStateService);
+  private openReferencedElementService = inject(OpenReferencedElementService);
+  public loadedFiles = inject(LoadedFilesService);
+  private ngZone = inject(NgZone);
+
   public modelElement: NamedElement = null;
 
   private selectedCellsSubject = new BehaviorSubject([]);
   public selectedCells$ = this.selectedCellsSubject.asObservable();
-
-  constructor(
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphService: MxGraphService,
-    private mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-    private bindingsService: BindingsService,
-    private editorService: EditorService,
-    private shapeSettingsStateService: ShapeSettingsStateService,
-    private openReferencedElementService: OpenReferencedElementService,
-    public loadedFiles: LoadedFilesService,
-    private ngZone: NgZone,
-  ) {}
 
   setGraphListeners() {
     this.setMoveCellsListener();

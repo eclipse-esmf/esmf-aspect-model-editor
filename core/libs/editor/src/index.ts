@@ -15,7 +15,6 @@ export * from './lib/confirm-dialog/confirm-dialog.component';
 export * from './lib/confirm-dialog/confirm-dialog.service';
 export * from './lib/editor-dialog';
 export * from './lib/editor-toolbar';
-export * from './lib/editor-toolbar/components/theme-switcher/theme-switcher.component';
 export * from './lib/editor-toolbar/enum/visible-step';
 export * from './lib/editor.service';
 export * from './lib/editor.types';

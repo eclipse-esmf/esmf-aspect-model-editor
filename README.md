@@ -4,7 +4,7 @@
 
 - [Introduction](#introduction)
 - [Getting help](#getting-help)
-- [Getting started](#getting-started)
+- [Getting started](#getting-started-for-developers)
   - [Setup](#setup)
   - [Install & Run](#install--run)
   - [Run As Electron](#run-as-electron)
@@ -29,7 +29,7 @@ Are you having trouble with Aspect Model Editor? We want to help!
 
 ### Getting started (for developers)
 
-#### Artifacts to use 
+#### Artifacts to use
 
 You can clone the repositories to run the aspect model editor. Feel free to contribute.
 If you want to run the aspect model editor from repositories, please ensure to clone and start the [backend](https://github.com/eclipse-esmf/esmf-aspect-model-editor-backend) first.

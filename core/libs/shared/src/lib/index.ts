@@ -15,7 +15,6 @@ export * from './components';
 export * from './config';
 export * from './constants';
 export * from './enums';
-export * from './factory';
 export * from './general-config';
 export * from './http-error.interceptor';
 export * from './http-header-builder';

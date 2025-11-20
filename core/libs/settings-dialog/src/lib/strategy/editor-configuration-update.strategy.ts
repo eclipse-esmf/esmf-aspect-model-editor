@@ -13,15 +13,13 @@
 
 import {MxGraphService} from '@ame/mx-graph';
 import {Settings} from '@ame/settings-dialog';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EditorConfigurationUpdateStrategy implements SettingsUpdateStrategy {
-  constructor(private mxGraphService: MxGraphService) {}
+  private mxGraphService = inject(MxGraphService);
 
   updateSettings(form: FormGroup, settings: Settings): void {
     const editorConfiguration = form.get('editorConfiguration');

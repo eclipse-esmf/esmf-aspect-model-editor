@@ -28,9 +28,7 @@ import {
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class CharacteristicEntityConnectionHandler implements MultiShapeConnector<DefaultCharacteristic, DefaultEntity> {
   private mxGraphService = inject(MxGraphService);
   private mxGraphAttributeService = inject(MxGraphAttributeService);
@@ -58,8 +56,8 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
 
     // Add icon when you simply connect an enumeration with an entity.
     if (parentMetaModel instanceof DefaultEnumeration) {
-      // TODO: User should be informed if he wants to change the entity, otherwise, all the values will be deleted.
-      // TODO: This should be done in the future.
+      // TODO User should be informed if he wants to change the entity, otherwise, all the values will be deleted.
+      // TODO This should be done in the future.
       // if (!parentMetaModel.createdFromEditor) {
       //   parentMetaModel.values = [];
       // }
@@ -102,7 +100,7 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
       this.mxGraphShapeOverlayService.removeComplexTypeShapeOverlays(parent);
     }
 
-    // TODO: Should be defined in more details
+    // TODO Should be defined in more details
     if (metaModel instanceof DefaultEntityInstance) {
       for (const child of metaModel.children) {
         MxGraphHelper.removeRelation(metaModel, child);

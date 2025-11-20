@@ -13,22 +13,20 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {SaveValidateErrorsCodes} from '@ame/shared';
-import {Injectable} from '@angular/core';
-import {Aspect, Samm} from '@esmf/aspect-model-loader';
+import {inject, Injectable} from '@angular/core';
 import {environment} from 'environments/environment';
 import {Observable, Observer, Subject, throwError} from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ModelService {
+  private loadedFilesService = inject(LoadedFilesService);
   private visitorAnnouncerSubject$ = new Subject<{observer: Observer<void>}>();
 
   get visitorAnnouncer$() {
     return this.visitorAnnouncerSubject$.asObservable();
   }
 
-  constructor(private loadedFilesService: LoadedFilesService) {
+  constructor() {
     if (!environment.production) {
       window['angular.modelService'] = this;
     }
@@ -36,17 +34,6 @@ export class ModelService {
 
   removeAspect() {
     this.loadedFilesService.currentLoadedFile.aspect = null;
-  }
-
-  addAspect(aspect: Aspect) {
-    this.loadedFilesService.currentLoadedFile.aspect = aspect;
-  }
-
-  getSammVersion(aspectModel: string) {
-    const partialSammUri = `<${Samm.BASE_URI}meta-model:`;
-    const startVersionIndex = aspectModel.indexOf(partialSammUri);
-    const endVersionIndex = aspectModel.indexOf('#', startVersionIndex);
-    return aspectModel.slice(startVersionIndex + partialSammUri.length, endVersionIndex);
   }
 
   finishStoreUpdate(observer: Observer<void>) {

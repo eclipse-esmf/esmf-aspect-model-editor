@@ -17,14 +17,8 @@ import {mxgraph} from 'mxgraph-factory';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class AspectConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Aspect> {
-  constructor() {
-    super();
-  }
-
   public connect(aspect: Aspect, source: mxgraph.mxCell) {
     const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty);
     const child = this.renderTree(defaultProperty, source);

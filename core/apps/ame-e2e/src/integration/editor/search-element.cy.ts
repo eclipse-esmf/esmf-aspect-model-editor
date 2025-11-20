@@ -12,6 +12,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+/// <reference types="cypress" />
+
 import {SELECTOR_searchInputField} from '../../support/constants';
 
 describe('Test search for element', () => {

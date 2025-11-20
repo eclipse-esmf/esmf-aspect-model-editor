@@ -12,7 +12,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/// <reference types="Cypress" />
+/// <reference types="cypress" />
+
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 import 'cypress-real-events';
 import {
@@ -212,7 +214,7 @@ describe('Test editing Aspect', () => {
   });
 
   it('can delete existing aspect', () => {
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different': [
         {
           version: '1.0.0',

@@ -12,9 +12,16 @@
  */
 
 import {ModelService} from '@ame/rdf/services';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MatOptionSelectionChange} from '@angular/material/core';
+import {AsyncPipe} from '@angular/common';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {MatIconButton} from '@angular/material/button';
+import {MatOptgroup, MatOption, MatOptionSelectionChange} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultDuration, DefaultUnit, Unit} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
@@ -24,6 +31,19 @@ declare const sammUDefinition: any;
 @Component({
   selector: 'ame-reference-unit-input-field',
   templateUrl: './reference-unit-input-field.component.html',
+  imports: [
+    MatFormFieldModule,
+    MatLabel,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatInput,
+    MatIconButton,
+    MatIconModule,
+    MatAutocomplete,
+    AsyncPipe,
+    MatOptgroup,
+    MatOption,
+  ],
 })
 export class ReferenceUnitInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit, OnDestroy {
   public filteredPredefinedUnits$: Observable<Array<any>>;
@@ -32,21 +52,24 @@ export class ReferenceUnitInputFieldComponent extends InputFieldComponent<Defaul
   public unitDisplayControl: FormControl;
   public referenceUnitControl: FormControl;
 
-  constructor(private modelService: ModelService) {
-    super();
-    // this.unitInstantiator = new UnitInstantiator(
-    //   new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile),
-    // );
-  }
+  private modelService = inject(ModelService);
+
+  // constructor() {
+  // this.unitInstantiator = new UnitInstantiator(
+  //   new MetaModelElementInstantiator(this.modelService.currentRdfModel, this.currentCachedFile),
+  // );
+  //}
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(metaModelElement => {
-      this.units = metaModelElement ? Object.keys(sammUDefinition.units).map(key => sammUDefinition.units[key]) : null;
-      if (this.metaModelElement instanceof DefaultDuration) {
-        this.units = this.units.filter(unit => unit.quantityKinds && unit.quantityKinds.includes('time'));
-      }
-      this.initReferenceUnitControl();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(metaModelElement => {
+        this.units = metaModelElement ? Object.keys(sammUDefinition.units).map(key => sammUDefinition.units[key]) : null;
+        if (this.metaModelElement instanceof DefaultDuration) {
+          this.units = this.units.filter(unit => unit.quantityKinds && unit.quantityKinds.includes('time'));
+        }
+        this.initReferenceUnitControl();
+      });
   }
 
   ngOnDestroy() {

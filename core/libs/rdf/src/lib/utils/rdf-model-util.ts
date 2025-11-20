@@ -38,7 +38,7 @@ import {
   Type,
   Value,
 } from '@esmf/aspect-model-loader';
-import {DataFactory, NamedNode, Quad, Util} from 'n3';
+import {DataFactory, NamedNode} from 'n3';
 import {getSammNamespaces} from './rdf-samm-namespaces';
 
 declare const sammUDefinition: any;
@@ -50,10 +50,6 @@ export class RdfModelUtil {
 
   static isCharacteristicInstance(urn: string, sammC: SammC): boolean {
     return urn && urn.includes(sammC.getNamespace());
-  }
-
-  static isUnitInstance(urn: string, sammU: SammU): boolean {
-    return urn && urn.includes(sammU.getNamespace());
   }
 
   static getValueWithoutUrnDefinition(value: Value | string): string {
@@ -196,46 +192,12 @@ export class RdfModelUtil {
     return dataType ? DataFactory.namedNode(dataType.getUrn()) : null;
   }
 
-  static getEffectiveType(quad: Quad, rdfModel: RdfModel): Quad {
-    const samm = rdfModel.samm;
-
-    if (Util.isBlankNode(quad.subject)) {
-      let resolvedQuad: Array<Quad>;
-      if (samm.isDataTypeProperty(quad.predicate.value)) {
-        resolvedQuad = [quad];
-      } else {
-        resolvedQuad = rdfModel.store.getQuads(quad.subject, null, null, null);
-      }
-
-      quad = resolvedQuad.find(propertyQuad => samm.isDataTypeProperty(propertyQuad.predicate.value));
-    } else if (quad.predicate.value === `${samm.getRdfSyntaxNameSpace()}type`) {
-      quad = rdfModel.store
-        .getQuads(quad.subject, null, null, null)
-        .find(propertyQuad => samm.isDataTypeProperty(propertyQuad.predicate.value));
-    }
-
-    return quad;
-  }
-
-  /**
-   * capitalizes first letter : e.g. : "hello" -> "Hello"
-   *
-   * @param stringVal initial value
-   * @returns formatted string
-   */
-  static capitalizeFirstLetter(stringVal: string): string {
-    if (!stringVal) {
-      return null;
-    }
-    return stringVal.charAt(0).toUpperCase() + stringVal.slice(1);
-  }
-
   /**
    * Check if the aspectModelUrn is a predefined characteristic
    *
    * @param aspectModelUrn urn of the characteristic
    * @param sammC definition of the characteristic
-   * @return boolean if the characteristic is an predefined value
+   * @return boolean if the characteristic is a predefined value
    */
   static isPredefinedCharacteristic(aspectModelUrn: string, sammC: SammC): boolean {
     return [
@@ -249,15 +211,6 @@ export class RdfModelUtil {
       `${sammC.getNamespace()}ResourcePath`,
       `${sammC.getNamespace()}MimeType`,
     ].some(predefinedUrn => predefinedUrn === aspectModelUrn);
-  }
-
-  static isEntity(quad: Quad, rdfModel: RdfModel): boolean {
-    const samm = rdfModel.samm;
-    if (samm.Entity().equals(quad.object)) {
-      return true;
-    }
-
-    return !!rdfModel.findAnyProperty(quad).find(quadProperty => samm.Entity().equals(quadProperty.subject));
   }
 
   static isEntityInstance(elementType: string, loadedFilesService: LoadedFilesService): boolean {

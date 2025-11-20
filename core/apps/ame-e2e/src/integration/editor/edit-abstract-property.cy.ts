@@ -12,7 +12,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/// <reference types="Cypress" />
+/// <reference types="cypress" />
 
 import {
   FIELD_descriptionen,
@@ -125,7 +125,7 @@ describe('Create and Edit Abstract Property', () => {
   });
 
   // skipped because the entry file is wrong
-  // TODO: fix the entry file
+  // TODO fix the entry file
   describe.skip('Abstract Property import', () => {
     it('should import', () => {
       cy.visitDefault();

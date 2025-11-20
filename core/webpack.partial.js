@@ -13,7 +13,7 @@
 
 const webpack = require('webpack');
 
-module.exports = {
+export default {
   node: {global: true, __filename: false, __dirname: false},
   resolve: {
     fallback: {

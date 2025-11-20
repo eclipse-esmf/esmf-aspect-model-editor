@@ -11,18 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {StartupService} from '@ame/app/startup.service';
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
-import {FileHandlingService} from '@ame/editor';
-import {MigratorService} from '@ame/migrator';
 import {MxGraphHelper, ThemeService} from '@ame/mx-graph';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {BrowserService, ElectronTunnelService, TitleService} from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {SearchesStateService} from '@ame/utils';
-import {Component, HostListener, Injector, OnInit} from '@angular/core';
-import {Router, RouterOutlet} from '@angular/router';
-import {StartupService} from './startup.service';
+import {Component, HostListener, inject, Injector, OnInit} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import {take} from 'rxjs';
 
 @Component({
   selector: 'ame-root',
@@ -31,25 +29,21 @@ import {StartupService} from './startup.service';
   imports: [RouterOutlet],
 })
 export class AppComponent implements OnInit {
+  private titleService = inject(TitleService);
+  private domainModelToRdf = inject(DomainModelToRdfService);
+  private browserService = inject(BrowserService);
+  private electronTunnelService = inject(ElectronTunnelService);
+  private configurationService = inject(ConfigurationService);
+  private themeService = inject(ThemeService);
+  private translate = inject(LanguageTranslationService);
+  private searchesStateService = inject(SearchesStateService);
+  private startupService = inject(StartupService);
+  private injector = inject(Injector);
+
   private language = 'en';
   public title = 'Aspect Model Editor';
 
-  constructor(
-    private titleService: TitleService,
-    private domainModelToRdf: DomainModelToRdfService,
-    private browserService: BrowserService,
-    private electronTunnelService: ElectronTunnelService,
-    private configurationService: ConfigurationService,
-    private themeService: ThemeService,
-    private startupService: StartupService,
-    private migratorService: MigratorService,
-    private sidebarService: SidebarStateService,
-    private fileHandlingService: FileHandlingService,
-    private translate: LanguageTranslationService,
-    private searchesStateService: SearchesStateService,
-    private router: Router,
-    private injector: Injector,
-  ) {
+  constructor() {
     this.domainModelToRdf.listenForStoreUpdates();
     MxGraphHelper.injector = this.injector;
   }
@@ -62,26 +56,17 @@ export class AppComponent implements OnInit {
     this.titleService.setTitle(this.title);
 
     if (this.browserService.isStartedAsElectronApp() || !window.require) {
-      this.setMenuTranslation();
+      //this.setMenuTranslation();
       this.setContextMenu();
     }
 
-    this.themeService.setCssVars(this.configurationService.getSettings()?.useSaturatedColors ? 'dark' : 'light');
+    this.themeService.setCssVars(this.configurationService.getSettings()?.useSaturatedColors ? '' : 'light');
 
     if (window.location.search.includes('?e2e=true')) {
       return;
     }
 
-    // TODO: In case of no service opened, display a error page
-    if (!this.electronTunnelService.ipcRenderer) {
-      this.migratorService.startMigrating().subscribe(() => {
-        this.fileHandlingService.createEmptyModel();
-        this.sidebarService.workspace.refresh();
-        this.router.navigate([{outlets: {migrator: null, 'export-namespaces': null, 'import-namespaces': null}}]);
-      });
-    } else {
-      this.startupService.listenForLoading();
-    }
+    this.startupService.listenForLoading().pipe(take(1)).subscribe();
   }
 
   @HostListener('window:keydown.control.f')
@@ -116,6 +101,7 @@ export class AppComponent implements OnInit {
   }
 
   setContextMenu(): void {
+    if (!window.require) return;
     const {Menu} = window.require('@electron/remote');
     const {shell} = window.require('electron');
 

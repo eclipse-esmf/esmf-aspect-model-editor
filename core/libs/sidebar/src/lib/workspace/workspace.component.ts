@@ -13,41 +13,60 @@
 
 import {ModelCheckerService} from '@ame/editor';
 import {SidebarStateService} from '@ame/sidebar';
-import {ChangeDetectorRef, Component, OnDestroy, OnInit, inject} from '@angular/core';
-import {Subscription, finalize, map} from 'rxjs';
+import {ChangeDetectorRef, Component, DestroyRef, effect, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {MatMiniFabButton} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
+import {finalize, map} from 'rxjs';
+import {WorkspaceEmptyComponent} from './workspace-empty/workspace-empty.component';
+import {WorkspaceErrorComponent} from './workspace-error/workspace-error.component';
+import {WorkspaceFileElementsComponent} from './workspace-file-elements/workspace-file-elements.component';
+import {WorkspaceFileListComponent} from './workspace-file-list/workspace-file-list.component';
 
 @Component({
   selector: 'ame-workspace',
   templateUrl: './workspace.component.html',
   styleUrls: ['./workspace.component.scss'],
+  imports: [
+    MatTooltipModule,
+    MatMiniFabButton,
+    MatIconModule,
+    WorkspaceErrorComponent,
+    WorkspaceEmptyComponent,
+    WorkspaceFileListComponent,
+    WorkspaceFileElementsComponent,
+    TranslatePipe,
+  ],
 })
-export class WorkspaceComponent implements OnInit, OnDestroy {
-  public sidebarService = inject(SidebarStateService);
+export class WorkspaceComponent {
+  private destroyRef = inject(DestroyRef);
+  private changeDetector = inject(ChangeDetectorRef);
   private modelChecker = inject(ModelCheckerService);
+
+  public sidebarService = inject(SidebarStateService);
 
   public namespaces = this.sidebarService.namespacesState;
   public loading = false;
   public error: {code: number; message: string; path: string} = null;
 
   public get namespacesKeys(): string[] {
-    return this.namespaces.namespacesKeys;
+    return this.namespaces.namespacesKeys();
   }
 
-  private subscription = new Subscription();
+  constructor() {
+    effect(() => {
+      this.sidebarService.workspace.refreshTick();
 
-  constructor(private changeDetector: ChangeDetectorRef) {}
-
-  ngOnInit(): void {
-    let refreshing$: Subscription;
-    const namespaces$ = this.sidebarService.workspace.refreshSignal$.subscribe(() => {
-      refreshing$?.unsubscribe();
       this.error = null;
       this.loading = true;
       this.changeDetector.detectChanges();
 
-      refreshing$ = this.modelChecker
+      this.modelChecker
         .detectWorkspaceErrors()
         .pipe(
+          takeUntilDestroyed(this.destroyRef),
           map(files => this.sidebarService.updateWorkspace(files)),
           finalize(() => {
             this.loading = false;
@@ -62,12 +81,5 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
           },
         });
     });
-
-    this.subscription.add(refreshing$);
-    this.subscription.add(namespaces$);
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }

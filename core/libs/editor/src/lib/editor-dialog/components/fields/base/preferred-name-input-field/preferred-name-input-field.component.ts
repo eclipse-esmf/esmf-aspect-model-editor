@@ -12,19 +12,26 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInput, MatLabel} from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {DefaultCharacteristic, DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-preferred-name-input-field',
   templateUrl: './preferred-name-input-field.component.html',
+  imports: [MatFormFieldModule, MatTooltipModule, MatLabel, ReactiveFormsModule, MatInput],
 })
 export class PreferredNameInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
   public fieldName = 'preferredName';
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => this.setPreferredNameNameControls());
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.setPreferredNameNameControls());
   }
 
   getCurrentValue(key: string, locale: string) {

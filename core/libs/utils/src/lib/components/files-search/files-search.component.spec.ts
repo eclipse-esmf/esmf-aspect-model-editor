@@ -5,6 +5,7 @@ import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {provideHttpClient} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
+import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -12,11 +13,20 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {MockModule, MockProvider} from 'ng-mocks';
-import {of} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {MockProvider} from 'ng-mocks';
+import {of, Subject} from 'rxjs';
 import {SearchesStateService} from '../../search-state.service';
 import {FilesSearchComponent} from './files-search.component';
+
+jest.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+  SaveModelDialogService: class {},
+  FileHandlingService: class {},
+  ModelCheckerService: class {
+    detectWorkspaceErrors = jest.fn();
+  },
+}));
 
 describe('Files search', () => {
   let component: FilesSearchComponent;
@@ -24,38 +34,36 @@ describe('Files search', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        FilesSearchComponent,
-        FormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDialogModule,
-        BrowserAnimationsModule,
-        MockModule(TranslateModule),
-      ],
+      imports: [FilesSearchComponent, FormsModule, MatFormFieldModule, MatInputModule, MatDialogModule, BrowserAnimationsModule],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         MockProvider(MatDialogRef),
         MockProvider(MxGraphService),
         MockProvider(NotificationsService),
-        MockProvider(FileHandlingService),
-        MockProvider(SaveModelDialogService),
         MockProvider(MxGraphShapeOverlayService),
         MockProvider(MxGraphAttributeService),
-        MockProvider(ModelCheckerService, {
-          detectWorkspaceErrors: jest.fn(() => of({})),
+        MockProvider(TranslateService, {
+          onTranslationChange: new Subject(),
+          onLangChange: new Subject(),
+          onDefaultLangChange: new Subject(),
+          onFallbackLangChange: new Subject(),
+          get: jest.fn(() => of('')),
         }),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        MockProvider(TranslateService),
         MockProvider(SearchesStateService),
         MockProvider(SidebarStateService, {
-          namespacesState: {namespaces: []} as any,
+          namespacesState: {namespaces: signal({})} as any,
           updateWorkspace: jest.fn(() => of({})) as any,
         }),
         MockProvider(MatDialog),
         MockProvider(ModelSavingTrackerService),
         MockProvider(SearchService),
         MockProvider(LanguageTranslationService),
+        MockProvider(FileHandlingService),
+        MockProvider(SaveModelDialogService),
+        MockProvider(ModelCheckerService, {
+          detectWorkspaceErrors: jest.fn(() => of({})),
+        }),
       ],
     }).compileComponents();
   });

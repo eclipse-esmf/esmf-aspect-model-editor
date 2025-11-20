@@ -15,9 +15,7 @@ import {Injectable} from '@angular/core';
 import {DefaultEntityInstance} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class MxGraphCharacteristicHelper {
   /**
    * When we delete the edge between enumeration and entity,

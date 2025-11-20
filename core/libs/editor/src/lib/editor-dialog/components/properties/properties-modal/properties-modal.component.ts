@@ -12,11 +12,29 @@
  */
 
 import {CacheUtils, LoadedFilesService} from '@ame/cache';
-import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {NgClass} from '@angular/common';
+import {AfterViewInit, Component, inject, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatCheckbox} from '@angular/material/checkbox';
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
+  MatTable,
+  MatTableDataSource,
+} from '@angular/material/table';
 import {
   DefaultAspect,
   DefaultEntity,
@@ -25,6 +43,7 @@ import {
   PropertyPayload,
   PropertyUrn,
 } from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 
 export interface PropertiesDialogData {
   metaModelElement?: DefaultEntity | DefaultAspect;
@@ -43,8 +62,40 @@ export interface PropertyStatus {
 @Component({
   templateUrl: './properties-modal.component.html',
   styleUrls: ['./properties-modal.component.scss'],
+  imports: [
+    MatIconModule,
+    MatIconButton,
+    MatDialogTitle,
+    MatDialogContent,
+    MatTable,
+    MatHeaderCell,
+    MatCell,
+    MatColumnDef,
+    MatCellDef,
+    MatHeaderCellDef,
+    NgClass,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatLabel,
+    MatInput,
+    MatCheckbox,
+    MatHeaderRow,
+    MatRow,
+    MatPaginator,
+    MatDialogActions,
+    MatButton,
+    TranslatePipe,
+    MatHeaderRowDef,
+    MatRowDef,
+  ],
 })
 export class PropertiesModalComponent implements OnInit, AfterViewInit {
+  private loadedFilesService = inject(LoadedFilesService);
+  private formBuilder = inject(FormBuilder);
+  private dialogRef = inject(MatDialogRef<PropertiesModalComponent>);
+
+  public data = inject(MAT_DIALOG_DATA) as PropertiesDialogData;
+
   public form: FormGroup;
   public keys: string[] = [];
 
@@ -58,13 +109,6 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
   public get extendedProperties(): DefaultProperty[] {
     return (this.data.metaModelElement as DefaultEntity)?.extends_?.properties || [];
   }
-
-  constructor(
-    private loadedFiles: LoadedFilesService,
-    private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<PropertiesModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: PropertiesDialogData,
-  ) {}
 
   ngOnInit() {
     const entity = this.data.metaModelElement as DefaultEntity;
@@ -120,7 +164,7 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
 
     this.headers = this.standardHeaders;
     if (this.data.metaModelElement instanceof DefaultEntity) {
-      const entityValues = CacheUtils.getCachedElements(this.loadedFiles.currentLoadedFile.cachedFile, DefaultEntityInstance);
+      const entityValues = CacheUtils.getCachedElements(this.loadedFilesService.currentLoadedFile.cachedFile, DefaultEntityInstance);
       entityValues.forEach((entityValue: DefaultEntityInstance) => {
         if (entityValue.type.aspectModelUrn === this.data.metaModelElement.aspectModelUrn) {
           this.headers = this.enumerationEntityHeaders;

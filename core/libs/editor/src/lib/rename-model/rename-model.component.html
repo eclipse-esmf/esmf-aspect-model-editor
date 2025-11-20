@@ -16,26 +16,35 @@
   <mat-icon>close</mat-icon>
 </button>
 
-@if (fileNameControl) {
-  <mat-dialog-content>
-    <p>
-      {{ 'DECLARE_NAME_DIALOG.INFO_CONTENT' | translate }}
-    </p>
+@if (loading()) {
+  <div class="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+} @else {
+  @if (fileNameControl) {
+    <mat-dialog-content>
+      <p>
+        {{ 'DECLARE_NAME_DIALOG.INFO_CONTENT' | translate }}
+      </p>
 
-    <mat-form-field>
-      <input [formControl]="fileNameControl" name="file-name" matInput placeholder="Name" data-cy="file-rename" />
-      <span class="input-suffix" matSuffix>.ttl</span>
-      @if (fileNameControl.getError('required')) {
-        <mat-error>* {{ 'DECLARE_NAME_DIALOG.REQUIRED_ERROR' | translate }}</mat-error>
-      }
-      @if (fileNameControl.getError('pattern')) {
-        <mat-error>{{ 'DECLARE_NAME_DIALOG.CHARACTERS_ERROR' | translate }}</mat-error>
-      }
-      @if (fileNameControl.getError('sameFile')) {
-        <mat-error>{{ 'DECLARE_NAME_DIALOG.EXIST_ERROR' | translate }}</mat-error>
-      }
-    </mat-form-field>
-  </mat-dialog-content>
+      <mat-form-field>
+        <input [formControl]="fileNameControl" name="file-name" matInput placeholder="Name" data-cy="file-rename" />
+        <span class="input-suffix" matSuffix>.ttl</span>
+        @if (fileNameControl.getError('required')) {
+          <mat-error>* {{ 'DECLARE_NAME_DIALOG.REQUIRED_ERROR' | translate }}</mat-error>
+        }
+        @if (fileNameControl.getError('pattern')) {
+          <mat-error>{{ 'DECLARE_NAME_DIALOG.CHARACTERS_ERROR' | translate }}</mat-error>
+        }
+        @if (fileNameControl.getError('sameFile')) {
+          <mat-error>{{ 'DECLARE_NAME_DIALOG.EXIST_ERROR' | translate }}</mat-error>
+        }
+        @if (fileNameControl.getError('fileExists')) {
+          <mat-error>{{ 'DECLARE_NAME_DIALOG.ALREADY_DEFINED_ERROR' | translate }}</mat-error>
+        }
+      </mat-form-field>
+    </mat-dialog-content>
+  }
 }
 
 <mat-dialog-actions align="end">

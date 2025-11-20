@@ -11,10 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 
 import {LoadedFilesService} from '@ame/cache';
-import {MxGraphService} from '@ame/mx-graph';
 import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
 import {
   DefaultConstraint,
@@ -26,22 +25,17 @@ import {
   DefaultRangeConstraint,
   DefaultRegularExpressionConstraint,
   DefaultTrait,
-  SammC,
 } from '@esmf/aspect-model-loader';
 import {ComplexType} from 'libs/aspect-model-loader/src/lib/aspect-meta-model/complex-type';
-import {Store} from 'n3';
+import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {BaseVisitor} from '../base-visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
-  private get store(): Store {
-    return this.loadedFilesService.currentLoadedFile.rdfModel.store;
-  }
-
-  private get sammC(): SammC {
-    return this.loadedFilesService.currentLoadedFile.rdfModel.sammC;
-  }
+  public rdfNodeService = inject(RdfNodeService);
+  public rdfListService = inject(RdfListService);
+  public loadedFilesService = inject(LoadedFilesService);
 
   private readonly constraintCallbacks = {
     DefaultRangeConstraint: (constraint: DefaultRangeConstraint, characteristicType: ComplexType) =>
@@ -53,15 +47,6 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
     DefaultRegularExpressionConstraint: (constraint: DefaultRegularExpressionConstraint) => this.updateRegularExpression(constraint),
     DefaultLocaleConstraint: (constraint: DefaultLocaleConstraint) => this.updateLocale(constraint),
   };
-
-  constructor(
-    public rdfNodeService: RdfNodeService,
-    public mxGraphService: MxGraphService,
-    private loadedFilesService: LoadedFilesService,
-    loadedFiles: LoadedFilesService,
-  ) {
-    super(loadedFiles);
-  }
 
   visit(constraint: DefaultConstraint): DefaultConstraint {
     this.setPrefix(constraint.aspectModelUrn);

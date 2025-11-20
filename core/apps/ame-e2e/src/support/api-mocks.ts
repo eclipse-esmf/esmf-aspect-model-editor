@@ -27,6 +27,17 @@ interface InterceptorConfigNamespaceFile {
   };
 }
 
+/**
+ * URL pattern for intercepting "namespaces" requests.
+ */
+export const NAMESPACES_URL = 'http://localhost:9090/ame/api/models/namespaces*';
+/**
+ * SAMM version number to be used in e2e tests.
+ * Affects only "version" fields of models loaded via interceptors, doesn't impact actual functionality.
+ * Should match the real SAMM version in the application.
+ */
+export const SAMM_VERSION_ACTUAL = '2.2.0';
+
 export function setUpStaticModellingInterceptors(): void {
   cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'}).as('validateModel');
   cy.intercept('POST', 'http://localhost:9090/ame/api/models/format', {}).as('formatModel');
@@ -40,7 +51,7 @@ export function setUpDynamicModellingInterceptors(namespacesConfig: InterceptorC
   // Set up namespaces structure to return
   cy.intercept(
     'GET',
-    'http://localhost:9090/ame/api/models/namespaces',
+    NAMESPACES_URL,
     values.reduce(
       (acc, value) => ({
         ...acc,

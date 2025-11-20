@@ -46,10 +46,11 @@
 3.2. Auto-generate packages in the download folder.
 
 ### Proposal to Stop Separation Between Workspace/Exports; Manual Zip:
+
 * Suggestion to end the separation between internal workspace and user-visible space.
 
 ### Proposal to Offer Zip and/or Namespace Folder:
-* 
+
 * Provide options for exporting packages in zip or folder format.
 
 ## Decision Outcome

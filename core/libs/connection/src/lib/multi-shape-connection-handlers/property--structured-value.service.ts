@@ -19,9 +19,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 import {PropertyCharacteristicConnectionHandler} from './property--characteristic.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class PropertyStructuredValueConnectionHandler implements MultiShapeConnector<DefaultProperty, DefaultStructuredValue> {
   private notificationsService = inject(NotificationsService);
   private propertyCharacteristicConnectionHandler = inject(PropertyCharacteristicConnectionHandler);

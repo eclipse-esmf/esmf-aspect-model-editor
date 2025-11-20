@@ -14,10 +14,17 @@
 import {CacheUtils} from '@ame/cache';
 import {RdfService} from '@ame/rdf/services';
 import {NotificationsService} from '@ame/shared';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {AsyncPipe} from '@angular/common';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
+import {MatIconButton} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {Characteristic, DefaultCharacteristic, DefaultEither} from '@esmf/aspect-model-loader';
-import {Observable, map} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -25,18 +32,31 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-right-input-field',
   templateUrl: './right-input-field.component.html',
   styleUrls: ['../../field.scss'],
+  imports: [
+    MatFormFieldModule,
+    MatLabel,
+    MatAutocompleteTrigger,
+    MatInput,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatAutocomplete,
+    MatIconButton,
+    AsyncPipe,
+    MatOption,
+    MatError,
+  ],
 })
 export class RightInputFieldComponent extends InputFieldComponent<DefaultEither> implements OnInit, OnDestroy {
+  private notificationsService = inject(NotificationsService);
+  private validators = inject(EditorDialogValidators);
+  public rdfService = inject(RdfService);
+
   filteredCharacteristicTypes$: Observable<any[]>;
 
   rightControl: FormControl;
   rightCharacteristicControl: FormControl;
 
-  constructor(
-    private notificationsService: NotificationsService,
-    public rdfService: RdfService,
-    private validators: EditorDialogValidators,
-  ) {
+  constructor() {
     super();
     this.fieldName = 'rightCharacteristic';
   }
@@ -46,7 +66,9 @@ export class RightInputFieldComponent extends InputFieldComponent<DefaultEither>
   }
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => this.setRightControl());
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.setRightControl());
   }
 
   ngOnDestroy() {

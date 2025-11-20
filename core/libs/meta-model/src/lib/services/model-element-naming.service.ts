@@ -15,9 +15,7 @@ import {LoadedFilesService} from '@ame/cache';
 import {inject, Injectable} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ModelElementNamingService {
   private loadedFiles = inject(LoadedFilesService);
 

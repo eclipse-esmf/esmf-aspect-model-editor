@@ -16,10 +16,28 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {Component, effect, inject, input, OnDestroy, OnInit, output, signal} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
+import {MatExpansionPanel, MatExpansionPanelActionRow, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
+import {MatIconModule} from '@angular/material/icon';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
+  MatTable,
+} from '@angular/material/table';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {DefaultEntityInstance, DefaultEnumeration, EntityInstanceProperty, Value} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import {filter} from 'rxjs/operators';
 import {DataType, FormFieldHelper} from '../../../../helpers/form-field.helper';
+import {EntityInstancePipe} from '../../../pipes';
 import {EntityInstanceModalComponent} from '../entity-instance-modal/entity-instance-modal.component';
+import {EntityInstanceSearchBarComponent} from '../entity-instance-search-bar/entity-instance-search-bar.component';
 
 interface MappedAssertion {
   property: {urn: string; name: string};
@@ -30,12 +48,36 @@ interface MappedAssertion {
   selector: 'ame-entity-instance-view',
   templateUrl: './entity-instance-view.component.html',
   styleUrls: ['./entity-instance-view.component.scss'],
+  imports: [
+    EntityInstanceSearchBarComponent,
+    EntityInstancePipe,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatIconModule,
+    MatTooltipModule,
+    MatExpansionPanelActionRow,
+    MatTable,
+    MatHeaderCell,
+    MatCell,
+    MatCellDef,
+    MatHeaderCellDef,
+    MatColumnDef,
+    MatRow,
+    MatHeaderRow,
+    MatRowDef,
+    TranslatePipe,
+    MatHeaderRowDef,
+  ],
 })
 export class EntityInstanceViewComponent implements OnInit, OnDestroy {
-  readonly displayedColumns = ['key', 'value'];
+  private matDialog = inject(MatDialog);
+
   protected readonly formFieldHelper = FormFieldHelper;
   protected readonly dataType = DataType;
   protected complexValues = signal<DefaultEntityInstance[]>([]);
+
+  public readonly displayedColumns = ['key', 'value'];
 
   public searchFilter: string;
   public selection: SelectionModel<EntityInstanceProperty> = new SelectionModel<EntityInstanceProperty>();
@@ -44,15 +86,17 @@ export class EntityInstanceViewComponent implements OnInit, OnDestroy {
   public complexValueChange = output<DefaultEntityInstance[]>();
   public parentForm = input<FormGroup>();
   public enumeration = input<DefaultEnumeration>();
+
   public instances = input([], {
     transform: (values: DefaultEntityInstance[]) =>
       values?.length > 0 && values.some(val => val instanceof DefaultEntityInstance) ? this.checkInnerComplexValues(values) : [],
+    // eslint-disable-next-line @angular-eslint/no-input-rename
     alias: 'complexValues',
   });
 
   public loadedFiles = inject(LoadedFilesService);
 
-  constructor(private matDialog: MatDialog) {
+  constructor() {
     effect(() => {
       for (const entityInstance of this.complexValues()) {
         this.tuples[entityInstance.aspectModelUrn] = [

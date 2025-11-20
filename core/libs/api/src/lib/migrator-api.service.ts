@@ -12,41 +12,29 @@
  */
 
 import {ModelLoaderService} from '@ame/editor';
-import {ExporterHelper} from '@ame/migrator';
 import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
+import {ExporterHelper} from '@ame/sidebar';
 import {HttpClient} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
 import {Observable, map, switchMap} from 'rxjs';
 import {ModelApiService} from './model-api.service';
+import {MigrationStatus} from './models';
 
-export interface NamespaceStatus {
-  namespace: string;
-  files: MigratedFileStatus[];
-}
-
-export interface MigratedFileStatus {
-  name: string;
-  success: boolean;
-  message?: string;
-}
-
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class MigratorApiService {
   private config: AppConfig = inject(APP_CONFIG);
+  private http = inject(HttpClient);
+  private browserService = inject(BrowserService);
+  private modelApiService = inject(ModelApiService);
+  private modelLoader = inject(ModelLoaderService);
+
   private defaultPort = this.config.defaultPort;
   private readonly serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
 
-  public rdfModelsToMigrate: string[] = [];
+  public rdfModelsToMigrate = [];
 
-  constructor(
-    private http: HttpClient,
-    private browserService: BrowserService,
-    private modelApiService: ModelApiService,
-    private modelLoader: ModelLoaderService,
-  ) {
+  constructor() {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
       const remote = window.require('@electron/remote');
       this.serviceUrl = this.serviceUrl.replace(this.defaultPort, remote.getGlobal('backendPort'));
@@ -56,27 +44,30 @@ export class MigratorApiService {
   public hasFilesToMigrate(): Observable<boolean> {
     this.rdfModelsToMigrate = [];
     return this.modelLoader.getRdfModelsFromWorkspace().pipe(
-      map(rdfModels => {
-        this.rdfModelsToMigrate = Object.keys(rdfModels).filter(absoluteName =>
-          ExporterHelper.isVersionOutdated(rdfModels[absoluteName].samm.version, this.config.currentSammVersion),
-        );
+      map(namedRdfModel => {
+        this.rdfModelsToMigrate = namedRdfModel
+          .filter(model => ExporterHelper.isVersionOutdated(model.version, this.config.currentSammVersion))
+          .map(model => model.rdfModel);
 
         return this.rdfModelsToMigrate.length > 0;
       }),
     );
   }
 
-  public createBackup(): Observable<NamespaceStatus[]> {
-    return this.http.get<Array<NamespaceStatus>>(`${this.serviceUrl}${this.api.package}/backup-workspace`);
+  public createBackup(): Observable<string> {
+    return this.http.get<string>(`${this.serviceUrl}${this.api.package}/backup-workspace`);
   }
 
-  public migrateWorkspace(): Observable<NamespaceStatus[]> {
-    return this.http.get<Array<NamespaceStatus>>(`${this.serviceUrl}${this.api.models}/migrate-workspace`);
+  public migrateWorkspace(setNewVersion: boolean): Observable<MigrationStatus> {
+    const params = {setNewVersion: setNewVersion.toString()};
+    return this.http.get<MigrationStatus>(`${this.serviceUrl}${this.api.models}/migrate-workspace`, {params});
   }
 
   public rewriteFile(payload: any): Observable<string> {
     return this.modelApiService
-      .formatModel(payload.serializedUpdatedModel)
-      .pipe(switchMap(formattedModel => this.modelApiService.saveModel(formattedModel, payload.rdfModel.absoluteAspectModelFileName)));
+      .fetchFormatedAspectModel(payload.serializedUpdatedModel)
+      .pipe(
+        switchMap(formattedModel => this.modelApiService.saveAspectModel(formattedModel, payload.rdfModel.absoluteAspectModelFileName)),
+      );
   }
 }

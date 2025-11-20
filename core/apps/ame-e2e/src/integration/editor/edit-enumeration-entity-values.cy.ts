@@ -12,6 +12,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+/// <reference types="cypress" />
+
+import {NAMESPACES_URL} from '../../support/api-mocks';
 import {
   FIELD_characteristicName,
   FIELD_clearDataTypeBtn,
@@ -258,7 +261,7 @@ describe('Test enumeration entity instance', () => {
 
   it('import new model with entity instances', () => {
     cy.visitDefault();
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.fixture('entity-values-enumeration')
       .as('rdfString')
@@ -431,7 +434,7 @@ describe('Test enumeration entity instance', () => {
 
   it('delete all entity instance one by one', () => {
     cy.visitDefault();
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.fixture('entity-values-enumeration')
       .as('rdfString')
@@ -477,7 +480,7 @@ describe('Test enumeration entity instance', () => {
 
   it('should add manually new entity instance shape', () => {
     cy.visitDefault();
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
 
     cy.startModelling()
       .wait(500)
@@ -556,7 +559,7 @@ describe('Test enumeration entity instance', () => {
 
   it('should create NewEntity', () => {
     cy.visitDefault();
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
 
     cy.startModelling()
       .wait(500)
@@ -579,7 +582,7 @@ describe('Test enumeration entity instance', () => {
 
   it('should create NewEntity and new entity instances', () => {
     cy.visitDefault();
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
 
     cy.startModelling()
       .wait(500)
@@ -607,7 +610,7 @@ describe('Test enumeration entity instance', () => {
 
   it('should create enumeration with lang string values', () => {
     cy.visitDefault();
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
 
     cy.startModelling()
       .wait(500)
@@ -718,7 +721,7 @@ describe('Test enumeration entity instance', () => {
 
   it('should create nested enumerations', () => {
     cy.visitDefault();
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
 
     cy.startModelling()
       .wait(500)

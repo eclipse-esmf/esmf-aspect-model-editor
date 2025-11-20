@@ -12,17 +12,23 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultUnit} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-conversion-factor-input-field',
   templateUrl: './conversion-factor-input-field.component.html',
+  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput],
 })
 export class ConversionFactorInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => this.initConversionFactorForm());
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.initConversionFactorForm());
   }
 
   initConversionFactorForm() {

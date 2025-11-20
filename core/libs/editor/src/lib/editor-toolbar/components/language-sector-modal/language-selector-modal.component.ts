@@ -12,12 +12,12 @@
  */
 
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {LanguageTranslateModule} from '@ame/translation';
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatOptionModule} from '@angular/material/core';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
+import {TranslatePipe} from '@ngx-translate/core';
 import * as locale from 'locale-codes';
 
 import {MatButtonModule} from '@angular/material/button';
@@ -25,16 +25,16 @@ import {MatButtonModule} from '@angular/material/button';
 @Component({
   standalone: true,
   templateUrl: './language-selector-modal.component.html',
-  imports: [MatButtonModule, MatDialogModule, LanguageTranslateModule, MatSelectModule, MatOptionModule, ReactiveFormsModule],
+  imports: [MatButtonModule, MatDialogModule, TranslatePipe, MatSelectModule, MatOptionModule, ReactiveFormsModule],
 })
 export class LanguageSelectorModalComponent {
+  private dialogRef = inject(MatDialogRef<LanguageSelectorModalComponent>);
+  private languageService = inject(SammLanguageSettingsService);
+
   public languages: locale.ILocale[] = [];
   public languageControl: FormControl;
 
-  constructor(
-    private dialogRef: MatDialogRef<LanguageSelectorModalComponent>,
-    private languageService: SammLanguageSettingsService,
-  ) {
+  constructor() {
     this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
     this.languageControl = new FormControl(this.languages[0].tag);
 

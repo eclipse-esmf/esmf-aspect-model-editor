@@ -15,7 +15,7 @@
   class="sidebar__workspace"
   [matTooltipShowDelay]="0"
   [matTooltipHideDelay]="0"
-  [class.selected]="sidebarService.workspace.isOpened$ | async"
+  [class.selected]="sidebarService.workspace.opened()"
   [matTooltip]="'TOOLTIPS.WORKSPACE' | translate"
   (click)="sidebarService.workspace.toggle()"
   matTooltipPosition="right"
@@ -28,7 +28,7 @@
   class="sidebar__item sidebar__elements"
   [matTooltipShowDelay]="0"
   [matTooltipHideDelay]="0"
-  [class.selected]="sidebarService.sammElements.isOpened$ | async"
+  [class.selected]="sidebarService.sammElements.opened()"
   [matTooltip]="'TOOLTIPS.ELEMENTS' | translate"
   (click)="sidebarService.sammElements.toggle()"
   matTooltipPosition="right"
@@ -58,7 +58,7 @@
   matTooltipPosition="right"
   data-cy="notificationsBtn"
 >
-  <mat-icon [matBadge]="notificationService.badgeText | async">notifications</mat-icon>
+  <mat-icon [matBadge]="notificationService.badgeText | async" aria-hidden="false">notifications</mat-icon>
 </ame-bar-item>
 
 <ame-bar-item

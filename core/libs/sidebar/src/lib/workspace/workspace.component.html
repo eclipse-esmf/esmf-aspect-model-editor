@@ -38,13 +38,13 @@
   <ame-workspace-empty [loading]="loading"></ame-workspace-empty>
 } @else {
   <ame-workspace-file-list class="list"></ame-workspace-file-list>
-  @if (sidebarService.fileElements.isOpened$ | async) {
+  @if (sidebarService.fileElements.opened()) {
     <ame-workspace-file-elements class="column-two"></ame-workspace-file-elements>
   }
 }
 <ng-template #list>
   <ame-workspace-file-list class="list"></ame-workspace-file-list>
-  @if (sidebarService.fileElements.isOpened$ | async) {
+  @if (sidebarService.fileElements.isOpened()) {
     <ame-workspace-file-elements class="column-two"></ame-workspace-file-elements>
   }
 </ng-template>

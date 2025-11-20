@@ -20,11 +20,6 @@ import {DataFactory, Quad, Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {RdfNodeService} from './rdf-node.service';
 
-class MockSamm {
-  RdfType = jest.fn(() => DataFactory.namedNode('type'));
-  getAspectModelUrn = jest.fn(key => key);
-}
-
 class MockRDFModel {
   store = new Store();
   samm = new Samm('');

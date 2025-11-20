@@ -12,10 +12,10 @@
  */
 
 import {CacheUtils, LoadedFilesService} from '@ame/cache';
-import {FILTER_ATTRIBUTES, FilterAttributesService, ModelTree} from '@ame/loader-filters';
+import {FILTER_ATTRIBUTES, ModelTree} from '@ame/loader-filters';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {NotificationsService, overlayGeometry} from '@ame/shared';
-import {Inject, Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntityInstance, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
 import {environment} from 'environments/environment';
 import {mxgraph} from 'mxgraph-factory';
@@ -34,8 +34,19 @@ export interface Coordinates {
   y: number;
 }
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class MxGraphService {
+  private filterAttributes = inject(FILTER_ATTRIBUTES);
+  private loadedFiles = inject(LoadedFilesService);
+  private configurationService = inject(ConfigurationService);
+  private graphSetupService = inject(MxGraphSetupService);
+  private mxGraphGeometryProviderService = inject(MxGraphGeometryProviderService);
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private notificationsService = inject(NotificationsService);
+  private themeService = inject(ThemeService);
+  public mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
+
   private document: Document;
   private nextCellCoordinates: {x: number; y: number} = null;
 
@@ -52,18 +63,7 @@ export class MxGraphService {
     return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
-  constructor(
-    @Inject(FILTER_ATTRIBUTES) private filterAttributes: FilterAttributesService,
-    private loadedFiles: LoadedFilesService,
-    private configurationService: ConfigurationService,
-    private graphSetupService: MxGraphSetupService,
-    private mxGraphGeometryProviderService: MxGraphGeometryProviderService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private notificationsService: NotificationsService,
-    private themeService: ThemeService,
-    public mxGraphShapeSelectorService: MxGraphShapeSelectorService,
-  ) {
+  constructor() {
     this.document = mxUtils.createXmlDocument();
     if (!environment.production) {
       window['angular.mxGraphService'] = this;

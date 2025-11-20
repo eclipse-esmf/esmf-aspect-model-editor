@@ -13,18 +13,73 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 import {DefaultCharacteristic, DefaultConstraint, NamedElement, Unit} from '@esmf/aspect-model-loader';
-import {Subscription} from 'rxjs';
+import {TranslatePipe} from '@ngx-translate/core';
 import {EditorModelService} from '../../editor-model.service';
+import {AbstractEntityComponent} from '../abstract-entities';
+import {AbstractPropertyComponent} from '../abstract-property';
+import {AspectComponent} from '../aspect';
+import {CharacteristicComponent, TraitCharacteristicComponent} from '../characteristics';
+import {ConstraintComponent} from '../constraints';
+import {EntityComponent} from '../entities';
+import {EntityInstanceComponent} from '../entity-instance';
+import {EventComponent} from '../events';
+import {LocateElementComponent} from '../fields';
+import {OperationComponent} from '../operations';
+import {PropertyComponent} from '../properties';
+import {UnitComponent} from '../units';
+import {SharedSettingsTitleComponent} from './shared-settings-title/shared-settings-title.component';
 
 @Component({
   selector: 'ame-shape-settings',
   templateUrl: './shape-settings.component.html',
   styleUrls: ['./shape-settings.component.scss'],
+  imports: [
+    SharedSettingsTitleComponent,
+    LocateElementComponent,
+    MatIconButton,
+    MatIconModule,
+    ReactiveFormsModule,
+    AspectComponent,
+    CharacteristicComponent,
+    ConstraintComponent,
+    PropertyComponent,
+    AbstractPropertyComponent,
+    OperationComponent,
+    AbstractEntityComponent,
+    EntityComponent,
+    UnitComponent,
+    TraitCharacteristicComponent,
+    EntityInstanceComponent,
+    EventComponent,
+    TranslatePipe,
+    MatButton,
+  ],
 })
-export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
+export class ShapeSettingsComponent implements OnInit, OnChanges {
+  private destroyRef = inject(DestroyRef);
+  private languageSettings = inject(SammLanguageSettingsService);
+  private changeDetector = inject(ChangeDetectorRef);
+
+  public metaModelDialogService = inject(EditorModelService);
+  public loadedFilesService = inject(LoadedFilesService);
+
   public metaModelClassName: string;
   public metaModelElement: NamedElement;
   public selectedMetaModelElement: NamedElement;
@@ -33,8 +88,6 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   public formGroup: FormGroup = new FormGroup({
     changedMetaModel: new FormControl(null),
   });
-
-  private subscription = new Subscription();
 
   @Input() isOpened = false;
   @Input() modelElement: NamedElement = null;
@@ -49,13 +102,6 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  constructor(
-    public metaModelDialogService: EditorModelService,
-    public loadedFilesService: LoadedFilesService,
-    private languageSettings: SammLanguageSettingsService,
-    private changeDetector: ChangeDetectorRef,
-  ) {}
-
   ngOnChanges(): void {
     if (!this.modelElement) {
       return;
@@ -65,16 +111,13 @@ export class ShapeSettingsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    const sub = this.metaModelDialogService.getMetaModelElement().subscribe(metaModelElement => {
-      this.metaModelElement = metaModelElement;
-      this.formGroup == new FormGroup({});
-      this.changeDetector.detectChanges();
-    });
-    this.subscription.add(sub);
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.metaModelDialogService
+      .getMetaModelElement()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(metaModelElement => {
+        this.metaModelElement = metaModelElement;
+        this.changeDetector.detectChanges();
+      });
   }
 
   onSave(): void {

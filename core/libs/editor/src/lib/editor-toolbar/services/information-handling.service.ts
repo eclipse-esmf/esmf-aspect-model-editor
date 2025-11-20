@@ -13,15 +13,13 @@
 
 import {DocumentComponent} from '@ame/editor';
 import {SettingDialogComponent} from '@ame/settings-dialog';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {NotificationsComponent} from '../components/notifications/notifications.component';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class InformationHandlingService {
-  constructor(private matDialog: MatDialog) {}
+  private matDialog = inject(MatDialog);
 
   openSettingsDialog() {
     this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container', width: '60%', autoFocus: false});

@@ -13,11 +13,13 @@
 import {Component, Input} from '@angular/core';
 import {DefaultEntity, DefaultState} from '@esmf/aspect-model-loader';
 import {PreviousFormDataSnapshot} from '../../../interfaces';
+import {DefaultValueEntityInputFieldComponent, DefaultValueInputFieldComponent, ValuesInputFieldComponent} from '../../fields';
 import {ModelElementEditorComponent} from '../../model-element-editor-component';
 
 @Component({
   selector: 'ame-state-characteristic',
   templateUrl: './state-characteristic.component.html',
+  imports: [ValuesInputFieldComponent, DefaultValueEntityInputFieldComponent, DefaultValueInputFieldComponent],
 })
 export class StateCharacteristicComponent extends ModelElementEditorComponent<DefaultState> {
   @Input() previousData: PreviousFormDataSnapshot = {};

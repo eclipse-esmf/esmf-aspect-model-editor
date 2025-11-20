@@ -12,22 +12,23 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {EditorDialogModule, EditorService, EditorToolbarComponent, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
+import {EditorService, EditorToolbarComponent, ShapeSettingsComponent, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
 import {ElementModelService} from '@ame/meta-model';
 import {MxGraphService} from '@ame/mx-graph';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {SidebarModule} from '@ame/sidebar';
 import {ElementsSearchComponent, FilesSearchComponent, SearchesStateService} from '@ame/utils';
 import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
 import {AsyncPipe, CommonModule} from '@angular/common';
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormGroup} from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
-import {Observable, Subject, fromEvent} from 'rxjs';
-import {debounceTime, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {fromEvent, Observable} from 'rxjs';
+import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
+import {SidebarComponent} from '../../../../../../libs/sidebar/src/lib/sidebar/sidebar.component';
 
 const SIDEBAR_MIN_WIDTH = 480;
 const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
@@ -38,7 +39,6 @@ const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
   templateUrl: './editor-canvas.component.html',
   styleUrls: ['./editor-canvas.component.scss'],
   imports: [
-    SidebarModule,
     AsyncPipe,
     CommonModule,
     CdkDrag,
@@ -46,13 +46,26 @@ const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
     MatIconModule,
     ElementsSearchComponent,
     FilesSearchComponent,
-    EditorDialogModule,
     EditorToolbarComponent,
+    SidebarComponent,
+    ShapeSettingsComponent,
   ],
 })
-export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
+export class EditorCanvasComponent implements AfterViewInit, OnInit {
   @ViewChild('graph') public graph: ElementRef;
-  private unsubscribe: Subject<void> = new Subject();
+
+  private destroyRef = inject(DestroyRef);
+  private shapeSettingsService = inject(ShapeSettingsService);
+  private shapeSettingsStateService = inject(ShapeSettingsStateService);
+  private mxGraphService = inject(MxGraphService);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+  private loadedFiles = inject(LoadedFilesService);
+  private elementModelService = inject(ElementModelService);
+  private changeDetector = inject(ChangeDetectorRef);
+  private editorService = inject(EditorService);
+  private configurationService = inject(ConfigurationService);
+  public searchesStateService = inject(SearchesStateService);
 
   public sidebarWidth = SIDEBAR_MIN_WIDTH;
   public sidebarDragPosition = {...SIDEBAR_DEFAULT_DRAG_POSITION};
@@ -78,19 +91,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
     return !this.mxGraphService.getAllCells()?.length;
   }
 
-  constructor(
-    private shapeSettingsService: ShapeSettingsService,
-    private shapeSettingsStateService: ShapeSettingsStateService,
-    private mxGraphService: MxGraphService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private loadedFiles: LoadedFilesService,
-    private elementModelService: ElementModelService,
-    private changeDetector: ChangeDetectorRef,
-    private editorService: EditorService,
-    private configurationService: ConfigurationService,
-    public searchesStateService: SearchesStateService,
-  ) {
+  constructor() {
     this.isShapeSettingsOpened$ = this.shapeSettingsStateService.onSettingsOpened$.asObservable();
     this.isShapeSettingsOpened$.subscribe(() =>
       requestAnimationFrame(() => {
@@ -102,7 +103,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnInit() {
     this.activatedRoute.queryParamMap
       .pipe(
-        takeUntil(this.unsubscribe),
+        takeUntilDestroyed(this.destroyRef),
         map(params => params?.get('urn')),
         filter(urn => !!urn),
         tap(urn =>
@@ -175,15 +176,10 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit, OnDestroy {
   watchScrollEvents(): void {
     fromEvent<Event>(this.graph.nativeElement, 'scroll')
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         debounceTime(250),
         tap(event => this.mxGraphService.setScrollPosition(event)),
-        takeUntil(this.unsubscribe),
       )
       .subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
   }
 }

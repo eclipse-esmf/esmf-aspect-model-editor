@@ -110,10 +110,9 @@ class WindowsManager {
       win.destroy();
     });
 
-    ipcMain.on(SIGNAL_REFRESH_WORKSPACE, (event, ignoreSenderWindow = false) => {
+    ipcMain.on(SIGNAL_REFRESH_WORKSPACE, event => {
       const windowId = event?.sender?.id;
       this.state.activeWindows.forEach(({id, window}) => {
-        if (ignoreSenderWindow && windowId && id === windowId) return;
         window.webContents.send(REQUEST_REFRESH_WORKSPACE);
       });
     });

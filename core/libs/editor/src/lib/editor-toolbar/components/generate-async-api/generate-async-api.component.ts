@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelService} from '@ame/rdf/services';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {LanguageTranslateModule} from '@ame/translation';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatOptionModule} from '@angular/material/core';
@@ -22,13 +20,15 @@ import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSelectModule} from '@angular/material/select';
+import {TranslatePipe} from '@ngx-translate/core';
 import {saveAs} from 'file-saver';
 import * as locale from 'locale-codes';
-import {Subscription, finalize, map} from 'rxjs';
+import {finalize, map} from 'rxjs';
 import {first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
 import {LoadedFilesService} from '@ame/cache';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIcon} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
@@ -50,7 +50,7 @@ export interface AsyncApi {
   styleUrls: ['./generate-async-api.component.scss'],
   imports: [
     MatDialogModule,
-    LanguageTranslateModule,
+    TranslatePipe,
     MatFormFieldModule,
     MatProgressSpinnerModule,
     MatButtonModule,
@@ -63,11 +63,16 @@ export interface AsyncApi {
     MatIcon,
   ],
 })
-export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
+export class GenerateAsyncApiComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
+  private languageService = inject(SammLanguageSettingsService);
+  private editorService = inject(EditorService);
+  private dialogRef = inject(MatDialogRef<AssignedNodesOptions>);
+  private loadedFilesService = inject(LoadedFilesService);
+
   form: FormGroup;
   languages: locale.ILocale[];
   isGenerating = false;
-  subscriptions = new Subscription();
 
   public get output(): FormControl {
     return this.form.get('output') as FormControl;
@@ -77,20 +82,8 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
     return this.form.get('file') as FormControl;
   }
 
-  constructor(
-    private dialogRef: MatDialogRef<GenerateAsyncApiComponent>,
-    private languageService: SammLanguageSettingsService,
-    private modelService: ModelService,
-    private editorService: EditorService,
-    private loadedFilesService: LoadedFilesService,
-  ) {}
-
   ngOnInit(): void {
     this.initializeForm();
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 
   private initializeForm(): void {
@@ -108,19 +101,18 @@ export class GenerateAsyncApiComponent implements OnInit, OnDestroy {
   generateAsyncApiSpec(): void {
     this.isGenerating = true;
     const asyncApiSpec = this.form.value as AsyncApi;
-    this.subscriptions.add(
-      this.editorService
-        .generateAsyncApiSpec(this.loadedFilesService.currentLoadedFile?.rdfModel, asyncApiSpec)
-        .pipe(
-          first(),
-          map(data => this.handleGeneratedSpec(data, asyncApiSpec)),
-          finalize(() => {
-            this.isGenerating = false;
-            this.dialogRef.close();
-          }),
-        )
-        .subscribe(),
-    );
+    this.editorService
+      .generateAsyncApiSpec(this.loadedFilesService.currentLoadedFile?.rdfModel, asyncApiSpec)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        first(),
+        map(data => this.handleGeneratedSpec(data, asyncApiSpec)),
+        finalize(() => {
+          this.isGenerating = false;
+          this.dialogRef.close();
+        }),
+      )
+      .subscribe();
   }
 
   private handleGeneratedSpec(data: any, spec: AsyncApi): void {

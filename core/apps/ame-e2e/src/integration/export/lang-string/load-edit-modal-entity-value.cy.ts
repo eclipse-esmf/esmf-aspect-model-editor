@@ -11,7 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/// <reference types="Cypress" />
+/// <reference types="cypress" />
+
+import {NAMESPACES_URL} from '../../../support/api-mocks';
 
 import {
   FIELD_entityValueName,
@@ -24,7 +26,7 @@ import {assertRdf, loadModel, openElementAndAssertValues} from '../../../support
 
 describe('Loading and edit Entity value RDF lang string properties on modal tests', () => {
   beforeEach(() => {
-    cy.intercept('http://localhost:9090/ame/api/models/namespaces', {statusCode: 200, body: {}});
+    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.visitDefault();
   });

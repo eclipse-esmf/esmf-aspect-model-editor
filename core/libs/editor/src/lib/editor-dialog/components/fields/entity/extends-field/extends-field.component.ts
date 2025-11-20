@@ -12,12 +12,18 @@
  */
 
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {RdfService} from '@ame/rdf/services';
 import {NotificationsService} from '@ame/shared';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {AsyncPipe} from '@angular/common';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
+import {MatIconButton} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultEntity, Entity, useLoader} from '@esmf/aspect-model-loader';
-import {Observable, combineLatest, map, of} from 'rxjs';
+import {combineLatest, map, Observable, of} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -25,8 +31,26 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-entity-extends-field',
   templateUrl: './extends-field.component.html',
   styleUrls: ['./extends-field.component.scss', '../../field.scss'],
+  imports: [
+    MatFormFieldModule,
+    MatLabel,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatInput,
+    MatIconButton,
+    MatAutocomplete,
+    MatIconModule,
+    MatOptgroup,
+    MatOption,
+    AsyncPipe,
+    MatError,
+  ],
 })
 export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEntity> implements OnInit, OnDestroy {
+  private notificationsService = inject(NotificationsService);
+  private editorDialogValidators = inject(EditorDialogValidators);
+  private loadedFilesService = inject(LoadedFilesService);
+
   public filteredAbstractEntities$: Observable<any[]>;
   public filteredEntities$: Observable<any[]>;
 
@@ -49,18 +73,15 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
     return this.loadedFilesService.currentLoadedFile;
   }
 
-  constructor(
-    private notificationsService: NotificationsService,
-    public rdfService: RdfService,
-    private validators: EditorDialogValidators,
-    private loadedFilesService: LoadedFilesService,
-  ) {
+  constructor() {
     super();
     this.fieldName = 'extends';
   }
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => this.setExtendsControl());
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.setExtendsControl());
     const {getAllPredefinedEntities} = useLoader({rdfModel: this.currentFile.rdfModel});
     const predefinedEntities = getAllPredefinedEntities();
     this.predefinedEntities = Object.values(predefinedEntities)
@@ -98,7 +119,7 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
           disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement) || this.metaModelElement.isPredefined,
         },
         {
-          validators: [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)],
+          validators: [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)],
         },
       ),
     );

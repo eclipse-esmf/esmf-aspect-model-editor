@@ -88,9 +88,9 @@
 
   &__toggle-button {
     .mat-mdc-icon-button.mat-mdc-button-base {
-      --mdc-icon-button-state-layer-size: 25px;
-      width: var(--mdc-icon-button-state-layer-size);
-      height: var(--mdc-icon-button-state-layer-size);
+      --mat-icon-button-state-layer-size: 25px;
+      width: var(--mat-icon-button-state-layer-size);
+      height: var(--mat-icon-button-state-layer-size);
       padding: 0;
     }
   }

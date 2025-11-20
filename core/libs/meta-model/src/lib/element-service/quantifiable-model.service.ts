@@ -12,20 +12,16 @@
  */
 
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultQuantifiable, DefaultUnit, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class QuantifiableModelService extends BaseModelService {
-  constructor(
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphService: MxGraphService,
-  ) {
-    super();
-  }
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private mxGraphService = inject(MxGraphService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultQuantifiable;

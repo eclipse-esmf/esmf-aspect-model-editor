@@ -23,31 +23,23 @@
       "MIGRATE_WORKSPACE": "Migrating Workspace...",
       "AWAITING_STATUS": "Please wait until all files are migrated"
     },
-    "MIGRATION_STATUS_DIALOG": {
-      "TITLE": "Migration Status",
-      "ERROR": "SAMM Version upgrade to {{version}} finished, but {{fileCount}} had to be skipped. Please fix {{fileCountMessage}} first (in a text editor, contacting us, or in a previous version of the editor that supports the original SAMM version that has to be temporarily installed). See below:",
-      "SUCCESS": "Migration finished with success",
-      "CLOSE": "Close",
-      "VERSION": "Increase Version"
-    },
     "WORKSPACE_MIGRATION_DIALOG": {
       "TITLE": "Migrate Workspace to SAMM",
       "FILE_VERSION_WARNING": "Your workspace has at least one file based on a SAMM version below",
       "MIGRATION_NEEDED": "and needs to be migrated.",
       "MIGRATE_INSTRUCTION": "Click the Migrate button to proceed with the migration.",
       "VERSION_AUTO_UPGRADE": "Auto-increase namespace versions.",
-      "UPGRADE_EFFECT": "If selected, a new major version of all migrated namespaces will be created to indicate the SAMM version upgrade. Otherwise the existing namespaces will be overwritten (previous content will remain in a backup).",
+      "UPGRADE_EFFECT": "If selected, all migrated namespaces will be updated to a new major version to reflect the SAMM upgrade. If a new version already exists, you will see a warning and no changes will be made. Previous content will be saved as a backup.",
       "CANCEL": "Cancel",
       "MIGRATE": "Migrate"
     },
-    "MIGRATION_SUCCESS_DIALOG": {
-      "TITLE": "Version increasing was successful",
-      "CONTENT": "Version increasing finished with success",
+    "MIGRATION_DIALOG": {
+      "TITLE": "Migration",
+      "SUCCESS_CONTENT": "Migration completed successfully.",
+      "ERROR_CONTENT": "Migration failed. Please try again or contact for support.",
+      "WARNING_CONTENT": "Migration completed with warnings. Please review the details below.",
+      "MIGRATION_FAILED_TITLE": "Migration failed",
       "CLOSE": "Close"
-    },
-    "INCREASE_VERSION_DIALOG": {
-      "TITLE": "Increasing Namespaces Versions",
-      "LOADING_NAMESPACES": "Loading Namespaces"
     },
     "SIDEBAR": {
       "MESSAGE": "Files with a lower SAMM version have been found.",
@@ -151,6 +143,7 @@
     "REQUIRED_ERROR": "This field is required",
     "CHARACTERS_ERROR": "Allowed characters: alphanumeric, space, dot(.), minus(-) and underscore(_)",
     "EXIST_ERROR": "This file already exists in your namespace",
+    "ALREADY_DEFINED_ERROR": "Filename already exists in your namespace",
     "REMOVE_ASPECT": "Remove Aspect",
     "CANCEL": "Cancel"
   },
@@ -185,7 +178,7 @@
   },
   "EXPORT_NAMESPACE_DIALOG": {
     "TITLE": "Export namespace(s) to package",
-    "INFO_CONTENT": "Please select the file that you would like to export as an Aspect Model Package (zip). All the dependencies of that file will be included into the Aspect Model Package (zip).",
+    "INFO_CONTENT": "Select the Aspect Model file containing the aspect you want to export as a package. All dependencies will be automatically included in the ZIP file.",
     "CANCEL": "Cancel",
     "NEXT": "Export"
   },

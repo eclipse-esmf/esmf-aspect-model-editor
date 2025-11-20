@@ -14,23 +14,19 @@
 import {ListProperties, RdfListService, RdfNodeService} from '@ame/aspect-exporter';
 import {LoadedFilesService} from '@ame/cache';
 import {getPreferredNamesLocales} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultOperation} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {BaseVisitor} from '../base-visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class OperationVisitor extends BaseVisitor<DefaultOperation> {
-  private get store(): Store {
-    return this.loadedFiles.currentLoadedFile?.rdfModel?.store;
-  }
+  public rdfNodeService = inject(RdfNodeService);
+  public rdfListService = inject(RdfListService);
+  public loadedFilesService = inject(LoadedFilesService);
 
-  constructor(
-    private rdfNodeService: RdfNodeService,
-    public rdfListService: RdfListService,
-    loadedFiles: LoadedFilesService,
-  ) {
-    super(loadedFiles);
+  private get store(): Store {
+    return this.loadedFilesService.currentLoadedFile?.rdfModel?.store;
   }
 
   visit(operation: DefaultOperation): DefaultOperation {
@@ -71,7 +67,7 @@ export class OperationVisitor extends BaseVisitor<DefaultOperation> {
       this.setPrefix(property.aspectModelUrn);
       this.store.addQuad(
         DataFactory.namedNode(operation.aspectModelUrn),
-        this.loadedFiles.currentLoadedFile.rdfModel.samm.OutputProperty(),
+        this.loadedFilesService.currentLoadedFile.rdfModel.samm.OutputProperty(),
         DataFactory.namedNode(property.aspectModelUrn),
       );
     }

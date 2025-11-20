@@ -12,13 +12,18 @@
  */
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatLabel} from '@angular/material/input';
+import {MatOption, MatSelect} from '@angular/material/select';
 import {DefaultEncodingConstraint, NamedElement, Samm} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-encoding-input-field',
   templateUrl: './encoding-input-field.component.html',
+  imports: [MatFormFieldModule, MatLabel, MatSelect, MatOption, ReactiveFormsModule],
 })
 export class EncodingInputFieldComponent extends InputFieldComponent<DefaultEncodingConstraint> implements OnInit, OnDestroy {
   public encodingList = [];
@@ -34,16 +39,18 @@ export class EncodingInputFieldComponent extends InputFieldComponent<DefaultEnco
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe((modelElement: NamedElement) => {
-      this.encodingList = modelElement ? new Samm(modelElement.metaModelVersion).getEncodingList() : null;
-      if (modelElement instanceof DefaultEncodingConstraint) {
-        this.metaModelElement = modelElement;
-      }
-      if (!this.metaModelElement.value) {
-        this.metaModelElement.value = this.encodingList[0].value;
-      }
-      this.initForm();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((modelElement: NamedElement) => {
+        this.encodingList = modelElement ? new Samm(modelElement.metaModelVersion).getEncodingList() : null;
+        if (modelElement instanceof DefaultEncodingConstraint) {
+          this.metaModelElement = modelElement;
+        }
+        if (!this.metaModelElement.value) {
+          this.metaModelElement.value = this.encodingList[0].value;
+        }
+        this.initForm();
+      });
   }
 
   ngOnDestroy() {

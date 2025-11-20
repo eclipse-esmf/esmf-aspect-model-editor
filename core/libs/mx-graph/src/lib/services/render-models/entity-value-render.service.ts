@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
 import {ShapeConnectorService} from '@ame/connection';
 import {FiltersService} from '@ame/loader-filters';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Injectable, inject} from '@angular/core';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultState} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
@@ -22,25 +20,14 @@ import {MxGraphHelper} from '../../helpers';
 import {EdgeStyles, RendererUpdatePayload} from '../../models';
 import {MxGraphAttributeService} from '../mx-graph-attribute.service';
 import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
-import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class EntityValueRenderService extends BaseRenderService {
   private filtersService = inject(FiltersService);
-
-  constructor(
-    mxGraphService: MxGraphService,
-    sammLangService: SammLanguageSettingsService,
-    protected loadedFilesService: LoadedFilesService,
-    private mxGraphShapeOverlay: MxGraphShapeOverlayService,
-    private shapeConnectorService: ShapeConnectorService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-  ) {
-    super(mxGraphService, sammLangService, loadedFilesService);
-  }
+  private mxGraphShapeOverlay = inject(MxGraphShapeOverlayService);
+  private shapeConnectorService = inject(ShapeConnectorService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
 
   isApplicable(cell: mxgraph.mxCell): boolean {
     return MxGraphHelper.getModelElement(cell) instanceof DefaultEntityInstance;

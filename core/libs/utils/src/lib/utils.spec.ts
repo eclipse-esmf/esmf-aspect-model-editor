@@ -36,8 +36,8 @@ describe('utils', () => {
       next: nextMock,
       error: errorMock,
       complete: () => {
-        expect(nextMock).toBeCalledTimes(1);
-        expect(nextMock).toBeCalledWith(fileContent);
+        expect(nextMock).toHaveBeenCalledTimes(1);
+        expect(nextMock).toHaveBeenCalledWith(fileContent);
         expect(errorMock).not.toHaveBeenCalled();
         done();
       },

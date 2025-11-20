@@ -13,17 +13,25 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
-import {ElementType, sammElements} from '@ame/shared';
+import {ElementIconComponent, ElementType, sammElements} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
 import {Component, inject} from '@angular/core';
+import {MatMiniFabButton} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 import {Aspect} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
+import {DraggableElementComponent} from '../draggable-element/draggable-element.component';
 
 @Component({
   selector: 'ame-sidebar-samm-elements',
   templateUrl: './sidebar-samm-elements.component.html',
   styleUrls: ['./sidebar-samm-elements.component.scss'],
+  imports: [MatIconModule, DraggableElementComponent, MatMiniFabButton, ElementIconComponent, TranslatePipe],
 })
 export class SidebarSAMMElementsComponent {
+  private mxGraphService = inject(MxGraphService);
+  private loadedFiles = inject(LoadedFilesService);
+
   public sidebarService = inject(SidebarStateService);
   public sammElements = sammElements;
   public elementsOrder: ElementType[] = [
@@ -43,11 +51,6 @@ export class SidebarSAMMElementsComponent {
   public get isEmptyModel(): boolean {
     return !this.mxGraphService.getAllCells()?.length;
   }
-
-  constructor(
-    private mxGraphService: MxGraphService,
-    private loadedFiles: LoadedFilesService,
-  ) {}
 
   public isAspectAvailable(): Aspect {
     return this.loadedFiles.currentLoadedFile?.aspect;

@@ -10,19 +10,52 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {CharacteristicClassType} from '@ame/editor';
-import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject} from '@angular/core';
+import {
+  BaseInputComponent,
+  CharacteristicClassType,
+  CharacteristicNameDropdownFieldComponent,
+  DataTypeInputFieldComponent,
+  ElementCharacteristicInputFieldComponent,
+  ElementListComponent,
+  LeftInputFieldComponent,
+  RightInputFieldComponent,
+  UnitInputFieldComponent,
+  ValuesInputFieldComponent,
+} from '@ame/editor';
+import {AsyncPipe} from '@angular/common';
+import {ChangeDetectorRef, Component, DestroyRef, Input, OnInit, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormGroup} from '@angular/forms';
-import {Subscription} from 'rxjs';
+import {TranslatePipe} from '@ngx-translate/core';
+import {StateCharacteristicComponent} from '../../components/characteristics/state-characteristic/state-characteristic.component';
+import {StructuredValueComponent} from '../../components/characteristics/structured-value/structured-value.component';
 import {EditorModelService} from '../../editor-model.service';
 import {PreviousFormDataSnapshot} from '../../interfaces';
 
 @Component({
   selector: 'ame-characteristic',
   templateUrl: './characteristic.component.html',
+  imports: [
+    CharacteristicNameDropdownFieldComponent,
+    BaseInputComponent,
+    DataTypeInputFieldComponent,
+    ElementCharacteristicInputFieldComponent,
+    ValuesInputFieldComponent,
+    UnitInputFieldComponent,
+    StateCharacteristicComponent,
+    StructuredValueComponent,
+    LeftInputFieldComponent,
+    RightInputFieldComponent,
+    ElementListComponent,
+    AsyncPipe,
+    TranslatePipe,
+  ],
 })
-export class CharacteristicComponent implements OnInit, OnDestroy {
-  private subscription: Subscription;
+export class CharacteristicComponent implements OnInit {
+  @Input() parentForm: FormGroup;
+
+  private destroyRef = inject(DestroyRef);
+  private changeDetector = inject(ChangeDetectorRef);
 
   public property = false;
   public selectedCharacteristic: CharacteristicClassType;
@@ -44,21 +77,16 @@ export class CharacteristicComponent implements OnInit, OnDestroy {
     this.characteristicClassType.Duration,
   ];
 
-  @Input() parentForm: FormGroup;
-
-  constructor(private changeDetector: ChangeDetectorRef) {}
-
-  ngOnDestroy() {
-    this.subscription?.unsubscribe();
-  }
-
   ngOnInit(): void {
-    this.subscription = this.metaModelDialogService.getMetaModelElement().subscribe(() => {
-      // TODO Should be solved better. Form does not seem to update correctly.
-      this.property = false;
-      requestAnimationFrame(() => (this.property = true));
-      this.changeDetector.detectChanges();
-    });
+    this.metaModelDialogService
+      .getMetaModelElement()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        // TODO Should be solved better. Form does not seem to update correctly.
+        this.property = false;
+        requestAnimationFrame(() => (this.property = true));
+        this.changeDetector.detectChanges();
+      });
   }
 
   onPreviousDataChange(previousData: PreviousFormDataSnapshot) {

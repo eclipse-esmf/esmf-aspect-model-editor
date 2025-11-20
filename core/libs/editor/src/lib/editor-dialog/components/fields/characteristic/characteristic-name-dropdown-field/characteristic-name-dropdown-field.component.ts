@@ -17,7 +17,13 @@ import {ModelElementNamingService} from '@ame/meta-model';
 import {ModelService} from '@ame/rdf/services';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {ElementCreatorService} from '@ame/shared';
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {KeyValuePipe} from '@angular/common';
+import {Component, DestroyRef, EventEmitter, inject, OnInit, Output} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatLabel} from '@angular/material/input';
+import {MatOptgroup, MatOption, MatSelect} from '@angular/material/select';
 import {
   Characteristic,
   DefaultCharacteristic,
@@ -46,34 +52,33 @@ import {DropdownFieldComponent} from '../../dropdown-field.component';
 @Component({
   selector: 'ame-characteristic-name-dropdown-field',
   templateUrl: './characteristic-name-dropdown-field.component.html',
+  imports: [MatFormFieldModule, MatLabel, MatSelect, FormsModule, KeyValuePipe, MatOptgroup, MatOption],
 })
 export class CharacteristicNameDropdownFieldComponent extends DropdownFieldComponent<DefaultCharacteristic> implements OnInit {
+  private destroyRef = inject(DestroyRef);
+  private modelElementNamingService = inject(ModelElementNamingService);
+  private elementCreator = inject(ElementCreatorService);
+
+  public editorModelService = inject(EditorModelService);
+  public modelService = inject(ModelService);
+  public languageSettings = inject(SammLanguageSettingsService);
+  public loadedFilesService = inject(LoadedFilesService);
+
   public listCharacteristics: Map<string, Function> = new Map();
   public listCharacteristicGroup: Map<string, Array<string>> = new Map();
   public units: Array<Unit> = [];
 
   @Output() selectedCharacteristic = new EventEmitter<CharacteristicClassType>();
 
-  constructor(
-    public editorModelService: EditorModelService,
-    public modelService: ModelService,
-    public languageSettings: SammLanguageSettingsService,
-    public loadedFilesService: LoadedFilesService,
-    private modelElementNamingService: ModelElementNamingService,
-    private elementCreator: ElementCreatorService,
-  ) {
-    super(editorModelService, modelService, languageSettings, loadedFilesService);
-  }
-
   ngOnInit(): void {
     this.initListCharacteristics();
-    this.subscription.add(
-      this.getMetaModelData().subscribe(() => {
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
         this.selectedMetaModelElement = this.metaModelElement;
         this.setMetaModelClassName();
         this.selectedCharacteristic.emit(this.metaModelClassName as CharacteristicClassType);
-      }),
-    );
+      });
   }
 
   onCharacteristicChange(characteristic: string) {

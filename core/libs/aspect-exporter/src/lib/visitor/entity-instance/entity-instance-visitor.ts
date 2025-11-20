@@ -12,22 +12,17 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEntityInstance, DefaultProperty, Value} from '@esmf/aspect-model-loader';
 import {DataFactory} from 'n3';
 import {BaseVisitor} from '../base-visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class EntityInstanceVisitor extends BaseVisitor<DefaultEntityInstance> {
+  public loadedFilesService = inject(LoadedFilesService);
+
   get currentFile() {
     return this.loadedFilesService.currentLoadedFile;
-  }
-
-  constructor(
-    private loadedFilesService: LoadedFilesService,
-    public loadedFiles: LoadedFilesService,
-  ) {
-    super(loadedFiles);
   }
 
   visit(entityValue: DefaultEntityInstance): DefaultEntityInstance {
@@ -49,7 +44,7 @@ export class EntityInstanceVisitor extends BaseVisitor<DefaultEntityInstance> {
     tuples.map(([propertyUrn, value]) => {
       this.handleExternalReference(value);
 
-      const property = this.loadedFiles.currentLoadedFile.cachedFile.get<DefaultProperty>(propertyUrn);
+      const property = this.loadedFilesService.currentLoadedFile.cachedFile.get<DefaultProperty>(propertyUrn);
       const dataType = property?.characteristic?.dataType;
 
       const object = value.language
@@ -63,7 +58,7 @@ export class EntityInstanceVisitor extends BaseVisitor<DefaultEntityInstance> {
   }
 
   private handleExternalReference(value: Value): void {
-    if (value instanceof DefaultEntityInstance && this.loadedFiles.isElementExtern(value)) {
+    if (value instanceof DefaultEntityInstance && this.loadedFilesService.isElementExtern(value)) {
       this.setPrefix(value.aspectModelUrn);
     }
   }

@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/// <reference types="Cypress" />
+/// <reference types="cypress" />
 
+import {NAMESPACES_URL, SAMM_VERSION_ACTUAL} from '../../../support/api-mocks';
 import {
   SELECTOR_ecConstraint,
   SELECTOR_ecTrait,
@@ -29,7 +30,7 @@ describe('Test drag and drop ext constraint', () => {
     const fileName = 'external-constraint-reference.ttl';
 
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       statusCode: 200,
       body: {
         'org.eclipse.different': [
@@ -39,6 +40,7 @@ describe('Test drag and drop ext constraint', () => {
               {
                 model: fileName,
                 aspectModelUrn: 'urn:samm:org.eclipse.different:1.0.0#ExternalConstraint',
+                version: SAMM_VERSION_ACTUAL,
                 existing: true,
               },
             ],

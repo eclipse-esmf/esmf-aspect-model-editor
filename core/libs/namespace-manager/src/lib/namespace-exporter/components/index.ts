@@ -11,5 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './root-export-namespaces/root-export-namespaces.component';
 export * from './select-namespaces/select-namespaces.component';

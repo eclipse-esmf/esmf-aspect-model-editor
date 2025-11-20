@@ -11,20 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {ModelRootService} from '../model-root.service';
 import {PredefinedRemove} from './predefined-remove.type';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class FileResourceRemoveService implements PredefinedRemove {
-  constructor(
-    private modelRootService: ModelRootService,
-    private mxGraphService: MxGraphService,
-  ) {}
+  private modelRootService = inject(ModelRootService);
+  private mxGraphService = inject(MxGraphService);
 
   delete(cell: mxgraph.mxCell): boolean {
     if (!cell) {

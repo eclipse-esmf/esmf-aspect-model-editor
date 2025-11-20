@@ -30,11 +30,6 @@ module.exports = defineConfig({
   pageLoadTimeout: 60000,
   responseTimeout: 60000,
   e2e: {
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
-    setupNodeEvents(on, config) {
-      return require('apps/ame-e2e/src/plugins/index.js')(on, config);
-    },
     testIsolation: false,
     specPattern: [
       'apps/ame-e2e/src/integration/drag-and-drop/*.ts',
@@ -49,5 +44,8 @@ module.exports = defineConfig({
     ],
     supportFile: 'apps/ame-e2e/src/support/index.ts',
     baseUrl: 'http://localhost:4200/',
+    // Please ensure you use `cy.origin()` when navigating between domains and remove this option.
+    // See https://docs.cypress.io/app/references/migration-guide#Changes-to-cyorigin
+    injectDocumentDomain: true,
   },
 });

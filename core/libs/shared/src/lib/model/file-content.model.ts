@@ -13,7 +13,10 @@
 
 export class FileContentModel {
   constructor(
-    public fileName: string,
+    public name: string,
+    public aspectModelUrn: string,
+    public version: string,
+    public existing: boolean,
     public aspectMetaModel: string,
   ) {}
 }

@@ -18,9 +18,7 @@ import {mxgraph} from 'mxgraph-factory';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class PropertyConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Property> {
   private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
 

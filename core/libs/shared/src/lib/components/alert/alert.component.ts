@@ -12,7 +12,7 @@
  */
 
 import {AlertOptions} from '@ame/shared';
-import {Component, Inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 
 import {MatButtonModule} from '@angular/material/button';
@@ -25,10 +25,8 @@ import {MatButtonModule} from '@angular/material/button';
   imports: [MatDialogModule, MatButtonModule],
 })
 export class AlertComponent {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: AlertOptions,
-    private dialogRef: MatDialogRef<AlertComponent>,
-  ) {}
+  private dialogRef = inject(MatDialogRef<AlertComponent>);
+  public data = inject(MAT_DIALOG_DATA) as AlertOptions;
 
   close(event: MouseEvent) {
     if (this.data.leftButtonAction && typeof this.data.leftButtonAction === 'function') {

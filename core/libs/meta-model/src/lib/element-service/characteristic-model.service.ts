@@ -23,7 +23,7 @@ import {
 } from '@ame/mx-graph';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {useUpdater} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {
   DefaultCharacteristic,
   DefaultCollection,
@@ -43,16 +43,12 @@ import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class CharacteristicModelService extends BaseModelService {
-  constructor(
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphService: MxGraphService,
-    private characteristicRenderer: CharacteristicRenderService,
-    private enumerationRenderer: EnumerationRenderService,
-    private filtersService: FiltersService,
-  ) {
-    super();
-  }
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private mxGraphService = inject(MxGraphService);
+  private characteristicRenderer = inject(CharacteristicRenderService);
+  private enumerationRenderer = inject(EnumerationRenderService);
+  private filtersService = inject(FiltersService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultCharacteristic;

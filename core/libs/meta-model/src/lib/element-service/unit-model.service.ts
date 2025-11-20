@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
 
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService, UnitRenderService} from '@ame/mx-graph';
@@ -22,17 +22,13 @@ declare const sammUDefinition: any;
 
 @Injectable({providedIn: 'root'})
 export class UnitModelService extends BaseModelService {
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private mxGraphService = inject(MxGraphService);
+  private unitRenderer = inject(UnitRenderService);
+
   private get sammU(): SammU {
     return this.loadedFile?.rdfModel.sammU;
-  }
-
-  constructor(
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private mxGraphService: MxGraphService,
-    private unitRenderer: UnitRenderService,
-  ) {
-    super();
   }
 
   isApplicable(metaModelElement: NamedElement): boolean {

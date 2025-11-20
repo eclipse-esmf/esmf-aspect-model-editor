@@ -82,7 +82,8 @@
           "buildTarget": "ame:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "continuous": true
     },
     "serve-coverage": {
       "executor": "ngx-build-plus:dev-server",
@@ -109,7 +110,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/ame"],
       "options": {
-        "jestConfig": "apps/ame/jest.config.js"
+        "jestConfig": "apps/ame/jest.config.ts"
       }
     }
   }

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Observable} from 'rxjs';
 import {first} from 'rxjs/operators';
@@ -28,7 +28,7 @@ export interface DialogOptions {
 
 @Injectable({providedIn: 'root'})
 export class ConfirmDialogService {
-  constructor(private matDialog: MatDialog) {}
+  private matDialog = inject(MatDialog);
 
   open({phrases, title, closeButtonText, okButtonText, actionButtonText}: DialogOptions): Observable<ConfirmDialogEnum> {
     return this.matDialog

@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultAspect, DefaultEntity, DefaultProperty, PropertyPayload, PropertyUrn, Type} from '@esmf/aspect-model-loader';
+import {DefaultAspect, DefaultEntity, DefaultProperty, PropertyPayload, PropertyUrn, Samm, SammC, Type} from '@esmf/aspect-model-loader';
 import {ScalarValue} from 'libs/aspect-model-loader/src/lib/aspect-meta-model/scalar-value';
-import {DataFactory} from 'n3';
-import {ListElement, ListElementType, PropertyListElement, ResolvedListElements, SourceElementType} from '.';
+import {DataFactory, NamedNode} from 'n3';
+import {ListElement, ListElementType, ListProperties, PropertyListElement, ResolvedListElements, SourceElementType} from '.';
 
 // TODO refactor this function so it's more clear what happens here
 export class RdfListHelper {
@@ -68,5 +68,21 @@ export class RdfListHelper {
 
   static filterDuplicates(elements: ListElementType[], exitingElements: ListElement[]) {
     return elements.filter(e => !exitingElements.find(({node, name}) => (name ? name : node.value) === RdfListHelper.getElementValue(e)));
+  }
+
+  static getPredicateByKey(key: ListProperties, samm: Samm, sammC: SammC): NamedNode<string> {
+    const predicates = {
+      [ListProperties.elements]: sammC.ElementsProperty(),
+      [ListProperties.values]: sammC.ValuesProperty(),
+      [ListProperties.operations]: samm.OperationsProperty(),
+      [ListProperties.properties]: samm.PropertiesProperty(),
+      [ListProperties.abstractProperties]: samm.PropertiesProperty(),
+      [ListProperties.input]: samm.InputProperty(),
+      [ListProperties.quantityKinds]: samm.QuantityKindsProperty(),
+      [ListProperties.events]: samm.EventsProperty(),
+      [ListProperties.parameters]: samm.ParametersProperty(),
+    };
+
+    return predicates[key];
   }
 }

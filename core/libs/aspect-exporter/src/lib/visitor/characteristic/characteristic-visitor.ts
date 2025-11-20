@@ -12,7 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {
   DefaultCharacteristic,
   DefaultCode,
@@ -41,8 +41,12 @@ import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
+  public rdfNodeService = inject(RdfNodeService);
+  public rdfListService = inject(RdfListService);
+  public loadedFilesService = inject(LoadedFilesService);
+
   private get store(): Store {
     return this.loadedFilesService.currentLoadedFile.rdfModel.store;
   }
@@ -72,15 +76,6 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     DefaultSingleEntity: (characteristic: DefaultSingleEntity) => this.updateSingleEntity(characteristic),
     DefaultStructuredValue: (characteristic: DefaultStructuredValue) => this.updateStructuredValue(characteristic),
   };
-
-  constructor(
-    private rdfNodeService: RdfNodeService,
-    private rdfListService: RdfListService,
-    private loadedFilesService: LoadedFilesService,
-    loadedFiles: LoadedFilesService,
-  ) {
-    super(loadedFiles);
-  }
 
   visit(characteristic: DefaultCharacteristic): DefaultCharacteristic {
     this.setPrefix(characteristic.aspectModelUrn);
@@ -294,7 +289,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
         continue;
       }
 
-      if ((parent instanceof DefaultProperty && parent.getExtends()) || this.loadedFiles.isElementExtern(parent)) {
+      if ((parent instanceof DefaultProperty && parent.getExtends()) || this.loadedFilesService.isElementExtern(parent)) {
         continue;
       }
 

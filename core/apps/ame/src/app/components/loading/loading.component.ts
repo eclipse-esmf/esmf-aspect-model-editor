@@ -10,12 +10,13 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {ModelApiService, PREDEFINED_MODELS} from '@ame/api';
+import {ModelApiService} from '@ame/api';
 import {ElectronSignals, ElectronSignalsService, ElectronTunnelService} from '@ame/shared';
 import {NgOptimizedImage} from '@angular/common';
-import {AfterViewInit, Component, NgZone, OnDestroy, inject} from '@angular/core';
+import {AfterViewInit, Component, DestroyRef, NgZone, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Router} from '@angular/router';
-import {Observable, Subscription, forkJoin, of, switchMap, take} from 'rxjs';
+import {Observable, forkJoin, of, switchMap, take} from 'rxjs';
 
 @Component({
   standalone: true,
@@ -23,32 +24,20 @@ import {Observable, Subscription, forkJoin, of, switchMap, take} from 'rxjs';
   styleUrls: ['loading.component.scss'],
   imports: [NgOptimizedImage],
 })
-export class LoadingComponent implements AfterViewInit, OnDestroy {
-  private subscription = new Subscription();
+export class LoadingComponent implements AfterViewInit {
+  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
+  private electronTunnel = inject(ElectronTunnelService);
+  private modelApiService = inject(ModelApiService);
+  private ngZone = inject(NgZone);
 
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
 
-  constructor(
-    private router: Router,
-    private electronTunnel: ElectronTunnelService,
-    private modelApiService: ModelApiService,
-    private ngZone: NgZone,
-  ) {}
-
   ngAfterViewInit(): void {
-    if (!this.electronTunnel.ipcRenderer) {
-      this.modelApiService.getPredefinedModel(PREDEFINED_MODELS.SIMPLE_ASPECT).subscribe(model => {
-        this.electronTunnel.startUpData$.next({isFirstWindow: true, model});
-        const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
-        this.ngZone.run(() => this.router.navigate(['/editor'], {queryParams}));
-      });
-      return;
-    }
-
     this.electronSignalsService.call('requestMaximizeWindow');
 
-    const sub = forkJoin([this.electronSignalsService.call('isFirstWindow'), this.loadModelText()])
-      .pipe(take(1))
+    forkJoin([this.electronSignalsService.call('isFirstWindow'), this.loadModelText()])
+      .pipe(takeUntilDestroyed(this.destroyRef), take(1))
       .subscribe({
         next: ([isFirstWindow, model]) => {
           this.electronTunnel.startUpData$.next({isFirstWindow, model});
@@ -62,12 +51,6 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
           this.ngZone.run(() => this.router.navigate(['/editor'], {queryParams}));
         },
       });
-
-    this.subscription.add(sub);
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   loadModelText(): Observable<string> {
@@ -77,7 +60,7 @@ export class LoadingComponent implements AfterViewInit, OnDestroy {
           return of(null);
         }
 
-        return this.modelApiService.getAspectMetaModel(data.options.aspectModelUrn);
+        return this.modelApiService.fetchAspectMetaModel(data.options.aspectModelUrn);
       }),
     );
   }

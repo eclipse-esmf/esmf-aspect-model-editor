@@ -5,14 +5,14 @@ import {ConfigurationService} from '@ame/settings-dialog';
 import {ModelSavingTrackerService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
-import {Injectable, inject} from '@angular/core';
+import {DestroyRef, Injectable, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import {Observable, Subscription, catchError, delayWhen, first, map, of, retry, switchMap, tap, throwError, timer} from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ModelSaverService {
+  private destroyRef = inject(DestroyRef);
   private modelApiService = inject(ModelApiService);
   private rdfSerializer = inject(RdfSerializerService);
   private loadedFiles = inject(LoadedFilesService);
@@ -36,6 +36,7 @@ export class ModelSaverService {
   saveModel(rdfModel?: RdfModel) {
     const synchronizedModel = this.modelService.synchronizeModelToRdf();
     return (synchronizedModel || throwError(() => ({type: SaveValidateErrorsCodes.desynchronized}))).pipe(
+      takeUntilDestroyed(this.destroyRef),
       switchMap(() => this.writeModelToWorkspace(rdfModel)),
       tap(() => {
         this.modelSavingTracker.updateSavedModel();
@@ -56,10 +57,11 @@ export class ModelSaverService {
 
   autoSaveModel(): Observable<RdfModel> {
     return of({}).pipe(
+      takeUntilDestroyed(this.destroyRef),
       delayWhen(() => timer(this.settings.saveTimerSeconds * 1000)),
       switchMap(() =>
         this.currentFile.cachedFile.getKeys().length && !this.currentFile.name.includes('empty.ttl')
-          ? this.saveModel().pipe(first())
+          ? this.saveModel().pipe(takeUntilDestroyed(this.destroyRef), first())
           : of(null),
       ),
       tap(() => {
@@ -94,7 +96,8 @@ export class ModelSaverService {
       return throwError(() => ({code: SaveValidateErrorsCodes.emptyModel}));
     }
 
-    return this.modelApiService.formatModel(rdfContent).pipe(
+    return this.modelApiService.fetchFormatedAspectModel(rdfContent).pipe(
+      takeUntilDestroyed(this.destroyRef),
       switchMap(content => {
         if (!content) {
           return throwError(() => ({code: SaveValidateErrorsCodes.emptyModel}));
@@ -103,11 +106,21 @@ export class ModelSaverService {
         const copyright = this.settings.copyrightHeader.join('\n');
         const contentWithCopyright = `${copyright}\n${content}`;
 
-        return this.modelApiService.saveModel(
-          contentWithCopyright,
-          this.currentFile?.getAnyAspectModelUrn(),
-          this.currentFile?.absoluteName || '',
-        );
+        const originalAspectModelUrn = this.currentFile?.originalAspectModelUrn;
+        const newAspectModelUrn = this.currentFile?.getAnyAspectModelUrn();
+
+        const saveModel = () =>
+          this.modelApiService.saveAspectModel(contentWithCopyright, newAspectModelUrn, this.currentFile?.absoluteName || '');
+
+        if (this.currentFile) {
+          this.currentFile.originalAspectModelUrn = newAspectModelUrn;
+        }
+
+        if (this.currentFile?.isNameChanged || this.currentFile?.isNamespaceChanged) {
+          return this.modelApiService.deleteAspectModel(originalAspectModelUrn).pipe(switchMap(saveModel));
+        }
+
+        return saveModel();
       }),
       map(() => this.currentFile?.rdfModel),
     );

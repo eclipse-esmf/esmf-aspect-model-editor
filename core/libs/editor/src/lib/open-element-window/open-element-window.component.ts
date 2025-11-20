@@ -13,7 +13,7 @@
 import {ModelApiService} from '@ame/api';
 import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
 import {DialogRef} from '@angular/cdk/dialog';
-import {Component, Inject, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {NamedNode} from 'n3';
@@ -47,18 +47,15 @@ import {ModelLoaderService} from '../model-loader.service';
 export class OpenElementWindowComponent implements OnInit {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private modelLoaderService = inject(ModelLoaderService);
-
-  constructor(
-    private dialogRef: DialogRef<OpenElementWindowComponent>,
-    private modelApiService: ModelApiService,
-    private notificationService: NotificationsService,
-    @Inject(MAT_DIALOG_DATA) private elementInfo: {urn: string; file: string},
-  ) {}
+  private dialogRef = inject(DialogRef<OpenElementWindowComponent>);
+  private modelApiService = inject(ModelApiService);
+  private notificationService = inject(NotificationsService);
+  private elementInfo = inject<{urn: string; file: string}>(MAT_DIALOG_DATA);
 
   ngOnInit() {
     const [namespace, elementName] = this.elementInfo.urn.replace('urn:samm:', '').split('#');
     this.modelApiService
-      .getAspectMetaModel(this.elementInfo.urn)
+      .fetchAspectMetaModel(this.elementInfo.urn)
       .pipe(
         switchMap((model: string) => this.modelLoaderService.parseRdfModel([model])),
         tap(rdfModel => {

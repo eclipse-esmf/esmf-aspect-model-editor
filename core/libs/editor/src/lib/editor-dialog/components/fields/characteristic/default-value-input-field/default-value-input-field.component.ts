@@ -12,13 +12,17 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultEntity, DefaultState} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-default-value-input-field',
   templateUrl: './default-value-input-field.component.html',
+  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput],
 })
 export class DefaultValueInputFieldComponent extends InputFieldComponent<DefaultState> implements OnInit, OnDestroy {
   constructor() {
@@ -27,7 +31,9 @@ export class DefaultValueInputFieldComponent extends InputFieldComponent<Default
   }
 
   ngOnInit() {
-    this.subscription = this.getMetaModelData().subscribe(() => this.initForm());
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.initForm());
   }
 
   ngOnDestroy() {

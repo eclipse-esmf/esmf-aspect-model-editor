@@ -19,14 +19,8 @@ import {mxgraph} from 'mxgraph-factory';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class TraitConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<DefaultTrait> {
-  constructor() {
-    super();
-  }
-
   public connect(trait: DefaultTrait, source: mxgraph.mxCell) {
     const defaultElement =
       trait.getBaseCharacteristic() == null

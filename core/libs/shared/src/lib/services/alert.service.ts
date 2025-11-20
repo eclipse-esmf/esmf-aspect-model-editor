@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AlertComponent} from '../components';
 
@@ -28,7 +28,7 @@ export interface AlertOptions {
 
 @Injectable({providedIn: 'root'})
 export class AlertService {
-  constructor(private matDialog: MatDialog) {}
+  private matDialog = inject(MatDialog);
 
   public open(options: MatDialogConfig<Partial<AlertOptions>>) {
     return this.matDialog.open(AlertComponent, {

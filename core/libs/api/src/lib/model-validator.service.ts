@@ -14,16 +14,14 @@
 import {ViolationError} from '@ame/editor';
 import {MxGraphService} from '@ame/mx-graph';
 import {NotificationsService} from '@ame/shared';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class ModelValidatorService {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private notificationsService: NotificationsService,
-  ) {
+  private mxGraphService = inject(MxGraphService);
+  private notificationsService = inject(NotificationsService);
+
+  constructor() {
     this.notificationsService.clearNotifications();
   }
 

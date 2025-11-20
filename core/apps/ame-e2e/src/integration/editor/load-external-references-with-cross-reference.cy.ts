@@ -12,7 +12,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-/// <reference types="Cypress" />
+/// <reference types="cypress" />
+
+import {NAMESPACES_URL} from '../../support/api-mocks';
 
 import {cyHelp} from '../../support/helpers';
 
@@ -20,7 +22,7 @@ import {cyHelp} from '../../support/helpers';
 describe.skip('Test load external reference with cross references', () => {
   it('Loading different elements from cross referenced file one way', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.digitaltwin:1.0.0': [
         'external-entity-reference.txt',
         'external-characteristic-reference.txt',
@@ -184,7 +186,7 @@ describe.skip('Test load external reference with cross references', () => {
 
   it('Loading different elements from cross referenced file mixing', () => {
     cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', 'http://localhost:9090/ame/api/models/namespaces', {
+    cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.digitaltwin:1.0.0': [
         'external-entity-reference.txt',
         'external-property-reference.txt',

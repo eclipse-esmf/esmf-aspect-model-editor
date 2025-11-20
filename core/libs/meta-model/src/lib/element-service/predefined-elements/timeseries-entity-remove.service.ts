@@ -11,20 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEntity, DefaultProperty, NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {ModelRootService} from '../model-root.service';
 import {PredefinedRemove} from './predefined-remove.type';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class TimeSeriesEntityRemoveService implements PredefinedRemove {
-  constructor(
-    private mxGraphService: MxGraphService,
-    private modelRootService: ModelRootService,
-  ) {}
+  private modelRootService = inject(ModelRootService);
+  private mxGraphService = inject(MxGraphService);
 
   public delete(cell: mxgraph.mxCell) {
     const modelElement = MxGraphHelper.getModelElement(cell);

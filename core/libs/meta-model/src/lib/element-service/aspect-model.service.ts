@@ -14,21 +14,17 @@
 import {AspectRenderService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {TitleService} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultAspect, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class AspectModelService extends BaseModelService {
-  constructor(
-    private aspectRenderer: AspectRenderService,
-    private titleService: TitleService,
-    private mxGraphService: MxGraphService,
-    private sidebarStateService: SidebarStateService,
-  ) {
-    super();
-  }
+  private aspectRenderer = inject(AspectRenderService);
+  private titleService = inject(TitleService);
+  private mxGraphService = inject(MxGraphService);
+  private sidebarStateService = inject(SidebarStateService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultAspect;
@@ -37,6 +33,7 @@ export class AspectModelService extends BaseModelService {
   update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
     const metaModelElement = MxGraphHelper.getModelElement<DefaultAspect>(cell);
     if (form.name && form.name !== metaModelElement.name) {
+      this.loadedFilesService.currentLoadedFile.originalAspectModelUrn = metaModelElement.aspectModelUrn;
       this.loadedFilesService.updateAbsoluteName(this.loadedFile.absoluteName, `${this.loadedFile.namespace}:${form.name}.ttl`);
     }
     super.update(cell, form);

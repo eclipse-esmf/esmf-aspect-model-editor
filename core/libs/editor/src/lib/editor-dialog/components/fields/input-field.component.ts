@@ -14,7 +14,7 @@
 import {CacheUtils, LoadedFilesService} from '@ame/cache';
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {SearchService, mxCellSearchOption, unitSearchOption} from '@ame/shared';
-import {Directive, Input, OnChanges, OnDestroy, SimpleChanges, inject} from '@angular/core';
+import {DestroyRef, Directive, Input, OnChanges, OnDestroy, SimpleChanges, inject} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {
   DefaultCharacteristic,
@@ -45,13 +45,13 @@ export abstract class InputFieldComponent<T extends NamedElement> implements OnD
   @Input() public parentForm: FormGroup;
   @Input() previousData: PreviousFormDataSnapshot = {};
 
+  public destroyRef = inject(DestroyRef);
   public metaModelDialogService = inject(EditorModelService);
   public searchService = inject(SearchService);
   public mxGraphService = inject(MxGraphService);
   public loadedFiles = inject(LoadedFilesService);
 
   public metaModelElement: T;
-  public subscription: Subscription = new Subscription();
   public formSubscription: Subscription = new Subscription(); // subscriptions from form controls are added here
   public frozen: boolean;
   protected resetFormOnDestroy = true;
@@ -98,7 +98,6 @@ export abstract class InputFieldComponent<T extends NamedElement> implements OnD
   }
 
   ngOnDestroy() {
-    this.subscription?.unsubscribe();
     this.cleanSubscriptions();
     this.resetFormOnDestroy && this.resetForm();
   }

@@ -16,9 +16,7 @@ import {Injectable} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class CopyrightHeaderUpdateStrategy implements SettingsUpdateStrategy {
   updateSettings(form: FormGroup, settings: Settings): void {
     const copyrightHeaderConfiguration = form.get('copyrightHeaderConfiguration');

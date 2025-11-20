@@ -12,31 +12,29 @@
  */
 
 import {SidebarStateService} from '@ame/sidebar';
-import {ChangeDetectorRef, Component, OnDestroy, OnInit, inject} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {ChangeDetectorRef, Component, DestroyRef, OnInit, inject} from '@angular/core';
+import {SidebarMenuComponent} from '../sidebar-menu/sidebar-menu.component';
+import {SidebarSAMMElementsComponent} from '../sidebar-samm-elements/sidebar-samm-elements.component';
+import {WorkspaceComponent} from '../workspace/workspace.component';
 
 @Component({
   selector: 'ame-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
+  imports: [SidebarMenuComponent, SidebarSAMMElementsComponent, WorkspaceComponent],
 })
-export class SidebarComponent implements OnInit, OnDestroy {
+export class SidebarComponent implements OnInit {
+  public destroyRef = inject(DestroyRef);
   public sidebarService = inject(SidebarStateService);
   private changeDetector = inject(ChangeDetectorRef);
 
-  private subscription = new Subscription();
-
   ngOnInit(): void {
-    this.subscription.add(
-      this.sidebarService.selection.selection$.subscribe(() => {
-        requestAnimationFrame(() => {
-          this.changeDetector.detectChanges();
-        });
-      }),
-    );
-  }
+    const selection = this.sidebarService.selection.selection();
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (selection) {
+      requestAnimationFrame(() => {
+        this.changeDetector.detectChanges();
+      });
+    }
   }
 }

@@ -13,21 +13,17 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultAspect} from '@esmf/aspect-model-loader';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class AspectVisitor extends BaseVisitor<DefaultAspect> {
-  constructor(
-    public rdfNodeService: RdfNodeService,
-    public rdfListService: RdfListService,
-    loadedFiles: LoadedFilesService,
-  ) {
-    super(loadedFiles);
-  }
+  public rdfNodeService = inject(RdfNodeService);
+  public rdfListService = inject(RdfListService);
+  public loadedFiles = inject(LoadedFilesService);
 
   visit(aspect: DefaultAspect): DefaultAspect {
     this.setPrefix(aspect.aspectModelUrn);

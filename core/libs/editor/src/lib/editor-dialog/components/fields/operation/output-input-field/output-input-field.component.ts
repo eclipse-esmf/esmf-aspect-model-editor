@@ -12,34 +12,53 @@
  */
 
 import {CacheUtils} from '@ame/cache';
-import {RdfService} from '@ame/rdf/services';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatError, MatLabel} from '@angular/material/input';
 import {DefaultOperation, DefaultProperty, Property} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
+import {AsyncPipe} from '@angular/common';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
+import {MatIconButton} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInput} from '@angular/material/input';
+
 @Component({
   selector: 'ame-output-input-field',
   templateUrl: './output-input-field.component.html',
   styleUrls: ['../../field.scss'],
+  imports: [
+    MatFormFieldModule,
+    MatLabel,
+    MatIconModule,
+    MatAutocompleteTrigger,
+    ReactiveFormsModule,
+    MatError,
+    MatInput,
+    MatIconButton,
+    MatAutocomplete,
+    AsyncPipe,
+    MatOptgroup,
+    MatOption,
+  ],
 })
 export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {
+  private editorDialogValidators = inject(EditorDialogValidators);
+
   filteredPropertyTypes$: Observable<any[]>;
 
   outputControl: FormControl;
   newPropertyControl: FormControl;
 
-  constructor(
-    public rdfService: RdfService,
-    private validators: EditorDialogValidators,
-  ) {
-    super();
-  }
-
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => this.setOutputControl());
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.setOutputControl());
   }
 
   ngOnDestroy() {
@@ -58,7 +77,7 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
           value,
           disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement),
         },
-        [this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
+        [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
       ),
     );
     this.getControl('output').markAsTouched();

@@ -9,7 +9,8 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/cache"],
       "options": {
-        "jestConfig": "libs/cache/jest.config.js"
+        "jestConfig": "libs/cache/jest.config.ts",
+        "tsConfig": "libs/cache/tsconfig.spec.json"
       }
     },
     "lint": {

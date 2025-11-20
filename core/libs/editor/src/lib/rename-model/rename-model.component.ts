@@ -12,63 +12,90 @@
  */
 
 import {ModelApiService} from '@ame/api';
-import {LanguageTranslateModule} from '@ame/translation';
-import {Component, Inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {AbstractControl, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {TranslatePipe} from '@ngx-translate/core';
 
 import {LoadedFilesService} from '@ame/cache';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {RdfModel} from '@esmf/aspect-model-loader';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   standalone: true,
   templateUrl: './rename-model.component.html',
-  styles: ['.input-suffix { padding-right: 5px;}'],
+  styleUrls: ['./rename-model.component.scss'],
   imports: [
     MatIconModule,
     MatDialogModule,
-    LanguageTranslateModule,
+    TranslatePipe,
     ReactiveFormsModule,
     MatInputModule,
     MatDialogActions,
     MatButtonModule,
     MatFormFieldModule,
+    MatProgressSpinner,
   ],
 })
 export class RenameModelComponent {
+  private dialogRef = inject(MatDialogRef<RenameModelComponent>);
+  private loadedFilesService = inject(LoadedFilesService);
+  private modelApiService = inject(ModelApiService);
+
+  public data = inject(MAT_DIALOG_DATA) as {namespaces: string; rdfModel: RdfModel};
+
   public fileNameControl: FormControl;
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {namespaces: string; rdfModel: RdfModel},
-    private dialogRef: MatDialogRef<RenameModelComponent>,
-    private loadedFiles: LoadedFilesService,
-    private modelApiService: ModelApiService,
-  ) {
-    this.modelApiService.getWorkspaceAspectModelUrns().subscribe(files => {
-      const namespaces: Record<string, boolean> = {};
-      for (const {aspectModelUrn, fileName} of files) {
-        const [namespace] = aspectModelUrn.replace('urn:samm:', '').split('#');
-        namespaces[`${namespace}:${fileName}`] = true;
-      }
+  public loading = signal(true);
 
-      this.fileNameControl = new FormControl('', [
-        Validators.required,
-        // eslint-disable-next-line no-useless-escape
-        Validators.pattern('[0-9a-zA-Z_. -]+'),
-        (control: AbstractControl) => {
-          const searchTerm = `${this.loadedFiles.currentLoadedFile.namespace}:${control.value}.ttl`.toLowerCase();
-          return namespaces[searchTerm] ? {sameFile: true} : null;
-        },
-      ]);
-      this.fileNameControl.markAsTouched();
-    });
+  constructor() {
+    this.loading.set(true);
+    this.modelApiService
+      .fetchAllNamespaceFilesContent()
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe(files => {
+        const namespaces = this.buildNamespaceMap(files);
+        this.fileNameControl = this.createFileNameControl(namespaces);
+        this.fileNameControl.markAsTouched();
+      });
+  }
+
+  private buildNamespaceMap(files: any[]): Record<string, boolean> {
+    return files.reduce(
+      (acc, {aspectModelUrn, name}) => {
+        const [namespace] = aspectModelUrn.replace('urn:samm:', '').split('#');
+        acc[`${namespace}:${name}`] = true;
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    );
+  }
+
+  private createFileNameControl(namespaces: Record<string, boolean>): FormControl {
+    return new FormControl('', [
+      Validators.required,
+      Validators.pattern('[0-9a-zA-Z_. -]+'),
+      (control: AbstractControl) => {
+        const searchTerm = `${this.loadedFilesService.currentLoadedFile.namespace}:${control.value}.ttl`.toLowerCase();
+        return namespaces[searchTerm] ? {sameFile: true} : null;
+      },
+      (control: AbstractControl) => {
+        const fileName = control.value;
+        if (this.loadedFilesService.files[`${this.loadedFilesService.currentLoadedFile.originalNamespace}:${fileName}.ttl`]) {
+          return {fileExists: true};
+        }
+        return null;
+      },
+    ]);
   }
 
   closeAndGiveResult(result: boolean) {
+    this.loadedFilesService.currentLoadedFile.originalAspectModelUrn = this.loadedFilesService.currentLoadedFile.aspect.getAspectModelUrn();
     return this.dialogRef.close(
       result && {
         name: this.fileNameControl.value.endsWith('.ttl') ? this.fileNameControl.value : `${this.fileNameControl.value}.ttl`,

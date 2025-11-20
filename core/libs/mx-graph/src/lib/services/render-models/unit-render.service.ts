@@ -11,32 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
 import {FiltersService} from '@ame/loader-filters';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Injectable, inject} from '@angular/core';
 import {DefaultUnit} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {MxGraphRenderer} from '../../renderers';
 import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
-import {MxGraphService} from '../mx-graph.service';
 import {BaseRenderService} from './base-render-service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class UnitRenderService extends BaseRenderService {
   private filterService = inject(FiltersService);
-
-  constructor(
-    mxGraphService: MxGraphService,
-    sammLangService: SammLanguageSettingsService,
-    protected loadedFilesService: LoadedFilesService,
-    private mxGraphShapeOverlayService: MxGraphShapeOverlayService,
-  ) {
-    super(mxGraphService, sammLangService, loadedFilesService);
-  }
+  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
 
   create(parentCell: mxgraph.mxCell, unit: DefaultUnit) {
     this.removeFrom(parentCell);

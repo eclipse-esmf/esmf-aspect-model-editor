@@ -11,34 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {FileInfo, FileTypes, FileUploadService, ModelLoaderService} from '@ame/editor';
-import {SidebarStateService} from '@ame/sidebar';
+import {FileHandlingService, FileInfo, FileTypes, FileUploadService} from '@ame/editor';
+import {ElectronSignalsService} from '@ame/shared';
 import {createFile} from '@ame/utils';
-import {Injectable, InjectionToken} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {Router} from '@angular/router';
-import {Observable, catchError, first, of, switchMap, tap} from 'rxjs';
+import {Observable, of, switchMap} from 'rxjs';
+import {take} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
-import {RootExportNamespacesComponent} from '../../namespace-exporter/components';
-import {RootNamespacesImporterComponent} from '../../namespace-importer/components';
-import {NamespacesSession} from '../models';
-
-const NAMESPACES_SESSION_NAME = 'NAMESPACES_SESSION';
-export let NAMESPACES_SESSION: InjectionToken<NamespacesSession>;
+import {SelectNamespacesComponent} from '../../namespace-exporter/components';
 
 @Injectable({providedIn: 'root'})
 export class NamespacesManagerService {
-  public session = new NamespacesSession();
+  private matDialog = inject(MatDialog);
+  private fileHandlingService = inject(FileHandlingService);
+  private electronSignalsService = inject(ElectronSignalsService);
+  private fileUploadService = inject(FileUploadService);
 
-  constructor(
-    private modelApiService: ModelApiService,
-    private matDialog: MatDialog,
-    private router: Router,
-    private fileUploadService: FileUploadService,
-    private sidebarService: SidebarStateService,
-    private modelLoader: ModelLoaderService,
-  ) {
+  constructor() {
     if (!environment.production) {
       window['angular.namespacesManagerService'] = this;
     }
@@ -46,11 +36,8 @@ export class NamespacesManagerService {
 
   onImportNamespaces(fileInfo?: FileInfo) {
     this.resolveNamespacesFile(fileInfo)
-      .pipe(
-        switchMap(file => this.importNamespaces(file)),
-        first(),
-      )
-      .subscribe();
+      .pipe(switchMap(file => this.importNamespaces(file)))
+      .subscribe(() => this.electronSignalsService.call('requestRefreshWorkspaces'));
   }
 
   resolveNamespacesFile(fileInfo?: FileInfo): Observable<File> {
@@ -58,56 +45,10 @@ export class NamespacesManagerService {
   }
 
   importNamespaces(zip: File) {
-    this.setInjectionTokens();
-    this.session.state.validating$.next(true);
-    this.session.modalRef = this.matDialog.open(RootNamespacesImporterComponent, {disableClose: true});
-
-    return this.session.modalRef.afterOpened().pipe(
-      tap(() =>
-        this.setOnClose(() => {
-          this.sidebarService.workspace.refresh();
-          this.router.navigate([{outlets: {'import-namespaces': null}}]);
-        }),
-      ),
-      switchMap(() => this.modelApiService.validateImportPackage(zip)),
-      tap(result => {
-        this.session.parseResponse(zip, result);
-        this.session.state.validating$.next(false);
-      }),
-      catchError(e => of(this.session.state.validating$.error(e))),
-    );
+    return this.fileHandlingService.importFilesToWorkspace(zip).pipe(take(1));
   }
 
   onExportNamespaces() {
-    this.exportNamespaces().pipe(first()).subscribe();
-  }
-
-  exportNamespaces(): Observable<void> {
-    this.setInjectionTokens();
-    this.session.modalRef = this.matDialog.open(RootExportNamespacesComponent, {disableClose: true});
-    return this.session.modalRef.afterOpened().pipe(
-      tap(() => {
-        const cb = () => this.router.navigate([{outlets: {'export-namespaces': null}}]);
-        this.setOnClose(cb);
-      }),
-    );
-  }
-
-  private setInjectionTokens() {
-    NAMESPACES_SESSION = new InjectionToken<NamespacesSession>(NAMESPACES_SESSION_NAME, {
-      providedIn: 'root',
-      factory: () => this.session,
-    });
-  }
-
-  private setOnClose(callback?: () => any) {
-    this.session.modalRef
-      .afterClosed()
-      .pipe(first())
-      .subscribe(() => {
-        this.session = new NamespacesSession();
-        this.setInjectionTokens();
-        callback?.();
-      });
+    this.matDialog.open(SelectNamespacesComponent, {disableClose: true});
   }
 }

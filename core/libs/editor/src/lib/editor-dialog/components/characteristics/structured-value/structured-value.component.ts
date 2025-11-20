@@ -11,11 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
+import {MatOption, MatSelect} from '@angular/material/select';
 import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader';
-import {Subscription, debounceTime, take} from 'rxjs';
+import {debounceTime, take} from 'rxjs';
 import {EditorDialogValidators} from '../../../validators';
 import {InputFieldComponent} from '../../fields';
 import {StructuredValueVanillaGroups} from './elements-input-field/model';
@@ -28,8 +34,12 @@ const customRule = '--custom-rule--';
   selector: 'ame-structured-value',
   templateUrl: './structured-value.component.html',
   styleUrls: ['./structured-value.component.scss'],
+  imports: [MatFormFieldModule, MatLabel, MatSelect, MatOption, ReactiveFormsModule, MatError, MatInput, MatIconModule, MatButton],
 })
 export class StructuredValueComponent extends InputFieldComponent<DefaultStructuredValue> implements OnInit, OnDestroy {
+  private predefinedRulesService = inject(PredefinedRulesService);
+  private matDialog = inject(MatDialog);
+
   public deconstructionRule = '';
   public selectedRule = customRule;
   public customRuleActive = true;
@@ -37,8 +47,6 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   public splitters: StructuredValueVanillaGroups[] = [];
   public elements: (DefaultProperty | string)[] = [];
   public predefinedRules: Array<{regex: string; name: string}>;
-
-  private subscription$: Subscription;
 
   get hasGroupsError() {
     if (this.groups.length <= 0) {
@@ -55,10 +63,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
     return hasErrors;
   }
 
-  constructor(
-    private predefinedRulesService: PredefinedRulesService,
-    private matDialog: MatDialog,
-  ) {
+  constructor() {
     super();
     this.predefinedRules = Object.entries(this.predefinedRulesService.rules).map(([key, value]) => ({
       regex: key,
@@ -67,15 +72,16 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   }
 
   ngOnInit(): void {
-    this.subscription = this.getMetaModelData().subscribe(() => {
-      this.initForm();
-      this.subscribeToRuleChanging();
-    });
+    this.getMetaModelData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.initForm();
+        this.subscribeToRuleChanging();
+      });
   }
 
   ngOnDestroy() {
     super.ngOnDestroy();
-    this.subscription$?.unsubscribe();
     this.parentForm.removeControl('deconstructionRule');
     this.parentForm.removeControl('elements');
   }
@@ -149,18 +155,15 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   }
 
   private subscribeToRuleChanging() {
-    this.subscription$?.unsubscribe();
-    this.subscription$ = new Subscription();
-    this.subscription$.add(
-      this.parentForm
-        .get('deconstructionRule')
-        ?.valueChanges.pipe(debounceTime(500))
-        .subscribe((value: string) => {
-          this.selectedRule = this.predefinedRulesService.rules[value] ? value : customRule;
-          this.elements = this.parentForm.get('elements')?.value || this.elements;
-          this.rebuildElements();
-        }),
-    );
+    this.parentForm
+      .get('deconstructionRule')
+      ?.valueChanges.pipe(debounceTime(500))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((value: string) => {
+        this.selectedRule = this.predefinedRulesService.rules[value] ? value : customRule;
+        this.elements = this.parentForm.get('elements')?.value || this.elements;
+        this.rebuildElements();
+      });
   }
 
   private rebuildElements() {

@@ -100,19 +100,6 @@ export const setUniqueElementName = (modelElement: NamedElement, rdfModel: RdfMo
 export const extractNamespace = (urn: string) => urn.split('#')[0];
 
 /**
- * Remove comments from an Aspect Model
- *
- * @param {string} aspectModel - The Aspect Model as a string.
- * @returns {string} - Aspect Model without comments.
- */
-export const removeCommentsFromTTL = (aspectModel: string): string => {
-  return aspectModel
-    .split('\n')
-    .filter(line => !line.trim().startsWith('#'))
-    .join('\n');
-};
-
-/**
  * Get the preferred names locales of a NamedElement
  *
  * @param {NamedElement} element - The NamedElement to get the preferred names locales from.
@@ -129,7 +116,7 @@ export const getPreferredNamesLocales = (element: NamedElement) => [...element.p
 export const getDescriptionsLocales = (element: NamedElement) => [...element.descriptions.keys()];
 
 /**
- * Get the data type of a characteristic
+ * Get the data type of characteristic
  *
  * @param {DefaultCharacteristic} characteristic - The characteristic to get the data type from.
  * @returns {Type} - The data type of the characteristic.

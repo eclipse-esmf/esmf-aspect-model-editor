@@ -9,7 +9,8 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/meta-model"],
       "options": {
-        "jestConfig": "libs/meta-model/jest.config.js"
+        "jestConfig": "libs/meta-model/jest.config.ts",
+        "tsConfig": "libs/meta-model/tsconfig.spec.json"
       }
     },
     "lint": {

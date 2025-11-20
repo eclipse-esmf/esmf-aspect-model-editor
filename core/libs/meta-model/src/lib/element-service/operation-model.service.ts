@@ -22,15 +22,10 @@ import {BaseModelService} from './base-model-service';
 @Injectable({providedIn: 'root'})
 export class OperationModelService extends BaseModelService {
   private filtersService = inject(FiltersService);
-
-  constructor(
-    private mxGraphAttributeService: MxGraphAttributeService,
-    private shapeConnectorService: ShapeConnectorService,
-    private mxGraphService: MxGraphService,
-    private operationRender: OperationRenderService,
-  ) {
-    super();
-  }
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private shapeConnectorService = inject(ShapeConnectorService);
+  private mxGraphService = inject(MxGraphService);
+  private operationRender = inject(OperationRenderService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultOperation;
