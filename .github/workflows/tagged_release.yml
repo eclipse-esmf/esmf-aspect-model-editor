@@ -203,7 +203,7 @@ jobs:
 
       - name: Create Windows installer
         if: matrix.os == 'windows-latest'
-        uses: joncloud/makensis-action@v3.6
+        uses: joncloud/makensis-action@v5.0
         with:
           script-file: win-installer/installer.nsi
           arguments: "-V3 -DVERSION=${{ github.event.inputs.release_version }}"
