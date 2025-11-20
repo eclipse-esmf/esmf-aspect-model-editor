@@ -15,7 +15,7 @@ import {CacheUtils} from '@ame/cache';
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatError, MatFormField, MatLabel} from '@angular/material/input';
+import {MatError, MatLabel} from '@angular/material/input';
 import {DefaultOperation, DefaultProperty, Property} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
@@ -24,6 +24,7 @@ import {InputFieldComponent} from '../../input-field.component';
 import {AsyncPipe} from '@angular/common';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
 import {MatIconButton} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInput} from '@angular/material/input';
 
@@ -32,7 +33,7 @@ import {MatInput} from '@angular/material/input';
   templateUrl: './output-input-field.component.html',
   styleUrls: ['../../field.scss'],
   imports: [
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     MatIconModule,
     MatAutocompleteTrigger,

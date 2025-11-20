@@ -20,8 +20,9 @@ import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Unt
 import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
 import {MatIconButton, MatMiniFabButton} from '@angular/material/button';
 import {MatDivider} from '@angular/material/divider';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {
   CacheStrategy,
   Characteristic,
@@ -47,7 +48,7 @@ import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
     ReactiveFormsModule,
     MatDivider,
     MatIconModule,
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     MatAutocompleteTrigger,
     MatInput,

@@ -30,8 +30,9 @@ import {
 import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
 import {MatIconButton, MatMiniFabButton} from '@angular/material/button';
 import {MatDivider} from '@angular/material/divider';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {
   Characteristic,
   DefaultCollection,
@@ -52,7 +53,7 @@ import {InputFieldComponent} from '../../fields';
   templateUrl: './entity-instance-table.component.html',
   styleUrls: ['./entity-instance-table.component.scss'],
   imports: [
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     TranslatePipe,
     MatAutocompleteTrigger,

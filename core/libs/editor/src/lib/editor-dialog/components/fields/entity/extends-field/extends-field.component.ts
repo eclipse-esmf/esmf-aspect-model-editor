@@ -19,8 +19,9 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
 import {MatIconButton} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultEntity, Entity, useLoader} from '@esmf/aspect-model-loader';
 import {combineLatest, map, Observable, of} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
@@ -31,7 +32,7 @@ import {InputFieldComponent} from '../../input-field.component';
   templateUrl: './extends-field.component.html',
   styleUrls: ['./extends-field.component.scss', '../../field.scss'],
   imports: [
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     MatAutocompleteTrigger,
     ReactiveFormsModule,

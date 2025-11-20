@@ -54,7 +54,6 @@ interface SeeElement {
     MatError,
     TranslatePipe,
     MatChipsModule,
-    MatIconModule,
   ],
 })
 export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {

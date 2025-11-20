@@ -19,8 +19,9 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatIconButton} from '@angular/material/button';
 import {MatOptgroup, MatOption, MatOptionSelectionChange} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultDuration, DefaultUnit, Unit} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
@@ -31,7 +32,7 @@ declare const sammUDefinition: any;
   selector: 'ame-reference-unit-input-field',
   templateUrl: './reference-unit-input-field.component.html',
   imports: [
-    MatFormField,
+    MatFormFieldModule,
     MatLabel,
     MatAutocompleteTrigger,
     ReactiveFormsModule,
