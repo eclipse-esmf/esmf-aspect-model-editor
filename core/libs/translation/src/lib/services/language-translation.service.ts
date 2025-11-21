@@ -52,7 +52,7 @@ export class LanguageTranslationService {
   }
 
   getTranslation(language: string): Observable<Translation> {
-    return this.http.get<Translation>(`/assets/i18n/${language}.json`).pipe(
+    return this.http.get<Translation>(`./assets/i18n/${language}.json`).pipe(
       takeUntilDestroyed(this.destroyRef),
       tap((translation: Translation) => (this.language = translation)),
     );

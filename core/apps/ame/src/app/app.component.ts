@@ -143,6 +143,6 @@ export class AppComponent implements OnInit {
   }
 
   setMenuTranslation(): void {
-    this.electronTunnelService.sendTranslationsToElectron(this.translate.translateService.currentLang);
+    this.electronTunnelService.sendTranslationsToElectron(this.translate.translateService.getCurrentLang());
   }
 }
