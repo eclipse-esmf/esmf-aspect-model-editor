@@ -29,7 +29,7 @@ Are you having trouble with Aspect Model Editor? We want to help!
 
 ### Getting started (for developers)
 
-#### Artifacts to use 
+#### Artifacts to use
 
 You can clone the repositories to run the aspect model editor. Feel free to contribute.
 If you want to run the aspect model editor from repositories, please ensure to clone and start the [backend](https://github.com/eclipse-esmf/esmf-aspect-model-editor-backend) first.
@@ -38,6 +38,8 @@ If you want to run the aspect model editor from repositories, please ensure to c
 
 - Download & Install [Node.js](https://nodejs.org/en/download/)
 - To generate Aspect Model documentation, the installation [GraphViz](https://graphviz.org/download) is required.
+
+#### First steps into the code: [Code Overview](CODE-OVERVIEW.md)
 
 #### Install & Run
 
@@ -50,6 +52,8 @@ npm run start
 ```
 
 #### Run As Electron
+
+After running `npm start` run one of the following commands:
 
 Windows:
 
