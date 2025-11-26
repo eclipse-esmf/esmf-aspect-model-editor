@@ -2,7 +2,7 @@ import {ModelApiService, ModelData, WorkspaceStructure} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {config} from '@ame/shared';
-import {ExporterHelper, FileStatus} from '@ame/sidebar';
+import {ExporterHelper, FileStatus, SidebarStateService} from '@ame/sidebar';
 import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Samm} from '@esmf/aspect-model-loader';
@@ -15,6 +15,7 @@ export class ModelCheckerService {
   private modelApiService = inject(ModelApiService);
   private loadedFilesService = inject(LoadedFilesService);
   private modelLoader = inject(ModelLoaderService);
+  private sidebarStateService = inject(SidebarStateService);
 
   /**
    * Gets all files from workspace and process if they have any error or missing dependencies
@@ -24,22 +25,35 @@ export class ModelCheckerService {
    */
   detectWorkspaceErrors(signal?: Subject<string>): Observable<Record<string, FileStatus>> {
     let namespacesStructure: WorkspaceStructure;
+    const extractDependencies = (absoluteName: string, modelData: ModelData, modelVersion: string) => {
+      const namespaces = this.sidebarStateService.namespacesState.namespaces();
+      const chunks = RdfModelUtil.splitRdfIntoChunks(absoluteName);
+      const namespace = namespaces[`${chunks[0]}:${chunks[1]}`];
+      if (namespace?.find(n => n.name === chunks[2])?.isLoadedInWorkspace) {
+        return null;
+      }
 
-    const extractDependencies = (absoluteName: string, modelData: ModelData, modelVersion: string) =>
-      this.modelApiService.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(
+      return this.modelApiService.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(
         takeUntilDestroyed(this.destroyRef),
         switchMap(rdf => this.modelLoader.parseRdfModel([rdf])),
         map(rdfModel => {
           const dependencies = RdfModelUtil.resolveExternalNamespaces(rdfModel)
-            .map(external => external.replace(/urn:samm:|urn:bamm:|#/gi, ''))
+            .map(external => external.replace(/urn:samm:|#/gi, ''))
             .filter(dependency => !`urn:samm:${dependency}`.includes(Samm.BASE_URI));
 
           const missingDependencies: string[] = [];
 
           for (const dependency of dependencies) {
             const [namespace, version] = dependency.split(':');
-            if (!namespacesStructure[`${namespace}:${version}`]) missingDependencies.push(dependency);
+            const namespaceElements = namespacesStructure[namespace];
+
+            const versionExists = namespaceElements?.some(element => element.version === version);
+
+            if (!versionExists) {
+              missingDependencies.push(dependency);
+            }
           }
+
           const status = new FileStatus(modelData.model);
           const currentFile = this.loadedFilesService.currentLoadedFile;
 
@@ -56,6 +70,7 @@ export class ModelCheckerService {
           return status;
         }),
       );
+    };
 
     return this.modelApiService.loadNamespacesStructure().pipe(
       takeUntilDestroyed(this.destroyRef),
@@ -71,7 +86,11 @@ export class ModelCheckerService {
           }
         }
 
-        return Object.keys(requests).length ? forkJoin(requests) : of({});
+        const entries = Object.fromEntries(
+          Object.entries(requests).filter((entry): entry is [string, Observable<FileStatus>] => entry[1] !== null),
+        );
+
+        return Object.keys(entries).length ? forkJoin(entries) : of({} as Record<string, FileStatus>);
       }),
     );
   }

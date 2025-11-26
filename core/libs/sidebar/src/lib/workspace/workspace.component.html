@@ -21,7 +21,7 @@
       [class.disabled]="loading"
       [matTooltip]="loading ? ('SIDEBAR.WORKSPACE.REFRESHING' | translate) : ('SIDEBAR.WORKSPACE.REFRESH' | translate)"
       [disabled]="loading"
-      (click)="sidebarService.workspace.refresh()"
+      (click)="refreshWorkspace()"
       mat-mini-fab
     >
       <mat-icon>refresh</mat-icon>

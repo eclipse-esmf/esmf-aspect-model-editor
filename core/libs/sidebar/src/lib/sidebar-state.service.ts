@@ -72,6 +72,7 @@ export class FileStatus {
   public loaded: boolean;
   public outdated: boolean;
   public errored: boolean;
+  public isLoadedInWorkspace: boolean;
   public sammVersion: string;
   public dependencies: string[];
   public missingDependencies: string[];
@@ -154,10 +155,10 @@ export class SidebarStateService {
   }
 
   updateWorkspace(files: Record<string, FileStatus>) {
-    this.namespacesState.clear();
     let hasOutdated = false;
     for (const absolute of Object.keys(files)) {
       const fs = files[absolute];
+      fs.isLoadedInWorkspace = true;
       const [namespace, version] = RdfModelUtil.splitRdfIntoChunks(absolute);
       this.namespacesState.setFile(`${namespace}:${version}`, fs);
       hasOutdated ||= fs.outdated;

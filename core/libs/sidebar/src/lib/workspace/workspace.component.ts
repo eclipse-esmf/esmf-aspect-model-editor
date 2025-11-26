@@ -82,4 +82,9 @@ export class WorkspaceComponent {
         });
     });
   }
+
+  refreshWorkspace() {
+    this.sidebarService.namespacesState.clear();
+    this.sidebarService.workspace.refresh();
+  }
 }

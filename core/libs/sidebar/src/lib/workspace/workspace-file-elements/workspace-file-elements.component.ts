@@ -98,9 +98,13 @@ export class WorkspaceFileElementsComponent {
           this.searched[element] = this.elements[element].elements;
         }
 
-        if (this.loadedFilesService.getFile(`${this.selection.namespace}:${this.selection.file}`)) {
+        const namespaceFile = this.loadedFilesService.getFile(`${this.selection.namespace}:${this.selection.file}`);
+
+        if (namespaceFile?.cachedFile.getAllElements().length) {
           this.updateElements(this.loadedFilesService.getFile(`${this.selection.namespace}:${this.selection.file}`));
-        } else this.requestFile(`${this.selection.namespace}:${this.selection.file}`, this.selection.aspectModelUrn);
+        } else {
+          this.requestFile(`${this.selection.namespace}:${this.selection.file}`, this.selection.aspectModelUrn);
+        }
       }
     });
   }
