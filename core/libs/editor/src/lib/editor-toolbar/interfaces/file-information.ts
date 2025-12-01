@@ -11,7 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './detail-violation-info';
-export * from './file-information';
-export * from './file-upload-options';
-export * from './violation-error';
+export interface FileInformation {
+  absoluteName: string;
+  fileName: string;
+  aspectModelUrn: string;
+  modelVersion: string;
+  aspectModel: string;
+}
+
+export type FileEntry = Omit<FileInformation, 'aspectModel'>;

@@ -274,6 +274,12 @@ export class RdfModelUtil {
     return chunks as [string, string, string];
   }
 
+  static splitAspectModelUrnIntoChunks(aspectModelUrn: string): [string, string, string, string, string] {
+    const chunks: string[] = aspectModelUrn.split(/[:#]/);
+    if (chunks.length !== 5)
+      throw new Error(`Unable to extract namespace from "${aspectModelUrn}": expected format "urn:samm:namespace:version:element"`);
+    return chunks as [string, string, string, string, string];
+  }
   static buildAbsoluteFileName(namespace: string, namespaceVersion: string, fileName: string): string {
     return `${namespace}:${namespaceVersion}:${fileName}`;
   }

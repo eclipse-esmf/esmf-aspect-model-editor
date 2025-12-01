@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AsyncApi, OpenApi, ViolationError} from '@ame/editor';
+import {AsyncApi, FileEntry, FileInformation, OpenApi, ViolationError} from '@ame/editor';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder} from '@ame/shared';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
@@ -50,6 +50,13 @@ export class ModelApiService {
         timeout(this.requestTimeout),
         catchError(res => throwError(() => res)),
       );
+  }
+
+  fetchAllAspectMetaModel(fileEntries: Array<FileEntry>): Observable<Array<FileInformation>> {
+    return this.http.post<Array<FileInformation>>(`${this.serviceUrl}${this.api.models}/batch`, fileEntries).pipe(
+      timeout(this.requestTimeout),
+      catchError(res => throwError(() => res)),
+    );
   }
 
   saveAspectModel(rdfContent: string, aspectModelUrn: string, absoluteModelName?: string): Observable<string> {
