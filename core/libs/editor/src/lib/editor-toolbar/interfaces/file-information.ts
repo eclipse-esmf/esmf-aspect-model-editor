@@ -12,11 +12,11 @@
  */
 
 export interface FileInformation {
-  absoluteName: string;
-  fileName: string;
   aspectModelUrn: string;
-  modelVersion: string;
   aspectModel: string;
+  absoluteName?: string;
+  fileName?: string;
+  modelVersion?: string;
 }
 
 export type FileEntry = Omit<FileInformation, 'aspectModel'>;

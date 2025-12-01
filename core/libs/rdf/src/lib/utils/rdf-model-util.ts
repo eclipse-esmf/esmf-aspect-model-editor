@@ -38,7 +38,7 @@ import {
   Type,
   Value,
 } from '@esmf/aspect-model-loader';
-import {DataFactory, NamedNode} from 'n3';
+import {DataFactory, NamedNode, Quad} from 'n3';
 import {getSammNamespaces} from './rdf-samm-namespaces';
 
 declare const sammUDefinition: any;
@@ -243,6 +243,30 @@ export class RdfModelUtil {
     }, []);
 
     const prefixes = Array.from(new Set(values)).filter(item => !sammNamespaces.includes(item));
+
+    const checkItself = (prefix: string) => (selfExclude ? prefix != rdfModel.getPrefixes()[''] : true);
+    return prefixes.filter(prefix => checkItself(prefix));
+  }
+
+  static resolveSpecificExternalNamespaces(rdfModel: RdfModel, selfExclude = true) {
+    const sammNamespaces = getSammNamespaces();
+
+    // Extracting all namespaces since the prefixes are not all returned by the rdfModel.getPrefixes()
+    const values: string[] = Object.values<string>(rdfModel.store['_entities']).reduce((acc: string[], item: string) => {
+      // skipping the blank nodes and other non-like urns
+      if (!item.startsWith('urn:samm:') || !item.includes('#')) {
+        return acc;
+      }
+
+      const namedNode = new NamedNode(item);
+      if (rdfModel.store.has(new Quad(namedNode, null, null, null))) {
+        return acc;
+      }
+
+      return [...acc, item];
+    }, []);
+
+    const prefixes = Array.from(new Set(values)).filter(item => !sammNamespaces.some(n => item.includes(n)));
 
     const checkItself = (prefix: string) => (selfExclude ? prefix != rdfModel.getPrefixes()[''] : true);
     return prefixes.filter(prefix => checkItself(prefix));
