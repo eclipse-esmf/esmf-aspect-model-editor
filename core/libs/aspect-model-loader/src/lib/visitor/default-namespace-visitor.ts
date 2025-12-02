@@ -23,6 +23,7 @@ import {
   Property,
   QuantityKind,
   Unit,
+  ValueElement,
 } from '../aspect-meta-model';
 import {NamedElement} from '../aspect-meta-model/named-element';
 import {ScalarValue} from '../aspect-meta-model/scalar-value';
@@ -67,6 +68,10 @@ export class DefaultNamespaceVisitor implements ModelVisitor<NamedElement, Map<s
   }
 
   visitEvent(unit: Event, context: Map<string, Array<NamedElement>>): NamedElement {
+    return undefined;
+  }
+
+  visitValue(value: ValueElement, context: Map<string, Array<NamedElement>>): NamedElement {
     return undefined;
   }
 

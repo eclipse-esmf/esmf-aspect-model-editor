@@ -46,6 +46,7 @@ export class SidebarSAMMElementsComponent {
     'trait',
     'operation',
     'event',
+    'value',
   ];
 
   public get isEmptyModel(): boolean {

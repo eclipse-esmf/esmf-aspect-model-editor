@@ -180,3 +180,7 @@ export interface RangeConstraintProps extends ConstraintProps {
   upperBoundDefinition?: BoundDefinition;
   lowerBoundDefinition?: BoundDefinition;
 }
+
+export interface ValueProps extends NamedElementProps {
+  value: string;
+}

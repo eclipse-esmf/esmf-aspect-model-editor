@@ -47,6 +47,7 @@ export class ThemeService {
       entityValue: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.entityValue},
       filteredProperties_entity: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.entity},
       filteredProperties_either: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.characteristic},
+      value: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.value},
     };
   }
 

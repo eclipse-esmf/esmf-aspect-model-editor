@@ -260,6 +260,8 @@ export interface ElementModelDescription {
   TRAIT: string;
   OPERATION: string;
   EVENT: string;
+  ENTITY_INSTANCE: string;
+  VALUE: string;
 }
 export interface SettingsDialog {
   SETTINGS: string;

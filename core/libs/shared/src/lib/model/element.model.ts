@@ -22,6 +22,7 @@ import {
   DefaultProperty,
   DefaultTrait,
   DefaultUnit,
+  DefaultValue,
 } from '@esmf/aspect-model-loader';
 
 export type ElementType =
@@ -36,7 +37,8 @@ export type ElementType =
   | 'unit'
   | 'trait'
   | 'constraint'
-  | 'entityInstance';
+  | 'entityInstance'
+  | 'value';
 
 export type ElementNames =
   | 'Aspect'
@@ -50,9 +52,10 @@ export type ElementNames =
   | 'Constraint'
   | 'Trait'
   | 'Unit'
-  | 'Entity Instance';
+  | 'Entity Instance'
+  | 'Value';
 
-export type ElementSymbols = 'A' | 'Ev' | 'O' | 'P' | 'AP' | 'C' | 'Co' | 'E' | 'AE' | 'T' | 'U' | 'e';
+export type ElementSymbols = 'A' | 'Ev' | 'O' | 'P' | 'AP' | 'C' | 'Co' | 'E' | 'AE' | 'T' | 'U' | 'e' | 'V';
 
 export type ElementInfo = {
   [K in ElementType]: {
@@ -148,5 +151,12 @@ export const sammElements: ElementInfo = {
     plural: 'Entity Instances',
     description: 'ELEMENT_MODEL_DESCRIPTION.ENTITY_INSTANCE',
     class: DefaultEntityInstance,
+  },
+  value: {
+    name: 'Value',
+    symbol: 'V',
+    plural: 'Values',
+    description: 'ELEMENT_MODEL_DESCRIPTION.VALUE',
+    class: DefaultValue,
   },
 };

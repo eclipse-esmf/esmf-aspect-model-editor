@@ -22,6 +22,7 @@ import {
   DefaultProperty,
   DefaultTrait,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
 } from '@esmf/aspect-model-loader';
 
@@ -41,6 +42,7 @@ export enum ModelStyle {
   ENTITY_INSTANCE = 'entityInstance',
   ABSTRACT_ENTITY = 'abstractEntity',
   EVENT = 'event',
+  VALUE = 'value',
 }
 
 export enum EdgeStyles {
@@ -77,6 +79,8 @@ export class ModelStyleResolver {
       return ModelStyle.ENTITY_INSTANCE;
     } else if (metaModelElement instanceof DefaultEvent) {
       return ModelStyle.EVENT;
+    } else if (metaModelElement instanceof DefaultValue) {
+      return ModelStyle.VALUE;
     }
     return null;
   }

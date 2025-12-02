@@ -37,10 +37,12 @@ import {
   DefaultState,
   DefaultStructuredValue,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
   Property,
   QuantityKind,
   Unit,
+  ValueElement,
 } from '@esmf/aspect-model-loader';
 import * as locale from 'locale-codes';
 import {ModelBaseProperties} from '../models';
@@ -159,10 +161,16 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addValue(constraint: Constraint): ShapeAttribute {
-    if (constraint instanceof DefaultEncodingConstraint || constraint instanceof DefaultRegularExpressionConstraint) {
-      if (constraint.value !== null && constraint.value !== undefined) {
-        return {label: `value = ${RdfModelUtil.getValueWithoutUrnDefinition(constraint.value)}`, key: 'value'};
+  static addValue(element: Constraint | ValueElement): ShapeAttribute {
+    if (element instanceof DefaultEncodingConstraint || element instanceof DefaultRegularExpressionConstraint) {
+      if (element.value !== null && element.value !== undefined) {
+        return {label: `value = ${RdfModelUtil.getValueWithoutUrnDefinition(element.value)}`, key: 'value'};
+      }
+    }
+
+    if (element instanceof DefaultValue) {
+      if (element.value !== null && element.value !== undefined) {
+        return {label: `value = ${element.value}`, key: 'value'};
       }
     }
     return null;
@@ -423,6 +431,15 @@ export class MxGraphVisitorHelper {
       ...this.addLocalizedPreferredNames(event, sammLangService),
       ...this.addLocalizedDescriptions(event, sammLangService),
       this.addSee(event),
+    ].filter(e => !!e);
+  }
+
+  static getValueProperties(value: DefaultValue, sammLangService: SammLanguageSettingsService) {
+    return [
+      this.addValue(value),
+      ...this.addLocalizedPreferredNames(value, sammLangService),
+      ...this.addLocalizedDescriptions(value, sammLangService),
+      this.addSee(value),
     ].filter(e => !!e);
   }
 

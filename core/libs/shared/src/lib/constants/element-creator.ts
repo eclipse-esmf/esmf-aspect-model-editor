@@ -40,6 +40,7 @@ import {
   DefaultTimeSeries,
   DefaultTrait,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
   XsdDataTypes,
 } from '@esmf/aspect-model-loader';
@@ -165,6 +166,14 @@ export class ElementCreatorService {
           name: name || 'event',
           metaModelVersion: config.currentSammVersion,
           aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#event`,
+        });
+        break;
+      case elementClass === DefaultValue:
+        element = new DefaultValue({
+          name: name || 'Value',
+          value: name || 'Value',
+          metaModelVersion: config.currentSammVersion,
+          aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#value`,
         });
         break;
       default:
