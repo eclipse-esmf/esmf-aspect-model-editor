@@ -32,6 +32,7 @@ import {
   DefaultStructuredValue,
   DefaultTrait,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
 } from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
@@ -162,10 +163,7 @@ export class MxGraphShapeOverlayService {
 
     if (!this.filtersService.currentFilter.hasOverlay(modelElement)) return;
     if (modelElement?.isPredefined) return;
-    if (cell.style === 'unit') return;
-    if (cell.style === 'constraint') return;
-    if (cell.style === 'entityValue') return;
-    if ([DefaultConstraint, DefaultEntityInstance, DefaultUnit].some(c => modelElement instanceof c)) return;
+    if ([DefaultConstraint, DefaultEntityInstance, DefaultUnit, DefaultValue].some(c => modelElement instanceof c)) return;
 
     const elementOffset = 40;
 
