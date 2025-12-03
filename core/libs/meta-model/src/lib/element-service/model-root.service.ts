@@ -10,6 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {ValueModelService} from '@ame/meta-model';
 import {inject, Injectable, Injector, ProviderToken} from '@angular/core';
 import {NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
 import {AbstractEntityModelService} from './abstract-entity-model.service';
@@ -65,6 +66,7 @@ export class ModelRootService {
       OperationModelService,
       PropertyModelService,
       UnitModelService,
+      ValueModelService,
     ];
 
     // choose the applicable model service

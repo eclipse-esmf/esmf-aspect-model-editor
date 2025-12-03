@@ -484,6 +484,10 @@ export class MxGraphVisitorHelper {
       return this.getAbstractPropertyProperties(element, sammLangService);
     }
 
+    if (element instanceof DefaultValue) {
+      return this.getValueProperties(element, sammLangService);
+    }
+
     return null;
   }
 

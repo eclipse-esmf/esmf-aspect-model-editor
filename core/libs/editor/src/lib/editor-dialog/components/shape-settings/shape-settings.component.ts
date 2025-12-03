@@ -39,7 +39,6 @@ import {CharacteristicComponent, TraitCharacteristicComponent} from '../characte
 import {ConstraintComponent} from '../constraints';
 import {EntityComponent} from '../entities';
 import {EntityInstanceComponent} from '../entity-instance';
-import {EventComponent} from '../events';
 import {LocateElementComponent} from '../fields';
 import {OperationComponent} from '../operations';
 import {PropertyComponent} from '../properties';
@@ -68,7 +67,6 @@ import {SharedSettingsTitleComponent} from './shared-settings-title/shared-setti
     UnitComponent,
     TraitCharacteristicComponent,
     EntityInstanceComponent,
-    EventComponent,
     TranslatePipe,
     MatButton,
     ValueComponent,
