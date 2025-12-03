@@ -24,6 +24,7 @@ import {
   DefaultEntityInstance,
   DefaultProperty,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
 } from '@esmf/aspect-model-loader';
 import {TranslatePipe} from '@ngx-translate/core';
@@ -115,7 +116,8 @@ export class NameInputFieldComponent extends InputFieldComponent<NamedElement> i
       this.metaModelElement instanceof DefaultEntity ||
       (this.metaModelElement instanceof DefaultEntity && this.metaModelElement.isAbstractEntity()) ||
       this.metaModelElement instanceof DefaultConstraint ||
-      this.metaModelElement instanceof DefaultCharacteristic
+      this.metaModelElement instanceof DefaultCharacteristic ||
+      this.metaModelElement instanceof DefaultValue
     );
   }
 }
