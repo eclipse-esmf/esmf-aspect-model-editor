@@ -34,6 +34,7 @@ interface Element {
   templateUrl: './connect-with-dialog.component.html',
   styleUrls: ['./connect-with-dialog.component.scss'],
   imports: [MatFormFieldModule, MatTooltipModule, CommonModule, MatButtonModule, MatDialogModule, MatInputModule],
+  providers: [ModelElementParserPipe],
 })
 export class ConnectWithDialogComponent {
   private mxGraphService = inject(MxGraphService);
