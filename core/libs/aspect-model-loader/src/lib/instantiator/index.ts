@@ -22,3 +22,4 @@ export * from './operation-instantiator';
 export * from './predefined-entity-instantiator';
 export * from './predefined-unit-instantiator';
 export * from './property-instantiator';
+export * from './value-instantiator';

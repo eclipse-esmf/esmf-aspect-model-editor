@@ -17,7 +17,7 @@ import {BaseInitProps} from '../shared/base-init-props';
 import {basePropertiesFactory} from './meta-model-element-instantiator';
 
 export function valueFactory(initProps: BaseInitProps) {
-  return (quads: Quad[], value = '') => {
+  return (quads: Quad[], dataType = null, value = '') => {
     if (!quads?.length) return null;
 
     const {samm} = initProps.rdfModel;
