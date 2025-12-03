@@ -13,6 +13,7 @@
 import {ElementSet} from '../../shared/elements-set';
 import {EnumerationProps} from '../../shared/props';
 import {DefaultEntityInstance, EntityInstance} from '../default-entity-instance';
+import {DefaultValue} from '../default-value';
 import {Value} from '../value';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 
@@ -22,7 +23,7 @@ export interface Enumeration extends Characteristic {
 
 export class DefaultEnumeration extends DefaultCharacteristic implements Enumeration {
   override className = 'DefaultEnumeration';
-  values: (Value | DefaultEntityInstance)[];
+  values: (Value | DefaultEntityInstance | DefaultValue)[];
 
   override get children(): ElementSet {
     const elementValues = this.values.filter(v => v instanceof DefaultEntityInstance);
