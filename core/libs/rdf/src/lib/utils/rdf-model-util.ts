@@ -30,6 +30,7 @@ import {
   DefaultScalar,
   DefaultState,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
   RdfModel,
   Samm,
@@ -140,7 +141,8 @@ export class RdfModelUtil {
       modelElement.className === 'DefaultEvent' ||
       modelElement instanceof DefaultOperation ||
       modelElement instanceof DefaultEvent ||
-      modelElement instanceof DefaultAspect
+      modelElement instanceof DefaultAspect ||
+      modelElement instanceof DefaultValue
     ) {
       namespace = samm.getNamespace();
     } else if (modelElement instanceof DefaultProperty) {
