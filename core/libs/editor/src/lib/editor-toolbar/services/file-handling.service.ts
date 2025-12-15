@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {ModelApiService, ModelData} from '@ame/api';
+import {LoadedFilePayload, LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {
   ConfirmDialogService,
   DialogOptions,
@@ -198,7 +198,18 @@ export class FileHandlingService {
       .subscribe();
   }
 
-  createEmptyModel() {
+  /**
+   * Loads an empty model with all the necessary dependencies.
+   * The method defines the whole process of loading an empty model.
+   *
+   * @returns Observable<void>
+   */
+  loadEmptyModel() {
+    this.loadingScreenService.open({
+      title: this.translate.language.LOADING_SCREEN_DIALOG.ASPECT_MODEL_LOADING,
+      content: this.translate.language.LOADING_SCREEN_DIALOG.GENERAL_WAIT_MESSAGE,
+    });
+
     this.loadedFilesService.removeAll();
     let fileStatus: FileStatus;
 
@@ -214,7 +225,9 @@ export class FileHandlingService {
     }
 
     const model = 'new-model.ttl';
-    const namespace = 'com.examples:1.0.0';
+    const namespaceName = 'com.examples';
+    const namespaceVersion = '1.0.0';
+    const namespace = `${namespaceName}:${namespaceVersion}`;
     const absoluteName = `${namespace}:${model}`;
     const rdfModel = new RdfModel(new Store(), GeneralConfig.sammVersion, `urn:samm:${namespace}`);
 
@@ -227,14 +240,19 @@ export class FileHandlingService {
       fromWorkspace: false,
     });
 
-    this.sidebarService.sammElements.open();
+    return this.loadWorkspaceModelsByNamespace(namespaceName, namespaceVersion).pipe(
+      map(() => {
+        this.sidebarService.sammElements.open();
 
-    if (this.mxGraphService.graph?.model) {
-      this.mxGraphService.deleteAllShapes();
-    }
+        if (this.mxGraphService.graph?.model) {
+          this.mxGraphService.deleteAllShapes();
+        }
 
-    this.modelSaveTracker.updateSavedModel(true);
-    this.titleService.updateTitle(absoluteName);
+        this.modelSaveTracker.updateSavedModel(true);
+        this.titleService.updateTitle(absoluteName);
+      }),
+      finalize(() => this.loadingScreenService.close()),
+    );
   }
 
   onCopyToClipboard() {
@@ -668,5 +686,82 @@ export class FileHandlingService {
     });
 
     this.notificationsService.info({title, message});
+  }
+
+  /**
+   * Loads all models from a workspace which belong to a specific namespace.
+   *
+   * @param namespaceName - a name of the target namespace
+   * @param namespaceVersion - a version of the target namespace
+   * @returns - a list of loaded files
+   */
+  private loadWorkspaceModelsByNamespace(namespaceName: string, namespaceVersion: string) {
+    return this.getAllWorkspaceModelsByNamespace(namespaceName, namespaceVersion).pipe(
+      switchMap(modelsData => this.loadNamespaceModels(`${namespaceName}:${namespaceVersion}`, modelsData)),
+    );
+  }
+
+  /**
+   * Gets all models from a workspace which belong to a specific namespace.
+   *
+   * @param namespaceName - a name of the target namespace
+   * @param namespaceVersion - a version of the target namespace
+   * @returns - a list of model data objects
+   */
+  private getAllWorkspaceModelsByNamespace(namespaceName: string, namespaceVersion: string) {
+    return this.modelApiService.loadNamespacesStructure().pipe(
+      map(namespacesStructure => {
+        const targetNamespaces = namespacesStructure?.[namespaceName];
+        const targetNamespace = targetNamespaces?.find(ns => ns?.version === namespaceVersion);
+        return targetNamespace?.models ?? [];
+      }),
+    );
+  }
+
+  /**
+   * Loads models associated with a specific namespace.
+   * Adds files to LoadedFilesService accordingly.
+   *
+   * @param namespace - the target namespace to load models from
+   * @param modelsData - data of the models to load (typically taken from a workspace structure, e.g. from ModelApiService.loadNamespacesStructure method)
+   * @returns - a list of loaded files
+   */
+  private loadNamespaceModels(namespace: string, modelsData: ModelData[]) {
+    const workspaceModelsRequests = modelsData.map(modelData =>
+      forkJoin([of(`${namespace}:${modelData.model}`), this.modelApiService.fetchAspectMetaModel(modelData.aspectModelUrn)]),
+    );
+    return forkJoin(workspaceModelsRequests).pipe(
+      switchMap(files => this.modelLoaderService.loadRdfModelsInSequence(files)),
+      map(models => {
+        const filesInfo = this.buildFilesInfo(models, modelsData);
+        return this.loadedFilesService.addFiles(filesInfo);
+      }),
+    );
+  }
+
+  /**
+   * Builds a list of files info to be added to LoadedFilesService
+   *
+   * @param models - a list of loaded models
+   * @param modelsData - data of the models to load
+   * @returns - a list of files info
+   */
+  private buildFilesInfo(models: Record<string, RdfModel>, modelsData: ModelData[]) {
+    return modelsData.map(({aspectModelUrn, model}) => {
+      const absoluteName = `${aspectModelUrn.substring('urn:samm:'.length, aspectModelUrn.indexOf('#'))}:${model}`;
+      const rdfModel = models[absoluteName];
+      if (!rdfModel) console.error(`Unable to find a model by key "${absoluteName}"`);
+
+      return {
+        aspectModelUrn,
+        rdfModel,
+        absoluteName,
+        sharedRdfModel: null,
+        cachedFile: new ModelElementCache(),
+        aspect: null,
+        rendered: false,
+        fromWorkspace: true,
+      } as LoadedFilePayload;
+    });
   }
 }
