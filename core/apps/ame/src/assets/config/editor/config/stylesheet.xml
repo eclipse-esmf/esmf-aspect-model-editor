@@ -94,6 +94,9 @@
 	<add as="entity" extend="model">
 		<add as="connectable" value="1" />
 	</add>
+  <add as="value" extend="model">
+    <add as="connectable" value="1" />
+  </add>
 	<add as="entity_property" extend="model_property">
 		<add as="connectable" value="1" />
 	</add>

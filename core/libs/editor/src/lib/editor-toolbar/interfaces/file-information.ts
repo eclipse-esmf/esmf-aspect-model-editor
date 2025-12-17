@@ -11,13 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './base';
-export * from './characteristic';
-export * from './constraints';
-export * from './dropdown-field.component';
-export * from './entity';
-export * from './input-field.component';
-export * from './operation';
-export * from './property';
-export * from './unit';
-export * from './value';
+export interface FileInformation {
+  aspectModelUrn: string;
+  aspectModel: string;
+  absoluteName?: string;
+  fileName?: string;
+  modelVersion?: string;
+}
+
+export type FileEntry = Omit<FileInformation, 'aspectModel'>;

@@ -12,13 +12,18 @@
  */
 
 import {NamedNode, Quad, Quad_Subject, Util} from 'n3';
-import {Property} from '../aspect-meta-model';
+import {Property, Type, ValueElement} from '../aspect-meta-model';
 import {DefaultProperty} from '../aspect-meta-model/default-property';
+import {ScalarValue} from '../aspect-meta-model/scalar-value';
 import {PropertyPayload} from '../aspect-meta-model/structure-element';
 import {BaseInitProps} from '../shared/base-init-props';
+import {CacheStrategy} from '../shared/model-element-cache.service';
+import {RdfModel} from '../shared/rdf-model';
 import {allCharacteristicsFactory} from './characteristic';
+import {CharacteristicInstantiatorUtil} from './characteristic/characteristic-instantiator-util';
 import {basePropertiesFactory} from './meta-model-element-instantiator';
 import {predefinedEntitiesFactory} from './predefined-entity-instantiator';
+import {valueFactory} from './value-instantiator';
 
 export interface PropertyData {
   property: Property;
@@ -96,12 +101,14 @@ export function propertyFactory(initProps: BaseInitProps) {
 
     const payload: PropertyPayload = {} as any;
 
+    let exampleValueQuad: Quad | null = null;
+
     for (const propertyQuad of propertyQuads) {
       if (samm.isCharacteristicProperty(propertyQuad.predicate.value)) {
         property.characteristic = createCharacteristic(propertyQuad);
         property.characteristic?.addParent(property);
       } else if (samm.isExampleValueProperty(propertyQuad.predicate.value)) {
-        property.exampleValue = propertyQuad.object.value;
+        exampleValueQuad = propertyQuad;
       } else if (samm.isNotInPayloadProperty(propertyQuad.predicate.value)) {
         payload.notInPayload = propertyQuad.object.value === 'true';
       } else if (samm.isOptionalProperty(propertyQuad.predicate.value)) {
@@ -111,10 +118,26 @@ export function propertyFactory(initProps: BaseInitProps) {
       }
     }
 
+    if (exampleValueQuad && property.characteristic) {
+      property.exampleValue = getValue(rdfModel, exampleValueQuad, property.characteristic.dataType, modelElementCache);
+    }
+
     property.extends_ = getExtends(propertyQuads);
     property.extends_?.addParent(property);
 
     return {property, payload};
+  }
+
+  function getValue(rdfModel: RdfModel, quad: Quad, dataType: Type, modelElementCache: CacheStrategy): ScalarValue | ValueElement {
+    if (Util.isLiteral(quad.object)) {
+      return new ScalarValue({
+        value: CharacteristicInstantiatorUtil.resolveValues(quad, dataType.urn),
+        type: dataType,
+      });
+    }
+
+    const valueQuads = rdfModel.store.getQuads(quad.object.value, null, null, null);
+    return modelElementCache.resolveInstance(valueFactory(initProps)(valueQuads, dataType));
   }
 
   function createProperties(subject: Quad_Subject): Array<PropertyData> {

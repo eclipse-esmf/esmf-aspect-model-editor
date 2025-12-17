@@ -336,4 +336,8 @@ export class Samm {
   isNumericConversionFactorProperty(value: string): boolean {
     return `${this.getNamespace()}numericConversionFactor` === value;
   }
+
+  Value(): NamedNode {
+    return DataFactory.namedNode(`${this.getNamespace()}Value`);
+  }
 }

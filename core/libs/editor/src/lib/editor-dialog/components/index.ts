@@ -26,3 +26,4 @@ export * from './operations';
 export * from './properties';
 export * from './shape-settings';
 export * from './units';
+export * from './value';

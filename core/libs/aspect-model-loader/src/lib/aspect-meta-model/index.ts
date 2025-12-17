@@ -46,6 +46,7 @@ export * from './default-operation';
 export * from './default-property';
 export * from './default-quantity-kind';
 export * from './default-unit';
+export * from './default-value';
 export * from './has-extends';
 export * from './has-properties';
 export * from './named-element';
