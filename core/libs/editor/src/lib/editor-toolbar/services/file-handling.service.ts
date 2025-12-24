@@ -695,7 +695,7 @@ export class FileHandlingService {
    * @param namespaceVersion - a version of the target namespace
    * @returns - a list of loaded files
    */
-  private loadWorkspaceModelsByNamespace(namespaceName: string, namespaceVersion: string) {
+  loadWorkspaceModelsByNamespace(namespaceName: string, namespaceVersion: string) {
     return this.getAllWorkspaceModelsByNamespace(namespaceName, namespaceVersion).pipe(
       switchMap(modelsData => this.loadNamespaceModels(`${namespaceName}:${namespaceVersion}`, modelsData)),
     );
@@ -763,5 +763,11 @@ export class FileHandlingService {
         fromWorkspace: true,
       } as LoadedFilePayload;
     });
+  }
+
+  isFileExistOnWorkspace(namespaceName: string, namespaceVersion: string, fileName: string): Observable<boolean> {
+    return this.getAllWorkspaceModelsByNamespace(namespaceName, namespaceVersion).pipe(
+      map((models: ModelData[]) => models.some((model: ModelData) => model.model === fileName)),
+    );
   }
 }
