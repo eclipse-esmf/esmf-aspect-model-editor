@@ -26,6 +26,7 @@ import {MatInput} from '@angular/material/input';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {TranslatePipe} from '@ngx-translate/core';
+import {filter, finalize, switchMap} from 'rxjs';
 import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-dialog.enum';
 import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.component';
 
@@ -185,13 +186,12 @@ export class WorkspaceFileListComponent {
         closeButtonText: this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.CANCEL_BUTTON,
         okButtonText: this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.OK_BUTTON,
       })
-      .subscribe(confirmed => {
-        if (confirmed !== ConfirmDialogEnum.cancel) {
-          this.modelSaverService.saveModel().subscribe();
-        }
-        // TODO improve this functionality
-        this.fileHandlingService.loadNamespaceFile(absoluteFileName, file.aspectModelUrn);
-      });
+      .pipe(
+        filter((confirmed: ConfirmDialogEnum) => confirmed !== ConfirmDialogEnum.cancel),
+        switchMap(() => this.modelSaverService.saveModel()),
+        finalize(() => this.fileHandlingService.loadNamespaceFile(absoluteFileName, file.aspectModelUrn)),
+      )
+      .subscribe();
   }
 
   public deleteFile() {

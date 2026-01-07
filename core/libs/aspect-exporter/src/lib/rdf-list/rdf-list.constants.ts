@@ -47,14 +47,7 @@ export class RdfListConstants {
           {type: DefaultEntity, predicate: samm.PropertiesProperty()},
         ],
       },
-      // TODO Why we commented this out?
-      // {
-      //   source: DefaultAbstractEntity,
-      //   children: [
-      //     {type: DefaultAbstractProperty, predicate: samm.PropertiesProperty()},
-      //     {type: DefaultProperty, predicate: samm.PropertiesProperty()},
-      //   ],
-      // },
+      // DefaultAbstractEntity can be created by DefaultEntity with isAbstract flag
       {
         source: DefaultEnumeration,
         children: [{predicate: sammC.ValuesProperty()}],
