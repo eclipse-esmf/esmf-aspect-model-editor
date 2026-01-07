@@ -12,9 +12,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementSet, NamedElement} from '@esmf/aspect-model-loader';
+import {ElementSet} from '../shared/elements-set';
 import {ValueProps} from '../shared/props';
 import {ModelVisitor} from '../visitor/model-visitor';
+import {NamedElement} from './named-element';
 
 export interface ValueElement extends NamedElement {
   value: string;

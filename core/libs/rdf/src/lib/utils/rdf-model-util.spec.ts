@@ -34,132 +34,6 @@ jest.mock('@ame/editor', () => ({
   ModelElementEditorComponent: class {},
 }));
 
-jest.mock('@esmf/aspect-model-loader', () => {
-  class NamedElement {}
-
-  class BaseDefault extends NamedElement {
-    metaModelVersion!: string;
-    aspectModelUrn!: string;
-    name!: string;
-
-    constructor(data: any = {}) {
-      super();
-      Object.assign(this, data);
-    }
-  }
-
-  class DefaultAspect extends BaseDefault {}
-  class DefaultCharacteristic extends BaseDefault {}
-  class DefaultEntity extends BaseDefault {}
-  class DefaultProperty extends BaseDefault {}
-  class DefaultOperation extends BaseDefault {
-    input: any[] = [];
-    output: any = null;
-    constructor(data: any = {}) {
-      super(data);
-      this.input = data.input ?? [];
-      this.output = data.output ?? null;
-    }
-  }
-  class DefaultEither extends BaseDefault {
-    left: any = null;
-    right: any = null;
-    constructor(data: any = {}) {
-      super(data);
-      this.left = data.left ?? null;
-      this.right = data.right ?? null;
-    }
-  }
-  class DefaultEnumeration extends BaseDefault {
-    values: any[] = [];
-    constructor(data: any = {}) {
-      super(data);
-      this.values = data.values ?? [];
-    }
-  }
-  class DefaultFixedPointConstraint extends BaseDefault {
-    scale!: number;
-    integer!: number;
-    constructor(data: any = {}) {
-      super(data);
-      this.scale = data.scale ?? 0;
-      this.integer = data.integer ?? 0;
-    }
-  }
-  class DefaultLengthConstraint extends BaseDefault {}
-  class DefaultRangeConstraint extends BaseDefault {}
-  class DefaultState extends BaseDefault {
-    values: any[] = [];
-    defaultValue: any = null;
-    constructor(data: any = {}) {
-      super(data);
-      this.values = data.values ?? [];
-      this.defaultValue = data.defaultValue ?? null;
-    }
-  }
-
-  class DefaultValue extends NamedElement {
-    metaModelVersion!: string;
-    aspectModelUrn!: string;
-    name!: string;
-    value!: string;
-    isPredefined?: boolean;
-
-    constructor(data: any) {
-      super();
-      Object.assign(this, data);
-    }
-  }
-
-  class ModelElementCache {}
-
-  class RdfModel {
-    samm: any;
-    sammC: any;
-    constructor(_store: any, _version: string, _cache: any) {
-      this.samm = {
-        PropertiesProperty: () => ({id: 'samm:properties'}),
-        OperationsProperty: () => ({id: 'samm:operations'}),
-        CharacteristicProperty: () => ({id: 'samm:characteristic'}),
-        DataTypeProperty: () => ({id: 'samm:dataType'}),
-        ExampleValueProperty: () => ({value: 'samm:exampleValue'}),
-        isExampleValueProperty: (predicate: any) => predicate?.value === 'samm:exampleValue',
-      };
-      this.sammC = {
-        MinValueProperty: () => ({value: 'samm-c:minValue'}),
-        MaxValueProperty: () => ({value: 'samm-c:maxValue'}),
-        ScaleProperty: () => ({value: 'samm-c:scale'}),
-        ValuesProperty: () => ({value: 'samm-c:values'}),
-        EitherRightProperty: () => ({id: 'samm-c:eitherRight'}),
-        EitherLeftProperty: () => ({id: 'samm-c:eitherLeft'}),
-        DefaultValueProperty: () => ({value: 'samm-c:defaultValue'}),
-        isValuesProperty: (predicate: any) => predicate?.value === 'samm-c:values',
-        isMinValueProperty: (predicate: any) => predicate?.value === 'samm-c:minValue',
-        isMaxValueProperty: (predicate: any) => predicate?.value === 'samm-c:maxValue',
-        isDefaultValueProperty: (predicate: any) => predicate?.value === 'samm-c:defaultValue',
-        isScaleValueProperty: (predicate: any) => predicate?.value === 'samm-c:scale',
-        isIntegerValueProperty: (predicate: any) => predicate?.value === 'samm-c:integer',
-      };
-    }
-  }
-
-  return {
-    DefaultAspect,
-    DefaultCharacteristic,
-    DefaultEither,
-    DefaultEntity,
-    DefaultEnumeration,
-    DefaultFixedPointConstraint,
-    DefaultLengthConstraint,
-    DefaultOperation,
-    DefaultProperty,
-    DefaultRangeConstraint,
-    DefaultState,
-    DefaultValue,
-    ModelElementCache,
-    RdfModel,
-  };
-});
 describe('Test RDF Model Util', () => {
   describe('getDataType', () => {
     test('should return Urn', () => {
@@ -189,7 +63,7 @@ describe('Test RDF Model Util', () => {
 
   describe('resolveAccurateType', () => {
     let expectedElementUrn: string;
-    const rdfModel = new RdfModel(new Store(), '2.1.0', null);
+    const rdfModel = new RdfModel(new Store(), '2.2.0', null);
     const sammC = rdfModel.sammC;
     const samm = rdfModel.samm;
 
@@ -265,7 +139,7 @@ describe('Test RDF Model Util', () => {
   });
 
   describe('resolvePredicate', () => {
-    const rdfModel = new RdfModel(new Store(), '2.1.0', null);
+    const rdfModel = new RdfModel(new Store(), '2.2.0', null);
     const samm = rdfModel.samm;
     const sammC = rdfModel.sammC;
     test('should return properties property', () => {
