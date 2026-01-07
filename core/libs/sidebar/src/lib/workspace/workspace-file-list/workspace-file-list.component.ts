@@ -50,7 +50,6 @@ import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.
 export class WorkspaceFileListComponent {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private modelSaverService = inject(ModelSaverService);
-  public sidebarService = inject(SidebarStateService);
   private notificationService = inject(NotificationsService);
   private confirmDialogService = inject(ConfirmDialogService);
   private modelApiService = inject(ModelApiService);
@@ -60,6 +59,7 @@ export class WorkspaceFileListComponent {
   private loadedFiles = inject(LoadedFilesService);
   private ngZone = inject(NgZone);
 
+  public sidebarService = inject(SidebarStateService);
   public menuSelection: {namespace: string; file: FileStatus} = null;
   public foldedStatus = false;
   public searched: Record<string, FileStatus[]> = {};
