@@ -59,6 +59,8 @@
         <ame-entity-instance [parentForm]="formGroup"></ame-entity-instance>
       } @else if (isOfType(['DefaultValue'])) {
         <ame-value [parentForm]="formGroup"></ame-value>
+      } @else if (isOfType(['DefaultEvent'])) {
+        <ame-event [parentForm]="formGroup"></ame-event>
       }
     </form>
   }

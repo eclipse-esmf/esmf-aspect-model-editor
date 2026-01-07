@@ -62,7 +62,7 @@ export class RdfModelUtil {
     }
 
     if (value instanceof Value) {
-      return `"${value.value}"`;
+      return `${value.value}`;
     }
 
     if (`${value}`.startsWith('urn:samm') || `${value}`.startsWith(Samm.XSD_URI) || `${value}`.startsWith(Samm.RDF_URI)) {

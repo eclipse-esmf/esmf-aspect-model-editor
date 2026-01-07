@@ -199,7 +199,7 @@ describe('Create and Edit Abstract Property', () => {
     });
 
     it('should export', () => {
-      cy.then(() => cy.getUpdatedRDF()).then(rdf => {
+      cy.getUpdatedRDF().then(rdf => {
         expect(rdf).to.contain(`[
   samm:characteristic :Characteristic2;
   samm:extends :abstractProperty1
@@ -212,11 +212,11 @@ describe('Create and Edit Abstract Property', () => {
         expect(rdf).to.contain('samm:preferredName "Preferred Name 1"@en;');
         expect(rdf).to.contain('samm:description "Description 1"@en;');
         expect(rdf).to.contain('samm:preferredName "Preferred Name 1"@en;');
-        expect(rdf).to.contain('samm:see <http://test1.com>.');
+        expect(rdf).to.contain('samm:see <http://test1.com>;');
         expect(rdf).to.contain(':abstractProperty2 a samm:AbstractProperty;');
         expect(rdf).to.contain('samm:preferredName "Preferred Name 2"@en');
         expect(rdf).to.contain('samm:description "Description 2"@en;');
-        expect(rdf).to.contain('samm:see <http://test2.com>.');
+        expect(rdf).to.contain('samm:see <http://test2.com>;');
       });
     });
   });

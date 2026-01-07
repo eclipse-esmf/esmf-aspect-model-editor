@@ -59,7 +59,7 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
         ? DataFactory.namedNode(property.exampleValue.aspectModelUrn)
         : DataFactory.literal(
             property.exampleValue.value.toString(),
-            DataFactory.namedNode(property.characteristic.dataType?.aspectModelUrn),
+            DataFactory.namedNode(property.characteristic?.dataType?.aspectModelUrn),
           ),
     );
   }
