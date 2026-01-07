@@ -13,16 +13,17 @@
 
 import {Component, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultValue} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-value-input-field',
   templateUrl: './value-input-field.component.html',
-  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput],
+  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput, TranslatePipe],
 })
 export class ValueInputFieldComponent extends InputFieldComponent<DefaultValue> implements OnInit {
   ngOnInit() {
@@ -32,6 +33,9 @@ export class ValueInputFieldComponent extends InputFieldComponent<DefaultValue> 
   }
 
   initForm() {
-    this.parentForm.setControl('value', new FormControl({value: this.metaModelElement?.value || '', disabled: false}));
+    this.parentForm.setControl(
+      'value',
+      new FormControl({value: this.metaModelElement?.value || '', disabled: false}, {validators: [Validators.required]}),
+    );
   }
 }

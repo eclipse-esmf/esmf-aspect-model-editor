@@ -25,7 +25,7 @@ export const lightColors: ThemeColors = {
   constraint: '#74AEAF',
   trait: '#74AEAF',
   unit: '#B9AB50',
-  value: '#6E8818',
+  value: '#E8C489',
   entityValue: '#AEADE0',
   font: '#000000',
   border: '#000000',

@@ -19,7 +19,6 @@ import {
   DefaultConstraint,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultEvent,
   DefaultFixedPointConstraint,
@@ -58,12 +57,12 @@ export class RdfModelUtil {
       return '';
     }
 
-    if (value instanceof DefaultEntityInstance) {
+    if (value instanceof NamedElement) {
       return value.name;
     }
 
     if (value instanceof Value) {
-      return `${value.value}`;
+      return `"${value.value}"`;
     }
 
     if (`${value}`.startsWith('urn:samm') || `${value}`.startsWith(Samm.XSD_URI) || `${value}`.startsWith(Samm.RDF_URI)) {

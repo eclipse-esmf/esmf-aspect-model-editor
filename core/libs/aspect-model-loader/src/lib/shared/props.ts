@@ -16,6 +16,7 @@ import {
   Characteristic,
   Constraint,
   DefaultScalar,
+  DefaultValue,
   Entity,
   Event,
   Operation,
@@ -29,7 +30,6 @@ import {BoundDefinition} from '../aspect-meta-model/bound-definition';
 import {ComplexType} from '../aspect-meta-model/complex-type';
 import {Property} from '../aspect-meta-model/default-property';
 import {LangString} from '../aspect-meta-model/named-element';
-import {ScalarValue} from '../aspect-meta-model/scalar-value';
 import {Value} from '../aspect-meta-model/value';
 
 export interface BaseProps {
@@ -78,7 +78,7 @@ export interface EntityProps extends StructuredElementProps {
 
 export interface PropertyProps extends NamedElementProps {
   characteristic?: Characteristic;
-  exampleValue?: ScalarValue | ValueElement;
+  exampleValue?: DefaultValue | ValueElement;
   isAbstract?: boolean;
   extends_?: Property;
 }

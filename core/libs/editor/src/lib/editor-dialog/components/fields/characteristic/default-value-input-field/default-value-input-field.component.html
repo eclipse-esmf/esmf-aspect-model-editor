@@ -11,7 +11,39 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="getControl('defaultValue')?.disabled ? 'always' : 'auto'" appearance="fill">
+<mat-form-field [floatLabel]="displayControl.disabled ? 'always' : 'auto'" appearance="fill">
   <mat-label for="defaultValue">defaultValue</mat-label>
-  <input [formControl]="getControl('defaultValue')" matInput name="defaultValue" data-cy="defaultValue" />
+  <input #valuesInput [matAutocomplete]="auto" [formControl]="displayControl" matInput name="defaultValue" data-cy="defaultValue" />
+
+  @if (displayControl.disabled) {
+    <button (click)="unlockDefaultValue()" data-cy="clear-example-value-button" matSuffix mat-icon-button tabindex="-1">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+
+  <mat-autocomplete #auto="matAutocomplete" [hideSingleSelectionIndicator]="true">
+    @let isComplex = isComplexDatatype();
+
+    @if (valuesInput.value && !isComplex) {
+      <mat-option [value]="valuesInput.value" (click)="addValue(valuesInput.value)">
+        <ame-element [isNewValue]="true" [type]="{type: 'text', symbol: 'T'}" [name]="valuesInput.value" size="medium"></ame-element>
+      </mat-option>
+    }
+
+    @if (filteredValues?.() && !isComplex) {
+      @for (value of filteredValues(); track value.name) {
+        <mat-option [value]="value.name" (click)="addValue(value)">
+          <ame-element [type]="{type: 'value', symbol: 'V'}" [name]="value.name" size="medium"></ame-element>
+        </mat-option>
+      }
+    }
+
+    @if (filteredEntityValues?.() && isComplex) {
+      @for (value of filteredEntityValues(); track value.name) {
+        <mat-option [value]="value.name" (click)="addValue(value)">
+          <ame-element [type]="{type: 'entityInstance', symbol: 'Ev'}" [name]="value.name" size="medium"></ame-element>
+        </mat-option>
+      }
+    }
+  </mat-autocomplete>
 </mat-form-field>

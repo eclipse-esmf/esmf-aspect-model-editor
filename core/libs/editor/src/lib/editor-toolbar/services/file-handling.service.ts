@@ -46,7 +46,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {saveAs} from 'file-saver';
 import {BlankNode, NamedNode, Quad, Quad_Graph, Quad_Object, Quad_Predicate, Quad_Subject, Store} from 'n3';
-import {Observable, forkJoin, from, of, throwError} from 'rxjs';
+import {Observable, forkJoin, of, throwError} from 'rxjs';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
 import {ConfirmDialogEnum} from '../../models/confirm-dialog.enum';
@@ -256,7 +256,11 @@ export class FileHandlingService {
   }
 
   onCopyToClipboard() {
-    this.copyToClipboard().pipe(first()).subscribe();
+    this.copyToClipboard()
+      .pipe(first())
+      .subscribe(fullText => {
+        this.copyToClipboardSync(fullText);
+      });
   }
 
   copyToClipboard(): Observable<any> {
@@ -272,7 +276,8 @@ export class FileHandlingService {
       switchMap(serializedModel => this.modelApiService.fetchFormatedAspectModel(serializedModel)),
       switchMap(formattedModel => {
         const header = this.configurationService.getSettings().copyrightHeader.join('\n');
-        return from(navigator.clipboard.writeText(header + '\n\n' + formattedModel));
+        const fullText = header + '\n\n' + formattedModel;
+        return of(fullText);
       }),
       catchError(error => {
         this.notificationsService.error({title: 'Copying error', message: error?.error?.message});
@@ -287,6 +292,30 @@ export class FileHandlingService {
       }),
       first(),
     );
+  }
+
+  copyToClipboardSync(text: string) {
+    if (!text) return;
+
+    window.focus();
+
+    if (navigator.clipboard && document.hasFocus()) {
+      navigator.clipboard.writeText(text).catch(() => this.fallbackCopy(text));
+    } else {
+      this.fallbackCopy(text);
+    }
+  }
+
+  fallbackCopy(text: string) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
   }
 
   onExportAsAspectModelFile() {

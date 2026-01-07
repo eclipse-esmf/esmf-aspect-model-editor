@@ -12,7 +12,7 @@
  */
 import {valueFactory} from '@esmf/aspect-model-loader';
 import {Literal, Quad, Quad_Object, Util} from 'n3';
-import {DefaultValue, Type} from '../../aspect-meta-model';
+import {DefaultValue, NamedElement, Type} from '../../aspect-meta-model';
 import {DefaultEnumeration, Enumeration} from '../../aspect-meta-model/characteristic/default-enumeration';
 import {DefaultEntityInstance} from '../../aspect-meta-model/default-entity-instance';
 import {ScalarValue} from '../../aspect-meta-model/scalar-value';
@@ -40,7 +40,7 @@ export function enumerationCharacteristicFactory(initProps: BaseInitProps) {
         if (samm.isValueProperty(propertyQuad.predicate.value) || sammC.isValuesProperty(propertyQuad.predicate.value)) {
           if (Util.isBlankNode(propertyQuad.object)) {
             characteristic.values = getEnumerationValues(propertyQuad, characteristic.dataType);
-            characteristic.values.forEach(value => value instanceof DefaultEntityInstance && value.addParent(characteristic));
+            characteristic.values.forEach(value => value instanceof NamedElement && value.addParent(characteristic));
           }
         }
       }

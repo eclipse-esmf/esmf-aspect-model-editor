@@ -89,8 +89,10 @@ export class MxGraphVisitorHelper {
 
   static addDefaultValue(characteristic: Characteristic): ShapeAttribute {
     if (characteristic instanceof DefaultState && characteristic.defaultValue) {
+      const defaultValue = characteristic.defaultValue;
+
       return {
-        label: `defaultValue = ${RdfModelUtil.getValuesWithoutUrnDefinition([characteristic.defaultValue.value.toString()])}`,
+        label: `defaultValue = ${defaultValue instanceof DefaultEntityInstance ? defaultValue.name : RdfModelUtil.getValuesWithoutUrnDefinition([characteristic.defaultValue.value as string])}`,
         key: 'defaultValue',
       };
     }
@@ -163,14 +165,14 @@ export class MxGraphVisitorHelper {
 
   static addValue(element: Constraint | ValueElement): ShapeAttribute {
     if (element instanceof DefaultEncodingConstraint || element instanceof DefaultRegularExpressionConstraint) {
-      if (element.value !== null && element.value !== undefined) {
+      if (element.value) {
         return {label: `value = ${RdfModelUtil.getValueWithoutUrnDefinition(element.value)}`, key: 'value'};
       }
     }
 
     if (element instanceof DefaultValue) {
-      if (element.value !== null && element.value !== undefined) {
-        return {label: `value = ${element.value}`, key: 'value'};
+      if (element.value) {
+        return {label: `value = "${element.value}"`, key: 'value'};
       }
     }
     return null;
@@ -294,8 +296,14 @@ export class MxGraphVisitorHelper {
   }
 
   static addExampleValue(property: Property): ShapeAttribute {
-    if (property.exampleValue) {
-      return {label: `exampleValue = ${property.exampleValue}`, key: 'exampleValue'};
+    const value = property.exampleValue
+      ? property.exampleValue instanceof DefaultValue
+        ? property.exampleValue.name
+        : `"${property.exampleValue.value}"`
+      : '';
+
+    if (value) {
+      return {label: `exampleValue = ${value}`, key: 'exampleValue'};
     }
     return null;
   }

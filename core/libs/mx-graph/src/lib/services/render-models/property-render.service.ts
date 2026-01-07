@@ -12,8 +12,9 @@
  */
 
 import {ShapeConnectorService} from '@ame/connection';
+import {FiltersService} from '@ame/loader-filters';
 import {inject, Injectable} from '@angular/core';
-import {DefaultProperty} from '@esmf/aspect-model-loader';
+import {DefaultProperty, DefaultValue, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {RendererUpdatePayload} from '../../models';
@@ -22,8 +23,10 @@ import {BaseRenderService} from './base-render-service';
 @Injectable({providedIn: 'root'})
 export class PropertyRenderService extends BaseRenderService {
   private shapeConnectorService = inject(ShapeConnectorService);
+  private filtersService = inject(FiltersService);
 
   update({cell, callback}: RendererUpdatePayload) {
+    this.handleExampleValueElement(cell);
     this.handleExtendsElement(cell);
     this.renderParents(cell);
     super.update({cell, callback});
@@ -31,6 +34,30 @@ export class PropertyRenderService extends BaseRenderService {
 
   isApplicable(cell: mxgraph.mxCell): boolean {
     return MxGraphHelper.getModelElement(cell) instanceof DefaultProperty;
+  }
+
+  private handleExampleValueElement(cell: mxgraph.mxCell) {
+    const element = MxGraphHelper.getElementNode<DefaultProperty>(cell).element;
+    if (!element.exampleValue) {
+      this.removeExampleValueConnection(cell);
+      return;
+    }
+
+    if (!(element.exampleValue instanceof DefaultValue)) {
+      this.removeExampleValueConnection(cell);
+      return;
+    }
+
+    const existing = this.mxGraphService.resolveCellByModelElement(element.exampleValue);
+
+    const exampleValueToConnect =
+      existing ||
+      this.mxGraphService.renderModelElement(
+        this.filtersService.createNode(element.exampleValue, {parent: MxGraphHelper.getModelElement(cell)}),
+      );
+
+    this.shapeConnectorService.connectShapes(element, element.exampleValue, cell, exampleValueToConnect);
+    this.refreshPropertiesLabel(exampleValueToConnect, element.exampleValue);
   }
 
   private handleExtendsElement(cell: mxgraph.mxCell) {
@@ -51,5 +78,17 @@ export class PropertyRenderService extends BaseRenderService {
           node.children.find(childNode => childNode.element.aspectModelUrn === extendsElement.aspectModelUrn),
         );
     this.shapeConnectorService.connectShapes(metaModelElement, extendsElement, cell, entityCell);
+  }
+
+  private removeExampleValueConnection(cell: mxgraph.mxCell) {
+    this.mxGraphService.graph
+      .getOutgoingEdges(cell)
+      .filter(edge => {
+        const targetModel = MxGraphHelper.getModelElement<NamedElement>(edge.target);
+        return targetModel instanceof DefaultValue;
+      })
+      .forEach(edgeToRemove => {
+        this.mxGraphService.removeCells([cell.removeEdge(edgeToRemove, true)]);
+      });
   }
 }

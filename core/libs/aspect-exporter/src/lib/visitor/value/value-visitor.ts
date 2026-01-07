@@ -55,6 +55,7 @@ export class ValueVisitor extends BaseVisitor<DefaultValue> {
   }
 
   private addValueProperty(value: DefaultValue) {
+    if (!value.getValue()) return;
     this.store.addQuad(DataFactory.namedNode(value.aspectModelUrn), this.samm.ValueProperty(), DataFactory.literal(value.getValue()));
   }
 }

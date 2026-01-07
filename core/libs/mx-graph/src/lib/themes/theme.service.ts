@@ -13,6 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
+import {ThemeColors} from '../models';
 import {mxConstants} from '../providers';
 import {lightColors} from './light-theme';
 
@@ -21,7 +22,7 @@ export class ThemeService {
   private root: HTMLElement = document.documentElement;
   private graph: mxgraph.mxGraph;
 
-  public currentColors: any = lightColors;
+  public currentColors: ThemeColors = lightColors;
 
   get getDefaultShapesColors() {
     return {

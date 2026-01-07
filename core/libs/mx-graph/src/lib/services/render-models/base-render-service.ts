@@ -18,12 +18,14 @@ import {DefaultAspect, DefaultEntity, DefaultProperty, NamedElement} from '@esmf
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper, MxGraphVisitorHelper} from '../../helpers';
 import {RendererUpdatePayload} from '../../models';
+import {MxGraphAttributeService} from '../mx-graph-attribute.service';
 import {MxGraphService} from '../mx-graph.service';
 
 export abstract class BaseRenderService {
   protected mxGraphService = inject(MxGraphService);
   protected sammLangService = inject(SammLanguageSettingsService);
   protected loadedFilesService = inject(LoadedFilesService);
+  protected mxGraphAttributeService = inject(MxGraphAttributeService);
 
   get graph(): mxgraph.mxGraph {
     return this.mxGraphService.graph;
@@ -87,5 +89,10 @@ export abstract class BaseRenderService {
       );
       this.graph.labelChanged(parent, MxGraphHelper.createPropertiesLabel(parent));
     }
+  }
+
+  protected refreshPropertiesLabel(cell: mxgraph.mxCell, modelElement: NamedElement) {
+    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.sammLangService);
+    this.mxGraphAttributeService.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
   }
 }

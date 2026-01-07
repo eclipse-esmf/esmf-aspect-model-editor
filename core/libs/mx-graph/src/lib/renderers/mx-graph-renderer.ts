@@ -194,6 +194,20 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     return cell;
   }
 
+  renderValue(node: ModelTree<DefaultValue>, parent: mxCell, geometry: ShapeConfiguration['geometry'] = {}): mxCell {
+    const value = node.element;
+    const cell = this.getOrCreateMxCell(node, {
+      shapeAttributes: MxGraphVisitorHelper.getValueProperties(value, this.sammLangService),
+      geometry,
+    });
+    this.connectIsolatedElement(parent, cell);
+
+    if (value.parents.length > 0) {
+      this.assignToParent(cell, parent, node);
+    }
+    return cell;
+  }
+
   renderAbstractEntity(node: ModelTree<DefaultEntity>, parent: mxCell, geometry: ShapeConfiguration['geometry'] = {}) {
     const abstractEntity = node.element;
     if (this.shapes.get(abstractEntity.aspectModelUrn)) {
@@ -241,21 +255,6 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     this.connectIsolatedElement(parent, cell);
 
     this.assignToParent(cell, parent, node);
-    return cell;
-  }
-
-  renderValue(node: ModelTree<DefaultValue>, parent: mxCell, geometry: ShapeConfiguration['geometry'] = {}): mxCell {
-    const unit = node.element;
-
-    const cell = this.getOrCreateMxCell(node, {
-      shapeAttributes: MxGraphVisitorHelper.getValueProperties(unit, this.sammLangService),
-      geometry,
-    });
-    this.connectIsolatedElement(parent, cell);
-
-    if (unit.parents.length > 0) {
-      this.assignToParent(cell, parent, node);
-    }
     return cell;
   }
 

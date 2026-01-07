@@ -50,6 +50,7 @@ export * from './default-value';
 export * from './has-extends';
 export * from './has-properties';
 export * from './named-element';
+export * from './scalar-value';
 export * from './structure-element';
 export * from './type';
 export * from './value';

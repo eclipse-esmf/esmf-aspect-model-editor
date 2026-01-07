@@ -10,21 +10,57 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-@if (metaModelElement?.characteristic?.dataType?.getUrn() === xsdBoolean.isDefinedBy) {
-  <mat-form-field [floatLabel]="getControl('exampleValue')?.disabled ? 'always' : 'auto'" appearance="fill">
+@if (isDataTypeBoolean) {
+  <mat-form-field [floatLabel]="displayControl?.disabled ? 'always' : 'auto'" appearance="fill">
     <mat-label>exampleValue</mat-label>
-    <mat-select [formControl]="getControl('exampleValue')">
-      <mat-option value="true"> true </mat-option>
-      <mat-option value="false"> false </mat-option>
+    <mat-select [formControl]="displayControl">
+      <mat-option (click)="selectExampleValue(TRUE)" value="true"> true </mat-option>
+      <mat-option (click)="selectExampleValue(FALSE)" value="false"> false </mat-option>
     </mat-select>
   </mat-form-field>
 } @else {
   <mat-form-field
-    [floatLabel]="getControl('exampleValue')?.disabled ? 'always' : 'auto'"
+    [floatLabel]="displayControl.disabled ? 'always' : 'auto'"
     [matTooltip]="this.hasComplexDataType ? 'exampleValue disabled for complex datatypes' : ''"
     appearance="fill"
   >
     <mat-label for="exampleValue">exampleValue</mat-label>
-    <input [formControl]="getControl('exampleValue')" matInput name="exampleValue" />
+    <input #exampleValueInput [formControl]="displayControl" [matAutocomplete]="auto" matInput name="exampleValue" />
+    @if (displayControl.disabled) {
+      <button (click)="unlockExampleValue(auto)" data-cy="clear-example-value-button" matSuffix mat-icon-button tabindex="-1">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+
+    <mat-autocomplete #auto="matAutocomplete" [hideSingleSelectionIndicator]="true">
+      @if (exampleValueInput.value) {
+        <mat-option [value]="exampleValueInput.value" (click)="selectExampleValue(exampleValueInput.value)">
+          <ame-element
+            [isNewValue]="true"
+            [type]="{type: 'text', symbol: 'T'}"
+            [name]="exampleValueInput.value"
+            size="medium"
+          ></ame-element>
+        </mat-option>
+      }
+
+      @let fValues = filteredValues();
+      @if (fValues.length === 0 && exampleValueInput.value) {
+        <mat-option [value]="exampleValueInput.value" (click)="selectExampleValue(exampleValueInput.value, false)">
+          <ame-element
+            [isNewValue]="true"
+            [type]="{type: 'value', symbol: 'V'}"
+            [name]="exampleValueInput.value"
+            size="medium"
+          ></ame-element>
+        </mat-option>
+      } @else {
+        @for (value of fValues; track value.name) {
+          <mat-option [value]="value.name" (click)="selectExampleValue(value)">
+            <ame-element [type]="{type: 'value', symbol: 'V'}" [name]="value.name" size="medium"></ame-element>
+          </mat-option>
+        }
+      }
+    </mat-autocomplete>
   </mat-form-field>
 }

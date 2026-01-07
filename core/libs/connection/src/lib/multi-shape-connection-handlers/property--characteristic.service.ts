@@ -14,7 +14,7 @@
 import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {basicShapeGeometry} from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
-import {DefaultCharacteristic, DefaultProperty} from '@esmf/aspect-model-loader';
+import {DefaultCharacteristic, DefaultProperty, DefaultValue, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
@@ -30,8 +30,8 @@ export class PropertyCharacteristicConnectionHandler implements MultiShapeConnec
         outEdge.target.geometry.translate(basicShapeGeometry.expandedWith, 0);
       }
 
-      const targetModel = MxGraphHelper.getModelElement<DefaultProperty>(outEdge.target);
-      if (targetModel instanceof DefaultProperty) {
+      const targetModel = MxGraphHelper.getModelElement<NamedElement>(outEdge.target);
+      if (targetModel instanceof DefaultProperty || targetModel instanceof DefaultValue) {
         return;
       }
 

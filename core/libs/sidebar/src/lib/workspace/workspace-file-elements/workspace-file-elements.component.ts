@@ -74,6 +74,7 @@ export class WorkspaceFileElementsComponent {
     'trait',
     'operation',
     'event',
+    'value',
   ];
   public get selection() {
     return this.sidebarService.selection.selection();

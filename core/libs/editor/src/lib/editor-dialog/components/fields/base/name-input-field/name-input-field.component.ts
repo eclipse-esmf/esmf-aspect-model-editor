@@ -100,7 +100,7 @@ export class NameInputFieldComponent extends InputFieldComponent<NamedElement> i
       return nameValidators;
     }
 
-    if (!(this.metaModelElement instanceof DefaultEntityInstance)) {
+    if (![DefaultEntityInstance, DefaultValue].some(el => this.metaModelElement instanceof el)) {
       nameValidators.push(this.isUpperCaseName() ? EditorDialogValidators.namingUpperCase : EditorDialogValidators.namingLowerCase);
     } else {
       nameValidators.push(EditorDialogValidators.noWhiteSpace);
