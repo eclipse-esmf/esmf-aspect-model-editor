@@ -56,6 +56,10 @@ function editSubmenu(translation) {
       icon: getIcon(icons.CONNECT_ELEMENTS.disabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_CONNECT_ELEMENTS),
     },
+    {role: 'cut', accelerator: 'CommandOrControl+X', visible: false, acceleratorWorksWhenHidden: true},
+    {role: 'copy', accelerator: 'CommandOrControl+C', visible: false, acceleratorWorksWhenHidden: true},
+    {role: 'paste', accelerator: 'CommandOrControl+V', visible: false, acceleratorWorksWhenHidden: true},
+    {role: 'selectAll', accelerator: 'CommandOrControl+A', visible: false, acceleratorWorksWhenHidden: true},
   ];
 }
 

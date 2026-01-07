@@ -13,22 +13,11 @@
 
 import {ElementSet} from '../../shared/elements-set';
 import {EitherProps} from '../../shared/props';
-import {Type} from '../type';
 import {Characteristic, DefaultCharacteristic} from './default-characteristic';
 
 export interface Either extends Characteristic {
   left: Characteristic;
   right: Characteristic;
-
-  // @TODO check if it is necessary to have these methods
-  /**
-   * Get the effective type for the left characteristic.
-   */
-  effectiveLeftDataType: Type | undefined;
-  /**
-   * Get the effective type for the right characteristic.
-   */
-  effectiveRightDataType: Type | undefined;
 }
 
 export class DefaultEither extends DefaultCharacteristic implements Either {
@@ -61,14 +50,5 @@ export class DefaultEither extends DefaultCharacteristic implements Either {
 
   getRight(): Characteristic {
     return this.right;
-  }
-
-  // @TODO check if it is necessary to have these methods
-  public get effectiveLeftDataType(): Type | undefined {
-    return DefaultCharacteristic.getEffectiveDataType(this.left);
-  }
-
-  public get effectiveRightDataType(): Type | undefined {
-    return DefaultCharacteristic.getEffectiveDataType(this.right);
   }
 }

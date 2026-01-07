@@ -623,8 +623,8 @@ export class FileHandlingService {
       }),
     );
   }
-  // TODO MOVE THESE 3 FUNCTION TO A MORE RELATED SERVICE
 
+  // TODO Move the next three methods t a more related service
   updateQuads(query: QuadComponents, replacement: QuadComponents, rdfModel: RdfModel): number {
     const quads: Quad[] = this.getQuads(query, rdfModel);
     return quads.reduce((counter, quad) => {

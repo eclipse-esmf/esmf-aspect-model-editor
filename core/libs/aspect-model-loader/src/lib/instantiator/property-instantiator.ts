@@ -12,7 +12,7 @@
  */
 
 import {NamedNode, Quad, Quad_Subject, Util} from 'n3';
-import {Property, Type, ValueElement} from '../aspect-meta-model';
+import {Property, ValueElement} from '../aspect-meta-model';
 import {DefaultProperty} from '../aspect-meta-model/default-property';
 import {ScalarValue} from '../aspect-meta-model/scalar-value';
 import {PropertyPayload} from '../aspect-meta-model/structure-element';
@@ -119,7 +119,7 @@ export function propertyFactory(initProps: BaseInitProps) {
     }
 
     if (exampleValueQuad && property.characteristic) {
-      property.exampleValue = getValue(rdfModel, exampleValueQuad, property.characteristic.dataType, modelElementCache);
+      property.exampleValue = getValue(rdfModel, exampleValueQuad, property, modelElementCache);
     }
 
     property.extends_ = getExtends(propertyQuads);
@@ -128,7 +128,9 @@ export function propertyFactory(initProps: BaseInitProps) {
     return {property, payload};
   }
 
-  function getValue(rdfModel: RdfModel, quad: Quad, dataType: Type, modelElementCache: CacheStrategy): ScalarValue | ValueElement {
+  function getValue(rdfModel: RdfModel, quad: Quad, property: Property, modelElementCache: CacheStrategy): ScalarValue | ValueElement {
+    const dataType = property.characteristic.dataType;
+
     if (Util.isLiteral(quad.object)) {
       return new ScalarValue({
         value: CharacteristicInstantiatorUtil.resolveValues(quad, dataType.urn),
@@ -137,7 +139,10 @@ export function propertyFactory(initProps: BaseInitProps) {
     }
 
     const valueQuads = rdfModel.store.getQuads(quad.object.value, null, null, null);
-    return modelElementCache.resolveInstance(valueFactory(initProps)(valueQuads, dataType));
+    const valueElement = modelElementCache.resolveInstance(valueFactory(initProps)(valueQuads, dataType));
+
+    valueElement?.addParent(property);
+    return valueElement;
   }
 
   function createProperties(subject: Quad_Subject): Array<PropertyData> {
