@@ -87,8 +87,8 @@ export class PropertyRenderService extends BaseRenderService {
         const targetModel = MxGraphHelper.getModelElement<NamedElement>(edge.target);
         return targetModel instanceof DefaultValue;
       })
-      .forEach(edgeToRemove => {
-        this.mxGraphService.removeCells([cell.removeEdge(edgeToRemove, true)]);
+      .forEach((edgeToRemove: any) => {
+        this.mxGraphService.removeCells([edgeToRemove]);
       });
   }
 }

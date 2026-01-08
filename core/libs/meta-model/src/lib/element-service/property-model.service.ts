@@ -16,7 +16,7 @@ import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHe
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {useUpdater} from '@ame/utils';
 import {inject, Injectable} from '@angular/core';
-import {DefaultProperty, DefaultStructuredValue, HasExtends, NamedElement, ScalarValue} from '@esmf/aspect-model-loader';
+import {DefaultProperty, DefaultStructuredValue, DefaultValue, HasExtends, NamedElement, ScalarValue} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
 
@@ -41,6 +41,11 @@ export class PropertyModelService extends BaseModelService {
     if (form.exampleValue instanceof ScalarValue && form.exampleValue.value === '') {
       form.exampleValue = null;
     }
+
+    if (form.exampleValue instanceof DefaultValue) {
+      this.currentCachedFile.addElement(form.exampleValue.aspectModelUrn, form.exampleValue);
+    }
+
     modelElement.exampleValue = form.exampleValue;
     super.update(cell, form);
 

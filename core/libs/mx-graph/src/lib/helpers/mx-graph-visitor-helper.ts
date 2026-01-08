@@ -74,17 +74,14 @@ export class MxGraphVisitorHelper {
   }
 
   static addValues(characteristic: Characteristic): ShapeAttribute {
-    if (
-      characteristic instanceof DefaultEnumeration &&
-      characteristic.values?.length &&
-      !characteristic.values.every(value => value instanceof DefaultEntityInstance)
-    ) {
-      return {
-        label: `values = ${RdfModelUtil.getValuesWithoutUrnDefinition(characteristic.values)}`,
-        key: 'values',
-      };
-    }
-    return null;
+    if (!(characteristic instanceof DefaultEnumeration)) return null;
+
+    const values = characteristic.values.filter(v => !(v instanceof DefaultValue));
+    const hasEntityInstances = characteristic.values.every(value => value instanceof DefaultEntityInstance);
+
+    return values?.length && !hasEntityInstances
+      ? {label: `values = ${RdfModelUtil.getValuesWithoutUrnDefinition(values)}`, key: 'values'}
+      : null;
   }
 
   static addDefaultValue(characteristic: Characteristic): ShapeAttribute {
@@ -296,16 +293,9 @@ export class MxGraphVisitorHelper {
   }
 
   static addExampleValue(property: Property): ShapeAttribute {
-    const value = property.exampleValue
-      ? property.exampleValue instanceof DefaultValue
-        ? property.exampleValue.name
-        : `"${property.exampleValue.value}"`
-      : '';
+    const hasValidValue = property.exampleValue && !(property.exampleValue instanceof DefaultValue) && property.exampleValue.value;
 
-    if (value) {
-      return {label: `exampleValue = ${value}`, key: 'exampleValue'};
-    }
-    return null;
+    return hasValidValue ? {label: `exampleValue = ${property.exampleValue.value}`, key: 'exampleValue'} : null;
   }
 
   static addIsCollectionAspect(aspect: Aspect): ShapeAttribute {

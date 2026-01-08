@@ -166,6 +166,10 @@ const property = (property: DefaultProperty): ElementUpdater => ({
     if (property.characteristic && property.characteristic.aspectModelUrn === toRemove.aspectModelUrn) {
       property.characteristic = null;
     }
+
+    if (toRemove instanceof DefaultValue) {
+      property.exampleValue = null;
+    }
   },
   update: (toUpdate: NamedElement) => {
     if (toUpdate instanceof DefaultCharacteristic) {

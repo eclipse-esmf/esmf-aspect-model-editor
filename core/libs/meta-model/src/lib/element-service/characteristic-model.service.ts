@@ -36,7 +36,9 @@ import {
   DefaultState,
   DefaultStructuredValue,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
+  ScalarValue,
 } from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
@@ -209,7 +211,9 @@ export class CharacteristicModelService extends BaseModelService {
     } else if (metaModelElement instanceof DefaultEnumeration && metaModelElement.dataType instanceof DefaultEntity) {
       this.updateComplexEnumeration(metaModelElement, form);
     } else if (metaModelElement instanceof DefaultEnumeration) {
-      // simple enumeration
+      form.enumValues
+        .filter((v: ScalarValue | DefaultValue) => v instanceof DefaultValue)
+        .forEach((value: DefaultValue) => this.currentCachedFile.addElement(value.aspectModelUrn, value));
       metaModelElement.values = form.enumValues || [];
     } else if (metaModelElement instanceof DefaultCollection) {
       metaModelElement.elementCharacteristic = form.elementCharacteristic;

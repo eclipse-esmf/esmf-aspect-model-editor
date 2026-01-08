@@ -202,6 +202,8 @@ export class LoadedFilesService {
   }
 
   updateAbsoluteName(oldAbsoluteName: string, newAbsoluteName: string, rewriteOriginal = false) {
+    if (oldAbsoluteName === newAbsoluteName) return;
+
     if (!this.files[oldAbsoluteName]) {
       console.error(`${oldAbsoluteName} is not in the file list`);
       return;
