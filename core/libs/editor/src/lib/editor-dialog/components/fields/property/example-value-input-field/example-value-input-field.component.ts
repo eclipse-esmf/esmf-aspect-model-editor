@@ -104,7 +104,7 @@ export class ExampleValueInputFieldComponent extends InputFieldComponent<Default
     } else if (typeof value === 'string') {
       value = new DefaultValue({
         aspectModelUrn: this.metaModelElement.namespace + `#${value}`,
-        value: 'change me',
+        value: 'Value',
         name: value,
         metaModelVersion: this.samm.version,
       });

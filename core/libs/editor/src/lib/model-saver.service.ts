@@ -91,16 +91,24 @@ export class ModelSaverService {
   private writeModelToWorkspace(rdfModel?: RdfModel): Observable<RdfModel> {
     const rdfContent = this.rdfSerializer.serializeModel(rdfModel || this.currentFile?.rdfModel);
 
-    if (!rdfContent) {
+    if (!rdfContent || !/\S/.test(rdfContent.replace(/@prefix[^\n]*\n/g, ''))) {
       console.info('Model is empty. Skipping saving.');
-      return throwError(() => ({code: SaveValidateErrorsCodes.emptyModel}));
+      return throwError(() => ({
+        error: {
+          message: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_EMPTY_MODEL,
+        },
+      }));
     }
 
     return this.modelApiService.fetchFormatedAspectModel(rdfContent).pipe(
       takeUntilDestroyed(this.destroyRef),
       switchMap(content => {
         if (!content) {
-          return throwError(() => ({code: SaveValidateErrorsCodes.emptyModel}));
+          return throwError(() => ({
+            error: {
+              message: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_EMPTY_MODEL,
+            },
+          }));
         }
 
         const copyright = this.settings.copyrightHeader.join('\n');

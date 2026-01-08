@@ -14,6 +14,7 @@
 import {AsyncApi, FileEntry, FileInformation, OpenApi, ViolationError} from '@ame/editor';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder} from '@ame/shared';
+import {LanguageTranslationService} from '@ame/translation';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
 import {Observable, forkJoin, of, throwError} from 'rxjs';
@@ -27,6 +28,7 @@ export class ModelApiService {
   private http = inject(HttpClient);
   private browserService = inject(BrowserService);
   private modelValidatorService = inject(ModelValidatorService);
+  private translate = inject(LanguageTranslationService);
 
   private defaultPort = this.config.defaultPort;
   private readonly serviceUrl = this.config.serviceUrl;
@@ -60,6 +62,14 @@ export class ModelApiService {
   }
 
   saveAspectModel(rdfContent: string, aspectModelUrn: string, absoluteModelName?: string): Observable<string> {
+    if (RdfModelUtil.splitRdfIntoChunks(absoluteModelName)[2] === 'new-model.ttl') {
+      return throwError(() => ({
+        error: {
+          message: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_DEFAULT_MODEL,
+        },
+      }));
+    }
+
     let headers: HttpHeaders;
     if (absoluteModelName) {
       const file = RdfModelUtil.getFileNameFromRdf(absoluteModelName);
