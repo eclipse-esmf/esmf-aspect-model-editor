@@ -10,8 +10,9 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {valueFactory} from '@esmf/aspect-model-loader';
 import {Literal, Quad, Quad_Object, Util} from 'n3';
-import {Type} from '../../aspect-meta-model';
+import {DefaultValue, NamedElement, Type} from '../../aspect-meta-model';
 import {DefaultEnumeration, Enumeration} from '../../aspect-meta-model/characteristic/default-enumeration';
 import {DefaultEntityInstance} from '../../aspect-meta-model/default-entity-instance';
 import {ScalarValue} from '../../aspect-meta-model/scalar-value';
@@ -39,7 +40,7 @@ export function enumerationCharacteristicFactory(initProps: BaseInitProps) {
         if (samm.isValueProperty(propertyQuad.predicate.value) || sammC.isValuesProperty(propertyQuad.predicate.value)) {
           if (Util.isBlankNode(propertyQuad.object)) {
             characteristic.values = getEnumerationValues(propertyQuad, characteristic.dataType);
-            characteristic.values.forEach(value => value instanceof DefaultEntityInstance && value.addParent(characteristic));
+            characteristic.values.forEach(value => value instanceof NamedElement && value.addParent(characteristic));
           }
         }
       }
@@ -55,21 +56,25 @@ export function enumerationCharacteristicFactory(initProps: BaseInitProps) {
             value: CharacteristicInstantiatorUtil.resolveValues(quadValue, dataType.urn),
             type: dataType,
           })
-        : resolveEntityInstance(quadValue),
+        : resolveQuad(quadValue, dataType),
     );
   }
 
-  function resolveEntityInstance(quad: Quad): DefaultEntityInstance {
+  function resolveQuad(quad: Quad, dataType?: Type): DefaultEntityInstance | DefaultValue {
     const {samm, store} = rdfModel;
 
-    const entityInstanceQuads = store.getQuads(quad.object, null, null, null);
-    const entityTypeQuad = entityInstanceQuads.find(entityInstanceQuad => entityInstanceQuad.predicate.value === `${Samm.RDF_URI}#type`);
+    const quads = store.getQuads(quad.object, null, null, null);
+    const typeQuad = quads.find(entityInstanceQuad => entityInstanceQuad.predicate.value === `${Samm.RDF_URI}#type`);
 
-    if (entityTypeQuad) {
-      const entity = entityFactory(initProps)(store.getQuads(entityTypeQuad.object, null, null, null));
+    if (samm.Value().value === typeQuad?.object.value) {
+      return cache.resolveInstance(valueFactory(initProps)(quads, dataType));
+    }
+
+    if (typeQuad) {
+      const entity = entityFactory(initProps)(store.getQuads(typeQuad.object, null, null, null));
 
       // determine the description of the value/instance if defined
-      const descriptionQuad = entityInstanceQuads.find(
+      const descriptionQuad = quads.find(
         quad =>
           quad.predicate.id.toLowerCase().includes('description') &&
           entity.properties.find(
@@ -78,7 +83,7 @@ export function enumerationCharacteristicFactory(initProps: BaseInitProps) {
       );
       const descriptions = new Map<string, string>();
       if (descriptionQuad) {
-        entityInstanceQuads
+        quads
           .filter(quad => quad.predicate.id === descriptionQuad.predicate.id)
           .forEach(quad => descriptions.set(rdfModel.getLocale(quad) || 'en', quad.object.value));
       }
@@ -92,7 +97,7 @@ export function enumerationCharacteristicFactory(initProps: BaseInitProps) {
         descriptions,
       });
 
-      entityInstanceQuads.forEach(quad => {
+      quads.forEach(quad => {
         if (
           rdfModel.store.getQuads(quad.predicate, null, null, null).length ||
           rdfModel.store.getQuads(null, rdfModel.samm.property(), quad.predicate, null).length
@@ -102,13 +107,10 @@ export function enumerationCharacteristicFactory(initProps: BaseInitProps) {
 
           if (entityInstance.assertions.has(predicateKey)) {
             const value = entityInstance.assertions.get(predicateKey);
-            const values = isEntityInstance(quad.object) ? [resolveEntityInstance(quad)] : resolveQuadObject(quad);
+            const values = isEntityInstance(quad.object) ? [resolveQuad(quad)] : resolveQuadObject(quad);
             entityInstance.assertions.set(predicateKey, Array.isArray(value) ? [...value, ...values] : values);
           } else {
-            entityInstance.assertions.set(
-              predicateKey,
-              isEntityInstance(quad.object) ? [resolveEntityInstance(quad)] : resolveQuadObject(quad),
-            );
+            entityInstance.assertions.set(predicateKey, isEntityInstance(quad.object) ? [resolveQuad(quad)] : resolveQuadObject(quad));
           }
         }
       });
@@ -116,7 +118,7 @@ export function enumerationCharacteristicFactory(initProps: BaseInitProps) {
       return cache.resolveInstance(entityInstance);
     }
 
-    throw new Error(`Could resolve Entity instance ${entityTypeQuad.subject.value}`);
+    throw new Error(`Could resolve Entity instance ${typeQuad.subject.value}`);
   }
 
   function resolveQuadObject(quad: Quad): Value[] {
@@ -150,6 +152,6 @@ export function enumerationCharacteristicFactory(initProps: BaseInitProps) {
   return {
     createEnumerationCharacteristic,
     getEnumerationValues,
-    resolveEntityInstance,
+    resolveEntityInstance: resolveQuad,
   };
 }

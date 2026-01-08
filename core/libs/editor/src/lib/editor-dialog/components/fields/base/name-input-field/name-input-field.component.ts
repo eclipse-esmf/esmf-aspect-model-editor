@@ -24,6 +24,7 @@ import {
   DefaultEntityInstance,
   DefaultProperty,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
 } from '@esmf/aspect-model-loader';
 import {TranslatePipe} from '@ngx-translate/core';
@@ -99,7 +100,7 @@ export class NameInputFieldComponent extends InputFieldComponent<NamedElement> i
       return nameValidators;
     }
 
-    if (!(this.metaModelElement instanceof DefaultEntityInstance)) {
+    if (![DefaultEntityInstance, DefaultValue].some(el => this.metaModelElement instanceof el)) {
       nameValidators.push(this.isUpperCaseName() ? EditorDialogValidators.namingUpperCase : EditorDialogValidators.namingLowerCase);
     } else {
       nameValidators.push(EditorDialogValidators.noWhiteSpace);
@@ -115,7 +116,8 @@ export class NameInputFieldComponent extends InputFieldComponent<NamedElement> i
       this.metaModelElement instanceof DefaultEntity ||
       (this.metaModelElement instanceof DefaultEntity && this.metaModelElement.isAbstractEntity()) ||
       this.metaModelElement instanceof DefaultConstraint ||
-      this.metaModelElement instanceof DefaultCharacteristic
+      this.metaModelElement instanceof DefaultCharacteristic ||
+      this.metaModelElement instanceof DefaultValue
     );
   }
 }

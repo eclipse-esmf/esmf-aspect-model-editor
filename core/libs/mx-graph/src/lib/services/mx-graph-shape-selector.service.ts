@@ -91,7 +91,7 @@ export class MxGraphShapeSelectorService {
         cellsToSelect.push(cell);
       }
 
-      cell.edges.forEach(edge => {
+      cell.edges?.forEach(edge => {
         cellsToSelect.push(edge);
 
         if (!cellsToSelect.includes(edge.target)) {

@@ -40,7 +40,7 @@ export interface CacheStrategy {
   filter<T extends NamedElement>(filterPredicate: FilterPredicate): T[];
 
   /**
-   * Resolve cached element instance or add the given element to teh cache
+   * Resolve cached element instance or add the given element to the cache
    *
    * @param modelElement element instance to resolve
    * @return cached element instance

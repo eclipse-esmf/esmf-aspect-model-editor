@@ -17,6 +17,7 @@ html {
   --ame-property: var(--ame-blue-30);
   --ame-operation: var(--ame-purple-50);
   --ame-event: var(--ame-blue-50);
+  --ame-value: var(--ame-green-50);
   --ame-characteristic: var(--ame-yellow-100);
   --ame-entity: var(--ame-blue-75);
   --ame-constraint: var(--ame-blue-60);
@@ -57,6 +58,9 @@ html {
   --ame-yellow-100: #d6e2a6;
   --ame-yellow-300: #b9ab50;
 
+  // green
+  --ame-green-50: #e8c489;
+
   // orange
   --ame-orange: #ffa500;
 
@@ -88,3 +92,4 @@ $unit-color: var(--ame-unit);
 $aspect-color: var(--ame-aspect);
 $operation-color: var(--ame-operation);
 $event-color: var(--ame-event);
+$value-color: var(--ame-value);

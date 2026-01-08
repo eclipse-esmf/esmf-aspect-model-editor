@@ -11,6 +11,7 @@ import {
   propertyFactory,
   unitFactory,
 } from './instantiator';
+import {valueFactory} from './instantiator/value-instantiator';
 import {BaseInitProps} from './shared/base-init-props';
 import {ModelElementCache} from './shared/model-element-cache.service';
 import {RdfModel} from './shared/rdf-model';
@@ -23,6 +24,7 @@ export function useLoader(init?: Partial<BaseInitProps>) {
   return {
     createAspect: aspectFactory(baseInit),
     createEntity: entityFactory(baseInit),
+    createValue: valueFactory(baseInit),
     createEvent: eventFactory(baseInit),
     createEvents: getEvents(baseInit),
     createOperation: operationFactory(baseInit),

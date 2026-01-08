@@ -15,12 +15,14 @@ import {ElementSet} from '../shared/elements-set';
 import {PropertyProps} from '../shared/props';
 import {ModelVisitor} from '../visitor/model-visitor';
 import {Characteristic} from './characteristic/default-characteristic';
+import {DefaultValue} from './default-value';
 import {HasExtends} from './has-extends';
 import {NamedElement} from './named-element';
+import {ScalarValue} from './scalar-value';
 
 export interface Property extends NamedElement, HasExtends<Property> {
   characteristic: Characteristic;
-  exampleValue: string;
+  exampleValue: ScalarValue | DefaultValue;
   isAbstract: boolean;
 }
 
@@ -36,12 +38,16 @@ export class DefaultProperty extends NamedElement implements Property {
       children.push(this.characteristic);
     }
 
+    if (this.exampleValue instanceof NamedElement) {
+      children.push(this.exampleValue);
+    }
+
     return children;
   }
 
   extends_: Property;
   characteristic: Characteristic;
-  exampleValue: string;
+  exampleValue: ScalarValue | DefaultValue;
   isAbstract: boolean;
 
   constructor(props: PropertyProps) {

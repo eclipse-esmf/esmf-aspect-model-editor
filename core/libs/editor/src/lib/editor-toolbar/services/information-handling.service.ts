@@ -36,8 +36,7 @@ export class InformationHandlingService {
 
   private keyDownEvents(matDialogRef: MatDialogRef<any>) {
     matDialogRef.keydownEvents().subscribe(keyBoardEvent => {
-      // TODO KeyCode might not be supported by electron.
-      if (keyBoardEvent.code === 'Escape') {
+      if (keyBoardEvent.key === 'Escape' || keyBoardEvent.code === 'Escape') {
         matDialogRef.close();
       }
     });

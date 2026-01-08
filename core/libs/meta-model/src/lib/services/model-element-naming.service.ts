@@ -44,7 +44,7 @@ export class ModelElementNamingService {
    *
    * @param element element being created.
    * @param parentName name of the parent element
-   * @returns element with filled version,name,urn
+   * @returns element with filled version, name, urn
    */
   resolveElementNaming<T extends NamedElement = NamedElement>(element: T, parentName?: string): T {
     const {rdfModel, namespace} = this.loadedFiles.currentLoadedFile;

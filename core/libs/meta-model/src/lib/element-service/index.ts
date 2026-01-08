@@ -24,3 +24,4 @@ export * from './operation-model.service';
 export * from './property-model.service';
 export * from './trait-model.service';
 export * from './unit-model.service';
+export * from './value-model.service';

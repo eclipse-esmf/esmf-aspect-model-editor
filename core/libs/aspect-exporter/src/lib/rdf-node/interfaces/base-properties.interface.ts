@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Type, Unit} from '@esmf/aspect-model-loader';
+import {Type, Unit, ValueElement} from '@esmf/aspect-model-loader';
+import {ScalarValue} from '../../../../../aspect-model-loader/src/lib/aspect-meta-model/scalar-value';
 import {LocaleInterface} from './locale.interface';
 
 export interface BasePropertiesInterface {
@@ -30,7 +31,7 @@ export interface BasePropertiesInterface {
   optional?: boolean;
   notInPayload?: boolean;
   payloadName?: string;
-  exampleValue?: string;
+  exampleValue?: ScalarValue | ValueElement;
 
   // constraints
   characteristicType?: Type;

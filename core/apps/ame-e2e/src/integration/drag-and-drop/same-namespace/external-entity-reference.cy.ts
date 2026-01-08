@@ -46,6 +46,27 @@ describe('Test drag and drop', () => {
       },
     });
 
+    cy.fixture(`/external-reference/same-namespace/without-childrens/${fileName}`).then(fixtureContent => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: 'http://localhost:9090/ame/api/models/batch',
+        },
+        {
+          statusCode: 200,
+          body: [
+            {
+              aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#ExternalEntity',
+              aspectModel: fixtureContent,
+              absoluteName: `org.eclipse.examples.aspect:1.0.0:${fileName}`,
+              fileName: fileName,
+              modelVersion: '2.2.0',
+            },
+          ],
+        },
+      );
+    });
+
     cy.intercept(
       {
         method: 'GET',

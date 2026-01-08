@@ -26,6 +26,7 @@ import {
   DefaultScalar,
   DefaultStructuredValue,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
   Type,
 } from '@esmf/aspect-model-loader';
@@ -50,6 +51,9 @@ export class CharacteristicRenderService extends BaseRenderService {
 
   update({cell, form}: RendererUpdatePayload) {
     this.metaModelElement = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
+
+    this.removeValues(cell);
+
     if (this.metaModelElement instanceof DefaultEither) {
       this.removeObsoleteEntityValues(cell);
       this.metaModelElement.dataType = null;
@@ -74,6 +78,17 @@ export class CharacteristicRenderService extends BaseRenderService {
     }
 
     super.update({cell});
+  }
+
+  private removeValues(cell: mxgraph.mxCell) {
+    const outGoingEdges = this.mxGraphService.graph.getOutgoingEdges(cell);
+    const toRemove = [];
+    for (const edge of outGoingEdges) {
+      const modelElement = MxGraphHelper.getModelElement(edge.target);
+      modelElement instanceof DefaultValue && toRemove.push(edge);
+    }
+
+    this.mxGraphService.removeCells(toRemove);
   }
 
   private removeStructuredValueProperties(cell: mxgraph.mxCell) {

@@ -181,6 +181,10 @@ mat-icon {
   background-color: colors.$event-color;
 }
 
+.value {
+  background-color: colors.$value-color;
+}
+
 .mxTooltip {
   max-width: 300px !important;
   width: fit-content !important;

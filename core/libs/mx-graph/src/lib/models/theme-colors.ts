@@ -23,6 +23,7 @@ export interface ThemeColors {
   constraint: string;
   trait: string;
   unit: string;
+  value: string;
   entityValue: string;
   font: string;
   border: string;

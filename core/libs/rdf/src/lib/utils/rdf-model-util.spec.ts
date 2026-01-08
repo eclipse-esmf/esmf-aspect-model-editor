@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2025 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -63,7 +63,7 @@ describe('Test RDF Model Util', () => {
 
   describe('resolveAccurateType', () => {
     let expectedElementUrn: string;
-    const rdfModel = new RdfModel(new Store(), '2.1.0', null);
+    const rdfModel = new RdfModel(new Store(), '2.2.0', null);
     const sammC = rdfModel.sammC;
     const samm = rdfModel.samm;
 
@@ -139,7 +139,7 @@ describe('Test RDF Model Util', () => {
   });
 
   describe('resolvePredicate', () => {
-    const rdfModel = new RdfModel(new Store(), '2.1.0', null);
+    const rdfModel = new RdfModel(new Store(), '2.2.0', null);
     const samm = rdfModel.samm;
     const sammC = rdfModel.sammC;
     test('should return properties property', () => {

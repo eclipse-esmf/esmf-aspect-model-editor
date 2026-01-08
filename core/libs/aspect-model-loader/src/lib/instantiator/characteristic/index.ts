@@ -27,6 +27,7 @@ import {quantifiableCharacteristicFactory} from './quantifiable-characteristic-i
 import {setCharacteristicFactory} from './set-characteristic-instantiator';
 import {singleEntityCharacteristicFactory} from './single-entity-instantiator';
 import {sortedSetCharacteristicFactory} from './sorted-set-characteristic-instantiator';
+import {stateCharacteristicFactory} from './state-characteristic-instantiator';
 import {timeSeriesCharacteristicFactory} from './timeseries-characteristic-instantiator';
 import {traitCharacteristicFactory} from './trait-characteristic-instantiator';
 
@@ -39,6 +40,7 @@ export function allCharacteristicsFactory(initProps: BaseInitProps) {
   const createDurationCharacteristic = durationCharacteristicFactory(initProps);
   const createEitherCharacteristic = eitherCharacteristicFactory(initProps);
   const {createEnumerationCharacteristic, resolveEntityInstance} = enumerationCharacteristicFactory(initProps);
+  const createStateCharacteristic = stateCharacteristicFactory(initProps);
   const createListCharacteristic = listCharacteristicFactory(initProps);
   const createMeasurementCharacteristic = measurementCharacteristicFactory(initProps);
   const createQuantifiableCharacteristic = quantifiableCharacteristicFactory(initProps);
@@ -74,6 +76,11 @@ export function allCharacteristicsFactory(initProps: BaseInitProps) {
     {
       process: (quad: Quad) => createEnumerationCharacteristic(quad),
       shouldProcess: (namedNode: NamedNode) => rdfModel.sammC.EnumerationCharacteristic().equals(namedNode),
+    },
+    // StateCharacteristic
+    {
+      process: (quad: Quad) => createStateCharacteristic(quad),
+      shouldProcess: (namedNode: NamedNode) => rdfModel.sammC.StateCharacteristic().equals(namedNode),
     },
     // ListCharacteristic
     {

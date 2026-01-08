@@ -36,7 +36,13 @@ describe('Property Visitor', () => {
     hasDependency: jest.fn(() => false),
     addPrefix: jest.fn(() => {}),
   } as any;
-  const property = new DefaultProperty({metaModelVersion: '1', aspectModelUrn: 'samm#property1', name: 'property1', characteristic: null});
+  const property = new DefaultProperty({
+    metaModelVersion: '1',
+    aspectModelUrn: 'samm#property1',
+    name: 'property1',
+    characteristic: null,
+    exampleValue: null,
+  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -66,7 +72,6 @@ describe('Property Visitor', () => {
     service.visit(property);
 
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(property, {
-      exampleValue: null,
       preferredName: [],
       description: [],
       see: [],

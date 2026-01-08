@@ -207,13 +207,10 @@ export class CharacteristicModelService extends BaseModelService {
     if (metaModelElement instanceof DefaultQuantifiable) {
       this.handleQuantifiableUnit(metaModelElement, form, originalModelElement as DefaultQuantifiable);
     } else if (metaModelElement instanceof DefaultEnumeration && metaModelElement.dataType instanceof DefaultEntity) {
-      // complex enumeration
-      // TODO get a way to signal is made in editor
-      // metaModelElement.createdFromEditor = true;
       this.updateComplexEnumeration(metaModelElement, form);
     } else if (metaModelElement instanceof DefaultEnumeration) {
       // simple enumeration
-      metaModelElement.values = form.enumValues.map(value => value.name) || null;
+      metaModelElement.values = form.enumValues || [];
     } else if (metaModelElement instanceof DefaultCollection) {
       metaModelElement.elementCharacteristic = form.elementCharacteristic;
       if (form.elementCharacteristic) {

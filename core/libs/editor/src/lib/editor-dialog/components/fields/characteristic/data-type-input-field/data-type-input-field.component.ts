@@ -14,7 +14,7 @@
 import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {config, DataTypeService} from '@ame/shared';
+import {config, DataTypeService, ElementIconComponent} from '@ame/shared';
 import {AsyncPipe} from '@angular/common';
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -56,6 +56,7 @@ import {InputFieldComponent} from '../../input-field.component';
     AsyncPipe,
     MatOptgroup,
     MatOption,
+    ElementIconComponent,
   ],
 })
 export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultCharacteristic> implements OnInit, OnDestroy {

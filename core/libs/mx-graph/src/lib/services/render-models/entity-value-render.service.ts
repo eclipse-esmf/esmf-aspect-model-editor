@@ -18,7 +18,6 @@ import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultState} 
 import {mxgraph} from 'mxgraph-factory';
 import {MxGraphHelper} from '../../helpers';
 import {EdgeStyles, RendererUpdatePayload} from '../../models';
-import {MxGraphAttributeService} from '../mx-graph-attribute.service';
 import {MxGraphShapeOverlayService} from '../mx-graph-shape-overlay.service';
 import {BaseRenderService} from './base-render-service';
 
@@ -27,7 +26,6 @@ export class EntityValueRenderService extends BaseRenderService {
   private filtersService = inject(FiltersService);
   private mxGraphShapeOverlay = inject(MxGraphShapeOverlayService);
   private shapeConnectorService = inject(ShapeConnectorService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
 
   isApplicable(cell: mxgraph.mxCell): boolean {
     return MxGraphHelper.getModelElement(cell) instanceof DefaultEntityInstance;

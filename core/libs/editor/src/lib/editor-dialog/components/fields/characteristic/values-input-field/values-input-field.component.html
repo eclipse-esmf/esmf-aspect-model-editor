@@ -11,41 +11,75 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-@if (!hasComplexValues) {
+@if (!hasComplexValues()) {
   <mat-form-field [floatLabel]="getControl('values')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
     <mat-label for="values">values</mat-label>
     <mat-chip-grid #chipList [formControl]="getControl('chipList')">
-      @for (value of enumValues; track value) {
-        <mat-chip-row [removable]="removable" (removed)="remove(value); onEnumChange()">
-          {{ value?.['name'] || value }}
+      @for (value of enumValues(); track value) {
+        <mat-chip-row
+          [class.is-value]="!!value?.['name']"
+          [editable]="!initialValues[value?.['aspectModelUrn'] || '']"
+          [removable]="removable"
+          (edited)="editValue(value, $event)"
+          (removed)="remove(value); onEnumChange()"
+        >
+          <span>{{ value?.['name'] || value?.['value'] }}</span>
+          @if (!initialValues[value?.['aspectModelUrn'] || '']) {
+            <button matChipEdit>
+              <mat-icon>edit</mat-icon>
+            </button>
+          }
           <mat-icon matChipRemove data-cy="chipIcon">close</mat-icon>
         </mat-chip-row>
       }
       <input
         class="enumeration-value-input"
+        #valuesInput
         [formControl]="getControl('values')"
         [matChipInputFor]="chipList"
-        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        [matChipInputAddOnBlur]="addOnBlur"
-        (matChipInputTokenEnd)="add($event)"
+        [matAutocomplete]="auto"
         (paste)="paste($event)"
-        (keyup)="onEnumChange()"
         matInput
         name="values"
-        placeholder="add value, hit enter"
+        placeholder="Type and select"
         data-cy="values"
       />
     </mat-chip-grid>
+
+    <mat-hint class="hint">
+      <mat-icon>info</mat-icon>
+      <span>Only newly created Values and simple values can be edited!</span>
+    </mat-hint>
+
     @if (getControl('values')?.errors?.required) {
       <mat-error>This field is required</mat-error>
     }
-  </mat-form-field>
-}
 
-@if (hasComplexValues) {
+    <mat-autocomplete #auto="matAutocomplete" [hideSingleSelectionIndicator]="true">
+      @if (valuesInput.value) {
+        <mat-option [value]="valuesInput.value" (click)="addValue(valuesInput.value)">
+          <ame-element [isNewValue]="true" [type]="{type: 'text', symbol: 'T'}" [name]="valuesInput.value" size="medium"></ame-element>
+        </mat-option>
+      }
+
+      @let fValues = filteredValues();
+      @if (fValues.length === 0 && valuesInput.value) {
+        <mat-option [value]="valuesInput.value" (click)="addValue(valuesInput.value, false)">
+          <ame-element [isNewValue]="true" [type]="{type: 'value', symbol: 'V'}" [name]="valuesInput.value" size="medium"></ame-element>
+        </mat-option>
+      } @else {
+        @for (value of fValues; track value.name) {
+          <mat-option [value]="value.name" (click)="addValue(value)">
+            <ame-element [type]="{type: 'value', symbol: 'V'}" [name]="value.name" size="medium"></ame-element>
+          </mat-option>
+        }
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+} @else {
   <ame-entity-instance-view
     class="entity-values"
-    [complexValues]="enumEntityValues"
+    [complexValues]="enumEntityValues()"
     [enumeration]="metaModelElement"
     [parentForm]="parentForm"
     (complexValueChange)="enumValueChange($event)"

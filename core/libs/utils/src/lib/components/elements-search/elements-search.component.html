@@ -23,7 +23,7 @@
         <mat-option class="list-option" (click)="openElement(element)">
           <div [class.has-external-element]="loadedFiles.isElementExtern(element) && !element.isPredefined">
             <ame-element
-              [type]="sammElements[transform(element).type]"
+              [type]="transform(element)"
               [name]="transform(element).element.name"
               [description]="transform(element).element.aspectModelUrn"
               [disabledTooltipDescriptionLength]="100"

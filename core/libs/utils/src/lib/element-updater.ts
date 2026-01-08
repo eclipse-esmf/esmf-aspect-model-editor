@@ -27,6 +27,7 @@ import {
   DefaultStructuredValue,
   DefaultTrait,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
   Type,
 } from '@esmf/aspect-model-loader';
@@ -124,6 +125,12 @@ const enumeration = (enumeration: DefaultEnumeration): ElementUpdater => ({
     if (toRemove instanceof DefaultEntity) {
       enumeration.dataType = null;
       enumeration.values = [];
+    }
+
+    if (toRemove instanceof DefaultValue) {
+      enumeration.values = enumeration.values.filter(
+        value => !(value instanceof DefaultValue) || value.aspectModelUrn !== toRemove.aspectModelUrn,
+      );
     }
   },
 });

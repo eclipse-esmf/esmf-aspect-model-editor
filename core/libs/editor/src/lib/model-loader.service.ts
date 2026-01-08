@@ -24,6 +24,7 @@ import {DefaultAspect, ModelElementCache, NamedElement, RdfModel, loadAspectMode
 import {RdfLoader} from 'libs/aspect-model-loader/src/lib/shared/rdf-loader';
 import {NamedNode} from 'n3';
 import {Observable, catchError, first, forkJoin, map, of, switchMap, tap, throwError} from 'rxjs';
+import {FileEntry, FileInformation} from './editor-toolbar';
 import {ModelRendererService} from './model-renderer.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
 import {LoadingCodeErrors} from './models/loading-errors';
@@ -78,7 +79,7 @@ export class ModelLoaderService {
   }
 
   /**
-   * Loads a model into memory along with it's dependencies and instantiate it but without render
+   * Loads a model into memory along with its dependencies and instantiates it (without rendering by default)
    * @param rdfContent
    * @param absoluteFileName
    */
@@ -99,7 +100,7 @@ export class ModelLoaderService {
       // getting dependencies from the current file and filter data from server
       switchMap((model: string) => {
         payload.rdfAspectModel = model;
-        return this.getNamespaceDependencies(payload.rdfAspectModel, {}, null, payload.namespaceFileName);
+        return this.getNamespaceDependencies(payload.rdfAspectModel, {}, null);
       }),
       // loading in sequence all RdfModels for the current file and dependencies
       switchMap(files => this.loadRdfModelFromFiles(files, payload)),
@@ -179,6 +180,27 @@ export class ModelLoaderService {
     );
   }
 
+  loadRdfModelsInSequence(
+    files: [fileName: string, fileContent: string][],
+    result: Record<string, RdfModel> = {},
+    index = 0,
+  ): Observable<Record<string, RdfModel>> {
+    const [fileName, fileContent] = files[index];
+    return this.parseRdfModel([fileContent]).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      switchMap(rdfModel =>
+        (++index < files.length ? this.loadRdfModelsInSequence(files, result, index) : of(null)).pipe(
+          takeUntilDestroyed(this.destroyRef),
+          map(() => {
+            result[fileName] = rdfModel;
+            return result;
+          }),
+        ),
+      ),
+      catchError(error => throwError(() => ({code: LoadingCodeErrors.SEQUENCE_LOADING, error}))),
+    );
+  }
+
   /**
    * Filters the only dependencies the file is using and the files from the same namespace and version
    *
@@ -234,48 +256,30 @@ export class ModelLoaderService {
    * @param namespaces
    * @returns
    */
-  private getNamespaceDependencies(
-    rdf: string,
-    namespaces: Record<string, string> = {},
-    workspaceStructure: WorkspaceStructure = null,
-    currentFile: string,
-  ) {
+  private getNamespaceDependencies(rdf: string, namespaces: Record<string, string> = {}, workspaceStructure: WorkspaceStructure = null) {
     return (workspaceStructure ? of(workspaceStructure) : this.modelApiService.loadNamespacesStructure()).pipe(
       takeUntilDestroyed(this.destroyRef),
-      switchMap(wStructure =>
+      switchMap(() =>
         this.parseRdfModel([rdf]).pipe(
           switchMap(rdfModel => {
             const mainNamespace = rdfModel.getPrefixes()['']?.replace('urn:samm:', '')?.replace('#', '');
             const excludeSelf = Object.keys(namespaces).some(namespace => namespace.startsWith(mainNamespace));
-            const dependencies = RdfModelUtil.resolveExternalNamespaces(rdfModel, excludeSelf).map(external =>
-              external.replace(/urn:samm:|#/gi, ''),
-            );
-            let dependenciesRequests = {};
+            const dependencies = RdfModelUtil.resolveSpecificExternalNamespaces(rdfModel, excludeSelf);
+
+            const fileEntries: Array<FileEntry> = [];
             for (const dependency of dependencies) {
-              const [namespace] = dependency.split(':');
-              const files = (wStructure[namespace] || []).reduce((acc, file) => {
-                for (const model of file.models) {
-                  const dependencyFile = `${dependency}:${model.model}`;
-                  if (dependencyFile === currentFile) continue;
-                  acc[`${dependency}:${model.model}`] = this.modelApiService.fetchAspectMetaModel(model.aspectModelUrn);
-                }
-                return acc;
-              }, {});
-              dependenciesRequests = {...dependenciesRequests, ...files};
+              fileEntries.push({aspectModelUrn: dependency});
             }
 
-            return Object.keys(dependenciesRequests).length ? forkJoin(dependenciesRequests) : of({});
+            return fileEntries.length > 0 ? this.modelApiService.fetchAllAspectMetaModel(fileEntries) : of([]);
           }),
-          switchMap((dependencies: Record<string, string>) => {
-            const entries = Object.entries(dependencies);
-            if (entries.length === 0) return of({});
+          tap((fileInformations: Array<FileInformation>) => {
+            if (fileInformations.length === 0) return;
 
-            entries.forEach(([key, value]) => (namespaces[key] = value));
-            const furtherDependencies = entries.reduce((acc, [key, value]) => {
-              acc[key] = this.getNamespaceDependencies(value, namespaces, wStructure, currentFile);
-              return acc;
-            }, {});
-            return forkJoin(furtherDependencies);
+            fileInformations.forEach(file => {
+              const split = file.aspectModelUrn.split(/urn:samm:|#/).filter(Boolean);
+              namespaces[`${split[0]}:${file.fileName}`] = file.aspectModel;
+            });
           }),
           map(() => namespaces),
         ),
@@ -286,27 +290,6 @@ export class ModelLoaderService {
   private getAspectUrn(rdfModel: RdfModel): string | undefined {
     if (!rdfModel) return undefined;
     return rdfModel.store.getSubjects(rdfModel.samm.RdfType(), rdfModel.samm.Aspect(), null)?.[0]?.value;
-  }
-
-  private loadRdfModelsInSequence(
-    files: [fileName: string, fileContent: string][],
-    result: Record<string, RdfModel> = {},
-    index = 0,
-  ): Observable<Record<string, RdfModel>> {
-    const [fileName, fileContent] = files[index];
-    return this.parseRdfModel([fileContent]).pipe(
-      takeUntilDestroyed(this.destroyRef),
-      switchMap(rdfModel =>
-        (++index < files.length ? this.loadRdfModelsInSequence(files, result, index) : of(null)).pipe(
-          takeUntilDestroyed(this.destroyRef),
-          map(() => {
-            result[fileName] = rdfModel;
-            return result;
-          }),
-        ),
-      ),
-      catchError(error => throwError(() => ({code: LoadingCodeErrors.SEQUENCE_LOADING, error}))),
-    );
   }
 
   private loadFilesInSequence(files: Record<string, string>) {

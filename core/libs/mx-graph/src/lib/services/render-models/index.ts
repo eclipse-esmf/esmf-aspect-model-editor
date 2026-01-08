@@ -26,3 +26,4 @@ export * from './operation-render.service';
 export * from './property-render.service';
 export * from './trait-render.service';
 export * from './unit-render.service';
+export * from './value-render.service';

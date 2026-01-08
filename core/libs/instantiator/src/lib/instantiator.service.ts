@@ -42,6 +42,7 @@ export class InstantiatorService {
       createEvent,
       createUnit,
       createEntity,
+      createValue,
       createConstraint,
       createCharacteristic,
       resolveEntityInstance,
@@ -81,6 +82,10 @@ export class InstantiatorService {
 
     if (samm.Entity().value === elementType) {
       return createEntity(rdfModel.store.getQuads(subject, null, null, null));
+    }
+
+    if (samm.Value().value === elementType) {
+      return createValue(rdfModel.store.getQuads(subject, null, null, null));
     }
 
     if (samm.isAbstractEntity(subject)) {

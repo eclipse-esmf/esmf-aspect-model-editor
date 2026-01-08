@@ -17,7 +17,7 @@ import {MxGraphAttributeService, MxGraphHelper, MxGraphRenderer, MxGraphService,
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {LoadingScreenService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {inject, Injectable, Injector} from '@angular/core';
+import {inject, Injectable, Injector, runInInjectionContext} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {switchMap} from 'rxjs';
 import {FILTER_ATTRIBUTES} from './active-filter.session';
@@ -55,7 +55,7 @@ export class FiltersService {
   }
 
   selectDefaultFilter() {
-    this.currentFilter = new DefaultFilter(inject(LoadedFilesService));
+    this.currentFilter = new DefaultFilter(runInInjectionContext(this.injector, () => inject(LoadedFilesService)));
     this.filterAttributesService.activeFilter = ModelFilter.DEFAULT;
   }
 
@@ -89,8 +89,8 @@ export class FiltersService {
   }
 
   renderByFilter(filter: ModelFilter) {
-    const mxGraphService = inject(MxGraphService);
-    const editorService = inject(EditorService);
+    const mxGraphService = runInInjectionContext(this.injector, () => inject(MxGraphService));
+    const editorService = runInInjectionContext(this.injector, () => inject(EditorService));
     let selectedCell = mxGraphService.graph.selectionModel.cells?.[0];
     const selectedModelElement = selectedCell && MxGraphHelper.getModelElement(selectedCell);
 
@@ -105,12 +105,12 @@ export class FiltersService {
           MxGraphHelper.filterMode = filter;
           this.filterAttributesService.isFiltering = true;
           this.filtersMethods[filter]?.();
-          const loadedFilesService = inject(LoadedFilesService);
+          const loadedFilesService = runInInjectionContext(this.injector, () => inject(LoadedFilesService));
           const mxGraphRenderer = new MxGraphRenderer(
             mxGraphService,
-            inject(MxGraphShapeOverlayService),
-            inject(SammLanguageSettingsService),
-            inject(LoadedFilesService)?.currentLoadedFile?.rdfModel,
+            runInInjectionContext(this.injector, () => inject(MxGraphShapeOverlayService)),
+            runInInjectionContext(this.injector, () => inject(SammLanguageSettingsService)),
+            runInInjectionContext(this.injector, () => inject(LoadedFilesService))?.currentLoadedFile?.rdfModel,
           );
 
           const cachedFile = loadedFilesService.currentLoadedFile.cachedFile;
