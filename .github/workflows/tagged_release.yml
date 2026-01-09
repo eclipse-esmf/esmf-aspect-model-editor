@@ -74,7 +74,7 @@ jobs:
           git push origin v${{ github.event.inputs.release_version }}
 
       - name: Download aspect model service into project (Mac)
-        if: matrix.os == 'macos-13'
+        if: matrix.os == 'macos-15-intel'
         run: |
           mkdir backend
 
@@ -175,7 +175,7 @@ jobs:
         working-directory: core
 
       - name: Set app version (Unix)
-        if: matrix.os == 'macos-13' || matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'macos-15-intel' || matrix.os == 'ubuntu-latest'
         run: npm version ${{ github.event.inputs.release_version }}
         working-directory: core
 
@@ -185,7 +185,7 @@ jobs:
         working-directory: core
 
       - name: Build electron app (Mac)
-        if: matrix.os == 'macos-13'
+        if: matrix.os == 'macos-15-intel'
         run: npm run build:mac:prod
         working-directory: core
 
@@ -220,7 +220,7 @@ jobs:
           path: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
 
       - name: Upload binary (Mac)
-        if: matrix.os == 'macos-13'
+        if: matrix.os == 'macos-15-intel'
         uses: actions/upload-artifact@v4
         with:
           name: aspect-model-editor-v${{ github.event.inputs.release_version }}-mac
