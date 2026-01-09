@@ -260,6 +260,8 @@ export interface ElementModelDescription {
   TRAIT: string;
   OPERATION: string;
   EVENT: string;
+  ENTITY_INSTANCE: string;
+  VALUE: string;
 }
 export interface SettingsDialog {
   SETTINGS: string;
@@ -575,6 +577,8 @@ export interface NotificationService {
   VALIDATION_ERROR_MESSAGE: string;
   ASPECT_SAVED_SUCCESS: string;
   ASPECT_SAVED_ERROR: string;
+  ASPECT_SAVED_EMPTY_MODEL: string;
+  ASPECT_SAVED_DEFAULT_MODEL: string;
   ASPECT_MISSING_TITLE: string;
   ASPECT_MISSING_CONTENT: string;
   LOAD_MODEL_INFO_TITLE: string;

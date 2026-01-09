@@ -15,23 +15,21 @@
   <mat-label for="name">Name</mat-label>
   <input class="ellipsis" [formControl]="getControl('name')" matInput name="name" data-cy="name" />
   @if (getControl('name')?.errors?.required) {
-    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_DEFINE' | translate }} </mat-error>
+    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_DEFINE' | translate }}</mat-error>
   }
   @if (getControl('name')?.errors?.namingUpperCase) {
-    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_START_WITH_UPPER_CASE' | translate }} </mat-error>
+    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_START_WITH_UPPER_CASE' | translate }}</mat-error>
   }
   @if (getControl('name')?.errors?.namingLowerCase) {
-    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_START_WITH_A_LOWER_CASE' | translate }} </mat-error>
+    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_START_WITH_A_LOWER_CASE' | translate }}</mat-error>
   }
   @if (getControl('name')?.errors?.checkShapeName) {
-    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_SELECT_DIFFERENT_NAME_NAMESPACE' | translate }} </mat-error>
+    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_SELECT_DIFFERENT_NAME_NAMESPACE' | translate }}</mat-error>
   }
   @if (getControl('name')?.errors?.checkShapeNameExtRef) {
-    <mat-error>
-      {{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.ALREADY_DEFINED_IN_SAME_NAMESPACE' | translate }}
-    </mat-error>
+    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.ALREADY_DEFINED_IN_SAME_NAMESPACE' | translate }}</mat-error>
   }
   @if (getControl('name')?.errors?.whitespace) {
-    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.NO_CONTAIN_WHITESPACES' | translate }} </mat-error>
+    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.NO_CONTAIN_WHITESPACES' | translate }}</mat-error>
   }
 </mat-form-field>

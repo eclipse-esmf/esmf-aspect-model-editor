@@ -19,12 +19,14 @@ import {
   DefaultEither,
   DefaultEntity,
   DefaultEntityInstance,
+  DefaultEnumeration,
   DefaultEvent,
   DefaultOperation,
   DefaultProperty,
   DefaultStructuredValue,
   DefaultTrait,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
 } from '@esmf/aspect-model-loader';
 import {ClassReference, ModelFilter} from './filter-loader.interface';
@@ -54,13 +56,14 @@ export class FilterRelation {
 
 export const filterRelations = [
   new FilterRelation(DefaultAspect, [DefaultProperty, DefaultOperation, DefaultEvent]),
-  new FilterRelation(DefaultProperty, [DefaultCharacteristic, DefaultTrait, DefaultProperty], {
+  new FilterRelation(DefaultProperty, [DefaultCharacteristic, DefaultTrait, DefaultProperty, DefaultValue], {
     [ModelFilter.PROPERTIES]: [DefaultProperty],
   }),
   // new FilterRelation(DefaultAbstractProperty, [DefaultAbstractProperty]),
   new FilterRelation(DefaultTrait, [DefaultConstraint, DefaultCharacteristic], {
     [ModelFilter.PROPERTIES]: [DefaultProperty],
   }),
+  new FilterRelation(DefaultEnumeration, [DefaultEntity, DefaultValue]),
   new FilterRelation(DefaultCollection, [DefaultCharacteristic]),
   new FilterRelation(DefaultStructuredValue, [DefaultProperty]),
   new FilterRelation(DefaultEither, [DefaultCharacteristic]),

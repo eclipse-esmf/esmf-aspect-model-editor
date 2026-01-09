@@ -36,7 +36,9 @@ import {
   DefaultState,
   DefaultStructuredValue,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
+  ScalarValue,
 } from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
 import {BaseModelService} from './base-model-service';
@@ -207,13 +209,12 @@ export class CharacteristicModelService extends BaseModelService {
     if (metaModelElement instanceof DefaultQuantifiable) {
       this.handleQuantifiableUnit(metaModelElement, form, originalModelElement as DefaultQuantifiable);
     } else if (metaModelElement instanceof DefaultEnumeration && metaModelElement.dataType instanceof DefaultEntity) {
-      // complex enumeration
-      // TODO get a way to signal is made in editor
-      // metaModelElement.createdFromEditor = true;
       this.updateComplexEnumeration(metaModelElement, form);
     } else if (metaModelElement instanceof DefaultEnumeration) {
-      // simple enumeration
-      metaModelElement.values = form.enumValues.map(value => value.name) || null;
+      form.enumValues
+        .filter((v: ScalarValue | DefaultValue) => v instanceof DefaultValue)
+        .forEach((value: DefaultValue) => this.currentCachedFile.addElement(value.aspectModelUrn, value));
+      metaModelElement.values = form.enumValues || [];
     } else if (metaModelElement instanceof DefaultCollection) {
       metaModelElement.elementCharacteristic = form.elementCharacteristic;
       if (form.elementCharacteristic) {

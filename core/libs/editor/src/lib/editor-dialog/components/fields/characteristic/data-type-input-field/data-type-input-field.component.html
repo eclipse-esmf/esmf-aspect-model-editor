@@ -30,22 +30,20 @@
   <mat-autocomplete class="characteristic-datatype-autocomplete" #auto="matAutocomplete">
     @if (!entitiesDisabled && filteredEntityTypes$ | async; as filteredEntityTypes) {
       <mat-optgroup label="Entities">
-        @if (!isAlreadyDefined(filteredEntityTypes, dataType.value) && !getControl('dataType')?.errors) {
+        @if (filteredEntityTypes.length === 0 && !getControl('dataType')?.errors) {
           <mat-option
             [disabled]="!isUpperCase(dataType.value)"
             [value]="!isUpperCase(dataType.value) ? '' : dataType.value"
             (click)="createNewEntity(dataType.value)"
           >
             @if (isUpperCase(dataType.value)) {
-              <span>
-                + Create new entity: <strong>{{ dataType.value }}</strong>
-              </span>
-            }
-            @if (!isUpperCase(dataType.value)) {
+              <ame-element [type]="{type: 'entity', symbol: 'E'}" [isNewValue]="true" [name]="dataType.value" size="medium"></ame-element>
+            } @else {
               <span class="ellipsis">Please provide the name for the new Entity in upper case.</span>
             }
           </mat-option>
         }
+
         @for (dataType of filteredEntityTypes; track dataType) {
           <mat-option [value]="dataType.name" (onSelectionChange)="onSelectionChange('dataType', dataType.entity, $event)">
             <div class="ellipsis">

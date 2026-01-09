@@ -44,6 +44,7 @@ import {LocateElementComponent} from '../fields';
 import {OperationComponent} from '../operations';
 import {PropertyComponent} from '../properties';
 import {UnitComponent} from '../units';
+import {ValueComponent} from '../value';
 import {SharedSettingsTitleComponent} from './shared-settings-title/shared-settings-title.component';
 
 @Component({
@@ -67,9 +68,10 @@ import {SharedSettingsTitleComponent} from './shared-settings-title/shared-setti
     UnitComponent,
     TraitCharacteristicComponent,
     EntityInstanceComponent,
-    EventComponent,
     TranslatePipe,
     MatButton,
+    ValueComponent,
+    EventComponent,
   ],
 })
 export class ShapeSettingsComponent implements OnInit, OnChanges {

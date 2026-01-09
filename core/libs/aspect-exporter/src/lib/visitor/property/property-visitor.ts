@@ -14,7 +14,7 @@
 import {LoadedFilesService} from '@ame/cache';
 import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
 import {inject, Injectable} from '@angular/core';
-import {DefaultProperty} from '@esmf/aspect-model-loader';
+import {DefaultProperty, DefaultValue} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
@@ -30,6 +30,10 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
     return this.loadedFilesService.currentLoadedFile?.rdfModel?.store;
   }
 
+  private get samm() {
+    return this.loadedFilesService.currentLoadedFile?.rdfModel?.samm;
+  }
+
   visit(property: DefaultProperty): DefaultProperty {
     if (property.getExtends() || property.isPredefined || this.loadedFilesService.isElementExtern(property)) {
       return null;
@@ -39,12 +43,29 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
     this.addExtends(property);
     this.addProperties(property);
     this.addCharacteristic(property);
+    this.addExampleValue(property);
     return property;
+  }
+
+  private addExampleValue(property: DefaultProperty) {
+    if (!property.exampleValue) {
+      return;
+    }
+
+    this.store.addQuad(
+      DataFactory.namedNode(property.aspectModelUrn),
+      this.samm.ExampleValueProperty(),
+      property.exampleValue instanceof DefaultValue
+        ? DataFactory.namedNode(property.exampleValue.aspectModelUrn)
+        : DataFactory.literal(
+            property.exampleValue.value.toString(),
+            DataFactory.namedNode(property.characteristic?.dataType?.aspectModelUrn),
+          ),
+    );
   }
 
   private addProperties(property: DefaultProperty) {
     this.rdfNodeService.update(property, {
-      exampleValue: property.exampleValue,
       preferredName: getPreferredNamesLocales(property).map(language => ({
         language,
         value: property.getPreferredName(language),
@@ -65,7 +86,7 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
     this.setPrefix(property.characteristic.aspectModelUrn);
     this.store.addQuad(
       DataFactory.namedNode(property.aspectModelUrn),
-      this.loadedFilesService.currentLoadedFile.rdfModel.samm.CharacteristicProperty(),
+      this.samm.CharacteristicProperty(),
       DataFactory.namedNode(property.characteristic.aspectModelUrn),
     );
   }
@@ -78,7 +99,7 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
     this.setPrefix(property.getExtends().aspectModelUrn);
     this.store.addQuad(
       DataFactory.namedNode(property.aspectModelUrn),
-      this.loadedFilesService.currentLoadedFile.rdfModel.samm.Extends(),
+      this.samm.Extends(),
       DataFactory.namedNode(property.getExtends().aspectModelUrn),
     );
   }

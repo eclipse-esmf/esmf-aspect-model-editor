@@ -119,7 +119,7 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
           disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement) || this.metaModelElement.isPredefined,
         },
         {
-          validators: [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)],
+          asyncValidators: [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)],
         },
       ),
     );
@@ -178,7 +178,6 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
       return;
     }
 
-    // const newAbstractEntity = new DefaultAbstractEntity(this.metaModelElement.metaModelVersion, urn, entityName, []);
     const newAbstractEntity = new DefaultEntity({
       isAbstract: true,
       name: entityName,

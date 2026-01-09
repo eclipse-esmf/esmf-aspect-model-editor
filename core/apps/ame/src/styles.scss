@@ -181,6 +181,10 @@ mat-icon {
   background-color: colors.$event-color;
 }
 
+.value {
+  background-color: colors.$value-color;
+}
+
 .mxTooltip {
   max-width: 300px !important;
   width: fit-content !important;
@@ -249,6 +253,18 @@ mat-icon {
 
 .toast-top-right {
   top: 60px !important;
+}
+
+.toast-container .ngx-toastr {
+  width: 350px;
+}
+
+.toast-container .ngx-toastr .toast-title {
+  margin-bottom: 8px;
+}
+
+.toast-container .ngx-toastr .toast-message {
+  font-size: 13px;
 }
 
 .mat-select-panel {

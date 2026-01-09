@@ -25,6 +25,7 @@ import {
   DefaultProperty,
   DefaultTrait,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
 } from '@esmf/aspect-model-loader';
 import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
@@ -52,6 +53,7 @@ export enum ModelStyle {
   ENTITY_VALUE = 'entityValue',
   ABSTRACT_ENTITY = 'abstractEntity',
   EVENT = 'event',
+  VALUE = 'value',
 }
 
 export class DefaultFilter implements FilterLoader {
@@ -68,6 +70,7 @@ export class DefaultFilter implements FilterLoader {
     DefaultProperty,
     DefaultTrait,
     DefaultUnit,
+    DefaultValue,
   ];
 
   constructor(public loadedFiles: LoadedFilesService) {}
@@ -157,6 +160,8 @@ export class DefaultFilter implements FilterLoader {
       return ModelStyle.ENTITY_VALUE;
     } else if (element instanceof DefaultEvent) {
       return ModelStyle.EVENT;
+    } else if (element instanceof DefaultValue) {
+      return ModelStyle.VALUE;
     }
     return null;
   }

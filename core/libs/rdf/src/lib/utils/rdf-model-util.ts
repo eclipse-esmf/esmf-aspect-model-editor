@@ -19,7 +19,6 @@ import {
   DefaultConstraint,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultEvent,
   DefaultFixedPointConstraint,
@@ -30,6 +29,7 @@ import {
   DefaultScalar,
   DefaultState,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
   RdfModel,
   Samm,
@@ -57,7 +57,7 @@ export class RdfModelUtil {
       return '';
     }
 
-    if (value instanceof DefaultEntityInstance) {
+    if (value instanceof NamedElement) {
       return value.name;
     }
 
@@ -140,7 +140,8 @@ export class RdfModelUtil {
       modelElement.className === 'DefaultEvent' ||
       modelElement instanceof DefaultOperation ||
       modelElement instanceof DefaultEvent ||
-      modelElement instanceof DefaultAspect
+      modelElement instanceof DefaultAspect ||
+      modelElement instanceof DefaultValue
     ) {
       namespace = samm.getNamespace();
     } else if (modelElement instanceof DefaultProperty) {

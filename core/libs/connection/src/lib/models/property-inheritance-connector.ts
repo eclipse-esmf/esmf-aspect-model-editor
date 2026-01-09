@@ -14,6 +14,7 @@
 import {MxGraphHelper} from '@ame/mx-graph';
 import {DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
+import {ScalarValue} from '../../../../aspect-model-loader/src/lib/aspect-meta-model/scalar-value';
 import {InheritanceConnector} from './inheritance-connector';
 import mxCell = mxgraph.mxCell;
 
@@ -26,7 +27,7 @@ export class PropertyInheritanceConnector extends InheritanceConnector {
       parentMetaModel.name = `[${childMetaModel.name}]`;
       parentMetaModel.preferredNames.clear();
       parentMetaModel.descriptions.clear();
-      parentMetaModel.exampleValue = '';
+      parentMetaModel.exampleValue = new ScalarValue({value: '', type: null});
       parentCell.setId(`[${childMetaModel.name}]`);
     }
 

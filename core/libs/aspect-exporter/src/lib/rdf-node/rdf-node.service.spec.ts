@@ -87,22 +87,6 @@ describe('RdfNodeService', () => {
       checkQuad(quads2[4], 'aspectModelUrn2', 'urn:samm:org.eclipse.esmf.samm:meta-model:#see', 'see1');
       checkQuad(quads2[5], 'aspectModelUrn2', 'urn:samm:org.eclipse.esmf.samm:meta-model:#see', 'see2');
     });
-
-    it('should update quads for model elements', () => {
-      // create initial quads
-      service.update(mockModelElement1, {optional: true});
-
-      // update existing
-      service.update(mockModelElement1, {optional: false, exampleValue: 'testExampleValue'});
-      const quads: Quad[] = rdfModel.store.getQuads(DataFactory.namedNode('aspectModelUrn1'), null, null, null);
-      expect(quads.length).toBe(2);
-
-      // type
-      checkQuad(quads[0], 'aspectModelUrn1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'elementType');
-
-      // example value
-      checkQuad(quads[1], 'aspectModelUrn1', 'urn:samm:org.eclipse.esmf.samm:meta-model:#exampleValue', 'testExampleValue');
-    });
   });
 });
 

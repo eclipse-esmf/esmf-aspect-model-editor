@@ -79,7 +79,7 @@ export class ModelLoaderService {
   }
 
   /**
-   * Loads a model into memory along with it's dependencies and instantiate it but without render
+   * Loads a model into memory along with its dependencies and instantiates it (without rendering by default)
    * @param rdfContent
    * @param absoluteFileName
    */
@@ -180,6 +180,27 @@ export class ModelLoaderService {
     );
   }
 
+  loadRdfModelsInSequence(
+    files: [fileName: string, fileContent: string][],
+    result: Record<string, RdfModel> = {},
+    index = 0,
+  ): Observable<Record<string, RdfModel>> {
+    const [fileName, fileContent] = files[index];
+    return this.parseRdfModel([fileContent]).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      switchMap(rdfModel =>
+        (++index < files.length ? this.loadRdfModelsInSequence(files, result, index) : of(null)).pipe(
+          takeUntilDestroyed(this.destroyRef),
+          map(() => {
+            result[fileName] = rdfModel;
+            return result;
+          }),
+        ),
+      ),
+      catchError(error => throwError(() => ({code: LoadingCodeErrors.SEQUENCE_LOADING, error}))),
+    );
+  }
+
   /**
    * Filters the only dependencies the file is using and the files from the same namespace and version
    *
@@ -269,27 +290,6 @@ export class ModelLoaderService {
   private getAspectUrn(rdfModel: RdfModel): string | undefined {
     if (!rdfModel) return undefined;
     return rdfModel.store.getSubjects(rdfModel.samm.RdfType(), rdfModel.samm.Aspect(), null)?.[0]?.value;
-  }
-
-  private loadRdfModelsInSequence(
-    files: [fileName: string, fileContent: string][],
-    result: Record<string, RdfModel> = {},
-    index = 0,
-  ): Observable<Record<string, RdfModel>> {
-    const [fileName, fileContent] = files[index];
-    return this.parseRdfModel([fileContent]).pipe(
-      takeUntilDestroyed(this.destroyRef),
-      switchMap(rdfModel =>
-        (++index < files.length ? this.loadRdfModelsInSequence(files, result, index) : of(null)).pipe(
-          takeUntilDestroyed(this.destroyRef),
-          map(() => {
-            result[fileName] = rdfModel;
-            return result;
-          }),
-        ),
-      ),
-      catchError(error => throwError(() => ({code: LoadingCodeErrors.SEQUENCE_LOADING, error}))),
-    );
   }
 
   private loadFilesInSequence(files: Record<string, string>) {

@@ -25,6 +25,7 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
 } from '@esmf/aspect-model-loader';
 import {mxgraph} from 'mxgraph-factory';
@@ -40,6 +41,7 @@ import {
   OperationVisitor,
   PropertyVisitor,
   UnitVisitor,
+  ValueVisitor,
 } from './visitor';
 
 @Injectable({providedIn: 'root'})
@@ -50,6 +52,7 @@ export class DomainModelToRdfService {
   private propertyVisitorService = inject(PropertyVisitor);
   private operationVisitorService = inject(OperationVisitor);
   private characteristicVisitorService = inject(CharacteristicVisitor);
+  private valueVisitorService = inject(ValueVisitor);
   private constraintVisitorService = inject(ConstraintVisitor);
   private entityVisitorService = inject(EntityVisitor);
   private entityInstanceVisitor = inject(EntityInstanceVisitor);
@@ -128,6 +131,8 @@ export class DomainModelToRdfService {
       return this.entityVisitorService;
     } else if (metaModelElement instanceof DefaultEntityInstance) {
       return this.entityInstanceVisitor;
+    } else if (metaModelElement instanceof DefaultValue) {
+      return this.valueVisitorService;
     } else if (metaModelElement instanceof DefaultEvent) {
       return this.eventVisitorService;
     } else if (metaModelElement instanceof DefaultUnit) {

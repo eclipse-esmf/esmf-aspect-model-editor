@@ -31,6 +31,16 @@ export class ModelCheckerService {
       const namespaces = this.sidebarStateService.namespacesState.namespaces();
       const unloadedFileEntries = this.filterUnloadedFiles(fileEntries, namespaces);
 
+      if (unloadedFileEntries.length === 0) {
+        const currentLoadedFile = this.loadedFilesService.currentLoadedFile;
+
+        Object.values(namespaces)
+          .flatMap(fileStatusArray => fileStatusArray)
+          .forEach(fileStatus => {
+            fileStatus.loaded = fileStatus.name === currentLoadedFile.name && namespaces[currentLoadedFile.namespace]?.includes(fileStatus);
+          });
+      }
+
       return this.modelApiService.fetchAllAspectMetaModel(unloadedFileEntries).pipe(
         takeUntilDestroyed(this.destroyRef),
         switchMap(fileInformation => this.parseFileModels(fileInformation)),

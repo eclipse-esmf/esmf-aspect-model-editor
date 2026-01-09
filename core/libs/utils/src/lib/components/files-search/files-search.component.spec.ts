@@ -62,7 +62,7 @@ describe('Files search', () => {
         MockProvider(FileHandlingService),
         MockProvider(SaveModelDialogService),
         MockProvider(ModelCheckerService, {
-          detectWorkspaceErrors: jest.fn(() => of({})),
+          detectWorkspaceErrors: jest.fn(() => of([])),
         }),
       ],
     }).compileComponents();

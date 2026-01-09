@@ -146,6 +146,13 @@ export class LoadedFilesService {
     );
   }
 
+  /**
+   * Stores a file into the service
+   *
+   * @param fileInfo - a file payload to be used for storing the file
+   * @param force - forces the method to proceed even if a file under the specified key already exists
+   * @returns - NamespaceFile class instance
+   */
   addFile(fileInfo: LoadedFilePayload, force = false): NamespaceFile {
     const newFile = new NamespaceFile(fileInfo.rdfModel, fileInfo.cachedFile, fileInfo.aspect);
     if (fileInfo.absoluteName) {
@@ -170,6 +177,16 @@ export class LoadedFilesService {
     return newFile;
   }
 
+  /**
+   * Stores files into the service
+   *
+   * @param filesInfo - a list of files payloads to be used for storing files
+   * @returns - a list of NamespaceFile class instances
+   */
+  addFiles(filesInfo: LoadedFilePayload[]) {
+    return filesInfo.map(fileInfo => this.addFile(fileInfo));
+  }
+
   updateFileNaming(file: NamespaceFile, {aspect, name, namespace}: UpdateFilePayload) {
     const oldAbsoluteName = file.absoluteName;
     if (name) file.name = name;
@@ -185,6 +202,8 @@ export class LoadedFilesService {
   }
 
   updateAbsoluteName(oldAbsoluteName: string, newAbsoluteName: string, rewriteOriginal = false) {
+    if (oldAbsoluteName === newAbsoluteName) return;
+
     if (!this.files[oldAbsoluteName]) {
       console.error(`${oldAbsoluteName} is not in the file list`);
       return;

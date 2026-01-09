@@ -13,7 +13,7 @@
 
 <mat-form-field [floatLabel]="getControl('left')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="left">left</mat-label>
-  <input #left [matAutocomplete]="auto" [formControl]="getControl('left')" matInput name="left" data-cy="left" />
+  <input #left [matAutocomplete]="auto" [formControl]="getControl('left')" matInput name="left" data-cy="left" required />
   @if (leftControl?.disabled && !loadedFiles.isElementExtern(metaModelElement)) {
     <button (click)="unlockLeft()" data-cy="clear-left-button" matSuffix mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
@@ -61,5 +61,13 @@
   </mat-autocomplete>
   @if (getControl('left')?.errors?.required) {
     <mat-error>Please define a left characteristic</mat-error>
+  }
+
+  @if (getControl('left')?.errors?.disabled) {
+    <mat-error>Please select a left characteristic</mat-error>
+  }
+
+  @if (getControl('left')?.errors?.checkShapeNameExtRef) {
+    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.ALREADY_DEFINED_IN_SAME_NAMESPACE' | translate }}</mat-error>
   }
 </mat-form-field>

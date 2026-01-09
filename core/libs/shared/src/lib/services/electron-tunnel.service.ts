@@ -33,7 +33,7 @@ import {Injectable, NgZone, inject} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {IpcRenderer} from 'electron';
-import {BehaviorSubject, Observable, catchError, distinctUntilChanged, map, of, switchMap, tap} from 'rxjs';
+import {BehaviorSubject, Observable, catchError, distinctUntilChanged, filter, map, of, switchMap, tap} from 'rxjs';
 import {ElectronEvents} from '../enums';
 import {ElectronSignals, LockUnlockPayload, StartupData, StartupPayload} from '../model';
 import {ElectronSignalsService} from './electron-signals.service';
@@ -345,14 +345,12 @@ export class ElectronTunnelService {
     this.ipcRenderer.on(ElectronEvents.SIGNAL_NEW_EMPTY_MODEL, () => {
       this.ngZone.run(() => {
         this.modelSavingTracker.isSaved$
-          .pipe(switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialogService.openDialog())))
-          .subscribe({
-            next: result => {
-              if (result) {
-                this.fileHandlingService.createEmptyModel();
-              }
-            },
-          });
+          .pipe(
+            switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialogService.openDialog())),
+            filter(result => result),
+            switchMap(() => this.fileHandlingService.loadEmptyModel()),
+          )
+          .subscribe();
       });
     });
 

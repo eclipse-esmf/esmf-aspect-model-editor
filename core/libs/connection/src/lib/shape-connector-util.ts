@@ -29,6 +29,7 @@ import {
   DefaultStructuredValue,
   DefaultTrait,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
 } from '@esmf/aspect-model-loader';
 
@@ -68,6 +69,10 @@ export class ShapeConnectorUtil {
 
   static isPropertyCharacteristicConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
     return parentModel instanceof DefaultProperty && childModel instanceof DefaultCharacteristic;
+  }
+
+  static isPropertyValueConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return parentModel instanceof DefaultProperty && childModel instanceof DefaultValue;
   }
 
   static isTraitConstraintConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
@@ -160,6 +165,12 @@ export class ShapeConnectorUtil {
       parentModel instanceof DefaultEnumeration &&
       childModel instanceof DefaultEntityInstance &&
       parentModel.dataType?.getUrn() === childModel.type?.getUrn()
+    );
+  }
+
+  static isEnumerationValueConnection(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return (
+      parentModel instanceof DefaultEnumeration && childModel instanceof DefaultValue && !(parentModel.dataType instanceof DefaultEntity)
     );
   }
 

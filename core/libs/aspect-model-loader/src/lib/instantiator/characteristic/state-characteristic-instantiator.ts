@@ -41,10 +41,10 @@ export function stateCharacteristicFactory(initProps: BaseInitProps) {
             characteristic.values = getEnumerationValues(propertyQuad, characteristic.dataType);
             characteristic.values.forEach(value => value instanceof DefaultEntityInstance && value.addParent(characteristic));
           }
-        } else if (sammC.isDefaultValueProperty(quad.predicate.value)) {
-          characteristic.defaultValue = Util.isLiteral(quad.object)
-            ? new ScalarValue({value: `${quad.object.value}`, type: characteristic.dataType})
-            : resolveEntityInstance(quad);
+        } else if (sammC.isDefaultValueProperty(propertyQuad.predicate.value)) {
+          characteristic.defaultValue = Util.isLiteral(propertyQuad.object)
+            ? new ScalarValue({value: `${propertyQuad.object.value}`, type: characteristic.dataType})
+            : resolveEntityInstance(propertyQuad);
 
           characteristic.defaultValue instanceof DefaultEntityInstance && characteristic.defaultValue.addParent(characteristic);
         }

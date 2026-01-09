@@ -11,14 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {inject, Injectable} from '@angular/core';
-import {AbstractControl, ValidatorFn} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, ValidationErrors} from '@angular/forms';
 import {CacheStrategy, NamedElement} from '@esmf/aspect-model-loader';
+import {from, map, Observable, of} from 'rxjs';
 import {RFC2141} from 'urn-lib';
 
 @Injectable({providedIn: 'root'})
 export class EditorDialogValidators {
+  private modelApiService = inject(ModelApiService);
   private loadedFileService = inject(LoadedFilesService);
 
   static namingLowerCase(control: AbstractControl) {
@@ -36,8 +39,8 @@ export class EditorDialogValidators {
     return /^(\b[A-Z]+[a-zA-Z0-9]*)$/.test(control?.value) ? null : {namingUpperCase: true}; //NOSONAR
   }
 
-  static disabled(control: AbstractControl) {
-    return control?.disabled ? null : {disabled: true};
+  static disabled(control: AbstractControl): Observable<ValidationErrors | null> {
+    return of(control?.disabled ? null : {disabled: true});
   }
 
   static seeURI(control: AbstractControl) {
@@ -66,68 +69,72 @@ export class EditorDialogValidators {
       : null;
   }
 
-  duplicateName(metaModelElement: NamedElement, haveTheSameName = true): ValidatorFn {
-    return (control: AbstractControl) => {
+  duplicateName(metaModelElement: NamedElement, haveTheSameName = true): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
       if (!control?.value) {
-        return null;
+        return of(null);
       }
 
       if (control.value === metaModelElement.name && haveTheSameName) {
-        return null;
+        return of(null);
       }
 
       const [primaryNamespace] = metaModelElement.aspectModelUrn.split('#');
       const aspectModelUrn = `${primaryNamespace}#${control.value}`;
+      const fileName = this.loadedFileService.currentLoadedFile.name;
 
-      let foundExternalElement: NamedElement;
-      for (const file of Object.values(this.loadedFileService.files)) {
-        if (!file.rendered && this.loadedFileService.currentLoadedFile.absoluteName === file.absoluteName) {
-          continue;
-        }
-
-        const files = this.loadedFileService.filesAsList.filter(file => !file.rendered);
-
-        for (const file of files) {
-          foundExternalElement = file.cachedFile.get(aspectModelUrn);
-
-          if (foundExternalElement) {
-            break;
+      return this.modelApiService.checkElementExists(aspectModelUrn, fileName).pipe(
+        map(elemenmtExists => {
+          if (elemenmtExists) {
+            return {
+              checkShapeNameExtRef: true,
+              foundModel: true,
+            };
           }
-        }
-      }
 
-      if (foundExternalElement) {
-        return {
-          checkShapeNameExtRef: true,
-          foundModel: foundExternalElement,
-        };
-      }
-
-      const modelElementDefinedInCurrentCachedFile = this.loadedFileService.currentLoadedFile.cachedFile.get<NamedElement>(aspectModelUrn);
-
-      return modelElementDefinedInCurrentCachedFile &&
-        (!haveTheSameName || modelElementDefinedInCurrentCachedFile.name !== metaModelElement.name)
-        ? {
-            checkShapeName: true,
-            foundModel: modelElementDefinedInCurrentCachedFile,
-          }
-        : null;
+          // Check cached file
+          return this.validateCachedElement(aspectModelUrn, metaModelElement, haveTheSameName);
+        }),
+      );
     };
   }
 
-  duplicateNameWithDifferentType(metaModelElement: NamedElement, modelType: Function): ValidatorFn {
-    return (control: AbstractControl) => {
-      const duplicateNameValidation = this.duplicateName(metaModelElement, false)(control);
+  private validateCachedElement(aspectModelUrn: string, metaModelElement: NamedElement, haveTheSameName: boolean): ValidationErrors | null {
+    const cachedElement = this.loadedFileService.currentLoadedFile.cachedFile.get<NamedElement>(aspectModelUrn);
 
-      if (
-        duplicateNameValidation &&
-        duplicateNameValidation.foundModel instanceof modelType &&
-        !duplicateNameValidation.checkShapeNameExtRef
-      ) {
-        return null;
-      }
+    if (!cachedElement) {
+      return null;
+    }
 
-      return duplicateNameValidation;
+    const isDuplicateWithDifferentName = !haveTheSameName || cachedElement.name !== metaModelElement.name;
+
+    return isDuplicateWithDifferentName
+      ? {
+          checkShapeName: true,
+          foundModel: cachedElement,
+        }
+      : null;
+  }
+
+  duplicateNameWithDifferentType(metaModelElement: NamedElement, modelType: Function): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const result = this.duplicateName(metaModelElement, false)(control);
+
+      // Convert Promise to Observable if necessary
+      const result$ = result instanceof Promise ? from(result) : result;
+
+      return result$.pipe(
+        map((duplicateNameValidation: ValidationErrors | null) => {
+          if (!duplicateNameValidation) {
+            return null;
+          }
+
+          const isValidDuplicate =
+            duplicateNameValidation['foundModel'] instanceof modelType && !duplicateNameValidation['checkShapeNameExtRef'];
+
+          return isValidDuplicate ? null : duplicateNameValidation;
+        }),
+      );
     };
   }
 

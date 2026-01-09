@@ -18,7 +18,7 @@ import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {inject, Injectable, NgZone} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {from, Observable, of, sample, switchMap, tap} from 'rxjs';
+import {from, Observable, sample, switchMap, tap} from 'rxjs';
 import {filter} from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
@@ -40,15 +40,14 @@ export class StartupService {
       filter(ev => ev instanceof NavigationEnd && ev.url.includes('/editor')),
       switchMap(() => this.electronTunnelService.startUpData$.asObservable()),
       sample(this.mxGraphService.graphInitialized$.pipe(filter(Boolean))),
-      filter(data => {
-        if (data?.model) return true;
-
-        this.fileHandlingService.createEmptyModel();
-        return false;
-      }),
-      switchMap(({model}) => this.loadModel(model)),
-      tap(() => this.sidebarStateService.workspace.refresh()),
-      switchMap(() => from(this.router.navigate([]))),
+      switchMap(data =>
+        data?.model
+          ? this.loadModel(data.model).pipe(
+              tap(() => this.sidebarStateService.workspace.refresh()),
+              switchMap(() => from(this.router.navigate([]))),
+            )
+          : this.fileHandlingService.loadEmptyModel(),
+      ),
     );
   }
 
@@ -74,7 +73,7 @@ export class StartupService {
                 fromWorkspace: options?.fromWorkspace,
                 editElementUrn: options?.editElement,
               })
-            : of(this.fileHandlingService.createEmptyModel()),
+            : this.fileHandlingService.loadEmptyModel(),
         ),
       ),
       tap(() => {

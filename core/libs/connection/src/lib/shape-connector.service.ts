@@ -59,6 +59,8 @@ import {
   StructuredValueCharacteristicPropertyConnectionHandler,
   TraitWithCharacteristicOrConstraintConnectionHandler,
 } from './multi-shape-connection-handlers';
+import {EnumerationValueConnectionHandler} from './multi-shape-connection-handlers/enumeration--value.service';
+import {PropertyValueConnectionHandler} from './multi-shape-connection-handlers/property--value.service';
 import {
   AbstractEntityConnectionHandler,
   AspectConnectionHandler,
@@ -104,6 +106,7 @@ export class ShapeConnectorService {
   private entityAbstractEntityConnectionHandler = inject(EntityAbstractEntityConnectionHandler);
   private abstractEntityPropertyConnectionHandler = inject(AbstractEntityPropertyConnectionHandler);
   private propertyPropertyConnectionHandler = inject(PropertyPropertyConnectionHandler);
+  private propertyValueConnectionHandler = inject(PropertyValueConnectionHandler);
   private propertyStructuredValueConnectionHandler = inject(PropertyStructuredValueConnectionHandler);
   private propertyAbstractPropertyConnectionHandler = inject(PropertyAbstractPropertyConnectionHandler);
   private abstractEntityAbstractPropertyConnectionHandler = inject(AbstractEntityAbstractPropertyConnectionHandler);
@@ -112,6 +115,7 @@ export class ShapeConnectorService {
   private structuredValueConnectionHandler = inject(StructuredValueConnectionHandler);
   private entityValueConnectionHandler = inject(EntityValueConnectionHandler);
   private enumerationEntityValueConnectionHandler = inject(EnumerationEntityValueConnectionHandler);
+  private enumerationValueConnectionHandler = inject(EnumerationValueConnectionHandler);
   private characteristicUnitConnectionHandler = inject(CharacteristicUnitConnectionHandler);
   private structuredValuePropertyConnectionHandler = inject(StructuredValueCharacteristicPropertyConnectionHandler);
   private translate = inject(LanguageTranslationService);
@@ -250,6 +254,9 @@ export class ShapeConnectorService {
       case ShapeConnectorUtil.isPropertyCharacteristicConnection(parentModel, childModel):
         connectionHandler = this.propertyCharacteristicConnectionHandler;
         break;
+      case ShapeConnectorUtil.isPropertyValueConnection(parentModel, childModel):
+        connectionHandler = this.propertyValueConnectionHandler;
+        break;
       case ShapeConnectorUtil.isCharacteristicEntityConnection(parentModel, childModel):
         if ((<DefaultCharacteristic>parentModel).isPredefined) {
           this.notificationsService.warning({title: 'The element can only be connected if the characteristic contains a class'});
@@ -295,6 +302,9 @@ export class ShapeConnectorService {
         break;
       case ShapeConnectorUtil.isEnumerationEntityValueConnection(parentModel, childModel):
         connectionHandler = this.enumerationEntityValueConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isEnumerationValueConnection(parentModel, childModel):
+        connectionHandler = this.enumerationValueConnectionHandler;
         break;
       case ShapeConnectorUtil.isCharacteristicCollectionConnection(parentModel, childModel):
         this.notificationsService.warning({title: 'Characteristics cannot be connected with collection'});

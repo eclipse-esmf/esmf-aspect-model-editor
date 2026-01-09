@@ -109,10 +109,13 @@ export class UnitInputFieldComponent
   initUnitFormControl() {
     const unit = this.getCurrentValue(this.fieldName);
     const unitName = unit instanceof DefaultUnit ? unit.name : unit;
-    this.unitDisplayControl = new FormControl({value: unitName, disabled: !!unit}, [
-      this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultUnit),
-      ...(this.unitRequired ? [Validators.required] : []),
-    ]);
+    this.unitDisplayControl = new FormControl(
+      {value: unitName, disabled: !!unit},
+      {
+        validators: [...(this.unitRequired ? [Validators.required] : [])],
+        asyncValidators: [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultUnit)],
+      },
+    );
 
     this.parentForm.setControl(
       this.fieldName,

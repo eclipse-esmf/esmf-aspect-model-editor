@@ -24,6 +24,7 @@ import {
   Property,
   QuantityKind,
   Unit,
+  ValueElement,
 } from '../aspect-meta-model';
 import {NamedElement} from '../aspect-meta-model/named-element';
 import {ScalarValue} from '../aspect-meta-model/scalar-value';
@@ -91,6 +92,10 @@ export class DefaultAspectModelVisitor<T extends NamedElement, U> implements Mod
   }
 
   visitEvent(unit: Event, context: U): T {
+    return undefined;
+  }
+
+  visitValue(value: ValueElement, context: U): T {
     return undefined;
   }
 

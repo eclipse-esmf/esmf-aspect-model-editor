@@ -21,11 +21,7 @@ const COMMON_SHORTCUTS = [
   {key: 'CommandOrControl+Shift+F', action: win => win.setFullScreen(true)},
   {key: 'CommandOrControl+Shift+G', action: win => win.setFullScreen(false)},
   // Edit operations
-  {key: 'CommandOrControl+X', action: win => win.webContents.cut()},
-  {key: 'CommandOrControl+C', action: win => win.webContents.copy()},
-  {key: 'CommandOrControl+V', action: win => win.webContents.paste()},
   {key: 'CommandOrControl+Z', action: win => win.webContents.undo()},
-  {key: 'CommandOrControl+A', action: win => win.webContents.selectAll()},
   {key: 'CommandOrControl+R', action: win => win.reload()},
 ];
 
