@@ -71,6 +71,7 @@ export class cyHelp {
    * @returns {Cypress.Chainable} Cypress chainable object.
    */
   public static clickSaveButton(): Cypress.Chainable {
+    cy.wait(100);
     return this.forceChangeDetection().then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}));
   }
 
