@@ -123,7 +123,9 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
           value,
           disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled,
         },
-        [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)],
+        {
+          asyncValidators: [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultEntity)],
+        },
       ),
     );
     this.getControl('dataType').markAsTouched();

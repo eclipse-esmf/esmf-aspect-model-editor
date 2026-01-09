@@ -25,7 +25,7 @@
     appearance="fill"
   >
     <mat-label for="exampleValue">exampleValue</mat-label>
-    <input #exampleValueInput [formControl]="displayControl" [matAutocomplete]="auto" matInput name="exampleValue" />
+    <input #exampleValueInput [formControl]="displayControl" [matAutocomplete]="auto" matInput name="exampleValue" data-cy="exampleValue" />
     @if (displayControl.disabled) {
       <button (click)="unlockExampleValue(auto)" data-cy="clear-example-value-button" matSuffix mat-icon-button tabindex="-1">
         <mat-icon>close</mat-icon>

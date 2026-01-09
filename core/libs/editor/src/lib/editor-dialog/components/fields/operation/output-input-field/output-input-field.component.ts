@@ -77,7 +77,9 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
           value,
           disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement),
         },
-        [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
+        {
+          asyncValidators: [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
+        },
       ),
     );
     this.getControl('output').markAsTouched();

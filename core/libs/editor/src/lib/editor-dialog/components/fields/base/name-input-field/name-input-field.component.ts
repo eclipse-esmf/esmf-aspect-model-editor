@@ -72,20 +72,11 @@ export class NameInputFieldComponent extends InputFieldComponent<NamedElement> i
         },
         {
           validators: this.getNameValidators(),
+          asyncValidators: [this.editorDialogValidators.duplicateName(this.metaModelElement)],
         },
       ),
     );
     nameControl = this.parentForm.get('name');
-
-    nameControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      const validation = this.editorDialogValidators.duplicateName(this.metaModelElement)(nameControl);
-      if (validation) {
-        nameControl.setErrors({
-          ...(nameControl.errors || {}),
-          ...(validation || {}),
-        });
-      }
-    });
     nameControl.markAsTouched();
   }
 

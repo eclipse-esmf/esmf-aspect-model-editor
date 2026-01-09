@@ -54,6 +54,18 @@ export class ModelApiService {
       );
   }
 
+  checkElementExists(aspectModelUrn: string, fileName: string): Observable<boolean> {
+    return this.http
+      .get<boolean>(`${this.serviceUrl}${this.api.models}/check-element`, {
+        params: {fileName},
+        headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withAspectModelUrn(aspectModelUrn).build(),
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => throwError(() => res)),
+      );
+  }
+
   fetchAllAspectMetaModel(fileEntries: Array<FileEntry>): Observable<Array<FileInformation>> {
     return this.http.post<Array<FileInformation>>(`${this.serviceUrl}${this.api.models}/batch`, fileEntries).pipe(
       timeout(this.requestTimeout),
