@@ -16,9 +16,16 @@ import {ModelService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {inject, Injectable} from '@angular/core';
 import {DefaultEncodingConstraint, NamedElement, RdfModel, Type} from '@esmf/aspect-model-loader';
-import {BlankNode, DataFactory, Quad} from 'n3';
+import {BlankNode, DataFactory, Quad, Quad_Graph, Quad_Object, Quad_Predicate, Quad_Subject} from 'n3';
 import {PropertyEnum} from './enums/property.enum';
 import {BasePropertiesInterface, LocaleInterface} from './interfaces';
+
+interface QuadComponents {
+  subject?: Quad_Subject;
+  predicate?: Quad_Predicate;
+  object?: Quad_Object;
+  graph?: Quad_Graph;
+}
 
 @Injectable({providedIn: 'root'})
 export class RdfNodeService {
@@ -186,6 +193,30 @@ export class RdfNodeService {
           break;
       }
     }
+  }
+
+  updateQuads(query: QuadComponents, replacement: QuadComponents, rdfModel: RdfModel): number {
+    const quads: Quad[] = this.getQuads(query, rdfModel);
+
+    return quads.reduce((counter, quad) => {
+      this.modifyQuad(replacement, quad, rdfModel);
+      return ++counter;
+    }, 0);
+  }
+
+  private getQuads(query: QuadComponents, rdfModel: RdfModel): Quad[] {
+    return rdfModel.store.getQuads(query.subject || null, query.predicate || null, query.object || null, query.graph || null);
+  }
+
+  private modifyQuad(replacement: QuadComponents, quad: Quad, rdfModel: RdfModel): void {
+    const updatedQuad: [Quad_Subject, Quad_Predicate, Quad_Object, Quad_Graph] = [
+      replacement.subject || quad.subject,
+      replacement.predicate || quad.predicate,
+      replacement.object || quad.object,
+      replacement.graph || quad.graph,
+    ];
+    rdfModel.store.addQuad(...updatedQuad);
+    rdfModel.store.removeQuad(quad);
   }
 
   private updateLocalizedValue(metaModelElement: NamedElement, properties: BasePropertiesInterface, key: string) {

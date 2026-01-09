@@ -12,6 +12,7 @@
  */
 
 import {ModelApiService, ModelData} from '@ame/api';
+import {RdfNodeService} from '@ame/aspect-exporter';
 import {LoadedFilePayload, LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {
   ConfirmDialogService,
@@ -45,8 +46,8 @@ import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {saveAs} from 'file-saver';
-import {BlankNode, NamedNode, Quad, Quad_Graph, Quad_Object, Quad_Predicate, Quad_Subject, Store} from 'n3';
-import {Observable, forkJoin, of, throwError} from 'rxjs';
+import {BlankNode, NamedNode, Store} from 'n3';
+import {Observable, forkJoin, from, of, throwError} from 'rxjs';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
 import {ConfirmDialogEnum} from '../../models/confirm-dialog.enum';
@@ -78,13 +79,6 @@ interface ModelLoaderState {
   isNamespaceChanged: boolean;
 }
 
-interface QuadComponents {
-  subject?: Quad_Subject;
-  predicate?: Quad_Predicate;
-  object?: Quad_Object;
-  graph?: Quad_Graph;
-}
-
 @Injectable({providedIn: 'root'})
 export class FileHandlingService {
   private destroyRef = inject(DestroyRef);
@@ -107,6 +101,7 @@ export class FileHandlingService {
   private loadedFilesService = inject(LoadedFilesService);
   private modelSaverService = inject(ModelSaverService);
   private titleService = inject(TitleService);
+  private rdfNodeService = inject(RdfNodeService);
 
   get currentLoadedFile() {
     return this.loadedFilesService.currentLoadedFile;
@@ -624,30 +619,6 @@ export class FileHandlingService {
     );
   }
 
-  // TODO Move the next three methods t a more related service
-  updateQuads(query: QuadComponents, replacement: QuadComponents, rdfModel: RdfModel): number {
-    const quads: Quad[] = this.getQuads(query, rdfModel);
-    return quads.reduce((counter, quad) => {
-      this.modifyQuad(replacement, quad, rdfModel);
-      return ++counter;
-    }, 0);
-  }
-
-  getQuads(query: QuadComponents, rdfModel: RdfModel): Quad[] {
-    return rdfModel.store.getQuads(query.subject || null, query.predicate || null, query.object || null, query.graph || null);
-  }
-
-  modifyQuad(replacement: QuadComponents, quad: Quad, rdfModel: RdfModel): void {
-    const updatedQuad: [Quad_Subject, Quad_Predicate, Quad_Object, Quad_Graph] = [
-      replacement.subject || quad.subject,
-      replacement.predicate || quad.predicate,
-      replacement.object || quad.object,
-      replacement.graph || quad.graph,
-    ];
-    rdfModel.store.addQuad(...updatedQuad);
-    rdfModel.store.removeQuad(quad);
-  }
-
   private migrateAffectedModels(originalModelName: string, newModelName: string): Observable<RdfModel[]> {
     const originalNamespace = RdfModelUtil.getUrnFromFileName(originalModelName);
     const newNamespace = RdfModelUtil.getUrnFromFileName(newModelName);
@@ -670,8 +641,8 @@ export class FileHandlingService {
       const originalSubject = new NamedNode(`${originalNamespace}#${subjectName}`);
 
       models.forEach(model => {
-        const updatedPredicateQuadsCount = this.updateQuads({predicate: originalSubject}, {predicate: subject}, model);
-        const updatedObjectQuadsCount = this.updateQuads({object: originalSubject}, {object: subject}, model);
+        const updatedPredicateQuadsCount = this.rdfNodeService.updateQuads({predicate: originalSubject}, {predicate: subject}, model);
+        const updatedObjectQuadsCount = this.rdfNodeService.updateQuads({object: originalSubject}, {object: subject}, model);
         if (updatedPredicateQuadsCount || updatedObjectQuadsCount) affectedModels.push(model);
       });
     });
@@ -724,7 +695,7 @@ export class FileHandlingService {
    * @param namespaceVersion - a version of the target namespace
    * @returns - a list of loaded files
    */
-  private loadWorkspaceModelsByNamespace(namespaceName: string, namespaceVersion: string) {
+  loadWorkspaceModelsByNamespace(namespaceName: string, namespaceVersion: string) {
     return this.getAllWorkspaceModelsByNamespace(namespaceName, namespaceVersion).pipe(
       switchMap(modelsData => this.loadNamespaceModels(`${namespaceName}:${namespaceVersion}`, modelsData)),
     );
@@ -792,5 +763,11 @@ export class FileHandlingService {
         fromWorkspace: true,
       } as LoadedFilePayload;
     });
+  }
+
+  isFileExistOnWorkspace(namespaceName: string, namespaceVersion: string, fileName: string): Observable<boolean> {
+    return this.getAllWorkspaceModelsByNamespace(namespaceName, namespaceVersion).pipe(
+      map((models: ModelData[]) => models.some((model: ModelData) => model.model === fileName)),
+    );
   }
 }
