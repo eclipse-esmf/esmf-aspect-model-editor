@@ -13,7 +13,7 @@
 
 <mat-form-field [floatLabel]="getControl('right')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
   <mat-label for="right">right</mat-label>
-  <input #right [matAutocomplete]="auto" [formControl]="getControl('right')" matInput name="right" data-cy="right" />
+  <input #right [matAutocomplete]="auto" [formControl]="getControl('right')" matInput name="right" data-cy="right" required />
   @if (rightControl?.disabled && !loadedFiles.isElementExtern(metaModelElement)) {
     <button (click)="unlockRight()" data-cy="clear-right-button" matSuffix mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
@@ -61,5 +61,13 @@
   </mat-autocomplete>
   @if (getControl('right')?.errors?.required) {
     <mat-error>Please define a right characteristic</mat-error>
+  }
+
+  @if (getControl('right')?.errors?.disabled) {
+    <mat-error>Please select a right characteristic</mat-error>
+  }
+
+  @if (getControl('right')?.errors?.checkShapeNameExtRef) {
+    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.ALREADY_DEFINED_IN_SAME_NAMESPACE' | translate }}</mat-error>
   }
 </mat-form-field>

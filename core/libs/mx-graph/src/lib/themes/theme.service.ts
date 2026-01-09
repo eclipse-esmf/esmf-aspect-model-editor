@@ -13,6 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {mxgraph} from 'mxgraph-factory';
+import {ThemeColors} from '../models';
 import {mxConstants} from '../providers';
 import {lightColors} from './light-theme';
 
@@ -21,7 +22,7 @@ export class ThemeService {
   private root: HTMLElement = document.documentElement;
   private graph: mxgraph.mxGraph;
 
-  public currentColors: any = lightColors;
+  public currentColors: ThemeColors = lightColors;
 
   get getDefaultShapesColors() {
     return {
@@ -47,6 +48,7 @@ export class ThemeService {
       entityValue: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.entityValue},
       filteredProperties_entity: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.entity},
       filteredProperties_either: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.characteristic},
+      value: {[mxConstants.STYLE_FILLCOLOR]: this.currentColors.value},
     };
   }
 
@@ -77,7 +79,7 @@ export class ThemeService {
   }
 
   setCssVars(theme: string) {
-    // TODO add new themes here
+    // New Themes can be added here.
     this.currentColors = theme === 'light' ? lightColors : null;
     Object.entries(this.currentColors).forEach(([key, color]: any) => this.root.style.setProperty(`--ame-${key}`, color));
   }

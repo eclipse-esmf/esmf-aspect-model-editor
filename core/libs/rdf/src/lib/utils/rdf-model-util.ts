@@ -19,7 +19,6 @@ import {
   DefaultConstraint,
   DefaultEither,
   DefaultEntity,
-  DefaultEntityInstance,
   DefaultEnumeration,
   DefaultEvent,
   DefaultFixedPointConstraint,
@@ -30,6 +29,7 @@ import {
   DefaultScalar,
   DefaultState,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
   RdfModel,
   Samm,
@@ -38,7 +38,7 @@ import {
   Type,
   Value,
 } from '@esmf/aspect-model-loader';
-import {DataFactory, NamedNode} from 'n3';
+import {DataFactory, NamedNode, Quad} from 'n3';
 import {getSammNamespaces} from './rdf-samm-namespaces';
 
 declare const sammUDefinition: any;
@@ -57,7 +57,7 @@ export class RdfModelUtil {
       return '';
     }
 
-    if (value instanceof DefaultEntityInstance) {
+    if (value instanceof NamedElement) {
       return value.name;
     }
 
@@ -140,7 +140,8 @@ export class RdfModelUtil {
       modelElement.className === 'DefaultEvent' ||
       modelElement instanceof DefaultOperation ||
       modelElement instanceof DefaultEvent ||
-      modelElement instanceof DefaultAspect
+      modelElement instanceof DefaultAspect ||
+      modelElement instanceof DefaultValue
     ) {
       namespace = samm.getNamespace();
     } else if (modelElement instanceof DefaultProperty) {
@@ -248,6 +249,30 @@ export class RdfModelUtil {
     return prefixes.filter(prefix => checkItself(prefix));
   }
 
+  static resolveSpecificExternalNamespaces(rdfModel: RdfModel, selfExclude = true) {
+    const sammNamespaces = getSammNamespaces();
+
+    // Extracting all namespaces since the prefixes are not all returned by the rdfModel.getPrefixes()
+    const values: string[] = Object.values<string>(rdfModel.store['_entities']).reduce((acc: string[], item: string) => {
+      // skipping the blank nodes and other non-like urns
+      if (!item.startsWith('urn:samm:') || !item.includes('#')) {
+        return acc;
+      }
+
+      const namedNode = new NamedNode(item);
+      if (rdfModel.store.has(new Quad(namedNode, null, null, null))) {
+        return acc;
+      }
+
+      return [...acc, item];
+    }, []);
+
+    const prefixes = Array.from(new Set(values)).filter(item => !sammNamespaces.some(n => item.includes(n)));
+
+    const checkItself = (prefix: string) => (selfExclude ? prefix != rdfModel.getPrefixes()[''] : true);
+    return prefixes.filter(prefix => checkItself(prefix));
+  }
+
   static getUrnFromFileName(fileName: string): string {
     return `urn:samm:${this.getNamespaceFromRdf(fileName)}`;
   }
@@ -274,6 +299,12 @@ export class RdfModelUtil {
     return chunks as [string, string, string];
   }
 
+  static splitAspectModelUrnIntoChunks(aspectModelUrn: string): [string, string, string, string, string] {
+    const chunks: string[] = aspectModelUrn.split(/[:#]/);
+    if (chunks.length !== 5)
+      throw new Error(`Unable to extract namespace from "${aspectModelUrn}": expected format "urn:samm:namespace:version:element"`);
+    return chunks as [string, string, string, string, string];
+  }
   static buildAbsoluteFileName(namespace: string, namespaceVersion: string, fileName: string): string {
     return `${namespace}:${namespaceVersion}:${fileName}`;
   }

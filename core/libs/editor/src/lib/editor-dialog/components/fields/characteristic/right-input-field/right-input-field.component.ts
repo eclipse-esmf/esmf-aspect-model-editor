@@ -17,13 +17,14 @@ import {NotificationsService} from '@ame/shared';
 import {AsyncPipe} from '@angular/common';
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
 import {MatIconButton} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {Characteristic, DefaultCharacteristic, DefaultEither} from '@esmf/aspect-model-loader';
+import {TranslatePipe} from '@ngx-translate/core';
 import {map, Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -44,6 +45,7 @@ import {InputFieldComponent} from '../../input-field.component';
     AsyncPipe,
     MatOption,
     MatError,
+    TranslatePipe,
   ],
 })
 export class RightInputFieldComponent extends InputFieldComponent<DefaultEither> implements OnInit, OnDestroy {
@@ -89,8 +91,7 @@ export class RightInputFieldComponent extends InputFieldComponent<DefaultEither>
           disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement),
         },
         {
-          validators: [
-            Validators.required,
+          asyncValidators: [
             EditorDialogValidators.disabled,
             this.validators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic),
           ],

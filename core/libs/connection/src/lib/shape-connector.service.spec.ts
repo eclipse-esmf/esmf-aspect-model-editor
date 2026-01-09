@@ -66,6 +66,8 @@ import {
 import {describe, expect} from '@jest/globals';
 import {TranslateModule, TranslatePipe} from '@ngx-translate/core';
 import {provideMockObject} from 'jest-helpers/utils';
+import {EnumerationValueConnectionHandler} from './multi-shape-connection-handlers/enumeration--value.service';
+import {PropertyValueConnectionHandler} from './multi-shape-connection-handlers/property--value.service';
 
 jest.mock('@ame/loader-filters', () => ({
   ModelFilter: {
@@ -255,6 +257,14 @@ describe('Test Shape connector service', () => {
         {
           provide: AbstractPropertyAbstractPropertyConnectionHandler,
           useValue: provideMockObject(AbstractPropertyAbstractPropertyConnectionHandler),
+        },
+        {
+          provide: PropertyValueConnectionHandler,
+          useValue: provideMockObject(PropertyValueConnectionHandler),
+        },
+        {
+          provide: EnumerationValueConnectionHandler,
+          useValue: provideMockObject(EnumerationValueConnectionHandler),
         },
       ],
     });

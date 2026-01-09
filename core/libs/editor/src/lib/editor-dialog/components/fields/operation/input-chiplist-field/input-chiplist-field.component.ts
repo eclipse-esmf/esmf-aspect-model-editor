@@ -98,7 +98,9 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
         value: '',
         disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
       },
-      [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
+      {
+        asyncValidators: [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
+      },
     );
 
     this.parentForm.setControl(

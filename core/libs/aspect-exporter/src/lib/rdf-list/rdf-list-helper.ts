@@ -16,7 +16,7 @@ import {ScalarValue} from 'libs/aspect-model-loader/src/lib/aspect-meta-model/sc
 import {DataFactory, NamedNode} from 'n3';
 import {ListElement, ListElementType, ListProperties, PropertyListElement, ResolvedListElements, SourceElementType} from '.';
 
-// TODO refactor this function so it's more clear what happens here
+// TODO should be refactored to make it more easier to read and more understandable
 export class RdfListHelper {
   static resolveNewElements(source: SourceElementType & {dataType?: Type}, elements: ListElementType[]): ResolvedListElements {
     const overWrittenListElements: PropertyListElement[] = [];

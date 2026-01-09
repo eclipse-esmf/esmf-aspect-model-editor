@@ -33,6 +33,7 @@ import {
   DefaultStructuredValue,
   DefaultTimeSeries,
   DefaultTrait,
+  NamedElement,
   Samm,
   SammC,
 } from '@esmf/aspect-model-loader';
@@ -153,11 +154,11 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     this.updateEnumeration(characteristic);
 
     let object = null;
-    if (characteristic.defaultValue instanceof DefaultEntity) {
+    if (characteristic.defaultValue instanceof NamedElement) {
       object = DataFactory.namedNode(characteristic.defaultValue.aspectModelUrn);
     } else {
       object = DataFactory.literal(
-        characteristic.defaultValue.toString(),
+        characteristic.defaultValue.value as string,
         characteristic.dataType ? DataFactory.namedNode(characteristic.dataType?.getUrn()) : undefined,
       );
     }

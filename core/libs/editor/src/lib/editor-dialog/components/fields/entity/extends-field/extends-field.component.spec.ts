@@ -15,6 +15,8 @@ import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {MxGraphService} from '@ame/mx-graph';
 import {RdfService} from '@ame/rdf/services';
 import {NotificationsService, SearchService} from '@ame/shared';
+import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -22,9 +24,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultEntity, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
+import {TranslateService} from '@ngx-translate/core';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {of} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {EditorModelService} from '../../../../editor-model.service';
 import {EntityExtendsFieldComponent} from './extends-field.component';
 
@@ -57,6 +60,15 @@ describe('EntityExtendsFieldComponent', () => {
     TestBed.configureTestingModule({
       imports: [MatFormFieldModule, MatAutocompleteModule, ReactiveFormsModule, MatInputModule, BrowserAnimationsModule],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        MockProvider(TranslateService, {
+          onTranslationChange: new Subject(),
+          onLangChange: new Subject(),
+          onDefaultLangChange: new Subject(),
+          onFallbackLangChange: new Subject(),
+          get: jest.fn(() => of('')),
+        }),
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),
         }),

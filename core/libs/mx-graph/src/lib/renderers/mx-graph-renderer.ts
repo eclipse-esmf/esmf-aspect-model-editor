@@ -26,6 +26,7 @@ import {
   DefaultProperty,
   DefaultQuantityKind,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
   RdfModel,
 } from '@esmf/aspect-model-loader';
@@ -193,6 +194,20 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
     return cell;
   }
 
+  renderValue(node: ModelTree<DefaultValue>, parent: mxCell, geometry: ShapeConfiguration['geometry'] = {}): mxCell {
+    const value = node.element;
+    const cell = this.getOrCreateMxCell(node, {
+      shapeAttributes: MxGraphVisitorHelper.getValueProperties(value, this.sammLangService),
+      geometry,
+    });
+    this.connectIsolatedElement(parent, cell);
+
+    if (value.parents.length > 0) {
+      this.assignToParent(cell, parent, node);
+    }
+    return cell;
+  }
+
   renderAbstractEntity(node: ModelTree<DefaultEntity>, parent: mxCell, geometry: ShapeConfiguration['geometry'] = {}) {
     const abstractEntity = node.element;
     if (this.shapes.get(abstractEntity.aspectModelUrn)) {
@@ -269,6 +284,8 @@ export class MxGraphRenderer implements ModelRenderer<mxCell, mxCell> {
         return this.renderConstraint(node, parent, geometry);
       case node.element instanceof DefaultEvent:
         return this.renderEvent(node, parent, geometry);
+      case node.element instanceof DefaultValue:
+        return this.renderValue(node, parent, geometry);
       default:
         return null;
     }

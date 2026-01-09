@@ -1,12 +1,13 @@
-import {ModelApiService, ModelData, WorkspaceStructure} from '@ame/api';
+import {ModelApiService, WorkspaceStructure} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {config} from '@ame/shared';
 import {ExporterHelper, FileStatus, SidebarStateService} from '@ame/sidebar';
 import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {Samm} from '@esmf/aspect-model-loader';
+import {RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {Observable, Subject, forkJoin, map, of, switchMap} from 'rxjs';
+import {FileEntry, FileInformation} from './editor-toolbar';
 import {ModelLoaderService} from './model-loader.service';
 
 @Injectable({providedIn: 'root'})
@@ -21,54 +22,29 @@ export class ModelCheckerService {
    * Gets all files from workspace and process if they have any error or missing dependencies
    *
    * @param signal used to get the current file in process
-   * @returns {Observable<Record<string, FileStatus>>}
+   * @returns Observable<FileStatus[]>}
    */
-  detectWorkspaceErrors(signal?: Subject<string>): Observable<Record<string, FileStatus>> {
+  detectWorkspaceErrors(signal?: Subject<string>): Observable<FileStatus[]> {
     let namespacesStructure: WorkspaceStructure;
-    const extractDependencies = (absoluteName: string, modelData: ModelData, modelVersion: string) => {
+
+    const extractDependencies = (fileEntries: Array<FileEntry>) => {
       const namespaces = this.sidebarStateService.namespacesState.namespaces();
-      const chunks = RdfModelUtil.splitRdfIntoChunks(absoluteName);
-      const namespace = namespaces[`${chunks[0]}:${chunks[1]}`];
-      if (namespace?.find(n => n.name === chunks[2])?.isLoadedInWorkspace) {
-        return null;
+      const unloadedFileEntries = this.filterUnloadedFiles(fileEntries, namespaces);
+
+      if (unloadedFileEntries.length === 0) {
+        const currentLoadedFile = this.loadedFilesService.currentLoadedFile;
+
+        Object.values(namespaces)
+          .flatMap(fileStatusArray => fileStatusArray)
+          .forEach(fileStatus => {
+            fileStatus.loaded = fileStatus.name === currentLoadedFile.name && namespaces[currentLoadedFile.namespace]?.includes(fileStatus);
+          });
       }
 
-      return this.modelApiService.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(
+      return this.modelApiService.fetchAllAspectMetaModel(unloadedFileEntries).pipe(
         takeUntilDestroyed(this.destroyRef),
-        switchMap(rdf => this.modelLoader.parseRdfModel([rdf])),
-        map(rdfModel => {
-          const dependencies = RdfModelUtil.resolveExternalNamespaces(rdfModel)
-            .map(external => external.replace(/urn:samm:|#/gi, ''))
-            .filter(dependency => !`urn:samm:${dependency}`.includes(Samm.BASE_URI));
-
-          const missingDependencies: string[] = [];
-
-          for (const dependency of dependencies) {
-            const [namespace, version] = dependency.split(':');
-            const namespaceElements = namespacesStructure[namespace];
-
-            const versionExists = namespaceElements?.some(element => element.version === version);
-
-            if (!versionExists) {
-              missingDependencies.push(dependency);
-            }
-          }
-
-          const status = new FileStatus(modelData.model);
-          const currentFile = this.loadedFilesService.currentLoadedFile;
-
-          status.dependencies = dependencies;
-          status.missingDependencies = missingDependencies;
-          status.sammVersion = modelVersion || 'unknown';
-          status.outdated = ExporterHelper.isVersionOutdated(modelVersion, config.currentSammVersion);
-          status.loaded = currentFile?.absoluteName === absoluteName;
-          status.errored = status.sammVersion === 'unknown' || Boolean(status.missingDependencies.length);
-          status.aspectModelUrn = modelData.aspectModelUrn;
-
-          signal?.next(absoluteName);
-
-          return status;
-        }),
+        switchMap(fileInformation => this.parseFileModels(fileInformation)),
+        map(results => results.map(result => this.createFileStatus(result, namespacesStructure, signal))),
       );
     };
 
@@ -76,23 +52,78 @@ export class ModelCheckerService {
       takeUntilDestroyed(this.destroyRef),
       switchMap(structure => {
         namespacesStructure = structure;
-        const requests = {};
-        for (const namespace in structure) {
-          for (const {version, models} of structure[namespace]) {
-            for (const model of models) {
-              const absoluteName = `${namespace}:${version}:${model.model}`;
-              requests[absoluteName] = extractDependencies(absoluteName, model, model.version);
-            }
-          }
-        }
-
-        const entries = Object.fromEntries(
-          Object.entries(requests).filter((entry): entry is [string, Observable<FileStatus>] => entry[1] !== null),
+        const fileEntries: Array<FileEntry> = Object.entries(structure).flatMap(([namespace, versions]) =>
+          versions.flatMap(({version, models}) =>
+            models.map(model => ({
+              absoluteName: `${namespace}:${version}:${model.model}`,
+              fileName: model.model,
+              aspectModelUrn: model.aspectModelUrn,
+              modelVersion: model.version,
+            })),
+          ),
         );
-
-        return Object.keys(entries).length ? forkJoin(entries) : of({} as Record<string, FileStatus>);
+        return extractDependencies(fileEntries);
       }),
     );
+  }
+
+  private filterUnloadedFiles(fileEntries: Array<FileEntry>, namespaces: {[key: string]: FileStatus[]}) {
+    return fileEntries.filter(file => {
+      const [namespace, version, name] = RdfModelUtil.splitRdfIntoChunks(file.absoluteName);
+      const isLoadedInWorkspace = namespaces[`${namespace}:${version}`]?.find(n => n.name === name)?.isLoadedInWorkspace;
+      return !isLoadedInWorkspace;
+    });
+  }
+
+  private parseFileModels(fileInformation: FileInformation[]) {
+    const parseObservables = fileInformation.map(f =>
+      this.modelLoader.parseRdfModel([f.aspectModel]).pipe(
+        map(rdfModel => ({
+          rdfModel,
+          absoluteName: f.absoluteName,
+          aspectModelUrn: f.aspectModelUrn,
+          modelVersion: f.modelVersion,
+          fileName: f.fileName,
+        })),
+      ),
+    );
+
+    return parseObservables.length > 0 ? forkJoin(parseObservables) : of([]);
+  }
+
+  private createFileStatus(result: any, namespacesStructure: WorkspaceStructure, signal?: Subject<string>) {
+    const {rdfModel, absoluteName, aspectModelUrn, modelVersion, fileName} = result;
+
+    const dependencies = this.extractDependencies(rdfModel);
+    const missingDependencies = this.findMissingDependencies(dependencies, namespacesStructure);
+
+    const status = new FileStatus(fileName);
+    const currentFile = this.loadedFilesService.currentLoadedFile;
+
+    status.dependencies = dependencies;
+    status.missingDependencies = missingDependencies;
+    status.sammVersion = modelVersion || 'unknown';
+    status.outdated = ExporterHelper.isVersionOutdated(modelVersion, config.currentSammVersion);
+    status.loaded = currentFile?.absoluteName === absoluteName;
+    status.errored = status.sammVersion === 'unknown' || missingDependencies.length > 0;
+    status.aspectModelUrn = aspectModelUrn;
+
+    signal?.next(absoluteName);
+
+    return status;
+  }
+
+  private extractDependencies(rdfModel: RdfModel): string[] {
+    return RdfModelUtil.resolveExternalNamespaces(rdfModel)
+      .map(external => external.replace(/urn:samm:|#/gi, ''))
+      .filter(dependency => !`urn:samm:${dependency}`.includes(Samm.BASE_URI));
+  }
+
+  private findMissingDependencies(dependencies: string[], namespacesStructure: WorkspaceStructure): string[] {
+    return dependencies.filter(dependency => {
+      const [namespace, version] = dependency.split(':');
+      return !namespacesStructure[namespace]?.some(element => element.version === version);
+    });
   }
 
   /**

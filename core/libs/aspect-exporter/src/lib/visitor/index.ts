@@ -23,3 +23,4 @@ export * from './event';
 export * from './operation';
 export * from './property';
 export * from './unit';
+export * from './value';

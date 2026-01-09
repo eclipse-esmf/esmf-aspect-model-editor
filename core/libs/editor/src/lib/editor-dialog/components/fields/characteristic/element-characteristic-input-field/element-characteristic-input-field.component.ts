@@ -96,7 +96,9 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
           value,
           disabled: !!value || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled,
         },
-        [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic)],
+        {
+          asyncValidators: [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultCharacteristic)],
+        },
       ),
     );
     this.getControl('elementCharacteristicDisplay').markAsTouched();

@@ -39,6 +39,8 @@ If you want to run the aspect model editor from repositories, please ensure to c
 - Download & Install [Node.js](https://nodejs.org/en/download/)
 - To generate Aspect Model documentation, the installation [GraphViz](https://graphviz.org/download) is required.
 
+#### First steps into the code: [Code Overview](CODE-OVERVIEW.md)
+
 #### Install & Run
 
 ```bash
@@ -50,6 +52,8 @@ npm run start
 ```
 
 #### Run As Electron
+
+After running `npm start` run one of the following commands:
 
 Windows:
 

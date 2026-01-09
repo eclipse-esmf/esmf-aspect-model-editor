@@ -22,6 +22,7 @@ import {
   DefaultProperty,
   DefaultTrait,
   DefaultUnit,
+  DefaultValue,
 } from '@esmf/aspect-model-loader';
 
 export type ElementType =
@@ -36,7 +37,8 @@ export type ElementType =
   | 'unit'
   | 'trait'
   | 'constraint'
-  | 'entityInstance';
+  | 'entityInstance'
+  | 'value';
 
 export type ElementNames =
   | 'Aspect'
@@ -50,9 +52,10 @@ export type ElementNames =
   | 'Constraint'
   | 'Trait'
   | 'Unit'
-  | 'Entity Instance';
+  | 'Entity Instance'
+  | 'Value';
 
-export type ElementSymbols = 'A' | 'Ev' | 'O' | 'P' | 'AP' | 'C' | 'Co' | 'E' | 'AE' | 'T' | 'U' | 'e';
+export type ElementSymbols = 'A' | 'Ev' | 'O' | 'P' | 'AP' | 'C' | 'Co' | 'E' | 'AE' | 'T' | 'U' | 'e' | 'V';
 
 export type ElementInfo = {
   [K in ElementType]: {
@@ -60,6 +63,7 @@ export type ElementInfo = {
     plural: string;
     symbol: ElementSymbols;
     description?: string;
+    type: ElementType;
     class: any;
   };
 };
@@ -70,6 +74,7 @@ export const sammElements: ElementInfo = {
     symbol: 'A',
     plural: 'Aspects',
     description: 'ELEMENT_MODEL_DESCRIPTION.ASPECT',
+    type: 'aspect',
     class: DefaultAspect,
   },
   event: {
@@ -77,6 +82,7 @@ export const sammElements: ElementInfo = {
     symbol: 'Ev',
     plural: 'Events',
     description: 'ELEMENT_MODEL_DESCRIPTION.EVENT',
+    type: 'event',
     class: DefaultEvent,
   },
   operation: {
@@ -84,6 +90,7 @@ export const sammElements: ElementInfo = {
     symbol: 'O',
     plural: 'Operations',
     description: 'ELEMENT_MODEL_DESCRIPTION.OPERATION',
+    type: 'operation',
     class: DefaultOperation,
   },
   property: {
@@ -91,6 +98,7 @@ export const sammElements: ElementInfo = {
     symbol: 'P',
     plural: 'Properties',
     description: 'ELEMENT_MODEL_DESCRIPTION.PROPERTY',
+    type: 'property',
     class: DefaultProperty,
   },
   'abstract-property': {
@@ -98,6 +106,7 @@ export const sammElements: ElementInfo = {
     symbol: 'AP',
     plural: 'Abstract Properties',
     description: 'ELEMENT_MODEL_DESCRIPTION.ABSTRACT_PROPERTY',
+    type: 'abstract-property',
     class: DefaultProperty,
   },
   entity: {
@@ -105,6 +114,7 @@ export const sammElements: ElementInfo = {
     symbol: 'E',
     plural: 'Entities',
     description: 'ELEMENT_MODEL_DESCRIPTION.ENTITY',
+    type: 'entity',
     class: DefaultEntity,
   },
   'abstract-entity': {
@@ -112,6 +122,7 @@ export const sammElements: ElementInfo = {
     symbol: 'AE',
     plural: 'Abstract Entities',
     description: 'ELEMENT_MODEL_DESCRIPTION.ABSTRACT_ENTITY',
+    type: 'abstract-entity',
     class: DefaultEntity,
   },
   unit: {
@@ -119,6 +130,7 @@ export const sammElements: ElementInfo = {
     symbol: 'U',
     plural: 'Units',
     description: 'ELEMENT_MODEL_DESCRIPTION.UNIT',
+    type: 'unit',
     class: DefaultUnit,
   },
   constraint: {
@@ -126,6 +138,7 @@ export const sammElements: ElementInfo = {
     symbol: 'Co',
     plural: 'Constraints',
     description: 'ELEMENT_MODEL_DESCRIPTION.CONSTRAINT',
+    type: 'constraint',
     class: DefaultConstraint,
   },
   trait: {
@@ -133,6 +146,7 @@ export const sammElements: ElementInfo = {
     symbol: 'T',
     plural: 'Traits',
     description: 'ELEMENT_MODEL_DESCRIPTION.TRAIT',
+    type: 'trait',
     class: DefaultTrait,
   },
   characteristic: {
@@ -140,6 +154,7 @@ export const sammElements: ElementInfo = {
     symbol: 'C',
     plural: 'Characteristics',
     description: 'ELEMENT_MODEL_DESCRIPTION.CHARACTERISTIC',
+    type: 'characteristic',
     class: DefaultCharacteristic,
   },
   entityInstance: {
@@ -147,6 +162,15 @@ export const sammElements: ElementInfo = {
     symbol: 'e',
     plural: 'Entity Instances',
     description: 'ELEMENT_MODEL_DESCRIPTION.ENTITY_INSTANCE',
+    type: 'entityInstance',
     class: DefaultEntityInstance,
+  },
+  value: {
+    name: 'Value',
+    symbol: 'V',
+    plural: 'Values',
+    description: 'ELEMENT_MODEL_DESCRIPTION.VALUE',
+    type: 'value',
+    class: DefaultValue,
   },
 };

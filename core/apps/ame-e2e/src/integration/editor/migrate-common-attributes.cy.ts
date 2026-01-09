@@ -181,7 +181,18 @@ describe('Test migration of common attributes on Constraint/Characteristic type 
       .then(() =>
         cy.get(FIELD_dataType).clear({force: true}).type('string', {force: true}).get(FIELD_dataTypeOption).eq(1).click({force: true}),
       )
-      .then(() => cy.get(FIELD_values).type('1{enter}2{enter}a{enter}b{enter}3{enter}4{enter}', {force: true}))
+      .then(() => cy.get(FIELD_values).type('1', {force: true}))
+      .then(() => cy.get('mat-option').contains('1').click({force: true}))
+      .then(() => cy.get(FIELD_values).type('2', {force: true}))
+      .then(() => cy.get('mat-option').contains('2').click({force: true}))
+      .then(() => cy.get(FIELD_values).type('a', {force: true}))
+      .then(() => cy.get('mat-option').contains('a').click({force: true}))
+      .then(() => cy.get(FIELD_values).type('b', {force: true}))
+      .then(() => cy.get('mat-option').contains('b').click({force: true}))
+      .then(() => cy.get(FIELD_values).type('3', {force: true}))
+      .then(() => cy.get('mat-option').contains('3').click({force: true}))
+      .then(() => cy.get(FIELD_values).type('4', {force: true}))
+      .then(() => cy.get('mat-option').contains('4').click({force: true}))
       .then(() => cy.get(SELECTOR_editorSaveButton).click({force: true}))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {

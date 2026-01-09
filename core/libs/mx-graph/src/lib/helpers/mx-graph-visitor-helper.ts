@@ -37,10 +37,12 @@ import {
   DefaultState,
   DefaultStructuredValue,
   DefaultUnit,
+  DefaultValue,
   NamedElement,
   Property,
   QuantityKind,
   Unit,
+  ValueElement,
 } from '@esmf/aspect-model-loader';
 import * as locale from 'locale-codes';
 import {ModelBaseProperties} from '../models';
@@ -72,23 +74,22 @@ export class MxGraphVisitorHelper {
   }
 
   static addValues(characteristic: Characteristic): ShapeAttribute {
-    if (
-      characteristic instanceof DefaultEnumeration &&
-      characteristic.values?.length &&
-      !characteristic.values.every(value => value instanceof DefaultEntityInstance)
-    ) {
-      return {
-        label: `values = ${RdfModelUtil.getValuesWithoutUrnDefinition(characteristic.values)}`,
-        key: 'values',
-      };
-    }
-    return null;
+    if (!(characteristic instanceof DefaultEnumeration)) return null;
+
+    const values = characteristic.values.filter(v => !(v instanceof DefaultValue));
+    const hasEntityInstances = characteristic.values.every(value => value instanceof DefaultEntityInstance);
+
+    return values?.length && !hasEntityInstances
+      ? {label: `values = ${RdfModelUtil.getValuesWithoutUrnDefinition(values)}`, key: 'values'}
+      : null;
   }
 
   static addDefaultValue(characteristic: Characteristic): ShapeAttribute {
     if (characteristic instanceof DefaultState && characteristic.defaultValue) {
+      const defaultValue = characteristic.defaultValue;
+
       return {
-        label: `defaultValue = ${RdfModelUtil.getValuesWithoutUrnDefinition([characteristic.defaultValue.value.toString()])}`,
+        label: `defaultValue = ${defaultValue instanceof DefaultEntityInstance ? defaultValue.name : RdfModelUtil.getValuesWithoutUrnDefinition([characteristic.defaultValue.value as string])}`,
         key: 'defaultValue',
       };
     }
@@ -159,10 +160,16 @@ export class MxGraphVisitorHelper {
     return null;
   }
 
-  static addValue(constraint: Constraint): ShapeAttribute {
-    if (constraint instanceof DefaultEncodingConstraint || constraint instanceof DefaultRegularExpressionConstraint) {
-      if (constraint.value !== null && constraint.value !== undefined) {
-        return {label: `value = ${RdfModelUtil.getValueWithoutUrnDefinition(constraint.value)}`, key: 'value'};
+  static addValue(element: Constraint | ValueElement): ShapeAttribute {
+    if (element instanceof DefaultEncodingConstraint || element instanceof DefaultRegularExpressionConstraint) {
+      if (element.value) {
+        return {label: `value = ${RdfModelUtil.getValueWithoutUrnDefinition(element.value)}`, key: 'value'};
+      }
+    }
+
+    if (element instanceof DefaultValue) {
+      if (element.value) {
+        return {label: `value = "${element.value}"`, key: 'value'};
       }
     }
     return null;
@@ -286,10 +293,9 @@ export class MxGraphVisitorHelper {
   }
 
   static addExampleValue(property: Property): ShapeAttribute {
-    if (property.exampleValue) {
-      return {label: `exampleValue = ${property.exampleValue}`, key: 'exampleValue'};
-    }
-    return null;
+    const hasValidValue = property.exampleValue && !(property.exampleValue instanceof DefaultValue) && property.exampleValue.value;
+
+    return hasValidValue ? {label: `exampleValue = ${property.exampleValue.value}`, key: 'exampleValue'} : null;
   }
 
   static addIsCollectionAspect(aspect: Aspect): ShapeAttribute {
@@ -426,6 +432,15 @@ export class MxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
+  static getValueProperties(value: DefaultValue, sammLangService: SammLanguageSettingsService) {
+    return [
+      this.addValue(value),
+      ...this.addLocalizedPreferredNames(value, sammLangService),
+      ...this.addLocalizedDescriptions(value, sammLangService),
+      this.addSee(value),
+    ].filter(e => !!e);
+  }
+
   static getElementProperties(element: NamedElement, sammLangService: SammLanguageSettingsService) {
     if (element instanceof DefaultOperation) {
       return this.getOperationProperties(element, sammLangService);
@@ -465,6 +480,10 @@ export class MxGraphVisitorHelper {
 
     if (element instanceof DefaultProperty && element.isAbstract) {
       return this.getAbstractPropertyProperties(element, sammLangService);
+    }
+
+    if (element instanceof DefaultValue) {
+      return this.getValueProperties(element, sammLangService);
     }
 
     return null;

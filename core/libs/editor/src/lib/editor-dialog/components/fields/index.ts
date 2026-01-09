@@ -20,3 +20,4 @@ export * from './input-field.component';
 export * from './operation';
 export * from './property';
 export * from './unit';
+export * from './value';

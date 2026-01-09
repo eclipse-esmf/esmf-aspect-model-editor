@@ -21,6 +21,40 @@ jest.mock('@ame/editor', () => ({
   ModelElementEditorComponent: class {},
 }));
 
+jest.mock('@esmf/aspect-model-loader', () => {
+  class NamedElement {}
+  class DefaultValue extends NamedElement {
+    metaModelVersion!: string;
+    aspectModelUrn!: string;
+    name!: string;
+    value!: string;
+    isPredefined?: boolean;
+
+    constructor(data: any) {
+      super();
+      Object.assign(this, data);
+    }
+    getPreferredName(lang: string) {
+      if (lang === 'en') return 'Value EN';
+      return undefined;
+    }
+    getDescription(lang: string) {
+      if (lang === 'en') return 'Description EN';
+      return undefined;
+    }
+    getSee() {
+      return [];
+    }
+    getValue() {
+      return this.value;
+    }
+  }
+
+  class ModelElementCache {}
+
+  return {DefaultValue, ModelElementCache};
+});
+
 describe('DomainModelToRdfService', () => {
   let service: DomainModelToRdfService;
 

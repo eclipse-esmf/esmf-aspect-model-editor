@@ -23,6 +23,7 @@ import {
   Property,
   QuantityKind,
   Unit,
+  ValueElement,
 } from '../aspect-meta-model';
 import {ScalarValue} from '../aspect-meta-model/scalar-value';
 
@@ -52,10 +53,12 @@ export interface ModelVisitor<T, U> {
   visitEntity(entity: Entity, context: U): T;
   /** Visit an Event definition */
   visitEvent(entity: Event, context: U): T;
-  /** Visit an Scalar definition */
+  /** Visit a Value definition */
+  visitValue(value: ValueElement, context: U): T;
+  /** Visit a Scalar definition */
   visitScalar(scalar: DefaultScalar, context: U): T;
   /** Visit an ScalarValue definition */
   visitScalarValue(scalarValue: ScalarValue, context: U): T;
-  /** Visit an Scalar definition */
+  /** Visit a Scalar definition */
   visitEntityInstance(scalarValue: EntityInstance, context: U): T;
 }

@@ -53,6 +53,17 @@ $gap-size: 10px;
   &.inline {
     display: inline-flex;
   }
+
+  &.new-value {
+    position: relative;
+
+    .new-element {
+      position: absolute;
+      bottom: 0px;
+      left: 22px;
+      font-size: 18px;
+    }
+  }
 }
 
 .element {
@@ -83,6 +94,16 @@ $gap-size: 10px;
       border-radius: 3px;
       font-size: 10px;
     }
+
+    &.text {
+      @include ellipsis();
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #000;
+      border-radius: 4px;
+      color: #000;
+    }
   }
 
   &-info {
@@ -95,6 +116,10 @@ $gap-size: 10px;
 
   &-name {
     @include ellipsis();
+
+    &.new-value {
+      font-style: italic;
+    }
   }
 
   &-description {
