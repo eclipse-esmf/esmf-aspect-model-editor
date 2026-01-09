@@ -39,6 +39,16 @@ before(function before() {
   (<any>window).chai.config.truncateThreshold = 0;
 });
 
+beforeEach(() => {
+  cy.intercept(
+    {
+      method: 'GET',
+      url: 'http://localhost:9090/ame/api/models/check-element**',
+    },
+    {statusCode: 200, body: false},
+  ).as('checkElement');
+});
+
 Cypress.on('uncaught:exception', (err, runnable) => {
   // returning false here prevents Cypress from failing the test
   return false;
