@@ -5,6 +5,7 @@
   "productName": "Aspect-Model-Editor",
   "version": "",
   "main": "main.js",
+  "asar": true,
   "build": {
     "appId": "org.eclipse.esmf",
     "artifactName": "${name}-v${version}-${os}.${ext}",
@@ -49,6 +50,7 @@
     },
     "mac": {
       "target": "zip",
+      "arch": "universal",
       "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
       "files": [
         "main.js",

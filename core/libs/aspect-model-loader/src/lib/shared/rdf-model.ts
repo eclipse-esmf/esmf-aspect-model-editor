@@ -188,11 +188,14 @@ export class RdfModel {
   }
 
   private resolveNamespaces(): void {
-    this.store.getQuads(null, null, null, null).forEach(quad => {
-      if (quad.object.value.startsWith('urn') || quad.object.value.startsWith('http://www.w3.org/2001/XMLSchema')) {
+    this.store
+      .getQuads(null, null, null, null)
+      .filter(quad => !Util.isBlankNode(quad.subject) && !Util.isBlankNode(quad.object))
+      .filter(quad => quad.object.value.includes('urn:samm:org.eclipse.esmf.samm:meta-model:'))
+      .filter(quad => quad.object.value.startsWith('urn') || quad.object.value.startsWith('http://www.w3.org/2001/XMLSchema'))
+      .forEach(quad => {
         const namespace = quad.object.value.split('#')[0] + '#';
         this.addPrefix(RdfModelUtil.resolveNamespaceAlias(namespace, this.metaModelVersion || ''), namespace);
-      }
-    });
+      });
   }
 }
