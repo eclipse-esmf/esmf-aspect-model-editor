@@ -18,10 +18,6 @@
     <key>com.apple.security.cs.disable-library-validation</key>
     <true/>
 
-    <!-- Debugging entitlements (remove in production) -->
-    <key>com.apple.security.get-task-allow</key>
-    <true/>
-
     <!-- Networking entitlements -->
     <key>com.apple.security.network.client</key>
     <true/>

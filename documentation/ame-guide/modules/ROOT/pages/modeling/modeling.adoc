@@ -14,6 +14,7 @@ This section guides you through recurring task with the Aspect Model Editor for 
 ***  xref:modeling/trait.adoc[]
 ***  xref:modeling/operation.adoc[]
 ***  xref:modeling/event.adoc[]
+***  xref:modeling/value.adoc[]
 ** xref:modeling/connect-elements.adoc[]
 ** xref:modeling/shared-models.adoc[]
 ** xref:modeling/migration-of-models.adoc[]

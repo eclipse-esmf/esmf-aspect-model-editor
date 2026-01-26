@@ -1,0 +1,28 @@
+= Value
+
+The Value type is designed to represent a value enriched with semantic metadata.
+It encapsulates the actual data (which can be a literal or a reference) along with additional descriptive information.
+This type is used to enhance clarity in Enumerations and Properties by allowing you to attach a human-readable label, a detailed description, and an external reference to the value.
+// definition copied from https://eclipse-esmf.github.io/samm-specification/snapshot/modeling-guidelines.html#value-type
+
+== Add an Value
+
+To add an Value, proceed as follows:
+
+* Open the Workspace sidebar.
+* Drag the Value element and drop it to the graph area canvas.
+
+== Connect the Value with the Property/Enummeration
+
+You can Connect the Value with a Property or an Enumeration and define there with more details.
+
+image::value.png[,70%,link=self]
+
+== Adjust the Value
+
+To select or create an Value in the Edit field, proceed as follows:
+
+* Double-click the Value to access the details.
+* Adjust all fields to your needs.
+
+image::edit-value.png[,70%,link=self]
