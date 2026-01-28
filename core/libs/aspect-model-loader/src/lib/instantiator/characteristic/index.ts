@@ -28,6 +28,7 @@ import {setCharacteristicFactory} from './set-characteristic-instantiator';
 import {singleEntityCharacteristicFactory} from './single-entity-instantiator';
 import {sortedSetCharacteristicFactory} from './sorted-set-characteristic-instantiator';
 import {stateCharacteristicFactory} from './state-characteristic-instantiator';
+import {structuredValueCharacteristicFactory} from './structured-value-instantiator';
 import {timeSeriesCharacteristicFactory} from './timeseries-characteristic-instantiator';
 import {traitCharacteristicFactory} from './trait-characteristic-instantiator';
 
@@ -49,6 +50,7 @@ export function allCharacteristicsFactory(initProps: BaseInitProps) {
   const createSortedSetCharacteristic = sortedSetCharacteristicFactory(initProps);
   const createTimeSeriesCharacteristic = timeSeriesCharacteristicFactory(initProps);
   const createTraitCharacteristic = traitCharacteristicFactory(initProps);
+  const createStructuredValueCharacteristic = structuredValueCharacteristicFactory(initProps);
   const {getSupportedCharacteristicNames} = predefinedCharacteristicFactory(initProps);
 
   const processors = [
@@ -121,6 +123,11 @@ export function allCharacteristicsFactory(initProps: BaseInitProps) {
     {
       process: (quad: Quad) => createTraitCharacteristic(quad, createCharacteristic),
       shouldProcess: (namedNode: NamedNode) => rdfModel.sammC.TraitCharacteristic().equals(namedNode),
+    },
+    // StrucutredValueCharacteristic
+    {
+      process: (quad: Quad) => createStructuredValueCharacteristic(quad),
+      shouldProcess: (namedNode: NamedNode) => rdfModel.sammC.StructuredValueCharacteristic().equals(namedNode),
     },
     // should always be last
     // DefaultCharacteristic

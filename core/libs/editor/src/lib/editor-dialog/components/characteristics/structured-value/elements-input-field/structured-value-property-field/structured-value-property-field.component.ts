@@ -13,7 +13,6 @@
 
 import {CacheUtils, LoadedFilesService} from '@ame/cache';
 import {EditorDialogValidators} from '@ame/editor';
-import {ModelElementNamingService} from '@ame/meta-model';
 import {ElementCreatorService} from '@ame/shared';
 import {AsyncPipe} from '@angular/common';
 import {Component, Input, OnInit, inject} from '@angular/core';
@@ -50,7 +49,6 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
   @Input() public fieldControl: FormControl;
 
   private elementCreator = inject(ElementCreatorService);
-  private modelElementNamingService = inject(ModelElementNamingService);
   public loadedFiles = inject(LoadedFilesService);
 
   public filteredProperties$: Observable<any>;
@@ -94,7 +92,7 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
 
   createNewProperty(name: string) {
     const namespace = `urn:samm:${this.loadedFiles.currentLoadedFile.namespace}#`;
-    const version = this.loadedFiles.currentLoadedFile.namespace.split(':')?.[1] || this.currentRdfModel.getMetaModelVersion();
+    const version = this.currentRdfModel.getMetaModelVersion();
     const characteristic = this.elementCreator.createEmptyElement(DefaultCharacteristic, {
       resolveNaming: true,
       cached: false,

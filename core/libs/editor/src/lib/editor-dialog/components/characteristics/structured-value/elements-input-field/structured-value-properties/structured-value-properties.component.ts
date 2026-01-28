@@ -62,7 +62,7 @@ export class StructuredValuePropertiesComponent implements OnInit {
       this.data.groups.map(group => ({data: group, regex: group.text, property: group.property || ''})),
     );
     for (const group of this.data.groups || []) {
-      this.form.addControl(this.getKey(group), new FormControl(group.property?.property, [Validators.required]));
+      this.form.addControl(this.getKey(group), new FormControl(group.property, [Validators.required]));
     }
   }
 

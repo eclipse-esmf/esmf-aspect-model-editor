@@ -22,7 +22,6 @@ export function structuredValueCharacteristicFactory(initProps: BaseInitProps) {
   const {rdfModel} = initProps;
   const {samm, sammC} = rdfModel;
   const {generateCharacteristic, getDataType} = characteristicFactory(initProps);
-  const {createProperty} = propertyFactory(initProps);
 
   return function createStructuredValueCharacteristic(quad: Quad): DefaultStructuredValue {
     return generateCharacteristic(quad, (baseProperties, propertyQuads) => {
@@ -39,7 +38,11 @@ export function structuredValueCharacteristicFactory(initProps: BaseInitProps) {
         } else if (sammC.isElementsProperty(propertyQuad.predicate.value)) {
           characteristic.elements = rdfModel
             .resolveBlankNodes(propertyQuad.object.value)
-            .map((elementQuad: Quad) => (Util.isNamedNode(elementQuad.object) ? createProperty(elementQuad) : elementQuad.object.value));
+            .map((elementQuad: Quad) =>
+              Util.isNamedNode(elementQuad.object)
+                ? propertyFactory(initProps).createProperty(elementQuad).property
+                : elementQuad.object.value,
+            );
 
           characteristic.elements.forEach(element => element instanceof DefaultProperty && element.addParent(characteristic));
         }
