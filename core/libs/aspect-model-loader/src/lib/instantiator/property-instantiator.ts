@@ -133,7 +133,7 @@ export function propertyFactory(initProps: BaseInitProps) {
 
     if (Util.isLiteral(quad.object)) {
       return new ScalarValue({
-        value: CharacteristicInstantiatorUtil.resolveValues(quad, dataType.urn),
+        value: CharacteristicInstantiatorUtil.resolveValues(quad, dataType?.urn),
         type: dataType,
       });
     }
