@@ -12,7 +12,7 @@
  */
 
 import {NamedNode, Quad, Quad_Subject, Util} from 'n3';
-import {Property, ValueElement} from '../aspect-meta-model';
+import {DefaultTrait, Property, ValueElement} from '../aspect-meta-model';
 import {DefaultProperty} from '../aspect-meta-model/default-property';
 import {ScalarValue} from '../aspect-meta-model/scalar-value';
 import {PropertyPayload} from '../aspect-meta-model/structure-element';
@@ -129,7 +129,10 @@ export function propertyFactory(initProps: BaseInitProps) {
   }
 
   function getValue(rdfModel: RdfModel, quad: Quad, property: Property, modelElementCache: CacheStrategy): ScalarValue | ValueElement {
-    const dataType = property.characteristic.dataType;
+    const dataType =
+      property.characteristic instanceof DefaultTrait
+        ? property.characteristic.baseCharacteristic?.dataType
+        : property.characteristic.dataType;
 
     if (Util.isLiteral(quad.object)) {
       return new ScalarValue({

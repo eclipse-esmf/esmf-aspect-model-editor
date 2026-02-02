@@ -14,8 +14,8 @@
 import {LoadedFilesService} from '@ame/cache';
 import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
 import {inject, Injectable} from '@angular/core';
-import {DefaultProperty, DefaultValue} from '@esmf/aspect-model-loader';
-import {DataFactory, Store} from 'n3';
+import {DefaultProperty, DefaultTrait, DefaultValue} from '@esmf/aspect-model-loader';
+import {DataFactory, Literal, NamedNode, Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
@@ -52,16 +52,22 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
       return;
     }
 
-    this.store.addQuad(
-      DataFactory.namedNode(property.aspectModelUrn),
-      this.samm.ExampleValueProperty(),
-      property.exampleValue instanceof DefaultValue
-        ? DataFactory.namedNode(property.exampleValue.aspectModelUrn)
-        : DataFactory.literal(
-            property.exampleValue.value.toString(),
-            DataFactory.namedNode(property.characteristic?.dataType?.aspectModelUrn),
-          ),
-    );
+    const exampleValueNode = this.getExampleValueNode(property);
+
+    this.store.addQuad(DataFactory.namedNode(property.aspectModelUrn), this.samm.ExampleValueProperty(), exampleValueNode);
+  }
+
+  private getExampleValueNode(property: DefaultProperty): NamedNode<string> | Literal {
+    if (property.exampleValue instanceof DefaultValue) {
+      return DataFactory.namedNode(property.exampleValue.aspectModelUrn);
+    }
+
+    const dataTypeUrn =
+      property.characteristic instanceof DefaultTrait
+        ? property.characteristic.baseCharacteristic?.dataType?.aspectModelUrn
+        : property.characteristic?.dataType?.aspectModelUrn;
+
+    return DataFactory.literal(property.exampleValue.value.toString(), DataFactory.namedNode(dataTypeUrn));
   }
 
   private addProperties(property: DefaultProperty) {
