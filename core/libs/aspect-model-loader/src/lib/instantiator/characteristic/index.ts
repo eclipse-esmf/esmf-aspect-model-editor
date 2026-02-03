@@ -101,7 +101,7 @@ export function allCharacteristicsFactory(initProps: BaseInitProps) {
     },
     // SetCharacteristic
     {
-      process: (quad: Quad) => createSetCharacteristic(quad),
+      process: (quad: Quad) => createSetCharacteristic(quad, createCharacteristic),
       shouldProcess: (namedNode: NamedNode) => rdfModel.sammC.SetCharacteristic().equals(namedNode),
     },
     // SingleEntityCharacteristic
