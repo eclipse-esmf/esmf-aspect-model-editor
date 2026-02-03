@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService, WorkspaceStructure} from '@ame/api';
+import {ModelApiService} from '@ame/api';
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {InstantiatorService} from '@ame/instantiator';
 import {RdfModelUtil} from '@ame/rdf/utils';
@@ -23,7 +23,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DefaultAspect, ModelElementCache, NamedElement, RdfModel, loadAspectModel} from '@esmf/aspect-model-loader';
 import {RdfLoader} from 'libs/aspect-model-loader/src/lib/shared/rdf-loader';
 import {NamedNode} from 'n3';
-import {Observable, catchError, first, forkJoin, map, of, switchMap, tap, throwError} from 'rxjs';
+import {Observable, catchError, concatMap, first, forkJoin, from, map, of, switchMap, tap, throwError} from 'rxjs';
 import {FileEntry, FileInformation} from './editor-toolbar';
 import {ModelRendererService} from './model-renderer.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
@@ -73,7 +73,6 @@ export class ModelLoaderService {
           this.titleService.updateTitle(this.loadedFilesService.currentLoadedFile?.absoluteName);
         }
       }),
-      switchMap(() => this.loadFilesInSequence(this.loadedFilesService.currentLoadedFile.namespaceFiles)),
       tap(() => (this.loadedFilesService.currentLoadedFile.namespaceFiles = {})),
     );
   }
@@ -100,12 +99,11 @@ export class ModelLoaderService {
       // getting dependencies from the current file and filter data from server
       switchMap((model: string) => {
         payload.rdfAspectModel = model;
-        return this.getNamespaceDependencies(payload.rdfAspectModel, {}, null);
+        return this.modelApiService.loadNamespacesStructure();
       }),
+      switchMap(() => this.getNamespaceDependencies(payload.rdfAspectModel, {}, 0)),
       // loading in sequence all RdfModels for the current file and dependencies
       switchMap(files => this.loadRdfModelFromFiles(files, payload)),
-      // Filter dependencies to only load the directly used ones
-      map(({files, rdfModels}) => ({files, rdfModels: this.filterDependencies(files, rdfModels, currentFileKey, payload.fromWorkspace)})),
       // loading the model with all namespace dependencies
       switchMap(({files, rdfModels}) =>
         loadAspectModel({
@@ -201,108 +199,56 @@ export class ModelLoaderService {
     );
   }
 
-  /**
-   * Filters the only dependencies the file is using and the files from the same namespace and version
-   *
-   * @param files all absolute names from workspace
-   * @param rdfModels a list of deep dependencies of the loading file
-   * @param currentFile absolute name of loading file
-   * @param fromWorkspace signals if model is loading from workspace
-   * @returns a map of RdfModels
-   */
-  private filterDependencies(
-    files: Record<string, string>,
-    rdfModels: Record<string, RdfModel>,
-    currentFile: string,
-    fromWorkspace: boolean,
-  ): Record<string, RdfModel> {
-    const current = rdfModels[currentFile];
-    if (!current) return rdfModels;
+  private getNamespaceDependencies(rdf: string, namespaces: Record<string, string> = {}, level = 1): Observable<Record<string, string>> {
+    return this.parseRdfModel([rdf]).pipe(
+      switchMap(rdfModel => {
+        const mainNamespace = rdfModel.getPrefixes()['']?.replace('urn:samm:', '')?.replace('#', '');
+        const excludeSelf = Object.keys(namespaces).some(namespace => namespace.startsWith(mainNamespace));
+        const dependencies = RdfModelUtil.resolveSpecificExternalNamespaces(rdfModel, excludeSelf);
 
-    const aspect = this.getAspectUrn(current);
-    const versionedNamespace: string = current.getPrefixes()['']?.replace('#', '')?.replace('urn:samm:', '');
+        const fileEntries: Array<FileEntry> = [];
+        for (const dependency of dependencies) {
+          fileEntries.push({aspectModelUrn: dependency});
+        }
 
-    const objects = current.store.getObjects(null, null, null);
-    const toRemove = [];
-    for (const key in rdfModels) {
-      if (key === currentFile) continue;
-      const foundAspect = Boolean(aspect && rdfModels[key].store.getQuads(new NamedNode(aspect), null, null, null).length);
+        return fileEntries.length > 0 ? this.modelApiService.fetchAllAspectMetaModel(fileEntries) : of([]);
+      }),
+      switchMap((fileInformations: Array<FileInformation>) => {
+        const filteredFiles = fileInformations.filter((file, index, arr) => {
+          const namespace = file.aspectModelUrn.split(/urn:samm:|#/).filter(Boolean);
+          const key = `${namespace[0]}:${file.fileName}`;
 
-      if (foundAspect && !fromWorkspace) {
-        this.notificationsService.error({title: 'Same aspect found in workspace file ' + key});
-        throw new Error('Same aspect found in workspace file ' + key);
-      }
+          return (
+            arr.findIndex(f => {
+              const ns = f.aspectModelUrn.split(/urn:samm:|#/).filter(Boolean);
+              const k = `${ns[0]}:${f.fileName}`;
+              return k === key;
+            }) === index
+          );
+        });
 
-      // Check if it is dependency or in the same versioned namespace
-      const isDependency =
-        key.startsWith(versionedNamespace) || objects.some(object => rdfModels[key].store.getQuads(object, null, null, null).length);
+        filteredFiles.forEach(file => {
+          const split = file.aspectModelUrn.split(/urn:samm:|#/).filter(Boolean);
+          namespaces[`${split[0]}:${file.fileName}`] = file.aspectModel;
+        });
 
-      if (!isDependency) {
-        toRemove.push(key);
-      }
-    }
+        const recursiveCalls$ =
+          filteredFiles.length > 0 && level === 0
+            ? from(filteredFiles).pipe(
+                concatMap(file => this.getNamespaceDependencies(file.aspectModel, namespaces)),
+                map(() => [namespaces]),
+              )
+            : of([namespaces]);
 
-    for (const file of toRemove) {
-      delete rdfModels[file];
-      delete files[file];
-    }
-
-    return rdfModels;
-  }
-
-  /**
-   *
-   * @param rdf
-   * @param namespaces
-   * @returns
-   */
-  private getNamespaceDependencies(rdf: string, namespaces: Record<string, string> = {}, workspaceStructure: WorkspaceStructure = null) {
-    return (workspaceStructure ? of(workspaceStructure) : this.modelApiService.loadNamespacesStructure()).pipe(
-      takeUntilDestroyed(this.destroyRef),
-      switchMap(() =>
-        this.parseRdfModel([rdf]).pipe(
-          switchMap(rdfModel => {
-            const mainNamespace = rdfModel.getPrefixes()['']?.replace('urn:samm:', '')?.replace('#', '');
-            const excludeSelf = Object.keys(namespaces).some(namespace => namespace.startsWith(mainNamespace));
-            const dependencies = RdfModelUtil.resolveSpecificExternalNamespaces(rdfModel, excludeSelf);
-
-            const fileEntries: Array<FileEntry> = [];
-            for (const dependency of dependencies) {
-              fileEntries.push({aspectModelUrn: dependency});
-            }
-
-            return fileEntries.length > 0 ? this.modelApiService.fetchAllAspectMetaModel(fileEntries) : of([]);
-          }),
-          tap((fileInformations: Array<FileInformation>) => {
-            if (fileInformations.length === 0) return;
-
-            fileInformations.forEach(file => {
-              const split = file.aspectModelUrn.split(/urn:samm:|#/).filter(Boolean);
-              namespaces[`${split[0]}:${file.fileName}`] = file.aspectModel;
-            });
-          }),
-          map(() => namespaces),
-        ),
-      ),
+        return recursiveCalls$;
+      }),
+      map(() => namespaces),
     );
   }
 
   private getAspectUrn(rdfModel: RdfModel): string | undefined {
     if (!rdfModel) return undefined;
     return rdfModel.store.getSubjects(rdfModel.samm.RdfType(), rdfModel.samm.Aspect(), null)?.[0]?.value;
-  }
-
-  private loadFilesInSequence(files: Record<string, string>) {
-    const entries = Object.entries(files);
-    let queue = of<NamespaceFile>(null);
-    for (const [key, model] of entries) {
-      queue = queue.pipe(
-        takeUntilDestroyed(this.destroyRef),
-        switchMap(() => this.loadSingleModel({namespaceFileName: key, rdfAspectModel: model, fromWorkspace: true})),
-      );
-    }
-
-    return queue;
   }
 
   /**
