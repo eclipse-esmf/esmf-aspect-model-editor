@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Characteristic, Collection, DefaultSet} from '@esmf/aspect-model-loader';
+import {Characteristic, DefaultSet} from '@esmf/aspect-model-loader';
 import {Quad} from 'n3';
 import {BaseInitProps} from '../../shared/base-init-props';
 import {characteristicFactory} from './characteristic-instantiator';
@@ -22,7 +22,7 @@ export function setCharacteristicFactory(initProps: BaseInitProps) {
   } = initProps;
   const {generateCharacteristic, getDataType} = characteristicFactory(initProps);
 
-  return function createSetCharacteristic(quad: Quad, characteristicCreator: (quad: Quad) => Characteristic): Collection {
+  return function createSetCharacteristic(quad: Quad, characteristicCreator: (quad: Quad) => Characteristic): DefaultSet {
     return generateCharacteristic(quad, (baseProperties, propertyQuads) => {
       const characteristic = new DefaultSet({...baseProperties});
 
