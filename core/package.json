@@ -279,7 +279,6 @@
     "@typescript-eslint/experimental-utils": "^5.29.0",
     "@typescript-eslint/parser": "7.18.0",
     "@typescript-eslint/utils": "^7.16.0",
-    "baseline-browser-mapping": "^2.9.19",
     "coverage-istanbul-loader": "^3.0.5",
     "cypress": "^14.5.4",
     "cypress-file-upload": "^5.0.8",
