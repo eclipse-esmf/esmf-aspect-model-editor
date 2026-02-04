@@ -185,8 +185,10 @@ export class CharacteristicModelService extends BaseModelService {
     this.mxGraphAttributeService.graph.getIncomingEdges(cell).forEach(edgeToParent => {
       const modelElementParent = MxGraphHelper.getModelElement<NamedElement>(edgeToParent.source);
       if (modelElementParent) {
-        MxGraphHelper.removeRelation(modelElementParent, oldModel);
-        MxGraphHelper.establishRelation(modelElementParent, value);
+        if (oldModel) {
+          MxGraphHelper.removeRelation(modelElementParent, oldModel);
+          MxGraphHelper.establishRelation(modelElementParent, value);
+        }
         useUpdater(modelElementParent).update(value);
       }
     });
