@@ -69,7 +69,7 @@ const xsdDataTypes = {
     isDefinedBy: 'http://www.w3.org/2001/XMLSchema#positiveInteger',
     description: 'Integer numbers >0',
   },
-  langString: {isDefinedBy: 'http://www.w3.org/2001/XMLSchema#langString', description: 'Strings with language tags'},
+  langString: {isDefinedBy: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString', description: 'Strings with language tags'},
   long: {
     isDefinedBy: 'http://www.w3.org/2001/XMLSchema#long',
     description: '-9223372036854775808…+9223372036854775807 (64 bit)',
