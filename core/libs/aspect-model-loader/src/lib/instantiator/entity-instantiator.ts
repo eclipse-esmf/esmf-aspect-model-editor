@@ -47,13 +47,15 @@ export function entityFactory(initProps: BaseInitProps) {
 
     for (const quad of quads) {
       if (samm.isPropertiesProperty(quad.predicate.value)) {
-        const propertiesData = propertyFactory(initProps).createProperties(quad.subject as NamedNode);
-        for (const propertyData of propertiesData) {
-          properties.push(propertyData.property);
-          if (!entity.propertiesPayload[propertyData.property.aspectModelUrn])
-            entity.propertiesPayload[propertyData.property.aspectModelUrn] = propertyData.payload;
+        if (quad.subject.value.includes(initProps.rdfModel.getAspectModelUrn())) {
+          const propertiesData = propertyFactory(initProps).createProperties(quad.subject as NamedNode);
+          for (const propertyData of propertiesData) {
+            properties.push(propertyData.property);
+            if (!entity.propertiesPayload[propertyData.property.aspectModelUrn])
+              entity.propertiesPayload[propertyData.property.aspectModelUrn] = propertyData.payload;
+          }
+          continue;
         }
-        continue;
       }
 
       if (samm.isExtends(quad.predicate.value)) {
