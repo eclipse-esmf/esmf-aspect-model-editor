@@ -67,16 +67,22 @@ describe('Test drag and drop ext properties', () => {
       );
     });
 
-    cy.intercept(
-      {
-        method: 'GET',
-        url: 'http://localhost:9090/ame/api/models',
-        headers: {'Aspect-Model-Urn': 'urn:samm:org.eclipse.different:1.0.0#externalProperty'},
-      },
-      {
-        fixture: `/external-reference/different-namespace/without-childrens/${fileName}`,
-      },
-    );
+    cy.fixture(`external-reference/different-namespace/without-childrens/${fileName}`).then(fixtureContent => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: 'http://localhost:9090/ame/api/models',
+          headers: {'Aspect-Model-Urn': 'urn:samm:org.eclipse.different:1.0.0#externalProperty'},
+        },
+        {
+          statusCode: 200,
+          body: {
+            content: fixtureContent,
+            sourceLocation: `file:/path/to/${fileName}`,
+          },
+        },
+      );
+    });
 
     cy.visitDefault().then(() =>
       cy

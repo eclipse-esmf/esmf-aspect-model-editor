@@ -69,16 +69,22 @@ describe('Test drag and drop ext constraint', () => {
       );
     });
 
-    cy.intercept(
-      {
-        method: 'GET',
-        url: 'http://localhost:9090/ame/api/models',
-        headers: {'Aspect-Model-Urn': 'urn:samm:org.eclipse.examples.aspect:1.0.0#ExternalConstraint'},
-      },
-      {
-        fixture: `/external-reference/same-namespace/without-childrens/${fileName}`,
-      },
-    );
+    cy.fixture(`/external-reference/same-namespace/without-childrens/${fileName}`).then(fixtureContent => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: 'http://localhost:9090/ame/api/models',
+          headers: {'Aspect-Model-Urn': 'urn:samm:org.eclipse.examples.aspect:1.0.0#ExternalConstraint'},
+        },
+        {
+          statusCode: 200,
+          body: {
+            content: fixtureContent,
+            sourceLocation: `file:/path/to/${fileName}`,
+          },
+        },
+      );
+    });
 
     cy.visitDefault().then(() =>
       cy
