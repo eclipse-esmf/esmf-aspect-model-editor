@@ -44,7 +44,10 @@ export class RdfService {
   isSameModelContent(absoluteFileName: string, fileContent: string, fileToCompare: NamespaceFile): Observable<boolean> {
     if (fileToCompare.absoluteName !== absoluteFileName) return of(false);
 
-    const serializedModel: string = this.serializeModel(fileToCompare.rdfModel);
-    return this.modelApiService.fetchFormatedAspectModel(serializedModel).pipe(map(formattedModel => formattedModel === fileContent));
+    const rdfModel = fileToCompare.rdfModel;
+    const serializedModel: string = this.serializeModel(rdfModel);
+    return this.modelApiService
+      .fetchFormatedAspectModel(serializedModel, rdfModel.getSourceLocation())
+      .pipe(map(formattedModel => formattedModel === fileContent));
   }
 }

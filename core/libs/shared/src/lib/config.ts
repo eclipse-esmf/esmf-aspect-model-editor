@@ -25,7 +25,7 @@ export const config: AppConfig = {
   assetLocation: 'assets',
   minSammVersion: '2.0.0',
   currentSammVersion: '2.2.0',
-  sdkVersion: '2.11.1',
+  sdkVersion: '2.13.1',
   defaultPort: '9090',
   serviceUrl: `http://localhost:${defaultPort}`,
   api: {

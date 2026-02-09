@@ -92,7 +92,8 @@ export class ModelSaverService {
   }
 
   private writeModelToWorkspace(rdfModel?: RdfModel): Observable<RdfModel> {
-    const rdfContent = this.rdfSerializer.serializeModel(rdfModel || this.currentFile?.rdfModel);
+    const currentModel = rdfModel || this.currentFile?.rdfModel;
+    const rdfContent = this.rdfSerializer.serializeModel(currentModel);
 
     if (!rdfContent || !/\S/.test(rdfContent.replace(/@prefix[^\n]*\n/g, ''))) {
       console.info('Model is empty. Skipping saving.');
@@ -103,7 +104,7 @@ export class ModelSaverService {
       }));
     }
 
-    return this.modelApiService.fetchFormatedAspectModel(rdfContent).pipe(
+    return this.modelApiService.fetchFormatedAspectModel(rdfContent, currentModel?.getSourceLocation()).pipe(
       takeUntilDestroyed(this.destroyRef),
       switchMap(content => {
         if (!content) {

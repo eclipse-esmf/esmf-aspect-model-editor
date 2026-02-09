@@ -56,7 +56,9 @@ export class AspectModelLoader extends BaseModelLoader {
     const subject = new Subject<InstantiatorResult>();
     const initProps: BaseInitProps = {rdfModel: null, cache: null};
 
-    new RdfLoader().loadModel(rdfContent).subscribe({
+    const rdfModels = rdfContent.map(r => ({rdfAspectModel: r, sourceLocation: ''}));
+
+    new RdfLoader().loadModel(rdfModels).subscribe({
       next: (rdfModel: RdfModel) => {
         initProps.rdfModel = rdfModel;
         initProps.cache = new ModelElementCache();

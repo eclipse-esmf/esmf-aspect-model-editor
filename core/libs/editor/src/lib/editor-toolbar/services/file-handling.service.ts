@@ -130,7 +130,9 @@ export class FileHandlingService {
     return this.modelApiService.validate(modelContent).pipe(
       switchMap(validations => {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
-        return found ? throwError(() => found.message) : this.modelLoaderService.renderModel({rdfAspectModel: modelContent});
+        return found
+          ? throwError(() => found.message)
+          : this.modelLoaderService.renderModel({aspectModelUri: '', rdfAspectModel: modelContent});
       }),
       catchError(error => {
         this.notificationsService.info({
@@ -164,9 +166,10 @@ export class FileHandlingService {
           };
           this.loadingScreenService.open(loadingScreenOptions);
         }),
-        switchMap((rdfAspectModel: string) =>
+        switchMap(model =>
           this.modelLoaderService.renderModel({
-            rdfAspectModel,
+            aspectModelUri: model.sourceLocation,
+            rdfAspectModel: model.content,
             aspectModelUrn,
             namespaceFileName: absoluteFileName,
             fromWorkspace: true,
@@ -259,7 +262,9 @@ export class FileHandlingService {
   }
 
   copyToClipboard(): Observable<any> {
-    if (!this.currentLoadedFile?.rdfModel) {
+    const rdfModel = this.currentLoadedFile?.rdfModel;
+
+    if (!rdfModel) {
       return throwError(() => {
         console.error('No Rdf model available. ');
         return 'No Rdf model available. ';
@@ -267,8 +272,8 @@ export class FileHandlingService {
     }
 
     return this.modelService.synchronizeModelToRdf().pipe(
-      map(() => this.rdfService.serializeModel(this.currentLoadedFile?.rdfModel)),
-      switchMap(serializedModel => this.modelApiService.fetchFormatedAspectModel(serializedModel)),
+      map(() => this.rdfService.serializeModel(rdfModel)),
+      switchMap(serializedModel => this.modelApiService.fetchFormatedAspectModel(serializedModel, rdfModel.getSourceLocation())),
       switchMap(formattedModel => {
         const header = this.configurationService.getSettings().copyrightHeader.join('\n');
         const fullText = header + '\n\n' + formattedModel;
@@ -318,7 +323,9 @@ export class FileHandlingService {
   }
 
   exportAsAspectModelFile(): Observable<string> {
-    if (!this.currentLoadedFile?.rdfModel) {
+    const rdfModel = this.currentLoadedFile?.rdfModel;
+
+    if (!rdfModel) {
       return throwError(() => {
         console.error('No Rdf model available. ');
         return 'No Rdf model available. ';
@@ -334,8 +341,8 @@ export class FileHandlingService {
     return this.modelService.synchronizeModelToRdf().pipe(
       map(() => this.currentLoadedFile.absoluteName || 'undefined.ttl'),
       switchMap(fileName => {
-        const rdfModelTtl = this.rdfService.serializeModel(this.currentLoadedFile?.rdfModel);
-        return this.modelApiService.fetchFormatedAspectModel(rdfModelTtl).pipe(
+        const rdfModelTtl = this.rdfService.serializeModel(rdfModel);
+        return this.modelApiService.fetchFormatedAspectModel(rdfModelTtl, rdfModel.getSourceLocation()).pipe(
           tap(formattedModel => {
             const header = this.configurationService.getSettings().copyrightHeader.join('\n');
             saveAs(new Blob([header + '\n\n' + formattedModel], {type: 'text/turtle;charset=utf-8'}), fileName);
@@ -446,7 +453,7 @@ export class FileHandlingService {
     return this.modelApiService.fetchFormatedAspectModel(fileContent).pipe(
       switchMap(formattedModel => {
         newModelContent = formattedModel;
-        return this.modelApiService.validate(fileContent, false);
+        return this.modelApiService.validate(fileContent);
       }),
       switchMap(validations => {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
@@ -728,10 +735,17 @@ export class FileHandlingService {
    */
   private loadNamespaceModels(namespace: string, modelsData: ModelData[]) {
     const workspaceModelsRequests = modelsData.map(modelData =>
-      forkJoin([of(`${namespace}:${modelData.model}`), this.modelApiService.fetchAspectMetaModel(modelData.aspectModelUrn)]),
+      forkJoin([
+        of(`${namespace}:${modelData.model}`),
+        this.modelApiService.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(map(model => model.content)),
+      ]),
     );
     return forkJoin(workspaceModelsRequests).pipe(
-      switchMap(files => this.modelLoaderService.loadRdfModelsInSequence(files)),
+      switchMap(files =>
+        this.modelLoaderService.loadRdfModelsInSequence(
+          files.map(([fileName, fileContent]) => [fileName, fileContent, ''] as [string, string, string]),
+        ),
+      ),
       map(models => {
         const filesInfo = this.buildFilesInfo(models, modelsData);
         return this.loadedFilesService.addFiles(filesInfo);

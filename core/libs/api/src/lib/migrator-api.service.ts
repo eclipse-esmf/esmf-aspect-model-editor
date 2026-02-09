@@ -16,7 +16,7 @@ import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
 import {ExporterHelper} from '@ame/sidebar';
 import {HttpClient} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
-import {Observable, map, switchMap} from 'rxjs';
+import {Observable, map} from 'rxjs';
 import {ModelApiService} from './model-api.service';
 import {MigrationStatus} from './models';
 
@@ -61,13 +61,5 @@ export class MigratorApiService {
   public migrateWorkspace(setNewVersion: boolean): Observable<MigrationStatus> {
     const params = {setNewVersion: setNewVersion.toString()};
     return this.http.get<MigrationStatus>(`${this.serviceUrl}${this.api.models}/migrate-workspace`, {params});
-  }
-
-  public rewriteFile(payload: any): Observable<string> {
-    return this.modelApiService
-      .fetchFormatedAspectModel(payload.serializedUpdatedModel)
-      .pipe(
-        switchMap(formattedModel => this.modelApiService.saveAspectModel(formattedModel, payload.rdfModel.absoluteAspectModelFileName)),
-      );
   }
 }

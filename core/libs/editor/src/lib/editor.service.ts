@@ -178,17 +178,17 @@ export class EditorService {
 
   generateJsonSample(rdfModel: RdfModel): Observable<string> {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.generateJsonSample(serializedModel);
+    return this.modelApiService.generateJsonSample(serializedModel, rdfModel.getSourceLocation());
   }
 
   generateJsonSchema(rdfModel: RdfModel, language: string): Observable<string> {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.generateJsonSchema(serializedModel, language);
+    return this.modelApiService.generateJsonSchema(serializedModel, language, rdfModel.getSourceLocation());
   }
 
   generateOpenApiSpec(rdfModel: RdfModel, openApi: OpenApi): Observable<string> {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.generateOpenApiSpec(serializedModel, openApi).pipe(
+    return this.modelApiService.generateOpenApiSpec(serializedModel, openApi, rdfModel.getSourceLocation()).pipe(
       catchError(err => {
         this.notificationsService.error({
           title: this.translate.language.GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH_ERROR,
@@ -202,7 +202,7 @@ export class EditorService {
 
   generateAsyncApiSpec(rdfModel: RdfModel, asyncApi: AsyncApi): Observable<string> {
     const serializedModel = this.rdfService.serializeModel(rdfModel);
-    return this.modelApiService.generateAsyncApiSpec(serializedModel, asyncApi);
+    return this.modelApiService.generateAsyncApiSpec(serializedModel, asyncApi, rdfModel.getSourceLocation());
   }
 
   makeDraggable(element: HTMLDivElement, dragElement: HTMLDivElement) {
@@ -506,7 +506,7 @@ export class EditorService {
         localStorage.setItem(ValidateStatus.validating, 'yes');
         const rdfModel = this.loadedFilesService.currentLoadedFile?.rdfModel;
         return rdfModel
-          ? this.modelApiService.validate(this.rdfService.serializeModel(rdfModel))
+          ? this.modelApiService.validate(this.rdfService.serializeModel(rdfModel), rdfModel.getSourceLocation())
           : throwError(() => ({type: SaveValidateErrorsCodes.emptyModel}));
       }),
     );

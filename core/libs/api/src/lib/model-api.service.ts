@@ -42,11 +42,10 @@ export class ModelApiService {
     }
   }
 
-  fetchAspectMetaModel(aspectModelUrn: string): Observable<string> {
+  fetchAspectMetaModel(aspectModelUrn: string): Observable<{content: string; sourceLocation: string | null}> {
     return this.http
-      .get<string>(`${this.serviceUrl}${this.api.models}`, {
+      .get<{content: string; sourceLocation: string | null}>(`${this.serviceUrl}${this.api.models}`, {
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withAspectModelUrn(aspectModelUrn).build(),
-        responseType: 'text' as 'json',
       })
       .pipe(
         timeout(this.requestTimeout),
@@ -99,20 +98,25 @@ export class ModelApiService {
       );
   }
 
-  validate(rdfContent: string, showNotifications = true): Observable<Array<ViolationError>> {
-    const formData = this.createAspectModelFormData(rdfContent);
-    return this.http.post<Array<ViolationError>>(`${this.serviceUrl}${this.api.models}/validate`, formData, {}).pipe(
-      timeout(this.requestTimeout),
-      map((data: any) => data.violationErrors),
-      tap(errors => showNotifications && this.modelValidatorService.notifyCorrectableErrors(errors)),
-      catchError(res => throwError(() => res)),
-    );
+  validate(rdfContent: string, sourceLocation?: string): Observable<Array<ViolationError>> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
+    return this.http
+      .post<Array<ViolationError>>(`${this.serviceUrl}${this.api.models}/validate`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        map((data: any) => data.violationErrors),
+        tap(errors => this.modelValidatorService.notifyCorrectableErrors(errors)),
+        catchError(res => throwError(() => res)),
+      );
   }
 
-  fetchFormatedAspectModel(rdfContent: string): Observable<string> {
-    const formData = this.createAspectModelFormData(rdfContent);
+  fetchFormatedAspectModel(rdfContent: string, sourceLocation?: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
       .post(`${this.serviceUrl}${this.api.models}/format`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
         responseType: 'text',
       })
       .pipe(
@@ -159,6 +163,7 @@ export class ModelApiService {
       map((modelDataList: ModelData[]) => {
         return modelDataList.map(modelData =>
           this.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(
+            map(model => model.content),
             map(
               aspectMetaModel =>
                 new FileContentModel(modelData.model, modelData.aspectModelUrn, modelData.version, modelData.existing, aspectMetaModel),
@@ -178,18 +183,23 @@ export class ModelApiService {
     });
   }
 
-  generateJsonSample(rdfContent: string): Observable<string> {
-    const formData = this.createAspectModelFormData(rdfContent);
-    return this.http.post<string>(`${this.serviceUrl}${this.api.generate}/json-sample`, formData).pipe(
-      timeout(this.requestTimeout),
-      catchError(res => throwError(() => res)),
-    );
+  generateJsonSample(rdfContent: string, sourceLocation?: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
+    return this.http
+      .post<string>(`${this.serviceUrl}${this.api.generate}/json-sample`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
+      })
+      .pipe(
+        timeout(this.requestTimeout),
+        catchError(res => throwError(() => res)),
+      );
   }
 
-  generateJsonSchema(rdfContent: string, language: string): Observable<string> {
-    const formData = this.createAspectModelFormData(rdfContent);
+  generateJsonSchema(rdfContent: string, language: string, sourceLocation?: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.generate}/json-schema`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
         params: {language},
       })
       .pipe(
@@ -198,19 +208,21 @@ export class ModelApiService {
       );
   }
 
-  migrateAspectModel(rdfContent: string): Observable<string> {
-    const formData = this.createAspectModelFormData(rdfContent);
+  migrateAspectModel(rdfContent: string, sourceLocation?: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
       .post(`${this.serviceUrl}${this.api.models}/migrate`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
         responseType: 'text',
       })
       .pipe(timeout(this.requestTimeout));
   }
 
-  generateOpenApiSpec(rdfContent: string, openApi: OpenApi): Observable<string> {
-    const formData = this.createAspectModelFormData(rdfContent);
+  generateOpenApiSpec(rdfContent: string, openApi: OpenApi, sourceLocation?: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.generate}/open-api-spec`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
         params: {
           language: openApi.language,
           output: openApi.output,
@@ -236,10 +248,11 @@ export class ModelApiService {
       );
   }
 
-  generateAsyncApiSpec(rdfContent: string, asyncApi: AsyncApi): Observable<any> {
-    const formData = this.createAspectModelFormData(rdfContent);
+  generateAsyncApiSpec(rdfContent: string, asyncApi: AsyncApi, sourceLocation?: string): Observable<any> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
       .post<string>(`${this.serviceUrl}${this.api.generate}/async-api-spec`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
         params: {
           language: asyncApi.language,
           output: asyncApi.output,
@@ -259,10 +272,11 @@ export class ModelApiService {
       );
   }
 
-  generateDocumentation(rdfContent: string, language: string): Observable<string> {
-    const formData = this.createAspectModelFormData(rdfContent);
+  generateDocumentation(rdfContent: string, language: string, sourceLocation?: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
       .post(`${this.serviceUrl}${this.api.generate}/documentation`, formData, {
+        headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
         params: {
           language: language,
         },
@@ -271,26 +285,27 @@ export class ModelApiService {
       .pipe(timeout(this.requestTimeout));
   }
 
-  generateAASX(rdfContent: string): Observable<string> {
-    const formData = this.createAspectModelFormData(rdfContent);
+  generateAASX(rdfContent: string, sourceLocation?: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http.post(`${this.serviceUrl}${this.api.generate}/aasx`, formData, {
+      headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
       responseType: 'text',
     });
   }
 
-  generatetAASasXML(rdfContent: string): Observable<string> {
-    const formData = this.createAspectModelFormData(rdfContent);
+  generatetAASasXML(rdfContent: string, sourceLocation?: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http.post(`${this.serviceUrl}${this.api.generate}/aas-xml`, formData, {
+      headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
       responseType: 'text',
     });
   }
 
-  private createAspectModelFormData(rdfContent: string): FormData {
+  private createAspectModelFormData(rdfContent: string): {formData: FormData; uri: string} {
     const aspectModel = new File([new Blob([rdfContent], {type: 'text/turtle'})], '', {type: 'text/turtle'});
-    // TODO have to be used, when backend are ready to use it.
-    //const uri = URL.createObjectURL(aspectModel);
+    const uri = URL.createObjectURL(aspectModel);
     const formData = new FormData();
     formData.append('aspectModel', aspectModel);
-    return formData;
+    return {formData, uri};
   }
 }

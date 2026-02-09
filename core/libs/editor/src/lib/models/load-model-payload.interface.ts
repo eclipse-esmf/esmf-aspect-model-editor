@@ -12,6 +12,7 @@
  */
 
 export interface LoadModelPayload {
+  aspectModelUri: string;
   rdfAspectModel: string;
   namespaceFileName?: string;
   isDefault?: boolean;

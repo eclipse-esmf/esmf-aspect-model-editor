@@ -21,6 +21,7 @@ import {XsdDataTypes} from './xsd-datatypes';
 export class RdfModel {
   private prefixes: Prefixes<string> = {};
   private metaModelVersion: string;
+  private sourceLocation: string;
 
   public readonly samm: Samm;
   public readonly sammC: SammC;
@@ -78,6 +79,10 @@ export class RdfModel {
     return this.prefixes;
   }
 
+  public getSourceLocation(): string {
+    return this.sourceLocation;
+  }
+
   public updatePrefix(alias: string, oldValue: string, newValue: string): void {
     const prefix: any = this.prefixes[alias];
     const newPrefix = prefix.replace(oldValue, newValue);
@@ -133,6 +138,10 @@ export class RdfModel {
 
   public setPrefixes(prefixes: Record<string, string>) {
     this.prefixes = prefixes;
+  }
+
+  public setSourceLocation(sourceLocation: string) {
+    this.sourceLocation = sourceLocation;
   }
 
   public getLocale(quad: Quad) {

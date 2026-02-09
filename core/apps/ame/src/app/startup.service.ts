@@ -68,6 +68,7 @@ export class StartupService {
         this.ngZone.run(() =>
           model
             ? this.modelLoaderService.renderModel({
+                aspectModelUri: '',
                 rdfAspectModel: model,
                 namespaceFileName: options ? `${options.namespace}:${options.file}` : '',
                 fromWorkspace: options?.fromWorkspace,

@@ -158,9 +158,10 @@ export class WorkspaceFileElementsComponent {
     this.modelApiService
       .fetchAspectMetaModel(aspectModelUrn)
       .pipe(
-        switchMap(content =>
+        switchMap(model =>
           this.modelLoaderService.loadSingleModel({
-            rdfAspectModel: content,
+            aspectModelUri: model.sourceLocation,
+            rdfAspectModel: model.content,
             fromWorkspace: true,
             namespaceFileName: absoluteName,
             aspectModelUrn,

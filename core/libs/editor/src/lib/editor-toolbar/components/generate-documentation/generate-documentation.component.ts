@@ -93,7 +93,11 @@ export class GenerateDocumentationComponent {
     this.isGenerating = true;
 
     this.modelApiService
-      .generateDocumentation(this.editorService.getSerializedModel(), this.languageControl.value)
+      .generateDocumentation(
+        this.editorService.getSerializedModel(),
+        this.languageControl.value,
+        this.loadedFiles.currentLoadedFile.rdfModel.getSourceLocation(),
+      )
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         first(),
@@ -116,52 +120,54 @@ export class GenerateDocumentationComponent {
   }
 
   private generateDocumentation(rdfContent: string, language: string): Observable<void> {
-    return this.modelApiService.generateDocumentation(rdfContent, language).pipe(
-      map((documentation: string) => {
-        if (!this.browserService.isStartedAsElectronApp()) {
-          const tabRef = window.open('about:blank', '_blank');
-          tabRef.document.write(documentation);
-          tabRef.focus();
-          tabRef.document.close();
-          return;
-        }
-
-        const fs = window.require('fs');
-        const os = window.require('os');
-        const path = window.require('path');
-        const ameTmpDir = path.join(os.homedir(), '.ametmp');
-        const printFilePath = path.normalize(path.join(ameTmpDir, 'print.html'));
-        const BrowserWindow = window.require('@electron/remote').BrowserWindow;
-        const electronBrowserWindow = new BrowserWindow({
-          width: 1920,
-          height: 1080,
-        });
-
-        if (!fs.existsSync(ameTmpDir)) {
-          fs.mkdirSync(ameTmpDir);
-        }
-
-        fs.writeFile(printFilePath, documentation, err => {
-          if (err) {
-            console.error('Write error:  ' + err.message);
-          } else {
-            electronBrowserWindow.loadFile(printFilePath);
-            electronBrowserWindow.reload();
-            electronBrowserWindow.focus();
+    return this.modelApiService
+      .generateDocumentation(rdfContent, language, this.loadedFiles.currentLoadedFile.rdfModel.getSourceLocation())
+      .pipe(
+        map((documentation: string) => {
+          if (!this.browserService.isStartedAsElectronApp()) {
+            const tabRef = window.open('about:blank', '_blank');
+            tabRef.document.write(documentation);
+            tabRef.focus();
+            tabRef.document.close();
+            return;
           }
-        });
-      }),
-      catchError(response => {
-        if (response instanceof HttpErrorResponse) {
-          if (response.status === 422) {
-            return throwError(() => JSON.parse(response.error).error.message.split(': ')[1]);
-          } else if (response.status === 400) {
-            // TODO This should be removed as soon as the SDK has fixed the graphviz error.
-            return throwError(() => JSON.parse(response.error).error.message);
+
+          const fs = window.require('fs');
+          const os = window.require('os');
+          const path = window.require('path');
+          const ameTmpDir = path.join(os.homedir(), '.ametmp');
+          const printFilePath = path.normalize(path.join(ameTmpDir, 'print.html'));
+          const BrowserWindow = window.require('@electron/remote').BrowserWindow;
+          const electronBrowserWindow = new BrowserWindow({
+            width: 1920,
+            height: 1080,
+          });
+
+          if (!fs.existsSync(ameTmpDir)) {
+            fs.mkdirSync(ameTmpDir);
           }
-        }
-        return throwError(() => 'Server error');
-      }),
-    );
+
+          fs.writeFile(printFilePath, documentation, err => {
+            if (err) {
+              console.error('Write error:  ' + err.message);
+            } else {
+              electronBrowserWindow.loadFile(printFilePath);
+              electronBrowserWindow.reload();
+              electronBrowserWindow.focus();
+            }
+          });
+        }),
+        catchError(response => {
+          if (response instanceof HttpErrorResponse) {
+            if (response.status === 422) {
+              return throwError(() => JSON.parse(response.error).error.message.split(': ')[1]);
+            } else if (response.status === 400) {
+              // TODO This should be removed as soon as the SDK has fixed the graphviz error.
+              return throwError(() => JSON.parse(response.error).error.message);
+            }
+          }
+          return throwError(() => 'Server error');
+        }),
+      );
   }
 }

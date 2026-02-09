@@ -77,7 +77,7 @@ export class ModelCheckerService {
 
   private parseFileModels(fileInformation: FileInformation[]) {
     const parseObservables = fileInformation.map(f =>
-      this.modelLoader.parseRdfModel([f.aspectModel]).pipe(
+      this.modelLoader.parseRdfModel([{rdfAspectModel: f.aspectModel, sourceLocation: ''}]).pipe(
         map(rdfModel => ({
           rdfModel,
           absoluteName: f.absoluteName,

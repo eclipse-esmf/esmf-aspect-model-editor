@@ -17,6 +17,7 @@ import {AfterViewInit, Component, DestroyRef, NgZone, inject} from '@angular/cor
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Router} from '@angular/router';
 import {Observable, forkJoin, of, switchMap, take} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Component({
   standalone: true,
@@ -60,7 +61,7 @@ export class LoadingComponent implements AfterViewInit {
           return of(null);
         }
 
-        return this.modelApiService.fetchAspectMetaModel(data.options.aspectModelUrn);
+        return this.modelApiService.fetchAspectMetaModel(data.options.aspectModelUrn).pipe(map(model => model.content));
       }),
     );
   }

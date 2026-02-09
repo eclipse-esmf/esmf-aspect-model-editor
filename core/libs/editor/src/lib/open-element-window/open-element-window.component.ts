@@ -17,7 +17,7 @@ import {Component, OnInit, inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {NamedNode} from 'n3';
-import {catchError, of, switchMap, tap} from 'rxjs';
+import {catchError, map, of, switchMap, tap} from 'rxjs';
 import {ModelLoaderService} from '../model-loader.service';
 
 @Component({
@@ -57,7 +57,8 @@ export class OpenElementWindowComponent implements OnInit {
     this.modelApiService
       .fetchAspectMetaModel(this.elementInfo.urn)
       .pipe(
-        switchMap((model: string) => this.modelLoaderService.parseRdfModel([model])),
+        map(model => model.content),
+        switchMap((model: string) => this.modelLoaderService.parseRdfModel([{rdfAspectModel: model, sourceLocation: ''}])),
         tap(rdfModel => {
           const quads = rdfModel.store.getQuads(new NamedNode(this.elementInfo.urn), null, null, null);
           if (quads.length) {
