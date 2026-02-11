@@ -242,7 +242,7 @@ jobs:
       # Release Linux executables
       - name: Create GitHub release (Linux)
         if: ${{ (matrix.os == 'ubuntu-latest') && (!contains( github.ref, '-rc' )) }}
-        uses: 6b7fa9f267e90b50a19fef07b3596790bb941741 # v2.11.3
+        uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741 # v2.11.3
         with:
           overwrite: true
           prerelease: false
@@ -252,7 +252,7 @@ jobs:
 
       - name: Create GitHub pre-release (Linux)
         if: ${{ (matrix.os == 'ubuntu-latest') && (contains( github.ref, '-rc' )) }}
-        uses: 6b7fa9f267e90b50a19fef07b3596790bb941741 # v2.11.3
+        uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741 # v2.11.3
         with:
           overwrite: true
           prerelease: true
