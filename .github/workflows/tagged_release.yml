@@ -85,14 +85,14 @@ jobs:
         run: |
           mkdir backend
 
-          ASSET_ONE_URL=$(curl -sl --header "Authorization: token $GH_TOKEN" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq '.assets[0].browser_download_url')
-          ASSET_TWO_URL=$(curl -sl --header "Authorization: token $GH_TOKEN" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq '.assets[1].browser_download_url')
-          ASSET_THREE_URL=$(curl -sl --header "Authorization: token $GH_TOKEN" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq '.assets[2].browser_download_url')
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token $GH_TOKEN" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token $GH_TOKEN" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[1].browser_download_url')
+          ASSET_THREE_URL=$(curl -sl --header "Authorization: token $GH_TOKEN" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[2].browser_download_url')
 
           if [[ ${ASSET_ONE_URL} == *"-mac"* ]];
             then
               echo $ASSET_ONE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token $GH_TOKEN" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq -r '.assets[0].browser_download_url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token $GH_TOKEN" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[0].browser_download_url')
           fi
 
           if [[ ${ASSET_TWO_URL} == *"-mac"* ]];
@@ -242,7 +242,7 @@ jobs:
       # Release Linux executables
       - name: Create GitHub release (Linux)
         if: ${{ (matrix.os == 'ubuntu-latest') && (!contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
+        uses: 6b7fa9f267e90b50a19fef07b3596790bb941741 # v2.11.3
         with:
           overwrite: true
           prerelease: false
@@ -252,7 +252,7 @@ jobs:
 
       - name: Create GitHub pre-release (Linux)
         if: ${{ (matrix.os == 'ubuntu-latest') && (contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@latest
+        uses: 6b7fa9f267e90b50a19fef07b3596790bb941741 # v2.11.3
         with:
           overwrite: true
           prerelease: true

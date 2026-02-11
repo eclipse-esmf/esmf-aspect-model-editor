@@ -8,6 +8,8 @@ on:
     paths-ignore:
       - 'documentation/decisions/**'
 
+permissions: {}
+
 # Tests are done in Ubuntu because Mac and Windows random failures, and it is not stable.
 jobs:
   build:
