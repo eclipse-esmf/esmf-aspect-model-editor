@@ -66,7 +66,7 @@ jobs:
 
       - name: Set antora version
         if: matrix.os == 'ubuntu-latest'
-        run: yq eval -i '.version = "${env.RELEASE_VERSION}"' documentation/ame-guide/antora.yml
+        run: yq eval -i '.version = "${RELEASE_VERSION}"' documentation/ame-guide/antora.yml
 
       - name: Commit version changes and push to upstream repository
         if: matrix.os == 'ubuntu-latest'
@@ -75,10 +75,10 @@ jobs:
           git config --global user.name "github-actions"
           git checkout -b ${{ env.release_branch_name }}
           git add documentation/ame-guide/antora.yml
-          git commit -m "Set version to ${env.RELEASE_VERSION}"
+          git commit -m "Set version to ${RELEASE_VERSION}"
           git push origin ${{ env.release_branch_name }}
-          git tag v${env.RELEASE_VERSION}
-          git push origin v${env.RELEASE_VERSION}
+          git tag v${RELEASE_VERSION}
+          git push origin v${RELEASE_VERSION}
 
       - name: Download aspect model service into project (Mac)
         if: matrix.os == 'macos-15-intel'
@@ -206,7 +206,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           npm run build:linux:prod
-          mv electron/aspect-model-editor-v${env.RELEASE_VERSION}-linux.tar.gz electron/aspect-model-editor-v${env.RELEASE_VERSION}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
+          mv electron/aspect-model-editor-v${RELEASE_VERSION}-linux.tar.gz electron/aspect-model-editor-v${RELEASE_VERSION}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
         working-directory: core
 
       - name: Build electron app (Windows)
