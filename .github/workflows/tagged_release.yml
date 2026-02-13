@@ -7,12 +7,6 @@ on:
         description: 'Version number of the release'
         required: true
 
-env:
-  RELEASE_VERSION: ${{ github.event.inputs.release_version }}
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-permissions: {}
-
 jobs:
   build:
     name: Create tagged release
@@ -20,14 +14,10 @@ jobs:
     strategy:
       matrix:
         os: [ macos-15-intel, windows-latest, ubuntu-latest ]
-    permissions:
-      contents: write
-      actions: read
+
     steps:
       - name: Checkout project
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 #v6.0.1
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v3
 
       - name: Setup Git
         run: |
@@ -35,7 +25,7 @@ jobs:
           git config user.email github-actions@github.com
 
       - name: Cache node modules
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb #v5.0.1
+        uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
         with:
@@ -47,7 +37,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Setup NodeJs
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # 6.1.0
+        uses: actions/setup-node@v3
         with:
           node-version: '22'
           cache: 'npm'
@@ -56,7 +46,8 @@ jobs:
       - name: Set versions
         if: matrix.os == 'ubuntu-latest'
         run: |
-          release_branch_name=${RELEASE_VERSION%.*}.x
+          release_version=${{ github.event.inputs.release_version }}
+          release_branch_name=${release_version%.*}.x
           echo "release_branch_name=$release_branch_name" >> $GITHUB_ENV
 
       - name: Get glibc version
@@ -68,7 +59,7 @@ jobs:
 
       - name: Set antora version
         if: matrix.os == 'ubuntu-latest'
-        run: yq eval -i '.version = "${RELEASE_VERSION}"' documentation/ame-guide/antora.yml
+        run: yq eval -i '.version = "${{ github.event.inputs.release_version }}"' documentation/ame-guide/antora.yml
 
       - name: Commit version changes and push to upstream repository
         if: matrix.os == 'ubuntu-latest'
@@ -77,82 +68,79 @@ jobs:
           git config --global user.name "github-actions"
           git checkout -b ${{ env.release_branch_name }}
           git add documentation/ame-guide/antora.yml
-          git commit -m "Set version to ${RELEASE_VERSION}"
+          git commit -m "Set version to ${{ github.event.inputs.release_version }}"
           git push origin ${{ env.release_branch_name }}
-          git tag v${RELEASE_VERSION}
-          git push origin v${RELEASE_VERSION}
+          git tag v${{ github.event.inputs.release_version }}
+          git push origin v${{ github.event.inputs.release_version }}
 
       - name: Download aspect model service into project (Mac)
         if: matrix.os == 'macos-15-intel'
         run: |
           mkdir backend
-          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[0].browser_download_url')
-          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[1].browser_download_url')
-          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[2].browser_download_url')
+
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq '.assets[1].browser_download_url')
+          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq '.assets[2].browser_download_url')
 
           if [[ ${ASSET_ONE_URL} == *"-mac"* ]];
             then
               echo $ASSET_ONE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[0].browser_download_url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq -r '.assets[0].browser_download_url')
           fi
 
           if [[ ${ASSET_TWO_URL} == *"-mac"* ]];
             then
               echo $ASSET_TWO_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[1].browser_download_url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq -r '.assets[1].browser_download_url')
           fi
 
           if [[ ${ASSET_THREE_URL} == *"-mac"* ]];
             then
               echo ASSET_THREE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[2].browser_download_url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq -r '.assets[2].browser_download_url')
           fi
 
-          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend-${RELEASE_VERSION}-mac.zip
-          unzip backend/ame-backend-${RELEASE_VERSION}-mac.zip -d backend/
-          rm backend/ame-backend-${RELEASE_VERSION}-mac.zip
-          chmod 755 backend/ame-backend-${RELEASE_VERSION}-mac
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend-${{ github.event.inputs.release_version }}-mac.zip
+          unzip backend/ame-backend-${{ github.event.inputs.release_version }}-mac.zip -d backend/
+          rm backend/ame-backend-${{ github.event.inputs.release_version }}-mac.zip
+          chmod 755 backend/ame-backend-${{ github.event.inputs.release_version }}-mac
 
       - name: Download aspect model service into project (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
           mkdir backend
 
-          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[0].browser_download_url')
-          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[1].browser_download_url')
-          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[2].browser_download_url')
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq '.assets[1].browser_download_url')
+          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq '.assets[2].browser_download_url')
 
           if [[ ${ASSET_ONE_URL} == *"-linux"* ]];
             then
               echo $ASSET_ONE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[0].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq -r '.assets[0].url')
           fi
 
           if [[ ${ASSET_TWO_URL} == *"-linux"* ]];
             then
               echo $ASSET_TWO_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[1].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq -r '.assets[1].url')
           fi
 
           if [[ ${ASSET_THREE_URL} == *"-linux"* ]];
             then
               echo ASSET_THREE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[2].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }} | jq -r '.assets[2].url')
           fi
 
-          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend-${RELEASE_VERSION}-linux
-          chmod 755 backend/ame-backend-${RELEASE_VERSION}-linux
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend-${{ github.event.inputs.release_version }}-linux
+          chmod 755 backend/ame-backend-${{ github.event.inputs.release_version }}-linux
 
       - name: Download aspect model service into project (Windows)
         if: matrix.os == 'windows-latest'
         run: |
           mkdir backend
 
-          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ env.RELEASE_VERSION }}")
+          $RESPONSE=$(curl.exe -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${{ github.event.inputs.release_version }}")
           $RESPONSE_JSON=($RESPONSE | ConvertFrom-Json)
 
           $url = $null
@@ -176,8 +164,6 @@ jobs:
             Write-Error "No zip file found."
           }
         shell: pwsh
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clear npm cache
         run: npm cache clean --force
@@ -190,12 +176,12 @@ jobs:
 
       - name: Set app version (Unix)
         if: matrix.os == 'macos-15-intel' || matrix.os == 'ubuntu-latest'
-        run: npm version ${{ env.RELEASE_VERSION }}
+        run: npm version ${{ github.event.inputs.release_version }}
         working-directory: core
 
       - name: Set app version (Windows)
         if: matrix.os == 'windows-latest'
-        run: npm version ${{ env.RELEASE_VERSION }}
+        run: npm version ${{ github.event.inputs.release_version }}
         working-directory: core
 
       - name: Build electron app (Mac)
@@ -207,7 +193,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           npm run build:linux:prod
-          mv electron/aspect-model-editor-v${RELEASE_VERSION}-linux.tar.gz electron/aspect-model-editor-v${RELEASE_VERSION}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
+          mv electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux.tar.gz electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
         working-directory: core
 
       - name: Build electron app (Windows)
@@ -221,57 +207,52 @@ jobs:
 
       - name: Create Windows installer
         if: matrix.os == 'windows-latest'
-        uses: joncloud/makensis-action@971ef20f43e4f9f3af2c7f276cb7348d033da1cd # v5.0
+        uses: joncloud/makensis-action@v5.0
         with:
           script-file: win-installer/installer.nsi
-          arguments: "-V3 -DVERSION=${{ env.RELEASE_VERSION }}"
+          arguments: "-V3 -DVERSION=${{ github.event.inputs.release_version }}"
 
       - name: Upload binary (Windows)
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
+        uses: actions/upload-artifact@v4
         with:
-          name: aspect-model-editor-v${{ env.RELEASE_VERSION }}-win
-          path: win-installer/aspect-model-editor-v${{ env.RELEASE_VERSION }}-win.exe
+          name: aspect-model-editor-v${{ github.event.inputs.release_version }}-win
+          path: win-installer/aspect-model-editor-v${{ github.event.inputs.release_version }}-win.exe
 
       - name: Upload binary (Mac)
         if: matrix.os == 'macos-15-intel'
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
+        uses: actions/upload-artifact@v4
         with:
-          name: aspect-model-editor-v${{ env.RELEASE_VERSION }}-mac
-          path: core/electron/aspect-model-editor-v${{ env.RELEASE_VERSION }}-mac.zip
+          name: aspect-model-editor-v${{ github.event.inputs.release_version }}-mac
+          path: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-mac.zip
 
       # Release Linux executables
       - name: Create GitHub release (Linux)
         if: ${{ (matrix.os == 'ubuntu-latest') && (!contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741 # v2.11.3
+        uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ env.RELEASE_VERSION }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
-          tag: v${{ env.RELEASE_VERSION }}
+          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
+          tag: v${{ github.event.inputs.release_version }}
 
       - name: Create GitHub pre-release (Linux)
         if: ${{ (matrix.os == 'ubuntu-latest') && (contains( github.ref, '-rc' )) }}
-        uses: svenstaro/upload-release-action@6b7fa9f267e90b50a19fef07b3596790bb941741 # v2.11.3
+        uses: svenstaro/upload-release-action@latest
         with:
           overwrite: true
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/electron/aspect-model-editor-v${{ env.RELEASE_VERSION }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
-          tag: v${{ env.RELEASE_VERSION }}
+          file: core/electron/aspect-model-editor-v${{ github.event.inputs.release_version }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
+          tag: v${{ github.event.inputs.release_version }}
 
   release:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: read
     steps:
       - name: Checkout project
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 #v6.0.1
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v3
 
       # Sign (Windows & Mac) executable
       - name: Get Artifact ID (Windows & Mac)
@@ -299,7 +280,7 @@ jobs:
 
           echo "artifact_url_win=$ARTIFACT_URL_WIN" > parameters.txt
           echo "artifact_url_mac=$ARTIFACT_URL_MAC" >> parameters.txt
-          echo "version=${RELEASE_VERSION}" >> parameters.txt
+          echo "version=${{ github.event.inputs.release_version }}" >> parameters.txt
 
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
