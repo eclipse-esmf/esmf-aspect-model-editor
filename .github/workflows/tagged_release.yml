@@ -86,26 +86,26 @@ jobs:
         if: matrix.os == 'macos-15-intel'
         run: |
           mkdir backend
-          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[0].browser_download_url')
-          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[1].browser_download_url')
-          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[2].browser_download_url')
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq '.assets[1].browser_download_url')
+          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq '.assets[2].browser_download_url')
 
           if [[ ${ASSET_ONE_URL} == *"-mac"* ]];
             then
               echo $ASSET_ONE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[0].browser_download_url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq -r '.assets[0].browser_download_url')
           fi
 
           if [[ ${ASSET_TWO_URL} == *"-mac"* ]];
             then
               echo $ASSET_TWO_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[1].browser_download_url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq -r '.assets[1].browser_download_url')
           fi
 
           if [[ ${ASSET_THREE_URL} == *"-mac"* ]];
             then
               echo ASSET_THREE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[2].browser_download_url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq -r '.assets[2].browser_download_url')
           fi
 
           curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend-${RELEASE_VERSION}-mac.zip
@@ -120,26 +120,26 @@ jobs:
         run: |
           mkdir backend
 
-          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[0].browser_download_url')
-          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[1].browser_download_url')
-          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq '.assets[2].browser_download_url')
+          ASSET_ONE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq '.assets[0].browser_download_url')
+          ASSET_TWO_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq '.assets[1].browser_download_url')
+          ASSET_THREE_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq '.assets[2].browser_download_url')
 
           if [[ ${ASSET_ONE_URL} == *"-linux"* ]];
             then
               echo $ASSET_ONE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[0].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq -r '.assets[0].url')
           fi
 
           if [[ ${ASSET_TWO_URL} == *"-linux"* ]];
             then
               echo $ASSET_TWO_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[1].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq -r '.assets[1].url')
           fi
 
           if [[ ${ASSET_THREE_URL} == *"-linux"* ]];
             then
               echo ASSET_THREE_URL
-              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/tags/v${RELEASE_VERSION} | jq -r '.assets[2].url')
+              DOWNLOAD_URL=$(curl -sl --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/releases/${{ env.RELEASE_VERSION }} | jq -r '.assets[2].url')
           fi
 
           curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" $DOWNLOAD_URL > backend/ame-backend-${RELEASE_VERSION}-linux
