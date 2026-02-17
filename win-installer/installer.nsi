@@ -31,6 +31,7 @@
 ;Pages
   !insertmacro MUI_PAGE_WELCOME
 
+  !define MUI_PAGE_CUSTOMFUNCTION_LEAVE DirectoryLeave
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
   !insertmacro MUI_PAGE_FINISH
@@ -101,6 +102,15 @@ SectionEnd
 
 ;--------------------------------
 ;Function
+
+Function DirectoryLeave
+    ExpandEnvStrings $0 "%USERPROFILE%\ASPECT-MODEL-EDITOR"
+
+    ${If} $INSTDIR == $0
+      MessageBox MB_OK|MB_ICONEXCLAMATION "The installation directory must not be directly under C:\Users\<username>\. Please choose a different path (e.g. a subfolder).$\r$\n$\r$\nDas Installationsverzeichnis darf nicht direkt unter C:\Users\<Benutzername>\ liegen. Bitte wählen Sie einen anderen Pfad (z.B. einen Unterordner)."
+      Abort
+    ${EndIf}
+FunctionEnd
 
 Function install_AME
     File /r "..\core\electron\win-unpacked\*"

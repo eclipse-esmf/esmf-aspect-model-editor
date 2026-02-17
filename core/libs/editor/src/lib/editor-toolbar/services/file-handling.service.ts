@@ -740,6 +740,11 @@ export class FileHandlingService {
         this.modelApiService.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(map(model => model.content)),
       ]),
     );
+
+    if (!workspaceModelsRequests.length) {
+      return of({});
+    }
+
     return forkJoin(workspaceModelsRequests).pipe(
       switchMap(files =>
         this.modelLoaderService.loadRdfModelsInSequence(
