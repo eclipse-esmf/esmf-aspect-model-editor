@@ -120,6 +120,9 @@ Function install_AME
     CreateShortCut "$SMPROGRAMS\ESMF\Aspect-Model-Editor.lnk" "$INSTDIR\Aspect-Model-Editor.exe"
     CreateShortCut "$SMPROGRAMS\ESMF\Aspect-Model-Editor Uninstaller.lnk" "$INSTDIR\Uninstall.exe"
     CreateShortCut "$DESKTOP\Aspect-Model-Editor.lnk" "$INSTDIR\Aspect-Model-Editor.exe"
+
+    ExpandEnvStrings $0 "%USERPROFILE%\aspect-model-editor\models"
+    CreateDirectory "$0"
 FunctionEnd
 
 Function un.install_AME
