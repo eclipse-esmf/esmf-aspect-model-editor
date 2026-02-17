@@ -5,6 +5,10 @@
   "productName": "Aspect-Model-Editor",
   "version": "",
   "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor.git"
+  },
   "build": {
     "appId": "org.eclipse.esmf",
     "artifactName": "${name}-v${version}-${os}.${ext}",
