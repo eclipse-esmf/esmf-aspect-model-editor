@@ -107,7 +107,7 @@ Function DirectoryLeave
     ExpandEnvStrings $0 "%USERPROFILE%\ASPECT-MODEL-EDITOR"
 
     ${If} $INSTDIR == $0
-      MessageBox MB_OK|MB_ICONEXCLAMATION "The installation directory must not be directly under C:\Users\<username>\. Please choose a different path (e.g. a subfolder).$\r$\n$\r$\nDas Installationsverzeichnis darf nicht direkt unter C:\Users\<Benutzername>\ liegen. Bitte wählen Sie einen anderen Pfad (z.B. einen Unterordner)."
+      MessageBox MB_OK|MB_ICONEXCLAMATION "The installation directory must not be directly under C:\Users\<username>\. Please choose a different path (e.g. a subfolder).$\r$\n$\r$\n"
       Abort
     ${EndIf}
 FunctionEnd
