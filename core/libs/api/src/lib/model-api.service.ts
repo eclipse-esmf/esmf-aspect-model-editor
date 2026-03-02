@@ -98,7 +98,7 @@ export class ModelApiService {
       );
   }
 
-  validate(rdfContent: string, sourceLocation?: string): Observable<Array<ViolationError>> {
+  validate(rdfContent: string, sourceLocation?: string, validInfo?: boolean): Observable<Array<ViolationError>> {
     const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
       .post<Array<ViolationError>>(`${this.serviceUrl}${this.api.models}/validate`, formData, {
@@ -107,7 +107,7 @@ export class ModelApiService {
       .pipe(
         timeout(this.requestTimeout),
         map((data: any) => data.violationErrors),
-        tap(errors => this.modelValidatorService.notifyCorrectableErrors(errors)),
+        tap(errors => this.modelValidatorService.notifyCorrectableErrors(errors, validInfo)),
         catchError(res => throwError(() => res)),
       );
   }
