@@ -134,13 +134,13 @@ export class FileHandlingService {
           ? throwError(() => found.message)
           : this.modelLoaderService.renderModel({aspectModelUri: '', rdfAspectModel: modelContent});
       }),
-      catchError(error => {
-        this.notificationsService.info({
+      catchError(httpError => {
+        this.notificationsService.error({
           title: this.translate.language.NOTIFICATION_SERVICE.LOADING_ERROR,
-          message: error.message,
+          message: httpError?.error?.error?.message,
           timeout: 5000,
         });
-        return of(null);
+        return throwError(() => 'Load model failed');
       }),
       finalize(() => {
         this.modelSaveTracker.updateSavedModel(true);
@@ -176,15 +176,13 @@ export class FileHandlingService {
           }),
         ),
         first(),
-        catchError(error => {
-          console.error('sidebar.component -> loadNamespaceFile', error);
-
+        catchError(httpError => {
           this.notificationsService.error({
             title: this.translate.language.NOTIFICATION_SERVICE.LOADING_ERROR,
-            message: `${error?.message || error?.error?.message || error}`,
+            message: httpError?.error?.error?.message,
             timeout: 5000,
           });
-          return throwError(() => error);
+          return throwError(() => 'Load namespace file failed');
         }),
         finalize(() => {
           this.loadingScreenService.close();
@@ -279,9 +277,9 @@ export class FileHandlingService {
         const fullText = header + '\n\n' + formattedModel;
         return of(fullText);
       }),
-      catchError(error => {
-        this.notificationsService.error({title: 'Copying error', message: error?.error?.message});
-        return throwError(() => error);
+      catchError(httpError => {
+        this.notificationsService.error({title: 'Copying error', message: httpError?.error?.error?.message});
+        return throwError(() => 'Copying to clipboard failed');
       }),
       tap(() => {
         this.notificationsService.success({
@@ -349,14 +347,13 @@ export class FileHandlingService {
           }),
         );
       }),
-      catchError(error => {
-        console.error(`Error while exporting the Aspect Model. ${JSON.stringify(error)}.`);
+      catchError(httpError => {
         this.notificationsService.error({
           title: this.translate.language.NOTIFICATION_SERVICE.EXPORTING_TITLE_ERROR,
-          message: `${error?.error?.message || error}`,
+          message: httpError?.error?.error?.message,
           timeout: 5000,
         });
-        return throwError(() => error);
+        return throwError(() => 'Exporting aspect model failed');
       }),
       finalize(() => this.loadingScreenService.close()),
     );
@@ -434,7 +431,7 @@ export class FileHandlingService {
           title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_ERROR,
           message: httpError.error?.error?.message,
         });
-        return of(null);
+        return throwError(() => 'Importing files to workspace failed');
       }),
       finalize(() => this.loadingScreenService.close()),
     );
@@ -475,15 +472,14 @@ export class FileHandlingService {
         this.sidebarService.workspace.refresh();
       }),
       switchMap(() => this.handleFileVersionConflicts(newModelAbsoluteFileName, newModelContent)),
-      catchError(error => {
-        console.error(`'Error adding file to namespaces. ${JSON.stringify(error)}.`);
+      catchError(httpError => {
         if (uploadOptions.showNotifications) {
           this.notificationsService.error({
             title: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_TITLE,
-            message: error || this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_MESSAGE,
+            message: httpError?.error?.error?.message || this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_MESSAGE,
           });
         }
-        return throwError(() => error);
+        return throwError(() => 'Adding file to workspace failed');
       }),
       finalize(() => (uploadOptions.showLoading ? this.loadingScreenService.close() : null)),
     );
