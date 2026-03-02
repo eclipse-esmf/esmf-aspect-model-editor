@@ -30,6 +30,13 @@ import {LoadModelPayload} from './models/load-model-payload.interface';
 import {LoadingCodeErrors} from './models/loading-errors';
 import {NamedRdfModel} from './models/named-rdf-mode';
 
+interface TmpLoadedFiles {
+  files: LoadedFilesService['files'];
+  currentLoadedFile: LoadedFilesService['currentLoadedFile'];
+  filesAsList: LoadedFilesService['filesAsList'];
+  externalFiles: LoadedFilesService['externalFiles'];
+}
+
 @Injectable({providedIn: 'root'})
 export class ModelLoaderService {
   private destroyRef = inject(DestroyRef);
@@ -44,6 +51,8 @@ export class ModelLoaderService {
   private configurationService = inject(ConfigurationService);
   private titleService = inject(TitleService);
 
+  private tmpLoadedFiles: TmpLoadedFiles;
+
   private get settings() {
     return this.configurationService.getSettings();
   }
@@ -53,6 +62,12 @@ export class ModelLoaderService {
    */
   renderModel(payload: LoadModelPayload) {
     this.settings.copyrightHeader = RdfModelUtil.extractCommentsFromRdfContent(payload.rdfAspectModel);
+    this.tmpLoadedFiles = {
+      files: {...this.loadedFilesService.files},
+      currentLoadedFile: this.loadedFilesService.currentLoadedFile,
+      filesAsList: [...this.loadedFilesService.filesAsList],
+      externalFiles: [...this.loadedFilesService.externalFiles],
+    };
     this.loadedFilesService.removeAll();
 
     return this.loadSingleModel(payload, true).pipe(
@@ -143,6 +158,10 @@ export class ModelLoaderService {
           }),
         ),
       ),
+      catchError(error => {
+        Object.assign(this.loadedFilesService, this.tmpLoadedFiles);
+        return throwError(() => error);
+      }),
     );
   }
 
