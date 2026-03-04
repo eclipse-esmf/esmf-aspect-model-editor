@@ -22,7 +22,7 @@ const {searchSubmenu} = require('./search-sub-menu');
 /**
  * @returns {Array<MenuItemConstructorOptions | MenuItem>}
  */
-function appMenuTemplate(translation) {
+function appMenuTemplate(translation, options = {}) {
   return [
     ...(isMac
       ? [

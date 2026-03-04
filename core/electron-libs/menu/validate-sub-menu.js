@@ -20,6 +20,7 @@ function validateSubmenu(translation) {
     {
       id: 'VALIDATE_MODEL',
       label: translation.CURRENT_MODEL,
+      enabled: false,
       icon: getIcon(icons.VALIDATE_MODEL.enabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_VALIDATE_MODEL),
     },

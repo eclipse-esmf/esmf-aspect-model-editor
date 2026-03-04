@@ -38,6 +38,7 @@ function fileSubmenu(translation) {
         {
           id: 'NEW_EMPTY_MODEL',
           label: translation.NEW.SUBMENU.EMPTY_MODEL,
+          enabled: false,
           icon: getIcon(icons.NEW_WINDOW.enabled),
           click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_NEW_EMPTY_MODEL),
         },
@@ -115,18 +116,21 @@ function fileSubmenu(translation) {
     {
       id: 'COPY_TO_CLIPBOARD',
       label: translation.COPY_TO_CLIPBOARD,
+      enabled: false,
       icon: getIcon(icons.COPY_TO_CLIPBOARD.enabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_COPY_TO_CLIPBOARD),
     },
     {
       id: 'SAVE_TO_WORKSPACE',
       label: translation.SAVE_TO_WORKSPACE,
+      enabled: false,
       icon: getIcon(icons.SAVE_TO_WORKSPACE.enabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_SAVE_TO_WORKSPACE),
     },
     {
       id: 'EXPORT_MODEL',
       label: translation.EXPORT_MODEL,
+      enabled: false,
       icon: getIcon(icons.EXPORT_MODEL.enabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_EXPORT_MODEL),
     },

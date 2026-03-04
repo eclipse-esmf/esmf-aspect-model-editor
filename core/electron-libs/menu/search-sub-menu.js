@@ -20,6 +20,7 @@ function searchSubmenu(translation) {
     {
       id: 'SEARCH_ELEMENTS',
       label: translation.ELEMENTS,
+      enabled: false,
       icon: getIcon(icons.SEARCH_ELEMENTS.enabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_SEARCH_ELEMENTS),
     },

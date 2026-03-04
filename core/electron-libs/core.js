@@ -56,7 +56,7 @@ function startService() {
     global.backendPort = 9090;
     setTimeout(function () {
       splashWindow.close();
-      windowsManager.createWindow();
+      windowsManager.createNewWindow();
     }, 1000);
     return;
   }
@@ -80,7 +80,7 @@ function startService() {
           if (data.includes(`Server Running`)) {
             console.log(`AME Server Running`);
             splashWindow.close();
-            windowsManager.createWindow();
+            windowsManager.createNewWindow();
           }
         });
 

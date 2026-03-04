@@ -39,7 +39,7 @@ app.on('ready', () => {
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    windowsManager.createWindow(null);
+    windowsManager.createNewWindow();
   }
 });
 

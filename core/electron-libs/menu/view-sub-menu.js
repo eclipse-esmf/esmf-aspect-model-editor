@@ -40,6 +40,7 @@ function viewSubmenu(translation) {
     {
       id: 'MENU_FILTER_MODEL_BY',
       label: translation.FILTER.LABEL,
+      enabled: false,
       icon: getIcon(icons.MENU_FILTER_MODEL_BY.enabled),
       submenu: [
         {
@@ -64,24 +65,28 @@ function viewSubmenu(translation) {
     {
       id: 'ZOOM_IN',
       label: translation.ZOOM_IN,
+      enabled: false,
       icon: getIcon(icons.ZOOM_IN.enabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_IN),
     },
     {
       id: 'ZOOM_OUT',
       label: translation.ZOOM_OUT,
+      enabled: false,
       icon: getIcon(icons.ZOOM_OUT.enabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_OUT),
     },
     {
       id: 'ZOOM_TO_FIT',
       label: translation.ZOOM_TO_FIT,
+      enabled: false,
       icon: getIcon(icons.ZOOM_TO_FIT.enabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_TO_FIT),
     },
     {
       id: 'ZOOM_TO_ACTUAL',
       label: translation.ZOOM_TO_100,
+      enabled: false,
       icon: getIcon(icons.ZOOM_TO_ACTUAL.enabled),
       click: (menuItem, browserWindow, _) => browserWindow.webContents.send(SIGNAL_ZOOM_TO_ACTUAL),
     },

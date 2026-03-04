@@ -114,6 +114,7 @@ export class ElectronTunnelService {
 
   private setMenuStateListeners() {
     this.setSelectedCellsCountListener().subscribe();
+    this.setHasCellsListener().subscribe();
   }
 
   setSelectedCellsCountListener(): Observable<number> {
@@ -121,27 +122,49 @@ export class ElectronTunnelService {
       map(selectedCells => selectedCells.length),
       distinctUntilChanged(),
       tap(cellsCount => {
-        this.translate.getTranslation(this.translate.translateService.currentLang).subscribe(translation => {
+        this.translate.getTranslation(this.translate.translateService.getCurrentLang()).subscribe(translation => {
           this.ipcRenderer.send(ElectronEvents.SIGNAL_UPDATE_MENU_ITEM, {
-            id: 'OPEN_SELECTED_ELEMENT',
+            ids: ['OPEN_SELECTED_ELEMENT', 'REMOVE_SELECTED_ELEMENT', 'CONNECT_ELEMENTS'],
             payload: {
               enabled: !!cellsCount,
               translation: translation,
             },
           });
+        });
+      }),
+    );
+  }
 
+  setHasCellsListener(): Observable<boolean> {
+    return this.shapeSettingsService.hasCellsSubject$.pipe(
+      distinctUntilChanged(),
+      tap(hasCells => {
+        this.translate.getTranslation(this.translate.translateService.getCurrentLang()).subscribe(translation => {
           this.ipcRenderer.send(ElectronEvents.SIGNAL_UPDATE_MENU_ITEM, {
-            id: 'REMOVE_SELECTED_ELEMENT',
+            ids: [
+              'COLLAPSE_EXPAND_MODEL',
+              'FORMAT_MODEL',
+              'MENU_FILTER_MODEL_BY',
+              'MENU_FILTER_MODEL_BY',
+              'ZOOM_IN',
+              'ZOOM_OUT',
+              'ZOOM_TO_FIT',
+              'ZOOM_TO_ACTUAL',
+              'NEW_EMPTY_MODEL',
+              'COPY_TO_CLIPBOARD',
+              'SAVE_TO_WORKSPACE',
+              'EXPORT_MODEL',
+              'VALIDATE_MODEL',
+              'GENERATE_HTML_DOCUMENTATION',
+              'GENERATE_OPEN_API_SPECIFICATION',
+              'GENERATE_ASYNC_API_SPECIFICATION',
+              'GENERATE_AASX_XML',
+              'GENERATE_JSON_PAYLOAD',
+              'GENERATE_JSON_SCHEMA',
+              'SEARCH_ELEMENTS',
+            ],
             payload: {
-              enabled: !!cellsCount,
-              translation: translation,
-            },
-          });
-
-          this.ipcRenderer.send(ElectronEvents.SIGNAL_UPDATE_MENU_ITEM, {
-            id: 'CONNECT_ELEMENTS',
-            payload: {
-              enabled: cellsCount === 2,
+              enabled: hasCells,
               translation: translation,
             },
           });
@@ -307,18 +330,6 @@ export class ElectronTunnelService {
       return;
     }
 
-    // this.electronSignalsService.addListener('lockFile', ({namespace, file}) => {
-    //   if (file === 'empty.ttl') {
-    //     return of();
-    //   }
-
-    //   return this.electronSignalsService.call('addLock', {namespace, file});
-    // });
-
-    // this.electronSignalsService.addListener('unlockFile', ({namespace, file}) => {
-    //   return this.electronSignalsService.call('removeLock', {namespace, file});
-    // });
-
     this.ipcRenderer.on(ElectronEvents.REQUEST_LOCK_FILE, (_: unknown, namespace: string, file: string, aspectModelUrn: string) => {
       if (file === 'empty.ttl') return;
       this.electronSignalsService.call('lockFile', {namespace, file, aspectModelUrn}).subscribe();
@@ -349,6 +360,7 @@ export class ElectronTunnelService {
             switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialogService.openDialog())),
             filter(result => result),
             switchMap(() => this.fileHandlingService.loadEmptyModel()),
+            tap(() => this.shapeSettingsService.hasCellsSubject.next(false)),
           )
           .subscribe();
       });
