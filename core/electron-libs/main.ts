@@ -11,29 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-// @ts-check
-
-const {app, globalShortcut, BrowserWindow, Menu, nativeTheme} = require('electron');
-const platformData = require('./electron-libs/os-checker');
-const core = require('./electron-libs/core');
-const {windowsManager} = require('./electron-libs/windows-manager');
-const {inProdMode} = require('./electron-libs/consts');
-const {registerGlobalShortcuts, unregisterGlobalShortcuts} = require('./electron-libs/shortcuts');
+import {app, BrowserWindow, nativeTheme} from 'electron';
+import {cleanUpProcesses, startService} from './core';
+import {isWin} from './platform/platform';
+import {registerGlobalShortcuts, unregisterGlobalShortcuts} from './shortcuts';
+import {inProdMode} from './utils/mode';
+import {windowsManager} from './windows-manager';
 
 if (require('electron-squirrel-startup')) process.exit();
 
 if (inProdMode()) {
-  // Disable test logging on production
   console.log = () => {};
 }
 
-if (platformData.isWin) app.setUserTasks([]);
+if (isWin) app.setUserTasks([]);
 
 app.on('ready', () => {
   app.on('browser-window-blur', unregisterGlobalShortcuts);
   app.on('browser-window-focus', registerGlobalShortcuts);
 
-  core.startService();
+  startService();
   windowsManager.activateCommunicationProtocol();
 });
 
@@ -48,7 +45,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('before-quit', () => {
-  core.cleanUpProcesses();
+  cleanUpProcesses();
 });
 
 nativeTheme.themeSource = 'light';

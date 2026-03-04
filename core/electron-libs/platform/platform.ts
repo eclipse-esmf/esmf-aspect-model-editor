@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,15 +12,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const {exec} = require('child_process');
+export const os: NodeJS.Platform = process.platform;
 
-exports.exec = cmd =>
-  new Promise((resolve, reject) => {
-    exec(cmd, (error, stdout, stderr) => {
-      if (error) {
-        return reject(error);
-      }
+export const isWin = os === 'win32';
+export const isMac = os === 'darwin';
+export const isLinux = os === 'linux';
 
-      resolve(stdout ? stdout : stderr);
-    });
-  });
+export const extension = isWin ? 'win.exe' : isMac ? 'mac' : 'linux';
+
+export default {
+  os,
+  extension,
+  isWin,
+  isLinux,
+  isMac,
+};

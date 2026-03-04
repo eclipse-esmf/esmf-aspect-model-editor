@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -12,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-module.exports = {
-  os: process.platform,
-  extension: process.platform === 'win32' ? 'win.exe' : process.platform === 'darwin' ? 'mac' : 'linux',
-  isWin: process.platform === 'win32',
-  isLinux: process.platform === 'linux',
-  isMac: process.platform === 'darwin',
-};
+export function inDevMode(): boolean {
+  return process.argv.includes('--dev');
+}
+
+export function inProdMode(): boolean {
+  return !inDevMode();
+}

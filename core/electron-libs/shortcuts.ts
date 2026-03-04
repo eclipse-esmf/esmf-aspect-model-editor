@@ -11,21 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const {app, globalShortcut, BrowserWindow, Menu, nativeTheme} = require('electron');
-const platformData = require('./os-checker');
+import {app, BrowserWindow, globalShortcut} from 'electron';
+import platformData from './platform/platform';
 
-const COMMON_SHORTCUTS = [
-  {key: 'CommandOrControl+W', action: win => win.close()},
-  {key: 'CommandOrControl+M', action: win => win.minimize()},
-  {key: 'CommandOrControl+Shift+M', action: win => win.maximize()},
-  {key: 'CommandOrControl+Shift+F', action: win => win.setFullScreen(true)},
-  {key: 'CommandOrControl+Shift+G', action: win => win.setFullScreen(false)},
-  // Edit operations
-  {key: 'CommandOrControl+Z', action: win => win.webContents.undo()},
-  {key: 'CommandOrControl+R', action: win => win.reload()},
+type ShortcutAction = (win?: Electron.BrowserWindow) => void;
+interface Shortcut {
+  key: string;
+  action: ShortcutAction;
+}
+
+const COMMON_SHORTCUTS: Shortcut[] = [
+  {key: 'CommandOrControl+W', action: win => win?.close()},
+  {key: 'CommandOrControl+M', action: win => win?.minimize()},
+  {key: 'CommandOrControl+Shift+M', action: win => win?.maximize()},
+  {key: 'CommandOrControl+Shift+F', action: win => win?.setFullScreen(true)},
+  {key: 'CommandOrControl+Shift+G', action: win => win?.setFullScreen(false)},
+  {key: 'CommandOrControl+Z', action: win => win?.webContents.undo()},
+  {key: 'CommandOrControl+R', action: win => win?.reload()},
 ];
 
-const MAC_SHORTCUTS = [
+const MAC_SHORTCUTS: Shortcut[] = [
   {
     key: 'CommandOrControl+Q',
     action: () => {
@@ -44,7 +49,7 @@ const MAC_SHORTCUTS = [
   },
 ];
 
-const DEVTOOLS_SHORTCUTS = [
+const DEVTOOLS_SHORTCUTS: Shortcut[] = [
   {
     key: 'Control+Shift+I',
     action: () => {
@@ -54,25 +59,21 @@ const DEVTOOLS_SHORTCUTS = [
   },
 ];
 
-function registerShortcut({key, action}) {
+function registerShortcut({key, action}: Shortcut): void {
   globalShortcut.register(key, () => {
     const focusedWindow = BrowserWindow.getFocusedWindow();
     if (!focusedWindow && action.length > 0) {
-      // For actions that rely on a window, do nothing if there is none
       return;
     }
-
     if (action.length > 0) {
-      // action expects a window
       action(focusedWindow);
     } else {
-      // action handles its own window lookup
       action();
     }
   });
 }
 
-function registerGlobalShortcuts() {
+export function registerGlobalShortcuts(): void {
   COMMON_SHORTCUTS.forEach(registerShortcut);
 
   if (platformData.isMac) {
@@ -84,11 +85,6 @@ function registerGlobalShortcuts() {
   }
 }
 
-function unregisterGlobalShortcuts() {
+export function unregisterGlobalShortcuts(): void {
   globalShortcut.unregisterAll();
 }
-
-module.exports = {
-  registerGlobalShortcuts,
-  unregisterGlobalShortcuts,
-};

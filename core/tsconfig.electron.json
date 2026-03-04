@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": true,
+    "noImplicitAny": true
+  },
+  "include": ["electron-libs/main.ts", "electron-libs/**/*.ts"],
+  "exclude": ["node_modules", "tmp"]
+}

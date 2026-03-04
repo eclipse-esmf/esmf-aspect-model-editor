@@ -11,28 +11,22 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const {BrowserWindow} = require('electron');
-const {spawn} = require('child_process');
-const path = require('path');
-const promises = require('./promisify');
-const portfinder = require('portfinder');
-const platformData = require('./os-checker');
-const {windowsManager} = require('./windows-manager');
-const projectVersion = require('../package.json').version;
-const {inDevMode} = require('./consts');
+import {ChildProcess, spawn} from 'child_process';
+import {BrowserWindow} from 'electron';
+import * as path from 'path';
+import * as portfinder from 'portfinder';
+import {extension, isWin} from './platform/platform';
+import {execPromise} from './utils/promisify';
+import {windowsManager} from './windows-manager';
+// @ts-ignore
+import projectVersion from '../package.json';
+import {inDevMode} from './utils/mode';
 
-/**
- * @type string[]
- */
-const processes = [];
+let mainWindow: BrowserWindow | null = null;
+let splashWindow: BrowserWindow | null = null;
+const processes: ChildProcess[] = [];
 
-/**
- * @type BrowserWindow
- */
-let mainWindow = null;
-let splashWindow = null;
-
-async function cleanUpProcesses() {
+async function cleanUpProcesses(): Promise<void> {
   for (const process of processes) {
     if (!process) continue;
 
@@ -40,7 +34,7 @@ async function cleanUpProcesses() {
     const success = process.kill();
     if (!success) {
       try {
-        await promises.exec(platformData.isWin ? `taskkill /F /PID ${process.pid}` : `kill -9 ${process.pid}`);
+        await execPromise(isWin ? `taskkill /F /PID ${process.pid}` : `kill -9 ${process.pid}`);
         console.log(`Killed process: ${process.pid}`);
       } catch (error) {
         console.log(error);
@@ -49,13 +43,13 @@ async function cleanUpProcesses() {
   }
 }
 
-function startService() {
+function startService(): void {
   createSplashWindow();
 
   if (inDevMode()) {
-    global.backendPort = 9090;
-    setTimeout(function () {
-      splashWindow.close();
+    (global as any).backendPort = 9090;
+    setTimeout(() => {
+      splashWindow?.close();
       windowsManager.createNewWindow();
     }, 1000);
     return;
@@ -67,34 +61,31 @@ function startService() {
       stopPort: 31000,
     })
     .then(port => {
-      const rootPath = path.join(__dirname, '..', '..', '..', 'backend', platformData.isWin ? 'signed_dir' : '');
+      const rootPath = path.join(__dirname, '..', '..', '..', 'backend', isWin ? 'signed_dir' : '');
 
       if (processes.length === 0) {
-        global.backendPort = port;
-        const process = spawn(path.join(rootPath, `ame-backend-${projectVersion}-${platformData.extension}`), [
-          `-Dmicronaut.server.port=${port}`,
-        ]);
+        (global as any).backendPort = port;
+        const proc = spawn(path.join(rootPath, `ame-backend-${projectVersion.version}-${extension}`), [`-Dmicronaut.server.port=${port}`]);
 
-        process.stdout.on('data', data => {
+        proc.stdout.on('data', (data: Buffer) => {
           console.log(data.toString());
           if (data.includes(`Server Running`)) {
             console.log(`AME Server Running`);
-            splashWindow.close();
+            splashWindow?.close();
             windowsManager.createNewWindow();
           }
         });
 
-        process.on('close', code => {
-          // notify frontend
+        proc.on('close', (code: number) => {
           console.log(`child process exited with code ${code}`);
         });
 
-        process.on('error', error => {
+        proc.on('error', (error: Error) => {
           console.log('Error on opening Tomcat');
           console.log(error);
         });
 
-        processes.push(process);
+        processes.push(proc);
       }
     })
     .catch(error => {
@@ -103,7 +94,7 @@ function startService() {
     });
 }
 
-function createSplashWindow() {
+function createSplashWindow(): void {
   splashWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -119,8 +110,4 @@ function createSplashWindow() {
   splashWindow.loadFile(`${splashScreenPath}${path.sep}splash.html`).catch(() => console.log('Splash screen not found.'));
 }
 
-module.exports = {
-  mainWindow,
-  cleanUpProcesses,
-  startService,
-};
+export {cleanUpProcesses, mainWindow, startService};

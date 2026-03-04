@@ -4,7 +4,7 @@
   "description": "Used to design and edit SAMM specific aspect models.",
   "productName": "Aspect-Model-Editor",
   "version": "",
-  "main": "main.js",
+  "main": "dist/electron-libs/main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor.git"
@@ -16,9 +16,7 @@
       "target": "zip",
       "icon": "./apps/ame/src/assets/img/png/aspect-model-editor-targetsize-256.png",
       "files": [
-        "main.js",
-        "dist",
-        "electron-libs"
+        "dist"
       ],
       "extraFiles": [
         {
@@ -55,9 +53,7 @@
       "target": "zip",
       "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
       "files": [
-        "main.js",
-        "dist",
-        "electron-libs"
+        "dist"
       ],
       "extraFiles": [
         {
@@ -94,9 +90,7 @@
       "target": "tar.gz",
       "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
       "files": [
-        "main.js",
-        "dist",
-        "electron-libs"
+        "dist"
       ],
       "extraFiles": [
         {
@@ -142,6 +136,7 @@
     "build": "ng build",
     "build:stats": "ng build --configuration=production --stats-json",
     "build:prod": "ng build --configuration=production",
+    "build:electron": "tsc -p tsconfig.electron.json",
     "format:check-apps": "prettier --config ./.prettierrc --list-different \"./apps/ame/src/{app,assets}/**/*{.ts,.js,.json,.html,.scss}\"",
     "format:check-libs": "prettier --config ./.prettierrc --list-different \"./libs/**/*{.ts,.js,.json,.html,.scss}\"",
     "prettier:apps": "prettier --config ./.prettierrc --write \"./apps/ame/src/{app,assets}/**/*{.ts,.js,.json,.html,.scss}\" \"./apps/ame-e2e/src/integration/**/*{.ts,.js,.json,.html,.scss}\"",
@@ -274,11 +269,12 @@
     "@swc/core": "1.5.7",
     "@swc/helpers": "0.5.17",
     "@typed-mxgraph/typed-mxgraph": "^1.0.4",
+    "@types/electron": "^1.4.38",
     "@types/file-saver": "^2.0.5",
     "@types/jasmine": "~4.0.0",
     "@types/jest": "30.0.0",
     "@types/n3": "^1.4.4",
-    "@types/node": "24.5.2",
+    "@types/node": "^24.5.2",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/experimental-utils": "^5.29.0",
     "@typescript-eslint/parser": "7.18.0",
@@ -322,7 +318,7 @@
     "ts-jest": "29.4.4",
     "ts-loader": "^9.2.5",
     "ts-node": "10.9.1",
-    "typescript": "5.9.2",
+    "typescript": "^5.9.2",
     "webpack": "^5.52.0",
     "webpack-cli": "^4.8.0"
   },

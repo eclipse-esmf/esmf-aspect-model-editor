@@ -11,57 +11,59 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const {isMac} = require('../os-checker');
-const {fileSubmenu} = require('./file-sub-menu');
-const {viewSubmenu} = require('./view-sub-menu');
-const {editSubmenu} = require('./edit-sub-menu');
-const {validateSubmenu} = require('./validate-sub-menu');
-const {generateSubmenu} = require('./generate-sub-menu');
-const {searchSubmenu} = require('./search-sub-menu');
+import {MenuItem, MenuItemConstructorOptions} from 'electron';
+import {isMac} from '../platform/platform';
+import {edit} from './edit';
+import {file} from './file';
+import {generate} from './generate';
+import {search} from './search';
+import {validate} from './validate';
+import {view} from './view';
 
-/**
- * @returns {Array<MenuItemConstructorOptions | MenuItem>}
- */
-function appMenuTemplate(translation, options = {}) {
+export interface Translation {
+  [key: string]: any;
+}
+
+export function appMenuTemplate(translation: Translation): Array<MenuItemConstructorOptions | MenuItem> {
   return [
     ...(isMac
       ? [
           {
             role: 'appMenu',
-          },
+          } as MenuItemConstructorOptions,
         ]
       : []),
     {
       id: 'MENU_FILE',
       label: translation.MENU.FILE.LABEL,
-      submenu: fileSubmenu(translation.MENU.FILE),
+      submenu: file(translation.MENU.FILE),
     },
     {
       id: 'MENU_VIEW',
       label: translation.MENU.VIEW.LABEL,
-      submenu: viewSubmenu(translation.MENU.VIEW),
+      submenu: view(translation.MENU.VIEW),
     },
     {
       id: 'MENU_EDIT',
       label: translation.MENU.EDIT.LABEL,
-      submenu: editSubmenu(translation.MENU.EDIT),
+      submenu: edit(translation.MENU.EDIT),
     },
     {
       id: 'MENU_VALIDATE',
       label: translation.MENU.VALIDATE.LABEL,
-      submenu: validateSubmenu(translation.MENU.VALIDATE),
+      submenu: validate(translation.MENU.VALIDATE),
     },
     {
       id: 'MENU_GENERATE',
       label: translation.MENU.GENERATE.LABEL,
-      submenu: generateSubmenu(translation.MENU.GENERATE),
+      submenu: generate(translation.MENU.GENERATE),
     },
     {
       id: 'MENU_SEARCH',
       label: translation.MENU.SEARCH.LABEL,
-      submenu: searchSubmenu(translation.MENU.SEARCH),
+      submenu: search(translation.MENU.SEARCH),
     },
   ];
 }
 
-module.exports = {appMenuTemplate};
+export default {appMenuTemplate};
