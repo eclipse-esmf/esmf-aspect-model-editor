@@ -70,15 +70,9 @@ export class ShapeSettingsService {
     const graph = this.mxGraphAttributeService.graph;
     graph.addListener(mxEvent.CELLS_ADDED, () => {
       const graph = this.mxGraphAttributeService.graph;
-      const model = graph.getModel();
-      const parent = graph.getDefaultParent();
+      const hasAnyChildren = graph.getModel().getChildCount(graph.getDefaultParent()) > 0;
 
-      const hasAnyChildren = model.getChildCount(parent) > 0;
-
-      const hasVertices = model.getChildVertices(parent).length > 0;
-      const hasCells = hasAnyChildren && hasVertices;
-
-      this.ngZone.run(() => this.hasCellsSubject.next(hasCells));
+      this.ngZone.run(() => this.hasCellsSubject.next(hasAnyChildren));
     });
   }
 

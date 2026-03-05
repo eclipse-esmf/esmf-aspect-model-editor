@@ -34,7 +34,7 @@ import {DestroyRef, Injectable, NgZone, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatDialog} from '@angular/material/dialog';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {BehaviorSubject, Observable, distinctUntilChanged, filter, map, of, switchMap, tap} from 'rxjs';
+import {BehaviorSubject, Observable, distinctUntilChanged, filter, map, of, switchMap, take, tap} from 'rxjs';
 import {ELECTRON_EVENTS} from '../enums';
 import {ElectronSignals, StartupData, StartupPayload} from '../model';
 import {ElectronSignalsService} from './electron-signals.service';
@@ -143,12 +143,15 @@ export class ElectronTunnelService {
   }
 
   private sendMenuUpdate(ids: string[], enabled: boolean): void {
-    this.translate.getTranslation(this.translate.translateService.getCurrentLang()).subscribe(translation => {
-      this.ipcRenderer?.send(ELECTRON_EVENTS.SIGNAL.UPDATE_MENU_ITEM, {
-        ids,
-        payload: {enabled, translation},
+    this.translate
+      .getTranslation(this.translate.translateService.getCurrentLang())
+      .pipe(takeUntilDestroyed(this.destroyRef), take(1))
+      .subscribe(translation => {
+        this.ipcRenderer?.send(ELECTRON_EVENTS.SIGNAL.UPDATE_MENU_ITEM, {
+          ids,
+          payload: {enabled, translation},
+        });
       });
-    });
   }
 
   private registerIpcEvents(): void {
